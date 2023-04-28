@@ -214,6 +214,162 @@ export enum AssetOrder {
   WidthDesc = 'width_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type Calendars = Entry & {
+  color?: Maybe<Scalars['String']>;
+  contentfulMetadata: ContentfulMetadata;
+  expirationDate?: Maybe<Scalars['Float']>;
+  googleCalendarId?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<CalendarsLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  resourceId?: Maybe<Scalars['String']>;
+  syncToken?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsColorArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsExpirationDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsGoogleCalendarIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsResourceIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsSyncTokenArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type CalendarsCollection = {
+  items: Array<Maybe<Calendars>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type CalendarsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CalendarsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CalendarsFilter>>>;
+  color?: InputMaybe<Scalars['String']>;
+  color_contains?: InputMaybe<Scalars['String']>;
+  color_exists?: InputMaybe<Scalars['Boolean']>;
+  color_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  color_not?: InputMaybe<Scalars['String']>;
+  color_not_contains?: InputMaybe<Scalars['String']>;
+  color_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  expirationDate?: InputMaybe<Scalars['Float']>;
+  expirationDate_exists?: InputMaybe<Scalars['Boolean']>;
+  expirationDate_gt?: InputMaybe<Scalars['Float']>;
+  expirationDate_gte?: InputMaybe<Scalars['Float']>;
+  expirationDate_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  expirationDate_lt?: InputMaybe<Scalars['Float']>;
+  expirationDate_lte?: InputMaybe<Scalars['Float']>;
+  expirationDate_not?: InputMaybe<Scalars['Float']>;
+  expirationDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  googleCalendarId?: InputMaybe<Scalars['String']>;
+  googleCalendarId_contains?: InputMaybe<Scalars['String']>;
+  googleCalendarId_exists?: InputMaybe<Scalars['Boolean']>;
+  googleCalendarId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleCalendarId_not?: InputMaybe<Scalars['String']>;
+  googleCalendarId_not_contains?: InputMaybe<Scalars['String']>;
+  googleCalendarId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceId?: InputMaybe<Scalars['String']>;
+  resourceId_contains?: InputMaybe<Scalars['String']>;
+  resourceId_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceId_not?: InputMaybe<Scalars['String']>;
+  resourceId_not_contains?: InputMaybe<Scalars['String']>;
+  resourceId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  syncToken?: InputMaybe<Scalars['String']>;
+  syncToken_contains?: InputMaybe<Scalars['String']>;
+  syncToken_exists?: InputMaybe<Scalars['Boolean']>;
+  syncToken_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  syncToken_not?: InputMaybe<Scalars['String']>;
+  syncToken_not_contains?: InputMaybe<Scalars['String']>;
+  syncToken_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type CalendarsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type CalendarsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type CalendarsLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type CalendarsLinkingCollectionsWorkingGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum CalendarsOrder {
+  ColorAsc = 'color_ASC',
+  ColorDesc = 'color_DESC',
+  ExpirationDateAsc = 'expirationDate_ASC',
+  ExpirationDateDesc = 'expirationDate_DESC',
+  GoogleCalendarIdAsc = 'googleCalendarId_ASC',
+  GoogleCalendarIdDesc = 'googleCalendarId_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  ResourceIdAsc = 'resourceId_ASC',
+  ResourceIdDesc = 'resourceId_DESC',
+  SyncTokenAsc = 'syncToken_ASC',
+  SyncTokenDesc = 'syncToken_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ContentfulMetadata = {
   tags: Array<Maybe<ContentfulTag>>;
 };
@@ -427,6 +583,84 @@ export type EntryFilter = {
 };
 
 export enum EntryOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
+export type ExternalUsers = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<ExternalUsersLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  orcid?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
+export type ExternalUsersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
+export type ExternalUsersNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
+export type ExternalUsersOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ExternalUsersCollection = {
+  items: Array<Maybe<ExternalUsers>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ExternalUsersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ExternalUsersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ExternalUsersFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ExternalUsersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ExternalUsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ExternalUsersOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -663,6 +897,130 @@ export enum MigrationOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
+export type Milestones = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  description?: Maybe<Scalars['String']>;
+  externalLink?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<MilestonesLinkingCollections>;
+  status?: Maybe<Scalars['String']>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
+export type MilestonesDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
+export type MilestonesExternalLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
+export type MilestonesLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
+export type MilestonesStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
+export type MilestonesTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type MilestonesCollection = {
+  items: Array<Maybe<Milestones>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type MilestonesFilter = {
+  AND?: InputMaybe<Array<InputMaybe<MilestonesFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<MilestonesFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink?: InputMaybe<Scalars['String']>;
+  externalLink_contains?: InputMaybe<Scalars['String']>;
+  externalLink_exists?: InputMaybe<Scalars['Boolean']>;
+  externalLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink_not?: InputMaybe<Scalars['String']>;
+  externalLink_not_contains?: InputMaybe<Scalars['String']>;
+  externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type MilestonesLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type MilestonesLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type MilestonesLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type MilestonesLinkingCollectionsWorkingGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum MilestonesOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
 }
 
 /** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
@@ -986,24 +1344,399 @@ export type PagesTextLinks = {
   entries: PagesTextEntries;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
+export type ProjectMembership = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<ProjectMembershipLinkingCollections>;
+  role?: Maybe<Scalars['String']>;
+  sys: Sys;
+  user?: Maybe<Users>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
+export type ProjectMembershipLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
+export type ProjectMembershipRoleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
+export type ProjectMembershipUserArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ProjectMembershipCollection = {
+  items: Array<Maybe<ProjectMembership>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ProjectMembershipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ProjectMembershipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ProjectMembershipFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user?: InputMaybe<CfUsersNestedFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ProjectMembershipLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type ProjectMembershipLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ProjectMembershipLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ProjectMembershipLinkingCollectionsWorkingGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ProjectMembershipOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type Projects = Entry & {
+  calendars?: Maybe<Calendars>;
+  contentfulMetadata: ContentfulMetadata;
+  description?: Maybe<Scalars['String']>;
+  endDate?: Maybe<Scalars['DateTime']>;
+  keywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  leadEmail?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<ProjectsLinkingCollections>;
+  membersCollection?: Maybe<ProjectsMembersCollection>;
+  milestonesCollection?: Maybe<ProjectsMilestonesCollection>;
+  opportunitiesLink?: Maybe<Scalars['String']>;
+  pmEmail?: Maybe<Scalars['String']>;
+  projectProposal?: Maybe<Scalars['String']>;
+  resourcesCollection?: Maybe<ProjectsResourcesCollection>;
+  startDate?: Maybe<Scalars['DateTime']>;
+  status?: Maybe<Scalars['String']>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+  traineeProject?: Maybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsCalendarsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsEndDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsKeywordsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsLeadEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsMembersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsMilestonesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsOpportunitiesLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsPmEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsProjectProposalArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsResourcesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsStartDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
+export type ProjectsTraineeProjectArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ProjectsCollection = {
+  items: Array<Maybe<Projects>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ProjectsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ProjectsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ProjectsFilter>>>;
+  calendars?: InputMaybe<CfCalendarsNestedFilter>;
+  calendars_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  endDate_exists?: InputMaybe<Scalars['Boolean']>;
+  endDate_gt?: InputMaybe<Scalars['DateTime']>;
+  endDate_gte?: InputMaybe<Scalars['DateTime']>;
+  endDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endDate_lt?: InputMaybe<Scalars['DateTime']>;
+  endDate_lte?: InputMaybe<Scalars['DateTime']>;
+  endDate_not?: InputMaybe<Scalars['DateTime']>;
+  endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_exists?: InputMaybe<Scalars['Boolean']>;
+  leadEmail?: InputMaybe<Scalars['String']>;
+  leadEmail_contains?: InputMaybe<Scalars['String']>;
+  leadEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  leadEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  leadEmail_not?: InputMaybe<Scalars['String']>;
+  leadEmail_not_contains?: InputMaybe<Scalars['String']>;
+  leadEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  members?: InputMaybe<CfProjectMembershipNestedFilter>;
+  membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  milestones?: InputMaybe<CfMilestonesNestedFilter>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  opportunitiesLink?: InputMaybe<Scalars['String']>;
+  opportunitiesLink_contains?: InputMaybe<Scalars['String']>;
+  opportunitiesLink_exists?: InputMaybe<Scalars['Boolean']>;
+  opportunitiesLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  opportunitiesLink_not?: InputMaybe<Scalars['String']>;
+  opportunitiesLink_not_contains?: InputMaybe<Scalars['String']>;
+  opportunitiesLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  pmEmail?: InputMaybe<Scalars['String']>;
+  pmEmail_contains?: InputMaybe<Scalars['String']>;
+  pmEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  pmEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  pmEmail_not?: InputMaybe<Scalars['String']>;
+  pmEmail_not_contains?: InputMaybe<Scalars['String']>;
+  pmEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectProposal?: InputMaybe<Scalars['String']>;
+  projectProposal_contains?: InputMaybe<Scalars['String']>;
+  projectProposal_exists?: InputMaybe<Scalars['Boolean']>;
+  projectProposal_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectProposal_not?: InputMaybe<Scalars['String']>;
+  projectProposal_not_contains?: InputMaybe<Scalars['String']>;
+  projectProposal_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resources?: InputMaybe<CfResourcesNestedFilter>;
+  resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
+  startDate_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate_gt?: InputMaybe<Scalars['DateTime']>;
+  startDate_gte?: InputMaybe<Scalars['DateTime']>;
+  startDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  startDate_lt?: InputMaybe<Scalars['DateTime']>;
+  startDate_lte?: InputMaybe<Scalars['DateTime']>;
+  startDate_not?: InputMaybe<Scalars['DateTime']>;
+  startDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  traineeProject?: InputMaybe<Scalars['Boolean']>;
+  traineeProject_exists?: InputMaybe<Scalars['Boolean']>;
+  traineeProject_not?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ProjectsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ProjectsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ProjectsMembersCollection = {
+  items: Array<Maybe<ProjectMembership>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ProjectsMilestonesCollection = {
+  items: Array<Maybe<Milestones>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum ProjectsOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  LeadEmailAsc = 'leadEmail_ASC',
+  LeadEmailDesc = 'leadEmail_DESC',
+  OpportunitiesLinkAsc = 'opportunitiesLink_ASC',
+  OpportunitiesLinkDesc = 'opportunitiesLink_DESC',
+  PmEmailAsc = 'pmEmail_ASC',
+  PmEmailDesc = 'pmEmail_DESC',
+  ProjectProposalAsc = 'projectProposal_ASC',
+  ProjectProposalDesc = 'projectProposal_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TraineeProjectAsc = 'traineeProject_ASC',
+  TraineeProjectDesc = 'traineeProject_DESC',
+}
+
+export type ProjectsResourcesCollection = {
+  items: Array<Maybe<Resources>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
 export type Query = {
   asset?: Maybe<Asset>;
   assetCollection?: Maybe<AssetCollection>;
+  calendars?: Maybe<Calendars>;
+  calendarsCollection?: Maybe<CalendarsCollection>;
   contributingCohorts?: Maybe<ContributingCohorts>;
   contributingCohortsCollection?: Maybe<ContributingCohortsCollection>;
   contributingCohortsMembership?: Maybe<ContributingCohortsMembership>;
   contributingCohortsMembershipCollection?: Maybe<ContributingCohortsMembershipCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  externalUsers?: Maybe<ExternalUsers>;
+  externalUsersCollection?: Maybe<ExternalUsersCollection>;
   media?: Maybe<Media>;
   mediaCollection?: Maybe<MediaCollection>;
   migration?: Maybe<Migration>;
   migrationCollection?: Maybe<MigrationCollection>;
+  milestones?: Maybe<Milestones>;
+  milestonesCollection?: Maybe<MilestonesCollection>;
   news?: Maybe<News>;
   newsCollection?: Maybe<NewsCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
+  projectMembership?: Maybe<ProjectMembership>;
+  projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
+  projects?: Maybe<Projects>;
+  projectsCollection?: Maybe<ProjectsCollection>;
+  resources?: Maybe<Resources>;
+  resourcesCollection?: Maybe<ResourcesCollection>;
   users?: Maybe<Users>;
   usersCollection?: Maybe<UsersCollection>;
+  workingGroupMembership?: Maybe<WorkingGroupMembership>;
+  workingGroupMembershipCollection?: Maybe<WorkingGroupMembershipCollection>;
+  workingGroupNetwork?: Maybe<WorkingGroupNetwork>;
+  workingGroupNetworkCollection?: Maybe<WorkingGroupNetworkCollection>;
+  workingGroups?: Maybe<WorkingGroups>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
 };
 
 export type QueryAssetArgs = {
@@ -1019,6 +1752,21 @@ export type QueryAssetCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<AssetFilter>;
+};
+
+export type QueryCalendarsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryCalendarsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<CalendarsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<CalendarsFilter>;
 };
 
 export type QueryContributingCohortsArgs = {
@@ -1060,6 +1808,21 @@ export type QueryEntryCollectionArgs = {
   where?: InputMaybe<EntryFilter>;
 };
 
+export type QueryExternalUsersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryExternalUsersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ExternalUsersOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ExternalUsersFilter>;
+};
+
 export type QueryMediaArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -1088,6 +1851,21 @@ export type QueryMigrationCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<MigrationFilter>;
+};
+
+export type QueryMilestonesArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryMilestonesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<MilestonesOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MilestonesFilter>;
 };
 
 export type QueryNewsArgs = {
@@ -1120,6 +1898,51 @@ export type QueryPagesCollectionArgs = {
   where?: InputMaybe<PagesFilter>;
 };
 
+export type QueryProjectMembershipArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryProjectMembershipCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectMembershipOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ProjectMembershipFilter>;
+};
+
+export type QueryProjectsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ProjectsFilter>;
+};
+
+export type QueryResourcesArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryResourcesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ResourcesOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResourcesFilter>;
+};
+
 export type QueryUsersArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -1134,6 +1957,175 @@ export type QueryUsersCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<UsersFilter>;
 };
+
+export type QueryWorkingGroupMembershipArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryWorkingGroupMembershipCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupMembershipOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupMembershipFilter>;
+};
+
+export type QueryWorkingGroupNetworkArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryWorkingGroupNetworkCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupNetworkOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupNetworkFilter>;
+};
+
+export type QueryWorkingGroupsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryWorkingGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
+export type Resources = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  description?: Maybe<Scalars['String']>;
+  externalLink?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<ResourcesLinkingCollections>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
+export type ResourcesDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
+export type ResourcesExternalLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
+export type ResourcesLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
+export type ResourcesTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
+export type ResourcesTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ResourcesCollection = {
+  items: Array<Maybe<Resources>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ResourcesFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ResourcesFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ResourcesFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink?: InputMaybe<Scalars['String']>;
+  externalLink_contains?: InputMaybe<Scalars['String']>;
+  externalLink_exists?: InputMaybe<Scalars['Boolean']>;
+  externalLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink_not?: InputMaybe<Scalars['String']>;
+  externalLink_not_contains?: InputMaybe<Scalars['String']>;
+  externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type?: InputMaybe<Scalars['String']>;
+  type_contains?: InputMaybe<Scalars['String']>;
+  type_exists?: InputMaybe<Scalars['Boolean']>;
+  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type_not?: InputMaybe<Scalars['String']>;
+  type_not_contains?: InputMaybe<Scalars['String']>;
+  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ResourcesLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type ResourcesLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResourcesLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResourcesLinkingCollectionsWorkingGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ResourcesOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
 
 export type Sys = {
   environmentId: Scalars['String'];
@@ -1561,9 +2553,25 @@ export type UsersFilter = {
 
 export type UsersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
+  workingGroupMembershipCollection?: Maybe<WorkingGroupMembershipCollection>;
 };
 
 export type UsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsProjectMembershipCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsWorkingGroupMembershipCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -1621,6 +2629,560 @@ export enum UsersOrder {
   TwitterDesc = 'twitter_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
+export type WorkingGroupMembership = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<WorkingGroupMembershipLinkingCollections>;
+  role?: Maybe<Scalars['String']>;
+  sys: Sys;
+  user?: Maybe<Users>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
+export type WorkingGroupMembershipLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
+export type WorkingGroupMembershipRoleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
+export type WorkingGroupMembershipUserArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type WorkingGroupMembershipCollection = {
+  items: Array<Maybe<WorkingGroupMembership>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupMembershipFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WorkingGroupMembershipFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WorkingGroupMembershipFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user?: InputMaybe<CfUsersNestedFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type WorkingGroupMembershipLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type WorkingGroupMembershipLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum WorkingGroupMembershipOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
+export type WorkingGroupNetwork = Entry & {
+  complexDiseaseCollection?: Maybe<WorkingGroupNetworkComplexDiseaseCollection>;
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<WorkingGroupNetworkLinkingCollections>;
+  monogenicCollection?: Maybe<WorkingGroupNetworkMonogenicCollection>;
+  operationalCollection?: Maybe<WorkingGroupNetworkOperationalCollection>;
+  supportCollection?: Maybe<WorkingGroupNetworkSupportCollection>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
+export type WorkingGroupNetworkComplexDiseaseCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
+export type WorkingGroupNetworkLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
+export type WorkingGroupNetworkMonogenicCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
+export type WorkingGroupNetworkOperationalCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
+export type WorkingGroupNetworkSupportCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type WorkingGroupNetworkCollection = {
+  items: Array<Maybe<WorkingGroupNetwork>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupNetworkComplexDiseaseCollection = {
+  items: Array<Maybe<WorkingGroups>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupNetworkFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WorkingGroupNetworkFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WorkingGroupNetworkFilter>>>;
+  complexDisease?: InputMaybe<CfWorkingGroupsNestedFilter>;
+  complexDiseaseCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  monogenic?: InputMaybe<CfWorkingGroupsNestedFilter>;
+  monogenicCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  operational?: InputMaybe<CfWorkingGroupsNestedFilter>;
+  operationalCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  support?: InputMaybe<CfWorkingGroupsNestedFilter>;
+  supportCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type WorkingGroupNetworkLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type WorkingGroupNetworkLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type WorkingGroupNetworkMonogenicCollection = {
+  items: Array<Maybe<WorkingGroups>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupNetworkOperationalCollection = {
+  items: Array<Maybe<WorkingGroups>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum WorkingGroupNetworkOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type WorkingGroupNetworkSupportCollection = {
+  items: Array<Maybe<WorkingGroups>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroups = Entry & {
+  calendars?: Maybe<Calendars>;
+  contentfulMetadata: ContentfulMetadata;
+  description?: Maybe<Scalars['String']>;
+  endDate?: Maybe<Scalars['DateTime']>;
+  keywords?: Maybe<Array<Maybe<Scalars['String']>>>;
+  leadEmail?: Maybe<Scalars['String']>;
+  leadingMembers?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<WorkingGroupsLinkingCollections>;
+  membersCollection?: Maybe<WorkingGroupsMembersCollection>;
+  milestonesCollection?: Maybe<WorkingGroupsMilestonesCollection>;
+  pmEmail?: Maybe<Scalars['String']>;
+  primaryEmail?: Maybe<Scalars['String']>;
+  projectProposal?: Maybe<Scalars['String']>;
+  resourcesCollection?: Maybe<WorkingGroupsResourcesCollection>;
+  secondaryEmail?: Maybe<Scalars['String']>;
+  shortDescription?: Maybe<Scalars['String']>;
+  startDate?: Maybe<Scalars['DateTime']>;
+  status?: Maybe<Scalars['String']>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsCalendarsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsEndDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsKeywordsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsLeadEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsLeadingMembersArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsMembersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsMilestonesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsPmEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsPrimaryEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsProjectProposalArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsResourcesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsSecondaryEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsShortDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsStartDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
+export type WorkingGroupsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type WorkingGroupsCollection = {
+  items: Array<Maybe<WorkingGroups>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
+  calendars?: InputMaybe<CfCalendarsNestedFilter>;
+  calendars_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  endDate_exists?: InputMaybe<Scalars['Boolean']>;
+  endDate_gt?: InputMaybe<Scalars['DateTime']>;
+  endDate_gte?: InputMaybe<Scalars['DateTime']>;
+  endDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endDate_lt?: InputMaybe<Scalars['DateTime']>;
+  endDate_lte?: InputMaybe<Scalars['DateTime']>;
+  endDate_not?: InputMaybe<Scalars['DateTime']>;
+  endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_exists?: InputMaybe<Scalars['Boolean']>;
+  leadEmail?: InputMaybe<Scalars['String']>;
+  leadEmail_contains?: InputMaybe<Scalars['String']>;
+  leadEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  leadEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  leadEmail_not?: InputMaybe<Scalars['String']>;
+  leadEmail_not_contains?: InputMaybe<Scalars['String']>;
+  leadEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  leadingMembers?: InputMaybe<Scalars['String']>;
+  leadingMembers_contains?: InputMaybe<Scalars['String']>;
+  leadingMembers_exists?: InputMaybe<Scalars['Boolean']>;
+  leadingMembers_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  leadingMembers_not?: InputMaybe<Scalars['String']>;
+  leadingMembers_not_contains?: InputMaybe<Scalars['String']>;
+  leadingMembers_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  members?: InputMaybe<CfProjectMembershipNestedFilter>;
+  membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  milestones?: InputMaybe<CfMilestonesNestedFilter>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  pmEmail?: InputMaybe<Scalars['String']>;
+  pmEmail_contains?: InputMaybe<Scalars['String']>;
+  pmEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  pmEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  pmEmail_not?: InputMaybe<Scalars['String']>;
+  pmEmail_not_contains?: InputMaybe<Scalars['String']>;
+  pmEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  primaryEmail?: InputMaybe<Scalars['String']>;
+  primaryEmail_contains?: InputMaybe<Scalars['String']>;
+  primaryEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  primaryEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  primaryEmail_not?: InputMaybe<Scalars['String']>;
+  primaryEmail_not_contains?: InputMaybe<Scalars['String']>;
+  primaryEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectProposal?: InputMaybe<Scalars['String']>;
+  projectProposal_contains?: InputMaybe<Scalars['String']>;
+  projectProposal_exists?: InputMaybe<Scalars['Boolean']>;
+  projectProposal_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectProposal_not?: InputMaybe<Scalars['String']>;
+  projectProposal_not_contains?: InputMaybe<Scalars['String']>;
+  projectProposal_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resources?: InputMaybe<CfResourcesNestedFilter>;
+  resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  secondaryEmail?: InputMaybe<Scalars['String']>;
+  secondaryEmail_contains?: InputMaybe<Scalars['String']>;
+  secondaryEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  secondaryEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  secondaryEmail_not?: InputMaybe<Scalars['String']>;
+  secondaryEmail_not_contains?: InputMaybe<Scalars['String']>;
+  secondaryEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
+  startDate_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate_gt?: InputMaybe<Scalars['DateTime']>;
+  startDate_gte?: InputMaybe<Scalars['DateTime']>;
+  startDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  startDate_lt?: InputMaybe<Scalars['DateTime']>;
+  startDate_lte?: InputMaybe<Scalars['DateTime']>;
+  startDate_not?: InputMaybe<Scalars['DateTime']>;
+  startDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type WorkingGroupsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  workingGroupNetworkCollection?: Maybe<WorkingGroupNetworkCollection>;
+};
+
+export type WorkingGroupsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type WorkingGroupsMembersCollection = {
+  items: Array<Maybe<ProjectMembership>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupsMilestonesCollection = {
+  items: Array<Maybe<Milestones>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum WorkingGroupsOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  LeadEmailAsc = 'leadEmail_ASC',
+  LeadEmailDesc = 'leadEmail_DESC',
+  LeadingMembersAsc = 'leadingMembers_ASC',
+  LeadingMembersDesc = 'leadingMembers_DESC',
+  PmEmailAsc = 'pmEmail_ASC',
+  PmEmailDesc = 'pmEmail_DESC',
+  PrimaryEmailAsc = 'primaryEmail_ASC',
+  PrimaryEmailDesc = 'primaryEmail_DESC',
+  ProjectProposalAsc = 'projectProposal_ASC',
+  ProjectProposalDesc = 'projectProposal_DESC',
+  SecondaryEmailAsc = 'secondaryEmail_ASC',
+  SecondaryEmailDesc = 'secondaryEmail_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export type WorkingGroupsResourcesCollection = {
+  items: Array<Maybe<Resources>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type CfCalendarsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfCalendarsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfCalendarsNestedFilter>>>;
+  color?: InputMaybe<Scalars['String']>;
+  color_contains?: InputMaybe<Scalars['String']>;
+  color_exists?: InputMaybe<Scalars['Boolean']>;
+  color_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  color_not?: InputMaybe<Scalars['String']>;
+  color_not_contains?: InputMaybe<Scalars['String']>;
+  color_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  expirationDate?: InputMaybe<Scalars['Float']>;
+  expirationDate_exists?: InputMaybe<Scalars['Boolean']>;
+  expirationDate_gt?: InputMaybe<Scalars['Float']>;
+  expirationDate_gte?: InputMaybe<Scalars['Float']>;
+  expirationDate_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  expirationDate_lt?: InputMaybe<Scalars['Float']>;
+  expirationDate_lte?: InputMaybe<Scalars['Float']>;
+  expirationDate_not?: InputMaybe<Scalars['Float']>;
+  expirationDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  googleCalendarId?: InputMaybe<Scalars['String']>;
+  googleCalendarId_contains?: InputMaybe<Scalars['String']>;
+  googleCalendarId_exists?: InputMaybe<Scalars['Boolean']>;
+  googleCalendarId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleCalendarId_not?: InputMaybe<Scalars['String']>;
+  googleCalendarId_not_contains?: InputMaybe<Scalars['String']>;
+  googleCalendarId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceId?: InputMaybe<Scalars['String']>;
+  resourceId_contains?: InputMaybe<Scalars['String']>;
+  resourceId_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceId_not?: InputMaybe<Scalars['String']>;
+  resourceId_not_contains?: InputMaybe<Scalars['String']>;
+  resourceId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  syncToken?: InputMaybe<Scalars['String']>;
+  syncToken_contains?: InputMaybe<Scalars['String']>;
+  syncToken_exists?: InputMaybe<Scalars['Boolean']>;
+  syncToken_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  syncToken_not?: InputMaybe<Scalars['String']>;
+  syncToken_not_contains?: InputMaybe<Scalars['String']>;
+  syncToken_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
 export type CfContributingCohortsMembershipNestedFilter = {
   AND?: InputMaybe<
     Array<InputMaybe<CfContributingCohortsMembershipNestedFilter>>
@@ -1659,6 +3221,397 @@ export type CfContributingCohortsNestedFilter = {
   name_not_contains?: InputMaybe<Scalars['String']>;
   name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+};
+
+export type CfMilestonesNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink?: InputMaybe<Scalars['String']>;
+  externalLink_contains?: InputMaybe<Scalars['String']>;
+  externalLink_exists?: InputMaybe<Scalars['Boolean']>;
+  externalLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink_not?: InputMaybe<Scalars['String']>;
+  externalLink_not_contains?: InputMaybe<Scalars['String']>;
+  externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CfProjectMembershipNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfProjectMembershipNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfProjectMembershipNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CfResourcesNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfResourcesNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfResourcesNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink?: InputMaybe<Scalars['String']>;
+  externalLink_contains?: InputMaybe<Scalars['String']>;
+  externalLink_exists?: InputMaybe<Scalars['Boolean']>;
+  externalLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink_not?: InputMaybe<Scalars['String']>;
+  externalLink_not_contains?: InputMaybe<Scalars['String']>;
+  externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type?: InputMaybe<Scalars['String']>;
+  type_contains?: InputMaybe<Scalars['String']>;
+  type_exists?: InputMaybe<Scalars['Boolean']>;
+  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type_not?: InputMaybe<Scalars['String']>;
+  type_not_contains?: InputMaybe<Scalars['String']>;
+  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CfUsersNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfUsersNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfUsersNestedFilter>>>;
+  activatedDate?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  activatedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  activatedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_not?: InputMaybe<Scalars['DateTime']>;
+  activatedDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  alternativeEmail?: InputMaybe<Scalars['String']>;
+  alternativeEmail_contains?: InputMaybe<Scalars['String']>;
+  alternativeEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  alternativeEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alternativeEmail_not?: InputMaybe<Scalars['String']>;
+  alternativeEmail_not_contains?: InputMaybe<Scalars['String']>;
+  alternativeEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  avatar_exists?: InputMaybe<Scalars['Boolean']>;
+  biography?: InputMaybe<Scalars['String']>;
+  biography_contains?: InputMaybe<Scalars['String']>;
+  biography_exists?: InputMaybe<Scalars['Boolean']>;
+  biography_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  biography_not?: InputMaybe<Scalars['String']>;
+  biography_not_contains?: InputMaybe<Scalars['String']>;
+  biography_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blog?: InputMaybe<Scalars['String']>;
+  blog_contains?: InputMaybe<Scalars['String']>;
+  blog_exists?: InputMaybe<Scalars['Boolean']>;
+  blog_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  blog_not?: InputMaybe<Scalars['String']>;
+  blog_not_contains?: InputMaybe<Scalars['String']>;
+  blog_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  city?: InputMaybe<Scalars['String']>;
+  city_contains?: InputMaybe<Scalars['String']>;
+  city_exists?: InputMaybe<Scalars['Boolean']>;
+  city_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  city_not?: InputMaybe<Scalars['String']>;
+  city_not_contains?: InputMaybe<Scalars['String']>;
+  city_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  contributingCohortsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  country?: InputMaybe<Scalars['String']>;
+  country_contains?: InputMaybe<Scalars['String']>;
+  country_exists?: InputMaybe<Scalars['Boolean']>;
+  country_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  country_not?: InputMaybe<Scalars['String']>;
+  country_not_contains?: InputMaybe<Scalars['String']>;
+  country_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  degree_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  degree_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  degree_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  degree_exists?: InputMaybe<Scalars['Boolean']>;
+  email?: InputMaybe<Scalars['String']>;
+  email_contains?: InputMaybe<Scalars['String']>;
+  email_exists?: InputMaybe<Scalars['Boolean']>;
+  email_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  email_not?: InputMaybe<Scalars['String']>;
+  email_not_contains?: InputMaybe<Scalars['String']>;
+  email_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  firstName?: InputMaybe<Scalars['String']>;
+  firstName_contains?: InputMaybe<Scalars['String']>;
+  firstName_exists?: InputMaybe<Scalars['Boolean']>;
+  firstName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  firstName_not?: InputMaybe<Scalars['String']>;
+  firstName_not_contains?: InputMaybe<Scalars['String']>;
+  firstName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  fundingStreams?: InputMaybe<Scalars['String']>;
+  fundingStreams_contains?: InputMaybe<Scalars['String']>;
+  fundingStreams_exists?: InputMaybe<Scalars['Boolean']>;
+  fundingStreams_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  fundingStreams_not?: InputMaybe<Scalars['String']>;
+  fundingStreams_not_contains?: InputMaybe<Scalars['String']>;
+  fundingStreams_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  github?: InputMaybe<Scalars['String']>;
+  github_contains?: InputMaybe<Scalars['String']>;
+  github_exists?: InputMaybe<Scalars['Boolean']>;
+  github_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  github_not?: InputMaybe<Scalars['String']>;
+  github_not_contains?: InputMaybe<Scalars['String']>;
+  github_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar?: InputMaybe<Scalars['String']>;
+  googleScholar_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_exists?: InputMaybe<Scalars['Boolean']>;
+  googleScholar_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar_not?: InputMaybe<Scalars['String']>;
+  googleScholar_not_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_exists?: InputMaybe<Scalars['Boolean']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  lastName_contains?: InputMaybe<Scalars['String']>;
+  lastName_exists?: InputMaybe<Scalars['Boolean']>;
+  lastName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastName_not?: InputMaybe<Scalars['String']>;
+  lastName_not_contains?: InputMaybe<Scalars['String']>;
+  lastName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn?: InputMaybe<Scalars['String']>;
+  linkedIn_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
+  linkedIn_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn_not?: InputMaybe<Scalars['String']>;
+  linkedIn_not_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  onboarded?: InputMaybe<Scalars['Boolean']>;
+  onboarded_exists?: InputMaybe<Scalars['Boolean']>;
+  onboarded_not?: InputMaybe<Scalars['Boolean']>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_exists?: InputMaybe<Scalars['Boolean']>;
+  region?: InputMaybe<Scalars['String']>;
+  region_contains?: InputMaybe<Scalars['String']>;
+  region_exists?: InputMaybe<Scalars['Boolean']>;
+  region_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  region_not?: InputMaybe<Scalars['String']>;
+  region_not_contains?: InputMaybe<Scalars['String']>;
+  region_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate?: InputMaybe<Scalars['String']>;
+  researchGate_contains?: InputMaybe<Scalars['String']>;
+  researchGate_exists?: InputMaybe<Scalars['Boolean']>;
+  researchGate_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate_not?: InputMaybe<Scalars['String']>;
+  researchGate_not_contains?: InputMaybe<Scalars['String']>;
+  researchGate_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId?: InputMaybe<Scalars['String']>;
+  researcherId_contains?: InputMaybe<Scalars['String']>;
+  researcherId_exists?: InputMaybe<Scalars['Boolean']>;
+  researcherId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId_not?: InputMaybe<Scalars['String']>;
+  researcherId_not_contains?: InputMaybe<Scalars['String']>;
+  researcherId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  telephoneCountryCode?: InputMaybe<Scalars['String']>;
+  telephoneCountryCode_contains?: InputMaybe<Scalars['String']>;
+  telephoneCountryCode_exists?: InputMaybe<Scalars['Boolean']>;
+  telephoneCountryCode_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  telephoneCountryCode_not?: InputMaybe<Scalars['String']>;
+  telephoneCountryCode_not_contains?: InputMaybe<Scalars['String']>;
+  telephoneCountryCode_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  telephoneNumber?: InputMaybe<Scalars['String']>;
+  telephoneNumber_contains?: InputMaybe<Scalars['String']>;
+  telephoneNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  telephoneNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  telephoneNumber_not?: InputMaybe<Scalars['String']>;
+  telephoneNumber_not_contains?: InputMaybe<Scalars['String']>;
+  telephoneNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  twitter?: InputMaybe<Scalars['String']>;
+  twitter_contains?: InputMaybe<Scalars['String']>;
+  twitter_exists?: InputMaybe<Scalars['Boolean']>;
+  twitter_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  twitter_not?: InputMaybe<Scalars['String']>;
+  twitter_not_contains?: InputMaybe<Scalars['String']>;
+  twitter_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CfWorkingGroupsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfWorkingGroupsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfWorkingGroupsNestedFilter>>>;
+  calendars_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  endDate_exists?: InputMaybe<Scalars['Boolean']>;
+  endDate_gt?: InputMaybe<Scalars['DateTime']>;
+  endDate_gte?: InputMaybe<Scalars['DateTime']>;
+  endDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endDate_lt?: InputMaybe<Scalars['DateTime']>;
+  endDate_lte?: InputMaybe<Scalars['DateTime']>;
+  endDate_not?: InputMaybe<Scalars['DateTime']>;
+  endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  keywords_exists?: InputMaybe<Scalars['Boolean']>;
+  leadEmail?: InputMaybe<Scalars['String']>;
+  leadEmail_contains?: InputMaybe<Scalars['String']>;
+  leadEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  leadEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  leadEmail_not?: InputMaybe<Scalars['String']>;
+  leadEmail_not_contains?: InputMaybe<Scalars['String']>;
+  leadEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  leadingMembers?: InputMaybe<Scalars['String']>;
+  leadingMembers_contains?: InputMaybe<Scalars['String']>;
+  leadingMembers_exists?: InputMaybe<Scalars['Boolean']>;
+  leadingMembers_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  leadingMembers_not?: InputMaybe<Scalars['String']>;
+  leadingMembers_not_contains?: InputMaybe<Scalars['String']>;
+  leadingMembers_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  pmEmail?: InputMaybe<Scalars['String']>;
+  pmEmail_contains?: InputMaybe<Scalars['String']>;
+  pmEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  pmEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  pmEmail_not?: InputMaybe<Scalars['String']>;
+  pmEmail_not_contains?: InputMaybe<Scalars['String']>;
+  pmEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  primaryEmail?: InputMaybe<Scalars['String']>;
+  primaryEmail_contains?: InputMaybe<Scalars['String']>;
+  primaryEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  primaryEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  primaryEmail_not?: InputMaybe<Scalars['String']>;
+  primaryEmail_not_contains?: InputMaybe<Scalars['String']>;
+  primaryEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectProposal?: InputMaybe<Scalars['String']>;
+  projectProposal_contains?: InputMaybe<Scalars['String']>;
+  projectProposal_exists?: InputMaybe<Scalars['Boolean']>;
+  projectProposal_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectProposal_not?: InputMaybe<Scalars['String']>;
+  projectProposal_not_contains?: InputMaybe<Scalars['String']>;
+  projectProposal_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  secondaryEmail?: InputMaybe<Scalars['String']>;
+  secondaryEmail_contains?: InputMaybe<Scalars['String']>;
+  secondaryEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  secondaryEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  secondaryEmail_not?: InputMaybe<Scalars['String']>;
+  secondaryEmail_not_contains?: InputMaybe<Scalars['String']>;
+  secondaryEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
+  startDate_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate_gt?: InputMaybe<Scalars['DateTime']>;
+  startDate_gte?: InputMaybe<Scalars['DateTime']>;
+  startDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  startDate_lt?: InputMaybe<Scalars['DateTime']>;
+  startDate_lte?: InputMaybe<Scalars['DateTime']>;
+  startDate_not?: InputMaybe<Scalars['DateTime']>;
+  startDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type ContributingCohortsContentDataFragment = Pick<
+  ContributingCohorts,
+  'name'
+> & { sys: Pick<Sys, 'id'> };
+
+export type FetchContributingCohortsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    | Array<InputMaybe<ContributingCohortsOrder>>
+    | InputMaybe<ContributingCohortsOrder>
+  >;
+}>;
+
+export type FetchContributingCohortsQuery = {
+  contributingCohortsCollection?: Maybe<
+    Pick<ContributingCohortsCollection, 'total'> & {
+      items: Array<
+        Maybe<Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }>
+      >;
+    }
+  >;
 };
 
 export type NewsContentDataFragment = Pick<
@@ -1733,19 +3686,32 @@ export type PageContentDataFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ContributingCohorts' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ContributingCohortsMembership' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Resources' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupMembership' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupNetwork' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
             >
           >;
         };
@@ -1781,10 +3747,16 @@ export type FetchPagesQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'ContributingCohorts' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
@@ -1793,9 +3765,30 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'Migration' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Resources' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupNetwork' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                       >
                     >;
                   };
@@ -1823,6 +3816,35 @@ export type FetchPagesQuery = {
   >;
 };
 
+export const ContributingCohortsContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ContributingCohortsContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ContributingCohorts' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ContributingCohortsContentDataFragment, unknown>;
 export const NewsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -2023,6 +4045,106 @@ export const PageContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageContentDataFragment, unknown>;
+export const FetchContributingCohortsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchContributingCohorts' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'ContributingCohortsOrder' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contributingCohortsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ContributingCohortsContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ContributingCohortsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchContributingCohortsQuery,
+  FetchContributingCohortsQueryVariables
+>;
 export const FetchNewsByIdDocument = {
   kind: 'Document',
   definitions: [

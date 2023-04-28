@@ -67,7 +67,7 @@ describe('createMailTo', () => {
 describe('mailToFeedback', () => {
   it('creates default mail', () => {
     expect(mailToFeedback()).toMatchInlineSnapshot(
-      `"mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Hub+Feedback"`,
+      `"mailto:techsupport@asap.science?subject=ASAP%20Hub%3A%20Hub%20Feedback"`,
     );
   });
 
@@ -83,7 +83,7 @@ describe('mailToFeedback', () => {
 describe('mailToGrants', () => {
   it('creates default mail', () => {
     expect(mailToGrants()).toMatchInlineSnapshot(
-      `"mailto:grants@parkinsonsroadmap.org?subject=ASAP+Hub%3A+Grant+support"`,
+      `"mailto:grants@parkinsonsroadmap.org?subject=ASAP%20Hub%3A%20Grant%20support"`,
     );
   });
 
@@ -99,7 +99,7 @@ describe('mailToGrants', () => {
 describe('mailToSupport', () => {
   it('creates default mail', () => {
     expect(mailToSupport()).toMatchInlineSnapshot(
-      `"mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support"`,
+      `"mailto:techsupport@asap.science?subject=ASAP%20Hub%3A%20Tech%20support"`,
     );
   });
 

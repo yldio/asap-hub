@@ -270,7 +270,12 @@ yarn contentful:migration:dryrun:crn
 yarn contentful:migration:dryrun:gp2
 ```
 
-Then repeat the command without `--dry-run` if all looks good.
+If all looks good, repeat with the commands.
+
+```sh
+yarn contentful:migration:run:crn
+yarn contentful:migration:run:gp2
+```
 
 There are also convenience methods for this:
 

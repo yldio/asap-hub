@@ -484,7 +484,12 @@ const serverlessConfig: AWS = {
               },
             ],
           },
-          AccessControl: 'PublicRead',
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+            BlockPublicAcls: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -510,7 +515,12 @@ const serverlessConfig: AWS = {
               },
             ],
           },
-          AccessControl: 'PublicRead',
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+            BlockPublicAcls: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -535,7 +545,12 @@ const serverlessConfig: AWS = {
               },
             ],
           },
-          AccessControl: 'PublicRead',
+          PublicAccessBlockConfiguration: {
+            BlockPublicPolicy: false,
+            BlockPublicAcls: false,
+            IgnorePublicAcls: false,
+            RestrictPublicBuckets: false,
+          },
           CorsConfiguration: {
             CorsRules: [
               {
@@ -565,6 +580,12 @@ const serverlessConfig: AWS = {
                   ],
                 },
               },
+              {
+                Action: ['s3:ListBucket'],
+                Effect: 'Allow',
+                Principal: '*',
+                Resource: { 'Fn::GetAtt': ['FrontendBucket', 'Arn'] },
+              },
             ],
           },
         },
@@ -586,6 +607,12 @@ const serverlessConfig: AWS = {
                   ],
                 },
               },
+              {
+                Action: ['s3:ListBucket'],
+                Effect: 'Allow',
+                Principal: '*',
+                Resource: { 'Fn::GetAtt': ['AuthFrontendBucket', 'Arn'] },
+              },
             ],
           },
         },
@@ -606,6 +633,12 @@ const serverlessConfig: AWS = {
                     [{ 'Fn::GetAtt': ['MessagesStaticBucket', 'Arn'] }, '/*'],
                   ],
                 },
+              },
+              {
+                Action: ['s3:ListBucket'],
+                Effect: 'Allow',
+                Principal: '*',
+                Resource: { 'Fn::GetAtt': ['MessagesStaticBucket', 'Arn'] },
               },
             ],
           },

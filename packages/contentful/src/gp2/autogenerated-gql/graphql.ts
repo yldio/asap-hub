@@ -214,6 +214,146 @@ export enum AssetOrder {
   WidthDesc = 'width_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type Calendars = Entry & {
+  color?: Maybe<Scalars['String']>;
+  contentfulMetadata: ContentfulMetadata;
+  expirationDate?: Maybe<Scalars['Float']>;
+  googleCalendarId?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<CalendarsLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  resourceId?: Maybe<Scalars['String']>;
+  syncToken?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsColorArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsExpirationDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsGoogleCalendarIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsResourceIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
+export type CalendarsSyncTokenArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type CalendarsCollection = {
+  items: Array<Maybe<Calendars>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type CalendarsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CalendarsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CalendarsFilter>>>;
+  color?: InputMaybe<Scalars['String']>;
+  color_contains?: InputMaybe<Scalars['String']>;
+  color_exists?: InputMaybe<Scalars['Boolean']>;
+  color_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  color_not?: InputMaybe<Scalars['String']>;
+  color_not_contains?: InputMaybe<Scalars['String']>;
+  color_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  expirationDate?: InputMaybe<Scalars['Float']>;
+  expirationDate_exists?: InputMaybe<Scalars['Boolean']>;
+  expirationDate_gt?: InputMaybe<Scalars['Float']>;
+  expirationDate_gte?: InputMaybe<Scalars['Float']>;
+  expirationDate_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  expirationDate_lt?: InputMaybe<Scalars['Float']>;
+  expirationDate_lte?: InputMaybe<Scalars['Float']>;
+  expirationDate_not?: InputMaybe<Scalars['Float']>;
+  expirationDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  googleCalendarId?: InputMaybe<Scalars['String']>;
+  googleCalendarId_contains?: InputMaybe<Scalars['String']>;
+  googleCalendarId_exists?: InputMaybe<Scalars['Boolean']>;
+  googleCalendarId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleCalendarId_not?: InputMaybe<Scalars['String']>;
+  googleCalendarId_not_contains?: InputMaybe<Scalars['String']>;
+  googleCalendarId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceId?: InputMaybe<Scalars['String']>;
+  resourceId_contains?: InputMaybe<Scalars['String']>;
+  resourceId_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceId_not?: InputMaybe<Scalars['String']>;
+  resourceId_not_contains?: InputMaybe<Scalars['String']>;
+  resourceId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  syncToken?: InputMaybe<Scalars['String']>;
+  syncToken_contains?: InputMaybe<Scalars['String']>;
+  syncToken_exists?: InputMaybe<Scalars['Boolean']>;
+  syncToken_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  syncToken_not?: InputMaybe<Scalars['String']>;
+  syncToken_not_contains?: InputMaybe<Scalars['String']>;
+  syncToken_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type CalendarsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type CalendarsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum CalendarsOrder {
+  ColorAsc = 'color_ASC',
+  ColorDesc = 'color_DESC',
+  ExpirationDateAsc = 'expirationDate_ASC',
+  ExpirationDateDesc = 'expirationDate_DESC',
+  GoogleCalendarIdAsc = 'googleCalendarId_ASC',
+  GoogleCalendarIdDesc = 'googleCalendarId_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  ResourceIdAsc = 'resourceId_ASC',
+  ResourceIdDesc = 'resourceId_DESC',
+  SyncTokenAsc = 'syncToken_ASC',
+  SyncTokenDesc = 'syncToken_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ContentfulMetadata = {
   tags: Array<Maybe<ContentfulTag>>;
 };
@@ -427,6 +567,84 @@ export type EntryFilter = {
 };
 
 export enum EntryOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
+export type ExternalUsers = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<ExternalUsersLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  orcid?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
+export type ExternalUsersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
+export type ExternalUsersNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
+export type ExternalUsersOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ExternalUsersCollection = {
+  items: Array<Maybe<ExternalUsers>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ExternalUsersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ExternalUsersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ExternalUsersFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ExternalUsersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ExternalUsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ExternalUsersOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -989,11 +1207,15 @@ export type PagesTextLinks = {
 export type Query = {
   asset?: Maybe<Asset>;
   assetCollection?: Maybe<AssetCollection>;
+  calendars?: Maybe<Calendars>;
+  calendarsCollection?: Maybe<CalendarsCollection>;
   contributingCohorts?: Maybe<ContributingCohorts>;
   contributingCohortsCollection?: Maybe<ContributingCohortsCollection>;
   contributingCohortsMembership?: Maybe<ContributingCohortsMembership>;
   contributingCohortsMembershipCollection?: Maybe<ContributingCohortsMembershipCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  externalUsers?: Maybe<ExternalUsers>;
+  externalUsersCollection?: Maybe<ExternalUsersCollection>;
   media?: Maybe<Media>;
   mediaCollection?: Maybe<MediaCollection>;
   migration?: Maybe<Migration>;
@@ -1019,6 +1241,21 @@ export type QueryAssetCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<AssetFilter>;
+};
+
+export type QueryCalendarsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryCalendarsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<CalendarsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<CalendarsFilter>;
 };
 
 export type QueryContributingCohortsArgs = {
@@ -1058,6 +1295,21 @@ export type QueryEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EntryFilter>;
+};
+
+export type QueryExternalUsersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryExternalUsersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ExternalUsersOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ExternalUsersFilter>;
 };
 
 export type QueryMediaArgs = {
@@ -1757,12 +2009,14 @@ export type PageContentDataFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ContributingCohorts' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ContributingCohortsMembership' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -1805,10 +2059,16 @@ export type FetchPagesQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'ContributingCohorts' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {

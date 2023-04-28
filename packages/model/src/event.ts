@@ -67,12 +67,13 @@ export type EventCreateDataObject = Pick<
   | 'endDateTimeZone'
   | 'status'
   | 'tags'
-  | 'meetingLink'
   | 'hideMeetingLink'
 > & {
   googleId: string;
   calendar: string;
   hidden: boolean;
+
+  // this is used only for integration tests
   speakers?: {
     user: string[];
     team: string[];

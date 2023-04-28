@@ -1,4 +1,5 @@
 export * from './calendar';
+export * from './event';
 export * from './external-authors';
 export * from './group';
 export * from './news';

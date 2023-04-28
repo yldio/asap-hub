@@ -432,6 +432,7 @@ input ExternalUsersFilter {
 
 type ExternalUsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
 }
 
 enum ExternalUsersOrder {
@@ -842,6 +843,159 @@ enum NewsOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs)"""
+type Outputs implements Entry {
+  addedDate(locale: String): DateTime
+  adminNotes(locale: String): String
+  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsAuthorsCollection
+  contentfulMetadata: ContentfulMetadata!
+  createdBy(locale: String, preview: Boolean): Users
+  documentType(locale: String): String
+  lastUpdatedPartial(locale: String): DateTime
+  link(locale: String): String
+  linkedFrom(allowedLocales: [String]): OutputsLinkingCollections
+  publishDate(locale: String): DateTime
+  relatedEntity(locale: String, preview: Boolean): OutputsRelatedEntity
+  subtype(locale: String): String
+  sys: Sys!
+  title(locale: String): String
+  type(locale: String): String
+  updatedBy(locale: String, preview: Boolean): Users
+}
+
+type OutputsAuthorsCollection {
+  items: [OutputsAuthorsItem]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+union OutputsAuthorsItem = ExternalUsers | Users
+
+type OutputsCollection {
+  items: [Outputs]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input OutputsFilter {
+  AND: [OutputsFilter]
+  OR: [OutputsFilter]
+  addedDate: DateTime
+  addedDate_exists: Boolean
+  addedDate_gt: DateTime
+  addedDate_gte: DateTime
+  addedDate_in: [DateTime]
+  addedDate_lt: DateTime
+  addedDate_lte: DateTime
+  addedDate_not: DateTime
+  addedDate_not_in: [DateTime]
+  adminNotes: String
+  adminNotes_contains: String
+  adminNotes_exists: Boolean
+  adminNotes_in: [String]
+  adminNotes_not: String
+  adminNotes_not_contains: String
+  adminNotes_not_in: [String]
+  authorsCollection_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  createdBy: cfUsersNestedFilter
+  createdBy_exists: Boolean
+  documentType: String
+  documentType_contains: String
+  documentType_exists: Boolean
+  documentType_in: [String]
+  documentType_not: String
+  documentType_not_contains: String
+  documentType_not_in: [String]
+  lastUpdatedPartial: DateTime
+  lastUpdatedPartial_exists: Boolean
+  lastUpdatedPartial_gt: DateTime
+  lastUpdatedPartial_gte: DateTime
+  lastUpdatedPartial_in: [DateTime]
+  lastUpdatedPartial_lt: DateTime
+  lastUpdatedPartial_lte: DateTime
+  lastUpdatedPartial_not: DateTime
+  lastUpdatedPartial_not_in: [DateTime]
+  link: String
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  publishDate: DateTime
+  publishDate_exists: Boolean
+  publishDate_gt: DateTime
+  publishDate_gte: DateTime
+  publishDate_in: [DateTime]
+  publishDate_lt: DateTime
+  publishDate_lte: DateTime
+  publishDate_not: DateTime
+  publishDate_not_in: [DateTime]
+  relatedEntity_exists: Boolean
+  subtype: String
+  subtype_contains: String
+  subtype_exists: Boolean
+  subtype_in: [String]
+  subtype_not: String
+  subtype_not_contains: String
+  subtype_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+  updatedBy: cfUsersNestedFilter
+  updatedBy_exists: Boolean
+}
+
+type OutputsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum OutputsOrder {
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+union OutputsRelatedEntity = Projects | WorkingGroups
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages)"""
 type Pages implements Entry {
   contentfulMetadata: ContentfulMetadata!
@@ -1120,6 +1274,7 @@ input ProjectsFilter {
 
 type ProjectsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
 }
 
 type ProjectsMembersCollection {
@@ -1195,6 +1350,8 @@ type Query {
   milestonesCollection(limit: Int = 100, locale: String, order: [MilestonesOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): MilestonesCollection
   news(id: String!, locale: String, preview: Boolean): News
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
+  outputs(id: String!, locale: String, preview: Boolean): Outputs
+  outputsCollection(limit: Int = 100, locale: String, order: [OutputsOrder], preview: Boolean, skip: Int = 0, where: OutputsFilter): OutputsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
   projectMembership(id: String!, locale: String, preview: Boolean): ProjectMembership
@@ -1566,6 +1723,7 @@ input UsersFilter {
 
 type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
   projectMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectMembershipCollection
   workingGroupMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupMembershipCollection
 }
@@ -1886,6 +2044,7 @@ input WorkingGroupsFilter {
 
 type WorkingGroupsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
   workingGroupNetworkCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkCollection
 }
 

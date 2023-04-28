@@ -10,7 +10,7 @@ import { Migration } from '@asap-hub/server-common';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class EnforceUrlFormat extends Migration {
-  isPatchingEnabled = false;
+  isPatchingEnabled = true;
 
   cleanupUrl = (url?: string) => {
     if (!url) {

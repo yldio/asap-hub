@@ -13,11 +13,14 @@ export const createMailTo = (
       .map((email) => email.split('@').map(encodeURIComponent).join('@'))
       .join(',')}`,
   );
+  const params = [
+    subject ? `subject=${encodeURIComponent(subject)}` : '',
+    body ? `body=${encodeURIComponent(body)}` : '',
+  ]
+    .filter(Boolean)
+    .join('&');
 
-  if (subject) mailTo.searchParams.set('subject', subject);
-  if (body) mailTo.searchParams.set('body', body);
-
-  return mailTo.toString();
+  return `${mailTo.toString()}${params ? `?${params}` : ''}`;
 };
 
 export const mailToFeedback = (overrides?: MailOptions): string =>

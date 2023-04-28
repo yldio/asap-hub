@@ -1661,6 +1661,30 @@ export type CfContributingCohortsNestedFilter = {
   sys?: InputMaybe<SysFilter>;
 };
 
+export type ContributingCohortsContentDataFragment = Pick<
+  ContributingCohorts,
+  'name'
+> & { sys: Pick<Sys, 'id'> };
+
+export type FetchContributingCohortsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    | Array<InputMaybe<ContributingCohortsOrder>>
+    | InputMaybe<ContributingCohortsOrder>
+  >;
+}>;
+
+export type FetchContributingCohortsQuery = {
+  contributingCohortsCollection?: Maybe<
+    Pick<ContributingCohortsCollection, 'total'> & {
+      items: Array<
+        Maybe<Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }>
+      >;
+    }
+  >;
+};
+
 export type NewsContentDataFragment = Pick<
   News,
   | 'title'
@@ -1823,6 +1847,35 @@ export type FetchPagesQuery = {
   >;
 };
 
+export const ContributingCohortsContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ContributingCohortsContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ContributingCohorts' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ContributingCohortsContentDataFragment, unknown>;
 export const NewsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -2023,6 +2076,106 @@ export const PageContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageContentDataFragment, unknown>;
+export const FetchContributingCohortsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchContributingCohorts' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'ContributingCohortsOrder' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contributingCohortsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ContributingCohortsContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ContributingCohortsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchContributingCohortsQuery,
+  FetchContributingCohortsQueryVariables
+>;
 export const FetchNewsByIdDocument = {
   kind: 'Document',
   definitions: [

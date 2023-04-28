@@ -76,6 +76,16 @@ describe('ContributingCohort data provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
   });
+
+  describe('Fetch-by-id method', () => {
+    test('Should throw as not implemented', async () => {
+      expect.assertions(1);
+      await expect(contributingCohortDataProvider.fetchById()).rejects.toThrow(
+        /Method not implemented/i,
+      );
+    });
+  });
+
   describe('Create', () => {
     afterEach(() => {
       expect(nock.isDone()).toBe(true);

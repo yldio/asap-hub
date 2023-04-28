@@ -228,6 +228,7 @@ export type FetchUsersFilter =
       hidden?: boolean;
       onboarded?: boolean;
       orcid?: string;
+      orcidLastSyncDate?: string;
     }
   | {
       labId?: string;
@@ -237,6 +238,7 @@ export type FetchUsersFilter =
       hidden?: never;
       onboarded?: never;
       orcid?: never;
+      orcidLastSyncDate?: string;
     }
   | {
       labId?: never;
@@ -246,6 +248,7 @@ export type FetchUsersFilter =
       hidden?: never;
       onboarded?: never;
       orcid?: never;
+      orcidLastSyncDate?: string;
     };
 
 export type FetchUsersOptions = Omit<FetchOptions<FetchUsersFilter>, 'search'>;

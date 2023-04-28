@@ -162,6 +162,7 @@ describe('POST /webhook/users/connections - success', () => {
       top: 1,
       skip: 0,
       filter: "data/connections/iv/code eq 'asapWelcomeCode'",
+      orderBy: 'data/firstName/iv,data/lastName/iv',
     });
     expect(nock.isDone()).toBe(true);
   });

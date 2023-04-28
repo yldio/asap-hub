@@ -705,6 +705,7 @@ describe('User data provider', () => {
           top: 12,
           skip: 2,
           filter: filterQuery,
+          orderBy: 'data/firstName/iv,data/lastName/iv',
         },
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
@@ -738,6 +739,7 @@ describe('User data provider', () => {
           top: 12,
           skip: 2,
           filter: filterQuery,
+          orderBy: 'data/firstName/iv,data/lastName/iv',
         },
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
@@ -765,6 +767,60 @@ describe('User data provider', () => {
           top: 1,
           skip: 0,
           filter: filterQuery,
+          orderBy: 'data/firstName/iv,data/lastName/iv',
+        },
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+    test('Should query with orcid filters and return the users', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: FetchUsersOptions = {
+        take: 1,
+        skip: 0,
+        filter: {
+          orcid: '-',
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      const filterQuery =
+        "data/onboarded/iv eq true and not(data/role/iv eq 'Hidden') and contains(data/orcid/iv,'-')";
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 1,
+          skip: 0,
+          filter: filterQuery,
+          orderBy: 'data/firstName/iv,data/lastName/iv',
+        },
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
+    test('Should query with orcidLastSyncDate filter and orderBy orcidLastSyncDate and return the users', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: FetchUsersOptions = {
+        take: 1,
+        skip: 0,
+        filter: {
+          orcidLastSyncDate: '2020-01-01T00:00:00.000Z',
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      const filterQuery =
+        "data/onboarded/iv eq true and not(data/role/iv eq 'Hidden') and data/orcidLastSyncDate/iv le '2020-01-01T00:00:00.000Z'";
+      expect(squidexGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 1,
+          skip: 0,
+          filter: filterQuery,
+          orderBy: 'data/orcidLastSyncDate/iv',
         },
       );
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });

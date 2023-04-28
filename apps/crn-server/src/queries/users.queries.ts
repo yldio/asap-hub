@@ -113,12 +113,12 @@ export const FETCH_USER = gql`
 `;
 
 export const FETCH_USERS = gql`
-  query FetchUsers($top: Int, $skip: Int, $filter: String) {
+  query FetchUsers($top: Int, $skip: Int, $filter: String, $orderBy: String) {
     queryUsersContentsWithTotal(
       top: $top
       skip: $skip
       filter: $filter
-      orderby: "data/firstName/iv,data/lastName/iv"
+      orderby: $orderBy
     ) {
       total
       items {

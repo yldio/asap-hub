@@ -683,7 +683,7 @@ __metadata:
     nock: 13.3.0
     node-dev: 6.7.0
     odata-query: 7.0.3
-    p-limit: 3.1.0
+    p-throttle: 4.1.1
     parse-data-url: 3.0.0
     pump: 3.0.0
     react-router-dom: 5.3.4
@@ -34533,7 +34533,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-throttle@npm:^4.1.1":
+"p-throttle@npm:4.1.1, p-throttle@npm:^4.1.1":
   version: 4.1.1
   resolution: "p-throttle@npm:4.1.1"
   checksum: fe8709f3c3b1da7c033479375c2c302e80c1a5d86449013afa7cd46d1dc210bc824a7e4a9d088e66d31987d00878c2b5491bb2fe76246d4d2fc9a1636f5f8298

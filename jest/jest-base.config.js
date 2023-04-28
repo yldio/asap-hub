@@ -8,6 +8,7 @@ const testPathIgnorePatterns = [
   '\\.e2e-test\\.(js|jsx|ts|tsx)$',
   '\\.integration-test\\.(js|jsx|ts|tsx)$',
   'gql/',
+  '\\.contentful-app-extensions\\.',
 ];
 
 module.exports = {
@@ -34,6 +35,7 @@ module.exports = {
     '<rootDir>/build(-cjs)?',
     '<rootDir>/coverage',
     `<rootDir>/packages/services-common/src/cms/`,
+    `/contentful-app-extensions/`,
   ],
   testPathIgnorePatterns,
 

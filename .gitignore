@@ -22,7 +22,7 @@ node_modules
 
 # production
 /apps/*/build*
-/packages/*/build*
+/packages/**/build*
 /apps/*/.webpack
 
 /.serverless*

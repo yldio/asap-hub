@@ -30,6 +30,7 @@ export const createGroupResponse = (
     id,
     active: true,
     createdDate: '2021-01-12T11:09:04.000Z',
+    contactEmails: ['test1@test.com', 'test2@test.com'],
     lastModifiedDate: '2021-01-12T11:10:04.000Z',
     name: `Group ${itemIndex + 1}`,
     tags: ['Tag'],

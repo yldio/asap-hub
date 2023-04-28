@@ -345,6 +345,7 @@ export const listGroupsResponse: ListGroupResponse = {
           role: 'Project Manager',
         },
       ],
+      contactEmails: [],
       calendars: [
         {
           id: 'hub@asap.science',
@@ -370,6 +371,7 @@ export const listGroupsResponse: ListGroupResponse = {
       },
       teams: [],
       leaders: [],
+      contactEmails: [],
       calendars: [
         {
           id: 'hub@asap.science',
@@ -509,6 +511,7 @@ export const getGroupDataObject = (): GroupDataObject => ({
       role: 'Project Manager',
     },
   ],
+  contactEmails: [],
   calendars: [
     {
       id: 'hub@asap.science',

@@ -58,6 +58,89 @@ describe('parseGraphQLWorkingGroup', () => {
       title: 'Working Group Title',
     });
   });
+
+  describe('point of contact', () => {
+    const leaderUserData = {
+      id: 'active-leader',
+      flatData: {
+        avatar: null,
+        firstName: 'foo',
+        lastName: 'test',
+        alumniSinceDate: undefined,
+        email: 'test@foo.com',
+      },
+    };
+    const leaderBaseData = {
+      role: 'Project Manager',
+      workstreamRole: 'role',
+      inactiveSinceDate: undefined,
+      user: [leaderUserData],
+    };
+
+    const inactiveLeader = {
+      ...leaderBaseData,
+      inactiveSinceDate: new Date().toISOString(),
+      user: [
+        {
+          ...leaderUserData,
+          id: 'inactive-leader',
+        },
+      ],
+    };
+
+    const alumniLeader = {
+      ...leaderBaseData,
+      user: [
+        {
+          ...leaderUserData,
+          id: 'alumni-leader',
+          flatData: {
+            ...leaderUserData.flatData,
+            alumniSinceDate: new Date().toISOString(),
+          },
+        },
+      ],
+    };
+
+    test('should be empty if product manager has inactiveSinceDate set', () => {
+      const workingGroupWithInactivePM = {
+        ...workingGroup,
+        flatData: {
+          ...workingGroup.flatData,
+          leaders: [inactiveLeader],
+        },
+      };
+      expect(
+        parseGraphQlWorkingGroup(workingGroupWithInactivePM).pointOfContact,
+      ).toBe(undefined);
+    });
+
+    test('should be empty if product manager is alumni', () => {
+      const workingGroupWithAlumniPM = {
+        ...workingGroup,
+        flatData: {
+          ...workingGroup.flatData,
+          leaders: [alumniLeader],
+        },
+      };
+      expect(
+        parseGraphQlWorkingGroup(workingGroupWithAlumniPM).pointOfContact,
+      ).toBe(undefined);
+    });
+    test('should be the first product manager that is still active', () => {
+      const workingGroupWithLeaders = {
+        ...workingGroup,
+        flatData: {
+          ...workingGroup.flatData,
+          leaders: [alumniLeader, inactiveLeader, leaderBaseData],
+        },
+      };
+      expect(
+        parseGraphQlWorkingGroup(workingGroupWithLeaders).pointOfContact?.user
+          .id,
+      ).toBe('active-leader');
+    });
+  });
 });
 
 describe('toWorkingGroupResponse', () => {

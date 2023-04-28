@@ -97,6 +97,7 @@ it('does not render a call to action button, when a PM is NOT defined on the gro
   const { queryByText } = render(
     <GroupProfileAbout
       {...props}
+      contactEmails={[]}
       leaders={[
         {
           user: {

@@ -74,6 +74,12 @@ export const parseGraphQLGroup = (
     name: item.flatData.name || '',
     tags: item.flatData.tags || [],
     description: item.flatData.description || '',
+    contactEmails: leaders
+      .filter(
+        ({ role, inactiveSinceDate, user: { alumniSinceDate } }) =>
+          role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
+      )
+      .map(({ user }) => user.email),
     tools,
     teams,
     leaders,

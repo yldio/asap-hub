@@ -32,6 +32,7 @@ import {
   Environment,
   Maybe,
 } from '@asap-hub/contentful';
+import retry from 'async-retry';
 import { isTeamRole } from '../../entities';
 import { UserDataProvider } from '../types';
 
@@ -128,7 +129,27 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-    await patchAndPublish(user, fields);
+    const result = await patchAndPublish(user, fields);
+    await this.waitForUpdated(id, result.sys.publishedVersion || Infinity);
+  }
+
+  private async waitForUpdated(id: string, version: number) {
+    return retry(
+      // eslint-disable-next-line consistent-return
+      async (bail) => {
+        const { users } = await this.contentfulClient.request<
+          FetchUserByIdQuery,
+          FetchUserByIdQueryVariables
+        >(FETCH_USER_BY_ID, { id });
+        if (!users) {
+          return bail(new Error('Not found'));
+        }
+        if ((users.sys.publishedVersion || 0) < version) {
+          throw new Error('Not synced');
+        }
+      },
+      { minTimeout: 100 },
+    );
   }
 }
 

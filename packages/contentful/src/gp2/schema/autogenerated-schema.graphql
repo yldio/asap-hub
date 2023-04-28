@@ -194,6 +194,8 @@ input CalendarsFilter {
 
 type CalendarsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum CalendarsOrder {
@@ -642,6 +644,84 @@ enum MigrationOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones)"""
+type Milestones implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  externalLink(locale: String): String
+  linkedFrom(allowedLocales: [String]): MilestonesLinkingCollections
+  status(locale: String): String
+  sys: Sys!
+  title(locale: String): String
+}
+
+type MilestonesCollection {
+  items: [Milestones]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input MilestonesFilter {
+  AND: [MilestonesFilter]
+  OR: [MilestonesFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  externalLink: String
+  externalLink_contains: String
+  externalLink_exists: Boolean
+  externalLink_in: [String]
+  externalLink_not: String
+  externalLink_not_contains: String
+  externalLink_not_in: [String]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type MilestonesLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum MilestonesOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 """Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
 type News implements Entry {
   articleCount(locale: String): Int
@@ -869,6 +949,229 @@ type PagesTextLinks {
   entries: PagesTextEntries!
 }
 
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership)"""
+type ProjectMembership implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ProjectMembershipLinkingCollections
+  role(locale: String): String
+  sys: Sys!
+  user(locale: String, preview: Boolean): Users
+}
+
+type ProjectMembershipCollection {
+  items: [ProjectMembership]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ProjectMembershipFilter {
+  AND: [ProjectMembershipFilter]
+  OR: [ProjectMembershipFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  user: cfUsersNestedFilter
+  user_exists: Boolean
+}
+
+type ProjectMembershipLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum ProjectMembershipOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects)"""
+type Projects implements Entry {
+  calendars(locale: String, preview: Boolean): Calendars
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  endDate(locale: String): DateTime
+  keywords(locale: String): [String]
+  leadEmail(locale: String): String
+  linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
+  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsMembersCollection
+  milestonesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsMilestonesCollection
+  opportunitiesLink(locale: String): String
+  pmEmail(locale: String): String
+  projectProposal(locale: String): String
+  resourcesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsResourcesCollection
+  startDate(locale: String): DateTime
+  status(locale: String): String
+  sys: Sys!
+  title(locale: String): String
+  traineeProject(locale: String): Boolean
+}
+
+type ProjectsCollection {
+  items: [Projects]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ProjectsFilter {
+  AND: [ProjectsFilter]
+  OR: [ProjectsFilter]
+  calendars: cfCalendarsNestedFilter
+  calendars_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  endDate: DateTime
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  keywords_contains_all: [String]
+  keywords_contains_none: [String]
+  keywords_contains_some: [String]
+  keywords_exists: Boolean
+  leadEmail: String
+  leadEmail_contains: String
+  leadEmail_exists: Boolean
+  leadEmail_in: [String]
+  leadEmail_not: String
+  leadEmail_not_contains: String
+  leadEmail_not_in: [String]
+  members: cfProjectMembershipNestedFilter
+  membersCollection_exists: Boolean
+  milestones: cfMilestonesNestedFilter
+  milestonesCollection_exists: Boolean
+  opportunitiesLink: String
+  opportunitiesLink_contains: String
+  opportunitiesLink_exists: Boolean
+  opportunitiesLink_in: [String]
+  opportunitiesLink_not: String
+  opportunitiesLink_not_contains: String
+  opportunitiesLink_not_in: [String]
+  pmEmail: String
+  pmEmail_contains: String
+  pmEmail_exists: Boolean
+  pmEmail_in: [String]
+  pmEmail_not: String
+  pmEmail_not_contains: String
+  pmEmail_not_in: [String]
+  projectProposal: String
+  projectProposal_contains: String
+  projectProposal_exists: Boolean
+  projectProposal_in: [String]
+  projectProposal_not: String
+  projectProposal_not_contains: String
+  projectProposal_not_in: [String]
+  resources: cfResourcesNestedFilter
+  resourcesCollection_exists: Boolean
+  startDate: DateTime
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  traineeProject: Boolean
+  traineeProject_exists: Boolean
+  traineeProject_not: Boolean
+}
+
+type ProjectsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+type ProjectsMembersCollection {
+  items: [ProjectMembership]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type ProjectsMilestonesCollection {
+  items: [Milestones]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ProjectsOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
+type ProjectsResourcesCollection {
+  items: [Resources]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
 """The 'Quality' type represents quality as whole numeric values between `1` and `100`."""
 scalar Quality
 
@@ -888,12 +1191,104 @@ type Query {
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
   migration(id: String!, locale: String, preview: Boolean): Migration
   migrationCollection(limit: Int = 100, locale: String, order: [MigrationOrder], preview: Boolean, skip: Int = 0, where: MigrationFilter): MigrationCollection
+  milestones(id: String!, locale: String, preview: Boolean): Milestones
+  milestonesCollection(limit: Int = 100, locale: String, order: [MilestonesOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): MilestonesCollection
   news(id: String!, locale: String, preview: Boolean): News
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
+  projectMembership(id: String!, locale: String, preview: Boolean): ProjectMembership
+  projectMembershipCollection(limit: Int = 100, locale: String, order: [ProjectMembershipOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectMembershipCollection
+  projects(id: String!, locale: String, preview: Boolean): Projects
+  projectsCollection(limit: Int = 100, locale: String, order: [ProjectsOrder], preview: Boolean, skip: Int = 0, where: ProjectsFilter): ProjectsCollection
+  resources(id: String!, locale: String, preview: Boolean): Resources
+  resourcesCollection(limit: Int = 100, locale: String, order: [ResourcesOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): ResourcesCollection
   users(id: String!, locale: String, preview: Boolean): Users
   usersCollection(limit: Int = 100, locale: String, order: [UsersOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): UsersCollection
+  workingGroupMembership(id: String!, locale: String, preview: Boolean): WorkingGroupMembership
+  workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupMembershipCollection
+  workingGroupNetwork(id: String!, locale: String, preview: Boolean): WorkingGroupNetwork
+  workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupNetworkFilter): WorkingGroupNetworkCollection
+  workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupsCollection
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources)"""
+type Resources implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  externalLink(locale: String): String
+  linkedFrom(allowedLocales: [String]): ResourcesLinkingCollections
+  sys: Sys!
+  title(locale: String): String
+  type(locale: String): String
+}
+
+type ResourcesCollection {
+  items: [Resources]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ResourcesFilter {
+  AND: [ResourcesFilter]
+  OR: [ResourcesFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  externalLink: String
+  externalLink_contains: String
+  externalLink_exists: Boolean
+  externalLink_in: [String]
+  externalLink_not: String
+  externalLink_not_contains: String
+  externalLink_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
+type ResourcesLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum ResourcesOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
 }
 
 type Sys {
@@ -1171,6 +1566,8 @@ input UsersFilter {
 
 type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectMembershipCollection
+  workingGroupMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupMembershipCollection
 }
 
 enum UsersOrder {
@@ -1224,6 +1621,379 @@ enum UsersOrder {
   twitter_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership)"""
+type WorkingGroupMembership implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): WorkingGroupMembershipLinkingCollections
+  role(locale: String): String
+  sys: Sys!
+  user(locale: String, preview: Boolean): Users
+}
+
+type WorkingGroupMembershipCollection {
+  items: [WorkingGroupMembership]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input WorkingGroupMembershipFilter {
+  AND: [WorkingGroupMembershipFilter]
+  OR: [WorkingGroupMembershipFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  user: cfUsersNestedFilter
+  user_exists: Boolean
+}
+
+type WorkingGroupMembershipLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum WorkingGroupMembershipOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork)"""
+type WorkingGroupNetwork implements Entry {
+  complexDiseaseCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkComplexDiseaseCollection
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): WorkingGroupNetworkLinkingCollections
+  monogenicCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkMonogenicCollection
+  operationalCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkOperationalCollection
+  supportCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkSupportCollection
+  sys: Sys!
+}
+
+type WorkingGroupNetworkCollection {
+  items: [WorkingGroupNetwork]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type WorkingGroupNetworkComplexDiseaseCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input WorkingGroupNetworkFilter {
+  AND: [WorkingGroupNetworkFilter]
+  OR: [WorkingGroupNetworkFilter]
+  complexDisease: cfWorkingGroupsNestedFilter
+  complexDiseaseCollection_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  monogenic: cfWorkingGroupsNestedFilter
+  monogenicCollection_exists: Boolean
+  operational: cfWorkingGroupsNestedFilter
+  operationalCollection_exists: Boolean
+  support: cfWorkingGroupsNestedFilter
+  supportCollection_exists: Boolean
+  sys: SysFilter
+}
+
+type WorkingGroupNetworkLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+type WorkingGroupNetworkMonogenicCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type WorkingGroupNetworkOperationalCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum WorkingGroupNetworkOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type WorkingGroupNetworkSupportCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)"""
+type WorkingGroups implements Entry {
+  calendars(locale: String, preview: Boolean): Calendars
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  endDate(locale: String): DateTime
+  keywords(locale: String): [String]
+  leadEmail(locale: String): String
+  leadingMembers(locale: String): String
+  linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
+  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsMembersCollection
+  milestonesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsMilestonesCollection
+  pmEmail(locale: String): String
+  primaryEmail(locale: String): String
+  projectProposal(locale: String): String
+  resourcesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsResourcesCollection
+  secondaryEmail(locale: String): String
+  shortDescription(locale: String): String
+  startDate(locale: String): DateTime
+  status(locale: String): String
+  sys: Sys!
+  title(locale: String): String
+}
+
+type WorkingGroupsCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input WorkingGroupsFilter {
+  AND: [WorkingGroupsFilter]
+  OR: [WorkingGroupsFilter]
+  calendars: cfCalendarsNestedFilter
+  calendars_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  endDate: DateTime
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  keywords_contains_all: [String]
+  keywords_contains_none: [String]
+  keywords_contains_some: [String]
+  keywords_exists: Boolean
+  leadEmail: String
+  leadEmail_contains: String
+  leadEmail_exists: Boolean
+  leadEmail_in: [String]
+  leadEmail_not: String
+  leadEmail_not_contains: String
+  leadEmail_not_in: [String]
+  leadingMembers: String
+  leadingMembers_contains: String
+  leadingMembers_exists: Boolean
+  leadingMembers_in: [String]
+  leadingMembers_not: String
+  leadingMembers_not_contains: String
+  leadingMembers_not_in: [String]
+  members: cfProjectMembershipNestedFilter
+  membersCollection_exists: Boolean
+  milestones: cfMilestonesNestedFilter
+  milestonesCollection_exists: Boolean
+  pmEmail: String
+  pmEmail_contains: String
+  pmEmail_exists: Boolean
+  pmEmail_in: [String]
+  pmEmail_not: String
+  pmEmail_not_contains: String
+  pmEmail_not_in: [String]
+  primaryEmail: String
+  primaryEmail_contains: String
+  primaryEmail_exists: Boolean
+  primaryEmail_in: [String]
+  primaryEmail_not: String
+  primaryEmail_not_contains: String
+  primaryEmail_not_in: [String]
+  projectProposal: String
+  projectProposal_contains: String
+  projectProposal_exists: Boolean
+  projectProposal_in: [String]
+  projectProposal_not: String
+  projectProposal_not_contains: String
+  projectProposal_not_in: [String]
+  resources: cfResourcesNestedFilter
+  resourcesCollection_exists: Boolean
+  secondaryEmail: String
+  secondaryEmail_contains: String
+  secondaryEmail_exists: Boolean
+  secondaryEmail_in: [String]
+  secondaryEmail_not: String
+  secondaryEmail_not_contains: String
+  secondaryEmail_not_in: [String]
+  shortDescription: String
+  shortDescription_contains: String
+  shortDescription_exists: Boolean
+  shortDescription_in: [String]
+  shortDescription_not: String
+  shortDescription_not_contains: String
+  shortDescription_not_in: [String]
+  startDate: DateTime
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type WorkingGroupsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  workingGroupNetworkCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkCollection
+}
+
+type WorkingGroupsMembersCollection {
+  items: [ProjectMembership]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type WorkingGroupsMilestonesCollection {
+  items: [Milestones]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum WorkingGroupsOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  leadingMembers_ASC
+  leadingMembers_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+type WorkingGroupsResourcesCollection {
+  items: [Resources]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input cfCalendarsNestedFilter {
+  AND: [cfCalendarsNestedFilter]
+  OR: [cfCalendarsNestedFilter]
+  color: String
+  color_contains: String
+  color_exists: Boolean
+  color_in: [String]
+  color_not: String
+  color_not_contains: String
+  color_not_in: [String]
+  contentfulMetadata: ContentfulMetadataFilter
+  expirationDate: Float
+  expirationDate_exists: Boolean
+  expirationDate_gt: Float
+  expirationDate_gte: Float
+  expirationDate_in: [Float]
+  expirationDate_lt: Float
+  expirationDate_lte: Float
+  expirationDate_not: Float
+  expirationDate_not_in: [Float]
+  googleCalendarId: String
+  googleCalendarId_contains: String
+  googleCalendarId_exists: Boolean
+  googleCalendarId_in: [String]
+  googleCalendarId_not: String
+  googleCalendarId_not_contains: String
+  googleCalendarId_not_in: [String]
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  resourceId: String
+  resourceId_contains: String
+  resourceId_exists: Boolean
+  resourceId_in: [String]
+  resourceId_not: String
+  resourceId_not_contains: String
+  resourceId_not_in: [String]
+  syncToken: String
+  syncToken_contains: String
+  syncToken_exists: Boolean
+  syncToken_in: [String]
+  syncToken_not: String
+  syncToken_not_contains: String
+  syncToken_not_in: [String]
+  sys: SysFilter
+}
+
 input cfContributingCohortsMembershipNestedFilter {
   AND: [cfContributingCohortsMembershipNestedFilter]
   OR: [cfContributingCohortsMembershipNestedFilter]
@@ -1258,4 +2028,369 @@ input cfContributingCohortsNestedFilter {
   name_not_contains: String
   name_not_in: [String]
   sys: SysFilter
+}
+
+input cfMilestonesNestedFilter {
+  AND: [cfMilestonesNestedFilter]
+  OR: [cfMilestonesNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  externalLink: String
+  externalLink_contains: String
+  externalLink_exists: Boolean
+  externalLink_in: [String]
+  externalLink_not: String
+  externalLink_not_contains: String
+  externalLink_not_in: [String]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+input cfProjectMembershipNestedFilter {
+  AND: [cfProjectMembershipNestedFilter]
+  OR: [cfProjectMembershipNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  user_exists: Boolean
+}
+
+input cfResourcesNestedFilter {
+  AND: [cfResourcesNestedFilter]
+  OR: [cfResourcesNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  externalLink: String
+  externalLink_contains: String
+  externalLink_exists: Boolean
+  externalLink_in: [String]
+  externalLink_not: String
+  externalLink_not_contains: String
+  externalLink_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
+input cfUsersNestedFilter {
+  AND: [cfUsersNestedFilter]
+  OR: [cfUsersNestedFilter]
+  activatedDate: DateTime
+  activatedDate_exists: Boolean
+  activatedDate_gt: DateTime
+  activatedDate_gte: DateTime
+  activatedDate_in: [DateTime]
+  activatedDate_lt: DateTime
+  activatedDate_lte: DateTime
+  activatedDate_not: DateTime
+  activatedDate_not_in: [DateTime]
+  alternativeEmail: String
+  alternativeEmail_contains: String
+  alternativeEmail_exists: Boolean
+  alternativeEmail_in: [String]
+  alternativeEmail_not: String
+  alternativeEmail_not_contains: String
+  alternativeEmail_not_in: [String]
+  avatar_exists: Boolean
+  biography: String
+  biography_contains: String
+  biography_exists: Boolean
+  biography_in: [String]
+  biography_not: String
+  biography_not_contains: String
+  biography_not_in: [String]
+  blog: String
+  blog_contains: String
+  blog_exists: Boolean
+  blog_in: [String]
+  blog_not: String
+  blog_not_contains: String
+  blog_not_in: [String]
+  city: String
+  city_contains: String
+  city_exists: Boolean
+  city_in: [String]
+  city_not: String
+  city_not_contains: String
+  city_not_in: [String]
+  connections_contains_all: [String]
+  connections_contains_none: [String]
+  connections_contains_some: [String]
+  connections_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  contributingCohortsCollection_exists: Boolean
+  country: String
+  country_contains: String
+  country_exists: Boolean
+  country_in: [String]
+  country_not: String
+  country_not_contains: String
+  country_not_in: [String]
+  degree_contains_all: [String]
+  degree_contains_none: [String]
+  degree_contains_some: [String]
+  degree_exists: Boolean
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
+  firstName: String
+  firstName_contains: String
+  firstName_exists: Boolean
+  firstName_in: [String]
+  firstName_not: String
+  firstName_not_contains: String
+  firstName_not_in: [String]
+  fundingStreams: String
+  fundingStreams_contains: String
+  fundingStreams_exists: Boolean
+  fundingStreams_in: [String]
+  fundingStreams_not: String
+  fundingStreams_not_contains: String
+  fundingStreams_not_in: [String]
+  github: String
+  github_contains: String
+  github_exists: Boolean
+  github_in: [String]
+  github_not: String
+  github_not_contains: String
+  github_not_in: [String]
+  googleScholar: String
+  googleScholar_contains: String
+  googleScholar_exists: Boolean
+  googleScholar_in: [String]
+  googleScholar_not: String
+  googleScholar_not_contains: String
+  googleScholar_not_in: [String]
+  keywords_contains_all: [String]
+  keywords_contains_none: [String]
+  keywords_contains_some: [String]
+  keywords_exists: Boolean
+  lastName: String
+  lastName_contains: String
+  lastName_exists: Boolean
+  lastName_in: [String]
+  lastName_not: String
+  lastName_not_contains: String
+  lastName_not_in: [String]
+  linkedIn: String
+  linkedIn_contains: String
+  linkedIn_exists: Boolean
+  linkedIn_in: [String]
+  linkedIn_not: String
+  linkedIn_not_contains: String
+  linkedIn_not_in: [String]
+  onboarded: Boolean
+  onboarded_exists: Boolean
+  onboarded_not: Boolean
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  questions_contains_all: [String]
+  questions_contains_none: [String]
+  questions_contains_some: [String]
+  questions_exists: Boolean
+  region: String
+  region_contains: String
+  region_exists: Boolean
+  region_in: [String]
+  region_not: String
+  region_not_contains: String
+  region_not_in: [String]
+  researchGate: String
+  researchGate_contains: String
+  researchGate_exists: Boolean
+  researchGate_in: [String]
+  researchGate_not: String
+  researchGate_not_contains: String
+  researchGate_not_in: [String]
+  researcherId: String
+  researcherId_contains: String
+  researcherId_exists: Boolean
+  researcherId_in: [String]
+  researcherId_not: String
+  researcherId_not_contains: String
+  researcherId_not_in: [String]
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  telephoneCountryCode: String
+  telephoneCountryCode_contains: String
+  telephoneCountryCode_exists: Boolean
+  telephoneCountryCode_in: [String]
+  telephoneCountryCode_not: String
+  telephoneCountryCode_not_contains: String
+  telephoneCountryCode_not_in: [String]
+  telephoneNumber: String
+  telephoneNumber_contains: String
+  telephoneNumber_exists: Boolean
+  telephoneNumber_in: [String]
+  telephoneNumber_not: String
+  telephoneNumber_not_contains: String
+  telephoneNumber_not_in: [String]
+  twitter: String
+  twitter_contains: String
+  twitter_exists: Boolean
+  twitter_in: [String]
+  twitter_not: String
+  twitter_not_contains: String
+  twitter_not_in: [String]
+}
+
+input cfWorkingGroupsNestedFilter {
+  AND: [cfWorkingGroupsNestedFilter]
+  OR: [cfWorkingGroupsNestedFilter]
+  calendars_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  endDate: DateTime
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  keywords_contains_all: [String]
+  keywords_contains_none: [String]
+  keywords_contains_some: [String]
+  keywords_exists: Boolean
+  leadEmail: String
+  leadEmail_contains: String
+  leadEmail_exists: Boolean
+  leadEmail_in: [String]
+  leadEmail_not: String
+  leadEmail_not_contains: String
+  leadEmail_not_in: [String]
+  leadingMembers: String
+  leadingMembers_contains: String
+  leadingMembers_exists: Boolean
+  leadingMembers_in: [String]
+  leadingMembers_not: String
+  leadingMembers_not_contains: String
+  leadingMembers_not_in: [String]
+  membersCollection_exists: Boolean
+  milestonesCollection_exists: Boolean
+  pmEmail: String
+  pmEmail_contains: String
+  pmEmail_exists: Boolean
+  pmEmail_in: [String]
+  pmEmail_not: String
+  pmEmail_not_contains: String
+  pmEmail_not_in: [String]
+  primaryEmail: String
+  primaryEmail_contains: String
+  primaryEmail_exists: Boolean
+  primaryEmail_in: [String]
+  primaryEmail_not: String
+  primaryEmail_not_contains: String
+  primaryEmail_not_in: [String]
+  projectProposal: String
+  projectProposal_contains: String
+  projectProposal_exists: Boolean
+  projectProposal_in: [String]
+  projectProposal_not: String
+  projectProposal_not_contains: String
+  projectProposal_not_in: [String]
+  resourcesCollection_exists: Boolean
+  secondaryEmail: String
+  secondaryEmail_contains: String
+  secondaryEmail_exists: Boolean
+  secondaryEmail_in: [String]
+  secondaryEmail_not: String
+  secondaryEmail_not_contains: String
+  secondaryEmail_not_in: [String]
+  shortDescription: String
+  shortDescription_contains: String
+  shortDescription_exists: Boolean
+  shortDescription_in: [String]
+  shortDescription_not: String
+  shortDescription_not_contains: String
+  shortDescription_not_in: [String]
+  startDate: DateTime
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
 }

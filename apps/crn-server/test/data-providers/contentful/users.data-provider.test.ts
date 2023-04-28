@@ -22,7 +22,11 @@ import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
-  patchAndPublish: jest.fn().mockResolvedValue(undefined),
+  patchAndPublish: jest.fn().mockResolvedValue({
+    sys: {
+      publishedVersion: 2,
+    },
+  }),
 }));
 
 describe('User data provider', () => {
@@ -529,11 +533,12 @@ describe('User data provider', () => {
       lastName: 'User',
     });
 
+    const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+      typeof patchAndPublish
+    >;
+
     beforeEach(() => {
       environmentMock.getEntry.mockResolvedValueOnce(entry);
-      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
-        typeof patchAndPublish
-      >;
       mockPatchAndPublish.mockResolvedValue({
         sys: {
           publishedVersion: 2,
@@ -646,7 +651,19 @@ describe('User data provider', () => {
         userDataProvider.update('123', {
           firstName: 'Colin',
         }),
-      ).rejects.toThrow();
+      ).rejects.toThrow('Not found');
+    });
+
+    test('throws if no target version number is defined', async () => {
+      mockPatchAndPublish.mockResolvedValue({
+        sys: {},
+      } as Entry);
+
+      expect(async () =>
+        userDataProvider.update('123', {
+          firstName: 'Colin',
+        }),
+      ).rejects.toThrow('Version number must be defined');
     });
   });
 

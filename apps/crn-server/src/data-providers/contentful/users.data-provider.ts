@@ -130,10 +130,13 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
     const result = await patchAndPublish(user, fields);
-    await this.waitForUpdated(id, result.sys.publishedVersion || Infinity);
+    await this.waitForUpdated(id, result.sys.publishedVersion);
   }
 
-  private async waitForUpdated(id: string, version: number) {
+  private async waitForUpdated(id: string, version: number | undefined) {
+    if (version === undefined) {
+      throw new Error('Version number must be defined');
+    }
     return retry(
       // eslint-disable-next-line consistent-return
       async (bail) => {
@@ -148,7 +151,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
           throw new Error('Not synced');
         }
       },
-      { minTimeout: 100 },
+      { minTimeout: 100, retries: 10 },
     );
   }
 }

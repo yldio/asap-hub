@@ -19,4 +19,71 @@ describe('parseGraphQLGroup', () => {
       'Invalid group role on leaders : invalid role',
     );
   });
+  test('contactEmails should be generated from proper leaders', () => {
+    const baseLeader = {
+      ...group.flatData.leaders![0]!,
+      role: 'Project Manager',
+      inactiveSinceDate: null,
+      user: [
+        {
+          ...group.flatData.leaders![0]!.user![0]!,
+          flatData: {
+            ...group.flatData.leaders![0]!.user![0]!.flatData,
+            alumniSinceDate: null,
+            email: 'leader1@test.com',
+          },
+        },
+      ],
+    };
+    const baseUser = {
+      ...baseLeader.user[0]!,
+    };
+    const leaders = [
+      {
+        ...baseLeader,
+        user: [
+          {
+            ...baseUser,
+            flatData: {
+              ...baseUser.flatData,
+              email: 'leader1@test.com',
+            },
+          },
+        ],
+      },
+      {
+        ...baseLeader,
+        inactiveSinceDate: new Date().toISOString(),
+        user: [
+          {
+            ...baseUser,
+            flatData: {
+              ...baseUser.flatData,
+              email: 'leader2@test.com',
+            },
+          },
+        ],
+      },
+      {
+        ...baseLeader,
+        user: [
+          {
+            ...baseUser,
+            flatData: {
+              ...baseUser.flatData,
+              email: 'leader3@test.com',
+            },
+          },
+        ],
+      },
+    ];
+    const groupWithLeaders = {
+      ...group,
+      flatData: { ...group.flatData, leaders: leaders },
+    };
+    expect(parseGraphQLGroup(groupWithLeaders).contactEmails).toStrictEqual([
+      'leader1@test.com',
+      'leader3@test.com',
+    ]);
+  });
 });

@@ -22,6 +22,19 @@ export default class RemoveWorkingGroupsFromNews extends Migration {
     );
   };
   down = async (): Promise<void> => {
-    // this is not needed
+    await applyToAllItemsInCollection<RestResearchOutput>(
+      'research-outputs',
+      async (researchOutput, squidexClient) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        // eslint-disable-next-line no-console
+        console.log(researchOutput);
+        if (researchOutput.status === 'Draft') {
+          await squidexClient.patch(researchOutput.id, {
+            addedDate: { iv: researchOutput.created },
+          });
+        }
+      },
+    );
   };
 }

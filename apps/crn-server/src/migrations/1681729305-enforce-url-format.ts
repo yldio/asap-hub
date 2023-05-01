@@ -10,8 +10,6 @@ import { Migration } from '@asap-hub/server-common';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class EnforceUrlFormat extends Migration {
-  isPatchingEnabled = true;
-
   cleanupUrl = (url?: string) => {
     if (!url) {
       return null;
@@ -40,18 +38,11 @@ export default class EnforceUrlFormat extends Migration {
           console.log(
             `Event ${event.id} does not have a valid meeting link. Adding https:// prefix.`,
           );
-          if (this.isPatchingEnabled) {
-            await squidexClient.patch(event.id, {
-              meetingLink: {
-                iv: `https://${cleanedUrl}`,
-              },
-            });
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(
-              `Before: ${event.data.meetingLink?.iv}\nAfter: https://${cleanedUrl}`,
-            );
-          }
+          await squidexClient.patch(event.id, {
+            meetingLink: {
+              iv: `https://${cleanedUrl}`,
+            },
+          });
         }
       },
     );
@@ -69,18 +60,11 @@ export default class EnforceUrlFormat extends Migration {
           console.log(
             `Page ${page.id} does not have a valid link. Adding https:// prefix.`,
           );
-          if (this.isPatchingEnabled) {
-            await squidexClient.patch(page.id, {
-              link: {
-                iv: `https://${cleanedUrl}`,
-              },
-            });
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(
-              `Before: ${page.data.link?.iv}\nAfter: https://${cleanedUrl}`,
-            );
-          }
+          await squidexClient.patch(page.id, {
+            link: {
+              iv: `https://${cleanedUrl}`,
+            },
+          });
         }
       },
     );
@@ -98,18 +82,11 @@ export default class EnforceUrlFormat extends Migration {
           console.log(
             `News ${news.id} does not have a valid link. Adding https:// prefix.`,
           );
-          if (this.isPatchingEnabled) {
-            await squidexClient.patch(news.id, {
-              link: {
-                iv: `https://${cleanedUrl}`,
-              },
-            });
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(
-              `Before: ${news.data.link?.iv}\nAfter: https://${cleanedUrl}`,
-            );
-          }
+          await squidexClient.patch(news.id, {
+            link: {
+              iv: `https://${cleanedUrl}`,
+            },
+          });
         }
       },
     );
@@ -141,22 +118,11 @@ export default class EnforceUrlFormat extends Migration {
             console.log(
               `Team ${team.id} does not have a valid tool link(s). Adding https:// prefix.`,
             );
-            if (this.isPatchingEnabled) {
-              await squidexClient.patch(team.id, {
-                tools: {
-                  iv: tools,
-                },
-              });
-            } else {
-              // eslint-disable-next-line no-console
-              console.log(
-                `Before: ${JSON.stringify(
-                  team.data.tools.iv,
-                  null,
-                  2,
-                )}\nAfter: ${JSON.stringify(tools, null, 2)}`,
-              );
-            }
+            await squidexClient.patch(team.id, {
+              tools: {
+                iv: tools,
+              },
+            });
           }
         }
       },
@@ -201,22 +167,11 @@ export default class EnforceUrlFormat extends Migration {
             console.log(
               `User ${user.id} does not have a valid social website(s). Adding https:// prefix.`,
             );
-            if (this.isPatchingEnabled) {
-              await squidexClient.patch(user.id, {
-                social: {
-                  iv: social,
-                },
-              });
-            } else {
-              // eslint-disable-next-line no-console
-              console.log(
-                `Before: ${JSON.stringify(
-                  user.data.social.iv,
-                  null,
-                  2,
-                )}\nAfter: ${JSON.stringify(social, null, 2)}`,
-              );
-            }
+            await squidexClient.patch(user.id, {
+              social: {
+                iv: social,
+              },
+            });
           }
         }
       },

@@ -117,6 +117,7 @@ import {
   PageDataProvider,
   UserDataProvider,
   DashboardDataProvider,
+  DiscoverDataProvider,
 } from './data-providers/types';
 import { UserSquidexDataProvider } from './data-providers/users.data-provider';
 import {
@@ -148,6 +149,7 @@ import {
   LabDataProvider,
   LabSquidexDataProvider,
 } from './data-providers/labs.data-provider';
+import { DiscoverSquidexDataProvider } from './data-providers/discover.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -235,6 +237,9 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.dashboardDataProvider || isContentfulEnabled
       ? dashboardContentfulDataProvider
       : dashboardSquidexDataProvider;
+  const discoverDataProvider =
+    libs.discoverDataProvider ||
+    new DiscoverSquidexDataProvider(squidexGraphqlClient);
   const groupDataProvider =
     libs.groupDataProvider ||
     new GroupSquidexDataProvider(squidexGraphqlClient);
@@ -413,7 +418,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.dashboardController || new Dashboard(dashboardDataProvider);
   const newsController = libs.newsController || new News(newsDataProvider);
   const discoverController =
-    libs.discoverController || new Discover(squidexGraphqlClient);
+    libs.discoverController || new Discover(discoverDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
   const groupController =
     libs.groupController || new Groups(groupDataProvider, userDataProvider);
@@ -571,6 +576,7 @@ export type Libs = {
   dashboardDataProvider?: DashboardDataProvider;
   dashboardSquidexDataProvider?: DashboardDataProvider;
   dashboardContentfulDataProvider?: DashboardDataProvider;
+  discoverDataProvider?: DiscoverDataProvider;
   externalAuthorSquidexDataProvider?: ExternalAuthorDataProvider;
   externalAuthorContentfulDataProvider?: ExternalAuthorDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;

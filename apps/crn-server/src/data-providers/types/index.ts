@@ -3,3 +3,4 @@ export * from './dashboard.data-provider.types';
 export * from './news.data-provider.types';
 export * from './pages.data-provider.types';
 export * from './users.data-provider.types';
+export * from './discover.data-provider.types';

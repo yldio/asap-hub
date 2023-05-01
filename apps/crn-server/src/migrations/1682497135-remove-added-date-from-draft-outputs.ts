@@ -9,8 +9,6 @@ export default class RemoveWorkingGroupsFromNews extends Migration {
     await applyToAllItemsInCollection<RestResearchOutput>(
       'research-outputs',
       async (researchOutput, squidexClient) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         if (researchOutput.status === 'Draft') {
           await squidexClient.patch(researchOutput.id, {
             addedDate: { iv: '' },
@@ -23,8 +21,6 @@ export default class RemoveWorkingGroupsFromNews extends Migration {
     await applyToAllItemsInCollection<RestResearchOutput>(
       'research-outputs',
       async (researchOutput, squidexClient) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         if (researchOutput.status === 'Draft') {
           await squidexClient.patch(researchOutput.id, {
             addedDate: { iv: researchOutput.created },

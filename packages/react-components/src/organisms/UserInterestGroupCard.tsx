@@ -6,6 +6,7 @@ import { Divider, Link, Paragraph } from '../atoms';
 import { lead } from '../colors';
 import { TabbedCard } from '../molecules';
 import { perRem, tabletScreen } from '../pixels';
+import { splitListBy } from '../utils';
 
 const itemsListWrapper = css({
   display: 'flex',
@@ -52,10 +53,12 @@ const listItemStyle = css({
 
 type UserInterestGroupItemProps = GroupResponse & {
   index: number;
+  userId: string;
 };
 
 const UserInterestGroupItem: React.FC<UserInterestGroupItemProps> = ({
   id,
+  userId,
   name,
   leaders,
   index,
@@ -75,7 +78,7 @@ const UserInterestGroupItem: React.FC<UserInterestGroupItemProps> = ({
       </div>
       <div css={[titleStyle]}>Role</div>
       <div css={roleStyle}>
-        {leaders.find((leader) => leader.user.id === id)?.role ?? 'Member'}
+        {leaders.find((leader) => leader.user.id === userId)?.role ?? 'Member'}
       </div>
     </li>
   </>
@@ -83,62 +86,82 @@ const UserInterestGroupItem: React.FC<UserInterestGroupItemProps> = ({
 
 type UserInterestGroupCardProps = Pick<
   UserResponse,
-  'alumniSinceDate' | 'displayName'
+  'alumniSinceDate' | 'displayName' | 'id'
 > & {
   groups: GroupResponse[];
 };
 
 const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
+  id,
   displayName,
   alumniSinceDate,
   groups,
-}) => (
-  <TabbedCard
-    title={`${displayName}'s Interest Groups`}
-    description="Interest groups allow teams to share findings with other teams about topics of interest."
-    activeTabIndex={alumniSinceDate ? 1 : 0}
-    getShowMoreText={(showMore) =>
-      `View ${showMore ? 'less' : 'more'} interest groups`
-    }
-    tabs={[
-      {
-        tabTitle: `Active Collaborations (${
-          alumniSinceDate ? 0 : groups.length
-        })`,
-        items: groups,
-        truncateFrom: 5,
-        disabled: alumniSinceDate !== undefined,
-        empty: (
-          <Paragraph accent="lead">
-            There are no active collaborations.
-          </Paragraph>
-        ),
-      },
-      {
-        tabTitle: `Past Collaborations (${
-          alumniSinceDate ? groups.length : 0
-        })`,
-        items: groups,
-        truncateFrom: 5,
-        disabled: alumniSinceDate === undefined,
-        empty: (
-          <Paragraph accent="lead">There are no past collaborations.</Paragraph>
-        ),
-      },
-    ]}
-  >
-    {({ data }) => (
-      <div css={itemsListWrapper}>
-        {data.map((item, index) => (
-          <UserInterestGroupItem
-            key={`${index}-user-interest-group`}
-            {...item}
-            index={index}
-          />
-        ))}
-      </div>
-    )}
-  </TabbedCard>
-);
+}) => {
+  const [activeMemberships, inactiveMemberships] = splitListBy(
+    groups,
+    (group) => {
+      if (group.active) {
+        const leader = group.leaders.find(
+          (leaderData) => leaderData.user.id === id,
+        );
+        if (leader?.inactiveSinceDate) {
+          return false;
+        }
+        return !alumniSinceDate;
+      }
+      return false;
+    },
+  );
+
+  return (
+    <TabbedCard
+      title={`${displayName}'s Interest Groups`}
+      description="Interest groups allow teams to share findings with other teams about topics of interest."
+      activeTabIndex={alumniSinceDate ? 1 : 0}
+      getShowMoreText={(showMore) =>
+        `View ${showMore ? 'less' : 'more'} interest groups`
+      }
+      tabs={[
+        {
+          tabTitle: `Active Collaborations (${
+            alumniSinceDate ? 0 : activeMemberships.length
+          })`,
+          items: activeMemberships,
+          truncateFrom: 5,
+          disabled: activeMemberships.length === 0,
+          empty: (
+            <Paragraph accent="lead">
+              There are no active collaborations.
+            </Paragraph>
+          ),
+        },
+        {
+          tabTitle: `Past Collaborations (${inactiveMemberships.length})`,
+          items: inactiveMemberships,
+          truncateFrom: 5,
+          disabled: inactiveMemberships.length === 0,
+          empty: (
+            <Paragraph accent="lead">
+              There are no past collaborations.
+            </Paragraph>
+          ),
+        },
+      ]}
+    >
+      {({ data }) => (
+        <div css={itemsListWrapper}>
+          {data.map((item, index) => (
+            <UserInterestGroupItem
+              key={`${index}-user-interest-group`}
+              {...item}
+              userId={id}
+              index={index}
+            />
+          ))}
+        </div>
+      )}
+    </TabbedCard>
+  );
+};
 
 export default UserInterestGroupCard;

@@ -8,6 +8,7 @@ export default {
 
 export const Normal = () => (
   <UserInterestGroupCard
+    id="userId"
     alumniSinceDate={boolean('is alumni', false) ? '2020-01-01' : undefined}
     displayName={text('Display Name', 'John Doe')}
     groups={createListGroupResponse(number('Number of groups', 10)).items}

@@ -63,13 +63,47 @@ export type EventUpdateDataObject = Partial<
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
 
-type FilterOptions = {
-  workingGroupId?: string;
-  projectId?: string;
-  userId?: string;
-  externalAuthorId?: string;
-  googleId?: string;
-};
+type FilterOptions =
+  | {
+      workingGroupId?: string;
+      projectId?: never;
+      userId?: never;
+      externalAuthorId?: never;
+      googleId?: never;
+      hidden?: never;
+    }
+  | {
+      workingGroupId?: never;
+      projectId?: string;
+      userId?: never;
+      externalAuthorId?: never;
+      googleId?: never;
+      hidden?: never;
+    }
+  | {
+      workingGroupId?: never;
+      projectId?: never;
+      userId?: string;
+      externalAuthorId?: never;
+      googleId?: never;
+      hidden?: never;
+    }
+  | {
+      workingGroupId?: never;
+      projectId?: never;
+      userId?: never;
+      externalAuthorId?: string;
+      googleId?: never;
+      hidden?: never;
+    }
+  | {
+      workingGroupId?: never;
+      projectId?: never;
+      userId?: never;
+      externalAuthorId?: never;
+      googleId?: string;
+      hidden?: boolean;
+    };
 
 export type FetchEventsOptions = {
   after?: string;

@@ -89,15 +89,61 @@ export type EventUpdateDataObject = Partial<
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
 
-type FilterOptions = {
-  workingGroupId?: string;
-  groupId?: string;
-  userId?: string;
-  externalAuthorId?: string;
-  teamId?: string;
-  googleId?: string;
-  hidden?: boolean;
-};
+type FilterOptions =
+  | {
+      workingGroupId?: string;
+      groupId?: never;
+      userId?: never;
+      externalAuthorId?: never;
+      teamId?: never;
+      googleId?: never;
+      hidden?: never;
+    }
+  | {
+      workingGroupId?: never;
+      groupId?: string;
+      userId?: never;
+      externalAuthorId?: never;
+      teamId?: never;
+      googleId?: never;
+      hidden?: never;
+    }
+  | {
+      workingGroupId?: never;
+      groupId?: never;
+      userId?: string;
+      externalAuthorId?: never;
+      teamId?: never;
+      googleId?: never;
+      hidden?: never;
+    }
+  | {
+      workingGroupId?: never;
+      groupId?: never;
+      userId?: never;
+      externalAuthorId?: string;
+      teamId?: never;
+      googleId?: never;
+      hidden?: never;
+    }
+  | {
+      workingGroupId?: never;
+      groupId?: never;
+      userId?: never;
+      externalAuthorId?: never;
+      teamId?: string;
+      googleId?: never;
+      hidden?: never;
+    }
+  | {
+      workingGroupId?: never;
+      groupId?: never;
+      userId?: never;
+      externalAuthorId?: never;
+      teamId?: never;
+      googleId?: string;
+      hidden?: boolean;
+    };
 
 export type FetchEventsOptions = {
   after?: string;

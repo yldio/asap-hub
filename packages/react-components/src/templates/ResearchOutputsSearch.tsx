@@ -13,13 +13,13 @@ export const researchOutputFilters: ReadonlyArray<
   Option<ResearchOutputDocumentType> | Title
 > = [
   { title: 'TYPE OF OUTPUTS' },
+  { label: 'Article', value: 'Article' },
+  { label: 'Bioinformatics', value: 'Bioinformatics' },
+  { label: 'Dataset', value: 'Dataset' },
   { label: 'Grant Document', value: 'Grant Document' },
+  { label: 'Lab Resource', value: 'Lab Resource' },
   { label: 'Presentation', value: 'Presentation' },
   { label: 'Protocol', value: 'Protocol' },
-  { label: 'Dataset', value: 'Dataset' },
-  { label: 'Bioinformatics', value: 'Bioinformatics' },
-  { label: 'Lab Resource', value: 'Lab Resource' },
-  { label: 'Article', value: 'Article' },
 ];
 
 const ResearchOutputsSearch: React.FC<ResearchOutputsSearchProps> = ({

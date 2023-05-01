@@ -31,7 +31,7 @@ describe('Discover Data Provider', () => {
 
   describe('Fetch method', () => {
     describe('with mock-server', () => {
-      test('Should fetch the dashboard from squidex graphql', async () => {
+      test('Should fetch discover from squidex graphql', async () => {
         const result = await discoverDataProviderGraphqlMockGraphql.fetch();
 
         const expected = getDiscoverDataObject();

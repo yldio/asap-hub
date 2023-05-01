@@ -63,47 +63,26 @@ export type EventUpdateDataObject = Partial<
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
 
+type BaseFilterOptions = {
+  workingGroupId?: never;
+  projectId?: never;
+  userId?: never;
+  externalAuthorId?: never;
+  googleId?: never;
+  hidden?: never;
+};
+
+type ExclusiveFilterOption<T> = Omit<BaseFilterOptions, keyof T> & T;
+
 type FilterOptions =
-  | {
-      workingGroupId?: string;
-      projectId?: never;
-      userId?: never;
-      externalAuthorId?: never;
-      googleId?: never;
-      hidden?: never;
-    }
-  | {
-      workingGroupId?: never;
-      projectId?: string;
-      userId?: never;
-      externalAuthorId?: never;
-      googleId?: never;
-      hidden?: never;
-    }
-  | {
-      workingGroupId?: never;
-      projectId?: never;
-      userId?: string;
-      externalAuthorId?: never;
-      googleId?: never;
-      hidden?: never;
-    }
-  | {
-      workingGroupId?: never;
-      projectId?: never;
-      userId?: never;
-      externalAuthorId?: string;
-      googleId?: never;
-      hidden?: never;
-    }
-  | {
-      workingGroupId?: never;
-      projectId?: never;
-      userId?: never;
-      externalAuthorId?: never;
+  | ExclusiveFilterOption<{ workingGroupId?: string }>
+  | ExclusiveFilterOption<{ projectId?: string }>
+  | ExclusiveFilterOption<{ userId?: string }>
+  | ExclusiveFilterOption<{ externalAuthorId?: string }>
+  | ExclusiveFilterOption<{
       googleId?: string;
       hidden?: boolean;
-    };
+    }>;
 
 export type FetchEventsOptions = {
   after?: string;

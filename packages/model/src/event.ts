@@ -89,61 +89,28 @@ export type EventUpdateDataObject = Partial<
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
 
+type BaseFilterOptions = {
+  workingGroupId?: never;
+  groupId?: never;
+  userId?: never;
+  externalAuthorId?: never;
+  teamId?: never;
+  googleId?: never;
+  hidden?: never;
+};
+
+type ExclusiveFilterOption<T> = Omit<BaseFilterOptions, keyof T> & T;
+
 type FilterOptions =
-  | {
-      workingGroupId?: string;
-      groupId?: never;
-      userId?: never;
-      externalAuthorId?: never;
-      teamId?: never;
-      googleId?: never;
-      hidden?: never;
-    }
-  | {
-      workingGroupId?: never;
-      groupId?: string;
-      userId?: never;
-      externalAuthorId?: never;
-      teamId?: never;
-      googleId?: never;
-      hidden?: never;
-    }
-  | {
-      workingGroupId?: never;
-      groupId?: never;
-      userId?: string;
-      externalAuthorId?: never;
-      teamId?: never;
-      googleId?: never;
-      hidden?: never;
-    }
-  | {
-      workingGroupId?: never;
-      groupId?: never;
-      userId?: never;
-      externalAuthorId?: string;
-      teamId?: never;
-      googleId?: never;
-      hidden?: never;
-    }
-  | {
-      workingGroupId?: never;
-      groupId?: never;
-      userId?: never;
-      externalAuthorId?: never;
-      teamId?: string;
-      googleId?: never;
-      hidden?: never;
-    }
-  | {
-      workingGroupId?: never;
-      groupId?: never;
-      userId?: never;
-      externalAuthorId?: never;
-      teamId?: never;
+  | ExclusiveFilterOption<{ workingGroupId?: string }>
+  | ExclusiveFilterOption<{ groupId?: string }>
+  | ExclusiveFilterOption<{ userId?: string }>
+  | ExclusiveFilterOption<{ externalAuthorId?: string }>
+  | ExclusiveFilterOption<{ teamId?: string }>
+  | ExclusiveFilterOption<{
       googleId?: string;
       hidden?: boolean;
-    };
+    }>;
 
 export type FetchEventsOptions = {
   after?: string;

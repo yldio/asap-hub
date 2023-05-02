@@ -5,7 +5,6 @@ import {
   CalendarUpdateDataObject,
   FetchCalendarProviderOptions,
   ListCalendarDataObject,
-  isGoogleLegacyCalendarColor,
 } from '@asap-hub/model';
 import {
   addLocaleToFields,
@@ -20,6 +19,7 @@ import {
   CalendarsOrder,
   updateEntryFields,
 } from '@asap-hub/contentful';
+import { parseContentfulGraphqlCalendarPartialToDataObject } from '../../entities';
 
 export type CalendarItem = NonNullable<
   NonNullable<FetchCalendarsQuery['calendarsCollection']>['items'][number]
@@ -111,16 +111,10 @@ export const parseGraphQlCalendarToDataObject = (
 ): CalendarDataObject => ({
   id: item.sys.id,
   version: item.sys.publishedVersion ?? 1,
-  color:
-    item.color && isGoogleLegacyCalendarColor(item.color)
-      ? item.color
-      : ('#333333' as const),
-  googleCalendarId: item.googleCalendarId ?? '',
-  name: item.name ?? '',
   resourceId: item.resourceId,
   expirationDate: item.expirationDate,
   syncToken: item.syncToken,
-
+  ...parseContentfulGraphqlCalendarPartialToDataObject(item),
   // TODO: implement this when
   // CT-13 Interest Groups
   // CT-17 Working Groups

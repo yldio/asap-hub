@@ -1,5 +1,6 @@
 export * from './calendars.queries';
 export * from './dashboard.queries';
+export * from './events.queries';
 export * from './external-authors.queries';
 export * from './news.queries';
 export * from './pages.queries';

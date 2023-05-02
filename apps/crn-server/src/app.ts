@@ -74,6 +74,7 @@ import { CalendarSquidexDataProvider } from './data-providers/calendars.data-pro
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';
 import { AssetContentfulDataProvider } from './data-providers/contentful/assets.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
+import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-authors.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
@@ -404,9 +405,30 @@ export const appFactory = (libs: Libs = {}): Express => {
       squidexGraphqlClient,
       workingGroupRestClient,
     );
+
+  featureFlagDependencySwitch.setDependency(
+    'events',
+    libs.eventSquidexDataProvider ||
+      new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'events',
+    libs.eventContentfulDataProvider ||
+      new EventContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      ),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
   const eventDataProvider =
     libs.eventDataProvider ||
-    new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient);
+    featureFlagDependencySwitch.getDependency(
+      'events',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
 
   const labDataProvider =
     libs.labDataProvider || new LabSquidexDataProvider(squidexGraphqlClient);
@@ -598,6 +620,8 @@ export type Libs = {
   userSquidexDataProvider?: UserDataProvider;
   userContentfulDataProvider?: UserDataProvider;
   eventDataProvider?: EventDataProvider;
+  eventSquidexDataProvider?: EventDataProvider;
+  eventContentfulDataProvider?: EventDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   authHandler?: AuthHandler;
   httpLogger?: HttpLogger;

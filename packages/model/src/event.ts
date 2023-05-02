@@ -67,12 +67,13 @@ export type EventCreateDataObject = Pick<
   | 'endDateTimeZone'
   | 'status'
   | 'tags'
-  | 'meetingLink'
   | 'hideMeetingLink'
 > & {
   googleId: string;
   calendar: string;
   hidden: boolean;
+
+  // this is used only for integration tests
   speakers?: {
     user: string[];
     team: string[];
@@ -88,15 +89,28 @@ export type EventUpdateDataObject = Partial<
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
 
-type FilterOptions = {
-  workingGroupId?: string;
-  groupId?: string;
-  userId?: string;
-  externalAuthorId?: string;
-  teamId?: string;
-  googleId?: string;
-  hidden?: boolean;
+type BaseFilterOptions = {
+  workingGroupId?: never;
+  groupId?: never;
+  userId?: never;
+  externalAuthorId?: never;
+  teamId?: never;
+  googleId?: never;
+  hidden?: never;
 };
+
+type ExclusiveFilterOption<T> = Omit<BaseFilterOptions, keyof T> & T;
+
+type FilterOptions =
+  | ExclusiveFilterOption<{ workingGroupId?: string }>
+  | ExclusiveFilterOption<{ groupId?: string }>
+  | ExclusiveFilterOption<{ userId?: string }>
+  | ExclusiveFilterOption<{ externalAuthorId?: string }>
+  | ExclusiveFilterOption<{ teamId?: string }>
+  | ExclusiveFilterOption<{
+      googleId?: string;
+      hidden?: boolean;
+    }>;
 
 export type FetchEventsOptions = {
   after?: string;

@@ -1224,7 +1224,6 @@ describe('Reminders', () => {
     endDateTimeZone: 'Europe/Lisbon',
     status: 'Confirmed' as EventStatus,
     hidden: false,
-    meetingLink: 'https://zweem.com',
     hideMeetingLink: false,
     calendar: calendarId,
     googleId: chance.string(),

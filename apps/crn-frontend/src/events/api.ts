@@ -1,5 +1,6 @@
 import { AlgoliaSearchClient, getEventFilters } from '@asap-hub/algolia';
 import {
+  createFeatureFlagHeaders,
   createSentryHeaders,
   GetEventListOptions,
 } from '@asap-hub/frontend-utils';
@@ -49,7 +50,11 @@ export const getEvent = async (
   authorization: string,
 ): Promise<EventResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/events/${id}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

@@ -1,3 +1,4 @@
+import { FetchCalendarsQuery } from '@asap-hub/contentful';
 import {
   CalendarDataObject,
   CalendarResponse,
@@ -25,6 +26,22 @@ export const parseGraphqlCalendarPartialToDataObject = (
   color: isGoogleLegacyCalendarColor(graphqlCalendar.color)
     ? graphqlCalendar.color
     : ('#333333' as const),
+  googleCalendarId: graphqlCalendar.googleCalendarId ?? '',
+  name: graphqlCalendar.name ?? '',
+});
+
+export const parseContentfulGraphqlCalendarPartialToDataObject = (
+  graphqlCalendar: Pick<
+    NonNullable<
+      NonNullable<FetchCalendarsQuery['calendarsCollection']>['items'][number]
+    >,
+    'name' | 'googleCalendarId' | 'color'
+  >,
+): Pick<CalendarDataObject, 'name' | 'googleCalendarId' | 'color'> => ({
+  color:
+    graphqlCalendar.color && isGoogleLegacyCalendarColor(graphqlCalendar.color)
+      ? graphqlCalendar.color
+      : ('#333333' as const),
   googleCalendarId: graphqlCalendar.googleCalendarId ?? '',
   name: graphqlCalendar.name ?? '',
 });

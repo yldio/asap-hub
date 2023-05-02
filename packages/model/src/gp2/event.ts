@@ -63,13 +63,26 @@ export type EventUpdateDataObject = Partial<
 export type EventCreateRequest = EventCreateDataObject;
 export type EventUpdateRequest = EventUpdateDataObject;
 
-type FilterOptions = {
-  workingGroupId?: string;
-  projectId?: string;
-  userId?: string;
-  externalAuthorId?: string;
-  googleId?: string;
+type BaseFilterOptions = {
+  workingGroupId?: never;
+  projectId?: never;
+  userId?: never;
+  externalAuthorId?: never;
+  googleId?: never;
+  hidden?: never;
 };
+
+type ExclusiveFilterOption<T> = Omit<BaseFilterOptions, keyof T> & T;
+
+type FilterOptions =
+  | ExclusiveFilterOption<{ workingGroupId?: string }>
+  | ExclusiveFilterOption<{ projectId?: string }>
+  | ExclusiveFilterOption<{ userId?: string }>
+  | ExclusiveFilterOption<{ externalAuthorId?: string }>
+  | ExclusiveFilterOption<{
+      googleId?: string;
+      hidden?: boolean;
+    }>;
 
 export type FetchEventsOptions = {
   after?: string;

@@ -1,4 +1,4 @@
-import { CalendarDataProvider } from '@asap-hub/model';
+import { CalendarDataProvider, EventDataProvider } from '@asap-hub/model';
 import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
 import { TeamDataProvider } from '../data-providers/teams.data-provider';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
@@ -17,6 +17,7 @@ type DependencyList = {
   teams: DependencySwitch<TeamDataProvider>;
   externalAuthors: DependencySwitch<ExternalAuthorDataProvider>;
   calendars: DependencySwitch<CalendarDataProvider>;
+  events: DependencySwitch<EventDataProvider>;
 };
 
 export class FeatureFlagDependencySwitch {
@@ -41,6 +42,10 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       calendars: {
+        true: undefined,
+        false: undefined,
+      },
+      events: {
         true: undefined,
         false: undefined,
       },

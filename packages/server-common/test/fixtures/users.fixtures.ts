@@ -75,7 +75,7 @@ export const getUserWebhookPayload = (
   },
 });
 
-export const userMock = (): UserDataObject => ({
+export const getUserDataObject = (): UserDataObject => ({
   id: 'userId',
   firstName: 'Tony',
   lastName: 'Stark',

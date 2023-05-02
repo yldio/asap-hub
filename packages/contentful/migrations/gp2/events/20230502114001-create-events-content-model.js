@@ -759,21 +759,6 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   eventSpeakers
-    .createField('team')
-    .name('Team')
-    .type('Link')
-    .localized(false)
-    .required(false)
-    .validations([
-      {
-        linkContentType: ['teams'],
-      },
-    ])
-    .disabled(false)
-    .omitted(false)
-    .linkType('Entry');
-
-  eventSpeakers
     .createField('user')
     .name('User')
     .type('Link')
@@ -781,7 +766,7 @@ module.exports.up = (migration) => {
     .required(false)
     .validations([
       {
-        linkContentType: ['externalAuthors'],
+        linkContentType: ['externalUsers', 'users'],
       },
     ])
     .disabled(false)
@@ -794,7 +779,6 @@ module.exports.up = (migration) => {
     '6ZkXISzhv1b7jjgyaK2piv',
     {},
   );
-  eventSpeakers.changeFieldControl('team', 'builtin', 'entryLinkEditor', {});
   eventSpeakers.changeFieldControl('user', 'builtin', 'entryLinkEditor', {});
 };
 

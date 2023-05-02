@@ -11,7 +11,8 @@
     "start": "SQUIDEX_APP_NAME=$CRN_SQUIDEX_APP_NAME SQUIDEX_CLIENT_ID=$CRN_SQUIDEX_CLIENT_ID SQUIDEX_CLIENT_SECRET=$CRN_SQUIDEX_CLIENT_SECRET node-dev ./src/server.ts",
     "migration:create": "./scripts/create-migration.sh",
     "typecheck": "tsc",
-    "import:keywords": "ts-node -T ./scripts/import-keywords.ts"
+    "import:keywords": "ts-node -T ./scripts/import-keywords.ts",
+    "migrate:keywords": "ts-node -T ./scripts/migrate-tags-to-keywords.ts"
   },
   "dependenciesMeta": {
     "serverless": {

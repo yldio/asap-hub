@@ -647,9 +647,17 @@ export type ExternalUsersFilter = {
 
 export type ExternalUsersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  outputsCollection?: Maybe<OutputsCollection>;
 };
 
 export type ExternalUsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ExternalUsersLinkingCollectionsOutputsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -1195,6 +1203,244 @@ export enum NewsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type Outputs = Entry & {
+  addedDate?: Maybe<Scalars['DateTime']>;
+  adminNotes?: Maybe<Scalars['String']>;
+  authorsCollection?: Maybe<OutputsAuthorsCollection>;
+  contentfulMetadata: ContentfulMetadata;
+  createdBy?: Maybe<Users>;
+  documentType?: Maybe<Scalars['String']>;
+  lastUpdatedPartial?: Maybe<Scalars['DateTime']>;
+  link?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<OutputsLinkingCollections>;
+  publishDate?: Maybe<Scalars['DateTime']>;
+  relatedEntity?: Maybe<OutputsRelatedEntity>;
+  subtype?: Maybe<Scalars['String']>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  updatedBy?: Maybe<Users>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsAddedDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsAdminNotesArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsAuthorsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsCreatedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsDocumentTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsLastUpdatedPartialArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsPublishDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsRelatedEntityArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsSubtypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsUpdatedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type OutputsAuthorsCollection = {
+  items: Array<Maybe<OutputsAuthorsItem>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type OutputsAuthorsItem = ExternalUsers | Users;
+
+export type OutputsCollection = {
+  items: Array<Maybe<Outputs>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type OutputsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<OutputsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<OutputsFilter>>>;
+  addedDate?: InputMaybe<Scalars['DateTime']>;
+  addedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  addedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  addedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  adminNotes?: InputMaybe<Scalars['String']>;
+  adminNotes_contains?: InputMaybe<Scalars['String']>;
+  adminNotes_exists?: InputMaybe<Scalars['Boolean']>;
+  adminNotes_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  adminNotes_not?: InputMaybe<Scalars['String']>;
+  adminNotes_not_contains?: InputMaybe<Scalars['String']>;
+  adminNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  createdBy?: InputMaybe<CfUsersNestedFilter>;
+  createdBy_exists?: InputMaybe<Scalars['Boolean']>;
+  documentType?: InputMaybe<Scalars['String']>;
+  documentType_contains?: InputMaybe<Scalars['String']>;
+  documentType_exists?: InputMaybe<Scalars['Boolean']>;
+  documentType_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  documentType_not?: InputMaybe<Scalars['String']>;
+  documentType_not_contains?: InputMaybe<Scalars['String']>;
+  documentType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastUpdatedPartial?: InputMaybe<Scalars['DateTime']>;
+  lastUpdatedPartial_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdatedPartial_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdatedPartial_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdatedPartial_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdatedPartial_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdatedPartial_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdatedPartial_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdatedPartial_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  link?: InputMaybe<Scalars['String']>;
+  link_contains?: InputMaybe<Scalars['String']>;
+  link_exists?: InputMaybe<Scalars['Boolean']>;
+  link_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_not?: InputMaybe<Scalars['String']>;
+  link_not_contains?: InputMaybe<Scalars['String']>;
+  link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publishDate?: InputMaybe<Scalars['DateTime']>;
+  publishDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publishDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publishDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  relatedEntity_exists?: InputMaybe<Scalars['Boolean']>;
+  subtype?: InputMaybe<Scalars['String']>;
+  subtype_contains?: InputMaybe<Scalars['String']>;
+  subtype_exists?: InputMaybe<Scalars['Boolean']>;
+  subtype_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  subtype_not?: InputMaybe<Scalars['String']>;
+  subtype_not_contains?: InputMaybe<Scalars['String']>;
+  subtype_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type?: InputMaybe<Scalars['String']>;
+  type_contains?: InputMaybe<Scalars['String']>;
+  type_exists?: InputMaybe<Scalars['Boolean']>;
+  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  type_not?: InputMaybe<Scalars['String']>;
+  type_not_contains?: InputMaybe<Scalars['String']>;
+  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  updatedBy?: InputMaybe<CfUsersNestedFilter>;
+  updatedBy_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type OutputsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type OutputsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum OutputsOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AdminNotesAsc = 'adminNotes_ASC',
+  AdminNotesDesc = 'adminNotes_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SubtypeAsc = 'subtype_ASC',
+  SubtypeDesc = 'subtype_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
+export type OutputsRelatedEntity = Projects | WorkingGroups;
+
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type Pages = Entry & {
   contentfulMetadata: ContentfulMetadata;
@@ -1642,9 +1888,17 @@ export type ProjectsFilter = {
 
 export type ProjectsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  outputsCollection?: Maybe<OutputsCollection>;
 };
 
 export type ProjectsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ProjectsLinkingCollectionsOutputsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -1721,6 +1975,8 @@ export type Query = {
   milestonesCollection?: Maybe<MilestonesCollection>;
   news?: Maybe<News>;
   newsCollection?: Maybe<NewsCollection>;
+  outputs?: Maybe<Outputs>;
+  outputsCollection?: Maybe<OutputsCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
   projectMembership?: Maybe<ProjectMembership>;
@@ -1881,6 +2137,21 @@ export type QueryNewsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<NewsFilter>;
+};
+
+export type QueryOutputsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryOutputsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<OutputsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<OutputsFilter>;
 };
 
 export type QueryPagesArgs = {
@@ -2553,11 +2824,19 @@ export type UsersFilter = {
 
 export type UsersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  outputsCollection?: Maybe<OutputsCollection>;
   projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
   workingGroupMembershipCollection?: Maybe<WorkingGroupMembershipCollection>;
 };
 
 export type UsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsOutputsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -3061,10 +3340,18 @@ export type WorkingGroupsFilter = {
 
 export type WorkingGroupsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  outputsCollection?: Maybe<OutputsCollection>;
   workingGroupNetworkCollection?: Maybe<WorkingGroupNetworkCollection>;
 };
 
 export type WorkingGroupsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type WorkingGroupsLinkingCollectionsOutputsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -3700,6 +3987,7 @@ export type PageContentDataFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
@@ -3769,6 +4057,7 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ProjectMembership' } & {
                             sys: Pick<Sys, 'id'>;

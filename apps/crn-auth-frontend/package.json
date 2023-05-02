@@ -19,9 +19,9 @@
     "@babel/runtime-corejs3": "7.21.0",
     "history": "4.10.1",
     "path": "npm:path-browserify@1.0.1",
-    "react": "17.0.2",
+    "react": "^18.2.0",
     "react-app-polyfill": "3.0.0",
-    "react-dom": "17.0.2",
+    "react-dom": "^18.2.0",
     "react-router-dom": "5.3.4"
   },
   "devDependencies": {
@@ -35,8 +35,8 @@
     "@types/history": "4.7.11",
     "@types/jest": "^29.4.0",
     "@types/jsdom": "16.2.15",
-    "@types/react": "17.0.58",
-    "@types/react-dom": "17.0.19",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "@types/react-router-dom": "5.3.3",
     "@types/testing-library__jest-dom": "5.14.5",
     "@types/testing-library__react": "10.0.1",

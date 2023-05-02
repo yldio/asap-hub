@@ -23,7 +23,7 @@ const wrapper =
   }: {
     currentRoute: string;
     user?: Partial<User>;
-  }): React.FC =>
+  }): React.FC<{ children: React.ReactNode }> =>
   ({ children }) =>
     (
       <RecoilRoot

@@ -2,11 +2,13 @@ import { PageResponse } from './page';
 import { UserResponse } from './user';
 import { TutorialsResponse } from './tutorials';
 
-export interface DiscoverResponse {
+export type DiscoverDataObject = {
   aboutUs: string;
-  members: ReadonlyArray<UserResponse>;
+  members: UserResponse[];
   membersTeamId?: string;
-  scientificAdvisoryBoard: ReadonlyArray<UserResponse>;
-  pages: ReadonlyArray<PageResponse>;
-  training: ReadonlyArray<TutorialsResponse>;
-}
+  scientificAdvisoryBoard: UserResponse[];
+  pages: PageResponse[];
+  training: TutorialsResponse[];
+};
+
+export type DiscoverResponse = DiscoverDataObject;

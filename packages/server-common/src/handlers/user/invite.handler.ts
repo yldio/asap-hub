@@ -37,7 +37,7 @@ export const inviteHandlerFactory =
 
     if (user.connections?.length) {
       logger.info(
-        `Found a previous invitation code for user ${user.id}, exiting...`,
+        `Found an existing connection code for user ${user.id}, exiting...`,
       );
       return;
     }

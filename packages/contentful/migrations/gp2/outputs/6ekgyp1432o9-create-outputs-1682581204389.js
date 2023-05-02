@@ -81,7 +81,7 @@ module.exports.up = (migration) => {
     .name('Last Updated (partial)')
     .type('Date')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([])
     .disabled(true)
     .omitted(false);
@@ -162,7 +162,7 @@ module.exports.up = (migration) => {
     .name('Related Entity')
     .type('Link')
     .localized(false)
-    .required(false)
+    .required(true)
     .validations([
       {
         linkContentType: ['projects', 'workingGroups'],
@@ -177,7 +177,7 @@ module.exports.up = (migration) => {
     .name('Publish Date')
     .type('Date')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([])
     .disabled(false)
     .omitted(false);
@@ -187,7 +187,7 @@ module.exports.up = (migration) => {
     .name('Admin notes')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([])
     .disabled(false)
     .omitted(false);

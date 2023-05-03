@@ -95,6 +95,7 @@ input AssetFilter {
 
 type AssetLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
   usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
 }
 
@@ -194,6 +195,7 @@ input CalendarsFilter {
 
 type CalendarsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
   projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
   workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
@@ -393,6 +395,364 @@ enum EntryOrder {
   sys_publishedVersion_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers)"""
+type EventSpeakers implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
+  sys: Sys!
+  title(locale: String): String
+  user(locale: String, preview: Boolean): EventSpeakersUser
+}
+
+type EventSpeakersCollection {
+  items: [EventSpeakers]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input EventSpeakersFilter {
+  AND: [EventSpeakersFilter]
+  OR: [EventSpeakersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  user_exists: Boolean
+}
+
+type EventSpeakersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
+}
+
+enum EventSpeakersOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+union EventSpeakersUser = ExternalUsers | Users
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events)"""
+type Events implements Entry {
+  calendar(locale: String, preview: Boolean): Calendars
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  endDate(locale: String): DateTime
+  endDateTimeZone(locale: String): String
+  eventLink(locale: String): String
+  googleId(locale: String): String
+  hidden(locale: String): Boolean
+  hideMeetingLink(locale: String): Boolean
+  linkedFrom(allowedLocales: [String]): EventsLinkingCollections
+  meetingLink(locale: String): String
+  meetingMaterials(locale: String): JSON
+  meetingMaterialsPermanentlyUnavailable(locale: String): Boolean
+  notes(locale: String): EventsNotes
+  notesPermanentlyUnavailable(locale: String): Boolean
+  notesUpdatedAt(locale: String): DateTime
+  presentation(locale: String): EventsPresentation
+  presentationPermanentlyUnavailable(locale: String): Boolean
+  presentationUpdatedAt(locale: String): DateTime
+  speakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsSpeakersCollection
+  startDate(locale: String): DateTime
+  startDateTimeZone(locale: String): String
+  status(locale: String): String
+  sys: Sys!
+  tags(locale: String): [String]
+  thumbnail(locale: String, preview: Boolean): Asset
+  title(locale: String): String
+  videoRecording(locale: String): EventsVideoRecording
+  videoRecordingPermanentlyUnavailable(locale: String): Boolean
+  videoRecordingUpdatedAt(locale: String): DateTime
+}
+
+type EventsCollection {
+  items: [Events]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input EventsFilter {
+  AND: [EventsFilter]
+  OR: [EventsFilter]
+  calendar: cfCalendarsNestedFilter
+  calendar_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  endDate: DateTime
+  endDateTimeZone: String
+  endDateTimeZone_contains: String
+  endDateTimeZone_exists: Boolean
+  endDateTimeZone_in: [String]
+  endDateTimeZone_not: String
+  endDateTimeZone_not_contains: String
+  endDateTimeZone_not_in: [String]
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  eventLink: String
+  eventLink_contains: String
+  eventLink_exists: Boolean
+  eventLink_in: [String]
+  eventLink_not: String
+  eventLink_not_contains: String
+  eventLink_not_in: [String]
+  googleId: String
+  googleId_contains: String
+  googleId_exists: Boolean
+  googleId_in: [String]
+  googleId_not: String
+  googleId_not_contains: String
+  googleId_not_in: [String]
+  hidden: Boolean
+  hidden_exists: Boolean
+  hidden_not: Boolean
+  hideMeetingLink: Boolean
+  hideMeetingLink_exists: Boolean
+  hideMeetingLink_not: Boolean
+  meetingLink: String
+  meetingLink_contains: String
+  meetingLink_exists: Boolean
+  meetingLink_in: [String]
+  meetingLink_not: String
+  meetingLink_not_contains: String
+  meetingLink_not_in: [String]
+  meetingMaterialsPermanentlyUnavailable: Boolean
+  meetingMaterialsPermanentlyUnavailable_exists: Boolean
+  meetingMaterialsPermanentlyUnavailable_not: Boolean
+  meetingMaterials_exists: Boolean
+  notesPermanentlyUnavailable: Boolean
+  notesPermanentlyUnavailable_exists: Boolean
+  notesPermanentlyUnavailable_not: Boolean
+  notesUpdatedAt: DateTime
+  notesUpdatedAt_exists: Boolean
+  notesUpdatedAt_gt: DateTime
+  notesUpdatedAt_gte: DateTime
+  notesUpdatedAt_in: [DateTime]
+  notesUpdatedAt_lt: DateTime
+  notesUpdatedAt_lte: DateTime
+  notesUpdatedAt_not: DateTime
+  notesUpdatedAt_not_in: [DateTime]
+  notes_contains: String
+  notes_exists: Boolean
+  notes_not_contains: String
+  presentationPermanentlyUnavailable: Boolean
+  presentationPermanentlyUnavailable_exists: Boolean
+  presentationPermanentlyUnavailable_not: Boolean
+  presentationUpdatedAt: DateTime
+  presentationUpdatedAt_exists: Boolean
+  presentationUpdatedAt_gt: DateTime
+  presentationUpdatedAt_gte: DateTime
+  presentationUpdatedAt_in: [DateTime]
+  presentationUpdatedAt_lt: DateTime
+  presentationUpdatedAt_lte: DateTime
+  presentationUpdatedAt_not: DateTime
+  presentationUpdatedAt_not_in: [DateTime]
+  presentation_contains: String
+  presentation_exists: Boolean
+  presentation_not_contains: String
+  speakers: cfEventSpeakersNestedFilter
+  speakersCollection_exists: Boolean
+  startDate: DateTime
+  startDateTimeZone: String
+  startDateTimeZone_contains: String
+  startDateTimeZone_exists: Boolean
+  startDateTimeZone_in: [String]
+  startDateTimeZone_not: String
+  startDateTimeZone_not_contains: String
+  startDateTimeZone_not_in: [String]
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  tags_contains_all: [String]
+  tags_contains_none: [String]
+  tags_contains_some: [String]
+  tags_exists: Boolean
+  thumbnail_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  videoRecordingPermanentlyUnavailable: Boolean
+  videoRecordingPermanentlyUnavailable_exists: Boolean
+  videoRecordingPermanentlyUnavailable_not: Boolean
+  videoRecordingUpdatedAt: DateTime
+  videoRecordingUpdatedAt_exists: Boolean
+  videoRecordingUpdatedAt_gt: DateTime
+  videoRecordingUpdatedAt_gte: DateTime
+  videoRecordingUpdatedAt_in: [DateTime]
+  videoRecordingUpdatedAt_lt: DateTime
+  videoRecordingUpdatedAt_lte: DateTime
+  videoRecordingUpdatedAt_not: DateTime
+  videoRecordingUpdatedAt_not_in: [DateTime]
+  videoRecording_contains: String
+  videoRecording_exists: Boolean
+  videoRecording_not_contains: String
+}
+
+type EventsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+type EventsNotes {
+  json: JSON!
+  links: EventsNotesLinks!
+}
+
+type EventsNotesAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type EventsNotesEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type EventsNotesLinks {
+  assets: EventsNotesAssets!
+  entries: EventsNotesEntries!
+}
+
+enum EventsOrder {
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+type EventsPresentation {
+  json: JSON!
+  links: EventsPresentationLinks!
+}
+
+type EventsPresentationAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type EventsPresentationEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type EventsPresentationLinks {
+  assets: EventsPresentationAssets!
+  entries: EventsPresentationEntries!
+}
+
+type EventsSpeakersCollection {
+  items: [EventSpeakers]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type EventsVideoRecording {
+  json: JSON!
+  links: EventsVideoRecordingLinks!
+}
+
+type EventsVideoRecordingAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type EventsVideoRecordingEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type EventsVideoRecordingLinks {
+  assets: EventsVideoRecordingAssets!
+  entries: EventsVideoRecordingEntries!
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers)"""
 type ExternalUsers implements Entry {
   contentfulMetadata: ContentfulMetadata!
@@ -432,6 +792,7 @@ input ExternalUsersFilter {
 
 type ExternalUsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
   outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
 }
 
@@ -1340,6 +1701,10 @@ type Query {
   contributingCohortsMembership(id: String!, locale: String, preview: Boolean): ContributingCohortsMembership
   contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsMembershipFilter): ContributingCohortsMembershipCollection
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
+  eventSpeakers(id: String!, locale: String, preview: Boolean): EventSpeakers
+  eventSpeakersCollection(limit: Int = 100, locale: String, order: [EventSpeakersOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventSpeakersCollection
+  events(id: String!, locale: String, preview: Boolean): Events
+  eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): EventsCollection
   externalUsers(id: String!, locale: String, preview: Boolean): ExternalUsers
   externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersFilter): ExternalUsersCollection
   media(id: String!, locale: String, preview: Boolean): Media
@@ -1518,6 +1883,7 @@ type Users implements Entry {
   linkedIn(locale: String): String
   onboarded(locale: String): Boolean
   orcid(locale: String): String
+  positions(locale: String): JSON
   questions(locale: String): [String]
   region(locale: String): String
   researchGate(locale: String): String
@@ -1665,6 +2031,7 @@ input UsersFilter {
   orcid_not: String
   orcid_not_contains: String
   orcid_not_in: [String]
+  positions_exists: Boolean
   questions_contains_all: [String]
   questions_contains_none: [String]
   questions_contains_some: [String]
@@ -1723,6 +2090,7 @@ input UsersFilter {
 
 type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
   outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
   projectMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectMembershipCollection
   workingGroupMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupMembershipCollection
@@ -2189,6 +2557,21 @@ input cfContributingCohortsNestedFilter {
   sys: SysFilter
 }
 
+input cfEventSpeakersNestedFilter {
+  AND: [cfEventSpeakersNestedFilter]
+  OR: [cfEventSpeakersNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  user_exists: Boolean
+}
+
 input cfMilestonesNestedFilter {
   AND: [cfMilestonesNestedFilter]
   OR: [cfMilestonesNestedFilter]
@@ -2395,6 +2778,7 @@ input cfUsersNestedFilter {
   orcid_not: String
   orcid_not_contains: String
   orcid_not_in: [String]
+  positions_exists: Boolean
   questions_contains_all: [String]
   questions_contains_none: [String]
   questions_contains_some: [String]

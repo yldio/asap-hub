@@ -32,13 +32,21 @@ const Field = () => {
     const userId = sdk.entry.fields.user.getValue()?.sys?.id;
     if (userId) {
       const user = await sdk.space.getEntry(userId);
-      setUserName(user.fields.name['en-US']);
+      if (user.fields.name) {
+        setUserName(user.fields.name['en-US']);
+      } else {
+        setUserName(
+          `${user.fields.firstName['en-US']} ${user.fields.lastName['en-US']}`,
+        );
+      }
     }
   });
 
   useEffect(() => {
     const titleValue = getTitle(teamName, userName);
-    sdk.field.setValue(titleValue);
+    if (titleValue) {
+      sdk.field.setValue(titleValue);
+    }
     setTitle(titleValue);
   }, [teamName, userName, sdk.field]);
 

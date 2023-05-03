@@ -9,70 +9,115 @@ jest.mock('@contentful/react-apps-toolkit', () => ({
   useSDK: jest.fn(),
 }));
 
+type IdMap = {
+  user: string | null;
+  team: string | null;
+};
+
+const mockBaseSdk = ({ user, team }: IdMap) => ({
+  window: {
+    startAutoResizer: jest.fn(),
+  },
+  field: {
+    getValue: jest.fn(),
+    setValue: jest.fn(),
+  },
+  space: {
+    getEntry: jest.fn().mockImplementation((entryId) => {
+      if (entryId === 'team-id') {
+        return Promise.resolve({
+          fields: {
+            displayName: {
+              'en-US': 'Team A',
+            },
+          },
+        });
+      }
+
+      if (entryId === 'external-author-id') {
+        return Promise.resolve({
+          fields: {
+            name: {
+              'en-US': 'External Author',
+            },
+          },
+        });
+      }
+
+      if (entryId === 'user-id') {
+        return Promise.resolve({
+          fields: {
+            firstName: {
+              'en-US': 'Hub',
+            },
+            lastName: {
+              'en-US': 'User',
+            },
+          },
+        });
+      }
+      return Promise.resolve(null);
+    }),
+  },
+  entry: {
+    onSysChanged: jest.fn((cb) => {
+      cb(jest.fn());
+      return jest.fn();
+    }),
+    fields: {
+      team: {
+        getValue: jest.fn(() => (team ? { sys: { id: team } } : null)),
+      },
+      user: {
+        getValue: jest.fn(() => (user ? { sys: { id: user } } : null)),
+      },
+    },
+  },
+});
+
 describe('Field component', () => {
   it('sets title based on team name and user name', async () => {
-    const mockBaseSdk = {
-      window: {
-        startAutoResizer: jest.fn(),
-      },
-      field: {
-        getValue: jest.fn(),
-        setValue: jest.fn(),
-      },
-      space: {
-        getEntry: jest.fn().mockImplementation((entryId) => {
-          if (entryId === 'team-id') {
-            return Promise.resolve({
-              fields: {
-                displayName: {
-                  'en-US': 'Team A',
-                },
-              },
-            });
-          }
-
-          if (entryId === 'user-id') {
-            return Promise.resolve({
-              fields: {
-                name: {
-                  'en-US': 'User B',
-                },
-              },
-            });
-          }
-        }),
-      },
-      entry: {
-        onSysChanged: jest.fn((cb) => {
-          cb(jest.fn());
-          return jest.fn();
-        }),
-        fields: {
-          team: {
-            getValue: jest.fn(() => ({
-              sys: {
-                id: 'team-id',
-              },
-            })),
-          },
-          user: {
-            getValue: jest.fn(() => ({
-              sys: {
-                id: 'user-id',
-              },
-            })),
-          },
-        },
-      },
-    };
-    (useSDK as jest.Mock).mockReturnValue(mockBaseSdk);
+    const mockSDK = mockBaseSdk({ user: 'user-id', team: 'team-id' });
+    (useSDK as jest.Mock).mockReturnValue(mockSDK);
     render(<Field />);
     await waitFor(() => {
-      expect(mockBaseSdk.field.setValue).toHaveBeenCalledWith(
-        'Team A - User B',
+      expect(mockSDK.field.setValue).toHaveBeenCalledWith('Team A - Hub User');
+    });
+    expect(screen.getByText('Team A - Hub User')).toBeInTheDocument();
+  });
+
+  it('sets title based on team name and external author name', async () => {
+    const mockSDK = mockBaseSdk({
+      user: 'external-author-id',
+      team: 'team-id',
+    });
+    (useSDK as jest.Mock).mockReturnValue(mockSDK);
+    render(<Field />);
+    await waitFor(() => {
+      expect(mockSDK.field.setValue).toHaveBeenCalledWith(
+        'Team A - External Author',
       );
     });
+    expect(screen.getByText('Team A - External Author')).toBeInTheDocument();
+  });
 
-    expect(screen.getByText('Team A - User B')).toBeInTheDocument();
+  it('sets title based on team name only', async () => {
+    const mockSDK = mockBaseSdk({ user: null, team: 'team-id' });
+    (useSDK as jest.Mock).mockReturnValue(mockSDK);
+    render(<Field />);
+    await waitFor(() => {
+      expect(mockSDK.field.setValue).toHaveBeenCalledWith('Team A');
+    });
+    expect(screen.getByText('Team A')).toBeInTheDocument();
+  });
+
+  it('sets title based on user name only', async () => {
+    const mockSDK = mockBaseSdk({ user: 'user-id', team: null });
+    (useSDK as jest.Mock).mockReturnValue(mockSDK);
+    render(<Field />);
+    await waitFor(() => {
+      expect(mockSDK.field.setValue).toHaveBeenCalledWith('Hub User');
+    });
+    expect(screen.getByText('Hub User')).toBeInTheDocument();
   });
 });

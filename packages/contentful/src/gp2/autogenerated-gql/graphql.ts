@@ -174,10 +174,18 @@ export type AssetFilter = {
 
 export type AssetLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  eventsCollection?: Maybe<EventsCollection>;
   usersCollection?: Maybe<UsersCollection>;
 };
 
 export type AssetLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type AssetLinkingCollectionsEventsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -322,11 +330,19 @@ export type CalendarsFilter = {
 
 export type CalendarsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  eventsCollection?: Maybe<EventsCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
 };
 
 export type CalendarsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type CalendarsLinkingCollectionsEventsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -593,6 +609,554 @@ export enum EntryOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers) */
+export type EventSpeakers = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<EventSpeakersLinkingCollections>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+  user?: Maybe<EventSpeakersUser>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers) */
+export type EventSpeakersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers) */
+export type EventSpeakersTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers) */
+export type EventSpeakersUserArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type EventSpeakersCollection = {
+  items: Array<Maybe<EventSpeakers>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type EventSpeakersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<EventSpeakersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<EventSpeakersFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type EventSpeakersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  eventsCollection?: Maybe<EventsCollection>;
+};
+
+export type EventSpeakersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type EventSpeakersLinkingCollectionsEventsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum EventSpeakersOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export type EventSpeakersUser = ExternalUsers | Users;
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type Events = Entry & {
+  calendar?: Maybe<Calendars>;
+  contentfulMetadata: ContentfulMetadata;
+  description?: Maybe<Scalars['String']>;
+  endDate?: Maybe<Scalars['DateTime']>;
+  endDateTimeZone?: Maybe<Scalars['String']>;
+  eventLink?: Maybe<Scalars['String']>;
+  googleId?: Maybe<Scalars['String']>;
+  hidden?: Maybe<Scalars['Boolean']>;
+  hideMeetingLink?: Maybe<Scalars['Boolean']>;
+  linkedFrom?: Maybe<EventsLinkingCollections>;
+  meetingLink?: Maybe<Scalars['String']>;
+  meetingMaterials?: Maybe<Scalars['JSON']>;
+  meetingMaterialsPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
+  notes?: Maybe<EventsNotes>;
+  notesPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
+  notesUpdatedAt?: Maybe<Scalars['DateTime']>;
+  presentation?: Maybe<EventsPresentation>;
+  presentationPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
+  presentationUpdatedAt?: Maybe<Scalars['DateTime']>;
+  speakersCollection?: Maybe<EventsSpeakersCollection>;
+  startDate?: Maybe<Scalars['DateTime']>;
+  startDateTimeZone?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  sys: Sys;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  thumbnail?: Maybe<Asset>;
+  title?: Maybe<Scalars['String']>;
+  videoRecording?: Maybe<EventsVideoRecording>;
+  videoRecordingPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
+  videoRecordingUpdatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsCalendarArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsEndDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsEndDateTimeZoneArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsEventLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsGoogleIdArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsHiddenArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsHideMeetingLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsMeetingLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsMeetingMaterialsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsMeetingMaterialsPermanentlyUnavailableArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsNotesArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsNotesPermanentlyUnavailableArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsNotesUpdatedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsPresentationArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsPresentationPermanentlyUnavailableArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsPresentationUpdatedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsSpeakersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsStartDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsStartDateTimeZoneArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsTagsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsThumbnailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsVideoRecordingArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsVideoRecordingPermanentlyUnavailableArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsVideoRecordingUpdatedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type EventsCollection = {
+  items: Array<Maybe<Events>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type EventsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<EventsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<EventsFilter>>>;
+  calendar?: InputMaybe<CfCalendarsNestedFilter>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  endDateTimeZone?: InputMaybe<Scalars['String']>;
+  endDateTimeZone_contains?: InputMaybe<Scalars['String']>;
+  endDateTimeZone_exists?: InputMaybe<Scalars['Boolean']>;
+  endDateTimeZone_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  endDateTimeZone_not?: InputMaybe<Scalars['String']>;
+  endDateTimeZone_not_contains?: InputMaybe<Scalars['String']>;
+  endDateTimeZone_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  endDate_exists?: InputMaybe<Scalars['Boolean']>;
+  endDate_gt?: InputMaybe<Scalars['DateTime']>;
+  endDate_gte?: InputMaybe<Scalars['DateTime']>;
+  endDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endDate_lt?: InputMaybe<Scalars['DateTime']>;
+  endDate_lte?: InputMaybe<Scalars['DateTime']>;
+  endDate_not?: InputMaybe<Scalars['DateTime']>;
+  endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  eventLink?: InputMaybe<Scalars['String']>;
+  eventLink_contains?: InputMaybe<Scalars['String']>;
+  eventLink_exists?: InputMaybe<Scalars['Boolean']>;
+  eventLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  eventLink_not?: InputMaybe<Scalars['String']>;
+  eventLink_not_contains?: InputMaybe<Scalars['String']>;
+  eventLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleId?: InputMaybe<Scalars['String']>;
+  googleId_contains?: InputMaybe<Scalars['String']>;
+  googleId_exists?: InputMaybe<Scalars['Boolean']>;
+  googleId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleId_not?: InputMaybe<Scalars['String']>;
+  googleId_not_contains?: InputMaybe<Scalars['String']>;
+  googleId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
+  hidden_exists?: InputMaybe<Scalars['Boolean']>;
+  hidden_not?: InputMaybe<Scalars['Boolean']>;
+  hideMeetingLink?: InputMaybe<Scalars['Boolean']>;
+  hideMeetingLink_exists?: InputMaybe<Scalars['Boolean']>;
+  hideMeetingLink_not?: InputMaybe<Scalars['Boolean']>;
+  meetingLink?: InputMaybe<Scalars['String']>;
+  meetingLink_contains?: InputMaybe<Scalars['String']>;
+  meetingLink_exists?: InputMaybe<Scalars['Boolean']>;
+  meetingLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  meetingLink_not?: InputMaybe<Scalars['String']>;
+  meetingLink_not_contains?: InputMaybe<Scalars['String']>;
+  meetingLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  meetingMaterialsPermanentlyUnavailable?: InputMaybe<Scalars['Boolean']>;
+  meetingMaterialsPermanentlyUnavailable_exists?: InputMaybe<
+    Scalars['Boolean']
+  >;
+  meetingMaterialsPermanentlyUnavailable_not?: InputMaybe<Scalars['Boolean']>;
+  meetingMaterials_exists?: InputMaybe<Scalars['Boolean']>;
+  notesPermanentlyUnavailable?: InputMaybe<Scalars['Boolean']>;
+  notesPermanentlyUnavailable_exists?: InputMaybe<Scalars['Boolean']>;
+  notesPermanentlyUnavailable_not?: InputMaybe<Scalars['Boolean']>;
+  notesUpdatedAt?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  notesUpdatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  notesUpdatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  notesUpdatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  notes_contains?: InputMaybe<Scalars['String']>;
+  notes_exists?: InputMaybe<Scalars['Boolean']>;
+  notes_not_contains?: InputMaybe<Scalars['String']>;
+  presentationPermanentlyUnavailable?: InputMaybe<Scalars['Boolean']>;
+  presentationPermanentlyUnavailable_exists?: InputMaybe<Scalars['Boolean']>;
+  presentationPermanentlyUnavailable_not?: InputMaybe<Scalars['Boolean']>;
+  presentationUpdatedAt?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  presentationUpdatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  presentationUpdatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  presentationUpdatedAt_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  presentation_contains?: InputMaybe<Scalars['String']>;
+  presentation_exists?: InputMaybe<Scalars['Boolean']>;
+  presentation_not_contains?: InputMaybe<Scalars['String']>;
+  speakers?: InputMaybe<CfEventSpeakersNestedFilter>;
+  speakersCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
+  startDateTimeZone?: InputMaybe<Scalars['String']>;
+  startDateTimeZone_contains?: InputMaybe<Scalars['String']>;
+  startDateTimeZone_exists?: InputMaybe<Scalars['Boolean']>;
+  startDateTimeZone_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  startDateTimeZone_not?: InputMaybe<Scalars['String']>;
+  startDateTimeZone_not_contains?: InputMaybe<Scalars['String']>;
+  startDateTimeZone_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  startDate_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate_gt?: InputMaybe<Scalars['DateTime']>;
+  startDate_gte?: InputMaybe<Scalars['DateTime']>;
+  startDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  startDate_lt?: InputMaybe<Scalars['DateTime']>;
+  startDate_lte?: InputMaybe<Scalars['DateTime']>;
+  startDate_not?: InputMaybe<Scalars['DateTime']>;
+  startDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  tags_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  tags_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  tags_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  tags_exists?: InputMaybe<Scalars['Boolean']>;
+  thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  videoRecordingPermanentlyUnavailable?: InputMaybe<Scalars['Boolean']>;
+  videoRecordingPermanentlyUnavailable_exists?: InputMaybe<Scalars['Boolean']>;
+  videoRecordingPermanentlyUnavailable_not?: InputMaybe<Scalars['Boolean']>;
+  videoRecordingUpdatedAt?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  videoRecordingUpdatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  videoRecordingUpdatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  videoRecordingUpdatedAt_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  videoRecording_contains?: InputMaybe<Scalars['String']>;
+  videoRecording_exists?: InputMaybe<Scalars['Boolean']>;
+  videoRecording_not_contains?: InputMaybe<Scalars['String']>;
+};
+
+export type EventsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type EventsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type EventsNotes = {
+  json: Scalars['JSON'];
+  links: EventsNotesLinks;
+};
+
+export type EventsNotesAssets = {
+  block: Array<Maybe<Asset>>;
+  hyperlink: Array<Maybe<Asset>>;
+};
+
+export type EventsNotesEntries = {
+  block: Array<Maybe<Entry>>;
+  hyperlink: Array<Maybe<Entry>>;
+  inline: Array<Maybe<Entry>>;
+};
+
+export type EventsNotesLinks = {
+  assets: EventsNotesAssets;
+  entries: EventsNotesEntries;
+};
+
+export enum EventsOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export type EventsPresentation = {
+  json: Scalars['JSON'];
+  links: EventsPresentationLinks;
+};
+
+export type EventsPresentationAssets = {
+  block: Array<Maybe<Asset>>;
+  hyperlink: Array<Maybe<Asset>>;
+};
+
+export type EventsPresentationEntries = {
+  block: Array<Maybe<Entry>>;
+  hyperlink: Array<Maybe<Entry>>;
+  inline: Array<Maybe<Entry>>;
+};
+
+export type EventsPresentationLinks = {
+  assets: EventsPresentationAssets;
+  entries: EventsPresentationEntries;
+};
+
+export type EventsSpeakersCollection = {
+  items: Array<Maybe<EventSpeakers>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type EventsVideoRecording = {
+  json: Scalars['JSON'];
+  links: EventsVideoRecordingLinks;
+};
+
+export type EventsVideoRecordingAssets = {
+  block: Array<Maybe<Asset>>;
+  hyperlink: Array<Maybe<Asset>>;
+};
+
+export type EventsVideoRecordingEntries = {
+  block: Array<Maybe<Entry>>;
+  hyperlink: Array<Maybe<Entry>>;
+  inline: Array<Maybe<Entry>>;
+};
+
+export type EventsVideoRecordingLinks = {
+  assets: EventsVideoRecordingAssets;
+  entries: EventsVideoRecordingEntries;
+};
+
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
 export type ExternalUsers = Entry & {
   contentfulMetadata: ContentfulMetadata;
@@ -647,10 +1211,18 @@ export type ExternalUsersFilter = {
 
 export type ExternalUsersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   outputsCollection?: Maybe<OutputsCollection>;
 };
 
 export type ExternalUsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ExternalUsersLinkingCollectionsEventSpeakersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -1965,6 +2537,10 @@ export type Query = {
   contributingCohortsMembership?: Maybe<ContributingCohortsMembership>;
   contributingCohortsMembershipCollection?: Maybe<ContributingCohortsMembershipCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  eventSpeakers?: Maybe<EventSpeakers>;
+  eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
+  events?: Maybe<Events>;
+  eventsCollection?: Maybe<EventsCollection>;
   externalUsers?: Maybe<ExternalUsers>;
   externalUsersCollection?: Maybe<ExternalUsersCollection>;
   media?: Maybe<Media>;
@@ -2062,6 +2638,36 @@ export type QueryEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<EntryFilter>;
+};
+
+export type QueryEventSpeakersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryEventSpeakersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<EventSpeakersOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<EventSpeakersFilter>;
+};
+
+export type QueryEventsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryEventsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<EventsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<EventsFilter>;
 };
 
 export type QueryExternalUsersArgs = {
@@ -2468,6 +3074,7 @@ export type Users = Entry & {
   linkedIn?: Maybe<Scalars['String']>;
   onboarded?: Maybe<Scalars['Boolean']>;
   orcid?: Maybe<Scalars['String']>;
+  positions?: Maybe<Scalars['JSON']>;
   questions?: Maybe<Array<Maybe<Scalars['String']>>>;
   region?: Maybe<Scalars['String']>;
   researchGate?: Maybe<Scalars['String']>;
@@ -2585,6 +3192,11 @@ export type UsersOnboardedArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersPositionsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -2764,6 +3376,7 @@ export type UsersFilter = {
   orcid_not?: InputMaybe<Scalars['String']>;
   orcid_not_contains?: InputMaybe<Scalars['String']>;
   orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  positions_exists?: InputMaybe<Scalars['Boolean']>;
   questions_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -2824,12 +3437,20 @@ export type UsersFilter = {
 
 export type UsersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   outputsCollection?: Maybe<OutputsCollection>;
   projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
   workingGroupMembershipCollection?: Maybe<WorkingGroupMembershipCollection>;
 };
 
 export type UsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsEventSpeakersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -3510,6 +4131,21 @@ export type CfContributingCohortsNestedFilter = {
   sys?: InputMaybe<SysFilter>;
 };
 
+export type CfEventSpeakersNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfEventSpeakersNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfEventSpeakersNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type CfMilestonesNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
@@ -3716,6 +4352,7 @@ export type CfUsersNestedFilter = {
   orcid_not?: InputMaybe<Scalars['String']>;
   orcid_not_contains?: InputMaybe<Scalars['String']>;
   orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  positions_exists?: InputMaybe<Scalars['Boolean']>;
   questions_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -3980,6 +4617,8 @@ export type PageContentDataFragment = Pick<
               | ({ __typename: 'ContributingCohortsMembership' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -4044,6 +4683,10 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'ContributingCohortsMembership' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'EventSpeakers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ExternalUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })

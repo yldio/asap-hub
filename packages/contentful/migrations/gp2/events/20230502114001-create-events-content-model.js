@@ -742,63 +742,8 @@ module.exports.up = (migration) => {
   );
   events.changeFieldControl('eventLink', 'app', '2finDNk15g5UtOq4DaLNxv', {});
   events.changeFieldControl('googleId', 'app', '2finDNk15g5UtOq4DaLNxv', {});
-
-  const eventSpeakers = migration
-    .createContentType('eventSpeakers')
-    .name('Event Speakers')
-    .description('')
-    .displayField('title');
-  eventSpeakers
-    .createField('title')
-    .name('Title')
-    .type('Symbol')
-    .localized(false)
-    .required(false)
-    .validations([])
-    .disabled(false)
-    .omitted(false);
-
-  eventSpeakers
-    .createField('team')
-    .name('Team')
-    .type('Link')
-    .localized(false)
-    .required(false)
-    .validations([
-      {
-        linkContentType: ['teams'],
-      },
-    ])
-    .disabled(false)
-    .omitted(false)
-    .linkType('Entry');
-
-  eventSpeakers
-    .createField('user')
-    .name('User')
-    .type('Link')
-    .localized(false)
-    .required(false)
-    .validations([
-      {
-        linkContentType: ['externalAuthors'],
-      },
-    ])
-    .disabled(false)
-    .omitted(false)
-    .linkType('Entry');
-
-  eventSpeakers.changeFieldControl(
-    'title',
-    'app',
-    '6ZkXISzhv1b7jjgyaK2piv',
-    {},
-  );
-  eventSpeakers.changeFieldControl('team', 'builtin', 'entryLinkEditor', {});
-  eventSpeakers.changeFieldControl('user', 'builtin', 'entryLinkEditor', {});
 };
 
 module.exports.down = (migration) => {
-  migration.deleteContentType('events');
   migration.deleteContentType('events');
 };

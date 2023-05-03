@@ -266,9 +266,9 @@ describe('Calendar handler', () => {
     });
   });
 
-  describe('multilple calls', () => {
+  describe('multiple calls', () => {
     test(`events played in order should update accordingly.
-    The first event invalidates a calender,
+    The first event invalidates a calendar,
     the second event should update to a valid calendar.
     Events are fired when we call the update method on calendar controller.
     (this updates the record in SquidEx firing an event)

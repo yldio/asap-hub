@@ -316,7 +316,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    subscribeCalendar: {
+    subscribeCalendarSquidex: {
       handler: './src/handlers/calendar/subscribe-handler.handler',
       events: [
         {
@@ -333,9 +333,30 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
       },
     },
-    resubscribeCalendars: {
+    subscribeCalendarContentful: {
+      handler: './src/handlers/calendar/subscribe-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['CalendarsPublished'],
+            },
+          },
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
+      },
+    },
+    resubscribeCalendarsSquidex: {
       handler: './src/handlers/calendar/resubscribe-handler.handler',
       timeout: 120,
       events: [
@@ -347,6 +368,22 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
+      },
+    },
+    resubscribeCalendarsContentful: {
+      handler: './src/handlers/calendar/resubscribe-handler.handler',
+      timeout: 120,
+      events: [
+        {
+          schedule: 'cron(0 1 * * ? *)',
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
     syncUserOrcid: {
@@ -1355,19 +1392,19 @@ const serverlessConfig: AWS = {
           ],
         },
       },
-      SubscribeCalendarDLQ: {
+      SubscribeCalendarSquidexDLQ: {
         Type: 'AWS::SQS::Queue',
         Properties: {
           MessageRetentionPeriod: 1_209_600, // 14 days
           QueueName:
-            '${self:service}-${self:provider.stage}-subscribe-calendar-dlq',
+            '${self:service}-${self:provider.stage}-subscribe-calendar-squidex-dlq',
         },
       },
-      SubscribeCalendarDLQPolicy: {
+      SubscribeCalendarSquidexDLQPolicy: {
         Type: 'AWS::SQS::QueuePolicy',
         Properties: {
           PolicyDocument: {
-            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-dlq-policy',
+            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-squidex-dlq-policy',
             Version: '2012-10-17',
             Statement: [
               {
@@ -1378,25 +1415,64 @@ const serverlessConfig: AWS = {
                 },
                 Action: 'sqs:SendMessage',
                 Resource: {
-                  'Fn::GetAtt': [`SubscribeCalendarDLQ`, 'Arn'],
+                  'Fn::GetAtt': [`SubscribeCalendarSquidexDLQ`, 'Arn'],
                 },
               },
             ],
           },
           Queues: [
             {
-              Ref: `SubscribeCalendarDLQ`,
+              Ref: `SubscribeCalendarSquidexDLQ`,
+            },
+          ],
+        },
+      },
+      SubscribeCalendarContentfulDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          MessageRetentionPeriod: 1_209_600, // 14 days
+          QueueName:
+            '${self:service}-${self:provider.stage}-subscribe-calendar-contentful-dlq',
+        },
+      },
+      SubscribeCalendarContentfulDLQPolicy: {
+        Type: 'AWS::SQS::QueuePolicy',
+        Properties: {
+          PolicyDocument: {
+            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-contentful-dlq-policy',
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Action: 'sqs:SendMessage',
+                Resource: {
+                  'Fn::GetAtt': [`SubscribeCalendarContentfulDLQ`, 'Arn'],
+                },
+              },
+            ],
+          },
+          Queues: [
+            {
+              Ref: `SubscribeCalendarContentfulDLQ`,
             },
           ],
         },
       },
     },
     extensions: {
-      SubscribeCalendarLambdaFunction: {
+      SubscribeCalendarSquidexLambdaFunction: {
         Properties: {
           DeadLetterConfig: {
             TargetArn: {
-              'Fn::GetAtt': ['SubscribeCalendarDLQ', 'Arn'],
+              'Fn::GetAtt': ['SubscribeCalendarSquidexDLQ', 'Arn'],
+            },
+          },
+        },
+      },
+      SubscribeCalendarContentfulLambdaFunction: {
+        Properties: {
+          DeadLetterConfig: {
+            TargetArn: {
+              'Fn::GetAtt': ['SubscribeCalendarContentfulDLQ', 'Arn'],
             },
           },
         },

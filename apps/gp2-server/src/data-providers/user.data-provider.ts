@@ -31,16 +31,8 @@ import {
 import { reverseMap } from '../utils/reverse-map';
 import { createUrl } from '../utils/urls';
 import { roleMap as projectRoleMap } from './project.data-provider';
+import { UserDataProvider } from './types/users.data-provider.types';
 import { roleMap as workingGroupRoleMap } from './working-group.data-provider';
-
-export interface UserDataProvider {
-  fetchById(id: string): Promise<gp2Model.UserDataObject | null>;
-  update(id: string, user: gp2Model.UserUpdateDataObject): Promise<void>;
-  create(user: gp2Model.UserCreateDataObject): Promise<string>;
-  fetch(
-    options: gp2Model.FetchUsersOptions,
-  ): Promise<gp2Model.ListUserDataObject>;
-}
 
 export class UserSquidexDataProvider implements UserDataProvider {
   constructor(

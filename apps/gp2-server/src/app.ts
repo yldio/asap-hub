@@ -83,11 +83,9 @@ import {
   ContributingCohortDataProvider,
   NewsDataProvider,
   PageDataProvider,
-} from './data-providers/types';
-import {
   UserDataProvider,
-  UserSquidexDataProvider,
-} from './data-providers/user.data-provider';
+} from './data-providers/types';
+import { UserSquidexDataProvider } from './data-providers/user.data-provider';
 import {
   WorkingGroupNetworkDataProvider,
   WorkingGroupNetworkSquidexDataProvider,

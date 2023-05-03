@@ -1,56 +1,70 @@
 import React, { useEffect, useState } from 'react';
 import { Paragraph } from '@contentful/f36-components';
-import { FieldExtensionSDK } from '@contentful/app-sdk';
-import { useSDK } from '@contentful/react-apps-toolkit';
+import { FieldExtensionSDK, Link } from '@contentful/app-sdk';
+import {
+  useSDK,
+  useFieldValue,
+  useAutoResizer,
+} from '@contentful/react-apps-toolkit';
 
 const getTitle = (teamName?: string, userName?: string) => {
   if (teamName && userName) return `${teamName} - ${userName}`;
   if (userName) return userName;
   if (teamName) return teamName;
-  return undefined;
+  return '';
 };
 
 const Field = () => {
   const sdk = useSDK<FieldExtensionSDK>();
+  useAutoResizer();
 
-  const [title, setTitle] = useState(sdk.field.getValue());
+  const [title, setTitle] = useFieldValue<string>('title');
+  const [team] = useFieldValue<Link>('team');
+  const [user] = useFieldValue<Link>('user');
 
   const [teamName, setTeamName] = useState('');
   const [userName, setUserName] = useState('');
 
+  const updateTeam = async (id: string) => {
+    const entry = await sdk.space.getEntry(id);
+    setTeamName(entry.fields.displayName['en-US']);
+  };
+
+  const updateUser = async (id: string) => {
+    const entry = await sdk.space.getEntry(id);
+    if (entry.fields.name) {
+      setUserName(entry.fields.name['en-US']);
+    } else if (entry.fields.firstName) {
+      setUserName(
+        `${entry.fields.firstName['en-US']} ${entry.fields.lastName['en-US']}`,
+      );
+    }
+  };
+
   useEffect(() => {
-    sdk.window.startAutoResizer();
-  }, [sdk.window]);
-
-  sdk.entry.onSysChanged(async () => {
-    const teamId = sdk.entry.fields.team.getValue()?.sys?.id;
-    if (teamId) {
-      const team = await sdk.space.getEntry(teamId);
-      setTeamName(team.fields.displayName['en-US']);
+    if (team?.sys?.id) {
+      updateTeam(team.sys.id);
+    } else {
+      setTeamName('');
     }
+  }, [team]);
 
-    const userId = sdk.entry.fields.user.getValue()?.sys?.id;
-    if (userId) {
-      const user = await sdk.space.getEntry(userId);
-      if (user.fields.name) {
-        setUserName(user.fields.name['en-US']);
-      } else {
-        setUserName(
-          `${user.fields.firstName['en-US']} ${user.fields.lastName['en-US']}`,
-        );
-      }
+  useEffect(() => {
+    if (user?.sys?.id) {
+      updateUser(user.sys.id);
+    } else {
+      setUserName('');
     }
-  });
+  }, [user]);
 
   useEffect(() => {
     const titleValue = getTitle(teamName, userName);
-    if (titleValue) {
-      sdk.field.setValue(titleValue);
+    if (titleValue || (!user && !team)) {
+      setTitle(titleValue);
     }
-    setTitle(titleValue);
-  }, [teamName, userName, sdk.field]);
+  }, [teamName, userName, user, team]);
 
-  return <Paragraph>{title ?? ''}</Paragraph>;
+  return <Paragraph>{title}</Paragraph>;
 };
 
 export default Field;

@@ -88,6 +88,9 @@ export const migrateUsers = async () => {
               fields: addLocaleToFields({
                 role: team.role,
                 inactiveSinceDate: team.inactiveSinceDate,
+                title: `${team.id[0].flatData.displayName}${
+                  team.inactiveSinceDate ? ' (inactive)' : ''
+                }`,
                 team: {
                   sys: {
                     type: 'Link',

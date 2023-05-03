@@ -297,7 +297,14 @@ describe('Migrate users', () => {
             {
               role: 'Project Manager',
               inactiveSinceDate: '2021-12-23T12:00:00.000Z',
-              id: [{ id: 'team-1' }],
+              id: [
+                {
+                  id: 'team-1',
+                  flatData: {
+                    displayName: 'Team 1',
+                  },
+                },
+              ],
             },
           ],
         }),
@@ -309,6 +316,7 @@ describe('Migrate users', () => {
 
       expect(contentfulEnv.createEntry).toHaveBeenCalledWith('teamMembership', {
         fields: {
+          title: { 'en-US': 'Team 1 (inactive)' },
           role: { 'en-US': 'Project Manager' },
           inactiveSinceDate: { 'en-US': '2021-12-23T12:00:00.000Z' },
           team: {

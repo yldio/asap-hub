@@ -19,7 +19,7 @@ describe('WorkingGroupOverview', () => {
   it('renders the contact information', () => {
     render(<WorkingGroupOverview {...defaultProps} />);
     expect(
-      screen.getByRole('heading', { name: 'Contact' }),
+      screen.getByRole('heading', { name: 'Contact Details' }),
     ).toBeInTheDocument();
   });
 

@@ -19,7 +19,7 @@ describe('UserOverview', () => {
     render(<UserOverview {...defaultProps} />);
     expect(screen.getByRole('heading', { name: 'Biography' })).toBeVisible();
     expect(
-      screen.getByRole('heading', { name: 'Contact Information' }),
+      screen.getByRole('heading', { name: 'Contact Details' }),
     ).toBeVisible();
     expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
   });

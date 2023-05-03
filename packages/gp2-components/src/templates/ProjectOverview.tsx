@@ -71,7 +71,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
     )}
     <div css={columnStyles}>
       <Card overrideStyles={cardStyles}>
-        <Headline3 noMargin>Contact</Headline3>
+        <Headline3 noMargin>Contact Details</Headline3>
         <div css={contentStyles}>
           <EmailSection
             contactEmails={[

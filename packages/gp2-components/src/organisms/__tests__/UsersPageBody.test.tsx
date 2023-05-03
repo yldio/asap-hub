@@ -78,7 +78,7 @@ describe('UsersPageBody', () => {
         screen.queryByText('Showing 0-0 of 0 results'),
       ).not.toBeInTheDocument();
       expect(
-        screen.getByRole('heading', { name: 'No users have been found.' }),
+        screen.getByRole('heading', { name: 'No results have been found.' }),
       ).toBeVisible();
     });
 

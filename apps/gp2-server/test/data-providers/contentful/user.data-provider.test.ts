@@ -1,0 +1,1802 @@
+import {
+  Environment,
+  getContentfulGraphqlClientMockServer,
+} from '@asap-hub/contentful';
+import { GenericError, NotFoundError } from '@asap-hub/errors';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import nock from 'nock';
+import { appName, baseUrl } from '../../../src/config';
+import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/users.data-provider';
+import { UserDataProvider } from '../../../src/data-providers/types';
+import {
+  fetchUserResponse,
+  getContentfulGraphql,
+  getContentfulGraphqlUser,
+  getGraphQLProjectMembers,
+  getGraphQLWorkingGroupMembers,
+  getSquidexProjectsMembersGraphqlResponse,
+  getSquidexUsersGraphqlResponse,
+  getSquidexWorkingGroupsMembersGraphqlResponse,
+  getUserCreateDataObject,
+  getUserDataObject,
+  getUserInput,
+} from '../../fixtures/user.fixtures';
+import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
+
+jest.mock('@asap-hub/contentful', () => ({
+  ...jest.requireActual('@asap-hub/contentful'),
+  patchAndPublish: jest.fn().mockResolvedValue(undefined),
+}));
+describe('User data provider', () => {
+  const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
+
+  const userDataProvider: UserDataProvider = new UserContentfulDataProvider(
+    contentfulGraphqlClientMock,
+    contentfulRestClientMock,
+  );
+
+  beforeEach(jest.resetAllMocks);
+
+  describe('FetchById', () => {
+    test('Should fetch the users from squidex graphql', async () => {
+      const contentfulGraphqlClientMockServer =
+        getContentfulGraphqlClientMockServer(getContentfulGraphql());
+      const userDataProviderWithMockServer: UserDataProvider =
+        new UserContentfulDataProvider(
+          contentfulGraphqlClientMockServer,
+          contentfulRestClientMock,
+        );
+      const result = await userDataProviderWithMockServer.fetchById('user-id');
+
+      expect(result).toMatchObject(getUserDataObject());
+    });
+    test('Should return the user when it finds it', async () => {
+      const mockResponse = getContentfulGraphqlUser();
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result).toEqual(getUserDataObject());
+    });
+    test('Should throw when the user has role undefined', async () => {
+      const mockResponse = getContentfulGraphqlUser({
+        role: null,
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      expect(() =>
+        userDataProvider.fetchById('user-id'),
+      ).rejects.toThrowErrorMatchingInlineSnapshot('"Role not defined: null"');
+    });
+
+    test('Should throw when the user has region undefined', async () => {
+      const mockResponse = getContentfulGraphqlUser({
+        region: null,
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      expect(() =>
+        userDataProvider.fetchById('user-id'),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        '"Region not defined: null"',
+      );
+    });
+
+    test.each(gp2Model.userDegrees)(
+      'Should correctly map MD, PhD Correctly - %s',
+      async (degree) => {
+        const expected = degree;
+        const degreeUser = getContentfulGraphqlUser();
+        degreeUser.degrees = [degree];
+        const mockResponse = getContentfulGraphqlUser(degreeUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.degrees).toEqual([expected]);
+      },
+    );
+    test('degrees default to empty array', async () => {
+      const mockResponse = getContentfulGraphqlUser({
+        degrees: null,
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result!.degrees).toEqual([]);
+    });
+
+    test('connections default to empty array', async () => {
+      const mockResponse = getContentfulGraphqlUser({
+        connections: null,
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result!.connections).toEqual([]);
+    });
+
+    test.each`
+      region                      | expected
+      ${'Africa'}                 | ${'Africa'}
+      ${'Asia'}                   | ${'Asia'}
+      ${'Australia/Australiasia'} | ${'Australia/Australiasia'}
+      ${'Europe'}                 | ${'Europe'}
+      ${'North America'}          | ${'North America'}
+      ${'South America'}          | ${'South America'}
+      ${'Latin America'}          | ${'Latin America'}
+    `(
+      'Should correctly map regions $region => $expected',
+      async ({ region, expected }) => {
+        const mockResponse = getContentfulGraphqlUser({ region });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.region).toEqual(expected);
+      },
+    );
+
+    test.each`
+      role                           | expected
+      ${'Working Group Participant'} | ${'Working Group Participant'}
+      ${'Network Investigator'}      | ${'Network Investigator'}
+      ${'Network Collaborator'}      | ${'Network Collaborator'}
+      ${'Administrator'}             | ${'Administrator'}
+      ${'Trainee'}                   | ${'Trainee'}
+    `(
+      'Should correctly map role $role => $expected',
+      async ({ role, expected }) => {
+        const mockResponse = getContentfulGraphqlUser({ role });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.role).toEqual(expected);
+      },
+    );
+
+    test.each(gp2Model.keywords)('keywords are added - %s', async (keyword) => {
+      const keywords = [keyword];
+      const mockResponse = getContentfulGraphqlUser({ keywords });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.keywords).toEqual(keywords);
+    });
+
+    test('keywords are valid', async () => {
+      const keywords = ['invalid-keyword'];
+      const mockResponse = getContentfulGraphqlUser({ keywords });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();
+    });
+
+    test('questions are added', async () => {
+      const questions = ['a valid question'];
+      const mockResponse = getContentfulGraphqlUser({ questions });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.questions).toEqual(questions);
+    });
+    test('avatar is added', async () => {
+      const avatar = {
+        sys: {
+          id: 'avatar-id',
+        },
+      };
+      const mockResponse = getContentfulGraphqlUser({ avatar });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.avatarUrl).toEqual(expect.stringContaining('avatar-id'));
+    });
+
+    test('questions are valid', async () => {
+      const questions = [{ question: null }];
+      const mockResponse = getContentfulGraphqlUser({ questions });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();
+    });
+    test('questions default to empty array', async () => {
+      const questions = null;
+      const mockResponse = getContentfulGraphqlUser({ questions });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result?.questions).toEqual([]);
+    });
+
+    describe('positions', () => {
+      const position = {
+        role: 'CEO',
+        department: 'Research',
+        institution: 'Stark Industries',
+      };
+      test.each(['role', 'department', 'institution'])(
+        'Should throw when the position has %s not defined',
+        async (item) => {
+          const positions = [
+            {
+              ...position,
+              [item]: null,
+            },
+          ];
+          const mockResponse = getContentfulGraphqlUser({ positions });
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            mockResponse,
+          );
+
+          expect(() =>
+            userDataProvider.fetchById('user-id'),
+          ).rejects.toThrowError('Position not defined');
+        },
+      );
+      test('Should return empty array if positions has not been defined', async () => {
+        const positions = null;
+        const mockResponse = getContentfulGraphqlUser({ positions });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.positions).toEqual([]);
+      });
+    });
+    describe('contributing cohorts', () => {
+      const contributingCohortsCollection = {
+        items: [
+          {
+            contributingCohort: {
+              sys: { id: '42' },
+              name: 'GeneFinder',
+            },
+            role: 'Investigator',
+            studyLink: 'http://example.com/test',
+          },
+        ],
+      };
+      test.each`
+        property                                            | description
+        ${{ id: null }}                                     | ${'id is not defined'}
+        ${{ id: [] }}                                       | ${'id is empty'}
+        ${{ role: null }}                                   | ${'role is not defined'}
+        ${{ id: [{ flatData: { name: null }, id: '42' }] }} | ${'name is not defined'}
+      `('Should throw when the cohort $description', async ({ property }) => {
+        const invalidRoleUser = getGraphQLUser();
+        invalidRoleUser.flatData.contributingCohorts = [
+          {
+            ...cohort,
+            ...property,
+          },
+        ];
+        const mockResponse = getContentfulGraphqlUser(invalidRoleUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Invalid Contributing Cohort');
+      });
+
+      test('Should return empty array if cohorts have not been defined', async () => {
+        const contributingCohorts = null;
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.contributingCohorts).toEqual([]);
+      });
+      test.each`
+        role                   | expectedRole
+        ${'Investigator'}      | ${'Investigator'}
+        ${'Co-Investigator'}   | ${'Co-Investigator'}
+        ${'Lead Investigator'} | ${'Lead Investigator'}
+      `(
+        'should parse the role $role => $expectedRole',
+        async ({ role, expectedRole }) => {
+          const user = getGraphQLUser();
+          user.flatData.contributingCohorts = [{ ...cohort, role }];
+          const mockResponse = getContentfulGraphqlUser(user);
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            mockResponse,
+          );
+          const result = await userDataProvider.fetchById('user-id');
+          expect(result?.contributingCohorts[0]?.role).toEqual(expectedRole);
+        },
+      );
+    });
+    describe('projects', () => {
+      const project = {
+        status: 'Active',
+        title: 'a title',
+        members: [
+          {
+            role: 'Contributor',
+            user: [{ id: '11' }],
+          },
+        ],
+      };
+      test('Should return empty array if projects has not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.referencingProjectsContents = null;
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.projects).toEqual([]);
+      });
+      test('Should throw when the status is not defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.referencingProjectsContents = [
+          {
+            id: '7',
+            flatData: {
+              ...project,
+              status: null,
+            },
+          },
+        ];
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Status not defined');
+      });
+      test('Should throw when a members role is not defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.referencingProjectsContents = [
+          {
+            id: '7',
+            flatData: {
+              ...project,
+              members: [
+                ...project.members,
+                { role: null, user: [{ id: '23' }] },
+              ],
+            },
+          },
+        ];
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Invalid project members');
+      });
+      test.each([null, []])(
+        'Should throw when a members user is not defined',
+        async (user) => {
+          const invalidUser = getGraphQLUser();
+          invalidUser.referencingProjectsContents = [
+            {
+              id: '7',
+              flatData: {
+                ...project,
+                members: [
+                  ...project.members,
+                  { role: ProjectsDataMembersRoleEnum.Contributor, user },
+                ],
+              },
+            },
+          ];
+          const mockResponse = getContentfulGraphqlUser(invalidUser);
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            mockResponse,
+          );
+
+          expect(() =>
+            userDataProvider.fetchById('user-id'),
+          ).rejects.toThrowError('Invalid project members');
+        },
+      );
+      test.each`
+        role                 | expectedRole
+        ${'Project manager'} | ${'Project manager'}
+        ${'Project lead'}    | ${'Project lead'}
+        ${'Project co-lead'} | ${'Project co-lead'}
+        ${'Contributor'}     | ${'Contributor'}
+        ${'Investigator'}    | ${'Investigator'}
+      `(
+        'should parse the role $role => $expectedRole',
+        async ({ role, expectedRole }) => {
+          const user = getGraphQLUser();
+          user.referencingProjectsContents = [
+            {
+              id: '7',
+              flatData: {
+                ...project,
+                members: [{ role, user: [{ id: '23' }] }],
+              },
+            },
+          ];
+          const mockResponse = getContentfulGraphqlUser(user);
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            mockResponse,
+          );
+          const result = await userDataProvider.fetchById('user-id');
+          expect(result?.projects[0]?.members[0]!.role).toEqual(expectedRole);
+        },
+      );
+      test('check multiple members', async () => {
+        const user = getGraphQLUser();
+        user.referencingProjectsContents = [
+          {
+            id: '7',
+            flatData: {
+              ...project,
+              members: [
+                {
+                  role: ProjectsDataMembersRoleEnum.Contributor,
+                  user: [{ id: '23' }],
+                },
+                {
+                  role: ProjectsDataMembersRoleEnum.ProjectLead,
+                  user: [{ id: '27' }],
+                },
+              ],
+            },
+          },
+        ];
+        const mockResponse = getContentfulGraphqlUser(user);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.projects[0]?.members).toHaveLength(2);
+        expect(result?.projects[0]?.members).toEqual([
+          { role: 'Contributor', userId: '23' },
+          { role: 'Project lead', userId: '27' },
+        ]);
+      });
+      test('members undefined', async () => {
+        const user = getGraphQLUser();
+        user.referencingProjectsContents = [
+          {
+            id: '7',
+            flatData: {
+              ...project,
+              members: null,
+            },
+          },
+        ];
+        const mockResponse = getContentfulGraphqlUser(user);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.projects[0]?.members).toHaveLength(0);
+      });
+    });
+    describe('working groups', () => {
+      const workingGroup = {
+        title: 'a title',
+        members: [
+          {
+            role: WorkingGroupsDataMembersRoleEnum.CoLead,
+            user: [{ id: '11' }],
+          },
+        ],
+      };
+      test('Should return empty array if working group has not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.referencingWorkingGroupsContents = null;
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.workingGroups).toEqual([]);
+      });
+      test('Should throw when a members role is not defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.referencingWorkingGroupsContents = [
+          {
+            id: '7',
+            flatData: {
+              ...workingGroup,
+              members: [{ role: null, user: [{ id: '23' }] }],
+            },
+          },
+        ];
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Invalid working group members');
+      });
+      test.each([null, []])(
+        'Should throw when a members user is not defined',
+        async (user) => {
+          const invalidUser = getGraphQLUser();
+          invalidUser.referencingWorkingGroupsContents = [
+            {
+              id: '7',
+              flatData: {
+                ...workingGroup,
+                members: [
+                  { role: WorkingGroupsDataMembersRoleEnum.CoLead, user },
+                ],
+              },
+            },
+          ];
+          const mockResponse = getContentfulGraphqlUser(invalidUser);
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            mockResponse,
+          );
+
+          expect(() =>
+            userDataProvider.fetchById('user-id'),
+          ).rejects.toThrowError('Invalid working group members');
+        },
+      );
+      test.each`
+        role                                                   | expectedRole
+        ${WorkingGroupsDataMembersRoleEnum.Lead}               | ${'Lead'}
+        ${WorkingGroupsDataMembersRoleEnum.CoLead}             | ${'Co-lead'}
+        ${WorkingGroupsDataMembersRoleEnum.WorkingGroupMember} | ${'Working group member'}
+      `(
+        'should parse the role $role => $expectedRole',
+        async ({ role, expectedRole }) => {
+          const user = getGraphQLUser();
+          user.referencingWorkingGroupsContents = [
+            {
+              id: '7',
+              flatData: {
+                ...workingGroup,
+                members: [{ role, user: [{ id: '23' }] }],
+              },
+            },
+          ];
+          const mockResponse = getContentfulGraphqlUser(user);
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            mockResponse,
+          );
+          const result = await userDataProvider.fetchById('user-id');
+          expect(result?.workingGroups[0]?.members[0]!.role).toEqual(
+            expectedRole,
+          );
+        },
+      );
+      test('check multiple members', async () => {
+        const user = getGraphQLUser();
+        user.referencingWorkingGroupsContents = [
+          {
+            id: '7',
+            flatData: {
+              ...workingGroup,
+              members: [
+                {
+                  role: WorkingGroupsDataMembersRoleEnum.CoLead,
+                  user: [{ id: '23' }],
+                },
+                {
+                  role: WorkingGroupsDataMembersRoleEnum.Lead,
+                  user: [{ id: '27' }],
+                },
+              ],
+            },
+          },
+        ];
+        const mockResponse = getContentfulGraphqlUser(user);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.workingGroups[0]?.members).toHaveLength(2);
+        expect(result?.workingGroups[0]?.members).toEqual([
+          { role: 'Co-lead', userId: '23' },
+          { role: 'Lead', userId: '27' },
+        ]);
+      });
+      test('members undefined', async () => {
+        const user = getGraphQLUser();
+        user.referencingWorkingGroupsContents = [
+          {
+            id: '7',
+            flatData: {
+              ...workingGroup,
+              members: null,
+            },
+          },
+        ];
+        const mockResponse = getContentfulGraphqlUser(user);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.workingGroups[0]?.members).toHaveLength(0);
+      });
+    });
+    describe('telephone', () => {
+      test('Should return undefined telephone if both the number and country code have not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.telephoneNumber = null;
+        invalidUser.flatData.telephoneCountryCode = null;
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.telephone).toBeUndefined();
+      });
+      test('Should return undefined telephone number if the number has not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.telephoneNumber = null;
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.telephone?.number).toBeUndefined();
+        expect(result?.telephone?.countryCode).toEqual('+1');
+      });
+      test('Should return undefined telephone country code if the country code has not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.telephoneCountryCode = null;
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.telephone?.countryCode).toBeUndefined();
+        expect(result?.telephone?.number).toEqual('212-970-4133');
+      });
+    });
+
+    describe('social', () => {
+      test('should return undefined social if it has not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.social = null;
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.social).toBeUndefined();
+      });
+
+      test('should return social props undefined if they have not been defined', async () => {
+        const invalidUser = getGraphQLUser();
+        invalidUser.flatData.social = [
+          {
+            googleScholar: null,
+            orcid: null,
+            blog: null,
+            twitter: null,
+            linkedIn: null,
+            github: null,
+            researcherId: null,
+            researchGate: null,
+          },
+        ];
+        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.social).toEqual({});
+      });
+    });
+  });
+
+  describe('Update', () => {
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    const userId = 'user-id';
+
+    test('Should throw when the PATCH request to squidex fails', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          firstName: { iv: 'Tony' },
+        })
+        .reply(404);
+
+      await expect(
+        userDataProvider.update(userId, { firstName: 'Tony' }),
+      ).rejects.toThrow(NotFoundError);
+      expect(nock.isDone()).toBe(true);
+    });
+
+    test('Should update telephone fields', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          telephoneCountryCode: { iv: '+1' },
+          telephoneNumber: { iv: '212-970-4133' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '+1', number: '212-970-4133' },
+      });
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update allow empty telephone country code', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          telephoneCountryCode: { iv: '' },
+          telephoneNumber: { iv: '212-970-4133' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '', number: '212-970-4133' },
+      });
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update allow empty telephone number', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          telephoneCountryCode: { iv: '+1' },
+          telephoneNumber: { iv: '' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '+1', number: '' },
+      });
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update secondary email', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          secondaryEmail: { iv: '' },
+        })
+        .reply(200, fetchUserResponse());
+
+      expect(
+        await userDataProvider.update(userId, {
+          secondaryEmail: '',
+        }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+    test('Should update secondary email', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          secondaryEmail: { iv: 'tony@example.com' },
+        })
+        .reply(200, fetchUserResponse());
+
+      expect(
+        await userDataProvider.update(userId, {
+          secondaryEmail: 'tony@example.com',
+        }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+
+    test('Should update first name', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          firstName: { iv: 'Tony' },
+        })
+        .reply(200, fetchUserResponse());
+
+      expect(
+        await userDataProvider.update(userId, { firstName: 'Tony' }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+
+    test('Should update last name', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          lastName: { iv: 'Stark' },
+        })
+        .reply(200, fetchUserResponse());
+
+      expect(
+        await userDataProvider.update(userId, { lastName: 'Stark' }),
+      ).not.toBeDefined();
+      expect(nock.isDone()).toBe(true);
+    });
+    test.each`
+      region                      | expected
+      ${'Africa'}                 | ${'Africa'}
+      ${'Asia'}                   | ${'Asia'}
+      ${'Australia/Australiasia'} | ${'Australia/Australiasia'}
+      ${'Europe'}                 | ${'Europe'}
+      ${'North America'}          | ${'North America'}
+      ${'South America'}          | ${'South America'}
+      ${'Latin America'}          | ${'Latin America'}
+    `(
+      'Should update the region $region => $expected',
+      async ({ region, expected }) => {
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/users/${userId}`, {
+            region: { iv: expected },
+          })
+          .reply(200, fetchUserResponse());
+        expect(
+          await userDataProvider.update(userId, {
+            region,
+          }),
+        ).not.toBeDefined();
+        expect(nock.isDone()).toBe(true);
+      },
+    );
+    test.each`
+      role                           | expected
+      ${'Working Group Participant'} | ${'Working Group Participant'}
+      ${'Network Investigator'}      | ${'Network Investigator'}
+      ${'Network Collaborator'}      | ${'Network Collaborator'}
+      ${'Administrator'}             | ${'Administrator'}
+      ${'Trainee'}                   | ${'Trainee'}
+    `(
+      'Should update the role $role => $expected',
+      async ({ role, expected }) => {
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/users/${userId}`, {
+            role: { iv: expected },
+          })
+          .reply(200, fetchUserResponse());
+        expect(
+          await userDataProvider.update(userId, {
+            role,
+          }),
+        ).not.toBeDefined();
+        expect(nock.isDone()).toBe(true);
+      },
+    );
+    test.each(gp2Model.userDegrees)(
+      'Should update the degree %s',
+      async (degree) => {
+        const expected = degree;
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/users/${userId}`, {
+            degree: { iv: [degree] },
+          })
+          .reply(200, fetchUserResponse());
+        expect(
+          await userDataProvider.update(userId, {
+            degrees: [expected],
+          }),
+        ).not.toBeDefined();
+        expect(nock.isDone()).toBe(true);
+      },
+    );
+    test.each`
+      role                   | expected
+      ${'Investigator'}      | ${'Investigator'}
+      ${'Co-Investigator'}   | ${'Co-Investigator'}
+      ${'Lead Investigator'} | ${'Lead Investigator'}
+    `(
+      'Should update the contributing cohort role $role => $expected',
+      async ({ role, expected }) => {
+        const id = '42';
+        nock(baseUrl)
+          .patch(`/api/content/${appName}/users/${userId}`, {
+            contributingCohorts: {
+              iv: [
+                {
+                  id: [id],
+                  role: expected,
+                },
+              ],
+            },
+          })
+          .reply(200, fetchUserResponse());
+        expect(
+          await userDataProvider.update(userId, {
+            contributingCohorts: [{ contributingCohortId: id, role }],
+          }),
+        ).not.toBeDefined();
+        expect(nock.isDone()).toBe(true);
+      },
+    );
+  });
+
+  describe('Create', () => {
+    afterEach(() => {
+      expect(nock.isDone()).toBe(true);
+    });
+
+    afterEach(() => {
+      nock.cleanAll();
+    });
+
+    test('Should throw when the POST request to squidex fails', async () => {
+      nock(baseUrl)
+        .post(`/api/content/${appName}/users?publish=true`)
+        .reply(500);
+
+      await expect(
+        userDataProvider.create(getUserCreateDataObject()),
+      ).rejects.toThrow(GenericError);
+    });
+
+    test('Should create the user', async () => {
+      const userResponse = fetchUserResponse();
+      const userCreateDataObject = getUserCreateDataObject();
+
+      nock(baseUrl)
+        .post(`/api/content/${appName}/users?publish=true`, getUserInput())
+        .reply(200, userResponse);
+
+      const response = await userDataProvider.create(userCreateDataObject);
+
+      expect(response).toEqual(userResponse.id);
+    });
+
+    test.each`
+      region                      | expected
+      ${'Africa'}                 | ${'Africa'}
+      ${'Asia'}                   | ${'Asia'}
+      ${'Australia/Australiasia'} | ${'Australia/Australiasia'}
+      ${'Europe'}                 | ${'Europe'}
+      ${'North America'}          | ${'North America'}
+      ${'South America'}          | ${'South America'}
+      ${'Latin America'}          | ${'Latin America'}
+    `(
+      'Should create a user with the region $region => $expected',
+      async ({ region, expected }) => {
+        const userCreateDataObject = getUserCreateDataObject();
+
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            region: { iv: expected },
+          })
+          .reply(200, fetchUserResponse());
+
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          region,
+        });
+      },
+    );
+
+    test.each`
+      role                           | expected
+      ${'Working Group Participant'} | ${'Working Group Participant'}
+      ${'Network Investigator'}      | ${'Network Investigator'}
+      ${'Network Collaborator'}      | ${'NetworkCollaborator'}
+      ${'Administrator'}             | ${'Administrator'}
+      ${'Trainee'}                   | ${'Trainee'}
+    `(
+      'Should create a user with the role $role => $expected',
+      async ({ role, expected }) => {
+        const userCreateDataObject = getUserCreateDataObject();
+
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            role: { iv: expected },
+          })
+          .reply(200, fetchUserResponse());
+
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          role,
+        });
+      },
+    );
+
+    test.each(gp2Model.userDegrees)(
+      'Should create a user with the degree %s',
+      async (degree) => {
+        const userCreateDataObject = getUserCreateDataObject();
+        const expected = degree;
+
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            degree: { iv: [degree] },
+          })
+          .reply(200, fetchUserResponse());
+
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          degrees: [expected],
+        });
+      },
+    );
+    test.each`
+      role                   | expected
+      ${'Investigator'}      | ${'Investigator'}
+      ${'Co-Investigator'}   | ${'Co-Investigator'}
+      ${'Lead Investigator'} | ${'Lead Investigator'}
+    `(
+      'Should update the contributing cohort role $role => $expected',
+      async ({ role, expected }) => {
+        const userCreateDataObject = getUserCreateDataObject();
+        const id = '42';
+        nock(baseUrl)
+          .post(`/api/content/${appName}/users?publish=true`, {
+            ...getUserInput(),
+            contributingCohorts: {
+              iv: [
+                {
+                  id: [id],
+                  role: expected,
+                },
+              ],
+            },
+          })
+          .reply(200, fetchUserResponse());
+        await userDataProvider.create({
+          ...userCreateDataObject,
+          contributingCohorts: [{ contributingCohortId: id, role }],
+        });
+      },
+    );
+  });
+
+  describe('Fetch', () => {
+    beforeEach(jest.resetAllMocks);
+    test('Should fetch the users from squidex graphql', async () => {
+      const result = await usersMockGraphqlServer.fetch({});
+
+      expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+    test('Should return an empty result', async () => {
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      mockResponse.queryUsersContentsWithTotal!.items = [];
+      mockResponse.queryUsersContentsWithTotal!.total = 0;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetch({});
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+    test('Should return an empty result when the client returns a response with query property set to null', async () => {
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      mockResponse.queryUsersContentsWithTotal = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetch({});
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
+      const mockResponse = getSquidexUsersGraphqlResponse();
+      mockResponse.queryUsersContentsWithTotal!.items = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await userDataProvider.fetch({});
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should query with onboarded filter', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        filter: {
+          onlyOnboarded: true,
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      const filter =
+        "(data/onboarded/iv eq true) and (data/role/iv ne 'Hidden')";
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter,
+        },
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
+    test('Should return all users when the onlyOnboard flag is false', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        filter: {
+          onlyOnboarded: false,
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: "(data/role/iv ne 'Hidden')",
+        },
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
+    test.each`
+      name          | value                 | fieldName
+      ${'regions'}  | ${['Africa', 'Asia']} | ${'region'}
+      ${'keywords'} | ${['Bash', 'R']}      | ${'keywords'}
+    `('Should query with $name filters', async ({ name, value, fieldName }) => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        filter: {
+          [name]: value,
+        },
+      };
+      await userDataProvider.fetch(fetchOptions);
+
+      const filter =
+        "(data/role/iv ne 'Hidden')" +
+        ' and' +
+        ` (data/${fieldName}/iv eq '${value[0]}' or data/${fieldName}/iv eq '${value[1]}')`;
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter,
+        },
+      );
+    });
+
+    describe('projects filter', () => {
+      test('it should be able to filter by project', async () => {
+        const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const userId = '11';
+        const projectMembers = getGraphQLProjectMembers({
+          members: [{ user: [{ id: userId }] }],
+        });
+        const projectMembersResponse =
+          getSquidexProjectsMembersGraphqlResponse();
+
+        projectMembersResponse.queryProjectsContents![0] = projectMembers;
+
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(projectMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            projects: [projectId],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
+        const projectFilter = `id eq '${projectId}'`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: projectFilter,
+          },
+        );
+        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${userId}')`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+      test('it should be able to filter by projects', async () => {
+        const project1Id = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const project2Id = '140f5e15-922d-4cbf-9d39-35dd39225b04';
+        const user1Id = '11';
+        const user2Id = '7';
+        const project1Members = getGraphQLProjectMembers({
+          members: [{ user: [{ id: user1Id }] }],
+        });
+        const project2Members = getGraphQLProjectMembers({
+          members: [{ user: [{ id: user2Id }] }],
+        });
+        const projectMembersResponse =
+          getSquidexProjectsMembersGraphqlResponse();
+
+        projectMembersResponse.queryProjectsContents![0] = project1Members;
+        projectMembersResponse.queryProjectsContents![1] = project2Members;
+
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(projectMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            projects: [project1Id, project2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
+        const projectFilter = `id eq '${project1Id}' or id eq '${project2Id}'`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: projectFilter,
+          },
+        );
+        const userFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          ` (id eq '${user1Id}' or id eq '${user2Id}')`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+      test('it should be able to filter by projects and multiple users', async () => {
+        const project1Id = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const project2Id = '140f5e15-922d-4cbf-9d39-35dd39225b04';
+        const user1Id = '11';
+        const user2Id = '7';
+        const user3Id = '23';
+        const project1Members = getGraphQLProjectMembers({
+          members: [{ user: [{ id: user1Id }] }],
+        });
+        const project2Members = getGraphQLProjectMembers({
+          members: [{ user: [{ id: user2Id }] }, { user: [{ id: user3Id }] }],
+        });
+        const projectMembersResponse =
+          getSquidexProjectsMembersGraphqlResponse();
+
+        projectMembersResponse.queryProjectsContents![0] = project1Members;
+        projectMembersResponse.queryProjectsContents![1] = project2Members;
+
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(projectMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            projects: [project1Id, project2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
+        const projectFilter = `id eq '${project1Id}' or id eq '${project2Id}'`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: projectFilter,
+          },
+        );
+        const userFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          ` (id eq '${user1Id}' or id eq '${user2Id}' or id eq '${user3Id}')`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+      test('it should be able to filter out duplicate user Ids', async () => {
+        const project1Id = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const project2Id = '140f5e15-922d-4cbf-9d39-35dd39225b04';
+        const user1Id = '11';
+        const user2Id = '11';
+        const project1Members = getGraphQLProjectMembers({
+          members: [{ user: [{ id: user1Id }] }],
+        });
+        const project2Members = getGraphQLProjectMembers({
+          members: [{ user: [{ id: user2Id }] }],
+        });
+        const projectMembersResponse =
+          getSquidexProjectsMembersGraphqlResponse();
+
+        projectMembersResponse.queryProjectsContents![0] = project1Members;
+        projectMembersResponse.queryProjectsContents![1] = project2Members;
+
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(projectMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            projects: [project1Id, project2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
+        const projectFilter = `id eq '${project1Id}' or id eq '${project2Id}'`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: projectFilter,
+          },
+        );
+        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${user1Id}')`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+    });
+
+    describe('working groups filter', () => {
+      test('it should be able to filter by working group', async () => {
+        const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
+        const userId = '11';
+        const workingGroupMembers = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: userId }] }],
+        });
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+          workingGroupMembers;
+
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(workingGroupMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroupId],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
+        const workingGroupFilter = `id eq '${workingGroupId}'`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: workingGroupFilter,
+          },
+        );
+        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${userId}')`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+      test('it should be able to filter by workingGroups', async () => {
+        const workingGroup1Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
+        const workingGroup2Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const user1Id = '11';
+        const user2Id = '7';
+        const workingGroup1Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user1Id }] }],
+        });
+        const workingGroup2Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user2Id }] }],
+        });
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+          workingGroup1Members;
+        workingGroupMembersResponse.queryWorkingGroupsContents![1] =
+          workingGroup2Members;
+
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(workingGroupMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroup1Id, workingGroup2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
+        const workingGroupFilter = `id eq '${workingGroup1Id}' or id eq '${workingGroup2Id}'`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: workingGroupFilter,
+          },
+        );
+        const userFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          ` (id eq '${user1Id}' or id eq '${user2Id}')`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+      test('it should be able to filter by workingGroups and multiple users', async () => {
+        const workingGroup1Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
+        const workingGroup2Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const user1Id = '11';
+        const user2Id = '7';
+        const user3Id = '23';
+        const workingGroup1Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user1Id }] }],
+        });
+        const workingGroup2Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user2Id }] }, { user: [{ id: user3Id }] }],
+        });
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+          workingGroup1Members;
+        workingGroupMembersResponse.queryWorkingGroupsContents![1] =
+          workingGroup2Members;
+
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(workingGroupMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroup1Id, workingGroup2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
+        const workingGroupFilter = `id eq '${workingGroup1Id}' or id eq '${workingGroup2Id}'`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: workingGroupFilter,
+          },
+        );
+        const userFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          ` (id eq '${user1Id}' or id eq '${user2Id}' or id eq '${user3Id}')`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+      test('it should be able to filter out duplicate user Ids', async () => {
+        const workingGroup1Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
+        const workingGroup2Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const user1Id = '11';
+        const user2Id = '11';
+        const workingGroup1Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user1Id }] }],
+        });
+        const workingGroup2Members = getGraphQLWorkingGroupMembers({
+          members: [{ user: [{ id: user2Id }] }],
+        });
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+          workingGroup1Members;
+        workingGroupMembersResponse.queryWorkingGroupsContents![1] =
+          workingGroup2Members;
+
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(workingGroupMembersResponse)
+          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroup1Id, workingGroup2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
+        const workingGroupFilter = `id eq '${workingGroup1Id}' or id eq '${workingGroup2Id}'`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          expect.anything(),
+          {
+            filter: workingGroupFilter,
+          },
+        );
+        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${user1Id}')`;
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          2,
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: userFilter,
+          },
+        );
+      });
+    });
+    test('it should be able to filter out duplicate user Ids when both the project and working group filters are defined', async () => {
+      const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+      const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+      const user1Id = '11';
+      const user2Id = '11';
+      const projectMembers = getGraphQLProjectMembers({
+        members: [{ user: [{ id: user1Id }] }],
+      });
+      const workingGroupMembers = getGraphQLWorkingGroupMembers({
+        members: [{ user: [{ id: user2Id }] }],
+      });
+      const projectMembersResponse = getSquidexProjectsMembersGraphqlResponse();
+      const workingGroupMembersResponse =
+        getSquidexWorkingGroupsMembersGraphqlResponse();
+
+      projectMembersResponse.queryProjectsContents![0] = projectMembers;
+      workingGroupMembersResponse.queryWorkingGroupsContents![0] =
+        workingGroupMembers;
+
+      contentfulGraphqlClientMock.request
+        .mockResolvedValueOnce(projectMembersResponse)
+        .mockResolvedValueOnce(workingGroupMembersResponse)
+        .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        filter: {
+          projects: [projectId],
+          workingGroups: [workingGroupId],
+        },
+      };
+      await userDataProvider.fetch(fetchOptions);
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledTimes(3);
+      const projectFilter = `id eq '${projectId}'`;
+      expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+        1,
+        expect.anything(),
+        {
+          filter: projectFilter,
+        },
+      );
+      const workingGroupFilter = `id eq '${workingGroupId}'`;
+      expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+        2,
+        expect.anything(),
+        {
+          filter: workingGroupFilter,
+        },
+      );
+      const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${user1Id}')`;
+      expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+        3,
+        expect.anything(),
+        {
+          top: 12,
+          skip: 2,
+          filter: userFilter,
+        },
+      );
+    });
+
+    describe('if there is a working group or a project filter and no users are found - we should return an empty list', () => {
+      test('we have a projects filter and no working group filter', async () => {
+        const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const projectMembersResponse =
+          getSquidexProjectsMembersGraphqlResponse();
+        projectMembersResponse.queryProjectsContents = [];
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          projectMembersResponse,
+        );
+
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            projects: [projectId],
+          },
+        };
+        const result = await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(1);
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+      test('we have a working groups filter and no projects filter', async () => {
+        const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        workingGroupMembersResponse.queryWorkingGroupsContents = [];
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          workingGroupMembersResponse,
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroupId],
+          },
+        };
+        const result = await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(1);
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+      test('if both are defined', async () => {
+        const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+        const projectMembersResponse =
+          getSquidexProjectsMembersGraphqlResponse();
+        const workingGroupMembersResponse =
+          getSquidexWorkingGroupsMembersGraphqlResponse();
+
+        projectMembersResponse.queryProjectsContents = [];
+        workingGroupMembersResponse.queryWorkingGroupsContents = [];
+
+        contentfulGraphqlClientMock.request
+          .mockResolvedValueOnce(projectMembersResponse)
+          .mockResolvedValueOnce(workingGroupMembersResponse);
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            projects: [projectId],
+            workingGroups: [workingGroupId],
+          },
+        };
+        const result = await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+    });
+
+    test('Should query with code filters', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getSquidexUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 1,
+        skip: 0,
+        filter: {
+          onlyOnboarded: false,
+          hidden: false,
+          code: 'a-code',
+        },
+      };
+      await userDataProvider.fetch(fetchOptions);
+
+      const filter = "(data/connections/iv/code eq 'a-code')";
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          top: 1,
+          skip: 0,
+          filter,
+        },
+      );
+    });
+    describe('search', () => {
+      test('Should query with filters and return the users', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          search: 'tony stark',
+          filter: {},
+        };
+        const users = await userDataProvider.fetch(fetchOptions);
+
+        const filterQuery =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          " ((contains(data/firstName/iv, 'tony')" +
+          " or contains(data/lastName/iv, 'tony'))" +
+          ' and' +
+          " (contains(data/firstName/iv, 'stark')" +
+          " or contains(data/lastName/iv, 'stark')))";
+        expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: filterQuery,
+          },
+        );
+        expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+      });
+      test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          search: "'",
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        const expectedFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          " ((contains(data/firstName/iv, '%27%27')" +
+          " or contains(data/lastName/iv, '%27%27')))";
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: expectedFilter,
+          },
+        );
+      });
+      test('Should sanitise double quotation mark by encoding to hex', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          search: '"',
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        const expectedFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          " ((contains(data/firstName/iv, '%22')" +
+          " or contains(data/lastName/iv, '%22')))";
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: expectedFilter,
+          },
+        );
+      });
+      test('Should search with special characters', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexUsersGraphqlResponse(),
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          search: 'Solène',
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        const expectedFilter =
+          "(data/role/iv ne 'Hidden')" +
+          ' and' +
+          " ((contains(data/firstName/iv, 'Solène')" +
+          " or contains(data/lastName/iv, 'Solène')))";
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+          expect.anything(),
+          {
+            top: 12,
+            skip: 2,
+            filter: expectedFilter,
+          },
+        );
+      });
+    });
+  });
+});

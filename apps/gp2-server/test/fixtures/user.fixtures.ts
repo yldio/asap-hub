@@ -1,3 +1,4 @@
+import { gp2 as gp2Contentful } from '@asap-hub/contentful';
 import { gp2, UserEvent } from '@asap-hub/model';
 import {
   gp2 as gp2Squidex,
@@ -605,3 +606,133 @@ export const getSquidexWorkingGroupsMembersGraphqlResponse =
     generateGraphqlFetchWorkingGroupsMembersResponse(
       getGraphQLWorkingGroupsMembers(),
     );
+
+export const getContentfulGraphql = (props = {}) => ({
+  Users: () => getContentfulGraphqlUser(props),
+});
+
+export const getContentfulGraphqlUser = (
+  props = {},
+): NonNullable<
+  NonNullable<gp2Contentful.FetchUsersQuery['usersCollection']>['items'][number]
+> => ({
+  sys: {
+    id: 'user-id-1',
+    firstPublishedAt: '2021-09-23T20:45:22.000Z',
+    publishedAt: '2021-09-23T20:45:22.000Z',
+  },
+  avatar: null,
+  biography: 'some bio',
+  onboarded: true,
+  connections: ['some-code'],
+  questions: ['Question 1', 'Question 2'],
+  keywords: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
+  ],
+  email: 'H@rdy.io',
+  alternativeEmail: null,
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  country: 'United Kingdom',
+  region: 'Europe',
+  city: 'London',
+  telephoneCountryCode: '+39',
+  telephoneNumber: '0123456789',
+  orcid: '123-456-789',
+  degrees: ['MPH'],
+  github: null,
+  twitter: null,
+  researchGate: null,
+  researcherId: null,
+  googleScholar: null,
+  linkedIn: null,
+  role: 'Network Investigator',
+  contributingCohortsCollection: {
+    items: [
+      {
+        contributingCohort: {
+          sys: { id: '42' },
+          name: 'GeneFinder',
+        },
+        role: 'Investigator',
+        studyLink: 'http://example.com/test',
+      },
+    ],
+  },
+  linkedFrom: {
+    projectMembershipCollection: {
+      items: [
+        {
+          user: {
+            sys: {
+              id: '6wZAwMeoJ6EoTcdedD9ZG4',
+            },
+          },
+          role: 'Project lead',
+          linkedFrom: {
+            projectsCollection: {
+              items: [],
+            },
+          },
+        },
+        {
+          user: {
+            sys: {
+              id: '6wZAwMeoJ6EoTcdedD9ZG4',
+            },
+          },
+          role: 'Investigator',
+          linkedFrom: {
+            projectsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: '19jFNrTz1LeqV8T4zLzVnF',
+                  },
+                  title: 'Test Project',
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+    workingGroupMembershipCollection: {
+      items: [
+        {
+          user: {
+            sys: {
+              id: '6wZAwMeoJ6EoTcdedD9ZG4',
+            },
+          },
+          role: 'Co-lead',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: '3d7Xp7z9eSY6A3pV6DM51y',
+                  },
+                  title: 'Test working group',
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  },
+  ...props,
+});
+
+export const getContentfulRestUser = () => ({
+  fields: {},
+  update: () =>
+    Promise.resolve({
+      publish: jest.fn(),
+    }),
+});

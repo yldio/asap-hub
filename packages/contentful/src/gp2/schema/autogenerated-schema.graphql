@@ -1883,7 +1883,6 @@ type Users implements Entry {
   linkedIn(locale: String): String
   onboarded(locale: String): Boolean
   orcid(locale: String): String
-  positions(locale: String): JSON
   questions(locale: String): [String]
   region(locale: String): String
   researchGate(locale: String): String
@@ -2031,7 +2030,6 @@ input UsersFilter {
   orcid_not: String
   orcid_not_contains: String
   orcid_not_in: [String]
-  positions_exists: Boolean
   questions_contains_all: [String]
   questions_contains_none: [String]
   questions_contains_some: [String]
@@ -2778,7 +2776,6 @@ input cfUsersNestedFilter {
   orcid_not: String
   orcid_not_contains: String
   orcid_not_in: [String]
-  positions_exists: Boolean
   questions_contains_all: [String]
   questions_contains_none: [String]
   questions_contains_some: [String]

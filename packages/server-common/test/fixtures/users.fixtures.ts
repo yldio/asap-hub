@@ -1,4 +1,4 @@
-import { UserEvent } from '@asap-hub/model';
+import { UserEvent, UserDataObject } from '@asap-hub/model';
 import { RestUser, User, SquidexWebhookPayload } from '@asap-hub/squidex';
 
 export const patchResponse = (): RestUser => ({
@@ -73,4 +73,12 @@ export const getUserWebhookPayload = (
       labs: { iv: [] },
     },
   },
+});
+
+export const getUserDataObject = (): UserDataObject => ({
+  id: 'userId',
+  firstName: 'Tony',
+  lastName: 'Stark',
+  email: 'tony@.stark.com',
+  connections: [],
 });

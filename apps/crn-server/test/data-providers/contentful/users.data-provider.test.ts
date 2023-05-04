@@ -648,6 +648,15 @@ describe('User data provider', () => {
         }),
       ).rejects.toThrow();
     });
+
+    test('unwraps `code` property of connections', async () => {
+      await userDataProvider.update('123', {
+        connections: [{ code: 'abc123' }],
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        connections: ['abc123'],
+      });
+    });
   });
 
   describe('Create', () => {

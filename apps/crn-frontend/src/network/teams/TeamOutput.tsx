@@ -56,8 +56,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
   const createResearchOutput = usePostResearchOutput();
-
   const updateResearchOutput = usePutResearchOutput();
+  const updateAndPublishResearchOutput = usePutResearchOutput(true);
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
@@ -116,7 +116,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           permissions={permissions}
           onSave={(output) =>
             researchOutputData
-              ? updateResearchOutput(researchOutputData.id, {
+              ? updateAndPublishResearchOutput(researchOutputData.id, {
                   ...output,
                   published: true,
                 }).catch(handleError(['/link', '/title'], setErrors))

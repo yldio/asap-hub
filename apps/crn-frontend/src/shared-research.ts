@@ -26,7 +26,10 @@ import {
 } from './network/teams/api';
 import { getUsersAndExternalAuthors } from './network/users/api';
 import { getResearchTags, getResearchOutputs } from './shared-research/api';
-import { useSetResearchOutputItem } from './shared-research/state';
+import {
+  useInvalidateResearchOutputIndex,
+  useSetResearchOutputItem,
+} from './shared-research/state';
 
 export function paramOutputDocumentTypeToResearchOutputDocumentType(
   data:
@@ -151,9 +154,10 @@ export const usePostResearchOutput = () => {
   };
 };
 
-export const usePutResearchOutput = () => {
+export const usePutResearchOutput = (shouldInvalidate?: boolean) => {
   const authorization = useRecoilValue(authorizationState);
   const setResearchOutputItem = useSetResearchOutputItem();
+  const invalidateResearchOutputIndex = useInvalidateResearchOutputIndex();
   return async (id: string, payload: ResearchOutputPutRequest) => {
     const researchOutput = await updateTeamResearchOutput(
       id,
@@ -161,6 +165,9 @@ export const usePutResearchOutput = () => {
       authorization,
     );
     setResearchOutputItem(researchOutput);
+    if (shouldInvalidate) {
+      invalidateResearchOutputIndex();
+    }
     return researchOutput;
   };
 };

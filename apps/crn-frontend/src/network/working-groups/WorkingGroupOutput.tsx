@@ -51,6 +51,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const createResearchOutput = usePostResearchOutput();
   const updateResearchOutput = usePutResearchOutput();
+  const updateAndPublishResearchOutput = usePutResearchOutput(true);
 
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
@@ -108,7 +109,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           permissions={permissions}
           onSave={(output) =>
             researchOutputData
-              ? updateResearchOutput(researchOutputData.id, {
+              ? updateAndPublishResearchOutput(researchOutputData.id, {
                   ...output,
                   workingGroups: [workingGroupId],
                   published: true,

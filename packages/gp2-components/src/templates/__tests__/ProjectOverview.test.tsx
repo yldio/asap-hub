@@ -26,7 +26,7 @@ describe('ProjectOverview', () => {
   it('renders the contact information', () => {
     render(<ProjectOverview {...defaultProps} />);
     expect(
-      screen.getByRole('heading', { name: 'Contact' }),
+      screen.getByRole('heading', { name: 'Contact Details' }),
     ).toBeInTheDocument();
   });
   it('renders the PM email information', () => {

@@ -14,7 +14,7 @@ describe('UserContactInformation', () => {
   it('renders the right title', () => {
     render(<UserContactInformation email="" />);
     expect(
-      screen.getByRole('heading', { name: 'Contact Information' }),
+      screen.getByRole('heading', { name: 'Contact Details' }),
     ).toBeVisible();
   });
   describe('if no alternative email', () => {

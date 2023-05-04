@@ -36,7 +36,7 @@ const UsersPageBody: React.FC<UsersPageBodyProps> = ({
       {users.total === 0 ? (
         <EmptyState
           icon={noUsersIcon}
-          title="No users have been found."
+          title="No results have been found."
           description="Please double-check your search for any typos or try a different search term."
         />
       ) : (

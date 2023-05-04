@@ -17,7 +17,7 @@ const UserContactInformation: React.FC<UserContactInformationProps> = ({
 }) => (
   <EditableCard
     editHref={editHref}
-    title="Contact Information"
+    title="Contact Details"
     optional
     edit={!!secondaryEmail}
   >

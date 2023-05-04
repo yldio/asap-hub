@@ -1,6 +1,6 @@
+import { DateTime } from 'luxon';
 import { UserEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
-import { SquidexWebhookPayload, User } from '@asap-hub/squidex';
 import Users, { UserController } from '../../controllers/users';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -8,30 +8,30 @@ import {
   getUserDataProvider,
   getAssetDataProvider,
 } from '../../dependencies/users.dependencies';
+import { UserPayload } from '../event-bus';
 
 export const syncOrcidUserHandler =
-  (
-    users: UserController,
-  ): EventBridgeHandler<UserEvent, SquidexWebhookPayload<User, UserEvent>> =>
+  (users: UserController): EventBridgeHandler<UserEvent, UserPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    const { payload, type: eventType } = event.detail;
-    const { id } = payload;
+    const { resourceId } = event.detail;
 
-    const newOrcid = payload.data.orcid?.iv;
+    const userResponse = await users.fetchById(resourceId);
 
-    if (eventType === 'UsersCreated') {
-      if (newOrcid) {
-        await users.syncOrcidProfile(id, undefined);
-      }
+    // skip if orcidLastSyncDate is less than 24 hours ago
+    if (
+      !userResponse.orcid ||
+      (userResponse.orcidLastSyncDate &&
+        DateTime.fromISO(userResponse.orcidLastSyncDate) >
+          DateTime.now().minus({ hours: 24 }))
+    ) {
+      logger.debug(
+        `Skipping sync for user ${resourceId} as orcidLastSyncDate is less than 24 hours ago`,
+      );
+      return;
     }
-
-    if (eventType === 'UsersUpdated') {
-      if (newOrcid && newOrcid !== payload.dataOld?.orcid?.iv) {
-        await users.syncOrcidProfile(id, undefined);
-      }
-    }
+    await users.syncOrcidProfile(resourceId, undefined);
   };
 
 export const handler = sentryWrapper(

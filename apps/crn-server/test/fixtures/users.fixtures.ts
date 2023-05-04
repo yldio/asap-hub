@@ -14,6 +14,7 @@ import {
   User,
   SquidexWebhookPayload,
 } from '@asap-hub/squidex';
+import { EventBridgeEvent } from 'aws-lambda';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -609,7 +610,13 @@ export const getUserWebhookPayload = (
   },
 });
 
-export const getUserEvent = (id: string, eventType: UserEvent) =>
+export const getUserEvent = (
+  id: string,
+  eventType: UserEvent,
+): EventBridgeEvent<
+  UserEvent,
+  WebhookDetail<SquidexWebhookPayload<User, UserEvent>>
+> =>
   createEventBridgeEventMock(
     getUserWebhookPayload(id, eventType),
     eventType,

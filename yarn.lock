@@ -795,7 +795,6 @@ __metadata:
     p-throttle: 4.1.1
     parse-data-url: 3.0.0
     pump: 3.0.0
-    react-router-dom: 5.3.4
     serverless: 3.30.1
     serverless-http: 2.7.0
     serverless-iam-roles-per-function: 2.0.2
@@ -1420,10 +1419,9 @@ __metadata:
     "@types/qs": 6.9.7
     "@types/react-router-dom": 5.3.3
     qs: 6.11.1
+    react-router-dom: 5.3.4
     typesafe-routes: 9.0.1
     typescript: 4.9.5
-  peerDependencies:
-    react-router-dom: 5.3.4
   languageName: unknown
   linkType: soft
 

@@ -1,21 +1,85 @@
-module.exports.description = 'Enables related entity';
+module.exports.description = 'Updates enums';
 
-const gp2 = require('@asap-hub/model');
 module.exports.up = (migration) => {
-  const users = migration.editContentType('outputs');
+  const users = migration.editContentType('users');
 
   users.editField('degree').items({
     type: 'Symbol',
-
     validations: [
       {
-        in: gp2.userDegrees,
+        in: [
+          'AA',
+          'AAS',
+          'BA',
+          'BSc',
+          'MA',
+          'MBA',
+          'MBBS',
+          'MD',
+          'MD, PhD',
+          'MPH',
+          'MSc',
+          'PhD',
+          'PharmD',
+        ],
       },
     ],
   });
+  users
+    .editField('role')
+    .name('GP2 Hub Role')
+    .validations([
+      {
+        in: [
+          'Administrator',
+          'Hidden',
+          'Network Collaborator',
+          'Network Investigator',
+          'Trainee',
+          'Working Group Participant',
+        ],
+      },
+    ]);
+  users.editField('region').validations([
+    {
+      in: [
+        'Africa',
+        'Asia',
+        'Australia/Australiasia',
+        'Europe',
+        'Latin America',
+        'North America',
+        'South America',
+      ],
+    },
+  ]);
+  users.changeFieldControl('region', 'builtin', 'dropdown', {});
 };
 
 module.exports.down = (migration) => {
   const users = migration.editContentType('users');
-  users.editField('relatedEntity');
+  users.editField('region').items({
+    type: 'Symbol',
+    validations: [
+      {
+        in: [],
+      },
+    ],
+  });
+  users.editField('role').items({
+    type: 'Symbol',
+    validations: [
+      {
+        in: [],
+      },
+    ],
+  });
+  users.editField('degree').items({
+    type: 'Symbol',
+    validations: [
+      {
+        in: [],
+      },
+    ],
+  });
 };

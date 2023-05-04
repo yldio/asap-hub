@@ -29,7 +29,7 @@
     "@graphql-tools/graphql-file-loader": "7.5.17",
     "@graphql-tools/load": "7.8.14",
     "@graphql-tools/mock": "8.7.20",
-    "async-retry": "^1.3.3",
+    "async-retry": "1.3.3",
     "contentful": "^10.1.8",
     "contentful-management": "10.32.0",
     "contentful-migrate": "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212",

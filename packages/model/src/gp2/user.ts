@@ -44,6 +44,14 @@ export const userRegions = [
 
 export type UserRegion = (typeof userRegions)[number];
 
+export const isUserRole = (data: string): data is UserRole =>
+  userRoles.includes(data as UserRole);
+
+export const isUserDegree = (data: string | null): data is UserDegree =>
+  userDegrees.includes(data as UserDegree);
+export const isUserRegion = (data: string): data is UserRegion =>
+  userRegions.includes(data as UserRegion);
+
 export type UserPosition = {
   role: string;
   department: string;

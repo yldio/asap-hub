@@ -3,13 +3,14 @@
 import { gql } from 'graphql-tag';
 
 export const usersContentQueryFragment = gql`
-  fragment UsersContent on Users {
+  fragment UsersContentData on Users {
     sys {
       id
       firstPublishedAt
       publishedAt
       publishedVersion
     }
+    activatedDate
     firstName
     lastName
     avatar {
@@ -120,7 +121,7 @@ export const usersContentQueryFragment = gql`
 export const FETCH_USER_BY_ID = gql`
   query FetchUserById($id: String!) {
     users(id: $id) {
-      ...UsersContent
+      ...UsersContentData
     }
   }
   ${usersContentQueryFragment}
@@ -136,7 +137,7 @@ export const FETCH_USERS = gql`
     usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
       total
       items {
-        ...UsersContent
+        ...UsersContentData
       }
     }
   }

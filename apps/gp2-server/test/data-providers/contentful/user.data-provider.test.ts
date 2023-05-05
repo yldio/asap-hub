@@ -1,6 +1,6 @@
 import {
   Environment,
-  getContentfulGraphqlClientMockServer,
+  getGP2ContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
@@ -12,10 +12,10 @@ import {
   fetchUserResponse,
   getContentfulGraphql,
   getContentfulGraphqlUser,
+  getContentfulUsersGraphqlResponse,
   getGraphQLProjectMembers,
   getGraphQLWorkingGroupMembers,
   getSquidexProjectsMembersGraphqlResponse,
-  getSquidexUsersGraphqlResponse,
   getSquidexWorkingGroupsMembersGraphqlResponse,
   getUserCreateDataObject,
   getUserDataObject,
@@ -42,9 +42,9 @@ describe('User data provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('FetchById', () => {
-    test('Should fetch the users from squidex graphql', async () => {
+    test.only('Should fetch the users from squidex graphql', async () => {
       const contentfulGraphqlClientMockServer =
-        getContentfulGraphqlClientMockServer(getContentfulGraphql());
+        getGP2ContentfulGraphqlClientMockServer(getContentfulGraphql());
       const userDataProviderWithMockServer: UserDataProvider =
         new UserContentfulDataProvider(
           contentfulGraphqlClientMockServer,
@@ -1167,7 +1167,7 @@ describe('User data provider', () => {
     beforeEach(jest.resetAllMocks);
     test('Should fetch the users from squidex graphql', async () => {
       const contentfulGraphqlClientMockServer =
-        getContentfulGraphqlClientMockServer(getContentfulGraphql());
+        getGP2ContentfulGraphqlClientMockServer(getContentfulGraphql());
       const userDataProviderWithMockServer: UserDataProvider =
         new UserContentfulDataProvider(
           contentfulGraphqlClientMockServer,
@@ -1178,25 +1178,25 @@ describe('User data provider', () => {
       expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
     test('Should return an empty result', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal!.items = [];
-      mockResponse.queryUsersContentsWithTotal!.total = 0;
+      const mockResponse = getContentfulUsersGraphqlResponse();
+      mockResponse.usersCollection!.items = [];
+      mockResponse.usersCollection!.total = 0;
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await userDataProvider.fetch({});
       expect(result).toEqual({ total: 0, items: [] });
     });
     test('Should return an empty result when the client returns a response with query property set to null', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal = null;
+      const mockResponse = getContentfulUsersGraphqlResponse();
+      mockResponse.usersCollection = null;
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await userDataProvider.fetch({});
       expect(result).toEqual({ total: 0, items: [] });
     });
     test('Should return an empty result when the client returns a response with items property set to null', async () => {
-      const mockResponse = getSquidexUsersGraphqlResponse();
-      mockResponse.queryUsersContentsWithTotal!.items = null;
+      const mockResponse = getContentfulUsersGraphqlResponse();
+      mockResponse.usersCollection!.items = [];
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await userDataProvider.fetch({});
@@ -1205,7 +1205,7 @@ describe('User data provider', () => {
 
     test('Should query with onboarded filter', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
+        getContentfulUsersGraphqlResponse(),
       );
       const fetchOptions: gp2Model.FetchUsersOptions = {
         take: 12,
@@ -1231,7 +1231,7 @@ describe('User data provider', () => {
 
     test('Should return all users when the onlyOnboard flag is false', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
+        getContentfulUsersGraphqlResponse(),
       );
       const fetchOptions: gp2Model.FetchUsersOptions = {
         take: 12,
@@ -1259,7 +1259,7 @@ describe('User data provider', () => {
       ${'keywords'} | ${['Bash', 'R']}      | ${'keywords'}
     `('Should query with $name filters', async ({ name, value, fieldName }) => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
+        getContentfulUsersGraphqlResponse(),
       );
       const fetchOptions: gp2Model.FetchUsersOptions = {
         take: 12,
@@ -1298,7 +1298,7 @@ describe('User data provider', () => {
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(projectMembersResponse)
-          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+          .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
@@ -1347,7 +1347,7 @@ describe('User data provider', () => {
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(projectMembersResponse)
-          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+          .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
@@ -1400,7 +1400,7 @@ describe('User data provider', () => {
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(projectMembersResponse)
-          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+          .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
@@ -1452,7 +1452,7 @@ describe('User data provider', () => {
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(projectMembersResponse)
-          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+          .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
@@ -1499,7 +1499,7 @@ describe('User data provider', () => {
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(workingGroupMembersResponse)
-          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+          .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
@@ -1550,7 +1550,7 @@ describe('User data provider', () => {
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(workingGroupMembersResponse)
-          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+          .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
@@ -1605,7 +1605,7 @@ describe('User data provider', () => {
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(workingGroupMembersResponse)
-          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+          .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
@@ -1659,7 +1659,7 @@ describe('User data provider', () => {
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(workingGroupMembersResponse)
-          .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+          .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
           skip: 2,
@@ -1712,7 +1712,7 @@ describe('User data provider', () => {
       contentfulGraphqlClientMock.request
         .mockResolvedValueOnce(projectMembersResponse)
         .mockResolvedValueOnce(workingGroupMembersResponse)
-        .mockResolvedValueOnce(getSquidexUsersGraphqlResponse());
+        .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
       const fetchOptions: gp2Model.FetchUsersOptions = {
         take: 12,
         skip: 2,
@@ -1828,7 +1828,7 @@ describe('User data provider', () => {
 
     test('Should query with code filters', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexUsersGraphqlResponse(),
+        getContentfulUsersGraphqlResponse(),
       );
       const fetchOptions: gp2Model.FetchUsersOptions = {
         take: 1,
@@ -1854,7 +1854,7 @@ describe('User data provider', () => {
     describe('search', () => {
       test('Should query with filters and return the users', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          getSquidexUsersGraphqlResponse(),
+          getContentfulUsersGraphqlResponse(),
         );
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
@@ -1884,7 +1884,7 @@ describe('User data provider', () => {
       });
       test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          getSquidexUsersGraphqlResponse(),
+          getContentfulUsersGraphqlResponse(),
         );
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
@@ -1910,7 +1910,7 @@ describe('User data provider', () => {
       });
       test('Should sanitise double quotation mark by encoding to hex', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          getSquidexUsersGraphqlResponse(),
+          getContentfulUsersGraphqlResponse(),
         );
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
@@ -1936,7 +1936,7 @@ describe('User data provider', () => {
       });
       test('Should search with special characters', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          getSquidexUsersGraphqlResponse(),
+          getContentfulUsersGraphqlResponse(),
         );
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,

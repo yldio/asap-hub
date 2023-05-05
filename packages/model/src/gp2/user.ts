@@ -79,6 +79,12 @@ export const userContributingCohortRole = [
 ] as const;
 export type UserContributingCohortRole =
   (typeof userContributingCohortRole)[number];
+
+export const isUserContributingCohortRole = (
+  data: string | null,
+): data is UserContributingCohortRole =>
+  userContributingCohortRole.includes(data as UserContributingCohortRole);
+
 export type UserContributingCohort = {
   role: UserContributingCohortRole;
   studyUrl?: string;

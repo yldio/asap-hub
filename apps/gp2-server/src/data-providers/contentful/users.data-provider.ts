@@ -6,18 +6,11 @@ import {
 
 import {
   Environment,
-  FetchUserByIdQuery,
-  FetchUserByIdQueryVariables,
-  FetchUsersQuery,
-  FetchUsersQueryVariables,
-  FETCH_USERS,
-  FETCH_USER_BY_ID,
   gp2 as gp2Contentful,
   GraphQLClient,
   Maybe,
   patchAndPublish,
   UsersFilter,
-  UsersOrder,
   waitForUpdated,
 } from '@asap-hub/contentful';
 import { UserDataProvider } from '../types';
@@ -34,9 +27,9 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
   private fetchUserById(id: string) {
     return this.contentfulClient.request<
-      FetchUserByIdQuery,
-      FetchUserByIdQueryVariables
-    >(FETCH_USER_BY_ID, { id });
+      gp2Contentful.FetchUserByIdQuery,
+      gp2Contentful.FetchUserByIdQueryVariables
+    >(gp2Contentful.FETCH_USER_BY_ID, { id });
   }
 
   async fetchById(id: string): Promise<gp2Model.UserDataObject | null> {
@@ -69,13 +62,13 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const where = generateFetchQueryFilter(options);
 
     const { usersCollection } = await this.contentfulClient.request<
-      FetchUsersQuery,
-      FetchUsersQueryVariables
-    >(FETCH_USERS, {
+      gp2Contentful.FetchUsersQuery,
+      gp2Contentful.FetchUsersQueryVariables
+    >(gp2Contentful.FETCH_USERS, {
       limit: take,
       skip,
       where,
-      order: [UsersOrder.LastNameAsc],
+      order: [gp2Contentful.UsersOrder.LastNameAsc],
     });
     return usersCollection || { total: 0, items: [] };
   }
@@ -92,7 +85,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
     const fetchEventById = () => this.fetchUserById(id);
 
-    await waitForUpdated<FetchUserByIdQuery>(
+    await waitForUpdated<gp2Contentful.FetchUserByIdQuery>(
       result.sys.publishedVersion || Infinity,
       fetchEventById,
       'users',
@@ -157,12 +150,29 @@ export const parseContentfulGraphQlUsers = (
   if (user.keywords && !user.keywords.every(gp2Model.isKeyword)) {
     throw new TypeError('Invalid keyword received');
   }
+
+  const telephone =
+    user.telephoneNumber || user.telephoneCountryCode
+      ? {
+          countryCode: user.telephoneCountryCode || undefined,
+          number: user.telephoneNumber || undefined,
+        }
+      : undefined;
+  const contributingCohorts = parseContributingCohorts(
+    user.contributingCohortsCollection,
+  );
+
+  const projects = parseProjects(user.linkedFrom?.projectMembershipCollection);
+  const workingGroups = parseWorkingGroups(
+    user.linkedFrom?.workingGroupMembershipCollection,
+  );
   return {
     id: user.sys.id,
     createdDate: user.sys.firstPublishedAt,
-    workingGroups: [],
+    activatedDate: user.activatedDate ?? undefined,
     onboarded: !!user.onboarded,
     email: user.email ?? '',
+    secondaryEmail: user.alternativeEmail ?? undefined,
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
     biography: user.biography ?? undefined,
@@ -175,19 +185,24 @@ export const parseContentfulGraphQlUsers = (
     degrees: user.degrees || [],
     connections: connections.map((connection) => ({ code: connection })),
     keywords: user.keywords || [],
-
+    telephone,
+    fundingStreams: user.fundingStreams ?? undefined,
     social: {
       linkedIn: user.linkedIn ?? undefined,
       orcid: user.orcid ?? undefined,
       researcherId: user.researcherId ?? undefined,
       twitter: user.twitter ?? undefined,
       github: user.github ?? undefined,
+      blog: user.blog ?? undefined,
       googleScholar: user.googleScholar ?? undefined,
       researchGate: user.researchGate ?? undefined,
     },
-    positions: [],
-    projects: [],
-    contributingCohorts: [],
+    positions: [
+      { department: 'Research', institution: 'Stark Industries', role: 'CEO' },
+    ],
+    projects,
+    contributingCohorts,
+    workingGroups,
   };
 };
 const generateFetchQueryFilter = ({
@@ -209,3 +224,95 @@ const generateFetchQueryFilter = ({
 
   return queryFilter;
 };
+
+const parseContributingCohorts = (
+  cohorts: NonNullable<
+    NonNullable<
+      gp2Contentful.FetchUsersQuery['usersCollection']
+    >['items'][number]
+  >['contributingCohortsCollection'],
+): gp2Model.UserDataObject['contributingCohorts'] =>
+  cohorts?.items.map((cohort) => {
+    if (!(cohort && cohort.contributingCohort?.name && cohort.role)) {
+      throw new Error('Invalid Contributing Cohort');
+    }
+    if (!gp2Model.isUserContributingCohortRole(cohort.role)) {
+      throw new Error('Invalid Contributing Cohort Role');
+    }
+    return {
+      contributingCohortId: cohort.contributingCohort.sys.id,
+      name: cohort.contributingCohort.name,
+      role: cohort.role,
+      ...(cohort.studyLink && { studyUrl: cohort.studyLink }),
+    };
+  }) || [];
+
+const parseProjects = (
+  projects: NonNullable<
+    NonNullable<
+      NonNullable<
+        gp2Contentful.FetchUsersQuery['usersCollection']
+      >['items'][number]
+    >['linkedFrom']
+  >['projectMembershipCollection'],
+): gp2Model.UserDataObject['projects'] =>
+  projects?.items.map((project) => {
+    const linkedProject = project?.linkedFrom?.projectsCollection?.items[0];
+    const projectId = linkedProject?.sys.id;
+    if (!projectId) {
+      throw new Error('Project not defined.');
+    }
+
+    const status = linkedProject?.status;
+    if (!(status && gp2Model.isProjectStatus(status))) {
+      throw new TypeError('Status not defined');
+    }
+    return {
+      id: projectId,
+      status,
+      title: linkedProject.title || '',
+      members:
+        linkedProject.membersCollection?.items.map((member) => {
+          const user = member?.user;
+          const role = member?.role;
+
+          if (!(role && user && gp2Model.isProjectMemberRole(role))) {
+            throw new Error('Invalid project members');
+          }
+          return { role, userId: user.sys.id };
+        }) || [],
+    };
+  }) || [];
+
+const parseWorkingGroups = (
+  workingGroupItems: NonNullable<
+    NonNullable<
+      NonNullable<
+        gp2Contentful.FetchUsersQuery['usersCollection']
+      >['items'][number]
+    >['linkedFrom']
+  >['workingGroupMembershipCollection'],
+): gp2Model.UserDataObject['workingGroups'] =>
+  workingGroupItems?.items.map((wg) => {
+    const linkedWorkingGroup =
+      wg?.linkedFrom?.workingGroupsCollection?.items[0];
+
+    const id = linkedWorkingGroup?.sys.id;
+    if (!id) {
+      throw new Error('Working Group not defined.');
+    }
+    return {
+      id,
+      title: linkedWorkingGroup.title || '',
+      members:
+        linkedWorkingGroup.membersCollection?.items.map((member) => {
+          const user = member?.user;
+          const role = member?.role;
+
+          if (!(role && user && gp2Model.isWorkingGroupMemberRole(role))) {
+            throw new Error('Invalid project members');
+          }
+          return { role, userId: user.sys.id };
+        }) || [],
+    };
+  }) || [];

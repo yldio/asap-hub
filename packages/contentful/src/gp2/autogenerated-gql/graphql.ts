@@ -4836,8 +4836,9 @@ export type FetchPagesQuery = {
   >;
 };
 
-export type UsersContentFragment = Pick<
+export type UsersContentDataFragment = Pick<
   Users,
+  | 'activatedDate'
   | 'firstName'
   | 'lastName'
   | 'degrees'
@@ -4863,7 +4864,6 @@ export type UsersContentFragment = Pick<
   | 'connections'
   | 'role'
   | 'onboarded'
-  | 'activatedDate'
 > & {
   sys: Pick<
     Sys,
@@ -4951,6 +4951,7 @@ export type FetchUserByIdQuery = {
   users?: Maybe<
     Pick<
       Users,
+      | 'activatedDate'
       | 'firstName'
       | 'lastName'
       | 'degrees'
@@ -4976,7 +4977,6 @@ export type FetchUserByIdQuery = {
       | 'connections'
       | 'role'
       | 'onboarded'
-      | 'activatedDate'
     > & {
       sys: Pick<
         Sys,
@@ -5072,6 +5072,7 @@ export type FetchUsersQuery = {
         Maybe<
           Pick<
             Users,
+            | 'activatedDate'
             | 'firstName'
             | 'lastName'
             | 'degrees'
@@ -5097,7 +5098,6 @@ export type FetchUsersQuery = {
             | 'connections'
             | 'role'
             | 'onboarded'
-            | 'activatedDate'
           > & {
             sys: Pick<
               Sys,
@@ -5456,12 +5456,12 @@ export const PageContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageContentDataFragment, unknown>;
-export const UsersContentFragmentDoc = {
+export const UsersContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'UsersContent' },
+      name: { kind: 'Name', value: 'UsersContentData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Users' },
@@ -5488,6 +5488,7 @@ export const UsersContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'activatedDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
           {
@@ -5998,7 +5999,7 @@ export const UsersContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<UsersContentFragment, unknown>;
+} as unknown as DocumentNode<UsersContentDataFragment, unknown>;
 export const FetchCalendarByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -6540,7 +6541,7 @@ export const FetchUserByIdDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'UsersContent' },
+                  name: { kind: 'Name', value: 'UsersContentData' },
                 },
               ],
             },
@@ -6548,7 +6549,7 @@ export const FetchUserByIdDocument = {
         ],
       },
     },
-    ...UsersContentFragmentDoc.definitions,
+    ...UsersContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUserByIdQuery, FetchUserByIdQueryVariables>;
 export const FetchUsersDocument = {
@@ -6650,7 +6651,7 @@ export const FetchUsersDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'UsersContent' },
+                        name: { kind: 'Name', value: 'UsersContentData' },
                       },
                     ],
                   },
@@ -6661,6 +6662,6 @@ export const FetchUsersDocument = {
         ],
       },
     },
-    ...UsersContentFragmentDoc.definitions,
+    ...UsersContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;

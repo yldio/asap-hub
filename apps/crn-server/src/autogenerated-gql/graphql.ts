@@ -8837,7 +8837,6 @@ export type ResearchOutputContentFragment = Pick<
     | 'labCatalogNumber'
     | 'accession'
     | 'rrid'
-    | 'tags'
     | 'lastUpdatedPartial'
     | 'usageNotes'
     | 'sharingStatus'
@@ -9049,7 +9048,6 @@ export type FetchResearchOutputQuery = {
         | 'labCatalogNumber'
         | 'accession'
         | 'rrid'
-        | 'tags'
         | 'lastUpdatedPartial'
         | 'usageNotes'
         | 'sharingStatus'
@@ -9276,7 +9274,6 @@ export type FetchResearchOutputsQuery = {
               | 'labCatalogNumber'
               | 'accession'
               | 'rrid'
-              | 'tags'
               | 'lastUpdatedPartial'
               | 'usageNotes'
               | 'sharingStatus'
@@ -12304,7 +12301,6 @@ export const ResearchOutputContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'accession' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'rrid' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'lastUpdatedPartial' },

@@ -11,7 +11,6 @@ import {
 } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
 import React, { useState } from 'react';
-import researchSuggestions from '../teams/research-suggestions';
 import { useWorkingGroupById } from './state';
 import {
   handleError,
@@ -66,6 +65,10 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     [workingGroupId],
     published,
   );
+
+  const researchSuggestions = researchTags
+    .filter((tag) => tag.category === 'Keyword')
+    .map((keyword) => keyword.name);
 
   if (permissions.canEditResearchOutput && workingGroup) {
     return (

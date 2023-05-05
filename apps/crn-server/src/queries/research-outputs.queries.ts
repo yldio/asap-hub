@@ -20,7 +20,6 @@ export const researchOutputContentQueryFragment = gql`
       labCatalogNumber
       accession
       rrid
-      tags
       lastUpdatedPartial
       usageNotes
       sharingStatus

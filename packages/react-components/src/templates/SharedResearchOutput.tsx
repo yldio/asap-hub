@@ -38,7 +38,7 @@ type SharedResearchOutputProps = Pick<
   ResearchOutputResponse,
   | 'description'
   | 'descriptionMD'
-  | 'tags'
+  | 'keywords'
   | 'usageNotes'
   | 'contactEmails'
   | 'methods'
@@ -76,7 +76,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ...props.organisms,
     ...props.environments,
     ...(props.subtype ? [props.subtype] : []),
-    ...props.tags,
+    ...props.keywords,
   ];
 
   const { canEditResearchOutput } = useContext(

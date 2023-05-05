@@ -79,50 +79,51 @@ export default class ResearchOutputs implements ResearchOutputController {
   async create(
     researchOutputCreateData: ResearchOutputCreateData,
   ): Promise<ResearchOutputResponse | null> {
-    const normalizedResearchOutputCreateData = this.normaliseResearchOutputData(
-      researchOutputCreateData,
-    ) as ResearchOutputCreateData;
-    await this.validateResearchOutput(normalizedResearchOutputCreateData);
+    const normalisedResearchOutputCreateData =
+      this.normaliseResearchOutputData<ResearchOutputCreateData>(
+        researchOutputCreateData,
+      );
+    await this.validateResearchOutput(normalisedResearchOutputCreateData);
     const { methods, organisms, environments, subtype, keywords } =
-      await this.parseResearchTags(normalizedResearchOutputCreateData);
+      await this.parseResearchTags(normalisedResearchOutputCreateData);
 
     const researchOutputCreateDataObject: ResearchOutputCreateDataObject = {
       authors: await this.mapAuthorsPostRequestToId(
-        normalizedResearchOutputCreateData.authors ?? [],
+        normalisedResearchOutputCreateData.authors ?? [],
       ),
-      accession: normalizedResearchOutputCreateData.accession,
-      addedDate: normalizedResearchOutputCreateData.published
+      accession: normalisedResearchOutputCreateData.accession,
+      addedDate: normalisedResearchOutputCreateData.published
         ? new Date(Date.now()).toISOString()
         : undefined,
-      asapFunded: normalizedResearchOutputCreateData.asapFunded,
-      createdBy: normalizedResearchOutputCreateData.createdBy,
-      description: normalizedResearchOutputCreateData.description,
-      descriptionMD: normalizedResearchOutputCreateData.descriptionMD,
-      documentType: normalizedResearchOutputCreateData.documentType,
-      doi: normalizedResearchOutputCreateData.doi,
+      asapFunded: normalisedResearchOutputCreateData.asapFunded,
+      createdBy: normalisedResearchOutputCreateData.createdBy,
+      description: normalisedResearchOutputCreateData.description,
+      descriptionMD: normalisedResearchOutputCreateData.descriptionMD,
+      documentType: normalisedResearchOutputCreateData.documentType,
+      doi: normalisedResearchOutputCreateData.doi,
       environmentIds: environments,
-      labCatalogNumber: normalizedResearchOutputCreateData.labCatalogNumber,
-      labIds: normalizedResearchOutputCreateData.labs || [],
-      link: normalizedResearchOutputCreateData.link,
+      labCatalogNumber: normalisedResearchOutputCreateData.labCatalogNumber,
+      labIds: normalisedResearchOutputCreateData.labs || [],
+      link: normalisedResearchOutputCreateData.link,
       methodIds: methods,
       organismIds: organisms,
-      publishDate: normalizedResearchOutputCreateData.publishDate,
-      rrid: normalizedResearchOutputCreateData.rrid,
-      sharingStatus: normalizedResearchOutputCreateData.sharingStatus,
+      publishDate: normalisedResearchOutputCreateData.publishDate,
+      rrid: normalisedResearchOutputCreateData.rrid,
+      sharingStatus: normalisedResearchOutputCreateData.sharingStatus,
       subtypeId: subtype,
       keywordIds: keywords,
-      tags: normalizedResearchOutputCreateData.tags,
-      teamIds: normalizedResearchOutputCreateData.teams,
-      relatedResearchIds: normalizedResearchOutputCreateData.relatedResearch,
-      title: normalizedResearchOutputCreateData.title,
-      type: normalizedResearchOutputCreateData.type,
-      usageNotes: normalizedResearchOutputCreateData.usageNotes,
-      usedInPublication: normalizedResearchOutputCreateData.usedInPublication,
-      workingGroups: normalizedResearchOutputCreateData.workingGroups,
+      tags: normalisedResearchOutputCreateData.tags,
+      teamIds: normalisedResearchOutputCreateData.teams,
+      relatedResearchIds: normalisedResearchOutputCreateData.relatedResearch,
+      title: normalisedResearchOutputCreateData.title,
+      type: normalisedResearchOutputCreateData.type,
+      usageNotes: normalisedResearchOutputCreateData.usageNotes,
+      usedInPublication: normalisedResearchOutputCreateData.usedInPublication,
+      workingGroups: normalisedResearchOutputCreateData.workingGroups,
     };
 
     const createOptions = {
-      publish: normalizedResearchOutputCreateData.published,
+      publish: normalisedResearchOutputCreateData.published,
     };
     const researchOutputId = await this.researchOutputDataProvider.create(
       researchOutputCreateDataObject,
@@ -136,9 +137,10 @@ export default class ResearchOutputs implements ResearchOutputController {
     id: string,
     researchOutputUpdateData: ResearchOutputUpdateData,
   ): Promise<ResearchOutputResponse | null> {
-    const normalizedResearchOutputUpdateData = this.normaliseResearchOutputData(
-      researchOutputUpdateData,
-    ) as ResearchOutputUpdateData;
+    const normalisedResearchOutputUpdateData =
+      this.normaliseResearchOutputData<ResearchOutputUpdateData>(
+        researchOutputUpdateData,
+      );
     const currentResearchOutput =
       await this.researchOutputDataProvider.fetchById(id);
 
@@ -151,57 +153,57 @@ export default class ResearchOutputs implements ResearchOutputController {
 
     if (
       currentResearchOutput.published &&
-      !normalizedResearchOutputUpdateData.published
+      !normalisedResearchOutputUpdateData.published
     ) {
       throw Boom.badRequest('Cannot unpublish a research output');
     }
 
     await this.validateResearchOutput(
-      normalizedResearchOutputUpdateData,
+      normalisedResearchOutputUpdateData,
       id,
       currentResearchOutput,
     );
 
     const { methods, organisms, environments, subtype, keywords } =
-      await this.parseResearchTags(normalizedResearchOutputUpdateData);
+      await this.parseResearchTags(normalisedResearchOutputUpdateData);
 
     const researchOutputUpdateDataObject: ResearchOutputUpdateDataObject = {
       authors: await this.mapAuthorsPostRequestToId(
-        normalizedResearchOutputUpdateData.authors ?? [],
+        normalisedResearchOutputUpdateData.authors ?? [],
       ),
-      accession: normalizedResearchOutputUpdateData.accession,
-      addedDate: normalizedResearchOutputUpdateData.published
+      accession: normalisedResearchOutputUpdateData.accession,
+      addedDate: normalisedResearchOutputUpdateData.published
         ? currentResearchOutput.addedDate || new Date(Date.now()).toISOString()
         : undefined,
-      asapFunded: normalizedResearchOutputUpdateData.asapFunded,
-      descriptionMD: normalizedResearchOutputUpdateData.descriptionMD,
-      description: normalizedResearchOutputUpdateData.description,
-      documentType: normalizedResearchOutputUpdateData.documentType,
-      doi: normalizedResearchOutputUpdateData.doi,
+      asapFunded: normalisedResearchOutputUpdateData.asapFunded,
+      descriptionMD: normalisedResearchOutputUpdateData.descriptionMD,
+      description: normalisedResearchOutputUpdateData.description,
+      documentType: normalisedResearchOutputUpdateData.documentType,
+      doi: normalisedResearchOutputUpdateData.doi,
       environmentIds: environments,
-      labCatalogNumber: normalizedResearchOutputUpdateData.labCatalogNumber,
-      labIds: normalizedResearchOutputUpdateData.labs || [],
-      link: normalizedResearchOutputUpdateData.link,
+      labCatalogNumber: normalisedResearchOutputUpdateData.labCatalogNumber,
+      labIds: normalisedResearchOutputUpdateData.labs || [],
+      link: normalisedResearchOutputUpdateData.link,
       methodIds: methods,
       organismIds: organisms,
-      publishDate: normalizedResearchOutputUpdateData.publishDate,
-      rrid: normalizedResearchOutputUpdateData.rrid,
-      sharingStatus: normalizedResearchOutputUpdateData.sharingStatus,
+      publishDate: normalisedResearchOutputUpdateData.publishDate,
+      rrid: normalisedResearchOutputUpdateData.rrid,
+      sharingStatus: normalisedResearchOutputUpdateData.sharingStatus,
       subtypeId: subtype,
       keywordIds: keywords,
-      tags: normalizedResearchOutputUpdateData.tags,
-      teamIds: normalizedResearchOutputUpdateData.teams,
-      relatedResearchIds: normalizedResearchOutputUpdateData.relatedResearch,
-      title: normalizedResearchOutputUpdateData.title,
-      type: normalizedResearchOutputUpdateData.type,
-      updatedBy: normalizedResearchOutputUpdateData.updatedBy,
-      usageNotes: normalizedResearchOutputUpdateData.usageNotes,
-      usedInPublication: normalizedResearchOutputUpdateData.usedInPublication,
-      workingGroups: normalizedResearchOutputUpdateData.workingGroups,
+      tags: normalisedResearchOutputUpdateData.tags,
+      teamIds: normalisedResearchOutputUpdateData.teams,
+      relatedResearchIds: normalisedResearchOutputUpdateData.relatedResearch,
+      title: normalisedResearchOutputUpdateData.title,
+      type: normalisedResearchOutputUpdateData.type,
+      updatedBy: normalisedResearchOutputUpdateData.updatedBy,
+      usageNotes: normalisedResearchOutputUpdateData.usageNotes,
+      usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
+      workingGroups: normalisedResearchOutputUpdateData.workingGroups,
     };
 
     const updateOptions = {
-      publish: normalizedResearchOutputUpdateData.published,
+      publish: normalisedResearchOutputUpdateData.published,
     };
     await this.researchOutputDataProvider.update(
       id,
@@ -395,9 +397,9 @@ export default class ResearchOutputs implements ResearchOutputController {
   ): [Pick<WorkingGroupResponse, 'id' | 'title'>] | undefined =>
     workingGroups[0] ? [workingGroups[0]] : undefined;
 
-  private normaliseResearchOutputData = (
-    researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
-  ): ResearchOutputCreateData | ResearchOutputUpdateData => ({
+  private normaliseResearchOutputData = <T extends ResearchOutputPostRequest>(
+    researchOutputData: T,
+  ): T => ({
     ...researchOutputData,
     title: (researchOutputData.title || '').trim(),
     link: (researchOutputData.link || '').trim(),

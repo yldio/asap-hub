@@ -634,7 +634,7 @@ export const getContentfulGraphqlUser = (
     'expertise 5',
   ],
   email: 'H@rdy.io',
-  alternativeEmail: null,
+  alternativeEmail: 'B@rdy.io',
   firstName: 'Tom',
   lastName: 'Hardy',
   country: 'United Kingdom',
@@ -644,12 +644,13 @@ export const getContentfulGraphqlUser = (
   telephoneNumber: '0123456789',
   orcid: '123-456-789',
   degrees: ['MPH'],
-  github: null,
-  twitter: null,
-  researchGate: null,
-  researcherId: null,
-  googleScholar: null,
-  linkedIn: null,
+  github: 'github-url',
+  twitter: 'twitter-url',
+  researchGate: 'research-gate-name',
+  researcherId: 'researcher-id',
+  googleScholar: 'google-scholar-id',
+  linkedIn: 'linkedin-url',
+  blog: 'blog-url',
   role: 'Network Investigator',
   contributingCohortsCollection: {
     items: [
@@ -669,7 +670,7 @@ export const getContentfulGraphqlUser = (
         {
           user: {
             sys: {
-              id: '6wZAwMeoJ6EoTcdedD9ZG4',
+              id: '42',
             },
           },
           role: 'Project lead',
@@ -682,7 +683,7 @@ export const getContentfulGraphqlUser = (
         {
           user: {
             sys: {
-              id: '6wZAwMeoJ6EoTcdedD9ZG4',
+              id: '42',
             },
           },
           role: 'Investigator',
@@ -691,9 +692,22 @@ export const getContentfulGraphqlUser = (
               items: [
                 {
                   sys: {
-                    id: '19jFNrTz1LeqV8T4zLzVnF',
+                    id: '11',
                   },
                   title: 'Test Project',
+                  status: 'Active',
+                  membersCollection: {
+                    items: [
+                      {
+                        role: 'Investigator',
+                        user: {
+                          sys: {
+                            id: '42',
+                          },
+                        },
+                      },
+                    ],
+                  },
                 },
               ],
             },
@@ -706,7 +720,7 @@ export const getContentfulGraphqlUser = (
         {
           user: {
             sys: {
-              id: '6wZAwMeoJ6EoTcdedD9ZG4',
+              id: '42',
             },
           },
           role: 'Co-lead',
@@ -715,9 +729,21 @@ export const getContentfulGraphqlUser = (
               items: [
                 {
                   sys: {
-                    id: '3d7Xp7z9eSY6A3pV6DM51y',
+                    id: '7',
                   },
                   title: 'Test working group',
+                  membersCollection: {
+                    items: [
+                      {
+                        role: 'Co-lead',
+                        user: {
+                          sys: {
+                            id: '42',
+                          },
+                        },
+                      },
+                    ],
+                  },
                 },
               ],
             },

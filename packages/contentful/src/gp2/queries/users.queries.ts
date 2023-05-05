@@ -52,7 +52,7 @@ export const usersContentQueryFragment = gql`
       }
     }
     linkedFrom {
-      projectMembershipCollection(limit: 100) {
+      projectMembershipCollection(limit: 10) {
         items {
           user {
             sys {
@@ -67,12 +67,23 @@ export const usersContentQueryFragment = gql`
                   id
                 }
                 title
+                status
+                membersCollection(limit: 25) {
+                  items {
+                    role
+                    user {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
               }
             }
           }
         }
       }
-      workingGroupMembershipCollection(limit: 100) {
+      workingGroupMembershipCollection(limit: 10) {
         items {
           user {
             sys {
@@ -87,6 +98,16 @@ export const usersContentQueryFragment = gql`
                   id
                 }
                 title
+                membersCollection(limit: 25) {
+                  items {
+                    role
+                    user {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
               }
             }
           }

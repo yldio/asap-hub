@@ -237,33 +237,23 @@ describe('User data provider', () => {
       });
     });
     describe('contributing cohorts', () => {
-      const contributingCohortsCollection = {
-        items: [
-          {
-            contributingCohort: {
-              sys: { id: '42' },
-              name: 'GeneFinder',
+      test('Should throw when the cohort id is null ', async () => {
+        const contributingCohort = {
+          sys: { id: null },
+          name: 'GeneFinder',
+        };
+        const contributingCohortsCollection = {
+          items: [
+            {
+              contributingCohort,
+              role: 'Investigator',
+              studyLink: 'http://example.com/test',
             },
-            role: 'Investigator',
-            studyLink: 'http://example.com/test',
-          },
-        ],
-      };
-      test.each`
-        property                                            | description
-        ${{ id: null }}                                     | ${'id is not defined'}
-        ${{ id: [] }}                                       | ${'id is empty'}
-        ${{ role: null }}                                   | ${'role is not defined'}
-        ${{ id: [{ flatData: { name: null }, id: '42' }] }} | ${'name is not defined'}
-      `('Should throw when the cohort $description', async ({ property }) => {
-        const invalidRoleUser = getGraphQLUser();
-        invalidRoleUser.flatData.contributingCohorts = [
-          {
-            ...cohort,
-            ...property,
-          },
-        ];
-        const mockResponse = getContentfulGraphqlUser(invalidRoleUser);
+          ],
+        };
+        const mockResponse = getContentfulGraphqlUser({
+          contributingCohortsCollection,
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         expect(() =>
@@ -271,9 +261,57 @@ describe('User data provider', () => {
         ).rejects.toThrowError('Invalid Contributing Cohort');
       });
 
+      test('Should throw when the cohort role is null ', async () => {
+        const contributingCohort = {
+          sys: { id: '42' },
+          name: 'GeneFinder',
+        };
+        const contributingCohortsCollection = {
+          items: [
+            {
+              contributingCohort,
+              role: null,
+              studyLink: 'http://example.com/test',
+            },
+          ],
+        };
+        const mockResponse = getContentfulGraphqlUser({
+          contributingCohortsCollection,
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Invalid Contributing Cohort');
+      });
+
+      test('Should throw when the cohort name is null ', async () => {
+        const contributingCohort = {
+          sys: { id: '42' },
+          name: null,
+        };
+        const contributingCohortsCollection = {
+          items: [
+            {
+              contributingCohort,
+              role: 'Investigator',
+              studyLink: 'http://example.com/test',
+            },
+          ],
+        };
+        const mockResponse = getContentfulGraphqlUser({
+          contributingCohortsCollection,
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Invalid Contributing Cohort');
+      });
       test('Should return empty array if cohorts have not been defined', async () => {
-        const contributingCohorts = null;
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        const mockResponse = getContentfulGraphqlUser({
+          contributingCohortsCollection: null,
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         const result = await userDataProvider.fetchById('user-id');
@@ -287,9 +325,22 @@ describe('User data provider', () => {
       `(
         'should parse the role $role => $expectedRole',
         async ({ role, expectedRole }) => {
-          const user = getGraphQLUser();
-          user.flatData.contributingCohorts = [{ ...cohort, role }];
-          const mockResponse = getContentfulGraphqlUser(user);
+          const contributingCohort = {
+            sys: { id: '42' },
+            name: 'GeneFinder',
+          };
+          const contributingCohortsCollection = {
+            items: [
+              {
+                contributingCohort,
+                role,
+                studyLink: 'http://example.com/test',
+              },
+            ],
+          };
+          const mockResponse = getContentfulGraphqlUser({
+            contributingCohortsCollection,
+          });
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             mockResponse,
           );
@@ -299,37 +350,113 @@ describe('User data provider', () => {
       );
     });
     describe('projects', () => {
-      const project = {
-        status: 'Active',
-        title: 'a title',
-        members: [
-          {
-            role: 'Contributor',
-            user: [{ id: '11' }],
-          },
-        ],
-      };
-      test('Should return empty array if projects has not been defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.referencingProjectsContents = null;
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+      test('Should return empty array if no projects collection', async () => {
+        const mockResponse = getContentfulGraphqlUser({ linkedFrom: {} });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.projects).toEqual([]);
       });
-      test('Should throw when the status is not defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.referencingProjectsContents = [
-          {
-            id: '7',
-            flatData: {
-              ...project,
-              status: null,
+      test('Should return empty array if project collection items has not been defined', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectMembershipCollection: {},
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.projects).toEqual([]);
+      });
+      test('Should return empty array if no project collection items', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectMembershipCollection: { items: [] },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.projects).toEqual([]);
+      });
+      test('Should return empty array if no linked project', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                {
+                  user: {
+                    sys: {
+                      id: '42',
+                    },
+                  },
+                  role: 'Project lead',
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [],
+                    },
+                  },
+                },
+              ],
             },
           },
-        ];
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.projects).toEqual([]);
+      });
+      const getProjectGraphQL = ({
+        status = 'Active',
+        role = 'Investigator',
+        user = {
+          sys: {
+            id: '42',
+          },
+        },
+      }: {
+        status?: string | null;
+        role?: string | null;
+        user?: { sys: { id: string } } | null;
+      } = {}) => ({
+        user: {
+          sys: {
+            id: '42',
+          },
+        },
+        role: 'Project lead',
+        linkedFrom: {
+          projectsCollection: {
+            items: [
+              {
+                user,
+                role,
+                linkedFrom: {
+                  projectsCollection: {
+                    items: [
+                      {
+                        sys: {
+                          id: '19jFNrTz1LeqV8T4zLzVnF',
+                        },
+                        title: 'Test Project',
+                        status,
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      });
+      test('Should throw when the status is not defined', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [getProjectGraphQL({ status: null })],
+            },
+          },
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         expect(() =>
@@ -337,52 +464,33 @@ describe('User data provider', () => {
         ).rejects.toThrowError('Status not defined');
       });
       test('Should throw when a members role is not defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.referencingProjectsContents = [
-          {
-            id: '7',
-            flatData: {
-              ...project,
-              members: [
-                ...project.members,
-                { role: null, user: [{ id: '23' }] },
-              ],
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [getProjectGraphQL({ role: null })],
             },
           },
-        ];
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         expect(() =>
           userDataProvider.fetchById('user-id'),
         ).rejects.toThrowError('Invalid project members');
       });
-      test.each([null, []])(
-        'Should throw when a members user is not defined',
-        async (user) => {
-          const invalidUser = getGraphQLUser();
-          invalidUser.referencingProjectsContents = [
-            {
-              id: '7',
-              flatData: {
-                ...project,
-                members: [
-                  ...project.members,
-                  { role: ProjectsDataMembersRoleEnum.Contributor, user },
-                ],
-              },
+      test('Should throw when a members user is not defined', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [getProjectGraphQL({ user: null })],
             },
-          ];
-          const mockResponse = getContentfulGraphqlUser(invalidUser);
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-            mockResponse,
-          );
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-          expect(() =>
-            userDataProvider.fetchById('user-id'),
-          ).rejects.toThrowError('Invalid project members');
-        },
-      );
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Invalid project members');
+      });
       test.each`
         role                 | expectedRole
         ${'Project manager'} | ${'Project manager'}
@@ -393,17 +501,13 @@ describe('User data provider', () => {
       `(
         'should parse the role $role => $expectedRole',
         async ({ role, expectedRole }) => {
-          const user = getGraphQLUser();
-          user.referencingProjectsContents = [
-            {
-              id: '7',
-              flatData: {
-                ...project,
-                members: [{ role, user: [{ id: '23' }] }],
+          const mockResponse = getContentfulGraphqlUser({
+            linkedFrom: {
+              projectMembershipCollection: {
+                items: [getProjectGraphQL({ role })],
               },
             },
-          ];
-          const mockResponse = getContentfulGraphqlUser(user);
+          });
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             mockResponse,
           );
@@ -412,26 +516,41 @@ describe('User data provider', () => {
         },
       );
       test('check multiple members', async () => {
-        const user = getGraphQLUser();
-        user.referencingProjectsContents = [
-          {
-            id: '7',
-            flatData: {
-              ...project,
-              members: [
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectsCollection: {
+              items: [
                 {
-                  role: ProjectsDataMembersRoleEnum.Contributor,
-                  user: [{ id: '23' }],
-                },
-                {
-                  role: ProjectsDataMembersRoleEnum.ProjectLead,
-                  user: [{ id: '27' }],
+                  sys: {
+                    id: '11',
+                  },
+                  title: 'Test Project',
+                  status: 'Active',
+                  membersCollection: {
+                    items: [
+                      {
+                        role: 'Contributor',
+                        user: {
+                          sys: {
+                            id: '23',
+                          },
+                        },
+                      },
+                      {
+                        role: 'Project lead',
+                        user: {
+                          sys: {
+                            id: '27',
+                          },
+                        },
+                      },
+                    ],
+                  },
                 },
               ],
             },
           },
-        ];
-        const mockResponse = getContentfulGraphqlUser(user);
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.projects[0]?.members).toHaveLength(2);
@@ -440,18 +559,25 @@ describe('User data provider', () => {
           { role: 'Project lead', userId: '27' },
         ]);
       });
-      test('members undefined', async () => {
-        const user = getGraphQLUser();
-        user.referencingProjectsContents = [
-          {
-            id: '7',
-            flatData: {
-              ...project,
-              members: null,
+      test('members empty', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: '11',
+                  },
+                  title: 'Test Project',
+                  status: 'Active',
+                  membersCollection: {
+                    items: [],
+                  },
+                },
+              ],
             },
           },
-        ];
-        const mockResponse = getContentfulGraphqlUser(user);
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         const result = await userDataProvider.fetchById('user-id');
@@ -459,86 +585,82 @@ describe('User data provider', () => {
       });
     });
     describe('working groups', () => {
-      const workingGroup = {
-        title: 'a title',
-        members: [
-          {
-            role: WorkingGroupsDataMembersRoleEnum.CoLead,
-            user: [{ id: '11' }],
+      const getWorkingGroupGraphQL = ({
+        role = 'Co-lead',
+        user = {
+          sys: {
+            id: '42',
           },
-        ],
-      };
+        },
+      }: {
+        role?: string | null;
+        user?: { sys: { id: string } } | null;
+      } = {}) => ({
+        user,
+        role,
+        workingGroupsCollection: {
+          items: [
+            {
+              sys: {
+                id: '7',
+              },
+              title: 'Test working group',
+            },
+          ],
+        },
+      });
       test('Should return empty array if working group has not been defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.referencingWorkingGroupsContents = null;
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: { workingGroupMembershipCollection: null },
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.workingGroups).toEqual([]);
       });
       test('Should throw when a members role is not defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.referencingWorkingGroupsContents = [
-          {
-            id: '7',
-            flatData: {
-              ...workingGroup,
-              members: [{ role: null, user: [{ id: '23' }] }],
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            workingGroupMembershipCollection: {
+              items: [getWorkingGroupGraphQL({ role: null })],
             },
           },
-        ];
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         expect(() =>
           userDataProvider.fetchById('user-id'),
         ).rejects.toThrowError('Invalid working group members');
       });
-      test.each([null, []])(
-        'Should throw when a members user is not defined',
-        async (user) => {
-          const invalidUser = getGraphQLUser();
-          invalidUser.referencingWorkingGroupsContents = [
-            {
-              id: '7',
-              flatData: {
-                ...workingGroup,
-                members: [
-                  { role: WorkingGroupsDataMembersRoleEnum.CoLead, user },
-                ],
-              },
+      test('Should throw when a members user is not defined', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            workingGroupMembershipCollection: {
+              items: [getWorkingGroupGraphQL({ user: null })],
             },
-          ];
-          const mockResponse = getContentfulGraphqlUser(invalidUser);
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-            mockResponse,
-          );
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
-          expect(() =>
-            userDataProvider.fetchById('user-id'),
-          ).rejects.toThrowError('Invalid working group members');
-        },
-      );
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Invalid working group members');
+      });
       test.each`
-        role                                                   | expectedRole
-        ${WorkingGroupsDataMembersRoleEnum.Lead}               | ${'Lead'}
-        ${WorkingGroupsDataMembersRoleEnum.CoLead}             | ${'Co-lead'}
-        ${WorkingGroupsDataMembersRoleEnum.WorkingGroupMember} | ${'Working group member'}
+        role                      | expectedRole
+        ${'Lead'}                 | ${'Lead'}
+        ${'Co-lead'}              | ${'Co-lead'}
+        ${'Working group member'} | ${'Working group member'}
       `(
         'should parse the role $role => $expectedRole',
         async ({ role, expectedRole }) => {
-          const user = getGraphQLUser();
-          user.referencingWorkingGroupsContents = [
-            {
-              id: '7',
-              flatData: {
-                ...workingGroup,
-                members: [{ role, user: [{ id: '23' }] }],
+          const mockResponse = getContentfulGraphqlUser({
+            linkedFrom: {
+              workingGroupMembershipCollection: {
+                items: [getWorkingGroupGraphQL({ role })],
               },
             },
-          ];
-          const mockResponse = getContentfulGraphqlUser(user);
+          });
           contentfulGraphqlClientMock.request.mockResolvedValueOnce(
             mockResponse,
           );
@@ -549,26 +671,54 @@ describe('User data provider', () => {
         },
       );
       test('check multiple members', async () => {
-        const user = getGraphQLUser();
-        user.referencingWorkingGroupsContents = [
-          {
-            id: '7',
-            flatData: {
-              ...workingGroup,
-              members: [
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            workingGroupMembershipCollection: {
+              items: [
                 {
-                  role: WorkingGroupsDataMembersRoleEnum.CoLead,
-                  user: [{ id: '23' }],
-                },
-                {
-                  role: WorkingGroupsDataMembersRoleEnum.Lead,
-                  user: [{ id: '27' }],
+                  user: {
+                    sys: {
+                      id: '42',
+                    },
+                  },
+                  role: 'Co-lead',
+                  linkedFrom: {
+                    workingGroupsCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: '7',
+                          },
+                          title: 'Test working group',
+                          membersCollection: {
+                            items: [
+                              {
+                                role: 'Co-lead',
+                                user: {
+                                  sys: {
+                                    id: '23',
+                                  },
+                                },
+                              },
+                              {
+                                role: 'Lead',
+                                user: {
+                                  sys: {
+                                    id: '27',
+                                  },
+                                },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
                 },
               ],
             },
           },
-        ];
-        const mockResponse = getContentfulGraphqlUser(user);
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.workingGroups[0]?.members).toHaveLength(2);
@@ -578,17 +728,37 @@ describe('User data provider', () => {
         ]);
       });
       test('members undefined', async () => {
-        const user = getGraphQLUser();
-        user.referencingWorkingGroupsContents = [
-          {
-            id: '7',
-            flatData: {
-              ...workingGroup,
-              members: null,
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            workingGroupMembershipCollection: {
+              items: [
+                {
+                  user: {
+                    sys: {
+                      id: '42',
+                    },
+                  },
+                  role: 'Co-lead',
+                  linkedFrom: {
+                    workingGroupsCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: '7',
+                          },
+                          title: 'Test working group',
+                          membersCollection: {
+                            items: [],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
             },
           },
-        ];
-        const mockResponse = getContentfulGraphqlUser(user);
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         const result = await userDataProvider.fetchById('user-id');
@@ -597,19 +767,19 @@ describe('User data provider', () => {
     });
     describe('telephone', () => {
       test('Should return undefined telephone if both the number and country code have not been defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.flatData.telephoneNumber = null;
-        invalidUser.flatData.telephoneCountryCode = null;
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        const mockResponse = getContentfulGraphqlUser({
+          telephoneNumber: null,
+          telephoneCountryCode: null,
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.telephone).toBeUndefined();
       });
       test('Should return undefined telephone number if the number has not been defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.flatData.telephoneNumber = null;
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        const mockResponse = getContentfulGraphqlUser({
+          telephoneNumber: null,
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         const result = await userDataProvider.fetchById('user-id');
@@ -617,9 +787,9 @@ describe('User data provider', () => {
         expect(result?.telephone?.countryCode).toEqual('+1');
       });
       test('Should return undefined telephone country code if the country code has not been defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.flatData.telephoneCountryCode = null;
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        const mockResponse = getContentfulGraphqlUser({
+          telephoneCountryCode: null,
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         const result = await userDataProvider.fetchById('user-id');
@@ -629,31 +799,17 @@ describe('User data provider', () => {
     });
 
     describe('social', () => {
-      test('should return undefined social if it has not been defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.flatData.social = null;
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-        const result = await userDataProvider.fetchById('user-id');
-        expect(result?.social).toBeUndefined();
-      });
-
       test('should return social props undefined if they have not been defined', async () => {
-        const invalidUser = getGraphQLUser();
-        invalidUser.flatData.social = [
-          {
-            googleScholar: null,
-            orcid: null,
-            blog: null,
-            twitter: null,
-            linkedIn: null,
-            github: null,
-            researcherId: null,
-            researchGate: null,
-          },
-        ];
-        const mockResponse = getContentfulGraphqlUser(invalidUser);
+        const mockResponse = getContentfulGraphqlUser({
+          googleScholar: null,
+          orcid: null,
+          blog: null,
+          twitter: null,
+          linkedIn: null,
+          github: null,
+          researcherId: null,
+          researchGate: null,
+        });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
         const result = await userDataProvider.fetchById('user-id');
@@ -1010,7 +1166,14 @@ describe('User data provider', () => {
   describe('Fetch', () => {
     beforeEach(jest.resetAllMocks);
     test('Should fetch the users from squidex graphql', async () => {
-      const result = await usersMockGraphqlServer.fetch({});
+      const contentfulGraphqlClientMockServer =
+        getContentfulGraphqlClientMockServer(getContentfulGraphql());
+      const userDataProviderWithMockServer: UserDataProvider =
+        new UserContentfulDataProvider(
+          contentfulGraphqlClientMockServer,
+          contentfulRestClientMock,
+        );
+      const result = await userDataProviderWithMockServer.fetch({});
 
       expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });

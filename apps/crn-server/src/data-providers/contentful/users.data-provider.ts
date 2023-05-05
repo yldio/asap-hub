@@ -133,7 +133,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     await this.waitForUpdated(id, result.sys.publishedVersion);
   }
 
-  private async waitForUpdated(id: string, version: number | undefined) {
+  private async waitForUpdated(id: string, version?: number) {
     if (version === undefined) {
       throw new Error('Version number must be defined');
     }

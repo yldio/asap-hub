@@ -241,6 +241,7 @@ runs:
 
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
+          HAS_CONTENTFUL_LABEL=${{ contains(github.event.pull_request.labels.*.name, 'contentful') }}
           echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT
           echo "crn-api-url=https://api-$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT
@@ -254,6 +255,7 @@ runs:
           echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "gp2-contentful-env-id=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "gp2-squidex-app-name=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "is-contentful-enabled-v2=$HAS_CONTENTFUL_LABEL" >> $GITHUB_OUTPUT
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT
         elif [ "$ENVIRONMENT_NAME" = 'Production' ]; then

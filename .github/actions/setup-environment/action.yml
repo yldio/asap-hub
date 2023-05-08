@@ -41,6 +41,9 @@ outputs:
   contentful-app-field-as-updated-at:
     description: 'Contentful App Extension Field As Updated At Id'
     value: ${{ steps.vars.outputs.contentful-app-field-as-updated-at }}
+  contentful-app-user-positions:
+    description: 'Contentful App Extension User Positions Id'
+    value: ${{ steps.vars.outputs.contentful-app-user-positions }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}

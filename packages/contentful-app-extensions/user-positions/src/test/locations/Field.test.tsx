@@ -6,7 +6,7 @@ import { useSDK } from '@contentful/react-apps-toolkit';
 
 const mockBaseSdk = {
   field: {
-    getValue: jest.fn(() => []),
+    getValue: jest.fn(() => undefined),
   },
   window: {
     startAutoResizer: jest.fn(),
@@ -41,7 +41,7 @@ describe('Field component', () => {
     (useSDK as jest.Mock).mockReturnValue({
       ...mockBaseSdk,
       field: {
-        getValue: jest.fn(() => null),
+        getValue: jest.fn(() => undefined),
       },
     });
     render(<Field />);
@@ -59,7 +59,7 @@ describe('Field component', () => {
     const mockSdk = {
       ...mockBaseSdk,
       field: {
-        getValue: jest.fn(() => []),
+        getValue: jest.fn(() => undefined),
         setValue: jest.fn(),
       },
     };

@@ -49,7 +49,7 @@ const Field = () => {
       if (duplicated) {
         sdk.notifier.error('Duplicated entry. Please add different values.');
       } else {
-        const newValue = [...positions, newPosition];
+        const newValue = [...(positions || []), newPosition];
         setPositions(newValue);
         sdk.field.setValue(newValue);
         setNewPosition(newEmptyPosition);

@@ -143,3 +143,58 @@ export const FETCH_USERS = gql`
   }
   ${usersContentQueryFragment}
 `;
+
+export const FETCH_USERS_BY_PROJECT_ID = gql`
+  query FetchUsersByProjectId($id: String[]!, $limit: Int, $skip: Int) {
+    projectsCollection(
+      limit: $limit
+      skip: $skip
+      where: { sys: { id_in: $id } }
+    ) {
+      total
+      items {
+        sys {
+          id
+        }
+        membersCollection {
+          total
+          items {
+            user {
+              sys {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+`;
+
+export const FETCH_USERS_BY_WORKING_GROUP_ID = gql`
+  query FetchUsersByWorkingGroupId($id: String[]!, $limit: Int, $skip: Int) {
+    workingGroupsCollection(
+      limit: $limit
+      skip: $skip
+      where: { sys: { id_in: $id } }
+    ) {
+      total
+      items {
+        sys {
+          id
+        }
+        membersCollection {
+          total
+          items {
+            user {
+              sys {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

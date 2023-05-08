@@ -59,7 +59,7 @@ export type UserPosition = {
 };
 
 type UserProjectMember = Pick<ProjectMember, 'userId' | 'role'>;
-type UserProject = Pick<ProjectDataObject, 'id' | 'title' | 'status'> & {
+export type UserProject = Pick<ProjectDataObject, 'id' | 'title' | 'status'> & {
   members: UserProjectMember[];
 };
 export type UserWorkingGroupMember = Pick<

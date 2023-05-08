@@ -1,8 +1,4 @@
-import {
-  FetchUsersOptions,
-  gp2 as gp2Model,
-  UserSocialLinks,
-} from '@asap-hub/model';
+import { gp2 as gp2Model, UserSocialLinks } from '@asap-hub/model';
 
 import {
   Environment,
@@ -10,7 +6,6 @@ import {
   GraphQLClient,
   Maybe,
   patchAndPublish,
-  UsersFilter,
   waitForUpdated,
 } from '@asap-hub/contentful';
 import { UserDataProvider } from '../types';
@@ -49,10 +44,9 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
     return {
       total: result?.total,
-      items: [],
-      // result?.items
-      // .filter((x): x is UserItem => x !== null)
-      // .map(parseContentfulGraphQlUsers),
+      items: result?.items
+        .filter((x): x is UserItem => x !== null)
+        .map(parseContentfulGraphQlUsers),
     };
   }
 
@@ -207,22 +201,28 @@ export const parseContentfulGraphQlUsers = (
 };
 const generateFetchQueryFilter = ({
   filter,
-}: FetchUsersOptions): UsersFilter => {
-  const { orcid, code, onboarded = true, hidden = true } = filter || {};
+}: gp2Model.FetchUsersOptions): gp2Contentful.UsersFilter => {
+  const {
+    regions,
+    keywords,
+    code,
+    onlyOnboarded = true,
+    hidden = true,
+  } = filter || {};
 
   const filterCode = code ? { connections_contains_all: [code] } : {};
   const filterHidden = hidden ? { role_not: 'Hidden' } : {};
-  const filterNonOnboarded = onboarded ? { onboarded: true } : {};
-  const filterOrcid = orcid ? { orcid_contains: orcid } : {};
+  const filterNonOnboarded = onlyOnboarded ? { onboarded: true } : {};
+  const filterRegions = regions ? { regions_in: regions } : {};
+  const filterKeywords = keywords ? { keywords_in: keywords } : {};
 
-  const queryFilter = {
+  return {
     ...filterCode,
     ...filterNonOnboarded,
     ...filterHidden,
-    ...filterOrcid,
+    ...filterRegions,
+    ...filterKeywords,
   };
-
-  return queryFilter;
 };
 
 const parseContributingCohorts = (
@@ -233,7 +233,14 @@ const parseContributingCohorts = (
   >['contributingCohortsCollection'],
 ): gp2Model.UserDataObject['contributingCohorts'] =>
   cohorts?.items.map((cohort) => {
-    if (!(cohort && cohort.contributingCohort?.name && cohort.role)) {
+    if (
+      !(
+        cohort &&
+        cohort.contributingCohort?.name &&
+        cohort.role &&
+        cohort.contributingCohort.sys.id
+      )
+    ) {
       throw new Error('Invalid Contributing Cohort');
     }
     if (!gp2Model.isUserContributingCohortRole(cohort.role)) {
@@ -256,33 +263,39 @@ const parseProjects = (
     >['linkedFrom']
   >['projectMembershipCollection'],
 ): gp2Model.UserDataObject['projects'] =>
-  projects?.items.map((project) => {
-    const linkedProject = project?.linkedFrom?.projectsCollection?.items[0];
-    const projectId = linkedProject?.sys.id;
-    if (!projectId) {
-      throw new Error('Project not defined.');
-    }
+  projects?.items
+    ?.filter(
+      (project) =>
+        project?.linkedFrom?.projectsCollection?.items &&
+        project.linkedFrom.projectsCollection.items.length > 0,
+    )
+    .map((project) => {
+      const linkedProject = project?.linkedFrom?.projectsCollection?.items[0];
+      const projectId = linkedProject?.sys.id;
+      if (!projectId) {
+        throw new Error('Project not defined.');
+      }
 
-    const status = linkedProject?.status;
-    if (!(status && gp2Model.isProjectStatus(status))) {
-      throw new TypeError('Status not defined');
-    }
-    return {
-      id: projectId,
-      status,
-      title: linkedProject.title || '',
-      members:
-        linkedProject.membersCollection?.items.map((member) => {
-          const user = member?.user;
-          const role = member?.role;
+      const status = linkedProject?.status;
+      if (!(status && gp2Model.isProjectStatus(status))) {
+        throw new TypeError('Status not defined');
+      }
+      return {
+        id: projectId,
+        status,
+        title: linkedProject.title || '',
+        members:
+          linkedProject.membersCollection?.items.map((member) => {
+            const user = member?.user;
+            const role = member?.role;
 
-          if (!(role && user && gp2Model.isProjectMemberRole(role))) {
-            throw new Error('Invalid project members');
-          }
-          return { role, userId: user.sys.id };
-        }) || [],
-    };
-  }) || [];
+            if (!(role && user && gp2Model.isProjectMemberRole(role))) {
+              throw new Error('Invalid project members');
+            }
+            return { role, userId: user.sys.id };
+          }) || [],
+      };
+    }) || [];
 
 const parseWorkingGroups = (
   workingGroupItems: NonNullable<
@@ -310,7 +323,7 @@ const parseWorkingGroups = (
           const role = member?.role;
 
           if (!(role && user && gp2Model.isWorkingGroupMemberRole(role))) {
-            throw new Error('Invalid project members');
+            throw new Error('Invalid working group members');
           }
           return { role, userId: user.sys.id };
         }) || [],

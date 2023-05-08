@@ -611,7 +611,7 @@ export const getContentfulGraphql = (props = {}) => ({
   Users: () => getContentfulGraphqlUser(props),
   ProjectMembershipCollection: () => getContentfulGraphqlProjectMembership(),
   ProjectsCollection: () => getContentfulGraphqlProjects(),
-  ProjectsMembersCollection: () => getContentfulGraphqlMembers(),
+  ProjectsMembersCollection: () => getContentfulGraphqlProjectMembers(),
   WorkingGroupMembershipCollection: () =>
     getContentfulGraphqlWorkingGroupMembership(),
   WorkingGroupsCollection: () => getContentfulGraphqlWorkingGroup(),
@@ -671,6 +671,46 @@ export const getContentfulGraphqlUser = (
       },
     ],
   },
+  linkedFrom: {
+    projectMembershipCollection: {
+      items: [
+        {
+          ...getContentfulGraphqlProjectMembership().items[0],
+          linkedFrom: {
+            projectsCollection: {
+              items: [
+                {
+                  ...getContentfulGraphqlProjects().items[0]!,
+                  membersCollection: {
+                    items: getContentfulGraphqlProjectMembers().items,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+    workingGroupMembershipCollection: {
+      items: [
+        {
+          ...getContentfulGraphqlWorkingGroupMembership().items[0],
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  ...getContentfulGraphqlWorkingGroup().items[0]!,
+                  membersCollection: {
+                    items: getContentfulGraphqlWorkingGroupMembers().items,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  },
   ...props,
 });
 export const getContentfulGraphqlWorkingGroupMembership = () => ({
@@ -695,11 +735,10 @@ export const getContentfulGraphqlWorkingGroup = () => ({
       },
       title: 'Steering Committee',
     },
-    ,
   ],
 });
 export const getContentfulGraphqlWorkingGroupMembers = () => ({
-  total: 1,
+  total: 2,
   items: [
     {
       role: 'Lead',
@@ -744,7 +783,7 @@ export const getContentfulGraphqlProjects = () => ({
     },
   ],
 });
-export const getContentfulGraphqlMembers = () => ({
+export const getContentfulGraphqlProjectMembers = () => ({
   total: 2,
   items: [
     {

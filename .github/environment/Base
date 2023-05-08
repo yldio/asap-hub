@@ -5,6 +5,7 @@ cache-prefix-definitions=definitions-ouput
 cache-prefix-frontend=frontend-output
 cache-prefix-transpile=transpile-output
 contentful-app-disabled-fields=2finDNk15g5UtOq4DaLNxv
+contentful-app-clear-on-change=6qDxRPM72qYTWfP4d6Sn0C
 contentful-app-event-additional-materials=3TfrYX8zVOgFtKxro89UVA
 contentful-app-event-speakers-title=6ZkXISzhv1b7jjgyaK2piv
 contentful-app-field-as-updated-at=mqvX9KU5AthRTlnIRhNNh

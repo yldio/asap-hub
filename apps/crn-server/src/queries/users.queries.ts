@@ -26,13 +26,6 @@ export const usersContentQueryFragment = gql`
         }
       }
     }
-    referencingInterestGroupsContents {
-      id
-      flatData {
-        title
-        active
-      }
-    }
     flatData {
       alumniSinceDate
       alumniLocation

@@ -92,3 +92,10 @@ jobs:
           app-definition-id: ${{ steps.setup.outputs.contentful-app-field-as-updated-at }}
           access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           folder: packages/contentful-app-extensions/field-as-updated-at/build
+      - name: Deploy App User Positions
+        uses: contentful/actions-app-deploy@v1
+        with:
+          organization-id: ${{ steps.setup.outputs.contentful-organization-id }}
+          app-definition-id: ${{ steps.setup.outputs.contentful-app-user-positions }}
+          access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          folder: packages/contentful-app-extensions/user-positions/build

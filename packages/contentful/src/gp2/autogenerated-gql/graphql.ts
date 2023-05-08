@@ -3074,6 +3074,7 @@ export type Users = Entry & {
   linkedIn?: Maybe<Scalars['String']>;
   onboarded?: Maybe<Scalars['Boolean']>;
   orcid?: Maybe<Scalars['String']>;
+  positions?: Maybe<Scalars['JSON']>;
   questions?: Maybe<Array<Maybe<Scalars['String']>>>;
   region?: Maybe<Scalars['String']>;
   researchGate?: Maybe<Scalars['String']>;
@@ -3191,6 +3192,11 @@ export type UsersOnboardedArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersPositionsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -3370,6 +3376,7 @@ export type UsersFilter = {
   orcid_not?: InputMaybe<Scalars['String']>;
   orcid_not_contains?: InputMaybe<Scalars['String']>;
   orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  positions_exists?: InputMaybe<Scalars['Boolean']>;
   questions_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -4345,6 +4352,7 @@ export type CfUsersNestedFilter = {
   orcid_not?: InputMaybe<Scalars['String']>;
   orcid_not_contains?: InputMaybe<Scalars['String']>;
   orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  positions_exists?: InputMaybe<Scalars['Boolean']>;
   questions_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;

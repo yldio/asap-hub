@@ -283,6 +283,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     connections: connections.map((connection) => ({ code: connection })),
     teams,
     labs,
+    interestGroups: [],
     social: {
       website1: item.website1 ?? undefined,
       website2: item.website2 ?? undefined,

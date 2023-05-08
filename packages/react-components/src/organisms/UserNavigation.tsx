@@ -8,8 +8,9 @@ import {
   largeDesktopScreen,
 } from '../pixels';
 import { Divider, NavigationLink, Caption, Anchor } from '../atoms';
-import { TeamIcon, UserIcon, feedbackIcon, logoutIcon } from '../icons';
+import { UserIcon, feedbackIcon, logoutIcon } from '../icons';
 import { mailToFeedback } from '../mail';
+import { UserNavigationAssociationSection } from '../molecules';
 
 const containerStyles = css({
   minWidth: '312px',
@@ -46,12 +47,18 @@ export interface UserNavigationProps {
   readonly userOnboarded?: boolean;
   readonly userProfileHref: string;
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
+  readonly workingGroups: ReadonlyArray<{
+    name: string;
+    href: string;
+    active: boolean;
+  }>;
   readonly aboutHref: string;
 }
 const UserNavigation: React.FC<UserNavigationProps> = ({
   userOnboarded = true,
   userProfileHref,
   teams,
+  workingGroups,
   aboutHref,
 }) => (
   <nav css={containerStyles}>
@@ -61,7 +68,13 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
           My Profile
         </NavigationLink>
       </li>
-      {teams.map(({ name, href }) => (
+      {/* TODO component that has  */}
+      <UserNavigationAssociationSection
+        teams={teams}
+        workingGroups={workingGroups}
+        userOnboarded={userOnboarded}
+      />
+      {/* {teams.map(({ name, href }) => (
         <li key={href}>
           <NavigationLink
             href={href}
@@ -71,7 +84,7 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
             My Team: {name}
           </NavigationLink>
         </li>
-      ))}
+      ))} */}
     </ul>
     <Divider />
     <ul css={listStyles}>

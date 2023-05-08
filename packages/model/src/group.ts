@@ -52,3 +52,9 @@ type GroupFilter = {
 };
 
 export type FetchGroupOptions = FetchOptions<GroupFilter>;
+
+export type InterestGroupMembership = {
+  id: string;
+  name: string;
+  active: boolean;
+};

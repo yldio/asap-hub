@@ -18,6 +18,18 @@ const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
     { name: '1', href: '/team-1' },
     { name: '2', href: '/team-2' },
   ],
+  workingGroups: [
+    {
+      name: 'Working Group 1',
+      href: '/working-group-1',
+      active: true,
+    },
+    {
+      name: 'Working Group 2',
+      href: '/working-group-2',
+      active: false,
+    },
+  ],
   aboutHref: '/about',
 };
 

@@ -492,6 +492,7 @@ export const parseGraphQLUserToDataObject = (
     teams,
     social,
     workingGroups,
+    interestGroups: [],
     alumniSinceDate: item.flatData.alumniSinceDate || undefined,
     alumniLocation: item.flatData.alumniLocation || undefined,
     avatarUrl: flatAvatar?.length

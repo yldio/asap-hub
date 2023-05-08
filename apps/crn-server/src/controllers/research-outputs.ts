@@ -79,10 +79,9 @@ export default class ResearchOutputs implements ResearchOutputController {
   async create(
     researchOutputCreateData: ResearchOutputCreateData,
   ): Promise<ResearchOutputResponse | null> {
-    const normalisedResearchOutputCreateData =
-      this.normaliseResearchOutputData<ResearchOutputCreateData>(
-        researchOutputCreateData,
-      );
+    const normalisedResearchOutputCreateData = this.normaliseResearchOutputData(
+      researchOutputCreateData,
+    );
     await this.validateResearchOutput(normalisedResearchOutputCreateData);
     const { methods, organisms, environments, subtype, keywords } =
       await this.parseResearchTags(normalisedResearchOutputCreateData);
@@ -137,10 +136,9 @@ export default class ResearchOutputs implements ResearchOutputController {
     id: string,
     researchOutputUpdateData: ResearchOutputUpdateData,
   ): Promise<ResearchOutputResponse | null> {
-    const normalisedResearchOutputUpdateData =
-      this.normaliseResearchOutputData<ResearchOutputUpdateData>(
-        researchOutputUpdateData,
-      );
+    const normalisedResearchOutputUpdateData = this.normaliseResearchOutputData(
+      researchOutputUpdateData,
+    );
     const currentResearchOutput =
       await this.researchOutputDataProvider.fetchById(id);
 

@@ -155,6 +155,11 @@ export interface UserDataObject extends Invitee {
   teams: UserTeam[];
   workingGroups: WorkingGroupMembership[];
 }
+
+export type createAnewEnvPlease = {
+  pleaseWork: boolean;
+};
+
 export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {

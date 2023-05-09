@@ -659,6 +659,9 @@ export const getContentfulGraphqlUser = (
   orcid: 'https://orcid.org',
   role: 'Trainee',
   fundingStreams: 'A funding stream',
+  positions: [
+    { role: 'CEO', department: 'Research', institution: 'Stark Industries' },
+  ],
   contributingCohortsCollection: {
     items: [
       {

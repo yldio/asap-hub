@@ -4864,6 +4864,7 @@ export type UsersContentDataFragment = Pick<
   | 'connections'
   | 'role'
   | 'onboarded'
+  | 'positions'
 > & {
   sys: Pick<
     Sys,
@@ -4977,6 +4978,7 @@ export type FetchUserByIdQuery = {
       | 'connections'
       | 'role'
       | 'onboarded'
+      | 'positions'
     > & {
       sys: Pick<
         Sys,
@@ -5098,6 +5100,7 @@ export type FetchUsersQuery = {
             | 'connections'
             | 'role'
             | 'onboarded'
+            | 'positions'
           > & {
             sys: Pick<
               Sys,
@@ -5573,6 +5576,7 @@ export const UsersContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'connections' } },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'positions' } },
           { kind: 'Field', name: { kind: 'Name', value: 'activatedDate' } },
           {
             kind: 'Field',

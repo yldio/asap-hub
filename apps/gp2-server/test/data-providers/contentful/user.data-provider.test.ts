@@ -221,7 +221,7 @@ describe('User data provider', () => {
       expect(result?.questions).toEqual([]);
     });
 
-    describe.skip('positions', () => {
+    describe('positions', () => {
       const position = {
         role: 'CEO',
         department: 'Research',

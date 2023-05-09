@@ -219,6 +219,7 @@ export const parseContentfulGraphQlUsers = (
     user.contributingCohortsCollection,
   );
 
+  const positions = parsePositions(user.positions);
   const projects = parseProjects(user.linkedFrom?.projectMembershipCollection);
   const workingGroups = parseWorkingGroups(
     user.linkedFrom?.workingGroupMembershipCollection,
@@ -254,9 +255,7 @@ export const parseContentfulGraphQlUsers = (
       googleScholar: user.googleScholar ?? undefined,
       researchGate: user.researchGate ?? undefined,
     },
-    positions: [
-      { department: 'Research', institution: 'Stark Industries', role: 'CEO' },
-    ],
+    positions,
     projects,
     contributingCohorts,
     workingGroups,
@@ -397,6 +396,34 @@ const parseWorkingGroups = (
         }) || [],
     };
   }) || [];
+
+const parsePositions = (
+  positions: NonNullable<
+    NonNullable<
+      gp2Contentful.FetchUsersQuery['usersCollection']
+    >['items'][number]
+  >['positions'],
+): gp2Model.UserDataObject['positions'] =>
+  positions?.map(
+    ({
+      role,
+      department,
+      institution,
+    }: {
+      role?: string;
+      department?: string;
+      institution?: string;
+    }) => {
+      if (!(role && department && institution)) {
+        throw new Error('Position not defined');
+      }
+      return {
+        role,
+        department,
+        institution,
+      };
+    },
+  ) || [];
 
 const getEntityMembers = async (
   ids: string[] | undefined,

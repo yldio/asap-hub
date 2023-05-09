@@ -39,6 +39,7 @@ export const usersContentQueryFragment = gql`
     connections
     role
     onboarded
+    positions
     activatedDate
     contributingCohortsCollection(limit: 100) {
       items {

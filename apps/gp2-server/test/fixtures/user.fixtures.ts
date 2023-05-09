@@ -820,7 +820,7 @@ export const getContentfulUsersGraphqlResponse =
   });
 
 export const getContentfulUsersByProjectId = (
-  id: string,
+  user1Id?: string,
   user2Id?: string,
 ) => ({
   projectsCollection: {
@@ -828,20 +828,20 @@ export const getContentfulUsersByProjectId = (
     items: [
       {
         sys: {
-          id,
+          id: user1Id,
         },
         membersCollection: {
           total: 1,
           items: [
-            {
+            user1Id && {
               user: {
                 sys: {
-                  id,
+                  id: user1Id,
                 },
               },
             },
             user2Id && { user: { sys: { id: user2Id } } },
-          ],
+          ].filter(Boolean),
         },
       },
     ],
@@ -849,7 +849,7 @@ export const getContentfulUsersByProjectId = (
 });
 
 export const getContentfulUsersByWorkingGroupId = (
-  id: string,
+  user1Id?: string,
   user2Id?: string,
 ) => ({
   workingGroupsCollection: {
@@ -857,20 +857,20 @@ export const getContentfulUsersByWorkingGroupId = (
     items: [
       {
         sys: {
-          id,
+          id: user1Id,
         },
         membersCollection: {
           total: 1,
           items: [
-            {
+            user1Id && {
               user: {
                 sys: {
-                  id,
+                  id: user1Id,
                 },
               },
             },
             user2Id && { user: { sys: { id: user2Id } } },
-          ],
+          ].filter(Boolean),
         },
       },
     ],

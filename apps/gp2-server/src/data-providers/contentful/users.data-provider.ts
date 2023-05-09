@@ -1,6 +1,7 @@
 import { gp2 as gp2Model, UserSocialLinks } from '@asap-hub/model';
 
 import {
+  addLocaleToFields,
   Environment,
   gp2 as gp2Contentful,
   GraphQLClient,
@@ -109,8 +110,16 @@ export class UserContentfulDataProvider implements UserDataProvider {
     return usersCollection || { total: 0, items: [] };
   }
 
-  async create(): Promise<string> {
-    throw new Error('Method not implemented.');
+  async create(data: gp2Model.UserCreateDataObject): Promise<string> {
+    const fields = cleanUser(data);
+    const environment = await this.getRestClient();
+    const userEntry = await environment.createEntry('users', {
+      fields: addLocaleToFields(fields),
+    });
+
+    await userEntry.publish();
+
+    return userEntry.sys.id;
   }
 
   async update(id: string, data: gp2Model.UserUpdateDataObject): Promise<void> {
@@ -129,8 +138,8 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 }
 
-const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) =>
-  Object.entries(userToUpdate).reduce((acc, [key, value]) => {
+const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) => {
+  return Object.entries(userToUpdate).reduce((acc, [key, value]) => {
     if (key === 'avatar') {
       return {
         ...acc,
@@ -157,8 +166,20 @@ const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) =>
         ...(value as UserSocialLinks),
       };
     }
+
+    if (key === 'telephone') {
+      return {
+        ...acc,
+        telephoneNumber: (value as gp2Model.UserUpdateDataObject['telephone'])
+          ?.number,
+        telephoneCountryCode: (
+          value as gp2Model.UserUpdateDataObject['telephone']
+        )?.countryCode,
+      };
+    }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
+};
 
 export const parseContentfulGraphQlUsers = (
   user: UserItem,
@@ -242,7 +263,7 @@ export const parseContentfulGraphQlUsers = (
   };
 };
 const generateFetchQueryFilter = (
-  { filter }: gp2Model.FetchUsersOptions,
+  { filter, search }: gp2Model.FetchUsersOptions,
   userIdFilter: string[],
 ): gp2Contentful.UsersFilter => {
   const {
@@ -258,7 +279,7 @@ const generateFetchQueryFilter = (
   const filterNonOnboarded = onlyOnboarded ? { onboarded: true } : {};
   const filterRegions = regions ? { regions_in: regions } : {};
   const filterKeywords = keywords ? { keywords_in: keywords } : {};
-
+  const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =
     userIdFilter.length > 0 ? { sys: { id_in: userIdFilter } } : {};
   return {
@@ -268,6 +289,7 @@ const generateFetchQueryFilter = (
     ...filterHidden,
     ...filterRegions,
     ...filterKeywords,
+    ...searchFilter,
   };
 };
 
@@ -395,4 +417,37 @@ const getEntityMembers = async (
         (member = {}) => member?.user?.sys.id,
       ) || [],
   );
+};
+
+const getSearchFilter = (search?: string) => {
+  if (!search) {
+    return {};
+  }
+  type SearchFields = {
+    OR: (
+      | {
+          firstName_contains: string;
+          lastName_contains?: undefined;
+        }
+      | {
+          lastName_contains: string;
+          firstName_contains?: undefined;
+        }
+    )[];
+  };
+
+  const filter = search
+    .split(' ')
+    .filter(Boolean) // removes whitespaces
+    .reduce<SearchFields[]>(
+      (acc, word: string) => [
+        ...acc,
+        {
+          OR: [{ firstName_contains: word }, { lastName_contains: word }],
+        },
+      ],
+      [],
+    );
+
+  return { AND: [...filter] };
 };

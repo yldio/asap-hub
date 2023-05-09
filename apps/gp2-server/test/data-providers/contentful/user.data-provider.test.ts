@@ -1,14 +1,17 @@
 import {
+  addLocaleToFields,
+  Entry,
   Environment,
   getGP2ContentfulGraphqlClientMockServer,
   gp2 as gp2Contentful,
+  patchAndPublish,
 } from '@asap-hub/contentful';
-import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { appName, baseUrl } from '../../../src/config';
 import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/users.data-provider';
 import { UserDataProvider } from '../../../src/data-providers/types';
+import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   fetchUserResponse,
   getContentfulGraphql,
@@ -16,11 +19,8 @@ import {
   getContentfulUsersByProjectId,
   getContentfulUsersByWorkingGroupId,
   getContentfulUsersGraphqlResponse,
-  getSquidexProjectsMembersGraphqlResponse,
-  getSquidexWorkingGroupsMembersGraphqlResponse,
   getUserCreateDataObject,
   getUserDataObject,
-  getUserInput,
 } from '../../fixtures/user.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -43,7 +43,7 @@ describe('User data provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('FetchById', () => {
-    test('Should fetch the users from squidex graphql', async () => {
+    test('Should fetch the users from contentful graphql', async () => {
       const contentfulGraphqlClientMockServer =
         getGP2ContentfulGraphqlClientMockServer(getContentfulGraphql());
       const userDataProviderWithMockServer: UserDataProvider =
@@ -1420,7 +1420,7 @@ describe('User data provider', () => {
 
       const workingGroupMembersResponse =
         getContentfulUsersByWorkingGroupId(user2Id);
-      const projectMembersResponse = getSquidexProjectsMembersGraphqlResponse();
+      const projectMembersResponse = getContentfulUsersByProjectId(user1Id);
 
       contentfulGraphqlClientMock.request
         .mockResolvedValueOnce(projectMembersResponse)
@@ -1469,10 +1469,8 @@ describe('User data provider', () => {
     describe('if there is a working group or a project filter and no users are found - we should return an empty list', () => {
       test('we have a projects filter and no working group filter', async () => {
         const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
-        const projectMembersResponse =
-          getSquidexProjectsMembersGraphqlResponse();
-        projectMembersResponse.queryProjectsContents = [];
 
+        const projectMembersResponse = getContentfulUsersByProjectId();
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           projectMembersResponse,
         );
@@ -1491,11 +1489,9 @@ describe('User data provider', () => {
       });
       test('we have a working groups filter and no projects filter', async () => {
         const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
+
         const workingGroupMembersResponse =
-          getSquidexWorkingGroupsMembersGraphqlResponse();
-
-        workingGroupMembersResponse.queryWorkingGroupsContents = [];
-
+          getContentfulUsersByWorkingGroupId();
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           workingGroupMembersResponse,
         );
@@ -1514,13 +1510,10 @@ describe('User data provider', () => {
       test('if both are defined', async () => {
         const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
         const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
-        const projectMembersResponse =
-          getSquidexProjectsMembersGraphqlResponse();
-        const workingGroupMembersResponse =
-          getSquidexWorkingGroupsMembersGraphqlResponse();
 
-        projectMembersResponse.queryProjectsContents = [];
-        workingGroupMembersResponse.queryWorkingGroupsContents = [];
+        const workingGroupMembersResponse =
+          getContentfulUsersByWorkingGroupId();
+        const projectMembersResponse = getContentfulUsersByProjectId();
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(projectMembersResponse)
@@ -1567,7 +1560,7 @@ describe('User data provider', () => {
       );
     });
     describe('search', () => {
-      test.only('Should query with filters and return the users', async () => {
+      test('Should query with filters and return the users', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getContentfulUsersGraphqlResponse(),
         );
@@ -1579,75 +1572,38 @@ describe('User data provider', () => {
         };
         const users = await userDataProvider.fetch(fetchOptions);
 
-        const filterQuery =
-          "(data/role/iv ne 'Hidden')" +
-          ' and' +
-          " ((contains(data/firstName/iv, 'tony')" +
-          " or contains(data/lastName/iv, 'tony'))" +
-          ' and' +
-          " (contains(data/firstName/iv, 'stark')" +
-          " or contains(data/lastName/iv, 'stark')))";
         expect(contentfulGraphqlClientMock.request).toBeCalledWith(
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: filterQuery,
-          },
+            where: expect.objectContaining({
+              AND: [
+                {
+                  OR: [
+                    {
+                      firstName_contains: 'tony',
+                    },
+                    {
+                      lastName_contains: 'tony',
+                    },
+                  ],
+                },
+                {
+                  OR: [
+                    {
+                      firstName_contains: 'stark',
+                    },
+                    {
+                      lastName_contains: 'stark',
+                    },
+                  ],
+                },
+              ],
+            }),
+          }),
         );
         expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
-      });
-      test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          getContentfulUsersGraphqlResponse(),
-        );
-        const fetchOptions: gp2Model.FetchUsersOptions = {
-          take: 12,
-          skip: 2,
-          search: "'",
-        };
-        await userDataProvider.fetch(fetchOptions);
-
-        const expectedFilter =
-          "(data/role/iv ne 'Hidden')" +
-          ' and' +
-          " ((contains(data/firstName/iv, '%27%27')" +
-          " or contains(data/lastName/iv, '%27%27')))";
-
-        expect(contentfulGraphqlClientMock.request).toBeCalledWith(
-          expect.anything(),
-          {
-            top: 12,
-            skip: 2,
-            filter: expectedFilter,
-          },
-        );
-      });
-      test('Should sanitise double quotation mark by encoding to hex', async () => {
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          getContentfulUsersGraphqlResponse(),
-        );
-        const fetchOptions: gp2Model.FetchUsersOptions = {
-          take: 12,
-          skip: 2,
-          search: '"',
-        };
-        await userDataProvider.fetch(fetchOptions);
-
-        const expectedFilter =
-          "(data/role/iv ne 'Hidden')" +
-          ' and' +
-          " ((contains(data/firstName/iv, '%22')" +
-          " or contains(data/lastName/iv, '%22')))";
-
-        expect(contentfulGraphqlClientMock.request).toBeCalledWith(
-          expect.anything(),
-          {
-            top: 12,
-            skip: 2,
-            filter: expectedFilter,
-          },
-        );
       });
       test('Should search with special characters', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -1660,262 +1616,61 @@ describe('User data provider', () => {
         };
         await userDataProvider.fetch(fetchOptions);
 
-        const expectedFilter =
-          "(data/role/iv ne 'Hidden')" +
-          ' and' +
-          " ((contains(data/firstName/iv, 'Solène')" +
-          " or contains(data/lastName/iv, 'Solène')))";
-
         expect(contentfulGraphqlClientMock.request).toBeCalledWith(
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: expectedFilter,
-          },
+            where: expect.objectContaining({
+              AND: [
+                {
+                  OR: [
+                    {
+                      firstName_contains: 'Solène',
+                    },
+                    {
+                      lastName_contains: 'Solène',
+                    },
+                  ],
+                },
+              ],
+            }),
+          }),
         );
       });
     });
   });
-  describe('Update', () => {
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    const userId = 'user-id';
-
-    test('Should throw when the PATCH request to squidex fails', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          firstName: { iv: 'Tony' },
-        })
-        .reply(404);
-
-      await expect(
-        userDataProvider.update(userId, { firstName: 'Tony' }),
-      ).rejects.toThrow(NotFoundError);
-      expect(nock.isDone()).toBe(true);
-    });
-
-    test('Should update telephone fields', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          telephoneCountryCode: { iv: '+1' },
-          telephoneNumber: { iv: '212-970-4133' },
-        })
-        .reply(200, fetchUserResponse());
-
-      await userDataProvider.update(userId, {
-        telephone: { countryCode: '+1', number: '212-970-4133' },
-      });
-      expect(nock.isDone()).toBe(true);
-    });
-    test('Should update allow empty telephone country code', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          telephoneCountryCode: { iv: '' },
-          telephoneNumber: { iv: '212-970-4133' },
-        })
-        .reply(200, fetchUserResponse());
-
-      await userDataProvider.update(userId, {
-        telephone: { countryCode: '', number: '212-970-4133' },
-      });
-      expect(nock.isDone()).toBe(true);
-    });
-    test('Should update allow empty telephone number', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          telephoneCountryCode: { iv: '+1' },
-          telephoneNumber: { iv: '' },
-        })
-        .reply(200, fetchUserResponse());
-
-      await userDataProvider.update(userId, {
-        telephone: { countryCode: '+1', number: '' },
-      });
-      expect(nock.isDone()).toBe(true);
-    });
-    test('Should update secondary email', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          secondaryEmail: { iv: '' },
-        })
-        .reply(200, fetchUserResponse());
-
-      expect(
-        await userDataProvider.update(userId, {
-          secondaryEmail: '',
-        }),
-      ).not.toBeDefined();
-      expect(nock.isDone()).toBe(true);
-    });
-    test('Should update secondary email', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          secondaryEmail: { iv: 'tony@example.com' },
-        })
-        .reply(200, fetchUserResponse());
-
-      expect(
-        await userDataProvider.update(userId, {
-          secondaryEmail: 'tony@example.com',
-        }),
-      ).not.toBeDefined();
-      expect(nock.isDone()).toBe(true);
-    });
-
-    test('Should update first name', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          firstName: { iv: 'Tony' },
-        })
-        .reply(200, fetchUserResponse());
-
-      expect(
-        await userDataProvider.update(userId, { firstName: 'Tony' }),
-      ).not.toBeDefined();
-      expect(nock.isDone()).toBe(true);
-    });
-
-    test('Should update last name', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          lastName: { iv: 'Stark' },
-        })
-        .reply(200, fetchUserResponse());
-
-      expect(
-        await userDataProvider.update(userId, { lastName: 'Stark' }),
-      ).not.toBeDefined();
-      expect(nock.isDone()).toBe(true);
-    });
-    test.each`
-      region                      | expected
-      ${'Africa'}                 | ${'Africa'}
-      ${'Asia'}                   | ${'Asia'}
-      ${'Australia/Australiasia'} | ${'Australia/Australiasia'}
-      ${'Europe'}                 | ${'Europe'}
-      ${'North America'}          | ${'North America'}
-      ${'South America'}          | ${'South America'}
-      ${'Latin America'}          | ${'Latin America'}
-    `(
-      'Should update the region $region => $expected',
-      async ({ region, expected }) => {
-        nock(baseUrl)
-          .patch(`/api/content/${appName}/users/${userId}`, {
-            region: { iv: expected },
-          })
-          .reply(200, fetchUserResponse());
-        expect(
-          await userDataProvider.update(userId, {
-            region,
-          }),
-        ).not.toBeDefined();
-        expect(nock.isDone()).toBe(true);
-      },
-    );
-    test.each`
-      role                           | expected
-      ${'Working Group Participant'} | ${'Working Group Participant'}
-      ${'Network Investigator'}      | ${'Network Investigator'}
-      ${'Network Collaborator'}      | ${'Network Collaborator'}
-      ${'Administrator'}             | ${'Administrator'}
-      ${'Trainee'}                   | ${'Trainee'}
-    `(
-      'Should update the role $role => $expected',
-      async ({ role, expected }) => {
-        nock(baseUrl)
-          .patch(`/api/content/${appName}/users/${userId}`, {
-            role: { iv: expected },
-          })
-          .reply(200, fetchUserResponse());
-        expect(
-          await userDataProvider.update(userId, {
-            role,
-          }),
-        ).not.toBeDefined();
-        expect(nock.isDone()).toBe(true);
-      },
-    );
-    test.each(gp2Model.userDegrees)(
-      'Should update the degree %s',
-      async (degree) => {
-        const expected = degree;
-        nock(baseUrl)
-          .patch(`/api/content/${appName}/users/${userId}`, {
-            degree: { iv: [degree] },
-          })
-          .reply(200, fetchUserResponse());
-        expect(
-          await userDataProvider.update(userId, {
-            degrees: [expected],
-          }),
-        ).not.toBeDefined();
-        expect(nock.isDone()).toBe(true);
-      },
-    );
-    test.each`
-      role                   | expected
-      ${'Investigator'}      | ${'Investigator'}
-      ${'Co-Investigator'}   | ${'Co-Investigator'}
-      ${'Lead Investigator'} | ${'Lead Investigator'}
-    `(
-      'Should update the contributing cohort role $role => $expected',
-      async ({ role, expected }) => {
-        const id = '42';
-        nock(baseUrl)
-          .patch(`/api/content/${appName}/users/${userId}`, {
-            contributingCohorts: {
-              iv: [
-                {
-                  id: [id],
-                  role: expected,
-                },
-              ],
-            },
-          })
-          .reply(200, fetchUserResponse());
-        expect(
-          await userDataProvider.update(userId, {
-            contributingCohorts: [{ contributingCohortId: id, role }],
-          }),
-        ).not.toBeDefined();
-        expect(nock.isDone()).toBe(true);
-      },
-    );
-  });
-
   describe('Create', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    test('Should throw when the POST request to squidex fails', async () => {
-      nock(baseUrl)
-        .post(`/api/content/${appName}/users?publish=true`)
-        .reply(500);
+    test('Should throw when the POST request to contentful fails', async () => {
+      environmentMock.createEntry.mockRejectedValue(new Error('failed'));
 
       await expect(
         userDataProvider.create(getUserCreateDataObject()),
-      ).rejects.toThrow(GenericError);
+      ).rejects.toThrow(Error);
     });
 
     test('Should create the user', async () => {
-      const userResponse = fetchUserResponse();
       const userCreateDataObject = getUserCreateDataObject();
 
-      nock(baseUrl)
-        .post(`/api/content/${appName}/users?publish=true`, getUserInput())
-        .reply(200, userResponse);
+      const userMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(userMock);
+      userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
 
-      const response = await userDataProvider.create(userCreateDataObject);
+      await userDataProvider.create(userCreateDataObject);
 
-      expect(response).toEqual(userResponse.id);
+      const { social, telephone, ...fieldsWithoutLocale } =
+        userCreateDataObject;
+      const fields = addLocaleToFields({
+        ...fieldsWithoutLocale,
+        ...social,
+        telephoneCountryCode: telephone?.countryCode,
+        telephoneNumber: telephone?.number,
+      });
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
+        fields,
+      });
+
+      expect(userMock.publish).toHaveBeenCalled();
     });
 
     test.each`
@@ -1932,17 +1687,19 @@ describe('User data provider', () => {
       async ({ region, expected }) => {
         const userCreateDataObject = getUserCreateDataObject();
 
-        nock(baseUrl)
-          .post(`/api/content/${appName}/users?publish=true`, {
-            ...getUserInput(),
-            region: { iv: expected },
-          })
-          .reply(200, fetchUserResponse());
+        const userMock = getEntry({});
+        environmentMock.createEntry.mockResolvedValue(userMock);
+        userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
 
         await userDataProvider.create({
           ...userCreateDataObject,
           region,
         });
+        expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
+          fields: expect.objectContaining({ region: { 'en-US': expected } }),
+        });
+
+        expect(userMock.publish).toHaveBeenCalled();
       },
     );
 
@@ -1950,7 +1707,7 @@ describe('User data provider', () => {
       role                           | expected
       ${'Working Group Participant'} | ${'Working Group Participant'}
       ${'Network Investigator'}      | ${'Network Investigator'}
-      ${'Network Collaborator'}      | ${'NetworkCollaborator'}
+      ${'Network Collaborator'}      | ${'Network Collaborator'}
       ${'Administrator'}             | ${'Administrator'}
       ${'Trainee'}                   | ${'Trainee'}
     `(
@@ -1958,17 +1715,19 @@ describe('User data provider', () => {
       async ({ role, expected }) => {
         const userCreateDataObject = getUserCreateDataObject();
 
-        nock(baseUrl)
-          .post(`/api/content/${appName}/users?publish=true`, {
-            ...getUserInput(),
-            role: { iv: expected },
-          })
-          .reply(200, fetchUserResponse());
+        const userMock = getEntry({});
+        environmentMock.createEntry.mockResolvedValue(userMock);
+        userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
 
         await userDataProvider.create({
           ...userCreateDataObject,
           role,
         });
+        expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
+          fields: expect.objectContaining({ role: { 'en-US': expected } }),
+        });
+
+        expect(userMock.publish).toHaveBeenCalled();
       },
     );
 
@@ -1978,17 +1737,19 @@ describe('User data provider', () => {
         const userCreateDataObject = getUserCreateDataObject();
         const expected = degree;
 
-        nock(baseUrl)
-          .post(`/api/content/${appName}/users?publish=true`, {
-            ...getUserInput(),
-            degree: { iv: [degree] },
-          })
-          .reply(200, fetchUserResponse());
+        const userMock = getEntry({});
+        environmentMock.createEntry.mockResolvedValue(userMock);
+        userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
 
         await userDataProvider.create({
           ...userCreateDataObject,
-          degrees: [expected],
+          degrees: [degree],
         });
+        expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
+          fields: expect.objectContaining({ degrees: { 'en-US': [expected] } }),
+        });
+
+        expect(userMock.publish).toHaveBeenCalled();
       },
     );
     test.each`
@@ -2001,22 +1762,180 @@ describe('User data provider', () => {
       async ({ role, expected }) => {
         const userCreateDataObject = getUserCreateDataObject();
         const id = '42';
-        nock(baseUrl)
-          .post(`/api/content/${appName}/users?publish=true`, {
-            ...getUserInput(),
-            contributingCohorts: {
-              iv: [
-                {
-                  id: [id],
-                  role: expected,
-                },
-              ],
-            },
-          })
-          .reply(200, fetchUserResponse());
+        const userMock = getEntry({});
+        environmentMock.createEntry.mockResolvedValue(userMock);
+        userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
         await userDataProvider.create({
           ...userCreateDataObject,
           contributingCohorts: [{ contributingCohortId: id, role }],
+        });
+        expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
+          fields: expect.objectContaining({
+            contributingCohorts: {
+              'en-US': [{ contributingCohortId: id, role }],
+            },
+          }),
+        });
+
+        expect(userMock.publish).toHaveBeenCalled();
+      },
+    );
+  });
+  describe('Update', () => {
+    const userId = 'user-id';
+
+    const entry = getEntry({
+      firstName: 'Test',
+      lastName: 'User',
+    });
+
+    beforeEach(() => {
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+        typeof patchAndPublish
+      >;
+      mockPatchAndPublish.mockResolvedValue({
+        sys: {
+          publishedVersion: 2,
+        },
+      } as Entry);
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        users: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
+    });
+
+    test('Should update telephone fields', async () => {
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '+1', number: '212-970-4133' },
+      });
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(userId);
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        telephoneCountryCode: '+1',
+        telephoneNumber: '212-970-4133',
+      });
+    });
+    test('Should update allow empty telephone country code', async () => {
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '', number: '212-970-4133' },
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        telephoneCountryCode: '',
+        telephoneNumber: '212-970-4133',
+      });
+    });
+    test('Should update allow empty telephone number', async () => {
+      await userDataProvider.update(userId, {
+        telephone: { countryCode: '+1', number: '' },
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        telephoneCountryCode: '+1',
+        telephoneNumber: '',
+      });
+    });
+    test('Should update secondary email', async () => {
+      await userDataProvider.update(userId, {
+        secondaryEmail: '',
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        secondaryEmail: '',
+      });
+    });
+    test('Should update secondary email', async () => {
+      await userDataProvider.update(userId, {
+        secondaryEmail: 'tony@example.com',
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        secondaryEmail: 'tony@example.com',
+      });
+    });
+
+    test('Should update first name', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          firstName: { iv: 'Tony' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, { firstName: 'Tony' });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        firstName: 'Tony',
+      });
+    });
+
+    test('Should update last name', async () => {
+      await userDataProvider.update(userId, { lastName: 'Stark' });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        lastName: 'Stark',
+      });
+    });
+    test.each`
+      region                      | expected
+      ${'Africa'}                 | ${'Africa'}
+      ${'Asia'}                   | ${'Asia'}
+      ${'Australia/Australiasia'} | ${'Australia/Australiasia'}
+      ${'Europe'}                 | ${'Europe'}
+      ${'North America'}          | ${'North America'}
+      ${'South America'}          | ${'South America'}
+      ${'Latin America'}          | ${'Latin America'}
+    `(
+      'Should update the region $region => $expected',
+      async ({ region, expected }) => {
+        await userDataProvider.update(userId, {
+          region,
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          region: expected,
+        });
+      },
+    );
+    test.each`
+      role                           | expected
+      ${'Working Group Participant'} | ${'Working Group Participant'}
+      ${'Network Investigator'}      | ${'Network Investigator'}
+      ${'Network Collaborator'}      | ${'Network Collaborator'}
+      ${'Administrator'}             | ${'Administrator'}
+      ${'Trainee'}                   | ${'Trainee'}
+    `(
+      'Should update the role $role => $expected',
+      async ({ role, expected }) => {
+        await userDataProvider.update(userId, {
+          role,
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          role: expected,
+        });
+      },
+    );
+    test.each(gp2Model.userDegrees)(
+      'Should update the degree %s',
+      async (degree) => {
+        const expected = degree;
+        await userDataProvider.update(userId, {
+          degrees: [expected],
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          degrees: [expected],
+        });
+      },
+    );
+    test.each`
+      role                   | expected
+      ${'Investigator'}      | ${'Investigator'}
+      ${'Co-Investigator'}   | ${'Co-Investigator'}
+      ${'Lead Investigator'} | ${'Lead Investigator'}
+    `(
+      'Should update the contributing cohort role $role => $expected',
+      async ({ role, expected }) => {
+        const id = '42';
+        await userDataProvider.update(userId, {
+          contributingCohorts: [{ contributingCohortId: id, role }],
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          contributingCohorts: [{ contributingCohortId: id, role: expected }],
         });
       },
     );

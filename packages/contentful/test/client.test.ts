@@ -1,6 +1,7 @@
 import * as gqlRequest from 'graphql-request';
 import * as contentfulManagement from 'contentful-management';
-import { getGraphQLClient, getRestClient } from '../src/client';
+import * as contentfulDeliveryApi from 'contentful';
+import { getGraphQLClient, getRestClient, getCDAClient } from '../src/client';
 
 jest.mock('contentful-management');
 const mockContentfulManagement = contentfulManagement as jest.Mocked<
@@ -54,5 +55,33 @@ describe('getGraphQLClient', () => {
       `https://graphql.contentful.com/content/v1/spaces/${spaceId}/environments/${environmentId}`,
       { headers: { authorization: `Bearer ${accessToken}` } },
     );
+  });
+});
+
+jest.mock('contentful');
+const mockContentful = contentfulDeliveryApi as jest.Mocked<
+  typeof contentfulDeliveryApi
+>;
+mockContentful.createClient.mockReturnValue({
+  getEntry: jest.fn(),
+} as any as jest.Mocked<contentfulDeliveryApi.ContentfulClientApi<undefined>>);
+
+describe('getCDAClient', () => {
+  it('should create a client', () => {
+    const accessToken = 'token';
+    const spaceId = 'space-id';
+    const environmentId = 'env-id';
+
+    getCDAClient({
+      space: spaceId,
+      accessToken,
+      environment: environmentId,
+    });
+
+    expect(contentfulDeliveryApi.createClient).toHaveBeenCalledWith({
+      space: spaceId,
+      accessToken,
+      environment: environmentId,
+    });
   });
 });

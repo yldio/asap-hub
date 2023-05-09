@@ -31,9 +31,9 @@ import {
   UsersFilter,
   Environment,
   Maybe,
+  pollContentfulGql,
 } from '@asap-hub/contentful';
 import { isTeamRole } from '../../entities';
-import { waitForUpdated } from '../../utils/wait-for-updated';
 import { UserDataProvider } from '../types';
 
 export type UserItem = NonNullable<
@@ -137,7 +137,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
     const fetchEventById = () => this.fetchUserById(id);
 
-    await waitForUpdated<FetchUserByIdQuery>(
+    await pollContentfulGql<FetchUserByIdQuery>(
       result.sys.publishedVersion || Infinity,
       fetchEventById,
       'users',

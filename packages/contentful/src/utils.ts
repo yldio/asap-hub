@@ -1,3 +1,5 @@
+import retry from 'async-retry';
+import { Entry as CDAEntry, EntrySkeletonType, FieldsType } from 'contentful';
 import { Entry } from 'contentful-management';
 import { Document, Node } from '@contentful/rich-text-types';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
@@ -139,3 +141,63 @@ export const patchAndPublish = async (
   const result = await entry.patch(patch);
   return result.publish();
 };
+
+type Entity = 'events' | 'users';
+type OptionalExceptFor<T, TRequired extends keyof T> = Partial<T> &
+  Pick<T, TRequired>;
+
+type DataContent = {
+  sys: OptionalExceptFor<Sys, 'publishedVersion'>;
+};
+
+type Data = {
+  [K in Entity]?: DataContent | null;
+};
+
+const pollContentful = async <T extends EntrySkeletonType<FieldsType, string>>(
+  fetchEntry: (() => Promise<CDAEntry<T>>) | (() => Promise<Data>),
+  revision: number,
+  entity?: Entity,
+) =>
+  retry(
+    // eslint-disable-next-line consistent-return
+    async (bail) => {
+      const entry = await fetchEntry();
+
+      if (!entry) {
+        return bail(new Error('Not found'));
+      }
+
+      if ('sys' in entry) {
+        if ((entry.sys.revision || 0) < revision) {
+          throw new Error('Not synced');
+        }
+        return entry;
+      }
+
+      if (entity) {
+        const data = entry[entity];
+        if (!data) {
+          return bail(new Error('Not found'));
+        }
+
+        if ((data.sys.publishedVersion || 0) < revision) {
+          throw new Error('Not synced');
+        }
+      }
+    },
+    { minTimeout: 100 },
+  );
+
+export const pollContentfulDeliveryApi = async <
+  T extends EntrySkeletonType<FieldsType, string>,
+>(
+  fetchEntry: () => Promise<CDAEntry<T>>,
+  revision: number,
+) => pollContentful(fetchEntry, revision) as Promise<CDAEntry<T>>;
+
+export const pollContentfulGql = async <FetchType extends Data>(
+  version: number,
+  fetchData: () => Promise<FetchType>,
+  entity: Entity,
+) => pollContentful(fetchData, version, entity) as Promise<void>;

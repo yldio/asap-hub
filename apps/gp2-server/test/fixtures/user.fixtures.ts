@@ -818,3 +818,61 @@ export const getContentfulUsersGraphqlResponse =
       items: [getContentfulGraphqlUser()],
     },
   });
+
+export const getContentfulUsersByProjectId = (
+  id: string,
+  user2Id?: string,
+) => ({
+  projectsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id,
+        },
+        membersCollection: {
+          total: 1,
+          items: [
+            {
+              user: {
+                sys: {
+                  id,
+                },
+              },
+            },
+            user2Id && { user: { sys: { id: user2Id } } },
+          ],
+        },
+      },
+    ],
+  },
+});
+
+export const getContentfulUsersByWorkingGroupId = (
+  id: string,
+  user2Id?: string,
+) => ({
+  workingGroupsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id,
+        },
+        membersCollection: {
+          total: 1,
+          items: [
+            {
+              user: {
+                sys: {
+                  id,
+                },
+              },
+            },
+            user2Id && { user: { sys: { id: user2Id } } },
+          ],
+        },
+      },
+    ],
+  },
+});

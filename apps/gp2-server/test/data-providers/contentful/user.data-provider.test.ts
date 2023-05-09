@@ -13,9 +13,9 @@ import {
   fetchUserResponse,
   getContentfulGraphql,
   getContentfulGraphqlUser,
+  getContentfulUsersByProjectId,
+  getContentfulUsersByWorkingGroupId,
   getContentfulUsersGraphqlResponse,
-  getGraphQLProjectMembers,
-  getGraphQLWorkingGroupMembers,
   getSquidexProjectsMembersGraphqlResponse,
   getSquidexWorkingGroupsMembersGraphqlResponse,
   getUserCreateDataObject,
@@ -992,7 +992,7 @@ describe('User data provider', () => {
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
 
-    test.only.each`
+    test.each`
       name          | value                 | fieldName
       ${'regions'}  | ${['Africa', 'Asia']} | ${'regions'}
       ${'keywords'} | ${['Bash', 'R']}      | ${'keywords'}
@@ -1024,19 +1024,13 @@ describe('User data provider', () => {
     });
 
     describe('projects filter', () => {
-      test.only('it should be able to filter by project', async () => {
+      test('it should be able to filter by project', async () => {
         const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
         const userId = '11';
-        const projectMembers = getGraphQLProjectMembers({
-          members: [{ user: [{ id: userId }] }],
-        });
-        const projectMembersResponse =
-          getSquidexProjectsMembersGraphqlResponse();
-
-        projectMembersResponse.queryProjectsContents![0] = projectMembers;
+        const projectMembers = getContentfulUsersByProjectId(userId);
 
         contentfulGraphqlClientMock.request
-          .mockResolvedValueOnce(projectMembersResponse)
+          .mockResolvedValueOnce(projectMembers)
           .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
         const fetchOptions: gp2Model.FetchUsersOptions = {
           take: 12,
@@ -1048,23 +1042,25 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
-        const projectFilter = `id eq '${projectId}'`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           1,
-          expect.anything(),
-          {
-            filter: projectFilter,
-          },
+          gp2Contentful.FETCH_USERS_BY_PROJECT_ID,
+          expect.objectContaining({
+            id: [projectId],
+          }),
         );
-        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${userId}')`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: userFilter,
-          },
+            where: expect.objectContaining({
+              onboarded: true,
+              role_not: 'Hidden',
+              sys: { id_in: ['11'] },
+            }),
+          }),
         );
       });
       test('it should be able to filter by projects', async () => {
@@ -1072,18 +1068,17 @@ describe('User data provider', () => {
         const project2Id = '140f5e15-922d-4cbf-9d39-35dd39225b04';
         const user1Id = '11';
         const user2Id = '7';
-        const project1Members = getGraphQLProjectMembers({
-          members: [{ user: [{ id: user1Id }] }],
-        });
-        const project2Members = getGraphQLProjectMembers({
-          members: [{ user: [{ id: user2Id }] }],
-        });
-        const projectMembersResponse =
-          getSquidexProjectsMembersGraphqlResponse();
+        const project1Members =
+          getContentfulUsersByProjectId(user1Id).projectsCollection.items;
+        const project2Members =
+          getContentfulUsersByProjectId(user2Id).projectsCollection.items;
 
-        projectMembersResponse.queryProjectsContents![0] = project1Members;
-        projectMembersResponse.queryProjectsContents![1] = project2Members;
-
+        const projectMembersResponse = {
+          projectsCollection: {
+            total: 2,
+            items: [project1Members, project2Members].flat(),
+          },
+        };
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(projectMembersResponse)
           .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
@@ -1097,26 +1092,25 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
-        const projectFilter = `id eq '${project1Id}' or id eq '${project2Id}'`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           1,
-          expect.anything(),
-          {
-            filter: projectFilter,
-          },
+          gp2Contentful.FETCH_USERS_BY_PROJECT_ID,
+          expect.objectContaining({
+            id: [project1Id, project2Id],
+          }),
         );
-        const userFilter =
-          "(data/role/iv ne 'Hidden')" +
-          ' and' +
-          ` (id eq '${user1Id}' or id eq '${user2Id}')`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: userFilter,
-          },
+            where: expect.objectContaining({
+              onboarded: true,
+              role_not: 'Hidden',
+              sys: { id_in: [user1Id, user2Id] },
+            }),
+          }),
         );
       });
       test('it should be able to filter by projects and multiple users', async () => {
@@ -1125,18 +1119,17 @@ describe('User data provider', () => {
         const user1Id = '11';
         const user2Id = '7';
         const user3Id = '23';
-        const project1Members = getGraphQLProjectMembers({
-          members: [{ user: [{ id: user1Id }] }],
-        });
-        const project2Members = getGraphQLProjectMembers({
-          members: [{ user: [{ id: user2Id }] }, { user: [{ id: user3Id }] }],
-        });
-        const projectMembersResponse =
-          getSquidexProjectsMembersGraphqlResponse();
+        const project1Members =
+          getContentfulUsersByProjectId(user1Id).projectsCollection.items;
+        const project2Members = getContentfulUsersByProjectId(user2Id, user3Id)
+          .projectsCollection.items;
 
-        projectMembersResponse.queryProjectsContents![0] = project1Members;
-        projectMembersResponse.queryProjectsContents![1] = project2Members;
-
+        const projectMembersResponse = {
+          projectsCollection: {
+            total: 2,
+            items: [project1Members, project2Members].flat(),
+          },
+        };
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(projectMembersResponse)
           .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
@@ -1150,26 +1143,25 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
-        const projectFilter = `id eq '${project1Id}' or id eq '${project2Id}'`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           1,
-          expect.anything(),
-          {
-            filter: projectFilter,
-          },
+          gp2Contentful.FETCH_USERS_BY_PROJECT_ID,
+          expect.objectContaining({
+            id: [project1Id, project2Id],
+          }),
         );
-        const userFilter =
-          "(data/role/iv ne 'Hidden')" +
-          ' and' +
-          ` (id eq '${user1Id}' or id eq '${user2Id}' or id eq '${user3Id}')`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: userFilter,
-          },
+            where: expect.objectContaining({
+              onboarded: true,
+              role_not: 'Hidden',
+              sys: { id_in: [user1Id, user2Id, user3Id] },
+            }),
+          }),
         );
       });
       test('it should be able to filter out duplicate user Ids', async () => {
@@ -1177,18 +1169,17 @@ describe('User data provider', () => {
         const project2Id = '140f5e15-922d-4cbf-9d39-35dd39225b04';
         const user1Id = '11';
         const user2Id = '11';
-        const project1Members = getGraphQLProjectMembers({
-          members: [{ user: [{ id: user1Id }] }],
-        });
-        const project2Members = getGraphQLProjectMembers({
-          members: [{ user: [{ id: user2Id }] }],
-        });
-        const projectMembersResponse =
-          getSquidexProjectsMembersGraphqlResponse();
+        const project1Members =
+          getContentfulUsersByProjectId(user1Id).projectsCollection.items;
+        const project2Members =
+          getContentfulUsersByProjectId(user2Id).projectsCollection.items;
 
-        projectMembersResponse.queryProjectsContents![0] = project1Members;
-        projectMembersResponse.queryProjectsContents![1] = project2Members;
-
+        const projectMembersResponse = {
+          projectsCollection: {
+            total: 2,
+            items: [project1Members, project2Members].flat(),
+          },
+        };
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(projectMembersResponse)
           .mockResolvedValueOnce(getContentfulUsersGraphqlResponse());
@@ -1202,23 +1193,25 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
-        const projectFilter = `id eq '${project1Id}' or id eq '${project2Id}'`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           1,
-          expect.anything(),
-          {
-            filter: projectFilter,
-          },
+          gp2Contentful.FETCH_USERS_BY_PROJECT_ID,
+          expect.objectContaining({
+            id: [project1Id, project2Id],
+          }),
         );
-        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${user1Id}')`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: userFilter,
-          },
+            where: expect.objectContaining({
+              onboarded: true,
+              role_not: 'Hidden',
+              sys: { id_in: [user1Id] },
+            }),
+          }),
         );
       });
     });
@@ -1227,14 +1220,8 @@ describe('User data provider', () => {
       test('it should be able to filter by working group', async () => {
         const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
         const userId = '11';
-        const workingGroupMembers = getGraphQLWorkingGroupMembers({
-          members: [{ user: [{ id: userId }] }],
-        });
         const workingGroupMembersResponse =
-          getSquidexWorkingGroupsMembersGraphqlResponse();
-
-        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
-          workingGroupMembers;
+          getContentfulUsersByWorkingGroupId(userId);
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(workingGroupMembersResponse)
@@ -1249,23 +1236,25 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
-        const workingGroupFilter = `id eq '${workingGroupId}'`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           1,
-          expect.anything(),
-          {
-            filter: workingGroupFilter,
-          },
+          gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID,
+          expect.objectContaining({
+            id: [workingGroupId],
+          }),
         );
-        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${userId}')`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: userFilter,
-          },
+            where: expect.objectContaining({
+              onboarded: true,
+              role_not: 'Hidden',
+              sys: { id_in: [userId] },
+            }),
+          }),
         );
       });
       test('it should be able to filter by workingGroups', async () => {
@@ -1273,19 +1262,17 @@ describe('User data provider', () => {
         const workingGroup2Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
         const user1Id = '11';
         const user2Id = '7';
-        const workingGroup1Members = getGraphQLWorkingGroupMembers({
-          members: [{ user: [{ id: user1Id }] }],
-        });
-        const workingGroup2Members = getGraphQLWorkingGroupMembers({
-          members: [{ user: [{ id: user2Id }] }],
-        });
-        const workingGroupMembersResponse =
-          getSquidexWorkingGroupsMembersGraphqlResponse();
+        const workingGroup1Members =
+          getContentfulUsersByProjectId(user1Id).projectsCollection.items;
+        const workingGroup2Members =
+          getContentfulUsersByProjectId(user2Id).projectsCollection.items;
 
-        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
-          workingGroup1Members;
-        workingGroupMembersResponse.queryWorkingGroupsContents![1] =
-          workingGroup2Members;
+        const workingGroupMembersResponse = {
+          workingGroupsCollection: {
+            total: 2,
+            items: [workingGroup1Members, workingGroup2Members].flat(),
+          },
+        };
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(workingGroupMembersResponse)
@@ -1300,26 +1287,25 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
-        const workingGroupFilter = `id eq '${workingGroup1Id}' or id eq '${workingGroup2Id}'`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           1,
-          expect.anything(),
-          {
-            filter: workingGroupFilter,
-          },
+          gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID,
+          expect.objectContaining({
+            id: [workingGroup1Id, workingGroup2Id],
+          }),
         );
-        const userFilter =
-          "(data/role/iv ne 'Hidden')" +
-          ' and' +
-          ` (id eq '${user1Id}' or id eq '${user2Id}')`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: userFilter,
-          },
+            where: expect.objectContaining({
+              onboarded: true,
+              role_not: 'Hidden',
+              sys: { id_in: [user1Id, user2Id] },
+            }),
+          }),
         );
       });
       test('it should be able to filter by workingGroups and multiple users', async () => {
@@ -1328,19 +1314,18 @@ describe('User data provider', () => {
         const user1Id = '11';
         const user2Id = '7';
         const user3Id = '23';
-        const workingGroup1Members = getGraphQLWorkingGroupMembers({
-          members: [{ user: [{ id: user1Id }] }],
-        });
-        const workingGroup2Members = getGraphQLWorkingGroupMembers({
-          members: [{ user: [{ id: user2Id }] }, { user: [{ id: user3Id }] }],
-        });
-        const workingGroupMembersResponse =
-          getSquidexWorkingGroupsMembersGraphqlResponse();
-
-        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
-          workingGroup1Members;
-        workingGroupMembersResponse.queryWorkingGroupsContents![1] =
-          workingGroup2Members;
+        const workingGroup1Members =
+          getContentfulUsersByProjectId(user1Id).projectsCollection.items;
+        const workingGroup2Members = getContentfulUsersByProjectId(
+          user2Id,
+          user3Id,
+        ).projectsCollection.items;
+        const workingGroupMembersResponse = {
+          workingGroupsCollection: {
+            total: 2,
+            items: [workingGroup1Members, workingGroup2Members].flat(),
+          },
+        };
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(workingGroupMembersResponse)
@@ -1355,26 +1340,25 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
-        const workingGroupFilter = `id eq '${workingGroup1Id}' or id eq '${workingGroup2Id}'`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           1,
-          expect.anything(),
-          {
-            filter: workingGroupFilter,
-          },
+          gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID,
+          expect.objectContaining({
+            id: [workingGroup1Id, workingGroup2Id],
+          }),
         );
-        const userFilter =
-          "(data/role/iv ne 'Hidden')" +
-          ' and' +
-          ` (id eq '${user1Id}' or id eq '${user2Id}' or id eq '${user3Id}')`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: userFilter,
-          },
+            where: expect.objectContaining({
+              onboarded: true,
+              role_not: 'Hidden',
+              sys: { id_in: [user1Id, user2Id, user3Id] },
+            }),
+          }),
         );
       });
       test('it should be able to filter out duplicate user Ids', async () => {
@@ -1382,19 +1366,16 @@ describe('User data provider', () => {
         const workingGroup2Id = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
         const user1Id = '11';
         const user2Id = '11';
-        const workingGroup1Members = getGraphQLWorkingGroupMembers({
-          members: [{ user: [{ id: user1Id }] }],
-        });
-        const workingGroup2Members = getGraphQLWorkingGroupMembers({
-          members: [{ user: [{ id: user2Id }] }],
-        });
-        const workingGroupMembersResponse =
-          getSquidexWorkingGroupsMembersGraphqlResponse();
-
-        workingGroupMembersResponse.queryWorkingGroupsContents![0] =
-          workingGroup1Members;
-        workingGroupMembersResponse.queryWorkingGroupsContents![1] =
-          workingGroup2Members;
+        const workingGroup1Members =
+          getContentfulUsersByProjectId(user1Id).projectsCollection.items;
+        const workingGroup2Members =
+          getContentfulUsersByProjectId(user2Id).projectsCollection.items;
+        const workingGroupMembersResponse = {
+          workingGroupsCollection: {
+            total: 2,
+            items: [workingGroup1Members, workingGroup2Members].flat(),
+          },
+        };
 
         contentfulGraphqlClientMock.request
           .mockResolvedValueOnce(workingGroupMembersResponse)
@@ -1409,23 +1390,25 @@ describe('User data provider', () => {
         await userDataProvider.fetch(fetchOptions);
 
         expect(contentfulGraphqlClientMock.request).toBeCalledTimes(2);
-        const workingGroupFilter = `id eq '${workingGroup1Id}' or id eq '${workingGroup2Id}'`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           1,
-          expect.anything(),
-          {
-            filter: workingGroupFilter,
-          },
+          gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID,
+          expect.objectContaining({
+            id: [workingGroup1Id, workingGroup2Id],
+          }),
         );
-        const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${user1Id}')`;
         expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
           2,
-          expect.anything(),
-          {
-            top: 12,
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
             skip: 2,
-            filter: userFilter,
-          },
+            where: expect.objectContaining({
+              onboarded: true,
+              role_not: 'Hidden',
+              sys: { id_in: [user1Id] },
+            }),
+          }),
         );
       });
     });
@@ -1434,19 +1417,10 @@ describe('User data provider', () => {
       const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
       const user1Id = '11';
       const user2Id = '11';
-      const projectMembers = getGraphQLProjectMembers({
-        members: [{ user: [{ id: user1Id }] }],
-      });
-      const workingGroupMembers = getGraphQLWorkingGroupMembers({
-        members: [{ user: [{ id: user2Id }] }],
-      });
-      const projectMembersResponse = getSquidexProjectsMembersGraphqlResponse();
-      const workingGroupMembersResponse =
-        getSquidexWorkingGroupsMembersGraphqlResponse();
 
-      projectMembersResponse.queryProjectsContents![0] = projectMembers;
-      workingGroupMembersResponse.queryWorkingGroupsContents![0] =
-        workingGroupMembers;
+      const workingGroupMembersResponse =
+        getContentfulUsersByWorkingGroupId(user2Id);
+      const projectMembersResponse = getSquidexProjectsMembersGraphqlResponse();
 
       contentfulGraphqlClientMock.request
         .mockResolvedValueOnce(projectMembersResponse)
@@ -1463,31 +1437,32 @@ describe('User data provider', () => {
       await userDataProvider.fetch(fetchOptions);
 
       expect(contentfulGraphqlClientMock.request).toBeCalledTimes(3);
-      const projectFilter = `id eq '${projectId}'`;
       expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
         1,
-        expect.anything(),
-        {
-          filter: projectFilter,
-        },
+        gp2Contentful.FETCH_USERS_BY_PROJECT_ID,
+        expect.objectContaining({
+          id: [projectId],
+        }),
       );
-      const workingGroupFilter = `id eq '${workingGroupId}'`;
       expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
         2,
-        expect.anything(),
-        {
-          filter: workingGroupFilter,
-        },
+        gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID,
+        expect.objectContaining({
+          id: [workingGroupId],
+        }),
       );
-      const userFilter = `(data/role/iv ne 'Hidden') and (id eq '${user1Id}')`;
       expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
         3,
-        expect.anything(),
-        {
-          top: 12,
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          limit: 12,
           skip: 2,
-          filter: userFilter,
-        },
+          where: expect.objectContaining({
+            onboarded: true,
+            role_not: 'Hidden',
+            sys: { id_in: [user1Id] },
+          }),
+        }),
       );
     });
 
@@ -1580,18 +1555,19 @@ describe('User data provider', () => {
       };
       await userDataProvider.fetch(fetchOptions);
 
-      const filter = "(data/connections/iv/code eq 'a-code')";
       expect(contentfulGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 1,
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          limit: 1,
           skip: 0,
-          filter,
-        },
+          where: expect.objectContaining({
+            connections_contains_all: ['a-code'],
+          }),
+        }),
       );
     });
     describe('search', () => {
-      test('Should query with filters and return the users', async () => {
+      test.only('Should query with filters and return the users', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getContentfulUsersGraphqlResponse(),
         );

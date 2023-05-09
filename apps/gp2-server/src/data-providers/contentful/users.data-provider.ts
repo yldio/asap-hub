@@ -26,6 +26,20 @@ export class UserContentfulDataProvider implements UserDataProvider {
       gp2Contentful.FetchUserByIdQueryVariables
     >(gp2Contentful.FETCH_USER_BY_ID, { id });
   }
+  private async fetchUsersByProject(id: string[]) {
+    const { projectsCollection } = await this.contentfulClient.request<
+      gp2Contentful.FetchUsersByProjectIdQuery,
+      gp2Contentful.FetchUsersByProjectIdQueryVariables
+    >(gp2Contentful.FETCH_USERS_BY_PROJECT_ID, { id });
+    return projectsCollection;
+  }
+  private async fetchUsersByWorkingGroup(id: string[]) {
+    const { workingGroupsCollection } = await this.contentfulClient.request<
+      gp2Contentful.FetchUsersByWorkingGroupIdQuery,
+      gp2Contentful.FetchUsersByWorkingGroupIdQueryVariables
+    >(gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID, { id });
+    return workingGroupsCollection;
+  }
 
   async fetchById(id: string): Promise<gp2Model.UserDataObject | null> {
     const { users } = await this.fetchUserById(id);
@@ -37,10 +51,35 @@ export class UserContentfulDataProvider implements UserDataProvider {
     return parseContentfulGraphQlUsers(users);
   }
 
+  private getUserIdFilter = async ({
+    projects,
+    workingGroups,
+  }: gp2Model.FetchUsersOptions['filter'] = {}): Promise<string[]> => {
+    const members = await Promise.all([
+      getEntityMembers(projects, this.fetchUsersByProject.bind(this)),
+      getEntityMembers(workingGroups, this.fetchUsersByWorkingGroup.bind(this)),
+    ]);
+
+    return members
+      .flat()
+      .filter((member): member is string => Boolean(member))
+      .filter((id, index, arr) => arr.indexOf(id) === index);
+  };
   async fetch(
     options: gp2Model.FetchUsersOptions,
   ): Promise<gp2Model.ListUserDataObject> {
-    const result = await this.fetchUsers(options);
+    const { projects, workingGroups } = options.filter || {};
+    const userIdFilter = await this.getUserIdFilter({
+      projects,
+      workingGroups,
+    });
+    if (
+      userIdFilter.length === 0 &&
+      (projects?.length || workingGroups?.length)
+    ) {
+      return { total: 0, items: [] };
+    }
+    const result = await this.fetchUsers(options, userIdFilter);
 
     return {
       total: result?.total,
@@ -50,10 +89,13 @@ export class UserContentfulDataProvider implements UserDataProvider {
     };
   }
 
-  private async fetchUsers(options: gp2Model.FetchUsersOptions) {
+  private async fetchUsers(
+    options: gp2Model.FetchUsersOptions,
+    userIdFilter: string[],
+  ) {
     const { take = 8, skip = 0 } = options;
 
-    const where = generateFetchQueryFilter(options);
+    const where = generateFetchQueryFilter(options, userIdFilter);
 
     const { usersCollection } = await this.contentfulClient.request<
       gp2Contentful.FetchUsersQuery,
@@ -199,9 +241,10 @@ export const parseContentfulGraphQlUsers = (
     workingGroups,
   };
 };
-const generateFetchQueryFilter = ({
-  filter,
-}: gp2Model.FetchUsersOptions): gp2Contentful.UsersFilter => {
+const generateFetchQueryFilter = (
+  { filter }: gp2Model.FetchUsersOptions,
+  userIdFilter: string[],
+): gp2Contentful.UsersFilter => {
   const {
     regions,
     keywords,
@@ -216,7 +259,10 @@ const generateFetchQueryFilter = ({
   const filterRegions = regions ? { regions_in: regions } : {};
   const filterKeywords = keywords ? { keywords_in: keywords } : {};
 
+  const filterUserId =
+    userIdFilter.length > 0 ? { sys: { id_in: userIdFilter } } : {};
   return {
+    ...filterUserId,
     ...filterCode,
     ...filterNonOnboarded,
     ...filterHidden,
@@ -329,3 +375,24 @@ const parseWorkingGroups = (
         }) || [],
     };
   }) || [];
+
+const getEntityMembers = async (
+  ids: string[] | undefined,
+  queryFetchMemberData: (
+    filter: string[],
+  ) => Promise<
+    | gp2Contentful.FetchUsersByWorkingGroupIdQuery['workingGroupsCollection']
+    | gp2Contentful.FetchUsersByProjectIdQuery['projectsCollection']
+  >,
+) => {
+  if (!ids) {
+    return [];
+  }
+  const entities = await queryFetchMemberData(ids);
+  return entities?.items.flatMap(
+    (entity) =>
+      entity?.membersCollection?.items?.map(
+        (member = {}) => member?.user?.sys.id,
+      ) || [],
+  );
+};

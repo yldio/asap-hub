@@ -20,6 +20,7 @@ import {
 } from '../rich-text.fixtures';
 
 describe('parseRichText', () => {
+  beforeEach(jest.resetAllMocks);
   describe('embedded-asset-block', () => {
     test('outputs html with img tag when asset is image', () => {
       const rtf = {
@@ -207,18 +208,17 @@ describe('updateEntryFields', () => {
 });
 
 describe('patchAndPublish', () => {
-  let entry;
-  let publish;
-
-  beforeEach(() => {
-    publish = jest.fn();
-    entry = {
+  const getMocks = () => {
+    const publish = jest.fn();
+    const entry = {
       fields: {},
       patch: jest.fn().mockResolvedValueOnce({ publish }),
-    };
-  });
+    } as unknown as Entry;
+    return { publish, entry };
+  };
 
   test('converts data object passed to a json patch with locales', async () => {
+    const { entry } = getMocks();
     await patchAndPublish(entry, { foo: 'bar', baz: 1 });
     expect(entry.patch).toHaveBeenCalledWith([
       { op: 'add', path: '/fields/foo', value: { 'en-US': 'bar' } },
@@ -227,6 +227,7 @@ describe('patchAndPublish', () => {
   });
 
   test('patches with a "replace" op if field exists on entry', async () => {
+    const { entry } = getMocks();
     entry.fields = {
       foo: null,
     };
@@ -238,6 +239,7 @@ describe('patchAndPublish', () => {
   });
 
   test('calls publish on the return value of the patch function', async () => {
+    const { entry, publish } = getMocks();
     await patchAndPublish(entry, { foo: 'bar' });
     expect(publish).toHaveBeenCalled();
   });

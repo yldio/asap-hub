@@ -14,10 +14,8 @@ import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sendEmailFactory } from '../../utils/send-email';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import {
-  UserSquidexDataProvider,
-  UserDataProvider,
-} from '../../data-providers/user.data-provider';
+import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
+import { UserDataProvider } from '../../data-providers/types';
 
 const ses = new SES({
   apiVersion: '2010-12-01',

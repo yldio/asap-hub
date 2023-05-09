@@ -24,6 +24,7 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
       teams,
       algoliaApiKey,
       workingGroups,
+      interestGroups,
       role,
     } = response;
 
@@ -43,6 +44,7 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
       })),
       algoliaApiKey,
       workingGroups,
+      interestGroups,
       role,
     };
   }

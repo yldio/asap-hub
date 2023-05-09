@@ -9,6 +9,7 @@ import {
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
 } from '@asap-hub/validation';
+import { useCallback } from 'react';
 import {
   atom,
   atomFamily,
@@ -176,6 +177,14 @@ export const useSetResearchOutputItem = () => {
         set(researchOutputState(researchOutput.id), researchOutput);
       },
   );
+};
+
+export const useInvalidateResearchOutputIndex = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshResearchOutputIndex);
+
+  return useCallback(() => {
+    setRefresh(refresh + 1);
+  }, [refresh, setRefresh]);
 };
 
 export const useCanShareResearchOutput = (

@@ -1,44 +1,18 @@
-import { DateTime } from 'luxon';
 import { syncOrcidUserHandler } from '../../../src/handlers/user/sync-orcid-handler';
 import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
 import { userControllerMock } from '../../mocks/user-controller.mock';
 
 describe('POST /webhook/users/orcid', () => {
   const syncHandler = syncOrcidUserHandler(userControllerMock);
-  let currentTime: DateTime;
-
-  beforeAll(() => {
-    jest.useFakeTimers();
-
-    currentTime = DateTime.fromISO('2022-09-01T08:00:00Z');
-    jest.setSystemTime(currentTime.toJSDate());
-  });
-
-  afterAll(() => {
-    jest.useRealTimers();
-  });
 
   afterEach(jest.clearAllMocks);
 
-  test('Should skip the sync when orcidLastSyncDate is less than 24 hours ago', async () => {
+  test('Should sync when orcid is present and orcidLastSyncDate is empty', async () => {
     const event = createEvent();
     const userResponse = getUserResponse();
-    // set orcidLastSyncDate to 30 seconds ago
-    userResponse.orcidLastSyncDate = currentTime.minus({ hours: 23 }).toISO();
-    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+    userResponse.orcid = '0000-0000-0000-0001';
+    userResponse.orcidLastSyncDate = undefined;
 
-    await syncHandler(event);
-
-    expect(userControllerMock.syncOrcidProfile).not.toHaveBeenCalled();
-  });
-
-  test('Should sync when orcidLastSyncDate is more than 24 hours ago', async () => {
-    const event = createEvent();
-    const userResponse = getUserResponse();
-    // set orcidLastSyncDate to 24 hours and one minute ago
-    userResponse.orcidLastSyncDate = currentTime
-      .minus({ hours: 24, minutes: 1 })
-      .toISO();
     userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
     await syncHandler(event);
@@ -49,14 +23,23 @@ describe('POST /webhook/users/orcid', () => {
     );
   });
 
+  test('Should skip the sync when orcidLastSyncDate is present', async () => {
+    const event = createEvent();
+    const userResponse = getUserResponse();
+    userResponse.orcid = '0000-0000-0000-0001';
+    userResponse.orcidLastSyncDate = new Date().toISOString();
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+    await syncHandler(event);
+
+    expect(userControllerMock.syncOrcidProfile).not.toHaveBeenCalled();
+  });
+
   test('Should skip the sync when orcid is not present', async () => {
     const event = createEvent();
     const userResponse = getUserResponse();
-    // set orcidLastSyncDate to 30 seconds ago
-    userResponse.orcidLastSyncDate = currentTime
-      .minus({ hours: 24, minutes: 1 })
-      .toISO();
     userResponse.orcid = undefined;
+    userResponse.orcidLastSyncDate = undefined;
     userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
     await syncHandler(event);

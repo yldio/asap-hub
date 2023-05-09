@@ -19,15 +19,10 @@ export const syncOrcidUserHandler =
 
     const userResponse = await users.fetchById(resourceId);
 
-    // skip if orcidLastSyncDate is less than 24 hours ago
-    if (
-      !userResponse.orcid ||
-      (userResponse.orcidLastSyncDate &&
-        DateTime.fromISO(userResponse.orcidLastSyncDate) >
-          DateTime.now().minus({ hours: 24 }))
-    ) {
+    // skip if orcid is missing or orcidLastSyncDate is given
+    if (!userResponse.orcid || userResponse.orcidLastSyncDate) {
       logger.debug(
-        `Skipping sync for user ${resourceId} as orcidLastSyncDate is less than 24 hours ago`,
+        `Skipping sync for user ${resourceId} because orcid is missing or it has already been synced`,
       );
       return;
     }

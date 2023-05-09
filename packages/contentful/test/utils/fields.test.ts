@@ -1,23 +1,23 @@
 import { BLOCKS, TopLevelBlockEnum } from '@contentful/rich-text-types';
 import { Entry } from 'contentful-management';
 import {
-  parseRichText,
   addLocaleToFields,
-  updateEntryFields,
+  parseRichText,
   patchAndPublish,
   pollContentfulDeliveryApi,
   pollContentfulGql,
-} from '../src/utils';
+  updateEntryFields,
+} from '../../src/utils';
 import {
   assetId_1,
   assetId_2,
   baseAssetUrl,
-  inexistentAssetId,
   documentWithAssets,
-  linksWithAssets,
   documentWithEntries,
+  inexistentAssetId,
+  linksWithAssets,
   linksWithEntries,
-} from './rich-text.fixtures';
+} from '../rich-text.fixtures';
 
 describe('parseRichText', () => {
   describe('embedded-asset-block', () => {

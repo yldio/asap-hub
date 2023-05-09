@@ -138,8 +138,8 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 }
 
-const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) => {
-  return Object.entries(userToUpdate).reduce((acc, [key, value]) => {
+const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) =>
+  Object.entries(userToUpdate).reduce((acc, [key, value]) => {
     if (key === 'avatar') {
       return {
         ...acc,
@@ -179,7 +179,6 @@ const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) => {
     }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
-};
 
 export const parseContentfulGraphQlUsers = (
   user: UserItem,

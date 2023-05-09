@@ -10,8 +10,8 @@ import {
   TableRow,
   TextInput,
 } from '@contentful/f36-components';
-import { FieldAppSDK } from '@contentful/app-sdk';
-import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';
+import { FieldExtensionSDK } from '@contentful/app-sdk';
+import { useSDK } from '@contentful/react-apps-toolkit';
 
 type PositionProps = {
   readonly role: string;
@@ -20,7 +20,7 @@ type PositionProps = {
 };
 
 const Field = () => {
-  const sdk = useSDK<FieldAppSDK>();
+  const sdk = useSDK<FieldExtensionSDK>();
 
   const newEmptyPosition = {
     role: '',

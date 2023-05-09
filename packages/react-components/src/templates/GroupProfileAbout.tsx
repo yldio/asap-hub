@@ -25,7 +25,7 @@ const membersSectionStyles = css({
 
 type GroupProfileAboutProps = Pick<
   GroupResponse,
-  'tags' | 'description' | 'tools' | 'calendars' | 'active'
+  'tags' | 'description' | 'tools' | 'calendars' | 'active' | 'contactEmails'
 > &
   Pick<GroupResponse, 'teams' | 'leaders'> & {
     membersSectionId?: string;
@@ -41,38 +41,30 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
 
   teams,
   leaders,
+  contactEmails,
 
   membersSectionId,
-}) => {
-  const contactEmails = leaders
-    .filter(
-      ({ role, user: { alumniSinceDate } }) =>
-        role === 'Project Manager' && !alumniSinceDate,
-    )
-    .map(({ user }) => user.email);
-
-  return (
-    <div css={styles}>
-      <GroupInformation tags={tags} description={description} />
-      <GroupTools
-        calendarId={calendars[0] && calendars[0].id}
-        tools={tools}
-        active={active}
-      />
-      <div id={membersSectionId}>
-        <div css={membersSectionStyles}>
-          <GroupLeadersTabbedCard leaders={leaders} isGroupActive={active} />
-          <GroupTeamsTabbedCard teams={teams} isGroupActive={active} />
-        </div>
+}) => (
+  <div css={styles}>
+    <GroupInformation tags={tags} description={description} />
+    <GroupTools
+      calendarId={calendars[0] && calendars[0].id}
+      tools={tools}
+      active={active}
+    />
+    <div id={membersSectionId}>
+      <div css={membersSectionStyles}>
+        <GroupLeadersTabbedCard leaders={leaders} isGroupActive={active} />
+        <GroupTeamsTabbedCard teams={teams} isGroupActive={active} />
       </div>
-      {contactEmails.length !== 0 && (
-        <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
-          <strong>Interested in what you have seen?</strong>
-          <br /> Reach out to this group and see how you can collaborate
-        </CtaCard>
-      )}
     </div>
-  );
-};
+    {contactEmails.length !== 0 && (
+      <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
+        <strong>Interested in what you have seen?</strong>
+        <br /> Reach out to this group and see how you can collaborate
+      </CtaCard>
+    )}
+  </div>
+);
 
 export default GroupProfileAbout;

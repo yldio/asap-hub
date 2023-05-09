@@ -112,8 +112,8 @@ export const parseGraphQLTeam = (
     expertiseAndResourceTags: team.flatData.expertiseAndResourceTags ?? [],
     tools,
     pointOfContact: members.find(
-      ({ role, alumniSinceDate }) =>
-        role === 'Project Manager' && !alumniSinceDate,
+      ({ role, alumniSinceDate, inactiveSinceDate }) =>
+        role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
     ),
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
     projectSummary: team.flatData.projectSummary ?? undefined,

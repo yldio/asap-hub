@@ -28,6 +28,7 @@ export type GroupDataObject = {
   readonly id: string;
   readonly active: boolean;
   readonly createdDate: string;
+  readonly contactEmails: string[];
   readonly name: string;
   readonly tags: ReadonlyArray<string>;
   readonly description: string;

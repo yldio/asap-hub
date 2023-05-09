@@ -162,6 +162,34 @@ describe('ResearchOutputs controller', () => {
       spy.mockRestore();
     });
 
+    test('Should create the new research output (trimmed) and return it', async () => {
+      const mockDate = new Date('2010-01-01');
+      const spy = jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+
+      const researchOutputId = 'research-output-id-1';
+      researchOutputDataProviderMock.create.mockResolvedValueOnce(
+        researchOutputId,
+      );
+
+      const researchOutputWithWhitespaces = getResearchOutputCreateData();
+      researchOutputWithWhitespaces.title = ` ${researchOutputWithWhitespaces.title} `;
+      researchOutputWithWhitespaces.link = ` ${researchOutputWithWhitespaces.link} `;
+
+      const result = await researchOutputs.create(
+        researchOutputWithWhitespaces,
+      );
+
+      expect(result).toEqual(getResearchOutputResponse());
+      expect(researchOutputDataProviderMock.create).toBeCalledWith(
+        {
+          ...getResearchOutputCreateDataObject(),
+          addedDate: mockDate.toISOString(),
+        },
+        { publish: true },
+      );
+      spy.mockRestore();
+    });
+
     test('Should create a draft research output and return it', async () => {
       const researchOutputId = 'research-output-id-1';
       researchOutputDataProviderMock.create.mockResolvedValueOnce(
@@ -232,6 +260,53 @@ describe('ResearchOutputs controller', () => {
         );
       });
 
+      test('Should throw error when a research output with the same type and title (trimmed) already exists', async () => {
+        const researchOutputWhitespacesRequest = getResearchOutputCreateData();
+        researchOutputWhitespacesRequest.title = ` ${researchOutputRequest.title} `;
+        researchOutputWhitespacesRequest.link = researchOutputRequest.link;
+
+        when(researchOutputDataProviderMock.fetch)
+          .calledWith({
+            filter: {
+              title: researchOutputRequest.title,
+              documentType: researchOutputRequest.documentType,
+            },
+            includeDrafts: true,
+          })
+          .mockResolvedValueOnce({
+            total: 1,
+            items: [getResearchOutputDataObject()],
+          });
+
+        when(researchOutputDataProviderMock.fetch)
+          .calledWith({
+            filter: { link: researchOutputRequest.link },
+            includeDrafts: true,
+          })
+          .mockResolvedValueOnce({
+            total: 0,
+            items: [],
+          });
+
+        await expect(
+          researchOutputs.create(researchOutputWhitespacesRequest), // should trim the title
+        ).rejects.toThrow(
+          expect.objectContaining({
+            data: [
+              {
+                instancePath: '/title',
+                keyword: 'unique',
+                message: 'must be unique',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: '#/properties/title/unique',
+              },
+            ],
+          }),
+        );
+      });
+
       test('Should throw error when a research output with the same link already exists', async () => {
         when(researchOutputDataProviderMock.fetch)
           .calledWith({
@@ -274,6 +349,52 @@ describe('ResearchOutputs controller', () => {
         );
       });
 
+      test('Should throw error when a research output with the same link (trimmed) already exists', async () => {
+        const researchOutputWhitespacesRequest = getResearchOutputCreateData();
+        researchOutputWhitespacesRequest.title = researchOutputRequest.title;
+        researchOutputWhitespacesRequest.link = ` ${researchOutputRequest.link} `;
+
+        when(researchOutputDataProviderMock.fetch)
+          .calledWith({
+            filter: { link: researchOutputRequest.link },
+            includeDrafts: true,
+          })
+          .mockResolvedValueOnce({
+            total: 1,
+            items: [getResearchOutputDataObject()],
+          });
+        when(researchOutputDataProviderMock.fetch)
+          .calledWith({
+            filter: {
+              title: researchOutputRequest.title,
+              documentType: researchOutputRequest.documentType,
+            },
+            includeDrafts: true,
+          })
+          .mockResolvedValueOnce({
+            total: 0,
+            items: [],
+          });
+
+        await expect(
+          researchOutputs.create(researchOutputWhitespacesRequest), // should trim the link
+        ).rejects.toThrow(
+          expect.objectContaining({
+            data: [
+              {
+                instancePath: '/link',
+                keyword: 'unique',
+                message: 'must be unique',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: '#/properties/link/unique',
+              },
+            ],
+          }),
+        );
+      });
+
       test('Should throw a validation error when a research output with the same type and title and link already exists', async () => {
         when(researchOutputDataProviderMock.fetch)
           .calledWith({
@@ -299,6 +420,61 @@ describe('ResearchOutputs controller', () => {
 
         await expect(
           researchOutputs.create(researchOutputRequest),
+        ).rejects.toThrow(
+          expect.objectContaining({
+            data: [
+              {
+                instancePath: '/title',
+                keyword: 'unique',
+                message: 'must be unique',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: '#/properties/title/unique',
+              },
+              {
+                instancePath: '/link',
+                keyword: 'unique',
+                message: 'must be unique',
+                params: {
+                  type: 'string',
+                },
+                schemaPath: '#/properties/link/unique',
+              },
+            ],
+          }),
+        );
+      });
+
+      test('Should throw a validation error when a research output with the same type and title and link (all trimmed) already exists', async () => {
+        const researchOutputWhitespacesRequest = getResearchOutputCreateData();
+        researchOutputWhitespacesRequest.title = ` ${researchOutputRequest.title} `;
+        researchOutputWhitespacesRequest.link = ` ${researchOutputRequest.link} `;
+
+        when(researchOutputDataProviderMock.fetch)
+          .calledWith({
+            filter: {
+              title: researchOutputRequest.title,
+              documentType: researchOutputRequest.documentType,
+            },
+            includeDrafts: true,
+          })
+          .mockResolvedValueOnce({
+            total: 1,
+            items: [getResearchOutputDataObject()],
+          });
+        when(researchOutputDataProviderMock.fetch)
+          .calledWith({
+            filter: { link: researchOutputRequest.link },
+            includeDrafts: true,
+          })
+          .mockResolvedValueOnce({
+            total: 1,
+            items: [getResearchOutputDataObject()],
+          });
+
+        await expect(
+          researchOutputs.create(researchOutputWhitespacesRequest), // should trim the title and link
         ).rejects.toThrow(
           expect.objectContaining({
             data: [
@@ -852,6 +1028,61 @@ describe('ResearchOutputs controller', () => {
           );
         });
 
+        test('Should throw an error when a different research output with the same type and title (trimmed) already exists', async () => {
+          const otherResearchOutputDataObject = getResearchOutputDataObject();
+          otherResearchOutputDataObject.id = 'another-research-output-id';
+
+          const researchOutputWhitespacesRequest = {
+            ...researchOutputRequest,
+            title: ` ${researchOutputRequest.title} `,
+          };
+
+          // returns this research output and another one with the same type and title
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: {
+                title: researchOutputRequest.title,
+                documentType: researchOutputRequest.documentType,
+              },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 2,
+              items: [researchOutputDataObject, otherResearchOutputDataObject],
+            });
+          // returns this research output only
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: { link: researchOutputRequest.link },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 1,
+              items: [researchOutputDataObject],
+            });
+
+          await expect(
+            researchOutputs.update(
+              researchOutputId,
+              researchOutputWhitespacesRequest,
+            ),
+          ).rejects.toThrow(
+            expect.objectContaining({
+              data: [
+                {
+                  instancePath: '/title',
+                  keyword: 'unique',
+                  message: 'must be unique',
+                  params: {
+                    type: 'string',
+                  },
+                  schemaPath: '#/properties/title/unique',
+                },
+              ],
+            }),
+          );
+        });
+
         test('Should throw error when a research output with the same link already exists', async () => {
           const otherResearchOutputDataObject = getResearchOutputDataObject();
           otherResearchOutputDataObject.id = 'another-research-output-id';
@@ -899,6 +1130,62 @@ describe('ResearchOutputs controller', () => {
           );
         });
 
+        test('Should throw error when a research output with the same link (trimmed) already exists', async () => {
+          const otherResearchOutputDataObject = getResearchOutputDataObject();
+          otherResearchOutputDataObject.id = 'another-research-output-id';
+
+          const researchOutputWhitespacesRequest = {
+            ...researchOutputRequest,
+            link: ` ${researchOutputRequest.link} `,
+          };
+
+          // returns this research output and another one with the link
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: { link: researchOutputRequest.link },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 2,
+              items: [researchOutputDataObject, otherResearchOutputDataObject],
+            });
+
+          // returns this research output only
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: {
+                title: researchOutputRequest.title,
+                documentType: researchOutputRequest.documentType,
+              },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 1,
+              items: [researchOutputDataObject],
+            });
+
+          await expect(
+            researchOutputs.update(
+              researchOutputId,
+              researchOutputWhitespacesRequest,
+            ),
+          ).rejects.toThrow(
+            expect.objectContaining({
+              data: [
+                {
+                  instancePath: '/link',
+                  keyword: 'unique',
+                  message: 'must be unique',
+                  params: {
+                    type: 'string',
+                  },
+                  schemaPath: '#/properties/link/unique',
+                },
+              ],
+            }),
+          );
+        });
+
         test('Should throw two validation errors when a research output with the same type and title and link already exists', async () => {
           const otherResearchOutputDataObject = getResearchOutputDataObject();
           otherResearchOutputDataObject.id = 'another-research-output-id';
@@ -926,6 +1213,69 @@ describe('ResearchOutputs controller', () => {
 
           await expect(
             researchOutputs.update(researchOutputId, researchOutputRequest),
+          ).rejects.toThrow(
+            expect.objectContaining({
+              data: [
+                {
+                  instancePath: '/title',
+                  keyword: 'unique',
+                  message: 'must be unique',
+                  params: {
+                    type: 'string',
+                  },
+                  schemaPath: '#/properties/title/unique',
+                },
+                {
+                  instancePath: '/link',
+                  keyword: 'unique',
+                  message: 'must be unique',
+                  params: {
+                    type: 'string',
+                  },
+                  schemaPath: '#/properties/link/unique',
+                },
+              ],
+            }),
+          );
+        });
+
+        test('Should throw two validation errors when a research output with the same type and title and link (all trimmed) already exists', async () => {
+          const otherResearchOutputDataObject = getResearchOutputDataObject();
+          otherResearchOutputDataObject.id = 'another-research-output-id';
+
+          const researchOutputWhitespacesRequest = {
+            ...researchOutputRequest,
+            title: ` ${researchOutputRequest.title} `,
+            link: ` ${researchOutputRequest.link} `,
+          };
+
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: {
+                title: researchOutputRequest.title,
+                documentType: researchOutputRequest.documentType,
+              },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 2,
+              items: [researchOutputDataObject, otherResearchOutputDataObject],
+            });
+          when(researchOutputDataProviderMock.fetch)
+            .calledWith({
+              filter: { link: researchOutputRequest.link },
+              includeDrafts: true,
+            })
+            .mockResolvedValueOnce({
+              total: 2,
+              items: [researchOutputDataObject, otherResearchOutputDataObject],
+            });
+
+          await expect(
+            researchOutputs.update(
+              researchOutputId,
+              researchOutputWhitespacesRequest,
+            ),
           ).rejects.toThrow(
             expect.objectContaining({
               data: [

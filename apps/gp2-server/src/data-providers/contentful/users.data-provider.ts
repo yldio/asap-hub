@@ -275,7 +275,7 @@ const generateFetchQueryFilter = (
     regions,
     keywords,
     code,
-    onlyOnboarded = true,
+    onlyOnboarded,
     hidden = true,
   } = filter || {};
 

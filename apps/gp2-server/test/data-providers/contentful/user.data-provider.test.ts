@@ -1015,7 +1015,6 @@ describe('User data provider', () => {
           limit: 12,
           skip: 2,
           where: expect.objectContaining({
-            onboarded: true,
             role_not: 'Hidden',
             [`${fieldName}_in`]: value,
           }),
@@ -1056,7 +1055,6 @@ describe('User data provider', () => {
             limit: 12,
             skip: 2,
             where: expect.objectContaining({
-              onboarded: true,
               role_not: 'Hidden',
               sys: { id_in: ['11'] },
             }),
@@ -1106,7 +1104,6 @@ describe('User data provider', () => {
             limit: 12,
             skip: 2,
             where: expect.objectContaining({
-              onboarded: true,
               role_not: 'Hidden',
               sys: { id_in: [user1Id, user2Id] },
             }),
@@ -1157,7 +1154,6 @@ describe('User data provider', () => {
             limit: 12,
             skip: 2,
             where: expect.objectContaining({
-              onboarded: true,
               role_not: 'Hidden',
               sys: { id_in: [user1Id, user2Id, user3Id] },
             }),
@@ -1207,7 +1203,6 @@ describe('User data provider', () => {
             limit: 12,
             skip: 2,
             where: expect.objectContaining({
-              onboarded: true,
               role_not: 'Hidden',
               sys: { id_in: [user1Id] },
             }),
@@ -1250,7 +1245,6 @@ describe('User data provider', () => {
             limit: 12,
             skip: 2,
             where: expect.objectContaining({
-              onboarded: true,
               role_not: 'Hidden',
               sys: { id_in: [userId] },
             }),
@@ -1301,7 +1295,6 @@ describe('User data provider', () => {
             limit: 12,
             skip: 2,
             where: expect.objectContaining({
-              onboarded: true,
               role_not: 'Hidden',
               sys: { id_in: [user1Id, user2Id] },
             }),
@@ -1354,7 +1347,6 @@ describe('User data provider', () => {
             limit: 12,
             skip: 2,
             where: expect.objectContaining({
-              onboarded: true,
               role_not: 'Hidden',
               sys: { id_in: [user1Id, user2Id, user3Id] },
             }),
@@ -1404,7 +1396,6 @@ describe('User data provider', () => {
             limit: 12,
             skip: 2,
             where: expect.objectContaining({
-              onboarded: true,
               role_not: 'Hidden',
               sys: { id_in: [user1Id] },
             }),
@@ -1458,7 +1449,6 @@ describe('User data provider', () => {
           limit: 12,
           skip: 2,
           where: expect.objectContaining({
-            onboarded: true,
             role_not: 'Hidden',
             sys: { id_in: [user1Id] },
           }),

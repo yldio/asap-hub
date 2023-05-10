@@ -695,6 +695,7 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     createdDate: _createdDate,
     social: _social,
     workingGroups,
+    interestGroups,
     connections,
     alumniLocation,
     alumniSinceDate,

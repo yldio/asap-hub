@@ -67,14 +67,19 @@ export const calendarCreatedContentfulHandlerFactory =
     const fetchCalendarById = () =>
       cdaClient.getEntry<CalendarSkeleton>(calendarId);
 
-    const cmsCalendar = await pollContentfulDeliveryApi<CalendarSkeleton>(
-      fetchCalendarById,
-      webhookEventVersion,
-    );
+    let cmsCalendar;
+    try {
+      cmsCalendar = await pollContentfulDeliveryApi<CalendarSkeleton>(
+        fetchCalendarById,
+        webhookEventVersion,
+      );
+    } catch {
+      logger.error('Failed to retrieve calendar by ID.');
+      return 'OK';
+    }
 
     if (!cmsCalendar) {
       logger.error('Failed to retrieve calendar by ID.');
-
       return 'OK';
     }
 
@@ -101,21 +106,27 @@ export const calendarCreatedContentfulHandlerFactory =
       return 'OK';
     }
 
-    try {
-      const { resourceId, expiration } = await subscribe(
-        webhookEventGoogleCalendarId,
-        calendarId,
-      );
+    if (
+      googleApiMetadata?.associatedGoogleCalendarId !==
+        webhookEventGoogleCalendarId ||
+      (!!webhookEventGoogleCalendarId && !googleApiMetadata)
+    ) {
+      try {
+        const { resourceId, expiration } = await subscribe(
+          webhookEventGoogleCalendarId,
+          calendarId,
+        );
 
-      await calendarDataProvider.update(calendarId, {
-        resourceId,
-        expirationDate: expiration,
-      });
-    } catch (error) {
-      logger.error(error, 'Error subscribing to the calendar');
-      alerts.error(error);
+        await calendarDataProvider.update(calendarId, {
+          resourceId,
+          expirationDate: expiration,
+        });
+      } catch (error) {
+        logger.error(error, 'Error subscribing to the calendar');
+        alerts.error(error);
 
-      throw error;
+        throw error;
+      }
     }
 
     return 'OK';

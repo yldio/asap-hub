@@ -104,6 +104,7 @@ export const getGraphQLUser = (
   created: '2020-09-23T20:45:22Z',
   ...user,
   referencingWorkingGroupsContents: null,
+  referencingGroupsContents: null,
   flatData: {
     alumniLocation: 'some alumni location',
     alumniSinceDate: '2020-09-23T20:45:22.000Z',

@@ -9855,6 +9855,13 @@ export type UsersContentFragment = Pick<
       }
     >
   >;
+  referencingGroupsContents: Maybe<
+    Array<
+      Pick<Groups, 'id'> & {
+        flatData: Pick<GroupsFlatDataDto, 'name' | 'active'>;
+      }
+    >
+  >;
   flatData: Pick<
     UsersFlatDataDto,
     | 'alumniSinceDate'
@@ -9963,6 +9970,13 @@ export type FetchUserQuery = {
                 >
               >;
             };
+          }
+        >
+      >;
+      referencingGroupsContents: Maybe<
+        Array<
+          Pick<Groups, 'id'> & {
+            flatData: Pick<GroupsFlatDataDto, 'name' | 'active'>;
           }
         >
       >;
@@ -10085,6 +10099,13 @@ export type FetchUsersQuery = {
                       >
                     >;
                   };
+                }
+              >
+            >;
+            referencingGroupsContents: Maybe<
+              Array<
+                Pick<Groups, 'id'> & {
+                  flatData: Pick<GroupsFlatDataDto, 'name' | 'active'>;
                 }
               >
             >;
@@ -13179,6 +13200,30 @@ export const UsersContentFragmentDoc = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingGroupsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'active' },
                       },
                     ],
                   },

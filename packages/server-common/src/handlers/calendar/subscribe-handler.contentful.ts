@@ -78,45 +78,44 @@ export const calendarCreatedContentfulHandlerFactory =
       return 'OK';
     }
 
-    const { associatedGoogleCalendarId, resourceId: previousResourceId } =
-      cmsCalendar.fields.googleApiMetadata;
+    const googleApiMetadata = cmsCalendar.fields.googleApiMetadata;
 
-    if (associatedGoogleCalendarId !== webhookEventGoogleCalendarId) {
-      if (previousResourceId) {
-        try {
-          await unsubscribe(previousResourceId as string, calendarId);
-
-          await calendarDataProvider.update(calendarId, {
-            resourceId: null,
-          });
-        } catch (error) {
-          logger.error(error, 'Error during unsubscribing from the calendar');
-          alerts.error(error);
-        }
-      }
-
-      if (webhookEventGoogleCalendarId === '') {
-        return 'OK';
-      }
-
+    if (
+      googleApiMetadata?.associatedGoogleCalendarId !==
+        webhookEventGoogleCalendarId &&
+      googleApiMetadata?.resourceId
+    ) {
       try {
-        const { resourceId, expiration } = await subscribe(
-          webhookEventGoogleCalendarId,
-          calendarId,
-        );
+        await unsubscribe(googleApiMetadata.resourceId as string, calendarId);
 
         await calendarDataProvider.update(calendarId, {
-          resourceId,
-          expirationDate: expiration,
+          resourceId: null,
         });
       } catch (error) {
-        logger.error(error, 'Error subscribing to the calendar');
+        logger.error(error, 'Error during unsubscribing from the calendar');
         alerts.error(error);
-
-        throw error;
       }
+    }
 
+    if (webhookEventGoogleCalendarId === '') {
       return 'OK';
+    }
+
+    try {
+      const { resourceId, expiration } = await subscribe(
+        webhookEventGoogleCalendarId,
+        calendarId,
+      );
+
+      await calendarDataProvider.update(calendarId, {
+        resourceId,
+        expirationDate: expiration,
+      });
+    } catch (error) {
+      logger.error(error, 'Error subscribing to the calendar');
+      alerts.error(error);
+
+      throw error;
     }
 
     return 'OK';

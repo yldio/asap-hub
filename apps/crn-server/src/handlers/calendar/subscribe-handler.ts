@@ -39,11 +39,14 @@ const contentfulDeliveryApiConfig = {
   accessToken: contentfulAccessToken,
 };
 
+const path = isContentfulEnabledV2 ? 'contentful' : undefined;
+
 const webhookHandler = calendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
     asapApiUrl,
     googleApiToken,
     googleApiUrl,
+    path,
   }),
   unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
     googleApiUrl,

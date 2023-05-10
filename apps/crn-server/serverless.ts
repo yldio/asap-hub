@@ -728,7 +728,7 @@ const serverlessConfig: AWS = {
         {
           httpApi: {
             method: 'POST',
-            path: '/webhook/events',
+            path: '/webhook/events/contentful',
           },
         },
       ],

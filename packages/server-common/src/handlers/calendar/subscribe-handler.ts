@@ -10,13 +10,14 @@ type Config = {
   asapApiUrl: string;
   googleApiToken: string;
   googleApiUrl: string;
+  path?: string;
 };
 
 export const subscribeToEventChangesFactory =
   (
     getJWTCredentials: GetJWTCredentials,
     logger: Logger,
-    { asapApiUrl, googleApiToken, googleApiUrl }: Config,
+    { asapApiUrl, googleApiToken, googleApiUrl, path }: Config,
   ) =>
   async (
     calendarId: string,
@@ -38,7 +39,9 @@ export const subscribeToEventChangesFactory =
       id: subscriptionId,
       token: googleApiToken,
       type: 'web_hook',
-      address: `${asapApiUrl}/webhook/events`,
+      address: path
+        ? `${asapApiUrl}/webhook/events/${path}`
+        : `${asapApiUrl}/webhook/events`,
       params: {
         // 30 days, which is a maximum TTL
         ttl,

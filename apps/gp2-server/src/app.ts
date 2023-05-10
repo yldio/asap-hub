@@ -42,7 +42,6 @@ import ContributingCohorts, {
   ContributingCohortController,
 } from './controllers/contributing-cohort.controller';
 import Events from './controllers/event.controller';
-import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import ExternalUsers, {
   ExternalUsersController,
 } from './controllers/external-users.controller';
@@ -62,6 +61,7 @@ import {
   AssetSquidexDataProvider,
 } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
+import { ContributingCohortsContentfulDataProvider } from './data-providers/contentful/contributing-cohorts.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
@@ -96,6 +96,7 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
+import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';
@@ -202,11 +203,17 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Data Providers
   const assetDataProvider =
     libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
-  const contributingCohortDataProvider =
-    libs.contributingCohortDataProvider ||
+  const contributingCohortSquidexDataProvider =
+    libs.contributingCohortSquidexDataProvider ||
     new ContributingCohortSquidexDataProvider(
       squidexGraphqlClient,
       contributingCohortRestClient,
+    );
+  const contributingCohortContentfulDataProvider =
+    libs.contributingCohortContentfulDataProvider ||
+    new ContributingCohortsContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
     );
   const userContentfulDataProvider =
     libs.userContentfulDataProvider ||
@@ -269,6 +276,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.userDataProvider || isContentfulEnabled
       ? userContentfulDataProvider
       : userSquidexDataProvider;
+  const contributingCohortDataProvider =
+    libs.contributingCohortDataProvider || isContentfulEnabled
+      ? contributingCohortContentfulDataProvider
+      : contributingCohortSquidexDataProvider;
   // Controllers
 
   const workingGroupController =
@@ -393,6 +404,8 @@ export type Libs = {
   calendarDataProvider?: gp2.CalendarDataProvider;
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
+  contributingCohortSquidexDataProvider?: ContributingCohortDataProvider;
+  contributingCohortContentfulDataProvider?: ContributingCohortDataProvider;
   eventController?: gp2.EventController;
   eventDataProvider?: gp2.EventDataProvider;
   externalUsersController?: ExternalUsersController;

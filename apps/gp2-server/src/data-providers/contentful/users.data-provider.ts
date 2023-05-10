@@ -83,17 +83,26 @@ export class UserContentfulDataProvider implements UserDataProvider {
       return { total: 0, items: [] };
     }
     logger.info(`fetch users ${JSON.stringify(options, undefined, 2)} `);
-    const result = await this.fetchUsers(options, userIdFilter);
+    try {
+      const result = await this.fetchUsers(options, userIdFilter);
 
-    const items = {
-      total: result?.total,
-      items: result?.items
-        .filter((x): x is UserItem => x !== null)
-        .map(parseContentfulGraphQlUsers),
-    };
+      const items = {
+        total: result?.total,
+        items: result?.items
+          .filter((x): x is UserItem => x !== null)
+          .map(parseContentfulGraphQlUsers),
+      };
 
-    logger.info(JSON.stringify(items, undefined, 2));
-    return items;
+      logger.info(JSON.stringify(items, undefined, 2));
+      return items;
+    } catch (err) {
+      logger.error(`An error occorred on fetch users`);
+      if (err instanceof Error) {
+        logger.error(`The error message: ${err.message}`);
+      }
+
+      throw err;
+    }
   }
 
   private async fetchUsers(

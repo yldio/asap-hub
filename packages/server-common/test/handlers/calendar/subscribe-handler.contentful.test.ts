@@ -1,21 +1,14 @@
-import nock from 'nock';
 import { getCDAClient } from '@asap-hub/contentful';
-import { CalendarEvent } from '@asap-hub/model';
-import { EventBridgeEvent } from 'aws-lambda';
 import {
-  CalendarContentfulPayload,
   SubscribeToEventChanges,
   UnsubscribeFromEventChanges,
 } from '../../../src';
 import { calendarCreatedContentfulHandlerFactory } from '../../../src/handlers/calendar/subscribe-handler.contentful';
 import { Alerts } from '../../../src/utils/alerts';
-import { createEventBridgeEventMock } from '../../helpers/events';
 import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
 import { loggerMock as logger } from '../../mocks/logger.mock';
 import {
   getCalendarContentfulEvent,
-  getCalendarContentfulWebhookDetail,
-  getCalendarDataObject,
   getCalendarFromDeliveryApi,
 } from './webhook-sync-calendar.fixtures';
 
@@ -26,13 +19,6 @@ jest.mock('@asap-hub/contentful', () => ({
   }),
 }));
 
-// const getCDAClientMock = {
-//   getEntry: jest.fn(),
-// } as unknown as jest.Mocked<ContentfulClientApi>;
-
-// jest.spyOn(contentful, 'getCDAClient').mockReturnValue({
-//   getEntry: jest.fn().mockResolvedValue(null),
-// });
 describe('Calendar handler', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
   const unsubscribe: jest.MockedFunction<UnsubscribeFromEventChanges> =
@@ -41,13 +27,9 @@ describe('Calendar handler', () => {
     error: jest.fn(),
   };
 
-  const cdaBaseUrl = 'https://cdn.contentful.com';
   const environment = 'environment-id';
   const space = 'space-id';
   const accessToken = 'access-token';
-  const baseCalendarId = 'calendar-1';
-
-  const calendarMock = getCalendarFromDeliveryApi({});
 
   const handler = calendarCreatedContentfulHandlerFactory(
     subscribe,
@@ -63,7 +45,7 @@ describe('Calendar handler', () => {
   );
 
   beforeEach(() => {
-    // jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   describe('Validation', () => {
@@ -133,7 +115,7 @@ describe('Calendar handler', () => {
     expect(calendarDataProviderMock.update).not.toHaveBeenCalled();
   });
 
-  test.only("Should skip unsubscribe action and return status OK if google calendar id haven't changed", async () => {
+  test("Should skip unsubscribe and subscribe actions and return status OK if google calendar id haven't changed", async () => {
     const event = getCalendarContentfulEvent({
       googleCalendarId: 'calendar-1',
     });
@@ -142,142 +124,146 @@ describe('Calendar handler', () => {
       associatedGoogleCalendarId: 'calendar-1',
     });
 
-    console.log('calendarResponse', JSON.stringify(calendarResponse, null, 2));
-
     (getCDAClient as jest.Mock).mockReturnValue({
       getEntry: jest.fn().mockResolvedValue(calendarResponse),
     });
-    // jest.mock('@asap-hub/contentful', () => ({
-    //   ...jest.requireActual('@asap-hub/contentful'),
-    //   getCDAClient: jest.fn().mockReturnValue({
-    //     getEntry: jest.fn().mockResolvedValue(,
-    //     ),
-    //   }),
-    // }));
 
     const res = await handler(event);
 
     expect(res).toBe('OK');
     expect(unsubscribe).not.toHaveBeenCalled();
-    // expect(subscribe).not.toHaveBeenCalled();
-    // expect(calendarDataProviderMock.update).not.toHaveBeenCalled();
+    expect(subscribe).not.toHaveBeenCalled();
+    expect(calendarDataProviderMock.update).not.toHaveBeenCalled();
   });
 
-  //   test('Should unsubscribe if google calendar id have changed and there was a previous resourceId and subscribe to the new google calendar', async () => {
-  //     const resourceId = 'some-resource-id';
-  //     const expiration = 123456;
-  //     subscribe.mockResolvedValueOnce({ resourceId, expiration });
+  test('Should skip unsubscribe action and subscribe to calendar if there were not previous values of googleApiMetadata (calendar just created)', async () => {
+    const resourceId = 'some-resource-id';
+    const expiration = 123456;
+    subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
-  //     const event = getCalendarContentfulEvent({
-  //       googleCalendarId: 'google-calendar-2',
-  //       resourceId: 'resource-id-1',
-  //     });
+    const event = getCalendarContentfulEvent({
+      googleCalendarId: 'calendar-1',
+    });
 
-  //     const calendarResponse = getCalendarFromDeliveryApi({
-  //       googleCalendarId: 'google-calendar-2',
-  //       associatedGoogleCalendarId: 'calendar-1',
-  //       resourceId: 'resource-id-1',
-  //     });
+    const calendarResponse = getCalendarFromDeliveryApi({});
 
-  //     nock(cdaBaseUrl)
-  //       .get(
-  //         `/spaces/${spaceId}/environments/${environmentId}/entries/${baseCalendarId}`,
-  //       )
-  //       .query({ access_token: token })
-  //       .reply(200, calendarResponse);
+    (getCDAClient as jest.Mock).mockReturnValue({
+      getEntry: jest.fn().mockResolvedValue(calendarResponse),
+    });
 
-  //     console.log('calendarResponse', JSON.stringify(calendarResponse, null, 2));
+    const res = await handler(event);
 
-  //     const res = await handler(event);
+    expect(res).toBe('OK');
+    expect(unsubscribe).not.toHaveBeenCalled();
+    expect(subscribe).toHaveBeenCalledWith('calendar-1', 'calendar-1');
+    expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
+      expirationDate: expiration,
+      resourceId,
+    });
+  });
 
-  //     expect(res).toBe('OK');
-  //     expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'calendar-1');
-  //     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
-  //       1,
-  //       'calendar-1',
-  //       { resourceId: null },
-  //     );
+  test('Should unsubscribe if google calendar id have changed and there was a previous resourceId and it should subscribe to the new google calendar', async () => {
+    const resourceId = 'some-resource-id';
+    const expiration = 123456;
+    subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
-  //     expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
+    const event = getCalendarContentfulEvent({
+      googleCalendarId: 'google-calendar-2',
+      resourceId: 'resource-id-1',
+    });
 
-  //     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
-  //       2,
-  //       'calendar-1',
-  //       { resourceId, expirationDate: expiration },
-  //     );
-  //   });
+    const calendarResponse = getCalendarFromDeliveryApi({
+      googleCalendarId: 'google-calendar-2',
+      associatedGoogleCalendarId: 'calendar-1',
+      resourceId: 'resource-id-1',
+    });
 
-  //   test('Should unsubscribe if google calendar id have changed and there was a previous resourceId and should not subscribe if the new google calendar is empty', async () => {
-  //     const resourceId = 'some-resource-id';
-  //     const expiration = 123456;
-  //     subscribe.mockResolvedValueOnce({ resourceId, expiration });
+    (getCDAClient as jest.Mock).mockReturnValue({
+      getEntry: jest.fn().mockResolvedValue(calendarResponse),
+    });
 
-  //     const event = getCalendarContentfulEvent({
-  //       googleCalendarId: '',
-  //       resourceId: 'resource-id-1',
-  //     });
+    const res = await handler(event);
 
-  //     const calendarResponse = getCalendarFromDeliveryApi({
-  //       googleCalendarId: '',
-  //       associatedGoogleCalendarId: 'calendar-1',
-  //       resourceId: 'resource-id-1',
-  //     });
+    expect(res).toBe('OK');
+    expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'calendar-1');
+    expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
+      1,
+      'calendar-1',
+      { resourceId: null },
+    );
 
-  //     nock(cdaBaseUrl)
-  //       .get(
-  //         `/spaces/${spaceId}/environments/${environmentId}/entries/${baseCalendarId}`,
-  //       )
-  //       .query({ access_token: token })
-  //       .reply(200, calendarResponse);
+    expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
 
-  //     console.log('calendarResponse', JSON.stringify(calendarResponse, null, 2));
+    expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
+      2,
+      'calendar-1',
+      { resourceId, expirationDate: expiration },
+    );
+  });
 
-  //     const res = await handler(event);
+  test('Should unsubscribe if google calendar id have changed and there was a previous resourceId and should not subscribe if the new google calendar is empty', async () => {
+    const resourceId = 'some-resource-id';
+    const expiration = 123456;
+    subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
-  //     expect(res).toBe('OK');
-  //     expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'calendar-1');
-  //     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
-  //       resourceId: null,
-  //     });
+    const event = getCalendarContentfulEvent({
+      googleCalendarId: '',
+      resourceId: 'resource-id-1',
+    });
 
-  //     expect(subscribe).not.toHaveBeenCalled();
-  //   });
+    const calendarResponse = getCalendarFromDeliveryApi({
+      googleCalendarId: '',
+      associatedGoogleCalendarId: 'calendar-1',
+      resourceId: 'resource-id-1',
+    });
 
-  //   test('Should only subscribe to the new google calendar if google calendar id have changed and there was not a previous resourceId', async () => {
-  //     const resourceId = 'some-resource-id';
-  //     const expiration = 123456;
-  //     subscribe.mockResolvedValueOnce({ resourceId, expiration });
+    (getCDAClient as jest.Mock).mockReturnValue({
+      getEntry: jest.fn().mockResolvedValue(calendarResponse),
+    });
 
-  //     const event = getCalendarContentfulEvent({
-  //       googleCalendarId: 'google-calendar-2',
-  //       resourceId: 'resource-id-1',
-  //     });
+    const res = await handler(event);
 
-  //     const calendarResponse = getCalendarFromDeliveryApi({
-  //       googleCalendarId: 'google-calendar-2',
-  //       associatedGoogleCalendarId: 'calendar-1',
-  //       resourceId: null,
-  //     });
+    expect(res).toBe('OK');
+    expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'calendar-1');
+    expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
+      resourceId: null,
+    });
 
-  //     nock(cdaBaseUrl)
-  //       .get(
-  //         `/spaces/${spaceId}/environments/${environmentId}/entries/${baseCalendarId}`,
-  //       )
-  //       .query({ access_token: token })
-  //       .reply(200, calendarResponse);
+    expect(subscribe).not.toHaveBeenCalled();
+  });
 
-  //     console.log('calendarResponse', JSON.stringify(calendarResponse, null, 2));
+  test('Should only subscribe to the new google calendar if google calendar id have changed and there was not a previous resourceId', async () => {
+    const resourceId = 'some-resource-id';
+    const expiration = 123456;
+    subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
-  //     const res = await handler(event);
+    const event = getCalendarContentfulEvent({
+      googleCalendarId: 'google-calendar-2',
+      resourceId: 'resource-id-1',
+    });
 
-  //     expect(res).toBe('OK');
-  //     expect(unsubscribe).not.toHaveBeenCalled();
+    const calendarResponse = getCalendarFromDeliveryApi({
+      googleCalendarId: 'google-calendar-2',
+      associatedGoogleCalendarId: 'calendar-1',
+      resourceId: null,
+    });
 
-  //     expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
+    (getCDAClient as jest.Mock).mockReturnValue({
+      getEntry: jest.fn().mockResolvedValue(calendarResponse),
+    });
 
-  //     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
-  //       resourceId,
-  //       expirationDate: expiration,
-  //     });
-  //   });
+    console.log('calendarResponse', JSON.stringify(calendarResponse, null, 2));
+
+    const res = await handler(event);
+
+    expect(res).toBe('OK');
+    expect(unsubscribe).not.toHaveBeenCalled();
+
+    expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
+
+    expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
+      resourceId,
+      expirationDate: expiration,
+    });
+  });
 });

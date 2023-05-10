@@ -64,7 +64,6 @@ export const calendarCreatedContentfulHandlerFactory =
 
     const cdaClient = getCDAClient(contentfulDeliveryApiConfig);
 
-    console.log('cdaClient', cdaClient);
     const fetchCalendarById = () =>
       cdaClient.getEntry<CalendarSkeleton>(calendarId);
 
@@ -85,15 +84,6 @@ export const calendarCreatedContentfulHandlerFactory =
     }
 
     const googleApiMetadata = cmsCalendar.fields?.googleApiMetadata;
-    console.log(
-      'googleApiMetadata',
-      JSON.stringify(googleApiMetadata, null, 2),
-    );
-    console.log(
-      'associatedGoogleCalendarId',
-      googleApiMetadata?.associatedGoogleCalendarId,
-    );
-    console.log('webhookEventGoogleCalendarId', webhookEventGoogleCalendarId);
 
     if (
       googleApiMetadata?.associatedGoogleCalendarId !==

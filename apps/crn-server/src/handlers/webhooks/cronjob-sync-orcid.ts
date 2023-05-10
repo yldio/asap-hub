@@ -1,38 +1,17 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import {
-  InputUser,
-  RestUser,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
 import pThrottle from 'p-throttle';
 import { DateTime } from 'luxon';
 import { UserDataObject, UserResponse } from '@asap-hub/model';
-import { appName, baseUrl } from '../../config';
 import Users from '../../controllers/users';
-import { AssetSquidexDataProvider } from '../../data-providers/assets.data-provider';
-import { UserSquidexDataProvider } from '../../data-providers/users.data-provider';
-import { getAuthToken } from '../../utils/auth';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import {
+  getAssetDataProvider,
+  getUserDataProvider,
+} from '../../dependencies/users.dependencies';
 
 const rawHandler = async (): Promise<lambda.Response> => {
-  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-    appName,
-    baseUrl,
-  });
-  const userRestClient = new SquidexRest<RestUser, InputUser>(
-    getAuthToken,
-    'users',
-    {
-      appName,
-      baseUrl,
-    },
-  );
-  const userDataProvider = new UserSquidexDataProvider(
-    squidexGraphqlClient,
-    userRestClient,
-  );
-  const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
+  const userDataProvider = getUserDataProvider();
+  const assetDataProvider = getAssetDataProvider();
   const users = new Users(userDataProvider, assetDataProvider);
   const orcidLastSyncDate = DateTime.now()
     .set({ hour: 0, minute: 0 })

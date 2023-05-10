@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { UserEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import Users, { UserController } from '../../controllers/users';

@@ -1491,6 +1491,11 @@ const serverlessConfig: AWS = {
             Version: '2012-10-17',
             Statement: [
               {
+                Sid: 'Publisher-statement-id',
+                Effect: 'Allow',
+                Principal: {
+                  AWS: '*',
+                },
                 Action: 'sqs:SendMessage',
                 Resource: {
                   'Fn::GetAtt': [`SubscribeCalendarContentfulDLQ`, 'Arn'],

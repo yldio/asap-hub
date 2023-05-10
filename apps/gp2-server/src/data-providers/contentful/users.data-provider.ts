@@ -9,6 +9,7 @@ import {
   patchAndPublish,
   waitForUpdated,
 } from '@asap-hub/contentful';
+import logger from '../../utils/logger';
 import { UserDataProvider } from '../types';
 
 export type UserItem = NonNullable<
@@ -69,6 +70,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
   async fetch(
     options: gp2Model.FetchUsersOptions,
   ): Promise<gp2Model.ListUserDataObject> {
+    logger.info(`fetch users contentful`);
     const { projects, workingGroups } = options.filter || {};
     const userIdFilter = await this.getUserIdFilter({
       projects,
@@ -80,14 +82,18 @@ export class UserContentfulDataProvider implements UserDataProvider {
     ) {
       return { total: 0, items: [] };
     }
+    logger.info(`fetch users ${JSON.stringify(options, undefined, 2)} `);
     const result = await this.fetchUsers(options, userIdFilter);
 
-    return {
+    const items = {
       total: result?.total,
       items: result?.items
         .filter((x): x is UserItem => x !== null)
         .map(parseContentfulGraphQlUsers),
     };
+
+    logger.info(JSON.stringify(items, undefined, 2));
+    return items;
   }
 
   private async fetchUsers(
@@ -97,6 +103,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const { take = 8, skip = 0 } = options;
 
     const where = generateFetchQueryFilter(options, userIdFilter);
+    logger.info(`fetch users where: ${JSON.stringify(where, undefined, 2)}`);
 
     const { usersCollection } = await this.contentfulClient.request<
       gp2Contentful.FetchUsersQuery,

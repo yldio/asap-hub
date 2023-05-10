@@ -28,6 +28,7 @@ import {
   FETCH_USERS,
   FETCH_WORKINGGROUPS_MEMBERS,
 } from '../queries/users.queries';
+import logger from '../utils/logger';
 import { reverseMap } from '../utils/reverse-map';
 import { createUrl } from '../utils/urls';
 import { roleMap as projectRoleMap } from './project.data-provider';
@@ -73,6 +74,7 @@ export class UserSquidexDataProvider implements UserDataProvider {
     filter,
     search,
   }: gp2Model.FetchUsersOptions): Promise<gp2Model.ListUserDataObject> {
+    logger.info(`fetch users squidex`);
     const { projects, workingGroups } = filter || {};
     const userIdFilter = await this.getUserIdFilter(filter);
     if (userIdFilter === '' && (projects?.length || workingGroups?.length)) {

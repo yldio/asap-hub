@@ -75,7 +75,7 @@ export const getUserResponse = (): gp2Model.UserResponse => ({
     'What color was Iron Mans original armour?',
     'Who is the Stark family butler?',
   ],
-  secondaryEmail: 'tony@stark.com',
+  alternativeEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   biography: 'a biography of Tony Stark',
   keywords: ['R', 'Bash'],
@@ -268,7 +268,7 @@ export const getUserDataObject = (): gp2Model.UserDataObject => ({
       name: 'CALYPSO',
     },
   ],
-  secondaryEmail: 'tony@stark.com',
+  alternativeEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   questions: [
     'What color was Iron Mans original armour?',
@@ -318,6 +318,7 @@ export const getUserInput = (): gp2Squidex.InputUser['data'] => {
     country,
     keywords,
     social,
+    alternativeEmail,
     ...input
   } = getUserCreateDataObject();
 
@@ -336,6 +337,7 @@ export const getUserInput = (): gp2Squidex.InputUser['data'] => {
     positions: { iv: positions },
     keywords: { iv: keywords },
     fundingStreams: { iv: fundingStreams || '' },
+    secondaryEmail: { iv: alternativeEmail || '' },
     contributingCohorts: {
       iv: contributingCohorts.map(
         ({ contributingCohortId, role, studyUrl }) => ({
@@ -392,7 +394,7 @@ export const fetchUserResponseDataObject = (): gp2Model.UserDataObject => ({
   ],
   fundingStreams: undefined,
   contributingCohorts: [],
-  secondaryEmail: 'tony@stark.com',
+  alternativeEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   keywords: [],
   questions: ['What was the name of Peter Parkers uncle?'],

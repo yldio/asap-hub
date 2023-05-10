@@ -224,6 +224,7 @@ function getUserSquidexData(
     questions,
     contributingCohorts,
     avatarUrl,
+    alternativeEmail,
     ...userInput
   } = input;
   const fieldMappedUser = mapUserFields({ region, role, degrees });
@@ -235,6 +236,7 @@ function getUserSquidexData(
     ...userInput,
     ...fieldMappedUser,
     ...mappedTelephone,
+    secondaryEmail: alternativeEmail,
     questions: mappedQuestions,
     contributingCohorts: mappedCohorts,
     avatar: avatarUrl ? [avatarUrl] : undefined,
@@ -345,7 +347,7 @@ export const parseGraphQLUserToDataObject = ({
     questions,
     region: regionMap[user.region],
     role: roleMap[user.role],
-    secondaryEmail: user.secondaryEmail || undefined,
+    alternativeEmail: user.secondaryEmail || undefined,
     social,
     telephone,
     workingGroups,

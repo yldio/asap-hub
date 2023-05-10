@@ -245,7 +245,7 @@ export const parseContentfulGraphQlUsers = (
     activatedDate: user.activatedDate ?? undefined,
     onboarded: !!user.onboarded,
     email: user.email ?? '',
-    secondaryEmail: user.alternativeEmail ?? undefined,
+    alternativeEmail: user.alternativeEmail ?? undefined,
     firstName: user.firstName ?? '',
     lastName: user.lastName ?? '',
     biography: user.biography ?? undefined,

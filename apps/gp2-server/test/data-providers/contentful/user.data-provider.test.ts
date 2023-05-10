@@ -1828,18 +1828,18 @@ describe('User data provider', () => {
     });
     test('Should update secondary email', async () => {
       await userDataProvider.update(userId, {
-        secondaryEmail: '',
+        alternativeEmail: '',
       });
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-        secondaryEmail: '',
+        alternativeEmail: '',
       });
     });
     test('Should update secondary email', async () => {
       await userDataProvider.update(userId, {
-        secondaryEmail: 'tony@example.com',
+        alternativeEmail: 'tony@example.com',
       });
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-        secondaryEmail: 'tony@example.com',
+        alternativeEmail: 'tony@example.com',
       });
     });
 

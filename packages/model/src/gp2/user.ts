@@ -98,31 +98,31 @@ export interface UserSocial
 }
 
 export type UserDataObject = {
+  id: string;
+  activatedDate?: string;
+  alternativeEmail?: string;
   avatarUrl?: string;
+  biography?: string;
   city?: string;
   connections?: Connection[];
+  contributingCohorts: UserContributingCohort[];
   country: string;
   createdDate: string;
   degrees: UserDegree[];
   email: string;
   firstName: string;
-  id: string;
+  fundingStreams?: string;
+  keywords: Keyword[];
   lastName: string;
   onboarded: boolean;
   positions: UserPosition[];
-  region: UserRegion;
-  role: UserRole;
   projects: UserProject[];
   questions: string[];
-  workingGroups: UserWorkingGroup[];
-  fundingStreams?: string;
-  contributingCohorts: UserContributingCohort[];
-  secondaryEmail?: string;
-  telephone?: Telephone;
+  region: UserRegion;
+  role: UserRole;
   social?: UserSocial;
-  keywords: Keyword[];
-  biography?: string;
-  activatedDate?: string;
+  telephone?: Telephone;
+  workingGroups: UserWorkingGroup[];
 };
 
 export type UserCreateDataObject = Omit<

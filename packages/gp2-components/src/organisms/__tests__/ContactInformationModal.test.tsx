@@ -63,20 +63,20 @@ describe('ContactInformationModal', () => {
   it('calls onSave with the right arguments', async () => {
     const onSave = jest.fn();
     const email = 'goncalo.ramos@fpf.pt';
-    const secondaryEmail = 'goncalo@fpf.pt';
+    const alternativeEmail = 'goncalo@fpf.pt';
     const telephone = {
       countryCode: '+351',
       number: '911111111',
     };
     renderContactInformation({
       email,
-      secondaryEmail,
+      alternativeEmail,
       telephone,
       onSave,
     });
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      secondaryEmail,
+      alternativeEmail,
       telephone,
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
@@ -85,12 +85,12 @@ describe('ContactInformationModal', () => {
   it('calls onSave with the updated fields', async () => {
     const onSave = jest.fn();
     const email = 'goncalo.ramos@fpf.pt';
-    const secondaryEmail = 'ramos.goncalo@fpf.pt';
+    const alternativeEmail = 'ramos.goncalo@fpf.pt';
     const countryCode = '+351';
     const number = '912345678';
     renderContactInformation({
       email,
-      secondaryEmail: '',
+      alternativeEmail: '',
       telephone: undefined,
       onSave,
       countryCodeSuggestions: [{ dialCode: '+351', name: 'Portugal' }],
@@ -100,7 +100,7 @@ describe('ContactInformationModal', () => {
       screen.getByRole('textbox', {
         name: /alternative email \(optional\)/i,
       }),
-      secondaryEmail,
+      alternativeEmail,
     );
 
     userEvent.click(
@@ -119,7 +119,7 @@ describe('ContactInformationModal', () => {
 
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      secondaryEmail,
+      alternativeEmail,
       telephone: {
         countryCode,
         number,
@@ -130,10 +130,10 @@ describe('ContactInformationModal', () => {
   it('does not allow invalid secondary email', async () => {
     const onSave = jest.fn();
     const email = 'goncalo.ramos@fpf.pt';
-    const secondaryEmail = 'not-an-email-address';
+    const alternativeEmail = 'not-an-email-address';
     renderContactInformation({
       email,
-      secondaryEmail: '',
+      alternativeEmail: '',
       telephone: undefined,
       onSave,
     });
@@ -142,7 +142,7 @@ describe('ContactInformationModal', () => {
       screen.getByRole('textbox', {
         name: /alternative email \(optional\)/i,
       }),
-      secondaryEmail,
+      alternativeEmail,
     );
 
     userEvent.click(getSaveButton());
@@ -159,7 +159,7 @@ describe('ContactInformationModal', () => {
     const number = 'invalid-number';
     renderContactInformation({
       email,
-      secondaryEmail: '',
+      alternativeEmail: '',
       telephone: undefined,
       onSave,
     });

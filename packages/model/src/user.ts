@@ -158,10 +158,6 @@ export interface UserDataObject extends Invitee {
   interestGroups: InterestGroupMembership[];
 }
 
-export type createAnewEnvPlease = {
-  pleaseWork: boolean;
-};
-
 export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse
   extends Omit<UserDataObject, 'onboarded' | 'connections'> {

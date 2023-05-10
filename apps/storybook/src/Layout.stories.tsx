@@ -30,6 +30,18 @@ const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
       active: false,
     },
   ],
+  interestGroups: [
+    {
+      name: 'Interest Group 1',
+      href: '/interest-group-1',
+      active: true,
+    },
+    {
+      name: 'Interest Group 2',
+      href: '/interest-group-2',
+      active: false,
+    },
+  ],
   aboutHref: '/about',
 };
 

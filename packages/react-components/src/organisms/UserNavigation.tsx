@@ -52,6 +52,11 @@ export interface UserNavigationProps {
     href: string;
     active: boolean;
   }>;
+  readonly interestGroups: ReadonlyArray<{
+    name: string;
+    href: string;
+    active: boolean;
+  }>;
   readonly aboutHref: string;
 }
 const UserNavigation: React.FC<UserNavigationProps> = ({
@@ -59,6 +64,7 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
   userProfileHref,
   teams,
   workingGroups,
+  interestGroups,
   aboutHref,
 }) => (
   <nav css={containerStyles}>
@@ -72,6 +78,7 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
       <UserNavigationAssociationSection
         teams={teams}
         workingGroups={workingGroups}
+        interestGroups={interestGroups}
         userOnboarded={userOnboarded}
       />
       {/* {teams.map(({ name, href }) => (

@@ -11,6 +11,7 @@ const props: ComponentProps<typeof Layout> = {
   userProfileHref: '/profile',
   teams: [],
   workingGroups: [],
+  interestGroups: [],
   aboutHref: '/about',
 };
 

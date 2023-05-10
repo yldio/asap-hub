@@ -1,15 +1,20 @@
 import { NavigationLink, Paragraph } from '../atoms';
-import { TeamIcon, WorkingGroupsIcon } from '../icons';
+import { InterestGroupsIcon, TeamIcon, WorkingGroupsIcon } from '../icons';
 
 type UserNavigationAssociationSectionProps = {
   teams: ReadonlyArray<{ name: string; href: string }>;
   workingGroups: ReadonlyArray<{ name: string; href: string; active: boolean }>;
+  interestGroups: ReadonlyArray<{
+    name: string;
+    href: string;
+    active: boolean;
+  }>;
   userOnboarded: boolean;
 };
 
 const UserNavigationAssociationSection: React.FC<
   UserNavigationAssociationSectionProps
-> = ({ teams, workingGroups, userOnboarded }) => (
+> = ({ teams, workingGroups, interestGroups, userOnboarded }) => (
   <div>
     {teams.length > 0 && (
       <div>
@@ -27,7 +32,25 @@ const UserNavigationAssociationSection: React.FC<
         ))}
       </div>
     )}
-    <div>My interest groups</div>
+    {interestGroups.length > 0 && (
+      <div>
+        <Paragraph>MY INTEREST GROUPS</Paragraph>
+        {interestGroups.map(
+          ({ name, href, active }) =>
+            active && (
+              <li key={href}>
+                <NavigationLink
+                  href={href}
+                  icon={<InterestGroupsIcon />}
+                  enabled={userOnboarded}
+                >
+                  {name}
+                </NavigationLink>
+              </li>
+            ),
+        )}
+      </div>
+    )}
     {workingGroups.length > 0 && (
       <div>
         <Paragraph>MY WORKING GROUPS</Paragraph>

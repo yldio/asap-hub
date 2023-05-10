@@ -16,6 +16,13 @@ const props: ComponentProps<typeof UserNavigation> = {
       active: true,
     },
   ],
+  interestGroups: [
+    {
+      name: 'Interest Group 1',
+      href: '/interest-group-1',
+      active: true,
+    },
+  ],
   aboutHref: '/about',
 };
 

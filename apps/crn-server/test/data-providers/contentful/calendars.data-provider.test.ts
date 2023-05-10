@@ -357,7 +357,9 @@ describe('Calendars data provider', () => {
 
       const calendarMock = getEntry({
         googleApiMetadata: {
-          syncToken: 'syncToken-1',
+          'en-US': {
+            syncToken: 'syncToken-1',
+          },
         },
       });
       environmentMock.getEntry.mockResolvedValueOnce(calendarMock);

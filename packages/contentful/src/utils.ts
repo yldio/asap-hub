@@ -116,11 +116,11 @@ export const updateEntryFields = (
   entry: Entry,
   fields: Record<string, unknown>,
 ) => {
-  const updatedEntry = { ...entry };
   Object.entries(fields).forEach(([fieldName, fieldValue]) => {
-    updatedEntry.fields[fieldName] = { 'en-US': fieldValue };
+    // eslint-disable-next-line no-param-reassign
+    entry.fields[fieldName] = { 'en-US': fieldValue };
   });
-  return updatedEntry;
+  return entry;
 };
 
 export const patchAndPublish = async (

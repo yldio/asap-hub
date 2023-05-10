@@ -2,15 +2,11 @@ import { ValidationError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
-import {
-  gp2 as gp2squidex,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
+import { gp2 as gp2squidex, SquidexRest } from '@asap-hub/squidex';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users, { UserController } from '../../controllers/user.controller';
 import { AssetSquidexDataProvider } from '../../data-providers/asset.data-provider';
-import { UserSquidexDataProvider } from '../../data-providers/user.data-provider';
+import { getUserDataProvider } from '../../dependencies/users.dependencies';
 import { getAuthToken } from '../../utils/auth';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
@@ -36,10 +32,6 @@ export type GetValidUntilTimestampInSecondsArgs = {
   ttl: number;
 };
 
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
 const userRestClient = new SquidexRest<
   gp2squidex.RestUser,
   gp2squidex.InputUser
@@ -47,10 +39,7 @@ const userRestClient = new SquidexRest<
   appName,
   baseUrl,
 });
-const userDataProvider = new UserSquidexDataProvider(
-  squidexGraphqlClient,
-  userRestClient,
-);
+const userDataProvider = getUserDataProvider();
 const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
 /* istanbul ignore next */

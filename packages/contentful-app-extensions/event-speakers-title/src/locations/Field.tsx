@@ -1,48 +1,124 @@
-import React, { useEffect, useState } from 'react';
-import { Paragraph } from '@contentful/f36-components';
-import { FieldExtensionSDK } from '@contentful/app-sdk';
-import { useSDK } from '@contentful/react-apps-toolkit';
+import React from 'react';
+import {
+  MultipleEntryReferenceEditor,
+  CustomEntityCardProps,
+  useEntity,
+} from '@contentful/field-editor-reference';
+import { entityHelpers } from '@contentful/field-editor-shared';
+import { EntryCard, MenuItem, Text, Badge } from '@contentful/f36-components';
+import { FieldExtensionSDK, Entry } from '@contentful/app-sdk';
+import { useSDK, useAutoResizer } from '@contentful/react-apps-toolkit';
 
-const getTitle = (teamName?: string, userName?: string) => {
-  if (teamName && userName) return `${teamName} - ${userName}`;
-  if (userName) return userName;
-  if (teamName) return teamName;
-  return undefined;
+type CustomEntryCardProps = CustomEntityCardProps & { entity: Entry };
+
+const TeamTitle = ({ id }: { id: string }) => {
+  const { data: team } = useEntity<Entry>('Entry', id);
+  if (!team) {
+    return null;
+  }
+  return (
+    <>
+      {team.fields?.displayName?.['en-US']} <Badge>Team</Badge>
+    </>
+  );
 };
+const UserTitle = ({ id }: { id: string }) => {
+  const { data: user } = useEntity<Entry>('Entry', id);
+  const contentType = user?.sys?.contentType?.sys?.id;
+
+  if (contentType === 'users') {
+    const name = `${user.fields?.firstName?.['en-US']} ${user.fields?.lastName?.['en-US']}`;
+    return (
+      <>
+        {name} <Badge>User</Badge>
+      </>
+    );
+  }
+  if (contentType === 'externalAuthors') {
+    return (
+      <>
+        {user.fields?.name?.['en-US']} <Badge>External Author</Badge>
+      </>
+    );
+  }
+  return null;
+};
+
+const Card = ({ entity, onEdit, onRemove }: CustomEntryCardProps) => {
+  const sdk = useSDK<FieldExtensionSDK>();
+  const { fields, sys } = entity;
+  const teamId = fields.team?.['en-US'].sys.id;
+  const userId = fields.user?.['en-US'].sys.id;
+
+  const removeSpeaker = async () => {
+    if (sys.publishedVersion) {
+      await sdk.space.unpublishEntry(entity);
+    }
+    await sdk.space.deleteEntry(entity);
+    if (onRemove) {
+      onRemove();
+    }
+  };
+
+  const status = entityHelpers.getEntryStatus(sys);
+
+  const defaultProps = {
+    contentType: 'Speaker',
+    actions: [
+      <MenuItem key="remove" onClick={removeSpeaker}>
+        Remove
+      </MenuItem>,
+    ],
+    status,
+    onClick: onEdit,
+  };
+
+  return (
+    <EntryCard {...defaultProps}>
+      {!teamId && !userId && (
+        <Text fontColor="colorNegative">No speakers selected</Text>
+      )}
+      {teamId && (
+        <Text>
+          <TeamTitle id={teamId} />
+        </Text>
+      )}
+      {userId && (
+        <Text>
+          <UserTitle id={userId} />
+        </Text>
+      )}
+    </EntryCard>
+  );
+};
+
+export const CustomCard = ({ entity, ...props }: CustomEntityCardProps) => (
+  <Card {...props} entity={entity as Entry} />
+);
 
 const Field = () => {
   const sdk = useSDK<FieldExtensionSDK>();
+  useAutoResizer();
 
-  const [title, setTitle] = useState(sdk.field.getValue());
-
-  const [teamName, setTeamName] = useState('');
-  const [userName, setUserName] = useState('');
-
-  useEffect(() => {
-    sdk.window.startAutoResizer();
-  }, [sdk.window]);
-
-  sdk.entry.onSysChanged(async () => {
-    const teamId = sdk.entry.fields.team.getValue()?.sys?.id;
-    if (teamId) {
-      const team = await sdk.space.getEntry(teamId);
-      setTeamName(team.fields.displayName['en-US']);
-    }
-
-    const userId = sdk.entry.fields.user.getValue()?.sys?.id;
-    if (userId) {
-      const user = await sdk.space.getEntry(userId);
-      setUserName(user.fields.name['en-US']);
-    }
-  });
-
-  useEffect(() => {
-    const titleValue = getTitle(teamName, userName);
-    sdk.field.setValue(titleValue);
-    setTitle(titleValue);
-  }, [teamName, userName, sdk.field]);
-
-  return <Paragraph>{title ?? ''}</Paragraph>;
+  return (
+    <MultipleEntryReferenceEditor
+      isInitiallyDisabled={false}
+      hasCardEditActions={true}
+      renderCustomCard={CustomCard}
+      parameters={{
+        instance: {
+          showLinkEntityAction: false,
+          showCreateEntityAction: true,
+          bulkEditing: false,
+        },
+      }}
+      viewType="link"
+      sdk={sdk}
+      actionLabels={{
+        createNew: () => 'Add',
+      }}
+    />
+  );
 };
 
 export default Field;

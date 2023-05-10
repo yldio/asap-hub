@@ -466,6 +466,8 @@ __metadata:
     "@contentful/app-sdk": 4.17.0
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.1
+    "@contentful/field-editor-reference": ^5.9.0
+    "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.15
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
@@ -22417,8 +22419,8 @@ __metadata:
   linkType: hard
 
 "contentful-management@npm:^10.14.0":
-  version: 10.33.0
-  resolution: "contentful-management@npm:10.33.0"
+  version: 10.35.3
+  resolution: "contentful-management@npm:10.35.3"
   dependencies:
     "@contentful/rich-text-types": ^16.0.3
     "@types/json-patch": 0.0.30
@@ -22427,7 +22429,7 @@ __metadata:
     fast-copy: ^3.0.0
     lodash.isplainobject: ^4.0.6
     type-fest: ^3.0.0
-  checksum: e05cb783c0d4058e0840342383dad7f2650875259897a0b44125ac5c02f8a7368bb6714e22b6fec27a81e466fd3c9cb97bf21c20413dcc40c4b4fd45ef2a6aac
+  checksum: 10dcabd3e7aab03945c6b59e0dc1b582aca55bfecb7c2103a53da5a258a23a8fbbf2ac509f1eca849cb2e3beba12b1ef3ff82f0f0b12aa69a22114b854bde2f9
   languageName: node
   linkType: hard
 

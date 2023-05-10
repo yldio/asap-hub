@@ -132,12 +132,14 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
 
     if (resourceId || expirationDate || syncToken)
       calendarWithUpdatedFields.fields.googleApiMetadata = {
-        ...previousGoogleApiMetadata,
-        // if the resourceId is updated, we change associatedGoogleCalendarId
-        // this field is used by webhooks
-        ...(resourceId ? { resourceId, associatedGoogleCalendarId: id } : {}),
-        ...(syncToken ? { syncToken } : {}),
-        ...(expirationDate ? { expirationDate } : {}),
+        'en-US': {
+          ...previousGoogleApiMetadata,
+          // if the resourceId is updated, we change associatedGoogleCalendarId
+          // this field is used by webhooks
+          ...(resourceId ? { resourceId, associatedGoogleCalendarId: id } : {}),
+          ...(syncToken ? { syncToken } : {}),
+          ...(expirationDate ? { expirationDate } : {}),
+        },
       };
 
     const calendarUpdated = await calendarWithUpdatedFields.update();

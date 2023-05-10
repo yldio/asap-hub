@@ -374,9 +374,11 @@ describe('Calendars data provider', () => {
 
       expect(calendarMock.fields).toEqual({
         googleApiMetadata: {
-          associatedGoogleCalendarId: 'calendar-id-1',
-          resourceId: 'resourceId-1',
-          syncToken: 'syncToken-1',
+          'en-US': {
+            associatedGoogleCalendarId: 'calendar-id-1',
+            resourceId: 'resourceId-1',
+            syncToken: 'syncToken-1',
+          },
         },
       });
       expect(calendarMock.update).toHaveBeenCalled();

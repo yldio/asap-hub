@@ -124,9 +124,12 @@ describe('Calendars data provider', () => {
     });
 
     test('Should filter calendars by the resourceId', async () => {
-      const resourceId = 'some-resource-id';
+      const contentfulGraphqlResponse = getContentfulCalendarsGraphqlResponse();
+      const resourceId =
+        contentfulGraphqlResponse.calendarsCollection?.items[0]
+          ?.googleApiMetadata.resourceId;
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        getContentfulCalendarsGraphqlResponse(),
+        contentfulGraphqlResponse,
       );
 
       const result = await calendarDataProvider.fetch({ resourceId });
@@ -138,13 +141,73 @@ describe('Calendars data provider', () => {
           order: ['name_ASC'],
           skip: 0,
           where: {
-            resourceId: 'some-resource-id',
+            googleApiMetadata_exists: true,
           },
         },
       );
       expect(result).toEqual({
         total: 1,
         items: [getContentfulCalendarDataObject()],
+      });
+    });
+
+    test('Should filter calendars by maxExpiration when it is greater than results expirationDate', async () => {
+      const contentfulGraphqlResponse = getContentfulCalendarsGraphqlResponse();
+      const responseExpirationDate =
+        contentfulGraphqlResponse.calendarsCollection?.items[0]
+          ?.googleApiMetadata.expirationDate;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphqlResponse,
+      );
+
+      const result = await calendarDataProvider.fetch({
+        maxExpiration: responseExpirationDate + 1,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          limit: 50,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {
+            googleApiMetadata_exists: true,
+          },
+        },
+      );
+      expect(result).toEqual({
+        total: 1,
+        items: [getContentfulCalendarDataObject()],
+      });
+    });
+
+    test('Should filter calendars by maxExpiration when it is less than results expirationDate', async () => {
+      const contentfulGraphqlResponse = getContentfulCalendarsGraphqlResponse();
+      const responseExpirationDate =
+        contentfulGraphqlResponse.calendarsCollection?.items[0]
+          ?.googleApiMetadata.expirationDate;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphqlResponse,
+      );
+
+      const result = await calendarDataProvider.fetch({
+        maxExpiration: responseExpirationDate - 1,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          limit: 50,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {
+            googleApiMetadata_exists: true,
+          },
+        },
+      );
+      expect(result).toEqual({
+        total: 0,
+        items: [],
       });
     });
 
@@ -270,7 +333,7 @@ describe('Calendars data provider', () => {
   });
 
   describe('Update method', () => {
-    test('Should update the calendar', async () => {
+    test('Should update the calendar - without google api metadata', async () => {
       const calendarId = 'calendar-id-1';
 
       const calendarMock = getEntry({});
@@ -285,6 +348,37 @@ describe('Calendars data provider', () => {
       expect(environmentMock.getEntry).toHaveBeenCalledWith(calendarId);
 
       expect(calendarMock.fields).toEqual({ color: { 'en-US': '#060D5E' } });
+      expect(calendarMock.update).toHaveBeenCalled();
+      expect(calendarMockUpdated.publish).toHaveBeenCalled();
+    });
+
+    test('Should update the calendar - with google api metadata', async () => {
+      const calendarId = 'calendar-id-1';
+
+      const calendarMock = getEntry({
+        googleApiMetadata: {
+          syncToken: 'syncToken-1',
+        },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(calendarMock);
+      const calendarMockUpdated = getEntry({});
+      calendarMock.update = jest
+        .fn()
+        .mockResolvedValueOnce(calendarMockUpdated);
+
+      await calendarDataProviderMock.update(calendarId, {
+        resourceId: 'resourceId-1',
+      });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(calendarId);
+
+      expect(calendarMock.fields).toEqual({
+        googleApiMetadata: {
+          associatedGoogleCalendarId: 'calendar-id-1',
+          resourceId: 'resourceId-1',
+          syncToken: 'syncToken-1',
+        },
+      });
       expect(calendarMock.update).toHaveBeenCalled();
       expect(calendarMockUpdated.publish).toHaveBeenCalled();
     });

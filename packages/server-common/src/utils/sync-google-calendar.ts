@@ -12,7 +12,7 @@ const isGaxiosError = (error: unknown): error is GaxiosError =>
 
 export type SyncCalendar = (
   googleCalendarId: string,
-  squidexCalendarId: string,
+  cmsCalendarId: string,
   syncToken: string | undefined,
 ) => Promise<string | null | undefined>;
 
@@ -23,7 +23,7 @@ export const syncCalendarFactory = (
 ): SyncCalendar => {
   const fetchEvents = async (
     googleCalendarId: string,
-    squidexCalendarId: string,
+    cmsCalendarId: string,
     syncToken: string | undefined,
     pageToken?: string,
   ): Promise<string | undefined | null> => {
@@ -64,7 +64,7 @@ export const syncCalendarFactory = (
     } catch (error) {
       if (isGaxiosError(error) && error.code === '410') {
         logger.warn(error, 'Token is Gone, doing full sync');
-        return fetchEvents(googleCalendarId, squidexCalendarId, undefined); // syncToken "Gone", do full sync
+        return fetchEvents(googleCalendarId, cmsCalendarId, undefined); // syncToken "Gone", do full sync
       }
       logger.error(error, 'The API returned an error');
       throw error;
@@ -75,23 +75,14 @@ export const syncCalendarFactory = (
 
     const syncResults = await Promise.allSettled(
       eventItems.map((e) =>
-        syncEvent(
-          e,
-          googleCalendarId,
-          squidexCalendarId,
-          defaultCalendarTimezone,
-        ),
+        syncEvent(e, googleCalendarId, cmsCalendarId, defaultCalendarTimezone),
       ),
     );
     logger.debug({ syncResults }, 'Sync events results');
 
     if (data.nextPageToken) {
       // get next page
-      return fetchEvents(
-        googleCalendarId,
-        squidexCalendarId,
-        data.nextPageToken,
-      );
+      return fetchEvents(googleCalendarId, cmsCalendarId, data.nextPageToken);
     }
 
     return data.nextSyncToken;
@@ -99,7 +90,7 @@ export const syncCalendarFactory = (
 
   return async (
     googleCalendarId: string,
-    squidexCalendarId: string,
+    cmsCalendarId: string,
     syncToken: string | undefined,
-  ) => fetchEvents(googleCalendarId, squidexCalendarId, syncToken);
+  ) => fetchEvents(googleCalendarId, cmsCalendarId, syncToken);
 };

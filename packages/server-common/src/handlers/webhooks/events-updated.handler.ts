@@ -44,19 +44,19 @@ export const webhookEventUpdatedHandlerFactory = (
 
     const calendar = await getCalendar(resourceId);
 
-    const squidexCalendarId = calendar.id;
+    const cmsCalendarId = calendar.id;
     const { googleCalendarId } = calendar;
     const syncToken = calendar.syncToken || undefined;
 
     const nextSyncToken = await syncCalendar(
       googleCalendarId,
-      squidexCalendarId,
+      cmsCalendarId,
       syncToken,
     );
 
     if (nextSyncToken) {
       await calendarDataProvider
-        .update(squidexCalendarId, { syncToken: nextSyncToken })
+        .update(cmsCalendarId, { syncToken: nextSyncToken })
         .catch((err) => {
           logger.error(err, 'Error updating syncToken');
         });

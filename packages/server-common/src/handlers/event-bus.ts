@@ -14,4 +14,15 @@ export type UserPayload = WebhookDetail<
   | ContentfulWebhookPayload<'users'>
 >;
 
-export type CalendarPayload = SquidexWebhookPayload<Calendar, CalendarEvent>;
+export type CalendarSquidexPayload = SquidexWebhookPayload<
+  Calendar,
+  CalendarEvent
+>;
+
+export type CalendarContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'calendars'>
+>;
+
+export type CalendarPayload =
+  | CalendarSquidexPayload
+  | CalendarContentfulPayload;

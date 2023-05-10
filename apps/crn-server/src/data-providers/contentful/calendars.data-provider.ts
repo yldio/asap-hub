@@ -57,8 +57,9 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
       skip: 0,
       order: [CalendarsOrder.NameAsc],
       where: {
-        ...(maxExpiration ? { expirationDate_lt: maxExpiration } : {}),
-        ...(resourceId ? { resourceId } : {}),
+        ...(maxExpiration || resourceId
+          ? { googleApiMetadata_exists: true }
+          : {}),
       },
     });
 
@@ -66,6 +67,36 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
       return {
         total: 0,
         items: [],
+      };
+    }
+
+    if (resourceId || maxExpiration) {
+      const filteredCalendarItems = calendarsCollection?.items.filter(
+        (calendar) => {
+          if (resourceId && maxExpiration) {
+            return (
+              calendar?.googleApiMetadata.resourceId === resourceId &&
+              calendar?.googleApiMetadata.expirationDate <= maxExpiration
+            );
+          }
+
+          if (resourceId) {
+            return calendar?.googleApiMetadata.resourceId === resourceId;
+          }
+
+          if (maxExpiration) {
+            return calendar?.googleApiMetadata.expirationDate <= maxExpiration;
+          }
+
+          return false;
+        },
+      );
+
+      return {
+        total: (filteredCalendarItems || [])?.length,
+        items: (filteredCalendarItems || [])
+          .filter((x): x is CalendarItem => x !== null)
+          .map(parseGraphQlCalendarToDataObject),
       };
     }
 
@@ -93,8 +124,21 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
     const environment = await this.getRestClient();
 
     const calendar = await environment.getEntry(id);
+    const previousGoogleApiMetadata = calendar.fields.googleApiMetadata;
 
-    const calendarWithUpdatedFields = updateEntryFields(calendar, update);
+    const { resourceId, expirationDate, syncToken, ...otherFields } = update;
+
+    const calendarWithUpdatedFields = updateEntryFields(calendar, otherFields);
+
+    if (resourceId || expirationDate || syncToken)
+      calendarWithUpdatedFields.fields.googleApiMetadata = {
+        ...previousGoogleApiMetadata,
+        // if the resourceId is updated, we change associatedGoogleCalendarId
+        // this field is used by webhooks
+        ...(resourceId ? { resourceId, associatedGoogleCalendarId: id } : {}),
+        ...(syncToken ? { syncToken } : {}),
+        ...(expirationDate ? { expirationDate } : {}),
+      };
 
     const calendarUpdated = await calendarWithUpdatedFields.update();
     await calendarUpdated.publish();
@@ -111,9 +155,11 @@ export const parseGraphQlCalendarToDataObject = (
 ): CalendarDataObject => ({
   id: item.sys.id,
   version: item.sys.publishedVersion ?? 1,
-  resourceId: item.resourceId,
-  expirationDate: item.expirationDate,
-  syncToken: item.syncToken,
+  resourceId: item.googleApiMetadata.resourceId ?? undefined,
+  expirationDate: item.googleApiMetadata.expirationDate ?? undefined,
+  syncToken: item.googleApiMetadata.syncToken ?? undefined,
+  associatedGoogleCalendarId:
+    item.googleApiMetadata.associatedGoogleCalendarId ?? undefined,
   ...parseContentfulGraphqlCalendarPartialToDataObject(item),
   // TODO: implement this when
   // CT-13 Interest Groups

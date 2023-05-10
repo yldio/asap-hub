@@ -290,12 +290,16 @@ type GraphQLUserOptionalFlatData = Partial<
 type GraphQLUserReferencingWorkingGroupsContents =
   UsersContentFragment['referencingWorkingGroupsContents'];
 
+type GraphQLUserReferencingInterestGroupsContents =
+  UsersContentFragment['referencingGroupsContents'];
+
 type GraphQLUser = Omit<
   UsersContentFragment,
-  'flatData' | 'referencingWorkingGroupsContents'
+  'flatData' | 'referencingWorkingGroupsContents' | 'referencingGroupsContents'
 > & {
   flatData: GraphQLUserRequiredFlatData & GraphQLUserOptionalFlatData;
   referencingWorkingGroupsContents?: GraphQLUserReferencingWorkingGroupsContents;
+  referencingGroupsContents?: GraphQLUserReferencingInterestGroupsContents;
 };
 
 export const parseGraphQLUser = (user: GraphQLUser): UserResponse => {

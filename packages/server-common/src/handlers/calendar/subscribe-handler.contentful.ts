@@ -64,21 +64,36 @@ export const calendarCreatedContentfulHandlerFactory =
 
     const cdaClient = getCDAClient(contentfulDeliveryApiConfig);
 
+    console.log('cdaClient', cdaClient);
     const fetchCalendarById = () =>
       cdaClient.getEntry<CalendarSkeleton>(calendarId);
 
-    const cmsCalendar = await pollContentfulDeliveryApi<CalendarSkeleton>(
-      fetchCalendarById,
-      webhookEventVersion,
-    );
+    let cmsCalendar;
+    try {
+      cmsCalendar = await pollContentfulDeliveryApi<CalendarSkeleton>(
+        fetchCalendarById,
+        webhookEventVersion,
+      );
+    } catch {
+      logger.error('Failed to retrieve calendar by ID.');
+      return 'OK';
+    }
 
     if (!cmsCalendar) {
       logger.error('Failed to retrieve calendar by ID.');
-
       return 'OK';
     }
 
     const googleApiMetadata = cmsCalendar.fields?.googleApiMetadata;
+    console.log(
+      'googleApiMetadata',
+      JSON.stringify(googleApiMetadata, null, 2),
+    );
+    console.log(
+      'associatedGoogleCalendarId',
+      googleApiMetadata?.associatedGoogleCalendarId,
+    );
+    console.log('webhookEventGoogleCalendarId', webhookEventGoogleCalendarId);
 
     if (
       googleApiMetadata?.associatedGoogleCalendarId !==
@@ -101,21 +116,27 @@ export const calendarCreatedContentfulHandlerFactory =
       return 'OK';
     }
 
-    try {
-      const { resourceId, expiration } = await subscribe(
-        webhookEventGoogleCalendarId,
-        calendarId,
-      );
+    if (
+      googleApiMetadata?.associatedGoogleCalendarId !==
+        webhookEventGoogleCalendarId ||
+      (!!webhookEventGoogleCalendarId && !googleApiMetadata)
+    ) {
+      try {
+        const { resourceId, expiration } = await subscribe(
+          webhookEventGoogleCalendarId,
+          calendarId,
+        );
 
-      await calendarDataProvider.update(calendarId, {
-        resourceId,
-        expirationDate: expiration,
-      });
-    } catch (error) {
-      logger.error(error, 'Error subscribing to the calendar');
-      alerts.error(error);
+        await calendarDataProvider.update(calendarId, {
+          resourceId,
+          expirationDate: expiration,
+        });
+      } catch (error) {
+        logger.error(error, 'Error subscribing to the calendar');
+        alerts.error(error);
 
-      throw error;
+        throw error;
+      }
     }
 
     return 'OK';

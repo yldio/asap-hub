@@ -1,9 +1,5 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  ContentfulWebhookPayload,
-  EntityMetaSysProps,
-  SnapshotProps,
-} from '@asap-hub/contentful';
+import { ContentfulWebhookPayload } from '@asap-hub/contentful';
 import {
   CalendarEvent,
   WebhookDetail,
@@ -168,17 +164,6 @@ export const getCalendarContentfulEvent = (
     'calendar-1',
   );
 
-export type CalendarSnapshot = SnapshotProps<
-  { sys: EntityMetaSysProps } & {
-    fields: {
-      name: { 'en-US': string };
-      googleCalendarId: { 'en-US': string };
-      color: { 'en-US': string };
-      resourceId?: { 'en-US': string | null };
-    };
-  }
->;
-
 export const getCalendarFromDeliveryApi = ({
   revision = 1,
   associatedGoogleCalendarId = null,
@@ -190,10 +175,8 @@ export const getCalendarFromDeliveryApi = ({
   },
   fields: {
     googleApiMetadata: {
-      'en-US': {
-        resourceId,
-        associatedGoogleCalendarId,
-      },
+      resourceId,
+      associatedGoogleCalendarId,
     },
   },
 });

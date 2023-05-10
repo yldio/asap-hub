@@ -163,7 +163,7 @@ const pollContentful = async <T extends EntrySkeletonType<FieldsType, string>>(
     // eslint-disable-next-line consistent-return
     async (bail) => {
       const entry = await fetchEntry();
-
+      console.log('entry', entry);
       if (!entry) {
         return bail(new Error('Not found'));
       }

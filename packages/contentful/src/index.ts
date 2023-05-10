@@ -1,4 +1,4 @@
-export type { EntryFieldTypes } from 'contentful';
+export type { EntryFieldTypes, ContentfulClientApi } from 'contentful';
 export type {
   Asset,
   AssetFileProp,

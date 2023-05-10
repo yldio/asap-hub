@@ -43,3 +43,25 @@ it('applies the passed href', () => {
     ),
   ).toHaveAttribute('href', '/profile');
 });
+
+it('renders the associations sections', () => {
+  const { getByText } = render(<UserNavigation {...props} />);
+  expect(getByText('MY TEAMS')).toBeVisible();
+  expect(getByText(/team 1/i)).toBeVisible();
+  expect(getByText(/team 2/i)).toBeVisible();
+
+  expect(getByText('MY INTEREST GROUPS')).toBeVisible();
+  expect(getByText(/interest group 1/i)).toBeVisible();
+
+  expect(getByText('MY WORKING GROUPS')).toBeVisible();
+  expect(getByText(/working group 1/i)).toBeVisible();
+});
+
+it('does not render the associations sections for missing associations', () => {
+  const { queryByText } = render(
+    <UserNavigation {...props} interestGroups={[]} workingGroups={[]} />,
+  );
+
+  expect(queryByText('MY INTEREST GROUPS')).not.toBeInTheDocument();
+  expect(queryByText('MY WORKING GROUPS')).not.toBeInTheDocument();
+});

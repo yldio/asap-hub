@@ -61,7 +61,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     return <Loading />;
   }
 
-  const ig = [
+  const mockInterestGroup = [
     {
       id: '1',
       name: 'test',
@@ -69,7 +69,6 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     },
   ];
 
-  console.log('userul lu masa ii', user);
   return (
     <Onboardable>
       {(onboardable) => (
@@ -97,11 +96,13 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 .workingGroup({ workingGroupId: id }).$,
             }),
           )}
-          interestGroups={ig.map(({ id, name = '', active }) => ({
-            name,
-            active,
-            href: network({}).groups({}).group({ groupId: id }).$,
-          }))}
+          interestGroups={mockInterestGroup.map(
+            ({ id, name = '', active }) => ({
+              name,
+              active,
+              href: network({}).groups({}).group({ groupId: id }).$,
+            }),
+          )}
           aboutHref="https://www.parkinsonsroadmap.org/"
         >
           <CheckOnboarded>

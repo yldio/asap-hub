@@ -20,7 +20,7 @@ const containerStyles = css({
   flexDirection: 'column',
 
   boxSizing: 'border-box',
-  padding: `${12 / perRem}em ${12 / perRem}em ${vminLinearCalc(
+  padding: `${9 / perRem}em ${12 / perRem}em ${vminLinearCalc(
     mobileScreen,
     8,
     largeDesktopScreen,
@@ -33,6 +33,12 @@ const listStyles = css({
   listStyle: 'none',
   margin: 0,
   padding: 0,
+});
+
+const dividerStyle = css({
+  display: 'block',
+  marginLeft: `${12 / perRem}em`,
+  marginRight: `${12 / perRem}em`,
 });
 
 const bottomLinksStyles = css({
@@ -74,26 +80,29 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
           My Profile
         </NavigationLink>
       </li>
-      {/* TODO component that has  */}
       <UserNavigationAssociationSection
-        teams={teams}
-        workingGroups={workingGroups}
-        interestGroups={interestGroups}
         userOnboarded={userOnboarded}
+        association={teams}
+        title="MY TEAMS"
       />
-      {/* {teams.map(({ name, href }) => (
-        <li key={href}>
-          <NavigationLink
-            href={href}
-            icon={<TeamIcon />}
-            enabled={userOnboarded}
-          >
-            My Team: {name}
-          </NavigationLink>
-        </li>
-      ))} */}
+      {interestGroups.length > 0 && (
+        <UserNavigationAssociationSection
+          userOnboarded={userOnboarded}
+          association={interestGroups}
+          title="MY INTEREST GROUPS"
+        />
+      )}
+      {workingGroups.length > 0 && (
+        <UserNavigationAssociationSection
+          userOnboarded={userOnboarded}
+          association={workingGroups}
+          title="MY WORKING GROUPS"
+        />
+      )}
     </ul>
-    <Divider />
+    <span css={dividerStyle}>
+      <Divider />
+    </span>
     <ul css={listStyles}>
       {/* settings could go here */}
       <li>

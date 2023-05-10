@@ -32,7 +32,6 @@ import {
   pollContentfulGql,
   UsersFilter,
   UsersOrder,
-  waitForUpdated,
 } from '@asap-hub/contentful';
 import { isTeamRole } from '../../entities';
 import { UserDataProvider } from '../types';

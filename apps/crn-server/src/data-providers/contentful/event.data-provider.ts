@@ -22,7 +22,6 @@ import {
   patchAndPublish,
   pollContentfulGql,
   RichTextFromQuery,
-  waitForUpdated,
 } from '@asap-hub/contentful';
 import {
   EventCreateDataObject,

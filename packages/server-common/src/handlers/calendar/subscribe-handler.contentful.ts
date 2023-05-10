@@ -78,7 +78,7 @@ export const calendarCreatedContentfulHandlerFactory =
       return 'OK';
     }
 
-    const googleApiMetadata = cmsCalendar.fields.googleApiMetadata;
+    const googleApiMetadata = cmsCalendar.fields?.googleApiMetadata;
 
     if (
       googleApiMetadata?.associatedGoogleCalendarId !==

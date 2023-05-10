@@ -20,6 +20,7 @@ import {
   FetchEventsQueryVariables,
   GraphQLClient,
   patchAndPublish,
+  pollContentfulGql,
   RichTextFromQuery,
 } from '@asap-hub/contentful';
 import {
@@ -44,7 +45,6 @@ import {
   parseContentfulGraphqlCalendarPartialToDataObject,
 } from '../../entities';
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendars';
-import { waitForUpdated } from '../../utils/wait-for-updated';
 
 export type EventItem = NonNullable<
   NonNullable<FetchEventsQuery['eventsCollection']>['items'][number]
@@ -199,7 +199,7 @@ export class EventContentfulDataProvider implements EventDataProvider {
 
     const fetchEventById = () => this.fetchEventById(id);
 
-    await waitForUpdated<FetchEventByIdQuery>(
+    await pollContentfulGql<FetchEventByIdQuery>(
       result.sys.publishedVersion || Infinity,
       fetchEventById,
       'events',

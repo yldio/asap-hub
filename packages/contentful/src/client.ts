@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { createClient } from 'contentful-management';
+import { createClient as createCDAClient } from 'contentful';
 
 export type CreateClientParams = {
   space: string;
@@ -31,3 +32,14 @@ export const getRestClient = async ({
   const environment = await space.getEnvironment(environmentId);
   return environment;
 };
+
+export const getCDAClient = ({
+  space,
+  accessToken,
+  environment,
+}: CreateClientParams) =>
+  createCDAClient({
+    space,
+    accessToken,
+    environment,
+  });

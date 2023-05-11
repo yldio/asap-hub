@@ -78,12 +78,7 @@ export const calendarCreatedContentfulHandlerFactory =
       return 'OK';
     }
 
-    if (!cmsCalendar) {
-      logger.error('Failed to retrieve calendar by ID.');
-      return 'OK';
-    }
-
-    const googleApiMetadata = cmsCalendar.fields?.googleApiMetadata;
+    const googleApiMetadata = cmsCalendar?.fields?.googleApiMetadata;
 
     if (
       googleApiMetadata?.associatedGoogleCalendarId !==

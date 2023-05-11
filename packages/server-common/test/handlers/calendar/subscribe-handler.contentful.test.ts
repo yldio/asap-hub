@@ -252,8 +252,6 @@ describe('Calendar handler', () => {
       getEntry: jest.fn().mockResolvedValue(calendarResponse),
     });
 
-    console.log('calendarResponse', JSON.stringify(calendarResponse, null, 2));
-
     const res = await handler(event);
 
     expect(res).toBe('OK');
@@ -264,6 +262,60 @@ describe('Calendar handler', () => {
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
       resourceId,
       expirationDate: expiration,
+    });
+  });
+
+  describe('Error handling', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    test('Should to throw and alert when the subscription was unsuccessful', async () => {
+      const errorMessage =
+        'Channel id 238c6b46-706e-11eb-9439-0242ac130002 not unique';
+      const error = new Error(errorMessage);
+      subscribe.mockRejectedValueOnce(error);
+
+      const event = getCalendarContentfulEvent({
+        googleCalendarId: 'calendar-1',
+      });
+
+      const calendarResponse = getCalendarFromDeliveryApi({});
+
+      (getCDAClient as jest.Mock).mockReturnValue({
+        getEntry: jest.fn().mockResolvedValue(calendarResponse),
+      });
+
+      await expect(handler(event)).rejects.toThrow(error);
+      expect(alerts.error).toBeCalledWith(error);
+    });
+
+    test('Should alert when the unsubscribe fails', async () => {
+      const errorMessage =
+        'Channel id 238c6b46-706e-11eb-9439-0242ac130002 not unique';
+      const error = new Error(errorMessage);
+      unsubscribe.mockRejectedValueOnce(error);
+
+      const resourceId = 'some-resource-id';
+      const expiration = 123456;
+      subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
+      const event = getCalendarContentfulEvent({
+        googleCalendarId: 'calendar-1',
+      });
+
+      const calendarResponse = getCalendarFromDeliveryApi({
+        associatedGoogleCalendarId: 'calendar-2',
+        resourceId: 'resource-2',
+      });
+
+      (getCDAClient as jest.Mock).mockReturnValue({
+        getEntry: jest.fn().mockResolvedValue(calendarResponse),
+      });
+
+      const res = await handler(event);
+      expect(res).toBe('OK');
+      expect(alerts.error).toBeCalledWith(error);
     });
   });
 });

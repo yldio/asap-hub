@@ -29,19 +29,19 @@ const getJWTCredentialsAWS = getJWTCredentialsFactory({
   region,
 });
 
-const calendarCreatedHandlerFactory = isContentfulEnabledV2
+export const calendarCreatedHandlerFactory = isContentfulEnabledV2
   ? calendarCreatedContentfulHandlerFactory
   : calendarCreatedSquidexHandlerFactory;
 
-const contentfulDeliveryApiConfig = {
+export const contentfulDeliveryApiConfig = {
   environment: contentfulEnvId,
   space: contentfulSpaceId,
   accessToken: contentfulAccessToken,
 };
 
-const path = isContentfulEnabledV2 ? 'contentful' : undefined;
+export const path = isContentfulEnabledV2 ? 'contentful' : undefined;
 
-const webhookHandler = calendarCreatedHandlerFactory(
+export const webhookHandler = calendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
     asapApiUrl,
     googleApiToken,

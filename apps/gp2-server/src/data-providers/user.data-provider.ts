@@ -221,7 +221,7 @@ function getUserSquidexData(
     telephone,
     questions,
     contributingCohorts,
-    avatarUrl,
+    avatar,
     alternativeEmail,
     ...userInput
   } = input;
@@ -237,7 +237,7 @@ function getUserSquidexData(
     secondaryEmail: alternativeEmail,
     questions: mappedQuestions,
     contributingCohorts: mappedCohorts,
-    avatar: avatarUrl ? [avatarUrl] : undefined,
+    avatar: avatar ? [avatar] : undefined,
     social: social ? [social] : undefined,
   });
 }

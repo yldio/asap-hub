@@ -101,9 +101,7 @@ export type UserDataObject = {
   id: string;
   activatedDate?: string;
   alternativeEmail?: string;
-  // TODO: Merge these avatarUrl and avatar when the Asset Data Provider is done
   avatarUrl?: string;
-  avatar?: string;
   biography?: string;
   city?: string;
   connections?: Connection[];
@@ -129,22 +127,21 @@ export type UserDataObject = {
 
 export type UserCreateDataObject = Omit<
   UserDataObject,
-  'id' | 'createdDate' | 'projects' | 'workingGroups' | 'contributingCohorts'
+  | 'id'
+  | 'createdDate'
+  | 'avatarUrl'
+  | 'projects'
+  | 'workingGroups'
+  | 'contributingCohorts'
 > & {
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
+  avatar?: string;
 };
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
-  // TODO: Merge these avatarUrl and avatar when the Asset Data Provider is done
-  | 'avatarUrl'
-  | 'avatar'
-  | 'connections'
-  | 'email'
-  | 'role'
-  | 'createdDate'
-  | 'activatedDate'
+  'avatar' | 'connections' | 'email' | 'role' | 'createdDate' | 'activatedDate'
 >;
 
 export type UserAvatarPostRequest = {

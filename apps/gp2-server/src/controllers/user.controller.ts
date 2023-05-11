@@ -43,7 +43,7 @@ export default class Users implements UserController {
       avatar,
       contentType,
     );
-    return this.update(id, { avatarUrl: assetId });
+    return this.update(id, { avatar: assetId });
   }
 
   async fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListUserResponse> {

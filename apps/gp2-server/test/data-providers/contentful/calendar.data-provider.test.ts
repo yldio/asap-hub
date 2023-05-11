@@ -2,7 +2,7 @@ import { GraphQLError } from 'graphql';
 import {
   getContentfulGraphqlClientMockServer,
   Environment,
-  gp2
+  gp2,
 } from '@asap-hub/contentful';
 
 import {

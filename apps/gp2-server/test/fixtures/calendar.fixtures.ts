@@ -8,6 +8,28 @@ import {
 import { getGraphQLProject } from './project.fixtures';
 import { getGraphQLWorkingGroup } from './working-group.fixtures';
 
+export const getContentfulGraphqlCalendar = (): NonNullable<
+  NonNullable<
+    ContentfulFetchCalendarsQuery['calendarsCollection']
+  >['items'][number]
+> => ({
+  sys: {
+    id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+    firstPublishedAt: '2020-09-23T16:34:26.842Z',
+    publishedAt: '2021-05-14T14:48:46Z',
+    publishedVersion: 42,
+  },
+  ...squidexGraphqlCalendarsFlatData(),
+});
+
+export const getContentfulCalendarsGraphqlResponse =
+  (): ContentfulFetchCalendarsQuery => ({
+    calendarsCollection: {
+      total: 1,
+      items: [getContentfulGraphqlCalendar()],
+    },
+  });
+
 export const getCalendarDataObject = (): gp2.CalendarDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   color: '#2952A3',

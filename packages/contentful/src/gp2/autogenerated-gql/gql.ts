@@ -3,6 +3,12 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
+  '\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n':
+    graphql.CalendarsContentDataFragmentDoc,
+  '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContentData\n    }\n  }\n  \n':
+    graphql.FetchCalendarByIdDocument,
+  '\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContentData\n      }\n    }\n  }\n  \n':
+    graphql.FetchCalendarsDocument,
   '\n  fragment ContributingCohortsContentData on ContributingCohorts {\n    sys {\n      id\n    }\n    name\n  }\n':
     graphql.ContributingCohortsContentDataFragmentDoc,
   '\n  query FetchContributingCohorts(\n    $limit: Int\n    $skip: Int\n    $order: [ContributingCohortsOrder]\n  ) {\n    contributingCohortsCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ContributingCohortsContentData\n      }\n    }\n  }\n  \n':
@@ -19,6 +25,15 @@ const documents = {
     graphql.FetchPagesDocument,
 };
 
+export function gql(
+  source: '\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n',
+): (typeof documents)['\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n'];
+export function gql(
+  source: '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContentData\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContentData\n    }\n  }\n  \n'];
+export function gql(
+  source: '\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContentData\n      }\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContentData\n      }\n    }\n  }\n  \n'];
 export function gql(
   source: '\n  fragment ContributingCohortsContentData on ContributingCohorts {\n    sys {\n      id\n    }\n    name\n  }\n',
 ): (typeof documents)['\n  fragment ContributingCohortsContentData on ContributingCohorts {\n    sys {\n      id\n    }\n    name\n  }\n'];

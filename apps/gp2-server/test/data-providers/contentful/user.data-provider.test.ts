@@ -2069,8 +2069,6 @@ describe('User data provider', () => {
         },
       });
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-        website1: null,
-        website2: null,
         googleScholar: null,
         linkedIn: null,
         researchGate: null,

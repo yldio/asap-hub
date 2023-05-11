@@ -5,7 +5,7 @@ describe('Users Dependencies', () => {
 
   describe('getUserDataProvider', () => {
     it('Should resolve User Squidex Data Provider when the Contentful feature flag is off', async () => {
-      process.env.IS_CONTENTFUL_ENABLED = 'false';
+      process.env.GP2_CONTENTFUL_ENABLED = 'false';
 
       const { UserSquidexDataProvider } = await import(
         '../../src/data-providers/user.data-provider'
@@ -19,7 +19,7 @@ describe('Users Dependencies', () => {
     });
 
     it('Should resolve User Contentful Data Provider when the Contentful feature flag is on', async () => {
-      process.env.IS_CONTENTFUL_ENABLED = 'true';
+      process.env.GP2_CONTENTFUL_ENABLED = 'true';
       const { UserContentfulDataProvider } = await import(
         '../../src/data-providers/contentful/users.data-provider'
       );

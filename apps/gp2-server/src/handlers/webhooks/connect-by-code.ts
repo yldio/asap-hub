@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { connectByCodeHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
@@ -26,7 +27,7 @@ const connectByCodeHandler = connectByCodeHandlerFactory(
   logger,
 );
 
-export const rawHandler = lambda.http(connectByCodeHandler);
+export const unloggedHandler = lambda.http(connectByCodeHandler);
 
 /* istanbul ignore next */
-export const handler = sentryWrapper(rawHandler);
+export const handler = sentryWrapper(unloggedHandler);

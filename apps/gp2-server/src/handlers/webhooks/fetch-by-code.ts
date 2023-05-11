@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { ValidationError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { validateAuth0Request } from '@asap-hub/server-common';

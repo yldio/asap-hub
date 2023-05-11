@@ -22,7 +22,7 @@ export type Scalars = {
    * A date-time string at UTC, such as 2007-12-03T10:15:30Z,
    *     compliant with the 'date-time' format outlined in section 5.6 of
    *     the RFC 3339 profile of the ISO 8601 standard for representation
-   *     of dates and times using the Gregorian data.
+   *     of dates and times using the Gregorian calendar.
    */
   DateTime: any;
   /** The 'Dimension' type represents dimensions as whole numeric values between `1` and `4000`. */

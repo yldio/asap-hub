@@ -9,5 +9,5 @@ const app = appFactory({ logger: getPrettyLogger({ logLevel, logEnabled }) });
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
-  console.log(`ASAP server listening at http://localhost:${port} `);
+  console.log(`ASAP server listening at http://localhost:${port}  `);
 });

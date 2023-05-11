@@ -101,7 +101,7 @@ export type UserDataObject = {
   id: string;
   activatedDate?: string;
   alternativeEmail?: string;
-  // TODO: Merge these two when the Asset Data Provider is done
+  // TODO: Merge these avatarUrl and avatar when the Asset Data Provider is done
   avatarUrl?: string;
   avatar?: string;
   biography?: string;
@@ -137,7 +137,9 @@ export type UserCreateDataObject = Omit<
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
+  // TODO: Merge these avatarUrl and avatar when the Asset Data Provider is done
   | 'avatarUrl'
+  | 'avatar'
   | 'connections'
   | 'email'
   | 'role'

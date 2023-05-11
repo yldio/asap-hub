@@ -31,11 +31,7 @@ export class CalendarContentfulDataProvider
       gp2.FetchCalendarByIdQueryVariables
     >(gp2.FETCH_CALENDAR_BY_ID, { id });
 
-    if (!calendars) {
-      return null;
-    }
-
-    return parseGraphQlCalendarToDataObject(calendars);
+    return calendars ? parseGraphQlCalendarToDataObject(calendars) : null;
   }
 
   async fetch(
@@ -66,7 +62,7 @@ export class CalendarContentfulDataProvider
     return {
       total: calendarsCollection.total,
       items: calendarsCollection.items
-        .filter((x): x is CalendarItem => x !== null)
+        .filter((item): item is CalendarItem => item !== null)
         .map(parseGraphQlCalendarToDataObject),
     };
   }

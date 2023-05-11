@@ -2,6 +2,7 @@ import { GraphQLError } from 'graphql';
 import {
   getContentfulGraphqlClientMockServer,
   Environment,
+  gp2
 } from '@asap-hub/contentful';
 
 import {
@@ -113,7 +114,7 @@ describe('Calendars data provider', () => {
       });
 
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
+        gp2.FETCH_CALENDARS,
         expect.objectContaining({
           limit: 50,
           order: ['name_ASC'],
@@ -225,7 +226,7 @@ describe('Calendars data provider', () => {
 
       expect(result).toEqual(getContentfulCalendarDataObject());
       expect(contentfulGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
+        gp2.FETCH_CALENDAR_BY_ID,
         expect.objectContaining({
           id,
         }),

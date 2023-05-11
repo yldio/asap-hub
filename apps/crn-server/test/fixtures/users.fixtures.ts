@@ -265,6 +265,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
     },
   ],
   workingGroups: [],
+  interestGroups: [],
   connections: [],
 });
 
@@ -304,6 +305,7 @@ export const getUserResponse = (): UserResponse => ({
   city: 'London',
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
+  interestGroups: [],
   expertiseAndResourceDescription: 'some expertise and resource description',
   orcidWorks: [
     {
@@ -372,6 +374,7 @@ export const fetchExpectation: ListUserResponse = {
       lastName: 'Schwatzneger',
       lastModifiedDate: '2021-09-23T20:45:22.000Z',
       workingGroups: [],
+      interestGroups: [],
       orcidWorks: [
         {
           doi: 'test-doi',
@@ -650,6 +653,7 @@ export const getUserDataObject = (): UserDataObject => ({
   city: 'London',
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
+  interestGroups: [],
   orcidWorks: [
     {
       doi: 'test-doi',
@@ -691,6 +695,7 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     createdDate: _createdDate,
     social: _social,
     workingGroups,
+    interestGroups,
     connections,
     alumniLocation,
     alumniSinceDate,

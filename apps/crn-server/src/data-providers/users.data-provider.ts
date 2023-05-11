@@ -381,6 +381,19 @@ export const parseGraphQLWorkingGroup = ({
   };
 };
 
+type GraphQLUserReferencingInterestGroupsContent =
+  NonNullable<GraphQLUserReferencingInterestGroupsContents>[number];
+
+export const parseGraphQLInterestGroup = ({
+  interestGroup,
+}: {
+  interestGroup: GraphQLUserReferencingInterestGroupsContent;
+}) => ({
+  id: interestGroup.id,
+  name: interestGroup.flatData.name || '',
+  active: interestGroup.flatData.active || false,
+});
+
 export const parseGraphQLUserToDataObject = (
   item: GraphQLUser,
 ): UserDataObject => {
@@ -405,6 +418,10 @@ export const parseGraphQLUserToDataObject = (
         isAlumni,
         userId,
       }),
+  );
+
+  const interestGroups = (item.referencingGroupsContents || []).map(
+    (interestGroup) => parseGraphQLInterestGroup({ interestGroup }),
   );
 
   const orcid = item.flatData.orcid || undefined;
@@ -496,6 +513,7 @@ export const parseGraphQLUserToDataObject = (
     teams,
     social,
     workingGroups,
+    interestGroups,
     alumniSinceDate: item.flatData.alumniSinceDate || undefined,
     alumniLocation: item.flatData.alumniLocation || undefined,
     avatarUrl: flatAvatar?.length

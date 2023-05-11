@@ -16,6 +16,7 @@ export type User = Pick<
   | 'avatarUrl'
   | 'algoliaApiKey'
   | 'workingGroups'
+  | 'interestGroups'
   | 'role'
 > & {
   teams: ReadonlyArray<UserResponse['teams'][0]>;

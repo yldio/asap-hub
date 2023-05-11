@@ -254,6 +254,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     createdDate: item.createdDate || item.sys.firstPublishedAt,
     lastModifiedDate: item.sys.publishedAt,
     workingGroups: [],
+    interestGroups: [],
     onboarded: !!item.onboarded,
     email: item.email ?? '',
     contactEmail: item.contactEmail ?? undefined,

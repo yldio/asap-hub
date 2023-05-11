@@ -1,29 +1,38 @@
-import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { GenericError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { parse } from '@asap-hub/server-common';
 import {
-  contentfulAccessToken,
-  contentfulEnvId,
-  contentfulSpaceId,
-} from '../src/config';
-import { ContributingCohortsContentfulDataProvider } from '../src/data-providers/contentful/contributing-cohorts.data-provider';
-import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependencies';
+  getAccessTokenFactory,
+  gp2 as gp2Squidex,
+  SquidexGraphql,
+  SquidexRest,
+} from '@asap-hub/squidex';
+import { appName, baseUrl, clientId, clientSecret } from '../src/config';
+import { ContributingCohortSquidexDataProvider } from '../src/data-providers/contributing-cohort.data-provider';
 
 console.log('Importing contributing cohorts...');
 
-const contentfulGraphQLClient = getContentfulGraphQLClient({
-  space: contentfulSpaceId,
-  accessToken: contentfulAccessToken,
-  environment: contentfulEnvId,
+const getAuthToken = getAccessTokenFactory({
+  clientId,
+  clientSecret,
+  baseUrl,
 });
-
+const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
+  appName,
+  baseUrl,
+});
+const contributingCohortRestClient = new SquidexRest<
+  gp2Squidex.RestContributingCohort,
+  gp2Squidex.InputContributingCohort
+>(getAuthToken, 'contributing-cohorts', {
+  appName,
+  baseUrl,
+});
 const contributingCohortDataProvider =
-  new ContributingCohortsContentfulDataProvider(
-    contentfulGraphQLClient,
-    getContentfulRestClientFactory,
+  new ContributingCohortSquidexDataProvider(
+    squidexGraphqlClient,
+    contributingCohortRestClient,
   );
-
 const app = async () => {
   let imported = 0;
   let alreayExist = 0;

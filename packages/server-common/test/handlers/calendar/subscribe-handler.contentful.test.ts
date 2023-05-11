@@ -136,13 +136,14 @@ describe('Calendar handler', () => {
     expect(calendarDataProviderMock.update).not.toHaveBeenCalled();
   });
 
-  test('Should skip unsubscribe action and subscribe to calendar if there were not previous values of googleApiMetadata (calendar just created)', async () => {
+  test('Should skip unsubscribe action and subscribe to calendar if there were not previous values of googleApiMetadata and revision is 1 (calendar just created)', async () => {
     const resourceId = 'some-resource-id';
     const expiration = 123456;
     subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
     const event = getCalendarContentfulEvent({
       googleCalendarId: 'calendar-1',
+      revision: 1,
     });
 
     const calendarResponse = getCalendarFromDeliveryApi({});
@@ -160,6 +161,28 @@ describe('Calendar handler', () => {
       expirationDate: expiration,
       resourceId,
     });
+  });
+
+  test('Should skip subscribe and unsubscribe if calendar remains the same and revision is bigger than 1', async () => {
+    const event = getCalendarContentfulEvent({
+      googleCalendarId: 'calendar-1',
+      revision: 2,
+    });
+
+    const calendarResponse = getCalendarFromDeliveryApi({
+      associatedGoogleCalendarId: 'calendar-1',
+      revision: 2,
+    });
+
+    (getCDAClient as jest.Mock).mockReturnValue({
+      getEntry: jest.fn().mockResolvedValue(calendarResponse),
+    });
+
+    const res = await handler(event);
+
+    expect(res).toBe('OK');
+    expect(unsubscribe).not.toHaveBeenCalled();
+    expect(subscribe).not.toHaveBeenCalled();
   });
 
   test('Should unsubscribe if google calendar id have changed and there was a previous resourceId and it should subscribe to the new google calendar', async () => {

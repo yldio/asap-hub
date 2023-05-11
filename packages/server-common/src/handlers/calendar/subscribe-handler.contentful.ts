@@ -104,7 +104,9 @@ export const calendarCreatedContentfulHandlerFactory =
     if (
       googleApiMetadata?.associatedGoogleCalendarId !==
         webhookEventGoogleCalendarId ||
-      (!!webhookEventGoogleCalendarId && !googleApiMetadata)
+      (!!webhookEventGoogleCalendarId &&
+        !googleApiMetadata &&
+        webhookEventVersion === 1)
     ) {
       try {
         const { resourceId, expiration } = await subscribe(

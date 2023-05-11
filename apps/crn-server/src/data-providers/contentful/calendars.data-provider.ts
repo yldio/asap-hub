@@ -80,15 +80,11 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
             );
           }
 
-          if (resourceId) {
-            return calendar?.googleApiMetadata?.resourceId === resourceId;
-          }
-
           if (maxExpiration) {
             return calendar?.googleApiMetadata?.expirationDate <= maxExpiration;
           }
 
-          return false;
+          return calendar?.googleApiMetadata?.resourceId === resourceId;
         },
       );
 

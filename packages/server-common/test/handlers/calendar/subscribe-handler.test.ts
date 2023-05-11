@@ -477,6 +477,55 @@ describe('Subscription', () => {
     });
     expect(nock.isDone()).toBe(true);
   });
+
+  test('Should subscribe to the calendar events notifications and return the resourceId when passing an additional path', async () => {
+    getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
+    const path = 'contentful';
+
+    const expiration = 1617196357000;
+
+    nock(googleApiUrl)
+      .post('/oauth2/v4/token')
+      .reply(200, {
+        access_token: '1/8xbJqaOZXSUZbHLl5EOtu1pxz3fmmetKx9W8CV4t79M',
+        scope: `${googleApiUrl}auth/prediction`,
+        token_type: 'Bearer',
+        expires_in: 3600,
+      })
+      .post(`/calendar/v3/calendars/${calendarId}/events/watch`, {
+        id: getCalendarCreateEvent().payload.id,
+        token: googleApiToken,
+        type: 'web_hook',
+        address: `${asapApiUrl}/webhook/events/${path}`,
+        params: {
+          // 30 days, which is a maximum TTL
+          ttl: 2592000,
+        },
+      })
+      .reply(200, {
+        resourceId: 'some-resource-id',
+        expiration: `${expiration}`,
+      });
+
+    const subscribeToEventChangesWithAdditionalPath =
+      subscribeToEventChangesFactory(getJWTCredentials, logger, {
+        googleApiUrl,
+        googleApiToken,
+        asapApiUrl,
+        path,
+      });
+
+    const result = await subscribeToEventChangesWithAdditionalPath(
+      calendarId,
+      getCalendarCreateEvent().payload.id,
+    );
+
+    expect(result).toEqual({
+      resourceId: 'some-resource-id',
+      expiration,
+    });
+    expect(nock.isDone()).toBe(true);
+  });
 });
 
 describe('Unsubscribing', () => {

@@ -147,9 +147,15 @@ describe('Calendar handler', () => {
     });
 
     const calendarResponse = getCalendarFromDeliveryApi({});
+    const calendarResponseWithoutGoogleApiMetadata = {
+      ...calendarResponse,
+      fields: {},
+    };
 
     (getCDAClient as jest.Mock).mockReturnValue({
-      getEntry: jest.fn().mockResolvedValue(calendarResponse),
+      getEntry: jest
+        .fn()
+        .mockResolvedValue(calendarResponseWithoutGoogleApiMetadata),
     });
 
     const res = await handler(event);

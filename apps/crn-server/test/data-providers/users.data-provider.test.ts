@@ -64,7 +64,7 @@ describe('User data provider', () => {
   });
 
   describe('FetchById', () => {
-    test.skip('Should fetch the users from squidex graphql', async () => {
+    test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetchById('user-id');
 
       expect(result).toMatchObject(getUserDataObject());
@@ -681,7 +681,7 @@ describe('User data provider', () => {
       nock.cleanAll();
     });
 
-    test.skip('Should create a user', async () => {
+    test('Should create a user', async () => {
       const userCreateDataObject = getUserCreateDataObject();
 
       nock(baseUrl)
@@ -694,7 +694,7 @@ describe('User data provider', () => {
       expect(result).toEqual(userId);
     });
 
-    test.skip('Should create a user with no team', async () => {
+    test('Should create a user with no team', async () => {
       const userCreateDataObject = {
         ...getUserCreateDataObject(),
         teams: undefined,
@@ -714,7 +714,7 @@ describe('User data provider', () => {
       expect(result).toEqual(userId);
     });
 
-    test.skip('Should throw when it fails to create the user', async () => {
+    test('Should throw when it fails to create the user', async () => {
       nock(baseUrl)
         .post(`/api/content/${appName}/users?publish=true`)
         .reply(500);
@@ -726,7 +726,7 @@ describe('User data provider', () => {
   });
 
   describe('Fetch', () => {
-    test.skip('Should fetch the users from squidex graphql', async () => {
+    test('Should fetch the users from squidex graphql', async () => {
       const result = await usersMockGraphqlServer.fetch({});
 
       expect(result).toMatchObject({ total: 1, items: [getUserDataObject()] });

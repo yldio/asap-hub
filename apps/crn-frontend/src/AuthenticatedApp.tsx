@@ -61,6 +61,14 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     return <Loading />;
   }
 
+  const mockInterestGroup = [
+    {
+      id: '1',
+      name: 'test',
+      active: true,
+    },
+  ];
+
   return (
     <Onboardable>
       {(onboardable) => (
@@ -86,6 +94,13 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
               href: network({})
                 .workingGroups({})
                 .workingGroup({ workingGroupId: id }).$,
+            }),
+          )}
+          interestGroups={mockInterestGroup.map(
+            ({ id, name = '', active }) => ({
+              name,
+              active,
+              href: network({}).groups({}).group({ groupId: id }).$,
             }),
           )}
           aboutHref="https://www.parkinsonsroadmap.org/"

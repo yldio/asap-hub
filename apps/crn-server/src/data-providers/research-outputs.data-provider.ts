@@ -107,6 +107,36 @@ export class ResearchOutputSquidexDataProvider
       throw Boom.notFound();
     }
 
+    // const relatedResearches = await this.squidexGraphqlClient.request<
+    //   FetchResearchOutputsQuery,
+    //   FetchResearchOutputsQueryVariables
+    // >(
+    //   FETCH_RESEARCH_OUTPUTS,
+    //   {
+    //     top: 1000,
+    //     skip: 0,
+    //     filter: `contains(data/relatedResearch/iv, '${id}')`, // `data/relatedResearch/iv contains ${id}`
+    //     withTeams: true,
+    //   },
+    //   {
+    //     includeDrafts: true,
+    //   },
+    // );
+    //
+    // console.log(
+    //   'relatedResearches=',
+    //   relatedResearches?.queryResearchOutputsContentsWithTotal?.items,
+    // );
+    /*
+    const fetched = await this.researchOutputSquidexRestClient.fetch({
+      filter: {
+        op: 'contains',
+        path: 'data.relatedResearch.iv',
+        value: id,
+      },
+    });
+    console.log('fetched', JSON.stringify(fetched, null, 2));
+    console.log('researchOutputContent=', researchOutputContent);*/
     return parseGraphQLResearchOutput(researchOutputContent);
   }
 
@@ -148,6 +178,8 @@ export class ResearchOutputSquidexDataProvider
     const query =
       filtersAndSearch.length === 1 ? filtersAndSearch[0] : filtersAndSearch;
     const filterGraphql = buildODataFilter(query as Filter);
+
+    console.log('filterGraphql=', filterGraphql);
 
     const { queryResearchOutputsContentsWithTotal } =
       await this.squidexGraphqlClient.request<

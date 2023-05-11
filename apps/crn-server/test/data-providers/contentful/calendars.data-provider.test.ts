@@ -379,7 +379,7 @@ describe('Calendars data provider', () => {
   });
 
   describe('Update method', () => {
-    test('Should update the calendar - without google api metadata', async () => {
+    test('Should update the calendar - without new google api metadata - without previous google api metadata', async () => {
       const calendarId = 'calendar-id-1';
 
       const calendarMock = getEntry({});
@@ -398,7 +398,34 @@ describe('Calendars data provider', () => {
       expect(calendarMockUpdated.publish).toHaveBeenCalled();
     });
 
-    test('Should update the calendar - with google api metadata', async () => {
+    test('Should update the calendar - with new google api metadata - without previous google api metadata', async () => {
+      const calendarId = 'calendar-id-1';
+
+      const calendarMock = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(calendarMock);
+      const calendarMockUpdated = getEntry({});
+      calendarMock.update = jest
+        .fn()
+        .mockResolvedValueOnce(calendarMockUpdated);
+
+      await calendarDataProviderMock.update(calendarId, {
+        syncToken: 'token-1',
+      });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(calendarId);
+
+      expect(calendarMock.fields).toEqual({
+        googleApiMetadata: {
+          'en-US': {
+            syncToken: 'token-1',
+          },
+        },
+      });
+      expect(calendarMock.update).toHaveBeenCalled();
+      expect(calendarMockUpdated.publish).toHaveBeenCalled();
+    });
+
+    test('Should update the calendar - with previous google api metadata', async () => {
       const calendarId = 'calendar-id-1';
 
       const calendarMock = getEntry({

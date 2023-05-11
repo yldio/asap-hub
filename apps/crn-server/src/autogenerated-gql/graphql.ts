@@ -6723,49 +6723,15 @@ export type EventContentFragment = Pick<
                           > & {
                             flatData: Pick<
                               UsersFlatDataDto,
-                              | 'biography'
-                              | 'degree'
                               | 'email'
-                              | 'contactEmail'
                               | 'firstName'
-                              | 'institution'
-                              | 'jobTitle'
                               | 'lastModifiedDate'
                               | 'lastName'
-                              | 'country'
-                              | 'city'
-                              | 'onboarded'
-                              | 'orcid'
-                              | 'orcidLastModifiedDate'
-                              | 'orcidLastSyncDate'
-                              | 'expertiseAndResourceTags'
-                              | 'expertiseAndResourceDescription'
-                              | 'role'
-                              | 'responsibilities'
-                              | 'researchInterests'
-                              | 'reachOut'
                               | 'alumniSinceDate'
-                              | 'alumniLocation'
+                              | 'jobTitle'
+                              | 'institution'
                             > & {
                               avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                              orcidWorks: Maybe<
-                                Array<
-                                  Pick<
-                                    UsersDataOrcidWorksChildDto,
-                                    | 'doi'
-                                    | 'id'
-                                    | 'lastModifiedDate'
-                                    | 'publicationDate'
-                                    | 'title'
-                                    | 'type'
-                                  >
-                                >
-                              >;
-                              questions: Maybe<
-                                Array<
-                                  Pick<UsersDataQuestionsChildDto, 'question'>
-                                >
-                              >;
                               teams: Maybe<
                                 Array<
                                   Pick<
@@ -6786,28 +6752,6 @@ export type EventContentFragment = Pick<
                                         }
                                       >
                                     >;
-                                  }
-                                >
-                              >;
-                              social: Maybe<
-                                Array<
-                                  Pick<
-                                    UsersDataSocialChildDto,
-                                    | 'github'
-                                    | 'googleScholar'
-                                    | 'linkedIn'
-                                    | 'researcherId'
-                                    | 'researchGate'
-                                    | 'twitter'
-                                    | 'website1'
-                                    | 'website2'
-                                  >
-                                >
-                              >;
-                              labs: Maybe<
-                                Array<
-                                  Pick<Labs, 'id'> & {
-                                    flatData: Pick<LabsFlatDataDto, 'name'>;
                                   }
                                 >
                               >;
@@ -7182,52 +7126,15 @@ export type FetchEventsQuery = {
                                     > & {
                                       flatData: Pick<
                                         UsersFlatDataDto,
-                                        | 'biography'
-                                        | 'degree'
                                         | 'email'
-                                        | 'contactEmail'
                                         | 'firstName'
-                                        | 'institution'
-                                        | 'jobTitle'
                                         | 'lastModifiedDate'
                                         | 'lastName'
-                                        | 'country'
-                                        | 'city'
-                                        | 'onboarded'
-                                        | 'orcid'
-                                        | 'orcidLastModifiedDate'
-                                        | 'orcidLastSyncDate'
-                                        | 'expertiseAndResourceTags'
-                                        | 'expertiseAndResourceDescription'
-                                        | 'role'
-                                        | 'responsibilities'
-                                        | 'researchInterests'
-                                        | 'reachOut'
                                         | 'alumniSinceDate'
-                                        | 'alumniLocation'
+                                        | 'jobTitle'
+                                        | 'institution'
                                       > & {
                                         avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                                        orcidWorks: Maybe<
-                                          Array<
-                                            Pick<
-                                              UsersDataOrcidWorksChildDto,
-                                              | 'doi'
-                                              | 'id'
-                                              | 'lastModifiedDate'
-                                              | 'publicationDate'
-                                              | 'title'
-                                              | 'type'
-                                            >
-                                          >
-                                        >;
-                                        questions: Maybe<
-                                          Array<
-                                            Pick<
-                                              UsersDataQuestionsChildDto,
-                                              'question'
-                                            >
-                                          >
-                                        >;
                                         teams: Maybe<
                                           Array<
                                             Pick<
@@ -7253,31 +7160,6 @@ export type FetchEventsQuery = {
                                                     };
                                                   }
                                                 >
-                                              >;
-                                            }
-                                          >
-                                        >;
-                                        social: Maybe<
-                                          Array<
-                                            Pick<
-                                              UsersDataSocialChildDto,
-                                              | 'github'
-                                              | 'googleScholar'
-                                              | 'linkedIn'
-                                              | 'researcherId'
-                                              | 'researchGate'
-                                              | 'twitter'
-                                              | 'website1'
-                                              | 'website2'
-                                            >
-                                          >
-                                        >;
-                                        labs: Maybe<
-                                          Array<
-                                            Pick<Labs, 'id'> & {
-                                              flatData: Pick<
-                                                LabsFlatDataDto,
-                                                'name'
                                               >;
                                             }
                                           >
@@ -7641,52 +7523,15 @@ export type FetchEventQuery = {
                               > & {
                                 flatData: Pick<
                                   UsersFlatDataDto,
-                                  | 'biography'
-                                  | 'degree'
                                   | 'email'
-                                  | 'contactEmail'
                                   | 'firstName'
-                                  | 'institution'
-                                  | 'jobTitle'
                                   | 'lastModifiedDate'
                                   | 'lastName'
-                                  | 'country'
-                                  | 'city'
-                                  | 'onboarded'
-                                  | 'orcid'
-                                  | 'orcidLastModifiedDate'
-                                  | 'orcidLastSyncDate'
-                                  | 'expertiseAndResourceTags'
-                                  | 'expertiseAndResourceDescription'
-                                  | 'role'
-                                  | 'responsibilities'
-                                  | 'researchInterests'
-                                  | 'reachOut'
                                   | 'alumniSinceDate'
-                                  | 'alumniLocation'
+                                  | 'jobTitle'
+                                  | 'institution'
                                 > & {
                                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                                  orcidWorks: Maybe<
-                                    Array<
-                                      Pick<
-                                        UsersDataOrcidWorksChildDto,
-                                        | 'doi'
-                                        | 'id'
-                                        | 'lastModifiedDate'
-                                        | 'publicationDate'
-                                        | 'title'
-                                        | 'type'
-                                      >
-                                    >
-                                  >;
-                                  questions: Maybe<
-                                    Array<
-                                      Pick<
-                                        UsersDataQuestionsChildDto,
-                                        'question'
-                                      >
-                                    >
-                                  >;
                                   teams: Maybe<
                                     Array<
                                       Pick<
@@ -7709,28 +7554,6 @@ export type FetchEventQuery = {
                                             }
                                           >
                                         >;
-                                      }
-                                    >
-                                  >;
-                                  social: Maybe<
-                                    Array<
-                                      Pick<
-                                        UsersDataSocialChildDto,
-                                        | 'github'
-                                        | 'googleScholar'
-                                        | 'linkedIn'
-                                        | 'researcherId'
-                                        | 'researchGate'
-                                        | 'twitter'
-                                        | 'website1'
-                                        | 'website2'
-                                      >
-                                    >
-                                  >;
-                                  labs: Maybe<
-                                    Array<
-                                      Pick<Labs, 'id'> & {
-                                        flatData: Pick<LabsFlatDataDto, 'name'>;
                                       }
                                     >
                                   >;
@@ -8077,47 +7900,15 @@ export type GroupsContentFragment = Pick<
               Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                 flatData: Pick<
                   UsersFlatDataDto,
-                  | 'biography'
-                  | 'degree'
                   | 'email'
-                  | 'contactEmail'
                   | 'firstName'
-                  | 'institution'
-                  | 'jobTitle'
                   | 'lastModifiedDate'
                   | 'lastName'
-                  | 'country'
-                  | 'city'
-                  | 'onboarded'
-                  | 'orcid'
-                  | 'orcidLastModifiedDate'
-                  | 'orcidLastSyncDate'
-                  | 'expertiseAndResourceTags'
-                  | 'expertiseAndResourceDescription'
-                  | 'role'
-                  | 'responsibilities'
-                  | 'researchInterests'
-                  | 'reachOut'
                   | 'alumniSinceDate'
-                  | 'alumniLocation'
+                  | 'jobTitle'
+                  | 'institution'
                 > & {
                   avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                  orcidWorks: Maybe<
-                    Array<
-                      Pick<
-                        UsersDataOrcidWorksChildDto,
-                        | 'doi'
-                        | 'id'
-                        | 'lastModifiedDate'
-                        | 'publicationDate'
-                        | 'title'
-                        | 'type'
-                      >
-                    >
-                  >;
-                  questions: Maybe<
-                    Array<Pick<UsersDataQuestionsChildDto, 'question'>>
-                  >;
                   teams: Maybe<
                     Array<
                       Pick<
@@ -8138,28 +7929,6 @@ export type GroupsContentFragment = Pick<
                             }
                           >
                         >;
-                      }
-                    >
-                  >;
-                  social: Maybe<
-                    Array<
-                      Pick<
-                        UsersDataSocialChildDto,
-                        | 'github'
-                        | 'googleScholar'
-                        | 'linkedIn'
-                        | 'researcherId'
-                        | 'researchGate'
-                        | 'twitter'
-                        | 'website1'
-                        | 'website2'
-                      >
-                    >
-                  >;
-                  labs: Maybe<
-                    Array<
-                      Pick<Labs, 'id'> & {
-                        flatData: Pick<LabsFlatDataDto, 'name'>;
                       }
                     >
                   >;
@@ -8341,49 +8110,15 @@ export type FetchGroupsQuery = {
                         > & {
                           flatData: Pick<
                             UsersFlatDataDto,
-                            | 'biography'
-                            | 'degree'
                             | 'email'
-                            | 'contactEmail'
                             | 'firstName'
-                            | 'institution'
-                            | 'jobTitle'
                             | 'lastModifiedDate'
                             | 'lastName'
-                            | 'country'
-                            | 'city'
-                            | 'onboarded'
-                            | 'orcid'
-                            | 'orcidLastModifiedDate'
-                            | 'orcidLastSyncDate'
-                            | 'expertiseAndResourceTags'
-                            | 'expertiseAndResourceDescription'
-                            | 'role'
-                            | 'responsibilities'
-                            | 'researchInterests'
-                            | 'reachOut'
                             | 'alumniSinceDate'
-                            | 'alumniLocation'
+                            | 'jobTitle'
+                            | 'institution'
                           > & {
                             avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                            orcidWorks: Maybe<
-                              Array<
-                                Pick<
-                                  UsersDataOrcidWorksChildDto,
-                                  | 'doi'
-                                  | 'id'
-                                  | 'lastModifiedDate'
-                                  | 'publicationDate'
-                                  | 'title'
-                                  | 'type'
-                                >
-                              >
-                            >;
-                            questions: Maybe<
-                              Array<
-                                Pick<UsersDataQuestionsChildDto, 'question'>
-                              >
-                            >;
                             teams: Maybe<
                               Array<
                                 Pick<
@@ -8404,28 +8139,6 @@ export type FetchGroupsQuery = {
                                       }
                                     >
                                   >;
-                                }
-                              >
-                            >;
-                            social: Maybe<
-                              Array<
-                                Pick<
-                                  UsersDataSocialChildDto,
-                                  | 'github'
-                                  | 'googleScholar'
-                                  | 'linkedIn'
-                                  | 'researcherId'
-                                  | 'researchGate'
-                                  | 'twitter'
-                                  | 'website1'
-                                  | 'website2'
-                                >
-                              >
-                            >;
-                            labs: Maybe<
-                              Array<
-                                Pick<Labs, 'id'> & {
-                                  flatData: Pick<LabsFlatDataDto, 'name'>;
                                 }
                               >
                             >;
@@ -8593,47 +8306,15 @@ export type FetchGroupQuery = {
                   Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
                     flatData: Pick<
                       UsersFlatDataDto,
-                      | 'biography'
-                      | 'degree'
                       | 'email'
-                      | 'contactEmail'
                       | 'firstName'
-                      | 'institution'
-                      | 'jobTitle'
                       | 'lastModifiedDate'
                       | 'lastName'
-                      | 'country'
-                      | 'city'
-                      | 'onboarded'
-                      | 'orcid'
-                      | 'orcidLastModifiedDate'
-                      | 'orcidLastSyncDate'
-                      | 'expertiseAndResourceTags'
-                      | 'expertiseAndResourceDescription'
-                      | 'role'
-                      | 'responsibilities'
-                      | 'researchInterests'
-                      | 'reachOut'
                       | 'alumniSinceDate'
-                      | 'alumniLocation'
+                      | 'jobTitle'
+                      | 'institution'
                     > & {
                       avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                      orcidWorks: Maybe<
-                        Array<
-                          Pick<
-                            UsersDataOrcidWorksChildDto,
-                            | 'doi'
-                            | 'id'
-                            | 'lastModifiedDate'
-                            | 'publicationDate'
-                            | 'title'
-                            | 'type'
-                          >
-                        >
-                      >;
-                      questions: Maybe<
-                        Array<Pick<UsersDataQuestionsChildDto, 'question'>>
-                      >;
                       teams: Maybe<
                         Array<
                           Pick<
@@ -8654,28 +8335,6 @@ export type FetchGroupQuery = {
                                 }
                               >
                             >;
-                          }
-                        >
-                      >;
-                      social: Maybe<
-                        Array<
-                          Pick<
-                            UsersDataSocialChildDto,
-                            | 'github'
-                            | 'googleScholar'
-                            | 'linkedIn'
-                            | 'researcherId'
-                            | 'researchGate'
-                            | 'twitter'
-                            | 'website1'
-                            | 'website2'
-                          >
-                        >
-                      >;
-                      labs: Maybe<
-                        Array<
-                          Pick<Labs, 'id'> & {
-                            flatData: Pick<LabsFlatDataDto, 'name'>;
                           }
                         >
                       >;
@@ -11105,37 +10764,11 @@ export const GroupsContentFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'biography' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'degree' },
-                                  },
-                                  {
-                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'email' },
                                   },
                                   {
                                     kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'contactEmail',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'firstName' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'institution',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'jobTitle' },
                                   },
                                   {
                                     kind: 'Field',
@@ -11150,104 +10783,20 @@ export const GroupsContentFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'country' },
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
+                                    },
                                   },
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'city' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'onboarded' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'orcid' },
+                                    name: { kind: 'Name', value: 'jobTitle' },
                                   },
                                   {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
-                                      value: 'orcidLastModifiedDate',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'orcidLastSyncDate',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'orcidWorks' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'doi' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'lastModifiedDate',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'publicationDate',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'title',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'type' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'questions' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'question',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'expertiseAndResourceTags',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'expertiseAndResourceDescription',
+                                      value: 'institution',
                                     },
                                   },
                                   {
@@ -11300,6 +10849,13 @@ export const GroupsContentFragmentDoc = {
                                                       kind: 'Field',
                                                       name: {
                                                         kind: 'Name',
+                                                        value: 'inactiveSince',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
                                                         value: 'proposal',
                                                       },
                                                       selectionSet: {
@@ -11315,13 +10871,6 @@ export const GroupsContentFragmentDoc = {
                                                         ],
                                                       },
                                                     },
-                                                    {
-                                                      kind: 'Field',
-                                                      name: {
-                                                        kind: 'Name',
-                                                        value: 'inactiveSince',
-                                                      },
-                                                    },
                                                   ],
                                                 },
                                               },
@@ -11329,139 +10878,6 @@ export const GroupsContentFragmentDoc = {
                                           },
                                         },
                                       ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'social' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'github',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'googleScholar',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'linkedIn',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'researcherId',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'researchGate',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'twitter',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'website1',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'website2',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'role' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'responsibilities',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'researchInterests',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'reachOut' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'labs' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'flatData',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'name',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'alumniSinceDate',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'alumniLocation',
                                     },
                                   },
                                 ],

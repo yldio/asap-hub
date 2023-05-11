@@ -4,6 +4,7 @@ import { TeamDataProvider } from '../data-providers/teams.data-provider';
 import {
   AssetDataProvider,
   UserDataProvider,
+  InterestGroupDataProvider,
   WorkingGroupDataProvider,
 } from '../data-providers/types';
 
@@ -20,6 +21,7 @@ type DependencyList = {
   users: DependencySwitch<UserDataProvider>;
   teams: DependencySwitch<TeamDataProvider>;
   externalAuthors: DependencySwitch<ExternalAuthorDataProvider>;
+  interestGroups: DependencySwitch<InterestGroupDataProvider>;
   calendars: DependencySwitch<CalendarDataProvider>;
   events: DependencySwitch<EventDataProvider>;
   workingGroups: DependencySwitch<WorkingGroupDataProvider>;
@@ -43,6 +45,10 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       externalAuthors: {
+        true: undefined,
+        false: undefined,
+      },
+      interestGroups: {
         true: undefined,
         false: undefined,
       },

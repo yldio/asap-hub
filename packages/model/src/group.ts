@@ -16,7 +16,17 @@ export const groupRole = ['Chair', 'Project Manager'] as const;
 export type GroupRole = (typeof groupRole)[number];
 
 export type GroupLeader = {
-  readonly user: UserResponse;
+  readonly user: Pick<
+    UserResponse,
+    | 'id'
+    | 'firstName'
+    | 'lastName'
+    | 'displayName'
+    | 'email'
+    | 'alumniSinceDate'
+    | 'avatarUrl'
+    | 'teams'
+  >;
   readonly role: GroupRole;
   readonly inactiveSinceDate?: string;
 };

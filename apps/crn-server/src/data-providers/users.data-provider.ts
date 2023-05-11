@@ -254,7 +254,7 @@ export const parseGraphQLUserTeamConnections = (
     }
     const team = item.id[0];
     const displayName = team.flatData?.displayName;
-    const teamInactiveSince = team.flatData?.inactiveSince ?? undefined;
+    const teamInactiveSince = team.flatData?.inactiveSince ?? '';
     const proposal = team.flatData?.proposal;
     if (!item.role || !isTeamRole(item.role)) {
       logger.warn(`Invalid team role: ${item.role}`);

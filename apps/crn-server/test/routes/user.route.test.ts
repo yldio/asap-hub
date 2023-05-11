@@ -6,14 +6,14 @@ import Boom from '@hapi/boom';
 import Crypto from 'crypto';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { listGroupsResponse } from '../fixtures/groups.fixtures';
+import { listInterestGroupsResponse } from '../fixtures/interest-groups.fixtures';
 import {
   fetchExpectation,
   getUserResponse,
   updateAvatarBody,
   userPatchRequest,
 } from '../fixtures/users.fixtures';
-import { groupControllerMock } from '../mocks/group-controller.mock';
+import { interestGroupControllerMock } from '../mocks/interest-group-controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
@@ -37,14 +37,14 @@ describe('/users/ route', () => {
     next();
   };
   const appWithMockedAuth = appFactory({
-    groupController: groupControllerMock,
+    interestGroupController: interestGroupControllerMock,
     userController: userControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });
 
   const app = appFactory({
-    groupController: groupControllerMock,
+    interestGroupController: interestGroupControllerMock,
     userController: userControllerMock,
     logger: loggerMock,
   });
@@ -235,7 +235,7 @@ describe('/users/ route', () => {
 
   describe('GET /users/{user_id}/groups', () => {
     test('Should return 404 when user doesnt exist', async () => {
-      groupControllerMock.fetchByUserId.mockRejectedValueOnce(
+      interestGroupControllerMock.fetchByUserId.mockRejectedValueOnce(
         new NotFoundError(undefined, 'user not found'),
       );
 
@@ -247,7 +247,7 @@ describe('/users/ route', () => {
     });
 
     test('Should return 200 when no grups exist', async () => {
-      groupControllerMock.fetchByUserId.mockResolvedValueOnce({
+      interestGroupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -264,8 +264,8 @@ describe('/users/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      groupControllerMock.fetchByUserId.mockResolvedValueOnce(
-        listGroupsResponse,
+      interestGroupControllerMock.fetchByUserId.mockResolvedValueOnce(
+        listInterestGroupsResponse,
       );
 
       const response = await supertest(appWithMockedAuth).get(
@@ -273,12 +273,12 @@ describe('/users/ route', () => {
       );
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(listGroupsResponse);
+      expect(response.body).toEqual(listInterestGroupsResponse);
     });
 
     test('Should call the controller method with the correct parameters', async () => {
       const userId = 'user-id';
-      groupControllerMock.fetchByUserId.mockResolvedValueOnce({
+      interestGroupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -289,7 +289,7 @@ describe('/users/ route', () => {
         search: 'something',
       });
 
-      expect(groupControllerMock.fetchByUserId).toBeCalledWith(userId);
+      expect(interestGroupControllerMock.fetchByUserId).toBeCalledWith(userId);
     });
   });
 

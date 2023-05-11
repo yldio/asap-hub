@@ -7,7 +7,7 @@ import {
 import { validateFetchOptions } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
-import { GroupController } from '../controllers/groups';
+import { InterestGroupController } from '../controllers/interest-groups';
 import { TeamController } from '../controllers/teams';
 import {
   validateTeamParameters,
@@ -15,7 +15,7 @@ import {
 } from '../validation/team.validation';
 
 export const teamRouteFactory = (
-  groupsController: GroupController,
+  interestGroupsController: InterestGroupController,
   teamsController: TeamController,
 ): Router => {
   const teamRoutes = Router();
@@ -74,7 +74,10 @@ export const teamRouteFactory = (
       const { teamId } = validateTeamParameters(params);
       const options = validateFetchOptions(query);
 
-      const result = await groupsController.fetchByTeamId(teamId, options);
+      const result = await interestGroupsController.fetchByTeamId(
+        teamId,
+        options,
+      );
 
       res.json(result);
     },

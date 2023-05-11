@@ -8,18 +8,18 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 
 import {
-  getGroupResponse,
-  getListGroupResponse,
-} from '../fixtures/groups.fixtures';
+  getInterestGroupResponse,
+  getListInterestGroupResponse,
+} from '../fixtures/interest-groups.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
-import { groupControllerMock } from '../mocks/group-controller.mock';
+import { interestGroupControllerMock } from '../mocks/interest-group-controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/groups/ route', () => {
   const app = appFactory({
     eventController: eventControllerMock,
-    groupController: groupControllerMock,
+    interestGroupController: interestGroupControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });
@@ -30,7 +30,7 @@ describe('/groups/ route', () => {
 
   describe('GET /groups', () => {
     test('Should return 200 when no grups exist', async () => {
-      groupControllerMock.fetch.mockResolvedValueOnce({
+      interestGroupControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -45,15 +45,17 @@ describe('/groups/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      groupControllerMock.fetch.mockResolvedValueOnce(getListGroupResponse());
+      interestGroupControllerMock.fetch.mockResolvedValueOnce(
+        getListInterestGroupResponse(),
+      );
 
       const response = await supertest(app).get('/groups/');
 
-      expect(response.body).toEqual(getListGroupResponse());
+      expect(response.body).toEqual(getListInterestGroupResponse());
     });
 
     test('Should call the controller with the right parameters', async () => {
-      groupControllerMock.fetch.mockResolvedValueOnce({
+      interestGroupControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -70,7 +72,7 @@ describe('/groups/ route', () => {
         search: 'something',
       };
 
-      expect(groupControllerMock.fetch).toBeCalledWith(expectedParams);
+      expect(interestGroupControllerMock.fetch).toBeCalledWith(expectedParams);
     });
 
     describe('Parameter validation', () => {
@@ -93,7 +95,9 @@ describe('/groups/ route', () => {
 
   describe('GET /groups/{groupId}', () => {
     test('Should return 404 when no group exist', async () => {
-      groupControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
+      interestGroupControllerMock.fetchById.mockRejectedValueOnce(
+        Boom.notFound(),
+      );
 
       const response = await supertest(app).get('/groups/123');
 
@@ -101,11 +105,13 @@ describe('/groups/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      groupControllerMock.fetchById.mockResolvedValueOnce(getGroupResponse());
+      interestGroupControllerMock.fetchById.mockResolvedValueOnce(
+        getInterestGroupResponse(),
+      );
 
       const response = await supertest(app).get('/groups/123');
 
-      expect(response.body).toEqual(getGroupResponse());
+      expect(response.body).toEqual(getInterestGroupResponse());
     });
   });
 

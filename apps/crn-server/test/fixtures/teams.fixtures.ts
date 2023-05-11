@@ -32,8 +32,8 @@ export const getContentfulGraphqlTeam = (): NonNullable<
 > => ({
   sys: {
     id: 'team-id-0',
-    firstPublishedAt: '2020-09-23T20:33:36Z',
-    publishedAt: '2020-11-26T11:56:04Z',
+    firstPublishedAt: '2020-09-23T20:33:36.000Z',
+    publishedAt: '2020-11-26T11:56:04.000Z',
     publishedVersion: 42,
   },
   displayName: 'Team A',

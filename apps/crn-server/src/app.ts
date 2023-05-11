@@ -52,7 +52,9 @@ import Calendars from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
 import Events from './controllers/events';
-import Groups, { GroupController } from './controllers/groups';
+import InterestGroups, {
+  InterestGroupController,
+} from './controllers/interest-groups';
 import Labs, { LabsController } from './controllers/labs';
 import News, { NewsController } from './controllers/news';
 import Pages, { PageController } from './controllers/pages';
@@ -76,6 +78,7 @@ import { AssetContentfulDataProvider } from './data-providers/contentful/assets.
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-authors.data-provider';
+import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-groups.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
@@ -87,10 +90,7 @@ import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
 } from './data-providers/external-authors.data-provider';
-import {
-  GroupDataProvider,
-  GroupSquidexDataProvider,
-} from './data-providers/groups.data-provider';
+import { InterestGroupSquidexDataProvider } from './data-providers/interest-groups.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import { PageSquidexDataProvider } from './data-providers/pages.data-provider';
 import {
@@ -115,6 +115,7 @@ import {
 } from './data-providers/tutorials.data-provider';
 import {
   AssetDataProvider,
+  InterestGroupDataProvider,
   NewsDataProvider,
   PageDataProvider,
   UserDataProvider,
@@ -130,7 +131,7 @@ import { calendarRouteFactory } from './routes/calendars.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
 import { eventRouteFactory } from './routes/events.route';
-import { groupRouteFactory } from './routes/groups.route';
+import { interestGroupRouteFactory } from './routes/interest-groups.route';
 import { labsRouteFactory } from './routes/labs.route';
 import { newsRouteFactory } from './routes/news.route';
 import { pageRouteFactory } from './routes/pages.route';
@@ -240,9 +241,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const discoverDataProvider =
     libs.discoverDataProvider ||
     new DiscoverSquidexDataProvider(squidexGraphqlClient);
-  const groupDataProvider =
-    libs.groupDataProvider ||
-    new GroupSquidexDataProvider(squidexGraphqlClient);
   const newsSquidexDataProvider =
     libs.newsSquidexDataProvider || new NewsSquidexDataProvider(newsRestClient);
   const newsContentfulDataProvider =
@@ -330,6 +328,26 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.assetDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'assets',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+  featureFlagDependencySwitch.setDependency(
+    'interestGroups',
+    libs.interestGroupSquidexDataProvider ||
+      new InterestGroupSquidexDataProvider(squidexGraphqlClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'interestGroups',
+    libs.interestGroupContentfulDataProvider ||
+      new InterestGroupContentfulDataProvider(contentfulGraphQLClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+  const interestGroupDataProvider =
+    libs.interestGroupDataProvider ||
+    featureFlagDependencySwitch.getDependency(
+      'interestGroups',
       'IS_CONTENTFUL_ENABLED_V2',
     );
   const reminderDataProvider =
@@ -462,8 +480,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const discoverController =
     libs.discoverController || new Discover(discoverDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
-  const groupController =
-    libs.groupController || new Groups(groupDataProvider, userDataProvider);
+  const interestGroupController =
+    libs.interestGroupController ||
+    new InterestGroups(interestGroupDataProvider, userDataProvider);
   const pageController = libs.pageController || new Pages(pageDataProvider);
   const reminderController =
     libs.reminderController || new Reminders(reminderDataProvider);
@@ -503,7 +522,10 @@ export const appFactory = (libs: Libs = {}): Express => {
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const discoverRoutes = discoverRouteFactory(discoverController);
   const eventRoutes = eventRouteFactory(eventController);
-  const groupRoutes = groupRouteFactory(groupController, eventController);
+  const interestGroupRoutes = interestGroupRouteFactory(
+    interestGroupController,
+    eventController,
+  );
   const labsRoutes = labsRouteFactory(labsController);
   const newsRoutes = newsRouteFactory(newsController);
   const pageRoutes = pageRouteFactory(pageController);
@@ -512,10 +534,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     researchOutputController,
   );
   const researchTagsRoutes = researchTagsRouteFactory(researchTagController);
-  const teamRoutes = teamRouteFactory(groupController, teamController);
+  const teamRoutes = teamRouteFactory(interestGroupController, teamController);
   const tutorialsRoutes = tutorialsRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
-  const userRoutes = userRouteFactory(userController, groupController);
+  const userRoutes = userRouteFactory(userController, interestGroupController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);
 
   /**
@@ -564,7 +586,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
   app.use(eventRoutes);
-  app.use(groupRoutes);
+  app.use(interestGroupRoutes);
   app.use(labsRoutes);
   app.use(newsRoutes);
   app.use(reminderRoutes);
@@ -598,7 +620,7 @@ export type Libs = {
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;
   eventController?: EventController;
-  groupController?: GroupController;
+  interestGroupController?: InterestGroupController;
   labsController?: LabsController;
   newsController?: NewsController;
   pageController?: PageController;
@@ -622,7 +644,9 @@ export type Libs = {
   externalAuthorSquidexDataProvider?: ExternalAuthorDataProvider;
   externalAuthorContentfulDataProvider?: ExternalAuthorDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
-  groupDataProvider?: GroupDataProvider;
+  interestGroupDataProvider?: InterestGroupDataProvider;
+  interestGroupSquidexDataProvider?: InterestGroupDataProvider;
+  interestGroupContentfulDataProvider?: InterestGroupDataProvider;
   labDataProvider?: LabDataProvider;
   newsContentfulDataProvider?: NewsDataProvider;
   newsDataProvider?: NewsDataProvider;

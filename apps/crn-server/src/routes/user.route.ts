@@ -10,7 +10,7 @@ import { isUserOnboardable } from '@asap-hub/validation';
 import Boom, { isBoom } from '@hapi/boom';
 import { Response, Router } from 'express';
 import parseURI from 'parse-data-url';
-import { GroupController } from '../controllers/groups';
+import { InterestGroupController } from '../controllers/interest-groups';
 import { UserController } from '../controllers/users';
 import {
   validateUserParameters,
@@ -50,7 +50,7 @@ export const userPublicRouteFactory = (
 
 export const userRouteFactory = (
   userController: UserController,
-  groupsController: GroupController,
+  interestGroupsController: InterestGroupController,
 ): Router => {
   const userRoutes = Router();
 
@@ -93,7 +93,7 @@ export const userRouteFactory = (
 
       const { userId } = validateUserParameters(params);
 
-      const result = await groupsController.fetchByUserId(userId);
+      const result = await interestGroupsController.fetchByUserId(userId);
 
       res.json(result);
     },

@@ -18,9 +18,9 @@ import {
   getEventCreateDataObject,
 } from '../fixtures/events.fixtures';
 import {
-  getSquidexGraphqlGroup,
-  getSquidexGroupGraphqlResponse,
-} from '../fixtures/groups.fixtures';
+  getSquidexGraphqlInterestGroup,
+  getSquidexInterestGroupGraphqlResponse,
+} from '../fixtures/interest-groups.fixtures';
 import { getSquidexWorkingGroupGraphqlResponse } from '../fixtures/working-groups.fixtures';
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
@@ -248,9 +248,9 @@ describe('Event data provider', () => {
     });
     describe('Filters', () => {
       describe.each`
-        typeOfGroup   | filterField         | groupGraphqlSquidexResponse              | graphqlField
-        ${'Interest'} | ${'groupId'}        | ${getSquidexGroupGraphqlResponse}        | ${'findGroupsContent'}
-        ${'Working'}  | ${'workingGroupId'} | ${getSquidexWorkingGroupGraphqlResponse} | ${'findWorkingGroupsContent'}
+        typeOfGroup   | filterField         | groupGraphqlSquidexResponse               | graphqlField
+        ${'Interest'} | ${'groupId'}        | ${getSquidexInterestGroupGraphqlResponse} | ${'findGroupsContent'}
+        ${'Working'}  | ${'workingGroupId'} | ${getSquidexWorkingGroupGraphqlResponse}  | ${'findWorkingGroupsContent'}
       `(
         '$typeOfGroup Group filter',
         ({ filterField, groupGraphqlSquidexResponse, graphqlField }) => {
@@ -740,8 +740,8 @@ describe('Event data provider', () => {
         const eventGraphqlResponse = getSquidexEventGraphqlResponse();
         eventGraphqlResponse.findEventsContent!.flatData.calendar![0]!.referencingGroupsContents =
           [
-            getSquidexGraphqlGroup(),
-            { ...getSquidexGraphqlGroup(), id: 'group-2' },
+            getSquidexGraphqlInterestGroup(),
+            { ...getSquidexGraphqlInterestGroup(), id: 'group-2' },
           ];
 
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -755,7 +755,7 @@ describe('Event data provider', () => {
       test('Should return one group when event calendar is referenced by single group', async () => {
         const eventGraphqlResponse = getSquidexEventGraphqlResponse();
         eventGraphqlResponse.findEventsContent!.flatData.calendar![0]!.referencingGroupsContents =
-          [getSquidexGraphqlGroup()];
+          [getSquidexGraphqlInterestGroup()];
 
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           eventGraphqlResponse,

@@ -4,7 +4,7 @@ import { EventBridgeEvent } from 'aws-lambda';
 import { GroupPayload } from '../../../src/handlers/event-bus';
 import { indexGroupEventsHandler } from '../../../src/handlers/event/index-group-events-handler';
 import { getListEventResponse } from '../../fixtures/events.fixtures';
-import { getGroupEvent } from '../../fixtures/groups.fixtures';
+import { getInterestGroupEvent } from '../../fixtures/interest-groups.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event-controller.mock';
@@ -12,10 +12,10 @@ import { eventControllerMock } from '../../mocks/event-controller.mock';
 const mapPayload = toPayload('event');
 
 const possibleEvents: [string, EventBridgeEvent<GroupEvent, GroupPayload>][] = [
-  ['created', getGroupEvent('group-id', 'GroupsCreated')],
-  ['updated', getGroupEvent('group-id', 'GroupsUpdated')],
-  ['unpublished', getGroupEvent('group-id', 'GroupsUnpublished')],
-  ['deleted', getGroupEvent('group-id', 'GroupsDeleted')],
+  ['created', getInterestGroupEvent('group-id', 'GroupsCreated')],
+  ['updated', getInterestGroupEvent('group-id', 'GroupsUpdated')],
+  ['unpublished', getInterestGroupEvent('group-id', 'GroupsUnpublished')],
+  ['deleted', getInterestGroupEvent('group-id', 'GroupsDeleted')],
 ];
 
 describe('Index Events on Group event handler', () => {
@@ -29,7 +29,7 @@ describe('Index Events on Group event handler', () => {
     eventControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getGroupEvent('group-id', 'GroupsCreated')),
+      indexHandler(getInterestGroupEvent('group-id', 'GroupsCreated')),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
@@ -42,7 +42,7 @@ describe('Index Events on Group event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getGroupEvent('group-id', 'GroupsUpdated')),
+      indexHandler(getInterestGroupEvent('group-id', 'GroupsUpdated')),
     ).rejects.toThrow(algoliaError);
   });
 

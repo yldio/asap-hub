@@ -14,7 +14,7 @@ import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
 import { getSquidexGraphqlEvent } from '../fixtures/events.fixtures';
 import { getGraphQLExternalAuthor } from '../fixtures/external-authors.fixtures';
-import { getSquidexGraphqlGroup } from '../fixtures/groups.fixtures';
+import { getSquidexGraphqlInterestGroup } from '../fixtures/interest-groups.fixtures';
 import { getSquidexGraphqlLab } from '../fixtures/labs.fixtures';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
 import { getSquidexGraphqlResearchTags } from '../fixtures/research-tag.fixtures';
@@ -41,7 +41,7 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     Int: () => 8,
     Instant: () => '2021-10-12T15:42:05Z',
     JsonScalar: () => {},
-    Groups: () => getSquidexGraphqlGroup(),
+    Groups: () => getSquidexGraphqlInterestGroup(),
     GroupsResultDto: resultDto,
     ResearchOutputs: () => getSquidexGraphqlResearchOutput(),
     ResearchOutputsResultDto: resultDto,

@@ -96,6 +96,7 @@ input AssetFilter {
 type AssetLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
+  interestGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupsCollection
   newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): NewsCollection
   usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
 }
@@ -173,6 +174,7 @@ input CalendarsFilter {
 type CalendarsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
+  interestGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupsCollection
   workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
@@ -934,6 +936,210 @@ input ImageTransformOptions {
   width: Dimension
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroupLeaders)"""
+type InterestGroupLeaders implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  inactiveSinceDate(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): InterestGroupLeadersLinkingCollections
+  role(locale: String): String
+  sys: Sys!
+  user(locale: String, preview: Boolean): Users
+}
+
+type InterestGroupLeadersCollection {
+  items: [InterestGroupLeaders]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input InterestGroupLeadersFilter {
+  AND: [InterestGroupLeadersFilter]
+  OR: [InterestGroupLeadersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  user: cfUsersNestedFilter
+  user_exists: Boolean
+}
+
+type InterestGroupLeadersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  interestGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupsCollection
+}
+
+enum InterestGroupLeadersOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups)"""
+type InterestGroups implements Entry {
+  active(locale: String): Boolean
+  calendar(locale: String, preview: Boolean): Calendars
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  googleDrive(locale: String): String
+  leadersCollection(limit: Int = 100, locale: String, order: [InterestGroupsLeadersCollectionOrder], preview: Boolean, skip: Int = 0, where: InterestGroupLeadersFilter): InterestGroupsLeadersCollection
+  linkedFrom(allowedLocales: [String]): InterestGroupsLinkingCollections
+  name(locale: String): String
+  slack(locale: String): String
+  sys: Sys!
+  tags(locale: String): [String]
+  teamsCollection(limit: Int = 100, locale: String, order: [InterestGroupsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): InterestGroupsTeamsCollection
+  thumbnail(locale: String, preview: Boolean): Asset
+}
+
+type InterestGroupsCollection {
+  items: [InterestGroups]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input InterestGroupsFilter {
+  AND: [InterestGroupsFilter]
+  OR: [InterestGroupsFilter]
+  active: Boolean
+  active_exists: Boolean
+  active_not: Boolean
+  calendar: cfCalendarsNestedFilter
+  calendar_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  googleDrive: String
+  googleDrive_contains: String
+  googleDrive_exists: Boolean
+  googleDrive_in: [String]
+  googleDrive_not: String
+  googleDrive_not_contains: String
+  googleDrive_not_in: [String]
+  leaders: cfInterestGroupLeadersNestedFilter
+  leadersCollection_exists: Boolean
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  slack: String
+  slack_contains: String
+  slack_exists: Boolean
+  slack_in: [String]
+  slack_not: String
+  slack_not_contains: String
+  slack_not_in: [String]
+  sys: SysFilter
+  tags_contains_all: [String]
+  tags_contains_none: [String]
+  tags_contains_some: [String]
+  tags_exists: Boolean
+  teams: cfTeamsNestedFilter
+  teamsCollection_exists: Boolean
+  thumbnail_exists: Boolean
+}
+
+type InterestGroupsLeadersCollection {
+  items: [InterestGroupLeaders]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum InterestGroupsLeadersCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type InterestGroupsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum InterestGroupsOrder {
+  active_ASC
+  active_DESC
+  googleDrive_ASC
+  googleDrive_DESC
+  name_ASC
+  name_DESC
+  slack_ASC
+  slack_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type InterestGroupsTeamsCollection {
+  items: [Teams]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum InterestGroupsTeamsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
 scalar JSON
 
@@ -1327,6 +1533,10 @@ type Query {
   externalAuthorsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsOrder], preview: Boolean, skip: Int = 0, where: ExternalAuthorsFilter): ExternalAuthorsCollection
   externalTools(id: String!, locale: String, preview: Boolean): ExternalTools
   externalToolsCollection(limit: Int = 100, locale: String, order: [ExternalToolsOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): ExternalToolsCollection
+  interestGroupLeaders(id: String!, locale: String, preview: Boolean): InterestGroupLeaders
+  interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [InterestGroupLeadersOrder], preview: Boolean, skip: Int = 0, where: InterestGroupLeadersFilter): InterestGroupLeadersCollection
+  interestGroups(id: String!, locale: String, preview: Boolean): InterestGroups
+  interestGroupsCollection(limit: Int = 100, locale: String, order: [InterestGroupsOrder], preview: Boolean, skip: Int = 0, where: InterestGroupsFilter): InterestGroupsCollection
   labs(id: String!, locale: String, preview: Boolean): Labs
   labsCollection(limit: Int = 100, locale: String, order: [LabsOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): LabsCollection
   media(id: String!, locale: String, preview: Boolean): Media
@@ -1537,6 +1747,7 @@ input TeamsFilter {
 type TeamsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
+  interestGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupsCollection
   teamMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): TeamMembershipCollection
 }
 
@@ -1906,6 +2117,7 @@ enum UsersLabsCollectionOrder {
 type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
+  interestGroupLeadersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupLeadersCollection
   workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupLeadersOrWorkingGroupMembersCollection
   workingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupMembersCollection
@@ -2410,6 +2622,30 @@ input cfExternalToolsNestedFilter {
   url_not: String
   url_not_contains: String
   url_not_in: [String]
+}
+
+input cfInterestGroupLeadersNestedFilter {
+  AND: [cfInterestGroupLeadersNestedFilter]
+  OR: [cfInterestGroupLeadersNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  user_exists: Boolean
 }
 
 input cfLabsNestedFilter {

@@ -2,6 +2,7 @@ import {
   GroupDataObject,
   GroupEvent,
   GroupResponse,
+  GroupLeader,
   ListGroupResponse,
 } from '@asap-hub/model';
 import { RestGroup } from '@asap-hub/squidex';
@@ -13,10 +14,12 @@ import {
 import { appName, baseUrl } from '../../src/config';
 import { GroupPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
-import { getSquidexGraphqlTeam } from './teams.fixtures';
-import { getGraphQLUser, getUserResponse } from './users.fixtures';
+import {
+  getSquidexGraphqlTeam,
+  getContentfulGraphqlTeam,
+} from './teams.fixtures';
 
-export const queryGroupsResponse = {
+export const queryInterestGroupsResponse = {
   data: {
     queryGroupsContentsWithTotal: {
       total: 2,
@@ -94,49 +97,18 @@ export const queryGroupsResponse = {
                     lastModified: '2020-12-11T15:06:26Z',
                     version: 42,
                     flatData: {
+                      alumniSinceDate: null,
                       avatar: [
                         {
                           id: 'asset-id-1',
                         },
                       ],
-                      social: [
-                        {
-                          github: 'fampinheiro',
-                          googleScholar: null,
-                          linkedIn: 'fampinheiro',
-                          researcherId: null,
-                          researchGate: null,
-                          twitter: 'fampinheiro',
-                        },
-                      ],
-                      biography:
-                        'Filipe is an Engineering Manager who works closely with our clients to ensure process and technical standards improvements. He previously worked at startups and multinational companies, leading tech projects in mobile and web apps, before bringing this gathered experience to YLD.',
-                      degree: null,
                       email: 'filipe@yld.io',
                       firstName: 'Filipe',
-                      institution: 'YLD',
-                      jobTitle: 'Software Engineer',
                       lastModifiedDate: null,
                       lastName: 'Pinheiro',
-                      orcid: null,
-                      orcidLastModifiedDate: null,
-                      orcidLastSyncDate: null,
-                      orcidWorks: [],
-                      labs: [
-                        { id: 'cd7be4904', flatData: { name: 'Manchester' } },
-                        { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-                      ],
-                      questions: [
-                        {
-                          question: 'What is the meaning of life?',
-                        },
-                        {
-                          question: 'Question 2',
-                        },
-                      ],
-                      expertiseAndResourceTags: ['React'],
-                      expertiseAndResourceDescription:
-                        "In addition to his expertise in not for profit management, Todd has scientific experience in animal models and the cell biology of Parkinson's disease.",
+                      jobTitle: 'Manager',
+                      institution: 'MJFF',
                       teams: [
                         {
                           role: 'Co-PI (Core Leadership)',
@@ -149,7 +121,6 @@ export const queryGroupsResponse = {
                               version: 42,
                               flatData: {
                                 displayName: 'Rio, D',
-                                proposal: [],
                               },
                             },
                           ],
@@ -168,36 +139,14 @@ export const queryGroupsResponse = {
                     lastModified: '2020-12-11T15:06:26Z',
                     version: 42,
                     flatData: {
+                      alumniSinceDate: null,
                       avatar: [],
-                      social: [
-                        {
-                          github: 'johnytiago',
-                          googleScholar: null,
-                          linkedIn: null,
-                          researcherId: null,
-                          researchGate: null,
-                          twitter: null,
-                        },
-                      ],
-                      biography: null,
-                      degree: null,
                       email: 'joao.tiago@yld.io',
                       firstName: 'João',
-                      institution: 'YLD',
-                      jobTitle: null,
                       lastModifiedDate: null,
                       lastName: 'Tiago',
-                      orcid: null,
-                      orcidLastModifiedDate: null,
-                      orcidLastSyncDate: null,
-                      orcidWorks: [],
-                      questions: [],
-                      expertiseAndResourceTags: [],
-                      expertiseAndResourceDescription: null,
-                      labs: [
-                        { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
-                        { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-                      ],
+                      jobTitle: 'Manager',
+                      institution: 'MJFF',
                       teams: [],
                     },
                   },
@@ -243,7 +192,7 @@ export const queryGroupsResponse = {
   },
 };
 
-export const listGroupsResponse: ListGroupResponse = {
+export const listInterestGroupsResponse: ListGroupResponse = {
   total: 2,
   items: [
     {
@@ -281,22 +230,10 @@ export const listGroupsResponse: ListGroupResponse = {
         {
           user: {
             id: 'user-id-1',
-            onboarded: true,
-            createdDate: '2020-12-11T14:33:50.000Z',
             displayName: 'Filipe Pinheiro',
             firstName: 'Filipe',
             lastName: 'Pinheiro',
-            biography:
-              'Filipe is an Engineering Manager who works closely with our clients to ensure process and technical standards improvements. He previously worked at startups and multinational companies, leading tech projects in mobile and web apps, before bringing this gathered experience to YLD.',
             email: 'filipe@yld.io',
-            institution: 'YLD',
-            jobTitle: 'Software Engineer',
-            orcidWorks: [],
-            questions: ['What is the meaning of life?', 'Question 2'],
-            expertiseAndResourceTags: ['React'],
-            expertiseAndResourceDescription:
-              "In addition to his expertise in not for profit management, Todd has scientific experience in animal models and the cell biology of Parkinson's disease.",
-            lastModifiedDate: '2020-12-11T14:33:50.000Z',
             teams: [
               {
                 id: 'team-id-2',
@@ -304,50 +241,22 @@ export const listGroupsResponse: ListGroupResponse = {
                 displayName: 'Rio, D',
               },
             ],
-            workingGroups: [],
-            interestGroups: [],
-            social: {
-              github: 'fampinheiro',
-              linkedIn: 'fampinheiro',
-              twitter: 'fampinheiro',
-            },
-            avatarUrl: `${baseUrl}/api/assets/${appName}/asset-id-1`,
-            role: 'Guest',
-            labs: [
-              { id: 'cd7be4904', name: 'Manchester' },
-              { id: 'cd7be4905', name: 'Glasgow' },
-            ],
           },
           role: 'Chair',
         },
         {
           user: {
             id: 'user-id-2',
-            onboarded: true,
-            createdDate: '2020-12-11T14:33:50.000Z',
             displayName: 'João Tiago',
             firstName: 'João',
             lastName: 'Tiago',
             email: 'joao.tiago@yld.io',
-            institution: 'YLD',
-            orcidWorks: [],
-            questions: [],
-            expertiseAndResourceTags: [],
-            lastModifiedDate: '2020-12-11T14:33:50.000Z',
             teams: [],
-            social: { github: 'johnytiago' },
-            role: 'Guest',
-            workingGroups: [],
-            interestGroups: [],
-            labs: [
-              { id: 'cd7be4902', name: 'Barcelona' },
-              { id: 'cd7be4905', name: 'Glasgow' },
-            ],
           },
           role: 'Project Manager',
         },
       ],
-      contactEmails: [],
+      contactEmails: ['joao.tiago@yld.io'],
       calendars: [
         {
           id: 'hub@asap.science',
@@ -387,7 +296,58 @@ export const listGroupsResponse: ListGroupResponse = {
   ],
 };
 
-export const getSquidexGraphqlGroup = (): NonNullable<
+const getLeaderResponse = (): GroupLeader['user'] => ({
+  id: 'user-id-1',
+  alumniSinceDate: undefined,
+  email: 'H@rdy.io',
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  displayName: 'Tom Hardy',
+  teams: [
+    {
+      id: 'team-id-0',
+      displayName: 'Team A',
+      role: 'Project Manager',
+      teamInactiveSince: '',
+    },
+  ],
+});
+
+const getSquidexGraphQLLeader = () => ({
+  id: 'user-id-1',
+  lastModified: '2021-09-23T20:45:22.000Z',
+  version: 42,
+  created: '2020-09-23T20:45:22Z',
+  flatData: {
+    alumniSinceDate: null,
+    email: 'H@rdy.io',
+    firstName: 'Tom',
+    lastName: 'Hardy',
+    lastModifiedDate: '2021-09-23T20:45:22.000Z',
+    jobTitle: 'Manager',
+    institution: 'MJFF',
+    avatar: null,
+    teams: [
+      {
+        role: 'Project Manager',
+        inactiveSinceDate: null,
+        id: [
+          {
+            __typename: 'Teams',
+            id: 'team-id-0',
+            flatData: {
+              displayName: 'Team A',
+              inactiveSince: null,
+              proposal: null,
+            },
+          },
+        ],
+      },
+    ],
+  },
+});
+
+export const getSquidexGraphqlInterestGroup = (): NonNullable<
   FetchGroupQuery['findGroupsContent']
 > => ({
   id: 'group-id-1',
@@ -424,37 +384,39 @@ export const getSquidexGraphqlGroup = (): NonNullable<
     leaders: [
       {
         role: 'Chair',
-        inactiveSinceDate: undefined,
-        user: [getGraphQLUser()],
+        inactiveSinceDate: null,
+        user: [getSquidexGraphQLLeader()],
       },
       {
         role: 'Project Manager',
-        inactiveSinceDate: undefined,
-        user: [getGraphQLUser()],
+        inactiveSinceDate: null,
+        user: [getSquidexGraphQLLeader()],
       },
     ],
   },
 });
 
-export const getSquidexGroupsGraphqlResponse = (): FetchGroupsQuery => ({
-  queryGroupsContentsWithTotal: {
-    total: 1,
-    items: [getSquidexGraphqlGroup()],
-  },
+export const getSquidexInterestGroupsGraphqlResponse =
+  (): FetchGroupsQuery => ({
+    queryGroupsContentsWithTotal: {
+      total: 1,
+      items: [getSquidexGraphqlInterestGroup()],
+    },
+  });
+
+export const getSquidexInterestGroupGraphqlResponse = (): FetchGroupQuery => ({
+  findGroupsContent: getSquidexGraphqlInterestGroup(),
 });
 
-export const getSquidexGroupGraphqlResponse = (): FetchGroupQuery => ({
-  findGroupsContent: getSquidexGraphqlGroup(),
-});
+export const getInterestGroupResponse = (): GroupResponse =>
+  getInterestGroupDataObject();
 
-export const getGroupResponse = (): GroupResponse => getGroupDataObject();
-
-export const getListGroupResponse = (): ListGroupResponse => ({
+export const getListInterestGroupResponse = (): ListGroupResponse => ({
   total: 1,
-  items: [getGroupResponse()],
+  items: [getInterestGroupResponse()],
 });
 
-export const getGroupPayload = (
+export const getInterestGroupPayload = (
   id: string,
   type: GroupEvent,
 ): GroupPayload => ({
@@ -471,13 +433,17 @@ export const getGroupPayload = (
   },
 });
 
-export const getGroupEvent = (
+export const getInterestGroupEvent = (
   id: string,
   eventType: GroupEvent,
 ): EventBridgeEvent<GroupEvent, GroupPayload> =>
-  createEventBridgeEventMock(getGroupPayload(id, eventType), eventType, id);
+  createEventBridgeEventMock(
+    getInterestGroupPayload(id, eventType),
+    eventType,
+    id,
+  );
 
-export const getGroupDataObject = (): GroupDataObject => ({
+export const getInterestGroupDataObject = (): GroupDataObject => ({
   id: 'group-id-1',
   active: true,
   createdDate: '2020-12-11T14:33:50.000Z',
@@ -505,15 +471,15 @@ export const getGroupDataObject = (): GroupDataObject => ({
   ],
   leaders: [
     {
-      user: getUserResponse(),
+      user: getLeaderResponse(),
       role: 'Chair',
     },
     {
-      user: getUserResponse(),
+      user: getLeaderResponse(),
       role: 'Project Manager',
     },
   ],
-  contactEmails: [],
+  contactEmails: ['H@rdy.io'],
   calendars: [
     {
       id: 'hub@asap.science',
@@ -523,4 +489,87 @@ export const getGroupDataObject = (): GroupDataObject => ({
       workingGroups: [],
     },
   ],
+});
+
+export const getContentfulGraphql = () => {
+  return {
+    InterestGroupsCollection: () => ({ total: 1, items: [{}] }),
+    InterestGroups: () => getContentfulGraphqlInterestGroup(),
+    Users: () => getContentfulGraphQLLeader(),
+    Teams: () => getContentfulGraphqlTeam(),
+  };
+};
+
+const getContentfulGraphQLLeader = () => ({
+  sys: {
+    id: 'user-id-1',
+    publishedAt: '2021-09-23T20:45:22.000Z',
+    firstPublishedAt: '2020-09-23T20:45:22Z',
+  },
+  alumniSinceDate: null,
+  email: 'H@rdy.io',
+  firstName: 'Tom',
+  lastName: 'Hardy',
+  teamsCollection: {
+    items: [
+      {
+        role: 'Project Manager',
+        inactiveSinceDate: null,
+        team: {
+          sys: {
+            id: 'team-id-0',
+          },
+          displayName: 'Team A',
+          inactiveSince: null,
+        },
+      },
+    ],
+  },
+  avatar: {
+    url: null,
+  },
+});
+
+export const getContentfulGraphqlInterestGroup = () => ({
+  sys: {
+    id: 'group-id-1',
+    publishedAt: '2020-12-11T15:06:26.000Z',
+    firstPublishedAt: '2020-12-11T14:33:50.000Z',
+  },
+  active: true,
+  name: "JT's Group",
+  tags: ['coding'],
+  thumbnail: {
+    url: `${baseUrl}/api/assets/${appName}/uuid-thumbnail-1`,
+  },
+  description: 'A test Group',
+  slack: 'https://example.com/secure-comms',
+  googleDrive: null,
+  leadersCollection: {
+    total: 2,
+    items: [
+      {
+        role: 'Chair',
+        inactiveSinceDate: null,
+        user: getContentfulGraphQLLeader(),
+      },
+      {
+        role: 'Project Manager',
+        inactiveSinceDate: null,
+        user: getContentfulGraphQLLeader(),
+      },
+    ],
+  },
+  teamsCollection: {
+    total: 1,
+    items: [getContentfulGraphqlTeam()],
+  },
+  calendar: {
+    sys: {
+      id: 'calendar-id-1',
+    },
+    googleCalendarId: 'hub@asap.science',
+    color: '#B1365F',
+    name: 'ASAP Hub',
+  },
 });

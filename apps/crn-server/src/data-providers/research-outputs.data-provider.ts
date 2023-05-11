@@ -179,8 +179,6 @@ export class ResearchOutputSquidexDataProvider
       filtersAndSearch.length === 1 ? filtersAndSearch[0] : filtersAndSearch;
     const filterGraphql = buildODataFilter(query as Filter);
 
-    console.log('filterGraphql=', filterGraphql);
-
     const { queryResearchOutputsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
         FetchResearchOutputsQuery,

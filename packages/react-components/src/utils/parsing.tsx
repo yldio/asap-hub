@@ -1,7 +1,13 @@
 import { createElement, HTMLAttributes, AnchorHTMLAttributes } from 'react';
 import { css } from '@emotion/react';
 
+import unified from 'unified';
 import { ComponentLike } from 'rehype-react';
+import rehypeHtml from 'rehype-parse';
+import rehypeSanitize from 'rehype-sanitize';
+import rehypeRemark from 'rehype-remark';
+import remarkStringify from 'remark-stringify';
+import githubSanitizationSchema from 'hast-util-sanitize/lib/github';
 
 import { Paragraph, Headline4, Headline5, Headline6, Link } from '../atoms';
 import { isAllowedChildren } from '../text';
@@ -146,3 +152,31 @@ export const parseTagNames = (poorText = false) =>
         // rehype-toc
         'nav',
       ];
+
+export function richTextToMarkdown(text = '', poorText = false): string {
+  let processor = unified().use(rehypeHtml, { fragment: true });
+  processor = processor.use(rehypeSanitize, {
+    tagNames: parseTagNames(poorText),
+    attributes: {
+      ...githubSanitizationSchema.attributes,
+      iframe: [
+        'src',
+        'title',
+        'width',
+        'height',
+        ['allow', 'fullscreen'],
+        'allowfullscreen',
+      ],
+    },
+  });
+
+  processor = processor.use(rehypeRemark).use(remarkStringify, {
+    bullet: '*',
+    fence: '~',
+    fences: true,
+    incrementListMarker: false,
+  });
+
+  const { contents } = processor.processSync(text);
+  return contents as string;
+}

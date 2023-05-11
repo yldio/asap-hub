@@ -33,7 +33,10 @@ export default class EnforceUrlFormat extends Migration {
       'events',
       async (event, squidexClient) => {
         const cleanedUrl = this.cleanupUrl(event.data.meetingLink?.iv);
-        if (cleanedUrl && !cleanedUrl.startsWith('http')) {
+        if (
+          (cleanedUrl && !cleanedUrl.startsWith('http')) ||
+          cleanedUrl !== event.data.meetingLink?.iv
+        ) {
           // eslint-disable-next-line no-console
           console.log(
             `Event ${event.id} does not have a valid meeting link. Adding https:// prefix.`,
@@ -55,7 +58,10 @@ export default class EnforceUrlFormat extends Migration {
       'pages',
       async (page, squidexClient) => {
         const cleanedUrl = this.cleanupUrl(page.data.link?.iv);
-        if (cleanedUrl && !cleanedUrl.startsWith('http')) {
+        if (
+          (cleanedUrl && !cleanedUrl.startsWith('http')) ||
+          cleanedUrl !== page.data.link?.iv
+        ) {
           // eslint-disable-next-line no-console
           console.log(
             `Page ${page.id} does not have a valid link. Adding https:// prefix.`,
@@ -77,7 +83,10 @@ export default class EnforceUrlFormat extends Migration {
       'news-and-events',
       async (news, squidexClient) => {
         const cleanedUrl = this.cleanupUrl(news.data.link?.iv);
-        if (cleanedUrl && !cleanedUrl.startsWith('http')) {
+        if (
+          (cleanedUrl && !cleanedUrl.startsWith('http')) ||
+          cleanedUrl !== news.data.link?.iv
+        ) {
           // eslint-disable-next-line no-console
           console.log(
             `News ${news.id} does not have a valid link. Adding https:// prefix.`,
@@ -103,7 +112,10 @@ export default class EnforceUrlFormat extends Migration {
 
           const tools = team.data.tools.iv.map((tool) => {
             const cleanedUrl = this.cleanupUrl(tool.url);
-            if (cleanedUrl && !cleanedUrl.startsWith('http')) {
+            if (
+              (cleanedUrl && !cleanedUrl.startsWith('http')) ||
+              cleanedUrl !== tool.url
+            ) {
               shouldUpdate = true;
               return {
                 ...tool,
@@ -142,7 +154,10 @@ export default class EnforceUrlFormat extends Migration {
             let newSocial = socialValue;
 
             let cleanedUrl = this.cleanupUrl(socialValue.website1);
-            if (cleanedUrl && !cleanedUrl.startsWith('http')) {
+            if (
+              (cleanedUrl && !cleanedUrl.startsWith('http')) ||
+              cleanedUrl !== socialValue.website1
+            ) {
               shouldUpdate = true;
               newSocial = {
                 ...newSocial,
@@ -151,7 +166,10 @@ export default class EnforceUrlFormat extends Migration {
             }
 
             cleanedUrl = this.cleanupUrl(socialValue.website2);
-            if (cleanedUrl && !cleanedUrl.startsWith('http')) {
+            if (
+              (cleanedUrl && !cleanedUrl.startsWith('http')) ||
+              cleanedUrl !== socialValue.website2
+            ) {
               shouldUpdate = true;
               newSocial = {
                 ...newSocial,

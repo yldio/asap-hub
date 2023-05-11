@@ -142,11 +142,12 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-    logger.info(`The user: ${JSON.stringify(user, undefined, 2)}`);
-    logger.info(`The user: `, user);
+    logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
     const result = await patchAndPublish(user, fields);
     const cohort = await environment.getEntry('3yuHOhdn7VpOAAi6gDOG1r');
-    await cohort.delete();
+    logger.info('printing user fields');
+    logger.info(JSON.stringify(user.fields));
+    await cohort?.delete();
 
     const fetchEventById = () => this.fetchUserById(id);
 

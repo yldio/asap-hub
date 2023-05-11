@@ -55,6 +55,14 @@ describe('User data provider', () => {
 
       expect(result).toMatchObject(getUserDataObject());
     });
+    test('Should return null when the user is not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: null,
+      });
+
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result).toBeNull();
+    });
     test('Should return the user when it finds it', async () => {
       const mockResponse = getContentfulGraphqlUser();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -116,6 +124,14 @@ describe('User data provider', () => {
       });
       const result = await userDataProvider.fetchById('user-id');
       expect(result!.degrees).toEqual([]);
+    });
+    test('degrees are valid', async () => {
+      const degrees = ['invalid-degree'];
+      const mockResponse = getContentfulGraphqlUser({ degrees });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: mockResponse,
+      });
+      expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();
     });
 
     test('connections default to empty array', async () => {
@@ -309,6 +325,31 @@ describe('User data provider', () => {
           userDataProvider.fetchById('user-id'),
         ).rejects.toThrowError('Invalid Contributing Cohort');
       });
+      test('Should throw when the cohort role is invalid ', async () => {
+        const contributingCohort = {
+          sys: { id: '42' },
+          name: 'GeneFinder',
+        };
+        const contributingCohortsCollection = {
+          items: [
+            {
+              contributingCohort,
+              role: 'invalid-role',
+              studyLink: 'http://example.com/test',
+            },
+          ],
+        };
+        const mockResponse = getContentfulGraphqlUser({
+          contributingCohortsCollection,
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Invalid Contributing Cohort');
+      });
 
       test('Should throw when the cohort name is null ', async () => {
         const contributingCohort = {
@@ -451,10 +492,14 @@ describe('User data provider', () => {
             id: '42',
           },
         },
+        projectId = '11',
+        hasMembers = true,
       }: {
         status?: string | null;
         role?: string | null;
         user?: { sys: { id: string } } | null;
+        projectId?: string | null;
+        hasMembers?: boolean;
       } = {}) => ({
         user: {
           sys: {
@@ -467,22 +512,40 @@ describe('User data provider', () => {
             items: [
               {
                 sys: {
-                  id: '19jFNrTz1LeqV8T4zLzVnF',
+                  id: projectId,
                 },
                 title: 'Test Project',
                 status,
-                membersCollection: {
-                  items: [
-                    {
-                      user,
-                      role,
-                    },
-                  ],
-                },
+                membersCollection: hasMembers
+                  ? {
+                      items: [
+                        {
+                          user,
+                          role,
+                        },
+                      ],
+                    }
+                  : null,
               },
             ],
           },
         },
+      });
+      test('Should throw when the id is not defined', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [getProjectGraphQL({ projectId: null })],
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Project not defined');
       });
       test('Should throw when the status is not defined', async () => {
         const mockResponse = getContentfulGraphqlUser({
@@ -499,6 +562,21 @@ describe('User data provider', () => {
         expect(() =>
           userDataProvider.fetchById('user-id'),
         ).rejects.toThrowError('Status not defined');
+      });
+      test('Should return empty when no members', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [getProjectGraphQL({ hasMembers: false })],
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.projects[0]?.members).toHaveLength(0);
       });
       test('Should throw when a members role is not defined', async () => {
         const mockResponse = getContentfulGraphqlUser({
@@ -653,9 +731,13 @@ describe('User data provider', () => {
             id: '42',
           },
         },
+        workingGroupId = '7',
+        hasMembers = true,
       }: {
         role?: string | null;
         user?: { sys: { id: string } } | null;
+        workingGroupId?: string | null;
+        hasMembers?: boolean;
       } = {}) => ({
         user,
         role,
@@ -664,17 +746,19 @@ describe('User data provider', () => {
             items: [
               {
                 sys: {
-                  id: '7',
+                  id: workingGroupId,
                 },
                 title: 'Test working group',
-                membersCollection: {
-                  items: [
-                    {
-                      user,
-                      role,
-                    },
-                  ],
-                },
+                membersCollection: hasMembers
+                  ? {
+                      items: [
+                        {
+                          user,
+                          role,
+                        },
+                      ],
+                    }
+                  : null,
               },
             ],
           },
@@ -690,6 +774,37 @@ describe('User data provider', () => {
 
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.workingGroups).toEqual([]);
+      });
+      test('Should throw when the id is not defined', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            workingGroupMembershipCollection: {
+              items: [getWorkingGroupGraphQL({ workingGroupId: null })],
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        expect(() =>
+          userDataProvider.fetchById('user-id'),
+        ).rejects.toThrowError('Working Group not defined');
+      });
+      test('Should return empty when no members', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            workingGroupMembershipCollection: {
+              items: [getWorkingGroupGraphQL({ hasMembers: false })],
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.workingGroups[0]?.members).toHaveLength(0);
       });
       test('Should throw when a members role is not defined', async () => {
         const mockResponse = getContentfulGraphqlUser({
@@ -1929,5 +2044,54 @@ describe('User data provider', () => {
         });
       },
     );
+    test('flattens `social` values', async () => {
+      await userDataProvider.update('123', {
+        social: {
+          github: 'yldio',
+          twitter: 'yldio',
+        },
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(
+        entry,
+        expect.objectContaining({ github: 'yldio', twitter: 'yldio' }),
+      );
+      expect(patchAndPublish).toHaveBeenCalledWith(
+        entry,
+        expect.not.objectContaining({ social: expect.anything() }),
+      );
+    });
+
+    test('includes undefined `social` values as null to allow unsetting', async () => {
+      await userDataProvider.update('123', {
+        social: {
+          github: 'yldio',
+          twitter: 'yldio',
+        },
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        website1: null,
+        website2: null,
+        googleScholar: null,
+        linkedIn: null,
+        researchGate: null,
+        researcherId: null,
+        github: 'yldio',
+        twitter: 'yldio',
+      });
+    });
+    test('maps avatar value to a linked resource', async () => {
+      await userDataProvider.update('123', {
+        avatar: 'abc123',
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        avatar: {
+          sys: {
+            type: 'Link',
+            linkType: 'Asset',
+            id: 'abc123',
+          },
+        },
+      });
+    });
   });
 });

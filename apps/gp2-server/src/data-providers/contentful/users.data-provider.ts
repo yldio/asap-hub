@@ -45,12 +45,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
   async fetchById(id: string): Promise<gp2Model.UserDataObject | null> {
     const { users } = await this.fetchUserById(id);
-
-    if (!users) {
-      return null;
-    }
-
-    return parseContentfulGraphQlUsers(users);
+    return users ? parseContentfulGraphQLUsers(users) : null;
   }
 
   private getUserIdFilter = async ({
@@ -70,7 +65,6 @@ export class UserContentfulDataProvider implements UserDataProvider {
   async fetch(
     options: gp2Model.FetchUsersOptions,
   ): Promise<gp2Model.ListUserDataObject> {
-    logger.info(`fetch users contentful`);
     const { projects, workingGroups } = options.filter || {};
     const userIdFilter = await this.getUserIdFilter({
       projects,
@@ -82,27 +76,18 @@ export class UserContentfulDataProvider implements UserDataProvider {
     ) {
       return { total: 0, items: [] };
     }
-    logger.info(`fetch users ${JSON.stringify(options, undefined, 2)} `);
-    try {
-      const result = await this.fetchUsers(options, userIdFilter);
+    logger.debug(`fetch users ${JSON.stringify(options, undefined, 2)} `);
+    const result = await this.fetchUsers(options, userIdFilter);
 
-      const items = {
-        total: result?.total,
-        items: result?.items
-          .filter((x): x is UserItem => x !== null)
-          .map(parseContentfulGraphQlUsers),
-      };
+    const items = {
+      total: result?.total,
+      items: result?.items
+        .filter((x): x is UserItem => x !== null)
+        .map(parseContentfulGraphQLUsers),
+    };
 
-      logger.info(JSON.stringify(items, undefined, 2));
-      return items;
-    } catch (err) {
-      logger.error(`An error occorred on fetch users`);
-      if (err instanceof Error) {
-        logger.error(`The error message: ${err.message}`);
-      }
-
-      throw err;
-    }
+    logger.debug(JSON.stringify(items, undefined, 2));
+    return items;
   }
 
   private async fetchUsers(
@@ -112,7 +97,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const { take = 8, skip = 0 } = options;
 
     const where = generateFetchQueryFilter(options, userIdFilter);
-    logger.info(`fetch users where: ${JSON.stringify(where, undefined, 2)}`);
+    logger.debug(`fetch users where: ${JSON.stringify(where, undefined, 2)}`);
 
     const { usersCollection } = await this.contentfulClient.request<
       gp2Contentful.FetchUsersQuery,
@@ -144,10 +129,6 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const user = await environment.getEntry(id);
     logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
     const result = await patchAndPublish(user, fields);
-    const cohort = await environment.getEntry('3yuHOhdn7VpOAAi6gDOG1r');
-    logger.info('printing user fields');
-    logger.info(JSON.stringify(user.fields));
-    await cohort?.delete();
 
     const fetchEventById = () => this.fetchUserById(id);
 
@@ -201,7 +182,7 @@ const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) =>
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 
-export const parseContentfulGraphQlUsers = (
+export const parseContentfulGraphQLUsers = (
   user: UserItem,
 ): gp2Model.UserDataObject => {
   const normaliseArray = (

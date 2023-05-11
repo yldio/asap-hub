@@ -101,7 +101,9 @@ export type UserDataObject = {
   id: string;
   activatedDate?: string;
   alternativeEmail?: string;
+  // TODO: Merge these two when the Asset Data Provider is done
   avatarUrl?: string;
+  avatar?: string;
   biography?: string;
   city?: string;
   connections?: Connection[];

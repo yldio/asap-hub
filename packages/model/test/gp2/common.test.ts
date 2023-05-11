@@ -1,12 +1,12 @@
 import { isKeyword, keywords } from '../../src/gp2';
 
-describe('Common', () => {
+describe('common', () => {
   describe('Keywords', () => {
-    it.each(keywords)('should recognize correct keyword - %s', (keyword) => {
+    it.each(keywords)('should recognise correct keyword - %s', (keyword) => {
       expect(isKeyword(keyword)).toEqual(true);
     });
 
-    it('should not recognize incorrect keyword', () => {
+    it('should not recognise incorrect keyword', () => {
       expect(isKeyword('not-a-keyword')).toEqual(false);
     });
   });

@@ -135,7 +135,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 <div css={{ paddingBottom: `${12 / perRem}em` }}>
                   <Headline2 styleAsHeading={4}>Description</Headline2>
                   <Markdown value={descriptionMD}></Markdown>
-                  <RichText poorText text={description} />
+                  {descriptionMD === '' && (
+                    <RichText poorText text={description} />
+                  )}
                 </div>
               )}
               {hasDescription && !isGrantDocument && !!tags.length && (
@@ -165,8 +167,8 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           )}
           {hasDescription && isGrantDocument && (
             <Card>
-              <Markdown value={descriptionMD}></Markdown>
-              <RichText toc text={description} />
+              <Markdown value={descriptionMD} toc></Markdown>
+              {!descriptionMD && <RichText toc text={description} />}
             </Card>
           )}
           {!!contactEmails.length && (

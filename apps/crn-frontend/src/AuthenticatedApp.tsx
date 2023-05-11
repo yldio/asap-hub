@@ -61,14 +61,6 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     return <Loading />;
   }
 
-  const mockInterestGroup = [
-    {
-      id: '1',
-      name: 'test',
-      active: true,
-    },
-  ];
-
   return (
     <Onboardable>
       {(onboardable) => (
@@ -96,7 +88,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 .workingGroup({ workingGroupId: id }).$,
             }),
           )}
-          interestGroups={mockInterestGroup.map(
+          interestGroups={(user.interestGroups || []).map(
             ({ id, name = '', active }) => ({
               name,
               active,

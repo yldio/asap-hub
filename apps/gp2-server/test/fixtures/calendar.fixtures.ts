@@ -1,3 +1,4 @@
+import { gp2 as gp2Contentful } from '@asap-hub/contentful';
 import { CalendarCreateDataObject, gp2 } from '@asap-hub/model';
 import { RestCalendar } from '@asap-hub/squidex';
 import {
@@ -10,7 +11,7 @@ import { getGraphQLWorkingGroup } from './working-group.fixtures';
 
 export const getContentfulGraphqlCalendar = (): NonNullable<
   NonNullable<
-    ContentfulFetchCalendarsQuery['calendarsCollection']
+    gp2Contentful.FetchCalendarsQuery['calendarsCollection']
   >['items'][number]
 > => ({
   sys: {
@@ -23,7 +24,7 @@ export const getContentfulGraphqlCalendar = (): NonNullable<
 });
 
 export const getContentfulCalendarsGraphqlResponse =
-  (): ContentfulFetchCalendarsQuery => ({
+  (): gp2Contentful.FetchCalendarsQuery => ({
     calendarsCollection: {
       total: 1,
       items: [getContentfulGraphqlCalendar()],

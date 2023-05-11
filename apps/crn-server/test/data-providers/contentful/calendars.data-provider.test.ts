@@ -211,6 +211,52 @@ describe('Calendars data provider', () => {
       });
     });
 
+    test('Should filter calendars by resourceId and maxExpiration', async () => {
+      const modifiedContentfulGraphqlCalendar = getContentfulGraphqlCalendar();
+      modifiedContentfulGraphqlCalendar.googleApiMetadata!.resourceId! =
+        'resource-2';
+      const responseExpirationDate =
+        modifiedContentfulGraphqlCalendar?.googleApiMetadata?.expirationDate;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        calendarsCollection: {
+          total: 2,
+          items: [
+            getContentfulGraphqlCalendar(),
+            modifiedContentfulGraphqlCalendar,
+          ],
+        },
+      });
+
+      const result = await calendarDataProvider.fetch({
+        resourceId: 'resource-2',
+        maxExpiration: responseExpirationDate + 1,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          limit: 50,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {
+            googleApiMetadata_exists: true,
+          },
+        },
+      );
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          {
+            ...getCalendarDataObject(),
+            resourceId: 'resource-2',
+            groups: [],
+            workingGroups: [],
+          },
+        ],
+      });
+    });
+
     test('Should default missing data to an empty string', async () => {
       const calendarResponse = getContentfulCalendarsGraphqlResponse();
       calendarResponse.calendarsCollection!.items![0]!.name = null;

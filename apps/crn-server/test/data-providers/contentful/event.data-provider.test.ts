@@ -633,7 +633,13 @@ describe('Events Contentful Data Provider', () => {
       expect(createEntryFn).toHaveBeenCalledWith('events', {
         fields: {
           calendar: {
-            'en-US': 'squidex-calendar-id',
+            'en-US': {
+              sys: {
+                id: 'squidex-calendar-id',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
           },
           description: {
             'en-US': 'This event will be good',

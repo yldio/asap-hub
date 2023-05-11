@@ -1,12 +1,13 @@
 import { BLOCKS, TopLevelBlockEnum } from '@contentful/rich-text-types';
 import { Entry } from 'contentful-management';
 import {
-  parseRichText,
   addLocaleToFields,
-  updateEntryFields,
+  createLink,
+  parseRichText,
   patchAndPublish,
   pollContentfulDeliveryApi,
   pollContentfulGql,
+  updateEntryFields,
 } from '../src/utils';
 import {
   assetId_1,
@@ -18,6 +19,14 @@ import {
   documentWithEntries,
   linksWithEntries,
 } from './rich-text.fixtures';
+
+describe('createLink', () => {
+  test('returns the right object given id', () => {
+    expect(createLink('id')).toEqual({
+      'en-US': { sys: { id: 'id', linkType: 'Entry', type: 'Link' } },
+    });
+  });
+});
 
 describe('parseRichText', () => {
   describe('embedded-asset-block', () => {

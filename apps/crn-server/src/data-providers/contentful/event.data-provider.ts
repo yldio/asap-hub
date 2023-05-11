@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   addLocaleToFields,
+  createLink,
   Environment,
   EventsOrder,
   FETCH_EVENT_BY_ID,
@@ -185,10 +186,16 @@ export class EventContentfulDataProvider implements EventDataProvider {
 
   async create(create: EventCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
+
+    const { calendar, ...otherCreateFields } = create;
     const newEntry = await environment.createEntry('events', {
-      fields: addLocaleToFields(create),
+      fields: {
+        ...addLocaleToFields(otherCreateFields),
+        calendar: createLink(calendar),
+      },
     });
 
+    await newEntry.publish();
     return newEntry.sys.id;
   }
 

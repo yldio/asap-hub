@@ -142,6 +142,16 @@ export const patchAndPublish = async (
   return result.publish();
 };
 
+export const createLink = (id: string) => ({
+  'en-US': {
+    sys: {
+      type: 'Link',
+      linkType: 'Entry',
+      id,
+    },
+  },
+});
+
 type Entity = 'events' | 'users';
 type OptionalExceptFor<T, TRequired extends keyof T> = Partial<T> &
   Pick<T, TRequired>;

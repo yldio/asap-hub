@@ -2,12 +2,23 @@ import {
   isUserContributingCohortRole,
   isUserDegree,
   isUserRegion,
+  isUserRole,
   userContributingCohortRole,
   userDegrees,
   userRegions,
+  userRoles,
 } from '../../src/gp2';
 
 describe('user', () => {
+  describe('isUserRole', () => {
+    it.each(userRoles)('should recognise correct value %s', (value) => {
+      expect(isUserRole(value)).toEqual(true);
+    });
+
+    it('should not recognise incorrect value', () => {
+      expect(isUserRole('not-valid')).toEqual(false);
+    });
+  });
   describe('isUserDegree', () => {
     it.each(userDegrees)('should recognise correct value %s', (value) => {
       expect(isUserDegree(value)).toEqual(true);

@@ -447,10 +447,7 @@ const getEntityMembers = async (
   );
 };
 
-const getSearchFilter = (search?: string) => {
-  if (!search) {
-    return {};
-  }
+const getSearchFilter = (search: string) => {
   type SearchFields = {
     OR: (
       | {

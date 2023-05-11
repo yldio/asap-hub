@@ -419,6 +419,7 @@ describe('User data provider', () => {
         },
       );
     });
+
     describe('projects', () => {
       test('Should return empty array if no projects collection', async () => {
         const mockResponse = getContentfulGraphqlUser({ linkedFrom: {} });
@@ -723,6 +724,7 @@ describe('User data provider', () => {
         expect(result?.projects[0]?.members).toHaveLength(0);
       });
     });
+
     describe('working groups', () => {
       const getWorkingGroupGraphQL = ({
         role = 'Co-lead',
@@ -791,6 +793,7 @@ describe('User data provider', () => {
           userDataProvider.fetchById('user-id'),
         ).rejects.toThrowError('Working Group not defined');
       });
+
       test('Should return empty when no members', async () => {
         const mockResponse = getContentfulGraphqlUser({
           linkedFrom: {
@@ -806,6 +809,7 @@ describe('User data provider', () => {
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.workingGroups[0]?.members).toHaveLength(0);
       });
+
       test('Should throw when a members role is not defined', async () => {
         const mockResponse = getContentfulGraphqlUser({
           linkedFrom: {
@@ -1138,6 +1142,40 @@ describe('User data provider', () => {
     });
 
     describe('projects filter', () => {
+      test('it should return empty when no members', async () => {
+        const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const projectMembers = {
+          projectsCollection: {
+            total: 0,
+            items: [
+              {
+                membersCollection: null,
+              },
+            ],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          projectMembers,
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            projects: [projectId],
+          },
+        };
+        const result = await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(1);
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          gp2Contentful.FETCH_USERS_BY_PROJECT_ID,
+          expect.objectContaining({
+            id: [projectId],
+          }),
+        );
+        expect(result).toEqual({ total: 0, items: [] });
+      });
       test('it should be able to filter by project', async () => {
         const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
         const userId = '11';
@@ -1327,6 +1365,40 @@ describe('User data provider', () => {
     });
 
     describe('working groups filter', () => {
+      test('it should return empty when no members', async () => {
+        const workingGroupId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
+        const workingGroupMembersResponse = {
+          workingGroupsCollection: {
+            total: 0,
+            items: [
+              {
+                membersCollection: null,
+              },
+            ],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          workingGroupMembersResponse,
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            workingGroups: [workingGroupId],
+          },
+        };
+        const result = await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(1);
+        expect(contentfulGraphqlClientMock.request).toHaveBeenNthCalledWith(
+          1,
+          gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID,
+          expect.objectContaining({
+            id: [workingGroupId],
+          }),
+        );
+        expect(result).toEqual({ total: 0, items: [] });
+      });
       test('it should be able to filter by working group', async () => {
         const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313ba';
         const userId = '11';

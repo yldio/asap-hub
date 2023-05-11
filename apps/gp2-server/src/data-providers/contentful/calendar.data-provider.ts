@@ -17,7 +17,9 @@ export type CalendarItem = NonNullable<
   NonNullable<gp2.FetchCalendarsQuery['calendarsCollection']>['items'][number]
 >;
 
-export class CalendarContentfulDataProvider implements gp2Model.CalendarDataProvider {
+export class CalendarContentfulDataProvider
+  implements gp2Model.CalendarDataProvider
+{
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,

@@ -134,7 +134,13 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
             : {}),
           // if the resourceId is updated, we change associatedGoogleCalendarId
           // this field is used by webhooks
-          ...(resourceId ? { resourceId, associatedGoogleCalendarId: id } : {}),
+          ...(resourceId
+            ? {
+                resourceId,
+                associatedGoogleCalendarId:
+                  calendar.fields.googleCalendarId['en-US'],
+              }
+            : {}),
           ...(syncToken ? { syncToken } : {}),
           ...(expirationDate ? { expirationDate } : {}),
         },

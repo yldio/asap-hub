@@ -429,6 +429,9 @@ describe('Calendars data provider', () => {
       const calendarId = 'calendar-id-1';
 
       const calendarMock = getEntry({
+        googleCalendarId: {
+          'en-US': 'google-calendar-id-1',
+        },
         googleApiMetadata: {
           'en-US': {
             syncToken: 'syncToken-1',
@@ -448,9 +451,12 @@ describe('Calendars data provider', () => {
       expect(environmentMock.getEntry).toHaveBeenCalledWith(calendarId);
 
       expect(calendarMock.fields).toEqual({
+        googleCalendarId: {
+          'en-US': 'google-calendar-id-1',
+        },
         googleApiMetadata: {
           'en-US': {
-            associatedGoogleCalendarId: 'calendar-id-1',
+            associatedGoogleCalendarId: 'google-calendar-id-1',
             resourceId: 'resourceId-1',
             syncToken: 'syncToken-1',
           },

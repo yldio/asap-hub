@@ -7,7 +7,7 @@ import {
   GraphQLClient,
   Maybe,
   patchAndPublish,
-  waitForUpdated,
+  pollContentfulGql,
 } from '@asap-hub/contentful';
 import logger from '../../utils/logger';
 import { UserDataProvider } from '../types';
@@ -132,7 +132,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
     const fetchEventById = () => this.fetchUserById(id);
 
-    await waitForUpdated<gp2Contentful.FetchUserByIdQuery>(
+    await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(
       result.sys.publishedVersion || Infinity,
       fetchEventById,
       'users',

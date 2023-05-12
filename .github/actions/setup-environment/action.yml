@@ -44,6 +44,9 @@ outputs:
   contentful-app-user-positions:
     description: 'Contentful App Extension User Positions Id'
     value: ${{ steps.vars.outputs.contentful-app-user-positions }}
+  contentful-app-user-team-memberships:
+    description: 'Contentful App Extension User Team Memberships Id'
+    value: ${{ steps.vars.outputs.contentful-app-user-team-memberships }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}

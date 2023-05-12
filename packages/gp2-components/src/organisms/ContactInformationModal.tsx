@@ -60,7 +60,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
       description="Provide alternative contact details."
       onSave={() =>
         onSave({
-          alternativeEmail: newAlternativeEmail,
+          alternativeEmail: newAlternativeEmail || undefined,
           telephone: {
             countryCode: newCountryCode || undefined,
             number: newNumber || undefined,

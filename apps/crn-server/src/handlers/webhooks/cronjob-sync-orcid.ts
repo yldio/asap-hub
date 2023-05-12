@@ -19,7 +19,7 @@ const rawHandler = async (): Promise<lambda.Response> => {
     .toISO();
 
   const { items: outdatedUsers } = await userDataProvider.fetch({
-    take: 100,
+    take: 50,
     filter: {
       orcid: '-',
       orcidLastSyncDate,

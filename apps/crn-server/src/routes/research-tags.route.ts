@@ -15,7 +15,7 @@ export const researchTagsRouteFactory = (
 
       const options = validateResearchTagFetchPaginationOptions(query);
 
-      const result = await researchTagController.fetch(options);
+      const result = await researchTagController.fetchAll(options);
 
       res.json(result);
     },

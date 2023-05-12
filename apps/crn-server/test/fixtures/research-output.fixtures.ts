@@ -171,7 +171,6 @@ export const getResearchOutputDataObject =
     title: 'Test Proposal 1234',
     description: 'Text',
     descriptionMD: 'Text MD',
-    tags: ['tag', 'test'],
     authors: fetchExpectation.items,
     teams: [{ id: 'team-id-0', displayName: 'Team A' }],
     relatedResearch: [

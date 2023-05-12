@@ -191,7 +191,9 @@ export class EventContentfulDataProvider implements EventDataProvider {
     const newEntry = await environment.createEntry('events', {
       fields: {
         ...addLocaleToFields(otherCreateFields),
-        calendar: createLink(calendar),
+        calendar: {
+          'en-US': createLink(calendar),
+        },
       },
     });
 
@@ -202,7 +204,14 @@ export class EventContentfulDataProvider implements EventDataProvider {
   async update(id: string, update: EventUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
     const event = await environment.getEntry(id);
-    const result = await patchAndPublish(event, update);
+    const { calendar, ...otherUpdateFields } = update;
+
+    const updateWithCalendarLink = {
+      ...(calendar ? { calendar: createLink(calendar) } : {}),
+      ...otherUpdateFields,
+    };
+
+    const result = await patchAndPublish(event, updateWithCalendarLink);
 
     const fetchEventById = () => this.fetchEventById(id);
 

@@ -23,7 +23,7 @@ import {
 describe('createLink', () => {
   test('returns the right object given id', () => {
     expect(createLink('id')).toEqual({
-      'en-US': { sys: { id: 'id', linkType: 'Entry', type: 'Link' } },
+      sys: { id: 'id', linkType: 'Entry', type: 'Link' },
     });
   });
 });

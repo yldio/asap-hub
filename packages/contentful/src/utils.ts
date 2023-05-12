@@ -143,12 +143,10 @@ export const patchAndPublish = async (
 };
 
 export const createLink = (id: string) => ({
-  'en-US': {
-    sys: {
-      type: 'Link',
-      linkType: 'Entry',
-      id,
-    },
+  sys: {
+    type: 'Link',
+    linkType: 'Entry',
+    id,
   },
 });
 

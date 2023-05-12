@@ -413,6 +413,7 @@ __metadata:
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.1
     "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -10453,6 +10454,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@contentful/rich-text-react-renderer@npm:^15.16.4":
+  version: 15.16.4
+  resolution: "@contentful/rich-text-react-renderer@npm:15.16.4"
+  dependencies:
+    "@contentful/rich-text-types": ^16.1.0
+  peerDependencies:
+    react: ^16.8.6 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0
+  checksum: dc7cb6b5578e3a115e0335d7cbbf1ebb5208fdd19621fb94ee51ffa6a448fd2d578f1bb0af5e5aa71d27b7ff3a5a96ce1dd1171d7c5400812e2a9ed14500d22b
+  languageName: node
+  linkType: hard
+
 "@contentful/rich-text-types@npm:16.0.3, @contentful/rich-text-types@npm:^16.0.3":
   version: 16.0.3
   resolution: "@contentful/rich-text-types@npm:16.0.3"
@@ -10460,7 +10473,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-types@npm:^16.0.2":
+"@contentful/rich-text-types@npm:^16.0.2, @contentful/rich-text-types@npm:^16.1.0":
   version: 16.1.0
   resolution: "@contentful/rich-text-types@npm:16.1.0"
   checksum: 191927b41b63b4b3fb4d53edfff37ea67fd01fae538aa29c5ee2ee7d7b8060fe10eac082ed3a2ff63b2b24b5e4d4e4ad88479d8edd61f32ad218edf915fc07f4

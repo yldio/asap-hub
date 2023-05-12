@@ -51,17 +51,20 @@ const UserNavigationAssociationSection: React.FC<
       <span css={headlineStyle}>
         <Headline5 noMargin>{title}</Headline5>
       </span>
-      {association.map(({ name, href, active = true }) => (
-        <li css={listStyle} key={href}>
-          <NavigationLink
-            href={href}
-            icon={icon[title]}
-            enabled={userOnboarded && active}
-          >
-            {name}
-          </NavigationLink>
-        </li>
-      ))}
+      {association.map(
+        ({ name, href, active = true }) =>
+          active && (
+            <li css={listStyle} key={href}>
+              <NavigationLink
+                href={href}
+                icon={icon[title]}
+                enabled={userOnboarded}
+              >
+                {name}
+              </NavigationLink>
+            </li>
+          ),
+      )}
     </div>
   </div>
 );

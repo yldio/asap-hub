@@ -85,20 +85,22 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
         association={teams}
         title="MY TEAMS"
       />
-      {interestGroups.length > 0 && (
-        <UserNavigationAssociationSection
-          userOnboarded={userOnboarded}
-          association={interestGroups}
-          title="MY INTEREST GROUPS"
-        />
-      )}
-      {workingGroups.length > 0 && (
-        <UserNavigationAssociationSection
-          userOnboarded={userOnboarded}
-          association={workingGroups}
-          title="MY WORKING GROUPS"
-        />
-      )}
+      {interestGroups.length > 0 &&
+        interestGroups.some((interestGroup) => interestGroup.active) && (
+          <UserNavigationAssociationSection
+            userOnboarded={userOnboarded}
+            association={interestGroups}
+            title="MY INTEREST GROUPS"
+          />
+        )}
+      {workingGroups.length > 0 &&
+        interestGroups.some((interestGroup) => interestGroup.active) && (
+          <UserNavigationAssociationSection
+            userOnboarded={userOnboarded}
+            association={workingGroups}
+            title="MY WORKING GROUPS"
+          />
+        )}
     </ul>
     <span css={dividerStyle}>
       <Divider />

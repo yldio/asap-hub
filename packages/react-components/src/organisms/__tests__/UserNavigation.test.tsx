@@ -65,3 +65,52 @@ it('does not render the associations sections for missing associations', () => {
   expect(queryByText('MY INTEREST GROUPS')).not.toBeInTheDocument();
   expect(queryByText('MY WORKING GROUPS')).not.toBeInTheDocument();
 });
+
+it('does not render the associations sections if associations are not active', () => {
+  const { queryByText } = render(
+    <UserNavigation
+      {...props}
+      interestGroups={[
+        {
+          name: 'Interest Group 1',
+          href: '/interest-group-1',
+          active: false,
+        },
+      ]}
+      workingGroups={[
+        {
+          name: 'Working Group 1',
+          href: '/working-group-1',
+          active: false,
+        },
+      ]}
+    />,
+  );
+
+  expect(queryByText('MY INTEREST GROUPS')).not.toBeInTheDocument();
+  expect(queryByText('MY WORKING GROUPS')).not.toBeInTheDocument();
+});
+
+it('does only renders associations which are active', () => {
+  const { queryByText } = render(
+    <UserNavigation
+      {...props}
+      interestGroups={[
+        {
+          name: 'Interest Group 1',
+          href: '/interest-group-1',
+          active: false,
+        },
+        {
+          name: 'Interest Group 2',
+          href: '/interest-group-2',
+          active: true,
+        },
+      ]}
+    />,
+  );
+
+  expect(queryByText('MY INTEREST GROUPS')).toBeVisible();
+  expect(queryByText('Interest Group 1')).not.toBeInTheDocument();
+  expect(queryByText('Interest Group 2')).toBeVisible();
+});

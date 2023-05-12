@@ -54,23 +54,24 @@ it('renders an association section with all the details', () => {
   );
 });
 
-it('disables the navigation link based on active and user onboarded', () => {
-  const { getByRole, rerender, getByText } = render(
+it('renders only active associations', () => {
+  const { getByText, queryByText } = render(
     <UserNavigationAssociationSection
       association={[
-        { ...interestGroup, name: 'group 1', href: '/abc', active: false },
+        { ...interestGroup, name: 'group 1', href: '/abc', active: true },
+        { ...interestGroup, active: false, name: 'group2' },
       ]}
       userOnboarded={true}
       title="MY INTEREST GROUPS"
     />,
   );
-  expect(getByText('group 1')).toBeVisible();
-  expect(getByRole('link', { name: /interest group/i })).toHaveStyleRule(
-    'pointer-events',
-    expect.stringMatching('none'),
-  );
 
-  rerender(
+  expect(getByText('group 1')).toBeVisible();
+  expect(queryByText('group 2')).not.toBeInTheDocument();
+});
+
+it('disables the navigation link based on user onboarded', () => {
+  const { getByRole, getByText } = render(
     <UserNavigationAssociationSection
       association={[
         { ...interestGroup, name: 'group 1', href: '/abc', active: true },

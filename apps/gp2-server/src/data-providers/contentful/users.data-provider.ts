@@ -128,15 +128,24 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
     logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
-    const result = await patchAndPublish(user, fields);
+    try {
+      const result = await patchAndPublish(user, fields);
 
-    const fetchEventById = () => this.fetchUserById(id);
+      const fetchEventById = () => this.fetchUserById(id);
 
-    await waitForUpdated<gp2Contentful.FetchUserByIdQuery>(
-      result.sys.publishedVersion || Infinity,
-      fetchEventById,
-      'users',
-    );
+      await waitForUpdated<gp2Contentful.FetchUserByIdQuery>(
+        result.sys.publishedVersion || Infinity,
+        fetchEventById,
+        'users',
+      );
+    } catch (err) {
+      logger.error(`An error occorred on fetch users`);
+      if (err instanceof Error) {
+        logger.error(`The error message: ${err.message}`);
+      }
+
+      throw err;
+    }
   }
 }
 

@@ -65,6 +65,7 @@ jobs:
           - field-as-updated-at
           - user-positions
           - user-team-memberships
+          - clear-on-change
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -88,7 +88,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 .workingGroup({ workingGroupId: id }).$,
             }),
           )}
-          interestGroups={(user.interestGroups || []).map(
+          interestGroups={user.interestGroups.map(
             ({ id, name = '', active }) => ({
               name,
               active,

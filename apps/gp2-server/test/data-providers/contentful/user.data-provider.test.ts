@@ -2163,5 +2163,54 @@ describe('User data provider', () => {
         },
       });
     });
+    test('checks version of published data and polls until they match', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: {
+          sys: {
+            publishedVersion: 1,
+          },
+        },
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: {
+          sys: {
+            publishedVersion: 1,
+          },
+        },
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
+
+      await userDataProvider.update('123', {
+        firstName: 'Colin',
+      });
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(3);
+    });
+
+    test('throws if polling query does not return a value', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: null,
+      });
+
+      expect(async () =>
+        userDataProvider.update('123', {
+          firstName: 'Colin',
+        }),
+      ).rejects.toThrow();
+    });
+
+    test('unwraps `code` property of connections', async () => {
+      await userDataProvider.update('123', {
+        connections: [{ code: 'abc123' }],
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        connections: ['abc123'],
+      });
+    });
   });
 });

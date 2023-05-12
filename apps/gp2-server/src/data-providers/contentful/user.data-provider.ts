@@ -179,6 +179,13 @@ const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) =>
         )?.countryCode,
       };
     }
+    if (key === 'connections') {
+      const connections = userToUpdate.connections || [];
+      return {
+        ...acc,
+        connections: connections.map(({ code }) => code),
+      };
+    }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 

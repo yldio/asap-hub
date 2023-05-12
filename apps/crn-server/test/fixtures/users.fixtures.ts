@@ -269,7 +269,6 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   workingGroups: [],
   interestGroups: [],
   connections: [],
-  interestGroups: [],
 });
 
 export const updateAvatarBody: { avatar: string } = {
@@ -342,7 +341,6 @@ export const getUserResponse = (): UserResponse => ({
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },
   ],
-  interestGroups: [],
 });
 
 export const fetchExpectation: ListUserResponse = {
@@ -690,7 +688,6 @@ export const getUserDataObject = (): UserDataObject => ({
     },
   ],
   role: 'Grantee',
-  interestGroups: [],
   labs: [
     { id: 'cd7be4902', name: 'Brighton' },
     { id: 'cd7be4903', name: 'Liverpool' },

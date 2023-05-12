@@ -32,7 +32,8 @@ runs:
                             --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
                             https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments \
                             | jq '.total' -r)
-
+                            
+        echo "Currently using $ENVIRONMENTS environments"
         if [[ "$ENVIRONMENTS" == "$MAX_CONTENTFUL_ENVIRONMENTS" ]]; then
           echo "Max Contentful environments reached. Cannot create more."
           exit 1;

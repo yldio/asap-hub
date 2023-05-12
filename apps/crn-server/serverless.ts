@@ -848,7 +848,7 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'false',
       },
     },
-    cronjobSyncContentful: {
+    cronjobSyncOrcidContentful: {
       handler: './src/handlers/webhooks/cronjob-sync-orcid.handler',
       events: [
         {

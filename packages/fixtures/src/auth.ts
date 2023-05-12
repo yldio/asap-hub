@@ -24,6 +24,13 @@ export const createAuthUser = (): User => ({
       active: true,
     },
   ],
+  interestGroups: [
+    {
+      id: 'ig-id-1',
+      name: 'Interest Group',
+      active: true,
+    },
+  ],
   role: 'Grantee',
 });
 

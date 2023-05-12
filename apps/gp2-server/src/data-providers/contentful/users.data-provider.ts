@@ -44,8 +44,17 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 
   async fetchById(id: string): Promise<gp2Model.UserDataObject | null> {
-    const { users } = await this.fetchUserById(id);
-    return users ? parseContentfulGraphQLUsers(users) : null;
+    try {
+      const { users } = await this.fetchUserById(id);
+      return users ? parseContentfulGraphQLUsers(users) : null;
+    } catch (err) {
+      logger.error(`An error occorred on fetch users`);
+      if (err instanceof Error) {
+        logger.error(`The error message: ${err.message}`);
+      }
+
+      throw err;
+    }
   }
 
   private getUserIdFilter = async ({
@@ -65,29 +74,38 @@ export class UserContentfulDataProvider implements UserDataProvider {
   async fetch(
     options: gp2Model.FetchUsersOptions,
   ): Promise<gp2Model.ListUserDataObject> {
-    const { projects, workingGroups } = options.filter || {};
-    const userIdFilter = await this.getUserIdFilter({
-      projects,
-      workingGroups,
-    });
-    if (
-      userIdFilter.length === 0 &&
-      (projects?.length || workingGroups?.length)
-    ) {
-      return { total: 0, items: [] };
+    try {
+      const { projects, workingGroups } = options.filter || {};
+      const userIdFilter = await this.getUserIdFilter({
+        projects,
+        workingGroups,
+      });
+      if (
+        userIdFilter.length === 0 &&
+        (projects?.length || workingGroups?.length)
+      ) {
+        return { total: 0, items: [] };
+      }
+      logger.debug(`fetch users ${JSON.stringify(options, undefined, 2)} `);
+      const result = await this.fetchUsers(options, userIdFilter);
+
+      const items = {
+        total: result?.total,
+        items: result?.items
+          .filter((x): x is UserItem => x !== null)
+          .map(parseContentfulGraphQLUsers),
+      };
+
+      logger.debug(JSON.stringify(items, undefined, 2));
+      return items;
+    } catch (err) {
+      logger.error(`An error occorred on fetch users`);
+      if (err instanceof Error) {
+        logger.error(`The error message: ${err.message}`);
+      }
+
+      throw err;
     }
-    logger.debug(`fetch users ${JSON.stringify(options, undefined, 2)} `);
-    const result = await this.fetchUsers(options, userIdFilter);
-
-    const items = {
-      total: result?.total,
-      items: result?.items
-        .filter((x): x is UserItem => x !== null)
-        .map(parseContentfulGraphQLUsers),
-    };
-
-    logger.debug(JSON.stringify(items, undefined, 2));
-    return items;
   }
 
   private async fetchUsers(

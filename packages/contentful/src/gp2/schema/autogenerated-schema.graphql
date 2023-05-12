@@ -1499,7 +1499,6 @@ input ProjectMembershipFilter {
 type ProjectMembershipLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum ProjectMembershipOrder {
@@ -1871,7 +1870,7 @@ type Users implements Entry {
   contentfulMetadata: ContentfulMetadata!
   contributingCohortsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersContributingCohortsCollection
   country(locale: String): String
-  degree(locale: String): [String]
+  degrees(locale: String): [String]
   email(locale: String): String
   firstName(locale: String): String
   fundingStreams(locale: String): String
@@ -1964,10 +1963,10 @@ input UsersFilter {
   country_not: String
   country_not_contains: String
   country_not_in: [String]
-  degree_contains_all: [String]
-  degree_contains_none: [String]
-  degree_contains_some: [String]
-  degree_exists: Boolean
+  degrees_contains_all: [String]
+  degrees_contains_none: [String]
+  degrees_contains_some: [String]
+  degrees_exists: Boolean
   email: String
   email_contains: String
   email_exists: Boolean
@@ -2181,6 +2180,7 @@ input WorkingGroupMembershipFilter {
 
 type WorkingGroupMembershipLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum WorkingGroupMembershipOrder {
@@ -2343,7 +2343,7 @@ input WorkingGroupsFilter {
   leadingMembers_not: String
   leadingMembers_not_contains: String
   leadingMembers_not_in: [String]
-  members: cfProjectMembershipNestedFilter
+  members: cfWorkingGroupMembershipNestedFilter
   membersCollection_exists: Boolean
   milestones: cfMilestonesNestedFilter
   milestonesCollection_exists: Boolean
@@ -2417,7 +2417,7 @@ type WorkingGroupsLinkingCollections {
 }
 
 type WorkingGroupsMembersCollection {
-  items: [ProjectMembership]!
+  items: [WorkingGroupMembership]!
   limit: Int!
   skip: Int!
   total: Int!
@@ -2711,10 +2711,10 @@ input cfUsersNestedFilter {
   country_not: String
   country_not_contains: String
   country_not_in: [String]
-  degree_contains_all: [String]
-  degree_contains_none: [String]
-  degree_contains_some: [String]
-  degree_exists: Boolean
+  degrees_contains_all: [String]
+  degrees_contains_none: [String]
+  degrees_contains_some: [String]
+  degrees_exists: Boolean
   email: String
   email_contains: String
   email_exists: Boolean
@@ -2833,6 +2833,21 @@ input cfUsersNestedFilter {
   twitter_not: String
   twitter_not_contains: String
   twitter_not_in: [String]
+}
+
+input cfWorkingGroupMembershipNestedFilter {
+  AND: [cfWorkingGroupMembershipNestedFilter]
+  OR: [cfWorkingGroupMembershipNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  user_exists: Boolean
 }
 
 input cfWorkingGroupsNestedFilter {

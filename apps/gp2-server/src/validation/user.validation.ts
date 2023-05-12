@@ -66,7 +66,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
       nullable: true,
     },
     onboarded: { type: 'boolean', nullable: true },
-    secondaryEmail: {
+    alternativeEmail: {
       type: 'string',
       nullable: true,
       pattern: emailExpression,

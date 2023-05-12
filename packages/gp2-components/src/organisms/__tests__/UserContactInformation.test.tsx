@@ -4,12 +4,15 @@ import UserContactInformation from '../UserContactInformation';
 describe('UserContactInformation', () => {
   it('renders emails', () => {
     const email = 'email@example.io';
-    const secondaryEmail = 'secondary.email@example.io';
+    const alternativeEmail = 'alternative.email@example.io';
     render(
-      <UserContactInformation email={email} secondaryEmail={secondaryEmail} />,
+      <UserContactInformation
+        email={email}
+        alternativeEmail={alternativeEmail}
+      />,
     );
     expect(screen.getByRole('link', { name: email })).toBeVisible();
-    expect(screen.getByRole('link', { name: secondaryEmail })).toBeVisible();
+    expect(screen.getByRole('link', { name: alternativeEmail })).toBeVisible();
   });
   it('renders the right title', () => {
     render(<UserContactInformation email="" />);

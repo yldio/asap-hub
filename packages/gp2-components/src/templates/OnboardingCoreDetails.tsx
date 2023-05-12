@@ -8,7 +8,7 @@ import UserContactInformation from '../organisms/UserContactInformation';
 
 type OnboardingCoreDetailProps = Pick<
   gp2Model.UserResponse,
-  'email' | 'secondaryEmail'
+  'email' | 'alternativeEmail'
 > &
   ComponentProps<typeof UserDetailHeaderCard>;
 
@@ -16,7 +16,7 @@ const { onboarding } = gp2Routing;
 
 const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
   email,
-  secondaryEmail,
+  alternativeEmail,
   onImageSelect,
   ...headerProps
 }) => (
@@ -32,7 +32,7 @@ const OnboardingCoreDetails: React.FC<OnboardingCoreDetailProps> = ({
     />
     <UserContactInformation
       editHref={onboarding({}).coreDetails({}).editContactInfo({}).$}
-      secondaryEmail={secondaryEmail}
+      alternativeEmail={alternativeEmail}
       email={email}
     />
   </>

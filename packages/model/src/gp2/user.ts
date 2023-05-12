@@ -44,6 +44,14 @@ export const userRegions = [
 
 export type UserRegion = (typeof userRegions)[number];
 
+export const isUserRole = (data: string): data is UserRole =>
+  userRoles.includes(data as UserRole);
+
+export const isUserDegree = (data: string | null): data is UserDegree =>
+  userDegrees.includes(data as UserDegree);
+export const isUserRegion = (data: string): data is UserRegion =>
+  userRegions.includes(data as UserRegion);
+
 export type UserPosition = {
   role: string;
   department: string;
@@ -51,7 +59,7 @@ export type UserPosition = {
 };
 
 type UserProjectMember = Pick<ProjectMember, 'userId' | 'role'>;
-type UserProject = Pick<ProjectDataObject, 'id' | 'title' | 'status'> & {
+export type UserProject = Pick<ProjectDataObject, 'id' | 'title' | 'status'> & {
   members: UserProjectMember[];
 };
 export type UserWorkingGroupMember = Pick<
@@ -71,6 +79,12 @@ export const userContributingCohortRole = [
 ] as const;
 export type UserContributingCohortRole =
   (typeof userContributingCohortRole)[number];
+
+export const isUserContributingCohortRole = (
+  data: string | null,
+): data is UserContributingCohortRole =>
+  userContributingCohortRole.includes(data as UserContributingCohortRole);
+
 export type UserContributingCohort = {
   role: UserContributingCohortRole;
   studyUrl?: string;
@@ -84,49 +98,50 @@ export interface UserSocial
 }
 
 export type UserDataObject = {
+  id: string;
+  activatedDate?: string;
+  alternativeEmail?: string;
   avatarUrl?: string;
+  biography?: string;
   city?: string;
   connections?: Connection[];
+  contributingCohorts: UserContributingCohort[];
   country: string;
   createdDate: string;
   degrees: UserDegree[];
   email: string;
   firstName: string;
-  id: string;
+  fundingStreams?: string;
+  keywords: Keyword[];
   lastName: string;
   onboarded: boolean;
   positions: UserPosition[];
-  region: UserRegion;
-  role: UserRole;
   projects: UserProject[];
   questions: string[];
-  workingGroups: UserWorkingGroup[];
-  fundingStreams?: string;
-  contributingCohorts: UserContributingCohort[];
-  secondaryEmail?: string;
-  telephone?: Telephone;
+  region: UserRegion;
+  role: UserRole;
   social?: UserSocial;
-  keywords: Keyword[];
-  biography?: string;
-  activatedDate?: string;
+  telephone?: Telephone;
+  workingGroups: UserWorkingGroup[];
 };
 
 export type UserCreateDataObject = Omit<
   UserDataObject,
-  'id' | 'createdDate' | 'projects' | 'workingGroups' | 'contributingCohorts'
+  | 'id'
+  | 'createdDate'
+  | 'avatarUrl'
+  | 'projects'
+  | 'workingGroups'
+  | 'contributingCohorts'
 > & {
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
+  avatar?: string;
 };
 
 export type UserUpdateDataObject = Partial<UserCreateDataObject>;
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
-  | 'avatarUrl'
-  | 'connections'
-  | 'email'
-  | 'role'
-  | 'createdDate'
-  | 'activatedDate'
+  'avatar' | 'connections' | 'email' | 'role' | 'createdDate' | 'activatedDate'
 >;
 
 export type UserAvatarPostRequest = {

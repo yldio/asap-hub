@@ -7,7 +7,7 @@ import {
   contentfulEnvId,
   contentfulSpaceId,
 } from '../src/config';
-import { UserContentfulDataProvider } from '../src/data-providers/contentful/users.data-provider';
+import { UserContentfulDataProvider } from '../src/data-providers/contentful/user.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependencies';
 
 console.log('Importing users...');

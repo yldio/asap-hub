@@ -8,7 +8,7 @@ import {
   contentfulSpaceId,
   isContentfulEnabled,
 } from '../config';
-import { UserContentfulDataProvider } from '../data-providers/contentful/users.data-provider';
+import { UserContentfulDataProvider } from '../data-providers/contentful/user.data-provider';
 import { UserDataProvider } from '../data-providers/types';
 import { UserSquidexDataProvider } from '../data-providers/user.data-provider';
 import { getAuthToken } from '../utils/auth';

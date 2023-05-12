@@ -11,7 +11,7 @@ describe('Users Dependencies', () => {
         '../../src/data-providers/user.data-provider'
       );
       const getDependenciesModule = await import(
-        '../../src/dependencies/users.dependencies'
+        '../../src/dependencies/user.dependencies'
       );
       const userDataProvider = getDependenciesModule.getUserDataProvider();
 
@@ -21,10 +21,10 @@ describe('Users Dependencies', () => {
     it('Should resolve User Contentful Data Provider when the Contentful feature flag is on', async () => {
       process.env.GP2_CONTENTFUL_ENABLED = 'true';
       const { UserContentfulDataProvider } = await import(
-        '../../src/data-providers/contentful/users.data-provider'
+        '../../src/data-providers/contentful/user.data-provider'
       );
       const getDependenciesModule = await import(
-        '../../src/dependencies/users.dependencies'
+        '../../src/dependencies/user.dependencies'
       );
       const userDataProvider = getDependenciesModule.getUserDataProvider();
 

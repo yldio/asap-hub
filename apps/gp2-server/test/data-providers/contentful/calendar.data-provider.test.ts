@@ -1,8 +1,8 @@
 import { GraphQLError } from 'graphql';
 import {
-  getContentfulGraphqlClientMockServer,
   Environment,
   gp2,
+  getGP2ContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
 
 import {
@@ -31,7 +31,7 @@ describe('Calendars data provider', () => {
   );
 
   const contentfulGraphqlClientMockServer =
-    getContentfulGraphqlClientMockServer({
+    getGP2ContentfulGraphqlClientMockServer({
       Calendars: () => getContentfulGraphqlCalendar(),
     });
 

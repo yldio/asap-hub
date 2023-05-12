@@ -68,7 +68,6 @@ const appUrl = `https://${appHostname}`;
 const apiUrl = `https://${apiHostname}`;
 const currentRevision = process.env.CI_COMMIT_SHA;
 const nodeEnv = 'production';
-
 export const plugins = [
   './serverless-plugins/serverless-webpack',
   './serverless-plugins/serverless-s3-sync',
@@ -301,7 +300,11 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus,
             pattern: {
-              source: [eventBusSourceSquidex],
+              source: [
+                isContentfulEnabled
+                  ? eventBusSourceContentful
+                  : eventBusSourceSquidex,
+              ],
               'detail-type': ['UsersPublished'],
             },
             retryPolicy: {

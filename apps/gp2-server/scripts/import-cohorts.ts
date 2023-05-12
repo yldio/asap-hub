@@ -57,7 +57,7 @@ const app = async () => {
         ) {
           if (
             (e as any).details[0].includes(
-              'name.iv: Another content with the same value exists.',
+              'name: Another content with the same value exists.',
             )
           ) {
             alreayExist++;

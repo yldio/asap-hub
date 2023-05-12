@@ -64,7 +64,7 @@ import { CalendarSquidexDataProvider } from './data-providers/calendar.data-prov
 import { ContributingCohortsContentfulDataProvider } from './data-providers/contentful/contributing-cohorts.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
-import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
+import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
 import { ContributingCohortSquidexDataProvider } from './data-providers/contributing-cohort.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {

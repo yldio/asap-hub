@@ -9,7 +9,7 @@ import {
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { appName, baseUrl } from '../../../src/config';
-import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/users.data-provider';
+import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/user.data-provider';
 import { UserDataProvider } from '../../../src/data-providers/types';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import {

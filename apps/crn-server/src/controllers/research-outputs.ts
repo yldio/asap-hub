@@ -22,6 +22,7 @@ import {
 } from '../data-providers/research-outputs.data-provider';
 import { ResearchTagDataProvider } from '../data-providers/research-tags.data-provider';
 import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
+import { fetchAll } from '../utils/fetch-all';
 
 export default class ResearchOutputs implements ResearchOutputController {
   constructor(
@@ -323,9 +324,7 @@ export default class ResearchOutputs implements ResearchOutputController {
   private async parseResearchTags(
     researchOutputData: ResearchOutputInputTags,
   ): Promise<ResearchOutputParsedTags> {
-    const researchTags = [
-      ...(await this.researchTagDataProvider.fetch({ take: 100 })).items,
-    ];
+    const researchTags = (await fetchAll(this.researchTagDataProvider)).items;
 
     const methods = mapResearchTags(
       researchTags,

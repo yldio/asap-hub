@@ -1,13 +1,19 @@
 import {
+  FetchResearchTagsFilter,
   FetchResearchTagsOptions,
   ListResearchTagResponse,
+  ResearchTagDataObject,
 } from '@asap-hub/model';
 import { ResearchTagDataProvider } from '../data-providers/research-tags.data-provider';
+import { fetchAll } from '../utils/fetch-all';
+
+type FetchAllOptions = Omit<FetchResearchTagsOptions, 'take' | 'skip'>;
 
 export interface ResearchTagController {
   fetch: (
     options: FetchResearchTagsOptions,
   ) => Promise<ListResearchTagResponse>;
+  fetchAll: (options: FetchAllOptions) => Promise<ListResearchTagResponse>;
 }
 
 export default class ResearchTags implements ResearchTagController {
@@ -23,5 +29,13 @@ export default class ResearchTags implements ResearchTagController {
       skip,
       filter,
     });
+  }
+
+  async fetchAll(options: FetchAllOptions): Promise<ListResearchTagResponse> {
+    const { filter } = options;
+    return fetchAll<ResearchTagDataObject, FetchResearchTagsFilter>(
+      this.researchTagsDataProvider,
+      filter,
+    );
   }
 }

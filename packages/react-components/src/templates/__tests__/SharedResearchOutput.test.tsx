@@ -207,7 +207,7 @@ describe('Not Grant Documents', () => {
         <SharedResearchOutput
           {...props}
           documentType="Article"
-          tags={['tag1']}
+          keywords={['tag1']}
           description="should not be there"
           descriptionMD="should be visible"
         />,

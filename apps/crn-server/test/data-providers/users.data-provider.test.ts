@@ -397,7 +397,7 @@ describe('User data provider', () => {
       const result = await userDataProvider.fetchById('user-1');
       expect(result).toEqual(expectedResponse);
     });
-    test('Should provide connected teams interest groups an', async () => {
+    test('Should provide connected teams interest groups', async () => {
       const mockResponse = getSquidexUserGraphqlResponse();
       mockResponse.findUsersContent!.flatData.alumniSinceDate = null;
       mockResponse.findUsersContent!.id = 'user-id-1';

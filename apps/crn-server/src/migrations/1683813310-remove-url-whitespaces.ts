@@ -10,7 +10,7 @@ import { Migration } from '@asap-hub/server-common';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class RemoveUrlWhitespaces extends Migration {
-  private isPatchingEnabled = true;
+  private isPatchingEnabled = false;
 
   processEvents = async (): Promise<void> => {
     // eslint-disable-next-line no-console

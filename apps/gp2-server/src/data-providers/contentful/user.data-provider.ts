@@ -82,7 +82,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const items = {
       total: result?.total,
       items: result?.items
-        .filter((user): user is UserItem => user !== null)
+        .filter((user: unknown): user is UserItem => user !== null)
         .map(parseContentfulGraphQLUsers),
     };
 
@@ -124,19 +124,74 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 
   async update(id: string, data: gp2Model.UserUpdateDataObject): Promise<void> {
-    const fields = cleanUser(data);
-    const environment = await this.getRestClient();
-    const user = await environment.getEntry(id);
-    logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
-    const result = await patchAndPublish(user, fields);
+    try {
+      const fields = cleanUser(data);
+      const environment = await this.getRestClient();
+      const user = await environment.getEntry(id);
 
-    const fetchEventById = () => this.fetchUserById(id);
+      logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
+      const output = await Promise.all(
+        (data.contributingCohorts || [])?.map(async (contributingCohort) => {
+          const entry = await environment.createEntry(
+            'contributingCohortsMembership',
+            {
+              fields: addLocaleToFields({
+                contributingCohort: {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: contributingCohort.contributingCohortId,
+                  },
+                },
+                role: contributingCohort.role,
+                studyLink: contributingCohort.studyUrl,
+              }),
+            },
+          );
+          await entry.publish();
+          return entry.sys.id;
+        }),
+      );
 
-    await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(
-      result.sys.publishedVersion || Infinity,
-      fetchEventById,
-      'users',
-    );
+      const result = await patchAndPublish(user, {
+        ...fields,
+        contributingCohorts: output.map((id) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id,
+          },
+        })),
+      });
+
+      if (user.fields['contributingCohorts']) {
+        const cohorts = user.fields['contributingCohorts']['en-US'];
+        const cohortEntities = await environment.getEntries({
+          content_type: 'contributingCohortsMembership',
+          'sys.id[in]': cohorts
+            .map((cohort: { sys: { id: string } }) => cohort.sys.id)
+            .join(','),
+        });
+        await Promise.all(
+          cohortEntities.items.map(async (entry) => {
+            await entry.unpublish();
+            await entry.delete();
+          }),
+        );
+      }
+      const fetchEventById = () => this.fetchUserById(id);
+      await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(
+        result.sys.publishedVersion || Infinity,
+        fetchEventById,
+        'users',
+      );
+    } catch (err) {
+      logger.error(`An error occurred updating a user ${id} - ${data}`);
+      if (err instanceof Error) {
+        logger.error(`The error message: ${err.message}`);
+      }
+      throw err;
+    }
   }
 }
 

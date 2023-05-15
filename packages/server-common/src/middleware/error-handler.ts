@@ -13,6 +13,8 @@ export const errorHandlerFactory =
 
     req.log.error(err);
 
+    console.log(err);
+    console.log(err.message);
     // add error to the trace
     req.span?.log({ 'error.error': err });
     req.span?.log({ 'error.message': err.message });

@@ -13,7 +13,6 @@ const Field = () => {
 
   useEffect(() => {
     if (!firstUpdate.current) {
-      console.log('clearing');
       setCurrentFieldValue(null);
     } else {
       firstUpdate.current = false;

@@ -148,11 +148,19 @@ export class UserContentfulDataProvider implements UserDataProvider {
               }),
             },
           );
-          await entry.publish();
           return entry.sys.id;
         }),
       );
 
+      const publish = await environment.createPublishBulkAction({
+        entities: {
+          sys: { type: 'Array' },
+          items: output.map((id) => ({
+            sys: { linkType: 'Entry', type: 'Link', id, version: 1 },
+          })),
+        },
+      });
+      await publish.waitProcessing();
       const result = await patchAndPublish(user, {
         ...fields,
         contributingCohorts: output.map((id) => ({
@@ -166,18 +174,22 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
       if (user.fields['contributingCohorts']) {
         const cohorts = user.fields['contributingCohorts']['en-US'];
+        const unpublish = await environment.createUnpublishBulkAction({
+          entities: {
+            sys: { type: 'Array' },
+            items: cohorts.map((cohort: { sys: { id: string } }) => ({
+              sys: { linkType: 'Entry', type: 'Link', id: cohort.sys.id },
+            })),
+          },
+        });
+        await unpublish.waitProcessing();
         const cohortEntities = await environment.getEntries({
           content_type: 'contributingCohortsMembership',
           'sys.id[in]': cohorts
             .map((cohort: { sys: { id: string } }) => cohort.sys.id)
             .join(','),
         });
-        await Promise.all(
-          cohortEntities.items.map(async (entry) => {
-            await entry.unpublish();
-            await entry.delete();
-          }),
-        );
+        await Promise.all(cohortEntities.items.map((entry) => entry.delete()));
       }
       const fetchEventById = () => this.fetchUserById(id);
       await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(

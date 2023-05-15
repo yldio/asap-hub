@@ -14,12 +14,6 @@ describe('Subscription', () => {
   const getJWTCredentials: jest.MockedFunction<GetJWTCredentials> = jest.fn();
   const asapApiUrl = 'http://asap-api-url';
   const googleApiToken = 'google-api-token';
-  const cms = 'squidex';
-  const subscribeToEventChanges = subscribeToEventChangesFactory(
-    getJWTCredentials,
-    logger,
-    { googleApiUrl, googleApiToken, asapApiUrl, cms },
-  );
 
   test.each`
     cms             | address
@@ -27,7 +21,7 @@ describe('Subscription', () => {
     ${'contentful'} | ${'webhook/events/contentful'}
   `(
     'Should subscribe to the calendar events notifications and return the resourceId when cms is $cms',
-    async ({ address }) => {
+    async ({ address, cms }) => {
       getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
       const expiration = 1617196357000;
@@ -54,6 +48,12 @@ describe('Subscription', () => {
           resourceId: 'some-resource-id',
           expiration: `${expiration}`,
         });
+
+      const subscribeToEventChanges = subscribeToEventChangesFactory(
+        getJWTCredentials,
+        logger,
+        { googleApiUrl, googleApiToken, asapApiUrl, cms },
+      );
 
       const result = await subscribeToEventChanges(
         calendarId,

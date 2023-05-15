@@ -3,7 +3,7 @@ import {
   SubscribeToEventChanges,
   UnsubscribeFromEventChanges,
 } from '../../../src';
-import { calendarCreatedContentfulHandlerFactory } from '../../../src/handlers/calendar/subscribe-handler.contentful';
+import { calendarCreatedContentfulHandlerFactory } from '../../../src/handlers/calendar/calendar-handler-factory.contentful';
 import { Alerts } from '../../../src/utils/alerts';
 import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
 import { loggerMock as logger } from '../../mocks/logger.mock';

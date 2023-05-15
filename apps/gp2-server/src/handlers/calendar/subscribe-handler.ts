@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import {
   AlertsSentry,
-  calendarCreatedHandlerFactory,
+  calendarCreatedSquidexHandlerFactory,
   getJWTCredentialsFactory,
   subscribeToEventChangesFactory,
   unsubscribeFromEventChangesFactory,
@@ -41,7 +41,7 @@ const getJWTCredentialsAWS = getJWTCredentialsFactory({
   googleApiCredentialsSecretId,
   region,
 });
-const webhookHandler = calendarCreatedHandlerFactory(
+const webhookHandler = calendarCreatedSquidexHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
     asapApiUrl,
     googleApiToken,

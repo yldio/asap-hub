@@ -6,8 +6,9 @@ import {
 import { CalendarDataProvider, CalendarEvent, gp2 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import 'source-map-support/register';
+
 import { Alerts, Logger } from '../../utils';
-import { validateBody } from '../../validation/subscribe-handler.contentful.validation';
+import { validateBody } from '../../validation/calendar-handler.contentful.validation';
 import { CalendarContentfulPayload } from '../event-bus';
 import {
   SubscribeToEventChanges,

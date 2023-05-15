@@ -3,15 +3,15 @@ describe('Subscribe handler', () => {
     jest.resetModules();
   });
 
-  it('Should select right handler and path when the Contentful feature flag is off', async () => {
+  it('Should select right handler and cms when the Contentful feature flag is off', async () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
 
     const {
-      path,
+      cms,
       calendarCreatedHandlerFactory,
     } = require('../../../src/handlers/calendar/subscribe-handler');
     const {
-      calendarCreatedHandlerFactory: calendarCreatedSquidexHandlerFactory,
+      calendarCreatedSquidexHandlerFactory,
       calendarCreatedContentfulHandlerFactory,
     } = require('@asap-hub/server-common');
 
@@ -21,19 +21,19 @@ describe('Subscribe handler', () => {
     expect(calendarCreatedHandlerFactory).not.toEqual(
       calendarCreatedContentfulHandlerFactory,
     );
-    expect(path).toBeUndefined();
+    expect(cms).toEqual('squidex');
   });
 
-  it('Should select right handler and path when the Contentful feature flag is on', async () => {
+  it('Should select right handler and cms when the Contentful feature flag is on', async () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
 
     const {
       contentfulDeliveryApiConfig,
-      path,
+      cms,
       calendarCreatedHandlerFactory,
     } = require('../../../src/handlers/calendar/subscribe-handler');
     const {
-      calendarCreatedHandlerFactory: calendarCreatedSquidexHandlerFactory,
+      calendarCreatedSquidexHandlerFactory,
       calendarCreatedContentfulHandlerFactory,
     } = require('@asap-hub/server-common');
 
@@ -48,7 +48,7 @@ describe('Subscribe handler', () => {
       environment: expect.any(String),
       space: expect.any(String),
     });
-    expect(path).toEqual('contentful');
+    expect(cms).toEqual('contentful');
   });
 });
 

@@ -1,6 +1,6 @@
 import {
   AlertsSentry,
-  calendarCreatedHandlerFactory as calendarCreatedSquidexHandlerFactory,
+  calendarCreatedSquidexHandlerFactory,
   calendarCreatedContentfulHandlerFactory,
   getJWTCredentialsFactory,
   subscribeToEventChangesFactory,
@@ -39,14 +39,14 @@ export const contentfulDeliveryApiConfig = {
   accessToken: contentfulAccessToken,
 };
 
-export const path = isContentfulEnabledV2 ? 'contentful' : undefined;
+export const cms = isContentfulEnabledV2 ? 'contentful' : 'squidex';
 
 export const webhookHandler = calendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
     asapApiUrl,
     googleApiToken,
     googleApiUrl,
-    path,
+    cms,
   }),
   unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
     googleApiUrl,

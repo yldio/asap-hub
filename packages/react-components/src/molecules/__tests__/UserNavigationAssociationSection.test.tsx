@@ -20,23 +20,6 @@ const team = {
   href: '/team-1',
 };
 
-it('renders a association section with all the details', () => {
-  const { getByText, getByRole } = render(
-    <UserNavigationAssociationSection
-      association={[{ ...interestGroup, name: 'group 1' }]}
-      userOnboarded={true}
-      title="MY INTEREST GROUPS"
-    />,
-  );
-
-  expect(getByText('group 1')).toBeVisible();
-  expect(getByText('MY INTEREST GROUPS')).toBeVisible();
-  expect(getByRole('link', { name: /interest group/i })).toHaveAttribute(
-    'href',
-    expect.stringMatching(interestGroup.href),
-  );
-});
-
 it('renders an association section with all the details', () => {
   const { getByText, getByRole } = render(
     <UserNavigationAssociationSection

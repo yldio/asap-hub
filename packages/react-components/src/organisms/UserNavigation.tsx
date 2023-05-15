@@ -94,7 +94,7 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
           />
         )}
       {workingGroups.length > 0 &&
-        interestGroups.some((interestGroup) => interestGroup.active) && (
+        workingGroups.some((workingGroup) => workingGroup.active) && (
           <UserNavigationAssociationSection
             userOnboarded={userOnboarded}
             association={workingGroups}

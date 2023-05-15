@@ -289,6 +289,7 @@ export const getUserCreateDataObject = (): gp2Model.UserCreateDataObject => {
   const {
     id: _id,
     createdDate: _createdDate,
+    connections: _connections,
     contributingCohorts,
     ...userCreateDataObject
   } = getUserDataObject();

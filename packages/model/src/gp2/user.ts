@@ -133,12 +133,14 @@ export type UserCreateDataObject = Omit<
   | 'projects'
   | 'workingGroups'
   | 'contributingCohorts'
+  | 'connections'
 > & {
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
   avatar?: string;
 };
 
-export type UserUpdateDataObject = Partial<UserCreateDataObject>;
+export type UserUpdateDataObject = Partial<UserCreateDataObject> &
+  Partial<Pick<UserDataObject, 'connections'>>;
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
   'avatar' | 'connections' | 'email' | 'role' | 'createdDate' | 'activatedDate'

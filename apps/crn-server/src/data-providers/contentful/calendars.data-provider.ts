@@ -165,8 +165,6 @@ export const parseGraphQlCalendarToDataObject = (
   resourceId: item.googleApiMetadata?.resourceId ?? undefined,
   expirationDate: item.googleApiMetadata?.expirationDate ?? undefined,
   syncToken: item.googleApiMetadata?.syncToken ?? undefined,
-  associatedGoogleCalendarId:
-    item.googleApiMetadata?.associatedGoogleCalendarId ?? undefined,
   ...parseContentfulGraphqlCalendarPartialToDataObject(item),
   // TODO: implement this when
   // CT-13 Interest Groups

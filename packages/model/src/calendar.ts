@@ -6,7 +6,6 @@ import { WorkingGroupDataObject, WorkingGroupResponse } from './working-group';
 export interface CalendarDataObject extends BasicCalendar {
   groups?: Pick<GroupDataObject, 'id' | 'active'>[];
   workingGroups?: Pick<WorkingGroupDataObject, 'id' | 'complete'>[];
-  associatedGoogleCalendarId?: string;
 }
 
 export type ListCalendarDataObject = ListResponse<CalendarDataObject>;

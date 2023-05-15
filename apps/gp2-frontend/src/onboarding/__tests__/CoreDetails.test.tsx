@@ -114,15 +114,15 @@ describe('CoreDetails', () => {
     expect(screen.getByRole('link', { name: /T@ark.io/i })).toBeVisible();
   });
 
-  it('renders the secondary email', async () => {
+  it('renders the alternative email', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce({
       ...user,
-      secondaryEmail: 'secondary@stark.com',
+      alternativeEmail: 'alternative@stark.com',
     });
     await renderCoreDetails(user.id);
     expect(
-      screen.getByRole('link', { name: /secondary@stark.com/i }),
+      screen.getByRole('link', { name: /alternative@stark.com/i }),
     ).toBeVisible();
   });
 
@@ -209,7 +209,7 @@ describe('CoreDetails', () => {
     expect(mockPatchUser).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
-        secondaryEmail: 'tony.stark@avengers.com',
+        alternativeEmail: 'tony.stark@avengers.com',
         telephone: {
           countryCode: '+1',
           number: '0123456789',

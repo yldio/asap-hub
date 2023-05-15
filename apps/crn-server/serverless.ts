@@ -389,7 +389,7 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
-    syncUserOrcid: {
+    syncUserOrcidSquidex: {
       handler: './src/handlers/user/sync-orcid-handler.handler',
       events: [
         {
@@ -407,6 +407,28 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
+      },
+    },
+    syncUserOrcidContentful: {
+      handler: './src/handlers/user/sync-orcid-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['UsersPublished'],
+            },
+            retryPolicy: {
+              maximumRetryAttempts: 2,
+            },
+          },
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
     inviteUserSquidex: {
@@ -870,7 +892,7 @@ const serverlessConfig: AWS = {
           contentfulWebhookAuthenticationToken,
       },
     },
-    cronjobSyncOrcid: {
+    cronjobSyncOrcidSquidex: {
       handler: './src/handlers/webhooks/cronjob-sync-orcid.handler',
       events: [
         {
@@ -879,6 +901,19 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
+      },
+    },
+    cronjobSyncOrcidContentful: {
+      handler: './src/handlers/webhooks/cronjob-sync-orcid.handler',
+      events: [
+        {
+          schedule: 'rate(1 hour)', // run every hour
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
   },

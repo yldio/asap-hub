@@ -5,7 +5,7 @@ import {
 
 describe('Error Model', () => {
   describe('isValidationErrorResponse', () => {
-    test('Should recognize validation error', () => {
+    test('Should recognise validation error', () => {
       expect(
         isValidationErrorResponse({
           error: 'Bad Request',
@@ -16,7 +16,7 @@ describe('Error Model', () => {
       ).toEqual(true);
     });
 
-    test('Should not recognize validation error', () => {
+    test('Should not recognise validation error', () => {
       expect(
         isValidationErrorResponse({
           error: 'Bad Request',

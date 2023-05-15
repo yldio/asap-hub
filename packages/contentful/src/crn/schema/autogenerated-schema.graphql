@@ -319,7 +319,6 @@ type EventSpeakers implements Entry {
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
   sys: Sys!
   team(locale: String, preview: Boolean): Teams
-  title(locale: String): String
   user(locale: String, preview: Boolean): EventSpeakersUser
 }
 
@@ -337,13 +336,6 @@ input EventSpeakersFilter {
   sys: SysFilter
   team: cfTeamsNestedFilter
   team_exists: Boolean
-  title: String
-  title_contains: String
-  title_exists: Boolean
-  title_in: [String]
-  title_not: String
-  title_not_contains: String
-  title_not_in: [String]
   user_exists: Boolean
 }
 
@@ -361,8 +353,6 @@ enum EventSpeakersOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
 }
 
 union EventSpeakersUser = ExternalAuthors | Users
@@ -1933,13 +1923,6 @@ input cfEventSpeakersNestedFilter {
   contentfulMetadata: ContentfulMetadataFilter
   sys: SysFilter
   team_exists: Boolean
-  title: String
-  title_contains: String
-  title_exists: Boolean
-  title_in: [String]
-  title_not: String
-  title_not_contains: String
-  title_not_in: [String]
   user_exists: Boolean
 }
 

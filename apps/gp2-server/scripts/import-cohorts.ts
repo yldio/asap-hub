@@ -1,38 +1,29 @@
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { GenericError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { parse } from '@asap-hub/server-common';
 import {
-  getAccessTokenFactory,
-  gp2 as gp2Squidex,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
-import { appName, baseUrl, clientId, clientSecret } from '../src/config';
-import { ContributingCohortSquidexDataProvider } from '../src/data-providers/contributing-cohort.data-provider';
+  contentfulAccessToken,
+  contentfulEnvId,
+  contentfulSpaceId,
+} from '../src/config';
+import { ContributingCohortsContentfulDataProvider } from '../src/data-providers/contentful/contributing-cohorts.data-provider';
+import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependencies';
 
 console.log('Importing contributing cohorts...');
 
-const getAuthToken = getAccessTokenFactory({
-  clientId,
-  clientSecret,
-  baseUrl,
+const contentfulGraphQLClient = getContentfulGraphQLClient({
+  space: contentfulSpaceId,
+  accessToken: contentfulAccessToken,
+  environment: contentfulEnvId,
 });
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const contributingCohortRestClient = new SquidexRest<
-  gp2Squidex.RestContributingCohort,
-  gp2Squidex.InputContributingCohort
->(getAuthToken, 'contributing-cohorts', {
-  appName,
-  baseUrl,
-});
+
 const contributingCohortDataProvider =
-  new ContributingCohortSquidexDataProvider(
-    squidexGraphqlClient,
-    contributingCohortRestClient,
+  new ContributingCohortsContentfulDataProvider(
+    contentfulGraphQLClient,
+    getContentfulRestClientFactory,
   );
+
 const app = async () => {
   let imported = 0;
   let alreayExist = 0;
@@ -66,7 +57,7 @@ const app = async () => {
         ) {
           if (
             (e as any).details[0].includes(
-              'name.iv: Another content with the same value exists.',
+              'name: Another content with the same value exists.',
             )
           ) {
             alreayExist++;

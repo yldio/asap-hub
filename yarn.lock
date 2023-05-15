@@ -404,6 +404,34 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change"
+  dependencies:
+    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-sdk": 4.17.0
+    "@contentful/f36-components": 4.34.1
+    "@contentful/f36-tokens": 4.0.1
+    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/rich-text-html-renderer": 16.0.3
+    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/react": 11.2.7
+    "@tsconfig/create-react-app": 1.0.3
+    "@types/jest": ^29.4.0
+    "@types/node": 18.15.11
+    "@types/react": 17.0.58
+    "@types/react-dom": 17.0.19
+    "@types/testing-library__jest-dom": 5.14.5
+    contentful-management: 10.32.0
+    cross-env: 7.0.3
+    emotion: 10.0.27
+    react: 17.0.2
+    react-dom: 17.0.2
+    react-scripts: 5.0.1
+    typescript: 4.9.5
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields"
@@ -413,6 +441,7 @@ __metadata:
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.1
     "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -594,7 +623,7 @@ __metadata:
     "@types/async-retry": ^1
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    async-retry: ^1.3.3
+    async-retry: 1.3.3
     contentful: ^10.1.8
     contentful-cli: 1.19.1
     contentful-management: 10.32.0
@@ -825,7 +854,7 @@ __metadata:
     ajv-formats: 2.1.1
     algoliasearch: 4.17.0
     apr-intercept: 3.0.4
-    async-retry: ^1.3.3
+    async-retry: 1.3.3
     aws-lambda: 1.0.7
     babel-loader: 8.3.0
     chance: 1.1.11
@@ -10455,6 +10484,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@contentful/rich-text-react-renderer@npm:^15.16.4":
+  version: 15.16.4
+  resolution: "@contentful/rich-text-react-renderer@npm:15.16.4"
+  dependencies:
+    "@contentful/rich-text-types": ^16.1.0
+  peerDependencies:
+    react: ^16.8.6 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0
+  checksum: dc7cb6b5578e3a115e0335d7cbbf1ebb5208fdd19621fb94ee51ffa6a448fd2d578f1bb0af5e5aa71d27b7ff3a5a96ce1dd1171d7c5400812e2a9ed14500d22b
+  languageName: node
+  linkType: hard
+
 "@contentful/rich-text-types@npm:16.0.3, @contentful/rich-text-types@npm:^16.0.3":
   version: 16.0.3
   resolution: "@contentful/rich-text-types@npm:16.0.3"
@@ -10462,7 +10503,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-types@npm:^16.0.2":
+"@contentful/rich-text-types@npm:^16.0.2, @contentful/rich-text-types@npm:^16.1.0":
   version: 16.1.0
   resolution: "@contentful/rich-text-types@npm:16.1.0"
   checksum: 191927b41b63b4b3fb4d53edfff37ea67fd01fae538aa29c5ee2ee7d7b8060fe10eac082ed3a2ff63b2b24b5e4d4e4ad88479d8edd61f32ad218edf915fc07f4
@@ -19220,7 +19261,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async-retry@npm:^1.3.3":
+"async-retry@npm:1.3.3":
   version: 1.3.3
   resolution: "async-retry@npm:1.3.3"
   dependencies:

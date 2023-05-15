@@ -31,16 +31,8 @@ import {
 import { reverseMap } from '../utils/reverse-map';
 import { createUrl } from '../utils/urls';
 import { roleMap as projectRoleMap } from './project.data-provider';
+import { UserDataProvider } from './types/users.data-provider.types';
 import { roleMap as workingGroupRoleMap } from './working-group.data-provider';
-
-export interface UserDataProvider {
-  fetchById(id: string): Promise<gp2Model.UserDataObject | null>;
-  update(id: string, user: gp2Model.UserUpdateDataObject): Promise<void>;
-  create(user: gp2Model.UserCreateDataObject): Promise<string>;
-  fetch(
-    options: gp2Model.FetchUsersOptions,
-  ): Promise<gp2Model.ListUserDataObject>;
-}
 
 export class UserSquidexDataProvider implements UserDataProvider {
   constructor(
@@ -229,7 +221,8 @@ function getUserSquidexData(
     telephone,
     questions,
     contributingCohorts,
-    avatarUrl,
+    avatar,
+    alternativeEmail,
     ...userInput
   } = input;
   const fieldMappedUser = mapUserFields({ region, role, degrees });
@@ -241,9 +234,10 @@ function getUserSquidexData(
     ...userInput,
     ...fieldMappedUser,
     ...mappedTelephone,
+    secondaryEmail: alternativeEmail,
     questions: mappedQuestions,
     contributingCohorts: mappedCohorts,
-    avatar: avatarUrl ? [avatarUrl] : undefined,
+    avatar: avatar ? [avatar] : undefined,
     social: social ? [social] : undefined,
   });
 }
@@ -351,7 +345,7 @@ export const parseGraphQLUserToDataObject = ({
     questions,
     region: regionMap[user.region],
     role: roleMap[user.role],
-    secondaryEmail: user.secondaryEmail || undefined,
+    alternativeEmail: user.secondaryEmail || undefined,
     social,
     telephone,
     workingGroups,

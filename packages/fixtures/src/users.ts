@@ -35,6 +35,7 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   },
   labs: [],
   workingGroups: [],
+  interestGroups: [],
 };
 
 type FixtureOptions = {

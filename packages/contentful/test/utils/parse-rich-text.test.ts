@@ -1,34 +1,18 @@
 import { BLOCKS, TopLevelBlockEnum } from '@contentful/rich-text-types';
-import { Entry } from 'contentful-management';
-import {
-  addLocaleToFields,
-  createLink,
-  parseRichText,
-  patchAndPublish,
-  pollContentfulDeliveryApi,
-  pollContentfulGql,
-  updateEntryFields,
-} from '../src/utils';
+import { parseRichText } from '../../src/utils';
 import {
   assetId_1,
   assetId_2,
   baseAssetUrl,
-  inexistentAssetId,
   documentWithAssets,
-  linksWithAssets,
   documentWithEntries,
+  inexistentAssetId,
+  linksWithAssets,
   linksWithEntries,
-} from './rich-text.fixtures';
-
-describe('createLink', () => {
-  test('returns the right object given id', () => {
-    expect(createLink('id')).toEqual({
-      sys: { id: 'id', linkType: 'Entry', type: 'Link' },
-    });
-  });
-});
+} from '../rich-text.fixtures';
 
 describe('parseRichText', () => {
+  beforeEach(jest.resetAllMocks);
   describe('embedded-asset-block', () => {
     test('outputs html with img tag when asset is image', () => {
       const rtf = {
@@ -179,148 +163,5 @@ describe('parseRichText', () => {
         'Entry with id not-found does not exist in contentful',
       );
     });
-  });
-});
-
-describe('addLocaleToFields', () => {
-  test('adds locale to fields', () => {
-    expect(
-      addLocaleToFields({
-        title: 'News',
-        description: 'Very informative news',
-      }),
-    ).toEqual({
-      description: { 'en-US': 'Very informative news' },
-      title: { 'en-US': 'News' },
-    });
-  });
-});
-
-describe('updateEntryFields', () => {
-  test('updates entry fields', () => {
-    expect(
-      updateEntryFields(
-        {
-          fields: {
-            title: {
-              'en-US': 'Cells',
-            },
-          },
-        } as unknown as Entry,
-        {
-          title: 'Tissues',
-        },
-      ),
-    ).toEqual({ fields: { title: { 'en-US': 'Tissues' } } });
-  });
-});
-
-describe('patchAndPublish', () => {
-  let entry;
-  let publish;
-
-  beforeEach(() => {
-    publish = jest.fn();
-    entry = {
-      fields: {},
-      patch: jest.fn().mockResolvedValueOnce({ publish }),
-    };
-  });
-
-  test('converts data object passed to a json patch with locales', async () => {
-    await patchAndPublish(entry, { foo: 'bar', baz: 1 });
-    expect(entry.patch).toHaveBeenCalledWith([
-      { op: 'add', path: '/fields/foo', value: { 'en-US': 'bar' } },
-      { op: 'add', path: '/fields/baz', value: { 'en-US': 1 } },
-    ]);
-  });
-
-  test('patches with a "replace" op if field exists on entry', async () => {
-    entry.fields = {
-      foo: null,
-    };
-    await patchAndPublish(entry, { foo: 'bar', baz: 1 });
-    expect(entry.patch).toHaveBeenCalledWith([
-      { op: 'replace', path: '/fields/foo', value: { 'en-US': 'bar' } },
-      { op: 'add', path: '/fields/baz', value: { 'en-US': 1 } },
-    ]);
-  });
-
-  test('calls publish on the return value of the patch function', async () => {
-    await patchAndPublish(entry, { foo: 'bar' });
-    expect(publish).toHaveBeenCalled();
-  });
-});
-
-describe('pollContentfulGql', () => {
-  test('checks version of published data and polls until they match', async () => {
-    const userDataWithPublishedVersion1 = {
-      users: {
-        sys: {
-          publishedVersion: 1,
-        },
-      },
-    };
-
-    const userDataWithPublishedVersion2 = {
-      users: {
-        sys: {
-          publishedVersion: 2,
-        },
-      },
-    };
-
-    const fetchData = jest
-      .fn()
-      .mockResolvedValueOnce(userDataWithPublishedVersion1)
-      .mockResolvedValueOnce(userDataWithPublishedVersion1)
-      .mockResolvedValueOnce(userDataWithPublishedVersion2);
-
-    await pollContentfulGql(2, fetchData, 'users');
-    expect(fetchData).toHaveBeenCalledTimes(3);
-  });
-
-  test('throws if polling query does not return a value', async () => {
-    const fetchData = jest.fn().mockResolvedValueOnce({
-      users: null,
-    });
-
-    expect(
-      async () => await pollContentfulGql(2, fetchData, 'users'),
-    ).rejects.toThrow();
-  });
-});
-
-describe('pollContentfulDeliveryApi', () => {
-  test('checks version of published counter and polls until they match and return entry', async () => {
-    const entryDataWithPublishedCounter1 = {
-      sys: {
-        revision: 1,
-      },
-    };
-
-    const entryDataWithPublishedCounter2 = {
-      sys: {
-        revision: 2,
-      },
-    };
-
-    const fetchEntry = jest
-      .fn()
-      .mockResolvedValueOnce(entryDataWithPublishedCounter1)
-      .mockResolvedValueOnce(entryDataWithPublishedCounter1)
-      .mockResolvedValueOnce(entryDataWithPublishedCounter2);
-
-    const response = await pollContentfulDeliveryApi(fetchEntry, 2);
-    expect(fetchEntry).toHaveBeenCalledTimes(3);
-    expect(response).toEqual(entryDataWithPublishedCounter2);
-  });
-
-  test('throws if polling query does not return a value', async () => {
-    const fetchEntry = jest.fn().mockResolvedValueOnce(null);
-
-    expect(
-      async () => await pollContentfulDeliveryApi(fetchEntry, 2),
-    ).rejects.toThrow();
   });
 });

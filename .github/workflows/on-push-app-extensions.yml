@@ -24,10 +24,8 @@ jobs:
         uses: technote-space/get-diff-action@v6
         with:
           PATTERNS: |
-            packages/contentful-app-extensions/**/*.+(ts|tsx)
-          FILES: |
-            .github/workflows/on-push-app-extensions.yml
-            .github/environment/Base
+            packages/contentful-app-extensions/**/*
+            .github/**/*
       - id: diff
         run: |
           echo "::set-output name=diff::${{ env.GIT_DIFF }}"
@@ -65,6 +63,7 @@ jobs:
           - field-as-updated-at
           - user-positions
           - user-team-memberships
+          - clear-on-change
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -738,7 +738,7 @@ describe('User data provider', () => {
 
       expect(
         await userDataProvider.update(userId, {
-          secondaryEmail: '',
+          alternativeEmail: '',
         }),
       ).not.toBeDefined();
       expect(nock.isDone()).toBe(true);
@@ -752,7 +752,7 @@ describe('User data provider', () => {
 
       expect(
         await userDataProvider.update(userId, {
-          secondaryEmail: 'tony@example.com',
+          alternativeEmail: 'tony@example.com',
         }),
       ).not.toBeDefined();
       expect(nock.isDone()).toBe(true);

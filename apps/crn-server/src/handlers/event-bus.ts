@@ -6,6 +6,7 @@ import {
   LabEvent,
   ResearchOutputEvent,
   TeamEvent,
+  UserEvent,
   WebhookDetail,
   WorkingGroupEvent,
 } from '@asap-hub/model';
@@ -17,6 +18,7 @@ import {
   ResearchOutput,
   SquidexWebhookPayload,
   Team,
+  User,
   WorkingGroup,
 } from '@asap-hub/squidex';
 
@@ -48,3 +50,12 @@ export type WorkingGroupPayload = SquidexWebhookPayload<
 >;
 
 export type TeamPayload = SquidexWebhookPayload<Team, TeamEvent>;
+
+export type UserSquidexPayload = WebhookDetail<
+  SquidexWebhookPayload<User, UserEvent>
+>;
+export type UserContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'users'>
+>;
+
+export type UserPayload = UserSquidexPayload | UserContentfulPayload;

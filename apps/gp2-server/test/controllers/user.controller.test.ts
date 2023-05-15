@@ -192,7 +192,7 @@ describe('Users controller', () => {
 
       expect(result).toEqual(getUserResponse());
       expect(userDataProviderMock.update).toHaveBeenCalledWith(userId, {
-        avatarUrl: '42',
+        avatar: '42',
       });
       expect(assetDataProviderMock.create).toHaveBeenCalledWith(
         userId,

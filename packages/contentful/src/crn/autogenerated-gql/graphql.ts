@@ -482,7 +482,6 @@ export type EventSpeakers = Entry & {
   linkedFrom?: Maybe<EventSpeakersLinkingCollections>;
   sys: Sys;
   team?: Maybe<Teams>;
-  title?: Maybe<Scalars['String']>;
   user?: Maybe<EventSpeakersUser>;
 };
 
@@ -495,11 +494,6 @@ export type EventSpeakersLinkedFromArgs = {
 export type EventSpeakersTeamArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/eventSpeakers) */
-export type EventSpeakersTitleArgs = {
-  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/eventSpeakers) */
@@ -522,13 +516,6 @@ export type EventSpeakersFilter = {
   sys?: InputMaybe<SysFilter>;
   team?: InputMaybe<CfTeamsNestedFilter>;
   team_exists?: InputMaybe<Scalars['Boolean']>;
-  title?: InputMaybe<Scalars['String']>;
-  title_contains?: InputMaybe<Scalars['String']>;
-  title_exists?: InputMaybe<Scalars['Boolean']>;
-  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  title_not?: InputMaybe<Scalars['String']>;
-  title_not_contains?: InputMaybe<Scalars['String']>;
-  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   user_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -560,8 +547,6 @@ export enum EventSpeakersOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TitleAsc = 'title_ASC',
-  TitleDesc = 'title_DESC',
 }
 
 export type EventSpeakersUser = ExternalAuthors | Users;
@@ -3085,13 +3070,6 @@ export type CfEventSpeakersNestedFilter = {
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   sys?: InputMaybe<SysFilter>;
   team_exists?: InputMaybe<Scalars['Boolean']>;
-  title?: InputMaybe<Scalars['String']>;
-  title_contains?: InputMaybe<Scalars['String']>;
-  title_exists?: InputMaybe<Scalars['Boolean']>;
-  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  title_not?: InputMaybe<Scalars['String']>;
-  title_not_contains?: InputMaybe<Scalars['String']>;
-  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   user_exists?: InputMaybe<Scalars['Boolean']>;
 };
 

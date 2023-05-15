@@ -435,7 +435,7 @@ describe('Calendars data provider', () => {
       expect(calendarMockUpdated.publish).toHaveBeenCalled();
     });
 
-    test('Should update the calendar - with new google api metadata - without previous google api metadata', async () => {
+    test('Should update syncToken in googleApiMetadata', async () => {
       const calendarId = 'calendar-id-1';
 
       const calendarMock = getEntry({});
@@ -462,7 +462,7 @@ describe('Calendars data provider', () => {
       expect(calendarMockUpdated.publish).toHaveBeenCalled();
     });
 
-    test('Should update the calendar - with previous google api metadata', async () => {
+    test('Should update associatedGoogleCalendarId when passing resourceId', async () => {
       const calendarId = 'calendar-id-1';
 
       const calendarMock = getEntry({

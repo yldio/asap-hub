@@ -26,11 +26,16 @@ export default class RemoveUrlWhitespaces extends Migration {
           );
 
           if (this.isPatchingEnabled) {
+            // eslint-disable-next-line no-console
+            console.log('Patching enabled. Updating event...');
             await squidexClient.patch(event.id, {
               meetingLink: {
                 iv: cleanedUrl,
               },
             });
+          } else {
+            // eslint-disable-next-line no-console
+            console.log('Patching is disabled. Skipping...');
           }
         }
       },
@@ -50,11 +55,16 @@ export default class RemoveUrlWhitespaces extends Migration {
             `Page ${page.id} does not have a valid link. '${page.data.link?.iv}' -> '${cleanedUrl}'`,
           );
           if (this.isPatchingEnabled) {
+            // eslint-disable-next-line no-console
+            console.log('Patching enabled. Updating page...');
             await squidexClient.patch(page.id, {
               link: {
                 iv: cleanedUrl,
               },
             });
+          } else {
+            // eslint-disable-next-line no-console
+            console.log('Patching is disabled. Skipping...');
           }
         }
       },
@@ -74,11 +84,16 @@ export default class RemoveUrlWhitespaces extends Migration {
             `News ${news.id} does not have a valid link. '${news.data.link?.iv}' -> '${cleanedUrl}'`,
           );
           if (this.isPatchingEnabled) {
+            // eslint-disable-next-line no-console
+            console.log('Patching enabled. Updating news...');
             await squidexClient.patch(news.id, {
               link: {
                 iv: cleanedUrl,
               },
             });
+          } else {
+            // eslint-disable-next-line no-console
+            console.log('Patching is disabled. Skipping...');
           }
         }
       },
@@ -111,11 +126,16 @@ export default class RemoveUrlWhitespaces extends Migration {
           });
 
           if (shouldUpdate && this.isPatchingEnabled) {
+            // eslint-disable-next-line no-console
+            console.log('Patching enabled. Updating team...');
             await squidexClient.patch(team.id, {
               tools: {
                 iv: tools,
               },
             });
+          } else {
+            // eslint-disable-next-line no-console
+            console.log('Patching is disabled. Skipping...');
           }
         }
       },
@@ -164,11 +184,16 @@ export default class RemoveUrlWhitespaces extends Migration {
           });
 
           if (shouldUpdate && this.isPatchingEnabled) {
+            // eslint-disable-next-line no-console
+            console.log('Patching enabled. Updating user...');
             await squidexClient.patch(user.id, {
               social: {
                 iv: social,
               },
             });
+          } else {
+            // eslint-disable-next-line no-console
+            console.log('Patching is disabled. Skipping...');
           }
         }
       },

@@ -224,7 +224,7 @@ describe('UserDetail', () => {
       expect(mockPatchUser).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
-          secondaryEmail: 'tony.stark@avengers.com',
+          alternativeEmail: 'tony.stark@avengers.com',
           telephone: {
             countryCode: '+1',
             number: '0123456789',

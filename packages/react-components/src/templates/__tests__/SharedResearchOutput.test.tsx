@@ -9,6 +9,7 @@ import SharedResearchOutput from '../SharedResearchOutput';
 
 const props: ComponentProps<typeof SharedResearchOutput> = {
   ...createResearchOutputResponse(),
+  descriptionMD: '',
   methods: [],
   subtype: undefined,
   environments: [],
@@ -199,6 +200,20 @@ describe('Not Grant Documents', () => {
       ).toBeInTheDocument();
       expect(getByText('tag1')).toBeVisible();
       expect(getByText('text')).toBeVisible();
+      expect(queryByRole('separator')).toBeVisible();
+    });
+    it('only display descriptionMD if it is set', () => {
+      const { queryByText, getByText, queryByRole } = render(
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          tags={['tag1']}
+          description="should not be there"
+          descriptionMD="should be visible"
+        />,
+      );
+      expect(getByText('should be visible')).toBeVisible();
+      expect(queryByText('should not be there')).not.toBeInTheDocument();
       expect(queryByRole('separator')).toBeVisible();
     });
     it('displays the related research card when data provided', () => {

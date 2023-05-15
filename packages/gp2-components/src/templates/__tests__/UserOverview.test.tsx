@@ -45,7 +45,10 @@ describe('UserOverview', () => {
     });
     it('renders the alternative email information', () => {
       render(
-        <UserOverview {...defaultProps} secondaryEmail={'peter@parker.com'} />,
+        <UserOverview
+          {...defaultProps}
+          alternativeEmail={'peter@parker.com'}
+        />,
       );
       expect(
         screen.getByRole('link', { name: 'peter@parker.com' }),
@@ -59,7 +62,7 @@ describe('UserOverview', () => {
         <UserOverview
           {...defaultProps}
           email={'tony@stark.com'}
-          secondaryEmail={'peter@parker.com'}
+          alternativeEmail={'peter@parker.com'}
         />,
       );
       expect(

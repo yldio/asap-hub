@@ -404,6 +404,34 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change"
+  dependencies:
+    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-sdk": 4.17.0
+    "@contentful/f36-components": 4.34.1
+    "@contentful/f36-tokens": 4.0.1
+    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/rich-text-html-renderer": 16.0.3
+    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/react": 11.2.7
+    "@tsconfig/create-react-app": 1.0.3
+    "@types/jest": ^29.4.0
+    "@types/node": 18.15.11
+    "@types/react": 17.0.58
+    "@types/react-dom": 17.0.19
+    "@types/testing-library__jest-dom": 5.14.5
+    contentful-management: 10.32.0
+    cross-env: 7.0.3
+    emotion: 10.0.27
+    react: 17.0.2
+    react-dom: 17.0.2
+    react-scripts: 5.0.1
+    typescript: 4.9.5
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields"
@@ -413,6 +441,7 @@ __metadata:
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.1
     "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -594,7 +623,7 @@ __metadata:
     "@types/async-retry": ^1
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    async-retry: ^1.3.3
+    async-retry: 1.3.3
     contentful: ^10.1.8
     contentful-cli: 1.19.1
     contentful-management: 10.32.0
@@ -825,7 +854,7 @@ __metadata:
     ajv-formats: 2.1.1
     algoliasearch: 4.17.0
     apr-intercept: 3.0.4
-    async-retry: ^1.3.3
+    async-retry: 1.3.3
     aws-lambda: 1.0.7
     babel-loader: 8.3.0
     chance: 1.1.11
@@ -1424,11 +1453,13 @@ __metadata:
     regenerator-runtime: 0.13.11
     rehype-parse: 7.0.1
     rehype-react: 6.2.1
+    rehype-remark: 8.1.1
     rehype-sanitize: 4.0.0
     rehype-slug: 4.0.1
     rehype-toc: 3.0.2
     remark-parse: 9.0.0
     remark-rehype: 8.1.0
+    remark-stringify: 9.0.1
     serialize-error: 7.0.1
     unified: 9.2.2
     use-debounce: 8.0.4
@@ -10451,6 +10482,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@contentful/rich-text-react-renderer@npm:^15.16.4":
+  version: 15.16.4
+  resolution: "@contentful/rich-text-react-renderer@npm:15.16.4"
+  dependencies:
+    "@contentful/rich-text-types": ^16.1.0
+  peerDependencies:
+    react: ^16.8.6 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0
+  checksum: dc7cb6b5578e3a115e0335d7cbbf1ebb5208fdd19621fb94ee51ffa6a448fd2d578f1bb0af5e5aa71d27b7ff3a5a96ce1dd1171d7c5400812e2a9ed14500d22b
+  languageName: node
+  linkType: hard
+
 "@contentful/rich-text-types@npm:16.0.3, @contentful/rich-text-types@npm:^16.0.3":
   version: 16.0.3
   resolution: "@contentful/rich-text-types@npm:16.0.3"
@@ -10458,7 +10501,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-types@npm:^16.0.2":
+"@contentful/rich-text-types@npm:^16.0.2, @contentful/rich-text-types@npm:^16.1.0":
   version: 16.1.0
   resolution: "@contentful/rich-text-types@npm:16.1.0"
   checksum: 191927b41b63b4b3fb4d53edfff37ea67fd01fae538aa29c5ee2ee7d7b8060fe10eac082ed3a2ff63b2b24b5e4d4e4ad88479d8edd61f32ad218edf915fc07f4
@@ -19216,7 +19259,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async-retry@npm:^1.3.3":
+"async-retry@npm:1.3.3":
   version: 1.3.3
   resolution: "async-retry@npm:1.3.3"
   dependencies:
@@ -28898,6 +28941,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hast-util-embedded@npm:^1.0.0":
+  version: 1.0.6
+  resolution: "hast-util-embedded@npm:1.0.6"
+  dependencies:
+    hast-util-is-element: ^1.1.0
+  checksum: 01f510504281183a29164ea9702427e5babac52834a2560fbebf1fb40497a20ec30f3ff460285b15cace7f6893bd517a9000ecdca736bb92b59be7ef40fc1fd1
+  languageName: node
+  linkType: hard
+
 "hast-util-from-parse5@npm:^6.0.0":
   version: 6.0.0
   resolution: "hast-util-from-parse5@npm:6.0.0"
@@ -28923,6 +28975,13 @@ __metadata:
   version: 1.0.1
   resolution: "hast-util-heading-rank@npm:1.0.1"
   checksum: 9f919ce54f3ddb2414a9ff786983c64f8d10f6e4b0bd9d591bbb9f45b9f37d1eb0821583ec708dc3961b15d9b2aebfe79e5e23868a87a4773b29ce5f0791108a
+  languageName: node
+  linkType: hard
+
+"hast-util-is-element@npm:^1.0.0, hast-util-is-element@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "hast-util-is-element@npm:1.1.0"
+  checksum: 30fad3f65e7ab2f0efd5db9e7344d0820b70971988dfe79f62d8447598b2a1ce8a59cd4bfc05ae0d9a1c451b9b53cbe1023743d7eac764d64720b6b73475f62f
   languageName: node
   linkType: hard
 
@@ -28960,6 +29019,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hast-util-to-mdast@npm:^7.0.0":
+  version: 7.1.3
+  resolution: "hast-util-to-mdast@npm:7.1.3"
+  dependencies:
+    extend: ^3.0.0
+    hast-util-has-property: ^1.0.0
+    hast-util-is-element: ^1.1.0
+    hast-util-to-text: ^2.0.0
+    mdast-util-phrasing: ^2.0.0
+    mdast-util-to-string: ^1.0.0
+    rehype-minify-whitespace: ^4.0.3
+    repeat-string: ^1.6.1
+    trim-trailing-lines: ^1.1.0
+    unist-util-is: ^4.0.0
+    unist-util-visit: ^2.0.0
+    xtend: ^4.0.1
+  checksum: 828098736673400dcda1060fb729ac51dc5ad8a76f2076e0f0fa4eabaa8a22a325bb88f91bc083a613a620e8b3a0bbe2935ecd6c157e2ffc312b022016ebb08a
+  languageName: node
+  linkType: hard
+
 "hast-util-to-parse5@npm:^6.0.0":
   version: 6.0.0
   resolution: "hast-util-to-parse5@npm:6.0.0"
@@ -28977,6 +29056,24 @@ __metadata:
   version: 1.0.4
   resolution: "hast-util-to-string@npm:1.0.4"
   checksum: 8132508d5c08d542b64979ad558e474f481011c29d5fce9b1a1fe779fc97e151b734b5c6d94f4937c4ec978b1d641977ee7f9f5ed61ea0611600764abdff7cbb
+  languageName: node
+  linkType: hard
+
+"hast-util-to-text@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "hast-util-to-text@npm:2.0.1"
+  dependencies:
+    hast-util-is-element: ^1.0.0
+    repeat-string: ^1.0.0
+    unist-util-find-after: ^3.0.0
+  checksum: 4e7960b414b7a6b2f0180e4af416cd8ae3c7ba1531d7eaec7e6dc9509daf88308784bbf5b94885384dccc42abcb74cc6cc26755c76914d646f32aa6bc32ea34b
+  languageName: node
+  linkType: hard
+
+"hast-util-whitespace@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "hast-util-whitespace@npm:1.0.4"
+  checksum: b7f4a1942bc78239a6fe4741aca34e3e7f84487e15e2cd2b6ca07bbba3055571763d877d7c077d7a2a029ede7500bc50a62af7b6dfe88e0644b16228b91dee0d
   languageName: node
   linkType: hard
 
@@ -34009,6 +34106,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"longest-streak@npm:^2.0.0":
+  version: 2.0.4
+  resolution: "longest-streak@npm:2.0.4"
+  checksum: 28b8234a14963002c5c71035dee13a0a11e9e9d18ffa320fdc8796ed7437399204495702ed69cd2a7087b0af041a2a8b562829b7c1e2042e73a3374d1ecf6580
+  languageName: node
+  linkType: hard
+
 "loose-envify@npm:^1.0.0, loose-envify@npm:^1.1.0, loose-envify@npm:^1.2.0, loose-envify@npm:^1.3.1, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
@@ -34369,6 +34473,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mdast-util-phrasing@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "mdast-util-phrasing@npm:2.0.0"
+  dependencies:
+    unist-util-is: ^4.0.0
+  checksum: 134bd03f463c1b718a221cdceee871aee8f490685e0148821c33926604599c95c20cdf34b97aaf921d200aea36a556283a635e20c889adc94615ca5a1d38e33a
+  languageName: node
+  linkType: hard
+
 "mdast-util-to-hast@npm:10.0.1":
   version: 10.0.1
   resolution: "mdast-util-to-hast@npm:10.0.1"
@@ -34398,6 +34511,27 @@ __metadata:
     unist-util-position: ^3.0.0
     unist-util-visit: ^2.0.0
   checksum: 72df2dd9bfa2d07b4750a333444f82e0f3752dae75b6e300cf0a716407a185eb75095a54ecad90cbd6f6d133b20dea8844ff76c1ea78612550de170b43d4fa85
+  languageName: node
+  linkType: hard
+
+"mdast-util-to-markdown@npm:^0.6.0":
+  version: 0.6.5
+  resolution: "mdast-util-to-markdown@npm:0.6.5"
+  dependencies:
+    "@types/unist": ^2.0.0
+    longest-streak: ^2.0.0
+    mdast-util-to-string: ^2.0.0
+    parse-entities: ^2.0.0
+    repeat-string: ^1.0.0
+    zwitch: ^1.0.0
+  checksum: 7ebc47533bff6e8669f85ae124dc521ea570e9df41c0d9e4f0f43c19ef4a8c9928d741f3e4afa62fcca1927479b714582ff5fd684ef240d84ee5b75ab9d863cf
+  languageName: node
+  linkType: hard
+
+"mdast-util-to-string@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "mdast-util-to-string@npm:1.1.0"
+  checksum: eec1eb283f3341376c8398b67ce512a11ab3e3191e3dbd5644d32a26784eac8d5f6d0b0fb81193af00d75a2c545cde765c8b03e966bd890076efb5d357fb4fe2
   languageName: node
   linkType: hard
 
@@ -40123,6 +40257,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rehype-minify-whitespace@npm:^4.0.3":
+  version: 4.0.5
+  resolution: "rehype-minify-whitespace@npm:4.0.5"
+  dependencies:
+    hast-util-embedded: ^1.0.0
+    hast-util-is-element: ^1.0.0
+    hast-util-whitespace: ^1.0.4
+    unist-util-is: ^4.0.0
+  checksum: cffb573df1d114b4055e424344dad3a8fd25ff8a9ba37663d35595effae88d64d9c40f965a4f3df1c477284ff885c9817f9edfd72039f814adb59e3457e61cd8
+  languageName: node
+  linkType: hard
+
 "rehype-parse@npm:7.0.1":
   version: 7.0.1
   resolution: "rehype-parse@npm:7.0.1"
@@ -40140,6 +40286,18 @@ __metadata:
     "@mapbox/hast-util-table-cell-style": "npm:^0.2.0"
     hast-to-hyperscript: "npm:^9.0.0"
   checksum: 7f16a2cfc38d1fe0d40944f8f27309fc16440d69d3bb53f8e0ca6d6825572f7d1cac4212193a4f4de456b2342fea66ea0919648ad09c0663cfb1e4ca12bed647
+  languageName: node
+  linkType: hard
+
+"rehype-remark@npm:8.1.1":
+  version: 8.1.1
+  resolution: "rehype-remark@npm:8.1.1"
+  dependencies:
+    "@types/hast": ^2.0.0
+    "@types/mdast": ^3.0.0
+    "@types/unist": ^2.0.0
+    hast-util-to-mdast: ^7.0.0
+  checksum: 76a9d1e6cae77fde4d1170fcef76026c5cca0b32af1715910346e730aad9070ac78c2c8e40009677b1b4ee6c669ab52cee0a793fd51437dbb3234760882852bd
   languageName: node
   linkType: hard
 
@@ -40322,6 +40480,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"remark-stringify@npm:9.0.1":
+  version: 9.0.1
+  resolution: "remark-stringify@npm:9.0.1"
+  dependencies:
+    mdast-util-to-markdown: ^0.6.0
+  checksum: 93f46076f4d96ab1946d13e7dd43e83088480ac6b1dfe05a65e2c2f0e33d1f52a50175199b464a81803fc0f5b3bf182037665f89720b30515eba37bec4d63d56
+  languageName: node
+  linkType: hard
+
 "remedial@npm:^1.0.7":
   version: 1.0.8
   resolution: "remedial@npm:1.0.8"
@@ -40383,7 +40550,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"repeat-string@npm:^1.5.4, repeat-string@npm:^1.6.1":
+"repeat-string@npm:^1.0.0, repeat-string@npm:^1.5.4, repeat-string@npm:^1.6.1":
   version: 1.6.1
   resolution: "repeat-string@npm:1.6.1"
   checksum: 1b809fc6db97decdc68f5b12c4d1a671c8e3f65ec4a40c238bc5200e44e85bcc52a54f78268ab9c29fcf5fe4f1343e805420056d1f30fa9a9ee4c2d93e3cc6c0
@@ -44047,7 +44214,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"trim-trailing-lines@npm:^1.0.0":
+"trim-trailing-lines@npm:^1.0.0, trim-trailing-lines@npm:^1.1.0":
   version: 1.1.4
   resolution: "trim-trailing-lines@npm:1.1.4"
   checksum: 5d39d21c0d4b258667012fcd784f73129e148ea1c213b1851d8904f80499fc91df6710c94c7dd49a486a32da2b9cb86020dda79f285a9a2586cfa622f80490c2
@@ -44790,6 +44957,15 @@ __metadata:
   version: 2.0.3
   resolution: "unist-builder@npm:2.0.3"
   checksum: e946fdf77dbfc320feaece137ce4959ae2da6614abd1623bd39512dc741a9d5f313eb2ba79f8887d941365dccddec7fef4e953827475e392bf49b45336f597f6
+  languageName: node
+  linkType: hard
+
+"unist-util-find-after@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "unist-util-find-after@npm:3.0.0"
+  dependencies:
+    unist-util-is: ^4.0.0
+  checksum: daa9a28f6cdf533a72ce7ec4864dbe0f11f0fd3efd337b54c08a8a9a47cdc8d10a299cd984d7f512a57e97af012df052210a51aab7c9afd6b1e24da3b2d0a714
   languageName: node
   linkType: hard
 

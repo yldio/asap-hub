@@ -9,8 +9,8 @@ import {
   UserExternalProfiles,
   UserFundingStreams,
   UserKeywords,
-  UserQuestions,
   UserProjects,
+  UserQuestions,
   UserWorkingGroups,
 } from '../organisms';
 
@@ -18,7 +18,7 @@ type UserOverviewProps = Pick<
   gp2.UserResponse,
   | 'id'
   | 'email'
-  | 'secondaryEmail'
+  | 'alternativeEmail'
   | 'biography'
   | 'keywords'
   | 'fundingStreams'
@@ -59,7 +59,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   id,
   biography,
   email,
-  secondaryEmail,
+  alternativeEmail,
   keywords,
   fundingStreams,
   questions,
@@ -79,7 +79,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   <div css={containerStyles}>
     <div css={[columnStyles]}>
       <UserContactInformation
-        secondaryEmail={secondaryEmail}
+        alternativeEmail={alternativeEmail}
         email={email}
         editHref={editContactInfoHref}
       />

@@ -10,21 +10,21 @@ import {
 
 describe('Research Output Model', () => {
   describe('Document Types', () => {
-    it('should recognize correct type', () => {
+    it('should recognise correct type', () => {
       expect(isResearchOutputDocumentType('Dataset')).toEqual(true);
     });
 
-    it('should not recognize incorrect type', () => {
+    it('should not recognise incorrect type', () => {
       expect(isResearchOutputDocumentType('NotADataset')).toEqual(false);
     });
   });
 
   describe('Types', () => {
-    it('should recognize correct type', () => {
+    it('should recognise correct type', () => {
       expect(isResearchOutputType('Report')).toEqual(true);
     });
 
-    it('should not recognize incorrect type', () => {
+    it('should not recognise incorrect type', () => {
       expect(isResearchOutputType('NotAReport')).toEqual(false);
     });
 

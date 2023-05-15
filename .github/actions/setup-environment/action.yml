@@ -32,6 +32,9 @@ outputs:
   contentful-app-disabled-fields:
     description: 'Contentful App Extension Disabled Fields Id'
     value: ${{ steps.vars.outputs.contentful-app-disabled-fields }}
+  contentful-app-clear-on-change:
+    description: 'Contentful App Extension Clear Field On Change'
+    value: ${{ steps.vars.outputs.contentful-app-clear-on-change }}
   contentful-app-event-additional-materials:
     description: 'Contentful App Extension Event Additional Materials Id'
     value: ${{ steps.vars.outputs.contentful-app-event-additional-materials }}
@@ -44,6 +47,9 @@ outputs:
   contentful-app-user-positions:
     description: 'Contentful App Extension User Positions Id'
     value: ${{ steps.vars.outputs.contentful-app-user-positions }}
+  contentful-app-user-team-memberships:
+    description: 'Contentful App Extension User Team Memberships Id'
+    value: ${{ steps.vars.outputs.contentful-app-user-team-memberships }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}

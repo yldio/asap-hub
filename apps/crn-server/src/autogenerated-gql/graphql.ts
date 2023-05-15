@@ -9855,6 +9855,19 @@ export type UsersContentFragment = Pick<
       }
     >
   >;
+  referencesTeamsContents: Maybe<
+    Array<
+      Pick<Teams, 'id'> & {
+        referencingGroupsContents: Maybe<
+          Array<
+            Pick<Groups, 'id'> & {
+              flatData: Pick<GroupsFlatDataDto, 'name' | 'active'>;
+            }
+          >
+        >;
+      }
+    >
+  >;
   referencingGroupsContents: Maybe<
     Array<
       Pick<Groups, 'id'> & {
@@ -9970,6 +9983,19 @@ export type FetchUserQuery = {
                 >
               >;
             };
+          }
+        >
+      >;
+      referencesTeamsContents: Maybe<
+        Array<
+          Pick<Teams, 'id'> & {
+            referencingGroupsContents: Maybe<
+              Array<
+                Pick<Groups, 'id'> & {
+                  flatData: Pick<GroupsFlatDataDto, 'name' | 'active'>;
+                }
+              >
+            >;
           }
         >
       >;
@@ -10099,6 +10125,19 @@ export type FetchUsersQuery = {
                       >
                     >;
                   };
+                }
+              >
+            >;
+            referencesTeamsContents: Maybe<
+              Array<
+                Pick<Teams, 'id'> & {
+                  referencingGroupsContents: Maybe<
+                    Array<
+                      Pick<Groups, 'id'> & {
+                        flatData: Pick<GroupsFlatDataDto, 'name' | 'active'>;
+                      }
+                    >
+                  >;
                 }
               >
             >;
@@ -13197,6 +13236,43 @@ export const UsersContentFragmentDoc = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencesTeamsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'referencingGroupsContents' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'active' },
                             },
                           ],
                         },

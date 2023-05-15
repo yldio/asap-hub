@@ -29,6 +29,7 @@ import {
   getIdentifierType,
   getPayload,
 } from '../utils';
+import { richTextToMarkdown } from '../utils/parsing';
 
 type ResearchOutputFormProps = Pick<
   ComponentProps<typeof ResearchOutputFormSharingCard>,
@@ -220,7 +221,11 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const [descriptionMD, setDescription] = useState<
     ResearchOutputPostRequest['descriptionMD']
-  >(researchOutputData?.descriptionMD || '');
+  >(
+    researchOutputData?.descriptionMD ||
+      richTextToMarkdown(researchOutputData?.description),
+  );
+
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>(
     researchOutputData?.link || '',
   );
@@ -282,7 +287,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     documentType,
     tags,
     link,
-    description: '',
+    description: researchOutputData?.description || '',
     descriptionMD,
     title,
     type,

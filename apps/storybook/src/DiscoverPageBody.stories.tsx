@@ -16,6 +16,7 @@ const baseMemberProps = {
   labs: [],
   questions: [],
   workingGroups: [],
+  interestGroups: [],
 };
 const members = [
   {

@@ -44,7 +44,7 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
   biography,
   keywords,
   email,
-  secondaryEmail,
+  alternativeEmail,
   projects,
   workingGroups,
   questions,
@@ -74,7 +74,7 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
     <div css={[columnStyles]}>
       <UserContactInformation
         editHref={editContactInfoHref}
-        secondaryEmail={secondaryEmail}
+        alternativeEmail={alternativeEmail}
         email={email}
       />
       <UserKeywords keywords={keywords} editHref={editKeywordsHref} />

@@ -2,8 +2,6 @@ name: Pipeline Contentful App Extensions
 
 on:
   push:
-    branches:
-      - master
 
 jobs:
   check-updates:
@@ -25,9 +23,9 @@ jobs:
         with:
           PATTERNS: |
             packages/contentful-app-extensions/**/*.+(ts|tsx)
+            .github/environment/Base
           FILES: |
             .github/workflows/on-push-app-extensions.yml
-            .github/environment/Base
       - id: diff
         run: |
           echo "::set-output name=diff::${{ env.GIT_DIFF }}"

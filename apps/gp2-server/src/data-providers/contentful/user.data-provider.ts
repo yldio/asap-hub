@@ -521,7 +521,7 @@ const addNextCohorts = async (
             'contributingCohortsMembership',
             {
               fields: addLocaleToFields({
-                contributingCohort: getLinkEntity(contributingCohortId),
+                contributingCohort: getLinkEntity(contributingCohortId, false),
                 role,
                 studyLink: studyUrl,
               }),
@@ -532,7 +532,7 @@ const addNextCohorts = async (
       ),
     );
 
-    const payload = getBulkPayload(nextContributingCohorts, 1);
+    const payload = getBulkPayload(nextContributingCohorts, true);
     const publish = await environment.createPublishBulkAction(payload);
     await publish.waitProcessing();
     return nextContributingCohorts;
@@ -548,7 +548,7 @@ const removePreviousCohorts = async (
     const previousCohorts = previousContributingCohorts['en-US'].map(
       (cohort) => cohort.sys.id,
     );
-    const payload = getBulkPayload(previousCohorts);
+    const payload = getBulkPayload(previousCohorts, false);
     const unpublish = await environment.createUnpublishBulkAction(payload);
     await unpublish.waitProcessing();
     const cohortEntities = await environment.getEntries({
@@ -559,25 +559,32 @@ const removePreviousCohorts = async (
   }
   return null;
 };
-const getBulkPayload = (entities: string[], version: number = -1) => ({
+const getBulkPayload = <Version extends boolean>(
+  entities: string[],
+  version?: Version,
+) => ({
   entities: {
     sys: { type: 'Array' as const },
-    items: getEntities(entities, version),
+    items: getEntities<Version>(entities, version),
   },
 });
 
-const getEntities = (entities: string[], version: number = -1) =>
-  entities.map((id) => getLinkEntity(id, version));
+const getEntities = <Version extends boolean>(
+  entities: string[],
+  version?: Version,
+) => entities.map((id) => getLinkEntity<Version>(id, version));
 
-function getLinkEntity(id: string): Link<'Entry'>;
-function getLinkEntity(id: string, version: number): VersionedLink<'Entry'>;
-function getLinkEntity(id: string, version: number = -1): unknown {
+function getLinkEntity<Version extends boolean>(
+  id: string,
+  x?: Version,
+): Version extends true ? VersionedLink<'Entry'> : Link<'Entry'>;
+function getLinkEntity(id: string, version: boolean = false): unknown {
   return {
     sys: {
       type: 'Link' as const,
       linkType: 'Entry' as const,
       id,
-      ...(version > -1 ? { version } : {}),
+      ...(version ? { version: 1 } : {}),
     },
   };
 }

@@ -194,27 +194,14 @@ export const referencingResearchOutputContentQueryFragment = gql`
     id
     flatData {
       title
-      #      teams @include(if: $withTeams) {
-      #        id
-      #        created
-      #        lastModified
-      #        version
-      #        flatData {
-      #          displayName
-      #          inactiveSince
-      #        }
-      #        referencingUsersContents {
-      #          flatData {
-      #            email
-      #            teams {
-      #              role
-      #              id {
-      #                id
-      #              }
-      #            }
-      #          }
-      #        }
-      #      }
+      type
+      documentType
+      teams {
+        id
+        flatData {
+          displayName
+        }
+      }
     }
   }
 `;
@@ -248,8 +235,12 @@ export const FETCH_RESEARCH_OUTPUTS = gql`
       total
       items {
         ...ResearchOutputContent
+        referencingResearchOutputsContents {
+          ...ReferencingResearchOutputContent
+        }
       }
     }
   }
   ${researchOutputContentQueryFragment}
+  ${referencingResearchOutputContentQueryFragment}
 `;

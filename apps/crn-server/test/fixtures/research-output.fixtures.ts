@@ -70,6 +70,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   lastModified: '2021-05-14T14:48:46Z',
   status: EnrichedContentEventType.Published,
   version: 42,
+  referencingResearchOutputsContents: [],
   flatData: {
     title: 'Test Proposal 1234',
     documentType: 'Bioinformatics',

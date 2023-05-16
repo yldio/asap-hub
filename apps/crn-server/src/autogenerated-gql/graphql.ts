@@ -9024,22 +9024,6 @@ export type ResearchOutputContentFragment = Pick<
   >;
 };
 
-export type ReferencingResearchOutputContentFragment = Pick<
-  ResearchOutputs,
-  'id'
-> & {
-  flatData: Pick<
-    ResearchOutputsFlatDataDto,
-    'title' | 'type' | 'documentType'
-  > & {
-    teams: Maybe<
-      Array<
-        Pick<Teams, 'id'> & { flatData: Pick<TeamsFlatDataDto, 'displayName'> }
-      >
-    >;
-  };
-};
-
 export type FetchResearchOutputQueryVariables = Exact<{
   id: Scalars['String'];
   withTeams: Scalars['Boolean'];
@@ -13191,63 +13175,6 @@ export const ResearchOutputContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ResearchOutputContentFragment, unknown>;
-export const ReferencingResearchOutputContentFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ReferencingResearchOutputContent' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'ResearchOutputs' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'flatData' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'documentType' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'teams' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'flatData' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'displayName' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<ReferencingResearchOutputContentFragment, unknown>;
 export const ResearchTagContentFragmentDoc = {
   kind: 'Document',
   definitions: [

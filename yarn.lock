@@ -927,7 +927,7 @@ __metadata:
   dependencies:
     "@babel/runtime-corejs3": 7.21.0
     "@playwright/test": ^1.30.0
-    "@types/node-fetch": 2.5.10
+    "@types/node-fetch": 2.6.4
     node-fetch: 3.0.0-beta.9
   languageName: unknown
   linkType: soft
@@ -16271,7 +16271,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-fetch@npm:2.5.10, @types/node-fetch@npm:^2.5.7":
+"@types/node-fetch@npm:2.6.4":
+  version: 2.6.4
+  resolution: "@types/node-fetch@npm:2.6.4"
+  dependencies:
+    "@types/node": "*"
+    form-data: ^3.0.0
+  checksum: f3e1d881bb42269e676ecaf49f0e096ab345e22823a2b2d071d60619414817fe02df48a31a8d05adb23054028a2a65521bdb3906ceb763ab6d3339c8d8775058
+  languageName: node
+  linkType: hard
+
+"@types/node-fetch@npm:^2.5.7":
   version: 2.5.10
   resolution: "@types/node-fetch@npm:2.5.10"
   dependencies:

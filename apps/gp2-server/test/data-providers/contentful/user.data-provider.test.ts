@@ -11,7 +11,7 @@ import nock from 'nock';
 import { appName, baseUrl } from '../../../src/config';
 import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/user.data-provider';
 import { UserDataProvider } from '../../../src/data-providers/types';
-import { getEntry } from '../../fixtures/contentful.fixtures';
+import { getBulkAction, getEntry } from '../../fixtures/contentful.fixtures';
 import {
   fetchUserResponse,
   getContentfulGraphql,
@@ -145,45 +145,29 @@ describe('User data provider', () => {
       expect(result!.connections).toEqual([]);
     });
 
-    test.each`
-      region                      | expected
-      ${'Africa'}                 | ${'Africa'}
-      ${'Asia'}                   | ${'Asia'}
-      ${'Australia/Australiasia'} | ${'Australia/Australiasia'}
-      ${'Europe'}                 | ${'Europe'}
-      ${'North America'}          | ${'North America'}
-      ${'South America'}          | ${'South America'}
-      ${'Latin America'}          | ${'Latin America'}
-    `(
-      'Should correctly map regions $region => $expected',
-      async ({ region, expected }) => {
+    test.each(gp2Model.userRegions)(
+      'Should correctly map region - %s',
+      async (region) => {
         const mockResponse = getContentfulGraphqlUser({ region });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           users: mockResponse,
         });
 
         const result = await userDataProvider.fetchById('user-id');
-        expect(result?.region).toEqual(expected);
+        expect(result?.region).toEqual(region);
       },
     );
 
-    test.each`
-      role                           | expected
-      ${'Working Group Participant'} | ${'Working Group Participant'}
-      ${'Network Investigator'}      | ${'Network Investigator'}
-      ${'Network Collaborator'}      | ${'Network Collaborator'}
-      ${'Administrator'}             | ${'Administrator'}
-      ${'Trainee'}                   | ${'Trainee'}
-    `(
-      'Should correctly map role $role => $expected',
-      async ({ role, expected }) => {
+    test.each(gp2Model.userRoles)(
+      'Should correctly map role - %s',
+      async (role) => {
         const mockResponse = getContentfulGraphqlUser({ role });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           users: mockResponse,
         });
 
         const result = await userDataProvider.fetchById('user-id');
-        expect(result?.role).toEqual(expected);
+        expect(result?.role).toEqual(role);
       },
     );
 
@@ -243,7 +227,7 @@ describe('User data provider', () => {
         department: 'Research',
         institution: 'Stark Industries',
       };
-      test.each(['role', 'department', 'institution'])(
+      test.each(Object.keys(position))(
         'Should throw when the position has %s not defined',
         async (item) => {
           const positions = [
@@ -387,14 +371,9 @@ describe('User data provider', () => {
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.contributingCohorts).toEqual([]);
       });
-      test.each`
-        role                   | expectedRole
-        ${'Investigator'}      | ${'Investigator'}
-        ${'Co-Investigator'}   | ${'Co-Investigator'}
-        ${'Lead Investigator'} | ${'Lead Investigator'}
-      `(
-        'should parse the role $role => $expectedRole',
-        async ({ role, expectedRole }) => {
+      test.each(gp2Model.userContributingCohortRole)(
+        'should parse the role - %s',
+        async (role) => {
           const contributingCohort = {
             sys: { id: '42' },
             name: 'GeneFinder',
@@ -415,7 +394,7 @@ describe('User data provider', () => {
             users: mockResponse,
           });
           const result = await userDataProvider.fetchById('user-id');
-          expect(result?.contributingCohorts[0]?.role).toEqual(expectedRole);
+          expect(result?.contributingCohorts[0]?.role).toEqual(role);
         },
       );
     });
@@ -611,16 +590,9 @@ describe('User data provider', () => {
           userDataProvider.fetchById('user-id'),
         ).rejects.toThrowError('Invalid project members');
       });
-      test.each`
-        role                 | expectedRole
-        ${'Project manager'} | ${'Project manager'}
-        ${'Project lead'}    | ${'Project lead'}
-        ${'Project co-lead'} | ${'Project co-lead'}
-        ${'Contributor'}     | ${'Contributor'}
-        ${'Investigator'}    | ${'Investigator'}
-      `(
-        'should parse the role $role => $expectedRole',
-        async ({ role, expectedRole }) => {
+      test.each(gp2Model.projectMemberRole)(
+        'should parse the role - %s',
+        async (role) => {
           const mockResponse = getContentfulGraphqlUser({
             linkedFrom: {
               projectMembershipCollection: {
@@ -632,7 +604,7 @@ describe('User data provider', () => {
             users: mockResponse,
           });
           const result = await userDataProvider.fetchById('user-id');
-          expect(result?.projects[0]?.members[0]!.role).toEqual(expectedRole);
+          expect(result?.projects[0]?.members[0]!.role).toEqual(role);
         },
       );
       test('check multiple members', async () => {
@@ -842,14 +814,9 @@ describe('User data provider', () => {
           userDataProvider.fetchById('user-id'),
         ).rejects.toThrowError('Invalid working group members');
       });
-      test.each`
-        role                      | expectedRole
-        ${'Lead'}                 | ${'Lead'}
-        ${'Co-lead'}              | ${'Co-lead'}
-        ${'Working group member'} | ${'Working group member'}
-      `(
-        'should parse the role $role => $expectedRole',
-        async ({ role, expectedRole }) => {
+      test.each(gp2Model.workingGroupMemberRole)(
+        'should parse the role - %s',
+        async (role) => {
           const mockResponse = getContentfulGraphqlUser({
             linkedFrom: {
               workingGroupMembershipCollection: {
@@ -861,9 +828,7 @@ describe('User data provider', () => {
             users: mockResponse,
           });
           const result = await userDataProvider.fetchById('user-id');
-          expect(result?.workingGroups[0]?.members[0]!.role).toEqual(
-            expectedRole,
-          );
+          expect(result?.workingGroups[0]?.members[0]!.role).toEqual(role);
         },
       );
       test('check multiple members', async () => {
@@ -1850,18 +1815,9 @@ describe('User data provider', () => {
       expect(userMock.publish).toHaveBeenCalled();
     });
 
-    test.each`
-      region                      | expected
-      ${'Africa'}                 | ${'Africa'}
-      ${'Asia'}                   | ${'Asia'}
-      ${'Australia/Australiasia'} | ${'Australia/Australiasia'}
-      ${'Europe'}                 | ${'Europe'}
-      ${'North America'}          | ${'North America'}
-      ${'South America'}          | ${'South America'}
-      ${'Latin America'}          | ${'Latin America'}
-    `(
-      'Should create a user with the region $region => $expected',
-      async ({ region, expected }) => {
+    test.each(gp2Model.userRegions)(
+      'Should create a user with the region - %s',
+      async (region) => {
         const userCreateDataObject = getUserCreateDataObject();
 
         const userMock = getEntry({});
@@ -1873,23 +1829,16 @@ describe('User data provider', () => {
           region,
         });
         expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
-          fields: expect.objectContaining({ region: { 'en-US': expected } }),
+          fields: expect.objectContaining({ region: { 'en-US': region } }),
         });
 
         expect(userMock.publish).toHaveBeenCalled();
       },
     );
 
-    test.each`
-      role                           | expected
-      ${'Working Group Participant'} | ${'Working Group Participant'}
-      ${'Network Investigator'}      | ${'Network Investigator'}
-      ${'Network Collaborator'}      | ${'Network Collaborator'}
-      ${'Administrator'}             | ${'Administrator'}
-      ${'Trainee'}                   | ${'Trainee'}
-    `(
-      'Should create a user with the role $role => $expected',
-      async ({ role, expected }) => {
+    test.each(gp2Model.userRoles)(
+      'Should create a user with the role - %s',
+      async (role) => {
         const userCreateDataObject = getUserCreateDataObject();
 
         const userMock = getEntry({});
@@ -1901,7 +1850,7 @@ describe('User data provider', () => {
           role,
         });
         expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
-          fields: expect.objectContaining({ role: { 'en-US': expected } }),
+          fields: expect.objectContaining({ role: { 'en-US': role } }),
         });
 
         expect(userMock.publish).toHaveBeenCalled();
@@ -1909,7 +1858,7 @@ describe('User data provider', () => {
     );
 
     test.each(gp2Model.userDegrees)(
-      'Should create a user with the degree %s',
+      'Should create a user with the degree - %s',
       async (degree) => {
         const userCreateDataObject = getUserCreateDataObject();
         const expected = degree;
@@ -1929,14 +1878,9 @@ describe('User data provider', () => {
         expect(userMock.publish).toHaveBeenCalled();
       },
     );
-    test.each`
-      role                   | expected
-      ${'Investigator'}      | ${'Investigator'}
-      ${'Co-Investigator'}   | ${'Co-Investigator'}
-      ${'Lead Investigator'} | ${'Lead Investigator'}
-    `(
-      'Should update the contributing cohort role $role => $expected',
-      async ({ role, expected }) => {
+    test.each(gp2Model.userContributingCohortRole)(
+      'Should update the contributing cohort role - %s',
+      async (role) => {
         const userCreateDataObject = getUserCreateDataObject();
         const id = '42';
         const userMock = getEntry({});
@@ -1967,6 +1911,7 @@ describe('User data provider', () => {
     });
 
     beforeEach(() => {
+      jest.resetAllMocks();
       environmentMock.getEntry.mockResolvedValueOnce(entry);
       const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
         typeof patchAndPublish
@@ -2049,46 +1994,30 @@ describe('User data provider', () => {
         lastName: 'Stark',
       });
     });
-    test.each`
-      region                      | expected
-      ${'Africa'}                 | ${'Africa'}
-      ${'Asia'}                   | ${'Asia'}
-      ${'Australia/Australiasia'} | ${'Australia/Australiasia'}
-      ${'Europe'}                 | ${'Europe'}
-      ${'North America'}          | ${'North America'}
-      ${'South America'}          | ${'South America'}
-      ${'Latin America'}          | ${'Latin America'}
-    `(
-      'Should update the region $region => $expected',
-      async ({ region, expected }) => {
+    test.each(gp2Model.userRegions)(
+      'Should update the region - %s',
+      async (region) => {
         await userDataProvider.update(userId, {
           region,
         });
         expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-          region: expected,
+          region,
         });
       },
     );
-    test.each`
-      role                           | expected
-      ${'Working Group Participant'} | ${'Working Group Participant'}
-      ${'Network Investigator'}      | ${'Network Investigator'}
-      ${'Network Collaborator'}      | ${'Network Collaborator'}
-      ${'Administrator'}             | ${'Administrator'}
-      ${'Trainee'}                   | ${'Trainee'}
-    `(
-      'Should update the role $role => $expected',
-      async ({ role, expected }) => {
+    test.each(gp2Model.userRoles)(
+      'Should update the role - %s',
+      async (role) => {
         await userDataProvider.update(userId, {
           role,
         });
         expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-          role: expected,
+          role,
         });
       },
     );
     test.each(gp2Model.userDegrees)(
-      'Should update the degree %s',
+      'Should update the degree - %s',
       async (degree) => {
         const expected = degree;
         await userDataProvider.update(userId, {
@@ -2099,21 +2028,106 @@ describe('User data provider', () => {
         });
       },
     );
-    test.each`
-      role                   | expected
-      ${'Investigator'}      | ${'Investigator'}
-      ${'Co-Investigator'}   | ${'Co-Investigator'}
-      ${'Lead Investigator'} | ${'Lead Investigator'}
-    `(
-      'Should update the contributing cohort role $role => $expected',
-      async ({ role, expected }) => {
+    test.only.each(gp2Model.userContributingCohortRole)(
+      'Should update the contributing cohort role - %s',
+      async (role) => {
+        const previousCohortId = '11';
+        const cohortUserEntry = getEntry({
+          contributingCohorts: {
+            'en-US': [
+              {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: previousCohortId,
+                },
+              },
+            ],
+          },
+        });
+
+        environmentMock.getEntry
+          .mockReset()
+          .mockResolvedValueOnce(cohortUserEntry);
         const id = '42';
+        const studyUrl = 'http://example.com/study';
+        const waitProcessingPublish = jest
+          .fn()
+          .mockImplementation(() => Promise.resolve());
+
+        const waitProcessingUnPublish = jest
+          .fn()
+          .mockImplementation(() => Promise.resolve());
+        environmentMock.createEntry.mockResolvedValueOnce(getEntry({}, id));
+        environmentMock.createPublishBulkAction.mockResolvedValueOnce(
+          getBulkAction({
+            waitProcessing: waitProcessingPublish,
+          }),
+        );
+        environmentMock.createUnpublishBulkAction.mockResolvedValueOnce(
+          getBulkAction({
+            waitProcessing: waitProcessingUnPublish,
+          }),
+        );
+        const deleteSpy = jest.fn();
+        environmentMock.getEntries.mockResolvedValueOnce({
+          items: [{ delete: deleteSpy }],
+        });
         await userDataProvider.update(userId, {
-          contributingCohorts: [{ contributingCohortId: id, role }],
+          contributingCohorts: [{ contributingCohortId: id, role, studyUrl }],
         });
-        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-          contributingCohorts: [{ contributingCohortId: id, role: expected }],
+
+        expect(environmentMock.createEntry).toHaveBeenCalledWith(
+          'contributingCohortsMembership',
+          {
+            fields: {
+              contributingCohort: {
+                'en-US': {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id,
+                  },
+                },
+              },
+              role: { 'en-US': role },
+              studyLink: { 'en-US': studyUrl },
+            },
+          },
+        );
+        expect(environmentMock.createPublishBulkAction).toHaveBeenCalledWith({
+          entities: {
+            sys: { type: 'Array' },
+            items: [
+              {
+                sys: { linkType: 'Entry', type: 'Link', id, version: 1 },
+              },
+            ],
+          },
         });
+        expect(waitProcessingPublish).toHaveBeenCalled();
+
+        expect(patchAndPublish).toHaveBeenCalledWith(cohortUserEntry, {
+          contributingCohorts: [
+            { sys: { id, linkType: 'Entry', type: 'Link' } },
+          ],
+        });
+        expect(environmentMock.createUnpublishBulkAction).toHaveBeenCalledWith({
+          entities: {
+            sys: { type: 'Array' },
+            items: [
+              {
+                sys: { linkType: 'Entry', type: 'Link', id: previousCohortId },
+              },
+            ],
+          },
+        });
+        expect(waitProcessingUnPublish).toHaveBeenCalled();
+        expect(environmentMock.getEntries).toHaveBeenCalledWith({
+          content_type: 'contributingCohortsMembership',
+          'sys.id[in]': previousCohortId,
+        });
+        expect(deleteSpy).toHaveBeenCalled();
       },
     );
     test('flattens `social` values', async () => {

@@ -1,6 +1,7 @@
 export type {
   Asset,
   AssetFileProp,
+  BulkAction,
   Entry,
   Environment,
   Link,

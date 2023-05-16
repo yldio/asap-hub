@@ -128,76 +128,52 @@ export class UserContentfulDataProvider implements UserDataProvider {
       const fields = cleanUser(data);
       const environment = await this.getRestClient();
       const user = await environment.getEntry(id);
+      const previousContributingCohorts = user.fields['contributingCohorts'];
 
+      // const bob = {
+      //   'en-US': [
+      //     {
+      //       sys: {
+      //         type: 'Link',
+      //         linkType: 'Entry',
+      //         id: '1DMoSoMU1I0EaoiI1VVZu4',
+      //       },
+      //     },
+      //     {
+      //       sys: {
+      //         type: 'Link',
+      //         linkType: 'Entry',
+      //         id: '2tIKKeVRo0WTEP74DHtMIl',
+      //       },
+      //     },
+      //   ],
+      // };
       logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
-      const output = await Promise.all(
-        (data.contributingCohorts || [])?.map(async (contributingCohort) => {
-          const entry = await environment.createEntry(
-            'contributingCohortsMembership',
-            {
-              fields: addLocaleToFields({
-                contributingCohort: {
-                  sys: {
-                    type: 'Link',
-                    linkType: 'Entry',
-                    id: contributingCohort.contributingCohortId,
-                  },
-                },
-                role: contributingCohort.role,
-                studyLink: contributingCohort.studyUrl,
-              }),
-            },
-          );
-          return entry.sys.id;
-        }),
-      );
 
-      const publish = await environment.createPublishBulkAction({
-        entities: {
-          sys: { type: 'Array' },
-          items: output.map((id) => ({
-            sys: { linkType: 'Entry', type: 'Link', id, version: 1 },
-          })),
-        },
-      });
-      await publish.waitProcessing();
+      console.log('addNextCohorts');
+      const nextContributingCohorts = await addNextCohorts(data, environment);
+
+      console.log('getCohortFields');
+      const cohortFields = getCohortFields(nextContributingCohorts);
+      console.log('patchAndPublish');
+      console.log(user, fields, cohortFields);
       const result = await patchAndPublish(user, {
         ...fields,
-        contributingCohorts: output.map((id) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id,
-          },
-        })),
+        ...cohortFields,
       });
 
-      if (user.fields['contributingCohorts']) {
-        const cohorts = user.fields['contributingCohorts']['en-US'];
-        const unpublish = await environment.createUnpublishBulkAction({
-          entities: {
-            sys: { type: 'Array' },
-            items: cohorts.map((cohort: { sys: { id: string } }) => ({
-              sys: { linkType: 'Entry', type: 'Link', id: cohort.sys.id },
-            })),
-          },
-        });
-        await unpublish.waitProcessing();
-        const cohortEntities = await environment.getEntries({
-          content_type: 'contributingCohortsMembership',
-          'sys.id[in]': cohorts
-            .map((cohort: { sys: { id: string } }) => cohort.sys.id)
-            .join(','),
-        });
-        await Promise.all(cohortEntities.items.map((entry) => entry.delete()));
-      }
+      console.log('removePreviousCohorts');
+      await removePreviousCohorts(environment, previousContributingCohorts);
+      console.log('fetchUserById');
       const fetchEventById = () => this.fetchUserById(id);
+      console.log('pollContentfulGql');
       await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(
         result.sys.publishedVersion || Infinity,
         fetchEventById,
         'users',
       );
     } catch (err) {
+      console.log(err);
       logger.error(`An error occurred updating a user ${id} - ${data}`);
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);
@@ -550,3 +526,80 @@ const getSearchFilter = (search: string) => {
 
   return { AND: [...filter] };
 };
+function getCohortFields(nextContributingCohorts: string[] | undefined) {
+  return nextContributingCohorts
+    ? {
+        contributingCohorts: nextContributingCohorts.map((id) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id,
+          },
+        })),
+      }
+    : {};
+}
+
+async function addNextCohorts(
+  data: gp2Model.UserUpdateDataObject,
+  environment: Environment,
+) {
+  if (data.contributingCohorts) {
+    const nextContributingCohorts = await Promise.all(
+      (data.contributingCohorts || [])?.map(async (contributingCohort) => {
+        const entry = await environment.createEntry(
+          'contributingCohortsMembership',
+          {
+            fields: addLocaleToFields({
+              contributingCohort: {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: contributingCohort.contributingCohortId,
+                },
+              },
+              role: contributingCohort.role,
+              studyLink: contributingCohort.studyUrl,
+            }),
+          },
+        );
+        return entry.sys.id;
+      }),
+    );
+
+    const publish = await environment.createPublishBulkAction({
+      entities: {
+        sys: { type: 'Array' },
+        items: nextContributingCohorts.map((id) => ({
+          sys: { linkType: 'Entry', type: 'Link', id, version: 1 },
+        })),
+      },
+    });
+    await publish.waitProcessing();
+    return nextContributingCohorts;
+  }
+  return undefined;
+}
+
+async function removePreviousCohorts(
+  environment: Environment,
+  previousContributingCohorts?: { sys: { id: string } }[],
+) {
+  if (previousContributingCohorts) {
+    const previousCohorts = previousContributingCohorts['en-US'];
+    const unpublish = await environment.createUnpublishBulkAction({
+      entities: {
+        sys: { type: 'Array' },
+        items: previousCohorts.map((cohort) => ({
+          sys: { linkType: 'Entry', type: 'Link', id: cohort.sys.id },
+        })),
+      },
+    });
+    await unpublish.waitProcessing();
+    const cohortEntities = await environment.getEntries({
+      content_type: 'contributingCohortsMembership',
+      'sys.id[in]': previousCohorts.map((cohort) => cohort.sys.id).join(','),
+    });
+    await Promise.all(cohortEntities.items.map((entry) => entry.delete()));
+  }
+}

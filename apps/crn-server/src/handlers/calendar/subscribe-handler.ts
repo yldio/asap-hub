@@ -29,32 +29,40 @@ const getJWTCredentialsAWS = getJWTCredentialsFactory({
   region,
 });
 
-export const calendarCreatedHandlerFactory = isContentfulEnabledV2
-  ? calendarCreatedContentfulHandlerFactory
-  : calendarCreatedSquidexHandlerFactory;
-
-export const contentfulDeliveryApiConfig = {
-  environment: contentfulEnvId,
-  space: contentfulSpaceId,
-  accessToken: contentfulAccessToken,
-};
-
-export const cms = isContentfulEnabledV2 ? 'contentful' : 'squidex';
-
-export const webhookHandler = calendarCreatedHandlerFactory(
-  subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
-    asapApiUrl,
-    googleApiToken,
-    googleApiUrl,
-    cms,
-  }),
-  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
-    googleApiUrl,
-  }),
-  getCalendarDataProvider(),
-  new AlertsSentry(Sentry.captureException.bind(Sentry)),
-  logger,
-  contentfulDeliveryApiConfig,
-);
+/* istanbul ignore next */
+export const webhookHandler = isContentfulEnabledV2
+  ? calendarCreatedContentfulHandlerFactory(
+      subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
+        asapApiUrl,
+        googleApiToken,
+        googleApiUrl,
+        cms: 'contentful',
+      }),
+      unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
+        googleApiUrl,
+      }),
+      getCalendarDataProvider(),
+      new AlertsSentry(Sentry.captureException.bind(Sentry)),
+      logger,
+      {
+        environment: contentfulEnvId,
+        space: contentfulSpaceId,
+        accessToken: contentfulAccessToken,
+      },
+    )
+  : calendarCreatedSquidexHandlerFactory(
+      subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
+        asapApiUrl,
+        googleApiToken,
+        googleApiUrl,
+        cms: 'squidex',
+      }),
+      unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
+        googleApiUrl,
+      }),
+      getCalendarDataProvider(),
+      new AlertsSentry(Sentry.captureException.bind(Sentry)),
+      logger,
+    );
 
 export const handler = sentryWrapper(webhookHandler);

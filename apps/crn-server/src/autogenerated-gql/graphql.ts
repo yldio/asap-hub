@@ -9004,6 +9004,24 @@ export type ResearchOutputContentFragment = Pick<
     subtype: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
     keywords: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
   };
+  referencingResearchOutputsContents: Maybe<
+    Array<
+      Pick<ResearchOutputs, 'id'> & {
+        flatData: Pick<
+          ResearchOutputsFlatDataDto,
+          'title' | 'type' | 'documentType'
+        > & {
+          teams: Maybe<
+            Array<
+              Pick<Teams, 'id'> & {
+                flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+              }
+            >
+          >;
+        };
+      }
+    >
+  >;
 };
 
 export type ReferencingResearchOutputContentFragment = Pick<
@@ -9033,24 +9051,6 @@ export type FetchResearchOutputQuery = {
       ResearchOutputs,
       'id' | 'created' | 'lastModified' | 'version' | 'status'
     > & {
-      referencingResearchOutputsContents: Maybe<
-        Array<
-          Pick<ResearchOutputs, 'id'> & {
-            flatData: Pick<
-              ResearchOutputsFlatDataDto,
-              'title' | 'type' | 'documentType'
-            > & {
-              teams: Maybe<
-                Array<
-                  Pick<Teams, 'id'> & {
-                    flatData: Pick<TeamsFlatDataDto, 'displayName'>;
-                  }
-                >
-              >;
-            };
-          }
-        >
-      >;
       flatData: Pick<
         ResearchOutputsFlatDataDto,
         | 'title'
@@ -9240,6 +9240,24 @@ export type FetchResearchOutputQuery = {
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
         >;
       };
+      referencingResearchOutputsContents: Maybe<
+        Array<
+          Pick<ResearchOutputs, 'id'> & {
+            flatData: Pick<
+              ResearchOutputsFlatDataDto,
+              'title' | 'type' | 'documentType'
+            > & {
+              teams: Maybe<
+                Array<
+                  Pick<Teams, 'id'> & {
+                    flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                  }
+                >
+              >;
+            };
+          }
+        >
+      >;
     }
   >;
 };
@@ -9260,24 +9278,6 @@ export type FetchResearchOutputsQuery = {
             ResearchOutputs,
             'id' | 'created' | 'lastModified' | 'version' | 'status'
           > & {
-            referencingResearchOutputsContents: Maybe<
-              Array<
-                Pick<ResearchOutputs, 'id'> & {
-                  flatData: Pick<
-                    ResearchOutputsFlatDataDto,
-                    'title' | 'type' | 'documentType'
-                  > & {
-                    teams: Maybe<
-                      Array<
-                        Pick<Teams, 'id'> & {
-                          flatData: Pick<TeamsFlatDataDto, 'displayName'>;
-                        }
-                      >
-                    >;
-                  };
-                }
-              >
-            >;
             flatData: Pick<
               ResearchOutputsFlatDataDto,
               | 'title'
@@ -9475,6 +9475,24 @@ export type FetchResearchOutputsQuery = {
                 Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
               >;
             };
+            referencingResearchOutputsContents: Maybe<
+              Array<
+                Pick<ResearchOutputs, 'id'> & {
+                  flatData: Pick<
+                    ResearchOutputsFlatDataDto,
+                    'title' | 'type' | 'documentType'
+                  > & {
+                    teams: Maybe<
+                      Array<
+                        Pick<Teams, 'id'> & {
+                          flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                        }
+                      >
+                    >;
+                  };
+                }
+              >
+            >;
           }
         >
       >;
@@ -13114,6 +13132,60 @@ export const ResearchOutputContentFragmentDoc = {
               ],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingResearchOutputsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'documentType' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teams' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'displayName',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -15358,25 +15430,6 @@ export const FetchResearchOutputDocument = {
                   kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'ResearchOutputContent' },
                 },
-                {
-                  kind: 'Field',
-                  name: {
-                    kind: 'Name',
-                    value: 'referencingResearchOutputsContents',
-                  },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'FragmentSpread',
-                        name: {
-                          kind: 'Name',
-                          value: 'ReferencingResearchOutputContent',
-                        },
-                      },
-                    ],
-                  },
-                },
               ],
             },
           },
@@ -15384,7 +15437,6 @@ export const FetchResearchOutputDocument = {
       },
     },
     ...ResearchOutputContentFragmentDoc.definitions,
-    ...ReferencingResearchOutputContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchResearchOutputQuery,
@@ -15489,25 +15541,6 @@ export const FetchResearchOutputsDocument = {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'ResearchOutputContent' },
                       },
-                      {
-                        kind: 'Field',
-                        name: {
-                          kind: 'Name',
-                          value: 'referencingResearchOutputsContents',
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: {
-                                kind: 'Name',
-                                value: 'ReferencingResearchOutputContent',
-                              },
-                            },
-                          ],
-                        },
-                      },
                     ],
                   },
                 },
@@ -15518,7 +15551,6 @@ export const FetchResearchOutputsDocument = {
       },
     },
     ...ResearchOutputContentFragmentDoc.definitions,
-    ...ReferencingResearchOutputContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchResearchOutputsQuery,

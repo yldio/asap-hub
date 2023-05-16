@@ -187,6 +187,20 @@ export const researchOutputContentQueryFragment = gql`
         }
       }
     }
+    referencingResearchOutputsContents {
+      id
+      flatData {
+        title
+        type
+        documentType
+        teams {
+          id
+          flatData {
+            displayName
+          }
+        }
+      }
+    }
   }
 `;
 export const referencingResearchOutputContentQueryFragment = gql`
@@ -210,13 +224,9 @@ export const FETCH_RESEARCH_OUTPUT = gql`
   query FetchResearchOutput($id: String!, $withTeams: Boolean!) {
     findResearchOutputsContent(id: $id) {
       ...ResearchOutputContent
-      referencingResearchOutputsContents {
-        ...ReferencingResearchOutputContent
-      }
     }
   }
   ${researchOutputContentQueryFragment}
-  ${referencingResearchOutputContentQueryFragment}
 `;
 
 export const FETCH_RESEARCH_OUTPUTS = gql`
@@ -235,12 +245,8 @@ export const FETCH_RESEARCH_OUTPUTS = gql`
       total
       items {
         ...ResearchOutputContent
-        referencingResearchOutputsContents {
-          ...ReferencingResearchOutputContent
-        }
       }
     }
   }
   ${researchOutputContentQueryFragment}
-  ${referencingResearchOutputContentQueryFragment}
 `;

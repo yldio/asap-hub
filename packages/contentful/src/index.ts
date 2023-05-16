@@ -2,10 +2,14 @@ export type {
   Asset,
   AssetFileProp,
   BulkAction,
+  BulkActionStatus,
+  Collection,
   Entry,
   Environment,
   Link,
   SysLink,
+  EntryProps,
+  KeyValueMap,
 } from 'contentful-management';
 export { gql, GraphQLClient } from 'graphql-request';
 export * from './client';

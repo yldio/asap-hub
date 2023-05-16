@@ -128,52 +128,26 @@ export class UserContentfulDataProvider implements UserDataProvider {
       const fields = cleanUser(data);
       const environment = await this.getRestClient();
       const user = await environment.getEntry(id);
-      const previousContributingCohorts = user.fields['contributingCohorts'];
+      const previousContributingCohorts = user.fields.contributingCohorts;
 
-      // const bob = {
-      //   'en-US': [
-      //     {
-      //       sys: {
-      //         type: 'Link',
-      //         linkType: 'Entry',
-      //         id: '1DMoSoMU1I0EaoiI1VVZu4',
-      //       },
-      //     },
-      //     {
-      //       sys: {
-      //         type: 'Link',
-      //         linkType: 'Entry',
-      //         id: '2tIKKeVRo0WTEP74DHtMIl',
-      //       },
-      //     },
-      //   ],
-      // };
       logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
 
-      console.log('addNextCohorts');
       const nextContributingCohorts = await addNextCohorts(data, environment);
 
-      console.log('getCohortFields');
       const cohortFields = getCohortFields(nextContributingCohorts);
-      console.log('patchAndPublish');
-      console.log(user, fields, cohortFields);
       const result = await patchAndPublish(user, {
         ...fields,
         ...cohortFields,
       });
 
-      console.log('removePreviousCohorts');
       await removePreviousCohorts(environment, previousContributingCohorts);
-      console.log('fetchUserById');
       const fetchEventById = () => this.fetchUserById(id);
-      console.log('pollContentfulGql');
       await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(
         result.sys.publishedVersion || Infinity,
         fetchEventById,
         'users',
       );
     } catch (err) {
-      console.log(err);
       logger.error(`An error occurred updating a user ${id} - ${data}`);
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);
@@ -583,7 +557,7 @@ async function addNextCohorts(
 
 async function removePreviousCohorts(
   environment: Environment,
-  previousContributingCohorts?: { sys: { id: string } }[],
+  previousContributingCohorts?: { 'en-US': { sys: { id: string } }[] },
 ) {
   if (previousContributingCohorts) {
     const previousCohorts = previousContributingCohorts['en-US'];

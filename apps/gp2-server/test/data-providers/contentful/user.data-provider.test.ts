@@ -11,7 +11,11 @@ import nock from 'nock';
 import { appName, baseUrl } from '../../../src/config';
 import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/user.data-provider';
 import { UserDataProvider } from '../../../src/data-providers/types';
-import { getBulkAction, getEntry } from '../../fixtures/contentful.fixtures';
+import {
+  getBulkAction,
+  getEntry,
+  getEntryCollection,
+} from '../../fixtures/contentful.fixtures';
 import {
   fetchUserResponse,
   getContentfulGraphql,
@@ -1906,8 +1910,10 @@ describe('User data provider', () => {
     const userId = 'user-id';
 
     const entry = getEntry({
-      firstName: 'Test',
-      lastName: 'User',
+      fields: {
+        firstName: 'Test',
+        lastName: 'User',
+      },
     });
 
     beforeEach(() => {
@@ -2028,21 +2034,23 @@ describe('User data provider', () => {
         });
       },
     );
-    test.only.each(gp2Model.userContributingCohortRole)(
+    test.each(gp2Model.userContributingCohortRole)(
       'Should update the contributing cohort role - %s',
       async (role) => {
         const previousCohortId = '11';
         const cohortUserEntry = getEntry({
-          contributingCohorts: {
-            'en-US': [
-              {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: previousCohortId,
+          fields: {
+            contributingCohorts: {
+              'en-US': [
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: previousCohortId,
+                  },
                 },
-              },
-            ],
+              ],
+            },
           },
         });
 
@@ -2070,9 +2078,9 @@ describe('User data provider', () => {
           }),
         );
         const deleteSpy = jest.fn();
-        environmentMock.getEntries.mockResolvedValueOnce({
-          items: [{ delete: deleteSpy }],
-        });
+        environmentMock.getEntries.mockResolvedValueOnce(
+          getEntryCollection([getEntry({ delete: deleteSpy })]),
+        );
         await userDataProvider.update(userId, {
           contributingCohorts: [{ contributingCohortId: id, role, studyUrl }],
         });

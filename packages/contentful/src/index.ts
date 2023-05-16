@@ -5,11 +5,12 @@ export type {
   BulkActionStatus,
   Collection,
   Entry,
+  EntryProps,
   Environment,
+  KeyValueMap,
   Link,
   SysLink,
-  EntryProps,
-  KeyValueMap,
+  VersionedLink,
 } from 'contentful-management';
 export { gql, GraphQLClient } from 'graphql-request';
 export * from './client';

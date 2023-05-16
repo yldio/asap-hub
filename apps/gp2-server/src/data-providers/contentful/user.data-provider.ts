@@ -5,9 +5,11 @@ import {
   Environment,
   gp2 as gp2Contentful,
   GraphQLClient,
+  Link,
   Maybe,
   patchAndPublish,
   pollContentfulGql,
+  VersionedLink,
 } from '@asap-hub/contentful';
 import logger from '../../utils/logger';
 import { UserDataProvider } from '../types';
@@ -132,7 +134,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
       logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
 
-      const nextContributingCohorts = await addNextCohorts(data, environment);
+      const nextContributingCohorts = await addNextCohorts(environment, data);
 
       const cohortFields = getCohortFields(nextContributingCohorts);
       const result = await patchAndPublish(user, {
@@ -500,80 +502,82 @@ const getSearchFilter = (search: string) => {
 
   return { AND: [...filter] };
 };
-function getCohortFields(nextContributingCohorts: string[] | undefined) {
-  return nextContributingCohorts
+const getCohortFields = (nextContributingCohorts: string[] | undefined) =>
+  nextContributingCohorts
     ? {
-        contributingCohorts: nextContributingCohorts.map((id) => ({
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id,
-          },
-        })),
+        contributingCohorts: getEntities(nextContributingCohorts),
       }
     : {};
-}
 
-async function addNextCohorts(
-  data: gp2Model.UserUpdateDataObject,
+const addNextCohorts = async (
   environment: Environment,
-) {
+  data: gp2Model.UserUpdateDataObject,
+) => {
   if (data.contributingCohorts) {
     const nextContributingCohorts = await Promise.all(
-      (data.contributingCohorts || [])?.map(async (contributingCohort) => {
-        const entry = await environment.createEntry(
-          'contributingCohortsMembership',
-          {
-            fields: addLocaleToFields({
-              contributingCohort: {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: contributingCohort.contributingCohortId,
-                },
-              },
-              role: contributingCohort.role,
-              studyLink: contributingCohort.studyUrl,
-            }),
-          },
-        );
-        return entry.sys.id;
-      }),
+      (data.contributingCohorts || [])?.map(
+        async ({ contributingCohortId, role, studyUrl }) => {
+          const entry = await environment.createEntry(
+            'contributingCohortsMembership',
+            {
+              fields: addLocaleToFields({
+                contributingCohort: getLinkEntity(contributingCohortId),
+                role,
+                studyLink: studyUrl,
+              }),
+            },
+          );
+          return entry.sys.id;
+        },
+      ),
     );
 
-    const publish = await environment.createPublishBulkAction({
-      entities: {
-        sys: { type: 'Array' },
-        items: nextContributingCohorts.map((id) => ({
-          sys: { linkType: 'Entry', type: 'Link', id, version: 1 },
-        })),
-      },
-    });
+    const payload = getBulkPayload(nextContributingCohorts, 1);
+    const publish = await environment.createPublishBulkAction(payload);
     await publish.waitProcessing();
     return nextContributingCohorts;
   }
   return undefined;
-}
+};
 
-async function removePreviousCohorts(
+const removePreviousCohorts = async (
   environment: Environment,
-  previousContributingCohorts?: { 'en-US': { sys: { id: string } }[] },
-) {
+  previousContributingCohorts?: { 'en-US': Link<'Entry'>[] },
+) => {
   if (previousContributingCohorts) {
-    const previousCohorts = previousContributingCohorts['en-US'];
-    const unpublish = await environment.createUnpublishBulkAction({
-      entities: {
-        sys: { type: 'Array' },
-        items: previousCohorts.map((cohort) => ({
-          sys: { linkType: 'Entry', type: 'Link', id: cohort.sys.id },
-        })),
-      },
-    });
+    const previousCohorts = previousContributingCohorts['en-US'].map(
+      (cohort) => cohort.sys.id,
+    );
+    const payload = getBulkPayload(previousCohorts);
+    const unpublish = await environment.createUnpublishBulkAction(payload);
     await unpublish.waitProcessing();
     const cohortEntities = await environment.getEntries({
       content_type: 'contributingCohortsMembership',
-      'sys.id[in]': previousCohorts.map((cohort) => cohort.sys.id).join(','),
+      'sys.id[in]': previousCohorts.join(','),
     });
-    await Promise.all(cohortEntities.items.map((entry) => entry.delete()));
+    return Promise.all(cohortEntities.items.map((entry) => entry.delete()));
   }
+  return null;
+};
+const getBulkPayload = (entities: string[], version: number = -1) => ({
+  entities: {
+    sys: { type: 'Array' as const },
+    items: getEntities(entities, version),
+  },
+});
+
+const getEntities = (entities: string[], version: number = -1) =>
+  entities.map((id) => getLinkEntity(id, version));
+
+function getLinkEntity(id: string): Link<'Entry'>;
+function getLinkEntity(id: string, version: number): VersionedLink<'Entry'>;
+function getLinkEntity(id: string, version: number = -1): unknown {
+  return {
+    sys: {
+      type: 'Link' as const,
+      linkType: 'Entry' as const,
+      id,
+      ...(version > -1 ? { version } : {}),
+    },
+  };
 }

@@ -100,6 +100,7 @@ export class ResearchOutputSquidexDataProvider
         { includeDrafts: true },
       );
 
+    console.log('response = ', researchOutputGraphqlResponse);
     const { findResearchOutputsContent: researchOutputContent } =
       researchOutputGraphqlResponse;
 
@@ -107,36 +108,11 @@ export class ResearchOutputSquidexDataProvider
       throw Boom.notFound();
     }
 
-    // const relatedResearches = await this.squidexGraphqlClient.request<
-    //   FetchResearchOutputsQuery,
-    //   FetchResearchOutputsQueryVariables
-    // >(
-    //   FETCH_RESEARCH_OUTPUTS,
-    //   {
-    //     top: 1000,
-    //     skip: 0,
-    //     filter: `contains(data/relatedResearch/iv, '${id}')`, // `data/relatedResearch/iv contains ${id}`
-    //     withTeams: true,
-    //   },
-    //   {
-    //     includeDrafts: true,
-    //   },
-    // );
-    //
-    // console.log(
-    //   'relatedResearches=',
-    //   relatedResearches?.queryResearchOutputsContentsWithTotal?.items,
-    // );
-    /*
-    const fetched = await this.researchOutputSquidexRestClient.fetch({
-      filter: {
-        op: 'contains',
-        path: 'data.relatedResearch.iv',
-        value: id,
-      },
-    });
-    console.log('fetched', JSON.stringify(fetched, null, 2));
-    console.log('researchOutputContent=', researchOutputContent);*/
+    console.log(
+      'researchOutputContent=',
+      researchOutputContent.referencingResearchOutputsContents,
+    );
+
     return parseGraphQLResearchOutput(researchOutputContent);
   }
 

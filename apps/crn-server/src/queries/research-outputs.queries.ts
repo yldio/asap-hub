@@ -189,14 +189,47 @@ export const researchOutputContentQueryFragment = gql`
     }
   }
 `;
+export const referencingResearchOutputContentQueryFragment = gql`
+  fragment ReferencingResearchOutputContent on ResearchOutputs {
+    id
+    flatData {
+      title
+      #      teams @include(if: $withTeams) {
+      #        id
+      #        created
+      #        lastModified
+      #        version
+      #        flatData {
+      #          displayName
+      #          inactiveSince
+      #        }
+      #        referencingUsersContents {
+      #          flatData {
+      #            email
+      #            teams {
+      #              role
+      #              id {
+      #                id
+      #              }
+      #            }
+      #          }
+      #        }
+      #      }
+    }
+  }
+`;
 
 export const FETCH_RESEARCH_OUTPUT = gql`
   query FetchResearchOutput($id: String!, $withTeams: Boolean!) {
     findResearchOutputsContent(id: $id) {
       ...ResearchOutputContent
+      referencingResearchOutputsContents {
+        ...ReferencingResearchOutputContent
+      }
     }
   }
   ${researchOutputContentQueryFragment}
+  ${referencingResearchOutputContentQueryFragment}
 `;
 
 export const FETCH_RESEARCH_OUTPUTS = gql`

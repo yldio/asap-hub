@@ -3,7 +3,7 @@
   "private": true,
   "devDependencies": {
     "@playwright/test": "^1.30.0",
-    "@types/node-fetch": "2.5.10",
+    "@types/node-fetch": "2.6.4",
     "node-fetch": "3.0.0-beta.9"
   },
   "dependencies": {

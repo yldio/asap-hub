@@ -100,18 +100,12 @@ export class ResearchOutputSquidexDataProvider
         { includeDrafts: true },
       );
 
-    console.log('response = ', researchOutputGraphqlResponse);
     const { findResearchOutputsContent: researchOutputContent } =
       researchOutputGraphqlResponse;
 
     if (!researchOutputContent) {
       throw Boom.notFound();
     }
-
-    console.log(
-      'researchOutputContent=',
-      researchOutputContent.referencingResearchOutputsContents,
-    );
 
     return parseGraphQLResearchOutput(researchOutputContent);
   }

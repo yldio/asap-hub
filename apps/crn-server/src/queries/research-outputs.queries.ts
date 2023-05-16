@@ -203,22 +203,6 @@ export const researchOutputContentQueryFragment = gql`
     }
   }
 `;
-export const referencingResearchOutputContentQueryFragment = gql`
-  fragment ReferencingResearchOutputContent on ResearchOutputs {
-    id
-    flatData {
-      title
-      type
-      documentType
-      teams {
-        id
-        flatData {
-          displayName
-        }
-      }
-    }
-  }
-`;
 
 export const FETCH_RESEARCH_OUTPUT = gql`
   query FetchResearchOutput($id: String!, $withTeams: Boolean!) {

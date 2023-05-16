@@ -19,11 +19,16 @@ export const FETCH_REMINDER_DATA = gql`
     }
     queryResearchOutputsContents(filter: $researchOutputFilter) {
       id
+      created
+      status
       flatData {
         addedDate
         documentType
         title
         teams {
+          id
+        }
+        workingGroups {
           id
         }
       }

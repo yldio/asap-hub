@@ -1813,10 +1813,6 @@ export type Calendars = Content & {
   referencingGroupsContents: Maybe<Array<Groups>>;
   /** Query Interest Groups content items with total count. */
   referencingGroupsContentsWithTotal: Maybe<GroupsResultDto>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** Query Working Groups content items. */
   referencingWorkingGroupsContents: Maybe<Array<WorkingGroups>>;
   /** Query Working Groups content items with total count. */
@@ -1860,24 +1856,6 @@ export type CalendarsReferencingGroupsContentsArgs = {
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingGroupsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Calendars content type. */
-export type CalendarsReferencingResearchOutputsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Calendars content type. */
-export type CalendarsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2070,10 +2048,6 @@ export type Dashboard = Content & {
   referencesPagesContents: Maybe<Array<Pages>>;
   /** Query Pages content items with total count. */
   referencesPagesContentsWithTotal: Maybe<PagesResultDto>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -2113,24 +2087,6 @@ export type DashboardReferencesPagesContentsArgs = {
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesPagesContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Dashboard content type. */
-export type DashboardReferencingResearchOutputsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Dashboard content type. */
-export type DashboardReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2230,10 +2186,6 @@ export type Discover = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -2327,24 +2279,6 @@ export type DiscoverReferencesUsersContentsArgs = {
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesUsersContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Discover ASAP content type. */
-export type DiscoverReferencingResearchOutputsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Discover ASAP content type. */
-export type DiscoverReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -2625,10 +2559,6 @@ export type Events = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -2704,24 +2634,6 @@ export type EventsReferencesUsersContentsArgs = {
 
 /** The structure of a Events content type. */
 export type EventsReferencesUsersContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Events content type. */
-export type EventsReferencingResearchOutputsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Events content type. */
-export type EventsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -3320,10 +3232,6 @@ export type Groups = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -3381,24 +3289,6 @@ export type GroupsReferencesUsersContentsArgs = {
 
 /** The structure of a Interest Groups content type. */
 export type GroupsReferencesUsersContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Interest Groups content type. */
-export type GroupsReferencingResearchOutputsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Interest Groups content type. */
-export type GroupsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -3711,10 +3601,6 @@ export type Migrations = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -3723,24 +3609,6 @@ export type Migrations = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
-};
-
-/** The structure of a Migrations content type. */
-export type MigrationsReferencingResearchOutputsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Migrations content type. */
-export type MigrationsReferencingResearchOutputsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of the Migrations data type. */
@@ -3810,10 +3678,6 @@ export type NewsAndEvents = Content & {
   referencingDiscoverContents: Maybe<Array<Discover>>;
   /** Query Discover ASAP content items with total count. */
   referencingDiscoverContentsWithTotal: Maybe<DiscoverResultDto>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -3853,24 +3717,6 @@ export type NewsAndEventsReferencingDiscoverContentsArgs = {
 
 /** The structure of a News content type. */
 export type NewsAndEventsReferencingDiscoverContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a News content type. */
-export type NewsAndEventsReferencingResearchOutputsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a News content type. */
-export type NewsAndEventsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4029,10 +3875,6 @@ export type Pages = Content & {
   referencingDiscoverContents: Maybe<Array<Discover>>;
   /** Query Discover ASAP content items with total count. */
   referencingDiscoverContentsWithTotal: Maybe<DiscoverResultDto>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -4072,24 +3914,6 @@ export type PagesReferencingDiscoverContentsArgs = {
 
 /** The structure of a Pages content type. */
 export type PagesReferencingDiscoverContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Pages content type. */
-export type PagesReferencingResearchOutputsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Pages content type. */
-export type PagesReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4221,46 +4045,14 @@ export type ResearchOutputs = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
-  /** Query Calendars content items. */
-  referencesCalendarsContents: Maybe<Array<Calendars>>;
-  /** Query Calendars content items with total count. */
-  referencesCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
-  /** Query Dashboard content items. */
-  referencesDashboardContents: Maybe<Array<Dashboard>>;
-  /** Query Dashboard content items with total count. */
-  referencesDashboardContentsWithTotal: Maybe<DashboardResultDto>;
-  /** Query Discover ASAP content items. */
-  referencesDiscoverContents: Maybe<Array<Discover>>;
-  /** Query Discover ASAP content items with total count. */
-  referencesDiscoverContentsWithTotal: Maybe<DiscoverResultDto>;
-  /** Query Events content items. */
-  referencesEventsContents: Maybe<Array<Events>>;
-  /** Query Events content items with total count. */
-  referencesEventsContentsWithTotal: Maybe<EventsResultDto>;
   /** Query External authors content items. */
   referencesExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
   /** Query External authors content items with total count. */
   referencesExternalAuthorsContentsWithTotal: Maybe<ExternalAuthorsResultDto>;
-  /** Query Interest Groups content items. */
-  referencesGroupsContents: Maybe<Array<Groups>>;
-  /** Query Interest Groups content items with total count. */
-  referencesGroupsContentsWithTotal: Maybe<GroupsResultDto>;
   /** Query Labs content items. */
   referencesLabsContents: Maybe<Array<Labs>>;
   /** Query Labs content items with total count. */
   referencesLabsContentsWithTotal: Maybe<LabsResultDto>;
-  /** Query Migrations content items. */
-  referencesMigrationsContents: Maybe<Array<Migrations>>;
-  /** Query Migrations content items with total count. */
-  referencesMigrationsContentsWithTotal: Maybe<MigrationsResultDto>;
-  /** Query News content items. */
-  referencesNewsAndEventsContents: Maybe<Array<NewsAndEvents>>;
-  /** Query News content items with total count. */
-  referencesNewsAndEventsContentsWithTotal: Maybe<NewsAndEventsResultDto>;
-  /** Query Pages content items. */
-  referencesPagesContents: Maybe<Array<Pages>>;
-  /** Query Pages content items with total count. */
-  referencesPagesContentsWithTotal: Maybe<PagesResultDto>;
   /** Query Research Outputs content items. */
   referencesResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
   /** Query Research Outputs content items with total count. */
@@ -4273,10 +4065,6 @@ export type ResearchOutputs = Content & {
   referencesTeamsContents: Maybe<Array<Teams>>;
   /** Query Teams content items with total count. */
   referencesTeamsContentsWithTotal: Maybe<TeamsResultDto>;
-  /** Query Tutorials content items. */
-  referencesTutorialsContents: Maybe<Array<Tutorials>>;
-  /** Query Tutorials content items with total count. */
-  referencesTutorialsContentsWithTotal: Maybe<TutorialsResultDto>;
   /** Query Users content items. */
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
@@ -4304,78 +4092,6 @@ export type ResearchOutputs = Content & {
 };
 
 /** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesCalendarsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesCalendarsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesDashboardContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesDashboardContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesDiscoverContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesDiscoverContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesEventsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesEventsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesExternalAuthorsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -4394,24 +4110,6 @@ export type ResearchOutputsReferencesExternalAuthorsContentsWithTotalArgs = {
 };
 
 /** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesGroupsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesGroupsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
@@ -4422,60 +4120,6 @@ export type ResearchOutputsReferencesLabsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesMigrationsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesMigrationsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesNewsAndEventsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesNewsAndEventsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesPagesContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesPagesContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4530,24 +4174,6 @@ export type ResearchOutputsReferencesTeamsContentsArgs = {
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesTeamsContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesTutorialsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Research Outputs content type. */
-export type ResearchOutputsReferencesTutorialsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4762,7 +4388,6 @@ export type ResearchOutputsDataDto = {
   methods: Maybe<ResearchOutputsDataMethodsDto>;
   organisms: Maybe<ResearchOutputsDataOrganismsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
-  referencingResearchOutputsContents: Maybe<ResearchOutputsDataReferencingResearchOutputsContentsDto>;
   relatedResearch: Maybe<ResearchOutputsDataRelatedResearchDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
@@ -4808,7 +4433,6 @@ export type ResearchOutputsDataInputDto = {
   methods: InputMaybe<ResearchOutputsDataMethodsInputDto>;
   organisms: InputMaybe<ResearchOutputsDataOrganismsInputDto>;
   publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
-  referencingResearchOutputsContents: InputMaybe<ResearchOutputsDataReferencingResearchOutputsContentsInputDto>;
   relatedResearch: InputMaybe<ResearchOutputsDataRelatedResearchInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
@@ -4908,36 +4532,6 @@ export type ResearchOutputsDataPublishDateInputDto = {
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   iv: InputMaybe<Scalars['Instant']>;
 };
-
-/** The structure of the Referencing Research Outputs field of the Research Outputs content type. */
-export type ResearchOutputsDataReferencingResearchOutputsContentsDto = {
-  iv: Maybe<
-    Array<ResearchOutputsDataReferencingResearchOutputsContentsUnionDto>
-  >;
-};
-
-/** The structure of the Referencing Research Outputs field of the Research Outputs content input type. */
-export type ResearchOutputsDataReferencingResearchOutputsContentsInputDto = {
-  iv: InputMaybe<Array<Scalars['String']>>;
-};
-
-export type ResearchOutputsDataReferencingResearchOutputsContentsUnionDto =
-  | Calendars
-  | Dashboard
-  | Discover
-  | Events
-  | ExternalAuthors
-  | Groups
-  | Labs
-  | Migrations
-  | NewsAndEvents
-  | Pages
-  | ResearchOutputs
-  | ResearchTags
-  | Teams
-  | Tutorials
-  | Users
-  | WorkingGroups;
 
 /** The structure of the Related Research field of the Research Outputs content type. */
 export type ResearchOutputsDataRelatedResearchDto = {
@@ -5095,9 +4689,6 @@ export type ResearchOutputsFlatDataDto = {
   organisms: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
-  referencingResearchOutputsContents: Maybe<
-    Array<ResearchOutputsDataReferencingResearchOutputsContentsUnionDto>
-  >;
   relatedResearch: Maybe<Array<ResearchOutputs>>;
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
@@ -5592,10 +5183,6 @@ export type Tutorials = Content & {
   referencingDiscoverContents: Maybe<Array<Discover>>;
   /** Query Discover ASAP content items with total count. */
   referencingDiscoverContentsWithTotal: Maybe<DiscoverResultDto>;
-  /** Query Research Outputs content items. */
-  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
-  /** Query Research Outputs content items with total count. */
-  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -5617,24 +5204,6 @@ export type TutorialsReferencingDiscoverContentsArgs = {
 
 /** The structure of a Tutorials content type. */
 export type TutorialsReferencingDiscoverContentsWithTotalArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Tutorials content type. */
-export type TutorialsReferencingResearchOutputsContentsArgs = {
-  filter: InputMaybe<Scalars['String']>;
-  orderby: InputMaybe<Scalars['String']>;
-  search: InputMaybe<Scalars['String']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  top: InputMaybe<Scalars['Int']>;
-};
-
-/** The structure of a Tutorials content type. */
-export type TutorialsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;

@@ -24,8 +24,8 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
     const environment = await this.getRestClient();
     const asset = await environment.createAssetFromFiles({
       fields: addLocaleToFields({
-        title: 'Avatar',
-        description: 'Avatar',
+        title: `${id} Avatar`,
+        description: `Avatar for id ${id}.`,
         file: {
           contentType,
           fileName,

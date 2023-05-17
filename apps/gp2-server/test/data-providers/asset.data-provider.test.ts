@@ -46,4 +46,19 @@ describe('Asset data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
   });
+  describe('Fetch', () => {
+    test('should throw an error', async () => {
+      await expect(assetDataProvider.fetch()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
+  });
+
+  describe('Fetch-by-id', () => {
+    test('should throw an error', async () => {
+      await expect(assetDataProvider.fetchById()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
+  });
 });

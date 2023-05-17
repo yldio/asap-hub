@@ -56,11 +56,9 @@ import WorkingGroupNetwork, {
 import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-group.controller';
-import {
-  AssetDataProvider,
-  AssetSquidexDataProvider,
-} from './data-providers/asset.data-provider';
+import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
+import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
 import { ContributingCohortsContentfulDataProvider } from './data-providers/contentful/contributing-cohorts.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
@@ -82,6 +80,7 @@ import {
   ProjectSquidexDataProvider,
 } from './data-providers/project.data-provider';
 import {
+  AssetDataProvider,
   ContributingCohortDataProvider,
   NewsDataProvider,
   PageDataProvider,
@@ -201,8 +200,12 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
   // Data Providers
-  const assetDataProvider =
-    libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
+  const assetSquidexDataProvider =
+    libs.assetSquidexDataProvider ||
+    new AssetSquidexDataProvider(userRestClient);
+  const assetContentfulDataProvider =
+    libs.assetContentfulDataProvider ||
+    new AssetContentfulDataProvider(getContentfulRestClientFactory);
   const contributingCohortSquidexDataProvider =
     libs.contributingCohortSquidexDataProvider ||
     new ContributingCohortSquidexDataProvider(
@@ -263,6 +266,11 @@ export const appFactory = (libs: Libs = {}): Express => {
   const pageContentfulDataProvider =
     libs.pageContentfulDataProvider ||
     new PageContentfulDataProvider(contentfulGraphQLClient);
+
+  const assetDataProvider =
+    libs.assetDataProvider || isContentfulEnabled
+      ? assetContentfulDataProvider
+      : assetSquidexDataProvider;
   const pageDataProvider =
     libs.pageDataProvider || isContentfulEnabled
       ? pageContentfulDataProvider
@@ -399,6 +407,8 @@ export const appFactory = (libs: Libs = {}): Express => {
 
 export type Libs = {
   assetDataProvider?: AssetDataProvider;
+  assetSquidexDataProvider?: AssetDataProvider;
+  assetContentfulDataProvider?: AssetDataProvider;
   authHandler?: AuthHandler;
   calendarController?: gp2.CalendarController;
   calendarDataProvider?: gp2.CalendarDataProvider;

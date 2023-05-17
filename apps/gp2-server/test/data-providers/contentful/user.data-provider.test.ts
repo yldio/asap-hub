@@ -1787,6 +1787,9 @@ describe('User data provider', () => {
     });
   });
   describe('Create', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
     test('Should throw when the POST request to contentful fails', async () => {
       environmentMock.createEntry.mockRejectedValue(new Error('failed'));
 
@@ -1796,18 +1799,23 @@ describe('User data provider', () => {
     });
 
     test('Should create the user', async () => {
-      const userCreateDataObject = getUserCreateDataObject();
+      const { contributingCohorts: _, ...userCreateDataObject } =
+        getUserCreateDataObject();
 
       const userMock = getEntry({});
       environmentMock.createEntry.mockResolvedValue(userMock);
       userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
 
-      await userDataProvider.create(userCreateDataObject);
+      await userDataProvider.create({
+        ...userCreateDataObject,
+        contributingCohorts: [],
+      });
 
       const { social, telephone, ...fieldsWithoutLocale } =
         userCreateDataObject;
       const fields = addLocaleToFields({
         ...fieldsWithoutLocale,
+        contributingCohorts: [],
         ...social,
         telephoneCountryCode: telephone?.countryCode,
         telephoneNumber: telephone?.number,
@@ -1822,7 +1830,8 @@ describe('User data provider', () => {
     test.each(gp2Model.userRegions)(
       'Should create a user with the region - %s',
       async (region) => {
-        const userCreateDataObject = getUserCreateDataObject();
+        const { contributingCohorts: _, ...userCreateDataObject } =
+          getUserCreateDataObject();
 
         const userMock = getEntry({});
         environmentMock.createEntry.mockResolvedValue(userMock);
@@ -1830,6 +1839,7 @@ describe('User data provider', () => {
 
         await userDataProvider.create({
           ...userCreateDataObject,
+          contributingCohorts: [],
           region,
         });
         expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
@@ -1843,7 +1853,8 @@ describe('User data provider', () => {
     test.each(gp2Model.userRoles)(
       'Should create a user with the role - %s',
       async (role) => {
-        const userCreateDataObject = getUserCreateDataObject();
+        const { contributingCohorts: _, ...userCreateDataObject } =
+          getUserCreateDataObject();
 
         const userMock = getEntry({});
         environmentMock.createEntry.mockResolvedValue(userMock);
@@ -1851,6 +1862,7 @@ describe('User data provider', () => {
 
         await userDataProvider.create({
           ...userCreateDataObject,
+          contributingCohorts: [],
           role,
         });
         expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
@@ -1864,7 +1876,8 @@ describe('User data provider', () => {
     test.each(gp2Model.userDegrees)(
       'Should create a user with the degree - %s',
       async (degree) => {
-        const userCreateDataObject = getUserCreateDataObject();
+        const { contributingCohorts: _, ...userCreateDataObject } =
+          getUserCreateDataObject();
         const expected = degree;
 
         const userMock = getEntry({});
@@ -1873,6 +1886,7 @@ describe('User data provider', () => {
 
         await userDataProvider.create({
           ...userCreateDataObject,
+          contributingCohorts: [],
           degrees: [degree],
         });
         expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
@@ -1885,22 +1899,67 @@ describe('User data provider', () => {
     test.each(gp2Model.userContributingCohortRole)(
       'Should update the contributing cohort role - %s',
       async (role) => {
+        const studyUrl = 'http://example.com/study';
         const userCreateDataObject = getUserCreateDataObject();
         const id = '42';
         const userMock = getEntry({});
+        const waitProcessingPublish = jest
+          .fn()
+          .mockImplementation(() => Promise.resolve());
+        environmentMock.createEntry.mockResolvedValueOnce(getEntry({}, id));
+        environmentMock.createPublishBulkAction.mockResolvedValueOnce(
+          getBulkAction({
+            waitProcessing: waitProcessingPublish,
+          }),
+        );
         environmentMock.createEntry.mockResolvedValue(userMock);
         userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
         await userDataProvider.create({
           ...userCreateDataObject,
-          contributingCohorts: [{ contributingCohortId: id, role }],
+          contributingCohorts: [{ contributingCohortId: id, role, studyUrl }],
         });
-        expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
-          fields: expect.objectContaining({
-            contributingCohorts: {
-              'en-US': [{ contributingCohortId: id, role }],
+        expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+          1,
+          'contributingCohortsMembership',
+          {
+            fields: {
+              contributingCohort: {
+                'en-US': {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id,
+                  },
+                },
+              },
+              role: { 'en-US': role },
+              studyLink: { 'en-US': studyUrl },
             },
-          }),
+          },
+        );
+        expect(environmentMock.createPublishBulkAction).toHaveBeenCalledWith({
+          entities: {
+            sys: { type: 'Array' },
+            items: [
+              {
+                sys: { linkType: 'Entry', type: 'Link', id, version: 1 },
+              },
+            ],
+          },
         });
+        expect(waitProcessingPublish).toHaveBeenCalled();
+
+        expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+          2,
+          'users',
+          {
+            fields: expect.objectContaining({
+              contributingCohorts: {
+                'en-US': [{ sys: { id, linkType: 'Entry', type: 'Link' } }],
+              },
+            }),
+          },
+        );
 
         expect(userMock.publish).toHaveBeenCalled();
       },
@@ -1936,6 +1995,29 @@ describe('User data provider', () => {
       });
     });
 
+    test('Should update first name', async () => {
+      nock(baseUrl)
+        .patch(`/api/content/${appName}/users/${userId}`, {
+          firstName: { iv: 'Tony' },
+        })
+        .reply(200, fetchUserResponse());
+
+      await userDataProvider.update(userId, { firstName: 'Tony' });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        firstName: 'Tony',
+      });
+      expect(environmentMock.createEntry).toBeCalledTimes(0);
+      expect(environmentMock.createPublishBulkAction).not.toBeCalled();
+      expect(environmentMock.createUnpublishBulkAction).not.toBeCalled();
+      expect(environmentMock.getEntries).not.toBeCalled();
+    });
+
+    test('Should update last name', async () => {
+      await userDataProvider.update(userId, { lastName: 'Stark' });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        lastName: 'Stark',
+      });
+    });
     test('Should update telephone fields', async () => {
       await userDataProvider.update(userId, {
         telephone: { countryCode: '+1', number: '212-970-4133' },
@@ -1981,25 +2063,6 @@ describe('User data provider', () => {
       });
     });
 
-    test('Should update first name', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          firstName: { iv: 'Tony' },
-        })
-        .reply(200, fetchUserResponse());
-
-      await userDataProvider.update(userId, { firstName: 'Tony' });
-      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-        firstName: 'Tony',
-      });
-    });
-
-    test('Should update last name', async () => {
-      await userDataProvider.update(userId, { lastName: 'Stark' });
-      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-        lastName: 'Stark',
-      });
-    });
     test.each(gp2Model.userRegions)(
       'Should update the region - %s',
       async (region) => {
@@ -2085,6 +2148,7 @@ describe('User data provider', () => {
           contributingCohorts: [{ contributingCohortId: id, role, studyUrl }],
         });
 
+        expect(environmentMock.createEntry).toBeCalledTimes(1);
         expect(environmentMock.createEntry).toHaveBeenCalledWith(
           'contributingCohortsMembership',
           {

@@ -296,7 +296,6 @@ export const getUserCreateDataObject = (): gp2Model.UserCreateDataObject => {
 
   return {
     ...userCreateDataObject,
-
     contributingCohorts: contributingCohorts.map(
       ({ contributingCohortId, role, studyUrl }) => ({
         contributingCohortId,

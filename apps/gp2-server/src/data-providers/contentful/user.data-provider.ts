@@ -116,8 +116,16 @@ export class UserContentfulDataProvider implements UserDataProvider {
   async create(data: gp2Model.UserCreateDataObject): Promise<string> {
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
+    const nextContributingCohorts = await addNextCohorts(
+      environment,
+      data.contributingCohorts,
+    );
+    const cohortFields = getCohortFields(nextContributingCohorts);
     const userEntry = await environment.createEntry('users', {
-      fields: addLocaleToFields(fields),
+      fields: addLocaleToFields({
+        ...fields,
+        ...cohortFields,
+      }),
     });
 
     await userEntry.publish();
@@ -134,7 +142,10 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
       logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
 
-      const nextContributingCohorts = await addNextCohorts(environment, data);
+      const nextContributingCohorts = await addNextCohorts(
+        environment,
+        data.contributingCohorts,
+      );
 
       const cohortFields = getCohortFields(nextContributingCohorts);
       const result = await patchAndPublish(user, {
@@ -142,7 +153,11 @@ export class UserContentfulDataProvider implements UserDataProvider {
         ...cohortFields,
       });
 
-      await removePreviousCohorts(environment, previousContributingCohorts);
+      await removePreviousCohorts(
+        environment,
+        data.contributingCohorts,
+        previousContributingCohorts,
+      );
       const fetchEventById = () => this.fetchUserById(id);
       await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(
         result.sys.publishedVersion || Infinity,
@@ -511,25 +526,23 @@ const getCohortFields = (nextContributingCohorts: string[] | undefined) =>
 
 const addNextCohorts = async (
   environment: Environment,
-  data: gp2Model.UserUpdateDataObject,
+  nextCohorts?: gp2Model.UserUpdateDataObject['contributingCohorts'],
 ) => {
-  if (data.contributingCohorts) {
+  if (nextCohorts && nextCohorts.length > 0) {
     const nextContributingCohorts = await Promise.all(
-      (data.contributingCohorts || [])?.map(
-        async ({ contributingCohortId, role, studyUrl }) => {
-          const entry = await environment.createEntry(
-            'contributingCohortsMembership',
-            {
-              fields: addLocaleToFields({
-                contributingCohort: getLinkEntity(contributingCohortId, false),
-                role,
-                studyLink: studyUrl,
-              }),
-            },
-          );
-          return entry.sys.id;
-        },
-      ),
+      nextCohorts.map(async ({ contributingCohortId, role, studyUrl }) => {
+        const entry = await environment.createEntry(
+          'contributingCohortsMembership',
+          {
+            fields: addLocaleToFields({
+              contributingCohort: getLinkEntity(contributingCohortId, false),
+              role,
+              studyLink: studyUrl,
+            }),
+          },
+        );
+        return entry.sys.id;
+      }),
     );
 
     const payload = getBulkPayload(nextContributingCohorts, true);
@@ -542,9 +555,10 @@ const addNextCohorts = async (
 
 const removePreviousCohorts = async (
   environment: Environment,
+  nextCohorts?: gp2Model.UserUpdateDataObject['contributingCohorts'],
   previousContributingCohorts?: { 'en-US': Link<'Entry'>[] },
 ) => {
-  if (previousContributingCohorts) {
+  if (previousContributingCohorts && nextCohorts && nextCohorts.length > 0) {
     const previousCohorts = previousContributingCohorts['en-US'].map(
       (cohort) => cohort.sys.id,
     );

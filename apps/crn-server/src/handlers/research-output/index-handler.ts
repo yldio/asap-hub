@@ -37,22 +37,43 @@ export const indexResearchOutputHandler =
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
+    const reindexResearchOutput = async (id: string) => {
+      try {
+        const researchOutput = await researchOutputController.fetchById(id);
+        logger.debug(`Fetched research-output ${researchOutput.id}`);
+
+        await algoliaClient.save({
+          data: researchOutput,
+          type: 'research-output',
+        });
+
+        logger.debug(`Saved research-output ${researchOutput.id}`);
+
+        return researchOutput;
+      } catch (e) {
+        logger.error(e, `Error while reindexing research output ${id}`);
+        if (isBoom(e) && e.output.statusCode === 404) {
+          logger.error(`Research output ${id} not found`);
+          await algoliaClient.remove(id);
+        }
+        throw e;
+      }
+    };
+
     try {
-      const researchOutput = await researchOutputController.fetchById(
+      const researchOutput = await reindexResearchOutput(
         event.detail.payload.id,
       );
 
-      logger.debug(`Fetched research-output ${researchOutput.id}`);
-
-      await algoliaClient.save({
-        data: researchOutput,
-        type: 'research-output',
-      });
-
-      logger.debug(`Saved research-output ${researchOutput.id}`);
+      for (const relatedResearchOutput of researchOutput.relatedResearch) {
+        await reindexResearchOutput(relatedResearchOutput.id);
+      }
     } catch (e) {
+      logger.error(
+        e,
+        `Error while reindexing research output ${event.detail.payload.id} and its related research outputs`,
+      );
       if (isBoom(e) && e.output.statusCode === 404) {
-        await algoliaClient.remove(event.detail.payload.id);
         return;
       }
       throw e;

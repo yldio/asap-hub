@@ -211,12 +211,16 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
       >['relatedResearch']
     >
   >(
-    researchOutputData?.relatedResearch?.map((research) => ({
-      value: research.id,
-      label: research.title,
-      type: research.type,
-      documentType: research.documentType,
-    })) || [],
+    researchOutputData?.relatedResearch
+      ?.filter(
+        ({ isReferencingRelatedResearch }) => !isReferencingRelatedResearch,
+      )
+      .map((research) => ({
+        value: research.id,
+        label: research.title,
+        type: research.type,
+        documentType: research.documentType,
+      })) || [],
   );
 
   const [descriptionMD, setDescription] = useState<

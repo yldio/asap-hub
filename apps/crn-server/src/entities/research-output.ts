@@ -65,10 +65,21 @@ export const parseGraphQLResearchOutput = (
         }) || [],
     teams:
       output.flatData.teams?.map((team) => parseGraphqlTeamLite(team)) || [],
-    relatedResearch:
-      (output.flatData.relatedResearch || [])
-        .concat(output.referencingResearchOutputsContents || [])
-        .map((research) => parseGraphqlResearchOutputLite(research)) || [],
+    relatedResearch: (output.flatData.relatedResearch || [])
+      .map((research) =>
+        parseGraphqlResearchOutputLite({
+          ...research,
+          isReferencingRelatedResearch: false,
+        }),
+      )
+      .concat(
+        (output.referencingResearchOutputsContents || []).map((research) =>
+          parseGraphqlResearchOutputLite({
+            ...research,
+            isReferencingRelatedResearch: true,
+          }),
+        ),
+      ),
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
     documentType:
@@ -140,10 +151,11 @@ const parseGraphqlTeamLite = (
 const parseGraphqlResearchOutputLite = ({
   id: researchOutputId,
   flatData,
+  isReferencingRelatedResearch,
 }: FetchResearchOutputRelatedResearch): Pick<
   ResearchOutputDataObject,
   'id' | 'title' | 'type' | 'documentType' | 'teams'
-> => ({
+> & { isReferencingRelatedResearch?: boolean } => ({
   id: researchOutputId,
   title: flatData.title || '',
   type: researchOutputMapType(flatData.type) || undefined,
@@ -156,6 +168,7 @@ const parseGraphqlResearchOutputLite = ({
       id,
       displayName: displayName || '',
     })) || [],
+  isReferencingRelatedResearch,
 });
 
 const isSharingStatus = (
@@ -173,7 +186,7 @@ type FetchResearchOutputRelatedResearch = NonNullable<
   NonNullable<
     FetchResearchOutputQuery['findResearchOutputsContent']
   >['flatData']['relatedResearch']
->[number];
+>[number] & { isReferencingRelatedResearch?: boolean };
 
 type LabWithName = Pick<Labs, 'id'> & {
   flatData: {

@@ -78,7 +78,7 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
       <TabNav>
         <TabLink href={route.overview({}).$}>Overview</TabLink>
         {isWorkingGroupMember && (
-          <TabLink href={route.resources({}).$}>Resources</TabLink>
+          <TabLink href={route.workspace({}).$}>Workspace</TabLink>
         )}
         <TabLink href={route.outputs({}).$}>
           Shared Outputs ({outputsTotal})

@@ -114,7 +114,7 @@ const Resources: React.FC<ResourcesProps> = ({
 
       <Card>
         <div css={[rowStyles, buttonStyles]}>
-          <Headline3 noMargin>Resource List</Headline3>
+          <Headline3 noMargin>Workspace Resources</Headline3>
           {add && (
             <div css={editButtonStyles}>
               <Link href={add} fullWidth buttonStyle noMargin small>
@@ -132,7 +132,7 @@ const Resources: React.FC<ResourcesProps> = ({
           )}
         </div>
         <div css={css({ paddingBottom: rem(32) })}>
-          View and share resources that others may find helpful.
+          View and share important notes and links for your team.
         </div>
         <div
           css={css({ display: 'flex', flexDirection: 'column', gap: rem(32) })}

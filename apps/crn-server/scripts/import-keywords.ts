@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { parseArgs } from 'node:util';
 import { open } from 'node:fs/promises';
+import pThrottle from 'p-throttle';
 
 import { getAccessTokenFactory, SquidexRest } from '@asap-hub/squidex';
 import { clientId, clientSecret, baseUrl, appName } from '../src/config';
@@ -37,8 +38,17 @@ const app = async () => {
 
   const keywords = csvWords.filter((w) => !existingKeyowrds.includes(w));
 
+  const throttle = pThrottle({
+    limit: 50,
+    interval: 1000,
+  });
+
+  const throttledImportKeywords = throttle(async (keyword) =>
+    importKeyword(keyword, dryRun),
+  );
+  console.log('importing keywords...');
   const results = await Promise.allSettled(
-    keywords.map((k) => importKeyword(k!, dryRun!)),
+    keywords.map((k) => throttledImportKeywords(k)),
   );
 
   const summary = { imported: 0, failed: 0 };

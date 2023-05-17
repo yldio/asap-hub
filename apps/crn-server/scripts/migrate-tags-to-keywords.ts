@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { parseArgs } from 'node:util';
 import { createWriteStream } from 'node:fs';
+import pThrottle from 'p-throttle';
 import { getAccessTokenFactory, SquidexRest } from '@asap-hub/squidex';
 import { clientId, clientSecret, baseUrl, appName } from '../src/config';
 
@@ -21,6 +22,9 @@ const researchOutputRestClient = new SquidexRest(
   {
     appName,
     baseUrl,
+  },
+  {
+    unpublished: true,
   },
 );
 
@@ -44,11 +48,17 @@ const app = async () => {
   const missingKeywords = {};
 
   const researchOutputs = await getResearchOutputFromSquidex();
+  const throttle = pThrottle({
+    limit: 50,
+    interval: 1000,
+  });
+
+  const throttledMigrateTagsToKeywords = throttle(async (researchOutput) =>
+    migrateTagsToKeywords(researchOutput, lookup, missingKeywords, dryRun),
+  );
 
   const results = await Promise.allSettled(
-    researchOutputs.map((r) =>
-      migrateTagsToKeywords(r, lookup, missingKeywords, dryRun),
-    ),
+    researchOutputs.map((r) => throttledMigrateTagsToKeywords(r)),
   );
 
   const summary = { updated: 0, failed: 0 };

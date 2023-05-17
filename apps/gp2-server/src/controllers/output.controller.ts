@@ -5,7 +5,7 @@ import {
   VALIDATION_ERROR_MESSAGE,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
-import { ExternalUserDataProvider } from '../data-providers/external-users.data-provider';
+import { ExternalUserDataProvider } from '../data-providers/external-user.data-provider';
 import { OutputDataProvider } from '../data-providers/output.data-provider';
 
 export default class Outputs implements OutputController {

@@ -12,7 +12,7 @@ import { UserContentfulDataProvider } from '../data-providers/contentful/user.da
 import { UserDataProvider } from '../data-providers/types';
 import { UserSquidexDataProvider } from '../data-providers/user.data-provider';
 import { getAuthToken } from '../utils/auth';
-import { getContentfulRestClientFactory } from './clients.dependencies';
+import { getContentfulRestClientFactory } from './clients.dependency';
 
 export const getUserDataProvider = (): UserDataProvider => {
   if (isContentfulEnabled) {

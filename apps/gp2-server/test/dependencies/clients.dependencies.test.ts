@@ -1,5 +1,5 @@
 import { Environment } from '@asap-hub/contentful';
-import { getContentfulRestClientFactory } from '../../src/dependencies/clients.dependencies';
+import { getContentfulRestClientFactory } from '../../src/dependencies/clients.dependency';
 
 const mockEnvironment = {} as Environment;
 

@@ -6,7 +6,7 @@ import {
 import { SES } from '@aws-sdk/client-ses';
 import { origin, sesRegion } from '../../config';
 import { UserDataProvider } from '../../data-providers/types';
-import { getUserDataProvider } from '../../dependencies/user.dependencies';
+import { getUserDataProvider } from '../../dependencies/user.dependency';
 import logger from '../../utils/logger';
 import { sendEmailFactory } from '../../utils/send-email';
 import { sentryWrapper } from '../../utils/sentry-wrapper';

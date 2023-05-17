@@ -3,20 +3,20 @@ import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
 
+import { ExternalUserSquidexDataProvider } from '../../src/data-providers/external-user.data-provider';
+import { getAuthToken } from '../../src/utils/auth';
 import {
   getExternalUserCreateDataObject,
   getExternalUserDataObject,
   getSquidexExternalUsersGraphqlResponse,
 } from '../fixtures/external-users.fixtures';
 import { identity } from '../helpers/squidex';
-import { getAuthToken } from '../../src/utils/auth';
-import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
-import { ExternalUserSquidexDataProvider } from '../../src/data-providers/external-users.data-provider';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
+import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
-import { gp2 } from '@asap-hub/model';
+import { FetchOptions } from '@asap-hub/model';
 
-describe('External Users data provider', () => {
+describe('External User data provider', () => {
   const externalUserRestClient = new SquidexRest<gp2Squidex.RestExternalUser>(
     getAuthToken,
     'external-users',
@@ -64,11 +64,10 @@ describe('External Users data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexExternalUsersGraphqlResponse(),
       );
-      const fetchOptions: gp2.FetchUsersOptions = {
+      const fetchOptions: FetchOptions = {
         take: 12,
         skip: 2,
         search: 'tony stark',
-        filter: {},
       };
       const users = await externalUsersDataProvider.fetch(fetchOptions);
 
@@ -138,6 +137,13 @@ describe('External Users data provider', () => {
       await expect(
         externalUsersDataProvider.create(externalUserCreateDataObject),
       ).rejects.toThrow(GenericError);
+    });
+  });
+  describe('Fetch-by-id method', () => {
+    test('not implemented', async () => {
+      expect(async () =>
+        externalUsersDataProvider.fetchById(),
+      ).rejects.toThrow();
     });
   });
 });

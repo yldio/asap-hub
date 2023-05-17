@@ -7,8 +7,8 @@ import {
   contentfulEnvId,
   contentfulSpaceId,
 } from '../src/config';
-import { ContributingCohortsContentfulDataProvider } from '../src/data-providers/contentful/contributing-cohorts.data-provider';
-import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependencies';
+import { ContributingCohortContentfulDataProvider } from '../src/data-providers/contentful/contributing-cohort.data-provider';
+import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependency';
 
 console.log('Importing contributing cohorts...');
 
@@ -19,7 +19,7 @@ const contentfulGraphQLClient = getContentfulGraphQLClient({
 });
 
 const contributingCohortDataProvider =
-  new ContributingCohortsContentfulDataProvider(
+  new ContributingCohortContentfulDataProvider(
     contentfulGraphQLClient,
     getContentfulRestClientFactory,
   );

@@ -3,7 +3,7 @@ import {
   getGP2ContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
-import { ContributingCohortsContentfulDataProvider } from '../../../src/data-providers/contentful/contributing-cohorts.data-provider';
+import { ContributingCohortContentfulDataProvider } from '../../../src/data-providers/contentful/contributing-cohort.data-provider';
 import {
   getContentfulContributingCohortsGraphqlResponse,
   getContentfulGraphqlContributingCohorts,
@@ -23,7 +23,7 @@ describe('Contributing Cohorts data provider', () => {
     Promise.resolve(environmentMock);
 
   const contributingCohortsDataProvider =
-    new ContributingCohortsContentfulDataProvider(
+    new ContributingCohortContentfulDataProvider(
       contentfulGraphqlClientMock,
       contentfulRestClientMock,
     );
@@ -34,7 +34,7 @@ describe('Contributing Cohorts data provider', () => {
     });
 
   const contributingCohortsDataProviderMockGraphql =
-    new ContributingCohortsContentfulDataProvider(
+    new ContributingCohortContentfulDataProvider(
       contentfulGraphqlClientMockServer,
       contentfulRestClientMock,
     );

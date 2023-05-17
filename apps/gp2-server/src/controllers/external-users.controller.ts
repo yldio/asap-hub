@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { ExternalUserDataProvider } from '../data-providers/external-users.data-provider';
+import { ExternalUserDataProvider } from '../data-providers/external-user.data-provider';
 
 export interface ExternalUsersController {
   fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListExternalUserResponse>;

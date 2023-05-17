@@ -59,7 +59,7 @@ import WorkingGroups, {
 import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
-import { ContributingCohortsContentfulDataProvider } from './data-providers/contentful/contributing-cohorts.data-provider';
+import { ContributingCohortContentfulDataProvider } from './data-providers/contentful/contributing-cohort.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
@@ -68,7 +68,7 @@ import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalUserDataProvider,
   ExternalUserSquidexDataProvider,
-} from './data-providers/external-users.data-provider';
+} from './data-providers/external-user.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import {
   OutputDataProvider,
@@ -95,7 +95,7 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
-import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
+import { getContentfulRestClientFactory } from './dependencies/clients.dependency';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';
@@ -214,7 +214,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     );
   const contributingCohortContentfulDataProvider =
     libs.contributingCohortContentfulDataProvider ||
-    new ContributingCohortsContentfulDataProvider(
+    new ContributingCohortContentfulDataProvider(
       contentfulGraphQLClient,
       getContentfulRestClientFactory,
     );

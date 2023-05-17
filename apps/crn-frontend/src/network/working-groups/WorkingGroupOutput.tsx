@@ -8,9 +8,11 @@ import {
   NotFoundPage,
   ResearchOutputForm,
   ResearchOutputHeader,
+  Toast,
 } from '@asap-hub/react-components';
+import { InnerToastContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
-import React, { useState } from 'react';
+import React, { ReactNode, useCallback, useState } from 'react';
 import researchSuggestions from '../teams/research-suggestions';
 import { useWorkingGroupById } from './state';
 import {
@@ -49,6 +51,9 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
 
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
 
+  const [toastNode, setToastNode] = useState<ReactNode>(undefined);
+  const toast = useCallback((node: ReactNode) => setToastNode(node), []);
+
   const createResearchOutput = usePostResearchOutput();
   const updateResearchOutput = usePutResearchOutput();
   const updateAndPublishResearchOutput = usePutResearchOutput(true);
@@ -70,70 +75,73 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   if (permissions.canEditResearchOutput && workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
-        <ResearchOutputHeader
-          documentType={documentType}
-          workingGroupAssociation
-        />
-        <ResearchOutputForm
-          tagSuggestions={researchSuggestions}
-          documentType={documentType}
-          getLabSuggestions={getLabSuggestions}
-          getAuthorSuggestions={(input) =>
-            getAuthorSuggestions(input).then((authors) =>
-              authors.map((author) => ({
-                author,
-                label: author.displayName,
-                value: author.id,
-              })),
-            )
-          }
-          getTeamSuggestions={getTeamSuggestions}
-          getRelatedResearchSuggestions={getRelatedResearchSuggestions}
-          researchTags={researchTags}
-          serverValidationErrors={errors}
-          clearServerValidationError={(instancePath: string) =>
-            setErrors(clearAjvErrorForPath(errors, instancePath))
-          }
-          researchOutputData={researchOutputData}
-          typeOptions={Array.from(
-            researchOutputDocumentTypeToType[documentType],
-          )}
-          selectedTeams={(researchOutputData?.teams ?? []).map(
-            ({ displayName, id }) => ({
-              label: displayName,
-              value: id,
-            }),
-          )}
-          authorsRequired
-          published={published}
-          permissions={permissions}
-          onSave={(output) =>
-            researchOutputData
-              ? updateAndPublishResearchOutput(researchOutputData.id, {
-                  ...output,
-                  workingGroups: [workingGroupId],
-                  published: true,
-                }).catch(handleError(['/link', '/title'], setErrors))
-              : createResearchOutput({
-                  ...output,
-                  workingGroups: [workingGroupId],
-                  published: true,
-                }).catch(handleError(['/link', '/title'], setErrors))
-          }
-          onSaveDraft={(output) =>
-            researchOutputData
-              ? updateResearchOutput(researchOutputData.id, {
-                  ...output,
-                  workingGroups: [workingGroupId],
-                  published: false,
-                }).catch(handleError(['/link', '/title'], setErrors))
-              : createResearchOutput({
-                  ...output,
-                  workingGroups: [workingGroupId],
-                  published: false,
-                }).catch(handleError(['/link', '/title'], setErrors))
-          }
-        />
+        <InnerToastContext.Provider value={toast}>
+          {toastNode && <Toast accent="error">{toastNode}</Toast>}
+          <ResearchOutputHeader
+            documentType={documentType}
+            workingGroupAssociation
+          />
+          <ResearchOutputForm
+            tagSuggestions={researchSuggestions}
+            documentType={documentType}
+            getLabSuggestions={getLabSuggestions}
+            getAuthorSuggestions={(input) =>
+              getAuthorSuggestions(input).then((authors) =>
+                authors.map((author) => ({
+                  author,
+                  label: author.displayName,
+                  value: author.id,
+                })),
+              )
+            }
+            getTeamSuggestions={getTeamSuggestions}
+            getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+            researchTags={researchTags}
+            serverValidationErrors={errors}
+            clearServerValidationError={(instancePath: string) =>
+              setErrors(clearAjvErrorForPath(errors, instancePath))
+            }
+            researchOutputData={researchOutputData}
+            typeOptions={Array.from(
+              researchOutputDocumentTypeToType[documentType],
+            )}
+            selectedTeams={(researchOutputData?.teams ?? []).map(
+              ({ displayName, id }) => ({
+                label: displayName,
+                value: id,
+              }),
+            )}
+            authorsRequired
+            published={published}
+            permissions={permissions}
+            onSave={(output) =>
+              researchOutputData
+                ? updateAndPublishResearchOutput(researchOutputData.id, {
+                    ...output,
+                    workingGroups: [workingGroupId],
+                    published: true,
+                  }).catch(handleError(['/link', '/title'], setErrors))
+                : createResearchOutput({
+                    ...output,
+                    workingGroups: [workingGroupId],
+                    published: true,
+                  }).catch(handleError(['/link', '/title'], setErrors))
+            }
+            onSaveDraft={(output) =>
+              researchOutputData
+                ? updateResearchOutput(researchOutputData.id, {
+                    ...output,
+                    workingGroups: [workingGroupId],
+                    published: false,
+                  }).catch(handleError(['/link', '/title'], setErrors))
+                : createResearchOutput({
+                    ...output,
+                    workingGroups: [workingGroupId],
+                    published: false,
+                  }).catch(handleError(['/link', '/title'], setErrors))
+            }
+          />
+        </InnerToastContext.Provider>
       </Frame>
     );
   }

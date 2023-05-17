@@ -21,4 +21,4 @@ export type ErrorResponse =
 export const isValidationErrorResponse = (
   error: ErrorResponse,
 ): error is ValidationErrorResponse =>
-  error.message === VALIDATION_ERROR_MESSAGE;
+  error.message.startsWith(VALIDATION_ERROR_MESSAGE);

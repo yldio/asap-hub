@@ -66,9 +66,9 @@ export const parseGraphQLResearchOutput = (
     teams:
       output.flatData.teams?.map((team) => parseGraphqlTeamLite(team)) || [],
     relatedResearch:
-      (output.flatData.relatedResearch || [])
-        .concat(output.referencingResearchOutputsContents || [])
-        .map((research) => parseGraphqlResearchOutputLite(research)) || [],
+      output.flatData.relatedResearch?.map((research) =>
+        parseGraphqlResearchOutputLite(research),
+      ) || [],
     created: parseDate(output.created).toISOString(),
     link: data.link || undefined,
     documentType:

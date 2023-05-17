@@ -70,24 +70,6 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   lastModified: '2021-05-14T14:48:46Z',
   status: EnrichedContentEventType.Published,
   version: 42,
-  referencingResearchOutputsContents: [
-    {
-      id: 'related-referencing-research-id',
-      flatData: {
-        title: 'Related Research2',
-        type: 'Report',
-        documentType: 'Bioinformatics',
-        teams: [
-          {
-            id: 'team-id-1',
-            flatData: {
-              displayName: 'Team B',
-            },
-          },
-        ],
-      },
-    },
-  ],
   flatData: {
     title: 'Test Proposal 1234',
     documentType: 'Bioinformatics',
@@ -200,13 +182,6 @@ export const getResearchOutputDataObject =
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ id: 'team-id-1', displayName: 'Team B' }],
-      },
-      {
-        id: 'related-referencing-research-id',
-        title: 'Related Research2',
-        type: 'Report',
-        documentType: 'Bioinformatics',
-        teams: [{ displayName: 'Team B', id: 'team-id-1' }],
       },
     ],
     publishDate: '2021-05-21T13:18:31Z',
@@ -432,9 +407,7 @@ export const getRestResearchOutputCreateData =
     teams: {
       iv: ['team-id-0'],
     },
-    relatedResearch: {
-      iv: ['related-research-id-0', 'related-referencing-research-id'],
-    },
+    relatedResearch: { iv: ['related-research-id-0'] },
     authors: { iv: ['user-id-1', 'user-id-2'] },
     createdBy: { iv: ['userId'] },
     updatedBy: { iv: ['userId'] },

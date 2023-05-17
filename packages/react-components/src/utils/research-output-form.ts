@@ -6,6 +6,7 @@ import {
   ResearchOutputPostRequest,
   convertDecisionToBoolean,
   ResearchOutputDocumentType,
+  ResearchOutputDataObject,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { ComponentProps, ComponentPropsWithRef } from 'react';
@@ -96,6 +97,18 @@ export const getPublishDate = (publishDate?: string): Date | undefined => {
 
 export const getDecision = (decision?: boolean): DecisionOption =>
   decision === undefined ? 'Not Sure' : decision ? 'Yes' : 'No';
+
+export const getOwnRelatedResearchLinks = (
+  relatedResearch?: ResearchOutputDataObject['relatedResearch'],
+) =>
+  relatedResearch
+    ?.filter(({ isOwnRelatedResearchLink }) => !!isOwnRelatedResearchLink)
+    .map((research) => ({
+      value: research.id,
+      label: research.title,
+      type: research.type,
+      documentType: research.documentType,
+    })) || [];
 
 export type ResearchOutputPayload = {
   identifierType: ResearchOutputIdentifierType;

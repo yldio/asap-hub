@@ -69,14 +69,14 @@ export const parseGraphQLResearchOutput = (
       .map((research) =>
         parseGraphqlResearchOutputLite({
           ...research,
-          isOwnRelatedResearchLink: false,
+          isOwnRelatedResearchLink: true,
         }),
       )
       .concat(
         (output.referencingResearchOutputsContents || []).map((research) =>
           parseGraphqlResearchOutputLite({
             ...research,
-            isOwnRelatedResearchLink: true,
+            isOwnRelatedResearchLink: false,
           }),
         ),
       ),

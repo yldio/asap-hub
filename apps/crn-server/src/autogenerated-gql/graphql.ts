@@ -8411,11 +8411,14 @@ export type FetchReminderDataQuery = {
   }>;
   queryResearchOutputsContents: Maybe<
     Array<
-      Pick<ResearchOutputs, 'id'> & {
+      Pick<ResearchOutputs, 'id' | 'created' | 'status'> & {
         flatData: Pick<
           ResearchOutputsFlatDataDto,
           'addedDate' | 'documentType' | 'title'
-        > & { teams: Maybe<Array<Pick<Teams, 'id'>>> };
+        > & {
+          teams: Maybe<Array<Pick<Teams, 'id'>>>;
+          workingGroups: Maybe<Array<Pick<WorkingGroups, 'id'>>>;
+        };
       }
     >
   >;
@@ -14417,6 +14420,8 @@ export const FetchReminderDataDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -14435,6 +14440,19 @@ export const FetchReminderDataDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'teams' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'workingGroups' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [

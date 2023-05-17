@@ -33,9 +33,28 @@ describe('parseGraphQLResearchOutput', () => {
         documentType: 'Report',
         teams: [{ id: 'team-id-1', displayName: 'Team B' }],
       },
+      {
+        id: 'related-referencing-research-id',
+        title: 'Related Research2',
+        type: 'Report',
+        documentType: 'Bioinformatics',
+        teams: [{ displayName: 'Team B', id: 'team-id-1' }],
+      },
     ]);
 
     output.flatData.relatedResearch = null;
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toStrictEqual([
+      {
+        id: 'related-referencing-research-id',
+        title: 'Related Research2',
+        type: 'Report',
+        documentType: 'Bioinformatics',
+        teams: [{ displayName: 'Team B', id: 'team-id-1' }],
+      },
+    ]);
+
+    output.flatData.relatedResearch = null;
+    output.referencingResearchOutputsContents = null;
     expect(parseGraphQLResearchOutput(output).relatedResearch).toStrictEqual(
       [],
     );

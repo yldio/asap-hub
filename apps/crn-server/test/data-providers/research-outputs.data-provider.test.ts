@@ -262,6 +262,8 @@ describe('ResearchOutputs data provider', () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.relatedResearch =
         null;
+      squidexGraphqlResponse.findResearchOutputsContent!.referencingResearchOutputsContents =
+        null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );

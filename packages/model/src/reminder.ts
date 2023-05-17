@@ -1,10 +1,14 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
-import { ResearchOutputPublishedDataObject } from './research-output';
+import {
+  ResearchOutputDraftDataObject,
+  ResearchOutputPublishedDataObject,
+} from './research-output';
 
 type ReminderEntity = 'Research Output' | 'Event';
 
 type ResearchOutputReminderType = 'Published';
+type ResearchOutputDraftReminderType = 'Draft';
 export type EventReminderType =
   | 'Happening Today'
   | 'Happening Now'
@@ -14,7 +18,10 @@ export type EventReminderType =
   | 'Share Presentation'
   | 'Publish Material'
   | 'Upload Presentation';
-type ReminderType = ResearchOutputReminderType | EventReminderType;
+type ReminderType =
+  | ResearchOutputReminderType
+  | EventReminderType
+  | ResearchOutputDraftReminderType;
 interface Reminder {
   id: string;
   entity: ReminderEntity;
@@ -24,7 +31,7 @@ interface Reminder {
 
 interface ResearchOutputReminder extends Reminder {
   entity: 'Research Output';
-  type: ResearchOutputReminderType;
+  type: ResearchOutputReminderType | ResearchOutputDraftReminderType;
 }
 
 export interface ReminderEventResponse extends EventResponse {
@@ -47,6 +54,17 @@ export interface ResearchOutputPublishedReminder
     documentType: ResearchOutputPublishedDataObject['documentType'];
     title: ResearchOutputPublishedDataObject['title'];
     addedDate: ResearchOutputPublishedDataObject['addedDate'];
+  };
+}
+
+export interface ResearchOutputDraftReminder extends ResearchOutputReminder {
+  entity: 'Research Output';
+  type: 'Draft';
+  data: {
+    researchOutputId: ResearchOutputDraftDataObject['id'];
+    documentType: ResearchOutputDraftDataObject['documentType'];
+    title: ResearchOutputDraftDataObject['title'];
+    addedDate: ResearchOutputDraftDataObject['created'];
   };
 }
 

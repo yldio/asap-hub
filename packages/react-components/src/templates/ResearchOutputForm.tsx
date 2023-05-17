@@ -212,9 +212,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     >
   >(
     researchOutputData?.relatedResearch
-      ?.filter(
-        ({ isReferencingRelatedResearch }) => !isReferencingRelatedResearch,
-      )
+      ?.filter(({ isOwnRelatedResearchLink }) => !isOwnRelatedResearchLink)
       .map((research) => ({
         value: research.id,
         label: research.title,

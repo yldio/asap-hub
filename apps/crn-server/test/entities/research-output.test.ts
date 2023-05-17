@@ -32,7 +32,7 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Report',
         teams: [{ id: 'team-id-1', displayName: 'Team B' }],
-        isReferencingRelatedResearch: false,
+        isOwnRelatedResearchLink: false,
       },
       {
         id: 'related-referencing-research-id',
@@ -40,7 +40,7 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ displayName: 'Team B', id: 'team-id-1' }],
-        isReferencingRelatedResearch: true,
+        isOwnRelatedResearchLink: true,
       },
     ]);
 
@@ -52,7 +52,7 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ displayName: 'Team B', id: 'team-id-1' }],
-        isReferencingRelatedResearch: true,
+        isOwnRelatedResearchLink: true,
       },
     ]);
 
@@ -79,7 +79,7 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Grant Document',
         teams: [],
-        isReferencingRelatedResearch: false,
+        isOwnRelatedResearchLink: false,
       },
     ]);
   });

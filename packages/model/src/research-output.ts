@@ -225,7 +225,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
     Pick<
       ResearchOutputDataObject,
       'id' | 'title' | 'type' | 'documentType' | 'teams'
-    > & { isReferencingRelatedResearch?: boolean }
+    > & { isOwnRelatedResearchLink?: boolean }
   >;
 };
 

@@ -206,11 +206,14 @@ export const getSquidexReminderReseachOutputsContents = (): NonNullable<
 
   return {
     id: researchOutput.id,
+    created: '2021-10-24T11:00:00Z',
+    status: 'Published',
     flatData: {
       addedDate: researchOutput.flatData.addedDate,
       documentType: researchOutput.flatData.documentType,
       title: researchOutput.flatData.title,
       teams: [{ id: researchOutput.flatData.teams![0]!.id }],
+      workingGroups: [{ id: 'wg-id-1' }],
     },
   };
 };

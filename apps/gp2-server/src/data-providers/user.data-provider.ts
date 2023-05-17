@@ -31,7 +31,7 @@ import {
 import { reverseMap } from '../utils/reverse-map';
 import { createUrl } from '../utils/urls';
 import { roleMap as projectRoleMap } from './project.data-provider';
-import { UserDataProvider } from './types/users.data-provider.types';
+import { UserDataProvider } from './types/user.data-provider.types';
 import { roleMap as workingGroupRoleMap } from './working-group.data-provider';
 
 export class UserSquidexDataProvider implements UserDataProvider {

@@ -83,7 +83,9 @@ export const getContributingCohortInput =
 
 export const getContributingCohortContentfulEntry = () =>
   getEntry({
-    sys: {
-      id: 'cohort-1',
+    fields: {
+      sys: {
+        id: 'cohort-1',
+      },
     },
   });

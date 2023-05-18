@@ -83,13 +83,11 @@ import {
   NewsDataProvider,
   PageDataProvider,
   UserDataProvider,
+  WorkingGroupNetworkDataProvider,
 } from './data-providers/types';
 import { ExternalUserDataProvider } from './data-providers/types/external-user.data-provider.type';
 import { UserSquidexDataProvider } from './data-providers/user.data-provider';
-import {
-  WorkingGroupNetworkDataProvider,
-  WorkingGroupNetworkSquidexDataProvider,
-} from './data-providers/working-group-network.data-provider';
+import { WorkingGroupNetworkSquidexDataProvider } from './data-providers/working-group-network.data-provider';
 import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,

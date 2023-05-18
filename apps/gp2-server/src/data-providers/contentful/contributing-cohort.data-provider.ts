@@ -67,7 +67,7 @@ export class ContributingCohortContentfulDataProvider
 
 export const parseContentfulGraphQlContributingCohorts = (
   item: ContributingCohortsItem,
-): gp2Model.ContributingCohortDataObject => ({
+) => ({
   // Every field in Contentful is marked as nullable even when its required
   // this is because Contentful use the same schema for preview and production
   // Read more in the link below

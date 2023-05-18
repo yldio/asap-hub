@@ -4,7 +4,7 @@ import {
   parseRichText,
   RichTextFromQuery,
 } from '@asap-hub/contentful';
-import { ListPageDataObject, PageDataObject } from '@asap-hub/model';
+import { PageDataObject } from '@asap-hub/model';
 import { FetchPagesProviderOptions, PageDataProvider } from '../types';
 
 export class PageContentfulDataProvider implements PageDataProvider {
@@ -13,9 +13,7 @@ export class PageContentfulDataProvider implements PageDataProvider {
   async fetchById(): Promise<null> {
     throw new Error('Method not implemented.');
   }
-  async fetch(
-    options?: FetchPagesProviderOptions,
-  ): Promise<ListPageDataObject> {
+  async fetch(options?: FetchPagesProviderOptions) {
     const { pagesCollection } = await this.contentfulClient.request<
       gp2.FetchPagesQuery,
       gp2.FetchPagesQueryVariables

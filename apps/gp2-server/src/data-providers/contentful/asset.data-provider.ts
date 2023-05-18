@@ -18,7 +18,7 @@ export class AssetContentfulDataProvider implements AssetDataProvider {
     throw new Error('Method not implemented.');
   }
 
-  async create({ id, avatar, contentType }: AssetCreateData): Promise<string> {
+  async create({ id, avatar, contentType }: AssetCreateData) {
     const fileName = `${id}.${mime.extension(contentType)}`;
 
     const environment = await this.getRestClient();

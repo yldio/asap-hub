@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { WorkingGroupNetworkDataProvider } from '../data-providers/working-group-network.data-provider';
+import { WorkingGroupNetworkDataProvider } from '../data-providers/types';
 
 export interface WorkingGroupNetworkController {
   fetch(): Promise<gp2.ListWorkingGroupNetworkResponse>;
@@ -13,6 +13,6 @@ export default class WorkingGroupNetwork
   ) {}
 
   async fetch(): Promise<gp2.ListWorkingGroupNetworkResponse> {
-    return this.workingGroupNetworkDataProvider.fetch();
+    return this.workingGroupNetworkDataProvider.fetch(null);
   }
 }

@@ -4,7 +4,7 @@ import { ReminderResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
 import { calendarIcon, EventIcon, infoCircleIcon } from '../icons';
-import { Anchor } from '../atoms';
+import { Anchor, Markdown } from '../atoms';
 import { neutral200 } from '../colors';
 
 const containerStyle = css({
@@ -29,37 +29,33 @@ const linkStyles = css({
   },
 });
 
+const descriptionStyles = css({
+  '& div > p': {
+    margin: '0',
+  },
+});
+
 const iconMap: Record<ReminderResponse['entity'], React.ReactElement> = {
   'Research Output': calendarIcon,
   Event: <EventIcon />,
 };
 
-//TODO: not something bad like this
 type ReminderProps = Pick<ReminderResponse, 'description' | 'href'> & {
   entity?: ReminderResponse['entity'];
-  publisherName?: ReminderResponse['publisherName'];
-  associationName?: ReminderResponse['associationName'];
-  entityTitle?: ReminderResponse['entityTitle'];
 };
 
 const ReminderItem: React.FC<ReminderProps> = ({
   entity,
   description,
   href,
-  publisherName,
-  associationName,
-  entityTitle,
 }) => {
   const content = (
     <>
       <span css={[iconStyles]}>
         {entity ? iconMap[entity] : infoCircleIcon}
       </span>
-      <span>
-        {publisherName && <b>{publisherName}</b>}
-        {description}
-        {associationName && <b>{associationName}</b>}
-        {entityTitle}
+      <span css={descriptionStyles}>
+        <Markdown value={description} />
       </span>
     </>
   );

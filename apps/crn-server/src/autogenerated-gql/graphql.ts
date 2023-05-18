@@ -8400,6 +8400,22 @@ export type FetchReminderDataQueryVariables = Exact<{
 
 export type FetchReminderDataQuery = {
   findUsersContent: Maybe<{
+    referencingWorkingGroupsContents: Maybe<
+      Array<
+        Pick<WorkingGroups, 'id'> & {
+          flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> & {
+            leaders: Maybe<
+              Array<
+                Pick<
+                  WorkingGroupsDataLeadersChildDto,
+                  'inactiveSinceDate' | 'role'
+                > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+              >
+            >;
+          };
+        }
+      >
+    >;
     flatData: Pick<UsersFlatDataDto, 'role'> & {
       teams: Maybe<
         Array<
@@ -8423,18 +8439,17 @@ export type FetchReminderDataQuery = {
       }
     >
   >;
-  drafts: Maybe<
+  draftResearchOutputs: Maybe<
     Array<
       Pick<ResearchOutputs, 'id' | 'created' | 'status'> & {
-        createdByUser: Pick<User, 'id'>;
-        referencesUsersContents: Maybe<
-          Array<
-            Pick<Users, 'id'> & {
-              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
-            }
-          >
-        >;
         flatData: Pick<ResearchOutputsFlatDataDto, 'documentType' | 'title'> & {
+          createdBy: Maybe<
+            Array<
+              Pick<Users, 'id'> & {
+                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+              }
+            >
+          >;
           teams: Maybe<
             Array<
               Pick<Teams, 'id'> & {
@@ -14411,6 +14426,65 @@ export const FetchReminderDataDocument = {
               selections: [
                 {
                   kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'referencingWorkingGroupsContents',
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'complete' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'leaders' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'inactiveSinceDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'role' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'user' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -14516,7 +14590,7 @@ export const FetchReminderDataDocument = {
           },
           {
             kind: 'Field',
-            alias: { kind: 'Name', value: 'drafts' },
+            alias: { kind: 'Name', value: 'draftResearchOutputs' },
             name: { kind: 'Name', value: 'queryResearchOutputsContents' },
             arguments: [
               {
@@ -14536,43 +14610,6 @@ export const FetchReminderDataDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'createdByUser' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'referencesUsersContents' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'flatData' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'firstName' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastName' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -14582,6 +14619,36 @@ export const FetchReminderDataDocument = {
                         name: { kind: 'Name', value: 'documentType' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'createdBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'teams' },

@@ -1,15 +1,14 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
 import {
-  ResearchOutputAssociations,
   ResearchOutputDraftDataObject,
   ResearchOutputPublishedDataObject,
 } from './research-output';
 
 type ReminderEntity = 'Research Output' | 'Event';
 
-type ResearchOutputReminderType = 'Published';
-type ResearchOutputDraftReminderType = 'Draft';
+type ResearchOutputReminderType = 'Published' | 'Draft';
+
 export type EventReminderType =
   | 'Happening Today'
   | 'Happening Now'
@@ -19,10 +18,7 @@ export type EventReminderType =
   | 'Share Presentation'
   | 'Publish Material'
   | 'Upload Presentation';
-type ReminderType =
-  | ResearchOutputReminderType
-  | EventReminderType
-  | ResearchOutputDraftReminderType;
+type ReminderType = ResearchOutputReminderType | EventReminderType;
 interface Reminder {
   id: string;
   entity: ReminderEntity;
@@ -32,7 +28,7 @@ interface Reminder {
 
 interface ResearchOutputReminder extends Reminder {
   entity: 'Research Output';
-  type: ResearchOutputReminderType | ResearchOutputDraftReminderType;
+  type: ResearchOutputReminderType;
 }
 
 export interface ReminderEventResponse extends EventResponse {
@@ -178,8 +174,5 @@ export type ReminderResponse = {
   entity: ReminderEntity;
   href?: string;
   id: string;
-  publisherName?: string;
-  associationName?: string;
-  entityTitle?: string;
 };
 export type ListReminderResponse = ListResponse<ReminderResponse>;

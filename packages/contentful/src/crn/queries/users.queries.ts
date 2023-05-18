@@ -30,6 +30,7 @@ export const usersContentQueryFragment = gql`
     orcid
     orcidLastModifiedDate
     orcidLastSyncDate
+    orcidWorks
     questions
     expertiseAndResourceTags
     expertiseAndResourceDescription

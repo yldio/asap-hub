@@ -1601,6 +1601,7 @@ type Users implements Entry {
   orcid(locale: String): String
   orcidLastModifiedDate(locale: String): DateTime
   orcidLastSyncDate(locale: String): DateTime
+  orcidWorks(locale: String): JSON
   questions(locale: String): [String]
   reachOut(locale: String): String
   researchGate(locale: String): String
@@ -1792,6 +1793,7 @@ input UsersFilter {
   orcidLastSyncDate_lte: DateTime
   orcidLastSyncDate_not: DateTime
   orcidLastSyncDate_not_in: [DateTime]
+  orcidWorks_exists: Boolean
   orcid_contains: String
   orcid_exists: Boolean
   orcid_in: [String]

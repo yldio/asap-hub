@@ -165,7 +165,7 @@ export const migrateEvents = async () => {
       return speakersLinks.filter(Boolean) as Link<'Entry'>[];
     }
 
-    return [];
+    return null;
   };
 
   const createCalendarLink = async (
@@ -251,9 +251,8 @@ export const migrateEvents = async () => {
       presentation: await createDocumentIfNeeded(presentation),
     };
 
-    const contentfulEvent = googleId
-      ? await fetchContentfulEventByGoogleId(googleId)
-      : null;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const contentfulEvent = await fetchContentfulEventByGoogleId(googleId!);
 
     if (contentfulEvent) {
       await deletePreviousSpeakerReferences(contentfulEvent);

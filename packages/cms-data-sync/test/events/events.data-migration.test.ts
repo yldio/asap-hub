@@ -99,6 +99,73 @@ const getEventSquidexResponse = (): FetchEventsQuery => ({
   },
 });
 
+const baseUpdatePayload = {
+  hidden: { 'en-US': true },
+  hideMeetingLink: { 'en-US': true },
+  meetingLink: { 'en-US': 'https://meet.google.com/idr-kixv-hhm' },
+  meetingMaterials: {
+    'en-US': [
+      {
+        title: 'Drive folder',
+        url: 'https://drive.google.com/drive/folders/id',
+      },
+      { title: 'Slack', url: 'https://slack.com/intl/pt-br/' },
+    ],
+  },
+  meetingMaterialsPermanentlyUnavailable: { 'en-US': null },
+  notes: {
+    'en-US': {
+      content: [
+        {
+          content: [{ data: {}, marks: [], nodeType: 'text', value: 'notes' }],
+          data: {},
+          nodeType: 'paragraph',
+        },
+      ],
+      data: {},
+      nodeType: 'document',
+    },
+  },
+  notesPermanentlyUnavailable: { 'en-US': null },
+  notesUpdatedAt: { 'en-US': '2023-05-17T13:38:51.128Z' },
+  presentation: { 'en-US': null },
+  presentationPermanentlyUnavailable: { 'en-US': null },
+  presentationUpdatedAt: { 'en-US': null },
+  speakers: {
+    'en-US': [
+      { sys: { id: 'entry-id', linkType: 'Entry', type: 'Link' } },
+      { sys: { id: 'entry-id', linkType: 'Entry', type: 'Link' } },
+    ],
+  },
+  tags: { 'en-US': ['googleMeet', 'science'] },
+  thumbnail: { 'en-US': undefined },
+  videoRecording: { 'en-US': null },
+  videoRecordingPermanentlyUnavailable: { 'en-US': null },
+  videoRecordingUpdatedAt: { 'en-US': null },
+};
+
+const baseCreatePayload = {
+  ...baseUpdatePayload,
+  calendar: {
+    'en-US': {
+      sys: {
+        id: '1e34bfaa-6752-41ec-a796-eca801228a90',
+        linkType: 'Entry',
+        type: 'Link',
+      },
+    },
+  },
+  description: { 'en-US': null },
+  endDate: { 'en-US': '2023-04-03T17:00:00Z' },
+  endDateTimeZone: { 'en-US': 'America/Sao_Paulo' },
+  eventLink: { 'en-US': null },
+  googleId: { 'en-US': '1jhm4181bs6ck0esegje4nf6ur' },
+  startDate: { 'en-US': '2023-04-03T16:00:00Z' },
+  startDateTimeZone: { 'en-US': 'America/Sao_Paulo' },
+  status: { 'en-US': 'Confirmed' },
+  title: { 'en-US': 'Amazing event!!!' },
+};
+
 describe('Migrate events', () => {
   let contentfulEnv: Environment;
   let squidexGraphqlClientMock: jest.Mocked<SquidexGraphqlClient>;
@@ -306,7 +373,7 @@ describe('Migrate events', () => {
   it("does not create eventSpeakers entries if there isn't any", async () => {
     const eventWithoutSpeakers = getEventSquidexResponse();
     eventWithoutSpeakers.queryEventsContentsWithTotal!.items![0].flatData.speakers =
-      [];
+      null;
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       eventWithoutSpeakers,
     );
@@ -331,63 +398,8 @@ describe('Migrate events', () => {
       'event-1',
       {
         fields: {
-          calendar: {
-            'en-US': {
-              sys: {
-                id: '1e34bfaa-6752-41ec-a796-eca801228a90',
-                linkType: 'Entry',
-                type: 'Link',
-              },
-            },
-          },
-          description: { 'en-US': null },
-          endDate: { 'en-US': '2023-04-03T17:00:00Z' },
-          endDateTimeZone: { 'en-US': 'America/Sao_Paulo' },
-          eventLink: { 'en-US': null },
-          googleId: { 'en-US': '1jhm4181bs6ck0esegje4nf6ur' },
-          hidden: { 'en-US': true },
-          hideMeetingLink: { 'en-US': true },
-          meetingLink: { 'en-US': 'https://meet.google.com/idr-kixv-hhm' },
-          meetingMaterials: {
-            'en-US': [
-              {
-                title: 'Drive folder',
-                url: 'https://drive.google.com/drive/folders/id',
-              },
-              { title: 'Slack', url: 'https://slack.com/intl/pt-br/' },
-            ],
-          },
-          meetingMaterialsPermanentlyUnavailable: { 'en-US': null },
-          notes: {
-            'en-US': {
-              content: [
-                {
-                  content: [
-                    { data: {}, marks: [], nodeType: 'text', value: 'notes' },
-                  ],
-                  data: {},
-                  nodeType: 'paragraph',
-                },
-              ],
-              data: {},
-              nodeType: 'document',
-            },
-          },
-          notesPermanentlyUnavailable: { 'en-US': null },
-          notesUpdatedAt: { 'en-US': '2023-05-17T13:38:51.128Z' },
-          presentation: { 'en-US': null },
-          presentationPermanentlyUnavailable: { 'en-US': null },
-          presentationUpdatedAt: { 'en-US': null },
-          speakers: { 'en-US': [] },
-          startDate: { 'en-US': '2023-04-03T16:00:00Z' },
-          startDateTimeZone: { 'en-US': 'America/Sao_Paulo' },
-          status: { 'en-US': 'Confirmed' },
-          tags: { 'en-US': ['googleMeet', 'science'] },
-          thumbnail: { 'en-US': undefined },
-          title: { 'en-US': 'Amazing event!!!' },
-          videoRecording: { 'en-US': null },
-          videoRecordingPermanentlyUnavailable: { 'en-US': null },
-          videoRecordingUpdatedAt: { 'en-US': null },
+          ...baseCreatePayload,
+          speakers: { 'en-US': null },
         },
       },
     );
@@ -409,53 +421,46 @@ describe('Migrate events', () => {
 
     await migrateEvents();
 
-    expect(eventMock.fields).toEqual({
-      hidden: { 'en-US': true },
-      hideMeetingLink: { 'en-US': true },
-      meetingLink: { 'en-US': 'https://meet.google.com/idr-kixv-hhm' },
-      meetingMaterials: {
-        'en-US': [
-          {
-            title: 'Drive folder',
-            url: 'https://drive.google.com/drive/folders/id',
-          },
-          { title: 'Slack', url: 'https://slack.com/intl/pt-br/' },
-        ],
-      },
-      meetingMaterialsPermanentlyUnavailable: { 'en-US': null },
-      notes: {
-        'en-US': {
-          content: [
-            {
-              content: [
-                { data: {}, marks: [], nodeType: 'text', value: 'notes' },
-              ],
-              data: {},
-              nodeType: 'paragraph',
-            },
-          ],
-          data: {},
-          nodeType: 'document',
+    expect(eventMock.fields).toEqual(baseUpdatePayload);
+    expect(eventMock.update).toHaveBeenCalled();
+  });
+
+  it('updates an event without thumbnail', async () => {
+    const eventWithoutThumbnail = getEventSquidexResponse();
+    eventWithoutThumbnail.queryEventsContentsWithTotal!.items![0].flatData.thumbnail =
+      null;
+    squidexGraphqlClientMock.request.mockResolvedValueOnce(
+      eventWithoutThumbnail,
+    );
+
+    jest.spyOn(contentfulEnv, 'getEntry').mockResolvedValue(getEntry({}));
+    jest.spyOn(contentfulEnv, 'createEntry').mockResolvedValue(getEntry({}));
+
+    jest
+      .spyOn(contentfulEnv, 'getEntries')
+      .mockReset()
+      .mockImplementation(() =>
+        Promise.resolve({
+          total: 0,
+          items: [],
+          skip: 0,
+          limit: 10,
+          toPlainObject: jest.fn(),
+          sys: { type: 'Array' },
+        }),
+      );
+    await migrateEvents();
+
+    expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
+      'events',
+      'event-1',
+      {
+        fields: {
+          ...baseCreatePayload,
+          thumbnail: { 'en-US': null },
         },
       },
-      notesPermanentlyUnavailable: { 'en-US': null },
-      notesUpdatedAt: { 'en-US': '2023-05-17T13:38:51.128Z' },
-      presentation: { 'en-US': null },
-      presentationPermanentlyUnavailable: { 'en-US': null },
-      presentationUpdatedAt: { 'en-US': null },
-      speakers: {
-        'en-US': [
-          { sys: { id: 'entry-id', linkType: 'Entry', type: 'Link' } },
-          { sys: { id: 'entry-id', linkType: 'Entry', type: 'Link' } },
-        ],
-      },
-      tags: { 'en-US': ['googleMeet', 'science'] },
-      thumbnail: { 'en-US': undefined },
-      videoRecording: { 'en-US': null },
-      videoRecordingPermanentlyUnavailable: { 'en-US': null },
-      videoRecordingUpdatedAt: { 'en-US': null },
-    });
-    expect(eventMock.update).toHaveBeenCalled();
+    );
   });
 
   it('creates a new Contentful event when it does not exist there yet', async () => {
@@ -485,82 +490,7 @@ describe('Migrate events', () => {
       'events',
       'event-1',
       {
-        fields: {
-          calendar: {
-            'en-US': {
-              sys: {
-                id: '1e34bfaa-6752-41ec-a796-eca801228a90',
-                linkType: 'Entry',
-                type: 'Link',
-              },
-            },
-          },
-          description: { 'en-US': null },
-          endDate: { 'en-US': '2023-04-03T17:00:00Z' },
-          endDateTimeZone: { 'en-US': 'America/Sao_Paulo' },
-          eventLink: { 'en-US': null },
-          googleId: { 'en-US': '1jhm4181bs6ck0esegje4nf6ur' },
-          hidden: { 'en-US': true },
-          hideMeetingLink: { 'en-US': true },
-          meetingLink: { 'en-US': 'https://meet.google.com/idr-kixv-hhm' },
-          meetingMaterials: {
-            'en-US': [
-              {
-                title: 'Drive folder',
-                url: 'https://drive.google.com/drive/folders/id',
-              },
-              { title: 'Slack', url: 'https://slack.com/intl/pt-br/' },
-            ],
-          },
-          meetingMaterialsPermanentlyUnavailable: { 'en-US': null },
-          notes: {
-            'en-US': {
-              content: [
-                {
-                  content: [
-                    { data: {}, marks: [], nodeType: 'text', value: 'notes' },
-                  ],
-                  data: {},
-                  nodeType: 'paragraph',
-                },
-              ],
-              data: {},
-              nodeType: 'document',
-            },
-          },
-          notesPermanentlyUnavailable: { 'en-US': null },
-          notesUpdatedAt: { 'en-US': '2023-05-17T13:38:51.128Z' },
-          presentation: { 'en-US': null },
-          presentationPermanentlyUnavailable: { 'en-US': null },
-          presentationUpdatedAt: { 'en-US': null },
-          speakers: {
-            'en-US': [
-              {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: 'entry-id',
-                },
-              },
-              {
-                sys: {
-                  type: 'Link',
-                  linkType: 'Entry',
-                  id: 'entry-id',
-                },
-              },
-            ],
-          },
-          startDate: { 'en-US': '2023-04-03T16:00:00Z' },
-          startDateTimeZone: { 'en-US': 'America/Sao_Paulo' },
-          status: { 'en-US': 'Confirmed' },
-          tags: { 'en-US': ['googleMeet', 'science'] },
-          thumbnail: { 'en-US': undefined },
-          title: { 'en-US': 'Amazing event!!!' },
-          videoRecording: { 'en-US': null },
-          videoRecordingPermanentlyUnavailable: { 'en-US': null },
-          videoRecordingUpdatedAt: { 'en-US': null },
-        },
+        fields: baseCreatePayload,
       },
     );
   });

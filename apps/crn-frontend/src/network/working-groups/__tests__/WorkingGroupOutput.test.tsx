@@ -12,7 +12,6 @@ import {
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { ToastContext } from '@asap-hub/react-context';
 import {
   network,
   WorkingGroupOutputDocumentTypeParameter,
@@ -24,7 +23,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { ContextType, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
 import { RecoilRoot } from 'recoil';
@@ -40,10 +39,6 @@ jest.mock('../api');
 jest.mock('../../teams/api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
-
-const mockToast = jest.fn() as jest.MockedFunction<
-  ContextType<typeof ToastContext>
->;
 
 const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
   typeof createResearchOutput
@@ -156,20 +151,18 @@ const renderPage = async ({
       }
     >
       <Suspense fallback="loading">
-        <ToastContext.Provider value={mockToast}>
-          <Auth0Provider user={user}>
-            <WhenReady>
-              <Router history={history}>
-                <Route path={path}>
-                  <WorkingGroupOutput
-                    workingGroupId={workingGroupId}
-                    researchOutputData={researchOutputData}
-                  />
-                </Route>
-              </Router>
-            </WhenReady>
-          </Auth0Provider>
-        </ToastContext.Provider>
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <Router history={history}>
+              <Route path={path}>
+                <WorkingGroupOutput
+                  workingGroupId={workingGroupId}
+                  researchOutputData={researchOutputData}
+                />
+              </Route>
+            </Router>
+          </WhenReady>
+        </Auth0Provider>
       </Suspense>
     </RecoilRoot>,
   );
@@ -398,7 +391,6 @@ it('will show server side validation error for link', async () => {
       'A Research Output with this URL already exists. Please enter a different URL.',
     ),
   ).toBeNull();
-  expect(mockToast).not.toHaveBeenCalled();
 });
 
 it('will toast server side errors for unknown errors', async () => {
@@ -413,9 +405,11 @@ it('will toast server side errors for unknown errors', async () => {
   await publish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
-  expect(mockToast).toHaveBeenCalledWith(
-    'There was an error and we were unable to save your changes. Please try again.',
-  );
+  expect(
+    screen.queryByText(
+      'There was an error and we were unable to save your changes. Please try again.',
+    ),
+  ).toBeInTheDocument();
 });
 
 it.each([

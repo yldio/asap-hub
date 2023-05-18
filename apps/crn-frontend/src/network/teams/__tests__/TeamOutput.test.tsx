@@ -12,7 +12,6 @@ import {
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { InnerToastContext } from '@asap-hub/react-context';
 import { network, TeamOutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
@@ -21,7 +20,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { ContextType, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { createResearchOutput, updateTeamResearchOutput } from '../api';
@@ -105,9 +104,6 @@ const mandatoryFields = async (
   };
 };
 
-const mockToast = jest.fn() as jest.MockedFunction<
-  ContextType<typeof InnerToastContext>
->;
 const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
   typeof createResearchOutput
 >;
@@ -454,10 +450,9 @@ it('will show server side validation error for link', async () => {
       'A Research Output with this URL already exists. Please enter a different URL.',
     ),
   ).toBeNull();
-  expect(mockToast).not.toHaveBeenCalled();
 });
 
-it.only('will toast server side errors for unknown errors', async () => {
+it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({ teamId: '42', teamOutputDocumentType: 'article' });
@@ -480,8 +475,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   const descriptionMD = 'example42 description';
   const type = 'Animal Model';
   const doi = '10.0777';
-
-  mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
+  mockUpdateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({
     teamId: '42',
@@ -502,8 +496,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   );
   await publish();
 
-  expect(mockCreateResearchOutput).toHaveBeenCalled();
-  // screen.debug();
+  expect(mockUpdateResearchOutput).toHaveBeenCalled();
   expect(
     screen.queryByText(
       'There was an error and we were unable to save your changes. Please try again.',

@@ -5,7 +5,7 @@ import { FETCH_NEWS } from '../queries/news.queries';
 import {
   FetchNewsProviderOptions,
   NewsDataProvider,
-} from './types/news.data-provider.types';
+} from './types/news.data-provider.type';
 
 export type GraphqlNews = NonNullable<
   NonNullable<

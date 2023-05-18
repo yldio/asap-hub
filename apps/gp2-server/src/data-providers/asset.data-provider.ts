@@ -6,7 +6,7 @@ import { appName, baseUrl } from '../config';
 import {
   AssetCreateData,
   AssetDataProvider,
-} from './types/asset.data-provider.types';
+} from './types/asset.data-provider.type';
 
 export class AssetSquidexDataProvider implements AssetDataProvider {
   constructor(

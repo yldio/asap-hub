@@ -5,7 +5,7 @@ import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import { appName, auth0SharedSecret, baseUrl } from '../../config';
 import Users from '../../controllers/user.controller';
 import { AssetSquidexDataProvider } from '../../data-providers/asset.data-provider';
-import { getUserDataProvider } from '../../dependencies/user.dependencies';
+import { getUserDataProvider } from '../../dependencies/user.dependency';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';

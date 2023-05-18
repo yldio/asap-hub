@@ -8,7 +8,7 @@ import {
   contentfulSpaceId,
 } from '../src/config';
 import { UserContentfulDataProvider } from '../src/data-providers/contentful/user.data-provider';
-import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependencies';
+import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependency';
 
 console.log('Importing users...');
 

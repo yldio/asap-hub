@@ -1,6 +1,6 @@
 import { ExternalUsersController } from '../../src/controllers/external-users.controller';
 
-export const ExternalusersControllerMock: jest.Mocked<ExternalUsersController> =
+export const ExternalUsersControllerMock: jest.Mocked<ExternalUsersController> =
   {
     fetch: jest.fn(),
   };

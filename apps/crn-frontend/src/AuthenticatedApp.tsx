@@ -60,7 +60,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
-
+  console.log(user);
   return (
     <Onboardable>
       {(onboardable) => (

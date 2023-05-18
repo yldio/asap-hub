@@ -195,6 +195,7 @@ export const getSquidexRemindersGraphqlResponse =
         ],
       },
     },
+    drafts: [],
     queryResearchOutputsContents: [getSquidexReminderReseachOutputsContents()],
     queryEventsContents: [getSquidexReminderEventsContents()],
   });

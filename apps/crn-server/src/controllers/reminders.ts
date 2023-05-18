@@ -51,6 +51,25 @@ export default class Reminders implements ReminderController {
         }
 
         if (
+          reminder.entity === 'Research Output' &&
+          reminder.type === 'Draft' &&
+          (reminder.data.associationType === 'working group' ||
+            reminder.data.associationType === 'team')
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: sharedResearch({}).researchOutput({
+              researchOutputId: reminder.data.researchOutputId,
+            }).$,
+            description: `created a draft output for`,
+            publisherName: reminder.data.createdBy,
+            associationName: reminder.data.associationName,
+            entityTitle: reminder.data.title,
+          };
+        }
+
+        if (
           reminder.entity === 'Event' &&
           reminder.type === 'Happening Today'
         ) {

@@ -1,6 +1,7 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
 import {
+  ResearchOutputAssociations,
   ResearchOutputDraftDataObject,
   ResearchOutputPublishedDataObject,
 } from './research-output';
@@ -65,6 +66,9 @@ export interface ResearchOutputDraftReminder extends ResearchOutputReminder {
     documentType: ResearchOutputDraftDataObject['documentType'];
     title: ResearchOutputDraftDataObject['title'];
     addedDate: ResearchOutputDraftDataObject['created'];
+    createdBy: string;
+    associationType: 'team' | 'working group';
+    associationName: string;
   };
 }
 
@@ -152,6 +156,7 @@ export interface PresentationUpdatedReminder extends EventReminder {
 
 export type ReminderDataObject =
   | ResearchOutputPublishedReminder
+  | ResearchOutputDraftReminder
   | EventHappeningTodayReminder
   | EventHappeningNowReminder
   | VideoEventReminder
@@ -173,5 +178,8 @@ export type ReminderResponse = {
   entity: ReminderEntity;
   href?: string;
   id: string;
+  publisherName?: string;
+  associationName?: string;
+  entityTitle?: string;
 };
 export type ListReminderResponse = ListResponse<ReminderResponse>;

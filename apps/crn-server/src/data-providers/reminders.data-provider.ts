@@ -15,6 +15,7 @@ import {
   PublishMaterialReminder,
   UploadPresentationReminder,
   DataProvider,
+  ResearchOutputDraftReminder,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { isCMSAdministrator } from '@asap-hub/validation';
@@ -43,24 +44,34 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
 
   async fetch(options: FetchRemindersOptions): Promise<ListReminderDataObject> {
     const researchOutputFilter = getResearchOutputFilter();
+    const researchOutputDraftFilter = getResearchOutputDraftFilter();
 
     const {
       findUsersContent,
       queryResearchOutputsContents,
+      drafts,
       queryEventsContents,
     } = await this.squidexGraphqlClient.request<
       FetchReminderDataQuery,
       FetchReminderDataQueryVariables
-    >(FETCH_REMINDER_DATA, {
-      researchOutputFilter,
-      eventFilter: getEventFilter(options.timezone),
-      userId: options.userId,
-    });
+    >(
+      FETCH_REMINDER_DATA,
+      {
+        researchOutputFilter,
+        researchOutputDraftFilter,
+        eventFilter: getEventFilter(options.timezone),
+        userId: options.userId,
+      },
+      { includeDrafts: true },
+    );
 
     const researchOutputReminders = getResearchOutputRemindersFromQuery(
       queryResearchOutputsContents,
       findUsersContent,
     );
+
+    const researchOutputDraftReminders =
+      getResearchOutputDraftRemindersFromQuery(drafts, findUsersContent);
 
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
 
@@ -89,6 +100,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       ...eventMaterialsReminders,
       ...publishPresentationReminders,
       ...uploadPresentationReminders,
+      ...researchOutputDraftReminders,
     ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
@@ -111,6 +123,15 @@ const getResearchOutputFilter = (): string => {
   const date24hAgo = date.toISOString();
 
   const filter = `data/addedDate/iv ge ${date24hAgo}`;
+  return filter;
+};
+
+const getResearchOutputDraftFilter = (): string => {
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
+  const date24hAgo = date.toISOString();
+
+  const filter = `created ge ${date24hAgo} and status eq 'Draft'`;
   return filter;
 };
 
@@ -204,6 +225,90 @@ const getResearchOutputRemindersFromQuery = (
             documentType: researchOutput.flatData.documentType,
             title: researchOutput.flatData.title,
             addedDate: researchOutput.flatData.addedDate,
+          },
+        });
+      }
+
+      return researchOutputReminders;
+    },
+    [],
+  );
+};
+
+const getResearchOutputDraftRemindersFromQuery = (
+  queryResearchOutputsContents: FetchReminderDataQuery['drafts'],
+  findUsersContent: FetchReminderDataQuery['findUsersContent'],
+): ResearchOutputDraftReminder[] => {
+  if (!findUsersContent || !findUsersContent.flatData.teams) {
+    return [];
+  }
+
+  const userTeamIds = getUserTeamIds(findUsersContent.flatData.teams);
+
+  if (!queryResearchOutputsContents) {
+    return [];
+  }
+
+  return queryResearchOutputsContents.reduce<ResearchOutputDraftReminder[]>(
+    (researchOutputReminders, researchOutput) => {
+      if (!researchOutput.flatData.teams) {
+        return researchOutputReminders;
+      }
+
+      const researchOutputTeams = researchOutput.flatData.teams.map(
+        (team) => team.id,
+      );
+
+      const isInTeam = researchOutputTeams.some((team) =>
+        userTeamIds.includes(team),
+      );
+
+      if (
+        !researchOutput.flatData.documentType ||
+        !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
+        !researchOutput.flatData.title
+      ) {
+        return researchOutputReminders;
+      }
+
+      let associationType: 'team' | 'working group' = 'team';
+      let associationName = '';
+      let userName = '';
+
+      if (
+        researchOutput.flatData &&
+        researchOutput.flatData.workingGroups &&
+        researchOutput.flatData.workingGroups.length > 0
+      ) {
+        associationType = 'working group';
+        associationName =
+          researchOutput.flatData.workingGroups[0]?.flatData.title || '';
+      } else {
+        associationName =
+          researchOutput.flatData.teams[0]?.flatData.displayName || '';
+      }
+
+      if (
+        researchOutput.referencesUsersContents &&
+        researchOutput.referencesUsersContents?.length > 0 &&
+        researchOutput.referencesUsersContents[0]?.flatData
+      ) {
+        userName = `${researchOutput.referencesUsersContents[0]?.flatData.firstName} ${researchOutput.referencesUsersContents[0]?.flatData.lastName}`;
+      }
+
+      if (isInTeam) {
+        researchOutputReminders.push({
+          id: `research-output-published-${researchOutput.id}`,
+          entity: 'Research Output',
+          type: 'Draft',
+          data: {
+            researchOutputId: researchOutput.id,
+            documentType: researchOutput.flatData.documentType,
+            title: researchOutput.flatData.title,
+            addedDate: researchOutput.created,
+            createdBy: userName || researchOutput.createdByUser.id,
+            associationType,
+            associationName,
           },
         });
       }

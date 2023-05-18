@@ -15,6 +15,7 @@ import {
   SquidexWebhookPayload,
 } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
+import { FetchUserByIdQuery } from '@asap-hub/contentful';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -791,7 +792,9 @@ export const getContentfulGraphql = (props = {}) => {
   };
 };
 
-export const getContentfulGraphqlUser = (props = {}) => ({
+export const getContentfulGraphqlUser = (
+  props = {},
+): NonNullable<NonNullable<FetchUserByIdQuery>['users']> => ({
   sys: {
     id: 'user-id-1',
     firstPublishedAt: '2021-09-23T20:45:22.000Z',
@@ -839,14 +842,12 @@ export const getContentfulGraphqlUser = (props = {}) => ({
   linkedIn: null,
   role: 'Grantee',
   labsCollection: {
-    total: 2,
     items: [
       { sys: { id: 'cd7be4902' }, name: 'Brighton' },
       { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
     ],
   },
   teamsCollection: {
-    total: 1,
     items: [
       {
         role: 'Lead PI (Core Leadership)',

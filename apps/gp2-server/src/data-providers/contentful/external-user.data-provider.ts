@@ -52,7 +52,7 @@ export class ExternalUserContentfulDataProvider
       total: externalUsersCollection?.total,
       items: externalUsersCollection?.items
         .filter((user): user is ExternalUserItem => user !== null)
-        .map(parseGraphQLExternalAuthor),
+        .map(parseGraphQLExternalUser),
     };
   }
 

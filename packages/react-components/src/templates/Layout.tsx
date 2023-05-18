@@ -159,7 +159,7 @@ const userMenuStyles = css({
   },
 });
 const userMenuShownStyles = css({
-  height: '90vh',
+  maxHeight: '90vh',
   overflowY: 'scroll',
   [drawerQuery]: {
     backgroundColor: navigationGrey.rgb,

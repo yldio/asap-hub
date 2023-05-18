@@ -78,7 +78,7 @@ export class ExternalUserContentfulDataProvider
   }
 }
 
-export const parseGraphQLExternalAuthor = (
+export const parseGraphQLExternalUser = (
   item: ExternalUserItem,
 ): gp2Model.ExternalUserDataObject => ({
   id: item.sys.id,

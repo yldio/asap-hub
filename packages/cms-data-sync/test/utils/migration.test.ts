@@ -125,6 +125,7 @@ describe('Migration from Squidex to Contentful', () => {
         'entity',
         fetchData,
         parseData,
+        true,
         fallbackParser,
       );
 

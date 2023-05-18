@@ -10,10 +10,13 @@ import {
   GraphQLClient,
   FETCH_INTEREST_GROUPS,
   FETCH_INTEREST_GROUP_BY_ID,
+  FETCH_INTEREST_GROUPS_BY_USER_ID,
   FetchInterestGroupByIdQuery,
   FetchInterestGroupByIdQueryVariables,
   FetchInterestGroupsQuery,
   FetchInterestGroupsQueryVariables,
+  FetchInterestGroupsByUserIdQuery,
+  FetchInterestGroupsByUserIdQueryVariables,
   InterestGroupsOrder,
   InterestGroupsFilter,
   Teams,
@@ -27,9 +30,20 @@ import {
 import { parseContentfulGraphQlUsers } from './users.data-provider';
 import { parseContentfulGraphQlTeams } from './teams.data-provider';
 
-export type InterestGroupItem = NonNullable<
-  NonNullable<FetchInterestGroupByIdQuery['interestGroups']>
+type InterestGroupItem = NonNullable<
+  NonNullable<
+    FetchInterestGroupsQuery['interestGroupsCollection']
+  >['items'][number]
 >;
+
+type InterestGroupLeader = NonNullable<
+  NonNullable<
+    FetchInterestGroupsByUserIdQuery['interestGroupLeadersCollection']
+  >['items'][number]
+>;
+
+type InterestGroupsQueryResult =
+  FetchInterestGroupsQuery['interestGroupsCollection'];
 
 export class InterestGroupContentfulDataProvider
   implements InterestGroupDataProvider
@@ -49,10 +63,59 @@ export class InterestGroupContentfulDataProvider
     return parseGraphQLInterestGroup(interestGroups);
   }
 
+  private async fetchByUserId(
+    userId: string,
+    options: FetchGroupOptions,
+  ): Promise<ListGroupDataObject> {
+    const { take = 10, skip = 0 } = options;
+    const { interestGroupLeadersCollection } =
+      await this.contentfulClient.request<
+        FetchInterestGroupsByUserIdQuery,
+        FetchInterestGroupsByUserIdQueryVariables
+      >(FETCH_INTEREST_GROUPS_BY_USER_ID, {
+        limit: take,
+        skip,
+        id: userId,
+      });
+
+    const items: InterestGroupItem[] =
+      interestGroupLeadersCollection?.items
+        ?.filter((x): x is InterestGroupLeader => x !== null)
+        .map(
+          (item: InterestGroupLeader) =>
+            item?.linkedFrom?.interestGroupsCollection?.items[0],
+        )
+        .filter((x): x is InterestGroupItem => !!x) || [];
+
+    return this.parseCollection({ total: items?.length || 0, items });
+  }
+
+  private parseCollection(
+    collection: InterestGroupsQueryResult,
+  ): ListGroupDataObject {
+    if (!collection || !collection.total) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    return {
+      total: collection.total,
+      items: collection.items
+        .filter((x): x is InterestGroupItem => x !== null)
+        .map(parseGraphQLInterestGroup),
+    };
+  }
+
   async fetch(options: FetchGroupOptions): Promise<ListGroupDataObject> {
     const { filter, search, take = 20, skip = 0 } = options;
 
+    if (filter && filter.userId) {
+      return this.fetchByUserId(filter.userId, options);
+    }
     const where: InterestGroupsFilter = {};
+
     const words = (search || '').split(' ').filter(Boolean); // removes whitespaces
 
     if (words.length) {
@@ -76,6 +139,13 @@ export class InterestGroupContentfulDataProvider
       where.AND = [...(where.AND || []), { active: filter.active }];
     }
 
+    if (filter && filter.teamId) {
+      where.AND = [
+        ...(where.AND || []),
+        { teams: { sys: { id_in: filter.teamId } } },
+      ];
+    }
+
     const { interestGroupsCollection } = await this.contentfulClient.request<
       FetchInterestGroupsQuery,
       FetchInterestGroupsQueryVariables
@@ -86,19 +156,7 @@ export class InterestGroupContentfulDataProvider
       order: [InterestGroupsOrder.NameAsc],
     });
 
-    if (!interestGroupsCollection || !interestGroupsCollection.total) {
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    return {
-      total: interestGroupsCollection.total,
-      items: interestGroupsCollection.items
-        .filter((x): x is InterestGroupItem => x !== null)
-        .map(parseGraphQLInterestGroup),
-    };
+    return this.parseCollection(interestGroupsCollection);
   }
 }
 

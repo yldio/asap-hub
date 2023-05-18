@@ -2,6 +2,8 @@ import {
   getContentfulGraphqlClientMockServer,
   InterestGroups,
   InterestGroupLeaders,
+  FETCH_INTEREST_GROUPS,
+  FETCH_INTEREST_GROUPS_BY_USER_ID,
 } from '@asap-hub/contentful';
 import {
   getContentfulGraphql,
@@ -114,365 +116,205 @@ describe('User data provider', () => {
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    test('Should apply pagination parameters', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        interestGroupsCollection: { total: 0, items: [] },
+    describe('query options', () => {
+      beforeEach(() => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          interestGroupsCollection: {
+            total: 0,
+            items: [],
+          },
+        });
       });
 
-      await dataProvider.fetch({
-        take: 13,
-        skip: 3,
-      });
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          limit: 13,
+      test('Should apply pagination parameters', async () => {
+        await dataProvider.fetch({
+          take: 13,
           skip: 3,
-        }),
-      );
-    });
+        });
 
-    test('Should pass default pagination parameters', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        interestGroupsCollection: { total: 0, items: [] },
-      });
-
-      await dataProvider.fetch({});
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          limit: 20,
-          skip: 0,
-        }),
-      );
-    });
-
-    test('should query with single term search filters', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        interestGroupsCollection: { total: 0, items: [] },
-      });
-
-      await dataProvider.fetch({ search: 'test' });
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          where: {
-            AND: [
-              {
-                OR: [
-                  { name_contains: 'test' },
-                  { description_contains: 'test' },
-                  { tags_contains_all: ['test'] },
-                ],
-              },
-            ],
-          },
-        }),
-      );
-    });
-
-    test('should query with multiple term search filters', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        interestGroupsCollection: { total: 0, items: [] },
-      });
-
-      await dataProvider.fetch({ search: 'test search' });
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          where: {
-            AND: [
-              {
-                OR: [
-                  { name_contains: 'test' },
-                  { description_contains: 'test' },
-                  { tags_contains_all: ['test'] },
-                ],
-              },
-              {
-                OR: [
-                  { name_contains: 'search' },
-                  { description_contains: 'search' },
-                  { tags_contains_all: ['search'] },
-                ],
-              },
-            ],
-          },
-        }),
-      );
-    });
-
-    test('should apply an active filter if defined', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        interestGroupsCollection: { total: 0, items: [] },
-      });
-
-      await dataProvider.fetch({ filter: { active: false } });
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          where: {
-            AND: [
-              { active: false },
-            ],
-          },
-        }),
-      );
-    });
-
-    test('can apply an active filter as well as a text search', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        interestGroupsCollection: { total: 0, items: [] },
-      });
-
-      await dataProvider.fetch({ filter: { active: false }, search: 'test' });
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          where: {
-            AND: [
-              {
-                OR: [
-                  { name_contains: 'test' },
-                  { description_contains: 'test' },
-                  { tags_contains_all: ['test'] },
-                ],
-              },
-              { active: false },
-            ],
-          },
-        }),
-      );
-    });
-
-    /*test('Should query with filters and return the groups', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexInterestGroupsGraphqlResponse(),
-      );
-
-      const fetchOptions: FetchGroupOptions = {
-        take: 12,
-        skip: 2,
-        search: 'first last',
-      };
-      const expectedFilter =
-        "((contains(data/name/iv,'first'))" +
-        " or (contains(data/description/iv,'first'))" +
-        " or (contains(data/tags/iv,'first')))" +
-        ' and' +
-        " ((contains(data/name/iv,'last'))" +
-        " or (contains(data/description/iv,'last'))" +
-        " or (contains(data/tags/iv,'last')))";
-
-      const result = await dataProvider.fetch(fetchOptions);
-
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          filter: expectedFilter,
-          top: 12,
-          skip: 2,
-        },
-      );
-      expect(result).toEqual({
-        total: 1,
-        items: [getInterestGroupDataObject()],
-      });
-    });
-
-    test('Should sanitise single quotes by doubling them', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexInterestGroupsGraphqlResponse(),
-      );
-
-      const fetchOptions: FetchGroupOptions = {
-        take: 12,
-        skip: 2,
-        search: "'",
-      };
-      const expectedFilter =
-        "((contains(data/name/iv,''''))" +
-        " or (contains(data/description/iv,''''))" +
-        " or (contains(data/tags/iv,'''')))";
-
-      await dataProvider.fetch(fetchOptions);
-
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          filter: expectedFilter,
-          top: 12,
-          skip: 2,
-        },
-      );
-    });
-
-    test('Should sanitise double quotation mark by escaping it', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexInterestGroupsGraphqlResponse(),
-      );
-
-      const fetchOptions: FetchGroupOptions = {
-        take: 12,
-        skip: 2,
-        search: '"',
-      };
-      const expectedFilter =
-        "((contains(data/name/iv,'\"'))" +
-        " or (contains(data/description/iv,'\"'))" +
-        " or (contains(data/tags/iv,'\"')))";
-
-      await dataProvider.fetch(fetchOptions);
-
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          filter: expectedFilter,
-          top: 12,
-          skip: 2,
-        },
-      );
-    });
-
-    test('Should apply the team and pagination filters', async () => {
-      const teamId = 'eb531b6e-195c-46e2-b347-58fb86715033';
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexInterestGroupsGraphqlResponse(),
-      );
-
-      await dataProvider.fetch({
-        filter: { teamId: [teamId] },
-        take: 13,
-        skip: 3,
-      });
-
-      const expectedFilter = `data/teams/iv eq '${teamId}'`;
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          filter: expectedFilter,
-          top: 13,
-          skip: 3,
-        },
-      );
-    });
-
-    test('Should filter by multiple team IDs', async () => {
-      const teamIds = [
-        'eb531b6e-195c-46e2-b347-58fb86715033',
-        'dc312b6e-195c-46e2-b347-58fb86715033',
-      ];
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexInterestGroupsGraphqlResponse(),
-      );
-
-      await dataProvider.fetch({
-        filter: { teamId: teamIds },
-        take: 13,
-        skip: 3,
-      });
-
-      const expectedFilter = `data/teams/iv in ('${teamIds[0]}','${teamIds[1]}')`;
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          filter: expectedFilter,
-          top: 13,
-          skip: 3,
-        },
-      );
-    });
-
-    test('Should filter by user ID', async () => {
-      const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
-      squidexGraphqlClientMock.request.mockResolvedValue(
-        getSquidexInterestGroupsGraphqlResponse(),
-      );
-
-      await dataProvider.fetch({ filter: { userId } });
-
-      const userFilter = `data/leaders/iv/user eq '${userId}'`;
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          filter: userFilter,
-          top: 50,
-          skip: 0,
-        },
-      );
-    });
-
-    test.each`
-      active
-      ${true} | ${false}
-    `(
-      'Should filter by active field when its value is $active',
-      async ({ active }) => {
-        squidexGraphqlClientMock.request.mockResolvedValue(
-          getSquidexInterestGroupsGraphqlResponse(),
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_INTEREST_GROUPS,
+          expect.objectContaining({
+            limit: 13,
+            skip: 3,
+          }),
         );
+      });
 
-        await dataProvider.fetch({ filter: { active } });
+      test('Should pass default pagination parameters', async () => {
+        await dataProvider.fetch({});
 
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            filter: `data/active/iv eq ${active}`,
-            top: 50,
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_INTEREST_GROUPS,
+          expect.objectContaining({
+            limit: 20,
             skip: 0,
-          },
+          }),
         );
-      },
-    );
-
-    test('Should apply the team, user and active filters', async () => {
-      const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
-      const teamIds = ['team-id-1', 'team-id-3'];
-      const active = true;
-
-      squidexGraphqlClientMock.request.mockResolvedValue(
-        getSquidexInterestGroupsGraphqlResponse(),
-      );
-
-      await dataProvider.fetch({
-        filter: { userId, teamId: teamIds, active },
       });
 
-      const teamFilter = `data/teams/iv in ('${teamIds[0]}','${teamIds[1]}')`;
-      const userFilter = `data/leaders/iv/user eq '${userId}'`;
-      const activeFilter = `data/active/iv eq ${active}`;
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          filter: [teamFilter, userFilter, activeFilter].join(' and '),
-          top: 50,
-          skip: 0,
+      test('should query with single term search filters', async () => {
+        await dataProvider.fetch({ search: 'test' });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_INTEREST_GROUPS,
+          expect.objectContaining({
+            where: {
+              AND: [
+                {
+                  OR: [
+                    { name_contains: 'test' },
+                    { description_contains: 'test' },
+                    { tags_contains_all: ['test'] },
+                  ],
+                },
+              ],
+            },
+          }),
+        );
+      });
+
+      test('should query with multiple term search filters', async () => {
+        await dataProvider.fetch({ search: 'test search' });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_INTEREST_GROUPS,
+          expect.objectContaining({
+            where: {
+              AND: [
+                {
+                  OR: [
+                    { name_contains: 'test' },
+                    { description_contains: 'test' },
+                    { tags_contains_all: ['test'] },
+                  ],
+                },
+                {
+                  OR: [
+                    { name_contains: 'search' },
+                    { description_contains: 'search' },
+                    { tags_contains_all: ['search'] },
+                  ],
+                },
+              ],
+            },
+          }),
+        );
+      });
+
+      test.each`
+        active
+        ${true} | ${false}
+      `(
+        'Should filter by active field when its value is $active',
+        async ({ active }) => {
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            interestGroupsCollection: { total: 0, items: [] },
+          });
+
+          await dataProvider.fetch({ filter: { active } });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            FETCH_INTEREST_GROUPS,
+            expect.objectContaining({
+              where: {
+                AND: [{ active }],
+              },
+            }),
+          );
         },
       );
-    });
 
-    test('Should return the deduped result', async () => {
-      const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
-      const teamIds = ['team-id-1', 'team-id-3'];
+      test('can apply an active filter as well as a text search', async () => {
+        await dataProvider.fetch({ filter: { active: false }, search: 'test' });
 
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexInterestGroupsGraphqlResponse(),
-      );
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexInterestGroupsGraphqlResponse(),
-      );
-
-      const result = await dataProvider.fetch({
-        filter: { userId, teamId: teamIds },
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_INTEREST_GROUPS,
+          expect.objectContaining({
+            where: {
+              AND: [
+                {
+                  OR: [
+                    { name_contains: 'test' },
+                    { description_contains: 'test' },
+                    { tags_contains_all: ['test'] },
+                  ],
+                },
+                { active: false },
+              ],
+            },
+          }),
+        );
       });
 
-      expect(result.items).toHaveLength(1);
-      expect(result.total).toBe(1);
-      expect(result).toMatchObject(getListInterestGroupResponse());
-    });*/
+      test('can filter by team id', async () => {
+        await dataProvider.fetch({ filter: { teamId: ['abc'] } });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_INTEREST_GROUPS,
+          expect.objectContaining({
+            where: {
+              AND: [{ teams: { sys: { id_in: ['abc'] } } }],
+            },
+          }),
+        );
+      });
+
+      test('can filter by multiple team IDs', async () => {
+        await dataProvider.fetch({ filter: { teamId: ['abc', 'def'] } });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_INTEREST_GROUPS,
+          expect.objectContaining({
+            where: {
+              AND: [{ teams: { sys: { id_in: ['abc', 'def'] } } }],
+            },
+          }),
+        );
+      });
+
+      test('can filter by user id', async () => {
+        await dataProvider.fetch({ filter: { userId: '1234567' } });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_INTEREST_GROUPS_BY_USER_ID,
+          expect.objectContaining({ id: '1234567' }),
+        );
+
+        const contentfulGraphqlClientMockServer =
+          getContentfulGraphqlClientMockServer({
+            InterestGroupLeadersCollection: () => ({
+              total: 2,
+              items: [
+                {
+                  linkedFrom: {
+                    interestGroupsCollection: {
+                      total: 1,
+                      items: [...Array(1)],
+                    },
+                  },
+                },
+                {
+                  linkedFrom: {
+                    interestGroupsCollection: {
+                      total: 1,
+                      items: [...Array(1)],
+                    },
+                  },
+                },
+              ],
+            }),
+          });
+
+        const dataProviderWithMockServer: InterestGroupDataProvider =
+          new InterestGroupContentfulDataProvider(
+            contentfulGraphqlClientMockServer,
+          );
+
+        const result = await dataProviderWithMockServer.fetch({
+          filter: { userId: '1234567' },
+        });
+
+        expect(result.total).toEqual(2);
+        expect(result.items).toHaveLength(2);
+      });
+    });
   });
 });

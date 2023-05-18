@@ -7214,6 +7214,111 @@ export type FetchInterestGroupsQuery = {
   >;
 };
 
+export type FetchInterestGroupsByUserIdQueryVariables = Exact<{
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchInterestGroupsByUserIdQuery = {
+  interestGroupLeadersCollection?: Maybe<
+    Pick<InterestGroupLeadersCollection, 'total'> & {
+      items: Array<
+        Maybe<{
+          linkedFrom?: Maybe<{
+            interestGroupsCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<
+                    InterestGroups,
+                    | 'name'
+                    | 'active'
+                    | 'tags'
+                    | 'description'
+                    | 'slack'
+                    | 'googleDrive'
+                  > & {
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
+                    thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                    teamsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<
+                            Teams,
+                            | 'displayName'
+                            | 'inactiveSince'
+                            | 'expertiseAndResourceTags'
+                            | 'projectTitle'
+                          > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+                        >
+                      >;
+                    }>;
+                    leadersCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<
+                            InterestGroupLeaders,
+                            'role' | 'inactiveSinceDate'
+                          > & {
+                            sys: Pick<Sys, 'id' | 'publishedAt'>;
+                            user?: Maybe<
+                              Pick<
+                                Users,
+                                | 'firstName'
+                                | 'lastName'
+                                | 'email'
+                                | 'alumniSinceDate'
+                              > & {
+                                sys: Pick<
+                                  Sys,
+                                  'id' | 'publishedAt' | 'firstPublishedAt'
+                                >;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                                teamsCollection?: Maybe<{
+                                  items: Array<
+                                    Maybe<
+                                      Pick<
+                                        TeamMembership,
+                                        'role' | 'inactiveSinceDate'
+                                      > & {
+                                        team?: Maybe<
+                                          Pick<
+                                            Teams,
+                                            'inactiveSince' | 'displayName'
+                                          > & { sys: Pick<Sys, 'id'> }
+                                        >;
+                                      }
+                                    >
+                                  >;
+                                }>;
+                              }
+                            >;
+                          }
+                        >
+                      >;
+                    }>;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'color' | 'googleCalendarId' | 'name'> & {
+                        sys: Pick<Sys, 'id'>;
+                      }
+                    >;
+                  }
+                >
+              >;
+            }>;
+          }>;
+        }>
+      >;
+    }
+  >;
+};
+
 export type NewsContentFragment = Pick<
   News,
   'title' | 'shortText' | 'frequency' | 'link' | 'linkText' | 'publishDate'
@@ -12146,6 +12251,167 @@ export const FetchInterestGroupsDocument = {
 } as unknown as DocumentNode<
   FetchInterestGroupsQuery,
   FetchInterestGroupsQueryVariables
+>;
+export const FetchInterestGroupsByUserIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchInterestGroupsByUserId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'interestGroupLeadersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'user' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'sys' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'id' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'linkedFrom' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'interestGroupsCollection',
+                              },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '1' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'FragmentSpread',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'InterestGroupsContent',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...InterestGroupsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchInterestGroupsByUserIdQuery,
+  FetchInterestGroupsByUserIdQueryVariables
 >;
 export const FetchNewsByIdDocument = {
   kind: 'Document',

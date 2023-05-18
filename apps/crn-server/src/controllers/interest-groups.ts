@@ -85,11 +85,13 @@ export default class InterestGroups implements InterestGroupController {
     }
 
     const teamIds = user.teams.map((team) => team.id);
-    const { items: groupsByTeams } = await this.interestGroupDataProvider.fetch({
-      filter: {
-        teamId: teamIds,
+    const { items: groupsByTeams } = await this.interestGroupDataProvider.fetch(
+      {
+        filter: {
+          teamId: teamIds,
+        },
       },
-    });
+    );
     const { items: groupsByUser } = await this.interestGroupDataProvider.fetch({
       filter: {
         userId,

@@ -109,3 +109,25 @@ export const FETCH_INTEREST_GROUPS = gql`
   }
   ${interestGroupContentQueryFragment}
 `;
+
+export const FETCH_INTEREST_GROUPS_BY_USER_ID = gql`
+  query FetchInterestGroupsByUserId($id: String!, $limit: Int, $skip: Int) {
+    interestGroupLeadersCollection(
+      limit: $limit
+      skip: $skip
+      where: { user: { sys: { id: $id } } }
+    ) {
+      total
+      items {
+        linkedFrom {
+          interestGroupsCollection(limit: 1) {
+            items {
+              ...InterestGroupsContent
+            }
+          }
+        }
+      }
+    }
+  }
+  ${interestGroupContentQueryFragment}
+`;

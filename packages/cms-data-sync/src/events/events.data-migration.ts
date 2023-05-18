@@ -151,6 +151,11 @@ export const migrateEvents = async () => {
                 },
               };
             }
+            logger(
+              `There's a speaker without a user. Please review event with id ${eventId}`,
+              'ERROR',
+            );
+            return null;
           } catch {
             // edge case, this should not happen if the migration happened in the correct order
             logger(

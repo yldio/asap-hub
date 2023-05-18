@@ -305,7 +305,7 @@ describe('Migrate events', () => {
     );
   });
 
-  it('outputs a message when user or team is not found in contentful', async () => {
+  it('outputs an error when user or team is not found in contentful', async () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       getEventSquidexResponse(),
     );
@@ -318,6 +318,56 @@ describe('Migrate events', () => {
     expect(console.log).toHaveBeenCalledWith(
       '\x1b[31m',
       '[ERROR] Either user external-user-1 or team null do not exist in contentful. Please review event with id event-1',
+    );
+  });
+
+  it('outputs an error and does not create an eventSpeakers entry when speaker is not associated to a user', async () => {
+    const eventWithInvalidSpeaker = getEventSquidexResponse();
+    eventWithInvalidSpeaker.queryEventsContentsWithTotal!.items![0].flatData.speakers =
+      [
+        {
+          team: [
+            {
+              id: 'team-1',
+            },
+          ],
+          user: null,
+        },
+      ];
+    squidexGraphqlClientMock.request.mockResolvedValueOnce(
+      eventWithInvalidSpeaker,
+    );
+
+    jest
+      .spyOn(contentfulEnv, 'getEntries')
+      .mockReset()
+      .mockImplementation(() =>
+        Promise.resolve({
+          total: 0,
+          items: [],
+          skip: 0,
+          limit: 10,
+          toPlainObject: jest.fn(),
+          sys: { type: 'Array' },
+        }),
+      );
+
+    await migrateEvents();
+
+    expect(console.log).toHaveBeenCalledWith(
+      '\x1b[31m',
+      "[ERROR] There's a speaker without a user. Please review event with id event-1",
+    );
+
+    expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
+      'events',
+      'event-1',
+      {
+        fields: {
+          ...baseCreatePayload,
+          speakers: { 'en-US': [] },
+        },
+      },
     );
   });
 

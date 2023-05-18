@@ -20,8 +20,14 @@ export const FETCH_EXTERNAL_USERS = gql`
     $limit: Int
     $skip: Int
     $order: [ExternalUsersOrder]
+    $where: ExternalUsersFilter
   ) {
-    externalUsersCollection(limit: $limit, skip: $skip, order: $order) {
+    externalUsersCollection(
+      limit: $limit
+      skip: $skip
+      order: $order
+      where: $where
+    ) {
       total
       items {
         ...ExternalUsersContentData

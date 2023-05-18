@@ -1,15 +1,17 @@
 import { gp2 } from '@asap-hub/model';
-import { ExternalUserDataProvider } from '../data-providers/external-user.data-provider';
+import { ExternalUserDataProvider } from '../data-providers/types/external-user.data-provider.type';
 
 export interface ExternalUsersController {
-  fetch(options: gp2.FetchUsersOptions): Promise<gp2.ListExternalUserResponse>;
+  fetch(
+    options: gp2.FetchExternalUsersOptions,
+  ): Promise<gp2.ListExternalUserResponse>;
 }
 
 export default class ExternalUsers implements ExternalUsersController {
   constructor(private externalUserDataProvider: ExternalUserDataProvider) {}
 
   async fetch(
-    options: gp2.FetchUsersOptions,
+    options: gp2.FetchExternalUsersOptions,
   ): Promise<gp2.ListExternalUserResponse> {
     const { total, items: externalUsers } =
       await this.externalUserDataProvider.fetch(options);

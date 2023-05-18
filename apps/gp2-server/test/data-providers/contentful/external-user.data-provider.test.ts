@@ -1,8 +1,10 @@
 import {
   Environment,
   getGP2ContentfulGraphqlClientMockServer,
+  gp2 as gp2Contentful,
 } from '@asap-hub/contentful';
 import { GenericError } from '@asap-hub/errors';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { ExternalUserContentfulDataProvider } from '../../../src/data-providers/contentful/external-user.data-provider';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
@@ -101,13 +103,60 @@ describe('External User Contentful Data Provider', () => {
       });
 
       expect(contentfulGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
+        gp2Contentful.FETCH_EXTERNAL_USERS,
+        expect.objectContaining({
           limit: 15,
-          skip: 11,
           order: ['name_ASC'],
-        },
+          skip: 11,
+          where: {},
+        }),
       );
+    });
+    describe('search', () => {
+      test('Should query with filters and return the external-users', async () => {
+        const contentfulGraphqlResponse =
+          getContentfulGraphqlExternalUsersResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphqlResponse,
+        );
+        const fetchOptions: gp2Model.FetchExternalUsersOptions = {
+          take: 12,
+          skip: 2,
+          search: 'tony stark',
+        };
+        const users = await externalUserDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+          gp2Contentful.FETCH_EXTERNAL_USERS,
+          {
+            limit: 12,
+            skip: 2,
+            order: ['name_ASC'],
+            where: expect.objectContaining({
+              AND: [
+                {
+                  OR: [
+                    {
+                      name_contains: 'tony',
+                    },
+                  ],
+                },
+                {
+                  OR: [
+                    {
+                      name_contains: 'stark',
+                    },
+                  ],
+                },
+              ],
+            }),
+          },
+        );
+        expect(users).toMatchObject({
+          total: 1,
+          items: [getExternalUserDataObject()],
+        });
+      });
     });
   });
 

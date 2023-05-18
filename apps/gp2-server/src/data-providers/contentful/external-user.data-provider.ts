@@ -1,4 +1,4 @@
-import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 
 import {
   addLocaleToFields,
@@ -23,18 +23,23 @@ export class ExternalUserContentfulDataProvider
   ) {}
 
   async fetch(
-    options: FetchOptions,
+    options: gp2Model.FetchExternalUsersOptions,
   ): Promise<gp2Model.ListExternalUserDataObject> {
     const { take = 8, skip = 0 } = options;
 
+    const where = generateFetchQueryFilter(options);
     const { externalUsersCollection } = await this.contentfulClient.request<
       gp2Contentful.FetchExternalUsersQuery,
       gp2Contentful.FetchExternalUsersQueryVariables
-    >(gp2Contentful.FETCH_EXTERNAL_USERS, {
-      limit: take,
-      skip,
-      order: [gp2Contentful.ExternalUsersOrder.NameAsc],
-    });
+    >(
+      gp2Contentful.FETCH_EXTERNAL_USERS,
+      expect.objectContaining({
+        limit: take,
+        skip,
+        where,
+        order: [gp2Contentful.ExternalUsersOrder.NameAsc],
+      }),
+    );
 
     if (!externalUsersCollection?.items) {
       return {
@@ -80,3 +85,35 @@ export const parseGraphQLExternalAuthor = (
   orcid: item.orcid || undefined,
   name: item.name || '',
 });
+
+const generateFetchQueryFilter = ({
+  search,
+}: gp2Model.FetchExternalUsersOptions): gp2Contentful.ExternalUsersFilter => {
+  const searchFilter = search ? getSearchFilter(search) : {};
+  return {
+    ...searchFilter,
+  };
+};
+
+const getSearchFilter = (search: string) => {
+  type SearchFields = {
+    OR: {
+      name_contains: string;
+    }[];
+  };
+
+  const filter = search
+    .split(' ')
+    .filter(Boolean) // removes whitespaces
+    .reduce<SearchFields[]>(
+      (acc, word: string) => [
+        ...acc,
+        {
+          OR: [{ name_contains: word }],
+        },
+      ],
+      [],
+    );
+
+  return { AND: [...filter] };
+};

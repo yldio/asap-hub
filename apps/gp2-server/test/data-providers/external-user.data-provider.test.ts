@@ -1,4 +1,5 @@
 import { GenericError } from '@asap-hub/errors';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
@@ -13,8 +14,6 @@ import {
 import { identity } from '../helpers/squidex';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
-
-import { FetchOptions } from '@asap-hub/model';
 
 describe('External User data provider', () => {
   const externalUserRestClient = new SquidexRest<gp2Squidex.RestExternalUser>(
@@ -64,7 +63,7 @@ describe('External User data provider', () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexExternalUsersGraphqlResponse(),
       );
-      const fetchOptions: FetchOptions = {
+      const fetchOptions: gp2Model.FetchExternalUsersOptions = {
         take: 12,
         skip: 2,
         search: 'tony stark',

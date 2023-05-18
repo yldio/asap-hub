@@ -4642,6 +4642,7 @@ export type FetchExternalUsersQueryVariables = Exact<{
   order?: InputMaybe<
     Array<InputMaybe<ExternalUsersOrder>> | InputMaybe<ExternalUsersOrder>
   >;
+  where?: InputMaybe<ExternalUsersFilter>;
 }>;
 
 export type FetchExternalUsersQuery = {
@@ -6427,6 +6428,17 @@ export const FetchExternalUsersDocument = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ExternalUsersFilter' },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -6457,6 +6469,14 @@ export const FetchExternalUsersDocument = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
                 },
               },
             ],

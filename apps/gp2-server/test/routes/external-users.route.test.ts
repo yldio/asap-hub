@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getFetchExternalUsersResponse } from '../fixtures/external-users.fixtures';
 import { getUserResponse } from '../fixtures/user.fixtures';
-import { ExternalusersControllerMock } from '../mocks/external-users.controller.mock';
+import { ExternalUsersControllerMock } from '../mocks/external-users.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/external-users route', () => {
@@ -19,7 +19,7 @@ describe('/external-users route', () => {
     next();
   };
   const app = appFactory({
-    externalUsersController: ExternalusersControllerMock,
+    externalUsersController: ExternalUsersControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });
@@ -32,7 +32,7 @@ describe('/external-users route', () => {
 
   describe('GET /external-users', () => {
     test('Should return 200 when no users exist', async () => {
-      ExternalusersControllerMock.fetch.mockResolvedValueOnce({
+      ExternalUsersControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -47,7 +47,7 @@ describe('/external-users route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      ExternalusersControllerMock.fetch.mockResolvedValueOnce(
+      ExternalUsersControllerMock.fetch.mockResolvedValueOnce(
         getFetchExternalUsersResponse(),
       );
 
@@ -58,35 +58,25 @@ describe('/external-users route', () => {
     });
 
     test('Should call the controller method with the correct parameters', async () => {
-      ExternalusersControllerMock.fetch.mockResolvedValueOnce({
+      ExternalUsersControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
 
-      const params: gp2.FetchUsersOptions = {
+      const params: gp2.FetchExternalUsersOptions = {
         take: 15,
         skip: 5,
         search: 'something',
-        filter: {
-          code: '123',
-          onlyOnboarded: true,
-          regions: ['Europe'],
-        },
       };
       await supertest(app).get('/external-users').query(params);
 
-      const expectedParams: gp2.FetchUsersOptions = {
+      const expectedParams: gp2.FetchExternalUsersOptions = {
         take: 15,
         skip: 5,
         search: 'something',
-        filter: {
-          code: '123',
-          onlyOnboarded: true,
-          regions: ['Europe'],
-        },
       };
 
-      expect(ExternalusersControllerMock.fetch).toBeCalledWith(expectedParams);
+      expect(ExternalUsersControllerMock.fetch).toBeCalledWith(expectedParams);
     });
 
     describe('Parameter validation', () => {

@@ -1,4 +1,4 @@
-import { ListResponse } from '../common';
+import { FetchOptions, ListResponse } from '../common';
 
 export type ExternalUserDataObject = {
   id: string;
@@ -19,3 +19,5 @@ export type ExternalUserCreateDataObject = {
   name: string;
   orcid?: string | undefined;
 };
+
+export type FetchExternalUsersOptions = FetchOptions;

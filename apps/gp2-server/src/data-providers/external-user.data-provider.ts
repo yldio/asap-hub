@@ -1,4 +1,4 @@
-import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   gp2 as gp2Squidex,
   sanitiseForSquidex,
@@ -47,7 +47,7 @@ export class ExternalUserSquidexDataProvider
     take = 8,
     skip = 0,
     search,
-  }: FetchOptions): Promise<gp2Model.ListExternalUserDataObject> {
+  }: gp2Model.FetchExternalUsersOptions): Promise<gp2Model.ListExternalUserDataObject> {
     const searchFilter = [
       ...(search || '')
         .split(' ')

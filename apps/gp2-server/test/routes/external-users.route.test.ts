@@ -19,7 +19,7 @@ describe('/external-users route', () => {
     next();
   };
   const app = appFactory({
-    externalUsersController: ExternalUsersControllerMock,
+    externalUserController: ExternalUsersControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });

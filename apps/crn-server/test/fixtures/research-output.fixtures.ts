@@ -254,20 +254,6 @@ export const getResearchOutputResponse = (): ResearchOutputResponse => {
   };
 };
 
-export const getRelatedResearchOutputResponse = (
-  isOwnRelatedResearchLink: boolean,
-): ResearchOutputResponse => {
-  const researchOutput = getResearchOutputResponse();
-  const relatedResearch = isOwnRelatedResearchLink
-    ? researchOutput.relatedResearch[0]
-    : researchOutput.relatedResearch[1];
-
-  return {
-    ...researchOutput,
-    ...relatedResearch,
-  };
-};
-
 export const getListResearchOutputResponse = ({
   published = true,
 } = {}): ListResearchOutputResponse => ({

@@ -4,7 +4,6 @@ import { EventBridgeEvent } from 'aws-lambda';
 import { ResearchOutputPayload } from '../../../src/handlers/event-bus';
 import { indexResearchOutputHandler } from '../../../src/handlers/research-output/index-handler';
 import {
-  getRelatedResearchOutputResponse,
   getResearchOutputEvent,
   getResearchOutputResponse,
 } from '../../fixtures/research-output.fixtures';
@@ -20,50 +19,123 @@ describe('Research Output index handler', () => {
 
   test('Should fetch the research-output and create a record in Algolia when research-output is created', async () => {
     const researchOutputResponse = getResearchOutputResponse();
-    const ownRelatedResearchOutput = getRelatedResearchOutputResponse(true);
-    const notOwnRelatedResearchOutput = getRelatedResearchOutputResponse(false);
-    researchOutputControllerMock.fetchById
-      .mockResolvedValueOnce(researchOutputResponse)
-      .mockResolvedValueOnce(ownRelatedResearchOutput)
-      .mockResolvedValueOnce(notOwnRelatedResearchOutput);
+    researchOutputResponse.relatedResearch = [];
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+      researchOutputResponse,
+    );
 
     await indexHandler(createEvent('ro-1234'));
 
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: researchOutputResponse,
+      type: 'research-output',
+    });
+  });
+
+  test('Should fetch the research-output and create two records in Algolia when research-output is created and own related RO is created', async () => {
+    const researchOutputResponse = getResearchOutputResponse();
+
+    const relatedResearchOutputResponse = researchOutputResponse;
+    relatedResearchOutputResponse.id = 'ro-1235';
+    relatedResearchOutputResponse.title = 'Related research output';
+
+    researchOutputResponse.relatedResearch = [
+      {
+        id: 'ro-1235',
+        title: 'Related research output',
+        type: 'Published',
+        isOwnRelatedResearchLink: true,
+        teams: [
+          {
+            id: 'team-1234',
+            displayName: 'Team 1',
+          },
+        ],
+        documentType: 'Grant Document',
+      },
+    ];
+
+    researchOutputControllerMock.fetchById
+      .mockResolvedValueOnce(researchOutputResponse)
+      .mockResolvedValueOnce(relatedResearchOutputResponse);
+
+    await indexHandler(createEvent('ro-1234'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
       data: researchOutputResponse,
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
-      data: ownRelatedResearchOutput,
+      data: relatedResearchOutputResponse,
+      type: 'research-output',
+    });
+  });
+
+  test('Should fetch the research-output and create three records in Algolia when research-output is created and own and foreign related ROs are created', async () => {
+    const researchOutputResponse = getResearchOutputResponse();
+
+    const ownRelatedResearchOutputResponse = researchOutputResponse;
+    ownRelatedResearchOutputResponse.id = 'ro-1235';
+    ownRelatedResearchOutputResponse.title = 'Own related research output';
+
+    const foreignRelatedResearchOutputResponse = researchOutputResponse;
+    foreignRelatedResearchOutputResponse.id = 'ro-1236';
+    foreignRelatedResearchOutputResponse.title =
+      'Foreign related research output';
+
+    researchOutputResponse.relatedResearch = [
+      {
+        id: 'ro-1235',
+        title: 'Own related research output',
+        type: 'Published',
+        isOwnRelatedResearchLink: true,
+        teams: [],
+        documentType: 'Grant Document',
+      },
+      {
+        id: 'ro-1236',
+        title: 'Foreign related research output',
+        type: 'Published',
+        isOwnRelatedResearchLink: false,
+        teams: [],
+        documentType: 'Grant Document',
+      },
+    ];
+
+    researchOutputControllerMock.fetchById
+      .mockResolvedValueOnce(researchOutputResponse)
+      .mockResolvedValueOnce(ownRelatedResearchOutputResponse)
+      .mockResolvedValueOnce(foreignRelatedResearchOutputResponse);
+
+    await indexHandler(createEvent('ro-1234'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(3);
+    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
+      data: researchOutputResponse,
+      type: 'research-output',
+    });
+    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
+      data: ownRelatedResearchOutputResponse,
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(3, {
-      data: notOwnRelatedResearchOutput,
+      data: foreignRelatedResearchOutputResponse,
       type: 'research-output',
     });
   });
 
   test('Should fetch the research-output and create a record in Algolia when research-output is updated', async () => {
     const researchOutputResponse = getResearchOutputResponse();
-    const ownRelatedResearchOutput = getRelatedResearchOutputResponse(true);
-    const notOwnRelatedResearchOutput = getRelatedResearchOutputResponse(false);
-    researchOutputControllerMock.fetchById
-      .mockResolvedValueOnce(researchOutputResponse)
-      .mockResolvedValueOnce(ownRelatedResearchOutput)
-      .mockResolvedValueOnce(notOwnRelatedResearchOutput);
+    researchOutputResponse.relatedResearch = [];
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+      researchOutputResponse,
+    );
 
     await indexHandler(updateEvent('ro-1234'));
 
-    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: researchOutputResponse,
-      type: 'research-output',
-    });
-    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
-      data: ownRelatedResearchOutput,
-      type: 'research-output',
-    });
-    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(3, {
-      data: notOwnRelatedResearchOutput,
       type: 'research-output',
     });
   });

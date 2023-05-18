@@ -22,6 +22,7 @@ import {
   getSharePresentationReminder,
   getPublishMaterialReminder,
   getUploadPresentationReminder,
+  getResearchOutputDraftReminder,
 } from '../fixtures/reminders.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
@@ -53,8 +54,11 @@ describe('Reminder Data Provider', () => {
         );
 
         expect(result).toEqual({
-          total: 1,
-          items: [getResearchOutputPublishedReminder()],
+          total: 2,
+          items: [
+            getResearchOutputPublishedReminder(),
+            getResearchOutputDraftReminder(),
+          ],
         });
       });
 

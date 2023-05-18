@@ -8,6 +8,19 @@ export const FETCH_REMINDER_DATA = gql`
     $eventFilter: String!
   ) {
     findUsersContent(id: $userId) {
+      referencingWorkingGroupsContents {
+        id
+        flatData {
+          complete
+          leaders {
+            inactiveSinceDate
+            role
+            user {
+              id
+            }
+          }
+        }
+      }
       flatData {
         role
         teams {
@@ -34,23 +47,22 @@ export const FETCH_REMINDER_DATA = gql`
         }
       }
     }
-    drafts: queryResearchOutputsContents(filter: $researchOutputDraftFilter) {
+    draftResearchOutputs: queryResearchOutputsContents(
+      filter: $researchOutputDraftFilter
+    ) {
       id
       created
       status
-      createdByUser {
-        id
-      }
-      referencesUsersContents {
-        id 
-        flatData {
-          firstName
-          lastName
-        }
-      }
       flatData {
         documentType
         title
+        createdBy {
+          id
+          flatData {
+            firstName
+            lastName
+          }
+        }
         teams {
           id
           flatData {

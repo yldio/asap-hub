@@ -22,6 +22,7 @@ const listStyle = css({
       span: {
         svg: {
           stroke: 'unset',
+          strokeWidth: 0,
         },
       },
     },

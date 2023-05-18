@@ -4,19 +4,11 @@ import {
 } from '@asap-hub/algolia';
 import { EventController, EventEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
-import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  algoliaApiKey,
-  algoliaAppId,
-  algoliaIndex,
-  appName,
-  baseUrl,
-} from '../../config';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Event from '../../controllers/events';
-import { EventSquidexDataProvider } from '../../data-providers/event.data-provider';
-import { getAuthToken } from '../../utils/auth';
+import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { EventPayload } from '../event-bus';
@@ -30,7 +22,7 @@ export const indexEventHandler =
     logger.debug(`Event ${event['detail-type']}`);
 
     try {
-      const crnEvent = await eventController.fetchById(event.detail.payload.id);
+      const crnEvent = await eventController.fetchById(event.detail.resourceId);
 
       logger.debug(`Fetched event ${crnEvent.id}`);
 
@@ -42,7 +34,7 @@ export const indexEventHandler =
       logger.debug(`Saved event  ${crnEvent.id}`);
     } catch (e) {
       if (isBoom(e) && e.output.statusCode === 404) {
-        await algoliaClient.remove(event.detail.payload.id);
+        await algoliaClient.remove(event.detail.resourceId);
         return;
       }
 
@@ -50,23 +42,11 @@ export const indexEventHandler =
       throw e;
     }
   };
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
-  appName,
-  baseUrl,
-});
-const eventDataProvider = new EventSquidexDataProvider(
-  eventRestClient,
-  squidexGraphqlClient,
-);
 
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexEventHandler(
-    new Event(eventDataProvider),
+    new Event(getEventDataProvider()),
     algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
   ),
 );

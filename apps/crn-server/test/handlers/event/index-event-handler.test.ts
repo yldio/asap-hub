@@ -1,8 +1,9 @@
 import Boom from '@hapi/boom';
 import { indexEventHandler } from '../../../src/handlers/event/index-event-handler';
 import {
-  getEventEvent,
+  getEventSquidexEvent,
   getEventResponse,
+  getEventContentfulEvent,
 } from '../../fixtures/events.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event-controller.mock';
@@ -15,14 +16,29 @@ describe('Event index handler', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  test('Should fetch the event and create a record in Algolia when the event is created', async () => {
-    const event = createEvent();
+  test('Should fetch the event and create a record in Algolia when the event is created in Squidex', async () => {
+    const event = createEventSquidex();
     const eventResponse = getEventResponse();
     eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
 
     await indexHandler(event);
     expect(eventControllerMock.fetchById).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
+    );
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: eventResponse,
+      type: 'event',
+    });
+  });
+
+  test('Should fetch the external author and create a record in Algolia when the external author is created in Contentful', async () => {
+    const event = createEventContentful();
+    const eventResponse = getEventResponse();
+    eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
+
+    await indexHandler(event);
+    expect(eventControllerMock.fetchById).toHaveBeenCalledWith(
+      event.detail.resourceId,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: eventResponse,
@@ -50,26 +66,40 @@ describe('Event index handler', () => {
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
     );
   });
 
-  test('Should fetch the event and remove the record in Algolia when event is deleted', async () => {
-    const event = deleteEvent();
+  test('Should fetch the event and remove the record in Algolia when event is deleted in Squidex', async () => {
+    const event = deleteEventSquidex();
 
     eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
+    );
+  });
+
+  test('Should fetch the event and remove the record in Algolia when event is deleted in Contentful', async () => {
+    const event = deleteEventContentful();
+
+    eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      event.detail.resourceId,
     );
   });
 
   test('Should throw an error and do not trigger algolia when the event request fails with another error code', async () => {
     eventControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
-    await expect(indexHandler(createEvent())).rejects.toThrow(Boom.badData());
+    await expect(indexHandler(createEventSquidex())).rejects.toThrow(
+      Boom.badData(),
+    );
     expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
   });
 
@@ -89,7 +119,9 @@ describe('Event index handler', () => {
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(deleteEvent())).rejects.toThrow(algoliaError);
+    await expect(indexHandler(deleteEventSquidex())).rejects.toThrow(
+      algoliaError,
+    );
   });
 
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
@@ -104,7 +136,7 @@ describe('Event index handler', () => {
         ...eventResponse.data,
       });
 
-      await indexHandler(createEvent(eventId));
+      await indexHandler(createEventSquidex(eventId));
       await indexHandler(updateEvent(eventId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
@@ -122,7 +154,7 @@ describe('Event index handler', () => {
       eventControllerMock.fetchById.mockResolvedValue(eventResponse.data);
 
       await indexHandler(updateEvent(eventId));
-      await indexHandler(createEvent(eventId));
+      await indexHandler(createEventSquidex(eventId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
@@ -131,7 +163,7 @@ describe('Event index handler', () => {
 
     test('receives the events created and unpublished in correct order', async () => {
       const eventId = 'event-1234';
-      const createEv = createEvent(eventId);
+      const createEv = createEventSquidex(eventId);
       const unpublishedEv = unpublishedEvent(eventId);
       const algoliaError = new Error('ERROR');
 
@@ -145,13 +177,13 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        unpublishedEv.detail.payload.id,
+        unpublishedEv.detail.resourceId,
       );
     });
 
     test('receives the events created and unpublished in reverse order', async () => {
       const eventId = 'event-1234';
-      const createEv = createEvent(eventId);
+      const createEv = createEventSquidex(eventId);
       const unpublishedEv = unpublishedEvent(eventId);
       const algoliaError = new Error('ERROR');
 
@@ -165,14 +197,14 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        unpublishedEv.detail.payload.id,
+        unpublishedEv.detail.resourceId,
       );
     });
 
     test('receives the events created and deleted in correct order', async () => {
       const eventId = 'event-1234';
-      const createEv = createEvent(eventId);
-      const deleteEv = deleteEvent(eventId);
+      const createEv = createEventSquidex(eventId);
+      const deleteEv = deleteEventSquidex(eventId);
       const algoliaError = new Error('ERROR');
 
       eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -185,14 +217,14 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        deleteEv.detail.payload.id,
+        deleteEv.detail.resourceId,
       );
     });
 
     test('receives the events created and deleted in reverse order', async () => {
       const eventId = 'event-1234';
-      const createEv = createEvent(eventId);
-      const deleteEv = deleteEvent(eventId);
+      const createEv = createEventSquidex(eventId);
+      const deleteEv = deleteEventSquidex(eventId);
       const algoliaError = new Error('ERROR');
 
       eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -205,14 +237,14 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        deleteEv.detail.payload.id,
+        deleteEv.detail.resourceId,
       );
     });
 
     test('receives the events updated and deleted in correct order', async () => {
       const eventId = 'event-1234';
       const updateEv = updateEvent(eventId);
-      const deleteEv = deleteEvent(eventId);
+      const deleteEv = deleteEventSquidex(eventId);
       const algoliaError = new Error('ERROR');
 
       eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -225,14 +257,14 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        deleteEv.detail.payload.id,
+        deleteEv.detail.resourceId,
       );
     });
 
     test('receives the events updated and deleted in reverse order', async () => {
       const eventId = 'event-1234';
       const updateEv = updateEvent(eventId);
-      const deleteEv = deleteEvent(eventId);
+      const deleteEv = deleteEventSquidex(eventId);
       const algoliaError = new Error('ERROR');
 
       eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -245,7 +277,7 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        deleteEv.detail.payload.id,
+        deleteEv.detail.resourceId,
       );
     });
     test('receives the events updated and unpublished in correct order', async () => {
@@ -264,7 +296,7 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        unpublishedEv.detail.payload.id,
+        unpublishedEv.detail.resourceId,
       );
     });
 
@@ -284,20 +316,26 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        unpublishedEv.detail.payload.id,
+        unpublishedEv.detail.resourceId,
       );
     });
   });
 });
 
 const unpublishedEvent = (id: string = 'event-1234') =>
-  getEventEvent(id, 'EventsUnpublished');
+  getEventSquidexEvent(id, 'EventsUnpublished');
 
-const deleteEvent = (id: string = 'event-1234') =>
-  getEventEvent(id, 'EventsDeleted');
+const deleteEventSquidex = (id: string = 'event-1234') =>
+  getEventSquidexEvent(id, 'EventsDeleted');
 
-const createEvent = (id: string = 'event-1234') =>
-  getEventEvent(id, 'EventsPublished');
+const deleteEventContentful = (id: string = 'event-1234') =>
+  getEventContentfulEvent(id, 'EventsDeleted');
+
+const createEventSquidex = (id: string = 'event-1234') =>
+  getEventSquidexEvent(id, 'EventsPublished');
+
+const createEventContentful = (id: string = 'event-1234') =>
+  getEventContentfulEvent(id, 'EventsPublished');
 
 const updateEvent = (id: string = 'event-1234') =>
-  getEventEvent(id, 'EventsUpdated');
+  getEventSquidexEvent(id, 'EventsUpdated');

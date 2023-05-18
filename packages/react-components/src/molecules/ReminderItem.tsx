@@ -34,21 +34,33 @@ const iconMap: Record<ReminderResponse['entity'], React.ReactElement> = {
   Event: <EventIcon />,
 };
 
+//TODO: not something bad like this
 type ReminderProps = Pick<ReminderResponse, 'description' | 'href'> & {
   entity?: ReminderResponse['entity'];
+  publisherName?: ReminderResponse['publisherName'];
+  associationName?: ReminderResponse['associationName'];
+  entityTitle?: ReminderResponse['entityTitle'];
 };
 
 const ReminderItem: React.FC<ReminderProps> = ({
   entity,
   description,
   href,
+  publisherName,
+  associationName,
+  entityTitle,
 }) => {
   const content = (
     <>
       <span css={[iconStyles]}>
         {entity ? iconMap[entity] : infoCircleIcon}
       </span>
-      <span>{description}</span>
+      <span>
+        {publisherName && <b>{publisherName}</b>}
+        {description}
+        {associationName && <b>{associationName}</b>}
+        {entityTitle}
+      </span>
     </>
   );
 

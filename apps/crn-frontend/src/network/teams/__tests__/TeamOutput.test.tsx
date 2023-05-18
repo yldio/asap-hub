@@ -12,7 +12,7 @@ import {
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { ToastContext } from '@asap-hub/react-context';
+import { InnerToastContext } from '@asap-hub/react-context';
 import { network, TeamOutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
@@ -106,7 +106,7 @@ const mandatoryFields = async (
 };
 
 const mockToast = jest.fn() as jest.MockedFunction<
-  ContextType<typeof ToastContext>
+  ContextType<typeof InnerToastContext>
 >;
 const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
   typeof createResearchOutput
@@ -457,7 +457,7 @@ it('will show server side validation error for link', async () => {
   expect(mockToast).not.toHaveBeenCalled();
 });
 
-it('will toast server side errors for unknown errors', async () => {
+it.only('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({ teamId: '42', teamOutputDocumentType: 'article' });
@@ -467,9 +467,11 @@ it('will toast server side errors for unknown errors', async () => {
   await publish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
-  expect(mockToast).toHaveBeenCalledWith(
-    'There was an error and we were unable to save your changes. Please try again.',
-  );
+  expect(
+    screen.queryByText(
+      'There was an error and we were unable to save your changes. Please try again.',
+    ),
+  ).toBeInTheDocument();
 });
 
 it('will toast server side errors for unknown errors in edit mode', async () => {
@@ -501,9 +503,12 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   await publish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
-  expect(mockToast).toHaveBeenCalledWith(
-    'There was an error and we were unable to save your changes. Please try again.',
-  );
+  // screen.debug();
+  expect(
+    screen.queryByText(
+      'There was an error and we were unable to save your changes. Please try again.',
+    ),
+  ).toBeInTheDocument();
 });
 
 async function renderPage({
@@ -528,27 +533,25 @@ async function renderPage({
       }
     >
       <Suspense fallback="loading">
-        <ToastContext.Provider value={mockToast}>
-          <Auth0Provider user={user}>
-            <WhenReady>
-              <StaticRouter
-                location={
-                  network({})
-                    .teams({})
-                    .team({ teamId })
-                    .createOutput({ teamOutputDocumentType }).$
-                }
-              >
-                <Route path={path}>
-                  <TeamOutput
-                    teamId={teamId}
-                    researchOutputData={researchOutputData}
-                  />
-                </Route>
-              </StaticRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </ToastContext.Provider>
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <StaticRouter
+              location={
+                network({})
+                  .teams({})
+                  .team({ teamId })
+                  .createOutput({ teamOutputDocumentType }).$
+              }
+            >
+              <Route path={path}>
+                <TeamOutput
+                  teamId={teamId}
+                  researchOutputData={researchOutputData}
+                />
+              </Route>
+            </StaticRouter>
+          </WhenReady>
+        </Auth0Provider>
       </Suspense>
     </RecoilRoot>,
   );

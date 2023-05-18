@@ -61,6 +61,7 @@ const Form = <T extends void | Record<string, unknown>>({
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       if (formRef.current!.reportValidity() && parentValidation) {
         setStatus('isSaving');
+        console.log(2);
         try {
           const result = await onSaveFunction();
           if (formRef.current) {
@@ -68,6 +69,7 @@ const Form = <T extends void | Record<string, unknown>>({
           }
           return result;
         } catch {
+          console.log(formRef, serverErrors);
           if (formRef.current) {
             setStatus('hasError');
             innerToast(
@@ -76,6 +78,7 @@ const Form = <T extends void | Record<string, unknown>>({
           }
         }
       } else {
+        console.log(3);
         innerToast(
           'There are some errors in the form. Please correct the fields below.',
         );

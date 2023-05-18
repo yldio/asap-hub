@@ -11,9 +11,8 @@ type TestProps = {
 };
 
 const OneToast: React.FC<TestProps> = ({ inner = false }) => {
-  const toast = inner
-    ? useContext(InnerToastContext)
-    : useContext(ToastContext);
+  const toast = useContext(inner ? InnerToastContext : ToastContext);
+
   useEffect(() => {
     toast('error');
     // eslint-disable-next-line react-hooks/exhaustive-deps

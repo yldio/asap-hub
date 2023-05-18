@@ -1,4 +1,4 @@
-import { ToastContext } from '@asap-hub/react-context';
+import { ToastContext, InnerToastContext } from '@asap-hub/react-context';
 import { act, render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
@@ -48,13 +48,15 @@ it('initially does not prompt when trying to leave', () => {
 });
 it('prompts when trying to leave after making edits', () => {
   const { getByText } = render(
-    <ToastContext.Provider value={jest.fn()}>
-      <Router history={history}>
-        <Form {...props} dirty>
-          {() => <Link to={'/another-url'}>Navigate away</Link>}
-        </Form>
-      </Router>
-    </ToastContext.Provider>,
+    <InnerToastContext.Provider value={jest.fn()}>
+      <ToastContext.Provider value={jest.fn()}>
+        <Router history={history}>
+          <Form {...props} dirty>
+            {() => <Link to={'/another-url'}>Navigate away</Link>}
+          </Form>
+        </Router>
+      </ToastContext.Provider>
+    </InnerToastContext.Provider>,
   );
 
   userEvent.click(getByText(/navigate/i));
@@ -189,9 +191,11 @@ describe('when saving', () => {
     let resolveSave!: () => void;
     let rejectSave!: (error: Error) => void;
     let mockToast: () => void;
+    let innerMockToast: () => void;
 
     beforeEach(() => {
       mockToast = jest.fn();
+      innerMockToast = jest.fn();
       handleSave = jest.fn().mockReturnValue(
         new Promise<void>((resolve, reject) => {
           resolveSave = resolve;
@@ -200,24 +204,26 @@ describe('when saving', () => {
       );
       history = createMemoryHistory({ getUserConfirmation });
       result = render(
-        <ToastContext.Provider value={mockToast}>
-          <Router history={history}>
-            <Form {...props} dirty>
-              {({ getWrappedOnSave, isSaving }) => (
-                <>
-                  <Link to={'/another-url'}>Navigate away</Link>
-                  <Button
-                    primary
-                    enabled={!isSaving}
-                    onClick={getWrappedOnSave(handleSave)}
-                  >
-                    save
-                  </Button>
-                </>
-              )}
-            </Form>
-          </Router>
-        </ToastContext.Provider>,
+        <InnerToastContext.Provider value={innerMockToast}>
+          <ToastContext.Provider value={mockToast}>
+            <Router history={history}>
+              <Form {...props} dirty>
+                {({ getWrappedOnSave, isSaving }) => (
+                  <>
+                    <Link to={'/another-url'}>Navigate away</Link>
+                    <Button
+                      primary
+                      enabled={!isSaving}
+                      onClick={getWrappedOnSave(handleSave)}
+                    >
+                      save
+                    </Button>
+                  </>
+                )}
+              </Form>
+            </Router>
+          </ToastContext.Provider>
+        </InnerToastContext.Provider>,
       );
     });
 

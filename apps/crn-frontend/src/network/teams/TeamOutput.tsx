@@ -16,7 +16,7 @@ import {
   TeamOutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import researchSuggestions from './research-suggestions';
 import { useTeamById } from './state';
 import {
@@ -71,6 +71,10 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const researchTags = useResearchTags();
 
   const published = researchOutputData ? !!researchOutputData.published : false;
+
+  useEffect(() => {
+    console.log(toastNode);
+  }, [toastNode]);
 
   const permissions = useResearchOutputPermissions(
     'teams',

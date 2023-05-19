@@ -18,7 +18,6 @@ import {
   useRouteParams,
 } from '@asap-hub/routing';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
-import researchSuggestions from './research-suggestions';
 import { useTeamById } from './state';
 import {
   handleError,
@@ -89,6 +88,10 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     researchOutputData?.teams.map(({ id }) => id) ?? [teamId],
     published,
   );
+
+  const researchSuggestions = researchTags
+    .filter((tag) => tag.category === 'Keyword')
+    .map((keyword) => keyword.name);
 
   if (permissions.canEditResearchOutput && team) {
     return (

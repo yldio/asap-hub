@@ -121,7 +121,7 @@ it('pre populates the form with provided backend response', async () => {
     link: 'https://test.com',
     descriptionMD: 'test description',
     type: 'Genetic Data - DNA' as ResearchOutputType,
-    tags: ['testAddedTag'],
+    keywords: ['testAddedTag'],
     labs: [
       {
         id: 'lab1',
@@ -148,7 +148,7 @@ it('pre populates the form with provided backend response', async () => {
     screen.getByText(researchOutputData.authors[0]!.displayName),
   ).toBeVisible();
 
-  expect(screen.getByText(researchOutputData.tags[0]!)).toBeVisible();
+  expect(screen.getByText(researchOutputData.keywords[0]!)).toBeVisible();
   expect(screen.getByText(researchOutputData.labs[0]!.name)).toBeVisible();
 
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
@@ -261,7 +261,6 @@ describe('on submit', () => {
   const expectedRequest: ResearchOutputPostRequest = {
     documentType: 'Article',
     doi: '10.1234',
-    tags: [],
     link: 'http://example.com',
     title: 'example title',
     description: '',

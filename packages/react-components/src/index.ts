@@ -92,6 +92,7 @@ export {
   UserAvatarList,
   UserMenuButton,
   UserProfilePersonalText,
+  UserNavigationAssociationSection,
   UsersList,
   UtilityBar,
   WorkingGroupsList,

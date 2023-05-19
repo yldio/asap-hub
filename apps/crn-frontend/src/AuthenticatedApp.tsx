@@ -79,6 +79,22 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
             name: displayName,
             href: network({}).teams({}).team({ teamId: id }).$,
           }))}
+          workingGroups={user.workingGroups.map(
+            ({ id, name = '', active }) => ({
+              name,
+              active,
+              href: network({})
+                .workingGroups({})
+                .workingGroup({ workingGroupId: id }).$,
+            }),
+          )}
+          interestGroups={user.interestGroups.map(
+            ({ id, name = '', active }) => ({
+              name,
+              active,
+              href: network({}).groups({}).group({ groupId: id }).$,
+            }),
+          )}
           aboutHref="https://www.parkinsonsroadmap.org/"
         >
           <CheckOnboarded>

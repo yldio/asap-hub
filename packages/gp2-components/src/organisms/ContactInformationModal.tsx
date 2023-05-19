@@ -26,7 +26,7 @@ const optional = '(optional)';
 
 type ContactInformationModalProps = Pick<
   gp2.UserResponse,
-  'email' | 'secondaryEmail' | 'telephone'
+  'email' | 'alternativeEmail' | 'telephone'
 > &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
@@ -37,12 +37,12 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
   onSave,
   backHref,
   email,
-  secondaryEmail,
+  alternativeEmail,
   telephone,
   countryCodeSuggestions,
 }) => {
-  const [newSecondaryEmail, setNewSecondaryEmail] = useState(
-    secondaryEmail || '',
+  const [newAlternativeEmail, setNewAlternativeEmail] = useState(
+    alternativeEmail || '',
   );
   const [newCountryCode, setNewCountryCode] = useState(
     telephone?.countryCode || '',
@@ -50,7 +50,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
   const [newNumber, setNewNumber] = useState(telephone?.number || '');
 
   const checkDirty = () =>
-    newSecondaryEmail !== (secondaryEmail || '') ||
+    newAlternativeEmail !== (alternativeEmail || '') ||
     newCountryCode !== (telephone?.countryCode || '') ||
     newNumber !== (telephone?.number || '');
 
@@ -60,7 +60,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
       description="Provide alternative contact details."
       onSave={() =>
         onSave({
-          secondaryEmail: newSecondaryEmail || undefined,
+          alternativeEmail: newAlternativeEmail || undefined,
           telephone: {
             countryCode: newCountryCode || undefined,
             number: newNumber || undefined,
@@ -84,8 +84,8 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
             subtitle={optional}
             description="An alternative way for members to contact you. This will not affect the way that you login."
             enabled={!isSaving}
-            value={newSecondaryEmail}
-            onChange={setNewSecondaryEmail}
+            value={newAlternativeEmail}
+            onChange={setNewAlternativeEmail}
             type={'email'}
             pattern={emailExpression}
             getValidationMessage={() => 'Please enter a valid email address'}

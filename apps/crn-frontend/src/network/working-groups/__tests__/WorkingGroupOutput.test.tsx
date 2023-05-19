@@ -230,7 +230,6 @@ it('can submit a form when form data is valid', async () => {
     {
       doi,
       documentType: 'Article',
-      tags: [],
       sharingStatus: 'Network Only',
       teams: ['t0'],
       link,
@@ -307,7 +306,6 @@ it('can save draft when form data is valid', async () => {
     {
       doi,
       documentType: 'Article',
-      tags: [],
       sharingStatus: 'Network Only',
       teams: ['t0'],
       link,

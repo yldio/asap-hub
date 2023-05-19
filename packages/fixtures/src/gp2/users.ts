@@ -5,7 +5,7 @@ export const mockedUser: gp2.UserResponse = {
   createdDate: '2020-09-23T20:45:22.000Z',
   displayName: 'Tony Stark',
   email: 'T@ark.io',
-  secondaryEmail: 'tony.stark@avengers.com',
+  alternativeEmail: 'tony.stark@avengers.com',
   firstName: 'Tony',
   lastName: 'Stark',
   region: 'Europe',

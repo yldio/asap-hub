@@ -56,19 +56,17 @@ import WorkingGroupNetwork, {
 import WorkingGroups, {
   WorkingGroupController,
 } from './controllers/working-group.controller';
-import {
-  AssetDataProvider,
-  AssetSquidexDataProvider,
-} from './data-providers/asset.data-provider';
+import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
+import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
+import { ContributingCohortContentfulDataProvider } from './data-providers/contentful/contributing-cohort.data-provider';
+import { ExternalUserContentfulDataProvider } from './data-providers/contentful/external-user.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
+import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
 import { ContributingCohortSquidexDataProvider } from './data-providers/contributing-cohort.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
-import {
-  ExternalUserDataProvider,
-  ExternalUserSquidexDataProvider,
-} from './data-providers/external-users.data-provider';
+import { ExternalUserSquidexDataProvider } from './data-providers/external-user.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import {
   OutputDataProvider,
@@ -80,14 +78,14 @@ import {
   ProjectSquidexDataProvider,
 } from './data-providers/project.data-provider';
 import {
+  AssetDataProvider,
   ContributingCohortDataProvider,
   NewsDataProvider,
   PageDataProvider,
-} from './data-providers/types';
-import {
   UserDataProvider,
-  UserSquidexDataProvider,
-} from './data-providers/user.data-provider';
+} from './data-providers/types';
+import { ExternalUserDataProvider } from './data-providers/types/external-user.data-provider.type';
+import { UserSquidexDataProvider } from './data-providers/user.data-provider';
 import {
   WorkingGroupNetworkDataProvider,
   WorkingGroupNetworkSquidexDataProvider,
@@ -96,6 +94,7 @@ import {
   WorkingGroupDataProvider,
   WorkingGroupSquidexDataProvider,
 } from './data-providers/working-group.data-provider';
+import { getContentfulRestClientFactory } from './dependencies/clients.dependency';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { eventRouteFactory } from './routes/event.route';
@@ -200,16 +199,32 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<gp2.UserResponse>();
 
   // Data Providers
-  const assetDataProvider =
-    libs.assetDataProvider || new AssetSquidexDataProvider(userRestClient);
-  const contributingCohortDataProvider =
-    libs.contributingCohortDataProvider ||
+  const assetSquidexDataProvider =
+    libs.assetSquidexDataProvider ||
+    new AssetSquidexDataProvider(userRestClient);
+  const assetContentfulDataProvider =
+    libs.assetContentfulDataProvider ||
+    new AssetContentfulDataProvider(getContentfulRestClientFactory);
+  const contributingCohortSquidexDataProvider =
+    libs.contributingCohortSquidexDataProvider ||
     new ContributingCohortSquidexDataProvider(
       squidexGraphqlClient,
       contributingCohortRestClient,
     );
-  const userDataProvider =
-    libs.userDataProvider ||
+  const contributingCohortContentfulDataProvider =
+    libs.contributingCohortContentfulDataProvider ||
+    new ContributingCohortContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+  const userContentfulDataProvider =
+    libs.userContentfulDataProvider ||
+    new UserContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+  const userSquidexDataProvider =
+    libs.userSquidexDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
   const newsSquidexDataProvider =
     libs.newsSquidexDataProvider ||
@@ -239,24 +254,49 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.outputDataProvider ||
     new OutputSquidexDataProvider(squidexGraphqlClient, outputRestClient);
 
-  const externalUserDataProvider =
-    libs.externalUsersDataProvider ||
+  const externalUserSquidexDataProvider =
+    libs.externalUserSquidexDataProvider ||
     new ExternalUserSquidexDataProvider(
       squidexGraphqlClient,
       externalUserRestClient,
+    );
+  const externalUserContentfulDataProvider =
+    libs.externalUserContentfulDataProvider ||
+    new ExternalUserContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
     );
   const pageSquidexDataProvider =
     libs.pageSquidexDataProvider || new PageSquidexDataProvider(pageRestClient);
   const pageContentfulDataProvider =
     libs.pageContentfulDataProvider ||
     new PageContentfulDataProvider(contentfulGraphQLClient);
-  const pageDataProvider = isContentfulEnabled
-    ? pageContentfulDataProvider
-    : pageSquidexDataProvider;
 
-  const newsDataProvider = isContentfulEnabled
-    ? newsContentfulDataProvider
-    : newsSquidexDataProvider;
+  const assetDataProvider =
+    libs.assetDataProvider || isContentfulEnabled
+      ? assetContentfulDataProvider
+      : assetSquidexDataProvider;
+  const pageDataProvider =
+    libs.pageDataProvider || isContentfulEnabled
+      ? pageContentfulDataProvider
+      : pageSquidexDataProvider;
+
+  const newsDataProvider =
+    libs.newsDataProvider || isContentfulEnabled
+      ? newsContentfulDataProvider
+      : newsSquidexDataProvider;
+  const userDataProvider =
+    libs.userDataProvider || isContentfulEnabled
+      ? userContentfulDataProvider
+      : userSquidexDataProvider;
+  const contributingCohortDataProvider =
+    libs.contributingCohortDataProvider || isContentfulEnabled
+      ? contributingCohortContentfulDataProvider
+      : contributingCohortSquidexDataProvider;
+  const externalUserDataProvider =
+    libs.externalUserDataProvider || isContentfulEnabled
+      ? externalUserContentfulDataProvider
+      : externalUserSquidexDataProvider;
   // Controllers
 
   const workingGroupController =
@@ -269,8 +309,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsController = libs.newsController || new News(newsDataProvider);
   const pageController = libs.pageController || new Pages(pageDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
-  const externalUsersController =
-    libs.externalUsersController || new ExternalUsers(externalUserDataProvider);
+  const externalUserController =
+    libs.externalUserController || new ExternalUsers(externalUserDataProvider);
   const calendarController =
     libs.calendarController || new Calendars(calendarDataProvider);
   const outputController =
@@ -313,7 +353,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const projectRoutes = projectRouteFactory(projectController);
   const eventRoutes = eventRouteFactory(eventController);
-  const externalUsersRoutes = externalUserRouteFactory(externalUsersController);
+  const externalUsersRoutes = externalUserRouteFactory(externalUserController);
   const calendarRoutes = calendarRouteFactory(calendarController);
   const outputRoutes = outputRouteFactory(outputController);
 
@@ -376,22 +416,30 @@ export const appFactory = (libs: Libs = {}): Express => {
 
 export type Libs = {
   assetDataProvider?: AssetDataProvider;
+  assetSquidexDataProvider?: AssetDataProvider;
+  assetContentfulDataProvider?: AssetDataProvider;
   authHandler?: AuthHandler;
   calendarController?: gp2.CalendarController;
   calendarDataProvider?: gp2.CalendarDataProvider;
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
+  contributingCohortSquidexDataProvider?: ContributingCohortDataProvider;
+  contributingCohortContentfulDataProvider?: ContributingCohortDataProvider;
   eventController?: gp2.EventController;
   eventDataProvider?: gp2.EventDataProvider;
-  externalUsersController?: ExternalUsersController;
-  externalUsersDataProvider?: ExternalUserDataProvider;
+  externalUserController?: ExternalUsersController;
+  externalUserDataProvider?: ExternalUserDataProvider;
+  externalUserSquidexDataProvider?: ExternalUserDataProvider;
+  externalUserContentfulDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
   newsContentfulDataProvider?: NewsDataProvider;
   newsController?: NewsController;
   newsSquidexDataProvider?: NewsDataProvider;
+  newsDataProvider?: NewsDataProvider;
   outputController?: OutputController;
   outputDataProvider?: OutputDataProvider;
   pageContentfulDataProvider?: PageDataProvider;
+  pageDataProvider?: PageDataProvider;
   pageController?: PageController;
   pageSquidexDataProvider?: PageDataProvider;
   projectController?: ProjectController;
@@ -401,11 +449,12 @@ export type Libs = {
   sentryTransactionIdHandler?: RequestHandler;
   userController?: UserController;
   userDataProvider?: UserDataProvider;
+  userContentfulDataProvider?: UserDataProvider;
+  userSquidexDataProvider?: UserDataProvider;
   workingGroupController?: WorkingGroupController;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkController?: WorkingGroupNetworkController;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
-  // sentryTransactionIdHandler?: RequestHandler;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
 };

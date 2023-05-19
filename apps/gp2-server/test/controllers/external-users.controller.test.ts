@@ -1,4 +1,4 @@
-import { gp2 } from '@asap-hub/model';
+import { FetchOptions } from '@asap-hub/model';
 import ExternalUsers from '../../src/controllers/external-users.controller';
 import {
   getExternalUserDataObject,
@@ -41,7 +41,7 @@ describe('External Users controller', () => {
         items: [],
       });
 
-      const params: gp2.FetchUsersOptions = {
+      const params: FetchOptions = {
         take: 15,
         skip: 5,
         search: 'something',

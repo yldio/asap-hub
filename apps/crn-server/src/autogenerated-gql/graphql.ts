@@ -8837,7 +8837,6 @@ export type ResearchOutputContentFragment = Pick<
     | 'labCatalogNumber'
     | 'accession'
     | 'rrid'
-    | 'tags'
     | 'lastUpdatedPartial'
     | 'usageNotes'
     | 'sharingStatus'
@@ -9004,6 +9003,24 @@ export type ResearchOutputContentFragment = Pick<
     subtype: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
     keywords: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
   };
+  referencingResearchOutputsContents: Maybe<
+    Array<
+      Pick<ResearchOutputs, 'id'> & {
+        flatData: Pick<
+          ResearchOutputsFlatDataDto,
+          'title' | 'type' | 'documentType'
+        > & {
+          teams: Maybe<
+            Array<
+              Pick<Teams, 'id'> & {
+                flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+              }
+            >
+          >;
+        };
+      }
+    >
+  >;
 };
 
 export type FetchResearchOutputQueryVariables = Exact<{
@@ -9031,7 +9048,6 @@ export type FetchResearchOutputQuery = {
         | 'labCatalogNumber'
         | 'accession'
         | 'rrid'
-        | 'tags'
         | 'lastUpdatedPartial'
         | 'usageNotes'
         | 'sharingStatus'
@@ -9206,6 +9222,24 @@ export type FetchResearchOutputQuery = {
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
         >;
       };
+      referencingResearchOutputsContents: Maybe<
+        Array<
+          Pick<ResearchOutputs, 'id'> & {
+            flatData: Pick<
+              ResearchOutputsFlatDataDto,
+              'title' | 'type' | 'documentType'
+            > & {
+              teams: Maybe<
+                Array<
+                  Pick<Teams, 'id'> & {
+                    flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                  }
+                >
+              >;
+            };
+          }
+        >
+      >;
     }
   >;
 };
@@ -9240,7 +9274,6 @@ export type FetchResearchOutputsQuery = {
               | 'labCatalogNumber'
               | 'accession'
               | 'rrid'
-              | 'tags'
               | 'lastUpdatedPartial'
               | 'usageNotes'
               | 'sharingStatus'
@@ -9423,6 +9456,24 @@ export type FetchResearchOutputsQuery = {
                 Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
               >;
             };
+            referencingResearchOutputsContents: Maybe<
+              Array<
+                Pick<ResearchOutputs, 'id'> & {
+                  flatData: Pick<
+                    ResearchOutputsFlatDataDto,
+                    'title' | 'type' | 'documentType'
+                  > & {
+                    teams: Maybe<
+                      Array<
+                        Pick<Teams, 'id'> & {
+                          flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                        }
+                      >
+                    >;
+                  };
+                }
+              >
+            >;
           }
         >
       >;
@@ -9855,6 +9906,19 @@ export type UsersContentFragment = Pick<
       }
     >
   >;
+  referencesTeamsContents: Maybe<
+    Array<
+      Pick<Teams, 'id'> & {
+        referencingGroupsContents: Maybe<
+          Array<
+            Pick<Groups, 'id'> & {
+              flatData: Pick<GroupsFlatDataDto, 'name' | 'active'>;
+            }
+          >
+        >;
+      }
+    >
+  >;
   referencingGroupsContents: Maybe<
     Array<
       Pick<Groups, 'id'> & {
@@ -9970,6 +10034,19 @@ export type FetchUserQuery = {
                 >
               >;
             };
+          }
+        >
+      >;
+      referencesTeamsContents: Maybe<
+        Array<
+          Pick<Teams, 'id'> & {
+            referencingGroupsContents: Maybe<
+              Array<
+                Pick<Groups, 'id'> & {
+                  flatData: Pick<GroupsFlatDataDto, 'name' | 'active'>;
+                }
+              >
+            >;
           }
         >
       >;
@@ -10099,6 +10176,19 @@ export type FetchUsersQuery = {
                       >
                     >;
                   };
+                }
+              >
+            >;
+            referencesTeamsContents: Maybe<
+              Array<
+                Pick<Teams, 'id'> & {
+                  referencingGroupsContents: Maybe<
+                    Array<
+                      Pick<Groups, 'id'> & {
+                        flatData: Pick<GroupsFlatDataDto, 'name' | 'active'>;
+                      }
+                    >
+                  >;
                 }
               >
             >;
@@ -12211,7 +12301,6 @@ export const ResearchOutputContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'accession' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'rrid' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'lastUpdatedPartial' },
@@ -13023,6 +13112,60 @@ export const ResearchOutputContentFragmentDoc = {
               ],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingResearchOutputsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'documentType' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teams' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'displayName',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -13197,6 +13340,43 @@ export const UsersContentFragmentDoc = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencesTeamsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'referencingGroupsContents' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'active' },
                             },
                           ],
                         },

@@ -12,9 +12,11 @@ import nock, { DataMatcherMap } from 'nock';
 import { appName, baseUrl } from '../../src/config';
 import {
   GraphqlUserTeam,
+  parseGraphQLInterestGroup,
   parseGraphQLUserTeamConnections,
   parseGraphQLWorkingGroup,
   parseUserToResponse,
+  removeDuplicates,
   UserSquidexDataProvider,
 } from '../../src/data-providers/users.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
@@ -351,6 +353,84 @@ describe('User data provider', () => {
         { id: 'wg-1', name: 'WG ONE', role: 'Chair', active: true },
         { id: 'wg-2', name: 'WG TWO', role: 'Member', active: true },
         { id: 'wg-3', name: 'WG THREE', role: 'Member', active: false },
+      ];
+      const result = await userDataProvider.fetchById('user-1');
+      expect(result).toEqual(expectedResponse);
+    });
+    test('Should provide connected interest groups', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.alumniSinceDate = null;
+      mockResponse.findUsersContent!.id = 'user-id-1';
+      mockResponse.findUsersContent!.referencingGroupsContents = [
+        {
+          id: 'ig-1',
+          flatData: {
+            name: 'IG ONE',
+            active: true,
+          },
+        },
+        {
+          id: 'ig-2',
+          flatData: {
+            name: 'IG TWO',
+            active: false,
+          },
+        },
+        {
+          id: 'ig-3',
+          flatData: {
+            name: 'IG THREE',
+            active: true,
+          },
+        },
+      ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const expectedResponse = getUserDataObject();
+      expectedResponse.alumniSinceDate = undefined;
+      expectedResponse._tags = ['CRN Member'];
+
+      expectedResponse.interestGroups = [
+        { id: 'ig-1', name: 'IG ONE', active: true },
+        { id: 'ig-2', name: 'IG TWO', active: false },
+        { id: 'ig-3', name: 'IG THREE', active: true },
+      ];
+      const result = await userDataProvider.fetchById('user-1');
+      expect(result).toEqual(expectedResponse);
+    });
+    test('Should provide connected teams interest groups', async () => {
+      const mockResponse = getSquidexUserGraphqlResponse();
+      mockResponse.findUsersContent!.flatData.alumniSinceDate = null;
+      mockResponse.findUsersContent!.id = 'user-id-1';
+      mockResponse.findUsersContent!.referencesTeamsContents = [
+        {
+          id: 'team-1',
+          referencingGroupsContents: [
+            {
+              id: 'ig-1',
+              flatData: {
+                name: 'IG ONE',
+                active: true,
+              },
+            },
+            {
+              id: 'ig-2',
+              flatData: {
+                name: 'IG TWO',
+                active: false,
+              },
+            },
+          ],
+        },
+      ];
+
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+      const expectedResponse = getUserDataObject();
+      expectedResponse.alumniSinceDate = undefined;
+      expectedResponse._tags = ['CRN Member'];
+
+      expectedResponse.interestGroups = [
+        { id: 'ig-1', name: 'IG ONE', active: true },
+        { id: 'ig-2', name: 'IG TWO', active: false },
       ];
       const result = await userDataProvider.fetchById('user-1');
       expect(result).toEqual(expectedResponse);
@@ -917,6 +997,59 @@ describe('User data provider', () => {
           dismissedGettingStarted: undefined,
         });
         expect(thirdResult.dismissedGettingStarted).toEqual(false);
+      });
+    });
+    describe('parseGraphQLUserInterestGroup', () => {
+      test('should parse interest group', () => {
+        const interestGroup = {
+          id: 'ig-1',
+          flatData: {
+            name: 'IG ONE',
+            active: true,
+          },
+        };
+        const parsedWorkingGroup = parseGraphQLInterestGroup({
+          interestGroup,
+        });
+        expect(parsedWorkingGroup).toEqual({
+          id: 'ig-1',
+          name: 'IG ONE',
+          active: true,
+        });
+      });
+    });
+    describe('removeDuplicates', () => {
+      test('should remove duplicated interest groups', () => {
+        const mergedInterestGroups = [
+          {
+            id: 'ig-1',
+            name: 'IG ONE',
+            active: true,
+          },
+          {
+            id: 'ig-2',
+            name: 'IG TWO',
+            active: true,
+          },
+          {
+            id: 'ig-2',
+            name: 'IG TWO',
+            active: true,
+          },
+        ];
+        const interestGroups = removeDuplicates(mergedInterestGroups);
+        expect(interestGroups).toEqual([
+          {
+            id: 'ig-1',
+            name: 'IG ONE',
+            active: true,
+          },
+          {
+            id: 'ig-2',
+            name: 'IG TWO',
+            active: true,
+          },
+        ]);
       });
     });
     describe('parseGraphQLUserWorkingGroup', () => {

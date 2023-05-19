@@ -1,38 +1,27 @@
+import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { GenericError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { parse } from '@asap-hub/server-common';
 import {
-  getAccessTokenFactory,
-  gp2 as gp2squidex,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
-import { appName, baseUrl, clientId, clientSecret } from '../src/config';
-import { UserSquidexDataProvider } from '../src/data-providers/user.data-provider';
+  contentfulAccessToken,
+  contentfulEnvId,
+  contentfulSpaceId,
+} from '../src/config';
+import { UserContentfulDataProvider } from '../src/data-providers/contentful/user.data-provider';
+import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependency';
 
 console.log('Importing users...');
 
-const getAuthToken = getAccessTokenFactory({
-  clientId,
-  clientSecret,
-  baseUrl,
+const contentfulGraphQLClient = getContentfulGraphQLClient({
+  space: contentfulSpaceId,
+  accessToken: contentfulAccessToken,
+  environment: contentfulEnvId,
 });
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const userRestClient = new SquidexRest<
-  gp2squidex.RestUser,
-  gp2squidex.InputUser
->(getAuthToken, 'users', {
-  appName,
-  baseUrl,
-});
-const userDataProvider = new UserSquidexDataProvider(
-  squidexGraphqlClient,
-  userRestClient,
-);
 
+const userDataProvider = new UserContentfulDataProvider(
+  contentfulGraphQLClient,
+  getContentfulRestClientFactory,
+);
 const app = async () => {
   let numberOfImportedUsers = 0;
   let usersAlreadyExist = 0;

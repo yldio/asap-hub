@@ -71,7 +71,6 @@ describe('researchOutputToCSV', () => {
       type: '3D Printing',
       authors: expect.anything(),
       labs: expect.anything(),
-      tags: expect.anything(),
       teams: expect.anything(),
       workingGroups: expect.anything(),
       relatedResearch: '',
@@ -124,12 +123,14 @@ describe('researchOutputToCSV', () => {
     };
     expect(researchOutputToCSV(output).labs).toMatchInlineSnapshot(`"a,b,z"`);
   });
-  it('flattens and orders tags', () => {
+  it('flattens and orders keywords', () => {
     const output: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
-      tags: ['a', 'z', 'c'],
+      keywords: ['a', 'z', 'c'],
     };
-    expect(researchOutputToCSV(output).tags).toMatchInlineSnapshot(`"a,c,z"`);
+    expect(researchOutputToCSV(output).keywords).toMatchInlineSnapshot(
+      `"a,c,z"`,
+    );
   });
   it('flattens and orders teams', () => {
     const output: ResearchOutputResponse = {

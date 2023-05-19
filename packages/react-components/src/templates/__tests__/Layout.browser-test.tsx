@@ -12,6 +12,8 @@ const props: ComponentProps<typeof Layout> = {
   userOnboarded: true,
   userProfileHref: '/profile',
   teams: [],
+  workingGroups: [],
+  interestGroups: [],
   aboutHref: '/about',
 };
 

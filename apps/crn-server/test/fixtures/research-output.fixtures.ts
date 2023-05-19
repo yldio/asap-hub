@@ -70,6 +70,24 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   lastModified: '2021-05-14T14:48:46Z',
   status: EnrichedContentEventType.Published,
   version: 42,
+  referencingResearchOutputsContents: [
+    {
+      id: 'related-referencing-research-id',
+      flatData: {
+        title: 'Related Research2',
+        type: 'Report',
+        documentType: 'Bioinformatics',
+        teams: [
+          {
+            id: 'team-id-1',
+            flatData: {
+              displayName: 'Team B',
+            },
+          },
+        ],
+      },
+    },
+  ],
   flatData: {
     title: 'Test Proposal 1234',
     documentType: 'Bioinformatics',
@@ -82,7 +100,6 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     doi: null,
     accession: null,
     rrid: 'RRID:AB_90755',
-    tags: ['tag', 'test'],
     lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
     authors: getSquidexResearchOutputGraphqlResponseAuthors(),
     usageNotes: 'some access instructions',
@@ -172,7 +189,6 @@ export const getResearchOutputDataObject =
     title: 'Test Proposal 1234',
     description: 'Text',
     descriptionMD: 'Text MD',
-    tags: ['tag', 'test'],
     authors: fetchExpectation.items,
     teams: [{ id: 'team-id-0', displayName: 'Team A' }],
     relatedResearch: [
@@ -182,6 +198,13 @@ export const getResearchOutputDataObject =
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ id: 'team-id-1', displayName: 'Team B' }],
+      },
+      {
+        id: 'related-referencing-research-id',
+        title: 'Related Research2',
+        type: 'Report',
+        documentType: 'Bioinformatics',
+        teams: [{ displayName: 'Team B', id: 'team-id-1' }],
       },
     ],
     publishDate: '2021-05-21T13:18:31Z',
@@ -381,7 +404,6 @@ export const getRestResearchOutputCreateData =
     publishDate: { iv: '2021-05-21T13:18:31Z' },
     description: { iv: 'Text' },
     descriptionMD: { iv: 'Text MD' },
-    tags: { iv: ['tag', 'test'] },
     methods: {
       iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
     },
@@ -407,7 +429,9 @@ export const getRestResearchOutputCreateData =
     teams: {
       iv: ['team-id-0'],
     },
-    relatedResearch: { iv: ['related-research-id-0'] },
+    relatedResearch: {
+      iv: ['related-research-id-0', 'related-referencing-research-id'],
+    },
     authors: { iv: ['user-id-1', 'user-id-2'] },
     createdBy: { iv: ['userId'] },
     updatedBy: { iv: ['userId'] },

@@ -1,6 +1,6 @@
-import { GraphQLClient } from 'graphql-request';
-import { createClient } from 'contentful-management';
 import { createClient as createCDAClient } from 'contentful';
+import { createClient, Environment } from 'contentful-management';
+import { GraphQLClient } from 'graphql-request';
 
 export type CreateClientParams = {
   space: string;
@@ -24,13 +24,12 @@ export const getRestClient = async ({
   space: spaceId,
   accessToken,
   environment: environmentId,
-}: CreateClientParams) => {
+}: CreateClientParams): Promise<Environment> => {
   const client = createClient({
     accessToken,
   });
   const space = await client.getSpace(spaceId);
-  const environment = await space.getEnvironment(environmentId);
-  return environment;
+  return space.getEnvironment(environmentId);
 };
 
 export const getCDAClient = ({

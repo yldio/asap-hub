@@ -40,6 +40,14 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
           { name: '2', href: '/team-2' },
         ]}
         aboutHref="/about"
+        workingGroups={[
+          { name: 'wg 1', href: '/working-group-1', active: true },
+          { name: 'wg 2', href: '/working-group-2', active: false },
+        ]}
+        interestGroups={[
+          { name: 'ig 1', href: '/interest-group-1', active: true },
+          { name: 'ig 2', href: '/interest-group-2', active: false },
+        ]}
       >
         {storyFn()}
       </Layout>

@@ -3,11 +3,6 @@ import {
   addLocaleToFields,
   Environment,
   EventsOrder,
-  FETCH_EVENT_BY_ID,
-  FETCH_EVENTS_BY_EXTERNAL_AUTHOR_ID,
-  FETCH_EVENTS_BY_TEAM_ID,
-  FETCH_EVENTS_BY_USER_ID,
-  FETCH_EVENTS,
   FetchEventByIdQuery,
   FetchEventByIdQueryVariables,
   FetchEventsByExternalAuthorIdQuery,
@@ -18,6 +13,11 @@ import {
   FetchEventsByUserIdQueryVariables,
   FetchEventsQuery,
   FetchEventsQueryVariables,
+  FETCH_EVENTS,
+  FETCH_EVENTS_BY_EXTERNAL_AUTHOR_ID,
+  FETCH_EVENTS_BY_TEAM_ID,
+  FETCH_EVENTS_BY_USER_ID,
+  FETCH_EVENT_BY_ID,
   GraphQLClient,
   patchAndPublish,
   pollContentfulGql,
@@ -39,12 +39,12 @@ import {
 } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
+import { parseCalendarDataObjectToResponse } from '../../controllers/calendars';
 import {
   getContentfulEventMaterial,
   MeetingMaterial,
   parseContentfulGraphqlCalendarPartialToDataObject,
 } from '../../entities';
-import { parseCalendarDataObjectToResponse } from '../../controllers/calendars';
 
 export type EventItem = NonNullable<
   NonNullable<FetchEventsQuery['eventsCollection']>['items'][number]

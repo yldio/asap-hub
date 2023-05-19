@@ -18,7 +18,7 @@ describe('/research-tags/ route', () => {
 
   describe('GET /research-tags', () => {
     test('Should return 200 when no research tags exist', async () => {
-      researchTagControllerMock.fetch.mockResolvedValueOnce({
+      researchTagControllerMock.fetchAll.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -35,7 +35,7 @@ describe('/research-tags/ route', () => {
     test('Should return the results correctly', async () => {
       const listResearchTagResponse = getListResearchTagResponse();
 
-      researchTagControllerMock.fetch.mockResolvedValueOnce(
+      researchTagControllerMock.fetchAll.mockResolvedValueOnce(
         listResearchTagResponse,
       );
 
@@ -65,7 +65,7 @@ describe('/research-tags/ route', () => {
         },
       };
 
-      expect(researchTagControllerMock.fetch).toBeCalledWith(expectedParams);
+      expect(researchTagControllerMock.fetchAll).toBeCalledWith(expectedParams);
     });
 
     describe('Parameter validation', () => {

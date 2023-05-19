@@ -1,4 +1,5 @@
 import { FetchOptions, ListResponse } from './common';
+import { InterestGroupMembership } from './group';
 import { LabResponse } from './lab';
 import { TeamRole } from './team';
 import { WorkingGroupMembership } from './working-group';
@@ -154,6 +155,7 @@ export interface UserDataObject extends Invitee {
   social?: UserSocialLinks;
   teams: UserTeam[];
   workingGroups: WorkingGroupMembership[];
+  interestGroups: InterestGroupMembership[];
 }
 export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse

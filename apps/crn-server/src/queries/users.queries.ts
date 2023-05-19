@@ -26,6 +26,16 @@ export const usersContentQueryFragment = gql`
         }
       }
     }
+    referencesTeamsContents {
+      id
+      referencingGroupsContents {
+        id
+        flatData {
+          name
+          active
+        }
+      }
+    }
     referencingGroupsContents {
       id
       flatData {

@@ -52,6 +52,7 @@ export { default as ToastCard } from './ToastCard';
 export { default as UserAvatarList } from './UserAvatarList';
 export { default as UserMenuButton } from './UserMenuButton';
 export { default as UserProfilePersonalText } from './UserProfilePersonalText';
+export { default as UserNavigationAssociationSection } from './UserNavigationAssociationSection';
 export { default as UsersList } from './UsersList';
 export { default as UtilityBar } from './UtilityBar';
 export { default as WorkingGroupsList } from './WorkingGroupsList';

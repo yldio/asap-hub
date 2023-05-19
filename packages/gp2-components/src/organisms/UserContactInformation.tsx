@@ -6,22 +6,22 @@ import EmailSection from './EmailSection';
 
 type UserContactInformationProps = Pick<
   gp2.UserResponse,
-  'email' | 'secondaryEmail'
+  'email' | 'alternativeEmail'
 > &
   Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
 
 const UserContactInformation: React.FC<UserContactInformationProps> = ({
   email,
-  secondaryEmail,
+  alternativeEmail,
   editHref,
 }) => (
   <EditableCard
     editHref={editHref}
     title="Contact Details"
     optional
-    edit={!!secondaryEmail}
+    edit={!!alternativeEmail}
   >
-    {editHref && !secondaryEmail ? (
+    {editHref && !alternativeEmail ? (
       <UserProfilePlaceholderCard>
         Provide alternative contact details.
       </UserProfilePlaceholderCard>
@@ -29,7 +29,7 @@ const UserContactInformation: React.FC<UserContactInformationProps> = ({
       <EmailSection
         contactEmails={[
           { email, contact: 'Institutional email' },
-          { email: secondaryEmail, contact: 'Alternative email' },
+          { email: alternativeEmail, contact: 'Alternative email' },
         ]}
       />
     )}

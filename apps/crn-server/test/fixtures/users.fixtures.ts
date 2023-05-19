@@ -14,6 +14,7 @@ import {
   User,
   SquidexWebhookPayload,
 } from '@asap-hub/squidex';
+import { EventBridgeEvent } from 'aws-lambda';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -105,6 +106,7 @@ export const getGraphQLUser = (
   ...user,
   referencingWorkingGroupsContents: null,
   referencingGroupsContents: null,
+  referencesTeamsContents: null,
   flatData: {
     alumniLocation: 'some alumni location',
     alumniSinceDate: '2020-09-23T20:45:22.000Z',
@@ -265,6 +267,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
     },
   ],
   workingGroups: [],
+  interestGroups: [],
   connections: [],
 });
 
@@ -304,6 +307,7 @@ export const getUserResponse = (): UserResponse => ({
   city: 'London',
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
+  interestGroups: [],
   expertiseAndResourceDescription: 'some expertise and resource description',
   orcidWorks: [
     {
@@ -372,6 +376,7 @@ export const fetchExpectation: ListUserResponse = {
       lastName: 'Schwatzneger',
       lastModifiedDate: '2021-09-23T20:45:22.000Z',
       workingGroups: [],
+      interestGroups: [],
       orcidWorks: [
         {
           doi: 'test-doi',
@@ -605,7 +610,13 @@ export const getUserWebhookPayload = (
   },
 });
 
-export const getUserEvent = (id: string, eventType: UserEvent) =>
+export const getUserEvent = (
+  id: string,
+  eventType: UserEvent,
+): EventBridgeEvent<
+  UserEvent,
+  WebhookDetail<SquidexWebhookPayload<User, UserEvent>>
+> =>
   createEventBridgeEventMock(
     getUserWebhookPayload(id, eventType),
     eventType,
@@ -650,6 +661,7 @@ export const getUserDataObject = (): UserDataObject => ({
   city: 'London',
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
+  interestGroups: [],
   orcidWorks: [
     {
       doi: 'test-doi',
@@ -691,6 +703,7 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     createdDate: _createdDate,
     social: _social,
     workingGroups,
+    interestGroups,
     connections,
     alumniLocation,
     alumniSinceDate,

@@ -250,8 +250,8 @@ type ContentfulTag {
 type Dashboard implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): DashboardLinkingCollections
-  newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DashboardNewsCollection
-  pagesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DashboardPagesCollection
+  newsCollection(limit: Int = 100, locale: String, order: [DashboardNewsCollectionOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): DashboardNewsCollection
+  pagesCollection(limit: Int = 100, locale: String, order: [DashboardPagesCollectionOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): DashboardPagesCollection
   sys: Sys!
 }
 
@@ -284,6 +284,25 @@ type DashboardNewsCollection {
   total: Int!
 }
 
+enum DashboardNewsCollectionOrder {
+  frequency_ASC
+  frequency_DESC
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 enum DashboardOrder {
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
@@ -300,6 +319,23 @@ type DashboardPagesCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum DashboardPagesCollectionOrder {
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  path_ASC
+  path_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 """
@@ -349,7 +385,6 @@ type EventSpeakers implements Entry {
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
   sys: Sys!
   team(locale: String, preview: Boolean): Teams
-  title(locale: String): String
   user(locale: String, preview: Boolean): EventSpeakersUser
 }
 
@@ -367,13 +402,6 @@ input EventSpeakersFilter {
   sys: SysFilter
   team: cfTeamsNestedFilter
   team_exists: Boolean
-  title: String
-  title_contains: String
-  title_exists: Boolean
-  title_in: [String]
-  title_not: String
-  title_not_contains: String
-  title_not_in: [String]
   user_exists: Boolean
 }
 
@@ -391,8 +419,6 @@ enum EventSpeakersOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
 }
 
 union EventSpeakersUser = ExternalAuthors | Users
@@ -418,7 +444,7 @@ type Events implements Entry {
   presentation(locale: String): EventsPresentation
   presentationPermanentlyUnavailable(locale: String): Boolean
   presentationUpdatedAt(locale: String): DateTime
-  speakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsSpeakersCollection
+  speakersCollection(limit: Int = 100, locale: String, order: [EventsSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventsSpeakersCollection
   startDate(locale: String): DateTime
   startDateTimeZone(locale: String): String
   status(locale: String): String
@@ -681,6 +707,17 @@ type EventsSpeakersCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum EventsSpeakersCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 type EventsVideoRecording {
@@ -1456,7 +1493,7 @@ type Teams implements Entry {
   projectSummary(locale: String): String
   projectTitle(locale: String): String
   sys: Sys!
-  toolsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): TeamsToolsCollection
+  toolsCollection(limit: Int = 100, locale: String, order: [TeamsToolsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): TeamsToolsCollection
 }
 
 type TeamsCollection {
@@ -1546,6 +1583,23 @@ type TeamsToolsCollection {
   total: Int!
 }
 
+enum TeamsToolsCollectionOrder {
+  description_ASC
+  description_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  url_ASC
+  url_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users)"""
 type Users implements Entry {
   adminNotes(locale: String): String
@@ -1569,7 +1623,7 @@ type Users implements Entry {
   googleScholar(locale: String): String
   institution(locale: String): String
   jobTitle(locale: String): String
-  labsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersLabsCollection
+  labsCollection(limit: Int = 100, locale: String, order: [UsersLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): UsersLabsCollection
   lastName(locale: String): String
   linkedFrom(allowedLocales: [String]): UsersLinkingCollections
   linkedIn(locale: String): String
@@ -1585,7 +1639,7 @@ type Users implements Entry {
   responsibilities(locale: String): String
   role(locale: String): String
   sys: Sys!
-  teamsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersTeamsCollection
+  teamsCollection(limit: Int = 100, locale: String, order: [UsersTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamMembershipFilter): UsersTeamsCollection
   twitter(locale: String): String
   website1(locale: String): String
   website2(locale: String): String
@@ -1853,6 +1907,19 @@ type UsersLabsCollection {
   total: Int!
 }
 
+enum UsersLabsCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
@@ -1928,6 +1995,21 @@ type UsersTeamsCollection {
   total: Int!
 }
 
+enum UsersTeamsCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 input cfCalendarsNestedFilter {
   AND: [cfCalendarsNestedFilter]
   OR: [cfCalendarsNestedFilter]
@@ -1985,13 +2067,6 @@ input cfEventSpeakersNestedFilter {
   contentfulMetadata: ContentfulMetadataFilter
   sys: SysFilter
   team_exists: Boolean
-  title: String
-  title_contains: String
-  title_exists: Boolean
-  title_in: [String]
-  title_not: String
-  title_not_contains: String
-  title_not_in: [String]
   user_exists: Boolean
 }
 

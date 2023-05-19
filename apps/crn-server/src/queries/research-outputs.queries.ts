@@ -20,7 +20,6 @@ export const researchOutputContentQueryFragment = gql`
       labCatalogNumber
       accession
       rrid
-      tags
       lastUpdatedPartial
       usageNotes
       sharingStatus
@@ -184,6 +183,20 @@ export const researchOutputContentQueryFragment = gql`
       keywords {
         flatData {
           name
+        }
+      }
+    }
+    referencingResearchOutputsContents {
+      id
+      flatData {
+        title
+        type
+        documentType
+        teams {
+          id
+          flatData {
+            displayName
+          }
         }
       }
     }

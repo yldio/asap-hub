@@ -347,7 +347,7 @@ describe('/users/ route', () => {
         const response = await supertest(app)
           .patch(`/users/${loggedInUserId}`)
           .send({
-            secondaryEmail: null,
+            alternativeEmail: null,
           });
         expect(response.status).toBe(200);
       });
@@ -355,7 +355,7 @@ describe('/users/ route', () => {
         const response = await supertest(app)
           .patch(`/users/${loggedInUserId}`)
           .send({
-            secondaryEmail: 'invalid-email',
+            alternativeEmail: 'invalid-email',
           });
         expect(response.status).toBe(400);
       });

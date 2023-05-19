@@ -191,7 +191,6 @@ it('can publish a form when the data is valid', async () => {
     {
       doi,
       documentType: 'Lab Resource',
-      tags: [],
       sharingStatus: 'Network Only',
       teams: [teamId],
       link,
@@ -252,7 +251,6 @@ it('can save draft when form data is valid', async () => {
     {
       doi,
       documentType: 'Lab Resource',
-      tags: [],
       sharingStatus: 'Network Only',
       teams: [teamId],
       link,

@@ -2485,7 +2485,7 @@ enum WorkingGroupNetworkSupportCollectionOrder {
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)"""
 type WorkingGroups implements Entry {
-  calendars(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   endDate(locale: String): DateTime
@@ -2517,8 +2517,8 @@ type WorkingGroupsCollection {
 input WorkingGroupsFilter {
   AND: [WorkingGroupsFilter]
   OR: [WorkingGroupsFilter]
-  calendars: cfCalendarsNestedFilter
-  calendars_exists: Boolean
+  calendar: cfCalendarsNestedFilter
+  calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   description: String
   description_contains: String
@@ -3115,7 +3115,7 @@ input cfWorkingGroupMembershipNestedFilter {
 input cfWorkingGroupsNestedFilter {
   AND: [cfWorkingGroupsNestedFilter]
   OR: [cfWorkingGroupsNestedFilter]
-  calendars_exists: Boolean
+  calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   description: String
   description_contains: String

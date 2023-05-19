@@ -3963,7 +3963,7 @@ export enum WorkingGroupNetworkSupportCollectionOrder {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroups = Entry & {
-  calendars?: Maybe<Calendars>;
+  calendar?: Maybe<Calendars>;
   contentfulMetadata: ContentfulMetadata;
   description?: Maybe<Scalars['String']>;
   endDate?: Maybe<Scalars['DateTime']>;
@@ -3986,7 +3986,7 @@ export type WorkingGroups = Entry & {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsCalendarsArgs = {
+export type WorkingGroupsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
 };
@@ -4101,8 +4101,8 @@ export type WorkingGroupsCollection = {
 export type WorkingGroupsFilter = {
   AND?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
-  calendars?: InputMaybe<CfCalendarsNestedFilter>;
-  calendars_exists?: InputMaybe<Scalars['Boolean']>;
+  calendar?: InputMaybe<CfCalendarsNestedFilter>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -4726,7 +4726,7 @@ export type CfWorkingGroupMembershipNestedFilter = {
 export type CfWorkingGroupsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfWorkingGroupsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfWorkingGroupsNestedFilter>>>;
-  calendars_exists?: InputMaybe<Scalars['Boolean']>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -5572,13 +5572,57 @@ export type WorkingGroupNetworkContentDataFragment = {
         Maybe<
           Pick<
             WorkingGroups,
-            'title' | 'shortDescription' | 'leadingMembers'
+            | 'title'
+            | 'shortDescription'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+            | 'leadingMembers'
           > & {
             sys: Pick<Sys, 'id'>;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
-                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembership, 'role'> & {
+                      sys: Pick<Sys, 'id'>;
+                      user?: Maybe<
+                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
               }
+            >;
+            milestonesCollection?: Maybe<
+              Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Milestones,
+                      'description' | 'externalLink' | 'status' | 'title'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            resourcesCollection?: Maybe<
+              Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Resources,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
             >;
           }
         >
@@ -5591,13 +5635,57 @@ export type WorkingGroupNetworkContentDataFragment = {
         Maybe<
           Pick<
             WorkingGroups,
-            'title' | 'shortDescription' | 'leadingMembers'
+            | 'title'
+            | 'shortDescription'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+            | 'leadingMembers'
           > & {
             sys: Pick<Sys, 'id'>;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
-                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembership, 'role'> & {
+                      sys: Pick<Sys, 'id'>;
+                      user?: Maybe<
+                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
               }
+            >;
+            milestonesCollection?: Maybe<
+              Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Milestones,
+                      'description' | 'externalLink' | 'status' | 'title'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            resourcesCollection?: Maybe<
+              Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Resources,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
             >;
           }
         >
@@ -5610,13 +5698,57 @@ export type WorkingGroupNetworkContentDataFragment = {
         Maybe<
           Pick<
             WorkingGroups,
-            'title' | 'shortDescription' | 'leadingMembers'
+            | 'title'
+            | 'shortDescription'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+            | 'leadingMembers'
           > & {
             sys: Pick<Sys, 'id'>;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
-                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembership, 'role'> & {
+                      sys: Pick<Sys, 'id'>;
+                      user?: Maybe<
+                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
               }
+            >;
+            milestonesCollection?: Maybe<
+              Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Milestones,
+                      'description' | 'externalLink' | 'status' | 'title'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            resourcesCollection?: Maybe<
+              Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Resources,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
             >;
           }
         >
@@ -5629,13 +5761,57 @@ export type WorkingGroupNetworkContentDataFragment = {
         Maybe<
           Pick<
             WorkingGroups,
-            'title' | 'shortDescription' | 'leadingMembers'
+            | 'title'
+            | 'shortDescription'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+            | 'leadingMembers'
           > & {
             sys: Pick<Sys, 'id'>;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
-                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembership, 'role'> & {
+                      sys: Pick<Sys, 'id'>;
+                      user?: Maybe<
+                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
               }
+            >;
+            milestonesCollection?: Maybe<
+              Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Milestones,
+                      'description' | 'externalLink' | 'status' | 'title'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            resourcesCollection?: Maybe<
+              Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Resources,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
             >;
           }
         >
@@ -5659,13 +5835,63 @@ export type FetchWorkingGroupNetworkQuery = {
                 Maybe<
                   Pick<
                     WorkingGroups,
-                    'title' | 'shortDescription' | 'leadingMembers'
+                    | 'title'
+                    | 'shortDescription'
+                    | 'description'
+                    | 'primaryEmail'
+                    | 'secondaryEmail'
+                    | 'leadingMembers'
                   > & {
                     sys: Pick<Sys, 'id'>;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
-                        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                        items: Array<
+                          Maybe<
+                            Pick<WorkingGroupMembership, 'role'> & {
+                              sys: Pick<Sys, 'id'>;
+                              user?: Maybe<
+                                Pick<
+                                  Users,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
                       }
+                    >;
+                    milestonesCollection?: Maybe<
+                      Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Milestones,
+                              | 'description'
+                              | 'externalLink'
+                              | 'status'
+                              | 'title'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    resourcesCollection?: Maybe<
+                      Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Resources,
+                              'type' | 'title' | 'description' | 'externalLink'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
                     >;
                   }
                 >
@@ -5678,13 +5904,63 @@ export type FetchWorkingGroupNetworkQuery = {
                 Maybe<
                   Pick<
                     WorkingGroups,
-                    'title' | 'shortDescription' | 'leadingMembers'
+                    | 'title'
+                    | 'shortDescription'
+                    | 'description'
+                    | 'primaryEmail'
+                    | 'secondaryEmail'
+                    | 'leadingMembers'
                   > & {
                     sys: Pick<Sys, 'id'>;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
-                        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                        items: Array<
+                          Maybe<
+                            Pick<WorkingGroupMembership, 'role'> & {
+                              sys: Pick<Sys, 'id'>;
+                              user?: Maybe<
+                                Pick<
+                                  Users,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
                       }
+                    >;
+                    milestonesCollection?: Maybe<
+                      Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Milestones,
+                              | 'description'
+                              | 'externalLink'
+                              | 'status'
+                              | 'title'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    resourcesCollection?: Maybe<
+                      Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Resources,
+                              'type' | 'title' | 'description' | 'externalLink'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
                     >;
                   }
                 >
@@ -5697,13 +5973,63 @@ export type FetchWorkingGroupNetworkQuery = {
                 Maybe<
                   Pick<
                     WorkingGroups,
-                    'title' | 'shortDescription' | 'leadingMembers'
+                    | 'title'
+                    | 'shortDescription'
+                    | 'description'
+                    | 'primaryEmail'
+                    | 'secondaryEmail'
+                    | 'leadingMembers'
                   > & {
                     sys: Pick<Sys, 'id'>;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
-                        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                        items: Array<
+                          Maybe<
+                            Pick<WorkingGroupMembership, 'role'> & {
+                              sys: Pick<Sys, 'id'>;
+                              user?: Maybe<
+                                Pick<
+                                  Users,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
                       }
+                    >;
+                    milestonesCollection?: Maybe<
+                      Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Milestones,
+                              | 'description'
+                              | 'externalLink'
+                              | 'status'
+                              | 'title'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    resourcesCollection?: Maybe<
+                      Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Resources,
+                              'type' | 'title' | 'description' | 'externalLink'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
                     >;
                   }
                 >
@@ -5716,13 +6042,63 @@ export type FetchWorkingGroupNetworkQuery = {
                 Maybe<
                   Pick<
                     WorkingGroups,
-                    'title' | 'shortDescription' | 'leadingMembers'
+                    | 'title'
+                    | 'shortDescription'
+                    | 'description'
+                    | 'primaryEmail'
+                    | 'secondaryEmail'
+                    | 'leadingMembers'
                   > & {
                     sys: Pick<Sys, 'id'>;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
-                        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                        items: Array<
+                          Maybe<
+                            Pick<WorkingGroupMembership, 'role'> & {
+                              sys: Pick<Sys, 'id'>;
+                              user?: Maybe<
+                                Pick<
+                                  Users,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
                       }
+                    >;
+                    milestonesCollection?: Maybe<
+                      Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Milestones,
+                              | 'description'
+                              | 'externalLink'
+                              | 'status'
+                              | 'title'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    resourcesCollection?: Maybe<
+                      Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Resources,
+                              'type' | 'title' | 'description' | 'externalLink'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
                     >;
                   }
                 >
@@ -5731,6 +6107,121 @@ export type FetchWorkingGroupNetworkQuery = {
           >;
         }>
       >;
+    }
+  >;
+};
+
+export type WorkingGroupsContentDataFragment = Pick<
+  WorkingGroups,
+  | 'title'
+  | 'shortDescription'
+  | 'description'
+  | 'primaryEmail'
+  | 'secondaryEmail'
+  | 'leadingMembers'
+> & {
+  sys: Pick<Sys, 'id'>;
+  membersCollection?: Maybe<
+    Pick<WorkingGroupsMembersCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<WorkingGroupMembership, 'role'> & {
+            sys: Pick<Sys, 'id'>;
+            user?: Maybe<
+              Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                sys: Pick<Sys, 'id'>;
+                avatar?: Maybe<Pick<Asset, 'url'>>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+  milestonesCollection?: Maybe<
+    Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            Milestones,
+            'description' | 'externalLink' | 'status' | 'title'
+          > & { sys: Pick<Sys, 'id'> }
+        >
+      >;
+    }
+  >;
+  resourcesCollection?: Maybe<
+    Pick<WorkingGroupsResourcesCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<Resources, 'type' | 'title' | 'description' | 'externalLink'> & {
+            sys: Pick<Sys, 'id'>;
+          }
+        >
+      >;
+    }
+  >;
+  calendar?: Maybe<Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }>;
+};
+
+export type FetchWorkingGroupByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchWorkingGroupByIdQuery = {
+  workingGroups?: Maybe<
+    Pick<
+      WorkingGroups,
+      | 'title'
+      | 'shortDescription'
+      | 'description'
+      | 'primaryEmail'
+      | 'secondaryEmail'
+      | 'leadingMembers'
+    > & {
+      sys: Pick<Sys, 'id'>;
+      membersCollection?: Maybe<
+        Pick<WorkingGroupsMembersCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<WorkingGroupMembership, 'role'> & {
+                sys: Pick<Sys, 'id'>;
+                user?: Maybe<
+                  Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                    sys: Pick<Sys, 'id'>;
+                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                  }
+                >;
+              }
+            >
+          >;
+        }
+      >;
+      milestonesCollection?: Maybe<
+        Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<
+                Milestones,
+                'description' | 'externalLink' | 'status' | 'title'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        }
+      >;
+      resourcesCollection?: Maybe<
+        Pick<WorkingGroupsResourcesCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<
+                Resources,
+                'type' | 'title' | 'description' | 'externalLink'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        }
+      >;
+      calendar?: Maybe<Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }>;
     }
   >;
 };
@@ -6591,6 +7082,227 @@ export const UsersContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<UsersContentDataFragment, unknown>;
+export const WorkingGroupsContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'WorkingGroupsContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'WorkingGroups' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'primaryEmail' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'secondaryEmail' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'leadingMembers' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'membersCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'onboarded' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'milestonesCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'resourcesCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'calendar' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<WorkingGroupsContentDataFragment, unknown>;
 export const WorkingGroupNetworkContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -6618,6 +7330,7 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'items' },
@@ -6625,60 +7338,10 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shortDescription' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'leadingMembers' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'membersCollection' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'total' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'sys' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupsContentData',
                         },
                       },
                     ],
@@ -6708,60 +7371,10 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shortDescription' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'leadingMembers' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'membersCollection' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'total' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'sys' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupsContentData',
                         },
                       },
                     ],
@@ -6791,60 +7404,10 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shortDescription' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'leadingMembers' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'membersCollection' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'total' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'sys' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupsContentData',
                         },
                       },
                     ],
@@ -6874,60 +7437,10 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
                     kind: 'SelectionSet',
                     selections: [
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shortDescription' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'leadingMembers' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'membersCollection' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'total' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'sys' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupsContentData',
                         },
                       },
                     ],
@@ -6939,6 +7452,7 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
         ],
       },
     },
+    ...WorkingGroupsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<WorkingGroupNetworkContentDataFragment, unknown>;
 export const FetchCalendarByIdDocument = {
@@ -8116,4 +8630,59 @@ export const FetchWorkingGroupNetworkDocument = {
 } as unknown as DocumentNode<
   FetchWorkingGroupNetworkQuery,
   FetchWorkingGroupNetworkQueryVariables
+>;
+export const FetchWorkingGroupByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroupById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'workingGroups' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'WorkingGroupsContentData' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupByIdQuery,
+  FetchWorkingGroupByIdQueryVariables
 >;

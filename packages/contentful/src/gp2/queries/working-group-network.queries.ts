@@ -1,86 +1,37 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
+import { workingGroupsContentQueryFragment } from './working-group.queries';
 
 export const workingGroupNetworkContentQueryFragment = gql`
   fragment WorkingGroupNetworkContentData on WorkingGroupNetwork {
     supportCollection(limit: 20) {
       total
+      total
       items {
-        sys {
-          id
-        }
-        title
-        shortDescription
-        leadingMembers
-        membersCollection {
-          total
-          items {
-            sys {
-              id
-            }
-          }
-        }
+        ...WorkingGroupsContentData
       }
     }
     monogenicCollection(limit: 20) {
       total
       items {
-        sys {
-          id
-        }
-        title
-        shortDescription
-        leadingMembers
-        membersCollection {
-          total
-          items {
-            sys {
-              id
-            }
-          }
-        }
+        ...WorkingGroupsContentData
       }
     }
     operationalCollection(limit: 20) {
       total
       items {
-        sys {
-          id
-        }
-        title
-        shortDescription
-        leadingMembers
-        membersCollection {
-          total
-          items {
-            sys {
-              id
-            }
-          }
-        }
+        ...WorkingGroupsContentData
       }
     }
     complexDiseaseCollection(limit: 20) {
       total
       items {
-        sys {
-          id
-        }
-        title
-        shortDescription
-        leadingMembers
-        membersCollection {
-          total
-          items {
-            sys {
-              id
-            }
-          }
-        }
+        ...WorkingGroupsContentData
       }
     }
   }
+  ${workingGroupsContentQueryFragment}
 `;
 
 export const FETCH_WORKING_GROUP_NETWORK = gql`

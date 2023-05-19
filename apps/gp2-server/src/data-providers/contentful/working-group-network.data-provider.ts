@@ -1,6 +1,10 @@
 import { gp2 as gp2Contentful, GraphQLClient } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupNetworkDataProvider } from '../types';
+import {
+  GraphQLWorkingGroup,
+  parseWorkingGroupToDataObject,
+} from './working-group.data-provider';
 
 const { workingGroupNetworkRole } = gp2Model;
 export class WorkingGroupNetworkContentfulDataProvider
@@ -24,16 +28,16 @@ export class WorkingGroupNetworkContentfulDataProvider
         total: 0,
       };
     }
-    const network = networks.items.filter(
+    const workingGroupNetwork = networks.items.filter(
       (network): network is GraphQLWorkingGroupNetwork => network !== null,
     )[0];
-    if (!network) {
+    if (!workingGroupNetwork) {
       return {
         items: [],
         total: 0,
       };
     }
-    const items = parseWorkingGroupNetworkToDataObject(network);
+    const items = parseWorkingGroupNetworkToDataObject(workingGroupNetwork);
     return {
       items,
       total: items.length,
@@ -51,20 +55,11 @@ export function parseWorkingGroupNetworkToDataObject(
   return workingGroupNetworkRole.map((role) => ({
     role,
     workingGroups:
-      network[`${role}Collection`]?.items.map((wg) => ({
-        id: wg?.sys.id || '',
-        title: wg?.title || '',
-        shortDescription: wg?.shortDescription || '',
-        description: '',
-        leadingMembers: wg?.leadingMembers || '',
-        members:
-          wg?.membersCollection?.items.map((member) => ({
-            userId: member?.sys.id || '',
-            role: 'Lead' as const,
-            firstName: '',
-            lastName: '',
-          })) || [],
-        milestones: [],
-      })) || [],
+      network[`${role}Collection`]?.items
+        .filter(
+          (workingGroup): workingGroup is GraphQLWorkingGroup =>
+            workingGroup !== null,
+        )
+        .map(parseWorkingGroupToDataObject) || [],
   }));
 }

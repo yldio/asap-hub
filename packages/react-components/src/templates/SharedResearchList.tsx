@@ -6,6 +6,7 @@ import {
   SharedResearchCard,
   SharedResearchListCard,
 } from '../organisms';
+import { libraryIcon } from '../icons';
 
 type SharedResearchListProps = Omit<
   ComponentProps<typeof ResultList>,
@@ -26,7 +27,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   algoliaQueryId,
   ...cardListProps
 }) => (
-  <ResultList {...cardListProps}>
+  <ResultList icon={libraryIcon} {...cardListProps}>
     {cardListProps.isListView ? (
       <SharedResearchListCard
         algoliaQueryId={algoliaQueryId}

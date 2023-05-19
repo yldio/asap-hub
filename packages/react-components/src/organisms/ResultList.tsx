@@ -3,14 +3,13 @@ import { css } from '@emotion/react';
 import { ToastContext } from '@asap-hub/react-context';
 
 import { ListControls, PageControls } from '../molecules';
-import { Button, Paragraph } from '../atoms';
+import { Button, Headline3, Paragraph } from '../atoms';
 import {
   perRem,
   vminLinearCalcClamped,
   mobileScreen,
   tabletScreen,
 } from '../pixels';
-import { lead } from '../colors';
 
 const headerStyles = css({
   display: 'flex',
@@ -51,7 +50,16 @@ const pageControlsStyles = css({
   paddingBottom: `${36 / perRem}em`,
 });
 
+const iconStyles = css({
+  display: 'inline-flex',
+  svg: {
+    width: `${48 / perRem}em`,
+    height: `${48 / perRem}em`,
+  },
+});
+
 type ResultListProps = ComponentProps<typeof PageControls> & {
+  readonly icon?: React.ReactElement;
   readonly numberOfItems: number;
   readonly isListView?: boolean;
   readonly exportResults?: () => Promise<void>;
@@ -62,6 +70,7 @@ type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly algoliaIndexName?: string;
 };
 const ResultList: React.FC<ResultListProps> = ({
+  icon,
   numberOfItems,
   isListView = false,
   exportResults,
@@ -124,13 +133,11 @@ const ResultList: React.FC<ResultListProps> = ({
       ) : (
         noEventsComponent ?? (
           <main css={{ textAlign: 'center' }}>
-            <Paragraph>
-              <strong>No matches found!</strong>
-              <br />
-              <span css={{ color: lead.rgb }}>
-                We're sorry, we couldn't find results to match your search.
-                Please check your spelling or try using fewer words.
-              </span>
+            {icon && <span css={iconStyles}>{icon}</span>}
+            <Headline3>No matches found!</Headline3>
+            <Paragraph accent="lead">
+              We're sorry, we couldn't find results to match your search. Please
+              check your spelling or try using fewer words.
             </Paragraph>
           </main>
         )

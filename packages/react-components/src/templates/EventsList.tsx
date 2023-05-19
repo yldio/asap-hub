@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { rem } from '../pixels';
 import { ResultList, EventCard } from '../organisms';
 import AlgoliaHit from '../atoms/AlgoliaHit';
+import { eventIcon } from '../icons';
 
 const containerStyles = css({
   display: 'grid',
@@ -20,7 +21,7 @@ const EventsListPage: FC<EventsListProps> = ({
   ...props
 }) => (
   <div css={containerStyles}>
-    <ResultList {...props}>
+    <ResultList icon={eventIcon} {...props}>
       {events.map(({ ...event }, index) => (
         <AlgoliaHit
           key={event.id}

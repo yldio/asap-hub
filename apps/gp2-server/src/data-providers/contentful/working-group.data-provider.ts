@@ -60,7 +60,7 @@ const parseWorkingGroupMembers = (
   role: GraphQLWorkingGroupMemberRole,
 ): gp2Model.WorkingGroupMember => {
   if (!(role && gp2Model.isWorkingGroupMemberRole(role))) {
-    throw new TypeError('Invalid degree received');
+    throw new TypeError('Invalid role received');
   }
   return {
     userId: user.sys.id,
@@ -81,10 +81,7 @@ export function parseWorkingGroupToDataObject(
         member: GraphQLWorkingGroupMember,
       ) => {
         const user = member?.user;
-        if (!(user && member.role)) {
-          return membersList;
-        }
-        if (user.onboarded === false) {
+        if (!(user && member.role && user.onboarded)) {
           return membersList;
         }
         const groupMember = parseWorkingGroupMembers(user, member.role);

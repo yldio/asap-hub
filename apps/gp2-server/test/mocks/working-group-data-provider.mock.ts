@@ -1,4 +1,4 @@
-import { WorkingGroupDataProvider } from '../../src/data-providers/working-group.data-provider';
+import { WorkingGroupDataProvider } from '../../src/data-providers/types/working-group.data-provider.type';
 
 export const workingGroupDataProviderMock: jest.Mocked<WorkingGroupDataProvider> =
   {

@@ -1,6 +1,30 @@
-import { gp2 as gp2Contentful } from '@asap-hub/contentful';
+import { gp2 as gp2Contentful, GraphQLClient } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
 
+export class WorkingGroupContentfulDataProvider
+  implements WorkingGroupDataProvider
+{
+  constructor(private graphQLClient: GraphQLClient) {}
+
+  async fetch(): Promise<gp2Model.ListWorkingGroupDataObject> {
+    throw new Error('Method not implemented.');
+  }
+  async update(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
+  async fetchById(id: string) {
+    const { workingGroups } = await this.graphQLClient.request<
+      gp2Contentful.FetchWorkingGroupByIdQuery,
+      gp2Contentful.FetchWorkingGroupByIdQueryVariables
+    >(gp2Contentful.FETCH_WORKING_GROUP_BY_ID, {
+      id,
+    });
+
+    return workingGroups ? parseWorkingGroupToDataObject(workingGroups) : null;
+  }
+}
 export type GraphQLWorkingGroup = NonNullable<
   NonNullable<
     NonNullable<gp2Contentful.FetchWorkingGroupByIdQuery>['workingGroups']

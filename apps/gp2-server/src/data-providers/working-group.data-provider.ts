@@ -17,15 +17,8 @@ import {
 } from '../queries/working-groups.queries';
 import { parseResources } from '../utils/resources';
 import { createUrl } from '../utils/urls';
+import { WorkingGroupDataProvider } from './types/working-group.data-provider.type';
 
-export interface WorkingGroupDataProvider {
-  fetchById(id: string): Promise<gp2Model.WorkingGroupDataObject | null>;
-  fetch(): Promise<gp2Model.ListWorkingGroupDataObject>;
-  update(
-    id: string,
-    workingGroupToUpdate: gp2Model.WorkingGroupUpdateDataObject,
-  ): Promise<void>;
-}
 export class WorkingGroupSquidexDataProvider
   implements WorkingGroupDataProvider
 {

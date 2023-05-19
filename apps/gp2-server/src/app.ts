@@ -86,12 +86,10 @@ import {
   WorkingGroupNetworkDataProvider,
 } from './data-providers/types';
 import { ExternalUserDataProvider } from './data-providers/types/external-user.data-provider.type';
+import { WorkingGroupDataProvider } from './data-providers/types/working-group.data-provider.type';
 import { UserSquidexDataProvider } from './data-providers/user.data-provider';
 import { WorkingGroupNetworkSquidexDataProvider } from './data-providers/working-group-network.data-provider';
-import {
-  WorkingGroupDataProvider,
-  WorkingGroupSquidexDataProvider,
-} from './data-providers/working-group.data-provider';
+import { WorkingGroupSquidexDataProvider } from './data-providers/working-group.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependency';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';

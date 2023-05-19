@@ -1,4 +1,4 @@
-module.exports.description = 'Updates role';
+module.exports.description = 'Updates workingGroups';
 
 module.exports.up = (migration) => {
   const workingGroups = migration.editContentType('workingGroups');

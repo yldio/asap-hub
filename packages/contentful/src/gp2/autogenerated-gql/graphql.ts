@@ -5565,6 +5565,176 @@ export type FetchUsersByWorkingGroupIdQuery = {
   >;
 };
 
+export type WorkingGroupNetworkContentDataFragment = {
+  supportCollection?: Maybe<
+    Pick<WorkingGroupNetworkSupportCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            'title' | 'shortDescription' | 'leadingMembers'
+          > & {
+            sys: Pick<Sys, 'id'>;
+            membersCollection?: Maybe<
+              Pick<WorkingGroupsMembersCollection, 'total'> & {
+                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+  monogenicCollection?: Maybe<
+    Pick<WorkingGroupNetworkMonogenicCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            'title' | 'shortDescription' | 'leadingMembers'
+          > & {
+            sys: Pick<Sys, 'id'>;
+            membersCollection?: Maybe<
+              Pick<WorkingGroupsMembersCollection, 'total'> & {
+                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+  operationalCollection?: Maybe<
+    Pick<WorkingGroupNetworkOperationalCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            'title' | 'shortDescription' | 'leadingMembers'
+          > & {
+            sys: Pick<Sys, 'id'>;
+            membersCollection?: Maybe<
+              Pick<WorkingGroupsMembersCollection, 'total'> & {
+                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+  complexDiseaseCollection?: Maybe<
+    Pick<WorkingGroupNetworkComplexDiseaseCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            'title' | 'shortDescription' | 'leadingMembers'
+          > & {
+            sys: Pick<Sys, 'id'>;
+            membersCollection?: Maybe<
+              Pick<WorkingGroupsMembersCollection, 'total'> & {
+                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
+export type FetchWorkingGroupNetworkQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type FetchWorkingGroupNetworkQuery = {
+  workingGroupNetworkCollection?: Maybe<
+    Pick<WorkingGroupNetworkCollection, 'total'> & {
+      items: Array<
+        Maybe<{
+          supportCollection?: Maybe<
+            Pick<WorkingGroupNetworkSupportCollection, 'total'> & {
+              items: Array<
+                Maybe<
+                  Pick<
+                    WorkingGroups,
+                    'title' | 'shortDescription' | 'leadingMembers'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    membersCollection?: Maybe<
+                      Pick<WorkingGroupsMembersCollection, 'total'> & {
+                        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                      }
+                    >;
+                  }
+                >
+              >;
+            }
+          >;
+          monogenicCollection?: Maybe<
+            Pick<WorkingGroupNetworkMonogenicCollection, 'total'> & {
+              items: Array<
+                Maybe<
+                  Pick<
+                    WorkingGroups,
+                    'title' | 'shortDescription' | 'leadingMembers'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    membersCollection?: Maybe<
+                      Pick<WorkingGroupsMembersCollection, 'total'> & {
+                        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                      }
+                    >;
+                  }
+                >
+              >;
+            }
+          >;
+          operationalCollection?: Maybe<
+            Pick<WorkingGroupNetworkOperationalCollection, 'total'> & {
+              items: Array<
+                Maybe<
+                  Pick<
+                    WorkingGroups,
+                    'title' | 'shortDescription' | 'leadingMembers'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    membersCollection?: Maybe<
+                      Pick<WorkingGroupsMembersCollection, 'total'> & {
+                        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                      }
+                    >;
+                  }
+                >
+              >;
+            }
+          >;
+          complexDiseaseCollection?: Maybe<
+            Pick<WorkingGroupNetworkComplexDiseaseCollection, 'total'> & {
+              items: Array<
+                Maybe<
+                  Pick<
+                    WorkingGroups,
+                    'title' | 'shortDescription' | 'leadingMembers'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    membersCollection?: Maybe<
+                      Pick<WorkingGroupsMembersCollection, 'total'> & {
+                        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                      }
+                    >;
+                  }
+                >
+              >;
+            }
+          >;
+        }>
+      >;
+    }
+  >;
+};
+
 export const CalendarsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -6421,6 +6591,356 @@ export const UsersContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<UsersContentDataFragment, unknown>;
+export const WorkingGroupNetworkContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'WorkingGroupNetworkContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'WorkingGroupNetwork' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'supportCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shortDescription' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'leadingMembers' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'membersCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'monogenicCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shortDescription' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'leadingMembers' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'membersCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'operationalCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shortDescription' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'leadingMembers' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'membersCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'complexDiseaseCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shortDescription' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'leadingMembers' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'membersCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<WorkingGroupNetworkContentDataFragment, unknown>;
 export const FetchCalendarByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -7544,4 +8064,56 @@ export const FetchUsersByWorkingGroupIdDocument = {
 } as unknown as DocumentNode<
   FetchUsersByWorkingGroupIdQuery,
   FetchUsersByWorkingGroupIdQueryVariables
+>;
+export const FetchWorkingGroupNetworkDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroupNetwork' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'workingGroupNetworkCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupNetworkContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupNetworkContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupNetworkQuery,
+  FetchWorkingGroupNetworkQueryVariables
 >;

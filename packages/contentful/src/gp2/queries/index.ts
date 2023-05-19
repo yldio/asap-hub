@@ -4,3 +4,4 @@ export * from './external-users.queries';
 export * from './news.queries';
 export * from './pages.queries';
 export * from './users.queries';
+export * from './working-group-network.queries';

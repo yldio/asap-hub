@@ -21,12 +21,12 @@ export class CalendarContentfulDataProvider
   implements gp2Model.CalendarDataProvider
 {
   constructor(
-    private contentfulClient: GraphQLClient,
+    private graphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
 
   async fetchById(id: string) {
-    const { calendars } = await this.contentfulClient.request<
+    const { calendars } = await this.graphQLClient.request<
       gp2.FetchCalendarByIdQuery,
       gp2.FetchCalendarByIdQueryVariables
     >(gp2.FETCH_CALENDAR_BY_ID, { id });
@@ -37,7 +37,7 @@ export class CalendarContentfulDataProvider
   async fetch(options?: FetchCalendarProviderOptions) {
     const { maxExpiration, resourceId } = options || {};
 
-    const { calendarsCollection } = await this.contentfulClient.request<
+    const { calendarsCollection } = await this.graphQLClient.request<
       gp2.FetchCalendarsQuery,
       gp2.FetchCalendarsQueryVariables
     >(gp2.FETCH_CALENDARS, {

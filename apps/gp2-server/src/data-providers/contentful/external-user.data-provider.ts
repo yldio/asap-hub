@@ -18,7 +18,7 @@ export class ExternalUserContentfulDataProvider
   implements ExternalUserDataProvider
 {
   constructor(
-    private contentfulClient: GraphQLClient,
+    private graphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
 
@@ -26,7 +26,7 @@ export class ExternalUserContentfulDataProvider
     const { take = 8, skip = 0 } = options;
 
     const where = generateFetchQueryFilter(options);
-    const { externalUsersCollection } = await this.contentfulClient.request<
+    const { externalUsersCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchExternalUsersQuery,
       gp2Contentful.FetchExternalUsersQueryVariables
     >(

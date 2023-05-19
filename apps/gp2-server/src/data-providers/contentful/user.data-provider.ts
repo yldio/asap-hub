@@ -20,25 +20,25 @@ export type UserItem = NonNullable<
 
 export class UserContentfulDataProvider implements UserDataProvider {
   constructor(
-    private contentfulClient: GraphQLClient,
+    private graphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
 
   private fetchUserById(id: string) {
-    return this.contentfulClient.request<
+    return this.graphQLClient.request<
       gp2Contentful.FetchUserByIdQuery,
       gp2Contentful.FetchUserByIdQueryVariables
     >(gp2Contentful.FETCH_USER_BY_ID, { id });
   }
   private async fetchUsersByProject(id: string[]) {
-    const { projectsCollection } = await this.contentfulClient.request<
+    const { projectsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchUsersByProjectIdQuery,
       gp2Contentful.FetchUsersByProjectIdQueryVariables
     >(gp2Contentful.FETCH_USERS_BY_PROJECT_ID, { id });
     return projectsCollection;
   }
   private async fetchUsersByWorkingGroup(id: string[]) {
-    const { workingGroupsCollection } = await this.contentfulClient.request<
+    const { workingGroupsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchUsersByWorkingGroupIdQuery,
       gp2Contentful.FetchUsersByWorkingGroupIdQueryVariables
     >(gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID, { id });
@@ -99,7 +99,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const where = generateFetchQueryFilter(options, userIdFilter);
     logger.debug(`fetch users where: ${JSON.stringify(where, undefined, 2)}`);
 
-    const { usersCollection } = await this.contentfulClient.request<
+    const { usersCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchUsersQuery,
       gp2Contentful.FetchUsersQueryVariables
     >(gp2Contentful.FETCH_USERS, {

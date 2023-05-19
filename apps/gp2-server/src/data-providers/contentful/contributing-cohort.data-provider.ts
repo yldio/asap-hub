@@ -20,18 +20,17 @@ export class ContributingCohortContentfulDataProvider
   implements ContributingCohortDataProvider
 {
   constructor(
-    private contentfulClient: GraphQLClient,
+    private graphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
 
   async fetch() {
-    const { contributingCohortsCollection } =
-      await this.contentfulClient.request<
-        gp2Contentful.FetchContributingCohortsQuery,
-        gp2Contentful.FetchContributingCohortsQueryVariables
-      >(gp2Contentful.FETCH_CONTRIBUTING_COHORTS, {
-        order: [gp2Contentful.ContributingCohortsOrder.NameAsc],
-      });
+    const { contributingCohortsCollection } = await this.graphQLClient.request<
+      gp2Contentful.FetchContributingCohortsQuery,
+      gp2Contentful.FetchContributingCohortsQueryVariables
+    >(gp2Contentful.FETCH_CONTRIBUTING_COHORTS, {
+      order: [gp2Contentful.ContributingCohortsOrder.NameAsc],
+    });
 
     if (!contributingCohortsCollection?.items) {
       return {

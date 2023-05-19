@@ -93,7 +93,9 @@ async function migrateTagsToKeywords(
   missingKeywords,
   dryRun,
 ) {
-  const keywords = new Set(researchOutput.data.keywords.iv);
+  const existingKeyowrds = researchOutput.data?.keywords?.iv || [];
+  const keywords = new Set(existingKeyowrds);
+
   researchOutput.data.tags.iv?.forEach((tag) => {
     const id = lookup[tag.toLowerCase()];
     if (id) {
@@ -140,7 +142,7 @@ async function getResearchOutputFromSquidex() {
     });
 
     researchOutputs.push(
-      ...res.items.filter((r) => r.data.tags.iv?.length !== 0),
+      ...res.items.filter((r) => r.data.tags && r.data.tags.iv?.length !== 0),
     );
 
     total = res.total;

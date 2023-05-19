@@ -1,5 +1,7 @@
 import { SquidexGraphqlClient, createUrlFactory } from '@asap-hub/squidex';
 import { Environment } from 'contentful-management';
+import { when } from 'jest-when';
+
 import { migrateEvents } from '../../src/events/events.data-migration';
 import type { EventItem } from '../../src/events/events.data-migration';
 import { getEntry, eventEntry } from '../fixtures';
@@ -52,7 +54,7 @@ const getEventSquidex = (): EventItem => ({
     ],
     calendar: [
       {
-        id: '1e34bfaa-6752-41ec-a796-eca801228a90',
+        id: 'calendar-1',
       },
     ],
     thumbnail: [
@@ -149,7 +151,7 @@ const baseCreatePayload = {
   calendar: {
     'en-US': {
       sys: {
-        id: '1e34bfaa-6752-41ec-a796-eca801228a90',
+        id: 'calendar-1',
         linkType: 'Entry',
         type: 'Link',
       },
@@ -183,6 +185,7 @@ describe('Migrate events', () => {
       squidexGraphqlClient: squidexGraphqlClientMock,
     });
 
+    eventEntry.sys.id = 'event-1';
     jest.spyOn(contentfulEnv, 'getEntries').mockResolvedValueOnce({
       total: 1,
       items: [eventEntry],
@@ -191,7 +194,19 @@ describe('Migrate events', () => {
       toPlainObject: jest.fn(),
       sys: { type: 'Array' },
     });
-    jest.spyOn(contentfulEnv, 'getEntry').mockResolvedValue(getEntry({}));
+
+    when(contentfulEnv.getEntry)
+      .calledWith('team-1')
+      .mockResolvedValue(getEntry({}));
+
+    when(contentfulEnv.getEntry)
+      .calledWith('user-1')
+      .mockResolvedValue(getEntry({}));
+
+    when(contentfulEnv.getEntry)
+      .calledWith('external-user-1')
+      .mockResolvedValue(getEntry({}));
+
     jest.spyOn(contentfulEnv, 'createEntry').mockResolvedValue(getEntry({}));
 
     jest.spyOn(eventEntry, 'publish').mockResolvedValue(getEntry({}));
@@ -246,13 +261,9 @@ describe('Migrate events', () => {
       });
 
     const previousSpeakerMock = getEntry({});
-    jest
-      .spyOn(contentfulEnv, 'getEntry')
-      .mockClear()
-      .mockResolvedValueOnce(getEntry({})) // team
-      .mockResolvedValueOnce(getEntry({})) // user
-      .mockResolvedValueOnce(getEntry({})) // external-user
-      .mockResolvedValueOnce(previousSpeakerMock); // speaker
+    when(contentfulEnv.getEntry)
+      .calledWith('old-speaker')
+      .mockResolvedValueOnce(previousSpeakerMock);
 
     await migrateEvents();
 
@@ -289,13 +300,9 @@ describe('Migrate events', () => {
         sys: { type: 'Array' },
       });
 
-    jest
-      .spyOn(contentfulEnv, 'getEntry')
-      .mockClear()
-      .mockResolvedValueOnce(getEntry({})) // team
-      .mockResolvedValueOnce(getEntry({})) // user
-      .mockResolvedValueOnce(getEntry({})) // external-user
-      .mockRejectedValueOnce(new Error()); // speaker
+    when(contentfulEnv.getEntry)
+      .calledWith('old-speaker')
+      .mockRejectedValueOnce(new Error());
 
     await migrateEvents();
 
@@ -461,13 +468,9 @@ describe('Migrate events', () => {
     );
     const eventMock = getEntry({});
 
-    jest
-      .spyOn(contentfulEnv, 'getEntry')
-      .mockClear()
-      .mockResolvedValueOnce(getEntry({})) // team
-      .mockResolvedValueOnce(getEntry({})) // user
-      .mockResolvedValueOnce(getEntry({})) // external-user
-      .mockResolvedValueOnce(eventMock); // event
+    when(contentfulEnv.getEntry)
+      .calledWith('event-1')
+      .mockResolvedValueOnce(eventMock);
 
     await migrateEvents();
 
@@ -482,9 +485,6 @@ describe('Migrate events', () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       eventWithoutThumbnail,
     );
-
-    jest.spyOn(contentfulEnv, 'getEntry').mockResolvedValue(getEntry({}));
-    jest.spyOn(contentfulEnv, 'createEntry').mockResolvedValue(getEntry({}));
 
     jest
       .spyOn(contentfulEnv, 'getEntries')
@@ -550,15 +550,10 @@ describe('Migrate events', () => {
       getEventSquidexResponse(),
     );
 
-    jest.spyOn(contentfulEnv, 'createEntry').mockResolvedValue(getEntry({}));
+    when(contentfulEnv.getEntry)
+      .calledWith('calendar-1')
+      .mockRejectedValueOnce(new Error('not-found'));
 
-    jest
-      .spyOn(contentfulEnv, 'getEntry')
-      .mockClear()
-      .mockResolvedValueOnce(getEntry({})) // team
-      .mockResolvedValueOnce(getEntry({})) // user
-      .mockResolvedValueOnce(getEntry({})) // external-user
-      .mockRejectedValueOnce(new Error('not-found')); // calendar
     jest
       .spyOn(contentfulEnv, 'getEntries')
       .mockReset()
@@ -576,7 +571,7 @@ describe('Migrate events', () => {
 
     expect(console.log).toHaveBeenCalledWith(
       '\x1b[31m',
-      '[ERROR] Calendar 1e34bfaa-6752-41ec-a796-eca801228a90 does not exist in contentful. Event with id event-1 is going to be created without a calendar.',
+      '[ERROR] Calendar calendar-1 does not exist in contentful. Event with id event-1 is going to be created without a calendar.',
     );
   });
 });

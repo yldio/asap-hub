@@ -290,7 +290,12 @@ export const migrateEvents = async () => {
     };
   };
 
-  const clearPreviousEntries = false;
+  // this clearPreviousEntries should be set to false
+  // in case we want to update the existing Contentful events
+  // created during google calendar sync instead of creating
+  // the events during the migration
+  const clearPreviousEntries = true;
+
   await migrateFromSquidexToContentful<EventItem>(
     'events',
     fetchData,

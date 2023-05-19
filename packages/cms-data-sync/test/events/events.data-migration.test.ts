@@ -220,7 +220,7 @@ describe('Migrate events', () => {
     console.log = consoleLogRef;
   });
 
-  it('does not call clear contentful entries for events', async () => {
+  it('calls clear contentful entries for events', async () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       getEventSquidexResponse(),
     );
@@ -228,7 +228,7 @@ describe('Migrate events', () => {
     await migrateEvents();
 
     const clearContentfulEntriesMock = clearContentfulEntries as jest.Mock;
-    expect(clearContentfulEntriesMock).not.toHaveBeenCalled();
+    expect(clearContentfulEntriesMock).toHaveBeenCalled();
   });
 
   it('unpublishes and deletes previous speakers from existing Contentful event', async () => {

@@ -29,6 +29,7 @@ import ResearchOutputs from '../src/controllers/research-outputs';
 import Users from '../src/controllers/users';
 import { AssetSquidexDataProvider } from '../src/data-providers/assets.data-provider';
 import { ExternalAuthorContentfulDataProvider } from '../src/data-providers/contentful/external-authors.data-provider';
+import { EventContentfulDataProvider } from '../src/data-providers/contentful/event.data-provider';
 import { UserContentfulDataProvider } from '../src/data-providers/contentful/users.data-provider';
 import { EventSquidexDataProvider } from '../src/data-providers/event.data-provider';
 import { ExternalAuthorSquidexDataProvider } from '../src/data-providers/external-authors.data-provider';
@@ -146,10 +147,13 @@ const getController = (entity: keyof EntityResponses) => {
 
   const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
 
-  const eventDataProvider = new EventSquidexDataProvider(
-    eventsRestClient,
-    squidexGraphqlClient,
-  );
+  const eventDataProvider = isContentfulEnabled
+    ? new EventContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      )
+    : new EventSquidexDataProvider(eventsRestClient, squidexGraphqlClient);
+
   const labDataProvider = new LabSquidexDataProvider(squidexGraphqlClient);
   const controllerMap = {
     user: new Users(userDataProvider, assetDataProvider),

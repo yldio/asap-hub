@@ -52,8 +52,6 @@ describe('User data provider', () => {
         );
       const result = await userDataProviderWithMockServer.fetchById('123');
       const expectation = getUserDataObject();
-      // TODO: attach ORCID works to users
-      expectation.orcidWorks = [];
       // TODO: team proposal
       expectation.teams[0]!.proposal = undefined;
       expect(result).toEqual(expectation);
@@ -92,7 +90,6 @@ describe('User data provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: getContentfulGraphqlUser({
           teamsCollection: {
-            total: 2,
             items: [
               null,
               {
@@ -119,7 +116,6 @@ describe('User data provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: getContentfulGraphqlUser({
           teamsCollection: {
-            total: 2,
             items: [
               {
                 inactiveSinceDate: null,
@@ -175,7 +171,6 @@ describe('User data provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: getContentfulGraphqlUser({
           labsCollection: {
-            total: 2,
             items: [
               {
                 sys: {
@@ -239,6 +234,7 @@ describe('User data provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: getContentfulGraphqlUser({
           sys: {
+            id: '123',
             firstPublishedAt: '2018-02-14T12:00:00.000Z',
           },
           createdDate: null,
@@ -248,6 +244,18 @@ describe('User data provider', () => {
       const result = await userDataProvider.fetchById('123');
 
       expect(result!.createdDate).toEqual('2018-02-14T12:00:00.000Z');
+    });
+
+    test('should throw an error when orcid-works field does not adhere to the interface', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          orcidWorks: { invalid: 'data' },
+        }),
+      });
+
+      await expect(userDataProvider.fetchById('123')).rejects.toThrow(
+        'Invalid ORCID works content data',
+      );
     });
 
     describe('default values', () => {
@@ -292,7 +300,6 @@ describe('User data provider', () => {
           users: getContentfulGraphqlUser({
             ...stringFields,
             ...fields,
-            social,
           }),
         });
         result = await userDataProvider.fetchById('123');
@@ -331,8 +338,6 @@ describe('User data provider', () => {
         );
       const result = await userDataProviderWithMockServer.fetch({});
       const expectation = getUserDataObject();
-      // TODO: attach ORCID works to users
-      expectation.orcidWorks = [];
       // TODO: team proposal
       expectation.teams[0]!.proposal = undefined;
       expect(result.total).toEqual(1);
@@ -445,6 +450,7 @@ describe('User data provider', () => {
                 items: [...new Array(2)],
               };
             },
+            ...getContentfulGraphql(),
           });
 
         const userDataProviderWithMockServer: UserDataProvider =
@@ -492,6 +498,7 @@ describe('User data provider', () => {
                 ],
               };
             },
+            ...getContentfulGraphql(),
           });
 
         const userDataProviderWithMockServer: UserDataProvider =

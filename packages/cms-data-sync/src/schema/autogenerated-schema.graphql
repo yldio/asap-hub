@@ -6224,6 +6224,7 @@ input GroupsDataInputDto {
 The structure of the Leaders nested schema.
 """
 type GroupsDataLeadersChildDto {
+  inactiveSinceDate: Instant
   role: String
   user: [Users!]
 }
@@ -6232,6 +6233,7 @@ type GroupsDataLeadersChildDto {
 The structure of the Leaders nested schema.
 """
 input GroupsDataLeadersChildInputDto {
+  inactiveSinceDate: Instant
   role: String
   user: [String!]
 }

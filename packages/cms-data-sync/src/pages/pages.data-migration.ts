@@ -79,6 +79,7 @@ export const migratePages = async () => {
     'pages',
     fetchData,
     parsePagesItem,
+    true,
     fallbackParsePageItem,
   );
 };

@@ -9,10 +9,11 @@ import {
   ResearchOutputForm,
   ResearchOutputHeader,
   Toast,
+  usePrevious,
 } from '@asap-hub/react-components';
 import { InnerToastContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import researchSuggestions from '../teams/research-suggestions';
 import { useWorkingGroupById } from './state';
 import {
@@ -50,9 +51,20 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const workingGroup = useWorkingGroupById(workingGroupId);
 
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
+  const previousErrors = usePrevious(errors);
 
   const [toastNode, setToastNode] = useState<ReactNode>(undefined);
   const toast = useCallback((node: ReactNode) => setToastNode(node), []);
+  const previousToast = usePrevious(toastNode);
+
+  useEffect(() => {
+    if (
+      toastNode !== previousToast ||
+      (previousErrors && previousErrors?.length < errors.length)
+    ) {
+      window.scrollTo(0, 0);
+    }
+  }, [toastNode, errors.length, previousErrors, previousToast]);
 
   const createResearchOutput = usePostResearchOutput();
   const updateResearchOutput = usePutResearchOutput();

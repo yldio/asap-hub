@@ -32,6 +32,10 @@ jest.mock('../api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
 
+beforeEach(() => {
+  window.scrollTo = jest.fn();
+});
+
 const baseUser = createUserResponse();
 const baseResearchOutput: ResearchOutputResponse = {
   ...createResearchOutputResponse(),
@@ -467,6 +471,7 @@ it('will toast server side errors for unknown errors', async () => {
       'There was an error and we were unable to save your changes. Please try again.',
     ),
   ).toBeInTheDocument();
+  expect(window.scrollTo).toBeCalled();
 });
 
 it('will toast server side errors for unknown errors in edit mode', async () => {
@@ -502,6 +507,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
       'There was an error and we were unable to save your changes. Please try again.',
     ),
   ).toBeInTheDocument();
+  expect(window.scrollTo).toBeCalled();
 });
 
 async function renderPage({

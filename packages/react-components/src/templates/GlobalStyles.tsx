@@ -14,7 +14,7 @@ const styles = {
   'html, body, #root': {
     boxSizing: 'border-box',
     width: '100%',
-    height: '100%',
+    minHeight: '100%',
   },
   p: {
     letterSpacing: `${0.1 / perRem}em`,

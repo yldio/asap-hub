@@ -9,6 +9,7 @@ import {
   ResearchOutputForm,
   ResearchOutputHeader,
   Toast,
+  usePrevious,
 } from '@asap-hub/react-components';
 import { InnerToastContext } from '@asap-hub/react-context';
 import {
@@ -16,7 +17,7 @@ import {
   TeamOutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { ReactNode, useCallback, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import researchSuggestions from './research-suggestions';
 import { useTeamById } from './state';
 import {
@@ -56,9 +57,20 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     );
   const team = useTeamById(teamId);
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
+  const previousErrors = usePrevious(errors);
 
   const [toastNode, setToastNode] = useState<ReactNode>(undefined);
   const toast = useCallback((node: ReactNode) => setToastNode(node), []);
+  const previousToast = usePrevious(toastNode);
+
+  useEffect(() => {
+    if (
+      toastNode !== previousToast ||
+      (previousErrors && previousErrors?.length < errors.length)
+    ) {
+      window.scrollTo(0, 0);
+    }
+  }, [toastNode, errors.length, previousErrors, previousToast]);
 
   const createResearchOutput = usePostResearchOutput();
   const updateResearchOutput = usePutResearchOutput();

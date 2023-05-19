@@ -40,6 +40,10 @@ jest.mock('../../teams/api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
 
+beforeEach(() => {
+  window.scrollTo = jest.fn();
+});
+
 const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
   typeof createResearchOutput
 >;
@@ -410,6 +414,7 @@ it('will toast server side errors for unknown errors', async () => {
       'There was an error and we were unable to save your changes. Please try again.',
     ),
   ).toBeInTheDocument();
+  expect(window.scrollTo).toBeCalled();
 });
 
 it.each([

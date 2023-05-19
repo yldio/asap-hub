@@ -4,7 +4,7 @@ concurrency:
   cancel-in-progress: true
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, labeled]
     branches:
       - master
 jobs:
@@ -37,6 +37,7 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-environment-id: ${{ steps.setup.outputs.crn-contentful-env-id }}
           app: crn
+          create-dedicated-env: ${{ contains(github.event.pull_request.labels.*.name, 'crn-create-environment') }}
       - name: Get GP2 Contentful Environment state
         id: get-gp2-contentful-state
         uses: ./.github/actions/contentful-checks
@@ -46,6 +47,7 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-environment-id: ${{ steps.setup.outputs.gp2-contentful-env-id }}
           app: gp2
+          create-dedicated-env: ${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') }}
 
   test:
     uses: ./.github/workflows/reusable-test.yml

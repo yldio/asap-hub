@@ -513,6 +513,41 @@ describe('Migrate events', () => {
     );
   });
 
+  it('handles empty meeting link', async () => {
+    const eventWithEmptyMeetingLink = getEventSquidexResponse();
+    eventWithEmptyMeetingLink.queryEventsContentsWithTotal!.items![0].flatData.meetingLink =
+      '';
+    squidexGraphqlClientMock.request.mockResolvedValueOnce(
+      eventWithEmptyMeetingLink,
+    );
+
+    jest
+      .spyOn(contentfulEnv, 'getEntries')
+      .mockReset()
+      .mockImplementation(() =>
+        Promise.resolve({
+          total: 0,
+          items: [],
+          skip: 0,
+          limit: 10,
+          toPlainObject: jest.fn(),
+          sys: { type: 'Array' },
+        }),
+      );
+    await migrateEvents();
+
+    expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
+      'events',
+      'event-1',
+      {
+        fields: {
+          ...baseCreatePayload,
+          meetingLink: { 'en-US': null },
+        },
+      },
+    );
+  });
+
   it('creates a new Contentful event when it does not exist there yet', async () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       getEventSquidexResponse(),

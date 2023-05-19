@@ -246,7 +246,7 @@ export const migrateEvents = async () => {
       calendar,
     } = squidexFlatData;
 
-    const materialsSpeakersAndThumbnail = {
+    const materialsSpeakersThumbAndMeetingLink = {
       thumbnail: thumbnail?.length
         ? await createAsset(contentfulEnvironment, thumbnail)
         : null,
@@ -254,6 +254,9 @@ export const migrateEvents = async () => {
       notes: await createDocumentIfNeeded(notes),
       videoRecording: await createDocumentIfNeeded(videoRecording),
       presentation: await createDocumentIfNeeded(presentation),
+      // it throws an error if meetingLink is ''
+      // because it's not a valid url
+      meetingLink: meetingLink?.trim() === '' ? null : meetingLink?.trim(),
     };
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -266,7 +269,6 @@ export const migrateEvents = async () => {
         id: contentfulEvent.sys.id,
         updateEntry: true,
         hidden,
-        meetingLink,
         hideMeetingLink,
         tags,
         notesPermanentlyUnavailable,
@@ -277,7 +279,7 @@ export const migrateEvents = async () => {
         presentationUpdatedAt,
         meetingMaterials,
         meetingMaterialsPermanentlyUnavailable,
-        ...materialsSpeakersAndThumbnail,
+        ...materialsSpeakersThumbAndMeetingLink,
       };
     }
 
@@ -285,7 +287,7 @@ export const migrateEvents = async () => {
       id,
       updateEntry: false,
       ...squidexFlatData,
-      ...materialsSpeakersAndThumbnail,
+      ...materialsSpeakersThumbAndMeetingLink,
       calendar: await createCalendarLink(calendar, id),
     };
   };

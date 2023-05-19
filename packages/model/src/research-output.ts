@@ -199,7 +199,6 @@ export type ResearchOutputCoreObject = {
   publishDate?: string;
   rrid?: string;
   sharingStatus: ResearchOutputSharingStatus;
-  tags: string[];
   title: string;
   type?: ResearchOutputType;
   usageNotes?: string;
@@ -324,7 +323,6 @@ export type ResearchOutputPostRequest = {
   rrid?: string;
   sharingStatus: ResearchOutputSharingStatus;
   subtype?: string;
-  tags: string[];
   keywords: string[];
   teams: string[];
   workingGroups: string[];

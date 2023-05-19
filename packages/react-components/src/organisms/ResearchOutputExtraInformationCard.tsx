@@ -20,13 +20,9 @@ import {
 
 type ResearchOutputExtraInformationProps = Pick<
   ResearchOutputPostRequest,
-  | 'tags'
-  | 'usageNotes'
-  | 'labCatalogNumber'
-  | 'methods'
-  | 'organisms'
-  | 'environments'
+  'usageNotes' | 'labCatalogNumber' | 'methods' | 'organisms' | 'environments'
 > & {
+  tags: string[];
   tagSuggestions: NonNullable<
     ComponentProps<typeof LabeledMultiSelect>['suggestions']
   >;

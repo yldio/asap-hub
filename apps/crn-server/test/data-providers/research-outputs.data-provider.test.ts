@@ -25,6 +25,7 @@ import {
   getSquidexResearchOutputGraphqlResponse,
   getSquidexResearchOutputsGraphqlResponse,
 } from '../fixtures/research-output.fixtures';
+import { getSquidexResearchTagsGraphqlResponse } from '../fixtures/research-tag.fixtures';
 import { getSquidexGraphqlTeam } from '../fixtures/teams.fixtures';
 import {
   getGraphqlResponseFetchUsers,
@@ -588,6 +589,7 @@ describe('ResearchOutputs data provider', () => {
       const result = await researchOutputDataProviderMockGraphql.fetch({
         take: 8,
         skip: 0,
+        search: 'Title',
       });
 
       expect(result).toMatchObject(getListResearchOutputDataObject());
@@ -668,198 +670,302 @@ describe('ResearchOutputs data provider', () => {
         withTeams: true,
       };
 
-      beforeEach(() => {
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          getSquidexResearchOutputsGraphqlResponse(),
-        );
-      });
-
-      test('Should pass the pagination parameters as expected', async () => {
-        await researchOutputDataProvider.fetch({ take: 13, skip: 7 });
-
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            top: 13,
-            skip: 7,
-          },
-          expect.anything(),
-        );
-      });
-
-      test('Should pass the displayDrafts parameter as expected', async () => {
-        await researchOutputDataProvider.fetch({
-          take: 13,
-          skip: 7,
-          includeDrafts: true,
+      describe('without search param', () => {
+        beforeEach(() => {
+          squidexGraphqlClientMock.request.mockResolvedValueOnce(
+            getSquidexResearchOutputsGraphqlResponse(),
+          );
         });
 
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            top: 13,
+        test('Should pass the pagination parameters as expected', async () => {
+          await researchOutputDataProvider.fetch({ take: 13, skip: 7 });
+
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              ...expectedDefaultParams,
+              top: 13,
+              skip: 7,
+            },
+            expect.anything(),
+          );
+        });
+
+        test('Should pass the displayDrafts parameter as expected', async () => {
+          await researchOutputDataProvider.fetch({
+            take: 13,
             skip: 7,
-          },
-          {
             includeDrafts: true,
-          },
-        );
-      });
+          });
 
-      test('Should pass the search parameter as a squidex filter', async () => {
-        await researchOutputDataProvider.fetch({
-          ...defaultParams,
-          search: 'Title',
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              ...expectedDefaultParams,
+              top: 13,
+              skip: 7,
+            },
+            {
+              includeDrafts: true,
+            },
+          );
         });
 
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            filter:
-              "((contains(data/title/iv,'Title')) or (contains(data/tags/iv,'Title')))",
-          },
-          expect.anything(),
-        );
-      });
+        test('Should pass the object filter parameter properties as a squidex filter', async () => {
+          await researchOutputDataProvider.fetch({
+            ...defaultParams,
+            filter: {
+              documentType: 'some-type',
+              title: 'some-title',
+            },
+          });
 
-      test('Should pass the object filter parameter properties as a squidex filter', async () => {
-        await researchOutputDataProvider.fetch({
-          ...defaultParams,
-          filter: {
-            documentType: 'some-type',
-            title: 'some-title',
-          },
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              ...expectedDefaultParams,
+              filter:
+                "data/documentType/iv eq 'some-type' and data/title/iv eq 'some-title'",
+            },
+            expect.anything(),
+          );
         });
 
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            filter:
-              "data/documentType/iv eq 'some-type' and data/title/iv eq 'some-title'",
-          },
-          expect.anything(),
-        );
-      });
+        test('Should pass the object filter parameter properties with an array as a squidex filter', async () => {
+          await researchOutputDataProvider.fetch({
+            ...defaultParams,
+            filter: {
+              documentType: ['some-type-1', 'some-type-2'],
+              title: 'some-title',
+            },
+          });
 
-      test('Should pass the object filter parameter properties with an array as a squidex filter', async () => {
-        await researchOutputDataProvider.fetch({
-          ...defaultParams,
-          filter: {
-            documentType: ['some-type-1', 'some-type-2'],
-            title: 'some-title',
-          },
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              ...expectedDefaultParams,
+              filter:
+                "((data/documentType/iv eq 'some-type-1') or (data/documentType/iv eq 'some-type-2')) and data/title/iv eq 'some-title'",
+            },
+            expect.anything(),
+          );
         });
 
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            filter:
-              "((data/documentType/iv eq 'some-type-1') or (data/documentType/iv eq 'some-type-2')) and data/title/iv eq 'some-title'",
-          },
-          expect.anything(),
-        );
+        test('Should pass the object filter parameter properties with `status:draft` as a squidex filter', async () => {
+          await researchOutputDataProvider.fetch({
+            ...defaultParams,
+            filter: {
+              status: 'draft',
+              teamId: 'team-id-0',
+              workingGroupId: 'workingGroup-id-0',
+            },
+          });
+
+          expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            {
+              ...expectedDefaultParams,
+              filter:
+                "status eq 'Draft' and data/teams/iv in ['team-id-0'] and data/workingGroups/iv in ['workingGroup-id-0']",
+            },
+            expect.anything(),
+          );
+        });
       });
 
-      test('Should pass the object filter parameter properties with `status:draft` as a squidex filter', async () => {
-        await researchOutputDataProvider.fetch({
-          ...defaultParams,
-          filter: {
-            status: 'draft',
-            teamId: 'team-id-0',
-            workingGroupId: 'workingGroup-id-0',
-          },
+      describe('with search param', () => {
+        describe('tags found', () => {
+          beforeEach(() => {
+            const tagResponse = getSquidexResearchTagsGraphqlResponse();
+
+            tagResponse.queryResearchTagsContentsWithTotal!.items = [
+              tagResponse.queryResearchTagsContentsWithTotal!.items![0]!,
+            ];
+
+            squidexGraphqlClientMock.request
+              .mockResolvedValueOnce(tagResponse)
+              .mockResolvedValueOnce(
+                getSquidexResearchOutputsGraphqlResponse(),
+              );
+          });
+
+          test('Should pass the search parameter as a squidex filter', async () => {
+            await researchOutputDataProvider.fetch({
+              ...defaultParams,
+              search: 'Title',
+            });
+
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                top: 200,
+                skip: 0,
+                filter: "contains(data/name/iv,'Title')",
+              },
+            );
+
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                ...expectedDefaultParams,
+                filter:
+                  "((contains(data/title/iv,'Title')) or (data/keywords/iv in ('ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca')))",
+              },
+              expect.anything(),
+            );
+          });
+
+          test('Should pass the search and filter parameter as a squidex filter', async () => {
+            await researchOutputDataProvider.fetch({
+              ...defaultParams,
+              search: 'Title',
+              filter: {
+                documentType: ['Grant Document', 'Presentation'],
+              },
+            });
+
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                top: 200,
+                skip: 0,
+                filter: "contains(data/name/iv,'Title')",
+              },
+            );
+
+            const expectedFilter =
+              "((data/documentType/iv eq 'Grant Document') or (data/documentType/iv eq 'Presentation')) " +
+              "and ((contains(data/title/iv,'Title')) or (data/keywords/iv in ('ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca')))";
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                ...expectedDefaultParams,
+                filter: expectedFilter,
+              },
+              expect.anything(),
+            );
+          });
+
+          test('Should break up the search parameter into multiple words and send as a squidex filter', async () => {
+            await researchOutputDataProvider.fetch({
+              ...defaultParams,
+              search: 'some words',
+            });
+
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                top: 200,
+                skip: 0,
+                filter:
+                  "((contains(data/name/iv,'some')) or (contains(data/name/iv,'words')))",
+              },
+            );
+
+            const expectedFilter =
+              "((contains(data/title/iv,'some')) or (contains(data/title/iv,'words')) or (data/keywords/iv in ('ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca')))";
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                ...expectedDefaultParams,
+                filter: expectedFilter,
+              },
+              expect.anything(),
+            );
+          });
+
+          test('Should sanitise single quote in the search parameter by doubling it for the squidex filter', async () => {
+            await researchOutputDataProvider.fetch({
+              ...defaultParams,
+              search: "'",
+            });
+
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                top: 200,
+                skip: 0,
+                filter: "contains(data/name/iv,'''')",
+              },
+            );
+
+            const expectedFilter =
+              "((contains(data/title/iv,'''')) or (data/keywords/iv in ('ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca')))";
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                ...expectedDefaultParams,
+                filter: expectedFilter,
+              },
+              expect.anything(),
+            );
+          });
+
+          test('Should sanitise double quotation mark in the search parameter by escaping it', async () => {
+            await researchOutputDataProvider.fetch({
+              ...defaultParams,
+              search: '"',
+            });
+
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                top: 200,
+                skip: 0,
+                filter: "contains(data/name/iv,'\"')",
+              },
+            );
+
+            const expectedFilter =
+              "((contains(data/title/iv,'\"')) or (data/keywords/iv in ('ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca')))";
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                ...expectedDefaultParams,
+                filter: expectedFilter,
+              },
+              expect.anything(),
+            );
+          });
         });
+        describe('tags not found', () => {
+          beforeEach(() => {
+            const tagResponse = getSquidexResearchTagsGraphqlResponse();
 
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            filter:
-              "status eq 'Draft' and data/teams/iv in ['team-id-0'] and data/workingGroups/iv in ['workingGroup-id-0']",
-          },
-          expect.anything(),
-        );
-      });
+            tagResponse.queryResearchTagsContentsWithTotal = null;
 
-      test('Should pass the search and filter parameter as a squidex filter', async () => {
-        await researchOutputDataProvider.fetch({
-          ...defaultParams,
-          search: 'Title',
-          filter: {
-            documentType: ['Grant Document', 'Presentation'],
-          },
+            squidexGraphqlClientMock.request
+              .mockResolvedValueOnce(tagResponse)
+              .mockResolvedValueOnce(
+                getSquidexResearchOutputsGraphqlResponse(),
+              );
+          });
+
+          test('Should not include keyword condition if null we get null response from keyword query', async () => {
+            await researchOutputDataProvider.fetch({
+              ...defaultParams,
+              search: 'Title',
+            });
+
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                top: 200,
+                skip: 0,
+                filter: "contains(data/name/iv,'Title')",
+              },
+            );
+
+            expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+              expect.anything(),
+              {
+                ...expectedDefaultParams,
+                filter: "contains(data/title/iv,'Title')",
+              },
+              expect.anything(),
+            );
+          });
         });
-
-        const expectedFilter =
-          "((data/documentType/iv eq 'Grant Document') or (data/documentType/iv eq 'Presentation')) " +
-          "and ((contains(data/title/iv,'Title')) or (contains(data/tags/iv,'Title')))";
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            filter: expectedFilter,
-          },
-          expect.anything(),
-        );
-      });
-
-      test('Should break up the search parameter into multiple words and send as a squidex filter', async () => {
-        await researchOutputDataProvider.fetch({
-          ...defaultParams,
-          search: 'some words',
-        });
-
-        const expectedFilter =
-          "((contains(data/title/iv,'some')) or (contains(data/tags/iv,'some')) or (contains(data/title/iv,'words')) or (contains(data/tags/iv,'words')))";
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            filter: expectedFilter,
-          },
-          expect.anything(),
-        );
-      });
-
-      test('Should sanitise single quote in the search parameter by doubling it for the squidex filter', async () => {
-        await researchOutputDataProvider.fetch({
-          ...defaultParams,
-          search: "'",
-        });
-
-        const expectedFilter =
-          "((contains(data/title/iv,'''')) or (contains(data/tags/iv,'''')))";
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            filter: expectedFilter,
-          },
-          expect.anything(),
-        );
-      });
-
-      test('Should sanitise double quotation mark in the search parameter by escaping it', async () => {
-        await researchOutputDataProvider.fetch({
-          ...defaultParams,
-          search: '"',
-        });
-
-        const expectedFilter =
-          "((contains(data/title/iv,'\"')) or (contains(data/tags/iv,'\"')))";
-        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          {
-            ...expectedDefaultParams,
-            filter: expectedFilter,
-          },
-          expect.anything(),
-        );
       });
     });
   });

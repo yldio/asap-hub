@@ -100,7 +100,6 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     doi: null,
     accession: null,
     rrid: 'RRID:AB_90755',
-    tags: ['tag', 'test'],
     lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
     authors: getSquidexResearchOutputGraphqlResponseAuthors(),
     usageNotes: 'some access instructions',
@@ -190,7 +189,6 @@ export const getResearchOutputDataObject =
     title: 'Test Proposal 1234',
     description: 'Text',
     descriptionMD: 'Text MD',
-    tags: ['tag', 'test'],
     authors: fetchExpectation.items,
     teams: [{ id: 'team-id-0', displayName: 'Team A' }],
     relatedResearch: [
@@ -406,7 +404,6 @@ export const getRestResearchOutputCreateData =
     publishDate: { iv: '2021-05-21T13:18:31Z' },
     description: { iv: 'Text' },
     descriptionMD: { iv: 'Text MD' },
-    tags: { iv: ['tag', 'test'] },
     methods: {
       iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
     },

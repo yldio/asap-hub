@@ -67,10 +67,6 @@ export const researchOutputToCSV = (
     .map((item) => item)
     .sort(caseInsensitive)
     .join(','),
-  tags: output.tags
-    .map((item) => item)
-    .sort(caseInsensitive)
-    .join(','),
   usedInPublication: output.usedInPublication,
   sharingStatus: output.sharingStatus,
   asapFunded: output.asapFunded,

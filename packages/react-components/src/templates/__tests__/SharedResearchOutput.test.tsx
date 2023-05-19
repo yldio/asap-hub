@@ -78,7 +78,7 @@ describe('Grant Documents', () => {
       <SharedResearchOutput
         {...props}
         documentType="Grant Document"
-        tags={['tag1']}
+        keywords={['tag1']}
         description="abc 123"
       />,
     );
@@ -125,7 +125,7 @@ describe('Not Grant Documents', () => {
         <SharedResearchOutput
           {...props}
           documentType="Article"
-          tags={[]}
+          keywords={[]}
           description=""
           descriptionMD=""
         />,
@@ -142,7 +142,7 @@ describe('Not Grant Documents', () => {
         <SharedResearchOutput
           {...props}
           documentType="Article"
-          tags={[]}
+          keywords={[]}
           description="text"
         />,
       );
@@ -159,7 +159,7 @@ describe('Not Grant Documents', () => {
         <SharedResearchOutput
           {...props}
           documentType="Article"
-          tags={['tag1']}
+          keywords={['tag1']}
           description={undefined}
           descriptionMD={undefined}
         />,
@@ -173,7 +173,7 @@ describe('Not Grant Documents', () => {
         <SharedResearchOutput
           {...props}
           documentType="Article"
-          tags={['tag1']}
+          keywords={['tag1']}
           description=""
           descriptionMD=""
         />,
@@ -190,7 +190,7 @@ describe('Not Grant Documents', () => {
         <SharedResearchOutput
           {...props}
           documentType="Article"
-          tags={['tag1']}
+          keywords={['tag1']}
           description="text"
         />,
       );
@@ -207,7 +207,7 @@ describe('Not Grant Documents', () => {
         <SharedResearchOutput
           {...props}
           documentType="Article"
-          tags={['tag1']}
+          keywords={['tag1']}
           description="should not be there"
           descriptionMD="should be visible"
         />,
@@ -274,7 +274,7 @@ it('merges different tag types in the correct order', () => {
       organisms={['organisms']}
       environments={['environment']}
       subtype={'subtype'}
-      tags={['tag']}
+      keywords={['tag']}
       teams={[]}
       labs={[]}
       authors={[]}

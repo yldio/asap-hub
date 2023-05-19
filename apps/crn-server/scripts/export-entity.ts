@@ -55,8 +55,8 @@ export const exportEntity = async (
 
   do {
     records = await controller.fetch({
-      take: 50,
-      skip: (page - 1) * 50,
+      take: 20,
+      skip: (page - 1) * 20,
     });
 
     total = records.total;

@@ -21,9 +21,7 @@ describe('Working Group Network Data Provider', () => {
   const workingGroupDataProviderMockGraphqlServer =
     new WorkingGroupNetworkSquidexDataProvider(squidexGraphqlClientMockServer);
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     test('Should fetch the working group network from squidex graphql', async () => {
@@ -71,6 +69,14 @@ describe('Working Group Network Data Provider', () => {
         .flatMap(({ workingGroups }) => workingGroups);
 
       expect(complexDiseaseWorkingGroups).toEqual([]);
+    });
+  });
+  describe('Fetch-by-id method', () => {
+    test('Should throw as not implemented', async () => {
+      expect.assertions(1);
+      await expect(workingGroupDataProvider.fetchById()).rejects.toThrow(
+        /Method not implemented/i,
+      );
     });
   });
 });

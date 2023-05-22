@@ -59,5 +59,38 @@ describe('Working Group Network Data Provider', () => {
       const expected = getListWorkingGroupNetworkDataObject();
       expect(result).toEqual(expected);
     });
+    test('the working group network is parsed2', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroupNetworkCollection: {
+          total: 1,
+          items: [
+            {
+              noCollection: {
+                total: 1,
+                items: [],
+              },
+            },
+          ],
+        },
+      });
+      const result = await workingGroupDataProvider.fetch();
+      expect(result).toEqual({
+        items: [
+          { role: 'operational', workingGroups: [] },
+          { role: 'monogenic', workingGroups: [] },
+          { role: 'complexDisease', workingGroups: [] },
+          { role: 'support', workingGroups: [] },
+        ],
+        total: 4,
+      });
+    });
+  });
+  describe('Fetch-by-id method', () => {
+    test('Should throw as not implemented', async () => {
+      expect.assertions(1);
+      await expect(workingGroupDataProvider.fetchById()).rejects.toThrow(
+        /Method not implemented/i,
+      );
+    });
   });
 });

@@ -1,4 +1,9 @@
-import { isKeyword, keywords } from '../../src/gp2';
+import {
+  isKeyword,
+  isMilestoneStatus,
+  keywords,
+  milestoneStatus,
+} from '../../src/gp2';
 
 describe('common', () => {
   describe('Keywords', () => {
@@ -8,6 +13,18 @@ describe('common', () => {
 
     it('should not recognise incorrect keyword', () => {
       expect(isKeyword('not-a-keyword')).toEqual(false);
+    });
+  });
+  describe('MilestoneStatus', () => {
+    it.each(milestoneStatus)(
+      'should recognise correct status - %s',
+      (status) => {
+        expect(isMilestoneStatus(status)).toEqual(true);
+      },
+    );
+
+    it('should not recognise incorrect status', () => {
+      expect(isMilestoneStatus('not-a-status')).toEqual(false);
     });
   });
 });

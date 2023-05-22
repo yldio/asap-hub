@@ -50,6 +50,16 @@ describe('Working Group Data Provider', () => {
       const expected = getWorkingGroupDataObject();
       expect(workingGroupDataObject).toEqual(expected);
     });
+    test('the calendar is null is ignored', async () => {
+      const workingGroup = getContentfulGraphqlWorkingGroup();
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroups: { ...workingGroup, calendar: null },
+      });
+      const workingGroupDataObject = await workingGroupDataProvider.fetchById(
+        'working-group-id',
+      );
+      expect(workingGroupDataObject?.calendar).toBeUndefined();
+    });
     describe('members', () => {
       test('the members in working group are parsed', async () => {
         const workingGroup = getContentfulGraphqlWorkingGroup();
@@ -160,10 +170,61 @@ describe('Working Group Data Provider', () => {
           workingGroupDataProvider.fetchById('working-group-id'),
         ).rejects.toThrow();
       });
-    });
-    test.each([false, undefined])(
-      'should skip the user from the result if the user is not onboarded',
-      async (onboarded) => {
+      test.each([false, undefined])(
+        'should skip the user from the result if the user is not onboarded',
+        async (onboarded) => {
+          const workingGroup = {
+            ...getContentfulGraphqlWorkingGroup(),
+            membersCollection: {
+              total: 0,
+              items: [
+                {
+                  sys: { id: '11' },
+                  role: 'Lead',
+                  user: {
+                    sys: { id: '42 ' },
+                    onboarded,
+                  },
+                },
+              ],
+            },
+          };
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            workingGroups: workingGroup,
+          });
+          const workingGroupDataObject =
+            await workingGroupDataProvider.fetchById('working-group-id');
+          expect(workingGroupDataObject?.members).toEqual([]);
+        },
+      );
+      test.each(gp2Model.workingGroupMemberRole)(
+        'should parse the role',
+        async (role) => {
+          const workingGroup = {
+            ...getContentfulGraphqlWorkingGroup(),
+            membersCollection: {
+              total: 0,
+              items: [
+                {
+                  sys: { id: '11' },
+                  role,
+                  user: {
+                    sys: { id: '42 ' },
+                    onboarded: true,
+                  },
+                },
+              ],
+            },
+          };
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            workingGroups: workingGroup,
+          });
+          const workingGroupDataObject =
+            await workingGroupDataProvider.fetchById('working-group-id');
+          expect(workingGroupDataObject?.members[0]?.role).toEqual(role);
+        },
+      );
+      test('should skip the user from the result if the user property is undefined', async () => {
         const workingGroup = {
           ...getContentfulGraphqlWorkingGroup(),
           membersCollection: {
@@ -172,10 +233,7 @@ describe('Working Group Data Provider', () => {
               {
                 sys: { id: '11' },
                 role: 'Lead',
-                user: {
-                  sys: { id: '42 ' },
-                  onboarded,
-                },
+                user: null,
               },
             ],
           },
@@ -187,26 +245,11 @@ describe('Working Group Data Provider', () => {
           'working-group-id',
         );
         expect(workingGroupDataObject?.members).toEqual([]);
-      },
-    );
-    test.each(gp2Model.workingGroupMemberRole)(
-      'should parse the role',
-      async (role) => {
+      });
+      test('undefined members should return empty array', async () => {
         const workingGroup = {
           ...getContentfulGraphqlWorkingGroup(),
-          membersCollection: {
-            total: 0,
-            items: [
-              {
-                sys: { id: '11' },
-                role,
-                user: {
-                  sys: { id: '42 ' },
-                  onboarded: true,
-                },
-              },
-            ],
-          },
+          membersCollection: null,
         };
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
@@ -214,30 +257,8 @@ describe('Working Group Data Provider', () => {
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
           'working-group-id',
         );
-        expect(workingGroupDataObject?.members[0]?.role).toEqual(role);
-      },
-    );
-    test('should skip the user from the result if the user property is undefined', async () => {
-      const workingGroup = {
-        ...getContentfulGraphqlWorkingGroup(),
-        membersCollection: {
-          total: 0,
-          items: [
-            {
-              sys: { id: '11' },
-              role: 'Lead',
-              user: null,
-            },
-          ],
-        },
-      };
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        workingGroups: workingGroup,
+        expect(workingGroupDataObject?.members).toEqual([]);
       });
-      const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-        'working-group-id',
-      );
-      expect(workingGroupDataObject?.members).toEqual([]);
     });
     describe('milestones', () => {
       test('undefined milestones returns empty array', async () => {
@@ -335,6 +356,22 @@ describe('Working Group Data Provider', () => {
           workingGroupDataProvider.fetchById('working-group-id'),
         ).rejects.toThrow(new TypeError('milestone status is unknown'));
       });
+      test('empty collection return empty array', async () => {
+        const workingGroup = {
+          ...getContentfulGraphqlWorkingGroup(),
+          milestonesCollection: {
+            total: 0,
+            items: null,
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          workingGroups: workingGroup,
+        });
+        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
+          'working-group-id',
+        );
+        expect(workingGroupDataObject?.milestones).toEqual([]);
+      });
     });
     describe('resources', () => {
       test('should map a resource note', async () => {
@@ -400,8 +437,6 @@ describe('Working Group Data Provider', () => {
           },
         ]);
       });
-    });
-    describe('resources', () => {
       test('should map a resource link', async () => {
         const externalLink = 'this is an external link';
         const workingGroup = {
@@ -529,6 +564,22 @@ describe('Working Group Data Provider', () => {
         'working-group-id',
       );
       expect(workingGroupDataObject?.resources).toEqual([]);
+    });
+  });
+  describe('Fetch method', () => {
+    test('Should throw as not implemented', async () => {
+      expect.assertions(1);
+      await expect(workingGroupDataProvider.fetch()).rejects.toThrow(
+        /Method not implemented/i,
+      );
+    });
+  });
+  describe('update method', () => {
+    test('Should throw as not implemented', async () => {
+      expect.assertions(1);
+      await expect(workingGroupDataProvider.update()).rejects.toThrow(
+        /Method not implemented/i,
+      );
     });
   });
 });

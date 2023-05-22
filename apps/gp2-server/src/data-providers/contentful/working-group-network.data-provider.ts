@@ -22,13 +22,7 @@ export class WorkingGroupNetworkContentfulDataProvider
         gp2Contentful.FetchWorkingGroupNetworkQueryVariables
       >(gp2Contentful.FETCH_WORKING_GROUP_NETWORK);
 
-    if (!networks?.items) {
-      return {
-        items: [],
-        total: 0,
-      };
-    }
-    const workingGroupNetwork = networks.items.filter(
+    const workingGroupNetwork = networks?.items.filter(
       (network): network is GraphQLWorkingGroupNetwork => network !== null,
     )[0];
     if (!workingGroupNetwork) {
@@ -49,10 +43,10 @@ export type GraphQLWorkingGroupNetwork = NonNullable<
   NonNullable<gp2Contentful.FetchWorkingGroupNetworkQuery>['workingGroupNetworkCollection']
 >['items'][number];
 
-export function parseWorkingGroupNetworkToDataObject(
+export const parseWorkingGroupNetworkToDataObject = (
   network: NonNullable<GraphQLWorkingGroupNetwork>,
-): gp2Model.WorkingGroupNetworkDataObject[] {
-  return workingGroupNetworkRole.map((role) => ({
+): gp2Model.WorkingGroupNetworkDataObject[] =>
+  workingGroupNetworkRole.map((role) => ({
     role,
     workingGroups:
       network[`${role}Collection`]?.items
@@ -62,4 +56,3 @@ export function parseWorkingGroupNetworkToDataObject(
         )
         .map(parseWorkingGroupToDataObject) || [],
   }));
-}

@@ -401,7 +401,7 @@ __metadata:
     graphql-typescript-integration: 1.2.1
     jest-when: 3.5.2
     limiter: ^2.1.0
-    p-throttle: ^4.1.1
+    p-throttle: 4.1.1
     prettier: 2.8.7
     ts-node: 10.9.1
   languageName: unknown

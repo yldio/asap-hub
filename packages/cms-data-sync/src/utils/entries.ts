@@ -3,11 +3,6 @@ import pThrottle from 'p-throttle';
 import { logger } from './logs';
 import { paginatedFetch } from './fetch';
 
-export const throttle = pThrottle({
-  limit: 3,
-  interval: 1000,
-});
-
 export const checkIfEntryAlreadyExistsInContentful = async (
   contentfulEnvironment: Environment,
   id: string,
@@ -54,6 +49,10 @@ export const clearContentfulEntries = async (
   const total = entries.length;
   let n = 0;
 
+  const throttle = pThrottle({
+    limit: 4,
+    interval: 1000,
+  });
   const throttledUnpublishAndDelete = throttle(async (entry: Entry) => {
     if (entry.isPublished()) {
       await entry.unpublish();
@@ -70,6 +69,10 @@ export const publishContentfulEntries = async (entries: Entry[]) => {
   const total = entries.length;
   let n = 0;
 
+  const throttle = pThrottle({
+    limit: 4,
+    interval: 1000,
+  });
   const throttledPublish = throttle(async (entry: Entry) => {
     try {
       const published = await entry.publish();

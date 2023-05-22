@@ -1,10 +1,7 @@
 import { Environment, Entry } from 'contentful-management';
 import { addLocaleToFields, updateEntryFields } from '@asap-hub/contentful';
-import {
-  clearContentfulEntries,
-  publishContentfulEntries,
-  throttle,
-} from './entries';
+import pThrottle from 'p-throttle';
+import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
 
 export const migrateFromSquidexToContentfulFactory =
@@ -21,6 +18,11 @@ export const migrateFromSquidexToContentfulFactory =
     ) => Promise<Record<string, unknown>>,
   ) => {
     const data = await fetchData();
+
+    const throttle = pThrottle({
+      limit: 4,
+      interval: 1000,
+    });
 
     const throttledCreateOrUpdateEntry = throttle(async (item: DataItem) => {
       const parsed = await parseData(item);

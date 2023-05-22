@@ -36,10 +36,7 @@ import logger from '../utils/logger';
 import { createUrl } from '../utils/urls';
 import { buildEqFilterForWords, buildODataFilter } from '../utils/odata';
 import { UserDataProvider } from './types';
-import {
-  getOrcidWorkPublicationDate,
-  isOrcidWorkType,
-} from '../entities/users';
+import { parseOrcidWorkFromCMS } from '../entities/users';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -466,19 +463,7 @@ export const parseGraphQLUserToDataObject = (
 
           return [
             ...orcidWorksAccumulator,
-            {
-              id: orcidWork.id,
-              doi: orcidWork.doi || undefined,
-              title: orcidWork.title || undefined,
-              type:
-                orcidWork.type && isOrcidWorkType(orcidWork.type)
-                  ? orcidWork.type
-                  : 'UNDEFINED',
-              publicationDate: getOrcidWorkPublicationDate(
-                orcidWork.publicationDate,
-              ),
-              lastModifiedDate: orcidWork.lastModifiedDate,
-            },
+            parseOrcidWorkFromCMS(orcidWork as NonNullable<OrcidWork>),
           ];
         }, [])
         .slice(0, 5)) ||

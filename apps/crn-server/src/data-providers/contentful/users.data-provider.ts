@@ -36,10 +36,7 @@ import {
 } from '@asap-hub/contentful';
 import { isTeamRole } from '../../entities';
 import { UserDataProvider } from '../types';
-import {
-  getOrcidWorkPublicationDate,
-  isOrcidWorkType,
-} from '../../entities/users';
+import { parseOrcidWorkFromCMS } from '../../entities/users';
 
 export type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -338,20 +335,7 @@ const parseOrcidWorksContentful = (
   orcidWorksContentful: OrcidWorkContentful[],
 ): OrcidWork[] => {
   try {
-    return orcidWorksContentful.map((orcidWork: OrcidWorkContentful) => ({
-      id: orcidWork.id,
-      doi: orcidWork.doi || undefined,
-      title: orcidWork.title || undefined,
-      type:
-        orcidWork.type && isOrcidWorkType(orcidWork.type)
-          ? orcidWork.type
-          : 'UNDEFINED',
-      publicationDate:
-        (orcidWork.publicationDate &&
-          getOrcidWorkPublicationDate(orcidWork.publicationDate)) ||
-        {},
-      lastModifiedDate: orcidWork.lastModifiedDate || '',
-    }));
+    return orcidWorksContentful.map(parseOrcidWorkFromCMS);
   } catch (e) {
     throw new Error(`Invalid ORCID works content data: ${e}`);
   }

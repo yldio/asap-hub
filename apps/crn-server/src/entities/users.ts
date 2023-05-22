@@ -3,9 +3,11 @@ import { OrcidWork, orcidWorkType, OrcidWorkType } from '@asap-hub/model';
 export const isOrcidWorkType = (data: string): data is OrcidWorkType =>
   (orcidWorkType as ReadonlyArray<string>).includes(data);
 
-export const getOrcidWorkPublicationDate = (
-  input: Record<'day' | 'month' | 'year', string | undefined>,
-): OrcidWork['publicationDate'] => {
+export const getOrcidWorkPublicationDate = (input: {
+  day?: string;
+  month?: string;
+  year?: string;
+}): OrcidWork['publicationDate'] => {
   const date: OrcidWork['publicationDate'] = {};
 
   if (typeof input.day === 'string') {
@@ -22,3 +24,31 @@ export const getOrcidWorkPublicationDate = (
 
   return date;
 };
+
+type OrcidWorkCMS = {
+  id: string;
+  doi?: string;
+  title?: string;
+  type?: string;
+  publicationDate?: {
+    day?: string;
+    month?: string;
+    year?: string;
+  };
+  lastModifiedDate?: string;
+};
+
+export const parseOrcidWorkFromCMS = (orcidWork: OrcidWorkCMS): OrcidWork => ({
+  id: orcidWork.id,
+  doi: orcidWork.doi || undefined,
+  title: orcidWork.title || undefined,
+  type:
+    orcidWork.type && isOrcidWorkType(orcidWork.type)
+      ? orcidWork.type
+      : 'UNDEFINED',
+  publicationDate:
+    (orcidWork.publicationDate &&
+      getOrcidWorkPublicationDate(orcidWork.publicationDate)) ||
+    {},
+  lastModifiedDate: orcidWork.lastModifiedDate || '',
+});

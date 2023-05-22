@@ -118,7 +118,7 @@ describe('ProjectDetail', () => {
       ];
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id, userId: '11' });
-      expect(screen.getByRole('link', { name: /resources/i })).toBeVisible();
+      expect(screen.getByRole('link', { name: /workspace/i })).toBeVisible();
     });
 
     it('does not render the resources tab if the user is not in the project', async () => {
@@ -134,7 +134,7 @@ describe('ProjectDetail', () => {
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id, userId: '11' });
       expect(
-        screen.queryByRole('link', { name: /resources/i }),
+        screen.queryByRole('link', { name: /workspace/i }),
       ).not.toBeInTheDocument();
     });
 
@@ -202,7 +202,7 @@ describe('ProjectDetail', () => {
       id: project.id,
       userId: '23',
     });
-    userEvent.click(screen.getByRole('link', { name: /resources/i }));
+    userEvent.click(screen.getByRole('link', { name: /workspace/i }));
     expect(
       screen.getByRole('heading', { name: /Workspace Resources/i }),
     ).toBeInTheDocument();

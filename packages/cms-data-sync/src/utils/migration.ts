@@ -24,6 +24,7 @@ export const migrateFromSquidexToContentfulFactory =
       interval: 1000,
     });
 
+    let n = 0;
     const throttledCreateOrUpdateEntry = throttle(async (item: DataItem) => {
       const parsed = await parseData(item);
 
@@ -80,7 +81,6 @@ export const migrateFromSquidexToContentfulFactory =
     if (clearPreviousEntries) {
       await clearContentfulEntries(contentfulEnvironment, contentTypeId);
     }
-    let n = 0;
     const entries = await Promise.all(data.map(throttledCreateOrUpdateEntry));
 
     await publishContentfulEntries(entries.filter(Boolean) as Entry[]);

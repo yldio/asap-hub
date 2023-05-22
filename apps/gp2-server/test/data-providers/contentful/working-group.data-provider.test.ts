@@ -1,13 +1,8 @@
 import { getGP2ContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import {
-  parseWorkingGroupToDataObject,
-  WorkingGroupContentfulDataProvider,
-} from '../../../src/data-providers/contentful/working-group.data-provider';
+import { WorkingGroupContentfulDataProvider } from '../../../src/data-providers/contentful/working-group.data-provider';
 import {
   getContentfulGraphqlWorkingGroup,
-  getGraphQLWorkingGroup,
-  getGraphQLWorkingGroupResource,
   getWorkingGroupDataObject,
 } from '../../fixtures/working-group.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
@@ -406,64 +401,134 @@ describe('Working Group Data Provider', () => {
         ]);
       });
     });
-  });
-
-  describe('Parsing', () => {
     describe('resources', () => {
-      test('should map a resource link', () => {
-        const workingGroup = getGraphQLWorkingGroup();
+      test('should map a resource link', async () => {
         const externalLink = 'this is an external link';
-        const resource = getGraphQLWorkingGroupResource();
-        resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-        resource.externalLink = externalLink;
-        workingGroup.flatData.resources = [resource];
-        const { resources } = parseWorkingGroupToDataObject(workingGroup);
-        const { resources: expectedResources } = getWorkingGroupDataObject();
-        expect(resources).toEqual([
+        const workingGroup = {
+          ...getContentfulGraphqlWorkingGroup(),
+          resourcesCollection: {
+            total: 0,
+            items: [
+              {
+                sys: {
+                  id: '27',
+                },
+                type: 'Link',
+                title: 'Working group resource title',
+                description: 'Working group resource description',
+                externalLink,
+              },
+            ],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          workingGroups: workingGroup,
+        });
+        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
+          'working-group-id',
+        );
+        expect(workingGroupDataObject?.resources).toStrictEqual([
           {
-            ...expectedResources![0],
+            description: 'Working group resource description',
+            title: 'Working group resource title',
             type: 'Link',
             externalLink,
           },
         ]);
       });
-
-      test('should ignore a resource if title is undefined.', () => {
-        const workingGroup = getGraphQLWorkingGroup();
-        const resource = getGraphQLWorkingGroupResource();
-        resource.title = null;
-        workingGroup.flatData.resources = [resource];
-        const { resources } = parseWorkingGroupToDataObject(workingGroup);
-        expect(resources).toEqual([]);
+      test('should ignore a resource if title is undefined.', async () => {
+        const workingGroup = {
+          ...getContentfulGraphqlWorkingGroup(),
+          resourcesCollection: {
+            total: 0,
+            items: [
+              {
+                sys: {
+                  id: '27',
+                },
+                type: 'Link',
+                title: null,
+                description: 'Working group resource description',
+              },
+            ],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          workingGroups: workingGroup,
+        });
+        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
+          'working-group-id',
+        );
+        expect(workingGroupDataObject?.resources).toStrictEqual([]);
       });
-
-      test('should return a resource if description is undefined.', () => {
-        const workingGroup = getGraphQLWorkingGroup();
-        const resource = getGraphQLWorkingGroupResource();
-        resource.description = null;
-        workingGroup.flatData.resources = [resource];
-        const { resources } = parseWorkingGroupToDataObject(workingGroup);
-        const description = resources![0]?.description;
-        expect(description).toBeUndefined();
+    });
+    test('should return a resource if description is undefined.', async () => {
+      const workingGroup = {
+        ...getContentfulGraphqlWorkingGroup(),
+        resourcesCollection: {
+          total: 0,
+          items: [
+            {
+              sys: {
+                id: '27',
+              },
+              type: 'Link',
+              title: 'Working group resource title',
+              description: null,
+            },
+          ],
+        },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroups: workingGroup,
       });
-
-      test('should ignore a resource if external Link is undefined for a Link.', () => {
-        const workingGroup = getGraphQLWorkingGroup();
-        const externalLink = null;
-        const resource = getGraphQLWorkingGroupResource();
-        resource.type = WorkingGroupsDataResourcesTypeEnum.Link;
-        resource.externalLink = externalLink;
-        workingGroup.flatData.resources = [resource];
-        const { resources } = parseWorkingGroupToDataObject(workingGroup);
-        expect(resources).toEqual([]);
+      const workingGroupDataObject = await workingGroupDataProvider.fetchById(
+        'working-group-id',
+      );
+      expect(
+        workingGroupDataObject?.resources![0]?.description,
+      ).toBeUndefined();
+    });
+    test('should ignore a resource if external Link is undefined for a Link.', async () => {
+      const workingGroup = {
+        ...getContentfulGraphqlWorkingGroup(),
+        resourcesCollection: {
+          total: 0,
+          items: [
+            {
+              sys: {
+                id: '27',
+              },
+              type: 'Link',
+              title: 'Working group resource title',
+              externalLink: null,
+            },
+          ],
+        },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroups: workingGroup,
       });
-
-      test('undefined resources returns empty array', () => {
-        const workingGroup = getGraphQLWorkingGroup();
-        workingGroup.flatData.resources = null;
-        const { resources } = parseWorkingGroupToDataObject(workingGroup);
-        expect(resources).toEqual([]);
+      const workingGroupDataObject = await workingGroupDataProvider.fetchById(
+        'working-group-id',
+      );
+      expect(workingGroupDataObject?.resources).toStrictEqual([]);
+    });
+    test('empty resources returns empty array', async () => {
+      const workingGroup = {
+        ...getContentfulGraphqlWorkingGroup(),
+        resourcesCollection: {
+          total: 0,
+          items: [],
+        },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroups: workingGroup,
       });
+      const workingGroupDataObject = await workingGroupDataProvider.fetchById(
+        'working-group-id',
+      );
+      expect(workingGroupDataObject?.resources).toEqual([]);
     });
   });
 });

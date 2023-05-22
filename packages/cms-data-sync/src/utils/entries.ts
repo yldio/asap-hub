@@ -1,6 +1,12 @@
 import { Environment, Entry } from 'contentful-management';
+import pThrottle from 'p-throttle';
 import { logger } from './logs';
 import { paginatedFetch } from './fetch';
+
+export const throttle = pThrottle({
+  limit: 3,
+  interval: 1000,
+});
 
 export const checkIfEntryAlreadyExistsInContentful = async (
   contentfulEnvironment: Environment,
@@ -47,35 +53,34 @@ export const clearContentfulEntries = async (
   );
   const total = entries.length;
   let n = 0;
-  await Promise.all(
-    entries.map(async (entry) => {
-      if (entry.isPublished()) {
-        await entry.unpublish();
-      }
-      await entry.delete();
-      n += 1;
-      logger(`Entry with ID ${entry.sys.id} deleted. (${n}/${total})`, 'INFO');
-    }),
-  );
+
+  const throttledUnpublishAndDelete = throttle(async (entry: Entry) => {
+    if (entry.isPublished()) {
+      await entry.unpublish();
+    }
+    await entry.delete();
+    n += 1;
+    logger(`Entry with ID ${entry.sys.id} deleted. (${n}/${total})`, 'INFO');
+  });
+
+  await Promise.all(entries.map(throttledUnpublishAndDelete));
 };
 
 export const publishContentfulEntries = async (entries: Entry[]) => {
   const total = entries.length;
   let n = 0;
-  await Promise.all(
-    entries.map(async (entry) => {
-      try {
-        const published = await entry.publish();
-        n += 1;
-        logger(`Published entry ${published.sys.id}. (${n}/${total})`, 'INFO');
-      } catch (err) {
-        logger(
-          `Entry with ID ${entry.sys.id} could not be published.`,
-          'ERROR',
-        );
-      }
-    }),
-  );
+
+  const throttledPublish = throttle(async (entry: Entry) => {
+    try {
+      const published = await entry.publish();
+      n += 1;
+      logger(`Published entry ${published.sys.id}. (${n}/${total})`, 'INFO');
+    } catch (err) {
+      logger(`Entry with ID ${entry.sys.id} could not be published.`, 'ERROR');
+    }
+  });
+
+  await Promise.all(entries.map(throttledPublish));
 };
 
 // Leaving it here because we could use

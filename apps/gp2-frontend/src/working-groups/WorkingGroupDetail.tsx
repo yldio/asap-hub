@@ -43,7 +43,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
     false;
   const isAdministrator = currentUser?.role === 'Administrator';
   const workingGroupRoute = workingGroups({}).workingGroup({ workingGroupId });
-  const resourcesRoute = workingGroupRoute.resources({});
+  const resourcesRoute = workingGroupRoute.workspace({});
   const createOutputRoute = workingGroupRoute.createOutput;
   const editRoute = resourcesRoute.edit({});
   const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;

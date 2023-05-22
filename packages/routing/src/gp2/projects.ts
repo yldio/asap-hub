@@ -6,7 +6,7 @@ const project = (() => {
   const edit = route('/edit', {}, { resource });
   const add = route('/add', {}, {});
   const overview = route('/overview', {}, {});
-  const resources = route('/resources', {}, { add, edit });
+  const workspace = route('/workspace', {}, { add, edit });
 
   const upcoming = route('/upcoming', {}, {});
   const past = route('/past', {}, {});
@@ -20,7 +20,7 @@ const project = (() => {
   return route(
     '/:projectId',
     { projectId: stringParser },
-    { overview, resources, upcoming, past, outputs, createOutput },
+    { overview, workspace, upcoming, past, outputs, createOutput },
   );
 })();
 

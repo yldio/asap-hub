@@ -6,7 +6,7 @@ const props = {
   position: 'center',
   title: 'Project Directory',
   description:
-    'Explore past and present GP2 projects being carried out by teams within the network and discover open opportunities to join them.',
+    'Explore past and present GP2 projects and discover open opportunities to join them.',
 };
 
 const ProjectsHeader: React.FC = () => <PageBanner {...props} />;

@@ -68,8 +68,8 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
               description: (
                 <>
                   <Paragraph>
-                    Watch a series of short videos that highlight the different
-                    aspects of the Hub.
+                    Learn more about the GP2 Hub and how to use different
+                    aspects.
                   </Paragraph>
                 </>
               ),
@@ -178,8 +178,8 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
               description: (
                 <>
                   <Paragraph>
-                    If you are interest in starting a new project in the GP2 Hub
-                    you can request it below.
+                    If you are interested in starting a new project, please
+                    complete the proposal request form below.
                   </Paragraph>
                   <ExternalLink
                     href="https://docs.google.com/forms/d/e/1FAIpQLScYnKgzk-gxFW6a8CgEkwowjCnWGdWqLxwF9YWacYHMnSaPzg/viewform"
@@ -194,8 +194,8 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
               description: (
                 <>
                   <Paragraph>
-                    Find out more about all available courses to improve your
-                    skills.
+                    View all available training courses in the GP2 Learning
+                    Platform.
                   </Paragraph>
                   <ExternalLink
                     href="https://gp2.org/training/"

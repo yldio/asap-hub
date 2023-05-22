@@ -62,10 +62,18 @@ type ConfirmModalProps = {
   readonly confirmText?: string;
   readonly cancelText?: string;
 
-  readonly backHref: string;
   readonly successHref?: string;
   readonly onSave?: () => void | Promise<void>;
-};
+} & (
+  | {
+      readonly backHref?: undefined;
+      readonly onCancel: () => void;
+    }
+  | {
+      readonly backHref: string;
+      readonly onCancel?: undefined;
+    }
+);
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
   title,
   description,
@@ -74,6 +82,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   error = 'There was an error',
   backHref,
   successHref,
+  onCancel = noop,
   onSave = noop,
 }) => {
   const [status, setStatus] = useState<
@@ -84,44 +93,57 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   return (
     <Modal padding={false}>
       {status === 'hasError' && <Toast>{error}</Toast>}
-      <form>
-        <header css={headerStyles}>
-          <div css={controlsContainerStyles}>
+      <header css={headerStyles}>
+        <div css={controlsContainerStyles}>
+          {backHref ? (
             <Link small buttonStyle href={backHref}>
               {crossIcon}
             </Link>
-          </div>
-          <Headline3>{title}</Headline3>
-        </header>
-        <div css={[paddingStyles, { paddingTop: 0 }]}>
-          <Paragraph accent="lead">{description}</Paragraph>
-          <div css={buttonContainerStyles}>
-            <div css={backStyles}>
+          ) : (
+            <Button small onClick={onCancel}>
+              {crossIcon}
+            </Button>
+          )}
+        </div>
+        <Headline3>{title}</Headline3>
+      </header>
+      <div css={[paddingStyles, { paddingTop: 0 }]}>
+        <Paragraph accent="lead">{description}</Paragraph>
+        <div css={buttonContainerStyles}>
+          <div css={backStyles}>
+            {backHref ? (
               <Link buttonStyle enabled={status !== 'isSaving'} href={backHref}>
                 {cancelText}
               </Link>
-            </div>
-            <div css={saveStyles}>
-              <Button
-                primary
-                enabled={status !== 'isSaving'}
-                onClick={async () => {
-                  setStatus('isSaving');
-                  try {
-                    await onSave();
-                    setStatus('hasSaved');
-                    historyPush(successHref ?? backHref);
-                  } catch (e) {
-                    setStatus('hasError');
-                  }
-                }}
-              >
-                {confirmText}
+            ) : (
+              <Button enabled={status !== 'isSaving'} onClick={onCancel}>
+                {cancelText}
               </Button>
-            </div>
+            )}
+          </div>
+          <div css={saveStyles}>
+            <Button
+              primary
+              enabled={status !== 'isSaving'}
+              onClick={async () => {
+                setStatus('isSaving');
+                try {
+                  await onSave();
+                  setStatus('hasSaved');
+                  const redirect = successHref ?? backHref;
+                  if (redirect) {
+                    historyPush(redirect);
+                  }
+                } catch (e) {
+                  setStatus('hasError');
+                }
+              }}
+            >
+              {confirmText}
+            </Button>
           </div>
         </div>
-      </form>
+      </div>
     </Modal>
   );
 };

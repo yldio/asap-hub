@@ -13,7 +13,13 @@ import {
 } from '@asap-hub/react-components';
 import { InnerToastContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+  ComponentProps,
+} from 'react';
 import { useWorkingGroupById } from './state';
 import {
   handleError,
@@ -31,10 +37,14 @@ import { useResearchOutputPermissions } from '../../shared-research/state';
 type WorkingGroupOutputProps = {
   workingGroupId: string;
   researchOutputData?: ResearchOutputResponse;
-};
+} & Pick<
+  ComponentProps<typeof ResearchOutputForm>,
+  'descriptionUnchangedWarning'
+>;
 const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   workingGroupId,
   researchOutputData,
+  descriptionUnchangedWarning,
 }) => {
   const route = network({})
     .workingGroups({})
@@ -129,6 +139,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             authorsRequired
             published={published}
             permissions={permissions}
+            descriptionUnchangedWarning={descriptionUnchangedWarning}
             onSave={(output) =>
               researchOutputData?.id
                 ? updateAndPublishResearchOutput(researchOutputData.id, {

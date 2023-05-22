@@ -25,11 +25,11 @@ describe('Asset data provider', () => {
         .post(`/api/apps/${appName}/assets`)
         .reply(200, { id: 'squidex-asset-id' });
 
-      const result = await assetDataProvider.create(
-        'user-id',
-        Buffer.from('avatar'),
-        'image/jpeg',
-      );
+      const result = await assetDataProvider.create({
+        id: 'user-id',
+        avatar: Buffer.from('avatar'),
+        contentType: 'image/jpeg',
+      });
       expect(result).toEqual('squidex-asset-id');
       expect(nock.isDone()).toBe(true);
     });
@@ -37,13 +37,28 @@ describe('Asset data provider', () => {
       nock(baseUrl).post(`/api/apps/${appName}/assets`).reply(500);
 
       await expect(
-        assetDataProvider.create(
-          'user-id',
-          Buffer.from('avatar'),
-          'image/jpeg',
-        ),
+        assetDataProvider.create({
+          id: 'user-id',
+          avatar: Buffer.from('avatar'),
+          contentType: 'image/jpeg',
+        }),
       ).rejects.toThrow();
       expect(nock.isDone()).toBe(true);
+    });
+  });
+  describe('Fetch', () => {
+    test('should throw an error', async () => {
+      await expect(assetDataProvider.fetch()).rejects.toThrow(
+        'Method not implemented.',
+      );
+    });
+  });
+
+  describe('Fetch-by-id', () => {
+    test('should throw an error', async () => {
+      await expect(assetDataProvider.fetchById()).rejects.toThrow(
+        'Method not implemented.',
+      );
     });
   });
 });

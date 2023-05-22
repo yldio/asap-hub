@@ -91,3 +91,54 @@ export const teamMembershipEntry = getEntry({
 export const labEntry = getEntry({
   name: { 'en-US': 'Test' },
 });
+
+export const eventEntry = getEntry({
+  title: {
+    'en-US': 'Amazing event!!!',
+  },
+  startDate: {
+    'en-US': '2023-05-19T16:00:00.000Z',
+  },
+  status: {
+    'en-US': 'Confirmed',
+  },
+  calendar: {
+    'en-US': {
+      sys: {
+        type: 'Link',
+        linkType: 'Entry',
+        id: '5Lf3bplTANrkNERCosjwvO',
+      },
+    },
+  },
+  hidden: {
+    'en-US': false,
+  },
+  hideMeetingLink: {
+    'en-US': false,
+  },
+  notesPermanentlyUnavailable: {
+    'en-US': false,
+  },
+  videoRecordingPermanentlyUnavailable: {
+    'en-US': false,
+  },
+  presentationPermanentlyUnavailable: {
+    'en-US': false,
+  },
+  meetingMaterialsPermanentlyUnavailable: {
+    'en-US': false,
+  },
+  startDateTimeZone: {
+    'en-US': 'America/Sao_Paulo',
+  },
+  endDate: {
+    'en-US': '2023-05-19T17:00:00.000Z',
+  },
+  endDateTimeZone: {
+    'en-US': 'America/Sao_Paulo',
+  },
+  googleId: {
+    'en-US': '1jhm4181bs6ck0esegje4nf6ur',
+  },
+});

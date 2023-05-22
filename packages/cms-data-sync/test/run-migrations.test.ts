@@ -5,6 +5,7 @@ import { BLUE_COLOR, RED_COLOR } from '../src/utils';
 
 import { migrateTeams } from '../src/teams/teams.data-migration';
 import { migrateExternalAuthors } from '../src/external-authors/external-authors.data-migration';
+import { migrateEvents } from '../src/events/events.data-migration';
 import { migrateCalendars } from '../src/calendars/calendars.data-migration';
 import { migrateLabs } from '../src/labs/labs.data-migration';
 import { migrateUsers } from '../src/users/users.data-migration';
@@ -18,6 +19,16 @@ jest.mock('../src/teams/teams.data-migration', () => {
   return {
     ...jest.requireActual('../src/teams/teams.data-migration'),
     migrateTeams: mockMigrateTeams,
+  };
+});
+
+var mockMigrateEvents: jest.MockedFunction<typeof migrateEvents>;
+
+jest.mock('../src/events/events.data-migration', () => {
+  mockMigrateEvents = jest.fn().mockReturnValue({});
+  return {
+    ...jest.requireActual('../src/events/events.data-migration'),
+    migrateEvents: mockMigrateEvents,
   };
 });
 

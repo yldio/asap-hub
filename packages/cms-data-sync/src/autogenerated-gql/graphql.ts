@@ -3356,12 +3356,14 @@ export type GroupsDataInputDto = {
 
 /** The structure of the Leaders nested schema. */
 export type GroupsDataLeadersChildDto = {
+  inactiveSinceDate: Maybe<Scalars['Instant']>;
   role: Maybe<Scalars['String']>;
   user: Maybe<Array<Users>>;
 };
 
 /** The structure of the Leaders nested schema. */
 export type GroupsDataLeadersChildInputDto = {
+  inactiveSinceDate: InputMaybe<Scalars['Instant']>;
   role: InputMaybe<Scalars['String']>;
   user: InputMaybe<Array<Scalars['String']>>;
 };
@@ -6346,6 +6348,77 @@ export type FetchCalendarsQuery = {
   >;
 };
 
+export type FetchEventsQueryVariables = Exact<{
+  take: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchEventsQuery = {
+  queryEventsContentsWithTotal: Maybe<
+    Pick<EventsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<Events, 'id'> & {
+            flatData: Pick<
+              EventsFlatDataDto,
+              | 'googleId'
+              | 'description'
+              | 'endDate'
+              | 'endDateTimeZone'
+              | 'startDate'
+              | 'startDateTimeZone'
+              | 'meetingLink'
+              | 'hideMeetingLink'
+              | 'eventLink'
+              | 'status'
+              | 'hidden'
+              | 'tags'
+              | 'title'
+              | 'notesPermanentlyUnavailable'
+              | 'notes'
+              | 'notesUpdatedAt'
+              | 'videoRecordingPermanentlyUnavailable'
+              | 'videoRecording'
+              | 'videoRecordingUpdatedAt'
+              | 'presentationPermanentlyUnavailable'
+              | 'presentation'
+              | 'presentationUpdatedAt'
+              | 'meetingMaterialsPermanentlyUnavailable'
+            > & {
+              meetingMaterials: Maybe<
+                Array<Pick<EventsDataMeetingMaterialsChildDto, 'url' | 'title'>>
+              >;
+              calendar: Maybe<Array<Pick<Calendars, 'id'>>>;
+              thumbnail: Maybe<
+                Array<
+                  Pick<
+                    Asset,
+                    'id' | 'fileName' | 'thumbnailUrl' | 'mimeType' | 'fileType'
+                  >
+                >
+              >;
+              speakers: Maybe<
+                Array<{
+                  team: Maybe<Array<Pick<Teams, 'id'>>>;
+                  user: Maybe<
+                    Array<
+                      | ({ __typename: 'ExternalAuthors' } & Pick<
+                          ExternalAuthors,
+                          'id'
+                        >)
+                      | ({ __typename: 'Users' } & Pick<Users, 'id'>)
+                    >
+                  >;
+                }>
+              >;
+            };
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type FetchExternalAuthorsQueryVariables = Exact<{
   take: InputMaybe<Scalars['Int']>;
   skip: InputMaybe<Scalars['Int']>;
@@ -6599,6 +6672,337 @@ export const FetchCalendarsDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchCalendarsQuery, FetchCalendarsQueryVariables>;
+export const FetchEventsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchEvents' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryEventsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'googleId' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'endDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'endDateTimeZone' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'startDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'startDateTimeZone',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'meetingLink' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'hideMeetingLink' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'eventLink' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'status' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'hidden' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'tags' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'notesPermanentlyUnavailable',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'notes' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'notesUpdatedAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'videoRecordingPermanentlyUnavailable',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'videoRecording' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'videoRecordingUpdatedAt',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'presentationPermanentlyUnavailable',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'presentation' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'presentationUpdatedAt',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'meetingMaterialsPermanentlyUnavailable',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'meetingMaterials' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'calendar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'thumbnail' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'fileName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'thumbnailUrl',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'mimeType' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'fileType' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'speakers' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'team' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'user' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: '__typename',
+                                          },
+                                        },
+                                        {
+                                          kind: 'InlineFragment',
+                                          typeCondition: {
+                                            kind: 'NamedType',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'Users',
+                                            },
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'InlineFragment',
+                                          typeCondition: {
+                                            kind: 'NamedType',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'ExternalAuthors',
+                                            },
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FetchEventsQuery, FetchEventsQueryVariables>;
 export const FetchExternalAuthorsDocument = {
   kind: 'Document',
   definitions: [

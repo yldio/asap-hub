@@ -114,6 +114,21 @@ export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOpt
     additionalProperties: false,
   };
 
+export const fetchExternalUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchExternalUsersOptions> =
+  {
+    type: 'object',
+    properties: {
+      take: { type: 'number', nullable: true },
+      skip: { type: 'number', nullable: true },
+      search: { type: 'string', nullable: true },
+      filter: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
+    },
+    additionalProperties: false,
+  };
 export const validateFetchOptions = validateInput(
   fetchOptionsValidationSchema,
   {
@@ -129,6 +144,13 @@ export const validateFetchUsersOptions = validateInput(
   },
 );
 
+export const validateFetchExternalUsersOptions = validateInput(
+  fetchExternalUsersOptionsValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
 export const fetchPaginationOptionsValidationSchema: JSONSchemaType<FetchPaginationOptions> =
   {
     type: 'object',

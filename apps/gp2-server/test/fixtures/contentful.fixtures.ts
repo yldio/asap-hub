@@ -1,10 +1,18 @@
-import { Entry, Link, SysLink } from '@asap-hub/contentful';
+import {
+  BulkAction,
+  BulkActionStatus,
+  Collection,
+  Entry,
+  EntryProps,
+  KeyValueMap,
+  Link,
+} from '@asap-hub/contentful';
 
-export const contenfulSpaceLink: SysLink = {
+export const contenfulSpaceLink: Link<'Space'> = {
   sys: { type: 'Link', linkType: 'Space', id: 'space-id' },
 };
 
-export const contentfulEnvironmentLink: SysLink = {
+export const contentfulEnvironmentLink: Link<'Environment'> = {
   sys: { id: 'env-id', type: 'Link', linkType: 'Environment' },
 };
 
@@ -12,9 +20,10 @@ export const contenfulUserLink: Link<'User'> = {
   sys: { type: 'Link', linkType: 'User', id: 'user-id' },
 };
 
-type Field = Record<string, any>;
-
-export const getEntry = (fields: Field): Entry => ({
+export const getEntry = (
+  overrides: Partial<Entry>,
+  id = 'entry-id',
+): Entry => ({
   update: jest.fn(),
   patch: jest.fn(),
   delete: jest.fn(),
@@ -40,7 +49,7 @@ export const getEntry = (fields: Field): Entry => ({
   sys: {
     automationTags: [],
     space: contenfulSpaceLink,
-    id: 'entry-id',
+    id,
     type: 'Entry',
     createdAt: '2022-11-22T09:06:28.060Z',
     updatedAt: '2022-11-22T09:06:28.060Z',
@@ -51,5 +60,37 @@ export const getEntry = (fields: Field): Entry => ({
     version: 1,
     contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'news' } },
   },
-  fields,
+  fields: {},
+  ...overrides,
+});
+
+export const getEntryCollection = (
+  items: Entry[],
+): Collection<Entry, EntryProps<KeyValueMap>> => ({
+  total: items.length,
+  skip: 0,
+  limit: 10,
+  toPlainObject: jest.fn(),
+  sys: {
+    type: 'Array',
+  },
+  items,
+});
+export const getBulkAction = (overrides: Partial<BulkAction>): BulkAction => ({
+  sys: {
+    id: 'bulk-id',
+    type: 'BulkAction',
+    space: contenfulSpaceLink,
+    environment: contentfulEnvironmentLink,
+    createdBy: contenfulUserLink,
+    createdAt: '2022-11-22T09:06:28.060Z',
+    updatedAt: '2022-11-22T09:06:28.060Z',
+    status: 'succeeded' as BulkActionStatus.succeeded,
+  },
+  action: 'publish',
+  payload: {},
+  get: jest.fn(),
+  waitProcessing: jest.fn(),
+  toPlainObject: jest.fn(),
+  ...overrides,
 });

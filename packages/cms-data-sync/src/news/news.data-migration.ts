@@ -91,6 +91,7 @@ export const migrateNews = async () => {
     'news',
     fetchData,
     parseNewsItem,
+    true,
     fallbackParseNewsItem,
   );
 };

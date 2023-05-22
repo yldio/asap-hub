@@ -2,13 +2,17 @@ export type { EntryFieldTypes, ContentfulClientApi } from 'contentful';
 export type {
   Asset,
   AssetFileProp,
+  BulkAction,
+  BulkActionStatus,
+  Collection,
   Entry,
+  EntryProps,
   Environment,
+  KeyValueMap,
   Link,
   SysLink,
-  Snapshot,
-  SnapshotProps,
   EntityMetaSysProps,
+  VersionedLink,
 } from 'contentful-management';
 export { gql, GraphQLClient } from 'graphql-request';
 export * from './client';

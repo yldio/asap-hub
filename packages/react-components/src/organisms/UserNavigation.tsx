@@ -8,8 +8,9 @@ import {
   largeDesktopScreen,
 } from '../pixels';
 import { Divider, NavigationLink, Caption, Anchor } from '../atoms';
-import { TeamIcon, UserIcon, feedbackIcon, logoutIcon } from '../icons';
+import { UserIcon, feedbackIcon, logoutIcon } from '../icons';
 import { mailToFeedback } from '../mail';
+import { UserNavigationAssociationSection } from '../molecules';
 
 const containerStyles = css({
   minWidth: '312px',
@@ -19,7 +20,7 @@ const containerStyles = css({
   flexDirection: 'column',
 
   boxSizing: 'border-box',
-  padding: `${12 / perRem}em ${12 / perRem}em ${vminLinearCalc(
+  padding: `${9 / perRem}em ${12 / perRem}em ${vminLinearCalc(
     mobileScreen,
     8,
     largeDesktopScreen,
@@ -34,6 +35,12 @@ const listStyles = css({
   padding: 0,
 });
 
+const dividerStyle = css({
+  display: 'block',
+  marginLeft: `${12 / perRem}em`,
+  marginRight: `${12 / perRem}em`,
+});
+
 const bottomLinksStyles = css({
   flexGrow: 1,
 
@@ -46,12 +53,24 @@ export interface UserNavigationProps {
   readonly userOnboarded?: boolean;
   readonly userProfileHref: string;
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
+  readonly workingGroups: ReadonlyArray<{
+    name: string;
+    href: string;
+    active: boolean;
+  }>;
+  readonly interestGroups: ReadonlyArray<{
+    name: string;
+    href: string;
+    active: boolean;
+  }>;
   readonly aboutHref: string;
 }
 const UserNavigation: React.FC<UserNavigationProps> = ({
   userOnboarded = true,
   userProfileHref,
   teams,
+  workingGroups,
+  interestGroups,
   aboutHref,
 }) => (
   <nav css={containerStyles}>
@@ -61,19 +80,31 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
           My Profile
         </NavigationLink>
       </li>
-      {teams.map(({ name, href }) => (
-        <li key={href}>
-          <NavigationLink
-            href={href}
-            icon={<TeamIcon />}
-            enabled={userOnboarded}
-          >
-            My Team: {name}
-          </NavigationLink>
-        </li>
-      ))}
+      <UserNavigationAssociationSection
+        userOnboarded={userOnboarded}
+        association={teams}
+        title="MY TEAMS"
+      />
+      {interestGroups.length > 0 &&
+        interestGroups.some((interestGroup) => interestGroup.active) && (
+          <UserNavigationAssociationSection
+            userOnboarded={userOnboarded}
+            association={interestGroups}
+            title="MY INTEREST GROUPS"
+          />
+        )}
+      {workingGroups.length > 0 &&
+        workingGroups.some((workingGroup) => workingGroup.active) && (
+          <UserNavigationAssociationSection
+            userOnboarded={userOnboarded}
+            association={workingGroups}
+            title="MY WORKING GROUPS"
+          />
+        )}
     </ul>
-    <Divider />
+    <span css={dividerStyle}>
+      <Divider />
+    </span>
     <ul css={listStyles}>
       {/* settings could go here */}
       <li>

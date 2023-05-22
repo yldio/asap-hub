@@ -10,7 +10,7 @@ import { Migration } from '@asap-hub/server-common';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
 export default class RemoveUrlWhitespaces extends Migration {
-  private isPatchingEnabled = false;
+  private isPatchingEnabled = true;
 
   processEvents = async (): Promise<void> => {
     // eslint-disable-next-line no-console
@@ -33,9 +33,6 @@ export default class RemoveUrlWhitespaces extends Migration {
                 iv: cleanedUrl,
               },
             });
-          } else {
-            // eslint-disable-next-line no-console
-            console.log('Patching is disabled. Skipping...');
           }
         }
       },
@@ -62,9 +59,6 @@ export default class RemoveUrlWhitespaces extends Migration {
                 iv: cleanedUrl,
               },
             });
-          } else {
-            // eslint-disable-next-line no-console
-            console.log('Patching is disabled. Skipping...');
           }
         }
       },
@@ -91,9 +85,6 @@ export default class RemoveUrlWhitespaces extends Migration {
                 iv: cleanedUrl,
               },
             });
-          } else {
-            // eslint-disable-next-line no-console
-            console.log('Patching is disabled. Skipping...');
           }
         }
       },
@@ -133,9 +124,6 @@ export default class RemoveUrlWhitespaces extends Migration {
                 iv: tools,
               },
             });
-          } else {
-            // eslint-disable-next-line no-console
-            console.log('Patching is disabled. Skipping...');
           }
         }
       },
@@ -191,9 +179,6 @@ export default class RemoveUrlWhitespaces extends Migration {
                 iv: social,
               },
             });
-          } else {
-            // eslint-disable-next-line no-console
-            console.log('Patching is disabled. Skipping...');
           }
         }
       },

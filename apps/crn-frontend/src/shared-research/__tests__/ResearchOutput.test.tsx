@@ -182,12 +182,12 @@ describe('a grant document research output', () => {
 });
 
 describe('a not-grant-document research output', () => {
-  it('renders with tags', async () => {
+  it('renders with keywords', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       id,
       documentType: 'Protocol',
-      tags: ['Example Tag'],
+      keywords: ['Example Keyword'],
       title: 'Not-Grant-Document title!',
       teams: [
         {
@@ -199,7 +199,7 @@ describe('a not-grant-document research output', () => {
     const { getByRole, getByText } = await renderComponent(
       researchOutputRoute.$,
     );
-    expect(getByText(/Example Tag/i)).toBeVisible();
+    expect(getByText(/Example Keyword/i)).toBeVisible();
     expect(getByRole('heading', { level: 1 }).textContent).toEqual(
       'Not-Grant-Document title!',
     );

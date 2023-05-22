@@ -1,9 +1,9 @@
-import { HTTPError } from 'got';
-import { ErrorRequestHandler } from 'express';
+import { GenericError, NotFoundError, ValidationError } from '@asap-hub/errors';
+import { ErrorResponse } from '@asap-hub/model';
 import { isBoom } from '@hapi/boom';
 import * as Sentry from '@sentry/serverless';
-import { ErrorResponse } from '@asap-hub/model';
-import { GenericError, NotFoundError, ValidationError } from '@asap-hub/errors';
+import { ErrorRequestHandler } from 'express';
+import { HTTPError } from 'got';
 
 export const errorHandlerFactory =
   (): ErrorRequestHandler<unknown, ErrorResponse> => (err, req, res, next) => {

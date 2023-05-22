@@ -129,7 +129,9 @@ export default class Users implements UserController {
     };
     if (!error) {
       const { lastModifiedDate, works } = transformOrcidWorks(res);
-      updateToUser.orcidLastModifiedDate = lastModifiedDate;
+      updateToUser.orcidLastModifiedDate = new Date(
+        parseInt(lastModifiedDate, 10),
+      ).toISOString();
       updateToUser.orcidWorks = works.slice(0, 10);
     }
     if (error) {

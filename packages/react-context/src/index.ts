@@ -12,6 +12,7 @@ export {
 } from './auth0';
 export { FlagsContext, LiveFlagsProvider, useFlags } from './flags';
 export { ResearchOutputPermissionsContext } from './permissions/research-output';
+export type { ResearchOutputPermissions } from './permissions/research-output';
 export { ToastContext, InnerToastContext } from './toast';
 export {
   useNotificationContext,

@@ -162,23 +162,6 @@ describe('a grant document research output', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Save')).toBeVisible();
   });
-
-  it('renders sorry page if you cannot edit the teams research out', async () => {
-    mockGetResearchOutput.mockResolvedValue({
-      ...createResearchOutputResponse(),
-      documentType: 'Bioinformatics',
-      teams: [
-        {
-          id: 't1',
-          displayName: 'Jakobsson, J',
-        },
-      ],
-    });
-    const { getByText } = await renderComponent(
-      researchOutputRoute.editResearchOutput({}).$,
-    );
-    expect(getByText(/sorry.+page/i)).toBeVisible();
-  });
 });
 
 describe('a not-grant-document research output', () => {

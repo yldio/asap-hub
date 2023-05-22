@@ -8,6 +8,8 @@ import {
   ResearchOutputResponse,
   ResearchTagResponse,
 } from '@asap-hub/model';
+
+import { ResearchOutputPermissions } from '@asap-hub/react-context';
 import { sharedResearch } from '@asap-hub/routing';
 import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
@@ -64,11 +66,7 @@ type ResearchOutputFormProps = Pick<
     >;
     researchOutputData?: ResearchOutputResponse;
     tagSuggestions: string[];
-    permissions: {
-      canEditResearchOutput: boolean;
-      canPublishResearchOutput: boolean;
-      canShareResearchOutput: boolean;
-    };
+    permissions: ResearchOutputPermissions;
   };
 
 const mainStyles = css({

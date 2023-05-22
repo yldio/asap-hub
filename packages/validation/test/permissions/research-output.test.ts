@@ -3,6 +3,7 @@ import { disable } from '@asap-hub/flags';
 import { UserResponse } from '@asap-hub/model';
 import {
   getUserRole,
+  hasDuplicateResearchOutputPermission,
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
   hasShareResearchOutputPermission,
@@ -123,6 +124,32 @@ describe('hasPublishResearchOutputPermission', () => {
     'returns $expected when user role is $userRole',
     ({ userRole, expected }) => {
       expect(hasPublishResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
+});
+
+describe('hasDuplicateResearchOutputPermission', () => {
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${true}
+    ${`Member`} | ${true}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole',
+    ({ userRole, expected }) => {
+      expect(hasDuplicateResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${true}
+    ${`Member`} | ${false}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole and feature flag is disabled',
+    ({ userRole, expected }) => {
+      disable('DRAFT_RESEARCH_OUTPUT');
+      expect(hasShareResearchOutputPermission(userRole)).toEqual(expected);
     },
   );
 });

@@ -2,7 +2,7 @@ import { NotFoundPage, SharedResearchOutput } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { useRouteMatch, Route } from 'react-router-dom';
+import { useRouteMatch, Route, Switch } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
 import { useResearchOutputById, useResearchOutputPermissions } from './state';
@@ -38,42 +38,47 @@ const ResearchOutput: React.FC = () => {
   const permissions = useResearchOutputPermissions(
     association,
     associationIds,
-    researchOutputData ? researchOutputData.published : false,
+    researchOutputData?.published,
   );
 
   if (researchOutputData) {
     return (
       <ResearchOutputPermissionsContext.Provider value={permissions}>
-        <Route exact path={publishedNow ? publishedNowPath : path}>
-          <Frame title={researchOutputData.title}>
-            <SharedResearchOutput
-              {...researchOutputData}
-              backHref={backHref}
-              publishedNow={publishedNow}
-            />
-          </Frame>
-        </Route>
-        <Route
-          path={
-            path +
-            sharedResearch({}).researchOutput({ researchOutputId })
-              .editResearchOutput.template
-          }
-        >
-          {isLinkedToWorkingGroup ? (
-            <WorkingGroupOutput
-              workingGroupId={researchOutputData.workingGroups[0]?.id}
-              researchOutputData={researchOutputData}
-            />
-          ) : (
-            researchOutputData.teams[0]?.id && (
-              <TeamOutput
-                teamId={researchOutputData.teams[0].id}
-                researchOutputData={researchOutputData}
+        <Switch>
+          <Route exact path={publishedNow ? publishedNowPath : path}>
+            <Frame title={researchOutputData.title}>
+              <SharedResearchOutput
+                {...researchOutputData}
+                backHref={backHref}
+                publishedNow={publishedNow}
               />
-            )
+            </Frame>
+          </Route>
+          {permissions.canEditResearchOutput && (
+            <Route
+              path={
+                path +
+                sharedResearch({}).researchOutput({ researchOutputId })
+                  .editResearchOutput.template
+              }
+            >
+              {isLinkedToWorkingGroup ? (
+                <WorkingGroupOutput
+                  workingGroupId={researchOutputData.workingGroups[0]?.id}
+                  researchOutputData={researchOutputData}
+                />
+              ) : (
+                researchOutputData.teams[0]?.id && (
+                  <TeamOutput
+                    teamId={researchOutputData.teams[0].id}
+                    researchOutputData={researchOutputData}
+                  />
+                )
+              )}
+            </Route>
           )}
-        </Route>
+          <NotFoundPage />
+        </Switch>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

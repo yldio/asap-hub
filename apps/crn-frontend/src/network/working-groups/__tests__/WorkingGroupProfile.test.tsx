@@ -1,6 +1,7 @@
 import {
   createListEventResponse,
   createListResearchOutputResponse,
+  createResearchOutputResponse,
   createUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
@@ -16,9 +17,11 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { ResearchOutputWorkingGroupResponse } from '@asap-hub/model';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {
   getDraftResearchOutputs,
+  getResearchOutput,
   getResearchOutputs,
 } from '../../../shared-research/api';
 import { getWorkingGroup } from '../api';
@@ -26,13 +29,21 @@ import { refreshWorkingGroupState } from '../state';
 import WorkingGroupProfile from '../WorkingGroupProfile';
 import { getEvents } from '../../../events/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
+import { createResearchOutput } from '../../teams/api';
 
 jest.mock('../api');
 jest.mock('../../../events/api');
 jest.mock('../../../shared-research/api');
+jest.mock('../../teams/api');
 
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
+>;
+const mockGetResearchOutput = getResearchOutput as jest.MockedFunction<
+  typeof getResearchOutput
+>;
+const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
+  typeof createResearchOutput
 >;
 const mockGetDraftResearchOutputs =
   getDraftResearchOutputs as jest.MockedFunction<
@@ -145,6 +156,153 @@ describe('the share outputs page', () => {
     );
     expect(screen.queryByText(/about/i)).not.toBeInTheDocument();
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  });
+
+  it('does not render the share button when a user does not have permission', async () => {
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+      ],
+    });
+
+    await renderWorkingGroupProfile(
+      {
+        ...createUserResponse({}, 1),
+        workingGroups: [],
+      },
+      history,
+    );
+    expect(screen.queryByText(/about/i)).toBeInTheDocument();
+    expect(screen.queryByText(/share an output/i)).toBeNull();
+  });
+});
+
+describe('Duplicate Output', () => {
+  it('allows a user who is a member of the working group duplicate the output', async () => {
+    const wgResponse = createWorkingGroupResponse();
+    const userResponse = createUserResponse({}, 1);
+    const researchOutput: ResearchOutputWorkingGroupResponse = {
+      ...createResearchOutputResponse(),
+      id: '123',
+      teams: [],
+      workingGroups: [{ title: wgResponse.title, id: wgResponse.id }],
+      title: 'Example',
+      link: 'http://example.com',
+    };
+    mockGetResearchOutput.mockResolvedValue(researchOutput);
+    mockGetWorkingGroup.mockResolvedValue(wgResponse);
+
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({})
+          .workingGroups({})
+          .workingGroup({ workingGroupId: wgResponse.id })
+          .duplicateOutput({ id: researchOutput.id }).$,
+      ],
+    });
+    await renderWorkingGroupProfile(
+      {
+        ...userResponse,
+        workingGroups: [
+          {
+            id: wgResponse.id,
+            active: true,
+            name: wgResponse.title,
+            role: 'Member',
+          },
+        ],
+      },
+      history,
+    );
+    expect(screen.getByLabelText(/Title/i)).toHaveValue('Copy of Example');
+    expect(screen.getByLabelText(/URL/i)).toHaveValue('');
+    expect(history.location.pathname).toEqual(
+      `/network/working-groups/${wgResponse.id}/duplicate/${researchOutput.id}`,
+    );
+  });
+  it('will create a new research output when saved', async () => {
+    const wgResponse = createWorkingGroupResponse();
+    const userResponse = createUserResponse({}, 1);
+    const researchOutput: ResearchOutputWorkingGroupResponse = {
+      ...createResearchOutputResponse(),
+      id: '123',
+      workingGroups: [{ title: wgResponse.title, id: wgResponse.id }],
+      title: 'Example',
+      link: 'http://example.com',
+    };
+    mockGetResearchOutput.mockResolvedValue(researchOutput);
+    mockGetWorkingGroup.mockResolvedValue(wgResponse);
+
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({})
+          .workingGroups({})
+          .workingGroup({ workingGroupId: wgResponse.id })
+          .duplicateOutput({ id: researchOutput.id }).$,
+      ],
+    });
+    await renderWorkingGroupProfile(
+      {
+        ...userResponse,
+        workingGroups: [
+          {
+            name: wgResponse.title,
+            active: true,
+            id: wgResponse.id,
+            role: 'Member',
+          },
+        ],
+      },
+      history,
+    );
+    expect(screen.getByLabelText(/Title/i)).toHaveValue('Copy of Example');
+    userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
+    userEvent.click(screen.getByText(/save/i));
+    expect(mockCreateResearchOutput).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Copy of Example',
+        link: 'http://example.com',
+      }),
+      expect.anything(),
+    );
+
+    await waitFor(() =>
+      expect(history.location.pathname).not.toEqual(
+        `/network/teams/${wgResponse.id}/duplicate/${researchOutput.id}`,
+      ),
+    );
+  });
+
+  it('will show a page not found if research output does not exist', async () => {
+    const wgResponse = createWorkingGroupResponse();
+    const userResponse = createUserResponse({}, 1);
+
+    mockGetResearchOutput.mockResolvedValueOnce(undefined);
+    mockGetWorkingGroup.mockResolvedValue(wgResponse);
+
+    const history = createMemoryHistory({
+      initialEntries: [
+        network({})
+          .workingGroups({})
+          .workingGroup({ workingGroupId: wgResponse.id })
+          .duplicateOutput({ id: 'fake' }).$,
+      ],
+    });
+    await renderWorkingGroupProfile(
+      {
+        ...userResponse,
+        workingGroups: [
+          {
+            id: wgResponse.id,
+            role: 'Member',
+            active: true,
+            name: wgResponse.title,
+          },
+        ],
+      },
+      history,
+    );
+    expect(screen.getByText(/sorry.+page/i)).toBeVisible();
   });
 });
 

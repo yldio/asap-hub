@@ -22,6 +22,7 @@ export { default as discoverIcon } from './discover';
 export { default as docsIcon } from './docs';
 export { default as dropdownChevronIcon } from './dropdown-chevron';
 export { default as dropdownCrossIcon } from './dropdown-cross';
+export { default as duplicateIcon } from './duplicate';
 export { default as editIcon } from './edit';
 export { default as errorIcon } from './error';
 export { default as eventIcon } from './event';

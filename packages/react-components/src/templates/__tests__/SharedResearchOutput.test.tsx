@@ -73,6 +73,50 @@ describe('Grant Documents', () => {
     expect(queryByTitle('Edit')).toBeInTheDocument();
   });
 
+  it('displays duplicate button when user has permission', () => {
+    const { queryByTitle, rerender } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: false,
+          canPublishResearchOutput: false,
+          canShareResearchOutput: false,
+          canDuplicateResearchOutput: false,
+        }}
+      >
+        <SharedResearchOutput {...props} documentType="Article" />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByTitle('Duplicate')).toBeNull();
+
+    rerender(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: false,
+          canPublishResearchOutput: false,
+          canShareResearchOutput: false,
+          canDuplicateResearchOutput: false,
+        }}
+      >
+        <SharedResearchOutput {...props} documentType="Grant Document" />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByTitle('Duplicate')).toBeNull();
+
+    rerender(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: true,
+          canPublishResearchOutput: false,
+          canShareResearchOutput: false,
+          canDuplicateResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput {...props} documentType="Article" />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByTitle('Duplicate')).toBeInTheDocument();
+  });
+
   it('handles tags and separate RTF description', () => {
     const { queryByText, getByText, queryByRole } = render(
       <SharedResearchOutput

@@ -87,7 +87,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);
 
-  if (permissions.canEditResearchOutput && workingGroup) {
+  if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
         <InnerToastContext.Provider value={toast}>
@@ -130,7 +130,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             published={published}
             permissions={permissions}
             onSave={(output) =>
-              researchOutputData
+              researchOutputData?.id
                 ? updateAndPublishResearchOutput(researchOutputData.id, {
                     ...output,
                     workingGroups: [workingGroupId],
@@ -143,7 +143,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
             onSaveDraft={(output) =>
-              researchOutputData
+              researchOutputData?.id
                 ? updateResearchOutput(researchOutputData.id, {
                     ...output,
                     workingGroups: [workingGroupId],
@@ -160,7 +160,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
       </Frame>
     );
   }
-
   return <NotFoundPage />;
 };
 

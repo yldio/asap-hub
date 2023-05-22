@@ -23,7 +23,11 @@ import userEvent, { specialChars } from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { createResearchOutput, updateTeamResearchOutput } from '../api';
+import {
+  createResearchOutput,
+  updateTeamResearchOutput,
+  getTeam,
+} from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput from '../TeamOutput';
 
@@ -112,6 +116,8 @@ const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
   typeof createResearchOutput
 >;
 
+const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
+
 const mockUpdateResearchOutput =
   updateTeamResearchOutput as jest.MockedFunction<
     typeof updateTeamResearchOutput
@@ -133,6 +139,15 @@ it('Renders the research output', async () => {
   expect(
     screen.getByRole('heading', { name: /Share bioinformatics/i }),
   ).toBeInTheDocument();
+});
+
+it('Shows the not found page if the team does not exist', async () => {
+  mockGetTeam.mockResolvedValueOnce(undefined);
+  await renderPage({
+    teamId: '42',
+    teamOutputDocumentType: 'bioinformatics',
+  });
+  expect(screen.getByText(/Sorry.+page/i)).toBeVisible();
 });
 
 it('displays the publish button for new research outputs', async () => {
@@ -394,27 +409,6 @@ it('can edit and publish a draft research output', async () => {
     }),
     expect.anything(),
   );
-});
-
-test('displays sorry page when user does not have edit permission', async () => {
-  await renderPage({
-    user: {
-      ...baseUser,
-      teams: [
-        {
-          ...baseUser.teams[0]!,
-          role: 'Key Personnel',
-        },
-      ],
-    },
-    teamId: '42',
-    teamOutputDocumentType: 'article',
-    researchOutputData: {
-      ...baseResearchOutput,
-      published: true,
-    },
-  });
-  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
 });
 
 it('will show server side validation error for link', async () => {

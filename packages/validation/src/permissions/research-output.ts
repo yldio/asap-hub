@@ -40,6 +40,12 @@ export const hasShareResearchOutputPermission = (userRole: UserRole): boolean =>
   userRole === 'Staff' ||
   (isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member');
 
+export const hasDuplicateResearchOutputPermission = (
+  userRole: UserRole,
+): boolean =>
+  userRole === 'Staff' ||
+  (isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member');
+
 export const hasPublishResearchOutputPermission = (
   userRole: UserRole,
 ): boolean => userRole === 'Staff';

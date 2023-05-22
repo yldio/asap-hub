@@ -97,6 +97,7 @@ const team = (() => {
     { teamOutputDocumentType: teamOutputDocumentTypeParser },
     {},
   );
+  const duplicateOutput = route('/duplicate/:id', { id: stringParser }, {});
 
   const upcoming = route('/upcoming', {}, {});
   const past = route('/past', {}, {});
@@ -104,7 +105,16 @@ const team = (() => {
   return route(
     '/:teamId',
     { teamId: stringParser },
-    { about, workspace, outputs, createOutput, upcoming, past, draftOutputs },
+    {
+      about,
+      workspace,
+      outputs,
+      createOutput,
+      duplicateOutput,
+      upcoming,
+      past,
+      draftOutputs,
+    },
   );
 })();
 const teams = route('/teams', {}, { team });
@@ -145,6 +155,7 @@ const workingGroup = (() => {
     { workingGroupOutputDocumentType: workingGroupOutputDocumentTypeParser },
     {},
   );
+  const duplicateOutput = route('/duplicate/:id', { id: stringParser }, {});
   const calendar = route('/calendar', {}, {});
   const upcoming = route('/upcoming', {}, {});
   const past = route('/past', {}, {});
@@ -152,7 +163,16 @@ const workingGroup = (() => {
   return route(
     '/:workingGroupId',
     { workingGroupId: stringParser },
-    { about, createOutput, outputs, draftOutputs, calendar, upcoming, past },
+    {
+      about,
+      createOutput,
+      duplicateOutput,
+      outputs,
+      draftOutputs,
+      calendar,
+      upcoming,
+      past,
+    },
   );
 })();
 

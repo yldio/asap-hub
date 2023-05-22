@@ -1,9 +1,10 @@
 import { createContext, useContext } from 'react';
 
-type ResearchOutputPermissions = {
+export type ResearchOutputPermissions = {
   canShareResearchOutput?: boolean;
   canEditResearchOutput?: boolean;
   canPublishResearchOutput?: boolean;
+  canDuplicateResearchOutput?: boolean;
 };
 
 export const ResearchOutputPermissionsContext =
@@ -11,6 +12,7 @@ export const ResearchOutputPermissionsContext =
     canShareResearchOutput: false,
     canEditResearchOutput: false,
     canPublishResearchOutput: false,
+    canDuplicateResearchOutput: false,
   });
 
 export const useResearchOutputPermissionsContext =

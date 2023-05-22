@@ -423,6 +423,7 @@ input EventSpeakersFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+  user: cfExternalUsersOrUsersNestedFilter
   user_exists: Boolean
 }
 
@@ -807,6 +808,52 @@ type ExternalUsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
   outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers)"""
+type ExternalUsersOrUsers implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ExternalUsersOrUsersLinkingCollections
+  orcid(locale: String): String
+  sys: Sys!
+}
+
+type ExternalUsersOrUsersCollection {
+  items: [ExternalUsersOrUsers]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ExternalUsersOrUsersFilter {
+  AND: [ExternalUsersOrUsersFilter]
+  OR: [ExternalUsersOrUsersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+type ExternalUsersOrUsersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum ExternalUsersOrUsersOrder {
+  orcid_ASC
+  orcid_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum ExternalUsersOrder {
@@ -1221,7 +1268,7 @@ enum NewsOrder {
 type Outputs implements Entry {
   addedDate(locale: String): DateTime
   adminNotes(locale: String): String
-  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsAuthorsCollection
+  authorsCollection(limit: Int = 100, locale: String, order: [OutputsAuthorsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): OutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean): Users
   documentType(locale: String): String
@@ -1242,6 +1289,19 @@ type OutputsAuthorsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum OutputsAuthorsCollectionOrder {
+  orcid_ASC
+  orcid_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 union OutputsAuthorsItem = ExternalUsers | Users
@@ -1272,6 +1332,7 @@ input OutputsFilter {
   adminNotes_not: String
   adminNotes_not_contains: String
   adminNotes_not_in: [String]
+  authors: cfExternalUsersOrUsersNestedFilter
   authorsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   createdBy: cfUsersNestedFilter
@@ -1529,7 +1590,7 @@ enum ProjectMembershipOrder {
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects)"""
 type Projects implements Entry {
-  calendars(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   endDate(locale: String): DateTime
@@ -1559,8 +1620,8 @@ type ProjectsCollection {
 input ProjectsFilter {
   AND: [ProjectsFilter]
   OR: [ProjectsFilter]
-  calendars: cfCalendarsNestedFilter
-  calendars_exists: Boolean
+  calendar: cfCalendarsNestedFilter
+  calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   description: String
   description_contains: String
@@ -1770,6 +1831,8 @@ type Query {
   eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): EventsCollection
   externalUsers(id: String!, locale: String, preview: Boolean): ExternalUsers
   externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersFilter): ExternalUsersCollection
+  externalUsersOrUsers(id: String!, locale: String, preview: Boolean): ExternalUsersOrUsers
+  externalUsersOrUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): ExternalUsersOrUsersCollection
   media(id: String!, locale: String, preview: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
   migration(id: String!, locale: String, preview: Boolean): Migration
@@ -2301,26 +2364,14 @@ type WorkingGroupNetworkComplexDiseaseCollection {
 }
 
 enum WorkingGroupNetworkComplexDiseaseCollectionOrder {
-  endDate_ASC
-  endDate_DESC
-  leadEmail_ASC
-  leadEmail_DESC
   leadingMembers_ASC
   leadingMembers_DESC
-  pmEmail_ASC
-  pmEmail_DESC
   primaryEmail_ASC
   primaryEmail_DESC
-  projectProposal_ASC
-  projectProposal_DESC
   secondaryEmail_ASC
   secondaryEmail_DESC
   shortDescription_ASC
   shortDescription_DESC
-  startDate_ASC
-  startDate_DESC
-  status_ASC
-  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2360,26 +2411,14 @@ type WorkingGroupNetworkMonogenicCollection {
 }
 
 enum WorkingGroupNetworkMonogenicCollectionOrder {
-  endDate_ASC
-  endDate_DESC
-  leadEmail_ASC
-  leadEmail_DESC
   leadingMembers_ASC
   leadingMembers_DESC
-  pmEmail_ASC
-  pmEmail_DESC
   primaryEmail_ASC
   primaryEmail_DESC
-  projectProposal_ASC
-  projectProposal_DESC
   secondaryEmail_ASC
   secondaryEmail_DESC
   shortDescription_ASC
   shortDescription_DESC
-  startDate_ASC
-  startDate_DESC
-  status_ASC
-  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2400,26 +2439,14 @@ type WorkingGroupNetworkOperationalCollection {
 }
 
 enum WorkingGroupNetworkOperationalCollectionOrder {
-  endDate_ASC
-  endDate_DESC
-  leadEmail_ASC
-  leadEmail_DESC
   leadingMembers_ASC
   leadingMembers_DESC
-  pmEmail_ASC
-  pmEmail_DESC
   primaryEmail_ASC
   primaryEmail_DESC
-  projectProposal_ASC
-  projectProposal_DESC
   secondaryEmail_ASC
   secondaryEmail_DESC
   shortDescription_ASC
   shortDescription_DESC
-  startDate_ASC
-  startDate_DESC
-  status_ASC
-  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2451,26 +2478,14 @@ type WorkingGroupNetworkSupportCollection {
 }
 
 enum WorkingGroupNetworkSupportCollectionOrder {
-  endDate_ASC
-  endDate_DESC
-  leadEmail_ASC
-  leadEmail_DESC
   leadingMembers_ASC
   leadingMembers_DESC
-  pmEmail_ASC
-  pmEmail_DESC
   primaryEmail_ASC
   primaryEmail_DESC
-  projectProposal_ASC
-  projectProposal_DESC
   secondaryEmail_ASC
   secondaryEmail_DESC
   shortDescription_ASC
   shortDescription_DESC
-  startDate_ASC
-  startDate_DESC
-  status_ASC
-  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2488,21 +2503,14 @@ type WorkingGroups implements Entry {
   calendar(locale: String, preview: Boolean): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
-  endDate(locale: String): DateTime
-  keywords(locale: String): [String]
-  leadEmail(locale: String): String
   leadingMembers(locale: String): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCollection
   milestonesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): WorkingGroupsMilestonesCollection
-  pmEmail(locale: String): String
   primaryEmail(locale: String): String
-  projectProposal(locale: String): String
   resourcesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): WorkingGroupsResourcesCollection
   secondaryEmail(locale: String): String
   shortDescription(locale: String): String
-  startDate(locale: String): DateTime
-  status(locale: String): String
   sys: Sys!
   title(locale: String): String
 }
@@ -2527,26 +2535,6 @@ input WorkingGroupsFilter {
   description_not: String
   description_not_contains: String
   description_not_in: [String]
-  endDate: DateTime
-  endDate_exists: Boolean
-  endDate_gt: DateTime
-  endDate_gte: DateTime
-  endDate_in: [DateTime]
-  endDate_lt: DateTime
-  endDate_lte: DateTime
-  endDate_not: DateTime
-  endDate_not_in: [DateTime]
-  keywords_contains_all: [String]
-  keywords_contains_none: [String]
-  keywords_contains_some: [String]
-  keywords_exists: Boolean
-  leadEmail: String
-  leadEmail_contains: String
-  leadEmail_exists: Boolean
-  leadEmail_in: [String]
-  leadEmail_not: String
-  leadEmail_not_contains: String
-  leadEmail_not_in: [String]
   leadingMembers: String
   leadingMembers_contains: String
   leadingMembers_exists: Boolean
@@ -2558,13 +2546,6 @@ input WorkingGroupsFilter {
   membersCollection_exists: Boolean
   milestones: cfMilestonesNestedFilter
   milestonesCollection_exists: Boolean
-  pmEmail: String
-  pmEmail_contains: String
-  pmEmail_exists: Boolean
-  pmEmail_in: [String]
-  pmEmail_not: String
-  pmEmail_not_contains: String
-  pmEmail_not_in: [String]
   primaryEmail: String
   primaryEmail_contains: String
   primaryEmail_exists: Boolean
@@ -2572,13 +2553,6 @@ input WorkingGroupsFilter {
   primaryEmail_not: String
   primaryEmail_not_contains: String
   primaryEmail_not_in: [String]
-  projectProposal: String
-  projectProposal_contains: String
-  projectProposal_exists: Boolean
-  projectProposal_in: [String]
-  projectProposal_not: String
-  projectProposal_not_contains: String
-  projectProposal_not_in: [String]
   resources: cfResourcesNestedFilter
   resourcesCollection_exists: Boolean
   secondaryEmail: String
@@ -2595,22 +2569,6 @@ input WorkingGroupsFilter {
   shortDescription_not: String
   shortDescription_not_contains: String
   shortDescription_not_in: [String]
-  startDate: DateTime
-  startDate_exists: Boolean
-  startDate_gt: DateTime
-  startDate_gte: DateTime
-  startDate_in: [DateTime]
-  startDate_lt: DateTime
-  startDate_lte: DateTime
-  startDate_not: DateTime
-  startDate_not_in: [DateTime]
-  status: String
-  status_contains: String
-  status_exists: Boolean
-  status_in: [String]
-  status_not: String
-  status_not_contains: String
-  status_not_in: [String]
   sys: SysFilter
   title: String
   title_contains: String
@@ -2674,26 +2632,14 @@ enum WorkingGroupsMilestonesCollectionOrder {
 }
 
 enum WorkingGroupsOrder {
-  endDate_ASC
-  endDate_DESC
-  leadEmail_ASC
-  leadEmail_DESC
   leadingMembers_ASC
   leadingMembers_DESC
-  pmEmail_ASC
-  pmEmail_DESC
   primaryEmail_ASC
   primaryEmail_DESC
-  projectProposal_ASC
-  projectProposal_DESC
   secondaryEmail_ASC
   secondaryEmail_DESC
   shortDescription_ASC
   shortDescription_DESC
-  startDate_ASC
-  startDate_DESC
-  status_ASC
-  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2832,6 +2778,20 @@ input cfEventSpeakersNestedFilter {
   title_not_contains: String
   title_not_in: [String]
   user_exists: Boolean
+}
+
+input cfExternalUsersOrUsersNestedFilter {
+  AND: [cfExternalUsersOrUsersNestedFilter]
+  OR: [cfExternalUsersOrUsersNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
 }
 
 input cfMilestonesNestedFilter {
@@ -3124,26 +3084,6 @@ input cfWorkingGroupsNestedFilter {
   description_not: String
   description_not_contains: String
   description_not_in: [String]
-  endDate: DateTime
-  endDate_exists: Boolean
-  endDate_gt: DateTime
-  endDate_gte: DateTime
-  endDate_in: [DateTime]
-  endDate_lt: DateTime
-  endDate_lte: DateTime
-  endDate_not: DateTime
-  endDate_not_in: [DateTime]
-  keywords_contains_all: [String]
-  keywords_contains_none: [String]
-  keywords_contains_some: [String]
-  keywords_exists: Boolean
-  leadEmail: String
-  leadEmail_contains: String
-  leadEmail_exists: Boolean
-  leadEmail_in: [String]
-  leadEmail_not: String
-  leadEmail_not_contains: String
-  leadEmail_not_in: [String]
   leadingMembers: String
   leadingMembers_contains: String
   leadingMembers_exists: Boolean
@@ -3153,13 +3093,6 @@ input cfWorkingGroupsNestedFilter {
   leadingMembers_not_in: [String]
   membersCollection_exists: Boolean
   milestonesCollection_exists: Boolean
-  pmEmail: String
-  pmEmail_contains: String
-  pmEmail_exists: Boolean
-  pmEmail_in: [String]
-  pmEmail_not: String
-  pmEmail_not_contains: String
-  pmEmail_not_in: [String]
   primaryEmail: String
   primaryEmail_contains: String
   primaryEmail_exists: Boolean
@@ -3167,13 +3100,6 @@ input cfWorkingGroupsNestedFilter {
   primaryEmail_not: String
   primaryEmail_not_contains: String
   primaryEmail_not_in: [String]
-  projectProposal: String
-  projectProposal_contains: String
-  projectProposal_exists: Boolean
-  projectProposal_in: [String]
-  projectProposal_not: String
-  projectProposal_not_contains: String
-  projectProposal_not_in: [String]
   resourcesCollection_exists: Boolean
   secondaryEmail: String
   secondaryEmail_contains: String
@@ -3189,22 +3115,6 @@ input cfWorkingGroupsNestedFilter {
   shortDescription_not: String
   shortDescription_not_contains: String
   shortDescription_not_in: [String]
-  startDate: DateTime
-  startDate_exists: Boolean
-  startDate_gt: DateTime
-  startDate_gte: DateTime
-  startDate_in: [DateTime]
-  startDate_lt: DateTime
-  startDate_lte: DateTime
-  startDate_not: DateTime
-  startDate_not_in: [DateTime]
-  status: String
-  status_contains: String
-  status_exists: Boolean
-  status_in: [String]
-  status_not: String
-  status_not_contains: String
-  status_not_in: [String]
   sys: SysFilter
   title: String
   title_contains: String

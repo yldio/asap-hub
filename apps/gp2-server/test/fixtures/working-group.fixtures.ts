@@ -156,7 +156,52 @@ export const getGraphQLWorkingGroup = (): GraphQLWorkingGroup => ({
     calendars: [getGraphQLWorkingGroupCalendar()],
   },
 });
+export const getContentfulGraphqlWorkingGroupMembers = () => ({
+  total: 1,
+  items: [
+    {
+      sys: {
+        id: '11',
+      },
+      role: 'Lead',
+      user: {
+        sys: {
+          id: '11',
+        },
+        firstName: 'Tony',
+        lastName: 'Stark',
+        onboarded: true,
+      },
+    },
+  ],
+});
+export const getContentfulGraphqlWorkingGroupMilestones = () => ({
+  total: 1,
+  items: [
+    {
+      sys: {
+        id: '23',
+      },
+      status: 'Active',
+      title: 'A working group milestone',
+    },
+  ],
+});
 
+export const getContentfulGraphqlWorkingGroupResources = () => ({
+  total: 1,
+  items: [
+    {
+      sys: {
+        id: '27',
+      },
+      type: 'Note',
+      title: 'Working group resource title',
+      description: 'Working group resource description',
+      externalLink: 'http://example/link',
+    },
+  ],
+});
 export const getContentfulGraphqlWorkingGroup = (
   props = {},
 ): NonNullable<
@@ -171,51 +216,9 @@ export const getContentfulGraphqlWorkingGroup = (
   primaryEmail: 'primary.email@example.com',
   secondaryEmail: 'secondary.email@example.com',
   leadingMembers: 'Leading members',
-  membersCollection: {
-    total: 1,
-    items: [
-      {
-        sys: {
-          id: '11',
-        },
-        role: 'Lead',
-        user: {
-          sys: {
-            id: '11',
-          },
-          firstName: 'Tony',
-          lastName: 'Stark',
-          onboarded: true,
-        },
-      },
-    ],
-  },
-  milestonesCollection: {
-    total: 1,
-    items: [
-      {
-        sys: {
-          id: '23',
-        },
-        status: 'Active',
-        title: 'A working group milestone',
-      },
-    ],
-  },
-  resourcesCollection: {
-    total: 1,
-    items: [
-      {
-        sys: {
-          id: '27',
-        },
-        type: 'Note',
-        title: 'Working group resource title',
-        description: 'Working group resource description',
-        externalLink: 'http://example/link',
-      },
-    ],
-  },
+  membersCollection: { ...getContentfulGraphqlWorkingGroupMembers() },
+  milestonesCollection: { ...getContentfulGraphqlWorkingGroupMilestones() },
+  resourcesCollection: { ...getContentfulGraphqlWorkingGroupResources() },
   calendar: {
     sys: {
       id: '42',

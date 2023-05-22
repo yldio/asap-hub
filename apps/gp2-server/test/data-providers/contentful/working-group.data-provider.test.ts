@@ -23,7 +23,7 @@ describe('Working Group Data Provider', () => {
     new WorkingGroupContentfulDataProvider(contentfulGraphqlClientMockServer);
   beforeEach(jest.resetAllMocks);
 
-  describe.only('FetchById', () => {
+  describe('FetchById', () => {
     test('Should fetch the working group from squidex graphql', async () => {
       const result = await workingGroupDataProviderWithMockServer.fetchById(
         'working-group-id',

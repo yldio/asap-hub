@@ -7,7 +7,6 @@ export const workingGroupNetworkContentQueryFragment = gql`
   fragment WorkingGroupNetworkContentData on WorkingGroupNetwork {
     supportCollection(limit: 20) {
       total
-      total
       items {
         ...WorkingGroupsContentData
       }

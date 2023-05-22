@@ -12,7 +12,6 @@ import {
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { ToastContext } from '@asap-hub/react-context';
 import { network, TeamOutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
@@ -21,7 +20,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
-import { ContextType, Suspense } from 'react';
+import { Suspense } from 'react';
 import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { createResearchOutput, updateTeamResearchOutput } from '../api';
@@ -32,6 +31,10 @@ jest.setTimeout(30000);
 jest.mock('../api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
+
+beforeEach(() => {
+  window.scrollTo = jest.fn();
+});
 
 const baseUser = createUserResponse();
 const baseResearchOutput: ResearchOutputResponse = {
@@ -105,9 +108,6 @@ const mandatoryFields = async (
   };
 };
 
-const mockToast = jest.fn() as jest.MockedFunction<
-  ContextType<typeof ToastContext>
->;
 const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
   typeof createResearchOutput
 >;
@@ -452,7 +452,6 @@ it('will show server side validation error for link', async () => {
       'A Research Output with this URL already exists. Please enter a different URL.',
     ),
   ).toBeNull();
-  expect(mockToast).not.toHaveBeenCalled();
 });
 
 it('will toast server side errors for unknown errors', async () => {
@@ -465,9 +464,12 @@ it('will toast server side errors for unknown errors', async () => {
   await publish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
-  expect(mockToast).toHaveBeenCalledWith(
-    'There was an error and we were unable to save your changes. Please try again.',
-  );
+  expect(
+    screen.queryByText(
+      'There was an error and we were unable to save your changes. Please try again.',
+    ),
+  ).toBeInTheDocument();
+  expect(window.scrollTo).toBeCalled();
 });
 
 it('will toast server side errors for unknown errors in edit mode', async () => {
@@ -476,8 +478,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   const descriptionMD = 'example42 description';
   const type = 'Animal Model';
   const doi = '10.0777';
-
-  mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
+  mockUpdateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({
     teamId: '42',
@@ -498,10 +499,13 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   );
   await publish();
 
-  expect(mockCreateResearchOutput).toHaveBeenCalled();
-  expect(mockToast).toHaveBeenCalledWith(
-    'There was an error and we were unable to save your changes. Please try again.',
-  );
+  expect(mockUpdateResearchOutput).toHaveBeenCalled();
+  expect(
+    screen.queryByText(
+      'There was an error and we were unable to save your changes. Please try again.',
+    ),
+  ).toBeInTheDocument();
+  expect(window.scrollTo).toBeCalled();
 });
 
 async function renderPage({
@@ -526,27 +530,25 @@ async function renderPage({
       }
     >
       <Suspense fallback="loading">
-        <ToastContext.Provider value={mockToast}>
-          <Auth0Provider user={user}>
-            <WhenReady>
-              <StaticRouter
-                location={
-                  network({})
-                    .teams({})
-                    .team({ teamId })
-                    .createOutput({ teamOutputDocumentType }).$
-                }
-              >
-                <Route path={path}>
-                  <TeamOutput
-                    teamId={teamId}
-                    researchOutputData={researchOutputData}
-                  />
-                </Route>
-              </StaticRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </ToastContext.Provider>
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <StaticRouter
+              location={
+                network({})
+                  .teams({})
+                  .team({ teamId })
+                  .createOutput({ teamOutputDocumentType }).$
+              }
+            >
+              <Route path={path}>
+                <TeamOutput
+                  teamId={teamId}
+                  researchOutputData={researchOutputData}
+                />
+              </Route>
+            </StaticRouter>
+          </WhenReady>
+        </Auth0Provider>
       </Suspense>
     </RecoilRoot>,
   );

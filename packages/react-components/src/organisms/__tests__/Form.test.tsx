@@ -1,4 +1,4 @@
-import { ToastContext } from '@asap-hub/react-context';
+import { InnerToastContext } from '@asap-hub/react-context';
 import { act, render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
@@ -48,13 +48,13 @@ it('initially does not prompt when trying to leave', () => {
 });
 it('prompts when trying to leave after making edits', () => {
   const { getByText } = render(
-    <ToastContext.Provider value={jest.fn()}>
+    <InnerToastContext.Provider value={jest.fn()}>
       <Router history={history}>
         <Form {...props} dirty>
           {() => <Link to={'/another-url'}>Navigate away</Link>}
         </Form>
       </Router>
-    </ToastContext.Provider>,
+    </InnerToastContext.Provider>,
   );
 
   userEvent.click(getByText(/navigate/i));
@@ -64,7 +64,7 @@ it('prompts when trying to leave after making edits', () => {
 describe('on cancel', () => {
   it('prompts after making edits', () => {
     const { getByText } = render(
-      <ToastContext.Provider value={jest.fn()}>
+      <InnerToastContext.Provider value={jest.fn()}>
         <Router history={history}>
           <Form {...props} dirty>
             {({ onCancel }) => (
@@ -77,7 +77,7 @@ describe('on cancel', () => {
             )}
           </Form>
         </Router>
-      </ToastContext.Provider>,
+      </InnerToastContext.Provider>,
       { wrapper: MemoryRouter },
     );
 
@@ -86,7 +86,7 @@ describe('on cancel', () => {
   });
   it('goes to the root route if previous navigation is not available', () => {
     const { getByText } = render(
-      <ToastContext.Provider value={jest.fn()}>
+      <InnerToastContext.Provider value={jest.fn()}>
         <Router history={history}>
           <Form {...props} dirty>
             {({ onCancel }) => (
@@ -99,7 +99,7 @@ describe('on cancel', () => {
             )}
           </Form>
         </Router>
-      </ToastContext.Provider>,
+      </InnerToastContext.Provider>,
       { wrapper: MemoryRouter },
     );
 
@@ -109,7 +109,7 @@ describe('on cancel', () => {
 
   it('goes back in browser history if previous navigation is available', () => {
     const { getByText } = render(
-      <ToastContext.Provider value={jest.fn()}>
+      <InnerToastContext.Provider value={jest.fn()}>
         <Router history={history}>
           <Route path="/form">
             <Form {...props} dirty>
@@ -124,7 +124,7 @@ describe('on cancel', () => {
             </Form>
           </Route>
         </Router>
-      </ToastContext.Provider>,
+      </InnerToastContext.Provider>,
       { wrapper: MemoryRouter },
     );
 
@@ -141,16 +141,18 @@ describe('when saving', () => {
     it('does not call onSave', () => {
       const handleSave = jest.fn();
       const { getByText } = render(
-        <Form {...props} dirty>
-          {({ getWrappedOnSave }) => (
-            <>
-              <input type="text" required />
-              <Button primary onClick={getWrappedOnSave(handleSave)}>
-                save
-              </Button>
-            </>
-          )}
-        </Form>,
+        <InnerToastContext.Provider value={jest.fn()}>
+          <Form {...props} dirty>
+            {({ getWrappedOnSave }) => (
+              <>
+                <input type="text" required />
+                <Button primary onClick={getWrappedOnSave(handleSave)}>
+                  save
+                </Button>
+              </>
+            )}
+          </Form>
+        </InnerToastContext.Provider>,
         { wrapper: MemoryRouter },
       );
 
@@ -162,16 +164,18 @@ describe('when saving', () => {
       const handleSave = jest.fn(() => Promise.resolve());
       const handleValidate = jest.fn(() => false);
       const { getByText } = render(
-        <Form {...props} validate={handleValidate} dirty>
-          {({ getWrappedOnSave }) => (
-            <>
-              <input type="text" />
-              <Button primary onClick={getWrappedOnSave(handleSave)}>
-                save
-              </Button>
-            </>
-          )}
-        </Form>,
+        <InnerToastContext.Provider value={jest.fn()}>
+          <Form {...props} validate={handleValidate} dirty>
+            {({ getWrappedOnSave }) => (
+              <>
+                <input type="text" />
+                <Button primary onClick={getWrappedOnSave(handleSave)}>
+                  save
+                </Button>
+              </>
+            )}
+          </Form>
+        </InnerToastContext.Provider>,
         { wrapper: StaticRouter },
       );
 
@@ -188,10 +192,10 @@ describe('when saving', () => {
     let handleSave!: jest.MockedFunction<() => Promise<void>>;
     let resolveSave!: () => void;
     let rejectSave!: (error: Error) => void;
-    let mockToast: () => void;
+    let innerMockToast: () => void;
 
     beforeEach(() => {
-      mockToast = jest.fn();
+      innerMockToast = jest.fn();
       handleSave = jest.fn().mockReturnValue(
         new Promise<void>((resolve, reject) => {
           resolveSave = resolve;
@@ -200,7 +204,7 @@ describe('when saving', () => {
       );
       history = createMemoryHistory({ getUserConfirmation });
       result = render(
-        <ToastContext.Provider value={mockToast}>
+        <InnerToastContext.Provider value={innerMockToast}>
           <Router history={history}>
             <Form {...props} dirty>
               {({ getWrappedOnSave, isSaving }) => (
@@ -217,7 +221,7 @@ describe('when saving', () => {
               )}
             </Form>
           </Router>
-        </ToastContext.Provider>,
+        </InnerToastContext.Provider>,
       );
     });
 
@@ -311,7 +315,7 @@ describe('when saving', () => {
 
         userEvent.click(getByText(/^save/i));
         await waitFor(() =>
-          expect(mockToast).toHaveBeenCalledWith(
+          expect(innerMockToast).toHaveBeenCalledWith(
             'There was an error and we were unable to save your changes. Please try again.',
           ),
         );
@@ -345,7 +349,7 @@ describe('when saving', () => {
         userEvent.click(getByText(/^save/i));
         userEvent.click(getByText(/navigate/i));
 
-        await waitFor(() => expect(mockToast).toHaveBeenCalledWith(null));
+        await waitFor(() => expect(innerMockToast).toHaveBeenCalledWith(null));
       });
     });
   });

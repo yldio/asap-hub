@@ -1,5 +1,5 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
-import { ToastContext } from '@asap-hub/react-context';
+import { InnerToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Prompt, useHistory } from 'react-router-dom';
@@ -32,7 +32,7 @@ const Form = <T extends void | Record<string, unknown>>({
   validate = () => true,
   serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
-  const toast = useContext(ToastContext);
+  const innerToast = useContext(InnerToastContext);
   const history = useHistory();
 
   const pushFromHere = usePushFromHere();
@@ -70,11 +70,15 @@ const Form = <T extends void | Record<string, unknown>>({
         } catch {
           if (formRef.current) {
             setStatus('hasError');
-            toast(
+            innerToast(
               'There was an error and we were unable to save your changes. Please try again.',
             );
           }
         }
+      } else {
+        innerToast(
+          'There are some errors in the form. Please correct the fields below.',
+        );
       }
       return Promise.resolve();
     };
@@ -93,7 +97,7 @@ const Form = <T extends void | Record<string, unknown>>({
           (status === 'initial' && dirty)
         }
         message={() => {
-          toast(null);
+          innerToast(null);
           return 'Are you sure you want to leave? Unsaved changes will be lost.';
         }}
       />

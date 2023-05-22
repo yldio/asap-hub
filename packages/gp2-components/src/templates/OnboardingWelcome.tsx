@@ -68,7 +68,7 @@ const OnboardingWelcome: React.FC<Record<string, never>> = () => (
       <Paragraph noMargin>
         Before you begin exploring, please take a small amount of time to fill
         in your profile so that others have a good idea about who you are and
-        what to do.
+        what you do.
       </Paragraph>
     </CardWithOffsetBackground>
     <Caption accent="lead">

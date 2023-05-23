@@ -35,14 +35,14 @@ describe('Research Output index handler', () => {
   test('Should fetch the research-output and create two records in Algolia when research-output is created and own related RO is created', async () => {
     const researchOutputResponse = getResearchOutputResponse();
 
-    const relatedResearchOutputResponse = researchOutputResponse;
+    const relatedResearchOutputResponse = getResearchOutputResponse();
     relatedResearchOutputResponse.id = 'ro-1235';
     relatedResearchOutputResponse.title = 'Related research output';
 
     researchOutputResponse.relatedResearch = [
       {
-        id: 'ro-1235',
-        title: 'Related research output',
+        id: relatedResearchOutputResponse.id,
+        title: relatedResearchOutputResponse.title,
         type: 'Published',
         isOwnRelatedResearchLink: true,
         teams: [
@@ -75,27 +75,27 @@ describe('Research Output index handler', () => {
   test('Should fetch the research-output and create three records in Algolia when research-output is created and own and foreign related ROs are created', async () => {
     const researchOutputResponse = getResearchOutputResponse();
 
-    const ownRelatedResearchOutputResponse = researchOutputResponse;
+    const ownRelatedResearchOutputResponse = getResearchOutputResponse();
     ownRelatedResearchOutputResponse.id = 'ro-1235';
     ownRelatedResearchOutputResponse.title = 'Own related research output';
 
-    const foreignRelatedResearchOutputResponse = researchOutputResponse;
+    const foreignRelatedResearchOutputResponse = getResearchOutputResponse();
     foreignRelatedResearchOutputResponse.id = 'ro-1236';
     foreignRelatedResearchOutputResponse.title =
       'Foreign related research output';
 
     researchOutputResponse.relatedResearch = [
       {
-        id: 'ro-1235',
-        title: 'Own related research output',
+        id: ownRelatedResearchOutputResponse.id,
+        title: ownRelatedResearchOutputResponse.title,
         type: 'Published',
         isOwnRelatedResearchLink: true,
         teams: [],
         documentType: 'Grant Document',
       },
       {
-        id: 'ro-1236',
-        title: 'Foreign related research output',
+        id: foreignRelatedResearchOutputResponse.id,
+        title: foreignRelatedResearchOutputResponse.title,
         type: 'Published',
         isOwnRelatedResearchLink: false,
         teams: [],

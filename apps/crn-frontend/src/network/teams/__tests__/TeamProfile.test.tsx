@@ -301,7 +301,8 @@ describe('Duplicate Output', () => {
     );
     expect(screen.getByLabelText(/Title/i)).toHaveValue('Copy of Example');
     userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
-    userEvent.click(screen.getByText(/save/i));
+    userEvent.click(screen.getByText(/save draft/i));
+    userEvent.click(screen.getByText(/keep and/i));
     expect(mockCreateResearchOutput).toHaveBeenCalledWith(
       expect.objectContaining({
         title: 'Copy of Example',

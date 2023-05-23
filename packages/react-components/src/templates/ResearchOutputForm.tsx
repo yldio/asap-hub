@@ -11,7 +11,7 @@ import {
 
 import { ResearchOutputPermissions } from '@asap-hub/react-context';
 import { sharedResearch } from '@asap-hub/routing';
-import React, { ComponentProps, useCallback, useState } from 'react';
+import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
 import { contentSidePaddingWithNavigation } from '../layout';
 import {
@@ -319,29 +319,28 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           setRedirectOnSave,
           onCancel: handleCancel,
         }) => {
-          const save = useCallback(
-            (draft = false) =>
-              getWrappedOnSave(async () => {
-                const researchOutput = await (draft
-                  ? onSaveDraft(currentPayload)
-                  : onSave(currentPayload));
-                setRemotePayload(currentPayload);
-                if (researchOutput) {
-                  const { id } = researchOutput;
-                  const savePath = sharedResearch({}).researchOutput({
+          const save = (draftSave = false) =>
+            getWrappedOnSave(async () => {
+              const researchOutput = await (draftSave
+                ? onSaveDraft(currentPayload)
+                : onSave(currentPayload));
+              setRemotePayload(currentPayload);
+              if (researchOutput) {
+                const { id } = researchOutput;
+                const savePath = sharedResearch({}).researchOutput({
+                  researchOutputId: id,
+                }).$;
+                const publishPath = sharedResearch({})
+                  .researchOutput({
                     researchOutputId: id,
-                  }).$;
-                  const publishPath = sharedResearch({})
-                    .researchOutput({
-                      researchOutputId: id,
-                    })
-                    .researchOutputPublished({}).$;
-                  setRedirectOnSave(published ? savePath : publishPath);
-                }
-                return researchOutput;
-              })(),
-            [currentPayload],
-          );
+                  })
+                  .researchOutputPublished({}).$;
+                setRedirectOnSave(
+                  !published && !draftSave ? publishPath : savePath,
+                );
+              }
+              return researchOutput;
+            })();
 
           return (
             <>
@@ -466,10 +465,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                       <Button
                         enabled={!isSaving}
                         fullWidth
-                        onClick={async () =>
+                        onClick={() =>
                           promptDescriptionChange
                             ? setShowDescriptionChangePrompt('draft')
-                            : await save(true)
+                            : save(true)
                         }
                         primary={showSaveDraftButton && !showPublishButton}
                       >
@@ -481,10 +480,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         enabled={!isSaving}
                         fullWidth
                         primary
-                        onClick={async () =>
+                        onClick={() =>
                           promptDescriptionChange
                             ? setShowDescriptionChangePrompt('publish')
-                            : await save(false)
+                            : save(false)
                         }
                       >
                         {published ? 'Save' : 'Publish'}

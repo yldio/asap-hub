@@ -13,7 +13,7 @@ export const workingGroupsContentQueryFragment = gql`
     primaryEmail
     secondaryEmail
     leadingMembers
-    membersCollection {
+    membersCollection(limit: 50) {
       total
       items {
         sys {
@@ -33,7 +33,7 @@ export const workingGroupsContentQueryFragment = gql`
         }
       }
     }
-    milestonesCollection {
+    milestonesCollection(limit: 10) {
       total
       items {
         sys {
@@ -45,7 +45,7 @@ export const workingGroupsContentQueryFragment = gql`
         title
       }
     }
-    resourcesCollection {
+    resourcesCollection(limit: 10) {
       total
       items {
         sys {

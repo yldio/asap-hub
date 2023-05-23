@@ -8,7 +8,7 @@ export class WorkingGroupContentfulDataProvider
   constructor(private graphQLClient: GraphQLClient) {}
 
   async fetch(): Promise<gp2Model.ListWorkingGroupDataObject> {
-    throw new Error('Method not implemented.');
+    return { total: 0, items: [] };
   }
   async update(): Promise<void> {
     throw new Error('Method not implemented.');

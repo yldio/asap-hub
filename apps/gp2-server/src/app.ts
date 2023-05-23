@@ -64,6 +64,8 @@ import { ExternalUserContentfulDataProvider } from './data-providers/contentful/
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
+import { WorkingGroupNetworkContentfulDataProvider } from './data-providers/contentful/working-group-network.data-provider';
+import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
 import { ContributingCohortSquidexDataProvider } from './data-providers/contributing-cohort.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import { ExternalUserSquidexDataProvider } from './data-providers/external-user.data-provider';
@@ -228,15 +230,21 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsContentfulDataProvider =
     libs.newsContentfulDataProvider ||
     new NewsContentfulDataProvider(contentfulGraphQLClient);
-  const workingGroupDataProvider =
-    libs.workingGroupDataProvider ||
+  const workingGroupSquidexDataProvider =
+    libs.workingGroupSquidexDataProvider ||
     new WorkingGroupSquidexDataProvider(
       squidexGraphqlClient,
       workingGroupRestClient,
     );
-  const workingGroupNetworkDataProvider =
-    libs.workingGroupNetworkDataProvider ||
+  const workingGroupContentfulDataProvider =
+    libs.workingGroupContentfulDataProvider ||
+    new WorkingGroupContentfulDataProvider(contentfulGraphQLClient);
+  const workingGroupNetworkSquidexDataProvider =
+    libs.workingGroupNetworkSquidexDataProvider ||
     new WorkingGroupNetworkSquidexDataProvider(squidexGraphqlClient);
+  const workingGroupNetworkContentfulDataProvider =
+    libs.workingGroupNetworkContentfulDataProvider ||
+    new WorkingGroupNetworkContentfulDataProvider(contentfulGraphQLClient);
   const projectDataProvider =
     libs.projectDataProvider ||
     new ProjectSquidexDataProvider(squidexGraphqlClient, projectRestClient);
@@ -293,6 +301,14 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.externalUserDataProvider || isContentfulEnabled
       ? externalUserContentfulDataProvider
       : externalUserSquidexDataProvider;
+  const workingGroupDataProvider =
+    libs.workingGroupDataProvider || isContentfulEnabled
+      ? workingGroupContentfulDataProvider
+      : workingGroupSquidexDataProvider;
+  const workingGroupNetworkDataProvider =
+    libs.workingGroupNetworkDataProvider || isContentfulEnabled
+      ? workingGroupNetworkContentfulDataProvider
+      : workingGroupNetworkSquidexDataProvider;
   // Controllers
 
   const workingGroupController =
@@ -449,8 +465,12 @@ export type Libs = {
   userSquidexDataProvider?: UserDataProvider;
   workingGroupController?: WorkingGroupController;
   workingGroupDataProvider?: WorkingGroupDataProvider;
+  workingGroupContentfulDataProvider?: WorkingGroupDataProvider;
+  workingGroupSquidexDataProvider?: WorkingGroupDataProvider;
   workingGroupNetworkController?: WorkingGroupNetworkController;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
+  workingGroupNetworkContentfulDataProvider?: WorkingGroupNetworkDataProvider;
+  workingGroupNetworkSquidexDataProvider?: WorkingGroupNetworkDataProvider;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
 };

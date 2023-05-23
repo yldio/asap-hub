@@ -568,10 +568,10 @@ describe('Working Group Data Provider', () => {
   });
   describe('Fetch method', () => {
     test('Should throw as not implemented', async () => {
-      expect.assertions(1);
-      await expect(workingGroupDataProvider.fetch()).rejects.toThrow(
-        /Method not implemented/i,
-      );
+      expect(await workingGroupDataProvider.fetch()).toEqual({
+        items: [],
+        total: 0,
+      });
     });
   });
   describe('update method', () => {

@@ -7029,6 +7029,13 @@ export const WorkingGroupsContentDataFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'membersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '50' },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -7109,6 +7116,13 @@ export const WorkingGroupsContentDataFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'milestonesCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -7154,6 +7168,13 @@ export const WorkingGroupsContentDataFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'resourcesCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -7238,7 +7259,7 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '10' },
               },
             ],
             selectionSet: {
@@ -7271,7 +7292,7 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '10' },
               },
             ],
             selectionSet: {
@@ -7304,7 +7325,7 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '10' },
               },
             ],
             selectionSet: {
@@ -7337,7 +7358,7 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '10' },
               },
             ],
             selectionSet: {

@@ -5,25 +5,25 @@ import { workingGroupsContentQueryFragment } from './working-group.queries';
 
 export const workingGroupNetworkContentQueryFragment = gql`
   fragment WorkingGroupNetworkContentData on WorkingGroupNetwork {
-    supportCollection(limit: 20) {
+    supportCollection(limit: 10) {
       total
       items {
         ...WorkingGroupsContentData
       }
     }
-    monogenicCollection(limit: 20) {
+    monogenicCollection(limit: 10) {
       total
       items {
         ...WorkingGroupsContentData
       }
     }
-    operationalCollection(limit: 20) {
+    operationalCollection(limit: 10) {
       total
       items {
         ...WorkingGroupsContentData
       }
     }
-    complexDiseaseCollection(limit: 20) {
+    complexDiseaseCollection(limit: 10) {
       total
       items {
         ...WorkingGroupsContentData

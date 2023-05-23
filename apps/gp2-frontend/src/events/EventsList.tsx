@@ -63,7 +63,7 @@ const eventEmptyStateText = {
   projectAndWorkingGroupPage: {
     past: {
       title: 'No past events available.',
-      description: 'When an event happens, it will be displayed here.',
+      description: 'When an event has happened, it will be displayed here.',
     },
     upcoming: {
       title: 'No upcoming events available.',

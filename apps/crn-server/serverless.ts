@@ -580,7 +580,7 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
-    indexEvents: {
+    indexEventsSquidex: {
       handler: './src/handlers/event/index-event-handler.handler',
       events: [
         {
@@ -602,6 +602,30 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
+      },
+    },
+    indexEventsContentful: {
+      handler: './src/handlers/event/index-event-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'EventsPublished',
+                'EventsDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
     indexUserEvents: {

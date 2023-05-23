@@ -54,7 +54,7 @@ export const keywords = [
   'Computer Science',
   'Outreach',
   'Neuroimaging',
-  'Parkinson disease',
+  `Parkinson's disease`,
 ] as const;
 
 export type Keyword = (typeof keywords)[number];

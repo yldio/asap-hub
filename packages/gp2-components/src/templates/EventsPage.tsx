@@ -13,7 +13,7 @@ const bannerProps = {
   position: 'center',
   title: 'Events',
   description:
-    'Discover past and upcoming events within the GP2 network to learn more about the great work that other members are doing.',
+    'Stay up to date with the GP2 network. Discover upcoming events and explore past events.',
 };
 
 const navStyles = css({

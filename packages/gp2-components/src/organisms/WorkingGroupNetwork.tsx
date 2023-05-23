@@ -55,7 +55,7 @@ const WorkingGroupNetwork: React.FC<
     support: {
       subtitle: 'Support Working Groups',
       paragraph:
-        'Provide additional support and assistance to the functioning of the other GP2 working groups.',
+        'Provide additional support and assistance to other GP2 working groups.',
     },
   };
 

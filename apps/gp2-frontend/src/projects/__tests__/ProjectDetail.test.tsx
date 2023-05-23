@@ -118,7 +118,7 @@ describe('ProjectDetail', () => {
       ];
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id, userId: '11' });
-      expect(screen.getByRole('link', { name: /resources/i })).toBeVisible();
+      expect(screen.getByRole('link', { name: /workspace/i })).toBeVisible();
     });
 
     it('does not render the resources tab if the user is not in the project', async () => {
@@ -134,7 +134,7 @@ describe('ProjectDetail', () => {
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id, userId: '11' });
       expect(
-        screen.queryByRole('link', { name: /resources/i }),
+        screen.queryByRole('link', { name: /workspace/i }),
       ).not.toBeInTheDocument();
     });
 
@@ -155,10 +155,10 @@ describe('ProjectDetail', () => {
         route: gp2Routing
           .projects({})
           .project({ projectId: project.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
       expect(
-        screen.getByRole('heading', { name: /Resource List/i }),
+        screen.getByRole('heading', { name: /Workspace Resources/i }),
       ).toBeInTheDocument();
     });
 
@@ -179,10 +179,10 @@ describe('ProjectDetail', () => {
         route: gp2Routing
           .projects({})
           .project({ projectId: project.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
       expect(
-        screen.queryByRole('heading', { name: /Resource List/i }),
+        screen.queryByRole('heading', { name: /Workspace Resources/i }),
       ).not.toBeInTheDocument();
     });
   });
@@ -202,9 +202,9 @@ describe('ProjectDetail', () => {
       id: project.id,
       userId: '23',
     });
-    userEvent.click(screen.getByRole('link', { name: /resources/i }));
+    userEvent.click(screen.getByRole('link', { name: /workspace/i }));
     expect(
-      screen.getByRole('heading', { name: /Resource List/i }),
+      screen.getByRole('heading', { name: /Workspace Resources/i }),
     ).toBeInTheDocument();
   });
 
@@ -225,7 +225,7 @@ describe('ProjectDetail', () => {
       route: gp2Routing
         .projects({})
         .project({ projectId: project.id })
-        .resources({}).$,
+        .workspace({}).$,
     });
     expect(
       screen.queryByRole('heading', { name: /Contact/i }),
@@ -257,7 +257,7 @@ describe('ProjectDetail', () => {
         route: gp2Routing
           .projects({})
           .project({ projectId: project.id })
-          .resources({})
+          .workspace({})
           .add({}).$,
       });
       expect(
@@ -284,7 +284,7 @@ describe('ProjectDetail', () => {
       route: gp2Routing
         .projects({})
         .project({ projectId: project.id })
-        .resources({})
+        .workspace({})
         .add({}).$,
     });
     expect(
@@ -312,7 +312,7 @@ describe('ProjectDetail', () => {
         route: gp2Routing
           .projects({})
           .project({ projectId: project.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
 
       expect(screen.getByRole('link', { name: /add/i })).toBeVisible();
@@ -330,7 +330,7 @@ describe('ProjectDetail', () => {
           route: gp2Routing
             .projects({})
             .project({ projectId: project.id })
-            .resources({}).$,
+            .workspace({}).$,
         });
 
         expect(
@@ -355,7 +355,7 @@ describe('ProjectDetail', () => {
         route: gp2Routing
           .projects({})
           .project({ projectId: project.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
 
       const addButton = screen.getByRole('link', { name: /add/i });
@@ -402,7 +402,7 @@ describe('ProjectDetail', () => {
         route: gp2Routing
           .projects({})
           .project({ projectId: projectResources.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;

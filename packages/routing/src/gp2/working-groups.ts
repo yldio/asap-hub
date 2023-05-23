@@ -19,7 +19,7 @@ const workingGroup = (() => {
   const edit = route('/edit', {}, { resource });
   const add = route('/add', {}, {});
   const overview = route('/overview', {}, {});
-  const resources = route('/resources', {}, { add, edit });
+  const workspace = route('/workspace', {}, { add, edit });
 
   const upcoming = route('/upcoming', {}, {});
   const past = route('/past', {}, {});
@@ -33,7 +33,7 @@ const workingGroup = (() => {
   return route(
     '/:workingGroupId',
     { workingGroupId: stringParser },
-    { overview, resources, outputs, upcoming, past, createOutput },
+    { overview, workspace, outputs, upcoming, past, createOutput },
   );
 })();
 

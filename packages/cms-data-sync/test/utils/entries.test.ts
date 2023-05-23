@@ -1,4 +1,5 @@
 import { Environment } from 'contentful-management';
+import { RateLimiter } from 'limiter';
 import {
   checkIfEntryAlreadyExistsInContentful,
   clearContentfulEntries,
@@ -79,7 +80,9 @@ describe('clearContentfulEntries', () => {
   });
 
   it('calls getEntries with the given contentModel', async () => {
-    await clearContentfulEntries(envMock, 'news');
+    await clearContentfulEntries(envMock, 'news', {
+      removeTokens: jest.fn(),
+    } as unknown as RateLimiter);
 
     expect(envMock.getEntries).toHaveBeenCalledWith({
       content_type: 'news',
@@ -98,7 +101,9 @@ describe('clearContentfulEntries', () => {
       toPlainObject: jest.fn(),
       sys: { type: 'Array' },
     });
-    await clearContentfulEntries(envMock, 'news');
+    await clearContentfulEntries(envMock, 'news', {
+      removeTokens: jest.fn(),
+    } as unknown as RateLimiter);
 
     expect(envMock.getEntries).toHaveBeenCalledWith({
       content_type: 'news',
@@ -121,7 +126,9 @@ describe('clearContentfulEntries', () => {
     it('and calls unpublish if entry is published', async () => {
       jest.spyOn(newsEntry, 'isPublished').mockImplementationOnce(() => true);
 
-      await clearContentfulEntries(envMock, 'news');
+      await clearContentfulEntries(envMock, 'news', {
+        removeTokens: jest.fn(),
+      } as unknown as RateLimiter);
 
       expect(newsEntry.isPublished).toHaveBeenCalledTimes(1);
       expect(newsEntry.unpublish).toHaveBeenCalledTimes(1);
@@ -130,14 +137,18 @@ describe('clearContentfulEntries', () => {
     it('and does not call unpublish if entry is not published', async () => {
       jest.spyOn(newsEntry, 'isPublished').mockImplementationOnce(() => false);
 
-      await clearContentfulEntries(envMock, 'news');
+      await clearContentfulEntries(envMock, 'news', {
+        removeTokens: jest.fn(),
+      } as unknown as RateLimiter);
 
       expect(newsEntry.isPublished).toHaveBeenCalledTimes(1);
       expect(newsEntry.unpublish).not.toHaveBeenCalled();
     });
 
     it('calls delete', async () => {
-      await clearContentfulEntries(envMock, 'news');
+      await clearContentfulEntries(envMock, 'news', {
+        removeTokens: jest.fn(),
+      } as unknown as RateLimiter);
       expect(newsEntry.delete).toHaveBeenCalledTimes(1);
     });
   });
@@ -155,12 +166,16 @@ describe('publishContentfulEntries', () => {
   });
 
   it('calls entry publish function', async () => {
-    await publishContentfulEntries([newsEntry]);
+    await publishContentfulEntries([newsEntry], {
+      removeTokens: jest.fn(),
+    } as unknown as RateLimiter);
     expect(newsEntry.publish).toHaveBeenCalledTimes(1);
   });
 
   it('outputs a message when publish fails', async () => {
-    await publishContentfulEntries([newsEntry]);
+    await publishContentfulEntries([newsEntry], {
+      removeTokens: jest.fn(),
+    } as unknown as RateLimiter);
     expect(console.log).toHaveBeenCalledWith(
       '\x1b[31m',
       `[ERROR] Entry with ID ${newsEntry.sys.id} could not be published.`,
@@ -171,7 +186,9 @@ describe('publishContentfulEntries', () => {
     jest
       .spyOn(newsEntry, 'publish')
       .mockImplementationOnce(() => Promise.resolve(newsEntry));
-    await publishContentfulEntries([newsEntry]);
+    await publishContentfulEntries([newsEntry], {
+      removeTokens: jest.fn(),
+    } as unknown as RateLimiter);
     expect(console.log).toHaveBeenCalledWith(
       '\x1b[32m',
       expect.stringContaining(`[INFO] Published entry ${newsEntry.sys.id}.`),

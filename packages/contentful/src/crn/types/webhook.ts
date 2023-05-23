@@ -3,6 +3,7 @@ export type ContentfulWebhookPayloadType =
   | 'news'
   | 'externalAuthors'
   | 'users'
+  | 'calendars'
   | 'events';
 
 export interface ContentfulWebhookPublishPayload<

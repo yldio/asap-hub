@@ -3,7 +3,7 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-  '\n  fragment CalendarsContent on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n':
+  '\n  fragment CalendarsContent on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    googleApiMetadata\n  }\n':
     graphql.CalendarsContentFragmentDoc,
   '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n':
     graphql.FetchCalendarByIdDocument,
@@ -58,8 +58,8 @@ const documents = {
 };
 
 export function gql(
-  source: '\n  fragment CalendarsContent on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n',
-): (typeof documents)['\n  fragment CalendarsContent on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n'];
+  source: '\n  fragment CalendarsContent on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    googleApiMetadata\n  }\n',
+): (typeof documents)['\n  fragment CalendarsContent on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    googleApiMetadata\n  }\n'];
 export function gql(
   source: '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContent\n    }\n  }\n  \n'];

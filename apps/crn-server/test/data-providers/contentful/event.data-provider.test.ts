@@ -614,6 +614,38 @@ describe('Events Contentful Data Provider', () => {
         hidden: false,
       });
     });
+
+    test('updates the calendar`', async () => {
+      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+        typeof patchAndPublish
+      >;
+      mockPatchAndPublish.mockResolvedValue({
+        sys: {
+          publishedVersion: 2,
+        },
+      } as Entry);
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        events: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
+
+      await eventDataProvider.update('123', {
+        calendar: 'google-calendar-1',
+      });
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        calendar: {
+          sys: {
+            id: 'google-calendar-1',
+            linkType: 'Entry',
+            type: 'Link',
+          },
+        },
+      });
+    });
   });
 
   describe('Create method', () => {
@@ -633,7 +665,13 @@ describe('Events Contentful Data Provider', () => {
       expect(createEntryFn).toHaveBeenCalledWith('events', {
         fields: {
           calendar: {
-            'en-US': 'squidex-calendar-id',
+            'en-US': {
+              sys: {
+                id: 'squidex-calendar-id',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
           },
           description: {
             'en-US': 'This event will be good',

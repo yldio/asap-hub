@@ -28,7 +28,14 @@ export const getContentfulGraphqlCalendar = (): NonNullable<
     publishedAt: '2021-05-14T14:48:46Z',
     publishedVersion: 42,
   },
-  ...squidexGraphqlCalendarsFlatData(),
+  googleCalendarId: '3@group.calendar.google.com',
+  color: '#2952A3',
+  name: 'Tech 4a - iPSCs - 3D & Co-cultures',
+  googleApiMetadata: {
+    resourceId: 'resource-id',
+    syncToken: 'sync-token',
+    expirationDate: 1617196357000,
+  },
 });
 
 export const getContentfulCalendarsGraphqlResponse =

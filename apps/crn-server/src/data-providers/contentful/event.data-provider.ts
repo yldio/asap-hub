@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   addLocaleToFields,
+  createLink,
   Environment,
   EventsOrder,
   FetchEventByIdQuery,
@@ -185,17 +186,32 @@ export class EventContentfulDataProvider implements EventDataProvider {
 
   async create(create: EventCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
+
+    const { calendar, ...otherCreateFields } = create;
     const newEntry = await environment.createEntry('events', {
-      fields: addLocaleToFields(create),
+      fields: {
+        ...addLocaleToFields(otherCreateFields),
+        calendar: {
+          'en-US': createLink(calendar),
+        },
+      },
     });
 
+    await newEntry.publish();
     return newEntry.sys.id;
   }
 
   async update(id: string, update: EventUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
     const event = await environment.getEntry(id);
-    const result = await patchAndPublish(event, update);
+    const { calendar, ...otherUpdateFields } = update;
+
+    const updateWithCalendarLink = {
+      ...(calendar ? { calendar: createLink(calendar) } : {}),
+      ...otherUpdateFields,
+    };
+
+    const result = await patchAndPublish(event, updateWithCalendarLink);
 
     const fetchEventById = () => this.fetchEventById(id);
 

@@ -234,12 +234,10 @@ export enum AssetOrder {
 export type Calendars = Entry & {
   color?: Maybe<Scalars['String']>;
   contentfulMetadata: ContentfulMetadata;
-  expirationDate?: Maybe<Scalars['Float']>;
+  googleApiMetadata?: Maybe<Scalars['JSON']>;
   googleCalendarId?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<CalendarsLinkingCollections>;
   name?: Maybe<Scalars['String']>;
-  resourceId?: Maybe<Scalars['String']>;
-  syncToken?: Maybe<Scalars['String']>;
   sys: Sys;
 };
 
@@ -249,7 +247,7 @@ export type CalendarsColorArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
-export type CalendarsExpirationDateArgs = {
+export type CalendarsGoogleApiMetadataArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -265,16 +263,6 @@ export type CalendarsLinkedFromArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
 export type CalendarsNameArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
-export type CalendarsResourceIdArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
-export type CalendarsSyncTokenArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -296,15 +284,7 @@ export type CalendarsFilter = {
   color_not_contains?: InputMaybe<Scalars['String']>;
   color_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  expirationDate?: InputMaybe<Scalars['Float']>;
-  expirationDate_exists?: InputMaybe<Scalars['Boolean']>;
-  expirationDate_gt?: InputMaybe<Scalars['Float']>;
-  expirationDate_gte?: InputMaybe<Scalars['Float']>;
-  expirationDate_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  expirationDate_lt?: InputMaybe<Scalars['Float']>;
-  expirationDate_lte?: InputMaybe<Scalars['Float']>;
-  expirationDate_not?: InputMaybe<Scalars['Float']>;
-  expirationDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  googleApiMetadata_exists?: InputMaybe<Scalars['Boolean']>;
   googleCalendarId?: InputMaybe<Scalars['String']>;
   googleCalendarId_contains?: InputMaybe<Scalars['String']>;
   googleCalendarId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -319,20 +299,6 @@ export type CalendarsFilter = {
   name_not?: InputMaybe<Scalars['String']>;
   name_not_contains?: InputMaybe<Scalars['String']>;
   name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  resourceId?: InputMaybe<Scalars['String']>;
-  resourceId_contains?: InputMaybe<Scalars['String']>;
-  resourceId_exists?: InputMaybe<Scalars['Boolean']>;
-  resourceId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  resourceId_not?: InputMaybe<Scalars['String']>;
-  resourceId_not_contains?: InputMaybe<Scalars['String']>;
-  resourceId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  syncToken?: InputMaybe<Scalars['String']>;
-  syncToken_contains?: InputMaybe<Scalars['String']>;
-  syncToken_exists?: InputMaybe<Scalars['Boolean']>;
-  syncToken_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  syncToken_not?: InputMaybe<Scalars['String']>;
-  syncToken_not_contains?: InputMaybe<Scalars['String']>;
-  syncToken_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
 };
 
@@ -358,16 +324,10 @@ export type CalendarsLinkingCollectionsEventsCollectionArgs = {
 export enum CalendarsOrder {
   ColorAsc = 'color_ASC',
   ColorDesc = 'color_DESC',
-  ExpirationDateAsc = 'expirationDate_ASC',
-  ExpirationDateDesc = 'expirationDate_DESC',
   GoogleCalendarIdAsc = 'googleCalendarId_ASC',
   GoogleCalendarIdDesc = 'googleCalendarId_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
-  ResourceIdAsc = 'resourceId_ASC',
-  ResourceIdDesc = 'resourceId_DESC',
-  SyncTokenAsc = 'syncToken_ASC',
-  SyncTokenDesc = 'syncToken_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3190,15 +3150,7 @@ export type CfCalendarsNestedFilter = {
   color_not_contains?: InputMaybe<Scalars['String']>;
   color_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  expirationDate?: InputMaybe<Scalars['Float']>;
-  expirationDate_exists?: InputMaybe<Scalars['Boolean']>;
-  expirationDate_gt?: InputMaybe<Scalars['Float']>;
-  expirationDate_gte?: InputMaybe<Scalars['Float']>;
-  expirationDate_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
-  expirationDate_lt?: InputMaybe<Scalars['Float']>;
-  expirationDate_lte?: InputMaybe<Scalars['Float']>;
-  expirationDate_not?: InputMaybe<Scalars['Float']>;
-  expirationDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['Float']>>>;
+  googleApiMetadata_exists?: InputMaybe<Scalars['Boolean']>;
   googleCalendarId?: InputMaybe<Scalars['String']>;
   googleCalendarId_contains?: InputMaybe<Scalars['String']>;
   googleCalendarId_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3213,20 +3165,6 @@ export type CfCalendarsNestedFilter = {
   name_not?: InputMaybe<Scalars['String']>;
   name_not_contains?: InputMaybe<Scalars['String']>;
   name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  resourceId?: InputMaybe<Scalars['String']>;
-  resourceId_contains?: InputMaybe<Scalars['String']>;
-  resourceId_exists?: InputMaybe<Scalars['Boolean']>;
-  resourceId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  resourceId_not?: InputMaybe<Scalars['String']>;
-  resourceId_not_contains?: InputMaybe<Scalars['String']>;
-  resourceId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  syncToken?: InputMaybe<Scalars['String']>;
-  syncToken_contains?: InputMaybe<Scalars['String']>;
-  syncToken_exists?: InputMaybe<Scalars['Boolean']>;
-  syncToken_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  syncToken_not?: InputMaybe<Scalars['String']>;
-  syncToken_not_contains?: InputMaybe<Scalars['String']>;
-  syncToken_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
 };
 
@@ -3462,12 +3400,7 @@ export type CfTeamsNestedFilter = {
 
 export type CalendarsContentFragment = Pick<
   Calendars,
-  | 'googleCalendarId'
-  | 'name'
-  | 'color'
-  | 'syncToken'
-  | 'resourceId'
-  | 'expirationDate'
+  'googleCalendarId' | 'name' | 'color' | 'googleApiMetadata'
 > & {
   sys: Pick<
     Sys,
@@ -3483,12 +3416,7 @@ export type FetchCalendarByIdQuery = {
   calendars?: Maybe<
     Pick<
       Calendars,
-      | 'googleCalendarId'
-      | 'name'
-      | 'color'
-      | 'syncToken'
-      | 'resourceId'
-      | 'expirationDate'
+      'googleCalendarId' | 'name' | 'color' | 'googleApiMetadata'
     > & {
       sys: Pick<
         Sys,
@@ -3514,12 +3442,7 @@ export type FetchCalendarsQuery = {
         Maybe<
           Pick<
             Calendars,
-            | 'googleCalendarId'
-            | 'name'
-            | 'color'
-            | 'syncToken'
-            | 'resourceId'
-            | 'expirationDate'
+            'googleCalendarId' | 'name' | 'color' | 'googleApiMetadata'
           > & {
             sys: Pick<
               Sys,
@@ -6206,9 +6129,7 @@ export const CalendarsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'googleCalendarId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'color' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'syncToken' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'resourceId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'expirationDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'googleApiMetadata' } },
         ],
       },
     },

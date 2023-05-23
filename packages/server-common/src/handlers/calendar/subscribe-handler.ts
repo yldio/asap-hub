@@ -1,22 +1,19 @@
-import { CalendarDataProvider, CalendarEvent, gp2 } from '@asap-hub/model';
-import { EventBridgeEvent } from 'aws-lambda';
 import { Auth } from 'googleapis';
 import 'source-map-support/register';
-import { Alerts, GetJWTCredentials, Logger } from '../../utils';
-import { validateBody } from '../../validation/subscribe-handler.validation';
-import { CalendarPayload } from '../event-bus';
+import { GetJWTCredentials, Logger } from '../../utils';
 
 type Config = {
   asapApiUrl: string;
   googleApiToken: string;
   googleApiUrl: string;
+  cms?: 'contentful' | 'squidex';
 };
 
 export const subscribeToEventChangesFactory =
   (
     getJWTCredentials: GetJWTCredentials,
     logger: Logger,
-    { asapApiUrl, googleApiToken, googleApiUrl }: Config,
+    { asapApiUrl, googleApiToken, googleApiUrl, cms }: Config,
   ) =>
   async (
     calendarId: string,
@@ -38,7 +35,10 @@ export const subscribeToEventChangesFactory =
       id: subscriptionId,
       token: googleApiToken,
       type: 'web_hook',
-      address: `${asapApiUrl}/webhook/events`,
+      address:
+        cms === 'contentful'
+          ? `${asapApiUrl}/webhook/events/contentful`
+          : `${asapApiUrl}/webhook/events`,
       params: {
         // 30 days, which is a maximum TTL
         ttl,
@@ -93,91 +93,3 @@ export type SubscribeToEventChanges = ReturnType<
 export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory
 >;
-
-export const calendarCreatedHandlerFactory =
-  (
-    subscribe: SubscribeToEventChanges,
-    unsubscribe: UnsubscribeFromEventChanges,
-    calendarDataProvider: CalendarDataProvider | gp2.CalendarDataProvider,
-    alerts: Alerts,
-    logger: Logger,
-  ) =>
-  async (
-    event: EventBridgeEvent<CalendarEvent, CalendarPayload>,
-  ): Promise<'OK'> => {
-    logger.debug(JSON.stringify(event, null, 2), 'Event input');
-
-    const { type: eventType, payload } = validateBody(event.detail as never);
-
-    logger.info(
-      `Received a '${eventType}' event for the calendar ${payload.id}`,
-    );
-
-    logger.debug(`Event payload: ${JSON.stringify(payload)}`);
-    if (eventType === 'CalendarsUpdated') {
-      if (
-        !payload.dataOld ||
-        !payload.dataOld.googleCalendarId ||
-        payload.dataOld.googleCalendarId.iv === payload.data.googleCalendarId.iv
-      ) {
-        return 'OK';
-      }
-
-      const result = await calendarDataProvider.fetchById(payload.id);
-
-      if (!result) {
-        logger.error('Failed to retrieve calendar by ID.');
-
-        return 'OK';
-      }
-
-      const { version } = result;
-
-      if (version > (payload.version as number)) {
-        logger.warn(
-          `version recieved (${payload.version}) is older than current version: ${version}`,
-        );
-        return 'OK';
-      }
-
-      if (payload.dataOld.resourceId) {
-        try {
-          await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
-
-          await calendarDataProvider.update(payload.id, {
-            resourceId: null,
-          });
-        } catch (error) {
-          logger.error(error, 'Error during unsubscribing from the calendar');
-          alerts.error(error);
-        }
-      }
-    }
-
-    if (payload.data.googleCalendarId.iv === '') {
-      return 'OK';
-    }
-
-    if (['CalendarsCreated', 'CalendarsUpdated'].includes(eventType)) {
-      try {
-        const { resourceId, expiration } = await subscribe(
-          payload.data.googleCalendarId.iv,
-          payload.id,
-        );
-
-        await calendarDataProvider.update(payload.id, {
-          resourceId,
-          expirationDate: expiration,
-        });
-      } catch (error) {
-        logger.error(error, 'Error subscribing to the calendar');
-        alerts.error(error);
-
-        throw error;
-      }
-
-      return 'OK';
-    }
-
-    return 'OK';
-  };

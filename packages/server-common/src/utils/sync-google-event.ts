@@ -9,7 +9,7 @@ import { Logger } from './logger';
 export type SyncEvent = (
   eventPayload: calendarV3.Schema$Event,
   googleCalendarId: string,
-  squidexCalendarId: string,
+  cmsCalendarId: string,
   defaultTimezone: string,
 ) => Promise<BasicEvent>;
 
@@ -34,12 +34,7 @@ export const syncEventFactory =
     eventsController: EventController | gp2.EventController,
     logger: Logger,
   ): SyncEvent =>
-  async (
-    eventPayload,
-    googleCalendarId,
-    squidexCalendarId,
-    defaultTimezone,
-  ) => {
+  async (eventPayload, googleCalendarId, cmsCalendarId, defaultTimezone) => {
     const googleEvent = validateEvent(eventPayload, logger);
 
     logger.debug({ googleEvent }, 'google event');
@@ -59,7 +54,7 @@ export const syncEventFactory =
       endDateTimeZone: googleEvent.end.timeZone || defaultTimezone,
       status: (googleEvent.status.charAt(0).toUpperCase() +
         googleEvent.status.slice(1)) as EventStatus,
-      calendar: squidexCalendarId,
+      calendar: cmsCalendarId,
       hideMeetingLink: false,
     };
 

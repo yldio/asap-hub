@@ -1,57 +1,68 @@
 import {
   AlertsSentry,
-  calendarCreatedHandlerFactory,
+  calendarCreatedSquidexHandlerFactory,
+  calendarCreatedContentfulHandlerFactory,
   getJWTCredentialsFactory,
   subscribeToEventChangesFactory,
   unsubscribeFromEventChangesFactory,
 } from '@asap-hub/server-common';
-import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import * as Sentry from '@sentry/serverless';
 import 'source-map-support/register';
 import {
-  appName,
   asapApiUrl,
-  baseUrl,
+  contentfulEnvId,
+  contentfulSpaceId,
+  contentfulAccessToken,
   googleApiCredentialsSecretId,
   googleApiToken,
   googleApiUrl,
+  isContentfulEnabledV2,
   region,
 } from '../../config';
-import { CalendarSquidexDataProvider } from '../../data-providers/calendars.data-provider';
-import { getAuthToken } from '../../utils/auth';
+import { getCalendarDataProvider } from '../../dependencies/calendars.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const calendarRestClient = new SquidexRest<RestCalendar>(
-  getAuthToken,
-  'calendars',
-  { appName, baseUrl },
-);
-const calendarDataProvider = new CalendarSquidexDataProvider(
-  calendarRestClient,
-  squidexGraphqlClient,
-);
 /* istanbul ignore next */
 const getJWTCredentialsAWS = getJWTCredentialsFactory({
   googleApiCredentialsSecretId,
   region,
 });
-const webhookHandler = calendarCreatedHandlerFactory(
-  subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
-    asapApiUrl,
-    googleApiToken,
-    googleApiUrl,
-  }),
-  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
-    googleApiUrl,
-  }),
-  calendarDataProvider,
-  new AlertsSentry(Sentry.captureException.bind(Sentry)),
-  logger,
-);
+
+/* istanbul ignore next */
+export const webhookHandler = isContentfulEnabledV2
+  ? calendarCreatedContentfulHandlerFactory(
+      subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
+        asapApiUrl,
+        googleApiToken,
+        googleApiUrl,
+        cms: 'contentful',
+      }),
+      unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
+        googleApiUrl,
+      }),
+      getCalendarDataProvider(),
+      new AlertsSentry(Sentry.captureException.bind(Sentry)),
+      logger,
+      {
+        environment: contentfulEnvId,
+        space: contentfulSpaceId,
+        accessToken: contentfulAccessToken,
+      },
+    )
+  : calendarCreatedSquidexHandlerFactory(
+      subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
+        asapApiUrl,
+        googleApiToken,
+        googleApiUrl,
+        cms: 'squidex',
+      }),
+      unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
+        googleApiUrl,
+      }),
+      getCalendarDataProvider(),
+      new AlertsSentry(Sentry.captureException.bind(Sentry)),
+      logger,
+    );
 
 export const handler = sentryWrapper(webhookHandler);

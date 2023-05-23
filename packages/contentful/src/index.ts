@@ -1,3 +1,4 @@
+export type { EntryFieldTypes, ContentfulClientApi } from 'contentful';
 export type {
   Asset,
   AssetFileProp,
@@ -10,6 +11,7 @@ export type {
   KeyValueMap,
   Link,
   SysLink,
+  EntityMetaSysProps,
   VersionedLink,
 } from 'contentful-management';
 export { gql, GraphQLClient } from 'graphql-request';

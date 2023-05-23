@@ -1,4 +1,5 @@
 import { Entry } from 'contentful-management';
+import { RateLimiter } from 'limiter';
 import { migrateFromSquidexToContentfulFactory } from '../../src/utils/migration';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
 import { loggerMock } from '../mocks/logger.mock';
@@ -8,6 +9,9 @@ describe('Migration from Squidex to Contentful', () => {
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironmentMock,
     loggerMock,
+    {
+      removeTokens: jest.fn(),
+    } as unknown as RateLimiter,
   );
   const entry = {
     isPublished: jest.fn().mockReturnValue(true),

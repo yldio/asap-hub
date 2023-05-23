@@ -1,3 +1,4 @@
+import { RateLimiter } from 'limiter';
 import { externalAuthorsQuery } from './external-authors.queries';
 import {
   FetchExternalAuthorsQuery,
@@ -16,6 +17,8 @@ type ExternalAuthorItem = NonNullable<
   >['items']
 >[number];
 
+const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
+
 export const migrateExternalAuthors = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =
     await getSquidexAndContentfulClients();
@@ -23,6 +26,7 @@ export const migrateExternalAuthors = async () => {
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironment,
     logger,
+    limiter,
   );
 
   const fetchData = async () =>

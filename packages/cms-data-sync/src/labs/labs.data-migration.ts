@@ -1,4 +1,5 @@
 import { Labs } from '@asap-hub/contentful';
+import { RateLimiter } from 'limiter';
 import { labsQuery } from './labs.queries';
 import {
   FetchLabsQuery,
@@ -10,6 +11,8 @@ import {
   paginatedFetch,
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
+
+const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
 
 type LabItem = NonNullable<
   NonNullable<FetchLabsQuery['queryLabsContentsWithTotal']>['items']
@@ -23,6 +26,7 @@ export const migrateLabs = async () => {
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironment,
     logger,
+    limiter,
   );
 
   const fetchAllData = async (): Promise<LabItem[]> =>

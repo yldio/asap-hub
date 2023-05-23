@@ -1,6 +1,7 @@
 import { Environment, Entry } from 'contentful-management';
 import { logger } from './logs';
 import { paginatedFetch } from './fetch';
+import { RateLimiter } from 'limiter';
 
 export const checkIfEntryAlreadyExistsInContentful = async (
   contentfulEnvironment: Environment,
@@ -36,6 +37,7 @@ export const fetchContentfulEntries = async (
 export const clearContentfulEntries = async (
   contentfulEnvironment: Environment,
   contentType: string,
+  limiter: RateLimiter,
 ) => {
   const entries = await fetchContentfulEntries(
     contentfulEnvironment,
@@ -51,21 +53,29 @@ export const clearContentfulEntries = async (
     entries.map(async (entry) => {
       if (entry.isPublished()) {
         await entry.unpublish();
+        await limiter.removeTokens(1);
       }
       await entry.delete();
+      await limiter.removeTokens(1);
+
       n += 1;
       logger(`Entry with ID ${entry.sys.id} deleted. (${n}/${total})`, 'INFO');
     }),
   );
 };
 
-export const publishContentfulEntries = async (entries: Entry[]) => {
+export const publishContentfulEntries = async (
+  entries: Entry[],
+  limiter: RateLimiter,
+) => {
   const total = entries.length;
   let n = 0;
   await Promise.all(
     entries.map(async (entry) => {
       try {
         const published = await entry.publish();
+        await limiter.removeTokens(1);
+
         n += 1;
         logger(`Published entry ${published.sys.id}. (${n}/${total})`, 'INFO');
       } catch (err) {

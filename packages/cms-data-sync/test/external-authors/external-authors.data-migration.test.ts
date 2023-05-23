@@ -93,6 +93,7 @@ describe('Migrate external authors', () => {
     expect(clearContentfulEntriesMock).toHaveBeenCalledWith(
       expect.anything(),
       'externalAuthors',
+      expect.anything(),
     );
   });
 
@@ -114,7 +115,7 @@ describe('Migrate external authors', () => {
       expect.anything(),
       { take: 100, skip: 100 },
     );
-  });
+  }, 100000);
 
   describe('creates contentful entries', () => {
     it('for an external author that does not contain orcid number', async () => {

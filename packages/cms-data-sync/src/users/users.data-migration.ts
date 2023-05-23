@@ -1,4 +1,5 @@
 import { Users, SysLink, addLocaleToFields } from '@asap-hub/contentful';
+import { RateLimiter } from 'limiter';
 import { usersQuery } from './users.queries';
 import {
   FetchUsersQuery,
@@ -23,6 +24,8 @@ type ContentfulUser = Omit<Users, 'sys' | 'contentfulMetadata' | 'avatar'> & {
   avatar: SysLink | undefined;
 };
 
+const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
+
 export const migrateUsers = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =
     await getSquidexAndContentfulClients();
@@ -30,9 +33,14 @@ export const migrateUsers = async () => {
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironment,
     logger,
+    limiter,
   );
 
-  await clearContentfulEntries(contentfulEnvironment, 'teamMembership');
+  await clearContentfulEntries(
+    contentfulEnvironment,
+    'teamMembership',
+    limiter,
+  );
 
   const fetchAllData = async (): Promise<UserItem[]> =>
     paginatedFetch<UserItem>(async (take: number, skip: number) => {
@@ -73,15 +81,20 @@ export const migrateUsers = async () => {
     if (avatar) {
       const urls = createAssetUrl(avatar.map((asset) => asset.id));
       if (urls.length > 0) {
-        avatarAsset = await createAsset(contentfulEnvironment, [
-          { ...avatar[0], thumbnailUrl: urls[0] },
-        ]);
+        avatarAsset = await createAsset(
+          contentfulEnvironment,
+          [{ ...avatar[0], thumbnailUrl: urls[0] }],
+          limiter,
+        );
       }
     }
 
     const teamLinks = await Promise.all(
       (teams || []).map(async (team) => {
         if (team.id && team.id.length) {
+          // create and publish
+          await limiter.removeTokens(2);
+
           const membership = await contentfulEnvironment.createEntry(
             'teamMembership',
             {

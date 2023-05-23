@@ -89,6 +89,7 @@ describe('Migrate labs', () => {
     expect(clearContentfulEntriesMock).toHaveBeenCalledWith(
       expect.anything(),
       'labs',
+      expect.anything(),
     );
   });
 
@@ -110,7 +111,7 @@ describe('Migrate labs', () => {
       expect.anything(),
       { take: 100, skip: 100 },
     );
-  });
+  }, 100000);
 
   it('does not fail if no data in squidex', async () => {
     squidexGraphqlClientMock.request.mockResolvedValue({
@@ -174,9 +175,9 @@ describe('Migrate labs', () => {
 
     await migrateLabs();
 
-    expect(publishContentfulEntriesMock).toHaveBeenCalledWith([
-      labEntry,
-      labEntry,
-    ]);
+    expect(publishContentfulEntriesMock).toHaveBeenCalledWith(
+      [labEntry, labEntry],
+      expect.anything(),
+    );
   });
 });

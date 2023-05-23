@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { Document } from '@contentful/rich-text-types';
+import { RateLimiter } from 'limiter';
 import { newsQuery } from './news.queries';
 import {
   FetchNewsQuery,
@@ -16,6 +17,8 @@ import {
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
 
+const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
+
 type NewsItem = NonNullable<
   FetchNewsQuery['queryNewsAndEventsContents']
 >[number];
@@ -27,6 +30,7 @@ export const migrateNews = async () => {
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironment,
     logger,
+    limiter,
   );
 
   const fetchData = async () => {

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { createClient } from 'contentful-management';
+import { migrateEvents } from './events/events.data-migration';
 import { migrateExternalAuthors } from './external-authors/external-authors.data-migration';
 import { migrateTeams } from './teams/teams.data-migration';
 import { migrateCalendars } from './calendars/calendars.data-migration';
@@ -49,6 +50,11 @@ export const runMigrations = async () => {
     await migrateCalendars();
     await migrateLabs();
     await migrateUsers();
+
+    // The events migration needs to be done after
+    // migrating teams, users, external authors
+    // and calendars
+    await migrateEvents();
   } catch (err) {
     error = err;
     logger('Error migrating data', 'ERROR');

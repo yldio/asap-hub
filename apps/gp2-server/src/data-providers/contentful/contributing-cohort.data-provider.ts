@@ -16,7 +16,7 @@ export type ContributingCohortsItem = NonNullable<
   >['items'][number]
 >;
 
-export class ContributingCohortsContentfulDataProvider
+export class ContributingCohortContentfulDataProvider
   implements ContributingCohortDataProvider
 {
   constructor(

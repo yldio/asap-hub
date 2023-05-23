@@ -423,6 +423,7 @@ input EventSpeakersFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+  user: cfExternalUsersOrUsersNestedFilter
   user_exists: Boolean
 }
 
@@ -467,7 +468,7 @@ type Events implements Entry {
   presentation(locale: String): EventsPresentation
   presentationPermanentlyUnavailable(locale: String): Boolean
   presentationUpdatedAt(locale: String): DateTime
-  speakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsSpeakersCollection
+  speakersCollection(limit: Int = 100, locale: String, order: [EventsSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventsSpeakersCollection
   startDate(locale: String): DateTime
   startDateTimeZone(locale: String): String
   status(locale: String): String
@@ -732,6 +733,19 @@ type EventsSpeakersCollection {
   total: Int!
 }
 
+enum EventsSpeakersCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 type EventsVideoRecording {
   json: JSON!
   links: EventsVideoRecordingLinks!
@@ -794,6 +808,52 @@ type ExternalUsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
   outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers)"""
+type ExternalUsersOrUsers implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ExternalUsersOrUsersLinkingCollections
+  orcid(locale: String): String
+  sys: Sys!
+}
+
+type ExternalUsersOrUsersCollection {
+  items: [ExternalUsersOrUsers]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ExternalUsersOrUsersFilter {
+  AND: [ExternalUsersOrUsersFilter]
+  OR: [ExternalUsersOrUsersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+type ExternalUsersOrUsersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum ExternalUsersOrUsersOrder {
+  orcid_ASC
+  orcid_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum ExternalUsersOrder {
@@ -1208,7 +1268,7 @@ enum NewsOrder {
 type Outputs implements Entry {
   addedDate(locale: String): DateTime
   adminNotes(locale: String): String
-  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsAuthorsCollection
+  authorsCollection(limit: Int = 100, locale: String, order: [OutputsAuthorsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): OutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean): Users
   documentType(locale: String): String
@@ -1229,6 +1289,19 @@ type OutputsAuthorsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum OutputsAuthorsCollectionOrder {
+  orcid_ASC
+  orcid_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 union OutputsAuthorsItem = ExternalUsers | Users
@@ -1259,6 +1332,7 @@ input OutputsFilter {
   adminNotes_not: String
   adminNotes_not_contains: String
   adminNotes_not_in: [String]
+  authors: cfExternalUsersOrUsersNestedFilter
   authorsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   createdBy: cfUsersNestedFilter
@@ -1523,12 +1597,12 @@ type Projects implements Entry {
   keywords(locale: String): [String]
   leadEmail(locale: String): String
   linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
-  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsMembersCollection
-  milestonesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsMilestonesCollection
+  membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectsMembersCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [ProjectsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): ProjectsMilestonesCollection
   opportunitiesLink(locale: String): String
   pmEmail(locale: String): String
   projectProposal(locale: String): String
-  resourcesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsResourcesCollection
+  resourcesCollection(limit: Int = 100, locale: String, order: [ProjectsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): ProjectsResourcesCollection
   startDate(locale: String): DateTime
   status(locale: String): String
   sys: Sys!
@@ -1644,11 +1718,43 @@ type ProjectsMembersCollection {
   total: Int!
 }
 
+enum ProjectsMembersCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type ProjectsMilestonesCollection {
   items: [Milestones]!
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum ProjectsMilestonesCollectionOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum ProjectsOrder {
@@ -1687,6 +1793,25 @@ type ProjectsResourcesCollection {
   total: Int!
 }
 
+enum ProjectsResourcesCollectionOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
 """The 'Quality' type represents quality as whole numeric values between `1` and `100`."""
 scalar Quality
 
@@ -1706,6 +1831,8 @@ type Query {
   eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): EventsCollection
   externalUsers(id: String!, locale: String, preview: Boolean): ExternalUsers
   externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersFilter): ExternalUsersCollection
+  externalUsersOrUsers(id: String!, locale: String, preview: Boolean): ExternalUsersOrUsers
+  externalUsersOrUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): ExternalUsersOrUsersCollection
   media(id: String!, locale: String, preview: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
   migration(id: String!, locale: String, preview: Boolean): Migration
@@ -1868,7 +1995,7 @@ type Users implements Entry {
   city(locale: String): String
   connections(locale: String): [String]
   contentfulMetadata: ContentfulMetadata!
-  contributingCohortsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersContributingCohortsCollection
+  contributingCohortsCollection(limit: Int = 100, locale: String, order: [UsersContributingCohortsCollectionOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsMembershipFilter): UsersContributingCohortsCollection
   country(locale: String): String
   degrees(locale: String): [String]
   email(locale: String): String
@@ -1906,6 +2033,21 @@ type UsersContributingCohortsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum UsersContributingCohortsCollectionOrder {
+  role_ASC
+  role_DESC
+  studyLink_ASC
+  studyLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 input UsersFilter {
@@ -2198,12 +2340,12 @@ enum WorkingGroupMembershipOrder {
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork)"""
 type WorkingGroupNetwork implements Entry {
-  complexDiseaseCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkComplexDiseaseCollection
+  complexDiseaseCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkComplexDiseaseCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkComplexDiseaseCollection
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): WorkingGroupNetworkLinkingCollections
-  monogenicCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkMonogenicCollection
-  operationalCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkOperationalCollection
-  supportCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkSupportCollection
+  monogenicCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkMonogenicCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkMonogenicCollection
+  operationalCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOperationalCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkOperationalCollection
+  supportCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkSupportCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkSupportCollection
   sys: Sys!
 }
 
@@ -2219,6 +2361,39 @@ type WorkingGroupNetworkComplexDiseaseCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum WorkingGroupNetworkComplexDiseaseCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  leadingMembers_ASC
+  leadingMembers_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 input WorkingGroupNetworkFilter {
@@ -2247,11 +2422,77 @@ type WorkingGroupNetworkMonogenicCollection {
   total: Int!
 }
 
+enum WorkingGroupNetworkMonogenicCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  leadingMembers_ASC
+  leadingMembers_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 type WorkingGroupNetworkOperationalCollection {
   items: [WorkingGroups]!
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum WorkingGroupNetworkOperationalCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  leadingMembers_ASC
+  leadingMembers_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum WorkingGroupNetworkOrder {
@@ -2272,6 +2513,39 @@ type WorkingGroupNetworkSupportCollection {
   total: Int!
 }
 
+enum WorkingGroupNetworkSupportCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  leadingMembers_ASC
+  leadingMembers_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)"""
 type WorkingGroups implements Entry {
   calendars(locale: String, preview: Boolean): Calendars
@@ -2282,12 +2556,12 @@ type WorkingGroups implements Entry {
   leadEmail(locale: String): String
   leadingMembers(locale: String): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
-  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsMembersCollection
-  milestonesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsMilestonesCollection
+  membersCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): WorkingGroupsMilestonesCollection
   pmEmail(locale: String): String
   primaryEmail(locale: String): String
   projectProposal(locale: String): String
-  resourcesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsResourcesCollection
+  resourcesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): WorkingGroupsResourcesCollection
   secondaryEmail(locale: String): String
   shortDescription(locale: String): String
   startDate(locale: String): DateTime
@@ -2423,11 +2697,43 @@ type WorkingGroupsMembersCollection {
   total: Int!
 }
 
+enum WorkingGroupsMembersCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type WorkingGroupsMilestonesCollection {
   items: [Milestones]!
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum WorkingGroupsMilestonesCollectionOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum WorkingGroupsOrder {
@@ -2468,6 +2774,25 @@ type WorkingGroupsResourcesCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+enum WorkingGroupsResourcesCollectionOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
 }
 
 input cfCalendarsNestedFilter {
@@ -2570,6 +2895,20 @@ input cfEventSpeakersNestedFilter {
   title_not_contains: String
   title_not_in: [String]
   user_exists: Boolean
+}
+
+input cfExternalUsersOrUsersNestedFilter {
+  AND: [cfExternalUsersOrUsersNestedFilter]
+  OR: [cfExternalUsersOrUsersNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
 }
 
 input cfMilestonesNestedFilter {

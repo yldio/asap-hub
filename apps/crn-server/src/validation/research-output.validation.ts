@@ -81,10 +81,6 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       },
       description: { type: 'string', nullable: true },
       descriptionMD: { type: 'string' },
-      tags: {
-        type: 'array',
-        items: { type: 'string' },
-      },
       methods: {
         type: 'array',
         items: { type: 'string' },
@@ -178,7 +174,6 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
     required: [
       'documentType',
       'descriptionMD',
-      'tags',
       'title',
       'sharingStatus',
       'teams',

@@ -126,7 +126,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
       <TabNav>
         <TabLink href={route.overview({}).$}>Overview</TabLink>
         {isProjectMember && (
-          <TabLink href={route.resources({}).$}>Resources</TabLink>
+          <TabLink href={route.workspace({}).$}>Workspace</TabLink>
         )}
         <TabLink href={route.outputs({}).$}>
           Shared Outputs ({outputsTotal})

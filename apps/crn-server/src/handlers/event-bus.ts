@@ -22,7 +22,14 @@ import {
   WorkingGroup,
 } from '@asap-hub/squidex';
 
-export type EventPayload = SquidexWebhookPayload<Event, EventEvent>;
+export type EventSquidexPayload = WebhookDetail<
+  SquidexWebhookPayload<Event, EventEvent>
+>;
+export type EventContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'events'>
+>;
+
+export type EventPayload = EventSquidexPayload | EventContentfulPayload;
 
 export type ExternalAuthorSquidexPayload = WebhookDetail<
   SquidexWebhookPayload<ExternalAuthor, ExternalAuthorEvent>

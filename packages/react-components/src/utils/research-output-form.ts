@@ -114,7 +114,6 @@ export type ResearchOutputPayload = {
   identifierType: ResearchOutputIdentifierType;
   identifier: string;
   documentType: ResearchOutputDocumentType;
-  tags: ResearchOutputPostRequest['tags'];
   link: ResearchOutputPostRequest['link'];
   description: ResearchOutputPostRequest['description'];
   descriptionMD: ResearchOutputPostRequest['descriptionMD'];
@@ -150,7 +149,6 @@ export const getPayload = ({
   identifierType,
   identifier,
   documentType,
-  tags,
   link,
   description,
   descriptionMD,
@@ -175,7 +173,6 @@ export const getPayload = ({
 }: ResearchOutputPayload): ResearchOutputPostRequest => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
-  tags,
   link: String(link).trim() === '' ? undefined : link,
   description,
   descriptionMD,

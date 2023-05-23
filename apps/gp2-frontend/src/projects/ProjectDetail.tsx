@@ -44,13 +44,13 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const isAdministrator = currentUser?.role === 'Administrator';
   const projectRoute = projects({}).project({ projectId });
   const createOutputRoute = projectRoute.createOutput;
-  const resourcesRoute = projectRoute.resources({});
-  const editRoute = resourcesRoute.edit({});
-  const add = isAdministrator ? resourcesRoute.add({}).$ : undefined;
+  const workspaceRoute = projectRoute.workspace({});
+  const editRoute = workspaceRoute.edit({});
+  const add = isAdministrator ? workspaceRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;
   const overview = projectRoute.overview({}).$;
   const outputs = projectRoute.outputs({}).$;
-  const resources = resourcesRoute.$;
+  const workspace = workspaceRoute.$;
   const upcoming = projectRoute.upcoming({}).$;
   const past = projectRoute.past({}).$;
 
@@ -86,8 +86,8 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
               </Frame>
             </Route>
             {isProjectMember && (
-              <Route path={resources}>
-                <Frame title="Resources">
+              <Route path={workspace}>
+                <Frame title="Workspace">
                   <ProjectResources {...project} add={add} edit={edit} />
                   {isAdministrator && (
                     <>
@@ -97,7 +97,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
                           modalDescription={
                             'Select a resource type and provide the neccessary information required to share a resource privately with your group.'
                           }
-                          backHref={resources}
+                          backHref={workspace}
                           onSave={(resource: gp2Model.Resource) =>
                             updateProjectResources([
                               ...(project.resources || []),
@@ -110,7 +110,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
                         <EditResourceModal
                           route={editRoute.resource}
                           resources={project.resources || []}
-                          backHref={resources}
+                          backHref={workspace}
                           updateResources={updateProjectResources}
                         />
                       </Route>

@@ -70,3 +70,4 @@ runs:
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{  inputs.contentful-management-token }}
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         IS_CONTENTFUL_ENABLED: ${{ inputs.data-store == 'contentful' }}
+        IS_CONTENTFUL_ENABLED_V2: ${{ inputs.data-store == 'contentful' }}

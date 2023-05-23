@@ -18,7 +18,6 @@ const researchOutputResponse: Omit<
   descriptionMD: 'descriptionMD',
   documentType: 'Grant Document',
   type: '3D Printing',
-  tags: ['test', 'tag'],
   authors: [
     {
       id: 'e12729e0-bfdd-471f-a554-7b58eae83a8d',

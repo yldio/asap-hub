@@ -19,7 +19,7 @@ describe('Resources', () => {
   it('renders heading', () => {
     render(<Resources {...defaultProps()} />);
     expect(
-      screen.getByRole('heading', { name: /Resource List/i }),
+      screen.getByRole('heading', { name: /Workspace Resources/i }),
     ).toBeVisible();
   });
   it('renders the headline', () => {

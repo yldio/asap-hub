@@ -11,7 +11,7 @@ describe('Users Dependencies', () => {
         '../../src/data-providers/user.data-provider'
       );
       const getDependenciesModule = await import(
-        '../../src/dependencies/user.dependencies'
+        '../../src/dependencies/user.dependency'
       );
       const userDataProvider = getDependenciesModule.getUserDataProvider();
 
@@ -24,7 +24,7 @@ describe('Users Dependencies', () => {
         '../../src/data-providers/contentful/user.data-provider'
       );
       const getDependenciesModule = await import(
-        '../../src/dependencies/user.dependencies'
+        '../../src/dependencies/user.dependency'
       );
       const userDataProvider = getDependenciesModule.getUserDataProvider();
 

@@ -166,9 +166,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   const showPublishButton = canPublishResearchOutput;
   const displayThreeButtons = showSaveDraftButton && showPublishButton;
 
-  const [tags, setTags] = useState<ResearchOutputPostRequest['tags']>(
-    (researchOutputData?.tags as string[]) || [],
-  );
   const [type, setType] = useState<ResearchOutputPostRequest['type'] | ''>(
     researchOutputData?.type || undefined,
   );
@@ -279,7 +276,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     identifierType,
     identifier,
     documentType,
-    tags,
     link,
     description: researchOutputData?.description || '',
     descriptionMD,
@@ -362,8 +358,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 label: suggestion,
                 value: suggestion,
               }))}
-              tags={tags}
-              onChangeTags={setTags}
+              tags={keywords}
+              onChangeTags={setKeywords}
               usageNotes={usageNotes}
               onChangeUsageNotes={setUsageNotes}
               identifier={identifier}

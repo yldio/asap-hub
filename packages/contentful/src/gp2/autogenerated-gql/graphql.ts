@@ -653,6 +653,7 @@ export type EventSpeakersFilter = {
   title_not?: InputMaybe<Scalars['String']>;
   title_not_contains?: InputMaybe<Scalars['String']>;
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  user?: InputMaybe<CfExternalUsersOrUsersNestedFilter>;
   user_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -819,8 +820,10 @@ export type EventsPresentationUpdatedAtArgs = {
 export type EventsSpeakersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<EventsSpeakersCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<EventSpeakersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
@@ -1136,6 +1139,19 @@ export type EventsSpeakersCollection = {
   total: Scalars['Int'];
 };
 
+export enum EventsSpeakersCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
 export type EventsVideoRecording = {
   json: Scalars['JSON'];
   links: EventsVideoRecordingLinks;
@@ -1235,6 +1251,69 @@ export type ExternalUsersLinkingCollectionsOutputsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers) */
+export type ExternalUsersOrUsers = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<ExternalUsersOrUsersLinkingCollections>;
+  orcid?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers) */
+export type ExternalUsersOrUsersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers) */
+export type ExternalUsersOrUsersOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ExternalUsersOrUsersCollection = {
+  items: Array<Maybe<ExternalUsersOrUsers>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ExternalUsersOrUsersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ExternalUsersOrUsersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ExternalUsersOrUsersFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ExternalUsersOrUsersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ExternalUsersOrUsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ExternalUsersOrUsersOrder {
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum ExternalUsersOrder {
   NameAsc = 'name_ASC',
@@ -1809,8 +1888,10 @@ export type OutputsAdminNotesArgs = {
 export type OutputsAuthorsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<OutputsAuthorsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ExternalUsersOrUsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -1878,6 +1959,19 @@ export type OutputsAuthorsCollection = {
   total: Scalars['Int'];
 };
 
+export enum OutputsAuthorsCollectionOrder {
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type OutputsAuthorsItem = ExternalUsers | Users;
 
 export type OutputsCollection = {
@@ -1906,6 +2000,7 @@ export type OutputsFilter = {
   adminNotes_not?: InputMaybe<Scalars['String']>;
   adminNotes_not_contains?: InputMaybe<Scalars['String']>;
   adminNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  authors?: InputMaybe<CfExternalUsersOrUsersNestedFilter>;
   authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   createdBy?: InputMaybe<CfUsersNestedFilter>;
@@ -2299,16 +2394,20 @@ export type ProjectsLinkedFromArgs = {
 export type ProjectsMembersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsMembersCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ProjectMembershipFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsMilestonesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsMilestonesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MilestonesFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
@@ -2330,8 +2429,10 @@ export type ProjectsProjectProposalArgs = {
 export type ProjectsResourcesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsResourcesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResourcesFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
@@ -2476,12 +2577,44 @@ export type ProjectsMembersCollection = {
   total: Scalars['Int'];
 };
 
+export enum ProjectsMembersCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ProjectsMilestonesCollection = {
   items: Array<Maybe<Milestones>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export enum ProjectsMilestonesCollectionOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export enum ProjectsOrder {
   EndDateAsc = 'endDate_ASC',
@@ -2519,6 +2652,25 @@ export type ProjectsResourcesCollection = {
   total: Scalars['Int'];
 };
 
+export enum ProjectsResourcesCollectionOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
 export type Query = {
   asset?: Maybe<Asset>;
   assetCollection?: Maybe<AssetCollection>;
@@ -2535,6 +2687,8 @@ export type Query = {
   eventsCollection?: Maybe<EventsCollection>;
   externalUsers?: Maybe<ExternalUsers>;
   externalUsersCollection?: Maybe<ExternalUsersCollection>;
+  externalUsersOrUsers?: Maybe<ExternalUsersOrUsers>;
+  externalUsersOrUsersCollection?: Maybe<ExternalUsersOrUsersCollection>;
   media?: Maybe<Media>;
   mediaCollection?: Maybe<MediaCollection>;
   migration?: Maybe<Migration>;
@@ -2675,6 +2829,21 @@ export type QueryExternalUsersCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ExternalUsersFilter>;
+};
+
+export type QueryExternalUsersOrUsersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryExternalUsersOrUsersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ExternalUsersOrUsersOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ExternalUsersOrUsersFilter>;
 };
 
 export type QueryMediaArgs = {
@@ -3118,8 +3287,12 @@ export type UsersConnectionsArgs = {
 export type UsersContributingCohortsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersContributingCohortsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ContributingCohortsMembershipFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
@@ -3245,6 +3418,21 @@ export type UsersContributingCohortsCollection = {
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export enum UsersContributingCohortsCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StudyLinkAsc = 'studyLink_ASC',
+  StudyLinkDesc = 'studyLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export type UsersFilter = {
   AND?: InputMaybe<Array<InputMaybe<UsersFilter>>>;
@@ -3617,8 +3805,12 @@ export type WorkingGroupNetwork = Entry & {
 export type WorkingGroupNetworkComplexDiseaseCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<WorkingGroupNetworkComplexDiseaseCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
@@ -3630,24 +3822,36 @@ export type WorkingGroupNetworkLinkedFromArgs = {
 export type WorkingGroupNetworkMonogenicCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<WorkingGroupNetworkMonogenicCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
 export type WorkingGroupNetworkOperationalCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<WorkingGroupNetworkOperationalCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork) */
 export type WorkingGroupNetworkSupportCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<WorkingGroupNetworkSupportCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupsFilter>;
 };
 
 export type WorkingGroupNetworkCollection = {
@@ -3663,6 +3867,39 @@ export type WorkingGroupNetworkComplexDiseaseCollection = {
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export enum WorkingGroupNetworkComplexDiseaseCollectionOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  LeadEmailAsc = 'leadEmail_ASC',
+  LeadEmailDesc = 'leadEmail_DESC',
+  LeadingMembersAsc = 'leadingMembers_ASC',
+  LeadingMembersDesc = 'leadingMembers_DESC',
+  PmEmailAsc = 'pmEmail_ASC',
+  PmEmailDesc = 'pmEmail_DESC',
+  PrimaryEmailAsc = 'primaryEmail_ASC',
+  PrimaryEmailDesc = 'primaryEmail_DESC',
+  ProjectProposalAsc = 'projectProposal_ASC',
+  ProjectProposalDesc = 'projectProposal_DESC',
+  SecondaryEmailAsc = 'secondaryEmail_ASC',
+  SecondaryEmailDesc = 'secondaryEmail_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export type WorkingGroupNetworkFilter = {
   AND?: InputMaybe<Array<InputMaybe<WorkingGroupNetworkFilter>>>;
@@ -3697,12 +3934,78 @@ export type WorkingGroupNetworkMonogenicCollection = {
   total: Scalars['Int'];
 };
 
+export enum WorkingGroupNetworkMonogenicCollectionOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  LeadEmailAsc = 'leadEmail_ASC',
+  LeadEmailDesc = 'leadEmail_DESC',
+  LeadingMembersAsc = 'leadingMembers_ASC',
+  LeadingMembersDesc = 'leadingMembers_DESC',
+  PmEmailAsc = 'pmEmail_ASC',
+  PmEmailDesc = 'pmEmail_DESC',
+  PrimaryEmailAsc = 'primaryEmail_ASC',
+  PrimaryEmailDesc = 'primaryEmail_DESC',
+  ProjectProposalAsc = 'projectProposal_ASC',
+  ProjectProposalDesc = 'projectProposal_DESC',
+  SecondaryEmailAsc = 'secondaryEmail_ASC',
+  SecondaryEmailDesc = 'secondaryEmail_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
 export type WorkingGroupNetworkOperationalCollection = {
   items: Array<Maybe<WorkingGroups>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export enum WorkingGroupNetworkOperationalCollectionOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  LeadEmailAsc = 'leadEmail_ASC',
+  LeadEmailDesc = 'leadEmail_DESC',
+  LeadingMembersAsc = 'leadingMembers_ASC',
+  LeadingMembersDesc = 'leadingMembers_DESC',
+  PmEmailAsc = 'pmEmail_ASC',
+  PmEmailDesc = 'pmEmail_DESC',
+  PrimaryEmailAsc = 'primaryEmail_ASC',
+  PrimaryEmailDesc = 'primaryEmail_DESC',
+  ProjectProposalAsc = 'projectProposal_ASC',
+  ProjectProposalDesc = 'projectProposal_DESC',
+  SecondaryEmailAsc = 'secondaryEmail_ASC',
+  SecondaryEmailDesc = 'secondaryEmail_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export enum WorkingGroupNetworkOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -3721,6 +4024,39 @@ export type WorkingGroupNetworkSupportCollection = {
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export enum WorkingGroupNetworkSupportCollectionOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  LeadEmailAsc = 'leadEmail_ASC',
+  LeadEmailDesc = 'leadEmail_DESC',
+  LeadingMembersAsc = 'leadingMembers_ASC',
+  LeadingMembersDesc = 'leadingMembers_DESC',
+  PmEmailAsc = 'pmEmail_ASC',
+  PmEmailDesc = 'pmEmail_DESC',
+  PrimaryEmailAsc = 'primaryEmail_ASC',
+  PrimaryEmailDesc = 'primaryEmail_DESC',
+  ProjectProposalAsc = 'projectProposal_ASC',
+  ProjectProposalDesc = 'projectProposal_DESC',
+  SecondaryEmailAsc = 'secondaryEmail_ASC',
+  SecondaryEmailDesc = 'secondaryEmail_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroups = Entry & {
@@ -3786,16 +4122,20 @@ export type WorkingGroupsLinkedFromArgs = {
 export type WorkingGroupsMembersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupsMembersCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupMembershipFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsMilestonesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupsMilestonesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MilestonesFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
@@ -3817,8 +4157,10 @@ export type WorkingGroupsProjectProposalArgs = {
 export type WorkingGroupsResourcesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupsResourcesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResourcesFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
@@ -3994,12 +4336,44 @@ export type WorkingGroupsMembersCollection = {
   total: Scalars['Int'];
 };
 
+export enum WorkingGroupsMembersCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type WorkingGroupsMilestonesCollection = {
   items: Array<Maybe<Milestones>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export enum WorkingGroupsMilestonesCollectionOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export enum WorkingGroupsOrder {
   EndDateAsc = 'endDate_ASC',
@@ -4040,6 +4414,25 @@ export type WorkingGroupsResourcesCollection = {
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
+
+export enum WorkingGroupsResourcesCollectionOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
 
 export type CfCalendarsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfCalendarsNestedFilter>>>;
@@ -4145,6 +4538,20 @@ export type CfEventSpeakersNestedFilter = {
   title_not_contains?: InputMaybe<Scalars['String']>;
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CfExternalUsersOrUsersNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfExternalUsersOrUsersNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfExternalUsersOrUsersNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
 };
 
 export type CfMilestonesNestedFilter = {
@@ -4626,6 +5033,42 @@ export type FetchContributingCohortsQuery = {
   >;
 };
 
+export type ExternalUsersContentDataFragment = Pick<
+  ExternalUsers,
+  'name' | 'orcid'
+> & {
+  sys: Pick<
+    Sys,
+    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
+};
+
+export type FetchExternalUsersQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ExternalUsersOrder>> | InputMaybe<ExternalUsersOrder>
+  >;
+  where?: InputMaybe<ExternalUsersFilter>;
+}>;
+
+export type FetchExternalUsersQuery = {
+  externalUsersCollection?: Maybe<
+    Pick<ExternalUsersCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<ExternalUsers, 'name' | 'orcid'> & {
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type NewsContentDataFragment = Pick<
   News,
   | 'title'
@@ -4708,6 +5151,9 @@ export type PageContentDataFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -4776,6 +5222,9 @@ export type FetchPagesQuery = {
                           })
                         | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ExternalUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
@@ -5305,6 +5754,45 @@ export const ContributingCohortsContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ContributingCohortsContentDataFragment, unknown>;
+export const ExternalUsersContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ExternalUsersContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ExternalUsers' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ExternalUsersContentDataFragment, unknown>;
 export const NewsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -6317,6 +6805,125 @@ export const FetchContributingCohortsDocument = {
 } as unknown as DocumentNode<
   FetchContributingCohortsQuery,
   FetchContributingCohortsQueryVariables
+>;
+export const FetchExternalUsersDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchExternalUsers' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'ExternalUsersOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ExternalUsersFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'externalUsersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'ExternalUsersContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ExternalUsersContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchExternalUsersQuery,
+  FetchExternalUsersQueryVariables
 >;
 export const FetchNewsByIdDocument = {
   kind: 'Document',

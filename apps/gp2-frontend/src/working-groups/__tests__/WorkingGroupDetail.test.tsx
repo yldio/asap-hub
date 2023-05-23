@@ -131,7 +131,7 @@ describe('WorkingGroupDetail', () => {
       ];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({ id: workingGroup.id, userId: '11' });
-      expect(screen.getByRole('link', { name: /resources/i })).toBeVisible();
+      expect(screen.getByRole('link', { name: /workspace/i })).toBeVisible();
     });
 
     it('does not render the resources tab if the user is not in the working group', async () => {
@@ -147,7 +147,7 @@ describe('WorkingGroupDetail', () => {
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({ id: workingGroup.id, userId: '11' });
       expect(
-        screen.queryByRole('link', { name: /resources/i }),
+        screen.queryByRole('link', { name: /workspace/i }),
       ).not.toBeInTheDocument();
     });
 
@@ -168,10 +168,10 @@ describe('WorkingGroupDetail', () => {
         route: gp2Routing
           .workingGroups({})
           .workingGroup({ workingGroupId: workingGroup.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
       expect(
-        screen.getByRole('heading', { name: /Resource List/i }),
+        screen.getByRole('heading', { name: /Workspace Resources/i }),
       ).toBeInTheDocument();
     });
 
@@ -192,10 +192,10 @@ describe('WorkingGroupDetail', () => {
         route: gp2Routing
           .workingGroups({})
           .workingGroup({ workingGroupId: workingGroup.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
       expect(
-        screen.queryByRole('heading', { name: /Resource List/i }),
+        screen.queryByRole('heading', { name: /Workspace Resources/i }),
       ).not.toBeInTheDocument();
     });
   });
@@ -215,9 +215,9 @@ describe('WorkingGroupDetail', () => {
       id: workingGroup.id,
       userId: '23',
     });
-    userEvent.click(screen.getByRole('link', { name: /resources/i }));
+    userEvent.click(screen.getByRole('link', { name: /workspace/i }));
     expect(
-      screen.getByRole('heading', { name: /Resource List/i }),
+      screen.getByRole('heading', { name: /Workspace Resources/i }),
     ).toBeInTheDocument();
   });
 
@@ -238,7 +238,7 @@ describe('WorkingGroupDetail', () => {
       route: gp2Routing
         .workingGroups({})
         .workingGroup({ workingGroupId: workingGroup.id })
-        .resources({}).$,
+        .workspace({}).$,
     });
     expect(
       screen.queryByRole('heading', { name: /Contact/i }),
@@ -270,7 +270,7 @@ describe('WorkingGroupDetail', () => {
         route: gp2Routing
           .workingGroups({})
           .workingGroup({ workingGroupId: workingGroup.id })
-          .resources({})
+          .workspace({})
           .add({}).$,
       });
       expect(
@@ -297,7 +297,7 @@ describe('WorkingGroupDetail', () => {
       route: gp2Routing
         .workingGroups({})
         .workingGroup({ workingGroupId: workingGroup.id })
-        .resources({})
+        .workspace({})
         .add({}).$,
     });
     expect(
@@ -325,7 +325,7 @@ describe('WorkingGroupDetail', () => {
         route: gp2Routing
           .workingGroups({})
           .workingGroup({ workingGroupId: workingGroup.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
 
       expect(screen.getByRole('link', { name: /add/i })).toBeVisible();
@@ -343,7 +343,7 @@ describe('WorkingGroupDetail', () => {
           route: gp2Routing
             .workingGroups({})
             .workingGroup({ workingGroupId: workingGroup.id })
-            .resources({}).$,
+            .workspace({}).$,
         });
 
         expect(
@@ -368,7 +368,7 @@ describe('WorkingGroupDetail', () => {
         route: gp2Routing
           .workingGroups({})
           .workingGroup({ workingGroupId: workingGroup.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
 
       const addButton = screen.getByRole('link', { name: /add/i });
@@ -415,7 +415,7 @@ describe('WorkingGroupDetail', () => {
         route: gp2Routing
           .workingGroups({})
           .workingGroup({ workingGroupId: workingGroupResources.id })
-          .resources({}).$,
+          .workspace({}).$,
       });
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;

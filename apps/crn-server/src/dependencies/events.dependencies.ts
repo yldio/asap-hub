@@ -1,28 +1,28 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
-import { gp2, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
+import { EventDataProvider } from '@asap-hub/model';
+import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import {
   appName,
   baseUrl,
   contentfulAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
-  isContentfulEnabled,
+  isContentfulEnabledV2,
 } from '../config';
-import { UserContentfulDataProvider } from '../data-providers/contentful/user.data-provider';
-import { UserDataProvider } from '../data-providers/types';
-import { UserSquidexDataProvider } from '../data-providers/user.data-provider';
+import { EventSquidexDataProvider } from '../data-providers/event.data-provider';
+import { EventContentfulDataProvider } from '../data-providers/contentful/event.data-provider';
 import { getAuthToken } from '../utils/auth';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 
-export const getUserDataProvider = (): UserDataProvider => {
-  if (isContentfulEnabled) {
+export const getEventDataProvider = (): EventDataProvider => {
+  if (isContentfulEnabledV2) {
     const contentfulGraphQLClient = getContentfulGraphQLClient({
       space: contentfulSpaceId,
       accessToken: contentfulAccessToken,
       environment: contentfulEnvId,
     });
 
-    return new UserContentfulDataProvider(
+    return new EventContentfulDataProvider(
       contentfulGraphQLClient,
       getContentfulRestClientFactory,
     );
@@ -32,14 +32,10 @@ export const getUserDataProvider = (): UserDataProvider => {
     appName,
     baseUrl,
   });
+  const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
+    appName,
+    baseUrl,
+  });
 
-  const restClient = new SquidexRest<gp2.RestUser, gp2.InputUser>(
-    getAuthToken,
-    'users',
-    {
-      appName,
-      baseUrl,
-    },
-  );
-  return new UserSquidexDataProvider(squidexGraphqlClient, restClient);
+  return new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient);
 };

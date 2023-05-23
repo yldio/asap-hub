@@ -1,5 +1,5 @@
 import { Environment, Entry } from 'contentful-management';
-import { addLocaleToFields } from '@asap-hub/contentful';
+import { addLocaleToFields, updateEntryFields } from '@asap-hub/contentful';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
 
@@ -11,21 +11,37 @@ export const migrateFromSquidexToContentfulFactory =
     parseData: (
       data: DataItem,
     ) => Promise<{ id: string } & Record<string, unknown>>,
+    clearPreviousEntries: boolean = true,
     fallbackParseData?: (
       data: Record<string, unknown>,
     ) => Promise<Record<string, unknown>>,
   ) => {
     const data = await fetchData();
 
-    await clearContentfulEntries(contentfulEnvironment, contentTypeId);
+    if (clearPreviousEntries) {
+      await clearContentfulEntries(contentfulEnvironment, contentTypeId);
+    }
     let n = 0;
     const entries = await Promise.all(
       data.map(async (item) => {
         const parsed = await parseData(item);
 
-        const { id, ...payload } = parsed;
+        const { id, updateEntry, ...payload } = parsed;
 
         try {
+          if (updateEntry) {
+            const entry = await contentfulEnvironment.getEntry(id);
+
+            updateEntryFields(entry, payload);
+            const updatedEntry = await entry.update();
+            n += 1;
+            logger(
+              `Updated entry with id ${id}. (${n}/${data.length})`,
+              'INFO',
+            );
+            return updatedEntry;
+          }
+
           const entry = await contentfulEnvironment.createEntryWithId(
             contentTypeId,
             id,

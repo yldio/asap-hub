@@ -79,7 +79,6 @@ describe('getResearchOutputPayload', () => {
       identifierType: ResearchOutputIdentifierType.Empty,
       identifier: '',
       documentType: researchOutputDocumentTypes[6],
-      tags: [],
       link: 'https://www.google.com',
       description: 'description',
       descriptionMD: 'description MD',

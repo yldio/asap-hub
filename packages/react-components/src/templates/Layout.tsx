@@ -117,6 +117,7 @@ const menuStyles = css({
   overflowY: 'auto',
   display: 'flex',
   flexDirection: 'column',
+  maxWidth: '100vw',
   [drawerQuery]: {
     gridRow: `main-menu/-1`,
     visibility: 'hidden',
@@ -158,6 +159,8 @@ const userMenuStyles = css({
   },
 });
 const userMenuShownStyles = css({
+  maxHeight: '90vh',
+  overflowY: 'scroll',
   [drawerQuery]: {
     backgroundColor: navigationGrey.rgb,
   },

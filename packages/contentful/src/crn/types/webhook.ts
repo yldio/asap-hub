@@ -2,7 +2,8 @@ export type ContentfulWebhookPayloadType =
   | 'teams'
   | 'news'
   | 'externalAuthors'
-  | 'users';
+  | 'users'
+  | 'events';
 
 export interface ContentfulWebhookPublishPayload<
   T extends ContentfulWebhookPayloadType = ContentfulWebhookPayloadType,

@@ -149,7 +149,6 @@ describe('Team Research Output', () => {
     publishDate: undefined,
     description: '',
     descriptionMD: '',
-    tags: [],
     type: 'Software',
     labs: ['lab1'],
     methods: [],

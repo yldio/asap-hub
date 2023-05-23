@@ -46,7 +46,7 @@ export const getResearchOutputDraftReminder =
   (): ResearchOutputDraftReminder => {
     const researchOutputDataObject = getResearchOutputDataObject();
     return {
-      id: 'research-output-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      id: 'research-output-draft-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
       entity: 'Research Output',
       type: 'Draft',
       data: {
@@ -216,7 +216,7 @@ export const getSquidexRemindersGraphqlResponse =
         ],
       },
     },
-    draftResearchOutputs: [],
+    draftResearchOutputs: [getSquidexReminderReseachOutputsDraftContents()],
     queryResearchOutputsContents: [getSquidexReminderReseachOutputsContents()],
     queryEventsContents: [getSquidexReminderEventsContents()],
   });
@@ -236,6 +236,34 @@ export const getSquidexReminderReseachOutputsContents = (): NonNullable<
       title: researchOutput.flatData.title,
       teams: [{ id: researchOutput.flatData.teams![0]!.id }],
       workingGroups: [{ id: 'wg-id-1' }],
+    },
+  };
+};
+export const getSquidexReminderReseachOutputsDraftContents = (): NonNullable<
+  FetchReminderDataQuery['draftResearchOutputs']
+>[number] => {
+  const researchOutput = getSquidexGraphqlResearchOutput();
+
+  return {
+    id: researchOutput.id,
+    created: researchOutput.created,
+    status: 'Draft',
+    flatData: {
+      documentType: researchOutput.flatData.documentType,
+      title: researchOutput.flatData.title,
+      createdBy: [
+        { id: 'user-id-1', flatData: { firstName: 'Tom', lastName: 'Hardy' } },
+      ],
+      teams: [
+        {
+          id: researchOutput.flatData.teams![0]!.id,
+          flatData: {
+            displayName:
+              researchOutput.flatData.teams![0]!.flatData.displayName,
+          },
+        },
+      ],
+      workingGroups: [],
     },
   };
 };

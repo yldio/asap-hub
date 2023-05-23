@@ -360,7 +360,7 @@ const getResearchOutputDraftRemindersFromQuery = (
         (associationType === 'working group' && isInWorkingGroup)
       ) {
         researchOutputReminders.push({
-          id: `research-output-published-${researchOutput.id}`,
+          id: `research-output-draft-${researchOutput.id}`,
           entity: 'Research Output',
           type: 'Draft',
           data: {

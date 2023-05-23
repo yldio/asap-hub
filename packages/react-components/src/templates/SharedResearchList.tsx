@@ -6,7 +6,8 @@ import {
   SharedResearchCard,
   SharedResearchListCard,
 } from '../organisms';
-import { libraryIcon } from '../icons';
+import { LibraryIcon } from '../icons';
+import { charcoal } from '../colors';
 
 type SharedResearchListProps = Omit<
   ComponentProps<typeof ResultList>,
@@ -27,7 +28,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   algoliaQueryId,
   ...cardListProps
 }) => (
-  <ResultList icon={libraryIcon} {...cardListProps}>
+  <ResultList icon={<LibraryIcon color={charcoal.rgb} />} {...cardListProps}>
     {cardListProps.isListView ? (
       <SharedResearchListCard
         algoliaQueryId={algoliaQueryId}

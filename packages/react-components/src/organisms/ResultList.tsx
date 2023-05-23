@@ -10,6 +10,7 @@ import {
   mobileScreen,
   tabletScreen,
 } from '../pixels';
+import { charcoal } from '../colors';
 
 const headerStyles = css({
   display: 'flex',
@@ -51,6 +52,7 @@ const pageControlsStyles = css({
 });
 
 const iconStyles = css({
+  color: charcoal.rgb,
   display: 'inline-flex',
   svg: {
     width: `${48 / perRem}em`,
@@ -134,10 +136,10 @@ const ResultList: React.FC<ResultListProps> = ({
         noEventsComponent ?? (
           <main css={{ textAlign: 'center' }}>
             {icon && <span css={iconStyles}>{icon}</span>}
-            <Headline3>No matches found!</Headline3>
+            <Headline3>No results have been found.</Headline3>
             <Paragraph accent="lead">
-              We're sorry, we couldn't find results to match your search. Please
-              check your spelling or try using fewer words.
+              Please double-check your search for any typos or try a different
+              search term.
             </Paragraph>
           </main>
         )

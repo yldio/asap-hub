@@ -2,6 +2,7 @@ import { FC, Fragment, ComponentProps } from 'react';
 
 import { ResultList, WorkingGroupCard } from '../organisms';
 import { WorkingGroupsIcon } from '../icons';
+import { charcoal } from '../colors';
 
 type NetworkWorkingGroupsProps = Omit<
   ComponentProps<typeof ResultList>,
@@ -16,7 +17,10 @@ const NetworkWorkingGroups: FC<NetworkWorkingGroupsProps> = ({
   workingGroups,
   ...cardListProps
 }) => (
-  <ResultList icon={<WorkingGroupsIcon />} {...cardListProps}>
+  <ResultList
+    icon={<WorkingGroupsIcon color={charcoal.rgb} />}
+    {...cardListProps}
+  >
     {workingGroups.map((workingGroup) => (
       <Fragment key={workingGroup.id}>
         <WorkingGroupCard {...workingGroup} />

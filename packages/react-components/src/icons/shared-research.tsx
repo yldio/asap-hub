@@ -1,6 +1,11 @@
 /* istanbul ignore file */
+import { FC } from 'react';
 
-const library = (
+interface LibraryIconProps {
+  readonly color?: string;
+}
+
+const LibraryIcon: FC<LibraryIconProps> = ({ color = '#4D646B' }) => (
   <svg
     width="24px"
     height="24px"
@@ -8,7 +13,7 @@ const library = (
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
-    stroke="#4D646B"
+    stroke={color}
   >
     <title>Research</title>
     <defs>
@@ -85,4 +90,4 @@ const library = (
   </svg>
 );
 
-export default library;
+export default LibraryIcon;

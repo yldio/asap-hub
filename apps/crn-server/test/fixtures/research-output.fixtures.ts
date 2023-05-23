@@ -198,6 +198,7 @@ export const getResearchOutputDataObject =
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ id: 'team-id-1', displayName: 'Team B' }],
+        isOwnRelatedResearchLink: true,
       },
       {
         id: 'related-referencing-research-id',
@@ -205,6 +206,7 @@ export const getResearchOutputDataObject =
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ displayName: 'Team B', id: 'team-id-1' }],
+        isOwnRelatedResearchLink: false,
       },
     ],
     publishDate: '2021-05-21T13:18:31Z',

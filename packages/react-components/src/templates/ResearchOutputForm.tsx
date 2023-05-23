@@ -30,6 +30,7 @@ import {
   getPublishDate,
   getIdentifierType,
   getPayload,
+  getOwnRelatedResearchLinks,
 } from '../utils';
 import { richTextToMarkdown } from '../utils/parsing';
 
@@ -205,14 +206,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
         typeof ResearchOutputRelatedResearchCard
       >['relatedResearch']
     >
-  >(
-    researchOutputData?.relatedResearch?.map((research) => ({
-      value: research.id,
-      label: research.title,
-      type: research.type,
-      documentType: research.documentType,
-    })) || [],
-  );
+  >(getOwnRelatedResearchLinks(researchOutputData?.relatedResearch));
 
   const [descriptionMD, setDescription] = useState<
     ResearchOutputPostRequest['descriptionMD']

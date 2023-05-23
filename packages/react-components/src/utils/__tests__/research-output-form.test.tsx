@@ -9,6 +9,7 @@ import {
   getPublishDate,
   getPayload,
   ResearchOutputPayload,
+  getOwnRelatedResearchLinks,
 } from '../research-output-form';
 
 describe('getPublishDate', () => {
@@ -124,5 +125,39 @@ describe('getResearchOutputPayload', () => {
       identifier: undefined,
       relatedResearch: ['r99'],
     });
+  });
+});
+describe('getOwnRelatedResearchLinks', () => {
+  it('returns empty array', () => {
+    expect(getOwnRelatedResearchLinks([])).toEqual([]);
+  });
+  it('returns own related research links', () => {
+    expect(
+      getOwnRelatedResearchLinks([
+        {
+          id: 'r1',
+          title: 'r1',
+          type: '3D Printing',
+          documentType: 'Grant Document',
+          teams: [],
+          isOwnRelatedResearchLink: true,
+        },
+        {
+          id: 'r2',
+          title: 'r2',
+          type: '3D Printing',
+          documentType: 'Grant Document',
+          teams: [],
+          isOwnRelatedResearchLink: false,
+        },
+      ]),
+    ).toEqual([
+      {
+        label: 'r1',
+        value: 'r1',
+        type: '3D Printing',
+        documentType: 'Grant Document',
+      },
+    ]);
   });
 });

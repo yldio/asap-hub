@@ -19,6 +19,7 @@ describe('Research Output index handler', () => {
 
   test('Should fetch the research-output and create a record in Algolia when research-output is created', async () => {
     const researchOutputResponse = getResearchOutputResponse();
+    researchOutputResponse.relatedResearch = [];
     researchOutputControllerMock.fetchById.mockResolvedValueOnce(
       researchOutputResponse,
     );
@@ -31,8 +32,102 @@ describe('Research Output index handler', () => {
     });
   });
 
+  test('Should fetch the research-output and create two records in Algolia when research-output is created and own related RO is created', async () => {
+    const researchOutputResponse = getResearchOutputResponse();
+
+    const relatedResearchOutputResponse = getResearchOutputResponse();
+    relatedResearchOutputResponse.id = 'ro-1235';
+    relatedResearchOutputResponse.title = 'Related research output';
+
+    researchOutputResponse.relatedResearch = [
+      {
+        id: relatedResearchOutputResponse.id,
+        title: relatedResearchOutputResponse.title,
+        type: 'Published',
+        isOwnRelatedResearchLink: true,
+        teams: [
+          {
+            id: 'team-1234',
+            displayName: 'Team 1',
+          },
+        ],
+        documentType: 'Grant Document',
+      },
+    ];
+
+    researchOutputControllerMock.fetchById
+      .mockResolvedValueOnce(researchOutputResponse)
+      .mockResolvedValueOnce(relatedResearchOutputResponse);
+
+    await indexHandler(createEvent('ro-1234'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
+    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
+      data: researchOutputResponse,
+      type: 'research-output',
+    });
+    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
+      data: relatedResearchOutputResponse,
+      type: 'research-output',
+    });
+  });
+
+  test('Should fetch the research-output and create three records in Algolia when research-output is created and own and foreign related ROs are created', async () => {
+    const researchOutputResponse = getResearchOutputResponse();
+
+    const ownRelatedResearchOutputResponse = getResearchOutputResponse();
+    ownRelatedResearchOutputResponse.id = 'ro-1235';
+    ownRelatedResearchOutputResponse.title = 'Own related research output';
+
+    const foreignRelatedResearchOutputResponse = getResearchOutputResponse();
+    foreignRelatedResearchOutputResponse.id = 'ro-1236';
+    foreignRelatedResearchOutputResponse.title =
+      'Foreign related research output';
+
+    researchOutputResponse.relatedResearch = [
+      {
+        id: ownRelatedResearchOutputResponse.id,
+        title: ownRelatedResearchOutputResponse.title,
+        type: 'Published',
+        isOwnRelatedResearchLink: true,
+        teams: [],
+        documentType: 'Grant Document',
+      },
+      {
+        id: foreignRelatedResearchOutputResponse.id,
+        title: foreignRelatedResearchOutputResponse.title,
+        type: 'Published',
+        isOwnRelatedResearchLink: false,
+        teams: [],
+        documentType: 'Grant Document',
+      },
+    ];
+
+    researchOutputControllerMock.fetchById
+      .mockResolvedValueOnce(researchOutputResponse)
+      .mockResolvedValueOnce(ownRelatedResearchOutputResponse)
+      .mockResolvedValueOnce(foreignRelatedResearchOutputResponse);
+
+    await indexHandler(createEvent('ro-1234'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(3);
+    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
+      data: researchOutputResponse,
+      type: 'research-output',
+    });
+    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
+      data: ownRelatedResearchOutputResponse,
+      type: 'research-output',
+    });
+    expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(3, {
+      data: foreignRelatedResearchOutputResponse,
+      type: 'research-output',
+    });
+  });
+
   test('Should fetch the research-output and create a record in Algolia when research-output is updated', async () => {
     const researchOutputResponse = getResearchOutputResponse();
+    researchOutputResponse.relatedResearch = [];
     researchOutputControllerMock.fetchById.mockResolvedValueOnce(
       researchOutputResponse,
     );
@@ -52,6 +147,8 @@ describe('Research Output index handler', () => {
 
     await indexHandler(event);
 
+    expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(1);
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
@@ -64,6 +161,8 @@ describe('Research Output index handler', () => {
 
     await indexHandler(event);
 
+    expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(1);
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
@@ -119,7 +218,7 @@ describe('Research Output index handler', () => {
       await indexHandler(updateEvent(roID));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(6);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
         data: researchOutputResponse,
         type: 'research-output',
@@ -141,7 +240,7 @@ describe('Research Output index handler', () => {
       await indexHandler(createEvent(roID));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
-      expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
+      expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(6);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
         data: researchOutputResponse,
         type: 'research-output',

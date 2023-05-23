@@ -744,7 +744,49 @@ describe('User data provider', () => {
       });
       test('Should return empty array if working group has not been defined', async () => {
         const mockResponse = getContentfulGraphqlUser({
-          linkedFrom: { workingGroupMembershipCollection: null },
+          linkedFrom: { workingGroupMembershipCollection: {} },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.workingGroups).toEqual([]);
+      });
+      test('Should return empty array if no working group collection items', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            workingGroupMembershipCollection: { items: [] },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.workingGroups).toEqual([]);
+      });
+      test('Should return empty array if no linked working group', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            workingGroupMembershipCollection: {
+              items: [
+                {
+                  user: {
+                    sys: {
+                      id: '42',
+                    },
+                  },
+                  role: 'Co-Lead',
+                  linkedFrom: {
+                    workingGroupsCollection: {
+                      items: [],
+                    },
+                  },
+                },
+              ],
+            },
+          },
         });
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           users: mockResponse,

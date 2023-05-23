@@ -169,7 +169,9 @@ describe('EventsEmbed with no upcoming events', () => {
 
     await waitFor(() => {
       expect(screen.queryByText(/no upcoming events/i)).not.toBeInTheDocument();
-      expect(screen.getByText(/no matches found/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/no results have been found/i),
+      ).toBeInTheDocument();
     });
   });
 });

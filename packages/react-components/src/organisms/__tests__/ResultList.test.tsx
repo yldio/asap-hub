@@ -55,7 +55,7 @@ it('renders no results found', () => {
   expect(screen.queryByText(/cards/i)).not.toBeInTheDocument();
   expect(screen.queryByText(/\d+ result/i)).not.toBeInTheDocument();
   expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
-  expect(screen.getByText(/no matches/i)).toBeVisible();
+  expect(screen.getByText(/no results/i)).toBeVisible();
 });
 
 it('renders page controls', () => {

@@ -1,4 +1,5 @@
 import { Environment } from 'contentful-management';
+import { RateLimiter } from 'limiter';
 import {
   checkIfAssetAlreadyExistsInContentful,
   createAsset,
@@ -11,6 +12,7 @@ import {
   contenfulUploadAssetFields,
 } from '../fixtures';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
+import { limiter } from '../mocks/limiter.mock';
 
 describe('checkIfAssetAlreadyExistsInContentful', () => {
   let envMock: Environment;
@@ -182,6 +184,20 @@ describe('createAsset', () => {
     jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
 
     const assetLinkPayload = await createAsset(envMock, [squidexAsset]);
+    expect(assetLinkPayload).toEqual({
+      sys: { id: 'asset-id', linkType: 'Asset', type: 'Link' },
+    });
+  });
+
+  it('calls limiter when it is passed', async () => {
+    jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
+
+    const assetLinkPayload = await createAsset(
+      envMock,
+      [squidexAsset],
+      limiter,
+    );
+    expect(limiter.removeTokens).toHaveBeenCalledWith(3);
     expect(assetLinkPayload).toEqual({
       sys: { id: 'asset-id', linkType: 'Asset', type: 'Link' },
     });

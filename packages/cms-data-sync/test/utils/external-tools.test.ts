@@ -1,8 +1,8 @@
 import { Environment } from 'contentful-management';
-import { RateLimiter } from 'limiter';
 import { createExternalTool, createExternalToolLinks } from '../../src/utils';
 import { getEntry } from '../fixtures';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
+import { limiter } from '../mocks/limiter.mock';
 
 const tool = {
   name: 'Google link',
@@ -58,9 +58,7 @@ describe('createExternalToolLinks', () => {
       envMock,
       [tool],
       'team-id',
-      {
-        removeTokens: jest.fn(),
-      } as unknown as RateLimiter,
+      limiter,
     );
 
     expect(toolLinks).toEqual([

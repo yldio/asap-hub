@@ -25,7 +25,7 @@ export const getOrcidWorkPublicationDate = (input: {
   return date;
 };
 
-type OrcidWorkCMS = {
+export type OrcidWorkCMS = {
   id: string;
   doi?: string;
   title?: string;

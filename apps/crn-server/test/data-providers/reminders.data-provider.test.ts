@@ -292,7 +292,6 @@ describe('Reminder Data Provider', () => {
         expect(result).toEqual({ items: [], total: 0 });
       });
 
-
       test('Should return an empty result when findUsersContent property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];

@@ -27,3 +27,17 @@ it('renders an item with a link', () => {
   );
   expect(screen.getByTitle('Event')).toBeInTheDocument();
 });
+
+it('renders a markdown text correctly', () => {
+  const { getByText } = render(
+    <ReminderItem
+      entity="Event"
+      description="**description**"
+      href="http://example.com"
+    />,
+  );
+
+  expect(getByText('description').closest('strong')?.textContent).toContain(
+    'description',
+  );
+});

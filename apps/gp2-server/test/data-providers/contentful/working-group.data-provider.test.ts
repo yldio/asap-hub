@@ -3,6 +3,8 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupContentfulDataProvider } from '../../../src/data-providers/contentful/working-group.data-provider';
 import {
   getContentfulGraphqlWorkingGroup,
+  getContentfulGraphqlWorkingGroupsResponse,
+  getListWorkingGroupDataObject,
   getWorkingGroupDataObject,
 } from '../../fixtures/working-group.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
@@ -21,6 +23,7 @@ describe('Working Group Data Provider', () => {
 
   const workingGroupDataProviderWithMockServer =
     new WorkingGroupContentfulDataProvider(contentfulGraphqlClientMockServer);
+
   beforeEach(jest.resetAllMocks);
 
   describe('FetchById', () => {
@@ -567,10 +570,58 @@ describe('Working Group Data Provider', () => {
     });
   });
   describe('Fetch method', () => {
-    test('Should throw as not implemented', async () => {
-      expect(await workingGroupDataProvider.fetch()).toEqual({
-        items: [],
-        total: 0,
+    test('Should fetch the working group from squidex graphql', async () => {
+      const result = await workingGroupDataProviderWithMockServer.fetch();
+
+      expect(result).toMatchObject(getListWorkingGroupDataObject());
+    });
+
+    test('Should return an empty result', async () => {
+      const mockResponse = getContentfulGraphqlWorkingGroupsResponse();
+      mockResponse.workingGroupsCollection!.items = [];
+      mockResponse.workingGroupsCollection!.total = 0;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await workingGroupDataProvider.fetch();
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result if the client returns a response with a null items property', async () => {
+      const mockResponse = getContentfulGraphqlWorkingGroupsResponse();
+      mockResponse.workingGroupsCollection = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await workingGroupDataProvider.fetch();
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should default null title, shortDescription and leadingMembers to an empty string', async () => {
+      const mockResponse = getContentfulGraphqlWorkingGroupsResponse();
+      const workingGroup = getContentfulGraphqlWorkingGroup();
+      workingGroup.title = null;
+      workingGroup.shortDescription = null;
+      workingGroup.leadingMembers = null;
+      mockResponse.workingGroupsCollection!.items = [workingGroup];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const { items } = await workingGroupDataProvider.fetch();
+      expect(items[0]).toMatchObject({
+        title: '',
+        shortDescription: '',
+        leadingMembers: '',
+      });
+    });
+
+    test('Should default null calendars to undefined', async () => {
+      const mockResponse = getContentfulGraphqlWorkingGroupsResponse();
+      const workingGroup = getContentfulGraphqlWorkingGroup();
+      workingGroup.calendar = null;
+      mockResponse.workingGroupsCollection!.items = [workingGroup];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const { items } = await workingGroupDataProvider.fetch();
+      expect(items[0]).toMatchObject({
+        calendar: undefined,
       });
     });
   });

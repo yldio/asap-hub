@@ -74,3 +74,15 @@ export const FETCH_WORKING_GROUP_BY_ID = gql`
   }
   ${workingGroupsContentQueryFragment}
 `;
+
+export const FETCH_WORKING_GROUPS = gql`
+  query FetchWorkingGroups {
+    workingGroupsCollection(limit: 100) {
+      total
+      items {
+        ...WorkingGroupsContentData
+      }
+    }
+  }
+  ${workingGroupsContentQueryFragment}
+`;

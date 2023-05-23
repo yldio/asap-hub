@@ -8,7 +8,27 @@ export class WorkingGroupContentfulDataProvider
   constructor(private graphQLClient: GraphQLClient) {}
 
   async fetch(): Promise<gp2Model.ListWorkingGroupDataObject> {
-    return { total: 0, items: [] };
+    const { workingGroupsCollection } = await this.graphQLClient.request<
+      gp2Contentful.FetchWorkingGroupsQuery,
+      gp2Contentful.FetchWorkingGroupsQueryVariables
+    >(gp2Contentful.FETCH_WORKING_GROUPS, {});
+
+    if (!workingGroupsCollection) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    return {
+      total: workingGroupsCollection?.total,
+      items: workingGroupsCollection?.items
+        .filter(
+          (workingGroup): workingGroup is GraphQLWorkingGroup =>
+            workingGroup !== null,
+        )
+        .map(parseWorkingGroupToDataObject),
+    };
   }
   async update(): Promise<void> {
     throw new Error('Method not implemented.');

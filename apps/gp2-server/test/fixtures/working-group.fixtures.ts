@@ -241,3 +241,11 @@ export const getContentfulGraphqlWorkingGroup = (
   },
   ...props,
 });
+
+export const getContentfulGraphqlWorkingGroupsResponse =
+  (): gp2Contentful.FetchWorkingGroupsQuery => ({
+    workingGroupsCollection: {
+      total: 1,
+      items: [getContentfulGraphqlWorkingGroup()],
+    },
+  });

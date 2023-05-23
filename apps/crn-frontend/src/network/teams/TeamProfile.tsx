@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -11,6 +11,8 @@ import { usePaginationParams } from '../../hooks';
 import {
   useResearchOutputs,
   useCanShareResearchOutput,
+  useResearchOutputById,
+  useCanDuplicateResearchOutput,
 } from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
@@ -39,6 +41,26 @@ type TeamProfileProps = {
   currentTime: Date;
 };
 
+const DuplicateOutput: FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const output = useResearchOutputById(id);
+  if (output && output.teams[0]?.id) {
+    return (
+      <TeamOutput
+        researchOutputData={{
+          ...output,
+          id: '',
+          published: false,
+          link: undefined,
+          title: `Copy of ${output.title}`,
+        }}
+        teamId={output.teams[0].id}
+      />
+    );
+  }
+  return <NotFoundPage />;
+};
+
 const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const route = network({}).teams({}).team;
@@ -56,7 +78,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   }, [team]);
 
   const canShareResearchOutput = useCanShareResearchOutput('teams', [teamId]);
-
+  const canDuplicateResearchOutput = useCanDuplicateResearchOutput('teams', [
+    teamId,
+  ]);
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     teamId,
   });
@@ -83,6 +107,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     const {
       about,
       createOutput,
+      duplicateOutput,
       outputs,
       past,
       upcoming,
@@ -102,14 +127,23 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
     return (
       <ResearchOutputPermissionsContext.Provider
-        value={{ canShareResearchOutput }}
+        value={{ canShareResearchOutput, canDuplicateResearchOutput }}
       >
         <Switch>
-          <Route path={path + createOutput.template}>
-            <Frame title="Share Output">
-              <TeamOutput teamId={teamId} />
-            </Frame>
-          </Route>
+          {canShareResearchOutput && (
+            <Route path={path + createOutput.template}>
+              <Frame title="Share Output">
+                <TeamOutput teamId={teamId} />
+              </Frame>
+            </Route>
+          )}
+          {canDuplicateResearchOutput && (
+            <Route path={path + duplicateOutput.template}>
+              <Frame title="Duplicate Output">
+                <DuplicateOutput />
+              </Frame>
+            </Route>
+          )}
           <TeamProfilePage
             {...team}
             teamListElementId={teamListElementId}

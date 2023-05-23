@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -11,6 +11,8 @@ import { usePaginationParams } from '../../hooks';
 import {
   useResearchOutputs,
   useCanShareResearchOutput,
+  useResearchOutputById,
+  useCanDuplicateResearchOutput,
 } from '../../shared-research/state';
 
 import { useUpcomingAndPastEvents } from '../events';
@@ -35,6 +37,26 @@ const Outputs = lazy(loadOutputs);
 const WorkingGroupOutput = lazy(loadWorkingGroupOutput);
 loadAbout();
 
+const DuplicateOutput: FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const output = useResearchOutputById(id);
+  if (output && output.workingGroups?.[0]?.id) {
+    return (
+      <WorkingGroupOutput
+        researchOutputData={{
+          ...output,
+          id: '',
+          published: false,
+          link: undefined,
+          title: `Copy of ${output.title}`,
+        }}
+        workingGroupId={output.workingGroups[0].id}
+      />
+    );
+  }
+  return <NotFoundPage />;
+};
+
 type WorkingGroupProfileProps = {
   currentTime: Date;
 };
@@ -49,6 +71,10 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   const canShareResearchOutput = useCanShareResearchOutput('workingGroups', [
     workingGroupId,
   ]);
+  const canDuplicateResearchOutput = useCanDuplicateResearchOutput(
+    'workingGroups',
+    [workingGroupId],
+  );
 
   useEffect(() => {
     loadAbout()
@@ -89,6 +115,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
       draftOutputs,
       past,
       upcoming,
+      duplicateOutput,
     } = route({
       workingGroupId,
     });
@@ -102,14 +129,23 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
     };
     return (
       <ResearchOutputPermissionsContext.Provider
-        value={{ canShareResearchOutput }}
+        value={{ canShareResearchOutput, canDuplicateResearchOutput }}
       >
         <Switch>
-          <Route path={path + createOutput.template}>
-            <Frame title="Share Output">
-              <WorkingGroupOutput workingGroupId={workingGroupId} />
-            </Frame>
-          </Route>
+          {canShareResearchOutput && (
+            <Route path={path + createOutput.template}>
+              <Frame title="Share Output">
+                <WorkingGroupOutput workingGroupId={workingGroupId} />
+              </Frame>
+            </Route>
+          )}
+          {canDuplicateResearchOutput && (
+            <Route path={path + duplicateOutput.template}>
+              <Frame title="Duplicate Output">
+                <DuplicateOutput />
+              </Frame>
+            </Route>
+          )}
           <WorkingGroupPage
             upcomingEventsCount={upcomingEventsResult?.total || 0}
             pastEventsCount={pastEventsResult?.total || 0}

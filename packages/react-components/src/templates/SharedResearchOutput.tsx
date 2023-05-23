@@ -2,12 +2,12 @@ import React, { ComponentProps, useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { sharedResearch } from '@asap-hub/routing';
+import { sharedResearch, network } from '@asap-hub/routing';
 
 import { Card, Headline2, Divider, Link, Markdown } from '../atoms';
-import { perRem } from '../pixels';
+import { mobileScreen, perRem, rem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { BackLink, CtaCard, TagList } from '../molecules';
+import { CtaCard, TagList } from '../molecules';
 import {
   RelatedResearch,
   RichText,
@@ -18,6 +18,7 @@ import {
 import { createMailTo } from '../mail';
 import { editIcon } from '..';
 import { getResearchOutputAssociation } from '../utils';
+import { duplicateIcon } from '../icons';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -25,9 +26,14 @@ const containerStyles = css({
 
 const buttonsContainer = css({
   display: 'flex',
-  justifyContent: 'space-between',
+  flexFlow: 'column',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'inline-flex',
+    flexFlow: 'row',
+  },
+  gap: rem(16),
+  paddingBottom: rem(32),
 });
-const editButtonContainer = css({ margin: 'auto 0' });
 
 const cardsStyles = css({
   display: 'grid',
@@ -78,14 +84,30 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ...(props.subtype ? [props.subtype] : []),
     ...props.keywords,
   ];
-
-  const { canEditResearchOutput } = useContext(
+  const { canEditResearchOutput, canDuplicateResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
   );
   const hasDescription = description || descriptionMD;
 
   const association = getResearchOutputAssociation(props);
   const [publishedNowBanner, setPublishedNowBanner] = useState(published);
+
+  const duplicateLink =
+    props.workingGroups && props.workingGroups[0].id
+      ? network({})
+          .workingGroups({})
+          .workingGroup({
+            workingGroupId: props.workingGroups[0].id,
+          })
+          .duplicateOutput({
+            id,
+          }).$
+      : props.teams[0] && props.teams[0].id
+      ? network({})
+          .teams({})
+          .team({ teamId: props.teams[0].id })
+          .duplicateOutput({ id }).$
+      : undefined;
 
   return (
     <div>
@@ -108,11 +130,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         </div>
       )}
       <div css={containerStyles}>
-        <div css={buttonsContainer}>
-          <BackLink href={backHref} />
-          {canEditResearchOutput && !isGrantDocument && (
-            <div css={editButtonContainer}>
+        {!isGrantDocument && (
+          <div css={buttonsContainer}>
+            {canEditResearchOutput && (
               <Link
+                noMargin
                 href={
                   sharedResearch({})
                     .researchOutput({ researchOutputId: id })
@@ -124,9 +146,14 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               >
                 {editIcon} Edit
               </Link>
-            </div>
-          )}
-        </div>
+            )}
+            {canDuplicateResearchOutput && duplicateLink && (
+              <Link noMargin href={duplicateLink} buttonStyle small primary>
+                {duplicateIcon} Duplicate
+              </Link>
+            )}
+          </div>
+        )}
         <div css={cardsStyles}>
           <SharedResearchOutputHeaderCard {...props} published={published} />
           {((hasDescription && !isGrantDocument) || !!tags.length) && (

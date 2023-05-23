@@ -8,6 +8,7 @@ import {
   hasShareResearchOutputPermission,
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
+  hasDuplicateResearchOutputPermission,
 } from '@asap-hub/validation';
 import { useCallback } from 'react';
 import {
@@ -196,20 +197,40 @@ export const useCanShareResearchOutput = (
   return hasShareResearchOutputPermission(userRole);
 };
 
+export const useCanDuplicateResearchOutput = (
+  association: 'teams' | 'workingGroups',
+  associationIds: string[],
+): boolean => {
+  const user = useCurrentUserCRN();
+  const originalAssociationUserRole = getUserRole(
+    user,
+    association,
+    associationIds[0] ? [associationIds[0]] : [],
+  );
+  return hasDuplicateResearchOutputPermission(originalAssociationUserRole);
+};
+
 export const useResearchOutputPermissions = (
   association: 'teams' | 'workingGroups',
   associationIds: string[],
-  published: boolean,
-): {
-  canEditResearchOutput: boolean;
-  canPublishResearchOutput: boolean;
-  canShareResearchOutput: boolean;
-} => {
+  published?: boolean,
+) => {
   const user = useCurrentUserCRN();
   const userRole = getUserRole(user, association, associationIds);
+  const originalAssociationUserRole = getUserRole(
+    user,
+    association,
+    associationIds[0] ? [associationIds[0]] : [],
+  );
   return {
-    canEditResearchOutput: hasEditResearchOutputPermission(userRole, published),
+    canEditResearchOutput: hasEditResearchOutputPermission(
+      userRole,
+      published ?? false,
+    ),
     canPublishResearchOutput: hasPublishResearchOutputPermission(userRole),
     canShareResearchOutput: hasShareResearchOutputPermission(userRole),
+    canDuplicateResearchOutput: hasDuplicateResearchOutputPermission(
+      originalAssociationUserRole,
+    ),
   };
 };

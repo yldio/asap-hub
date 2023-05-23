@@ -88,12 +88,10 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     researchOutputData?.teams.map(({ id }) => id) ?? [teamId],
     published,
   );
-
   const researchSuggestions = researchTags
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);
-
-  if (permissions.canEditResearchOutput && team) {
+  if (team) {
     return (
       <Frame title="Share Research Output">
         <InnerToastContext.Provider value={toast}>
@@ -137,7 +135,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             published={published}
             permissions={permissions}
             onSave={(output) =>
-              researchOutputData
+              researchOutputData?.id
                 ? updateAndPublishResearchOutput(researchOutputData.id, {
                     ...output,
                     published: true,
@@ -147,7 +145,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                   )
             }
             onSaveDraft={(output) =>
-              researchOutputData
+              researchOutputData?.id
                 ? updateResearchOutput(researchOutputData.id, {
                     ...output,
                     published: false,

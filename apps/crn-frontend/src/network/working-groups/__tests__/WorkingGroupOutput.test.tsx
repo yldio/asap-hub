@@ -33,6 +33,7 @@ import {
 } from '../../teams/api';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupOutput from '../WorkingGroupOutput';
+import { getWorkingGroup } from '../api';
 
 jest.setTimeout(60000);
 jest.mock('../api');
@@ -52,6 +53,10 @@ const mockUpdateResearchOutput =
   updateTeamResearchOutput as jest.MockedFunction<
     typeof updateTeamResearchOutput
   >;
+
+const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
+  typeof getWorkingGroup
+>;
 
 const mandatoryFields = async (
   {
@@ -189,6 +194,13 @@ it('Renders the working group research output form with relevant fields', async 
   ).toBeVisible();
 });
 
+it('shows the sorry not found page when the working group does not exist', async () => {
+  mockGetWorkingGroup.mockResolvedValueOnce(undefined);
+  await renderPage({
+    workingGroupOutputDocumentType: 'article',
+  });
+  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+});
 it('can submit a form when form data is valid', async () => {
   const workingGroupId = 'wg1';
   const link = 'https://example42.com';
@@ -339,21 +351,6 @@ it('can save draft when form data is valid', async () => {
       '/shared-research/research-output-id',
     );
   });
-});
-
-it('displays sorry page when user does not have editing permissions', async () => {
-  await renderPage({
-    user: {
-      ...baseUser,
-      workingGroups: [{ ...baseUser.workingGroups[0]!, role: 'Member' }],
-    },
-    canEditResearchOutput: false,
-    researchOutputData: {
-      ...createResearchOutputResponse(),
-      published: true,
-    },
-  });
-  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
 });
 
 it('will show server side validation error for link', async () => {

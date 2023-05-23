@@ -19,6 +19,7 @@ export const Dashboard = () => components.dashboardIcon;
 export const Discover = () => components.discoverIcon;
 export const Docs = () => components.docsIcon;
 export const DropdownChevron = () => components.dropdownChevronIcon;
+export const Duplicate = () => components.duplicateIcon;
 export const Edit = () => components.editIcon;
 export const Error = () => components.errorIcon;
 export const Event = () => components.eventIcon;

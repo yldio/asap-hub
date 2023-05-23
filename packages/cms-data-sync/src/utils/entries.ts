@@ -52,11 +52,11 @@ export const clearContentfulEntries = async (
   await Promise.all(
     entries.map(async (entry) => {
       if (entry.isPublished()) {
-        await entry.unpublish();
         await limiter.removeTokens(1);
+        await entry.unpublish();
       }
-      await entry.delete();
       await limiter.removeTokens(1);
+      await entry.delete();
 
       n += 1;
       logger(`Entry with ID ${entry.sys.id} deleted. (${n}/${total})`, 'INFO');

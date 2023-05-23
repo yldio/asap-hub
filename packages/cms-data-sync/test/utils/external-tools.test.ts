@@ -1,4 +1,5 @@
 import { Environment } from 'contentful-management';
+import { RateLimiter } from 'limiter';
 import { createExternalTool, createExternalToolLinks } from '../../src/utils';
 import { getEntry } from '../fixtures';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
@@ -53,7 +54,14 @@ describe('createExternalToolLinks', () => {
     jest.spyOn(envMock, 'createEntry').mockResolvedValueOnce(toolMock);
     jest.spyOn(toolMock, 'publish').mockResolvedValueOnce(toolMock);
 
-    const toolLinks = await createExternalToolLinks(envMock, [tool]);
+    const toolLinks = await createExternalToolLinks(
+      envMock,
+      [tool],
+      'team-id',
+      {
+        removeTokens: jest.fn(),
+      } as unknown as RateLimiter,
+    );
 
     expect(toolLinks).toEqual([
       { sys: { id, linkType: 'Entry', type: 'Link' } },

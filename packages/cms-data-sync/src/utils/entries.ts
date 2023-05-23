@@ -1,7 +1,7 @@
 import { Environment, Entry } from 'contentful-management';
+import { RateLimiter } from 'limiter';
 import { logger } from './logs';
 import { paginatedFetch } from './fetch';
-import { RateLimiter } from 'limiter';
 
 export const checkIfEntryAlreadyExistsInContentful = async (
   contentfulEnvironment: Environment,

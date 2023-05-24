@@ -89,13 +89,14 @@ const app = async () => {
         firstName: data[0]!,
         lastName: data[1]!,
         country: data[4]!,
-        email: data[2]!,
+        email: data[2]! || data[3]!,
+        alternativeEmail: data[3]!,
         region: data[5] as gp2.UserRegion,
         positions: [
           {
-            institution: data[6]!,
-            department: data[7]!,
-            role: data[8]!,
+            institution: data[6]! || 'Unknown',
+            department: data[7]! || 'Unknown',
+            role: data[8]! || 'Unknown',
           },
         ],
         role: 'Network Collaborator',

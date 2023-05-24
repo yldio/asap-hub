@@ -84,14 +84,13 @@ const convertToSquidexProject = ({
   resources,
   members,
 }: gp2Model.ProjectUpdateDataObject): gp2Squidex.InputProject['data'] => ({
-  ...(resources && { resources: { iv: resources || null } }),
+  ...(resources && { resources: { iv: resources } }),
   ...(members && {
     members: {
-      iv:
-        members.map(({ userId, role }) => ({
-          user: [userId],
-          role: reverseRoleMap[role],
-        })) || null,
+      iv: members.map(({ userId, role }) => ({
+        user: [userId],
+        role: reverseRoleMap[role],
+      })),
     },
   }),
 });

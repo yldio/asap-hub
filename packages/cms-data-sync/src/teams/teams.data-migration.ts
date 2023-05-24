@@ -15,7 +15,7 @@ import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
 
 type TeamItem = NonNullable<FetchTeamsQuery['queryTeamsContents']>[number];
 
-const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
+const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
 
 export const migrateTeams = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =

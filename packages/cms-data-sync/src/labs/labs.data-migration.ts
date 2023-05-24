@@ -12,7 +12,7 @@ import {
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
 
-const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
+const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
 
 type LabItem = NonNullable<
   NonNullable<FetchLabsQuery['queryLabsContentsWithTotal']>['items']

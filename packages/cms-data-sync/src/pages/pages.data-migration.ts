@@ -14,7 +14,7 @@ import { pagesQuery } from './pages.queries';
 
 type PageItem = NonNullable<FetchPagesQuery['queryPagesContents']>[number];
 
-const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
+const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
 
 export const migratePages = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =

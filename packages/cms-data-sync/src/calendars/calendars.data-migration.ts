@@ -11,7 +11,7 @@ type CalendarItem = NonNullable<
   FetchCalendarsQuery['queryCalendarsContents']
 >[number];
 
-const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
+const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
 
 export const migrateCalendars = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =

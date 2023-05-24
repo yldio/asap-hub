@@ -24,7 +24,7 @@ type ContentfulUser = Omit<Users, 'sys' | 'contentfulMetadata' | 'avatar'> & {
   avatar: SysLink | undefined;
 };
 
-const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
+const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
 
 export const migrateUsers = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =

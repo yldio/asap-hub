@@ -17,7 +17,7 @@ type ExternalAuthorItem = NonNullable<
   >['items']
 >[number];
 
-const limiter = new RateLimiter({ tokensPerInterval: 7, interval: 'second' });
+const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
 
 export const migrateExternalAuthors = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =

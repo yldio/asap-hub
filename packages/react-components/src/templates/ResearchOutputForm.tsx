@@ -341,7 +341,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               }
               return researchOutput;
             })();
-
+          const confirmText = `Keep and ${
+            showDescriptionChangePrompt === 'draft' ? 'draft' : 'publish'
+          }`;
           return (
             <>
               {showDescriptionChangePrompt && (
@@ -351,14 +353,14 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onCancel={() => {
                     setShowDescriptionChangePrompt(false);
                   }}
-                  confirmText={`Keep and ${
-                    showDescriptionChangePrompt === 'draft'
-                      ? 'draft'
-                      : 'publish'
-                  }`}
+                  confirmText={confirmText}
                   onSave={async () => {
-                    setShowDescriptionChangePrompt(false);
-                    await save(showDescriptionChangePrompt === 'draft');
+                    const result = await save(
+                      showDescriptionChangePrompt === 'draft',
+                    );
+                    if (!result) {
+                      setShowDescriptionChangePrompt(false);
+                    }
                   }}
                   description="We noticed that you kept the same description as your previous output. ASAP encourages users to provide specific context for each output."
                 />

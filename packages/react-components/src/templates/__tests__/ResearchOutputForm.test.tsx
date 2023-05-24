@@ -796,6 +796,8 @@ describe('form buttons', () => {
       published = false,
       documentType = 'Article',
       researchTags = [{ id: '1', name: 'research tag 1' }],
+      descriptionUnchangedWarning = false,
+      researchOutputData = undefined,
     }: {
       canEditResearchOutput?: boolean;
       canPublishResearchOutput?: boolean;
@@ -803,6 +805,12 @@ describe('form buttons', () => {
       published?: boolean;
       documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
       researchTags?: ResearchTagResponse[];
+      descriptionUnchangedWarning?: ComponentProps<
+        typeof ResearchOutputForm
+      >['descriptionUnchangedWarning'];
+      researchOutputData?: ComponentProps<
+        typeof ResearchOutputForm
+      >['researchOutputData'];
     } = {
       documentType: 'Article',
       researchTags: [],
@@ -812,6 +820,8 @@ describe('form buttons', () => {
       <Router history={history}>
         <ResearchOutputForm
           {...props}
+          researchOutputData={researchOutputData}
+          descriptionUnchangedWarning={descriptionUnchangedWarning}
           selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}
           typeOptions={Array.from(
@@ -916,5 +926,44 @@ describe('form buttons', () => {
     const cancelButton = screen.getByRole('button', { name: /Cancel/i });
     expect(cancelButton).toBeInTheDocument();
     expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
+  });
+  describe('descriptionUnchangedWarning', () => {
+    it('Shows correct button for draft save warning', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        published: false,
+        researchOutputData: createResearchOutputResponse(),
+      });
+      userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      expect(screen.getByText(/Keep and draft/i)).toBeVisible();
+    });
+    it('Shows correct button for publish save warning', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        researchOutputData: createResearchOutputResponse(),
+        published: false,
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      expect(screen.getByText(/Keep and publish/i)).toBeVisible();
+    });
+    it('is cancelable', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        researchOutputData: createResearchOutputResponse(),
+        published: false,
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+      expect(screen.queryByText(/Keep the same description/i)).toBeNull();
+    });
   });
 });

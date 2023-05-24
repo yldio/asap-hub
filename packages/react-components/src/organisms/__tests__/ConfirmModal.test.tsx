@@ -41,6 +41,25 @@ it('triggers the save function', async () => {
   await waitFor(() => expect(publish.closest('button')).toBeEnabled());
 });
 
+it('triggers the cancel function', async () => {
+  const jestFn = jest.fn();
+  const { getByText } = render(
+    <ConfirmModal
+      {...props}
+      backHref={undefined}
+      cancelText="Cancel"
+      onCancel={jestFn}
+    />,
+    {
+      wrapper: MemoryRouter,
+    },
+  );
+  const cancel = getByText(/Cancel/i);
+  userEvent.click(cancel);
+
+  expect(jestFn).toHaveBeenCalled();
+});
+
 it('disables publish & back while submitting', async () => {
   let resolveSubmit!: () => void;
   const handleSave = () =>

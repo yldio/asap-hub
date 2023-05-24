@@ -5,7 +5,7 @@ import {
   createUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
+import { network, sharedResearch } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -231,6 +231,8 @@ describe('Duplicate Output', () => {
       link: 'http://example.com',
     };
     mockGetResearchOutput.mockResolvedValue(researchOutput);
+    mockCreateResearchOutput.mockResolvedValue(researchOutput);
+
     mockGetWorkingGroup.mockResolvedValue(wgResponse);
 
     const history = createMemoryHistory({
@@ -267,11 +269,14 @@ describe('Duplicate Output', () => {
       expect.anything(),
     );
 
-    await waitFor(() =>
-      expect(history.location.pathname).not.toEqual(
-        `/network/teams/${wgResponse.id}/duplicate/${researchOutput.id}`,
-      ),
-    );
+    await waitFor(() => {
+      expect(history.location.pathname).toEqual(
+        sharedResearch({}).researchOutput({
+          researchOutputId: researchOutput.id,
+        }).$,
+      );
+      expect(screen.queryByText(/loading/i)).toBe(null);
+    });
   });
 
   it('will show a page not found if research output does not exist', async () => {

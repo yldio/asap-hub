@@ -387,6 +387,79 @@ describe('Reminder Data Provider', () => {
         });
       });
 
+      test('Should return no team reminder when the team displayname is missing', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        const draft = getSquidexReminderReseachOutputsDraftContents(true);
+        draft.flatData.teams![0]!.flatData.displayName = null;
+        squidexGraphqlResponse.draftResearchOutputs = [draft];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [],
+          total: 0,
+        });
+      });
+
+      test('Should return no working group reminder when the working group title is missing', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        const draft = getSquidexReminderReseachOutputsDraftContents(false);
+        draft.flatData.workingGroups![0]!.flatData.title = null;
+        squidexGraphqlResponse.draftResearchOutputs = [draft];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [],
+          total: 0,
+        });
+      });
+
+      test('Should return no reminder when the teams and working groups are missing', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        const draft = getSquidexReminderReseachOutputsDraftContents(false);
+        draft.flatData.workingGroups = null;
+        draft.flatData.teams = null;
+        squidexGraphqlResponse.draftResearchOutputs = [draft];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [],
+          total: 0,
+        });
+      });
+
+      test('Should return no reminder wnen the createdBy attribute is missing', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        const draft = getSquidexReminderReseachOutputsDraftContents(true);
+        draft.flatData.createdBy = null;
+        squidexGraphqlResponse.draftResearchOutputs = [draft];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [],
+          total: 0,
+        });
+      });
+
       test('Should return an empty result when no teams and no working groups are found', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];

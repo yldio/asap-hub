@@ -71,7 +71,7 @@ const MainNavigation: React.FC = () => (
       </li>
       <li>
         <NavigationLink href={users({}).$} icon={usersIcon}>
-          Users
+          People
         </NavigationLink>
       </li>
       <li>

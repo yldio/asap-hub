@@ -2528,6 +2528,7 @@ export type Users = Entry & {
   orcid?: Maybe<Scalars['String']>;
   orcidLastModifiedDate?: Maybe<Scalars['DateTime']>;
   orcidLastSyncDate?: Maybe<Scalars['DateTime']>;
+  orcidWorks?: Maybe<Scalars['JSON']>;
   questions?: Maybe<Array<Maybe<Scalars['String']>>>;
   reachOut?: Maybe<Scalars['String']>;
   researchGate?: Maybe<Scalars['String']>;
@@ -2685,6 +2686,11 @@ export type UsersOrcidLastModifiedDateArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersOrcidLastSyncDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersOrcidWorksArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -2937,6 +2943,7 @@ export type UsersFilter = {
   orcidLastSyncDate_lte?: InputMaybe<Scalars['DateTime']>;
   orcidLastSyncDate_not?: InputMaybe<Scalars['DateTime']>;
   orcidLastSyncDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidWorks_exists?: InputMaybe<Scalars['Boolean']>;
   orcid_contains?: InputMaybe<Scalars['String']>;
   orcid_exists?: InputMaybe<Scalars['Boolean']>;
   orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -5737,6 +5744,7 @@ export type UsersContentFragment = Pick<
   | 'orcid'
   | 'orcidLastModifiedDate'
   | 'orcidLastSyncDate'
+  | 'orcidWorks'
   | 'questions'
   | 'expertiseAndResourceTags'
   | 'expertiseAndResourceDescription'
@@ -5803,6 +5811,7 @@ export type FetchUserByIdQuery = {
       | 'orcid'
       | 'orcidLastModifiedDate'
       | 'orcidLastSyncDate'
+      | 'orcidWorks'
       | 'questions'
       | 'expertiseAndResourceTags'
       | 'expertiseAndResourceDescription'
@@ -5877,6 +5886,7 @@ export type FetchUsersQuery = {
             | 'orcid'
             | 'orcidLastModifiedDate'
             | 'orcidLastSyncDate'
+            | 'orcidWorks'
             | 'questions'
             | 'expertiseAndResourceTags'
             | 'expertiseAndResourceDescription'
@@ -5959,6 +5969,7 @@ export type FetchUsersByTeamIdQuery = {
                     | 'orcid'
                     | 'orcidLastModifiedDate'
                     | 'orcidLastSyncDate'
+                    | 'orcidWorks'
                     | 'questions'
                     | 'expertiseAndResourceTags'
                     | 'expertiseAndResourceDescription'
@@ -6046,6 +6057,7 @@ export type FetchUsersByLabIdQuery = {
                 | 'orcid'
                 | 'orcidLastModifiedDate'
                 | 'orcidLastSyncDate'
+                | 'orcidWorks'
                 | 'questions'
                 | 'expertiseAndResourceTags'
                 | 'expertiseAndResourceDescription'
@@ -7545,6 +7557,7 @@ export const UsersContentFragmentDoc = {
             name: { kind: 'Name', value: 'orcidLastModifiedDate' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'orcidLastSyncDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'orcidWorks' } },
           { kind: 'Field', name: { kind: 'Name', value: 'questions' } },
           {
             kind: 'Field',

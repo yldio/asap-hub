@@ -81,6 +81,13 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 - Use this UUID to activate your account by visting <https://dev.hub.asap.science/welcome/{uuid}>.
 - Reload localhost:3000 and you should now be able to log in.
 
+### Contentful Dedicated Environment
+
+If you require a dedicated environment for your developement work, create a PR and add one or both of the followings labels to your PR. This will run the github action workflow to create a new environment in contentful.
+
+- crn-create-environment
+- gp2-create-environment
+
 ## Editor setup
 
 Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks) for how to integrate your editor with the TypeScript compiler and ESLint linter in this repository. You will also need to set up your editor to run ESLint with the same CLI options that the scripts do — they are in [this file](jest-runner-eslint.config.js).

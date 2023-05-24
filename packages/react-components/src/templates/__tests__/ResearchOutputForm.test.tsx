@@ -1,6 +1,8 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter, Router } from 'react-router-dom';
+import { InnerToastContext } from '@asap-hub/react-context';
+
 import {
   createResearchOutputResponse,
   createUserResponse,
@@ -817,28 +819,30 @@ describe('form buttons', () => {
     },
   ) => {
     render(
-      <Router history={history}>
-        <ResearchOutputForm
-          {...props}
-          researchOutputData={researchOutputData}
-          descriptionUnchangedWarning={descriptionUnchangedWarning}
-          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
-          documentType={documentType}
-          typeOptions={Array.from(
-            researchOutputDocumentTypeToType[documentType],
-          )}
-          onSave={saveFn}
-          getLabSuggestions={getLabSuggestions}
-          getAuthorSuggestions={getAuthorSuggestions}
-          researchTags={researchTags}
-          published={published}
-          permissions={{
-            canEditResearchOutput,
-            canPublishResearchOutput,
-            canShareResearchOutput: true,
-          }}
-        />
-      </Router>,
+      <InnerToastContext.Provider value={jest.fn()}>
+        <Router history={history}>
+          <ResearchOutputForm
+            {...props}
+            researchOutputData={researchOutputData}
+            descriptionUnchangedWarning={descriptionUnchangedWarning}
+            selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+            documentType={documentType}
+            typeOptions={Array.from(
+              researchOutputDocumentTypeToType[documentType],
+            )}
+            onSave={saveFn}
+            getLabSuggestions={getLabSuggestions}
+            getAuthorSuggestions={getAuthorSuggestions}
+            researchTags={researchTags}
+            published={published}
+            permissions={{
+              canEditResearchOutput,
+              canPublishResearchOutput,
+              canShareResearchOutput: true,
+            }}
+          />
+        </Router>
+      </InnerToastContext.Provider>,
     );
   };
 
@@ -964,6 +968,29 @@ describe('form buttons', () => {
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
       userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
+    });
+
+    it('Will be dismissed if there are errors on the form', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+
+        researchOutputData: {
+          ...createResearchOutputResponse(),
+          link: '',
+        },
+        published: false,
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      userEvent.click(
+        screen.getByRole('button', { name: /Keep and publish/i }),
+      );
+      await waitFor(() => {
+        expect(screen.queryByText(/Keep the same description/i)).toBeNull();
+        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
+      });
     });
   });
 });

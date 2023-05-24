@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { useState } from 'react';
+import useIsMounted from 'ismounted';
 
 import { Modal } from '../molecules';
 import { noop } from '../utils';
@@ -89,7 +90,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     'initial' | 'isSaving' | 'hasError' | 'hasSaved'
   >('initial');
   const historyPush = usePushFromHere();
-
+  const mounted = useIsMounted();
   return (
     <Modal padding={false}>
       {status === 'hasError' && <Toast>{error}</Toast>}
@@ -129,6 +130,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 setStatus('isSaving');
                 try {
                   await onSave();
+                  if (!mounted.current) return;
                   setStatus('hasSaved');
                   const redirect = successHref ?? backHref;
                   if (redirect) {

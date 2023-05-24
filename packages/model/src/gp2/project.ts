@@ -49,9 +49,11 @@ export type ListProjectDataObject = ListResponse<ProjectDataObject>;
 export type ProjectResponse = ProjectDataObject;
 
 export type ListProjectResponse = ListResponse<ProjectResponse>;
-export type ProjectUpdateDataObject = Required<
+export type ProjectUpdateDataObject = Partial<
   Pick<ProjectDataObject, 'resources'>
->;
+> & {
+  members?: Pick<ProjectMember, 'userId' | 'role'>[];
+};
 
 export type ProjectUpdateRequest = ProjectUpdateDataObject;
 

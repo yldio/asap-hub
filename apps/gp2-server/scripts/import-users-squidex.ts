@@ -8,6 +8,7 @@ import {
   SquidexRest,
 } from '@asap-hub/squidex';
 import { appName, baseUrl, clientId, clientSecret } from '../src/config';
+import { ProjectSquidexDataProvider } from '../src/data-providers/project.data-provider';
 
 import { UserSquidexDataProvider } from '../src/data-providers/user.data-provider';
 import { WorkingGroupSquidexDataProvider } from '../src/data-providers/working-group.data-provider';
@@ -45,12 +46,25 @@ const workingGroupDataProvider = new WorkingGroupSquidexDataProvider(
   squidexGraphqlClient,
   workingGroupRestClient,
 );
+const projectRestClient = new SquidexRest<
+  gp2squidex.RestProject,
+  gp2squidex.InputProject
+>(getAuthToken, 'projects', {
+  appName,
+  baseUrl,
+});
+const projectDataProvider = new ProjectSquidexDataProvider(
+  squidexGraphqlClient,
+  projectRestClient,
+);
 
 const app = async () => {
   let numberOfImportedUsers = 0;
   let usersAlreadyExist = 0;
   let usersFailed = 0;
   const workingGroups = (await workingGroupDataProvider.fetch()).items;
+  const projects = (await projectDataProvider.fetch({ skip: 0, take: 200 }))
+    .items;
   const args = process.argv.slice(2);
 
   if (typeof args[0] !== 'string') {
@@ -64,12 +78,13 @@ const app = async () => {
       input,
     ): gp2.UserCreateDataObject & {
       workingGroup?: gp2.WorkingGroupDataObject;
+      project?: gp2.ProjectDataObject;
     } => {
       const data = input.map((s) => s.trim());
       const userWorkingGroup = workingGroups.find(
         (wg) => wg.title === data[10]!,
       );
-
+      const userProject = projects.find((p) => p.title === data[16]!);
       return {
         firstName: data[0]!,
         lastName: data[1]!,
@@ -91,9 +106,10 @@ const app = async () => {
         questions: [],
         contributingCohorts: [],
         workingGroup: userWorkingGroup,
+        project: userProject,
       };
     },
-    async ({ workingGroup, ...input }) => {
+    async ({ workingGroup, project, ...input }) => {
       try {
         const user = await userDataProvider.create(input);
         if (workingGroup) {
@@ -101,6 +117,14 @@ const app = async () => {
             members: [
               ...workingGroup.members,
               { userId: user, role: 'Working group member' },
+            ],
+          });
+        }
+        if (project) {
+          projectDataProvider.update(project.id, {
+            members: [
+              ...project.members,
+              { userId: user, role: 'Contributor' },
             ],
           });
         }

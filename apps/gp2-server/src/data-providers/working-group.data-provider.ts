@@ -221,8 +221,7 @@ export const reverseRoleMap: Record<
   gp2Model.WorkingGroupMemberRole,
   gp2Squidex.RestWorkingGroupsMembersRole
 > = {
-  Lead: gp2Squidex.RestWorkingGroupsMembersRole.Lead,
-  'Co-lead': gp2Squidex.RestWorkingGroupsMembersRole.CoLead,
-  'Working group member':
-    gp2Squidex.RestWorkingGroupsMembersRole.WorkingGroupMember,
+  Lead: 'Lead',
+  'Co-lead': 'Co_lead',
+  'Working group member': 'Working_group_member',
 };

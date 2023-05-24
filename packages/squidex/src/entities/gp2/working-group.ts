@@ -1,14 +1,10 @@
 import { gp2 } from '@asap-hub/model';
 import { Entity, Rest, RestPayload } from '../common';
 
-export enum RestWorkingGroupsMembersRole {
-  /** Co_lead */
-  CoLead = 'Co_lead',
-  /** Lead */
-  Lead = 'Lead',
-  /** Working_group_member */
-  WorkingGroupMember = 'Working_group_member',
-}
+export type RestWorkingGroupsMembersRole =
+  | 'Co_lead'
+  | 'Lead'
+  | 'Working_group_member';
 
 export interface WorkingGroup {
   resources?: gp2.Resource[];

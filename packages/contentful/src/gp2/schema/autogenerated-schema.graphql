@@ -843,19 +843,6 @@ type ExternalUsersOrUsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
-enum ExternalUsersOrUsersOrder {
-  orcid_ASC
-  orcid_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
 enum ExternalUsersOrder {
   name_ASC
   name_DESC
@@ -1268,7 +1255,7 @@ enum NewsOrder {
 type Outputs implements Entry {
   addedDate(locale: String): DateTime
   adminNotes(locale: String): String
-  authorsCollection(limit: Int = 100, locale: String, order: [OutputsAuthorsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): OutputsAuthorsCollection
+  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): OutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean): Users
   documentType(locale: String): String
@@ -1289,19 +1276,6 @@ type OutputsAuthorsCollection {
   limit: Int!
   skip: Int!
   total: Int!
-}
-
-enum OutputsAuthorsCollectionOrder {
-  orcid_ASC
-  orcid_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
 }
 
 union OutputsAuthorsItem = ExternalUsers | Users
@@ -1832,7 +1806,7 @@ type Query {
   externalUsers(id: String!, locale: String, preview: Boolean): ExternalUsers
   externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersFilter): ExternalUsersCollection
   externalUsersOrUsers(id: String!, locale: String, preview: Boolean): ExternalUsersOrUsers
-  externalUsersOrUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): ExternalUsersOrUsersCollection
+  externalUsersOrUsersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): ExternalUsersOrUsersCollection
   media(id: String!, locale: String, preview: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
   migration(id: String!, locale: String, preview: Boolean): Migration

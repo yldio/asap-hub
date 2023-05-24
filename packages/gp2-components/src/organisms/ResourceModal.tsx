@@ -44,6 +44,7 @@ type ResourceModalProps = Partial<gp2.Resource> & {
 };
 
 const ResourceModal: React.FC<ResourceModalProps> = ({
+  id,
   title,
   description,
   backHref,
@@ -84,6 +85,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
     }
 
     const resourceBase = {
+      id,
       title: newTitle,
       description: newDescription || undefined,
     };

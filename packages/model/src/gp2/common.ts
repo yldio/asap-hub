@@ -1,7 +1,8 @@
 export const resourceTypes = ['Link', 'Note'] as const;
-type ResourceTypes = (typeof resourceTypes)[number];
+type ResourceTypes = typeof resourceTypes[number];
 
 interface ResourceBase {
+  id?: string;
   title: string;
   description?: string;
   type: ResourceTypes;
@@ -57,7 +58,7 @@ export const keywords = [
   `Parkinson's disease`,
 ] as const;
 
-export type Keyword = (typeof keywords)[number];
+export type Keyword = typeof keywords[number];
 export const isKeyword = (data: string | null): data is Keyword =>
   keywords.includes(data as Keyword);
 
@@ -67,7 +68,7 @@ export interface Calendar {
 }
 
 export const milestoneStatus = ['Active', 'Not Started', 'Completed'] as const;
-export type MilestoneStatus = (typeof milestoneStatus)[number];
+export type MilestoneStatus = typeof milestoneStatus[number];
 
 export const isMilestoneStatus = (data: string): data is MilestoneStatus =>
   milestoneStatus.includes(data as MilestoneStatus);

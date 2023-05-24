@@ -80,7 +80,7 @@ export const FETCH_WORKING_GROUP_BY_ID = gql`
 
 export const FETCH_WORKING_GROUPS = gql`
   query FetchWorkingGroups {
-    workingGroupsCollection(limit: 100) {
+    workingGroupsCollection(limit: 50) {
       total
       items {
         ...WorkingGroupsContentData

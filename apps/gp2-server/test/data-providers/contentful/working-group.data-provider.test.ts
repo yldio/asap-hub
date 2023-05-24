@@ -420,6 +420,7 @@ describe('Working Group Data Provider', () => {
         );
         expect(workingGroupDataObject?.resources).toStrictEqual([
           {
+            id: '27',
             description: 'Working group resource description',
             title: 'Working group resource title',
             type: 'Note',
@@ -452,6 +453,7 @@ describe('Working Group Data Provider', () => {
         );
         expect(workingGroupDataObject?.resources).toStrictEqual([
           {
+            id: '27',
             description: 'Working group resource description',
             title: 'Working group resource title',
             type: 'Note',
@@ -485,6 +487,7 @@ describe('Working Group Data Provider', () => {
         );
         expect(workingGroupDataObject?.resources).toStrictEqual([
           {
+            id: '27',
             description: 'Working group resource description',
             title: 'Working group resource title',
             type: 'Link',

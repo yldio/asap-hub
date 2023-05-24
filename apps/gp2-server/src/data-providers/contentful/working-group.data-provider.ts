@@ -196,6 +196,7 @@ export function parseResources(
   }
 
   const parsedResource = {
+    id: resource.sys.id,
     title: resource.title,
     description: resource.description || undefined,
   };

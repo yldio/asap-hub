@@ -50,6 +50,7 @@ const projectPutRequestValidationSchema: JSONSchemaType<gp2.ProjectResourcesPutR
         {
           type: 'object',
           properties: {
+            id: { type: 'string', nullable: true },
             title: { type: 'string' },
             type: { type: 'string', const: 'Link' },
             description: { type: 'string', nullable: true },
@@ -64,6 +65,7 @@ const projectPutRequestValidationSchema: JSONSchemaType<gp2.ProjectResourcesPutR
         {
           type: 'object',
           properties: {
+            id: { type: 'string', nullable: true },
             title: { type: 'string' },
             type: { type: 'string', const: 'Note' },
             description: { type: 'string', nullable: true },

@@ -36,6 +36,7 @@ export const getWorkingGroupDataObject =
     ],
     resources: [
       {
+        id: '27',
         type: 'Note',
         description: 'Working group resource description',
         title: 'Working group resource title',

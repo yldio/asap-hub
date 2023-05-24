@@ -2339,7 +2339,7 @@ export enum ProjectMembershipOrder {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type Projects = Entry & {
-  calendars?: Maybe<Calendars>;
+  calendar?: Maybe<Calendars>;
   contentfulMetadata: ContentfulMetadata;
   description?: Maybe<Scalars['String']>;
   endDate?: Maybe<Scalars['DateTime']>;
@@ -2360,7 +2360,7 @@ export type Projects = Entry & {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
-export type ProjectsCalendarsArgs = {
+export type ProjectsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
 };
@@ -2465,8 +2465,8 @@ export type ProjectsCollection = {
 export type ProjectsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ProjectsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ProjectsFilter>>>;
-  calendars?: InputMaybe<CfCalendarsNestedFilter>;
-  calendars_exists?: InputMaybe<Scalars['Boolean']>;
+  calendar?: InputMaybe<CfCalendarsNestedFilter>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -3869,26 +3869,14 @@ export type WorkingGroupNetworkComplexDiseaseCollection = {
 };
 
 export enum WorkingGroupNetworkComplexDiseaseCollectionOrder {
-  EndDateAsc = 'endDate_ASC',
-  EndDateDesc = 'endDate_DESC',
-  LeadEmailAsc = 'leadEmail_ASC',
-  LeadEmailDesc = 'leadEmail_DESC',
   LeadingMembersAsc = 'leadingMembers_ASC',
   LeadingMembersDesc = 'leadingMembers_DESC',
-  PmEmailAsc = 'pmEmail_ASC',
-  PmEmailDesc = 'pmEmail_DESC',
   PrimaryEmailAsc = 'primaryEmail_ASC',
   PrimaryEmailDesc = 'primaryEmail_DESC',
-  ProjectProposalAsc = 'projectProposal_ASC',
-  ProjectProposalDesc = 'projectProposal_DESC',
   SecondaryEmailAsc = 'secondaryEmail_ASC',
   SecondaryEmailDesc = 'secondaryEmail_DESC',
   ShortDescriptionAsc = 'shortDescription_ASC',
   ShortDescriptionDesc = 'shortDescription_DESC',
-  StartDateAsc = 'startDate_ASC',
-  StartDateDesc = 'startDate_DESC',
-  StatusAsc = 'status_ASC',
-  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3935,26 +3923,14 @@ export type WorkingGroupNetworkMonogenicCollection = {
 };
 
 export enum WorkingGroupNetworkMonogenicCollectionOrder {
-  EndDateAsc = 'endDate_ASC',
-  EndDateDesc = 'endDate_DESC',
-  LeadEmailAsc = 'leadEmail_ASC',
-  LeadEmailDesc = 'leadEmail_DESC',
   LeadingMembersAsc = 'leadingMembers_ASC',
   LeadingMembersDesc = 'leadingMembers_DESC',
-  PmEmailAsc = 'pmEmail_ASC',
-  PmEmailDesc = 'pmEmail_DESC',
   PrimaryEmailAsc = 'primaryEmail_ASC',
   PrimaryEmailDesc = 'primaryEmail_DESC',
-  ProjectProposalAsc = 'projectProposal_ASC',
-  ProjectProposalDesc = 'projectProposal_DESC',
   SecondaryEmailAsc = 'secondaryEmail_ASC',
   SecondaryEmailDesc = 'secondaryEmail_DESC',
   ShortDescriptionAsc = 'shortDescription_ASC',
   ShortDescriptionDesc = 'shortDescription_DESC',
-  StartDateAsc = 'startDate_ASC',
-  StartDateDesc = 'startDate_DESC',
-  StatusAsc = 'status_ASC',
-  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3975,26 +3951,14 @@ export type WorkingGroupNetworkOperationalCollection = {
 };
 
 export enum WorkingGroupNetworkOperationalCollectionOrder {
-  EndDateAsc = 'endDate_ASC',
-  EndDateDesc = 'endDate_DESC',
-  LeadEmailAsc = 'leadEmail_ASC',
-  LeadEmailDesc = 'leadEmail_DESC',
   LeadingMembersAsc = 'leadingMembers_ASC',
   LeadingMembersDesc = 'leadingMembers_DESC',
-  PmEmailAsc = 'pmEmail_ASC',
-  PmEmailDesc = 'pmEmail_DESC',
   PrimaryEmailAsc = 'primaryEmail_ASC',
   PrimaryEmailDesc = 'primaryEmail_DESC',
-  ProjectProposalAsc = 'projectProposal_ASC',
-  ProjectProposalDesc = 'projectProposal_DESC',
   SecondaryEmailAsc = 'secondaryEmail_ASC',
   SecondaryEmailDesc = 'secondaryEmail_DESC',
   ShortDescriptionAsc = 'shortDescription_ASC',
   ShortDescriptionDesc = 'shortDescription_DESC',
-  StartDateAsc = 'startDate_ASC',
-  StartDateDesc = 'startDate_DESC',
-  StatusAsc = 'status_ASC',
-  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4026,26 +3990,14 @@ export type WorkingGroupNetworkSupportCollection = {
 };
 
 export enum WorkingGroupNetworkSupportCollectionOrder {
-  EndDateAsc = 'endDate_ASC',
-  EndDateDesc = 'endDate_DESC',
-  LeadEmailAsc = 'leadEmail_ASC',
-  LeadEmailDesc = 'leadEmail_DESC',
   LeadingMembersAsc = 'leadingMembers_ASC',
   LeadingMembersDesc = 'leadingMembers_DESC',
-  PmEmailAsc = 'pmEmail_ASC',
-  PmEmailDesc = 'pmEmail_DESC',
   PrimaryEmailAsc = 'primaryEmail_ASC',
   PrimaryEmailDesc = 'primaryEmail_DESC',
-  ProjectProposalAsc = 'projectProposal_ASC',
-  ProjectProposalDesc = 'projectProposal_DESC',
   SecondaryEmailAsc = 'secondaryEmail_ASC',
   SecondaryEmailDesc = 'secondaryEmail_DESC',
   ShortDescriptionAsc = 'shortDescription_ASC',
   ShortDescriptionDesc = 'shortDescription_DESC',
-  StartDateAsc = 'startDate_ASC',
-  StartDateDesc = 'startDate_DESC',
-  StatusAsc = 'status_ASC',
-  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4060,51 +4012,29 @@ export enum WorkingGroupNetworkSupportCollectionOrder {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroups = Entry & {
-  calendars?: Maybe<Calendars>;
+  calendar?: Maybe<Calendars>;
   contentfulMetadata: ContentfulMetadata;
   description?: Maybe<Scalars['String']>;
-  endDate?: Maybe<Scalars['DateTime']>;
-  keywords?: Maybe<Array<Maybe<Scalars['String']>>>;
-  leadEmail?: Maybe<Scalars['String']>;
   leadingMembers?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<WorkingGroupsLinkingCollections>;
   membersCollection?: Maybe<WorkingGroupsMembersCollection>;
   milestonesCollection?: Maybe<WorkingGroupsMilestonesCollection>;
-  pmEmail?: Maybe<Scalars['String']>;
   primaryEmail?: Maybe<Scalars['String']>;
-  projectProposal?: Maybe<Scalars['String']>;
   resourcesCollection?: Maybe<WorkingGroupsResourcesCollection>;
   secondaryEmail?: Maybe<Scalars['String']>;
   shortDescription?: Maybe<Scalars['String']>;
-  startDate?: Maybe<Scalars['DateTime']>;
-  status?: Maybe<Scalars['String']>;
   sys: Sys;
   title?: Maybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsCalendarsArgs = {
+export type WorkingGroupsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsDescriptionArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsEndDateArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsKeywordsArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsLeadEmailArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -4139,17 +4069,7 @@ export type WorkingGroupsMilestonesCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsPmEmailArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsPrimaryEmailArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsProjectProposalArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -4174,16 +4094,6 @@ export type WorkingGroupsShortDescriptionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsStartDateArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsStatusArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -4198,8 +4108,8 @@ export type WorkingGroupsCollection = {
 export type WorkingGroupsFilter = {
   AND?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
-  calendars?: InputMaybe<CfCalendarsNestedFilter>;
-  calendars_exists?: InputMaybe<Scalars['Boolean']>;
+  calendar?: InputMaybe<CfCalendarsNestedFilter>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -4208,26 +4118,6 @@ export type WorkingGroupsFilter = {
   description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
   description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  endDate?: InputMaybe<Scalars['DateTime']>;
-  endDate_exists?: InputMaybe<Scalars['Boolean']>;
-  endDate_gt?: InputMaybe<Scalars['DateTime']>;
-  endDate_gte?: InputMaybe<Scalars['DateTime']>;
-  endDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  endDate_lt?: InputMaybe<Scalars['DateTime']>;
-  endDate_lte?: InputMaybe<Scalars['DateTime']>;
-  endDate_not?: InputMaybe<Scalars['DateTime']>;
-  endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_exists?: InputMaybe<Scalars['Boolean']>;
-  leadEmail?: InputMaybe<Scalars['String']>;
-  leadEmail_contains?: InputMaybe<Scalars['String']>;
-  leadEmail_exists?: InputMaybe<Scalars['Boolean']>;
-  leadEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  leadEmail_not?: InputMaybe<Scalars['String']>;
-  leadEmail_not_contains?: InputMaybe<Scalars['String']>;
-  leadEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   leadingMembers?: InputMaybe<Scalars['String']>;
   leadingMembers_contains?: InputMaybe<Scalars['String']>;
   leadingMembers_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4239,13 +4129,6 @@ export type WorkingGroupsFilter = {
   membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   milestones?: InputMaybe<CfMilestonesNestedFilter>;
   milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  pmEmail?: InputMaybe<Scalars['String']>;
-  pmEmail_contains?: InputMaybe<Scalars['String']>;
-  pmEmail_exists?: InputMaybe<Scalars['Boolean']>;
-  pmEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  pmEmail_not?: InputMaybe<Scalars['String']>;
-  pmEmail_not_contains?: InputMaybe<Scalars['String']>;
-  pmEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   primaryEmail?: InputMaybe<Scalars['String']>;
   primaryEmail_contains?: InputMaybe<Scalars['String']>;
   primaryEmail_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4253,13 +4136,6 @@ export type WorkingGroupsFilter = {
   primaryEmail_not?: InputMaybe<Scalars['String']>;
   primaryEmail_not_contains?: InputMaybe<Scalars['String']>;
   primaryEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectProposal?: InputMaybe<Scalars['String']>;
-  projectProposal_contains?: InputMaybe<Scalars['String']>;
-  projectProposal_exists?: InputMaybe<Scalars['Boolean']>;
-  projectProposal_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectProposal_not?: InputMaybe<Scalars['String']>;
-  projectProposal_not_contains?: InputMaybe<Scalars['String']>;
-  projectProposal_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   resources?: InputMaybe<CfResourcesNestedFilter>;
   resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   secondaryEmail?: InputMaybe<Scalars['String']>;
@@ -4276,22 +4152,6 @@ export type WorkingGroupsFilter = {
   shortDescription_not?: InputMaybe<Scalars['String']>;
   shortDescription_not_contains?: InputMaybe<Scalars['String']>;
   shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  startDate?: InputMaybe<Scalars['DateTime']>;
-  startDate_exists?: InputMaybe<Scalars['Boolean']>;
-  startDate_gt?: InputMaybe<Scalars['DateTime']>;
-  startDate_gte?: InputMaybe<Scalars['DateTime']>;
-  startDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  startDate_lt?: InputMaybe<Scalars['DateTime']>;
-  startDate_lte?: InputMaybe<Scalars['DateTime']>;
-  startDate_not?: InputMaybe<Scalars['DateTime']>;
-  startDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  status?: InputMaybe<Scalars['String']>;
-  status_contains?: InputMaybe<Scalars['String']>;
-  status_exists?: InputMaybe<Scalars['Boolean']>;
-  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  status_not?: InputMaybe<Scalars['String']>;
-  status_not_contains?: InputMaybe<Scalars['String']>;
-  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -4376,26 +4236,14 @@ export enum WorkingGroupsMilestonesCollectionOrder {
 }
 
 export enum WorkingGroupsOrder {
-  EndDateAsc = 'endDate_ASC',
-  EndDateDesc = 'endDate_DESC',
-  LeadEmailAsc = 'leadEmail_ASC',
-  LeadEmailDesc = 'leadEmail_DESC',
   LeadingMembersAsc = 'leadingMembers_ASC',
   LeadingMembersDesc = 'leadingMembers_DESC',
-  PmEmailAsc = 'pmEmail_ASC',
-  PmEmailDesc = 'pmEmail_DESC',
   PrimaryEmailAsc = 'primaryEmail_ASC',
   PrimaryEmailDesc = 'primaryEmail_DESC',
-  ProjectProposalAsc = 'projectProposal_ASC',
-  ProjectProposalDesc = 'projectProposal_DESC',
   SecondaryEmailAsc = 'secondaryEmail_ASC',
   SecondaryEmailDesc = 'secondaryEmail_DESC',
   ShortDescriptionAsc = 'shortDescription_ASC',
   ShortDescriptionDesc = 'shortDescription_DESC',
-  StartDateAsc = 'startDate_ASC',
-  StartDateDesc = 'startDate_DESC',
-  StatusAsc = 'status_ASC',
-  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4837,7 +4685,7 @@ export type CfWorkingGroupMembershipNestedFilter = {
 export type CfWorkingGroupsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfWorkingGroupsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfWorkingGroupsNestedFilter>>>;
-  calendars_exists?: InputMaybe<Scalars['Boolean']>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -4846,26 +4694,6 @@ export type CfWorkingGroupsNestedFilter = {
   description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
   description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  endDate?: InputMaybe<Scalars['DateTime']>;
-  endDate_exists?: InputMaybe<Scalars['Boolean']>;
-  endDate_gt?: InputMaybe<Scalars['DateTime']>;
-  endDate_gte?: InputMaybe<Scalars['DateTime']>;
-  endDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  endDate_lt?: InputMaybe<Scalars['DateTime']>;
-  endDate_lte?: InputMaybe<Scalars['DateTime']>;
-  endDate_not?: InputMaybe<Scalars['DateTime']>;
-  endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_exists?: InputMaybe<Scalars['Boolean']>;
-  leadEmail?: InputMaybe<Scalars['String']>;
-  leadEmail_contains?: InputMaybe<Scalars['String']>;
-  leadEmail_exists?: InputMaybe<Scalars['Boolean']>;
-  leadEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  leadEmail_not?: InputMaybe<Scalars['String']>;
-  leadEmail_not_contains?: InputMaybe<Scalars['String']>;
-  leadEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   leadingMembers?: InputMaybe<Scalars['String']>;
   leadingMembers_contains?: InputMaybe<Scalars['String']>;
   leadingMembers_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4875,13 +4703,6 @@ export type CfWorkingGroupsNestedFilter = {
   leadingMembers_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  pmEmail?: InputMaybe<Scalars['String']>;
-  pmEmail_contains?: InputMaybe<Scalars['String']>;
-  pmEmail_exists?: InputMaybe<Scalars['Boolean']>;
-  pmEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  pmEmail_not?: InputMaybe<Scalars['String']>;
-  pmEmail_not_contains?: InputMaybe<Scalars['String']>;
-  pmEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   primaryEmail?: InputMaybe<Scalars['String']>;
   primaryEmail_contains?: InputMaybe<Scalars['String']>;
   primaryEmail_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4889,13 +4710,6 @@ export type CfWorkingGroupsNestedFilter = {
   primaryEmail_not?: InputMaybe<Scalars['String']>;
   primaryEmail_not_contains?: InputMaybe<Scalars['String']>;
   primaryEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectProposal?: InputMaybe<Scalars['String']>;
-  projectProposal_contains?: InputMaybe<Scalars['String']>;
-  projectProposal_exists?: InputMaybe<Scalars['Boolean']>;
-  projectProposal_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectProposal_not?: InputMaybe<Scalars['String']>;
-  projectProposal_not_contains?: InputMaybe<Scalars['String']>;
-  projectProposal_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   secondaryEmail?: InputMaybe<Scalars['String']>;
   secondaryEmail_contains?: InputMaybe<Scalars['String']>;
@@ -4911,22 +4725,6 @@ export type CfWorkingGroupsNestedFilter = {
   shortDescription_not?: InputMaybe<Scalars['String']>;
   shortDescription_not_contains?: InputMaybe<Scalars['String']>;
   shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  startDate?: InputMaybe<Scalars['DateTime']>;
-  startDate_exists?: InputMaybe<Scalars['Boolean']>;
-  startDate_gt?: InputMaybe<Scalars['DateTime']>;
-  startDate_gte?: InputMaybe<Scalars['DateTime']>;
-  startDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  startDate_lt?: InputMaybe<Scalars['DateTime']>;
-  startDate_lte?: InputMaybe<Scalars['DateTime']>;
-  startDate_not?: InputMaybe<Scalars['DateTime']>;
-  startDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  status?: InputMaybe<Scalars['String']>;
-  status_contains?: InputMaybe<Scalars['String']>;
-  status_exists?: InputMaybe<Scalars['Boolean']>;
-  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  status_not?: InputMaybe<Scalars['String']>;
-  status_not_contains?: InputMaybe<Scalars['String']>;
-  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -5678,6 +5476,667 @@ export type FetchUsersByWorkingGroupIdQuery = {
           >;
         }>
       >;
+    }
+  >;
+};
+
+export type WorkingGroupNetworkContentDataFragment = {
+  supportCollection?: Maybe<
+    Pick<WorkingGroupNetworkSupportCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            | 'title'
+            | 'shortDescription'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+            | 'leadingMembers'
+          > & {
+            sys: Pick<Sys, 'id'>;
+            membersCollection?: Maybe<
+              Pick<WorkingGroupsMembersCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembership, 'role'> & {
+                      sys: Pick<Sys, 'id'>;
+                      user?: Maybe<
+                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }
+            >;
+            milestonesCollection?: Maybe<
+              Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Milestones,
+                      'description' | 'externalLink' | 'status' | 'title'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            resourcesCollection?: Maybe<
+              Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Resources,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+  monogenicCollection?: Maybe<
+    Pick<WorkingGroupNetworkMonogenicCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            | 'title'
+            | 'shortDescription'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+            | 'leadingMembers'
+          > & {
+            sys: Pick<Sys, 'id'>;
+            membersCollection?: Maybe<
+              Pick<WorkingGroupsMembersCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembership, 'role'> & {
+                      sys: Pick<Sys, 'id'>;
+                      user?: Maybe<
+                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }
+            >;
+            milestonesCollection?: Maybe<
+              Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Milestones,
+                      'description' | 'externalLink' | 'status' | 'title'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            resourcesCollection?: Maybe<
+              Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Resources,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+  operationalCollection?: Maybe<
+    Pick<WorkingGroupNetworkOperationalCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            | 'title'
+            | 'shortDescription'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+            | 'leadingMembers'
+          > & {
+            sys: Pick<Sys, 'id'>;
+            membersCollection?: Maybe<
+              Pick<WorkingGroupsMembersCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembership, 'role'> & {
+                      sys: Pick<Sys, 'id'>;
+                      user?: Maybe<
+                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }
+            >;
+            milestonesCollection?: Maybe<
+              Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Milestones,
+                      'description' | 'externalLink' | 'status' | 'title'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            resourcesCollection?: Maybe<
+              Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Resources,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+  complexDiseaseCollection?: Maybe<
+    Pick<WorkingGroupNetworkComplexDiseaseCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            | 'title'
+            | 'shortDescription'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+            | 'leadingMembers'
+          > & {
+            sys: Pick<Sys, 'id'>;
+            membersCollection?: Maybe<
+              Pick<WorkingGroupsMembersCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembership, 'role'> & {
+                      sys: Pick<Sys, 'id'>;
+                      user?: Maybe<
+                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }
+            >;
+            milestonesCollection?: Maybe<
+              Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Milestones,
+                      'description' | 'externalLink' | 'status' | 'title'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            resourcesCollection?: Maybe<
+              Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Resources,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
+export type FetchWorkingGroupNetworkQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type FetchWorkingGroupNetworkQuery = {
+  workingGroupNetworkCollection?: Maybe<
+    Pick<WorkingGroupNetworkCollection, 'total'> & {
+      items: Array<
+        Maybe<{
+          supportCollection?: Maybe<
+            Pick<WorkingGroupNetworkSupportCollection, 'total'> & {
+              items: Array<
+                Maybe<
+                  Pick<
+                    WorkingGroups,
+                    | 'title'
+                    | 'shortDescription'
+                    | 'description'
+                    | 'primaryEmail'
+                    | 'secondaryEmail'
+                    | 'leadingMembers'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    membersCollection?: Maybe<
+                      Pick<WorkingGroupsMembersCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<WorkingGroupMembership, 'role'> & {
+                              sys: Pick<Sys, 'id'>;
+                              user?: Maybe<
+                                Pick<
+                                  Users,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
+                      }
+                    >;
+                    milestonesCollection?: Maybe<
+                      Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Milestones,
+                              | 'description'
+                              | 'externalLink'
+                              | 'status'
+                              | 'title'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    resourcesCollection?: Maybe<
+                      Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Resources,
+                              'type' | 'title' | 'description' | 'externalLink'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                  }
+                >
+              >;
+            }
+          >;
+          monogenicCollection?: Maybe<
+            Pick<WorkingGroupNetworkMonogenicCollection, 'total'> & {
+              items: Array<
+                Maybe<
+                  Pick<
+                    WorkingGroups,
+                    | 'title'
+                    | 'shortDescription'
+                    | 'description'
+                    | 'primaryEmail'
+                    | 'secondaryEmail'
+                    | 'leadingMembers'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    membersCollection?: Maybe<
+                      Pick<WorkingGroupsMembersCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<WorkingGroupMembership, 'role'> & {
+                              sys: Pick<Sys, 'id'>;
+                              user?: Maybe<
+                                Pick<
+                                  Users,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
+                      }
+                    >;
+                    milestonesCollection?: Maybe<
+                      Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Milestones,
+                              | 'description'
+                              | 'externalLink'
+                              | 'status'
+                              | 'title'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    resourcesCollection?: Maybe<
+                      Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Resources,
+                              'type' | 'title' | 'description' | 'externalLink'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                  }
+                >
+              >;
+            }
+          >;
+          operationalCollection?: Maybe<
+            Pick<WorkingGroupNetworkOperationalCollection, 'total'> & {
+              items: Array<
+                Maybe<
+                  Pick<
+                    WorkingGroups,
+                    | 'title'
+                    | 'shortDescription'
+                    | 'description'
+                    | 'primaryEmail'
+                    | 'secondaryEmail'
+                    | 'leadingMembers'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    membersCollection?: Maybe<
+                      Pick<WorkingGroupsMembersCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<WorkingGroupMembership, 'role'> & {
+                              sys: Pick<Sys, 'id'>;
+                              user?: Maybe<
+                                Pick<
+                                  Users,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
+                      }
+                    >;
+                    milestonesCollection?: Maybe<
+                      Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Milestones,
+                              | 'description'
+                              | 'externalLink'
+                              | 'status'
+                              | 'title'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    resourcesCollection?: Maybe<
+                      Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Resources,
+                              'type' | 'title' | 'description' | 'externalLink'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                  }
+                >
+              >;
+            }
+          >;
+          complexDiseaseCollection?: Maybe<
+            Pick<WorkingGroupNetworkComplexDiseaseCollection, 'total'> & {
+              items: Array<
+                Maybe<
+                  Pick<
+                    WorkingGroups,
+                    | 'title'
+                    | 'shortDescription'
+                    | 'description'
+                    | 'primaryEmail'
+                    | 'secondaryEmail'
+                    | 'leadingMembers'
+                  > & {
+                    sys: Pick<Sys, 'id'>;
+                    membersCollection?: Maybe<
+                      Pick<WorkingGroupsMembersCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<WorkingGroupMembership, 'role'> & {
+                              sys: Pick<Sys, 'id'>;
+                              user?: Maybe<
+                                Pick<
+                                  Users,
+                                  'firstName' | 'lastName' | 'onboarded'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                                }
+                              >;
+                            }
+                          >
+                        >;
+                      }
+                    >;
+                    milestonesCollection?: Maybe<
+                      Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Milestones,
+                              | 'description'
+                              | 'externalLink'
+                              | 'status'
+                              | 'title'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    resourcesCollection?: Maybe<
+                      Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                        items: Array<
+                          Maybe<
+                            Pick<
+                              Resources,
+                              'type' | 'title' | 'description' | 'externalLink'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
+                        >;
+                      }
+                    >;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                  }
+                >
+              >;
+            }
+          >;
+        }>
+      >;
+    }
+  >;
+};
+
+export type WorkingGroupsContentDataFragment = Pick<
+  WorkingGroups,
+  | 'title'
+  | 'shortDescription'
+  | 'description'
+  | 'primaryEmail'
+  | 'secondaryEmail'
+  | 'leadingMembers'
+> & {
+  sys: Pick<Sys, 'id'>;
+  membersCollection?: Maybe<
+    Pick<WorkingGroupsMembersCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<WorkingGroupMembership, 'role'> & {
+            sys: Pick<Sys, 'id'>;
+            user?: Maybe<
+              Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                sys: Pick<Sys, 'id'>;
+                avatar?: Maybe<Pick<Asset, 'url'>>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+  milestonesCollection?: Maybe<
+    Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            Milestones,
+            'description' | 'externalLink' | 'status' | 'title'
+          > & { sys: Pick<Sys, 'id'> }
+        >
+      >;
+    }
+  >;
+  resourcesCollection?: Maybe<
+    Pick<WorkingGroupsResourcesCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<Resources, 'type' | 'title' | 'description' | 'externalLink'> & {
+            sys: Pick<Sys, 'id'>;
+          }
+        >
+      >;
+    }
+  >;
+  calendar?: Maybe<Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }>;
+};
+
+export type FetchWorkingGroupByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchWorkingGroupByIdQuery = {
+  workingGroups?: Maybe<
+    Pick<
+      WorkingGroups,
+      | 'title'
+      | 'shortDescription'
+      | 'description'
+      | 'primaryEmail'
+      | 'secondaryEmail'
+      | 'leadingMembers'
+    > & {
+      sys: Pick<Sys, 'id'>;
+      membersCollection?: Maybe<
+        Pick<WorkingGroupsMembersCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<WorkingGroupMembership, 'role'> & {
+                sys: Pick<Sys, 'id'>;
+                user?: Maybe<
+                  Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                    sys: Pick<Sys, 'id'>;
+                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                  }
+                >;
+              }
+            >
+          >;
+        }
+      >;
+      milestonesCollection?: Maybe<
+        Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<
+                Milestones,
+                'description' | 'externalLink' | 'status' | 'title'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        }
+      >;
+      resourcesCollection?: Maybe<
+        Pick<WorkingGroupsResourcesCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<
+                Resources,
+                'type' | 'title' | 'description' | 'externalLink'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        }
+      >;
+      calendar?: Maybe<Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }>;
     }
   >;
 };
@@ -6538,6 +6997,399 @@ export const UsersContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<UsersContentDataFragment, unknown>;
+export const WorkingGroupsContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'WorkingGroupsContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'WorkingGroups' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'primaryEmail' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'secondaryEmail' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'leadingMembers' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'membersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '50' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'onboarded' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'milestonesCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'resourcesCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'externalLink' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'calendar' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<WorkingGroupsContentDataFragment, unknown>;
+export const WorkingGroupNetworkContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'WorkingGroupNetworkContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'WorkingGroupNetwork' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'supportCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupsContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'monogenicCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupsContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'operationalCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupsContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'complexDiseaseCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupsContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<WorkingGroupNetworkContentDataFragment, unknown>;
 export const FetchCalendarByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -7661,4 +8513,111 @@ export const FetchUsersByWorkingGroupIdDocument = {
 } as unknown as DocumentNode<
   FetchUsersByWorkingGroupIdQuery,
   FetchUsersByWorkingGroupIdQueryVariables
+>;
+export const FetchWorkingGroupNetworkDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroupNetwork' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'workingGroupNetworkCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupNetworkContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupNetworkContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupNetworkQuery,
+  FetchWorkingGroupNetworkQueryVariables
+>;
+export const FetchWorkingGroupByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroupById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'workingGroups' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'WorkingGroupsContentData' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupByIdQuery,
+  FetchWorkingGroupByIdQueryVariables
 >;

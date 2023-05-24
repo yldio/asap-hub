@@ -9,10 +9,10 @@ export type NewsItem = NonNullable<
 >;
 
 export class NewsContentfulDataProvider implements NewsDataProvider {
-  constructor(private contentfulClient: GraphQLClient) {}
+  constructor(private graphQLClient: GraphQLClient) {}
 
   async fetch(options?: FetchNewsProviderOptions) {
-    const { newsCollection } = await this.contentfulClient.request<
+    const { newsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchNewsQuery,
       gp2Contentful.FetchNewsQueryVariables
     >(gp2Contentful.FETCH_NEWS, {
@@ -34,7 +34,7 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
     return {
       total: newsCollection?.total,
       items: newsCollection?.items
-        .filter((x): x is NewsItem => x !== null)
+        .filter((news): news is NewsItem => news !== null)
         .map(parseContentfulGraphQlNews),
     };
   }

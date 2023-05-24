@@ -4,19 +4,17 @@ import {
   parseRichText,
   RichTextFromQuery,
 } from '@asap-hub/contentful';
-import { ListPageDataObject, PageDataObject } from '@asap-hub/model';
+import { PageDataObject } from '@asap-hub/model';
 import { FetchPagesProviderOptions, PageDataProvider } from '../types';
 
 export class PageContentfulDataProvider implements PageDataProvider {
-  constructor(private contentfulClient: GraphQLClient) {}
+  constructor(private graphQLClient: GraphQLClient) {}
 
   async fetchById(): Promise<null> {
     throw new Error('Method not implemented.');
   }
-  async fetch(
-    options?: FetchPagesProviderOptions,
-  ): Promise<ListPageDataObject> {
-    const { pagesCollection } = await this.contentfulClient.request<
+  async fetch(options?: FetchPagesProviderOptions) {
+    const { pagesCollection } = await this.graphQLClient.request<
       gp2.FetchPagesQuery,
       gp2.FetchPagesQueryVariables
     >(gp2.FETCH_PAGES, {
@@ -33,7 +31,7 @@ export class PageContentfulDataProvider implements PageDataProvider {
     return {
       total: pagesCollection?.total,
       items: pagesCollection?.items
-        .filter((x): x is PageItem => x !== null)
+        .filter((page): page is PageItem => page !== null)
         .map(parseContentfulGraphQlPages),
     };
   }

@@ -1,6 +1,6 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
-import { WorkingGroupDataProvider } from '../data-providers/working-group.data-provider';
+import { WorkingGroupDataProvider } from '../data-providers/types/working-group.data-provider.type';
 import { removeNotAllowedResources } from '../utils/resources';
 
 export interface WorkingGroupController {
@@ -20,7 +20,7 @@ export default class WorkingGroups implements WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}
 
   async fetch(loggedInUserId: string): Promise<gp2.ListWorkingGroupResponse> {
-    const workingGroups = await this.workingGroupDataProvider.fetch();
+    const workingGroups = await this.workingGroupDataProvider.fetch(null);
     return {
       ...workingGroups,
       items: workingGroups.items.map((workingGroup) =>

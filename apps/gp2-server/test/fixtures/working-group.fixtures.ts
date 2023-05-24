@@ -1,3 +1,4 @@
+import type { gp2 as gp2Contentful } from '@asap-hub/contentful';
 import type { gp2 as gp2Model } from '@asap-hub/model';
 import type { gp2 as gp2Squidex } from '@asap-hub/squidex';
 import {
@@ -11,8 +12,8 @@ import {
   GraphQLWorkingGroup,
   GraphQLWorkingGroupCalendar,
   GraphQLWorkingGroupMember,
-  GraphQLWorkingGroupResource,
   GraphQLWorkingGroupMilestone,
+  GraphQLWorkingGroupResource,
 } from '../../src/data-providers/working-group.data-provider';
 
 export const getWorkingGroupDataObject =
@@ -154,4 +155,75 @@ export const getGraphQLWorkingGroup = (): GraphQLWorkingGroup => ({
     resources: [getGraphQLWorkingGroupResource()],
     calendars: [getGraphQLWorkingGroupCalendar()],
   },
+});
+export const getContentfulGraphqlWorkingGroupMembers = () => ({
+  total: 1,
+  items: [
+    {
+      sys: {
+        id: '11',
+      },
+      role: 'Lead',
+      user: {
+        sys: {
+          id: '11',
+        },
+        firstName: 'Tony',
+        lastName: 'Stark',
+        onboarded: true,
+      },
+    },
+  ],
+});
+export const getContentfulGraphqlWorkingGroupMilestones = () => ({
+  total: 1,
+  items: [
+    {
+      sys: {
+        id: '23',
+      },
+      status: 'Active',
+      title: 'A working group milestone',
+    },
+  ],
+});
+
+export const getContentfulGraphqlWorkingGroupResources = () => ({
+  total: 1,
+  items: [
+    {
+      sys: {
+        id: '27',
+      },
+      type: 'Note',
+      title: 'Working group resource title',
+      description: 'Working group resource description',
+      externalLink: 'http://example/link',
+    },
+  ],
+});
+export const getContentfulGraphqlWorkingGroup = (
+  props = {},
+): NonNullable<
+  NonNullable<gp2Contentful.FetchWorkingGroupByIdQuery['workingGroups']>
+> => ({
+  sys: {
+    id: '11',
+  },
+  title: 'a working group title',
+  shortDescription: 'Short description',
+  description: 'longer description',
+  primaryEmail: 'primary.email@example.com',
+  secondaryEmail: 'secondary.email@example.com',
+  leadingMembers: 'Leading members',
+  membersCollection: { ...getContentfulGraphqlWorkingGroupMembers() },
+  milestonesCollection: { ...getContentfulGraphqlWorkingGroupMilestones() },
+  resourcesCollection: { ...getContentfulGraphqlWorkingGroupResources() },
+  calendar: {
+    sys: {
+      id: '42',
+    },
+    name: 'working group calendar',
+  },
+  ...props,
 });

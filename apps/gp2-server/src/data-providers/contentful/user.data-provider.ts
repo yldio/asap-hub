@@ -20,32 +20,32 @@ export type UserItem = NonNullable<
 
 export class UserContentfulDataProvider implements UserDataProvider {
   constructor(
-    private contentfulClient: GraphQLClient,
+    private graphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
 
   private fetchUserById(id: string) {
-    return this.contentfulClient.request<
+    return this.graphQLClient.request<
       gp2Contentful.FetchUserByIdQuery,
       gp2Contentful.FetchUserByIdQueryVariables
     >(gp2Contentful.FETCH_USER_BY_ID, { id });
   }
   private async fetchUsersByProject(id: string[]) {
-    const { projectsCollection } = await this.contentfulClient.request<
+    const { projectsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchUsersByProjectIdQuery,
       gp2Contentful.FetchUsersByProjectIdQueryVariables
     >(gp2Contentful.FETCH_USERS_BY_PROJECT_ID, { id });
     return projectsCollection;
   }
   private async fetchUsersByWorkingGroup(id: string[]) {
-    const { workingGroupsCollection } = await this.contentfulClient.request<
+    const { workingGroupsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchUsersByWorkingGroupIdQuery,
       gp2Contentful.FetchUsersByWorkingGroupIdQueryVariables
     >(gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID, { id });
     return workingGroupsCollection;
   }
 
-  async fetchById(id: string): Promise<gp2Model.UserDataObject | null> {
+  async fetchById(id: string) {
     const { users } = await this.fetchUserById(id);
     return users ? parseContentfulGraphQLUsers(users) : null;
   }
@@ -64,9 +64,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
       .filter((member): member is string => Boolean(member))
       .filter((id, index, arr) => arr.indexOf(id) === index);
   };
-  async fetch(
-    options: gp2Model.FetchUsersOptions,
-  ): Promise<gp2Model.ListUserDataObject> {
+  async fetch(options: gp2Model.FetchUsersOptions) {
     const { projects, workingGroups } = options.filter || {};
     const userIdFilter = await this.getUserIdFilter({
       projects,
@@ -101,7 +99,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const where = generateFetchQueryFilter(options, userIdFilter);
     logger.debug(`fetch users where: ${JSON.stringify(where, undefined, 2)}`);
 
-    const { usersCollection } = await this.contentfulClient.request<
+    const { usersCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchUsersQuery,
       gp2Contentful.FetchUsersQueryVariables
     >(gp2Contentful.FETCH_USERS, {
@@ -113,7 +111,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     return usersCollection || { total: 0, items: [] };
   }
 
-  async create(data: gp2Model.UserCreateDataObject): Promise<string> {
+  async create(data: gp2Model.UserCreateDataObject) {
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
     const nextContributingCohorts = await addNextCohorts(
@@ -133,7 +131,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     return userEntry.sys.id;
   }
 
-  async update(id: string, data: gp2Model.UserUpdateDataObject): Promise<void> {
+  async update(id: string, data: gp2Model.UserUpdateDataObject) {
     try {
       const fields = cleanUser(data);
       const environment = await this.getRestClient();

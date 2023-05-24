@@ -6,7 +6,7 @@ import {
   gp2 as gp2Contentful,
   GraphQLClient,
 } from '@asap-hub/contentful';
-import { ExternalUserDataProvider } from '../types/external-user.data-provider.type';
+import { ExternalUserDataProvider } from '../types';
 
 export type ExternalUserItem = NonNullable<
   NonNullable<
@@ -18,17 +18,15 @@ export class ExternalUserContentfulDataProvider
   implements ExternalUserDataProvider
 {
   constructor(
-    private contentfulClient: GraphQLClient,
+    private graphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
 
-  async fetch(
-    options: gp2Model.FetchExternalUsersOptions,
-  ): Promise<gp2Model.ListExternalUserDataObject> {
+  async fetch(options: gp2Model.FetchExternalUsersOptions) {
     const { take = 8, skip = 0 } = options;
 
     const where = generateFetchQueryFilter(options);
-    const { externalUsersCollection } = await this.contentfulClient.request<
+    const { externalUsersCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchExternalUsersQuery,
       gp2Contentful.FetchExternalUsersQueryVariables
     >(
@@ -59,7 +57,7 @@ export class ExternalUserContentfulDataProvider
   async fetchById(): Promise<null> {
     throw new Error('Method not implemented.');
   }
-  async create(input: gp2Model.ExternalUserCreateDataObject): Promise<string> {
+  async create(input: gp2Model.ExternalUserCreateDataObject) {
     const environment = await this.getRestClient();
 
     const payload = {
@@ -78,9 +76,7 @@ export class ExternalUserContentfulDataProvider
   }
 }
 
-export const parseGraphQLExternalUser = (
-  item: ExternalUserItem,
-): gp2Model.ExternalUserDataObject => ({
+export const parseGraphQLExternalUser = (item: ExternalUserItem) => ({
   id: item.sys.id,
   orcid: item.orcid || undefined,
   name: item.name || '',

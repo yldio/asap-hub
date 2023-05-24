@@ -262,10 +262,10 @@ describe('Reminder Data Provider', () => {
     });
 
     describe('Research Output Draft Reminder', () => {
-      test('Should fetch the draft reminders from squidex graphql', async () => {
+      test('Should fetch the team draft reminders from squidex graphql', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [
-          getSquidexReminderReseachOutputsDraftContents(),
+          getSquidexReminderReseachOutputsDraftContents(true),
         ];
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -275,7 +275,24 @@ describe('Reminder Data Provider', () => {
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({
           total: 1,
-          items: [getResearchOutputDraftReminder()],
+          items: [getResearchOutputDraftReminder(true)],
+        });
+      });
+
+      test('Should fetch the working group draft reminders from squidex graphql', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.draftResearchOutputs = [
+          getSquidexReminderReseachOutputsDraftContents(false),
+        ];
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({
+          total: 1,
+          items: [getResearchOutputDraftReminder(false)],
         });
       });
 
@@ -331,6 +348,63 @@ describe('Reminder Data Provider', () => {
         expect(result).toEqual({ items: [], total: 0 });
       });
 
+      test('Should return a working group reminder result when no teams are found but there are working groups', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [
+          getSquidexReminderReseachOutputsDraftContents(false),
+        ];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [getResearchOutputDraftReminder(false)],
+          total: 1,
+        });
+      });
+
+      test('Should return a team reminder result when no working groups are found but there are teams', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [
+          getSquidexReminderReseachOutputsDraftContents(true),
+        ];
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [getResearchOutputDraftReminder(true)],
+          total: 1,
+        });
+      });
+
+      test('Should return an empty result when no teams and no working groups are found', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [
+          getSquidexReminderReseachOutputsDraftContents(false),
+        ];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
       test('Should not return anything related to drafts RO when draftResearchOutputs property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = null;
@@ -344,6 +418,37 @@ describe('Reminder Data Provider', () => {
           items: [getResearchOutputPublishedReminder()],
           total: 1,
         });
+      });
+
+      test('Should return an empty result when user team id property is an empty array', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams![0]!.id = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return a team reminder result when user working id property is an empty array', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [
+          getSquidexReminderReseachOutputsDraftContents(false),
+        ];
+
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
       });
 
       test('Should return an empty result when research-output referencingTeamsContents property is null', async () => {

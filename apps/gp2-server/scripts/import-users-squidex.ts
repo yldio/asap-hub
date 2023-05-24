@@ -8,7 +8,9 @@ import {
   SquidexRest,
 } from '@asap-hub/squidex';
 import { appName, baseUrl, clientId, clientSecret } from '../src/config';
+
 import { UserSquidexDataProvider } from '../src/data-providers/user.data-provider';
+import { WorkingGroupSquidexDataProvider } from '../src/data-providers/working-group.data-provider';
 
 console.log('Importing users...');
 
@@ -32,12 +34,23 @@ const userDataProvider = new UserSquidexDataProvider(
   squidexGraphqlClient,
   userRestClient,
 );
+const workingGroupRestClient = new SquidexRest<
+  gp2squidex.RestWorkingGroup,
+  gp2squidex.InputWorkingGroup
+>(getAuthToken, 'working-groups', {
+  appName,
+  baseUrl,
+});
+const workingGroupDataProvider = new WorkingGroupSquidexDataProvider(
+  squidexGraphqlClient,
+  workingGroupRestClient,
+);
 
 const app = async () => {
   let numberOfImportedUsers = 0;
   let usersAlreadyExist = 0;
   let usersFailed = 0;
-
+  const workingGroups = (await workingGroupDataProvider.fetch()).items;
   const args = process.argv.slice(2);
 
   if (typeof args[0] !== 'string') {
@@ -47,32 +60,50 @@ const app = async () => {
   const filePath = args[0];
 
   const userCsvImport = parse(
-    (input): gp2.UserCreateDataObject => {
+    (
+      input,
+    ): gp2.UserCreateDataObject & {
+      workingGroup?: gp2.WorkingGroupDataObject;
+    } => {
       const data = input.map((s) => s.trim());
+      const userWorkingGroup = workingGroups.find(
+        (wg) => wg.title === data[10]!,
+      );
+
       return {
-        firstName: data[1]!,
-        lastName: data[2]!,
-        country: data[5]!,
-        email: data[3]!,
-        region: data[6] as gp2.UserRegion,
+        firstName: data[0]!,
+        lastName: data[1]!,
+        country: data[4]!,
+        email: data[2]!,
+        region: data[5] as gp2.UserRegion,
         positions: [
           {
-            institution: data[7]!,
-            department: data[8]!,
-            role: data[9]!,
+            institution: data[6]!,
+            department: data[7]!,
+            role: data[8]!,
           },
         ],
         role: 'Network Collaborator',
         onboarded: false,
-        degrees: [data[10]! as gp2.UserDegree],
+        degrees: [],
+        fundingStreams: data[13]!,
         keywords: [],
         questions: [],
         contributingCohorts: [],
+        workingGroup: userWorkingGroup,
       };
     },
-    async (input) => {
+    async ({ workingGroup, ...input }) => {
       try {
-        await userDataProvider.create(input);
+        const user = await userDataProvider.create(input);
+        if (workingGroup) {
+          workingGroupDataProvider.update(workingGroup.id, {
+            members: [
+              ...workingGroup.members,
+              { userId: user, role: 'Working group member' },
+            ],
+          });
+        }
         numberOfImportedUsers++;
       } catch (e) {
         if (

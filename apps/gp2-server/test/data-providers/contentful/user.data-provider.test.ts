@@ -7,8 +7,6 @@ import {
   patchAndPublish,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import nock from 'nock';
-import { appName, baseUrl } from '../../../src/config';
 import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/user.data-provider';
 import { UserDataProvider } from '../../../src/data-providers/types';
 import {
@@ -17,7 +15,6 @@ import {
   getEntryCollection,
 } from '../../fixtures/contentful.fixtures';
 import {
-  fetchUserResponse,
   getContentfulGraphql,
   getContentfulGraphqlUser,
   getContentfulUsersByProjectId,
@@ -1829,9 +1826,7 @@ describe('User data provider', () => {
     });
   });
   describe('Create', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
     test('Should throw when the POST request to contentful fails', async () => {
       environmentMock.createEntry.mockRejectedValue(new Error('failed'));
 
@@ -2038,12 +2033,6 @@ describe('User data provider', () => {
     });
 
     test('Should update first name', async () => {
-      nock(baseUrl)
-        .patch(`/api/content/${appName}/users/${userId}`, {
-          firstName: { iv: 'Tony' },
-        })
-        .reply(200, fetchUserResponse());
-
       await userDataProvider.update(userId, { firstName: 'Tony' });
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
         firstName: 'Tony',

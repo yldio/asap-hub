@@ -1,6 +1,12 @@
-import { getGP2ContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import {
+  Entry,
+  Environment,
+  getGP2ContentfulGraphqlClientMockServer,
+  patchAndPublish,
+} from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupContentfulDataProvider } from '../../../src/data-providers/contentful/working-group.data-provider';
+import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlWorkingGroup,
   getContentfulGraphqlWorkingGroupsResponse,
@@ -8,12 +14,21 @@ import {
   getWorkingGroupDataObject,
 } from '../../fixtures/working-group.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
+jest.mock('@asap-hub/contentful', () => ({
+  ...jest.requireActual('@asap-hub/contentful'),
+  patchAndPublish: jest.fn().mockResolvedValue(undefined),
+}));
 describe('Working Group Data Provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
 
   const workingGroupDataProvider = new WorkingGroupContentfulDataProvider(
     contentfulGraphqlClientMock,
+    contentfulRestClientMock,
   );
 
   const contentfulGraphqlClientMockServer =
@@ -22,7 +37,10 @@ describe('Working Group Data Provider', () => {
     });
 
   const workingGroupDataProviderWithMockServer =
-    new WorkingGroupContentfulDataProvider(contentfulGraphqlClientMockServer);
+    new WorkingGroupContentfulDataProvider(
+      contentfulGraphqlClientMockServer,
+      contentfulRestClientMock,
+    );
 
   beforeEach(jest.resetAllMocks);
 
@@ -626,11 +644,77 @@ describe('Working Group Data Provider', () => {
     });
   });
   describe('update method', () => {
-    test('Should throw as not implemented', async () => {
-      expect.assertions(1);
-      await expect(workingGroupDataProvider.update()).rejects.toThrow(
-        /Method not implemented/i,
-      );
+    const workingGroupId = '11';
+    const entry = getEntry({
+      fields: {
+        title: 'a title',
+      },
+    });
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+        typeof patchAndPublish
+      >;
+      mockPatchAndPublish.mockResolvedValue({
+        sys: {
+          publishedVersion: 2,
+        },
+      } as Entry);
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        workingGroups: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
+    });
+
+    test('Should update the existing working group', async () => {
+      await workingGroupDataProvider.update(workingGroupId, {
+        resources: [{ title: 'a title', type: 'Note' }],
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        resources: [
+          {
+            title: 'a title',
+            type: 'Note',
+          },
+        ],
+      });
+      expect(environmentMock.createEntry).toBeCalledTimes(0);
+      expect(environmentMock.createPublishBulkAction).not.toBeCalled();
+      expect(environmentMock.createUnpublishBulkAction).not.toBeCalled();
+      expect(environmentMock.getEntries).not.toBeCalled();
+    });
+    test('checks version of published data and polls until they match', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroups: {
+          sys: {
+            publishedVersion: 1,
+          },
+        },
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroups: {
+          sys: {
+            publishedVersion: 1,
+          },
+        },
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroups: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
+
+      await workingGroupDataProvider.update('123', {
+        resources: [{ title: 'title', type: 'Note' }],
+      });
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(3);
     });
   });
 });

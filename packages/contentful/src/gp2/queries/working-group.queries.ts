@@ -6,6 +6,9 @@ export const workingGroupsContentQueryFragment = gql`
   fragment WorkingGroupsContentData on WorkingGroups {
     sys {
       id
+      firstPublishedAt
+      publishedAt
+      publishedVersion
     }
     title
     shortDescription

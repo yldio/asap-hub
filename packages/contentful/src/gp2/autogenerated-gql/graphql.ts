@@ -6990,7 +6990,10 @@ export type WorkingGroupNetworkContentDataFragment = {
             | 'secondaryEmail'
             | 'leadingMembers'
           > & {
-            sys: Pick<Sys, 'id'>;
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -7053,7 +7056,10 @@ export type WorkingGroupNetworkContentDataFragment = {
             | 'secondaryEmail'
             | 'leadingMembers'
           > & {
-            sys: Pick<Sys, 'id'>;
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -7116,7 +7122,10 @@ export type WorkingGroupNetworkContentDataFragment = {
             | 'secondaryEmail'
             | 'leadingMembers'
           > & {
-            sys: Pick<Sys, 'id'>;
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -7179,7 +7188,10 @@ export type WorkingGroupNetworkContentDataFragment = {
             | 'secondaryEmail'
             | 'leadingMembers'
           > & {
-            sys: Pick<Sys, 'id'>;
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -7253,7 +7265,13 @@ export type FetchWorkingGroupNetworkQuery = {
                     | 'secondaryEmail'
                     | 'leadingMembers'
                   > & {
-                    sys: Pick<Sys, 'id'>;
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -7322,7 +7340,13 @@ export type FetchWorkingGroupNetworkQuery = {
                     | 'secondaryEmail'
                     | 'leadingMembers'
                   > & {
-                    sys: Pick<Sys, 'id'>;
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -7391,7 +7415,13 @@ export type FetchWorkingGroupNetworkQuery = {
                     | 'secondaryEmail'
                     | 'leadingMembers'
                   > & {
-                    sys: Pick<Sys, 'id'>;
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -7460,7 +7490,13 @@ export type FetchWorkingGroupNetworkQuery = {
                     | 'secondaryEmail'
                     | 'leadingMembers'
                   > & {
-                    sys: Pick<Sys, 'id'>;
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -7531,7 +7567,10 @@ export type WorkingGroupsContentDataFragment = Pick<
   | 'secondaryEmail'
   | 'leadingMembers'
 > & {
-  sys: Pick<Sys, 'id'>;
+  sys: Pick<
+    Sys,
+    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
   membersCollection?: Maybe<
     Pick<WorkingGroupsMembersCollection, 'total'> & {
       items: Array<
@@ -7590,7 +7629,10 @@ export type FetchWorkingGroupByIdQuery = {
       | 'secondaryEmail'
       | 'leadingMembers'
     > & {
-      sys: Pick<Sys, 'id'>;
+      sys: Pick<
+        Sys,
+        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
       membersCollection?: Maybe<
         Pick<WorkingGroupsMembersCollection, 'total'> & {
           items: Array<
@@ -7653,7 +7695,10 @@ export type FetchWorkingGroupsQuery = {
             | 'secondaryEmail'
             | 'leadingMembers'
           > & {
-            sys: Pick<Sys, 'id'>;
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -9268,6 +9313,15 @@ export const WorkingGroupsContentDataFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
               ],
             },
           },

@@ -1,11 +1,20 @@
-import { gp2 as gp2Contentful, GraphQLClient } from '@asap-hub/contentful';
+import {
+  Environment,
+  gp2 as gp2Contentful,
+  GraphQLClient,
+  patchAndPublish,
+  pollContentfulGql,
+} from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
 
 export class WorkingGroupContentfulDataProvider
   implements WorkingGroupDataProvider
 {
-  constructor(private graphQLClient: GraphQLClient) {}
+  constructor(
+    private graphQLClient: GraphQLClient,
+    private getRestClient: () => Promise<Environment>,
+  ) {}
 
   async fetch(): Promise<gp2Model.ListWorkingGroupDataObject> {
     const { workingGroupsCollection } = await this.graphQLClient.request<
@@ -30,17 +39,31 @@ export class WorkingGroupContentfulDataProvider
         .map(parseWorkingGroupToDataObject),
     };
   }
-  async update(): Promise<void> {
-    throw new Error('Method not implemented.');
+  async update(
+    id: string,
+    workingGroup: gp2Model.WorkingGroupUpdateDataObject,
+  ): Promise<void> {
+    const environment = await this.getRestClient();
+    const user = await environment.getEntry(id);
+    const result = await patchAndPublish(user, {
+      ...workingGroup,
+    });
+    const fetchEventById = () => this.fetchWorkingGroupById(id);
+    await pollContentfulGql<gp2Contentful.FetchWorkingGroupByIdQuery>(
+      result.sys.publishedVersion || Infinity,
+      fetchEventById,
+      'workingGroups',
+    );
   }
 
-  async fetchById(id: string) {
-    const { workingGroups } = await this.graphQLClient.request<
+  private fetchWorkingGroupById(id: string) {
+    return this.graphQLClient.request<
       gp2Contentful.FetchWorkingGroupByIdQuery,
       gp2Contentful.FetchWorkingGroupByIdQueryVariables
-    >(gp2Contentful.FETCH_WORKING_GROUP_BY_ID, {
-      id,
-    });
+    >(gp2Contentful.FETCH_WORKING_GROUP_BY_ID, { id });
+  }
+  async fetchById(id: string) {
+    const { workingGroups } = await this.fetchWorkingGroupById(id);
 
     return workingGroups ? parseWorkingGroupToDataObject(workingGroups) : null;
   }

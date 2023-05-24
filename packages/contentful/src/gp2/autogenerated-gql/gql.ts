@@ -59,7 +59,7 @@ const documents = {
     graphql.WorkingGroupsContentDataFragmentDoc,
   '\n  query FetchWorkingGroupById($id: String!) {\n    workingGroups(id: $id) {\n      ...WorkingGroupsContentData\n    }\n  }\n  \n':
     graphql.FetchWorkingGroupByIdDocument,
-  '\n  query FetchWorkingGroups {\n    workingGroupsCollection(limit: 100) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n':
+  '\n  query FetchWorkingGroups {\n    workingGroupsCollection(limit: 50) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n':
     graphql.FetchWorkingGroupsDocument,
 };
 
@@ -148,8 +148,8 @@ export function gql(
   source: '\n  query FetchWorkingGroupById($id: String!) {\n    workingGroups(id: $id) {\n      ...WorkingGroupsContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchWorkingGroupById($id: String!) {\n    workingGroups(id: $id) {\n      ...WorkingGroupsContentData\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  query FetchWorkingGroups {\n    workingGroupsCollection(limit: 100) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n',
-): (typeof documents)['\n  query FetchWorkingGroups {\n    workingGroupsCollection(limit: 100) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n'];
+  source: '\n  query FetchWorkingGroups {\n    workingGroupsCollection(limit: 50) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchWorkingGroups {\n    workingGroupsCollection(limit: 50) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n'];
 
 export function gql(source: string): unknown;
 export function gql(source: string) {

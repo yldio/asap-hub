@@ -322,18 +322,28 @@ const getResearchOutputDraftRemindersFromQuery = (
 
   return queryResearchOutputsContents.reduce<ResearchOutputDraftReminder[]>(
     (researchOutputReminders, researchOutput) => {
-      if (!researchOutput.flatData.teams) {
+      const userName = getUserName(researchOutput);
+      const { associationName, associationType } =
+        getAssociationNameAndType(researchOutput);
+
+      if (
+        !researchOutput.flatData.teams ||
+        !researchOutput.flatData.documentType ||
+        !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
+        !researchOutput.flatData.title ||
+        userName === null ||
+        associationName === null ||
+        associationType === null
+      ) {
         return researchOutputReminders;
       }
 
       const researchOutputTeams = researchOutput.flatData.teams.map(
         (team) => team.id,
       );
-      const researchOutputWorkingGroups = researchOutput.flatData.workingGroups
-        ? researchOutput.flatData.workingGroups.map(
-            (workingGroup) => workingGroup.id,
-          )
-        : [];
+      const researchOutputWorkingGroups = (
+        researchOutput.flatData.workingGroups || []
+      ).map((workingGroup) => workingGroup.id);
 
       const isInTeam = researchOutputTeams.some((team) =>
         userTeamIds.includes(team),
@@ -344,36 +354,26 @@ const getResearchOutputDraftRemindersFromQuery = (
       );
 
       if (
-        !researchOutput.flatData.documentType ||
-        !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
-        !researchOutput.flatData.title
+        (associationType === 'team' && !isInTeam) ||
+        (associationType === 'working group' && !isInWorkingGroup)
       ) {
         return researchOutputReminders;
       }
 
-      const userName = getUserName(researchOutput);
-      const { associationName, associationType } =
-        getAssociationNameAndType(researchOutput);
-
-      if (
-        (associationType === 'team' && isInTeam) ||
-        (associationType === 'working group' && isInWorkingGroup)
-      ) {
-        researchOutputReminders.push({
-          id: `research-output-draft-${researchOutput.id}`,
-          entity: 'Research Output',
-          type: 'Draft',
-          data: {
-            researchOutputId: researchOutput.id,
-            documentType: researchOutput.flatData.documentType,
-            title: researchOutput.flatData.title,
-            addedDate: researchOutput.created,
-            createdBy: userName,
-            associationType,
-            associationName,
-          },
-        });
-      }
+      researchOutputReminders.push({
+        id: `research-output-draft-${researchOutput.id}`,
+        entity: 'Research Output',
+        type: 'Draft',
+        data: {
+          researchOutputId: researchOutput.id,
+          documentType: researchOutput.flatData.documentType,
+          title: researchOutput.flatData.title,
+          addedDate: researchOutput.created,
+          createdBy: userName,
+          associationType,
+          associationName,
+        },
+      });
 
       return researchOutputReminders;
     },
@@ -695,7 +695,12 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
   return DateTime.fromISO(reminder.data.endDate);
 };
 
-const getAssociationNameAndType = (researchOutput: ResearchOutputQueried) => {
+const getAssociationNameAndType = (
+  researchOutput: ResearchOutputQueried,
+): {
+  associationType: 'team' | 'working group' | null;
+  associationName: string | null;
+} => {
   if (
     researchOutput.flatData &&
     researchOutput.flatData.workingGroups &&
@@ -704,7 +709,7 @@ const getAssociationNameAndType = (researchOutput: ResearchOutputQueried) => {
     return {
       associationType: 'working group',
       associationName:
-        researchOutput.flatData.workingGroups[0]?.flatData.title || '',
+        researchOutput.flatData.workingGroups[0]?.flatData.title || null,
     };
   }
   if (
@@ -715,12 +720,12 @@ const getAssociationNameAndType = (researchOutput: ResearchOutputQueried) => {
     return {
       associationType: 'team',
       associationName:
-        researchOutput.flatData.teams[0]?.flatData.displayName || '',
+        researchOutput.flatData.teams[0]?.flatData.displayName || null,
     };
   }
   return {
-    associationType: 'team',
-    associationName: '',
+    associationType: null,
+    associationName: null,
   };
 };
 
@@ -732,5 +737,5 @@ const getUserName = (researchOutput: ResearchOutputQueried) => {
   ) {
     return `${researchOutput.flatData.createdBy[0]?.flatData.firstName} ${researchOutput.flatData.createdBy[0]?.flatData.lastName}`;
   }
-  return '';
+  return null;
 };

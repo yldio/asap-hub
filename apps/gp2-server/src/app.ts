@@ -240,7 +240,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     );
   const workingGroupContentfulDataProvider =
     libs.workingGroupContentfulDataProvider ||
-    new WorkingGroupContentfulDataProvider(contentfulGraphQLClient);
+    new WorkingGroupContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
   const workingGroupNetworkSquidexDataProvider =
     libs.workingGroupNetworkSquidexDataProvider ||
     new WorkingGroupNetworkSquidexDataProvider(squidexGraphqlClient);

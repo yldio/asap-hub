@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 import { gp2 } from '@asap-hub/model';
 import { Router } from 'express';
-import { isContentfulEnabled } from '../config';
 import {
   validateEventFetchParameters,
   validateEventParameters,
@@ -15,17 +14,10 @@ export const eventRouteFactory = (
   eventRoutes.get<gp2.EventConstraint, gp2.ListEventResponse>(
     '/events',
     async (req, res) => {
-      if (isContentfulEnabled) {
-        res.json({
-          total: 0,
-          items: [],
-        });
-      } else {
-        const query = validateEventFetchParameters(req.query);
-        const result = await eventController.fetch(query);
+      const query = validateEventFetchParameters(req.query);
+      const result = await eventController.fetch(query);
 
-        res.json(result);
-      }
+      res.json(result);
     },
   );
 

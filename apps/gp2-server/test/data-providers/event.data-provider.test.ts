@@ -13,7 +13,7 @@ import {
   getSquidexEventGraphqlResponse,
   getSquidexEventsGraphqlResponse,
   getSquidexGraphqlEvents,
-  getUserCreateDataObject,
+  getEventCreateDataObject,
 } from '../fixtures/event.fixtures';
 import { getSquidexProjectGraphqlResponse } from '../fixtures/project.fixtures';
 import { getSquidexWorkingGroupGraphqlResponse } from '../fixtures/working-group.fixtures';
@@ -692,7 +692,7 @@ describe('Event data provider', () => {
           )
           .reply(200, getEventInput());
 
-        await eventDataProvider.create(getUserCreateDataObject());
+        await eventDataProvider.create(getEventCreateDataObject());
       });
 
       test('Should throw when squidex return an error', async () => {
@@ -701,7 +701,7 @@ describe('Event data provider', () => {
           .reply(404);
 
         await expect(
-          eventDataProvider.create(getUserCreateDataObject()),
+          eventDataProvider.create(getEventCreateDataObject()),
         ).rejects.toThrow(GenericError);
       });
     });

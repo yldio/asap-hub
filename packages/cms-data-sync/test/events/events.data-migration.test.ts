@@ -397,14 +397,9 @@ describe('Migrate events', () => {
       'eventSpeakers',
       {
         fields: {
-          team: {
-            'en-US': {
-              sys: { id: 'team-1', linkType: 'Entry', type: 'Link' },
-            },
-          },
           user: {
             'en-US': {
-              sys: { id: 'user-1', linkType: 'Entry', type: 'Link' },
+              sys: { id: 'external-user-1', linkType: 'Entry', type: 'Link' },
             },
           },
         },
@@ -416,9 +411,14 @@ describe('Migrate events', () => {
       'eventSpeakers',
       {
         fields: {
+          team: {
+            'en-US': {
+              sys: { id: 'team-1', linkType: 'Entry', type: 'Link' },
+            },
+          },
           user: {
             'en-US': {
-              sys: { id: 'external-user-1', linkType: 'Entry', type: 'Link' },
+              sys: { id: 'user-1', linkType: 'Entry', type: 'Link' },
             },
           },
         },

@@ -1302,19 +1302,6 @@ export type ExternalUsersOrUsersLinkingCollectionsEntryCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
 };
 
-export enum ExternalUsersOrUsersOrder {
-  OrcidAsc = 'orcid_ASC',
-  OrcidDesc = 'orcid_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-}
-
 export enum ExternalUsersOrder {
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
@@ -1888,7 +1875,6 @@ export type OutputsAdminNotesArgs = {
 export type OutputsAuthorsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<Array<InputMaybe<OutputsAuthorsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ExternalUsersOrUsersFilter>;
@@ -1958,19 +1944,6 @@ export type OutputsAuthorsCollection = {
   skip: Scalars['Int'];
   total: Scalars['Int'];
 };
-
-export enum OutputsAuthorsCollectionOrder {
-  OrcidAsc = 'orcid_ASC',
-  OrcidDesc = 'orcid_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-}
 
 export type OutputsAuthorsItem = ExternalUsers | Users;
 
@@ -2840,7 +2813,6 @@ export type QueryExternalUsersOrUsersArgs = {
 export type QueryExternalUsersOrUsersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<Array<InputMaybe<ExternalUsersOrUsersOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ExternalUsersOrUsersFilter>;

@@ -1,4 +1,3 @@
-import { RateLimiter } from 'limiter';
 import { calendarsQuery } from './calendars.queries';
 import {
   FetchCalendarsQuery,
@@ -11,8 +10,6 @@ type CalendarItem = NonNullable<
   FetchCalendarsQuery['queryCalendarsContents']
 >[number];
 
-const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
-
 export const migrateCalendars = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =
     await getSquidexAndContentfulClients();
@@ -20,7 +17,6 @@ export const migrateCalendars = async () => {
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironment,
     logger,
-    limiter,
   );
 
   const fetchData = async () => {

@@ -101,13 +101,11 @@ describe('Migrate teams', () => {
       1,
       expect.anything(),
       'externalTools',
-      expect.anything(),
     );
     expect(clearContentfulEntriesMock).toHaveBeenNthCalledWith(
       2,
       expect.anything(),
       'teams',
-      expect.anything(),
     );
   });
 

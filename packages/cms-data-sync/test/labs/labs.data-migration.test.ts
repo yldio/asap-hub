@@ -89,7 +89,6 @@ describe('Migrate labs', () => {
     expect(clearContentfulEntriesMock).toHaveBeenCalledWith(
       expect.anything(),
       'labs',
-      expect.anything(),
     );
   });
 
@@ -175,9 +174,9 @@ describe('Migrate labs', () => {
 
     await migrateLabs();
 
-    expect(publishContentfulEntriesMock).toHaveBeenCalledWith(
-      [labEntry, labEntry],
-      expect.anything(),
-    );
+    expect(publishContentfulEntriesMock).toHaveBeenCalledWith([
+      labEntry,
+      labEntry,
+    ]);
   });
 });

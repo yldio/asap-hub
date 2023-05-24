@@ -93,7 +93,6 @@ describe('Migrate external authors', () => {
     expect(clearContentfulEntriesMock).toHaveBeenCalledWith(
       expect.anything(),
       'externalAuthors',
-      expect.anything(),
     );
   });
 

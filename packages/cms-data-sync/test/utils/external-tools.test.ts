@@ -2,7 +2,6 @@ import { Environment } from 'contentful-management';
 import { createExternalTool, createExternalToolLinks } from '../../src/utils';
 import { getEntry } from '../fixtures';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
-import { limiter } from '../mocks/limiter.mock';
 
 const tool = {
   name: 'Google link',
@@ -54,12 +53,7 @@ describe('createExternalToolLinks', () => {
     jest.spyOn(envMock, 'createEntry').mockResolvedValueOnce(toolMock);
     jest.spyOn(toolMock, 'publish').mockResolvedValueOnce(toolMock);
 
-    const toolLinks = await createExternalToolLinks(
-      envMock,
-      [tool],
-      'team-id',
-      limiter,
-    );
+    const toolLinks = await createExternalToolLinks(envMock, [tool], 'team-id');
 
     expect(toolLinks).toEqual([
       { sys: { id, linkType: 'Entry', type: 'Link' } },

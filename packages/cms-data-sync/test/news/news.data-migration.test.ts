@@ -273,10 +273,7 @@ describe('Migrate news', () => {
         },
       );
 
-      expect(publishContentfulEntriesMock).toHaveBeenCalledWith(
-        [newsEntry],
-        expect.anything(),
-      );
+      expect(publishContentfulEntriesMock).toHaveBeenCalledWith([newsEntry]);
     });
 
     it('tries to create the entry again if it fails the first time', async () => {
@@ -303,10 +300,7 @@ describe('Migrate news', () => {
         '[ERROR] Entry with ID news-1 was uploaded with fallback data',
       );
       expect(contenfulEnv.createEntryWithId).toHaveBeenCalledTimes(2);
-      expect(publishContentfulEntriesMock).toHaveBeenCalledWith(
-        [newsEntry],
-        expect.anything(),
-      );
+      expect(publishContentfulEntriesMock).toHaveBeenCalledWith([newsEntry]);
     });
 
     it('outputs a message create entry fails for the second time', async () => {
@@ -329,10 +323,7 @@ describe('Migrate news', () => {
         '[ERROR] There is a problem creating entry news-1',
       );
 
-      expect(publishContentfulEntriesMock).toHaveBeenCalledWith(
-        [],
-        expect.anything(),
-      );
+      expect(publishContentfulEntriesMock).toHaveBeenCalledWith([]);
     });
 
     it('does not fail if squidex does not return anything', async () => {

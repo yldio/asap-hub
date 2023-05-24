@@ -109,13 +109,11 @@ describe('Migrate users', () => {
       1,
       expect.anything(),
       'teamMembership',
-      expect.anything(),
     );
     expect(clearContentfulEntriesMock).toHaveBeenNthCalledWith(
       2,
       expect.anything(),
       'users',
-      expect.anything(),
     );
   });
 
@@ -399,19 +397,15 @@ describe('Migrate users', () => {
 
       await migrateUsers();
 
-      expect(createAssetMock).toHaveBeenCalledWith(
-        expect.anything(),
-        [
-          {
-            fileName: 'avatar.jpg',
-            fileType: 'jpeg',
-            id: 'asset-1',
-            mimeType: 'image/jpeg',
-            thumbnailUrl: 'https://test.squidex.io/api/assets/test/asset-1',
-          },
-        ],
-        expect.anything(),
-      );
+      expect(createAssetMock).toHaveBeenCalledWith(expect.anything(), [
+        {
+          fileName: 'avatar.jpg',
+          fileType: 'jpeg',
+          id: 'asset-1',
+          mimeType: 'image/jpeg',
+          thumbnailUrl: 'https://test.squidex.io/api/assets/test/asset-1',
+        },
+      ]);
 
       expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
         'users',
@@ -441,9 +435,6 @@ describe('Migrate users', () => {
 
     await migrateUsers();
 
-    expect(publishContentfulEntriesMock).toHaveBeenCalledWith(
-      [userEntry],
-      expect.anything(),
-    );
+    expect(publishContentfulEntriesMock).toHaveBeenCalledWith([userEntry]);
   });
 });

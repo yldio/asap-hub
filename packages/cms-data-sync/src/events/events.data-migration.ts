@@ -1,5 +1,4 @@
 import { Entry, Link, Maybe } from '@asap-hub/contentful';
-import { RateLimiter } from 'limiter';
 import { eventsQuery as squidexEventsQuery } from './events.queries';
 import {
   FetchEventsQuery as SquidexFetchEventsQuery,
@@ -15,8 +14,7 @@ import {
   paginatedFetch,
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
-
-const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
+import { contentfulRateLimiter } from '../contentful-rate-limiter';
 
 export type EventItem = NonNullable<
   NonNullable<SquidexFetchEventsQuery['queryEventsContentsWithTotal']>['items']
@@ -29,7 +27,6 @@ export const migrateEvents = async () => {
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironment,
     logger,
-    limiter,
   );
   const fetchAllData = async (): Promise<EventItem[]> =>
     paginatedFetch<EventItem>(async (take: number, skip: number) => {
@@ -81,7 +78,7 @@ export const migrateEvents = async () => {
           const teamId = squidexTeam ? squidexTeam[0].id : null;
           const userId = squidexUser ? squidexUser[0].id : null;
 
-          await limiter.removeTokens(2);
+          await contentfulRateLimiter.removeTokens(2);
           try {
             const contentfulTeam = teamId
               ? await contentfulEnvironment.getEntry(teamId)
@@ -186,7 +183,7 @@ export const migrateEvents = async () => {
       const calendarId = calendar[0].id;
 
       try {
-        await limiter.removeTokens(1);
+        await contentfulRateLimiter.removeTokens(1);
         await contentfulEnvironment.getEntry(calendarId);
 
         return {
@@ -213,7 +210,7 @@ export const migrateEvents = async () => {
       await Promise.all(
         contentfulEvent.fields.speakers['en-US'].map(
           async (speakerLink: Link<'Entry'>) => {
-            await limiter.removeTokens(2);
+            await contentfulRateLimiter.removeTokens(2);
             try {
               const entry = await contentfulEnvironment.getEntry(
                 speakerLink.sys.id,

@@ -1,5 +1,4 @@
 import { Users, SysLink, addLocaleToFields } from '@asap-hub/contentful';
-import { RateLimiter } from 'limiter';
 import { usersQuery } from './users.queries';
 import {
   FetchUsersQuery,
@@ -15,6 +14,7 @@ import {
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
 import { date } from '../utils/normalise';
+import { contentfulRateLimiter } from '../contentful-rate-limiter';
 
 type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['queryUsersContentsWithTotal']>['items']
@@ -24,8 +24,6 @@ type ContentfulUser = Omit<Users, 'sys' | 'contentfulMetadata' | 'avatar'> & {
   avatar: SysLink | undefined;
 };
 
-const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
-
 export const migrateUsers = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =
     await getSquidexAndContentfulClients();
@@ -33,14 +31,9 @@ export const migrateUsers = async () => {
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironment,
     logger,
-    limiter,
   );
 
-  await clearContentfulEntries(
-    contentfulEnvironment,
-    'teamMembership',
-    limiter,
-  );
+  await clearContentfulEntries(contentfulEnvironment, 'teamMembership');
 
   const fetchAllData = async (): Promise<UserItem[]> =>
     paginatedFetch<UserItem>(async (take: number, skip: number) => {
@@ -81,11 +74,9 @@ export const migrateUsers = async () => {
     if (avatar) {
       const urls = createAssetUrl(avatar.map((asset) => asset.id));
       if (urls.length > 0) {
-        avatarAsset = await createAsset(
-          contentfulEnvironment,
-          [{ ...avatar[0], thumbnailUrl: urls[0] }],
-          limiter,
-        );
+        avatarAsset = await createAsset(contentfulEnvironment, [
+          { ...avatar[0], thumbnailUrl: urls[0] },
+        ]);
       }
     }
 
@@ -93,7 +84,7 @@ export const migrateUsers = async () => {
       (teams || []).map(async (team) => {
         if (team.id && team.id.length) {
           // create and publish
-          await limiter.removeTokens(2);
+          await contentfulRateLimiter.removeTokens(2);
 
           const membership = await contentfulEnvironment.createEntry(
             'teamMembership',

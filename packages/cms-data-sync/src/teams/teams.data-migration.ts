@@ -1,5 +1,4 @@
 import { SysLink } from 'contentful-management';
-import { RateLimiter } from 'limiter';
 import { teamsQuery } from './teams.queries';
 import {
   FetchTeamsQuery,
@@ -15,18 +14,15 @@ import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
 
 type TeamItem = NonNullable<FetchTeamsQuery['queryTeamsContents']>[number];
 
-const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
-
 export const migrateTeams = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =
     await getSquidexAndContentfulClients();
 
-  await clearContentfulEntries(contentfulEnvironment, 'externalTools', limiter);
+  await clearContentfulEntries(contentfulEnvironment, 'externalTools');
 
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironment,
     logger,
-    limiter,
   );
 
   const fetchData = async () => {
@@ -56,7 +52,6 @@ export const migrateTeams = async () => {
         contentfulEnvironment,
         tools,
         id,
-        limiter,
       );
     }
 

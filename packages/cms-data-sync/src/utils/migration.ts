@@ -1,15 +1,11 @@
 import { addLocaleToFields, updateEntryFields } from '@asap-hub/contentful';
 import { Environment, Entry } from 'contentful-management';
-import { RateLimiter } from 'limiter';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
+import { contentfulRateLimiter } from '../contentful-rate-limiter';
 
 export const migrateFromSquidexToContentfulFactory =
-  (
-    contentfulEnvironment: Environment,
-    logger: typeof loggerFunc,
-    limiter: RateLimiter,
-  ) =>
+  (contentfulEnvironment: Environment, logger: typeof loggerFunc) =>
   async <DataItem>(
     contentTypeId: string,
     fetchData: () => Promise<DataItem[]>,
@@ -24,11 +20,7 @@ export const migrateFromSquidexToContentfulFactory =
     const data = await fetchData();
 
     if (clearPreviousEntries) {
-      await clearContentfulEntries(
-        contentfulEnvironment,
-        contentTypeId,
-        limiter,
-      );
+      await clearContentfulEntries(contentfulEnvironment, contentTypeId);
     }
     let n = 0;
     const entries = await Promise.all(
@@ -43,7 +35,7 @@ export const migrateFromSquidexToContentfulFactory =
 
             updateEntryFields(entry, payload);
             const updatedEntry = await entry.update();
-            await limiter.removeTokens(1);
+            await contentfulRateLimiter.removeTokens(1);
 
             n += 1;
             logger(
@@ -60,7 +52,7 @@ export const migrateFromSquidexToContentfulFactory =
               fields: addLocaleToFields(payload),
             },
           );
-          await limiter.removeTokens(1);
+          await contentfulRateLimiter.removeTokens(1);
 
           n += 1;
           logger(`Created entry with id ${id}. (${n}/${data.length})`, 'INFO');
@@ -80,7 +72,7 @@ export const migrateFromSquidexToContentfulFactory =
                     fields: addLocaleToFields(fallbackPayload),
                   },
                 );
-              await limiter.removeTokens(1);
+              await contentfulRateLimiter.removeTokens(1);
 
               logger(
                 `Entry with ID ${id} was uploaded with fallback data`,
@@ -96,5 +88,5 @@ export const migrateFromSquidexToContentfulFactory =
       }),
     );
 
-    await publishContentfulEntries(entries.filter(Boolean) as Entry[], limiter);
+    await publishContentfulEntries(entries.filter(Boolean) as Entry[]);
   };

@@ -1,5 +1,4 @@
 import { Document } from '@contentful/rich-text-types';
-import { RateLimiter } from 'limiter';
 import {
   FetchPagesQuery,
   FetchPagesQueryVariables,
@@ -14,8 +13,6 @@ import { pagesQuery } from './pages.queries';
 
 type PageItem = NonNullable<FetchPagesQuery['queryPagesContents']>[number];
 
-const limiter = new RateLimiter({ tokensPerInterval: 5, interval: 'second' });
-
 export const migratePages = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =
     await getSquidexAndContentfulClients();
@@ -23,7 +20,6 @@ export const migratePages = async () => {
   const migrateFromSquidexToContentful = migrateFromSquidexToContentfulFactory(
     contentfulEnvironment,
     logger,
-    limiter,
   );
 
   const fetchData = async () => {

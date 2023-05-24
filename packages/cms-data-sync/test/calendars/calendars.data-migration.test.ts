@@ -71,7 +71,6 @@ describe('Migrate calendars', () => {
     expect(clearContentfulEntriesMock).toHaveBeenCalledWith(
       expect.anything(),
       'calendars',
-      expect.anything(),
     );
   });
 

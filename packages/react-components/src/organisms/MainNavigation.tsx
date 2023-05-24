@@ -18,7 +18,7 @@ import { NavigationLink } from '../atoms';
 import {
   networkIcon,
   discoverIcon,
-  libraryIcon,
+  LibraryIcon,
   newsIcon,
   calendarIcon,
 } from '../icons';
@@ -75,7 +75,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
       <li>
         <NavigationLink
           href={sharedResearch({}).$}
-          icon={libraryIcon}
+          icon={<LibraryIcon />}
           enabled={userOnboarded}
         >
           Shared Research

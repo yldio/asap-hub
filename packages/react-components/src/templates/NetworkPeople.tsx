@@ -2,6 +2,8 @@ import { ComponentProps, FC } from 'react';
 import AlgoliaHit from '../atoms/AlgoliaHit';
 
 import { ResultList, PeopleCard } from '../organisms';
+import { UserIcon } from '../icons';
+import { charcoal } from '../colors';
 
 type NetworkPeopleProps = Omit<
   ComponentProps<typeof ResultList>,
@@ -17,7 +19,7 @@ const NetworkPeople: FC<NetworkPeopleProps> = ({
   algoliaQueryId,
   ...cardListProps
 }) => (
-  <ResultList {...cardListProps}>
+  <ResultList icon={<UserIcon color={charcoal.rgb} />} {...cardListProps}>
     {people.map((person, index) => (
       <AlgoliaHit
         key={person.id}

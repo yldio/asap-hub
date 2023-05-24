@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { Display, Paragraph, Link } from '../atoms';
 import { mobileScreen } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { libraryIcon } from '../icons';
+import { LibraryIcon } from '../icons';
 import { charcoal } from '../colors';
 
 const styles = css({
@@ -19,7 +19,7 @@ const styles = css({
   },
 });
 const iconStyles = css({
-  svg: { stroke: charcoal.rgb, width: 48, height: 48 },
+  svg: { width: 48, height: 48 },
 });
 
 type NoOutputsPageProps = {
@@ -34,7 +34,9 @@ const NoOutputsPage: React.FC<NoOutputsPageProps> = ({
   hideExploreButton = false,
 }) => (
   <div css={styles}>
-    <span css={iconStyles}>{libraryIcon}</span>
+    <span css={iconStyles}>
+      <LibraryIcon color={charcoal.rgb} />
+    </span>
     <div>
       <Display styleAsHeading={3}>{title}</Display>
       <Paragraph accent="lead">{description}</Paragraph>

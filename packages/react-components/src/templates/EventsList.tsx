@@ -4,8 +4,11 @@ import { css } from '@emotion/react';
 import { rem } from '../pixels';
 import { ResultList, EventCard } from '../organisms';
 import AlgoliaHit from '../atoms/AlgoliaHit';
+import { EventIcon } from '../icons';
+import { charcoal } from '../colors';
 
 const containerStyles = css({
+  paddingTop: rem(36),
   display: 'grid',
   gridRowGap: rem(36),
 });
@@ -20,7 +23,7 @@ const EventsListPage: FC<EventsListProps> = ({
   ...props
 }) => (
   <div css={containerStyles}>
-    <ResultList {...props}>
+    <ResultList icon={<EventIcon color={charcoal.rgb} />} {...props}>
       {events.map(({ ...event }, index) => (
         <AlgoliaHit
           key={event.id}

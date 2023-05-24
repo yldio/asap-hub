@@ -64,6 +64,7 @@ export const migrateAsset = async (
   const assets = await Promise.all(
     thumbnail.map(
       async ({ id, fileName, thumbnailUrl, mimeType, fileType }) => {
+        await contentfulRateLimiter.removeTokens(1);
         const isAssetAlreadyInContentful =
           await checkIfAssetAlreadyExistsInContentful(
             contentfulEnvironment,
@@ -72,6 +73,7 @@ export const migrateAsset = async (
         if (!isAssetAlreadyInContentful && thumbnailUrl) {
           console.log(`Creating asset with id ${id}.`);
 
+          await contentfulRateLimiter.removeTokens(1);
           return contentfulEnvironment.createAssetWithId(id, {
             fields: {
               title: {
@@ -97,7 +99,9 @@ export const migrateAsset = async (
     assets
       .filter((asset): asset is ContentfulAsset => asset !== null)
       .map(async (asset) => {
+        await contentfulRateLimiter.removeTokens(1);
         const processedAsset = await asset.processForAllLocales();
+        await contentfulRateLimiter.removeTokens(1);
         return processedAsset.publish();
       }),
   );
@@ -110,8 +114,6 @@ export const createAsset = async (
     'id' | 'fileName' | 'thumbnailUrl' | 'mimeType' | 'fileType'
   >[],
 ): Promise<SysLink> => {
-  // get, create and publish asset
-  await contentfulRateLimiter.removeTokens(3);
   await migrateAsset(contentfulEnvironment, asset);
   return {
     sys: {

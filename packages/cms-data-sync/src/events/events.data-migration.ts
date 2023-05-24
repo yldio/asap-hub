@@ -78,15 +78,16 @@ export const migrateEvents = async () => {
           const teamId = squidexTeam ? squidexTeam[0].id : null;
           const userId = squidexUser ? squidexUser[0].id : null;
 
-          await contentfulRateLimiter.removeTokens(2);
           try {
             const contentfulTeam = teamId
               ? await contentfulEnvironment.getEntry(teamId)
               : null;
+            await contentfulRateLimiter.removeTokens(1);
 
             const contentfulUser = userId
               ? await contentfulEnvironment.getEntry(userId)
               : null;
+            await contentfulRateLimiter.removeTokens(1);
 
             if (contentfulTeam && contentfulUser) {
               const speakerEntry = await contentfulEnvironment.createEntry(
@@ -114,8 +115,10 @@ export const migrateEvents = async () => {
                   },
                 },
               );
+              await contentfulRateLimiter.removeTokens(1);
 
               await speakerEntry.publish();
+              await contentfulRateLimiter.removeTokens(1);
               return {
                 sys: {
                   type: 'Link',
@@ -210,13 +213,17 @@ export const migrateEvents = async () => {
       await Promise.all(
         contentfulEvent.fields.speakers['en-US'].map(
           async (speakerLink: Link<'Entry'>) => {
-            await contentfulRateLimiter.removeTokens(2);
             try {
               const entry = await contentfulEnvironment.getEntry(
                 speakerLink.sys.id,
               );
+              await contentfulRateLimiter.removeTokens(1);
+
               await entry.unpublish();
+              await contentfulRateLimiter.removeTokens(1);
+
               await entry.delete();
+              await contentfulRateLimiter.removeTokens(1);
             } catch {
               logger('Error deleting old speaker', 'ERROR');
             }

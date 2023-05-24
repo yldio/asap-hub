@@ -11,9 +11,12 @@ export const createExternalTool = async (
 ) => {
   const publishedTools = await Promise.all(
     tools.map(async (tool) => {
+      await contentfulRateLimiter.removeTokens(1);
       const entry = await contentfulEnvironment.createEntry('externalTools', {
         fields: addLocaleToFields(tool),
       });
+
+      await contentfulRateLimiter.removeTokens(1);
       return entry.publish();
     }),
   );
@@ -47,12 +50,11 @@ export const createExternalToolLinks = async (
     return toolsWithValidURLs;
   }, []);
 
-  // create and publish
-  await contentfulRateLimiter.removeTokens(2);
   const contentfulPublishedTools = await createExternalTool(
     contentfulEnvironment,
     cleanTools,
   );
+
   return contentfulPublishedTools.map((contentfulPublishedTool) => ({
     sys: {
       type: 'Link',

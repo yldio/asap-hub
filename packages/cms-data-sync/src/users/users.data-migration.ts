@@ -83,9 +83,6 @@ export const migrateUsers = async () => {
     const teamLinks = await Promise.all(
       (teams || []).map(async (team) => {
         if (team.id && team.id.length) {
-          // create and publish
-          await contentfulRateLimiter.removeTokens(2);
-
           const membership = await contentfulEnvironment.createEntry(
             'teamMembership',
             {
@@ -102,7 +99,10 @@ export const migrateUsers = async () => {
               }),
             },
           );
+          await contentfulRateLimiter.removeTokens(1);
+
           await membership.publish();
+          await contentfulRateLimiter.removeTokens(1);
           return {
             sys: {
               type: 'Link',

@@ -18,5 +18,5 @@ module.exports.up = (migration) => {
 
 module.exports.down = (migration) => {
   const users = migration.editContentType('users');
-  users.deleteField('positions');
+  users.deleteField('orcidWorks');
 };

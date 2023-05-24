@@ -177,13 +177,13 @@ export const FETCH_EVENTS = gql`
 `;
 
 export const FETCH_EVENTS_BY_USER_ID = gql`
-  query FetchEventsByUserId($id: String!, $limit: Int, $skip: Int, $where: EventsFilter) {
+  query FetchEventsByUserId($id: String!, $limit: Int, $skip: Int) {
     users(id: $id) {
       linkedFrom {
         eventSpeakersCollection(limit: 1) {
           items {
             linkedFrom {
-              eventsCollection(limit: $limit, skip: $skip, where: $where) {
+              eventsCollection(limit: $limit, skip: $skip) {
                 total
                 items {
                   ...EventsContentData

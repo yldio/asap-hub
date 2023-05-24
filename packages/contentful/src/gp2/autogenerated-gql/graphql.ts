@@ -4803,7 +4803,7 @@ export type FetchContributingCohortsQuery = {
   >;
 };
 
-export type EventsContentFragment = Pick<
+export type EventsContentDataFragment = Pick<
   Events,
   | 'description'
   | 'endDate'
@@ -4843,6 +4843,9 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -4894,6 +4897,9 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -4945,6 +4951,9 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
                   })
@@ -5048,6 +5057,9 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -5101,6 +5113,9 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -5154,6 +5169,9 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -5276,6 +5294,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -5349,6 +5370,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -5420,6 +5444,9 @@ export type FetchEventsQuery = {
                           })
                         | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ExternalUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
@@ -5573,6 +5600,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -5657,6 +5687,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -5741,6 +5774,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -5907,6 +5943,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -5991,6 +6030,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -6075,6 +6117,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'Media' } & Pick<
                                         Media,
                                         'url'
@@ -7555,12 +7600,12 @@ export const ContributingCohortsContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ContributingCohortsContentDataFragment, unknown>;
-export const EventsContentFragmentDoc = {
+export const EventsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'EventsContent' },
+      name: { kind: 'Name', value: 'EventsContentData' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Events' },
@@ -8159,7 +8204,7 @@ export const EventsContentFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<EventsContentFragment, unknown>;
+} as unknown as DocumentNode<EventsContentDataFragment, unknown>;
 export const ExternalUsersContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -9646,7 +9691,7 @@ export const FetchEventByIdDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'EventsContent' },
+                  name: { kind: 'Name', value: 'EventsContentData' },
                 },
               ],
             },
@@ -9654,7 +9699,7 @@ export const FetchEventByIdDocument = {
         ],
       },
     },
-    ...EventsContentFragmentDoc.definitions,
+    ...EventsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchEventByIdQuery, FetchEventByIdQueryVariables>;
 export const FetchEventsDocument = {
@@ -9756,7 +9801,7 @@ export const FetchEventsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'EventsContent' },
+                        name: { kind: 'Name', value: 'EventsContentData' },
                       },
                     ],
                   },
@@ -9767,7 +9812,7 @@ export const FetchEventsDocument = {
         ],
       },
     },
-    ...EventsContentFragmentDoc.definitions,
+    ...EventsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchEventsQuery, FetchEventsQueryVariables>;
 export const FetchEventsByUserIdDocument = {
@@ -9915,7 +9960,8 @@ export const FetchEventsByUserIdDocument = {
                                                       kind: 'FragmentSpread',
                                                       name: {
                                                         kind: 'Name',
-                                                        value: 'EventsContent',
+                                                        value:
+                                                          'EventsContentData',
                                                       },
                                                     },
                                                   ],
@@ -9942,7 +9988,7 @@ export const FetchEventsByUserIdDocument = {
         ],
       },
     },
-    ...EventsContentFragmentDoc.definitions,
+    ...EventsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchEventsByUserIdQuery,
@@ -10093,7 +10139,8 @@ export const FetchEventsByExternalUserIdDocument = {
                                                       kind: 'FragmentSpread',
                                                       name: {
                                                         kind: 'Name',
-                                                        value: 'EventsContent',
+                                                        value:
+                                                          'EventsContentData',
                                                       },
                                                     },
                                                   ],
@@ -10120,7 +10167,7 @@ export const FetchEventsByExternalUserIdDocument = {
         ],
       },
     },
-    ...EventsContentFragmentDoc.definitions,
+    ...EventsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchEventsByExternalUserIdQuery,

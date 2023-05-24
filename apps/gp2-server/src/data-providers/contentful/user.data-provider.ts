@@ -413,29 +413,35 @@ const parseWorkingGroups = (
     >['linkedFrom']
   >['workingGroupMembershipCollection'],
 ): gp2Model.UserDataObject['workingGroups'] =>
-  workingGroupItems?.items.map((wg) => {
-    const linkedWorkingGroup =
-      wg?.linkedFrom?.workingGroupsCollection?.items[0];
+  workingGroupItems?.items
+    ?.filter(
+      (workingGroup) =>
+        workingGroup?.linkedFrom?.workingGroupsCollection?.items &&
+        workingGroup.linkedFrom.workingGroupsCollection.items.length > 0,
+    )
+    .map((workingGroup) => {
+      const linkedWorkingGroup =
+        workingGroup?.linkedFrom?.workingGroupsCollection?.items[0];
 
-    const id = linkedWorkingGroup?.sys.id;
-    if (!id) {
-      throw new Error('Working Group not defined.');
-    }
-    return {
-      id,
-      title: linkedWorkingGroup.title || '',
-      members:
-        linkedWorkingGroup.membersCollection?.items.map((member) => {
-          const user = member?.user;
-          const role = member?.role;
+      const workingGroupId = linkedWorkingGroup?.sys.id;
+      if (!workingGroupId) {
+        throw new Error('Working Group not defined.');
+      }
+      return {
+        id: workingGroupId,
+        title: linkedWorkingGroup.title || '',
+        members:
+          linkedWorkingGroup.membersCollection?.items.map((member) => {
+            const user = member?.user;
+            const role = member?.role;
 
-          if (!(role && user && gp2Model.isWorkingGroupMemberRole(role))) {
-            throw new Error('Invalid working group members');
-          }
-          return { role, userId: user.sys.id };
-        }) || [],
-    };
-  }) || [];
+            if (!(role && user && gp2Model.isWorkingGroupMemberRole(role))) {
+              throw new Error('Invalid working group members');
+            }
+            return { role, userId: user.sys.id };
+          }) || [],
+      };
+    }) || [];
 
 const parsePositions = (
   positions: NonNullable<

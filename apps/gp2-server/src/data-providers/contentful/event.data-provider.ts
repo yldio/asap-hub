@@ -8,11 +8,7 @@ import {
   RichTextFromQuery,
   gp2,
 } from '@asap-hub/contentful';
-import {
-  EventStatus,
-  gp2 as gp2Model,
-  isEventStatus,
-} from '@asap-hub/model';
+import { EventStatus, gp2 as gp2Model, isEventStatus } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
 import {
@@ -91,8 +87,8 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
       });
 
       const eventsCollection =
-        externalUsers?.linkedFrom?.eventSpeakersCollection?.items[0]
-          ?.linkedFrom?.eventsCollection;
+        externalUsers?.linkedFrom?.eventSpeakersCollection?.items[0]?.linkedFrom
+          ?.eventsCollection;
 
       return getEventDataObject(eventsCollection);
     }
@@ -204,36 +200,43 @@ export const parseEventSpeakerExternalUser = (
   orcid: user?.orcid || '',
 });
 
-export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): gp2Model.EventSpeaker[] =>
-  (speakers || []).reduce((speakerList: gp2Model.EventSpeaker[], { title, user }) => {
-    if (user?.__typename === 'ExternalUsers') {
+export const parseGraphQLSpeakers = (
+  speakers: SpeakerItem[],
+): gp2Model.EventSpeaker[] =>
+  (speakers || []).reduce(
+    (speakerList: gp2Model.EventSpeaker[], { title, user }) => {
+      if (user?.__typename === 'ExternalUsers') {
+        speakerList.push({
+          speaker: parseEventSpeakerExternalUser(user),
+          topic: title || undefined,
+        });
+        return speakerList;
+      }
+
+      if (!user) {
+        speakerList.push({
+          speaker: undefined,
+          topic: title || undefined,
+        });
+        return speakerList;
+      }
+
+      if (user.onboarded !== true) {
+        return speakerList;
+      }
+
       speakerList.push({
-        speaker: parseEventSpeakerExternalUser(user),
+        speaker: parseEventSpeakerUser(user),
         topic: title || undefined,
       });
       return speakerList;
-    }
+    },
+    [],
+  );
 
-    if (!user) {
-      speakerList.push({
-        speaker: undefined,
-        topic: title || undefined,
-      });
-      return speakerList;
-    }
-
-    if (user.onboarded !== true) {
-      return speakerList;
-    }
-
-    speakerList.push({
-      speaker: parseEventSpeakerUser(user),
-      topic: title || undefined,
-    });
-    return speakerList;
-  }, []);
-
-export const parseGraphQLEvent = (item: EventItem): gp2Model.EventDataObject => {
+export const parseGraphQLEvent = (
+  item: EventItem,
+): gp2Model.EventDataObject => {
   if (!item.calendar) {
     throw new Error(`Event (${item.sys.id}) doesn't have a calendar"`);
   }
@@ -315,7 +318,7 @@ export const parseGraphQLEvent = (item: EventItem): gp2Model.EventDataObject => 
     meetingLink: meetingLink || undefined,
     hideMeetingLink: hideMeetingLink || false,
     status: status as EventStatus,
-    tags: tags as string[] | undefined | null ?? [],
+    tags: (tags as string[] | undefined | null) ?? [],
 
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
@@ -337,7 +340,7 @@ const getEventDataObject = (
   return {
     total: eventsCollection.total,
     items: eventsCollection.items
-      .filter((item : unknown): item is EventItem => item !== null)
+      .filter((item: unknown): item is EventItem => item !== null)
       .map(parseGraphQLEvent),
   };
 };

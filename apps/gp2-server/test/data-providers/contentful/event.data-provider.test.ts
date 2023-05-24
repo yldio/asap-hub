@@ -179,8 +179,8 @@ describe('Events Contentful Data Provider', () => {
 
     describe('Filters', () => {
       describe.each`
-        filterBy              | filterValue           | getGraphqlResponse                            | collection
-        ${'userId'}           | ${'user-1'}           | ${getEventsByUserIdGraphqlResponse}           | ${'users'}
+        filterBy            | filterValue         | getGraphqlResponse                          | collection
+        ${'userId'}         | ${'user-1'}         | ${getEventsByUserIdGraphqlResponse}         | ${'users'}
         ${'externalUserId'} | ${'externalUser-1'} | ${getEventsByExternalUserIdGraphqlResponse} | ${'externalUsers'}
       `(
         '$filterBy',

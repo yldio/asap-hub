@@ -135,7 +135,7 @@ describe('Migrate users', () => {
       expect.anything(),
       { take: 100, skip: 100 },
     );
-  });
+  }, 100000);
 
   it('does not fail if no data in squidex', async () => {
     squidexGraphqlClientMock.request.mockResolvedValue({

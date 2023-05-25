@@ -391,6 +391,7 @@ describe('Migrate events', () => {
     await migrateEvents();
 
     expect(contentfulEnv.createEntry).toHaveBeenCalledTimes(2);
+
     expect(contentfulEnv.createEntry).toHaveBeenNthCalledWith(
       1,
       'eventSpeakers',

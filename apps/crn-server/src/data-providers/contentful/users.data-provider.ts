@@ -6,6 +6,7 @@ import {
   isUserRole,
   LabResponse,
   ListUserDataObject,
+  OrcidWork,
   UserDataObject,
   UserSocialLinks,
   UserTeam,
@@ -35,6 +36,7 @@ import {
 } from '@asap-hub/contentful';
 import { isTeamRole } from '../../entities';
 import { UserDataProvider } from '../types';
+import { parseOrcidWorkFromCMS } from '../../entities/users';
 
 export type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -42,6 +44,15 @@ export type UserItem = NonNullable<
 export type TeamMembership = NonNullable<
   NonNullable<UserItem['teamsCollection']>['items'][number]
 >;
+
+type OrcidWorkContentful = {
+  id: string;
+  doi?: string;
+  title?: string;
+  type?: string;
+  publicationDate?: Record<'day' | 'month' | 'year', string | undefined>;
+  lastModifiedDate?: string;
+};
 
 export class UserContentfulDataProvider implements UserDataProvider {
   constructor(
@@ -246,9 +257,11 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     [],
   );
 
+  const orcidWorks: OrcidWork[] = parseOrcidWorksContentful(
+    item.orcidWorks || [],
+  );
+
   return {
-    // TODO: attach ORCID works to user model
-    orcidWorks: [],
     id: item.sys.id,
     _tags: [item.alumniSinceDate ? inactiveUserTag : activeUserTag],
     createdDate: item.createdDate || item.sys.firstPublishedAt,
@@ -268,6 +281,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     orcid: item.orcid ?? undefined,
     orcidLastModifiedDate: item.orcidLastModifiedDate ?? undefined,
     orcidLastSyncDate: item.orcidLastSyncDate ?? undefined,
+    orcidWorks,
     alumniLocation: item.alumniLocation ?? undefined,
     alumniSinceDate: item.alumniSinceDate ?? undefined,
     reachOut: item.reachOut ?? undefined,
@@ -315,4 +329,14 @@ const generateFetchQueryFilter = ({
   };
 
   return queryFilter;
+};
+
+const parseOrcidWorksContentful = (
+  orcidWorksContentful: OrcidWorkContentful[],
+): OrcidWork[] => {
+  try {
+    return orcidWorksContentful.map(parseOrcidWorkFromCMS);
+  } catch (e) {
+    throw new Error(`Invalid ORCID works content data: ${e}`);
+  }
 };

@@ -8,8 +8,6 @@ import {
   LabResponse,
   ListUserDataObject,
   OrcidWork,
-  OrcidWorkType,
-  orcidWorkType,
   UserCreateDataObject,
   UserDataObject,
   UserResponse,
@@ -38,6 +36,7 @@ import logger from '../utils/logger';
 import { createUrl } from '../utils/urls';
 import { buildEqFilterForWords, buildODataFilter } from '../utils/odata';
 import { UserDataProvider } from './types';
+import { parseOrcidWorkFromCMS } from '../entities/users';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -318,31 +317,6 @@ export const parseGraphQLUser = (user: GraphQLUser): UserResponse => {
   return parseUserToResponse(userDataObject);
 };
 
-const getOrcidWorkPublicationDate = (
-  input: NonNullable<
-    GraphQLUser['flatData']['orcidWorks']
-  >[number]['publicationDate'],
-): OrcidWork['publicationDate'] => {
-  const date: OrcidWork['publicationDate'] = {};
-
-  if (typeof input.day === 'string') {
-    date.day = input.day;
-  }
-
-  if (typeof input.month === 'string') {
-    date.month = input.month;
-  }
-
-  if (typeof input.year === 'string') {
-    date.year = input.year;
-  }
-
-  return date;
-};
-
-const isOrcidWorkType = (data: string): data is OrcidWorkType =>
-  (orcidWorkType as ReadonlyArray<string>).includes(data);
-
 export const parseUserToResponse = ({
   connections: _,
   ...user
@@ -489,19 +463,7 @@ export const parseGraphQLUserToDataObject = (
 
           return [
             ...orcidWorksAccumulator,
-            {
-              id: orcidWork.id,
-              doi: orcidWork.doi || undefined,
-              title: orcidWork.title || undefined,
-              type:
-                orcidWork.type && isOrcidWorkType(orcidWork.type)
-                  ? orcidWork.type
-                  : 'UNDEFINED',
-              publicationDate: getOrcidWorkPublicationDate(
-                orcidWork.publicationDate,
-              ),
-              lastModifiedDate: orcidWork.lastModifiedDate,
-            },
+            parseOrcidWorkFromCMS(orcidWork as NonNullable<OrcidWork>),
           ];
         }, [])
         .slice(0, 5)) ||

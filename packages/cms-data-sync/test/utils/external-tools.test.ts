@@ -53,7 +53,7 @@ describe('createExternalToolLinks', () => {
     jest.spyOn(envMock, 'createEntry').mockResolvedValueOnce(toolMock);
     jest.spyOn(toolMock, 'publish').mockResolvedValueOnce(toolMock);
 
-    const toolLinks = await createExternalToolLinks(envMock, [tool]);
+    const toolLinks = await createExternalToolLinks(envMock, [tool], 'team-id');
 
     expect(toolLinks).toEqual([
       { sys: { id, linkType: 'Entry', type: 'Link' } },

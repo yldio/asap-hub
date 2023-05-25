@@ -11,6 +11,7 @@ import Intercept from 'apr-intercept';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
 import { parseUserToResponse } from '../data-providers/users.data-provider';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
+import logger from '../utils/logger';
 
 export interface UserController extends UserControllerBase<UserResponse> {
   fetch(options: FetchUsersOptions): Promise<ListUserResponse>;
@@ -128,9 +129,15 @@ export default class Users implements UserController {
     };
     if (!error) {
       const { lastModifiedDate, works } = transformOrcidWorks(res);
-      updateToUser.orcidLastModifiedDate = lastModifiedDate;
+      updateToUser.orcidLastModifiedDate = new Date(
+        parseInt(lastModifiedDate, 10),
+      ).toISOString();
       updateToUser.orcidWorks = works.slice(0, 10);
     }
+    if (error) {
+      logger.warn(error, 'Failed to sync ORCID profile');
+    }
+
     return this.update(user.id, updateToUser);
   }
   private async queryByCode(code: string) {

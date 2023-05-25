@@ -19,6 +19,10 @@ inputs:
     description: 'crn or gp2'
     required: true
     type: string
+  create-dedicated-env:
+    description: 'if a dedicated env should be created'
+    required: true
+    type: boolean
 
 outputs:
   contentful-env:
@@ -30,33 +34,12 @@ outputs:
   contentful-env-exists:
     description: 'Whether the Contentful environment already exists'
     value: ${{ steps.check-contentful-exists.outputs.exists }}
-  contentful-env-migrations-up-to-date:
-    description: 'Whether the Contentful environment is up to date with local migrations'
-    value: ${{ steps.check-contentful-migrated.outputs.migrations-up-to-date }}
 
 runs:
   using: 'composite'
   steps:
-    - name: Determine whether migrations need to be run on master environment
-      id: count-outstanding-migrations
-      shell: bash
-      run: |
-        OUTSTANDING_MIGRATIONS=$(yarn contentful:migration:count:$APP)
-        echo "OUTSTANDING_MIGRATIONS=$OUTSTANDING_MIGRATIONS" >> $GITHUB_ENV
-      env:
-        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
-        CONTENTFUL_ENV_ID: ${{ inputs.contentful-master-env }}
-        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
-        APP: ${{ inputs.app }}
-      # Determine whether the Contentful webhook setup has changed since master
-    - uses: technote-space/get-diff-action@v6
-      with:
-        PATTERNS: |
-          +packages/contentful/scripts/setup-webhook.ts
-        FILES: |
-          setup-webhook.ts
-      # Determine whether a dedicated environment is needed for this branch
-      # otherwise default to $CONTENTFUL_MASTER_ENV
+    # Determine whether a dedicated environment is needed for this branch
+    # otherwise default to $CONTENTFUL_MASTER_ENV
     - name: Determine Environment
       id: determine-environment
       shell: bash
@@ -64,17 +47,19 @@ runs:
         CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
         BRANCH_ENV=false
 
-        if [ "$OUTSTANDING_MIGRATIONS" != "0" ] || [ "$GIT_DIFF" != "" ]; then
+        echo "CREATE_DEDICATED_ENV = $CREATE_DEDICATED_ENV"
+
+        if [ "$CREATE_DEDICATED_ENV" = true ]; then
           CONTENTFUL_ENV=$CONTENTFUL_ENV_ID
           BRANCH_ENV=true
         fi
 
-        echo "$OUTSTANDING_MIGRATIONS migrations to run on $CONTENTFUL_ENV."
         echo "env-id=$CONTENTFUL_ENV" >> $GITHUB_OUTPUT
         echo "on-branch-env=$BRANCH_ENV" >> $GITHUB_OUTPUT
       env:
         CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
         CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
+        CREATE_DEDICATED_ENV: ${{ inputs.create-dedicated-env }}
     - name: Determine whether the Contentful environment has been created
       id: check-contentful-exists
       shell: bash
@@ -96,31 +81,3 @@ runs:
         CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.env-id }}
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
-    - name: Determine whether the Contentful environment has been migrated
-      id: check-contentful-migrated
-      shell: bash
-      run: |
-        if [[ "$CONTENTFUL_ENV_ID" == "$CONTENTFUL_MASTER_ENV" ]]; then
-          echo "No new Contentful environment required for this branch."
-          echo "migrations-up-to-date=true" >> $GITHUB_OUTPUT
-        elif [[ "$CONTENTFUL_ENV_EXISTS" == "false" ]]; then
-          echo "New Contentful environment required but has not yet been created."
-          echo "migrations-up-to-date=true" >> $GITHUB_OUTPUT
-        else
-          OUTSTANDING_MIGRATIONS=$(yarn contentful:migration:count:$APP)
-
-          if [[ "$OUTSTANDING_MIGRATIONS" == "0" ]]; then
-            echo "All migrations have been run on target environment."
-            echo "migrations-up-to-date=true" >> $GITHUB_OUTPUT
-          else
-            echo "New migrations need to be run on target environment."
-            echo "migrations-up-to-date=false" >> $GITHUB_OUTPUT
-          fi
-        fi
-      env:
-        CONTENTFUL_ENV_EXISTS: ${{ steps.check-contentful-exists.outputs.exists }}
-        CONTENTFUL_ENV_ID: ${{ steps.determine-environment.outputs.env-id }}
-        CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
-        CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
-        CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
-        APP: ${{ inputs.app }}

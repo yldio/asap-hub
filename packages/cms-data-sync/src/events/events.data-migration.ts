@@ -14,6 +14,7 @@ import {
   paginatedFetch,
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
+import { contentfulRateLimiter } from '../contentful-rate-limiter';
 
 export type EventItem = NonNullable<
   NonNullable<SquidexFetchEventsQuery['queryEventsContentsWithTotal']>['items']
@@ -81,10 +82,12 @@ export const migrateEvents = async () => {
             const contentfulTeam = teamId
               ? await contentfulEnvironment.getEntry(teamId)
               : null;
+            await contentfulRateLimiter.removeTokens(1);
 
             const contentfulUser = userId
               ? await contentfulEnvironment.getEntry(userId)
               : null;
+            await contentfulRateLimiter.removeTokens(1);
 
             if (contentfulTeam && contentfulUser) {
               const speakerEntry = await contentfulEnvironment.createEntry(
@@ -112,8 +115,10 @@ export const migrateEvents = async () => {
                   },
                 },
               );
+              await contentfulRateLimiter.removeTokens(1);
 
               await speakerEntry.publish();
+              await contentfulRateLimiter.removeTokens(1);
               return {
                 sys: {
                   type: 'Link',
@@ -181,6 +186,7 @@ export const migrateEvents = async () => {
       const calendarId = calendar[0].id;
 
       try {
+        await contentfulRateLimiter.removeTokens(1);
         await contentfulEnvironment.getEntry(calendarId);
 
         return {
@@ -211,8 +217,13 @@ export const migrateEvents = async () => {
               const entry = await contentfulEnvironment.getEntry(
                 speakerLink.sys.id,
               );
+              await contentfulRateLimiter.removeTokens(1);
+
               await entry.unpublish();
+              await contentfulRateLimiter.removeTokens(1);
+
               await entry.delete();
+              await contentfulRateLimiter.removeTokens(1);
             } catch {
               logger('Error deleting old speaker', 'ERROR');
             }

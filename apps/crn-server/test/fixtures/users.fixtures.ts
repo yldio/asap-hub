@@ -15,6 +15,7 @@ import {
   SquidexWebhookPayload,
 } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
+import { FetchUserByIdQuery } from '@asap-hub/contentful';
 import {
   FetchUserQuery,
   FetchUsersQuery,
@@ -791,7 +792,9 @@ export const getContentfulGraphql = (props = {}) => {
   };
 };
 
-export const getContentfulGraphqlUser = (props = {}) => ({
+export const getContentfulGraphqlUser = (
+  props: Partial<NonNullable<NonNullable<FetchUserByIdQuery>['users']>> = {},
+): NonNullable<NonNullable<FetchUserByIdQuery>['users']> => ({
   sys: {
     id: 'user-id-1',
     firstPublishedAt: '2021-09-23T20:45:22.000Z',
@@ -808,6 +811,16 @@ export const getContentfulGraphqlUser = (props = {}) => ({
   expertiseAndResourceDescription: 'some expertise and resource description',
   orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
   orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
+  orcidWorks: [
+    {
+      doi: 'test-doi',
+      id: '123-456-789',
+      lastModifiedDate: '2020-10-26T15:33:18Z',
+      publicationDate: {},
+      type: 'ANNOTATION',
+      title: 'orcid work title',
+    },
+  ],
   questions: ['Question 1', 'Question 2'],
   expertiseAndResourceTags: [
     'expertise 1',
@@ -839,14 +852,12 @@ export const getContentfulGraphqlUser = (props = {}) => ({
   linkedIn: null,
   role: 'Grantee',
   labsCollection: {
-    total: 2,
     items: [
       { sys: { id: 'cd7be4902' }, name: 'Brighton' },
       { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
     ],
   },
   teamsCollection: {
-    total: 1,
     items: [
       {
         role: 'Lead PI (Core Leadership)',

@@ -10,7 +10,6 @@ import {
   VersionedLink,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { isResourceLink } from '@asap-hub/model/src/gp2';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
 
 export class WorkingGroupContentfulDataProvider
@@ -51,17 +50,18 @@ export class WorkingGroupContentfulDataProvider
     const previousWorkingGroupDataObject = await this.fetchById(id);
     const environment = await this.getRestClient();
     const previousWorkingGroup = await environment.getEntry(id);
+
     const nextResources: string[] = await addNextResources(
       environment,
-      workingGroup.resources.filter((resource) => !resource.id),
+      workingGroup.resources?.filter((resource) => !resource.id),
     );
 
     const idsToDelete = getResourceIdsToDelete(
       previousWorkingGroup,
-      workingGroup,
+      workingGroup.resources,
     );
     const updatedIds = await updateResources(
-      workingGroup,
+      workingGroup.resources,
       idsToDelete,
       previousWorkingGroupDataObject?.resources,
       environment,
@@ -257,7 +257,7 @@ const addNextResources = async (
             type: resource.type,
             title: resource.title,
             description: resource.description,
-            externalLink: isResourceLink(resource)
+            externalLink: gp2Model.isResourceLink(resource)
               ? resource.externalLink
               : undefined,
           }),
@@ -300,7 +300,7 @@ const getResourceFields = (nextResources: string[] | undefined) =>
 
 const getResourceIdsToDelete = (
   previousWorkingGroup: Entry,
-  workingGroup: gp2Model.WorkingGroupUpdateDataObject,
+  resources: gp2Model.WorkingGroupUpdateDataObject['resources'] = [],
 ): string[] => {
   const previousResources = previousWorkingGroup.fields.resources;
   if (!(previousResources && previousResources['en-US'])) {
@@ -309,7 +309,7 @@ const getResourceIdsToDelete = (
   const existingIds = previousResources['en-US'].map(
     ({ sys: { id } }: { sys: { id: string } }) => id,
   );
-  const nextIds = workingGroup.resources.map(({ id }) => id);
+  const nextIds = resources.map(({ id }) => id);
 
   return existingIds.filter((id: string) => !nextIds.includes(id));
 };
@@ -327,12 +327,12 @@ const deleteResources = async (
   );
 
 const updateResources = async (
-  workingGroup: gp2Model.WorkingGroupUpdateDataObject,
+  resources: gp2Model.WorkingGroupUpdateDataObject['resources'] = [],
   idsToDelete: string[],
   previousResources: gp2Model.WorkingGroupDataObject['resources'] = [],
   environment: Environment,
 ): Promise<string[]> => {
-  const toUpdate = workingGroup.resources.filter(
+  const toUpdate = resources.filter(
     (resource: { id?: string }) =>
       !!resource.id && !idsToDelete.includes(resource.id),
   );
@@ -347,9 +347,9 @@ const updateResources = async (
           previousResource[0]?.type === resource.type &&
           previousResource[0].title === resource.title &&
           previousResource[0].description === resource.description &&
-          (isResourceLink(previousResource[0]) &&
+          (gp2Model.isResourceLink(previousResource[0]) &&
             previousResource[0].externalLink) ===
-            (isResourceLink(resource) && resource.externalLink)
+            (gp2Model.isResourceLink(resource) && resource.externalLink)
         );
       })
       .map(async ({ id, ...resource }) => {

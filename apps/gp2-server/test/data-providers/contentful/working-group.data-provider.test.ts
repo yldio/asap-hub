@@ -668,7 +668,7 @@ describe('Working Group Data Provider', () => {
       });
     });
 
-    describe.only('resource', () => {
+    describe('resource', () => {
       test('It should create the resource and associate it to the working group', async () => {
         const resourceId = '11';
         const createdResourceMock = getEntry({}, resourceId);
@@ -773,6 +773,15 @@ describe('Working Group Data Provider', () => {
       });
     });
     test('checks version of published data and polls until they match', async () => {
+      const existingWorkingGroupMock = getEntry({
+        fields: { resources: [] },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(existingWorkingGroupMock);
+      const createdResourceMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValueOnce(createdResourceMock);
+      createdResourceMock.publish = jest
+        .fn()
+        .mockResolvedValueOnce(createdResourceMock);
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         workingGroups: {
           sys: {

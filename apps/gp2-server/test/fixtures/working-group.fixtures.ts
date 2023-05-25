@@ -56,6 +56,12 @@ export const getWorkingGroupUpdateDataObject =
         title: 'Working group resource title',
       },
     ],
+    members: [
+      {
+        userId: '11',
+        role: 'Lead',
+      },
+    ],
   });
 
 export const getRestWorkingGroupUpdateData =
@@ -66,6 +72,14 @@ export const getRestWorkingGroupUpdateData =
           type: 'Note',
           description: 'Working group resource description',
           title: 'Working group resource title',
+        },
+      ],
+    },
+    members: {
+      iv: [
+        {
+          role: 'Lead',
+          user: ['11'],
         },
       ],
     },

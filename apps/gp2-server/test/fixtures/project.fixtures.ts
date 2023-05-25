@@ -60,6 +60,12 @@ export const getProjectUpdateDataObject =
         title: 'Project resource title',
       },
     ],
+    members: [
+      {
+        userId: '11',
+        role: 'Project manager',
+      },
+    ],
   });
 
 export const getRestProjectUpdateData =
@@ -70,6 +76,14 @@ export const getRestProjectUpdateData =
           type: 'Note',
           description: 'Project resource description',
           title: 'Project resource title',
+        },
+      ],
+    },
+    members: {
+      iv: [
+        {
+          role: 'Project_Manager',
+          user: ['11'],
         },
       ],
     },

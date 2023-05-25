@@ -67,7 +67,6 @@ export class WorkingGroupSquidexDataProvider
     workingGroup: gp2Model.WorkingGroupUpdateDataObject,
   ): Promise<void> {
     const squidexWorkingGroup = convertToSquidexWorkingGroup(workingGroup);
-
     await this.squidexRestClient.patch(id, squidexWorkingGroup);
   }
   private async queryFetchByIdData(id: string) {
@@ -80,8 +79,17 @@ export class WorkingGroupSquidexDataProvider
 
 const convertToSquidexWorkingGroup = ({
   resources,
+  members,
 }: gp2Model.WorkingGroupUpdateDataObject): gp2Squidex.InputWorkingGroup['data'] => ({
-  resources: { iv: resources },
+  ...(resources && { resources: { iv: resources } }),
+  ...(members && {
+    members: {
+      iv: members.map(({ userId, role }) => ({
+        user: [userId],
+        role: reverseRoleMap[role],
+      })),
+    },
+  }),
 });
 
 export type GraphQLWorkingGroup = NonNullable<
@@ -206,4 +214,13 @@ export const roleMap: Record<
   [WorkingGroupsDataMembersRoleEnum.Lead]: 'Lead',
   [WorkingGroupsDataMembersRoleEnum.CoLead]: 'Co-lead',
   [WorkingGroupsDataMembersRoleEnum.WorkingGroupMember]: 'Working group member',
+};
+
+export const reverseRoleMap: Record<
+  gp2Model.WorkingGroupMemberRole,
+  gp2Squidex.RestWorkingGroupsMembersRole
+> = {
+  Lead: 'Lead',
+  'Co-lead': 'Co_lead',
+  'Working group member': 'Working_group_member',
 };

@@ -378,6 +378,19 @@ describe('Events Contentful Data Provider', () => {
         ]);
       });
 
+      test('Should not return user if not onboarded', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse.speakersCollection!.items![0]!.user!.onboarded =
+          false;
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+        const speakerResult = result!.speakers;
+        expect(speakerResult).toEqual([]);
+      });
+
       test('Should return TBA speaker', async () => {
         const contentfulGraphQLResponse = getContentfulGraphqlEvent();
         contentfulGraphQLResponse.speakersCollection!.items![0]!.user = null;

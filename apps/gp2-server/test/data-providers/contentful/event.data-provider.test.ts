@@ -380,8 +380,16 @@ describe('Events Contentful Data Provider', () => {
 
       test('Should not return user if not onboarded', async () => {
         const contentfulGraphQLResponse = getContentfulGraphqlEvent();
-        contentfulGraphQLResponse.speakersCollection!.items![0]!.user!.onboarded =
-          false;
+        contentfulGraphQLResponse.speakersCollection!.items![0]!.user = {
+          sys: {
+            id: 'user-id-1',
+          },
+          __typename: 'Users',
+          onboarded: false,
+          firstName: 'Adam',
+          lastName: 'Brown',
+          avatar: null,
+        };
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           events: contentfulGraphQLResponse,
         });

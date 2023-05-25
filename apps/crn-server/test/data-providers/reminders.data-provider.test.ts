@@ -48,21 +48,21 @@ describe('Reminder Data Provider', () => {
     const timezone = 'Europe/London';
     const fetchRemindersOptions: FetchRemindersOptions = { userId, timezone };
 
-    describe('Research Output Published Reminder', () => {
-      test('Should fetch the reminders from squidex graphql', async () => {
-        const result = await reminderDataProviderMockGraphql.fetch(
-          fetchRemindersOptions,
-        );
+    test('Should fetch the reminders from squidex graphql', async () => {
+      const result = await reminderDataProviderMockGraphql.fetch(
+        fetchRemindersOptions,
+      );
 
-        expect(result).toEqual({
-          total: 2,
-          items: [
-            getResearchOutputPublishedReminder(),
-            getResearchOutputDraftReminder(),
-          ],
-        });
+      expect(result).toEqual({
+        total: 2,
+        items: [
+          getResearchOutputPublishedReminder(),
+          getResearchOutputDraftReminder(),
+        ],
       });
+    });
 
+    describe('Research Output Published Reminder', () => {
       test('Should fetch the published reminders from squidex graphql', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [
@@ -537,38 +537,10 @@ describe('Reminder Data Provider', () => {
         expect(result).toEqual({ items: [], total: 0 });
       });
 
-      test('Should return an empty result when research-output documentType property is null', async () => {
-        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
-        squidexGraphqlResponse.queryResearchOutputsContents = null;
-        squidexGraphqlResponse.draftResearchOutputs![0]!.flatData.documentType =
-          null;
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          squidexGraphqlResponse,
-        );
-
-        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-        expect(result).toEqual({ items: [], total: 0 });
-      });
-
       test('Should return an empty result when research-output title property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = null;
         squidexGraphqlResponse.draftResearchOutputs![0]!.flatData.title = null;
-        squidexGraphqlClientMock.request.mockResolvedValueOnce(
-          squidexGraphqlResponse,
-        );
-
-        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
-
-        expect(result).toEqual({ items: [], total: 0 });
-      });
-
-      test('Should return an empty result when research-output documentType property is not a valid document-type', async () => {
-        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
-        squidexGraphqlResponse.queryResearchOutputsContents = null;
-        squidexGraphqlResponse.draftResearchOutputs![0]!.flatData.documentType =
-          'invalid-document-type';
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );

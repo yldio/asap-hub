@@ -2,8 +2,9 @@ import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
-import { Label, TextArea, Paragraph } from '../atoms';
-import { lead } from '../colors';
+import { Label, Paragraph, TextArea } from '../atoms';
+import { lead, paper } from '../colors';
+import Info from './Info';
 
 const tipStyles = css({
   ':empty': {
@@ -22,12 +23,32 @@ type LabeledTextAreaProps = {
   readonly title: React.ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly tip?: React.ReactNode;
+  readonly info?: React.ReactNode;
 } & Exclude<ComponentProps<typeof TextArea>, 'id'>;
+
+const infoStyle = css({
+  [`p:first-of-type`]: {
+    marginBottom: `${8 / perRem}em`,
+  },
+  [`p:not(:first-of-type)`]: {
+    marginBottom: `${2 / perRem}em`,
+  },
+  [`& p`]: {
+    textAlign: 'left',
+    color: paper.rgb,
+    marginTop: 0,
+  },
+});
+
+const infoWrapperStyle = css({
+  paddingLeft: `${16 / perRem}em`,
+});
 
 const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   title,
   subtitle,
   tip,
+  info,
   ...textAreaProps
 }) => (
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
@@ -35,6 +56,13 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
       <Paragraph>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>
+        {info && (
+          <span css={infoWrapperStyle} onClick={(e) => e.preventDefault()}>
+            <Info>
+              <span css={infoStyle}>{info}</span>
+            </Info>
+          </span>
+        )}
         <br />
         <span css={tipStyles}>{tip}</span>
       </Paragraph>

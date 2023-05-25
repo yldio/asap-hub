@@ -19,6 +19,7 @@ import {
   LabeledTextField,
 } from '../molecules';
 import { noop } from '../utils';
+import { Markdown } from '../atoms/index';
 
 type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
@@ -193,6 +194,12 @@ const ResearchOutputFormSharingCard: React.FC<
         required
         enabled={!isSaving}
         value={descriptionMD}
+        info={
+          <Markdown
+            value={`**Markup Language**\n\n**Bold:** \\*\\*your text\\*\\*\n\n**Italic:** \\*your text\\*\n\n**H1:** \\# Your Text\n\n**H2:** \\#\\# Your Text\n\n**H3:** \\#\\#\\# Your Text\n\n**Hyperlink:** (your text)[https://example.com]\n\n**New Paragraph:** To create a line break, you will need to press the enter button twice.
+        `}
+          ></Markdown>
+        }
       />
       <LabeledRadioButtonGroup
         title="Has this output been funded by ASAP"

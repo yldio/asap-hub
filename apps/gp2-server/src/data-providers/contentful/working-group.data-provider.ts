@@ -1,5 +1,6 @@
 import {
   addLocaleToFields,
+  Entry,
   Environment,
   gp2 as gp2Contentful,
   GraphQLClient,
@@ -46,6 +47,8 @@ export class WorkingGroupContentfulDataProvider
     id: string,
     workingGroup: gp2Model.WorkingGroupUpdateDataObject,
   ): Promise<void> {
+    // const previousWorkingGroupDataObject = await this.fetchById(id)
+    // console.log(previousWorkingGroupDataObject)
     const environment = await this.getRestClient();
     const previousWorkingGroup = await environment.getEntry(id);
     // const previousResources = previousWorkingGroup.fields.resources
@@ -53,12 +56,19 @@ export class WorkingGroupContentfulDataProvider
       environment,
       workingGroup.resources,
     );
+    // const resourcesToBeDeleted = previousWorkingGroup.filter({ id });
 
+    const idsToDelete = getResourceIdsToDelete(
+      previousWorkingGroup,
+      workingGroup,
+    );
     const resourceFields = getResourceFields(nextResources);
     const result = await patchAndPublish(previousWorkingGroup, {
       ...workingGroup,
       ...resourceFields,
     });
+
+    await deleteResources(idsToDelete, environment);
     const fetchEventById = () => this.fetchWorkingGroupById(id);
     await pollContentfulGql<gp2Contentful.FetchWorkingGroupByIdQuery>(
       result.sys.publishedVersion || Infinity,
@@ -278,3 +288,27 @@ const getResourceFields = (nextResources: string[] | undefined) =>
         resources: getEntities(nextResources),
       }
     : {};
+
+const getResourceIdsToDelete = (
+  previousWorkingGroup: Entry,
+  workingGroup: gp2Model.WorkingGroupUpdateDataObject,
+): string[] => {
+  const existingIds = previousWorkingGroup.fields.resources?.map(
+    ({ id }: { id: string }) => id,
+  );
+  const nextIds = workingGroup.resources.map(({ id }) => id);
+
+  return existingIds.filter((id: string) => !nextIds.includes(id));
+};
+
+const deleteResources = async (
+  idsToDelete: string[],
+  environment: Environment,
+) =>
+  Promise.all(
+    idsToDelete.map(async (id) => {
+      const deletable = await environment.getEntry(id);
+      await deletable.unpublish();
+      await deletable.delete();
+    }),
+  );

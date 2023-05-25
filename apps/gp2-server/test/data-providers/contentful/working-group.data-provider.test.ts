@@ -671,13 +671,19 @@ describe('Working Group Data Provider', () => {
     describe.only('resource', () => {
       test('It should create the resource and associate it to the working group', async () => {
         const id = '42';
-        const resourceMock = getEntry({}, id);
+        const createdResourceMock = getEntry({}, id);
         const title = 'a title 2';
         const type = 'Note';
-        const entry = getEntry({ fields: { resources: [] } });
-        environmentMock.getEntry.mockResolvedValueOnce(entry);
-        environmentMock.createEntry.mockResolvedValueOnce(resourceMock);
-        resourceMock.publish = jest.fn().mockResolvedValueOnce(resourceMock);
+        const existingWorkingGroupMock = getEntry({
+          fields: { resources: [] },
+        });
+        environmentMock.getEntry.mockResolvedValueOnce(
+          existingWorkingGroupMock,
+        );
+        environmentMock.createEntry.mockResolvedValueOnce(createdResourceMock);
+        createdResourceMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdResourceMock);
         await workingGroupDataProvider.update(workingGroupId, {
           resources: [{ title, type }],
         });
@@ -688,10 +694,39 @@ describe('Working Group Data Provider', () => {
           },
         });
 
-        expect(resourceMock.publish).toHaveBeenCalled();
-        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        expect(createdResourceMock.publish).toHaveBeenCalled();
+        expect(patchAndPublish).toHaveBeenCalledWith(existingWorkingGroupMock, {
           resources: [{ sys: { id, linkType: 'Entry', type: 'Link' } }],
         });
+      });
+      test('It should delete the resource and unassociate it to the working group if no resources passed', async () => {
+        const workingGroupId = '42';
+        const existingResourceId = '11';
+        const resourceMock = getEntry({}, workingGroupId);
+        const existingWorkingGroupMock = getEntry({
+          fields: {
+            resources: [
+              { id: existingResourceId, linkType: 'Entry', type: 'Link' },
+            ],
+          },
+        });
+        const existingResourceMock = getEntry({}, existingResourceId);
+        const unpublishSpy = jest.fn();
+        const deleteSpy = jest.fn();
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingWorkingGroupMock)
+          .mockResolvedValueOnce(existingResourceMock);
+        existingResourceMock.unpublish = unpublishSpy;
+        existingResourceMock.delete = deleteSpy;
+        await workingGroupDataProvider.update(workingGroupId, {
+          resources: [],
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(existingWorkingGroupMock, {
+          resources: [],
+        });
+        expect(unpublishSpy).toBeCalled();
+        expect(deleteSpy).toBeCalled();
+        expect(environmentMock.createEntry).not.toBeCalled();
       });
     });
     test('checks version of published data and polls until they match', async () => {

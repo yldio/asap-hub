@@ -10,6 +10,7 @@ import {
   VersionedLink,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { isResourceLink } from '@asap-hub/model/src/gp2';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
 
 export class WorkingGroupContentfulDataProvider
@@ -48,11 +49,9 @@ export class WorkingGroupContentfulDataProvider
     workingGroup: gp2Model.WorkingGroupUpdateDataObject,
   ): Promise<void> {
     // const previousWorkingGroupDataObject = await this.fetchById(id)
-    // console.log(previousWorkingGroupDataObject)
     const environment = await this.getRestClient();
     const previousWorkingGroup = await environment.getEntry(id);
-    // const previousResources = previousWorkingGroup.fields.resources
-    const nextResources = await addNextResources(
+    const nextResources: string[] = await addNextResources(
       environment,
       workingGroup.resources.filter((resource) => !resource.id),
     );
@@ -61,9 +60,13 @@ export class WorkingGroupContentfulDataProvider
       previousWorkingGroup,
       workingGroup,
     );
-    await updateResources(workingGroup, idsToDelete, environment);
+    const updatedIds = await updateResources(
+      workingGroup,
+      idsToDelete,
+      environment,
+    );
 
-    const resourceFields = getResourceFields(nextResources);
+    const resourceFields = getResourceFields([...nextResources, ...updatedIds]);
     const result = await patchAndPublish(previousWorkingGroup, {
       ...workingGroup,
       ...resourceFields,
@@ -244,14 +247,18 @@ export function parseResources(
 const addNextResources = async (
   environment: Environment,
   nextResources?: gp2Model.WorkingGroupUpdateDataObject['resources'],
-) => {
+): Promise<string[]> => {
   if (nextResources && nextResources.length > 0) {
     const nextContributingCohorts = await Promise.all(
-      nextResources.map(async ({ type, title }) => {
+      nextResources.map(async (resource) => {
         const entry = await environment.createEntry('resources', {
           fields: addLocaleToFields({
-            type,
-            title,
+            type: resource.type,
+            title: resource.title,
+            description: resource.description,
+            externalLink: isResourceLink(resource)
+              ? resource.externalLink
+              : undefined,
           }),
         });
         await entry.publish();
@@ -261,7 +268,7 @@ const addNextResources = async (
 
     return nextContributingCohorts;
   }
-  return undefined;
+  return [];
 };
 
 const getEntities = <Version extends boolean>(
@@ -294,8 +301,12 @@ const getResourceIdsToDelete = (
   previousWorkingGroup: Entry,
   workingGroup: gp2Model.WorkingGroupUpdateDataObject,
 ): string[] => {
-  const existingIds = previousWorkingGroup.fields.resources?.map(
-    ({ id }: { id: string }) => id,
+  const previousResources = previousWorkingGroup.fields.resources;
+  if (!(previousResources && previousResources['en-US'])) {
+    return [];
+  }
+  const existingIds = previousResources['en-US'].map(
+    ({ sys: { id } }: { sys: { id: string } }) => id,
   );
   const nextIds = workingGroup.resources.map(({ id }) => id);
 
@@ -318,7 +329,7 @@ const updateResources = async (
   workingGroup: gp2Model.WorkingGroupUpdateDataObject,
   idsToDelete: string[],
   environment: Environment,
-) =>
+): Promise<string[]> =>
   Promise.all(
     workingGroup.resources
       .filter(
@@ -329,5 +340,6 @@ const updateResources = async (
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const updatable = await environment.getEntry(id!);
         await patchAndPublish(updatable, { ...resource });
+        return id || '';
       }),
   );

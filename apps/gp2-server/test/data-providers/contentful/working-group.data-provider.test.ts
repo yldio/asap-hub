@@ -689,6 +689,8 @@ describe('Working Group Data Provider', () => {
         });
         expect(environmentMock.createEntry).toHaveBeenCalledWith('resources', {
           fields: {
+            description: { 'en-US': undefined },
+            externalLink: { 'en-US': undefined },
             title: { 'en-US': title },
             type: { 'en-US': type },
           },
@@ -707,9 +709,15 @@ describe('Working Group Data Provider', () => {
         const existingWorkingGroupMock = getEntry(
           {
             fields: {
-              resources: [
-                { id: existingResourceId, linkType: 'Entry', type: 'Link' },
-              ],
+              resources: {
+                'en-US': [
+                  {
+                    sys: { id: existingResourceId },
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                ],
+              },
             },
           },
           workingGroupId,
@@ -740,9 +748,15 @@ describe('Working Group Data Provider', () => {
         const existingWorkingGroupMock = getEntry(
           {
             fields: {
-              resources: [
-                { id: existingResourceId, linkType: 'Entry', type: 'Link' },
-              ],
+              resources: {
+                'en-US': [
+                  {
+                    sys: { id: existingResourceId },
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                ],
+              },
             },
           },
           workingGroupId,
@@ -766,7 +780,15 @@ describe('Working Group Data Provider', () => {
           2,
           existingWorkingGroupMock,
           {
-            resources: [{ id: existingResourceId, title, type }],
+            resources: [
+              {
+                sys: {
+                  id: existingResourceId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
           },
         );
         expect(environmentMock.createEntry).not.toBeCalled();

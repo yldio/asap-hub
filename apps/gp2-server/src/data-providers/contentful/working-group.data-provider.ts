@@ -48,7 +48,7 @@ export class WorkingGroupContentfulDataProvider
     id: string,
     workingGroup: gp2Model.WorkingGroupUpdateDataObject,
   ): Promise<void> {
-    // const previousWorkingGroupDataObject = await this.fetchById(id)
+    const previousWorkingGroupDataObject = await this.fetchById(id);
     const environment = await this.getRestClient();
     const previousWorkingGroup = await environment.getEntry(id);
     const nextResources: string[] = await addNextResources(
@@ -63,6 +63,7 @@ export class WorkingGroupContentfulDataProvider
     const updatedIds = await updateResources(
       workingGroup,
       idsToDelete,
+      previousWorkingGroupDataObject?.resources,
       environment,
     );
 
@@ -328,14 +329,29 @@ const deleteResources = async (
 const updateResources = async (
   workingGroup: gp2Model.WorkingGroupUpdateDataObject,
   idsToDelete: string[],
+  previousResources: gp2Model.WorkingGroupDataObject['resources'] = [],
   environment: Environment,
-): Promise<string[]> =>
-  Promise.all(
-    workingGroup.resources
-      .filter(
-        (resource: { id?: string }) =>
-          !!resource.id && !idsToDelete.includes(resource.id),
-      )
+): Promise<string[]> => {
+  const toUpdate = workingGroup.resources.filter(
+    (resource: { id?: string }) =>
+      !!resource.id && !idsToDelete.includes(resource.id),
+  );
+  await Promise.all(
+    toUpdate
+      .filter((resource) => {
+        const previousResource = previousResources?.filter(
+          (previous) => previous.id === resource.id,
+        );
+        return !(
+          previousResource.length > 0 &&
+          previousResource[0]?.type === resource.type &&
+          previousResource[0].title === resource.title &&
+          previousResource[0].description === resource.description &&
+          (isResourceLink(previousResource[0]) &&
+            previousResource[0].externalLink) ===
+            (isResourceLink(resource) && resource.externalLink)
+        );
+      })
       .map(async ({ id, ...resource }) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const updatable = await environment.getEntry(id!);
@@ -343,3 +359,7 @@ const updateResources = async (
         return id || '';
       }),
   );
+  return toUpdate
+    .map(({ id }) => id)
+    .filter((id): id is string => id !== undefined);
+};

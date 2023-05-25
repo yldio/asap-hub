@@ -10,16 +10,6 @@ export const FETCH_REMINDER_DATA = gql`
     findUsersContent(id: $userId) {
       referencingWorkingGroupsContents {
         id
-        flatData {
-          complete
-          leaders {
-            inactiveSinceDate
-            role
-            user {
-              id
-            }
-          }
-        }
       }
       flatData {
         role

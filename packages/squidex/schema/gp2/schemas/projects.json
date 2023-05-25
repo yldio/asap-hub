@@ -241,7 +241,7 @@
         "properties": {
           "fieldType": "String",
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
-          "isUnique": true,
+          "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
           "createEnum": false,
@@ -262,7 +262,7 @@
         "properties": {
           "fieldType": "String",
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
-          "isUnique": true,
+          "isUnique": false,
           "isEmbeddable": false,
           "inlineEditable": true,
           "createEnum": false,

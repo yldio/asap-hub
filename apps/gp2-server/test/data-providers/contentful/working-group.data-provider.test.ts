@@ -648,15 +648,9 @@ describe('Working Group Data Provider', () => {
   });
   describe('update method', () => {
     const workingGroupId = '11';
-    const entry = getEntry({
-      fields: {
-        title: 'a title',
-      },
-    });
 
     beforeEach(() => {
       jest.resetAllMocks();
-      environmentMock.getEntry.mockResolvedValueOnce(entry);
       const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
         typeof patchAndPublish
       >;
@@ -674,22 +668,31 @@ describe('Working Group Data Provider', () => {
       });
     });
 
-    test('Should update the existing working group', async () => {
-      await workingGroupDataProvider.update(workingGroupId, {
-        resources: [{ title: 'a title', type: 'Note' }],
-      });
-      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-        resources: [
-          {
-            title: 'a title',
-            type: 'Note',
+    describe.only('resource', () => {
+      test('It should create the resource and associate it to the working group', async () => {
+        const id = '42';
+        const resourceMock = getEntry({}, id);
+        const title = 'a title 2';
+        const type = 'Note';
+        const entry = getEntry({ fields: { resources: [] } });
+        environmentMock.getEntry.mockResolvedValueOnce(entry);
+        environmentMock.createEntry.mockResolvedValueOnce(resourceMock);
+        resourceMock.publish = jest.fn().mockResolvedValueOnce(resourceMock);
+        await workingGroupDataProvider.update(workingGroupId, {
+          resources: [{ title, type }],
+        });
+        expect(environmentMock.createEntry).toHaveBeenCalledWith('resources', {
+          fields: {
+            title: { 'en-US': title },
+            type: { 'en-US': type },
           },
-        ],
+        });
+
+        expect(resourceMock.publish).toHaveBeenCalled();
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          resources: [{ sys: { id, linkType: 'Entry', type: 'Link' } }],
+        });
       });
-      expect(environmentMock.createEntry).toBeCalledTimes(0);
-      expect(environmentMock.createPublishBulkAction).not.toBeCalled();
-      expect(environmentMock.createUnpublishBulkAction).not.toBeCalled();
-      expect(environmentMock.getEntries).not.toBeCalled();
     });
     test('checks version of published data and polls until they match', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({

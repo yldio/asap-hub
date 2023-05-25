@@ -1,9 +1,12 @@
 import {
+  addLocaleToFields,
   Environment,
   gp2 as gp2Contentful,
   GraphQLClient,
+  Link,
   patchAndPublish,
   pollContentfulGql,
+  VersionedLink,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
@@ -44,9 +47,17 @@ export class WorkingGroupContentfulDataProvider
     workingGroup: gp2Model.WorkingGroupUpdateDataObject,
   ): Promise<void> {
     const environment = await this.getRestClient();
-    const user = await environment.getEntry(id);
-    const result = await patchAndPublish(user, {
+    const previousWorkingGroup = await environment.getEntry(id);
+    // const previousResources = previousWorkingGroup.fields.resources
+    const nextResources = await addNextResources(
+      environment,
+      workingGroup.resources,
+    );
+
+    const resourceFields = getResourceFields(nextResources);
+    const result = await patchAndPublish(previousWorkingGroup, {
       ...workingGroup,
+      ...resourceFields,
     });
     const fetchEventById = () => this.fetchWorkingGroupById(id);
     await pollContentfulGql<gp2Contentful.FetchWorkingGroupByIdQuery>(
@@ -219,3 +230,51 @@ export function parseResources(
     },
   ];
 }
+const addNextResources = async (
+  environment: Environment,
+  nextResources?: gp2Model.WorkingGroupUpdateDataObject['resources'],
+) => {
+  if (nextResources && nextResources.length > 0) {
+    const nextContributingCohorts = await Promise.all(
+      nextResources.map(async ({ type, title }) => {
+        const entry = await environment.createEntry('resources', {
+          fields: addLocaleToFields({
+            type,
+            title,
+          }),
+        });
+        await entry.publish();
+        return entry.sys.id;
+      }),
+    );
+
+    return nextContributingCohorts;
+  }
+  return undefined;
+};
+
+const getEntities = <Version extends boolean>(
+  entities: string[],
+  version?: Version,
+) => entities.map((id) => getLinkEntity<Version>(id, version));
+
+function getLinkEntity<Version extends boolean>(
+  id: string,
+  x?: Version,
+): Version extends true ? VersionedLink<'Entry'> : Link<'Entry'>;
+function getLinkEntity(id: string, version: boolean = false): unknown {
+  return {
+    sys: {
+      type: 'Link' as const,
+      linkType: 'Entry' as const,
+      id,
+      ...(version ? { version: 1 } : {}),
+    },
+  };
+}
+const getResourceFields = (nextResources: string[] | undefined) =>
+  nextResources
+    ? {
+        resources: getEntities(nextResources),
+      }
+    : {};

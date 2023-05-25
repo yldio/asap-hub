@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, Global } from '@emotion/react';
 import { ComponentProps } from 'react';
 
 import { Anchor, Link, Paragraph } from '../atoms';
@@ -36,6 +36,12 @@ const defaultValues = {
     ),
   },
 };
+
+const rootStyles = {
+  'html, body, #root': {
+    height: '100%',
+  },
+} as const;
 
 const containerStyles = css({
   height: '100%',
@@ -94,6 +100,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
 
   return (
     <div css={[themes.dark, containerStyles]}>
+      <Global styles={rootStyles} />
       {authFailed && (
         <Toast onClose={onCloseAuthFailedToast}>
           {authFailed === 'alumni'

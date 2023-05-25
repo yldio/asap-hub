@@ -52,7 +52,6 @@ export const getResearchOutputDraftReminder = (
     type: 'Draft',
     data: {
       researchOutputId: researchOutputDataObject.id,
-      documentType: researchOutputDataObject.documentType,
       title: researchOutputDataObject.title,
       addedDate: researchOutputDataObject.created,
       associationName: teamAssociation

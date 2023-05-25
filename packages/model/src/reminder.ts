@@ -59,7 +59,6 @@ export interface ResearchOutputDraftReminder extends ResearchOutputReminder {
   type: 'Draft';
   data: {
     researchOutputId: ResearchOutputDraftDataObject['id'];
-    documentType: ResearchOutputDraftDataObject['documentType'];
     title: ResearchOutputDraftDataObject['title'];
     addedDate: ResearchOutputDraftDataObject['created'];
     createdBy: string;

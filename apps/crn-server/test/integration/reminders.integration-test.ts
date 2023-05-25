@@ -12,6 +12,8 @@ import {
   TeamRole,
   UploadPresentationReminder,
   UserCreateDataObject,
+  ResearchOutputDraftReminder,
+  DraftResearchOutputCreateDataObject,
 } from '@asap-hub/model';
 import {
   InputCalendar,
@@ -238,6 +240,95 @@ describe('Reminders', () => {
           researchOutputId3,
           researchOutputId1,
         ]);
+      });
+    });
+  });
+
+  describe('Research Output Draft Reminder', () => {
+    let creatorId: string;
+    let creatorUsername: string;
+    let teamId: string;
+    let fetchRemindersOptions: FetchRemindersOptions;
+
+    beforeEach(async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      teamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const userCreateDataObject2 = getUserInput(teamId);
+
+      creatorId = await userDataProvider.create(userCreateDataObject2);
+      let creator = await userDataProvider.fetchById(creatorId);
+      creatorUsername = creator?.firstName + ' ' + creator?.lastName;
+
+      const userCreateDataObject = getUserInput(teamId);
+      const userId1 = await userDataProvider.create(userCreateDataObject);
+
+      const timezone = 'Europe/London';
+      fetchRemindersOptions = { userId: userId1, timezone };
+    });
+
+    test('Should see the reminder when the research output was created recently and the user is associated with the team that owns it', async () => {
+      const researchOutputInput = getResearchOutputInputDraft(
+        teamId,
+        creatorId,
+      );
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        { publish: false },
+      );
+
+      const researchOutput = await researchOutputDataProvider.fetchById(
+        researchOutputId,
+      );
+
+      const expectedReminder: ResearchOutputDraftReminder = {
+        id: `research-output-draft-${researchOutputId}`,
+        entity: 'Research Output',
+        type: 'Draft',
+        data: {
+          researchOutputId,
+          associationName: getTeamCreateDataObject().displayName,
+          associationType: 'team',
+          createdBy: creatorUsername,
+          title: researchOutputInput.title,
+          addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+        },
+      };
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the research output was created recently but the user is NOT associated with the team that owns it', async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      const anotherTeamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const researchOutputInput = getResearchOutputInputDraft(
+        teamId,
+        creatorId,
+      );
+      researchOutputInput.teamIds = [anotherTeamId];
+
+      await researchOutputDataProvider.create(researchOutputInput, {
+        publish: false,
+      });
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
       });
     });
   });
@@ -1247,5 +1338,25 @@ describe('Reminders', () => {
     authors: [],
     relatedResearchIds: [],
     addedDate: new Date().toISOString(),
+  });
+
+  const getResearchOutputInputDraft = (
+    teamId: string,
+    creatorId: string,
+    workingGroupId: string = '',
+  ): DraftResearchOutputCreateDataObject => ({
+    ...getResearchOutputCreateDataObject(),
+    teamIds: [teamId],
+    workingGroups: workingGroupId ? [workingGroupId] : [],
+    createdBy: creatorId,
+    subtypeId: undefined,
+    link: chance.url(),
+    environmentIds: [],
+    organismIds: [],
+    methodIds: [],
+    keywordIds: [],
+    labIds: [],
+    authors: [],
+    relatedResearchIds: [],
   });
 });

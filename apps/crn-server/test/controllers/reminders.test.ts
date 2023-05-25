@@ -105,7 +105,6 @@ describe('Reminder Controller', () => {
           entity: 'Research Output',
           type: 'Draft',
           data: {
-            documentType: 'Presentation',
             title: 'Some Test title',
             researchOutputId: 'some-research-output-id',
             addedDate: '2021-01-01',
@@ -134,7 +133,6 @@ describe('Reminder Controller', () => {
           entity: 'Research Output',
           type: 'Draft',
           data: {
-            documentType: 'Presentation',
             title: 'Some Test title',
             researchOutputId: 'some-research-output-id',
             addedDate: '2021-01-01',

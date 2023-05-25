@@ -8400,22 +8400,7 @@ export type FetchReminderDataQueryVariables = Exact<{
 
 export type FetchReminderDataQuery = {
   findUsersContent: Maybe<{
-    referencingWorkingGroupsContents: Maybe<
-      Array<
-        Pick<WorkingGroups, 'id'> & {
-          flatData: Pick<WorkingGroupsFlatDataDto, 'complete'> & {
-            leaders: Maybe<
-              Array<
-                Pick<
-                  WorkingGroupsDataLeadersChildDto,
-                  'inactiveSinceDate' | 'role'
-                > & { user: Maybe<Array<Pick<Users, 'id'>>> }
-              >
-            >;
-          };
-        }
-      >
-    >;
+    referencingWorkingGroupsContents: Maybe<Array<Pick<WorkingGroups, 'id'>>>;
     flatData: Pick<UsersFlatDataDto, 'role'> & {
       teams: Maybe<
         Array<
@@ -14434,52 +14419,6 @@ export const FetchReminderDataDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'flatData' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'complete' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'leaders' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: {
-                                      kind: 'Name',
-                                      value: 'inactiveSinceDate',
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'role' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'user' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
                     ],
                   },
                 },

@@ -54,14 +54,15 @@ export class WorkingGroupContentfulDataProvider
     // const previousResources = previousWorkingGroup.fields.resources
     const nextResources = await addNextResources(
       environment,
-      workingGroup.resources,
+      workingGroup.resources.filter((resource) => !resource.id),
     );
-    // const resourcesToBeDeleted = previousWorkingGroup.filter({ id });
 
     const idsToDelete = getResourceIdsToDelete(
       previousWorkingGroup,
       workingGroup,
     );
+    await updateResources(workingGroup, idsToDelete, environment);
+
     const resourceFields = getResourceFields(nextResources);
     const result = await patchAndPublish(previousWorkingGroup, {
       ...workingGroup,
@@ -311,4 +312,22 @@ const deleteResources = async (
       await deletable.unpublish();
       await deletable.delete();
     }),
+  );
+
+const updateResources = async (
+  workingGroup: gp2Model.WorkingGroupUpdateDataObject,
+  idsToDelete: string[],
+  environment: Environment,
+) =>
+  Promise.all(
+    workingGroup.resources
+      .filter(
+        (resource: { id?: string }) =>
+          !!resource.id && !idsToDelete.includes(resource.id),
+      )
+      .map(async ({ id, ...resource }) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const updatable = await environment.getEntry(id!);
+        await patchAndPublish(updatable, { ...resource });
+      }),
   );

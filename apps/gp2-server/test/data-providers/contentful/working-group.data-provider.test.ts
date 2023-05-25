@@ -670,8 +670,8 @@ describe('Working Group Data Provider', () => {
 
     describe.only('resource', () => {
       test('It should create the resource and associate it to the working group', async () => {
-        const id = '42';
-        const createdResourceMock = getEntry({}, id);
+        const resourceId = '11';
+        const createdResourceMock = getEntry({}, resourceId);
         const title = 'a title 2';
         const type = 'Note';
         const existingWorkingGroupMock = getEntry({
@@ -696,20 +696,24 @@ describe('Working Group Data Provider', () => {
 
         expect(createdResourceMock.publish).toHaveBeenCalled();
         expect(patchAndPublish).toHaveBeenCalledWith(existingWorkingGroupMock, {
-          resources: [{ sys: { id, linkType: 'Entry', type: 'Link' } }],
+          resources: [
+            { sys: { id: resourceId, linkType: 'Entry', type: 'Link' } },
+          ],
         });
       });
       test('It should delete the resource and unassociate it to the working group if no resources passed', async () => {
         const workingGroupId = '42';
         const existingResourceId = '11';
-        const resourceMock = getEntry({}, workingGroupId);
-        const existingWorkingGroupMock = getEntry({
-          fields: {
-            resources: [
-              { id: existingResourceId, linkType: 'Entry', type: 'Link' },
-            ],
+        const existingWorkingGroupMock = getEntry(
+          {
+            fields: {
+              resources: [
+                { id: existingResourceId, linkType: 'Entry', type: 'Link' },
+              ],
+            },
           },
-        });
+          workingGroupId,
+        );
         const existingResourceMock = getEntry({}, existingResourceId);
         const unpublishSpy = jest.fn();
         const deleteSpy = jest.fn();
@@ -726,6 +730,45 @@ describe('Working Group Data Provider', () => {
         });
         expect(unpublishSpy).toBeCalled();
         expect(deleteSpy).toBeCalled();
+        expect(environmentMock.createEntry).not.toBeCalled();
+      });
+      test('It should update the resource', async () => {
+        const title = 'a title 2';
+        const type = 'Note';
+        const workingGroupId = '42';
+        const existingResourceId = '11';
+        const existingWorkingGroupMock = getEntry(
+          {
+            fields: {
+              resources: [
+                { id: existingResourceId, linkType: 'Entry', type: 'Link' },
+              ],
+            },
+          },
+          workingGroupId,
+        );
+        const existingResourceMock = getEntry({}, existingResourceId);
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingWorkingGroupMock)
+          .mockResolvedValueOnce(existingResourceMock);
+        await workingGroupDataProvider.update(workingGroupId, {
+          resources: [{ id: existingResourceId, title, type }],
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(
+          1,
+          existingResourceMock,
+          {
+            title,
+            type,
+          },
+        );
+        expect(patchAndPublish).toHaveBeenNthCalledWith(
+          2,
+          existingWorkingGroupMock,
+          {
+            resources: [{ id: existingResourceId, title, type }],
+          },
+        );
         expect(environmentMock.createEntry).not.toBeCalled();
       });
     });

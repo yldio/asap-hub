@@ -2,6 +2,7 @@ import {
   Entry,
   Environment,
   getGP2ContentfulGraphqlClientMockServer,
+  gp2 as gp2Contentful,
   patchAndPublish,
 } from '@asap-hub/contentful';
 import {
@@ -85,7 +86,7 @@ describe('Events Contentful Data Provider', () => {
       const result = await eventDataProvider.fetch({});
 
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
+        gp2Contentful.FETCH_EVENTS,
         {
           limit: 10,
           skip: 0,
@@ -107,7 +108,7 @@ describe('Events Contentful Data Provider', () => {
       const result = await eventDataProvider.fetch({ after: 'after-date' });
 
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
+        gp2Contentful.FETCH_EVENTS,
         {
           limit: 10,
           skip: 0,
@@ -141,7 +142,7 @@ describe('Events Contentful Data Provider', () => {
           });
 
           expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-            expect.anything(),
+            gp2Contentful.FETCH_EVENTS,
             {
               limit: 10,
               skip: 0,
@@ -163,7 +164,7 @@ describe('Events Contentful Data Provider', () => {
         const result = await eventDataProvider.fetch({});
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_EVENTS,
           {
             limit: 10,
             skip: 0,
@@ -246,7 +247,7 @@ describe('Events Contentful Data Provider', () => {
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_EVENTS_BY_USER_ID,
           {
             id: 'user-1',
             limit: 10,
@@ -267,7 +268,7 @@ describe('Events Contentful Data Provider', () => {
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_EVENTS_BY_USER_ID,
           {
             id: 'user-1',
             limit: 10,
@@ -276,6 +277,54 @@ describe('Events Contentful Data Provider', () => {
         );
         expect(result).toEqual({ total: 0, items: [] });
       });
+
+      test.each`
+        filterValue           | filterBy            | resultParamName    | query
+        ${'working-group-id'} | ${'workingGroupId'} | ${'workingGroups'} | ${gp2Contentful.FETCH_WORKING_GROUP_CALENDAR}
+        ${'project-id'}       | ${'projectId'}      | ${'projects'}      | ${gp2Contentful.FETCH_PROJECT_CALENDAR}
+      `(
+        'can filter by $filterParam',
+        async ({ filterValue, filterBy, resultParamName, query }) => {
+          const calendarId = 'calendar-id';
+          const calendarResponse = {
+            [resultParamName]: {
+              calendar: {
+                sys: {
+                  id: calendarId,
+                },
+              },
+            },
+          };
+
+          const eventsGraphqlResponse = getContentfulGraphqlEventsResponse();
+          contentfulGraphqlClientMock.request
+            .mockResolvedValueOnce(calendarResponse)
+            .mockResolvedValueOnce(eventsGraphqlResponse);
+          const result = await eventDataProvider.fetch({
+            filter: { [filterBy]: filterValue },
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            query,
+            {
+              id: filterValue,
+            },
+          );
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            gp2Contentful.FETCH_EVENTS,
+            {
+              limit: 10,
+              skip: 0,
+              where: {
+                calendar: { sys: { id: calendarId } },
+                hidden_not: true,
+              },
+              order: undefined,
+            },
+          );
+          expect(result).toEqual(getContentfulListEventDataObject());
+        },
+      );
 
       test('can filter by googleId', async () => {
         const googleId = 'google-event-id';
@@ -289,7 +338,7 @@ describe('Events Contentful Data Provider', () => {
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_EVENTS,
           {
             limit: 10,
             skip: 0,
@@ -314,7 +363,7 @@ describe('Events Contentful Data Provider', () => {
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_EVENTS,
           {
             limit: 10,
             skip: 0,

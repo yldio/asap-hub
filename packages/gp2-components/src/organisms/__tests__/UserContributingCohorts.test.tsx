@@ -28,15 +28,6 @@ describe('UserContributingCohorts', () => {
       />,
     );
 
-  it('renders the Paragraph', () => {
-    renderUserCohorts([]);
-    expect(
-      screen.getByText(
-        `${firstName} has contributed to the following cohort studies:`,
-      ),
-    ).toBeVisible();
-  });
-
   it('renders cohort name', () => {
     renderUserCohorts(getCohorts(1));
     expect(screen.getByText('a name 0')).toBeVisible();

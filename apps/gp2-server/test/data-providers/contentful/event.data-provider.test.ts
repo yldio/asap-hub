@@ -233,6 +233,50 @@ describe('Events Contentful Data Provider', () => {
         },
       );
 
+      test('should filter events if before date is provided', async () => {
+        const eventsGraphqlResponse = getEventsByUserIdGraphqlResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          eventsGraphqlResponse,
+        );
+        const result = await eventDataProvider.fetch({
+          before: new Date().toISOString(),
+          filter: {
+            userId: 'user-1',
+          },
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            id: 'user-1',
+            limit: 10,
+            skip: 0,
+          },
+        );
+        expect(result).toEqual(getContentfulListEventDataObject());
+      });
+
+      test('should filter events if after date is provided', async () => {
+        const eventsGraphqlResponse = getEventsByUserIdGraphqlResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          eventsGraphqlResponse,
+        );
+        const result = await eventDataProvider.fetch({
+          after: new Date().toISOString(),
+          filter: { userId: 'user-1' },
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            id: 'user-1',
+            limit: 10,
+            skip: 0,
+          },
+        );
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+
       test('can filter by googleId', async () => {
         const googleId = 'google-event-id';
 

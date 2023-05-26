@@ -332,6 +332,9 @@ const updateResources = async (
     (resource: { id?: string }) =>
       !!resource.id && !idsToDelete.includes(resource.id),
   );
+  type ResourceWithId = gp2Model.Resource & {
+    id: string;
+  };
   await Promise.all(
     toUpdate
       .filter((resource) => {
@@ -349,9 +352,11 @@ const updateResources = async (
             (gp2Model.isResourceLink(resource) && resource.externalLink)
         );
       })
+      .filter(
+        (resource): resource is ResourceWithId => resource.id !== undefined,
+      )
       .map(async ({ id, ...resource }) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const updatable = await environment.getEntry(id!);
+        const updatable = await environment.getEntry(id);
         await patchAndPublish(updatable, { ...resource });
         return id || '';
       }),

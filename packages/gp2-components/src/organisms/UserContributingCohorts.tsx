@@ -19,7 +19,6 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
   <EditableCard
     editHref={editHref}
     title="Contributing Cohort Studies"
-    subtitle={`${firstName} has contributed to the following cohort studies:`}
     edit={!!contributingCohorts.length}
     optional
   >

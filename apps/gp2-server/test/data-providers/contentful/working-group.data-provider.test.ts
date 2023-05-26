@@ -669,7 +669,7 @@ describe('Working Group Data Provider', () => {
     });
 
     describe('resource', () => {
-      test('It should create the resource and associate it to the working group', async () => {
+      test('It should create the Note resource and associate it to the working group', async () => {
         const resourceId = '11';
         const createdResourceMock = getEntry({}, resourceId);
         const title = 'a title 2';
@@ -691,6 +691,42 @@ describe('Working Group Data Provider', () => {
           fields: {
             description: { 'en-US': undefined },
             externalLink: { 'en-US': undefined },
+            title: { 'en-US': title },
+            type: { 'en-US': type },
+          },
+        });
+
+        expect(createdResourceMock.publish).toHaveBeenCalled();
+        expect(patchAndPublish).toHaveBeenCalledWith(existingWorkingGroupMock, {
+          resources: [
+            { sys: { id: resourceId, linkType: 'Entry', type: 'Link' } },
+          ],
+        });
+      });
+      test('It should create the Link resource and associate it to the working group', async () => {
+        const resourceId = '11';
+        const createdResourceMock = getEntry({}, resourceId);
+        const title = 'a title 2';
+        const description = 'a description 2';
+        const externalLink = 'http://example.com/a-link';
+        const type = 'Link';
+        const existingWorkingGroupMock = getEntry({
+          fields: { resources: [] },
+        });
+        environmentMock.getEntry.mockResolvedValueOnce(
+          existingWorkingGroupMock,
+        );
+        environmentMock.createEntry.mockResolvedValueOnce(createdResourceMock);
+        createdResourceMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdResourceMock);
+        await workingGroupDataProvider.update(workingGroupId, {
+          resources: [{ title, type, externalLink, description }],
+        });
+        expect(environmentMock.createEntry).toHaveBeenCalledWith('resources', {
+          fields: {
+            description: { 'en-US': description },
+            externalLink: { 'en-US': externalLink },
             title: { 'en-US': title },
             type: { 'en-US': type },
           },

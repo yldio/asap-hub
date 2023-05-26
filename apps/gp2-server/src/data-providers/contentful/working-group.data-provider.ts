@@ -291,16 +291,12 @@ function getLinkEntity(id: string, version: boolean = false): unknown {
     },
   };
 }
-const getResourceFields = (nextResources: string[] | undefined) =>
-  nextResources
-    ? {
-        resources: getEntities(nextResources),
-      }
-    : {};
-
+const getResourceFields = (nextResources: string[]) => ({
+  resources: getEntities(nextResources),
+});
 const getResourceIdsToDelete = (
   previousWorkingGroup: Entry,
-  resources: gp2Model.WorkingGroupUpdateDataObject['resources'] = [],
+  resources: gp2Model.WorkingGroupUpdateDataObject['resources'],
 ): string[] => {
   const previousResources = previousWorkingGroup.fields.resources;
   if (!(previousResources && previousResources['en-US'])) {
@@ -309,7 +305,7 @@ const getResourceIdsToDelete = (
   const existingIds = previousResources['en-US'].map(
     ({ sys: { id } }: { sys: { id: string } }) => id,
   );
-  const nextIds = resources.map(({ id }) => id);
+  const nextIds = (resources || []).map(({ id }) => id);
 
   return existingIds.filter((id: string) => !nextIds.includes(id));
 };
@@ -327,12 +323,12 @@ const deleteResources = async (
   );
 
 const updateResources = async (
-  resources: gp2Model.WorkingGroupUpdateDataObject['resources'] = [],
+  resources: gp2Model.WorkingGroupUpdateDataObject['resources'],
   idsToDelete: string[],
-  previousResources: gp2Model.WorkingGroupDataObject['resources'] = [],
+  previousResources: gp2Model.WorkingGroupDataObject['resources'],
   environment: Environment,
 ): Promise<string[]> => {
-  const toUpdate = resources.filter(
+  const toUpdate = (resources || []).filter(
     (resource: { id?: string }) =>
       !!resource.id && !idsToDelete.includes(resource.id),
   );
@@ -343,6 +339,7 @@ const updateResources = async (
           (previous) => previous.id === resource.id,
         );
         return !(
+          previousResource &&
           previousResource.length > 0 &&
           previousResource[0]?.type === resource.type &&
           previousResource[0].title === resource.title &&

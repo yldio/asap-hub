@@ -251,7 +251,8 @@ describe('events entity', () => {
     };
 
     test('Should parse working group and project', () => {
-      const { workingGroup, project } = parseContentfulWorkingGroupProject(calendar);
+      const { workingGroup, project } =
+        parseContentfulWorkingGroupProject(calendar);
 
       expect(workingGroup).toEqual({
         id: 'working-group-id-1',

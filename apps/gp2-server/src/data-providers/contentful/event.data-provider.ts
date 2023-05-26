@@ -103,7 +103,8 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
           items: previousEventsForUser,
           total: previousEventsForUser.length,
         };
-      } else if (after) {
+      }
+      if (after) {
         const upcomingEventsForUser = eventsForUser.items.filter(
           (item) => DateTime.fromISO(item.endDate) >= DateTime.now(),
         );

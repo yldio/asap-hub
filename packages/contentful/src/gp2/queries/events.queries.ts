@@ -117,6 +117,24 @@ export const eventsContentQueryFragment = gql`
       googleCalendarId
       color
       name
+      linkedFrom {
+        workingGroupsCollection {
+          items {
+            sys {
+              id
+            }
+            title
+          }
+        }
+        projectsCollection {
+          items {
+            sys {
+              id
+            }
+            title
+          }
+        }
+      }
     }
     thumbnail {
       url
@@ -218,4 +236,28 @@ export const FETCH_EVENTS_BY_EXTERNAL_USER_ID = gql`
     }
   }
   ${eventsContentQueryFragment}
+`;
+
+export const FETCH_PROJECT_CALENDAR = gql`
+  query FetchProjectCalendar($id: String!) {
+    projects(id: $id) {
+      calendar {
+        sys {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_WORKING_GROUP_CALENDAR = gql`
+  query FetchWorkingGroupCalendar($id: String!) {
+    workingGroups(id: $id) {
+      calendar {
+        sys {
+          id
+        }
+      }
+    }
+  }
 `;

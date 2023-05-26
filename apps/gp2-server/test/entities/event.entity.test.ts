@@ -2,6 +2,7 @@ import { gp2 } from '@asap-hub/model';
 import {
   getContentfulEventMaterial,
   getMeetingMaterial,
+  parseContentfulWorkingGroupProject,
   parseEventSpeakerExternalUser,
   parseEventSpeakerUser,
   parseGraphQLEvent,
@@ -223,6 +224,54 @@ describe('events entity', () => {
     );
   });
 
+  describe('Working Groups and Projects', () => {
+    const calendar = {
+      linkedFrom: {
+        workingGroupsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'working-group-id-1',
+              },
+              title: 'Some title',
+            },
+          ],
+        },
+        projectsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'project-id-1',
+              },
+              title: 'Another title',
+            },
+          ],
+        },
+      },
+    };
+
+    test('Should parse working group and project', () => {
+      const { workingGroup, project } = parseContentfulWorkingGroupProject(calendar);
+
+      expect(workingGroup).toEqual({
+        id: 'working-group-id-1',
+        title: 'Some title',
+      });
+      expect(project).toEqual({
+        id: 'project-id-1',
+        title: 'Another title',
+      });
+    });
+
+    test('Should return undefined working group and project when calendar is undefined', () => {
+      const { workingGroup, project } =
+        parseContentfulWorkingGroupProject(undefined);
+
+      expect(workingGroup).toBeUndefined();
+      expect(project).toBeUndefined();
+    });
+  });
+
   describe('Speakers', () => {
     test('Should return the user', () => {
       const eventSpeakers = parseGraphQLSpeakers([
@@ -299,6 +348,7 @@ describe('events entity', () => {
 
     expect(eventSpeakers).toStrictEqual([]);
   });
+
   describe('parseGraphQLWorkingGroupProjects', () => {
     it('parses the working groups', () => {
       const id = '42';
@@ -313,6 +363,7 @@ describe('events entity', () => {
       expect(workingGroup).toEqual({ id, title });
       expect(project).toBeUndefined();
     });
+
     it('parses the project', () => {
       const id = '42';
       const title = 'some title';

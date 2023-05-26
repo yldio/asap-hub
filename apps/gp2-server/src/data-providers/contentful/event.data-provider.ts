@@ -15,6 +15,7 @@ import {
   getContentfulEventMaterial,
   MeetingMaterial,
   parseContentfulGraphqlCalendarPartialToDataObject,
+  parseContentfulWorkingGroupProject,
 } from '../../entities';
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendar.controller';
 
@@ -59,6 +60,26 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
       filter,
     } = options;
 
+    let calendarId;
+
+    if (filter?.workingGroupId) {
+      const { workingGroups } = await this.contentfulClient.request<
+        gp2.FetchWorkingGroupCalendarQuery,
+        gp2.FetchWorkingGroupCalendarQueryVariables
+      >(gp2.FETCH_WORKING_GROUP_CALENDAR, { id: filter.workingGroupId });
+
+      calendarId = workingGroups?.calendar?.sys.id;
+    }
+
+    if (filter?.projectId) {
+      const { projects } = await this.contentfulClient.request<
+        gp2.FetchProjectCalendarQuery,
+        gp2.FetchProjectCalendarQueryVariables
+      >(gp2.FETCH_PROJECT_CALENDAR, { id: filter.projectId });
+
+      calendarId = projects?.calendar?.sys.id;
+    }
+
     if (filter?.userId) {
       const { users } = await this.contentfulClient.request<
         gp2.FetchEventsByUserIdQuery,
@@ -73,6 +94,24 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
         users?.linkedFrom?.eventSpeakersCollection?.items[0]?.linkedFrom
           ?.eventsCollection;
 
+      const eventsForUser = getEventDataObject(eventsCollection);
+      if (before) {
+        const previousEventsForUser = eventsForUser.items.filter(
+          (item) => DateTime.fromISO(item.endDate) < DateTime.now(),
+        );
+        return {
+          items: previousEventsForUser,
+          total: previousEventsForUser.length,
+        };
+      } else if (after) {
+        const upcomingEventsForUser = eventsForUser.items.filter(
+          (item) => DateTime.fromISO(item.endDate) >= DateTime.now(),
+        );
+        return {
+          items: upcomingEventsForUser,
+          total: upcomingEventsForUser.length,
+        };
+      }
       return getEventDataObject(eventsCollection);
     }
 
@@ -129,6 +168,7 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
       skip: skip ?? null,
       order: getOrderFilter(),
       where: {
+        ...(calendarId ? { calendar: { sys: { id: calendarId } } } : {}),
         ...(filter?.hidden !== true ? { hidden_not: true } : {}),
         ...(filter?.googleId ? { googleId_contains: filter.googleId } : {}),
         ...(after ? { endDate_gt: after } : {}),
@@ -247,8 +287,7 @@ export const parseGraphQLEvent = (
 
   const calendar = parseCalendarDataObjectToResponse({
     ...parseContentfulGraphqlCalendarPartialToDataObject(item.calendar),
-    projects: [],
-    workingGroups: [],
+    ...parseContentfulWorkingGroupProject(item.calendar),
   });
 
   const startDate = DateTime.fromISO(item.startDate);
@@ -319,10 +358,8 @@ export const parseGraphQLEvent = (
     hideMeetingLink: hideMeetingLink || false,
     status: status as EventStatus,
     tags: (tags as string[] | undefined | null) ?? [],
-
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
-    // TODO: projects and workingGroups
     ...eventUnreadyResponse,
   };
 };

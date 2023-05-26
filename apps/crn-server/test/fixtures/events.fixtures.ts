@@ -196,7 +196,7 @@ export const getContentfulGraphqlEvent = (): NonNullable<
               id: 'presentation-id',
             },
             __typename: 'Media',
-            url: 'https://drive.google.com/file/d/1euARcFkYJoqj4c_oor_nYIMBDWOfL-3x/preview',
+            url: 'https://example.com',
           },
         ],
       },
@@ -219,7 +219,7 @@ export const getContentfulGraphqlEvent = (): NonNullable<
     name: 'Tech 1 - Sequencing/omics',
   },
   thumbnail: {
-    url: 'https://images.ctfassets.net/5v6w5j61tndm/849855829/ac04300efa901ab22278b50d63bfde14/COSA-9900000000079e3c.png',
+    url: 'https://example.com',
   },
   speakersCollection: {
     items: [
@@ -340,12 +340,10 @@ export const getContentfulEventDataObject = (): EventDataObject => ({
   ...getEventDataObject(),
   ...eventUnreadyResponse,
   notes: '<p>These are the notes from the meeting</p>',
-  presentation:
-    '<p><iframe src="https://drive.google.com/file/d/1euARcFkYJoqj4c_oor_nYIMBDWOfL-3x/preview"/></p>',
+  presentation: '<p><iframe src="https://example.com"/></p>',
   videoRecording:
     '<p><iframe src="https://player.vimeo.com/video/493052720"/></p>',
-  thumbnail:
-    'https://images.ctfassets.net/5v6w5j61tndm/849855829/ac04300efa901ab22278b50d63bfde14/COSA-9900000000079e3c.png',
+  thumbnail: 'https://example.com',
 });
 
 export const getContentfulEventResponse = (): EventResponse =>

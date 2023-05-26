@@ -4803,6 +4803,1530 @@ export type FetchContributingCohortsQuery = {
   >;
 };
 
+export type EventsContentDataFragment = Pick<
+  Events,
+  | 'description'
+  | 'endDate'
+  | 'endDateTimeZone'
+  | 'startDate'
+  | 'startDateTimeZone'
+  | 'meetingLink'
+  | 'hideMeetingLink'
+  | 'eventLink'
+  | 'status'
+  | 'hidden'
+  | 'tags'
+  | 'title'
+  | 'notesPermanentlyUnavailable'
+  | 'notesUpdatedAt'
+  | 'videoRecordingPermanentlyUnavailable'
+  | 'videoRecordingUpdatedAt'
+  | 'presentationPermanentlyUnavailable'
+  | 'presentationUpdatedAt'
+  | 'meetingMaterialsPermanentlyUnavailable'
+  | 'meetingMaterials'
+> & {
+  sys: Pick<Sys, 'id' | 'publishedAt' | 'publishedVersion'>;
+  notes?: Maybe<
+    Pick<EventsNotes, 'json'> & {
+      links: {
+        entries: {
+          inline: Array<
+            Maybe<
+              | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ContributingCohorts' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'ContributingCohortsMembership' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                    sys: Pick<Sys, 'id'>;
+                  })
+              | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Resources' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupMembership' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupNetwork' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
+            >
+          >;
+        };
+        assets: {
+          block: Array<
+            Maybe<
+              Pick<
+                Asset,
+                'url' | 'description' | 'contentType' | 'width' | 'height'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        };
+      };
+    }
+  >;
+  videoRecording?: Maybe<
+    Pick<EventsVideoRecording, 'json'> & {
+      links: {
+        entries: {
+          inline: Array<
+            Maybe<
+              | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ContributingCohorts' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'ContributingCohortsMembership' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                    sys: Pick<Sys, 'id'>;
+                  })
+              | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Resources' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupMembership' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupNetwork' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
+            >
+          >;
+        };
+        assets: {
+          block: Array<
+            Maybe<
+              Pick<
+                Asset,
+                'url' | 'description' | 'contentType' | 'width' | 'height'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        };
+      };
+    }
+  >;
+  presentation?: Maybe<
+    Pick<EventsPresentation, 'json'> & {
+      links: {
+        entries: {
+          inline: Array<
+            Maybe<
+              | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ContributingCohorts' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'ContributingCohortsMembership' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                    sys: Pick<Sys, 'id'>;
+                  })
+              | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ProjectMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Resources' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupMembership' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupNetwork' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
+            >
+          >;
+        };
+        assets: {
+          block: Array<
+            Maybe<
+              Pick<
+                Asset,
+                'url' | 'description' | 'contentType' | 'width' | 'height'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        };
+      };
+    }
+  >;
+  calendar?: Maybe<
+    Pick<Calendars, 'googleCalendarId' | 'color' | 'name'> & {
+      linkedFrom?: Maybe<{
+        workingGroupsCollection?: Maybe<{
+          items: Array<
+            Maybe<Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }>
+          >;
+        }>;
+        projectsCollection?: Maybe<{
+          items: Array<
+            Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+          >;
+        }>;
+      }>;
+    }
+  >;
+  thumbnail?: Maybe<Pick<Asset, 'url'>>;
+  speakersCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<EventSpeakers, 'title'> & {
+          user?: Maybe<
+            | ({ __typename: 'ExternalUsers' } & Pick<
+                ExternalUsers,
+                'name' | 'orcid'
+              > & { sys: Pick<Sys, 'id'> })
+            | ({ __typename: 'Users' } & Pick<
+                Users,
+                'firstName' | 'lastName' | 'onboarded'
+              > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
+          >;
+        }
+      >
+    >;
+  }>;
+};
+
+export type FetchEventByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchEventByIdQuery = {
+  events?: Maybe<
+    Pick<
+      Events,
+      | 'description'
+      | 'endDate'
+      | 'endDateTimeZone'
+      | 'startDate'
+      | 'startDateTimeZone'
+      | 'meetingLink'
+      | 'hideMeetingLink'
+      | 'eventLink'
+      | 'status'
+      | 'hidden'
+      | 'tags'
+      | 'title'
+      | 'notesPermanentlyUnavailable'
+      | 'notesUpdatedAt'
+      | 'videoRecordingPermanentlyUnavailable'
+      | 'videoRecordingUpdatedAt'
+      | 'presentationPermanentlyUnavailable'
+      | 'presentationUpdatedAt'
+      | 'meetingMaterialsPermanentlyUnavailable'
+      | 'meetingMaterials'
+    > & {
+      sys: Pick<Sys, 'id' | 'publishedAt' | 'publishedVersion'>;
+      notes?: Maybe<
+        Pick<EventsNotes, 'json'> & {
+          links: {
+            entries: {
+              inline: Array<
+                Maybe<
+                  | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ContributingCohorts' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'ContributingCohortsMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                  | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Resources' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroupNetwork' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
+                >
+              >;
+            };
+            assets: {
+              block: Array<
+                Maybe<
+                  Pick<
+                    Asset,
+                    'url' | 'description' | 'contentType' | 'width' | 'height'
+                  > & { sys: Pick<Sys, 'id'> }
+                >
+              >;
+            };
+          };
+        }
+      >;
+      videoRecording?: Maybe<
+        Pick<EventsVideoRecording, 'json'> & {
+          links: {
+            entries: {
+              inline: Array<
+                Maybe<
+                  | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ContributingCohorts' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'ContributingCohortsMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                  | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Resources' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroupNetwork' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
+                >
+              >;
+            };
+            assets: {
+              block: Array<
+                Maybe<
+                  Pick<
+                    Asset,
+                    'url' | 'description' | 'contentType' | 'width' | 'height'
+                  > & { sys: Pick<Sys, 'id'> }
+                >
+              >;
+            };
+          };
+        }
+      >;
+      presentation?: Maybe<
+        Pick<EventsPresentation, 'json'> & {
+          links: {
+            entries: {
+              inline: Array<
+                Maybe<
+                  | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ContributingCohorts' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'ContributingCohortsMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                  | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Milestones' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ProjectMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Projects' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Resources' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroupNetwork' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
+                >
+              >;
+            };
+            assets: {
+              block: Array<
+                Maybe<
+                  Pick<
+                    Asset,
+                    'url' | 'description' | 'contentType' | 'width' | 'height'
+                  > & { sys: Pick<Sys, 'id'> }
+                >
+              >;
+            };
+          };
+        }
+      >;
+      calendar?: Maybe<
+        Pick<Calendars, 'googleCalendarId' | 'color' | 'name'> & {
+          linkedFrom?: Maybe<{
+            workingGroupsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
+            projectsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
+          }>;
+        }
+      >;
+      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+      speakersCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<EventSpeakers, 'title'> & {
+              user?: Maybe<
+                | ({ __typename: 'ExternalUsers' } & Pick<
+                    ExternalUsers,
+                    'name' | 'orcid'
+                  > & { sys: Pick<Sys, 'id'> })
+                | ({ __typename: 'Users' } & Pick<
+                    Users,
+                    'firstName' | 'lastName' | 'onboarded'
+                  > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    })
+              >;
+            }
+          >
+        >;
+      }>;
+    }
+  >;
+};
+
+export type FetchEventsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<Array<InputMaybe<EventsOrder>> | InputMaybe<EventsOrder>>;
+  where?: InputMaybe<EventsFilter>;
+}>;
+
+export type FetchEventsQuery = {
+  eventsCollection?: Maybe<
+    Pick<EventsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            Events,
+            | 'description'
+            | 'endDate'
+            | 'endDateTimeZone'
+            | 'startDate'
+            | 'startDateTimeZone'
+            | 'meetingLink'
+            | 'hideMeetingLink'
+            | 'eventLink'
+            | 'status'
+            | 'hidden'
+            | 'tags'
+            | 'title'
+            | 'notesPermanentlyUnavailable'
+            | 'notesUpdatedAt'
+            | 'videoRecordingPermanentlyUnavailable'
+            | 'videoRecordingUpdatedAt'
+            | 'presentationPermanentlyUnavailable'
+            | 'presentationUpdatedAt'
+            | 'meetingMaterialsPermanentlyUnavailable'
+            | 'meetingMaterials'
+          > & {
+            sys: Pick<Sys, 'id' | 'publishedAt' | 'publishedVersion'>;
+            notes?: Maybe<
+              Pick<EventsNotes, 'json'> & {
+                links: {
+                  entries: {
+                    inline: Array<
+                      Maybe<
+                        | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ContributingCohorts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'EventSpeakers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ExternalUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                        | ({ __typename: 'Migration' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Resources' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupNetwork' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                      >
+                    >;
+                  };
+                  assets: {
+                    block: Array<
+                      Maybe<
+                        Pick<
+                          Asset,
+                          | 'url'
+                          | 'description'
+                          | 'contentType'
+                          | 'width'
+                          | 'height'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  };
+                };
+              }
+            >;
+            videoRecording?: Maybe<
+              Pick<EventsVideoRecording, 'json'> & {
+                links: {
+                  entries: {
+                    inline: Array<
+                      Maybe<
+                        | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ContributingCohorts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'EventSpeakers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ExternalUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                        | ({ __typename: 'Migration' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Resources' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupNetwork' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                      >
+                    >;
+                  };
+                  assets: {
+                    block: Array<
+                      Maybe<
+                        Pick<
+                          Asset,
+                          | 'url'
+                          | 'description'
+                          | 'contentType'
+                          | 'width'
+                          | 'height'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  };
+                };
+              }
+            >;
+            presentation?: Maybe<
+              Pick<EventsPresentation, 'json'> & {
+                links: {
+                  entries: {
+                    inline: Array<
+                      Maybe<
+                        | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ContributingCohorts' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'EventSpeakers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ExternalUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                        | ({ __typename: 'Migration' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Milestones' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Outputs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ProjectMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Projects' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Resources' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupNetwork' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                      >
+                    >;
+                  };
+                  assets: {
+                    block: Array<
+                      Maybe<
+                        Pick<
+                          Asset,
+                          | 'url'
+                          | 'description'
+                          | 'contentType'
+                          | 'width'
+                          | 'height'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  };
+                };
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'googleCalendarId' | 'color' | 'name'> & {
+                linkedFrom?: Maybe<{
+                  workingGroupsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }>;
+                  projectsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<Pick<Projects, 'title'> & { sys: Pick<Sys, 'id'> }>
+                    >;
+                  }>;
+                }>;
+              }
+            >;
+            thumbnail?: Maybe<Pick<Asset, 'url'>>;
+            speakersCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<EventSpeakers, 'title'> & {
+                    user?: Maybe<
+                      | ({ __typename: 'ExternalUsers' } & Pick<
+                          ExternalUsers,
+                          'name' | 'orcid'
+                        > & { sys: Pick<Sys, 'id'> })
+                      | ({ __typename: 'Users' } & Pick<
+                          Users,
+                          'firstName' | 'lastName' | 'onboarded'
+                        > & {
+                            sys: Pick<Sys, 'id'>;
+                            avatar?: Maybe<Pick<Asset, 'url'>>;
+                          })
+                    >;
+                  }
+                >
+              >;
+            }>;
+          }
+        >
+      >;
+    }
+  >;
+};
+
+export type FetchEventsByUserIdQueryVariables = Exact<{
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchEventsByUserIdQuery = {
+  users?: Maybe<{
+    linkedFrom?: Maybe<{
+      eventSpeakersCollection?: Maybe<{
+        items: Array<
+          Maybe<{
+            linkedFrom?: Maybe<{
+              eventsCollection?: Maybe<
+                Pick<EventsCollection, 'total'> & {
+                  items: Array<
+                    Maybe<
+                      Pick<
+                        Events,
+                        | 'description'
+                        | 'endDate'
+                        | 'endDateTimeZone'
+                        | 'startDate'
+                        | 'startDateTimeZone'
+                        | 'meetingLink'
+                        | 'hideMeetingLink'
+                        | 'eventLink'
+                        | 'status'
+                        | 'hidden'
+                        | 'tags'
+                        | 'title'
+                        | 'notesPermanentlyUnavailable'
+                        | 'notesUpdatedAt'
+                        | 'videoRecordingPermanentlyUnavailable'
+                        | 'videoRecordingUpdatedAt'
+                        | 'presentationPermanentlyUnavailable'
+                        | 'presentationUpdatedAt'
+                        | 'meetingMaterialsPermanentlyUnavailable'
+                        | 'meetingMaterials'
+                      > & {
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedAt' | 'publishedVersion'
+                        >;
+                        notes?: Maybe<
+                          Pick<EventsNotes, 'json'> & {
+                            links: {
+                              entries: {
+                                inline: Array<
+                                  Maybe<
+                                    | ({ __typename: 'Calendars' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ContributingCohorts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ContributingCohortsMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'EventSpeakers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Events' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ExternalUsers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Media' } & Pick<
+                                        Media,
+                                        'url'
+                                      > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Migration' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Outputs' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Pages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Resources' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Users' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupNetwork' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                  >
+                                >;
+                              };
+                              assets: {
+                                block: Array<
+                                  Maybe<
+                                    Pick<
+                                      Asset,
+                                      | 'url'
+                                      | 'description'
+                                      | 'contentType'
+                                      | 'width'
+                                      | 'height'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
+                                >;
+                              };
+                            };
+                          }
+                        >;
+                        videoRecording?: Maybe<
+                          Pick<EventsVideoRecording, 'json'> & {
+                            links: {
+                              entries: {
+                                inline: Array<
+                                  Maybe<
+                                    | ({ __typename: 'Calendars' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ContributingCohorts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ContributingCohortsMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'EventSpeakers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Events' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ExternalUsers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Media' } & Pick<
+                                        Media,
+                                        'url'
+                                      > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Migration' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Outputs' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Pages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Resources' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Users' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupNetwork' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                  >
+                                >;
+                              };
+                              assets: {
+                                block: Array<
+                                  Maybe<
+                                    Pick<
+                                      Asset,
+                                      | 'url'
+                                      | 'description'
+                                      | 'contentType'
+                                      | 'width'
+                                      | 'height'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
+                                >;
+                              };
+                            };
+                          }
+                        >;
+                        presentation?: Maybe<
+                          Pick<EventsPresentation, 'json'> & {
+                            links: {
+                              entries: {
+                                inline: Array<
+                                  Maybe<
+                                    | ({ __typename: 'Calendars' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ContributingCohorts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ContributingCohortsMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'EventSpeakers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Events' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ExternalUsers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Media' } & Pick<
+                                        Media,
+                                        'url'
+                                      > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Migration' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Outputs' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Pages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Resources' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Users' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupNetwork' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                  >
+                                >;
+                              };
+                              assets: {
+                                block: Array<
+                                  Maybe<
+                                    Pick<
+                                      Asset,
+                                      | 'url'
+                                      | 'description'
+                                      | 'contentType'
+                                      | 'width'
+                                      | 'height'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
+                                >;
+                              };
+                            };
+                          }
+                        >;
+                        calendar?: Maybe<
+                          Pick<
+                            Calendars,
+                            'googleCalendarId' | 'color' | 'name'
+                          > & {
+                            linkedFrom?: Maybe<{
+                              workingGroupsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<WorkingGroups, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >
+                                >;
+                              }>;
+                              projectsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<Projects, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >
+                                >;
+                              }>;
+                            }>;
+                          }
+                        >;
+                        thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                        speakersCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<EventSpeakers, 'title'> & {
+                                user?: Maybe<
+                                  | ({ __typename: 'ExternalUsers' } & Pick<
+                                      ExternalUsers,
+                                      'name' | 'orcid'
+                                    > & { sys: Pick<Sys, 'id'> })
+                                  | ({ __typename: 'Users' } & Pick<
+                                      Users,
+                                      'firstName' | 'lastName' | 'onboarded'
+                                    > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                      })
+                                >;
+                              }
+                            >
+                          >;
+                        }>;
+                      }
+                    >
+                  >;
+                }
+              >;
+            }>;
+          }>
+        >;
+      }>;
+    }>;
+  }>;
+};
+
+export type FetchEventsByExternalUserIdQueryVariables = Exact<{
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchEventsByExternalUserIdQuery = {
+  externalUsers?: Maybe<{
+    linkedFrom?: Maybe<{
+      eventSpeakersCollection?: Maybe<{
+        items: Array<
+          Maybe<{
+            linkedFrom?: Maybe<{
+              eventsCollection?: Maybe<
+                Pick<EventsCollection, 'total'> & {
+                  items: Array<
+                    Maybe<
+                      Pick<
+                        Events,
+                        | 'description'
+                        | 'endDate'
+                        | 'endDateTimeZone'
+                        | 'startDate'
+                        | 'startDateTimeZone'
+                        | 'meetingLink'
+                        | 'hideMeetingLink'
+                        | 'eventLink'
+                        | 'status'
+                        | 'hidden'
+                        | 'tags'
+                        | 'title'
+                        | 'notesPermanentlyUnavailable'
+                        | 'notesUpdatedAt'
+                        | 'videoRecordingPermanentlyUnavailable'
+                        | 'videoRecordingUpdatedAt'
+                        | 'presentationPermanentlyUnavailable'
+                        | 'presentationUpdatedAt'
+                        | 'meetingMaterialsPermanentlyUnavailable'
+                        | 'meetingMaterials'
+                      > & {
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedAt' | 'publishedVersion'
+                        >;
+                        notes?: Maybe<
+                          Pick<EventsNotes, 'json'> & {
+                            links: {
+                              entries: {
+                                inline: Array<
+                                  Maybe<
+                                    | ({ __typename: 'Calendars' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ContributingCohorts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ContributingCohortsMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'EventSpeakers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Events' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ExternalUsers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Media' } & Pick<
+                                        Media,
+                                        'url'
+                                      > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Migration' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Outputs' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Pages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Resources' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Users' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupNetwork' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                  >
+                                >;
+                              };
+                              assets: {
+                                block: Array<
+                                  Maybe<
+                                    Pick<
+                                      Asset,
+                                      | 'url'
+                                      | 'description'
+                                      | 'contentType'
+                                      | 'width'
+                                      | 'height'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
+                                >;
+                              };
+                            };
+                          }
+                        >;
+                        videoRecording?: Maybe<
+                          Pick<EventsVideoRecording, 'json'> & {
+                            links: {
+                              entries: {
+                                inline: Array<
+                                  Maybe<
+                                    | ({ __typename: 'Calendars' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ContributingCohorts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ContributingCohortsMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'EventSpeakers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Events' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ExternalUsers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Media' } & Pick<
+                                        Media,
+                                        'url'
+                                      > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Migration' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Outputs' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Pages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Resources' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Users' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupNetwork' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                  >
+                                >;
+                              };
+                              assets: {
+                                block: Array<
+                                  Maybe<
+                                    Pick<
+                                      Asset,
+                                      | 'url'
+                                      | 'description'
+                                      | 'contentType'
+                                      | 'width'
+                                      | 'height'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
+                                >;
+                              };
+                            };
+                          }
+                        >;
+                        presentation?: Maybe<
+                          Pick<EventsPresentation, 'json'> & {
+                            links: {
+                              entries: {
+                                inline: Array<
+                                  Maybe<
+                                    | ({ __typename: 'Calendars' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ContributingCohorts' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ContributingCohortsMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'EventSpeakers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Events' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ExternalUsers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Media' } & Pick<
+                                        Media,
+                                        'url'
+                                      > & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Migration' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Milestones' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Outputs' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Pages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ProjectMembership' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Projects' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Resources' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Users' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupMembership';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupNetwork' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                  >
+                                >;
+                              };
+                              assets: {
+                                block: Array<
+                                  Maybe<
+                                    Pick<
+                                      Asset,
+                                      | 'url'
+                                      | 'description'
+                                      | 'contentType'
+                                      | 'width'
+                                      | 'height'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
+                                >;
+                              };
+                            };
+                          }
+                        >;
+                        calendar?: Maybe<
+                          Pick<
+                            Calendars,
+                            'googleCalendarId' | 'color' | 'name'
+                          > & {
+                            linkedFrom?: Maybe<{
+                              workingGroupsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<WorkingGroups, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >
+                                >;
+                              }>;
+                              projectsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<Projects, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >
+                                >;
+                              }>;
+                            }>;
+                          }
+                        >;
+                        thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                        speakersCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<EventSpeakers, 'title'> & {
+                                user?: Maybe<
+                                  | ({ __typename: 'ExternalUsers' } & Pick<
+                                      ExternalUsers,
+                                      'name' | 'orcid'
+                                    > & { sys: Pick<Sys, 'id'> })
+                                  | ({ __typename: 'Users' } & Pick<
+                                      Users,
+                                      'firstName' | 'lastName' | 'onboarded'
+                                    > & {
+                                        sys: Pick<Sys, 'id'>;
+                                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                                      })
+                                >;
+                              }
+                            >
+                          >;
+                        }>;
+                      }
+                    >
+                  >;
+                }
+              >;
+            }>;
+          }>
+        >;
+      }>;
+    }>;
+  }>;
+};
+
+export type FetchProjectCalendarQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchProjectCalendarQuery = {
+  projects?: Maybe<{ calendar?: Maybe<{ sys: Pick<Sys, 'id'> }> }>;
+};
+
+export type FetchWorkingGroupCalendarQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchWorkingGroupCalendarQuery = {
+  workingGroups?: Maybe<{ calendar?: Maybe<{ sys: Pick<Sys, 'id'> }> }>;
+};
+
 export type ExternalUsersContentDataFragment = Pick<
   ExternalUsers,
   'name' | 'orcid'
@@ -6185,6 +7709,693 @@ export const ContributingCohortsContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ContributingCohortsContentDataFragment, unknown>;
+export const EventsContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'EventsContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Events' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endDateTimeZone' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startDateTimeZone' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'meetingLink' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hideMeetingLink' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'eventLink' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'notesPermanentlyUnavailable' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'notes' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'json' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'links' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'entries' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'inline' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Media' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'assets' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'block' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contentType',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'width' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'height' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'notesUpdatedAt' } },
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'videoRecordingPermanentlyUnavailable',
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'videoRecording' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'json' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'links' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'entries' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'inline' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Media' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'assets' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'block' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contentType',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'width' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'height' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'videoRecordingUpdatedAt' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'presentationPermanentlyUnavailable' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'presentation' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'json' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'links' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'entries' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'inline' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Media' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'assets' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'block' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contentType',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'width' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'height' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'presentationUpdatedAt' },
+          },
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'meetingMaterialsPermanentlyUnavailable',
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'meetingMaterials' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'calendar' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'googleCalendarId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'color' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'workingGroupsCollection',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectsCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'thumbnail' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'speakersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: '__typename' },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'ExternalUsers' },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'name' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'orcid' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'Users' },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EventsContentDataFragment, unknown>;
 export const ExternalUsersContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -7629,6 +9840,673 @@ export const FetchContributingCohortsDocument = {
 } as unknown as DocumentNode<
   FetchContributingCohortsQuery,
   FetchContributingCohortsQueryVariables
+>;
+export const FetchEventByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchEventById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'events' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'EventsContentData' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...EventsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchEventByIdQuery, FetchEventByIdQueryVariables>;
+export const FetchEventsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchEvents' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'EventsOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'EventsFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'eventsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'EventsContentData' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...EventsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchEventsQuery, FetchEventsQueryVariables>;
+export const FetchEventsByUserIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchEventsByUserId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'users' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'eventSpeakersCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '1' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'linkedFrom' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'eventsCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'limit',
+                                                },
+                                              },
+                                            },
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'skip',
+                                              },
+                                              value: {
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'skip',
+                                                },
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'total',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'FragmentSpread',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'EventsContentData',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...EventsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchEventsByUserIdQuery,
+  FetchEventsByUserIdQueryVariables
+>;
+export const FetchEventsByExternalUserIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchEventsByExternalUserId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'externalUsers' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'eventSpeakersCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '1' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'linkedFrom' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'eventsCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'limit',
+                                                },
+                                              },
+                                            },
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'skip',
+                                              },
+                                              value: {
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'skip',
+                                                },
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'total',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'FragmentSpread',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'EventsContentData',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...EventsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchEventsByExternalUserIdQuery,
+  FetchEventsByExternalUserIdQueryVariables
+>;
+export const FetchProjectCalendarDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProjectCalendar' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'projects' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendar' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchProjectCalendarQuery,
+  FetchProjectCalendarQueryVariables
+>;
+export const FetchWorkingGroupCalendarDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroupCalendar' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'workingGroups' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendar' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupCalendarQuery,
+  FetchWorkingGroupCalendarQueryVariables
 >;
 export const FetchExternalUsersDocument = {
   kind: 'Document',

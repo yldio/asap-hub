@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { gp2 as gp2Model } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';

@@ -286,12 +286,10 @@ export const getContentfulEventDataObject = (): gp2Model.EventDataObject => ({
   ...getEventDataObject(),
   ...eventUnreadyResponse,
   notes: '<p>These are the notes from the meeting</p>',
-  presentation:
-    '<p><iframe src="https://example.com"/></p>',
+  presentation: '<p><iframe src="https://example.com"/></p>',
   videoRecording:
     '<p><iframe src="https://player.vimeo.com/video/493052720"/></p>',
-  thumbnail:
-    'https://example.com',
+  thumbnail: 'https://example.com',
 });
 
 export const getContentfulEventResponse = (): gp2Model.EventResponse =>

@@ -1,3 +1,4 @@
+import { FetchInterestGroupByIdQuery } from '@asap-hub/contentful';
 import {
   GroupDataObject,
   GroupEvent,
@@ -530,7 +531,9 @@ const getContentfulGraphQLLeader = () => ({
   },
 });
 
-export const getContentfulGraphqlInterestGroup = () => ({
+export const getContentfulGraphqlInterestGroup = (): NonNullable<
+  FetchInterestGroupByIdQuery['interestGroups']
+> => ({
   sys: {
     id: 'group-id-1',
     publishedAt: '2020-12-11T15:06:26.000Z',
@@ -546,14 +549,19 @@ export const getContentfulGraphqlInterestGroup = () => ({
   slack: 'https://example.com/secure-comms',
   googleDrive: null,
   leadersCollection: {
-    total: 2,
     items: [
       {
+        sys: {
+          id: 'user-id-1',
+        },
         role: 'Chair',
         inactiveSinceDate: null,
         user: getContentfulGraphQLLeader(),
       },
       {
+        sys: {
+          id: 'user-id-2',
+        },
         role: 'Project Manager',
         inactiveSinceDate: null,
         user: getContentfulGraphQLLeader(),
@@ -561,7 +569,6 @@ export const getContentfulGraphqlInterestGroup = () => ({
     ],
   },
   teamsCollection: {
-    total: 1,
     items: [getContentfulGraphqlTeam()],
   },
   calendar: {

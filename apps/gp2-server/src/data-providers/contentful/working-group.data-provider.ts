@@ -2,12 +2,11 @@ import {
   addLocaleToFields,
   Entry,
   Environment,
+  getEntities,
   gp2 as gp2Contentful,
   GraphQLClient,
-  Link,
   patchAndPublish,
   pollContentfulGql,
-  VersionedLink,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
@@ -53,7 +52,7 @@ export class WorkingGroupContentfulDataProvider
 
     const nextResources: string[] = await addNextResources(
       environment,
-      workingGroup.resources?.filter((resource) => !resource.id),
+      workingGroup.resources,
     );
 
     const idsToDelete = getResourceIdsToDelete(
@@ -165,25 +164,18 @@ export function parseWorkingGroupToDataObject(
         (milestone): milestone is GraphQLWorkingGroupMilestone =>
           milestone !== null,
       )
-      .map(
-        ({
-          status,
-          title,
-          externalLink,
-          description,
-        }: GraphQLWorkingGroupMilestone) => {
-          if (!(status && gp2Model.isMilestoneStatus(status))) {
-            throw new TypeError('milestone status is unknown');
-          }
+      .map(({ status, title, externalLink, description }) => {
+        if (!(status && gp2Model.isMilestoneStatus(status))) {
+          throw new TypeError('milestone status is unknown');
+        }
 
-          return {
-            title: title || '',
-            status,
-            link: externalLink || undefined,
-            description: description || undefined,
-          };
-        },
-      ) || [];
+        return {
+          title: title || '',
+          status,
+          link: externalLink || undefined,
+          description: description || undefined,
+        };
+      }) || [];
 
   const resources =
     workingGroup.resourcesCollection?.items?.reduce(parseResources, []) || [];
@@ -221,78 +213,49 @@ export function parseResources(
     return resourceList;
   }
 
-  const parsedResource = {
-    id: resource.sys.id,
-    title: resource.title,
-    description: resource.description || undefined,
-  };
-  if (resource.type === 'Note') {
-    return [
-      ...resourceList,
-      {
-        type: 'Note' as const,
-        ...parsedResource,
-      },
-    ];
-  }
-  const externalLink = resource.externalLink || '';
   return [
     ...resourceList,
     {
-      type: 'Link' as const,
-      ...parsedResource,
-      externalLink,
+      id: resource.sys.id,
+      title: resource.title,
+      description: resource.description || undefined,
+      ...(resource.type === 'Note'
+        ? { type: 'Note' }
+        : {
+            type: 'Link',
+            externalLink: resource.externalLink || '',
+          }),
     },
   ];
 }
 const addNextResources = async (
   environment: Environment,
-  nextResources?: gp2Model.WorkingGroupUpdateDataObject['resources'],
+  resources: gp2Model.WorkingGroupUpdateDataObject['resources'],
 ): Promise<string[]> => {
-  if (nextResources && nextResources.length > 0) {
-    const nextContributingCohorts = await Promise.all(
-      nextResources.map(async (resource) => {
-        const entry = await environment.createEntry('resources', {
-          fields: addLocaleToFields({
-            type: resource.type,
-            title: resource.title,
-            description: resource.description,
-            externalLink: gp2Model.isResourceLink(resource)
-              ? resource.externalLink
-              : undefined,
-          }),
-        });
-        await entry.publish();
-        return entry.sys.id;
-      }),
-    );
-
-    return nextContributingCohorts;
+  const nextResources = resources?.filter((resource) => !resource.id);
+  if (!(nextResources && nextResources.length > 0)) {
+    return [];
   }
-  return [];
+  return Promise.all(
+    nextResources.map(async (resource) => {
+      const entry = await environment.createEntry('resources', {
+        fields: addLocaleToFields({
+          type: resource.type,
+          title: resource.title,
+          description: resource.description,
+          externalLink: gp2Model.isResourceLink(resource)
+            ? resource.externalLink
+            : undefined,
+        }),
+      });
+      await entry.publish();
+      return entry.sys.id;
+    }),
+  );
 };
 
-const getEntities = <Version extends boolean>(
-  entities: string[],
-  version?: Version,
-) => entities.map((id) => getLinkEntity<Version>(id, version));
-
-function getLinkEntity<Version extends boolean>(
-  id: string,
-  x?: Version,
-): Version extends true ? VersionedLink<'Entry'> : Link<'Entry'>;
-function getLinkEntity(id: string, version: boolean = false): unknown {
-  return {
-    sys: {
-      type: 'Link' as const,
-      linkType: 'Entry' as const,
-      id,
-      ...(version ? { version: 1 } : {}),
-    },
-  };
-}
 const getResourceFields = (nextResources: string[]) => ({
-  resources: getEntities(nextResources),
+  resources: getEntities(nextResources, false),
 });
 const getResourceIdsToDelete = (
   previousWorkingGroup: Entry,
@@ -302,12 +265,12 @@ const getResourceIdsToDelete = (
   if (!(previousResources && previousResources['en-US'])) {
     return [];
   }
-  const existingIds = previousResources['en-US'].map(
+  const existingIds: string[] = previousResources['en-US'].map(
     ({ sys: { id } }: { sys: { id: string } }) => id,
   );
   const nextIds = (resources || []).map(({ id }) => id);
 
-  return existingIds.filter((id: string) => !nextIds.includes(id));
+  return existingIds.filter((id) => !nextIds.includes(id));
 };
 
 const deleteResources = async (
@@ -318,10 +281,13 @@ const deleteResources = async (
     idsToDelete.map(async (id) => {
       const deletable = await environment.getEntry(id);
       await deletable.unpublish();
-      await deletable.delete();
+      return deletable.delete();
     }),
   );
 
+type ResourceWithId = gp2Model.Resource & {
+  id: string;
+};
 const updateResources = async (
   resources: gp2Model.WorkingGroupUpdateDataObject['resources'],
   idsToDelete: string[],
@@ -329,39 +295,36 @@ const updateResources = async (
   environment: Environment,
 ): Promise<string[]> => {
   const toUpdate = (resources || []).filter(
-    (resource: { id?: string }) =>
+    (resource): resource is ResourceWithId =>
       !!resource.id && !idsToDelete.includes(resource.id),
   );
-  type ResourceWithId = gp2Model.Resource & {
-    id: string;
-  };
   await Promise.all(
     toUpdate
-      .filter((resource) => {
-        const previousResource = previousResources?.filter(
-          (previous) => previous.id === resource.id,
-        );
-        return !(
-          previousResource &&
-          previousResource.length > 0 &&
-          previousResource[0]?.type === resource.type &&
-          previousResource[0].title === resource.title &&
-          previousResource[0].description === resource.description &&
-          (gp2Model.isResourceLink(previousResource[0]) &&
-            previousResource[0].externalLink) ===
-            (gp2Model.isResourceLink(resource) && resource.externalLink)
-        );
-      })
-      .filter(
-        (resource): resource is ResourceWithId => resource.id !== undefined,
-      )
+      .filter(outUnchangedResources(previousResources))
       .map(async ({ id, ...resource }) => {
         const updatable = await environment.getEntry(id);
-        await patchAndPublish(updatable, { ...resource });
-        return id || '';
+        return patchAndPublish(updatable, { ...resource });
       }),
   );
-  return toUpdate
-    .map(({ id }) => id)
-    .filter((id): id is string => id !== undefined);
+  return toUpdate.map(({ id }) => id);
 };
+
+const outUnchangedResources =
+  (previousResources: gp2Model.WorkingGroupDataObject['resources']) =>
+  (
+    resource: NonNullable<gp2Model.WorkingGroupDataObject['resources']>[number],
+  ) => {
+    const previousResource = previousResources?.filter(
+      (previous) => previous.id === resource.id,
+    );
+    return !(
+      previousResource &&
+      previousResource[0] &&
+      previousResource[0].type === resource.type &&
+      previousResource[0].title === resource.title &&
+      previousResource[0].description === resource.description &&
+      (gp2Model.isResourceLink(previousResource[0]) &&
+        previousResource[0].externalLink) ===
+        (gp2Model.isResourceLink(resource) && resource.externalLink)
+    );
+  };

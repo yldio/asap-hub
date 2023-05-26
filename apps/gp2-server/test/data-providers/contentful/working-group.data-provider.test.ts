@@ -940,83 +940,89 @@ describe('Working Group Data Provider', () => {
           expect(environmentMock.createEntry).not.toBeCalled();
         },
       );
-      test('It should not update the resource only if it is the same', async () => {
-        const title = 'a title 2';
-        const type = 'Link';
-        const description = 'a description';
-        const externalLink = 'http://example.com/a-link';
-        const workingGroupId = '42';
-        const existingResourceId = '11';
-        const workingGroup = getContentfulGraphqlWorkingGroup();
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          workingGroups: {
-            ...workingGroup,
-            resourcesCollection: {
-              total: 1,
-              items: [
-                {
-                  sys: { id: existingResourceId },
-                  title,
-                  type,
-                  description,
-                  externalLink,
-                },
-              ],
-            },
-          },
-        });
-        const existingWorkingGroupMock = getEntry(
-          {
-            fields: {
-              resources: {
-                'en-US': [
+      test.each<gp2Model.Resource['type']>(['Link', 'Note'])(
+        'It should not update the resource only if it is the same',
+        async (type) => {
+          const title = 'a title 2';
+          const description = 'a description';
+          const externalLink = 'http://example.com/a-link';
+          const workingGroupId = '42';
+          const existingResourceId = '11';
+          const workingGroup = getContentfulGraphqlWorkingGroup();
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            workingGroups: {
+              ...workingGroup,
+              resourcesCollection: {
+                total: 1,
+                items: [
                   {
                     sys: { id: existingResourceId },
-                    linkType: 'Entry',
-                    type: 'Link',
+                    title,
+                    type,
+                    description,
+                    ...(type === 'Link' ? { externalLink } : {}),
                   },
                 ],
               },
             },
-          },
-          workingGroupId,
-        );
-        const existingResourceMock = getEntry(
-          {
-            fields: {
-              type,
-              title,
-              description,
-              externalLink,
-            },
-          },
-          existingResourceId,
-        );
-        environmentMock.getEntry
-          .mockResolvedValueOnce(existingWorkingGroupMock)
-          .mockResolvedValueOnce(existingResourceMock);
-        await workingGroupDataProvider.update(workingGroupId, {
-          resources: [
-            { id: existingResourceId, title, type, externalLink, description },
-          ],
-        });
-        expect(patchAndPublish).toHaveBeenNthCalledWith(
-          1,
-          existingWorkingGroupMock,
-          {
-            resources: [
-              {
-                sys: {
-                  id: existingResourceId,
-                  linkType: 'Entry',
-                  type: 'Link',
+          });
+          const existingWorkingGroupMock = getEntry(
+            {
+              fields: {
+                resources: {
+                  'en-US': [
+                    {
+                      sys: { id: existingResourceId },
+                      linkType: 'Entry',
+                      type: 'Link',
+                    },
+                  ],
                 },
               },
-            ],
-          },
-        );
-        expect(environmentMock.createEntry).not.toBeCalled();
-      });
+            },
+            workingGroupId,
+          );
+          const existingResourceMock = getEntry(
+            {
+              fields: {
+                type,
+                title,
+                description,
+                ...(type === 'Link' ? { externalLink } : {}),
+              },
+            },
+            existingResourceId,
+          );
+          environmentMock.getEntry
+            .mockResolvedValueOnce(existingWorkingGroupMock)
+            .mockResolvedValueOnce(existingResourceMock);
+          const resourceToUpdate: gp2Model.Resource = {
+            id: existingResourceId,
+            title,
+            description,
+            ...(type === 'Link' ? { externalLink, type } : { type }),
+          };
+          await workingGroupDataProvider.update(workingGroupId, {
+            resources: [resourceToUpdate],
+          });
+          expect(patchAndPublish).toHaveBeenNthCalledWith(
+            1,
+            existingWorkingGroupMock,
+            {
+              resources: [
+                {
+                  sys: {
+                    id: existingResourceId,
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
+          );
+          expect(environmentMock.createEntry).not.toBeCalled();
+        },
+      );
     });
     test('checks version of published data and polls until they match', async () => {
       const existingWorkingGroupMock = getEntry({

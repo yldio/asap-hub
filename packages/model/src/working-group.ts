@@ -77,16 +77,9 @@ export type WorkingGroupDataObject = {
   readonly lastModifiedDate: string;
 };
 
-export type WorkingGroupUpdateDataObject = Partial<
-  Omit<WorkingGroupDataObject, 'leaders' | 'members' | 'calendars'> & {
-    calendars: string[];
-    leaders: {
-      user: string[];
-      role: string;
-      workstreamRole: string;
-    }[];
-    members: string[];
-  }
+export type WorkingGroupUpdateDataObject = Pick<
+  WorkingGroupDataObject,
+  'deliverables'
 >;
 
 export type WorkingGroupListDataObject = ListResponse<WorkingGroupDataObject>;

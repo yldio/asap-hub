@@ -480,16 +480,20 @@ describe('Working Group Data Provider', () => {
 
   describe('update method', () => {
     it('calls `patch` method on squidex rest client', async () => {
-      await workingGroupDataProvider.update('123', { title: 'New title' });
+      await workingGroupDataProvider.update('123', {
+        deliverables: [
+          {
+            description: '<p>Deliverable one</p>',
+            status: 'Complete',
+          },
+        ],
+      });
 
       expect(workingGroupRestClient.patch).toHaveBeenCalled();
     });
 
     it('maps arguments to `{ iv: <arg> }` pattern expected by Squidex API', async () => {
       await workingGroupDataProvider.update('123', {
-        title: 'New title',
-        description: '<p>Description</p>',
-        complete: true,
         deliverables: [
           {
             description: '<p>Deliverable one</p>',
@@ -500,22 +504,9 @@ describe('Working Group Data Provider', () => {
             status: 'Incomplete',
           },
         ],
-        shortText: '',
-        calendars: ['123'],
-        leaders: [
-          {
-            user: ['456'],
-            role: '',
-            workstreamRole: '',
-          },
-        ],
-        members: ['456'],
       });
 
       expect(workingGroupRestClient.patch).toHaveBeenCalledWith('123', {
-        title: { iv: 'New title' },
-        description: { iv: '<p>Description</p>' },
-        complete: { iv: true },
         deliverables: {
           iv: [
             {
@@ -528,18 +519,6 @@ describe('Working Group Data Provider', () => {
             },
           ],
         },
-        shortText: { iv: '' },
-        calendars: { iv: ['123'] },
-        leaders: {
-          iv: [
-            {
-              user: ['456'],
-              role: '',
-              workstreamRole: '',
-            },
-          ],
-        },
-        members: { iv: ['456'] },
       });
     });
   });

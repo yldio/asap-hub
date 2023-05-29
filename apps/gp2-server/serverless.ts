@@ -301,7 +301,7 @@ const serverlessConfig: AWS = {
             eventBus,
             pattern: {
               source: [
-                isContentfulEnabled
+                isContentfulEnabled === 'true'
                   ? eventBusSourceContentful
                   : eventBusSourceSquidex,
               ],

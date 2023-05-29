@@ -7,10 +7,11 @@ import { lead, paper } from '../colors';
 import Info from './Info';
 
 const tipStyles = css({
+  marginTop: 0,
   ':empty': {
     display: 'none',
   },
-  paddingTop: `${6 / perRem}em`,
+  paddingTop: 0,
 
   color: lead.rgb,
 });
@@ -42,7 +43,17 @@ const infoStyle = css({
 
 const infoWrapperStyle = css({
   paddingLeft: `${16 / perRem}em`,
+  lineHeight: 0,
+  [`span, button`]: {
+    lineHeight: 0,
+  },
 });
+
+const titleStyle = css({
+  display: 'flex',
+  marginBottom: 0,
+});
+
 
 const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   title,
@@ -53,7 +64,7 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
 }) => (
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
-      <Paragraph>
+      <Paragraph styles={titleStyle}>
         <strong>{title}</strong>
         <span css={subtitleStyles}>{subtitle}</span>
         {info && (
@@ -63,9 +74,8 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
             </Info>
           </span>
         )}
-        <br />
-        <span css={tipStyles}>{tip}</span>
       </Paragraph>
+      <Paragraph styles={tipStyles}>{tip}</Paragraph>
     </Label>
   </div>
 );

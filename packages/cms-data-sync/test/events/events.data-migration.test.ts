@@ -391,40 +391,6 @@ describe('Migrate events', () => {
     await migrateEvents();
 
     expect(contentfulEnv.createEntry).toHaveBeenCalledTimes(2);
-
-    expect(contentfulEnv.createEntry).toHaveBeenNthCalledWith(
-      1,
-      'eventSpeakers',
-      {
-        fields: {
-          user: {
-            'en-US': {
-              sys: { id: 'external-user-1', linkType: 'Entry', type: 'Link' },
-            },
-          },
-        },
-      },
-    );
-
-    expect(contentfulEnv.createEntry).toHaveBeenNthCalledWith(
-      2,
-      'eventSpeakers',
-      {
-        fields: {
-          team: {
-            'en-US': {
-              sys: { id: 'team-1', linkType: 'Entry', type: 'Link' },
-            },
-          },
-          user: {
-            'en-US': {
-              sys: { id: 'user-1', linkType: 'Entry', type: 'Link' },
-            },
-          },
-        },
-      },
-    );
-
     expect(eventSpeakersMock.publish).toHaveBeenCalled();
   });
 

@@ -9,11 +9,12 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
 import {
   deleteResources,
+  parseCalendar,
   parseMembers,
-  parseMilestone,
+  parseMilestones,
   parseResources,
   processResources,
-} from './common';
+} from './utils';
 
 export class WorkingGroupContentfulDataProvider
   implements WorkingGroupDataProvider
@@ -92,24 +93,6 @@ export type GraphQLWorkingGroup = NonNullable<
   >
 >;
 
-export type GraphQLWorkingGroupMember = NonNullable<
-  NonNullable<GraphQLWorkingGroup['membersCollection']>
->['items'][number];
-
-export type GraphQLWorkingGroupMilestone = NonNullable<
-  NonNullable<
-    NonNullable<GraphQLWorkingGroup['milestonesCollection']>
-  >['items'][number]
->;
-
-export type GraphQLWorkingGroupResource = NonNullable<
-  NonNullable<GraphQLWorkingGroup['resourcesCollection']>
->['items'][number];
-
-export type GraphQLWorkingGroupCalendar = NonNullable<
-  GraphQLWorkingGroup['calendar']
->;
-
 export const parseWorkingGroupToDataObject = (
   workingGroup: GraphQLWorkingGroup,
 ): gp2Model.WorkingGroupDataObject => {
@@ -117,24 +100,9 @@ export const parseWorkingGroupToDataObject = (
     workingGroup.membersCollection,
     gp2Model.isWorkingGroupMemberRole,
   );
-
-  const milestones =
-    workingGroup.milestonesCollection?.items
-      ?.filter(
-        (milestone): milestone is GraphQLWorkingGroupMilestone =>
-          milestone !== null,
-      )
-      .map(parseMilestone) || [];
-
-  const resources =
-    workingGroup.resourcesCollection?.items?.reduce(parseResources, []) || [];
-
-  const calendar = workingGroup.calendar
-    ? {
-        id: workingGroup.calendar.sys.id,
-        name: workingGroup.calendar.name || '',
-      }
-    : undefined;
+  const milestones = parseMilestones(workingGroup.milestonesCollection);
+  const resources = parseResources(workingGroup.resourcesCollection);
+  const calendar = parseCalendar(workingGroup.calendar);
 
   return {
     id: workingGroup.sys.id,

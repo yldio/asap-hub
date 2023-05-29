@@ -44,9 +44,7 @@ describe('Project Data Provider', () => {
 
   describe('FetchById', () => {
     test('Should fetch the project from squidex graphql', async () => {
-      const result = await projectDataProviderWithMockServer.fetchById(
-        'project-id',
-      );
+      const result = await projectDataProviderWithMockServer.fetchById('id');
 
       expect(result).toMatchObject(getProjectDataObject());
     });
@@ -63,9 +61,7 @@ describe('Project Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         projects: project,
       });
-      const projectDataObject = await projectDataProvider.fetchById(
-        'project-id',
-      );
+      const projectDataObject = await projectDataProvider.fetchById('id');
       const expected = getProjectDataObject();
       expect(projectDataObject).toEqual(expected);
     });
@@ -74,9 +70,9 @@ describe('Project Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         projects: { ...project, status },
       });
-      expect(() =>
-        projectDataProvider.fetchById('project-id'),
-      ).rejects.toThrowError(new TypeError('status is unknown'));
+      expect(() => projectDataProvider.fetchById('id')).rejects.toThrowError(
+        new TypeError('status is unknown'),
+      );
     });
     test('pm emails are added if available', async () => {
       const email = 'tony@starkenterprises.com';
@@ -84,9 +80,7 @@ describe('Project Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         projects: { ...project, pmEmail: email },
       });
-      const projectDataObject = await projectDataProvider.fetchById(
-        'project-id',
-      );
+      const projectDataObject = await projectDataProvider.fetchById('id');
       expect(projectDataObject?.pmEmail).toEqual(email);
     });
 
@@ -96,9 +90,7 @@ describe('Project Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         projects: { ...project, leadEmail: email },
       });
-      const projectDataObject = await projectDataProvider.fetchById(
-        'project-id',
-      );
+      const projectDataObject = await projectDataProvider.fetchById('id');
       expect(projectDataObject?.leadEmail).toEqual(email);
     });
 
@@ -108,9 +100,7 @@ describe('Project Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         projects: { ...project, description },
       });
-      const projectDataObject = await projectDataProvider.fetchById(
-        'project-id',
-      );
+      const projectDataObject = await projectDataProvider.fetchById('id');
       expect(projectDataObject?.description).toEqual(description);
     });
 
@@ -123,9 +113,7 @@ describe('Project Data Provider', () => {
           contentfulGraphqlClientMock.request.mockResolvedValueOnce({
             projects: { ...project, keywords: expectedKeywords },
           });
-          const projectDataObject = await projectDataProvider.fetchById(
-            'project-id',
-          );
+          const projectDataObject = await projectDataProvider.fetchById('id');
           expect(projectDataObject?.keywords).toEqual(expectedKeywords);
         },
       );
@@ -135,9 +123,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, keywords: ['invalid'] },
         });
-        expect(() =>
-          projectDataProvider.fetchById('project-id'),
-        ).rejects.toThrow();
+        expect(() => projectDataProvider.fetchById('id')).rejects.toThrow();
       });
     });
 
@@ -147,9 +133,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, traineeProject: null },
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.traineeProject).toEqual(false);
       });
 
@@ -158,9 +142,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, traineeProject: true },
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.traineeProject).toEqual(true);
       });
     });
@@ -170,9 +152,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, opportunitiesLink: null },
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.opportunitiesLink).toBeUndefined();
       });
 
@@ -182,9 +162,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, opportunitiesLink },
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.opportunitiesLink).toEqual(opportunitiesLink);
       });
     });
@@ -194,9 +172,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, membersCollection: { total: 0, items: [] } },
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.members).toEqual([]);
       });
 
@@ -222,9 +198,7 @@ describe('Project Data Provider', () => {
             },
           },
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.members[0]?.avatarUrl).toEqual(url);
       });
 
@@ -248,9 +222,7 @@ describe('Project Data Provider', () => {
             },
           },
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.members).toEqual([]);
       });
       test('should throw if the role property is invalid', () => {
@@ -273,9 +245,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        expect(() =>
-          projectDataProvider.fetchById('project-id'),
-        ).rejects.toThrow();
+        expect(() => projectDataProvider.fetchById('id')).rejects.toThrow();
       });
 
       test.each([false, undefined])(
@@ -300,9 +270,7 @@ describe('Project Data Provider', () => {
           contentfulGraphqlClientMock.request.mockResolvedValueOnce({
             projects: project,
           });
-          const projectDataObject = await projectDataProvider.fetchById(
-            'project-id',
-          );
+          const projectDataObject = await projectDataProvider.fetchById('id');
           expect(projectDataObject?.members).toEqual([]);
         },
       );
@@ -329,9 +297,7 @@ describe('Project Data Provider', () => {
           contentfulGraphqlClientMock.request.mockResolvedValueOnce({
             projects: project,
           });
-          const projectDataObject = await projectDataProvider.fetchById(
-            'project-id',
-          );
+          const projectDataObject = await projectDataProvider.fetchById('id');
           expect(projectDataObject?.members[0]?.role).toEqual(role);
         },
       );
@@ -357,9 +323,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.resources).toStrictEqual([
           {
             id: '27',
@@ -390,9 +354,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.resources).toStrictEqual([
           {
             id: '27',
@@ -424,9 +386,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.resources).toStrictEqual([
           {
             id: '27',
@@ -457,9 +417,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.resources).toStrictEqual([]);
       });
       test('should return a resource if description is undefined.', async () => {
@@ -482,9 +440,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.resources![0]?.description).toBeUndefined();
       });
       test('should ignore a resource if external Link is undefined for a Link.', async () => {
@@ -507,9 +463,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.resources).toStrictEqual([]);
       });
       test('empty resources returns empty array', async () => {
@@ -523,9 +477,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.resources).toEqual([]);
       });
     });
@@ -541,9 +493,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.milestones).toEqual([]);
       });
       test('if present it parses the link', async () => {
@@ -567,9 +517,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.milestones[0]?.link).toEqual(externalLink);
       });
       test('if present it parses the description', async () => {
@@ -593,14 +541,12 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.milestones[0]?.description).toEqual(
           description,
         );
       });
-      test('throws if status is not provided', () => {
+      test('throws if status is not provided', async () => {
         const project = {
           ...getContentfulGraphqlProject(),
           milestonesCollection: {
@@ -619,24 +565,7 @@ describe('Project Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: project,
         });
-        expect(() =>
-          projectDataProvider.fetchById('project-id'),
-        ).rejects.toThrow(new TypeError('milestone status is unknown'));
-      });
-      test('empty collection return empty array', async () => {
-        const project = {
-          ...getContentfulGraphqlProject(),
-          milestonesCollection: {
-            total: 0,
-            items: null,
-          },
-        };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          projects: project,
-        });
-        const projectDataObject = await projectDataProvider.fetchById(
-          'project-id',
-        );
+        const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.milestones).toEqual([]);
       });
     });

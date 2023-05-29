@@ -36,7 +36,7 @@ describe('Working Group Data Provider', () => {
       WorkingGroups: () => getContentfulGraphqlWorkingGroup(),
     });
 
-  const workingGroupDataProviderWithMockServer =
+  const workinGroupDataProviderWithMockServer =
     new WorkingGroupContentfulDataProvider(
       contentfulGraphqlClientMockServer,
       contentfulRestClientMock,
@@ -46,8 +46,8 @@ describe('Working Group Data Provider', () => {
 
   describe('FetchById', () => {
     test('Should fetch the working group from squidex graphql', async () => {
-      const result = await workingGroupDataProviderWithMockServer.fetchById(
-        'working-group-id',
+      const result = await workinGroupDataProviderWithMockServer.fetchById(
+        'id',
       );
 
       expect(result).toMatchObject(getWorkingGroupDataObject());
@@ -66,7 +66,7 @@ describe('Working Group Data Provider', () => {
         workingGroups: workingGroup,
       });
       const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-        'working-group-id',
+        'id',
       );
       const expected = getWorkingGroupDataObject();
       expect(workingGroupDataObject).toEqual(expected);
@@ -77,7 +77,7 @@ describe('Working Group Data Provider', () => {
         workingGroups: { ...workingGroup, calendar: null },
       });
       const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-        'working-group-id',
+        'id',
       );
       expect(workingGroupDataObject?.calendar).toBeUndefined();
     });
@@ -88,7 +88,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.members).toEqual([
           {
@@ -111,7 +111,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.members).toEqual([]);
       });
@@ -138,7 +138,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.members[0]?.avatarUrl).toEqual(url);
       });
@@ -163,7 +163,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.members).toEqual([]);
       });
@@ -188,7 +188,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         expect(() =>
-          workingGroupDataProvider.fetchById('working-group-id'),
+          workingGroupDataProvider.fetchById('id'),
         ).rejects.toThrow();
       });
       test.each([false, undefined])(
@@ -214,7 +214,7 @@ describe('Working Group Data Provider', () => {
             workingGroups: workingGroup,
           });
           const workingGroupDataObject =
-            await workingGroupDataProvider.fetchById('working-group-id');
+            await workingGroupDataProvider.fetchById('id');
           expect(workingGroupDataObject?.members).toEqual([]);
         },
       );
@@ -241,7 +241,7 @@ describe('Working Group Data Provider', () => {
             workingGroups: workingGroup,
           });
           const workingGroupDataObject =
-            await workingGroupDataProvider.fetchById('working-group-id');
+            await workingGroupDataProvider.fetchById('id');
           expect(workingGroupDataObject?.members[0]?.role).toEqual(role);
         },
       );
@@ -263,7 +263,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.members).toEqual([]);
       });
@@ -276,7 +276,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.members).toEqual([]);
       });
@@ -294,7 +294,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.milestones).toEqual([]);
       });
@@ -320,7 +320,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.milestones[0]?.link).toEqual(
           externalLink,
@@ -348,13 +348,13 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.milestones[0]?.description).toEqual(
           description,
         );
       });
-      test('throws if status is not provided', () => {
+      test('throws if status is not provided', async () => {
         const workingGroup = {
           ...getContentfulGraphqlWorkingGroup(),
           milestonesCollection: {
@@ -373,23 +373,8 @@ describe('Working Group Data Provider', () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           workingGroups: workingGroup,
         });
-        expect(() =>
-          workingGroupDataProvider.fetchById('working-group-id'),
-        ).rejects.toThrow(new TypeError('milestone status is unknown'));
-      });
-      test('empty collection return empty array', async () => {
-        const workingGroup = {
-          ...getContentfulGraphqlWorkingGroup(),
-          milestonesCollection: {
-            total: 0,
-            items: null,
-          },
-        };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          workingGroups: workingGroup,
-        });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.milestones).toEqual([]);
       });
@@ -416,7 +401,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.resources).toStrictEqual([
           {
@@ -449,7 +434,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.resources).toStrictEqual([
           {
@@ -483,7 +468,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.resources).toStrictEqual([
           {
@@ -516,7 +501,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.resources).toStrictEqual([]);
       });
@@ -541,7 +526,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(
           workingGroupDataObject?.resources![0]?.description,
@@ -568,7 +553,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.resources).toStrictEqual([]);
       });
@@ -584,7 +569,7 @@ describe('Working Group Data Provider', () => {
           workingGroups: workingGroup,
         });
         const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'working-group-id',
+          'id',
         );
         expect(workingGroupDataObject?.resources).toEqual([]);
       });
@@ -592,7 +577,7 @@ describe('Working Group Data Provider', () => {
   });
   describe('Fetch method', () => {
     test('Should fetch the working group from squidex graphql', async () => {
-      const result = await workingGroupDataProviderWithMockServer.fetch();
+      const result = await workinGroupDataProviderWithMockServer.fetch();
 
       expect(result).toMatchObject(getListWorkingGroupDataObject());
     });

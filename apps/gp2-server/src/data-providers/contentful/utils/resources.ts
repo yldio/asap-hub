@@ -3,61 +3,43 @@ import {
   Entry,
   Environment,
   getEntities,
-  gp2 as gp2Contentful,
   patchAndPublish,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import {
-  GraphQLProjectMember,
-  GraphQLProjectMilestone,
-} from './project.data-provider';
-import {
-  GraphQLWorkingGroupMember,
-  GraphQLWorkingGroupMilestone,
-} from './working-group.data-provider';
+import { GraphQLProject } from '../project.data-provider';
+import { GraphQLWorkingGroup } from '../working-group.data-provider';
 
-export type GraphQLProject = NonNullable<
-  NonNullable<NonNullable<gp2Contentful.FetchProjectByIdQuery>['projects']>
->;
-
-export type GraphQLProjectResource = NonNullable<
-  NonNullable<GraphQLProject['resourcesCollection']>
->['items'][number];
-
-export type GraphQLWorkingGroup = NonNullable<
-  NonNullable<
-    NonNullable<gp2Contentful.FetchWorkingGroupByIdQuery>['workingGroups']
-  >
->;
 export type GraphQLWorkingGroupResource = NonNullable<
   NonNullable<GraphQLWorkingGroup['resourcesCollection']>
 >['items'][number];
 export const parseResources = (
-  resourceList: gp2Model.Resource[],
-  resource: GraphQLWorkingGroupResource | GraphQLProjectResource,
-): gp2Model.Resource[] => {
-  if (
-    !(resource?.title && resource.type) ||
-    (resource.type === 'Link' && !resource.externalLink)
-  ) {
-    return resourceList;
-  }
+  resources:
+    | GraphQLWorkingGroup['resourcesCollection']
+    | GraphQLProject['resourcesCollection'],
+): gp2Model.Resource[] =>
+  resources?.items.reduce((resourceList: gp2Model.Resource[], resource) => {
+    if (
+      !(resource?.title && resource.type) ||
+      (resource.type === 'Link' && !resource.externalLink)
+    ) {
+      return resourceList;
+    }
 
-  return [
-    ...resourceList,
-    {
-      id: resource.sys.id,
-      title: resource.title,
-      description: resource.description || undefined,
-      ...(resource.type === 'Note'
-        ? { type: 'Note' }
-        : {
-            type: 'Link',
-            externalLink: resource.externalLink || '',
-          }),
-    },
-  ];
-};
+    return [
+      ...resourceList,
+      {
+        id: resource.sys.id,
+        title: resource.title,
+        description: resource.description || undefined,
+        ...(resource.type === 'Note'
+          ? { type: 'Note' }
+          : {
+              type: 'Link',
+              externalLink: resource.externalLink || '',
+            }),
+      },
+    ];
+  }, []) || [];
 
 const addNextResources = async (
   environment: Environment,
@@ -176,68 +158,4 @@ export const processResources = async (
 
   const resourceFields = getResourceFields([...nextResources, ...updatedIds]);
   return { resourceFields, idsToDelete };
-};
-
-type GraphQLProjectMemberUser = NonNullable<
-  NonNullable<GraphQLProjectMember>['user']
->;
-type GraphQLWorkingGroupMemberUser = NonNullable<
-  NonNullable<GraphQLWorkingGroupMember>['user']
->;
-
-export const parseMember = <T extends string>(
-  user: GraphQLProjectMemberUser | GraphQLWorkingGroupMemberUser,
-  role: string,
-  isRole: (a: string) => a is T,
-): {
-  userId: string;
-  role: T;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-} => {
-  if (!(role && isRole(role))) {
-    throw new TypeError('Invalid role received');
-  }
-
-  return {
-    userId: user.sys.id,
-    role,
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
-    avatarUrl: user.avatar?.url || undefined,
-  };
-};
-
-export const parseMembers = <T extends string>(
-  members:
-    | GraphQLWorkingGroup['membersCollection']
-    | GraphQLProject['membersCollection'],
-  isRole: (a: string) => a is T,
-) =>
-  members?.items.reduce((membersList: gp2Model.Member<T>[], member) => {
-    const user = member?.user;
-    if (!(user && member.role && user.onboarded)) {
-      return membersList;
-    }
-    const groupMember = parseMember(user, member.role, isRole);
-    return [...membersList, groupMember];
-  }, []) || [];
-
-export const parseMilestone = ({
-  status,
-  title,
-  externalLink,
-  description,
-}: GraphQLProjectMilestone | GraphQLWorkingGroupMilestone) => {
-  if (!(status && gp2Model.isMilestoneStatus(status))) {
-    throw new TypeError('milestone status is unknown');
-  }
-
-  return {
-    title: title || '',
-    status,
-    link: externalLink || undefined,
-    description: description || undefined,
-  };
 };

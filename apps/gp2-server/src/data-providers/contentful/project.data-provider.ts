@@ -9,11 +9,12 @@ import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
 import { ProjectDataProvider } from '../types/project.data-provider.type';
 import {
   deleteResources,
+  parseCalendar,
   parseMembers,
-  parseMilestone,
+  parseMilestones,
   parseResources,
   processResources,
-} from './common';
+} from './utils';
 
 export class ProjectContentfulDataProvider implements ProjectDataProvider {
   constructor(
@@ -90,20 +91,6 @@ export type GraphQLProject = NonNullable<
   NonNullable<NonNullable<gp2Contentful.FetchProjectByIdQuery>['projects']>
 >;
 
-export type GraphQLProjectMember = NonNullable<
-  NonNullable<GraphQLProject['membersCollection']>
->['items'][number];
-
-export type GraphQLProjectMilestone = NonNullable<
-  NonNullable<
-    NonNullable<GraphQLProject['milestonesCollection']>
-  >['items'][number]
->;
-
-export type GraphQLProjectResource = NonNullable<
-  NonNullable<GraphQLProject['resourcesCollection']>
->['items'][number];
-
 export type GraphQLProjectCalendar = NonNullable<GraphQLProject['calendar']>;
 
 export function parseProjectToDataObject(
@@ -116,25 +103,14 @@ export function parseProjectToDataObject(
     project.membersCollection,
     gp2Model.isProjectMemberRole,
   );
+  const milestones = parseMilestones(project.milestonesCollection);
+  const resources = parseResources(project.resourcesCollection);
+  const calendar = parseCalendar(project.calendar);
 
   if (project.keywords && !project.keywords.every(gp2Model.isKeyword)) {
-    throw new TypeError('Invalid keyword received from Squidex');
+    throw new TypeError('Invalid keyword received');
   }
-  const milestones =
-    project.milestonesCollection?.items
-      ?.filter(
-        (milestone): milestone is GraphQLProjectMilestone => milestone !== null,
-      )
-      .map(parseMilestone) || [];
 
-  const resources =
-    project.resourcesCollection?.items.reduce(parseResources, []) || [];
-  const calendar = project.calendar
-    ? {
-        id: project.calendar.sys.id,
-        name: project.calendar.name || '',
-      }
-    : undefined;
   return {
     id: project.sys.id,
     title: project.title || '',

@@ -3,7 +3,6 @@ import {
   WorkingGroupDataObject,
   WorkingGroupListDataObject,
   WorkingGroupUpdateDataObject,
-  DataProvider,
 } from '@asap-hub/model';
 import {
   RestWorkingGroup,
@@ -13,6 +12,7 @@ import {
   parseToSquidex,
 } from '@asap-hub/squidex';
 import { Filter } from 'odata-query';
+import { WorkingGroupDataProvider } from './types';
 import {
   FetchWorkingGroupQuery,
   FetchWorkingGroupQueryVariables,
@@ -25,14 +25,6 @@ import {
   FETCH_WORKING_GROUPS,
 } from '../queries/working-groups.queries';
 import { buildODataFilter } from '../utils/odata';
-
-export type WorkingGroupDataProvider = DataProvider<
-  WorkingGroupDataObject,
-  FetchWorkingGroupOptions,
-  null,
-  null,
-  WorkingGroupUpdateDataObject
->;
 
 export class WorkingGroupSquidexDataProvider
   implements WorkingGroupDataProvider

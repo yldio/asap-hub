@@ -47,7 +47,7 @@ describe('parseGraphQLWorkingGroup', () => {
       ],
       complete: false,
       deliverables: [],
-      description: 'Working Group Description',
+      description: '<p>Working Group Description</p>',
       externalLink: 'https://example.com',
       id: '123',
       lastModifiedDate: '2021-01-01T00:00:00.000Z',
@@ -165,7 +165,7 @@ describe('toWorkingGroupResponse', () => {
     expect(toWorkingGroupResponse(workingGroup)).toEqual({
       id: '123',
       title: 'Working Group Title',
-      description: 'Working Group Description',
+      description: '<p>Working Group Description</p>',
       shortText: 'Working Group Short Text',
       deliverables: [],
       leaders: [{ ...leaders[0], isActive: true }],
@@ -202,7 +202,7 @@ describe('toWorkingGroupResponse', () => {
     expect(toWorkingGroupResponse(workingGroup)).toEqual({
       id: '123',
       title: 'Working Group Title',
-      description: 'Working Group Description',
+      description: '<p>Working Group Description</p>',
       shortText: 'Working Group Short Text',
       deliverables: [],
       leaders: [{ ...leaders[0], isActive: false }],
@@ -245,7 +245,7 @@ describe('toWorkingGroupResponse', () => {
     expect(toWorkingGroupResponse(workingGroup)).toEqual({
       id: '123',
       title: 'Working Group Title',
-      description: 'Working Group Description',
+      description: '<p>Working Group Description</p>',
       shortText: 'Working Group Short Text',
       deliverables: [],
       leaders: [{ ...leaders[0], isActive: false }],
@@ -288,7 +288,7 @@ describe('toWorkingGroupResponse', () => {
     expect(toWorkingGroupResponse(workingGroup)).toEqual({
       id: '123',
       title: 'Working Group Title',
-      description: 'Working Group Description',
+      description: '<p>Working Group Description</p>',
       shortText: 'Working Group Short Text',
       deliverables: [],
       leaders: [{ ...leaders[0], isActive: false }],

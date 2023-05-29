@@ -6,3 +6,4 @@ export * from './news.queries';
 export * from './pages.queries';
 export * from './teams.queries';
 export * from './users.queries';
+export * from './working-groups.queries';

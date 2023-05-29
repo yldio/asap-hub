@@ -65,6 +65,7 @@ import { EventContentfulDataProvider } from './data-providers/contentful/event.d
 import { ExternalUserContentfulDataProvider } from './data-providers/contentful/external-user.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
+import { ProjectContentfulDataProvider } from './data-providers/contentful/project.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
 import { WorkingGroupNetworkContentfulDataProvider } from './data-providers/contentful/working-group-network.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
@@ -77,10 +78,7 @@ import {
   OutputSquidexDataProvider,
 } from './data-providers/output.data-provider';
 import { PageSquidexDataProvider } from './data-providers/page.data-provider';
-import {
-  ProjectDataProvider,
-  ProjectSquidexDataProvider,
-} from './data-providers/project.data-provider';
+import { ProjectSquidexDataProvider } from './data-providers/project.data-provider';
 import {
   AssetDataProvider,
   ContributingCohortDataProvider,
@@ -90,6 +88,7 @@ import {
   WorkingGroupNetworkDataProvider,
 } from './data-providers/types';
 import { ExternalUserDataProvider } from './data-providers/types/external-user.data-provider.type';
+import { ProjectDataProvider } from './data-providers/types/project.data-provider.type';
 import { WorkingGroupDataProvider } from './data-providers/types/working-group.data-provider.type';
 import { UserSquidexDataProvider } from './data-providers/user.data-provider';
 import { WorkingGroupNetworkSquidexDataProvider } from './data-providers/working-group-network.data-provider';
@@ -250,8 +249,14 @@ export const appFactory = (libs: Libs = {}): Express => {
   const workingGroupNetworkContentfulDataProvider =
     libs.workingGroupNetworkContentfulDataProvider ||
     new WorkingGroupNetworkContentfulDataProvider(contentfulGraphQLClient);
-  const projectDataProvider =
-    libs.projectDataProvider ||
+  const projectContentfulDataProvider =
+    libs.projectContentfulDataProvider ||
+    new ProjectContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+  const projectSquidexDataProvider =
+    libs.projectSquidexDataProvider ||
     new ProjectSquidexDataProvider(squidexGraphqlClient, projectRestClient);
   const calendarSquidexDataProvider =
     libs.calendarSquidexDataProvider ||
@@ -318,6 +323,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.externalUserDataProvider || isContentfulEnabled
       ? externalUserContentfulDataProvider
       : externalUserSquidexDataProvider;
+  const projectDataProvider =
+    libs.projectDataProvider || isContentfulEnabled
+      ? projectContentfulDataProvider
+      : projectSquidexDataProvider;
   const workingGroupDataProvider =
     libs.workingGroupDataProvider || isContentfulEnabled
       ? workingGroupContentfulDataProvider
@@ -453,54 +462,56 @@ export const appFactory = (libs: Libs = {}): Express => {
 };
 
 export type Libs = {
+  assetContentfulDataProvider?: AssetDataProvider;
   assetDataProvider?: AssetDataProvider;
   assetSquidexDataProvider?: AssetDataProvider;
-  assetContentfulDataProvider?: AssetDataProvider;
   authHandler?: AuthHandler;
+  calendarContentfulDataProvider?: gp2.CalendarDataProvider;
   calendarController?: gp2.CalendarController;
   calendarDataProvider?: gp2.CalendarDataProvider;
   calendarSquidexDataProvider?: gp2.CalendarDataProvider;
-  calendarContentfulDataProvider?: gp2.CalendarDataProvider;
+  contributingCohortContentfulDataProvider?: ContributingCohortDataProvider;
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
   contributingCohortSquidexDataProvider?: ContributingCohortDataProvider;
-  contributingCohortContentfulDataProvider?: ContributingCohortDataProvider;
+  eventContentfulDataProvider?: gp2.EventDataProvider;
   eventController?: gp2.EventController;
   eventDataProvider?: gp2.EventDataProvider;
   eventSquidexDataProvider?: gp2.EventDataProvider;
-  eventContentfulDataProvider?: gp2.EventDataProvider;
+  externalUserContentfulDataProvider?: ExternalUserDataProvider;
   externalUserController?: ExternalUsersController;
   externalUserDataProvider?: ExternalUserDataProvider;
   externalUserSquidexDataProvider?: ExternalUserDataProvider;
-  externalUserContentfulDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
   newsContentfulDataProvider?: NewsDataProvider;
   newsController?: NewsController;
-  newsSquidexDataProvider?: NewsDataProvider;
   newsDataProvider?: NewsDataProvider;
+  newsSquidexDataProvider?: NewsDataProvider;
   outputController?: OutputController;
   outputDataProvider?: OutputDataProvider;
   pageContentfulDataProvider?: PageDataProvider;
-  pageDataProvider?: PageDataProvider;
   pageController?: PageController;
+  pageDataProvider?: PageDataProvider;
   pageSquidexDataProvider?: PageDataProvider;
+  projectContentfulDataProvider?: ProjectDataProvider;
   projectController?: ProjectController;
   projectDataProvider?: ProjectDataProvider;
+  projectSquidexDataProvider?: ProjectDataProvider;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
   sentryTransactionIdHandler?: RequestHandler;
+  userContentfulDataProvider?: UserDataProvider;
   userController?: UserController;
   userDataProvider?: UserDataProvider;
-  userContentfulDataProvider?: UserDataProvider;
   userSquidexDataProvider?: UserDataProvider;
+  workingGroupContentfulDataProvider?: WorkingGroupDataProvider;
   workingGroupController?: WorkingGroupController;
   workingGroupDataProvider?: WorkingGroupDataProvider;
-  workingGroupContentfulDataProvider?: WorkingGroupDataProvider;
-  workingGroupSquidexDataProvider?: WorkingGroupDataProvider;
+  workingGroupNetworkContentfulDataProvider?: WorkingGroupNetworkDataProvider;
   workingGroupNetworkController?: WorkingGroupNetworkController;
   workingGroupNetworkDataProvider?: WorkingGroupNetworkDataProvider;
-  workingGroupNetworkContentfulDataProvider?: WorkingGroupNetworkDataProvider;
   workingGroupNetworkSquidexDataProvider?: WorkingGroupNetworkDataProvider;
+  workingGroupSquidexDataProvider?: WorkingGroupDataProvider;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
 };

@@ -14,15 +14,8 @@ import {
 import { FETCH_PROJECT, FETCH_PROJECTS } from '../queries/projects.queries';
 import { parseResources } from '../utils/resources';
 import { createUrl } from '../utils/urls';
+import { ProjectDataProvider } from './types/project.data-provider.type';
 
-export interface ProjectDataProvider {
-  fetchById(id: string): Promise<gp2Model.ProjectDataObject | null>;
-  fetch(options: FetchOptions): Promise<gp2Model.ListProjectDataObject>;
-  update(
-    id: string,
-    projectToUpdate: gp2Model.ProjectUpdateDataObject,
-  ): Promise<void>;
-}
 export class ProjectSquidexDataProvider implements ProjectDataProvider {
   constructor(
     private squidexGraphqlClient: SquidexGraphqlClient,

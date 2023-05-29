@@ -33,8 +33,8 @@ export class WorkingGroupContentfulDataProvider
     }
 
     return {
-      total: workingGroupsCollection?.total,
-      items: workingGroupsCollection?.items
+      total: workingGroupsCollection.total,
+      items: workingGroupsCollection.items
         .filter(
           (workingGroup): workingGroup is GraphQLWorkingGroup =>
             workingGroup !== null,
@@ -139,9 +139,9 @@ const parseWorkingGroupMembers = (
   };
 };
 
-export function parseWorkingGroupToDataObject(
+export const parseWorkingGroupToDataObject = (
   workingGroup: GraphQLWorkingGroup,
-): gp2Model.WorkingGroupDataObject {
+): gp2Model.WorkingGroupDataObject => {
   const members =
     workingGroup.membersCollection?.items.reduce(
       (
@@ -200,12 +200,12 @@ export function parseWorkingGroupToDataObject(
     resources,
     calendar,
   };
-}
+};
 
-export function parseResources(
+const parseResources = (
   resourceList: gp2Model.Resource[],
   resource: GraphQLWorkingGroupResource,
-): gp2Model.Resource[] {
+): gp2Model.Resource[] => {
   if (
     !(resource?.title && resource.type) ||
     (resource.type === 'Link' && !resource.externalLink)
@@ -227,7 +227,7 @@ export function parseResources(
           }),
     },
   ];
-}
+};
 const addNextResources = async (
   environment: Environment,
   resources: gp2Model.WorkingGroupUpdateDataObject['resources'],

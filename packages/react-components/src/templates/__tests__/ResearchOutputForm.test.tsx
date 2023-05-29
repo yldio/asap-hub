@@ -334,7 +334,8 @@ describe('on submit', () => {
     fireEvent.change(screen.getByLabelText(/title/i), {
       target: { value: data.title },
     });
-    fireEvent.change(screen.getByLabelText(/description/i), {
+    const [_, description] = screen.getAllByLabelText(/description/i);
+    fireEvent.change(description!, {
       target: { value: data.descriptionMD },
     });
 

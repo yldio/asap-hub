@@ -2,6 +2,7 @@ export const resourceTypes = ['Link', 'Note'] as const;
 type ResourceTypes = (typeof resourceTypes)[number];
 
 interface ResourceBase {
+  id?: string;
   title: string;
   description?: string;
   type: ResourceTypes;
@@ -15,6 +16,8 @@ export interface ResourceNote extends ResourceBase {
 }
 export type Resource = ResourceNote | ResourceLink;
 
+export const isResourceLink = (resource: Resource): resource is ResourceLink =>
+  resource.type === 'Link';
 export const keywords = [
   'Epidemiology',
   'Neurology',

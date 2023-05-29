@@ -16,7 +16,6 @@ import {
   getGraphQLWorkingGroupMember,
   getGraphQLWorkingGroupMilestone,
   getGraphQLWorkingGroupResource,
-  getListWorkingGroupDataObject,
   getRestWorkingGroupUpdateData,
   getSquidexWorkingGroupGraphqlResponse,
   getSquidexWorkingGroupsGraphqlResponse,
@@ -55,7 +54,19 @@ describe('Working Group Data Provider', () => {
     test('Should fetch the working group from squidex graphql', async () => {
       const result = await workingGroupDataProviderMockGraphqlServer.fetch();
 
-      expect(result).toMatchObject(getListWorkingGroupDataObject());
+      const workingGroupDataObject = getWorkingGroupDataObject();
+
+      expect(result).toMatchObject({
+        total: 1,
+        items: [
+          {
+            ...workingGroupDataObject,
+            resources: workingGroupDataObject.resources?.map(
+              ({ id: _, ...resource }) => resource,
+            ),
+          },
+        ],
+      });
     });
 
     test('Should return an empty result', async () => {
@@ -123,7 +134,13 @@ describe('Working Group Data Provider', () => {
         'working-group-id',
       );
 
-      expect(result).toMatchObject(getWorkingGroupDataObject());
+      const workingGroupDataObject = getWorkingGroupDataObject();
+      expect(result).toMatchObject({
+        ...workingGroupDataObject,
+        resources: workingGroupDataObject.resources!.map(
+          ({ id: _, ...resource }) => resource,
+        ),
+      });
     });
 
     test('Should return null when the working group is not found', async () => {
@@ -230,10 +247,14 @@ describe('Working Group Data Provider', () => {
   describe('Parsing', () => {
     test('the working group is parsed', () => {
       const workingGroup = getGraphQLWorkingGroup();
-      const workingGroupDataObject =
-        parseWorkingGroupToDataObject(workingGroup);
-      const expected = getWorkingGroupDataObject();
-      expect(workingGroupDataObject).toEqual(expected);
+      const result = parseWorkingGroupToDataObject(workingGroup);
+      const workingGroupDataObject = getWorkingGroupDataObject();
+      expect(result).toMatchObject({
+        ...workingGroupDataObject,
+        resources: workingGroupDataObject.resources!.map(
+          ({ id: _, ...resource }) => resource,
+        ),
+      });
     });
 
     describe('members', () => {
@@ -317,7 +338,9 @@ describe('Working Group Data Provider', () => {
         const workingGroup = getGraphQLWorkingGroup();
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
         const { resources: expectedResources } = getWorkingGroupDataObject();
-        expect(resources).toStrictEqual(expectedResources);
+        expect(resources).toStrictEqual(
+          expectedResources!.map(({ id: _, ...resource }) => resource),
+        );
       });
 
       test('should ignore an external link for a resource note', () => {
@@ -328,7 +351,9 @@ describe('Working Group Data Provider', () => {
         workingGroup.flatData.resources = [resource];
         const { resources } = parseWorkingGroupToDataObject(workingGroup);
         const { resources: expectedResources } = getWorkingGroupDataObject();
-        expect(resources).toStrictEqual(expectedResources);
+        expect(resources).toStrictEqual(
+          expectedResources!.map(({ id: _, ...resource }) => resource),
+        );
       });
 
       test('should map a resource link', () => {
@@ -342,7 +367,7 @@ describe('Working Group Data Provider', () => {
         const { resources: expectedResources } = getWorkingGroupDataObject();
         expect(resources).toEqual([
           {
-            ...expectedResources![0],
+            ...expectedResources!.map(({ id: _, ...resource }) => resource)[0],
             type: 'Link',
             externalLink,
           },

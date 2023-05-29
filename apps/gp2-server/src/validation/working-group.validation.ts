@@ -33,6 +33,7 @@ const workingGroupPutRequestValidationSchema: JSONSchemaType<gp2.WorkingGroupRes
         {
           type: 'object',
           properties: {
+            id: { type: 'string', nullable: true },
             title: { type: 'string' },
             type: { type: 'string', const: 'Link' },
             description: { type: 'string', nullable: true },
@@ -47,6 +48,7 @@ const workingGroupPutRequestValidationSchema: JSONSchemaType<gp2.WorkingGroupRes
         {
           type: 'object',
           properties: {
+            id: { type: 'string', nullable: true },
             title: { type: 'string' },
             type: { type: 'string', const: 'Note' },
             description: { type: 'string', nullable: true },

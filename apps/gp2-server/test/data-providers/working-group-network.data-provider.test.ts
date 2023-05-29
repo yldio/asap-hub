@@ -4,10 +4,9 @@ import {
 } from '../../src/data-providers/working-group-network.data-provider';
 import {
   getGraphQLWorkingGroupNetwork,
-  getListWorkingGroupNetworkDataObject,
   getSquidexWorkingGroupNetworkGraphqlResponse,
-  getWorkingGroupNetworkDataObject,
 } from '../fixtures/working-group-network.fixtures';
+import { getWorkingGroupDataObject } from '../fixtures/working-group.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
@@ -27,7 +26,56 @@ describe('Working Group Network Data Provider', () => {
     test('Should fetch the working group network from squidex graphql', async () => {
       const result = await workingGroupDataProviderMockGraphqlServer.fetch();
 
-      expect(result).toMatchObject(getListWorkingGroupNetworkDataObject());
+      const expected = getWorkingGroupDataObject();
+      expect(result).toMatchObject({
+        total: 4,
+        items: [
+          {
+            role: 'operational',
+            workingGroups: [
+              {
+                ...expected,
+                resources: expected.resources!.map(
+                  ({ id: _, ...resource }) => resource,
+                ),
+              },
+            ],
+          },
+          {
+            role: 'monogenic',
+            workingGroups: [
+              {
+                ...expected,
+                resources: expected.resources!.map(
+                  ({ id: _, ...resource }) => resource,
+                ),
+              },
+            ],
+          },
+          {
+            role: 'complexDisease',
+            workingGroups: [
+              {
+                ...expected,
+                resources: expected.resources!.map(
+                  ({ id: _, ...resource }) => resource,
+                ),
+              },
+            ],
+          },
+          {
+            role: 'support',
+            workingGroups: [
+              {
+                ...expected,
+                resources: expected.resources!.map(
+                  ({ id: _, ...resource }) => resource,
+                ),
+              },
+            ],
+          },
+        ],
+      });
     });
 
     test('Should return an empty result', async () => {
@@ -54,8 +102,53 @@ describe('Working Group Network Data Provider', () => {
       const workingGroupNetwork = getGraphQLWorkingGroupNetwork();
       const workingGroupNetworkDataObject =
         parseWorkingGroupNetworkToDataObject(workingGroupNetwork);
-      const expected = getWorkingGroupNetworkDataObject();
-      expect(workingGroupNetworkDataObject).toEqual(expected);
+      const expected = getWorkingGroupDataObject();
+      expect(workingGroupNetworkDataObject).toEqual([
+        {
+          role: 'operational',
+          workingGroups: [
+            {
+              ...expected,
+              resources: expected.resources!.map(
+                ({ id: _, ...resource }) => resource,
+              ),
+            },
+          ],
+        },
+        {
+          role: 'monogenic',
+          workingGroups: [
+            {
+              ...expected,
+              resources: expected.resources!.map(
+                ({ id: _, ...resource }) => resource,
+              ),
+            },
+          ],
+        },
+        {
+          role: 'complexDisease',
+          workingGroups: [
+            {
+              ...expected,
+              resources: expected.resources!.map(
+                ({ id: _, ...resource }) => resource,
+              ),
+            },
+          ],
+        },
+        {
+          role: 'support',
+          workingGroups: [
+            {
+              ...expected,
+              resources: expected.resources!.map(
+                ({ id: _, ...resource }) => resource,
+              ),
+            },
+          ],
+        },
+      ]);
     });
 
     test('empty array returned when network role not found in response', () => {

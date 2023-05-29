@@ -6,6 +6,9 @@ export const workingGroupsContentQueryFragment = gql`
   fragment WorkingGroupsContentData on WorkingGroups {
     sys {
       id
+      firstPublishedAt
+      publishedAt
+      publishedVersion
     }
     title
     shortDescription
@@ -70,6 +73,18 @@ export const FETCH_WORKING_GROUP_BY_ID = gql`
   query FetchWorkingGroupById($id: String!) {
     workingGroups(id: $id) {
       ...WorkingGroupsContentData
+    }
+  }
+  ${workingGroupsContentQueryFragment}
+`;
+
+export const FETCH_WORKING_GROUPS = gql`
+  query FetchWorkingGroups {
+    workingGroupsCollection(limit: 50) {
+      total
+      items {
+        ...WorkingGroupsContentData
+      }
     }
   }
   ${workingGroupsContentQueryFragment}

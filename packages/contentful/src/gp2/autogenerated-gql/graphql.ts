@@ -6990,7 +6990,10 @@ export type WorkingGroupNetworkContentDataFragment = {
             | 'secondaryEmail'
             | 'leadingMembers'
           > & {
-            sys: Pick<Sys, 'id'>;
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -7053,7 +7056,10 @@ export type WorkingGroupNetworkContentDataFragment = {
             | 'secondaryEmail'
             | 'leadingMembers'
           > & {
-            sys: Pick<Sys, 'id'>;
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -7116,7 +7122,10 @@ export type WorkingGroupNetworkContentDataFragment = {
             | 'secondaryEmail'
             | 'leadingMembers'
           > & {
-            sys: Pick<Sys, 'id'>;
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -7179,7 +7188,10 @@ export type WorkingGroupNetworkContentDataFragment = {
             | 'secondaryEmail'
             | 'leadingMembers'
           > & {
-            sys: Pick<Sys, 'id'>;
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -7253,7 +7265,13 @@ export type FetchWorkingGroupNetworkQuery = {
                     | 'secondaryEmail'
                     | 'leadingMembers'
                   > & {
-                    sys: Pick<Sys, 'id'>;
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -7322,7 +7340,13 @@ export type FetchWorkingGroupNetworkQuery = {
                     | 'secondaryEmail'
                     | 'leadingMembers'
                   > & {
-                    sys: Pick<Sys, 'id'>;
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -7391,7 +7415,13 @@ export type FetchWorkingGroupNetworkQuery = {
                     | 'secondaryEmail'
                     | 'leadingMembers'
                   > & {
-                    sys: Pick<Sys, 'id'>;
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -7460,7 +7490,13 @@ export type FetchWorkingGroupNetworkQuery = {
                     | 'secondaryEmail'
                     | 'leadingMembers'
                   > & {
-                    sys: Pick<Sys, 'id'>;
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -7531,7 +7567,10 @@ export type WorkingGroupsContentDataFragment = Pick<
   | 'secondaryEmail'
   | 'leadingMembers'
 > & {
-  sys: Pick<Sys, 'id'>;
+  sys: Pick<
+    Sys,
+    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
   membersCollection?: Maybe<
     Pick<WorkingGroupsMembersCollection, 'total'> & {
       items: Array<
@@ -7590,7 +7629,10 @@ export type FetchWorkingGroupByIdQuery = {
       | 'secondaryEmail'
       | 'leadingMembers'
     > & {
-      sys: Pick<Sys, 'id'>;
+      sys: Pick<
+        Sys,
+        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
       membersCollection?: Maybe<
         Pick<WorkingGroupsMembersCollection, 'total'> & {
           items: Array<
@@ -7633,6 +7675,77 @@ export type FetchWorkingGroupByIdQuery = {
         }
       >;
       calendar?: Maybe<Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }>;
+    }
+  >;
+};
+
+export type FetchWorkingGroupsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchWorkingGroupsQuery = {
+  workingGroupsCollection?: Maybe<
+    Pick<WorkingGroupsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            | 'title'
+            | 'shortDescription'
+            | 'description'
+            | 'primaryEmail'
+            | 'secondaryEmail'
+            | 'leadingMembers'
+          > & {
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+            membersCollection?: Maybe<
+              Pick<WorkingGroupsMembersCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroupMembership, 'role'> & {
+                      sys: Pick<Sys, 'id'>;
+                      user?: Maybe<
+                        Pick<Users, 'firstName' | 'lastName' | 'onboarded'> & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }
+            >;
+            milestonesCollection?: Maybe<
+              Pick<WorkingGroupsMilestonesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Milestones,
+                      'description' | 'externalLink' | 'status' | 'title'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            resourcesCollection?: Maybe<
+              Pick<WorkingGroupsResourcesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<
+                      Resources,
+                      'type' | 'title' | 'description' | 'externalLink'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }
+            >;
+            calendar?: Maybe<
+              Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+            >;
+          }
+        >
+      >;
     }
   >;
 };
@@ -8715,7 +8828,7 @@ export const UsersContentDataFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '100' },
+                value: { kind: 'IntValue', value: '10' },
               },
             ],
             selectionSet: {
@@ -9200,6 +9313,15 @@ export const WorkingGroupsContentDataFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
               ],
             },
           },
@@ -11470,4 +11592,56 @@ export const FetchWorkingGroupByIdDocument = {
 } as unknown as DocumentNode<
   FetchWorkingGroupByIdQuery,
   FetchWorkingGroupByIdQueryVariables
+>;
+export const FetchWorkingGroupsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroups' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'workingGroupsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '50' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'WorkingGroupsContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupsQuery,
+  FetchWorkingGroupsQueryVariables
 >;

@@ -1,6 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
-import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
 import nock, { DataMatcherMap } from 'nock';
 import {
   ProjectsDataMembersRoleEnum,
@@ -17,7 +17,6 @@ import {
   getGraphQLProjectMember,
   getGraphQLProjectMilestone,
   getGraphQLProjectResource,
-  getListProjectDataObject,
   getProjectDataObject,
   getProjectUpdateDataObject,
   getRestProjectUpdateData,
@@ -61,7 +60,18 @@ describe('Project Data Provider', () => {
     test('Should fetch the project from squidex graphql', async () => {
       const result = await projectDataProviderMockGraphqlServer.fetch(options);
 
-      expect(result).toMatchObject(getListProjectDataObject());
+      const projectDataObject = getProjectDataObject();
+      expect(result).toMatchObject({
+        total: 1,
+        items: [
+          {
+            ...projectDataObject,
+            resources: projectDataObject.resources?.map(
+              ({ id: _, ...resource }) => resource,
+            ),
+          },
+        ],
+      });
     });
 
     test('Should return an empty result', async () => {
@@ -127,7 +137,13 @@ describe('Project Data Provider', () => {
         'project-id',
       );
 
-      expect(result).toMatchObject(getProjectDataObject());
+      const projectDataObject = getProjectDataObject();
+      expect(result).toMatchObject({
+        ...projectDataObject,
+        resources: projectDataObject.resources!.map(
+          ({ id: _, ...resource }) => resource,
+        ),
+      });
     });
 
     test('Should return null when the project is not found', async () => {
@@ -144,7 +160,12 @@ describe('Project Data Provider', () => {
       const project = getGraphQLProject();
       const projectDataObject = parseProjectToDataObject(project);
       const expected = getProjectDataObject();
-      expect(projectDataObject).toEqual(expected);
+      expect(projectDataObject).toEqual({
+        ...expected,
+        resources: expected.resources!.map(
+          ({ id: _, ...resource }) => resource,
+        ),
+      });
     });
 
     test('with no status', () => {
@@ -255,7 +276,9 @@ describe('Project Data Provider', () => {
         const project = getGraphQLProject();
         const { resources } = parseProjectToDataObject(project);
         const { resources: expectedResources } = getProjectDataObject();
-        expect(resources).toStrictEqual(expectedResources);
+        expect(resources).toStrictEqual(
+          expectedResources!.map(({ id: _, ...resource }) => resource),
+        );
       });
 
       test('should ignore an external link for a resource note', () => {
@@ -282,7 +305,7 @@ describe('Project Data Provider', () => {
         const { resources: expectedResources } = getProjectDataObject();
         expect(resources).toEqual([
           {
-            ...expectedResources![0],
+            ...expectedResources!!.map(({ id: _, ...resource }) => resource)[0],
             type: 'Link',
             externalLink,
           },

@@ -67,7 +67,7 @@ type BaseFilterOptions = {
   workingGroupId?: never;
   projectId?: never;
   userId?: never;
-  externalAuthorId?: never;
+  externalUserId?: never;
   googleId?: never;
   hidden?: never;
 };
@@ -78,7 +78,7 @@ type FilterOptions =
   | ExclusiveFilterOption<{ workingGroupId?: string }>
   | ExclusiveFilterOption<{ projectId?: string }>
   | ExclusiveFilterOption<{ userId?: string }>
-  | ExclusiveFilterOption<{ externalAuthorId?: string }>
+  | ExclusiveFilterOption<{ externalUserId?: string }>
   | ExclusiveFilterOption<{
       googleId?: string;
       hidden?: boolean;

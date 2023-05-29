@@ -40,9 +40,11 @@ export type WorkingGroupResponse = WorkingGroupDataObject;
 
 export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
 
-export type WorkingGroupUpdateDataObject = Required<
+export type WorkingGroupUpdateDataObject = Partial<
   Pick<WorkingGroupDataObject, 'resources'>
->;
+> & {
+  members?: Pick<WorkingGroupMember, 'userId' | 'role'>[];
+};
 
 export type WorkingGroupUpdateRequest = WorkingGroupUpdateDataObject;
 

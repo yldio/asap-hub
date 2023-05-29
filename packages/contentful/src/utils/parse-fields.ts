@@ -1,4 +1,4 @@
-import type { Entry } from 'contentful-management';
+import type { Entry, Link, VersionedLink } from 'contentful-management';
 
 export const addLocaleToFields = (payload: Record<string, unknown>) =>
   Object.entries(payload).reduce(
@@ -27,3 +27,34 @@ export const updateEntryFields = (
   });
   return entry;
 };
+
+export function getLinkEntity<Version extends boolean>(
+  id: string,
+  version?: Version,
+): Version extends true ? VersionedLink<'Entry'> : Link<'Entry'>;
+// eslint-disable-next-line no-redeclare
+export function getLinkEntity(id: string, version: boolean = false): unknown {
+  return {
+    sys: {
+      type: 'Link',
+      linkType: 'Entry',
+      id,
+      ...(version ? { version: 1 } : {}),
+    },
+  };
+}
+
+export const getEntities = <Version extends boolean>(
+  entities: string[],
+  version?: Version,
+) => entities.map((id) => getLinkEntity<Version>(id, version));
+
+export const getBulkPayload = <Version extends boolean>(
+  entities: string[],
+  version?: Version,
+) => ({
+  entities: {
+    sys: { type: 'Array' as const },
+    items: getEntities<Version>(entities, version),
+  },
+});

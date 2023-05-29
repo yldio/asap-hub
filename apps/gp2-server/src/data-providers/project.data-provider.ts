@@ -82,8 +82,17 @@ export class ProjectSquidexDataProvider implements ProjectDataProvider {
 }
 const convertToSquidexProject = ({
   resources,
+  members,
 }: gp2Model.ProjectUpdateDataObject): gp2Squidex.InputProject['data'] => ({
-  resources: { iv: resources },
+  ...(resources && { resources: { iv: resources } }),
+  ...(members && {
+    members: {
+      iv: members.map(({ userId, role }) => ({
+        user: [userId],
+        role: reverseRoleMap[role],
+      })),
+    },
+  }),
 });
 
 export type GraphQLProject = NonNullable<
@@ -217,4 +226,14 @@ export const roleMap: Record<
   [ProjectsDataMembersRoleEnum.ProjectCoLead]: 'Project co-lead',
   [ProjectsDataMembersRoleEnum.Contributor]: 'Contributor',
   [ProjectsDataMembersRoleEnum.Investigator]: 'Investigator',
+};
+export const reverseRoleMap: Record<
+  gp2Model.ProjectMemberRole,
+  gp2Squidex.RestProjectsMembersRole
+> = {
+  'Project manager': 'Project_Manager',
+  'Project lead': 'Project_Lead',
+  'Project co-lead': 'Project_CoLead',
+  Contributor: 'Contributor',
+  Investigator: 'Investigator',
 };

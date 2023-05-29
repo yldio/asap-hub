@@ -3,13 +3,15 @@ import { gp2 as gp2Model, UserSocialLinks } from '@asap-hub/model';
 import {
   addLocaleToFields,
   Environment,
+  getBulkPayload,
+  getEntities,
+  getLinkEntity,
   gp2 as gp2Contentful,
   GraphQLClient,
   Link,
   Maybe,
   patchAndPublish,
   pollContentfulGql,
-  VersionedLink,
 } from '@asap-hub/contentful';
 import logger from '../../utils/logger';
 import { UserDataProvider } from '../types';
@@ -524,7 +526,7 @@ const getSearchFilter = (search: string) => {
 const getCohortFields = (nextContributingCohorts: string[] | undefined) =>
   nextContributingCohorts
     ? {
-        contributingCohorts: getEntities(nextContributingCohorts),
+        contributingCohorts: getEntities(nextContributingCohorts, false),
       }
     : {};
 
@@ -577,32 +579,3 @@ const removePreviousCohorts = async (
   }
   return null;
 };
-const getBulkPayload = <Version extends boolean>(
-  entities: string[],
-  version?: Version,
-) => ({
-  entities: {
-    sys: { type: 'Array' as const },
-    items: getEntities<Version>(entities, version),
-  },
-});
-
-const getEntities = <Version extends boolean>(
-  entities: string[],
-  version?: Version,
-) => entities.map((id) => getLinkEntity<Version>(id, version));
-
-function getLinkEntity<Version extends boolean>(
-  id: string,
-  x?: Version,
-): Version extends true ? VersionedLink<'Entry'> : Link<'Entry'>;
-function getLinkEntity(id: string, version: boolean = false): unknown {
-  return {
-    sys: {
-      type: 'Link' as const,
-      linkType: 'Entry' as const,
-      id,
-      ...(version ? { version: 1 } : {}),
-    },
-  };
-}

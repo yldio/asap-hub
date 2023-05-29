@@ -36,6 +36,7 @@ export const getWorkingGroupDataObject =
     ],
     resources: [
       {
+        id: '27',
         type: 'Note',
         description: 'Working group resource description',
         title: 'Working group resource title',
@@ -56,6 +57,12 @@ export const getWorkingGroupUpdateDataObject =
         title: 'Working group resource title',
       },
     ],
+    members: [
+      {
+        userId: '11',
+        role: 'Lead',
+      },
+    ],
   });
 
 export const getRestWorkingGroupUpdateData =
@@ -66,6 +73,14 @@ export const getRestWorkingGroupUpdateData =
           type: 'Note',
           description: 'Working group resource description',
           title: 'Working group resource title',
+        },
+      ],
+    },
+    members: {
+      iv: [
+        {
+          role: 'Lead',
+          user: ['11'],
         },
       ],
     },
@@ -227,3 +242,11 @@ export const getContentfulGraphqlWorkingGroup = (
   },
   ...props,
 });
+
+export const getContentfulGraphqlWorkingGroupsResponse =
+  (): gp2Contentful.FetchWorkingGroupsQuery => ({
+    workingGroupsCollection: {
+      total: 1,
+      items: [getContentfulGraphqlWorkingGroup()],
+    },
+  });

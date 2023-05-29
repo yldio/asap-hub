@@ -59,7 +59,9 @@ import WorkingGroups, {
 import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
+import { CalendarContentfulDataProvider } from './data-providers/contentful/calendar.data-provider';
 import { ContributingCohortContentfulDataProvider } from './data-providers/contentful/contributing-cohort.data-provider';
+import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
 import { ExternalUserContentfulDataProvider } from './data-providers/contentful/external-user.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
@@ -238,7 +240,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     );
   const workingGroupContentfulDataProvider =
     libs.workingGroupContentfulDataProvider ||
-    new WorkingGroupContentfulDataProvider(contentfulGraphQLClient);
+    new WorkingGroupContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
   const workingGroupNetworkSquidexDataProvider =
     libs.workingGroupNetworkSquidexDataProvider ||
     new WorkingGroupNetworkSquidexDataProvider(squidexGraphqlClient);
@@ -248,12 +253,24 @@ export const appFactory = (libs: Libs = {}): Express => {
   const projectDataProvider =
     libs.projectDataProvider ||
     new ProjectSquidexDataProvider(squidexGraphqlClient, projectRestClient);
-  const calendarDataProvider =
-    libs.calendarDataProvider ||
+  const calendarSquidexDataProvider =
+    libs.calendarSquidexDataProvider ||
     new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient);
-  const eventDataProvider =
-    libs.eventDataProvider ||
+  const calendarContentfulDataProvider =
+    libs.calendarContentfulDataProvider ||
+    new CalendarContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+  const eventSquidexDataProvider =
+    libs.eventSquidexDataProvider ||
     new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient);
+  const eventContentfulDataProvider =
+    libs.eventContentfulDataProvider ||
+    new EventContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
   const outputDataProvider =
     libs.outputDataProvider ||
     new OutputSquidexDataProvider(squidexGraphqlClient, outputRestClient);
@@ -309,6 +326,15 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.workingGroupNetworkDataProvider || isContentfulEnabled
       ? workingGroupNetworkContentfulDataProvider
       : workingGroupNetworkSquidexDataProvider;
+  const eventDataProvider =
+    libs.eventDataProvider || isContentfulEnabled
+      ? eventContentfulDataProvider
+      : eventSquidexDataProvider;
+  const calendarDataProvider =
+    libs.calendarDataProvider || isContentfulEnabled
+      ? calendarContentfulDataProvider
+      : calendarSquidexDataProvider;
+
   // Controllers
 
   const workingGroupController =
@@ -433,12 +459,16 @@ export type Libs = {
   authHandler?: AuthHandler;
   calendarController?: gp2.CalendarController;
   calendarDataProvider?: gp2.CalendarDataProvider;
+  calendarSquidexDataProvider?: gp2.CalendarDataProvider;
+  calendarContentfulDataProvider?: gp2.CalendarDataProvider;
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
   contributingCohortSquidexDataProvider?: ContributingCohortDataProvider;
   contributingCohortContentfulDataProvider?: ContributingCohortDataProvider;
   eventController?: gp2.EventController;
   eventDataProvider?: gp2.EventDataProvider;
+  eventSquidexDataProvider?: gp2.EventDataProvider;
+  eventContentfulDataProvider?: gp2.EventDataProvider;
   externalUserController?: ExternalUsersController;
   externalUserDataProvider?: ExternalUserDataProvider;
   externalUserSquidexDataProvider?: ExternalUserDataProvider;

@@ -266,7 +266,9 @@ describe('Project Data Provider', () => {
         project.flatData.resources = [resource];
         const { resources } = parseProjectToDataObject(project);
         const { resources: expectedResources } = getProjectDataObject();
-        expect(resources).toStrictEqual(expectedResources);
+        expect(resources).toStrictEqual(
+          expectedResources?.map(({ id: _, ...resource }) => resource),
+        );
       });
 
       test('should map a resource link', () => {

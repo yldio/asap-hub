@@ -2,6 +2,9 @@ import { Entry } from 'contentful-management';
 import {
   addLocaleToFields,
   createLink,
+  getBulkPayload,
+  getEntities,
+  getLinkEntity,
   updateEntryFields,
 } from '../../src/utils/parse-fields';
 
@@ -43,5 +46,95 @@ describe('updateEntryFields', () => {
         },
       ),
     ).toEqual({ fields: { title: { 'en-US': 'Tissues' } } });
+  });
+});
+
+describe('getLinkEntity', () => {
+  test('version is false', () => {
+    const id = '42';
+    expect(getLinkEntity(id)).toEqual({
+      sys: {
+        type: 'Link',
+        linkType: 'Entry',
+        id,
+      },
+    });
+  });
+  test('version is true', () => {
+    const id = '42';
+    expect(getLinkEntity(id, true)).toEqual({
+      sys: {
+        type: 'Link',
+        linkType: 'Entry',
+        id,
+        version: 1,
+      },
+    });
+  });
+});
+
+describe('getEntities', () => {
+  test('version is false', () => {
+    const id = '42';
+    expect(getEntities([id])).toEqual([
+      {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id,
+        },
+      },
+    ]);
+  });
+  test('version is true', () => {
+    const id = '42';
+    expect(getEntities([id], true)).toEqual([
+      {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id,
+          version: 1,
+        },
+      },
+    ]);
+  });
+});
+
+describe('getBulkPayload', () => {
+  test('version is false', () => {
+    const id = '42';
+    expect(getBulkPayload([id])).toEqual({
+      entities: {
+        sys: { type: 'Array' as const },
+        items: [
+          {
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id,
+            },
+          },
+        ],
+      },
+    });
+  });
+  test('version is true', () => {
+    const id = '42';
+    expect(getBulkPayload([id], true)).toEqual({
+      entities: {
+        sys: { type: 'Array' as const },
+        items: [
+          {
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id,
+              version: 1,
+            },
+          },
+        ],
+      },
+    });
   });
 });

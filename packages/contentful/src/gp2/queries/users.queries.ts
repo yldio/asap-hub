@@ -41,7 +41,7 @@ export const usersContentQueryFragment = gql`
     onboarded
     positions
     activatedDate
-    contributingCohortsCollection(limit: 100) {
+    contributingCohortsCollection(limit: 10) {
       items {
         contributingCohort {
           sys {

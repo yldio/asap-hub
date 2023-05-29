@@ -1,5 +1,5 @@
 import { ListResponse } from '../common';
-import { Calendar, Keyword, Milestone, Resource } from './common';
+import { Calendar, Keyword, Member, Milestone, Resource } from './common';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
 export type ProjectStatus = (typeof projectStatus)[number];
@@ -17,13 +17,7 @@ export type ProjectMemberRole = (typeof projectMemberRole)[number];
 export const isProjectMemberRole = (data: string): data is ProjectMemberRole =>
   projectMemberRole.includes(data as ProjectMemberRole);
 
-export type ProjectMember = {
-  avatarUrl?: string;
-  firstName: string;
-  lastName: string;
-  role: ProjectMemberRole;
-  userId: string;
-};
+export type ProjectMember = Member<ProjectMemberRole>;
 
 export type ProjectDataObject = {
   description?: string;

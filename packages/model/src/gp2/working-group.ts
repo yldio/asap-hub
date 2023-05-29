@@ -1,5 +1,5 @@
 import { ListResponse } from '../common';
-import { Calendar, Milestone, Resource } from './common';
+import { Calendar, Member, Milestone, Resource } from './common';
 
 export const workingGroupMemberRole = [
   'Lead',
@@ -12,13 +12,7 @@ export const isWorkingGroupMemberRole = (
 ): data is WorkingGroupMemberRole =>
   workingGroupMemberRole.includes(data as WorkingGroupMemberRole);
 
-export type WorkingGroupMember = {
-  userId: string;
-  role: WorkingGroupMemberRole;
-  firstName: string;
-  lastName: string;
-  avatarUrl?: string;
-};
+export type WorkingGroupMember = Member<WorkingGroupMemberRole>;
 
 export type WorkingGroupDataObject = {
   id: string;

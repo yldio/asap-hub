@@ -1,6 +1,6 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { FetchOptions, gp2 } from '@asap-hub/model';
-import { ProjectDataProvider } from '../data-providers/project.data-provider';
+import { ProjectDataProvider } from '../data-providers/types/project.data-provider.type';
 import { removeNotAllowedResources } from '../utils/resources';
 
 export interface ProjectController {

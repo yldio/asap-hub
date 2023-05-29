@@ -242,7 +242,7 @@ const addNextResources = async (
   resources: gp2Model.ProjectUpdateDataObject['resources'],
 ): Promise<string[]> => {
   const nextResources = resources?.filter((resource) => !resource.id);
-  if (!(nextResources && nextResources.length > 0)) {
+  if (!nextResources?.length) {
     return [];
   }
   return Promise.all(
@@ -271,7 +271,7 @@ const getResourceIdsToDelete = (
   resources: gp2Model.ProjectUpdateDataObject['resources'],
 ): string[] => {
   const previousResources = previousProject.fields.resources;
-  if (!(previousResources && previousResources['en-US'])) {
+  if (!previousResources?.['en-US']) {
     return [];
   }
   const existingIds: string[] = previousResources['en-US'].map(
@@ -325,9 +325,7 @@ const outUnchangedResources =
       (previous) => previous.id === resource.id,
     );
     return !(
-      previousResource &&
-      previousResource[0] &&
-      previousResource[0].type === resource.type &&
+      previousResource?.[0]?.type === resource.type &&
       previousResource[0].title === resource.title &&
       previousResource[0].description === resource.description &&
       (gp2Model.isResourceLink(previousResource[0]) &&

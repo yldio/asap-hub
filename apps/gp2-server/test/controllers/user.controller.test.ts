@@ -49,7 +49,7 @@ describe('Users controller', () => {
           code: '123',
           onlyOnboarded: false,
           regions: ['Europe'],
-          keywords: ['Bash', 'R'],
+          keywords: ['Aging', 'RNA'],
           projects: ['a project'],
           workingGroups: ['a working group'],
         },

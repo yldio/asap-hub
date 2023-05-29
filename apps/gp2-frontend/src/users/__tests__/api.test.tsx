@@ -216,7 +216,7 @@ describe('createUserApiUrl', () => {
   it.each`
     name               | value
     ${'regions'}       | ${['Africa', 'Asia']}
-    ${'keywords'}      | ${['Bash', 'R']}
+    ${'keywords'}      | ${['Aging', 'RNA']}
     ${'projects'}      | ${['a project', 'another project']}
     ${'workingGroups'} | ${['a working group', 'another working group']}
   `(

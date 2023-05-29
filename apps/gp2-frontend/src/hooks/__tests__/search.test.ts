@@ -21,7 +21,7 @@ describe('useSearch', () => {
     describe.each`
       name               | value                | queryParam
       ${'regions'}       | ${'Asia'}            | ${'region'}
-      ${'keywords'}      | ${'Bash'}            | ${'keyword'}
+      ${'keywords'}      | ${'Aging'}           | ${'keyword'}
       ${'projects'}      | ${'project 1'}       | ${'project'}
       ${'workingGroups'} | ${'working group 1'} | ${'working-group'}
     `('single filters for $name', ({ name, value, queryParam }) => {
@@ -78,7 +78,7 @@ describe('useSearch', () => {
 
     describe.each`
       name               | firstValue           | secondValue          | queryParam
-      ${'keywords'}      | ${'Bash'}            | ${'R'}               | ${'keyword'}
+      ${'keywords'}      | ${'Aging'}           | ${'RNA'}             | ${'keyword'}
       ${'regions'}       | ${'Asia'}            | ${'Europe'}          | ${'region'}
       ${'projects'}      | ${'project 1'}       | ${'project 2'}       | ${'project'}
       ${'workingGroups'} | ${'working group 1'} | ${'working group 2'} | ${'working-group'}
@@ -141,7 +141,7 @@ describe('useSearch', () => {
   describe.each`
     name               | value                | queryParam
     ${'regions'}       | ${'Asia'}            | ${'region'}
-    ${'keywords'}      | ${'Bash'}            | ${'keyword'}
+    ${'keywords'}      | ${'Aging'}           | ${'keyword'}
     ${'projects'}      | ${'a-project'}       | ${'project'}
     ${'workingGroups'} | ${'a-working-group'} | ${'working-group'}
   `('changeLocation for $name', ({ name, value, queryParam }) => {

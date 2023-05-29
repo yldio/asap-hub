@@ -1,8 +1,5 @@
 import {
-  addLocaleToFields,
-  Entry,
   Environment,
-  getEntities,
   gp2 as gp2Contentful,
   GraphQLClient,
   patchAndPublish,
@@ -10,6 +7,13 @@ import {
 } from '@asap-hub/contentful';
 import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
 import { ProjectDataProvider } from '../types/project.data-provider.type';
+import {
+  deleteResources,
+  parseMembers,
+  parseMilestone,
+  parseResources,
+  processResources,
+} from './common';
 
 export class ProjectContentfulDataProvider implements ProjectDataProvider {
   constructor(
@@ -61,23 +65,12 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     const environment = await this.getRestClient();
     const previousProject = await environment.getEntry(id);
 
-    const nextResources: string[] = await addNextResources(
+    const { resourceFields, idsToDelete } = await processResources(
       environment,
       project.resources,
-    );
-
-    const idsToDelete = getResourceIdsToDelete(
       previousProject,
-      project.resources,
-    );
-    const updatedIds = await updateResources(
-      project.resources,
-      idsToDelete,
       previousProjectDataObject?.resources,
-      environment,
     );
-
-    const resourceFields = getResourceFields([...nextResources, ...updatedIds]);
     const result = await patchAndPublish(previousProject, {
       ...project,
       ...resourceFields,
@@ -101,11 +94,6 @@ export type GraphQLProjectMember = NonNullable<
   NonNullable<GraphQLProject['membersCollection']>
 >['items'][number];
 
-type GraphQLProjectMemberUser = NonNullable<
-  NonNullable<GraphQLProjectMember>['user']
->;
-type GraphQLProjectMemberRole = NonNullable<GraphQLProjectMember>['role'];
-
 export type GraphQLProjectMilestone = NonNullable<
   NonNullable<
     NonNullable<GraphQLProject['milestonesCollection']>
@@ -118,42 +106,16 @@ export type GraphQLProjectResource = NonNullable<
 
 export type GraphQLProjectCalendar = NonNullable<GraphQLProject['calendar']>;
 
-const parseProjectMembers = (
-  user: GraphQLProjectMemberUser,
-  role: GraphQLProjectMemberRole,
-) => {
-  if (!(role && gp2Model.isProjectMemberRole(role))) {
-    throw new TypeError('Invalid role received');
-  }
-
-  return {
-    userId: user.sys.id,
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
-    avatarUrl: user.avatar?.url || undefined,
-    role,
-  };
-};
-
 export function parseProjectToDataObject(
   project: GraphQLProject,
 ): gp2Model.ProjectDataObject {
   if (!(project.status && gp2Model.isProjectStatus(project.status))) {
     throw new TypeError('status is unknown');
   }
-  const members =
-    project.membersCollection?.items.reduce(
-      (membersList: gp2Model.ProjectMember[], member: GraphQLProjectMember) => {
-        const user = member?.user;
-        if (!(user && member.role && user.onboarded)) {
-          return membersList;
-        }
-
-        const groupMember = parseProjectMembers(user, member.role);
-        return [...membersList, groupMember];
-      },
-      [],
-    ) || [];
+  const members = parseMembers<gp2Model.ProjectMemberRole>(
+    project.membersCollection,
+    gp2Model.isProjectMemberRole,
+  );
 
   if (project.keywords && !project.keywords.every(gp2Model.isKeyword)) {
     throw new TypeError('Invalid keyword received from Squidex');
@@ -163,25 +125,7 @@ export function parseProjectToDataObject(
       ?.filter(
         (milestone): milestone is GraphQLProjectMilestone => milestone !== null,
       )
-      .map(
-        ({
-          status,
-          title,
-          externalLink,
-          description,
-        }: GraphQLProjectMilestone) => {
-          if (!(status && gp2Model.isMilestoneStatus(status))) {
-            throw new TypeError('milestone status is unknown');
-          }
-
-          return {
-            title: title || '',
-            status,
-            link: externalLink || undefined,
-            description: description || undefined,
-          };
-        },
-      ) || [];
+      .map(parseMilestone) || [];
 
   const resources =
     project.resourcesCollection?.items.reduce(parseResources, []) || [];
@@ -210,126 +154,3 @@ export function parseProjectToDataObject(
     calendar,
   };
 }
-
-const parseResources = (
-  resourceList: gp2Model.Resource[],
-  resource: GraphQLProjectResource,
-): gp2Model.Resource[] => {
-  if (
-    !(resource?.title && resource.type) ||
-    (resource.type === 'Link' && !resource.externalLink)
-  ) {
-    return resourceList;
-  }
-
-  return [
-    ...resourceList,
-    {
-      id: resource.sys.id,
-      title: resource.title,
-      description: resource.description || undefined,
-      ...(resource.type === 'Note'
-        ? { type: 'Note' }
-        : {
-            type: 'Link',
-            externalLink: resource.externalLink || '',
-          }),
-    },
-  ];
-};
-const addNextResources = async (
-  environment: Environment,
-  resources: gp2Model.ProjectUpdateDataObject['resources'],
-): Promise<string[]> => {
-  const nextResources = resources?.filter((resource) => !resource.id);
-  if (!nextResources?.length) {
-    return [];
-  }
-  return Promise.all(
-    nextResources.map(async (resource) => {
-      const entry = await environment.createEntry('resources', {
-        fields: addLocaleToFields({
-          type: resource.type,
-          title: resource.title,
-          description: resource.description,
-          externalLink: gp2Model.isResourceLink(resource)
-            ? resource.externalLink
-            : undefined,
-        }),
-      });
-      await entry.publish();
-      return entry.sys.id;
-    }),
-  );
-};
-
-const getResourceFields = (nextResources: string[]) => ({
-  resources: getEntities(nextResources, false),
-});
-const getResourceIdsToDelete = (
-  previousProject: Entry,
-  resources: gp2Model.ProjectUpdateDataObject['resources'],
-): string[] => {
-  const previousResources = previousProject.fields.resources;
-  if (!previousResources?.['en-US']) {
-    return [];
-  }
-  const existingIds: string[] = previousResources['en-US'].map(
-    ({ sys: { id } }: { sys: { id: string } }) => id,
-  );
-  const nextIds = (resources || []).map(({ id }) => id);
-
-  return existingIds.filter((id) => !nextIds.includes(id));
-};
-
-const deleteResources = async (
-  idsToDelete: string[],
-  environment: Environment,
-) =>
-  Promise.all(
-    idsToDelete.map(async (id) => {
-      const deletable = await environment.getEntry(id);
-      await deletable.unpublish();
-      return deletable.delete();
-    }),
-  );
-
-type ResourceWithId = gp2Model.Resource & {
-  id: string;
-};
-const updateResources = async (
-  resources: gp2Model.ProjectUpdateDataObject['resources'],
-  idsToDelete: string[],
-  previousResources: gp2Model.ProjectDataObject['resources'],
-  environment: Environment,
-): Promise<string[]> => {
-  const toUpdate = (resources || []).filter(
-    (resource): resource is ResourceWithId =>
-      !!resource.id && !idsToDelete.includes(resource.id),
-  );
-  await Promise.all(
-    toUpdate
-      .filter(outUnchangedResources(previousResources))
-      .map(async ({ id, ...resource }) => {
-        const updatable = await environment.getEntry(id);
-        return patchAndPublish(updatable, { ...resource });
-      }),
-  );
-  return toUpdate.map(({ id }) => id);
-};
-
-const outUnchangedResources =
-  (previousResources: gp2Model.ProjectDataObject['resources']) =>
-  (resource: NonNullable<gp2Model.ProjectDataObject['resources']>[number]) => {
-    const previousResource = previousResources?.filter(
-      (previous) => previous.id === resource.id,
-    );
-    return !(
-      previousResource?.[0]?.type === resource.type &&
-      previousResource[0].title === resource.title &&
-      previousResource[0].description === resource.description &&
-      (gp2Model.isResourceLink(previousResource[0]) &&
-        previousResource[0].externalLink) ===
-        (gp2Model.isResourceLink(resource) && resource.externalLink)
-    );
-  };

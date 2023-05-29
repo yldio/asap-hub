@@ -80,3 +80,11 @@ export type Milestone = {
   status: MilestoneStatus;
   title: string;
 };
+
+export type Member<T> = {
+  userId: string;
+  role: T;
+  firstName: string;
+  lastName: string;
+  avatarUrl?: string;
+};

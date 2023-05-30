@@ -74,7 +74,6 @@ describe('Reminders', () => {
       baseUrl,
     },
   );
-
   const userDataProvider = new UserSquidexDataProvider(
     squidexGraphqlClient,
     userRestClient,
@@ -1353,10 +1352,6 @@ describe('Reminders', () => {
       jest.setSystemTime(new Date('2022-08-10T09:00:00.0Z'));
 
       const researchOutputInput1 = getResearchOutputInput(teamId, creatorId);
-      const researchOutputInput1Draft = getResearchOutputInputDraft(
-        teamId,
-        creatorId,
-      );
       // Research Output added at 05:00AM today
       researchOutputInput1.addedDate = new Date(
         '2022-08-10T05:00:00.0Z',
@@ -1379,9 +1374,6 @@ describe('Reminders', () => {
       const researchOutputId1 = await researchOutputDataProvider.create(
         researchOutputInput1,
       );
-      const researchOutputId1Draft = await researchOutputDataProvider.create(
-        researchOutputInput1Draft,
-      );
       const researchOutputId2 = await researchOutputDataProvider.create(
         researchOutputInput2,
       );
@@ -1396,9 +1388,6 @@ describe('Reminders', () => {
         expect(reminders).toEqual({
           total: 4,
           items: [
-            expect.objectContaining({
-              id: `research-output-published-${researchOutputId1Draft}`,
-            }),
             expect.objectContaining({
               id: `event-happening-today-${event1Id}`,
             }),

@@ -27,7 +27,7 @@ const Paragraph: React.FC<ParagraphProps> = ({
       noMargin ? { margin: 0 } : layoutStyles,
       primaryStyles,
       accent ? { color: colors[accent].rgb } : null,
-      styles ? styles : null,
+      styles,
     ]}
   >
     {children}

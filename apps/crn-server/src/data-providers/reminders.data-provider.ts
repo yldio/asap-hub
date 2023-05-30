@@ -277,6 +277,8 @@ const getResearchOutputDraftRemindersFromQuery = (
     findUsersContent.referencingWorkingGroupsContents,
   );
 
+  const isAsapStaff = findUsersContent.flatData.role === 'Staff';
+
   if (!queryResearchOutputsContents) {
     return [];
   }
@@ -313,8 +315,10 @@ const getResearchOutputDraftRemindersFromQuery = (
       );
 
       if (
-        (associationType === 'team' && !isInTeam) ||
-        (associationType === 'working group' && !isInWorkingGroup)
+        (associationType === 'team' && !isInTeam && !isAsapStaff) ||
+        (associationType === 'working group' &&
+          !isInWorkingGroup &&
+          !isAsapStaff)
       ) {
         return researchOutputReminders;
       }

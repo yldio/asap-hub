@@ -61,7 +61,7 @@ export default class Reminders implements ReminderController {
               href: sharedResearch({}).researchOutput({
                 researchOutputId: reminder.data.researchOutputId,
               }).$,
-              description: `**${reminder.data.createdBy}** on **${reminder.data.associationName}** created a draft output ${reminder.data.title}.`,
+              description: `**${reminder.data.createdBy}** on **${reminder.data.associationName}** created a draft output: ${reminder.data.title}.`,
             };
           }
           return {

@@ -478,6 +478,50 @@ describe('Reminder Data Provider', () => {
         expect(result).toEqual({ items: [], total: 0 });
       });
 
+      test('Should return a team draft research output reminder if the user is Staff', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [
+          getSquidexReminderReseachOutputsDraftContents(false),
+        ];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlResponse.findUsersContent!.flatData.role = 'Staff';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [getResearchOutputDraftReminder(false)],
+          total: 1,
+        });
+      });
+
+      test('Should return a working group draft research output reminder if the user is Staff', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [
+          getSquidexReminderReseachOutputsDraftContents(true),
+        ];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlResponse.findUsersContent!.flatData.role = 'Staff';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [getResearchOutputDraftReminder(true)],
+          total: 1,
+        });
+      });
+
       test('Should not return anything related to drafts RO when draftResearchOutputs property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = null;

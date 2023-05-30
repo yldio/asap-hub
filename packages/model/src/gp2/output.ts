@@ -11,6 +11,10 @@ export const outputDocumentTypes = [
 ] as const;
 
 export type OutputDocumentType = (typeof outputDocumentTypes)[number];
+export const isOutputDocumentType = (
+  data: string,
+): data is OutputDocumentType =>
+  outputDocumentTypes.includes(data as OutputDocumentType);
 
 export const outputTypes = [
   'Research',
@@ -20,9 +24,13 @@ export const outputTypes = [
   'Blog',
 ] as const;
 export type OutputType = (typeof outputTypes)[number];
+export const isOutputType = (data: string): data is OutputType =>
+  outputTypes.includes(data as OutputType);
 
 export const outputSubtypes = ['Preprints', 'Published'] as const;
 export type OutputSubtype = (typeof outputSubtypes)[number];
+export const isOutputSubType = (data: string): data is OutputSubtype =>
+  outputSubtypes.includes(data as OutputSubtype);
 
 export const outputDocumentTypeToType: Record<
   OutputDocumentType,

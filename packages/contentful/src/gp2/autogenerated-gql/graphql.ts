@@ -6381,6 +6381,163 @@ export type FetchNewsQuery = {
   >;
 };
 
+export type OutputsContentDataFragment = Pick<
+  Outputs,
+  | 'title'
+  | 'documentType'
+  | 'type'
+  | 'subtype'
+  | 'link'
+  | 'addedDate'
+  | 'publishDate'
+  | 'lastUpdatedPartial'
+> & {
+  sys: Pick<
+    Sys,
+    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
+  relatedEntity?: Maybe<
+    | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+          sys: Pick<Sys, 'id'>;
+        })
+    | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
+          sys: Pick<Sys, 'id'>;
+        })
+  >;
+  authorsCollection?: Maybe<
+    Pick<OutputsAuthorsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          | ({ __typename: 'ExternalUsers' } & Pick<ExternalUsers, 'name'> & {
+                sys: Pick<Sys, 'id'>;
+              })
+          | ({ __typename: 'Users' } & Pick<
+              Users,
+              'firstName' | 'lastName' | 'onboarded'
+            > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
+        >
+      >;
+    }
+  >;
+};
+
+export type FetchOutputByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchOutputByIdQuery = {
+  outputs?: Maybe<
+    Pick<
+      Outputs,
+      | 'title'
+      | 'documentType'
+      | 'type'
+      | 'subtype'
+      | 'link'
+      | 'addedDate'
+      | 'publishDate'
+      | 'lastUpdatedPartial'
+    > & {
+      sys: Pick<
+        Sys,
+        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
+      relatedEntity?: Maybe<
+        | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+              sys: Pick<Sys, 'id'>;
+            })
+        | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
+              sys: Pick<Sys, 'id'>;
+            })
+      >;
+      authorsCollection?: Maybe<
+        Pick<OutputsAuthorsCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              | ({ __typename: 'ExternalUsers' } & Pick<
+                  ExternalUsers,
+                  'name'
+                > & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Users' } & Pick<
+                  Users,
+                  'firstName' | 'lastName' | 'onboarded'
+                > & {
+                    sys: Pick<Sys, 'id'>;
+                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                  })
+            >
+          >;
+        }
+      >;
+    }
+  >;
+};
+
+export type FetchOutputsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    Array<InputMaybe<OutputsOrder>> | InputMaybe<OutputsOrder>
+  >;
+  where?: InputMaybe<OutputsFilter>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+}>;
+
+export type FetchOutputsQuery = {
+  outputsCollection?: Maybe<
+    Pick<OutputsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            Outputs,
+            | 'title'
+            | 'documentType'
+            | 'type'
+            | 'subtype'
+            | 'link'
+            | 'addedDate'
+            | 'publishDate'
+            | 'lastUpdatedPartial'
+          > & {
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+            relatedEntity?: Maybe<
+              | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+                    sys: Pick<Sys, 'id'>;
+                  })
+              | ({ __typename: 'WorkingGroups' } & Pick<
+                  WorkingGroups,
+                  'title'
+                > & { sys: Pick<Sys, 'id'> })
+            >;
+            authorsCollection?: Maybe<
+              Pick<OutputsAuthorsCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    | ({ __typename: 'ExternalUsers' } & Pick<
+                        ExternalUsers,
+                        'name'
+                      > & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'Users' } & Pick<
+                        Users,
+                        'firstName' | 'lastName' | 'onboarded'
+                      > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                        })
+                  >
+                >;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type PageContentDataFragment = Pick<
   Pages,
   'title' | 'path' | 'shortText' | 'link' | 'linkText'
@@ -8832,6 +8989,225 @@ export const NewsContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<NewsContentDataFragment, unknown>;
+export const OutputsContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'OutputsContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Outputs' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'documentType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'subtype' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'lastUpdatedPartial' },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'relatedEntity' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'Projects' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: {
+                    kind: 'NamedType',
+                    name: { kind: 'Name', value: 'WorkingGroups' },
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'authorsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Users' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'onboarded' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ExternalUsers' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<OutputsContentDataFragment, unknown>;
 export const PageContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -11414,6 +11790,190 @@ export const FetchNewsDocument = {
     ...NewsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchNewsQuery, FetchNewsQueryVariables>;
+export const FetchOutputByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchOutputById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'outputs' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'OutputsContentData' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...OutputsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchOutputByIdQuery,
+  FetchOutputByIdQueryVariables
+>;
+export const FetchOutputsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchOutputs' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'OutputsOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'OutputsFilter' },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'preview' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'outputsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'preview' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'preview' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'OutputsContentData' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...OutputsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<FetchOutputsQuery, FetchOutputsQueryVariables>;
 export const FetchPagesDocument = {
   kind: 'Document',
   definitions: [

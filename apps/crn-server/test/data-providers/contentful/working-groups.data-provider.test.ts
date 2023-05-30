@@ -348,7 +348,7 @@ describe('Working Groups data provider', () => {
         );
         const response = await workingGroupDataProvider.fetchById(id);
 
-        expect(response?.calendars).toEqual([
+        expect(response!.calendars).toEqual([
           {
             id: 'hub@asap.science',
             name: 'ASAP Hub',
@@ -369,7 +369,7 @@ describe('Working Groups data provider', () => {
         );
         const response = await workingGroupDataProvider.fetchById(id);
 
-        expect(response?.calendars).toEqual([]);
+        expect(response!.calendars).toEqual([]);
       });
     });
 
@@ -395,7 +395,7 @@ describe('Working Groups data provider', () => {
         );
         const response = await workingGroupDataProvider.fetchById(id);
 
-        expect(response?.deliverables).toEqual([
+        expect(response!.deliverables).toEqual([
           { description: 'Deliverable 1', status: 'In Progress' },
           { description: 'Deliverable 2', status: 'Complete' },
         ]);
@@ -411,7 +411,7 @@ describe('Working Groups data provider', () => {
         );
         const response = await workingGroupDataProvider.fetchById(id);
 
-        expect(response?.deliverables).toEqual([]);
+        expect(response!.deliverables).toEqual([]);
       });
 
       test('should filter null deliverablesCollection items', async () => {
@@ -432,7 +432,7 @@ describe('Working Groups data provider', () => {
         );
         const response = await workingGroupDataProvider.fetchById(id);
 
-        expect(response?.deliverables).toEqual([
+        expect(response!.deliverables).toEqual([
           { description: 'Deliverable 1', status: 'In Progress' },
         ]);
       });
@@ -489,8 +489,8 @@ describe('Working Groups data provider', () => {
 
         const result = await workingGroupDataProvider.fetchById(id);
 
-        expect(result?.leaders).toHaveLength(1);
-        expect(result?.leaders[0]?.user).toEqual({
+        expect(result!.leaders).toHaveLength(1);
+        expect(result!.leaders[0]?.user).toEqual({
           alumniSinceDate: null,
           avatarUrl: undefined,
           displayName: 'John Doe',
@@ -499,8 +499,8 @@ describe('Working Groups data provider', () => {
           id: 'leader-1',
           lastName: 'Doe',
         });
-        expect(result?.members).toHaveLength(1);
-        expect(result?.members[0]?.user).toEqual({
+        expect(result!.members).toHaveLength(1);
+        expect(result!.members[0]?.user).toEqual({
           alumniSinceDate: null,
           avatarUrl: 'https://images.ctfassets.net/a01453c.png',
           displayName: 'Jane Doe',
@@ -523,8 +523,8 @@ describe('Working Groups data provider', () => {
 
         const result = await workingGroupDataProvider.fetchById(id);
 
-        expect(result?.members).toStrictEqual([]);
-        expect(result?.leaders).toStrictEqual([]);
+        expect(result!.members).toStrictEqual([]);
+        expect(result!.leaders).toStrictEqual([]);
       });
 
       test('should filter null membersCollection items', async () => {
@@ -562,8 +562,8 @@ describe('Working Groups data provider', () => {
 
         const result = await workingGroupDataProvider.fetchById(id);
 
-        expect(result?.members).toHaveLength(1);
-        expect(result?.leaders).toHaveLength(0);
+        expect(result!.members).toHaveLength(1);
+        expect(result!.leaders).toHaveLength(0);
       });
     });
   });

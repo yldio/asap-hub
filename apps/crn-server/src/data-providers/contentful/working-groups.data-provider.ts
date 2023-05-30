@@ -1,7 +1,10 @@
 import {
   FetchWorkingGroupOptions,
   WorkingGroupDataObject,
+  WorkingGroupDeliverable,
+  WorkingGroupLeader,
   WorkingGroupListDataObject,
+  WorkingGroupMember,
   WorkingGroupRole,
   WorkingGroupUpdateDataObject,
 } from '@asap-hub/model';
@@ -29,6 +32,10 @@ export type WorkingGroupItem = NonNullable<
   NonNullable<
     FetchWorkingGroupsQuery['workingGroupsCollection']
   >['items'][number]
+>;
+
+type MemberItem = NonNullable<
+  NonNullable<WorkingGroupItem['membersCollection']>['items'][number]
 >;
 
 export class WorkingGroupContentfulDataProvider
@@ -173,68 +180,51 @@ export const parseContentfulGraphQlWorkingGroup = (
     membersCollection,
   } = item;
 
-  const deliverables = (deliverablesCollection?.items || []).reduce(
-    (
-      wgDeliverables: WorkingGroupDataObject['deliverables'][number][],
-      deliverableItem,
-    ) => {
-      if (deliverableItem) {
-        wgDeliverables.push({
-          // these two fields are required in Contentful they can't be null
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          status: deliverableItem.status!,
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          description: deliverableItem.description!,
-        } as WorkingGroupDataObject['deliverables'][number]);
+  const deliverables = (deliverablesCollection?.items || [])
+    .filter((x): x is WorkingGroupDeliverable => x !== null)
+    .map((deliverable) => ({
+      // these two fields are required in Contentful they can't be null
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      status: deliverable.status!,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      description: deliverable.description!,
+    }));
+
+  const getUserFromMemberCollection = (member: MemberItem) => ({
+    id: member.user?.sys.id || '',
+    firstName: member.user?.firstName || '',
+    lastName: member.user?.lastName || '',
+    displayName: `${member.user?.firstName} ${member.user?.lastName}`,
+    alumniSinceDate: member.user?.alumniSinceDate,
+    email: member.user?.email || '',
+    avatarUrl: member.user?.avatar?.url || undefined,
+  });
+
+  const leaders = (membersCollection?.items || [])
+    .map((member) => {
+      if (member?.__typename === 'WorkingGroupLeaders') {
+        return {
+          role: member.role as WorkingGroupRole,
+          workstreamRole: member.workstreamRole || '',
+          inactiveSinceDate: member.inactiveSinceDate,
+          user: getUserFromMemberCollection(member),
+        } as WorkingGroupLeader;
       }
+      return null;
+    })
+    .filter((x): x is WorkingGroupLeader => x !== null);
 
-      return wgDeliverables;
-    },
-    [],
-  );
-
-  const { leaders, members } = (membersCollection?.items || []).reduce(
-    (
-      wgMembers: {
-        leaders: WorkingGroupDataObject['leaders'][number][];
-        members: WorkingGroupDataObject['members'][number][];
-      },
-      member,
-    ) => {
-      if (member) {
-        const user = {
-          id: member.user?.sys.id || '',
-          firstName: member.user?.firstName || '',
-          lastName: member.user?.lastName || '',
-          displayName: `${member.user?.firstName} ${member.user?.lastName}`,
-          alumniSinceDate: member.user?.alumniSinceDate,
-          email: member.user?.email || '',
-          avatarUrl: member.user?.avatar?.url || undefined,
-        };
-
-        if (member?.__typename === 'WorkingGroupLeaders') {
-          wgMembers.leaders.push({
-            role: member.role as WorkingGroupRole,
-            workstreamRole: member.workstreamRole || '',
-            inactiveSinceDate: member.inactiveSinceDate,
-            user,
-          });
-        }
-
-        if (member?.__typename === 'WorkingGroupMembers') {
-          wgMembers.members.push({
-            inactiveSinceDate: member.inactiveSinceDate,
-            user,
-          });
-        }
+  const members = (membersCollection?.items || [])
+    .map((member) => {
+      if (member?.__typename === 'WorkingGroupMembers') {
+        return {
+          inactiveSinceDate: member.inactiveSinceDate,
+          user: getUserFromMemberCollection(member),
+        } as WorkingGroupMember;
       }
-      return wgMembers;
-    },
-    {
-      leaders: [],
-      members: [],
-    },
-  );
+      return null;
+    })
+    .filter((x): x is WorkingGroupMember => x !== null);
 
   const workingGroup = {
     id: sys.id,

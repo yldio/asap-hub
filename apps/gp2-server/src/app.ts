@@ -73,16 +73,14 @@ import { ContributingCohortSquidexDataProvider } from './data-providers/contribu
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import { ExternalUserSquidexDataProvider } from './data-providers/external-user.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import {
-  OutputDataProvider,
-  OutputSquidexDataProvider,
-} from './data-providers/output.data-provider';
+import { OutputSquidexDataProvider } from './data-providers/output.data-provider';
 import { PageSquidexDataProvider } from './data-providers/page.data-provider';
 import { ProjectSquidexDataProvider } from './data-providers/project.data-provider';
 import {
   AssetDataProvider,
   ContributingCohortDataProvider,
   NewsDataProvider,
+  OutputDataProvider,
   PageDataProvider,
   UserDataProvider,
   WorkingGroupNetworkDataProvider,

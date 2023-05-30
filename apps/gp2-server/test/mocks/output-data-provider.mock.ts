@@ -1,4 +1,4 @@
-import { OutputDataProvider } from '../../src/data-providers/output.data-provider';
+import { OutputDataProvider } from '../../src/data-providers/types';
 
 export const outputDataProviderMock: jest.Mocked<OutputDataProvider> = {
   fetch: jest.fn(),

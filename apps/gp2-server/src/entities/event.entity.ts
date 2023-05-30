@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import {
-  parseRichText,
-  RichTextFromQuery,
-} from '@asap-hub/contentful';
+import { parseRichText, RichTextFromQuery } from '@asap-hub/contentful';
 import { gp2, isEventStatus } from '@asap-hub/model';
 import { parseDate } from '@asap-hub/squidex';
 import { DateTime } from 'luxon';

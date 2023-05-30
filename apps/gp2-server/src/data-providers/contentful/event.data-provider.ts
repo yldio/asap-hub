@@ -15,9 +15,9 @@ import {
   getContentfulEventMaterial,
   MeetingMaterial,
   parseContentfulGraphqlCalendarPartialToDataObject,
-  parseContentfulWorkingGroupProject,
 } from '../../entities';
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendar.controller';
+import { parseContentfulWorkingGroupsProjects } from './utils';
 
 export type EventItem = NonNullable<
   NonNullable<gp2.FetchEventsQuery['eventsCollection']>['items'][number]
@@ -208,11 +208,6 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
   }
 }
 
-export const eventUnreadyResponse = {
-  project: {} as gp2Model.ProjectResponse,
-  workingGroup: {} as gp2Model.WorkingGroupResponse,
-};
-
 type SpeakerItem = NonNullable<
   NonNullable<EventItem['speakersCollection']>['items'][number]
 >;
@@ -288,7 +283,7 @@ export const parseGraphQLEvent = (
 
   const calendar = parseCalendarDataObjectToResponse({
     ...parseContentfulGraphqlCalendarPartialToDataObject(item.calendar),
-    ...parseContentfulWorkingGroupProject(item.calendar),
+    ...parseContentfulWorkingGroupsProjects(item.calendar),
   });
 
   const startDate = DateTime.fromISO(item.startDate);
@@ -361,7 +356,8 @@ export const parseGraphQLEvent = (
     tags: (tags as string[] | undefined | null) ?? [],
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
-    ...eventUnreadyResponse,
+    workingGroup: calendar.workingGroups?.[0],
+    project: calendar.projects?.[0],
   };
 };
 

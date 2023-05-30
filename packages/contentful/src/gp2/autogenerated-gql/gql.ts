@@ -3,7 +3,7 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-  '\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n':
+  '\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    googleApiMetadata\n    linkedFrom {\n      projectsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n      workingGroupsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n    }\n  }\n':
     graphql.CalendarsContentDataFragmentDoc,
   '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContentData\n    }\n  }\n  \n':
     graphql.FetchCalendarByIdDocument,
@@ -70,8 +70,8 @@ const documents = {
 };
 
 export function gql(
-  source: '\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n',
-): (typeof documents)['\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    syncToken\n    resourceId\n    expirationDate\n  }\n'];
+  source: '\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    googleApiMetadata\n    linkedFrom {\n      projectsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n      workingGroupsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    googleApiMetadata\n    linkedFrom {\n      projectsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n      workingGroupsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n    }\n  }\n'];
 export function gql(
   source: '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContentData\n    }\n  }\n  \n'];

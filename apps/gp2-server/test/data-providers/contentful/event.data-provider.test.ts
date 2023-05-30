@@ -12,6 +12,7 @@ import {
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulEventDataObject,
+  getContentfulGraphql,
   getContentfulGraphqlEvent,
   getContentfulGraphqlEventsResponse,
   getContentfulListEventDataObject,
@@ -39,9 +40,7 @@ describe('Events Contentful Data Provider', () => {
   );
 
   const contentfulGraphqlClientMockServer =
-    getGP2ContentfulGraphqlClientMockServer({
-      Events: () => getContentfulGraphqlEvent(),
-    });
+    getGP2ContentfulGraphqlClientMockServer(getContentfulGraphql());
 
   const eventDataProviderMockGraphql = new EventContentfulDataProvider(
     contentfulGraphqlClientMockServer,

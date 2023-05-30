@@ -12,6 +12,7 @@ import {
   gp2 as gp2Model,
 } from '@asap-hub/model';
 import { parseContentfulGraphqlCalendarPartialToDataObject } from '../../entities';
+import { parseContentfulWorkingGroupsProjects } from './utils';
 
 export type CalendarItem = NonNullable<
   NonNullable<gp2.FetchCalendarsQuery['calendarsCollection']>['items'][number]
@@ -45,8 +46,9 @@ export class CalendarContentfulDataProvider
       skip: 0,
       order: [gp2.CalendarsOrder.NameAsc],
       where: {
-        ...(maxExpiration ? { expirationDate_lt: maxExpiration } : {}),
-        ...(resourceId ? { resourceId } : {}),
+        ...(maxExpiration || resourceId
+          ? { googleApiMetadata_exists: true }
+          : {}),
       },
     });
 
@@ -54,6 +56,32 @@ export class CalendarContentfulDataProvider
       return {
         total: 0,
         items: [],
+      };
+    }
+
+    if (resourceId || maxExpiration) {
+      const filteredCalendarItems = calendarsCollection?.items.filter(
+        (calendar) => {
+          if (resourceId && maxExpiration) {
+            return (
+              calendar?.googleApiMetadata?.resourceId === resourceId &&
+              calendar?.googleApiMetadata?.expirationDate <= maxExpiration
+            );
+          }
+
+          if (maxExpiration) {
+            return calendar?.googleApiMetadata?.expirationDate <= maxExpiration;
+          }
+
+          return calendar?.googleApiMetadata?.resourceId === resourceId;
+        },
+      );
+
+      return {
+        total: (filteredCalendarItems || [])?.length,
+        items: (filteredCalendarItems || [])
+          .filter((x): x is CalendarItem => x !== null)
+          .map(parseGraphQlCalendarToDataObject),
       };
     }
 
@@ -65,7 +93,7 @@ export class CalendarContentfulDataProvider
     };
   }
 
-  async create(create: CalendarCreateDataObject) {
+  async create(create: CalendarCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
 
     const calendarEntry = await environment.createEntry('calendars', {
@@ -77,31 +105,50 @@ export class CalendarContentfulDataProvider
     return calendarEntry.sys.id;
   }
 
-  async update(id: string, update: CalendarUpdateDataObject) {
+  async update(id: string, update: CalendarUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
 
     const calendar = await environment.getEntry(id);
+    const previousGoogleApiMetadata = calendar.fields.googleApiMetadata;
 
-    const calendarWithUpdatedFields = updateEntryFields(calendar, update);
+    const { resourceId, expirationDate, syncToken, ...otherFields } = update;
+
+    const calendarWithUpdatedFields = updateEntryFields(calendar, otherFields);
+
+    if (resourceId || expirationDate || syncToken) {
+      calendarWithUpdatedFields.fields.googleApiMetadata = {
+        'en-US': {
+          ...(previousGoogleApiMetadata
+            ? previousGoogleApiMetadata['en-US']
+            : {}),
+          // if the resourceId is updated, we change associatedGoogleCalendarId
+          // this field is used by webhooks
+          ...(resourceId
+            ? {
+                resourceId,
+                associatedGoogleCalendarId:
+                  calendar.fields.googleCalendarId['en-US'],
+              }
+            : {}),
+          ...(syncToken ? { syncToken } : {}),
+          ...(expirationDate ? { expirationDate } : {}),
+        },
+      };
+    }
 
     const calendarUpdated = await calendarWithUpdatedFields.update();
     await calendarUpdated.publish();
   }
 }
 
-export const calendarUnreadyResponse = {
-  projects: [],
-  workingGroups: [],
-};
-
 export const parseGraphQlCalendarToDataObject = (
   item: CalendarItem,
 ): gp2Model.CalendarDataObject => ({
   id: item.sys.id,
   version: item.sys.publishedVersion ?? 1,
-  resourceId: item.resourceId,
-  expirationDate: item.expirationDate,
-  syncToken: item.syncToken,
+  resourceId: item.googleApiMetadata.resourceId,
+  expirationDate: item.googleApiMetadata.expirationDate,
+  syncToken: item.googleApiMetadata.syncToken,
   ...parseContentfulGraphqlCalendarPartialToDataObject(item),
-  ...calendarUnreadyResponse,
+  ...parseContentfulWorkingGroupsProjects(item),
 });

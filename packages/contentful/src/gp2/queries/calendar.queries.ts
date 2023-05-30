@@ -13,9 +13,25 @@ export const calendarsContentQueryFragment = gql`
     googleCalendarId
     name
     color
-    syncToken
-    resourceId
-    expirationDate
+    googleApiMetadata
+    linkedFrom {
+      projectsCollection {
+        items {
+          sys {
+            id
+          }
+          title
+        }
+      }
+      workingGroupsCollection {
+        items {
+          sys {
+            id
+          }
+          title
+        }
+      }
+    }
   }
 `;
 

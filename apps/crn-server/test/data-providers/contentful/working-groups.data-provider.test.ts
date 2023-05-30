@@ -644,8 +644,6 @@ describe('Working Groups data provider', () => {
           },
         },
       ]);
-
-      // expect(workingGroupMockUpdated.publish).toHaveBeenCalled();
     });
   });
 });

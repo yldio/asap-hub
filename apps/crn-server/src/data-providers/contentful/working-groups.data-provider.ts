@@ -21,9 +21,9 @@ import {
   addLocaleToFields,
   Link,
 } from '@asap-hub/contentful';
-
 import { WorkingGroupDataProvider } from '../types';
 import { parseContentfulGraphqlCalendarToResponse } from '../../entities';
+import { contentfulRateLimiter } from './contentful-rate-limiter';
 
 export type WorkingGroupItem = NonNullable<
   NonNullable<
@@ -116,12 +116,16 @@ export class WorkingGroupContentfulDataProvider
       workingGroup.fields.deliverables['en-US'].map(
         async (deliverable: Link<'Entry'>) => {
           const deliverableId = deliverable.sys.id;
+          await contentfulRateLimiter.removeTokens(1);
           const deliverableEntry = await environment.getEntry(deliverableId);
+          await contentfulRateLimiter.removeTokens(1);
 
           if (deliverableEntry.isPublished()) {
+            await contentfulRateLimiter.removeTokens(1);
             await deliverableEntry.unpublish();
           }
 
+          await contentfulRateLimiter.removeTokens(1);
           await deliverableEntry.delete();
         },
       ),
@@ -129,12 +133,15 @@ export class WorkingGroupContentfulDataProvider
 
     const publishedDeliverables = await Promise.all(
       update.deliverables.map(async (deliverable) => {
+        await contentfulRateLimiter.removeTokens(1);
         const entry = await environment.createEntry(
           'workingGroupDeliverables',
           {
             fields: addLocaleToFields(deliverable),
           },
         );
+
+        await contentfulRateLimiter.removeTokens(1);
         return entry.publish();
       }),
     );
@@ -147,6 +154,7 @@ export class WorkingGroupContentfulDataProvider
       },
     }));
 
+    await contentfulRateLimiter.removeTokens(2);
     await patchAndPublish(workingGroup, { deliverables });
   }
 }

@@ -66,6 +66,7 @@
     "graphql-tag": "2.12.6",
     "jsonwebtoken": "8.5.1",
     "jwt-decode": "2.2.0",
+    "limiter": "^2.1.0",
     "lodash.get": "4.4.2",
     "lodash.matches": "4.6.0",
     "lodash.uniqby": "4.7.0",

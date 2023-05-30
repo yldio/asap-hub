@@ -3,6 +3,7 @@ import {
   getContentfulGraphqlClientMockServer,
   Environment,
 } from '@asap-hub/contentful';
+import { DeliverableStatus } from '@asap-hub/model';
 import { when } from 'jest-when';
 
 import {
@@ -15,8 +16,8 @@ import {
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 import { WorkingGroupContentfulDataProvider } from '../../../src/data-providers/contentful/working-groups.data-provider';
+import logger from '../../../src/utils/logger';
 import { getEntry } from '../../fixtures/contentful.fixtures';
-import { DeliverableStatus } from '@asap-hub/model';
 
 describe('Working Groups data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -569,6 +570,351 @@ describe('Working Groups data provider', () => {
   });
 
   describe('Update method', () => {
+    test("Should log if can't delete previous entry because fetching previous entry fails but still create new deliverable and update the working group", async () => {
+      const loggerWarnSpy = jest.spyOn(logger, 'warn');
+
+      const workingGroupId = 'working-group-id-1';
+      const workingGroupMock = getEntry({
+        deliverables: {
+          'en-US': [
+            {
+              sys: {
+                id: 'd0',
+              },
+              description: 'D0',
+              status: 'Complete' as DeliverableStatus,
+            },
+          ],
+        },
+      });
+      when(environmentMock.getEntry)
+        .calledWith(workingGroupId)
+        .mockResolvedValue(workingGroupMock);
+
+      const previousDeliverableMock = getEntry({});
+      previousDeliverableMock.isPublished = jest.fn(() => true);
+      when(environmentMock.getEntry)
+        .calledWith('d0')
+        .mockRejectedValueOnce(new Error('failed!'));
+
+      const deliverableCreatedMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(deliverableCreatedMock);
+      deliverableCreatedMock.publish = jest
+        .fn()
+        .mockResolvedValueOnce(getEntry({}));
+
+      const workingGroupMockUpdated = getEntry({});
+      workingGroupMock.patch = jest
+        .fn()
+        .mockResolvedValueOnce(workingGroupMockUpdated);
+
+      await workingGroupDataProviderMock.update(workingGroupId, {
+        deliverables: [
+          {
+            description: 'D1',
+            status: 'Pending' as DeliverableStatus,
+          },
+        ],
+      });
+
+      expect(loggerWarnSpy).toHaveBeenCalledWith(
+        `Error fetching entry with id: d0`,
+      );
+
+      expect(previousDeliverableMock.unpublish).not.toHaveBeenCalled();
+      expect(previousDeliverableMock.delete).not.toHaveBeenCalled();
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'workingGroupDeliverables',
+        {
+          fields: {
+            description: { 'en-US': 'D1' },
+            status: { 'en-US': 'Pending' },
+          },
+        },
+      );
+      expect(deliverableCreatedMock.publish).toHaveBeenCalled();
+      expect(workingGroupMock.patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/deliverables',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'entry-id',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      ]);
+    });
+
+    test("Should log if can't delete previous entry because unpublish previous entry fails but still create new deliverable and update the working group", async () => {
+      const loggerWarnSpy = jest.spyOn(logger, 'warn');
+
+      const workingGroupId = 'working-group-id-1';
+      const workingGroupMock = getEntry({
+        deliverables: {
+          'en-US': [
+            {
+              sys: {
+                id: 'd0',
+              },
+              description: 'D0',
+              status: 'Complete' as DeliverableStatus,
+            },
+          ],
+        },
+      });
+      when(environmentMock.getEntry)
+        .calledWith(workingGroupId)
+        .mockResolvedValue(workingGroupMock);
+
+      const previousDeliverableMock = getEntry({});
+      previousDeliverableMock.isPublished = jest.fn(() => true);
+      previousDeliverableMock.unpublish = jest
+        .fn()
+        .mockRejectedValueOnce(new Error('failed!'));
+      when(environmentMock.getEntry)
+        .calledWith('d0')
+        .mockResolvedValueOnce(previousDeliverableMock);
+
+      const deliverableCreatedMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(deliverableCreatedMock);
+      deliverableCreatedMock.publish = jest
+        .fn()
+        .mockResolvedValueOnce(getEntry({}));
+
+      const workingGroupMockUpdated = getEntry({});
+      workingGroupMock.patch = jest
+        .fn()
+        .mockResolvedValueOnce(workingGroupMockUpdated);
+
+      await workingGroupDataProviderMock.update(workingGroupId, {
+        deliverables: [
+          {
+            description: 'D1',
+            status: 'Pending' as DeliverableStatus,
+          },
+        ],
+      });
+
+      expect(loggerWarnSpy).toHaveBeenCalledWith(
+        `Error unpublishing entry with id: d0`,
+      );
+
+      expect(previousDeliverableMock.unpublish).toHaveBeenCalled();
+      expect(previousDeliverableMock.delete).not.toHaveBeenCalled();
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'workingGroupDeliverables',
+        {
+          fields: {
+            description: { 'en-US': 'D1' },
+            status: { 'en-US': 'Pending' },
+          },
+        },
+      );
+      expect(deliverableCreatedMock.publish).toHaveBeenCalled();
+      expect(workingGroupMock.patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/deliverables',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'entry-id',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      ]);
+    });
+
+    test("Should log if can't delete previous entry because delete previous entry fails but still create new deliverable and update the working group", async () => {
+      const loggerWarnSpy = jest.spyOn(logger, 'warn');
+
+      const workingGroupId = 'working-group-id-1';
+      const workingGroupMock = getEntry({
+        deliverables: {
+          'en-US': [
+            {
+              sys: {
+                id: 'd0',
+              },
+              description: 'D0',
+              status: 'Complete' as DeliverableStatus,
+            },
+          ],
+        },
+      });
+      when(environmentMock.getEntry)
+        .calledWith(workingGroupId)
+        .mockResolvedValue(workingGroupMock);
+
+      const previousDeliverableMock = getEntry({});
+      previousDeliverableMock.isPublished = jest.fn(() => true);
+      previousDeliverableMock.delete = jest
+        .fn()
+        .mockRejectedValueOnce(new Error('failed!'));
+      when(environmentMock.getEntry)
+        .calledWith('d0')
+        .mockResolvedValueOnce(previousDeliverableMock);
+
+      const deliverableCreatedMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(deliverableCreatedMock);
+      deliverableCreatedMock.publish = jest
+        .fn()
+        .mockResolvedValueOnce(getEntry({}));
+
+      const workingGroupMockUpdated = getEntry({});
+      workingGroupMock.patch = jest
+        .fn()
+        .mockResolvedValueOnce(workingGroupMockUpdated);
+
+      await workingGroupDataProviderMock.update(workingGroupId, {
+        deliverables: [
+          {
+            description: 'D1',
+            status: 'Pending' as DeliverableStatus,
+          },
+        ],
+      });
+
+      expect(loggerWarnSpy).toHaveBeenCalledWith(
+        `Error deleting entry with id: d0`,
+      );
+
+      expect(previousDeliverableMock.unpublish).toHaveBeenCalled();
+      expect(previousDeliverableMock.delete).toHaveBeenCalled();
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'workingGroupDeliverables',
+        {
+          fields: {
+            description: { 'en-US': 'D1' },
+            status: { 'en-US': 'Pending' },
+          },
+        },
+      );
+      expect(deliverableCreatedMock.publish).toHaveBeenCalled();
+      expect(workingGroupMock.patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/deliverables',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'entry-id',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      ]);
+    });
+
+    test("Should throw if there's an error creating deliverable", async () => {
+      const workingGroupId = 'working-group-id-1';
+      const workingGroupMock = getEntry({
+        deliverables: {
+          'en-US': [
+            {
+              sys: {
+                id: 'd0',
+              },
+              description: 'D0',
+              status: 'Complete' as DeliverableStatus,
+            },
+          ],
+        },
+      });
+      when(environmentMock.getEntry)
+        .calledWith(workingGroupId)
+        .mockResolvedValue(workingGroupMock);
+
+      const previousDeliverableMock = getEntry({});
+      previousDeliverableMock.isPublished = jest.fn(() => true);
+      when(environmentMock.getEntry)
+        .calledWith('d0')
+        .mockResolvedValueOnce(previousDeliverableMock);
+
+      const deliverableCreatedMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValueOnce(deliverableCreatedMock);
+      environmentMock.createEntry.mockRejectedValueOnce(new Error('failed'));
+
+      await expect(
+        workingGroupDataProviderMock.update(workingGroupId, {
+          deliverables: [
+            {
+              description: 'D1',
+              status: 'Pending' as DeliverableStatus,
+            },
+            {
+              description: 'D2',
+              status: 'Complete' as DeliverableStatus,
+            },
+          ],
+        }),
+      ).rejects.toThrowError('Error creating deliverable: Error: failed');
+
+      expect(deliverableCreatedMock.publish).toHaveBeenCalled();
+      expect(workingGroupMock.patch).not.toHaveBeenCalled();
+    });
+
+    test("Should throw if there's an error publishing deliverable", async () => {
+      const workingGroupId = 'working-group-id-1';
+      const workingGroupMock = getEntry({
+        deliverables: {
+          'en-US': [
+            {
+              sys: {
+                id: 'd0',
+              },
+              description: 'D0',
+              status: 'Complete' as DeliverableStatus,
+            },
+          ],
+        },
+      });
+      when(environmentMock.getEntry)
+        .calledWith(workingGroupId)
+        .mockResolvedValue(workingGroupMock);
+
+      const previousDeliverableMock = getEntry({});
+      previousDeliverableMock.isPublished = jest.fn(() => true);
+      when(environmentMock.getEntry)
+        .calledWith('d0')
+        .mockResolvedValueOnce(previousDeliverableMock);
+
+      const deliverableCreatedMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValueOnce(deliverableCreatedMock);
+      deliverableCreatedMock.publish = jest
+        .fn()
+        .mockRejectedValueOnce(new Error('failed!'));
+
+      await expect(
+        workingGroupDataProviderMock.update(workingGroupId, {
+          deliverables: [
+            {
+              description: 'D1',
+              status: 'Pending' as DeliverableStatus,
+            },
+          ],
+        }),
+      ).rejects.toThrowError();
+
+      expect(workingGroupMock.patch).not.toHaveBeenCalled();
+    });
+
     test('Should update the working group with deliverables and delete previous ones', async () => {
       const workingGroupId = 'working-group-id-1';
 

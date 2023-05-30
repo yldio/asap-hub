@@ -27,6 +27,7 @@ import {
 
 import { WorkingGroupDataProvider } from '../types';
 import { parseContentfulGraphqlCalendarToResponse } from '../../entities';
+import logger from '../../utils/logger';
 
 export type WorkingGroupItem = NonNullable<
   NonNullable<
@@ -122,27 +123,46 @@ export class WorkingGroupContentfulDataProvider
     await Promise.all(
       workingGroup.fields.deliverables['en-US'].map(
         async (deliverable: Link<'Entry'>) => {
-          const deliverableId = deliverable.sys.id;
-          const deliverableEntry = await environment.getEntry(deliverableId);
+          try {
+            const deliverableId = deliverable.sys.id;
+            const deliverableEntry = await environment.getEntry(deliverableId);
 
-          if (deliverableEntry.isPublished()) {
-            await deliverableEntry.unpublish();
+            try {
+              if (deliverableEntry.isPublished()) {
+                await deliverableEntry.unpublish();
+              }
+              try {
+                await deliverableEntry.delete();
+              } catch {
+                logger.warn(
+                  `Error deleting entry with id: ${deliverable.sys.id}`,
+                );
+              }
+            } catch {
+              logger.warn(
+                `Error unpublishing entry with id: ${deliverable.sys.id}`,
+              );
+            }
+          } catch {
+            logger.warn(`Error fetching entry with id: ${deliverable.sys.id}`);
           }
-
-          await deliverableEntry.delete();
         },
       ),
     );
 
     const publishedDeliverables = await Promise.all(
       update.deliverables.map(async (deliverable) => {
-        const entry = await environment.createEntry(
-          'workingGroupDeliverables',
-          {
-            fields: addLocaleToFields(deliverable),
-          },
-        );
-        return entry.publish();
+        try {
+          const entry = await environment.createEntry(
+            'workingGroupDeliverables',
+            {
+              fields: addLocaleToFields(deliverable),
+            },
+          );
+          return entry.publish();
+        } catch (e) {
+          throw new Error(`Error creating deliverable: ${e}`);
+        }
       }),
     );
 

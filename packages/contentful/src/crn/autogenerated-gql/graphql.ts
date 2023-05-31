@@ -305,6 +305,7 @@ export type CalendarsFilter = {
 export type CalendarsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
 };
 
 export type CalendarsLinkingCollectionsEntryCollectionArgs = {
@@ -315,6 +316,13 @@ export type CalendarsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export type CalendarsLinkingCollectionsEventsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type CalendarsLinkingCollectionsWorkingGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -1928,6 +1936,16 @@ export type Query = {
   teamsCollection?: Maybe<TeamsCollection>;
   users?: Maybe<Users>;
   usersCollection?: Maybe<UsersCollection>;
+  workingGroupDeliverables?: Maybe<WorkingGroupDeliverables>;
+  workingGroupDeliverablesCollection?: Maybe<WorkingGroupDeliverablesCollection>;
+  workingGroupLeaders?: Maybe<WorkingGroupLeaders>;
+  workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
+  workingGroupLeadersOrWorkingGroupMembers?: Maybe<WorkingGroupLeadersOrWorkingGroupMembers>;
+  workingGroupLeadersOrWorkingGroupMembersCollection?: Maybe<WorkingGroupLeadersOrWorkingGroupMembersCollection>;
+  workingGroupMembers?: Maybe<WorkingGroupMembers>;
+  workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
+  workingGroups?: Maybe<WorkingGroups>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
 };
 
 export type QueryAssetArgs = {
@@ -2162,6 +2180,80 @@ export type QueryUsersCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<UsersFilter>;
+};
+
+export type QueryWorkingGroupDeliverablesArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryWorkingGroupDeliverablesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupDeliverablesOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupDeliverablesFilter>;
+};
+
+export type QueryWorkingGroupLeadersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryWorkingGroupLeadersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupLeadersOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupLeadersFilter>;
+};
+
+export type QueryWorkingGroupLeadersOrWorkingGroupMembersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryWorkingGroupLeadersOrWorkingGroupMembersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupLeadersOrWorkingGroupMembersFilter>;
+};
+
+export type QueryWorkingGroupMembersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryWorkingGroupMembersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupMembersOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupMembersFilter>;
+};
+
+export type QueryWorkingGroupsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryWorkingGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupsFilter>;
 };
 
 export type Sys = {
@@ -3045,6 +3137,9 @@ export enum UsersLabsCollectionOrder {
 export type UsersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
+  workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
+  workingGroupLeadersOrWorkingGroupMembersCollection?: Maybe<WorkingGroupLeadersOrWorkingGroupMembersCollection>;
+  workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
 };
 
 export type UsersLinkingCollectionsEntryCollectionArgs = {
@@ -3055,6 +3150,28 @@ export type UsersLinkingCollectionsEntryCollectionArgs = {
 };
 
 export type UsersLinkingCollectionsEventSpeakersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsWorkingGroupLeadersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsWorkingGroupLeadersOrWorkingGroupMembersCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
+
+export type UsersLinkingCollectionsWorkingGroupMembersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -3144,6 +3261,550 @@ export enum UsersTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupDeliverables) */
+export type WorkingGroupDeliverables = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  description?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<WorkingGroupDeliverablesLinkingCollections>;
+  status?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupDeliverables) */
+export type WorkingGroupDeliverablesDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupDeliverables) */
+export type WorkingGroupDeliverablesLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupDeliverables) */
+export type WorkingGroupDeliverablesStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type WorkingGroupDeliverablesCollection = {
+  items: Array<Maybe<WorkingGroupDeliverables>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupDeliverablesFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WorkingGroupDeliverablesFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WorkingGroupDeliverablesFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type WorkingGroupDeliverablesLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type WorkingGroupDeliverablesLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
+
+export enum WorkingGroupDeliverablesOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeaders) */
+export type WorkingGroupLeaders = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  inactiveSinceDate?: Maybe<Scalars['DateTime']>;
+  linkedFrom?: Maybe<WorkingGroupLeadersLinkingCollections>;
+  role?: Maybe<Scalars['String']>;
+  sys: Sys;
+  user?: Maybe<Users>;
+  workstreamRole?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeaders) */
+export type WorkingGroupLeadersInactiveSinceDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeaders) */
+export type WorkingGroupLeadersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeaders) */
+export type WorkingGroupLeadersRoleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeaders) */
+export type WorkingGroupLeadersUserArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeaders) */
+export type WorkingGroupLeadersWorkstreamRoleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type WorkingGroupLeadersCollection = {
+  items: Array<Maybe<WorkingGroupLeaders>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupLeadersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WorkingGroupLeadersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WorkingGroupLeadersFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user?: InputMaybe<CfUsersNestedFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+  workstreamRole?: InputMaybe<Scalars['String']>;
+  workstreamRole_contains?: InputMaybe<Scalars['String']>;
+  workstreamRole_exists?: InputMaybe<Scalars['Boolean']>;
+  workstreamRole_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  workstreamRole_not?: InputMaybe<Scalars['String']>;
+  workstreamRole_not_contains?: InputMaybe<Scalars['String']>;
+  workstreamRole_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type WorkingGroupLeadersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type WorkingGroupLeadersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers) */
+export type WorkingGroupLeadersOrWorkingGroupMembers = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  inactiveSinceDate?: Maybe<Scalars['DateTime']>;
+  linkedFrom?: Maybe<WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections>;
+  sys: Sys;
+  user?: Maybe<Users>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers) */
+export type WorkingGroupLeadersOrWorkingGroupMembersInactiveSinceDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers) */
+export type WorkingGroupLeadersOrWorkingGroupMembersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers) */
+export type WorkingGroupLeadersOrWorkingGroupMembersUserArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type WorkingGroupLeadersOrWorkingGroupMembersCollection = {
+  items: Array<Maybe<WorkingGroupLeadersOrWorkingGroupMembers>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupLeadersOrWorkingGroupMembersFilter = {
+  AND?: InputMaybe<
+    Array<InputMaybe<WorkingGroupLeadersOrWorkingGroupMembersFilter>>
+  >;
+  OR?: InputMaybe<
+    Array<InputMaybe<WorkingGroupLeadersOrWorkingGroupMembersFilter>>
+  >;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user?: InputMaybe<CfUsersNestedFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type WorkingGroupLeadersOrWorkingGroupMembersLinkingCollectionsEntryCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
+
+export enum WorkingGroupLeadersOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  WorkstreamRoleAsc = 'workstreamRole_ASC',
+  WorkstreamRoleDesc = 'workstreamRole_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupMembers) */
+export type WorkingGroupMembers = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  inactiveSinceDate?: Maybe<Scalars['DateTime']>;
+  linkedFrom?: Maybe<WorkingGroupMembersLinkingCollections>;
+  sys: Sys;
+  user?: Maybe<Users>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupMembers) */
+export type WorkingGroupMembersInactiveSinceDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupMembers) */
+export type WorkingGroupMembersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupMembers) */
+export type WorkingGroupMembersUserArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type WorkingGroupMembersCollection = {
+  items: Array<Maybe<WorkingGroupMembers>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupMembersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WorkingGroupMembersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WorkingGroupMembersFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user?: InputMaybe<CfUsersNestedFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type WorkingGroupMembersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type WorkingGroupMembersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type WorkingGroupMembersLinkingCollectionsWorkingGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum WorkingGroupMembersOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroups = Entry & {
+  calendars?: Maybe<Calendars>;
+  complete?: Maybe<Scalars['Boolean']>;
+  contentfulMetadata: ContentfulMetadata;
+  deliverablesCollection?: Maybe<WorkingGroupsDeliverablesCollection>;
+  description?: Maybe<WorkingGroupsDescription>;
+  externalLink?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<WorkingGroupsLinkingCollections>;
+  membersCollection?: Maybe<WorkingGroupsMembersCollection>;
+  shortText?: Maybe<Scalars['String']>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsCalendarsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsCompleteArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsDeliverablesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<WorkingGroupsDeliverablesCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupDeliverablesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsExternalLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsMembersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<WorkingGroupLeadersOrWorkingGroupMembersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsShortTextArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type WorkingGroupsCollection = {
+  items: Array<Maybe<WorkingGroups>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupsDeliverablesCollection = {
+  items: Array<Maybe<WorkingGroupDeliverables>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum WorkingGroupsDeliverablesCollectionOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type WorkingGroupsDescription = {
+  json: Scalars['JSON'];
+  links: WorkingGroupsDescriptionLinks;
+};
+
+export type WorkingGroupsDescriptionAssets = {
+  block: Array<Maybe<Asset>>;
+  hyperlink: Array<Maybe<Asset>>;
+};
+
+export type WorkingGroupsDescriptionEntries = {
+  block: Array<Maybe<Entry>>;
+  hyperlink: Array<Maybe<Entry>>;
+  inline: Array<Maybe<Entry>>;
+};
+
+export type WorkingGroupsDescriptionLinks = {
+  assets: WorkingGroupsDescriptionAssets;
+  entries: WorkingGroupsDescriptionEntries;
+};
+
+export type WorkingGroupsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
+  calendars?: InputMaybe<CfCalendarsNestedFilter>;
+  calendars_exists?: InputMaybe<Scalars['Boolean']>;
+  complete?: InputMaybe<Scalars['Boolean']>;
+  complete_exists?: InputMaybe<Scalars['Boolean']>;
+  complete_not?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  deliverables?: InputMaybe<CfWorkingGroupDeliverablesNestedFilter>;
+  deliverablesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  externalLink?: InputMaybe<Scalars['String']>;
+  externalLink_contains?: InputMaybe<Scalars['String']>;
+  externalLink_exists?: InputMaybe<Scalars['Boolean']>;
+  externalLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  externalLink_not?: InputMaybe<Scalars['String']>;
+  externalLink_not_contains?: InputMaybe<Scalars['String']>;
+  externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  members?: InputMaybe<CfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter>;
+  membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  shortText?: InputMaybe<Scalars['String']>;
+  shortText_contains?: InputMaybe<Scalars['String']>;
+  shortText_exists?: InputMaybe<Scalars['Boolean']>;
+  shortText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortText_not?: InputMaybe<Scalars['String']>;
+  shortText_not_contains?: InputMaybe<Scalars['String']>;
+  shortText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type WorkingGroupsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type WorkingGroupsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type WorkingGroupsMembersCollection = {
+  items: Array<Maybe<WorkingGroupsMembersItem>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type WorkingGroupsMembersItem =
+  | WorkingGroupLeaders
+  | WorkingGroupMembers;
+
+export enum WorkingGroupsOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
 }
 
 export type CfCalendarsNestedFilter = {
@@ -3405,6 +4066,307 @@ export type CfTeamsNestedFilter = {
   toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type CfUsersNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfUsersNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfUsersNestedFilter>>>;
+  adminNotes?: InputMaybe<Scalars['String']>;
+  adminNotes_contains?: InputMaybe<Scalars['String']>;
+  adminNotes_exists?: InputMaybe<Scalars['Boolean']>;
+  adminNotes_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  adminNotes_not?: InputMaybe<Scalars['String']>;
+  adminNotes_not_contains?: InputMaybe<Scalars['String']>;
+  adminNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alumniLocation?: InputMaybe<Scalars['String']>;
+  alumniLocation_contains?: InputMaybe<Scalars['String']>;
+  alumniLocation_exists?: InputMaybe<Scalars['Boolean']>;
+  alumniLocation_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alumniLocation_not?: InputMaybe<Scalars['String']>;
+  alumniLocation_not_contains?: InputMaybe<Scalars['String']>;
+  alumniLocation_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alumniSinceDate?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  alumniSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  alumniSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  avatar_exists?: InputMaybe<Scalars['Boolean']>;
+  biography?: InputMaybe<Scalars['String']>;
+  biography_contains?: InputMaybe<Scalars['String']>;
+  biography_exists?: InputMaybe<Scalars['Boolean']>;
+  biography_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  biography_not?: InputMaybe<Scalars['String']>;
+  biography_not_contains?: InputMaybe<Scalars['String']>;
+  biography_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  city?: InputMaybe<Scalars['String']>;
+  city_contains?: InputMaybe<Scalars['String']>;
+  city_exists?: InputMaybe<Scalars['Boolean']>;
+  city_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  city_not?: InputMaybe<Scalars['String']>;
+  city_not_contains?: InputMaybe<Scalars['String']>;
+  city_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  connections_exists?: InputMaybe<Scalars['Boolean']>;
+  contactEmail?: InputMaybe<Scalars['String']>;
+  contactEmail_contains?: InputMaybe<Scalars['String']>;
+  contactEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  contactEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contactEmail_not?: InputMaybe<Scalars['String']>;
+  contactEmail_not_contains?: InputMaybe<Scalars['String']>;
+  contactEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  country?: InputMaybe<Scalars['String']>;
+  country_contains?: InputMaybe<Scalars['String']>;
+  country_exists?: InputMaybe<Scalars['Boolean']>;
+  country_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  country_not?: InputMaybe<Scalars['String']>;
+  country_not_contains?: InputMaybe<Scalars['String']>;
+  country_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  createdDate?: InputMaybe<Scalars['DateTime']>;
+  createdDate_exists?: InputMaybe<Scalars['Boolean']>;
+  createdDate_gt?: InputMaybe<Scalars['DateTime']>;
+  createdDate_gte?: InputMaybe<Scalars['DateTime']>;
+  createdDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  createdDate_lt?: InputMaybe<Scalars['DateTime']>;
+  createdDate_lte?: InputMaybe<Scalars['DateTime']>;
+  createdDate_not?: InputMaybe<Scalars['DateTime']>;
+  createdDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  degree?: InputMaybe<Scalars['String']>;
+  degree_contains?: InputMaybe<Scalars['String']>;
+  degree_exists?: InputMaybe<Scalars['Boolean']>;
+  degree_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  degree_not?: InputMaybe<Scalars['String']>;
+  degree_not_contains?: InputMaybe<Scalars['String']>;
+  degree_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  dismissedGettingStarted?: InputMaybe<Scalars['Boolean']>;
+  dismissedGettingStarted_exists?: InputMaybe<Scalars['Boolean']>;
+  dismissedGettingStarted_not?: InputMaybe<Scalars['Boolean']>;
+  email?: InputMaybe<Scalars['String']>;
+  email_contains?: InputMaybe<Scalars['String']>;
+  email_exists?: InputMaybe<Scalars['Boolean']>;
+  email_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  email_not?: InputMaybe<Scalars['String']>;
+  email_not_contains?: InputMaybe<Scalars['String']>;
+  email_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  expertiseAndResourceDescription?: InputMaybe<Scalars['String']>;
+  expertiseAndResourceDescription_contains?: InputMaybe<Scalars['String']>;
+  expertiseAndResourceDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  expertiseAndResourceDescription_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  expertiseAndResourceDescription_not?: InputMaybe<Scalars['String']>;
+  expertiseAndResourceDescription_not_contains?: InputMaybe<Scalars['String']>;
+  expertiseAndResourceDescription_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  expertiseAndResourceTags_contains_all?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  expertiseAndResourceTags_contains_none?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  expertiseAndResourceTags_contains_some?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  expertiseAndResourceTags_exists?: InputMaybe<Scalars['Boolean']>;
+  firstName?: InputMaybe<Scalars['String']>;
+  firstName_contains?: InputMaybe<Scalars['String']>;
+  firstName_exists?: InputMaybe<Scalars['Boolean']>;
+  firstName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  firstName_not?: InputMaybe<Scalars['String']>;
+  firstName_not_contains?: InputMaybe<Scalars['String']>;
+  firstName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  github?: InputMaybe<Scalars['String']>;
+  github_contains?: InputMaybe<Scalars['String']>;
+  github_exists?: InputMaybe<Scalars['Boolean']>;
+  github_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  github_not?: InputMaybe<Scalars['String']>;
+  github_not_contains?: InputMaybe<Scalars['String']>;
+  github_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar?: InputMaybe<Scalars['String']>;
+  googleScholar_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_exists?: InputMaybe<Scalars['Boolean']>;
+  googleScholar_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleScholar_not?: InputMaybe<Scalars['String']>;
+  googleScholar_not_contains?: InputMaybe<Scalars['String']>;
+  googleScholar_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  institution?: InputMaybe<Scalars['String']>;
+  institution_contains?: InputMaybe<Scalars['String']>;
+  institution_exists?: InputMaybe<Scalars['Boolean']>;
+  institution_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  institution_not?: InputMaybe<Scalars['String']>;
+  institution_not_contains?: InputMaybe<Scalars['String']>;
+  institution_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  jobTitle?: InputMaybe<Scalars['String']>;
+  jobTitle_contains?: InputMaybe<Scalars['String']>;
+  jobTitle_exists?: InputMaybe<Scalars['Boolean']>;
+  jobTitle_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  jobTitle_not?: InputMaybe<Scalars['String']>;
+  jobTitle_not_contains?: InputMaybe<Scalars['String']>;
+  jobTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  labsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  lastName?: InputMaybe<Scalars['String']>;
+  lastName_contains?: InputMaybe<Scalars['String']>;
+  lastName_exists?: InputMaybe<Scalars['Boolean']>;
+  lastName_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastName_not?: InputMaybe<Scalars['String']>;
+  lastName_not_contains?: InputMaybe<Scalars['String']>;
+  lastName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn?: InputMaybe<Scalars['String']>;
+  linkedIn_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
+  linkedIn_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkedIn_not?: InputMaybe<Scalars['String']>;
+  linkedIn_not_contains?: InputMaybe<Scalars['String']>;
+  linkedIn_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  onboarded?: InputMaybe<Scalars['Boolean']>;
+  onboarded_exists?: InputMaybe<Scalars['Boolean']>;
+  onboarded_not?: InputMaybe<Scalars['Boolean']>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcidLastModifiedDate?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  orcidLastModifiedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidLastModifiedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_not?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  orcidLastSyncDate?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_exists?: InputMaybe<Scalars['Boolean']>;
+  orcidLastSyncDate_gt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_gte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidLastSyncDate_lt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_lte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_not?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidWorks_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  questions_exists?: InputMaybe<Scalars['Boolean']>;
+  reachOut?: InputMaybe<Scalars['String']>;
+  reachOut_contains?: InputMaybe<Scalars['String']>;
+  reachOut_exists?: InputMaybe<Scalars['Boolean']>;
+  reachOut_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  reachOut_not?: InputMaybe<Scalars['String']>;
+  reachOut_not_contains?: InputMaybe<Scalars['String']>;
+  reachOut_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate?: InputMaybe<Scalars['String']>;
+  researchGate_contains?: InputMaybe<Scalars['String']>;
+  researchGate_exists?: InputMaybe<Scalars['Boolean']>;
+  researchGate_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchGate_not?: InputMaybe<Scalars['String']>;
+  researchGate_not_contains?: InputMaybe<Scalars['String']>;
+  researchGate_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchInterests?: InputMaybe<Scalars['String']>;
+  researchInterests_contains?: InputMaybe<Scalars['String']>;
+  researchInterests_exists?: InputMaybe<Scalars['Boolean']>;
+  researchInterests_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researchInterests_not?: InputMaybe<Scalars['String']>;
+  researchInterests_not_contains?: InputMaybe<Scalars['String']>;
+  researchInterests_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId?: InputMaybe<Scalars['String']>;
+  researcherId_contains?: InputMaybe<Scalars['String']>;
+  researcherId_exists?: InputMaybe<Scalars['Boolean']>;
+  researcherId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  researcherId_not?: InputMaybe<Scalars['String']>;
+  researcherId_not_contains?: InputMaybe<Scalars['String']>;
+  researcherId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  responsibilities?: InputMaybe<Scalars['String']>;
+  responsibilities_contains?: InputMaybe<Scalars['String']>;
+  responsibilities_exists?: InputMaybe<Scalars['Boolean']>;
+  responsibilities_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  responsibilities_not?: InputMaybe<Scalars['String']>;
+  responsibilities_not_contains?: InputMaybe<Scalars['String']>;
+  responsibilities_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  twitter?: InputMaybe<Scalars['String']>;
+  twitter_contains?: InputMaybe<Scalars['String']>;
+  twitter_exists?: InputMaybe<Scalars['Boolean']>;
+  twitter_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  twitter_not?: InputMaybe<Scalars['String']>;
+  twitter_not_contains?: InputMaybe<Scalars['String']>;
+  twitter_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website1?: InputMaybe<Scalars['String']>;
+  website1_contains?: InputMaybe<Scalars['String']>;
+  website1_exists?: InputMaybe<Scalars['Boolean']>;
+  website1_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website1_not?: InputMaybe<Scalars['String']>;
+  website1_not_contains?: InputMaybe<Scalars['String']>;
+  website1_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website2?: InputMaybe<Scalars['String']>;
+  website2_contains?: InputMaybe<Scalars['String']>;
+  website2_exists?: InputMaybe<Scalars['Boolean']>;
+  website2_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  website2_not?: InputMaybe<Scalars['String']>;
+  website2_not_contains?: InputMaybe<Scalars['String']>;
+  website2_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CfWorkingGroupDeliverablesNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfWorkingGroupDeliverablesNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfWorkingGroupDeliverablesNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type CfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter = {
+  AND?: InputMaybe<
+    Array<InputMaybe<CfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter>>
+  >;
+  OR?: InputMaybe<
+    Array<InputMaybe<CfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter>>
+  >;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type CalendarsContentFragment = Pick<
   Calendars,
   'googleCalendarId' | 'name' | 'color' | 'googleApiMetadata'
@@ -3530,6 +4492,21 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Users' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'WorkingGroupDeliverables' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'WorkingGroupLeaders' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({
+                                __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                              } & { sys: Pick<Sys, 'id'> })
+                            | ({ __typename: 'WorkingGroupMembers' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'WorkingGroups' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                           >
                         >;
                       };
@@ -3610,6 +4587,21 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Users' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'WorkingGroupDeliverables' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'WorkingGroupLeaders' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({
+                                __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                              } & { sys: Pick<Sys, 'id'> })
+                            | ({ __typename: 'WorkingGroupMembers' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'WorkingGroups' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                           >
                         >;
                       };
@@ -3685,6 +4677,19 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupDeliverables' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
             >
           >;
         };
@@ -3723,6 +4728,19 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupDeliverables' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
             >
           >;
         };
@@ -3761,6 +4779,19 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupDeliverables' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
             >
           >;
         };
@@ -3872,6 +4903,19 @@ export type FetchEventByIdQuery = {
                     })
                   | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupDeliverables' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({
+                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                    } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupMembers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
                 >
               >;
             };
@@ -3914,6 +4958,19 @@ export type FetchEventByIdQuery = {
                     })
                   | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupDeliverables' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({
+                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                    } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupMembers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
                 >
               >;
             };
@@ -3956,6 +5013,19 @@ export type FetchEventByIdQuery = {
                     })
                   | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupDeliverables' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({
+                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                    } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupMembers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
                 >
               >;
             };
@@ -4087,6 +5157,21 @@ export type FetchEventsQuery = {
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupDeliverables' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({
+                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                          } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                       >
                     >;
                   };
@@ -4143,6 +5228,21 @@ export type FetchEventsQuery = {
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupDeliverables' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({
+                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                          } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                       >
                     >;
                   };
@@ -4199,6 +5299,21 @@ export type FetchEventsQuery = {
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupDeliverables' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({
+                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                          } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                       >
                     >;
                   };
@@ -4360,6 +5475,21 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'WorkingGroupDeliverables';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupLeaders' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupMembers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                   >
                                 >;
                               };
@@ -4429,6 +5559,21 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'WorkingGroupDeliverables';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupLeaders' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupMembers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                   >
                                 >;
                               };
@@ -4496,6 +5641,21 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Users' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupDeliverables';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupLeaders' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupMembers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                   >
@@ -4665,6 +5825,21 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'WorkingGroupDeliverables';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupLeaders' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupMembers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                   >
                                 >;
                               };
@@ -4734,6 +5909,21 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'WorkingGroupDeliverables';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupLeaders' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupMembers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                   >
                                 >;
                               };
@@ -4801,6 +5991,21 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Users' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupDeliverables';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupLeaders' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupMembers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                   >
@@ -4970,6 +6175,21 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'WorkingGroupDeliverables';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupLeaders' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupMembers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                   >
                                 >;
                               };
@@ -5039,6 +6259,21 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'WorkingGroupDeliverables';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupLeaders' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupMembers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                   >
                                 >;
                               };
@@ -5106,6 +6341,21 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Users' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupDeliverables';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupLeaders' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'WorkingGroupMembers' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'WorkingGroups' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                   >
@@ -5260,6 +6510,19 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupDeliverables' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
             >
           >;
         };
@@ -5316,6 +6579,19 @@ export type FetchNewsByIdQuery = {
                     })
                   | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupDeliverables' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({
+                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                    } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupMembers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
                 >
               >;
             };
@@ -5395,6 +6671,21 @@ export type FetchNewsQuery = {
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupDeliverables' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({
+                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                          } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                       >
                     >;
                   };
@@ -5449,6 +6740,19 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupDeliverables' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
             >
           >;
         };
@@ -5514,6 +6818,21 @@ export type FetchPagesQuery = {
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupDeliverables' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({
+                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                          } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                       >
                     >;
                   };
@@ -6104,6 +7423,360 @@ export type FetchUsersByLabIdQuery = {
       >;
     }>;
   }>;
+};
+
+export type WorkingGroupsContentFragment = Pick<
+  WorkingGroups,
+  'title' | 'externalLink' | 'shortText' | 'complete'
+> & {
+  sys: Pick<Sys, 'id' | 'publishedAt'>;
+  description?: Maybe<
+    Pick<WorkingGroupsDescription, 'json'> & {
+      links: {
+        entries: {
+          inline: Array<
+            Maybe<
+              | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                    sys: Pick<Sys, 'id'>;
+                  })
+              | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'WorkingGroupDeliverables' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroupMembers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
+            >
+          >;
+        };
+        assets: {
+          block: Array<
+            Maybe<
+              Pick<
+                Asset,
+                'url' | 'description' | 'contentType' | 'width' | 'height'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        };
+      };
+    }
+  >;
+  deliverablesCollection?: Maybe<{
+    items: Array<
+      Maybe<Pick<WorkingGroupDeliverables, 'description' | 'status'>>
+    >;
+  }>;
+  membersCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        | ({ __typename: 'WorkingGroupLeaders' } & Pick<
+            WorkingGroupLeaders,
+            'workstreamRole' | 'role' | 'inactiveSinceDate'
+          > & {
+              user?: Maybe<
+                Pick<
+                  Users,
+                  'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> }
+              >;
+            })
+        | ({ __typename: 'WorkingGroupMembers' } & Pick<
+            WorkingGroupMembers,
+            'inactiveSinceDate'
+          > & {
+              user?: Maybe<
+                Pick<
+                  Users,
+                  'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> }
+              >;
+            })
+      >
+    >;
+  }>;
+  calendars?: Maybe<
+    Pick<Calendars, 'name' | 'color' | 'googleCalendarId'> & {
+      sys: Pick<Sys, 'id'>;
+    }
+  >;
+};
+
+export type FetchWorkingGroupByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchWorkingGroupByIdQuery = {
+  workingGroups?: Maybe<
+    Pick<WorkingGroups, 'title' | 'externalLink' | 'shortText' | 'complete'> & {
+      sys: Pick<Sys, 'id' | 'publishedAt'>;
+      description?: Maybe<
+        Pick<WorkingGroupsDescription, 'json'> & {
+          links: {
+            entries: {
+              inline: Array<
+                Maybe<
+                  | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalAuthors' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                  | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'TeamMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupDeliverables' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({
+                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                    } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupMembers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
+                >
+              >;
+            };
+            assets: {
+              block: Array<
+                Maybe<
+                  Pick<
+                    Asset,
+                    'url' | 'description' | 'contentType' | 'width' | 'height'
+                  > & { sys: Pick<Sys, 'id'> }
+                >
+              >;
+            };
+          };
+        }
+      >;
+      deliverablesCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<WorkingGroupDeliverables, 'description' | 'status'>>
+        >;
+      }>;
+      membersCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            | ({ __typename: 'WorkingGroupLeaders' } & Pick<
+                WorkingGroupLeaders,
+                'workstreamRole' | 'role' | 'inactiveSinceDate'
+              > & {
+                  user?: Maybe<
+                    Pick<
+                      Users,
+                      'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
+                  >;
+                })
+            | ({ __typename: 'WorkingGroupMembers' } & Pick<
+                WorkingGroupMembers,
+                'inactiveSinceDate'
+              > & {
+                  user?: Maybe<
+                    Pick<
+                      Users,
+                      'email' | 'firstName' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                    }
+                  >;
+                })
+          >
+        >;
+      }>;
+      calendars?: Maybe<
+        Pick<Calendars, 'name' | 'color' | 'googleCalendarId'> & {
+          sys: Pick<Sys, 'id'>;
+        }
+      >;
+    }
+  >;
+};
+
+export type FetchWorkingGroupsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    Array<InputMaybe<WorkingGroupsOrder>> | InputMaybe<WorkingGroupsOrder>
+  >;
+  where?: InputMaybe<WorkingGroupsFilter>;
+}>;
+
+export type FetchWorkingGroupsQuery = {
+  workingGroupsCollection?: Maybe<
+    Pick<WorkingGroupsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            WorkingGroups,
+            'title' | 'externalLink' | 'shortText' | 'complete'
+          > & {
+            sys: Pick<Sys, 'id' | 'publishedAt'>;
+            description?: Maybe<
+              Pick<WorkingGroupsDescription, 'json'> & {
+                links: {
+                  entries: {
+                    inline: Array<
+                      Maybe<
+                        | ({ __typename: 'Calendars' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Dashboard' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'EventSpeakers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ExternalAuthors' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalTools' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                              sys: Pick<Sys, 'id'>;
+                            })
+                        | ({ __typename: 'Migration' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'TeamMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupDeliverables' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({
+                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                          } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroupMembers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'WorkingGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                      >
+                    >;
+                  };
+                  assets: {
+                    block: Array<
+                      Maybe<
+                        Pick<
+                          Asset,
+                          | 'url'
+                          | 'description'
+                          | 'contentType'
+                          | 'width'
+                          | 'height'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  };
+                };
+              }
+            >;
+            deliverablesCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<WorkingGroupDeliverables, 'description' | 'status'>>
+              >;
+            }>;
+            membersCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  | ({ __typename: 'WorkingGroupLeaders' } & Pick<
+                      WorkingGroupLeaders,
+                      'workstreamRole' | 'role' | 'inactiveSinceDate'
+                    > & {
+                        user?: Maybe<
+                          Pick<
+                            Users,
+                            | 'email'
+                            | 'firstName'
+                            | 'lastName'
+                            | 'alumniSinceDate'
+                          > & {
+                            sys: Pick<Sys, 'id'>;
+                            avatar?: Maybe<Pick<Asset, 'url'>>;
+                          }
+                        >;
+                      })
+                  | ({ __typename: 'WorkingGroupMembers' } & Pick<
+                      WorkingGroupMembers,
+                      'inactiveSinceDate'
+                    > & {
+                        user?: Maybe<
+                          Pick<
+                            Users,
+                            | 'email'
+                            | 'firstName'
+                            | 'lastName'
+                            | 'alumniSinceDate'
+                          > & {
+                            sys: Pick<Sys, 'id'>;
+                            avatar?: Maybe<Pick<Asset, 'url'>>;
+                          }
+                        >;
+                      })
+                >
+              >;
+            }>;
+            calendars?: Maybe<
+              Pick<Calendars, 'name' | 'color' | 'googleCalendarId'> & {
+                sys: Pick<Sys, 'id'>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
 };
 
 export const CalendarsContentFragmentDoc = {
@@ -7693,6 +9366,397 @@ export const UsersContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<UsersContentFragment, unknown>;
+export const WorkingGroupsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'WorkingGroupsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'WorkingGroups' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'description' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'json' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'links' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'entries' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'inline' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Media' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'assets' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'block' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contentType',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'width' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'height' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'externalLink' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'complete' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deliverablesCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'membersCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'WorkingGroupLeaders' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'workstreamRole' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'role' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'inactiveSinceDate',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'user' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'email' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'WorkingGroupMembers' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'inactiveSinceDate',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'user' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'email' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'calendars' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'color' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'googleCalendarId' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<WorkingGroupsContentFragment, unknown>;
 export const FetchCalendarByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -9648,4 +11712,175 @@ export const FetchUsersByLabIdDocument = {
 } as unknown as DocumentNode<
   FetchUsersByLabIdQuery,
   FetchUsersByLabIdQueryVariables
+>;
+export const FetchWorkingGroupByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroupById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'workingGroups' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'WorkingGroupsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupByIdQuery,
+  FetchWorkingGroupByIdQueryVariables
+>;
+export const FetchWorkingGroupsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroups' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'WorkingGroupsOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'WorkingGroupsFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'workingGroupsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'WorkingGroupsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...WorkingGroupsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupsQuery,
+  FetchWorkingGroupsQueryVariables
 >;

@@ -1,4 +1,8 @@
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  createFeatureFlagHeaders,
+  createSentryHeaders,
+  GetListOptions,
+} from '@asap-hub/frontend-utils';
 import {
   WorkingGroupListResponse,
   WorkingGroupResponse,
@@ -30,7 +34,11 @@ export const getWorkingGroup = async (
   authorization: string,
 ): Promise<WorkingGroupResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/working-groups/${id}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

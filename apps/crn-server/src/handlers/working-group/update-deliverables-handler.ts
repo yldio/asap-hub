@@ -15,10 +15,8 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { WorkingGroupPayload } from '../event-bus';
-import {
-  WorkingGroupDataProvider,
-  WorkingGroupSquidexDataProvider,
-} from '../../data-providers/working-groups.data-provider';
+import { WorkingGroupDataProvider } from '../../data-providers/types';
+import { WorkingGroupSquidexDataProvider } from '../../data-providers/working-groups.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import { appName, baseUrl } from '../../config';
 

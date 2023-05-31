@@ -4,7 +4,7 @@ import {
   WorkingGroupListResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
-import { WorkingGroupDataProvider } from '../data-providers/working-groups.data-provider';
+import { WorkingGroupDataProvider } from '../data-providers/types';
 import { toWorkingGroupResponse } from '../entities/working-group';
 
 export interface WorkingGroupController {

@@ -80,6 +80,7 @@ import { NewsContentfulDataProvider } from './data-providers/contentful/news.dat
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
+import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-groups.data-provider';
 import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
@@ -119,12 +120,10 @@ import {
   UserDataProvider,
   DashboardDataProvider,
   DiscoverDataProvider,
+  WorkingGroupDataProvider,
 } from './data-providers/types';
 import { UserSquidexDataProvider } from './data-providers/users.data-provider';
-import {
-  WorkingGroupDataProvider,
-  WorkingGroupSquidexDataProvider,
-} from './data-providers/working-groups.data-provider';
+import { WorkingGroupSquidexDataProvider } from './data-providers/working-groups.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { calendarRouteFactory } from './routes/calendars.route';
@@ -399,11 +398,32 @@ export const appFactory = (libs: Libs = {}): Express => {
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
+  featureFlagDependencySwitch.setDependency(
+    'workingGroups',
+    libs.workingGroupSquidexDataProvider ||
+      new WorkingGroupSquidexDataProvider(
+        squidexGraphqlClient,
+        workingGroupRestClient,
+      ),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'workingGroups',
+    libs.workingGroupContentfulDataProvider ||
+      new WorkingGroupContentfulDataProvider(
+        contentfulGraphQLClient,
+        getContentfulRestClientFactory,
+      ),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
-    new WorkingGroupSquidexDataProvider(
-      squidexGraphqlClient,
-      workingGroupRestClient,
+    featureFlagDependencySwitch.getDependency(
+      'workingGroups',
+      'IS_CONTENTFUL_ENABLED_V2',
     );
 
   featureFlagDependencySwitch.setDependency(
@@ -622,6 +642,8 @@ export type Libs = {
   eventDataProvider?: EventDataProvider;
   eventSquidexDataProvider?: EventDataProvider;
   eventContentfulDataProvider?: EventDataProvider;
+  workingGroupSquidexDataProvider?: WorkingGroupDataProvider;
+  workingGroupContentfulDataProvider?: WorkingGroupDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   authHandler?: AuthHandler;
   httpLogger?: HttpLogger;

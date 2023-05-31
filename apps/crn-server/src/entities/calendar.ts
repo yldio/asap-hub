@@ -30,6 +30,18 @@ export const parseGraphqlCalendarPartialToDataObject = (
   name: graphqlCalendar.name ?? '',
 });
 
+export const parseContentfulGraphqlCalendarToResponse = (
+  graphqlCalendar: Pick<
+    NonNullable<
+      NonNullable<FetchCalendarsQuery['calendarsCollection']>['items'][number]
+    >,
+    'name' | 'googleCalendarId' | 'color'
+  >,
+): CalendarResponse =>
+  parseCalendarDataObjectToResponse(
+    parseContentfulGraphqlCalendarPartialToDataObject(graphqlCalendar),
+  );
+
 export const parseContentfulGraphqlCalendarPartialToDataObject = (
   graphqlCalendar: Pick<
     NonNullable<

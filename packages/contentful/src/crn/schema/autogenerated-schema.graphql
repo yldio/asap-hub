@@ -173,6 +173,7 @@ input CalendarsFilter {
 type CalendarsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum CalendarsOrder {
@@ -1342,6 +1343,16 @@ type Query {
   teamsCollection(limit: Int = 100, locale: String, order: [TeamsOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): TeamsCollection
   users(id: String!, locale: String, preview: Boolean): Users
   usersCollection(limit: Int = 100, locale: String, order: [UsersOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): UsersCollection
+  workingGroupDeliverables(id: String!, locale: String, preview: Boolean): WorkingGroupDeliverables
+  workingGroupDeliverablesCollection(limit: Int = 100, locale: String, order: [WorkingGroupDeliverablesOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupDeliverablesFilter): WorkingGroupDeliverablesCollection
+  workingGroupLeaders(id: String!, locale: String, preview: Boolean): WorkingGroupLeaders
+  workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [WorkingGroupLeadersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersFilter): WorkingGroupLeadersCollection
+  workingGroupLeadersOrWorkingGroupMembers(id: String!, locale: String, preview: Boolean): WorkingGroupLeadersOrWorkingGroupMembers
+  workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersOrWorkingGroupMembersFilter): WorkingGroupLeadersOrWorkingGroupMembersCollection
+  workingGroupMembers(id: String!, locale: String, preview: Boolean): WorkingGroupMembers
+  workingGroupMembersCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembersFilter): WorkingGroupMembersCollection
+  workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupsCollection
 }
 
 type Sys {
@@ -1895,6 +1906,9 @@ enum UsersLabsCollectionOrder {
 type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
+  workingGroupLeadersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupLeadersCollection
+  workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupLeadersOrWorkingGroupMembersCollection
+  workingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupMembersCollection
 }
 
 enum UsersOrder {
@@ -1980,6 +1994,356 @@ enum UsersTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupDeliverables)"""
+type WorkingGroupDeliverables implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String): String
+  linkedFrom(allowedLocales: [String]): WorkingGroupDeliverablesLinkingCollections
+  status(locale: String): String
+  sys: Sys!
+}
+
+type WorkingGroupDeliverablesCollection {
+  items: [WorkingGroupDeliverables]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input WorkingGroupDeliverablesFilter {
+  AND: [WorkingGroupDeliverablesFilter]
+  OR: [WorkingGroupDeliverablesFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+}
+
+type WorkingGroupDeliverablesLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum WorkingGroupDeliverablesOrder {
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeaders)"""
+type WorkingGroupLeaders implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  inactiveSinceDate(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): WorkingGroupLeadersLinkingCollections
+  role(locale: String): String
+  sys: Sys!
+  user(locale: String, preview: Boolean): Users
+  workstreamRole(locale: String): String
+}
+
+type WorkingGroupLeadersCollection {
+  items: [WorkingGroupLeaders]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input WorkingGroupLeadersFilter {
+  AND: [WorkingGroupLeadersFilter]
+  OR: [WorkingGroupLeadersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  user: cfUsersNestedFilter
+  user_exists: Boolean
+  workstreamRole: String
+  workstreamRole_contains: String
+  workstreamRole_exists: Boolean
+  workstreamRole_in: [String]
+  workstreamRole_not: String
+  workstreamRole_not_contains: String
+  workstreamRole_not_in: [String]
+}
+
+type WorkingGroupLeadersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers)"""
+type WorkingGroupLeadersOrWorkingGroupMembers implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  inactiveSinceDate(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections
+  sys: Sys!
+  user(locale: String, preview: Boolean): Users
+}
+
+type WorkingGroupLeadersOrWorkingGroupMembersCollection {
+  items: [WorkingGroupLeadersOrWorkingGroupMembers]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input WorkingGroupLeadersOrWorkingGroupMembersFilter {
+  AND: [WorkingGroupLeadersOrWorkingGroupMembersFilter]
+  OR: [WorkingGroupLeadersOrWorkingGroupMembersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  sys: SysFilter
+  user: cfUsersNestedFilter
+  user_exists: Boolean
+}
+
+type WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum WorkingGroupLeadersOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  workstreamRole_ASC
+  workstreamRole_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupMembers)"""
+type WorkingGroupMembers implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  inactiveSinceDate(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): WorkingGroupMembersLinkingCollections
+  sys: Sys!
+  user(locale: String, preview: Boolean): Users
+}
+
+type WorkingGroupMembersCollection {
+  items: [WorkingGroupMembers]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input WorkingGroupMembersFilter {
+  AND: [WorkingGroupMembersFilter]
+  OR: [WorkingGroupMembersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  sys: SysFilter
+  user: cfUsersNestedFilter
+  user_exists: Boolean
+}
+
+type WorkingGroupMembersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum WorkingGroupMembersOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups)"""
+type WorkingGroups implements Entry {
+  calendars(locale: String, preview: Boolean): Calendars
+  complete(locale: String): Boolean
+  contentfulMetadata: ContentfulMetadata!
+  deliverablesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsDeliverablesCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupDeliverablesFilter): WorkingGroupsDeliverablesCollection
+  description(locale: String): WorkingGroupsDescription
+  externalLink(locale: String): String
+  linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
+  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersOrWorkingGroupMembersFilter): WorkingGroupsMembersCollection
+  shortText(locale: String): String
+  sys: Sys!
+  title(locale: String): String
+}
+
+type WorkingGroupsCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type WorkingGroupsDeliverablesCollection {
+  items: [WorkingGroupDeliverables]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum WorkingGroupsDeliverablesCollectionOrder {
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type WorkingGroupsDescription {
+  json: JSON!
+  links: WorkingGroupsDescriptionLinks!
+}
+
+type WorkingGroupsDescriptionAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type WorkingGroupsDescriptionEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type WorkingGroupsDescriptionLinks {
+  assets: WorkingGroupsDescriptionAssets!
+  entries: WorkingGroupsDescriptionEntries!
+}
+
+input WorkingGroupsFilter {
+  AND: [WorkingGroupsFilter]
+  OR: [WorkingGroupsFilter]
+  calendars: cfCalendarsNestedFilter
+  calendars_exists: Boolean
+  complete: Boolean
+  complete_exists: Boolean
+  complete_not: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  deliverables: cfWorkingGroupDeliverablesNestedFilter
+  deliverablesCollection_exists: Boolean
+  description_contains: String
+  description_exists: Boolean
+  description_not_contains: String
+  externalLink: String
+  externalLink_contains: String
+  externalLink_exists: Boolean
+  externalLink_in: [String]
+  externalLink_not: String
+  externalLink_not_contains: String
+  externalLink_not_in: [String]
+  members: cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter
+  membersCollection_exists: Boolean
+  shortText: String
+  shortText_contains: String
+  shortText_exists: Boolean
+  shortText_in: [String]
+  shortText_not: String
+  shortText_not_contains: String
+  shortText_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type WorkingGroupsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+type WorkingGroupsMembersCollection {
+  items: [WorkingGroupsMembersItem]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+union WorkingGroupsMembersItem = WorkingGroupLeaders | WorkingGroupMembers
+
+enum WorkingGroupsOrder {
+  complete_ASC
+  complete_DESC
+  externalLink_ASC
+  externalLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 input cfCalendarsNestedFilter {
@@ -2233,4 +2597,289 @@ input cfTeamsNestedFilter {
   projectTitle_not_in: [String]
   sys: SysFilter
   toolsCollection_exists: Boolean
+}
+
+input cfUsersNestedFilter {
+  AND: [cfUsersNestedFilter]
+  OR: [cfUsersNestedFilter]
+  adminNotes: String
+  adminNotes_contains: String
+  adminNotes_exists: Boolean
+  adminNotes_in: [String]
+  adminNotes_not: String
+  adminNotes_not_contains: String
+  adminNotes_not_in: [String]
+  alumniLocation: String
+  alumniLocation_contains: String
+  alumniLocation_exists: Boolean
+  alumniLocation_in: [String]
+  alumniLocation_not: String
+  alumniLocation_not_contains: String
+  alumniLocation_not_in: [String]
+  alumniSinceDate: DateTime
+  alumniSinceDate_exists: Boolean
+  alumniSinceDate_gt: DateTime
+  alumniSinceDate_gte: DateTime
+  alumniSinceDate_in: [DateTime]
+  alumniSinceDate_lt: DateTime
+  alumniSinceDate_lte: DateTime
+  alumniSinceDate_not: DateTime
+  alumniSinceDate_not_in: [DateTime]
+  avatar_exists: Boolean
+  biography: String
+  biography_contains: String
+  biography_exists: Boolean
+  biography_in: [String]
+  biography_not: String
+  biography_not_contains: String
+  biography_not_in: [String]
+  city: String
+  city_contains: String
+  city_exists: Boolean
+  city_in: [String]
+  city_not: String
+  city_not_contains: String
+  city_not_in: [String]
+  connections_contains_all: [String]
+  connections_contains_none: [String]
+  connections_contains_some: [String]
+  connections_exists: Boolean
+  contactEmail: String
+  contactEmail_contains: String
+  contactEmail_exists: Boolean
+  contactEmail_in: [String]
+  contactEmail_not: String
+  contactEmail_not_contains: String
+  contactEmail_not_in: [String]
+  contentfulMetadata: ContentfulMetadataFilter
+  country: String
+  country_contains: String
+  country_exists: Boolean
+  country_in: [String]
+  country_not: String
+  country_not_contains: String
+  country_not_in: [String]
+  createdDate: DateTime
+  createdDate_exists: Boolean
+  createdDate_gt: DateTime
+  createdDate_gte: DateTime
+  createdDate_in: [DateTime]
+  createdDate_lt: DateTime
+  createdDate_lte: DateTime
+  createdDate_not: DateTime
+  createdDate_not_in: [DateTime]
+  degree: String
+  degree_contains: String
+  degree_exists: Boolean
+  degree_in: [String]
+  degree_not: String
+  degree_not_contains: String
+  degree_not_in: [String]
+  dismissedGettingStarted: Boolean
+  dismissedGettingStarted_exists: Boolean
+  dismissedGettingStarted_not: Boolean
+  email: String
+  email_contains: String
+  email_exists: Boolean
+  email_in: [String]
+  email_not: String
+  email_not_contains: String
+  email_not_in: [String]
+  expertiseAndResourceDescription: String
+  expertiseAndResourceDescription_contains: String
+  expertiseAndResourceDescription_exists: Boolean
+  expertiseAndResourceDescription_in: [String]
+  expertiseAndResourceDescription_not: String
+  expertiseAndResourceDescription_not_contains: String
+  expertiseAndResourceDescription_not_in: [String]
+  expertiseAndResourceTags_contains_all: [String]
+  expertiseAndResourceTags_contains_none: [String]
+  expertiseAndResourceTags_contains_some: [String]
+  expertiseAndResourceTags_exists: Boolean
+  firstName: String
+  firstName_contains: String
+  firstName_exists: Boolean
+  firstName_in: [String]
+  firstName_not: String
+  firstName_not_contains: String
+  firstName_not_in: [String]
+  github: String
+  github_contains: String
+  github_exists: Boolean
+  github_in: [String]
+  github_not: String
+  github_not_contains: String
+  github_not_in: [String]
+  googleScholar: String
+  googleScholar_contains: String
+  googleScholar_exists: Boolean
+  googleScholar_in: [String]
+  googleScholar_not: String
+  googleScholar_not_contains: String
+  googleScholar_not_in: [String]
+  institution: String
+  institution_contains: String
+  institution_exists: Boolean
+  institution_in: [String]
+  institution_not: String
+  institution_not_contains: String
+  institution_not_in: [String]
+  jobTitle: String
+  jobTitle_contains: String
+  jobTitle_exists: Boolean
+  jobTitle_in: [String]
+  jobTitle_not: String
+  jobTitle_not_contains: String
+  jobTitle_not_in: [String]
+  labsCollection_exists: Boolean
+  lastName: String
+  lastName_contains: String
+  lastName_exists: Boolean
+  lastName_in: [String]
+  lastName_not: String
+  lastName_not_contains: String
+  lastName_not_in: [String]
+  linkedIn: String
+  linkedIn_contains: String
+  linkedIn_exists: Boolean
+  linkedIn_in: [String]
+  linkedIn_not: String
+  linkedIn_not_contains: String
+  linkedIn_not_in: [String]
+  onboarded: Boolean
+  onboarded_exists: Boolean
+  onboarded_not: Boolean
+  orcid: String
+  orcidLastModifiedDate: DateTime
+  orcidLastModifiedDate_exists: Boolean
+  orcidLastModifiedDate_gt: DateTime
+  orcidLastModifiedDate_gte: DateTime
+  orcidLastModifiedDate_in: [DateTime]
+  orcidLastModifiedDate_lt: DateTime
+  orcidLastModifiedDate_lte: DateTime
+  orcidLastModifiedDate_not: DateTime
+  orcidLastModifiedDate_not_in: [DateTime]
+  orcidLastSyncDate: DateTime
+  orcidLastSyncDate_exists: Boolean
+  orcidLastSyncDate_gt: DateTime
+  orcidLastSyncDate_gte: DateTime
+  orcidLastSyncDate_in: [DateTime]
+  orcidLastSyncDate_lt: DateTime
+  orcidLastSyncDate_lte: DateTime
+  orcidLastSyncDate_not: DateTime
+  orcidLastSyncDate_not_in: [DateTime]
+  orcidWorks_exists: Boolean
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  questions_contains_all: [String]
+  questions_contains_none: [String]
+  questions_contains_some: [String]
+  questions_exists: Boolean
+  reachOut: String
+  reachOut_contains: String
+  reachOut_exists: Boolean
+  reachOut_in: [String]
+  reachOut_not: String
+  reachOut_not_contains: String
+  reachOut_not_in: [String]
+  researchGate: String
+  researchGate_contains: String
+  researchGate_exists: Boolean
+  researchGate_in: [String]
+  researchGate_not: String
+  researchGate_not_contains: String
+  researchGate_not_in: [String]
+  researchInterests: String
+  researchInterests_contains: String
+  researchInterests_exists: Boolean
+  researchInterests_in: [String]
+  researchInterests_not: String
+  researchInterests_not_contains: String
+  researchInterests_not_in: [String]
+  researcherId: String
+  researcherId_contains: String
+  researcherId_exists: Boolean
+  researcherId_in: [String]
+  researcherId_not: String
+  researcherId_not_contains: String
+  researcherId_not_in: [String]
+  responsibilities: String
+  responsibilities_contains: String
+  responsibilities_exists: Boolean
+  responsibilities_in: [String]
+  responsibilities_not: String
+  responsibilities_not_contains: String
+  responsibilities_not_in: [String]
+  role: String
+  role_contains: String
+  role_exists: Boolean
+  role_in: [String]
+  role_not: String
+  role_not_contains: String
+  role_not_in: [String]
+  sys: SysFilter
+  teamsCollection_exists: Boolean
+  twitter: String
+  twitter_contains: String
+  twitter_exists: Boolean
+  twitter_in: [String]
+  twitter_not: String
+  twitter_not_contains: String
+  twitter_not_in: [String]
+  website1: String
+  website1_contains: String
+  website1_exists: Boolean
+  website1_in: [String]
+  website1_not: String
+  website1_not_contains: String
+  website1_not_in: [String]
+  website2: String
+  website2_contains: String
+  website2_exists: Boolean
+  website2_in: [String]
+  website2_not: String
+  website2_not_contains: String
+  website2_not_in: [String]
+}
+
+input cfWorkingGroupDeliverablesNestedFilter {
+  AND: [cfWorkingGroupDeliverablesNestedFilter]
+  OR: [cfWorkingGroupDeliverablesNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+}
+
+input cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter {
+  AND: [cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter]
+  OR: [cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  sys: SysFilter
+  user_exists: Boolean
 }

@@ -1,7 +1,11 @@
 import { CalendarDataProvider, EventDataProvider } from '@asap-hub/model';
 import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
 import { TeamDataProvider } from '../data-providers/teams.data-provider';
-import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
+import {
+  AssetDataProvider,
+  UserDataProvider,
+  WorkingGroupDataProvider,
+} from '../data-providers/types';
 
 const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
 type FeatureFlag = (typeof featureFlags)[number];
@@ -18,6 +22,7 @@ type DependencyList = {
   externalAuthors: DependencySwitch<ExternalAuthorDataProvider>;
   calendars: DependencySwitch<CalendarDataProvider>;
   events: DependencySwitch<EventDataProvider>;
+  workingGroups: DependencySwitch<WorkingGroupDataProvider>;
 };
 
 export class FeatureFlagDependencySwitch {
@@ -46,6 +51,10 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       events: {
+        true: undefined,
+        false: undefined,
+      },
+      workingGroups: {
         true: undefined,
         false: undefined,
       },

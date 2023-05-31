@@ -68,6 +68,7 @@ export const getContentfulGraphqlClientMockServer = (
     PagesCollection: resultDto,
     TeamsCollection: resultDto,
     UsersCollection: resultDto,
+    WorkingGroupsCollection: resultDto,
   };
   return getGraphqlClientMockServer(schemaLocation, baseMocks, inputMocks);
 };

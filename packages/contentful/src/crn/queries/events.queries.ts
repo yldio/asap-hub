@@ -117,6 +117,16 @@ export const eventsContentQueryFragment = gql`
       googleCalendarId
       color
       name
+      linkedFrom {
+        workingGroupsCollection(limit: 1) {
+          items {
+            sys {
+              id
+            }
+            title
+          }
+        }
+      }
     }
     thumbnail {
       url
@@ -253,4 +263,16 @@ export const FETCH_EVENTS_BY_TEAM_ID = gql`
     }
   }
   ${eventsContentQueryFragment}
+`;
+
+export const FETCH_WORKING_GROUP_CALENDAR = gql`
+  query FetchWorkingGroupCalendar($id: String!) {
+    workingGroups(id: $id) {
+      calendars {
+        sys {
+          id
+        }
+      }
+    }
+  }
 `;

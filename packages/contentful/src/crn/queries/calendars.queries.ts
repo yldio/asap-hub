@@ -14,6 +14,16 @@ export const calendarsContentQueryFragment = gql`
     name
     color
     googleApiMetadata
+    linkedFrom {
+      workingGroupsCollection(limit: 1) {
+        items {
+          sys {
+            id
+          }
+          complete
+        }
+      }
+    }
   }
 `;
 

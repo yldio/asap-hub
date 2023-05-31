@@ -25,6 +25,12 @@ export type CalendarItem = NonNullable<
   NonNullable<FetchCalendarsQuery['calendarsCollection']>['items'][number]
 >;
 
+type WorkingGroupItem = NonNullable<
+  NonNullable<
+    NonNullable<CalendarItem['linkedFrom']>['workingGroupsCollection']
+  >['items'][number]
+>;
+
 export class CalendarContentfulDataProvider implements CalendarDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
@@ -47,7 +53,7 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
   async fetch(
     options?: FetchCalendarProviderOptions,
   ): Promise<ListCalendarDataObject> {
-    const { maxExpiration, resourceId } = options || {};
+    const { maxExpiration, resourceId, active } = options || {};
 
     const { calendarsCollection } = await this.contentfulClient.request<
       FetchCalendarsQuery,
@@ -70,37 +76,51 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
       };
     }
 
+    let calendars: CalendarItem[] = calendarsCollection.items.filter(
+      (x): x is CalendarItem => x !== null,
+    );
+
+    if (active === true) {
+      calendars = calendars.filter((calendar) => {
+        if (
+          !calendar?.linkedFrom?.workingGroupsCollection ||
+          calendar?.linkedFrom?.workingGroupsCollection?.items?.length === 0
+        ) {
+          return true;
+        }
+
+        return (
+          calendar?.linkedFrom?.workingGroupsCollection?.items || []
+        ).some((wg) => !wg?.complete);
+      });
+    }
+
     if (resourceId || maxExpiration) {
-      const filteredCalendarItems = calendarsCollection?.items.filter(
-        (calendar) => {
-          if (resourceId && maxExpiration) {
-            return (
-              calendar?.googleApiMetadata?.resourceId === resourceId &&
-              calendar?.googleApiMetadata?.expirationDate <= maxExpiration
-            );
-          }
+      const filteredCalendarItems = calendars.filter((calendar) => {
+        if (resourceId && maxExpiration) {
+          return (
+            calendar?.googleApiMetadata?.resourceId === resourceId &&
+            calendar?.googleApiMetadata?.expirationDate <= maxExpiration
+          );
+        }
 
-          if (maxExpiration) {
-            return calendar?.googleApiMetadata?.expirationDate <= maxExpiration;
-          }
+        if (maxExpiration) {
+          return calendar?.googleApiMetadata?.expirationDate <= maxExpiration;
+        }
 
-          return calendar?.googleApiMetadata?.resourceId === resourceId;
-        },
-      );
-
+        return calendar?.googleApiMetadata?.resourceId === resourceId;
+      });
       return {
         total: (filteredCalendarItems || [])?.length,
-        items: (filteredCalendarItems || [])
-          .filter((x): x is CalendarItem => x !== null)
-          .map(parseGraphQlCalendarToDataObject),
+        items: (filteredCalendarItems || []).map(
+          parseGraphQlCalendarToDataObject,
+        ),
       };
     }
 
     return {
-      total: calendarsCollection.total,
-      items: calendarsCollection.items
-        .filter((x): x is CalendarItem => x !== null)
-        .map(parseGraphQlCalendarToDataObject),
+      total: calendars.length,
+      items: calendars.map(parseGraphQlCalendarToDataObject),
     };
   }
 
@@ -154,21 +174,29 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
 
 export const calendarUnreadyResponse = {
   groups: [],
-  workingGroups: [],
 };
 
 export const parseGraphQlCalendarToDataObject = (
   item: CalendarItem,
-): CalendarDataObject => ({
-  id: item.sys.id,
-  version: item.sys.publishedVersion ?? 1,
-  resourceId: item.googleApiMetadata?.resourceId ?? undefined,
-  expirationDate: item.googleApiMetadata?.expirationDate ?? undefined,
-  syncToken: item.googleApiMetadata?.syncToken ?? undefined,
-  ...parseContentfulGraphqlCalendarPartialToDataObject(item),
-  // TODO: implement this when
-  // CT-13 Interest Groups
-  // CT-17 Working Groups
-  // are ready
-  ...calendarUnreadyResponse,
-});
+): CalendarDataObject => {
+  const workingGroups = (item.linkedFrom?.workingGroupsCollection?.items || [])
+    .filter((wg): wg is WorkingGroupItem => wg !== null)
+    .map((wg) => ({
+      id: wg.sys.id,
+      complete: !!wg.complete,
+    }));
+
+  return {
+    id: item.sys.id,
+    version: item.sys.publishedVersion ?? 1,
+    resourceId: item.googleApiMetadata?.resourceId ?? undefined,
+    expirationDate: item.googleApiMetadata?.expirationDate ?? undefined,
+    syncToken: item.googleApiMetadata?.syncToken ?? undefined,
+    workingGroups,
+    ...parseContentfulGraphqlCalendarPartialToDataObject(item),
+    // TODO: implement this when
+    // CT-13 Interest Groups
+    // is ready
+    ...calendarUnreadyResponse,
+  };
+};

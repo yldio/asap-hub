@@ -41,7 +41,7 @@ export type EventSpeaker =
 export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
   group?: GroupResponse;
-  workingGroup?: WorkingGroupResponse;
+  workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
 }
 

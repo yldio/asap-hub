@@ -36,6 +36,18 @@ export const getContentfulGraphqlCalendar = (): NonNullable<
     syncToken: 'sync-token',
     expirationDate: 1617196357000,
   },
+  linkedFrom: {
+    workingGroupsCollection: {
+      items: [
+        {
+          sys: {
+            id: '123',
+          },
+          complete: false,
+        },
+      ],
+    },
+  },
 });
 
 export const getContentfulCalendarsGraphqlResponse =

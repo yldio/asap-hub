@@ -4779,6 +4779,13 @@ export type CalendarsContentFragment = Pick<
     Sys,
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
   >;
+  linkedFrom?: Maybe<{
+    workingGroupsCollection?: Maybe<{
+      items: Array<
+        Maybe<Pick<WorkingGroups, 'complete'> & { sys: Pick<Sys, 'id'> }>
+      >;
+    }>;
+  }>;
 };
 
 export type FetchCalendarByIdQueryVariables = Exact<{
@@ -4795,6 +4802,13 @@ export type FetchCalendarByIdQuery = {
         Sys,
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
       >;
+      linkedFrom?: Maybe<{
+        workingGroupsCollection?: Maybe<{
+          items: Array<
+            Maybe<Pick<WorkingGroups, 'complete'> & { sys: Pick<Sys, 'id'> }>
+          >;
+        }>;
+      }>;
     }
   >;
 };
@@ -4821,6 +4835,15 @@ export type FetchCalendarsQuery = {
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
+            linkedFrom?: Maybe<{
+              workingGroupsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<WorkingGroups, 'complete'> & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }>;
+            }>;
           }
         >
       >;
@@ -5236,7 +5259,17 @@ export type EventsContentFragment = Pick<
       };
     }
   >;
-  calendar?: Maybe<Pick<Calendars, 'googleCalendarId' | 'color' | 'name'>>;
+  calendar?: Maybe<
+    Pick<Calendars, 'googleCalendarId' | 'color' | 'name'> & {
+      linkedFrom?: Maybe<{
+        workingGroupsCollection?: Maybe<{
+          items: Array<
+            Maybe<Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }>
+          >;
+        }>;
+      }>;
+    }
+  >;
   thumbnail?: Maybe<Pick<Asset, 'url'>>;
   speakersCollection?: Maybe<{
     items: Array<
@@ -5488,7 +5521,17 @@ export type FetchEventByIdQuery = {
           };
         }
       >;
-      calendar?: Maybe<Pick<Calendars, 'googleCalendarId' | 'color' | 'name'>>;
+      calendar?: Maybe<
+        Pick<Calendars, 'googleCalendarId' | 'color' | 'name'> & {
+          linkedFrom?: Maybe<{
+            workingGroupsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
+          }>;
+        }
+      >;
       thumbnail?: Maybe<Pick<Asset, 'url'>>;
       speakersCollection?: Maybe<{
         items: Array<
@@ -5799,7 +5842,17 @@ export type FetchEventsQuery = {
               }
             >;
             calendar?: Maybe<
-              Pick<Calendars, 'googleCalendarId' | 'color' | 'name'>
+              Pick<Calendars, 'googleCalendarId' | 'color' | 'name'> & {
+                linkedFrom?: Maybe<{
+                  workingGroupsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }>;
+                }>;
+              }
             >;
             thumbnail?: Maybe<Pick<Asset, 'url'>>;
             speakersCollection?: Maybe<{
@@ -6161,7 +6214,22 @@ export type FetchEventsByUserIdQuery = {
                           }
                         >;
                         calendar?: Maybe<
-                          Pick<Calendars, 'googleCalendarId' | 'color' | 'name'>
+                          Pick<
+                            Calendars,
+                            'googleCalendarId' | 'color' | 'name'
+                          > & {
+                            linkedFrom?: Maybe<{
+                              workingGroupsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<WorkingGroups, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >
+                                >;
+                              }>;
+                            }>;
+                          }
                         >;
                         thumbnail?: Maybe<Pick<Asset, 'url'>>;
                         speakersCollection?: Maybe<{
@@ -6529,7 +6597,22 @@ export type FetchEventsByExternalAuthorIdQuery = {
                           }
                         >;
                         calendar?: Maybe<
-                          Pick<Calendars, 'googleCalendarId' | 'color' | 'name'>
+                          Pick<
+                            Calendars,
+                            'googleCalendarId' | 'color' | 'name'
+                          > & {
+                            linkedFrom?: Maybe<{
+                              workingGroupsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<WorkingGroups, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >
+                                >;
+                              }>;
+                            }>;
+                          }
                         >;
                         thumbnail?: Maybe<Pick<Asset, 'url'>>;
                         speakersCollection?: Maybe<{
@@ -6897,7 +6980,22 @@ export type FetchEventsByTeamIdQuery = {
                           }
                         >;
                         calendar?: Maybe<
-                          Pick<Calendars, 'googleCalendarId' | 'color' | 'name'>
+                          Pick<
+                            Calendars,
+                            'googleCalendarId' | 'color' | 'name'
+                          > & {
+                            linkedFrom?: Maybe<{
+                              workingGroupsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<WorkingGroups, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >
+                                >;
+                              }>;
+                            }>;
+                          }
                         >;
                         thumbnail?: Maybe<Pick<Asset, 'url'>>;
                         speakersCollection?: Maybe<{
@@ -6948,6 +7046,14 @@ export type FetchEventsByTeamIdQuery = {
       }>;
     }>;
   }>;
+};
+
+export type FetchWorkingGroupCalendarQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchWorkingGroupCalendarQuery = {
+  workingGroups?: Maybe<{ calendars?: Maybe<{ sys: Pick<Sys, 'id'> }> }>;
 };
 
 export type ExternalAuthorsContentFragment = Pick<
@@ -8694,6 +8800,57 @@ export const CalendarsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
           { kind: 'Field', name: { kind: 'Name', value: 'color' } },
           { kind: 'Field', name: { kind: 'Name', value: 'googleApiMetadata' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkedFrom' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'workingGroupsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '1' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'complete' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -9164,6 +9321,60 @@ export const EventsContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'color' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'workingGroupsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '1' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -11928,6 +12139,78 @@ export const FetchEventsByTeamIdDocument = {
 } as unknown as DocumentNode<
   FetchEventsByTeamIdQuery,
   FetchEventsByTeamIdQueryVariables
+>;
+export const FetchWorkingGroupCalendarDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroupCalendar' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'workingGroups' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendars' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupCalendarQuery,
+  FetchWorkingGroupCalendarQueryVariables
 >;
 export const FetchExternalAuthorByIdDocument = {
   kind: 'Document',

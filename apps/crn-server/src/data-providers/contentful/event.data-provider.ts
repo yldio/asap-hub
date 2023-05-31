@@ -3,6 +3,7 @@ import {
   addLocaleToFields,
   createLink,
   Environment,
+  EventsFilter,
   EventsOrder,
   FetchEventByIdQuery,
   FetchEventByIdQueryVariables,
@@ -14,11 +15,14 @@ import {
   FetchEventsByUserIdQueryVariables,
   FetchEventsQuery,
   FetchEventsQueryVariables,
+  FetchWorkingGroupCalendarQuery,
+  FetchWorkingGroupCalendarQueryVariables,
   FETCH_EVENTS,
   FETCH_EVENTS_BY_EXTERNAL_AUTHOR_ID,
   FETCH_EVENTS_BY_TEAM_ID,
   FETCH_EVENTS_BY_USER_ID,
   FETCH_EVENT_BY_ID,
+  FETCH_WORKING_GROUP_CALENDAR,
   GraphQLClient,
   patchAndPublish,
   pollContentfulGql,
@@ -36,7 +40,6 @@ import {
   GroupResponse,
   isEventStatus,
   ListEventDataObject,
-  WorkingGroupResponse,
 } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
@@ -49,6 +52,14 @@ import {
 
 export type EventItem = NonNullable<
   NonNullable<FetchEventsQuery['eventsCollection']>['items'][number]
+>;
+
+type WorkingGroupItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<EventItem['calendar']>['linkedFrom']
+    >['workingGroupsCollection']
+  >['items'][number]
 >;
 
 export class EventContentfulDataProvider implements EventDataProvider {
@@ -165,6 +176,21 @@ export class EventContentfulDataProvider implements EventDataProvider {
         [],
       );
 
+    let calendarFilter: EventsFilter = {};
+    if (filter?.workingGroupId) {
+      const { workingGroups } = await this.contentfulClient.request<
+        FetchWorkingGroupCalendarQuery,
+        FetchWorkingGroupCalendarQueryVariables
+      >(FETCH_WORKING_GROUP_CALENDAR, {
+        id: filter.workingGroupId,
+      });
+
+      if (workingGroups?.calendars) {
+        calendarFilter = {
+          calendar: { sys: { id: workingGroups.calendars.sys.id } },
+        };
+      }
+    }
     const { eventsCollection } = await this.contentfulClient.request<
       FetchEventsQuery,
       FetchEventsQueryVariables
@@ -178,6 +204,7 @@ export class EventContentfulDataProvider implements EventDataProvider {
         ...(after ? { endDate_gt: after } : {}),
         ...(before ? { endDate_lt: before } : {}),
         ...(search ? { OR: searchFilter } : {}),
+        ...calendarFilter,
       },
     });
 
@@ -225,7 +252,6 @@ export class EventContentfulDataProvider implements EventDataProvider {
 
 export const eventUnreadyResponse = {
   group: {} as GroupResponse,
-  workingGroup: {} as WorkingGroupResponse,
 };
 
 type SpeakerItem = NonNullable<
@@ -356,6 +382,14 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     speakersCollection,
   } = item;
 
+  const workingGroup =
+    item.calendar.linkedFrom?.workingGroupsCollection?.items
+      .filter((x): x is WorkingGroupItem => x !== null)
+      .map((wg) => ({
+        id: wg.sys.id,
+        title: wg.title || '',
+      }))[0] || undefined;
+
   const speakersItems = (speakersCollection?.items as SpeakerItem[]) ?? [];
   return {
     id,
@@ -410,8 +444,8 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
 
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
-    // TODO: implement below when interest groups (CT-13),
-    // and working groups (CT-17) are ready
+    workingGroup,
+    // TODO: implement below when interest groups (CT-13) is ready
     ...eventUnreadyResponse,
   };
 };

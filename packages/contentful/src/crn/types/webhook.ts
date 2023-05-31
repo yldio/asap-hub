@@ -5,7 +5,8 @@ export type ContentfulWebhookPayloadType =
   | 'users'
   | 'calendars'
   | 'events'
-  | 'interestGroups';
+  | 'interestGroups'
+  | 'workingGroups';
 
 export interface ContentfulWebhookPublishPayload<
   T extends ContentfulWebhookPayloadType = ContentfulWebhookPayloadType,

@@ -1,8 +1,10 @@
 import {
   FetchWorkingGroupsQuery as ContentfulFetchWorkingGroupsQuery,
   FetchWorkingGroupByIdQuery as ContentfulFetchWorkingGroupByIdQuery,
+  ContentfulWebhookPayload,
 } from '@asap-hub/contentful';
 import {
+  WebhookDetail,
   WorkingGroupDataObject,
   WorkingGroupEvent,
   WorkingGroupListDataObject,
@@ -124,10 +126,11 @@ export const getSquidexGraphqlWorkingGroup = (): NonNullable<
   },
 });
 
-export const getWorkingGroupEventPayload = (
+export const getWorkingGroupSquidexEventPayload = (
   id: string,
   data: Partial<WorkingGroup>,
 ): WorkingGroupPayload => ({
+  resourceId: id,
   type: 'WorkingGroupsUpdated',
   timestamp: '2021-01-01T00:00:00.000Z',
   payload: {
@@ -152,13 +155,146 @@ export const getWorkingGroupEventPayload = (
   },
 });
 
-export const getWorkingGroupEvent = (
+export const getWorkingGroupSquidexEvent = (
   data = {},
 ): EventBridgeEvent<WorkingGroupEvent, WorkingGroupPayload> =>
   createEventBridgeEventMock(
-    getWorkingGroupEventPayload('123', data),
+    getWorkingGroupSquidexEventPayload('123', data),
     'WorkingGroupsUpdated',
     '123',
+  );
+
+export const getWorkingGroupContentfulWebhookDetail = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'workingGroups'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'crn-3046',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'workingGroups',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    title: {
+      'en-US': 'WG-1',
+    },
+    complete: {
+      'en-US': false,
+    },
+    description: {
+      'en-US': {
+        data: {},
+        content: [
+          {
+            data: {},
+            content: [
+              {
+                data: {},
+                marks: [],
+                value: 'A nice working group!',
+                nodeType: 'text',
+              },
+            ],
+            nodeType: 'paragraph',
+          },
+        ],
+        nodeType: 'document',
+      },
+    },
+    shortText: {
+      'en-US': 'WG',
+    },
+    calendars: {
+      'en-US': {
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: '605f89c4-a2f7-4e78-9e12-0f83ff32c4b3',
+        },
+      },
+    },
+    deliverables: {
+      'en-US': [
+        {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: '4mrJ1Cxkr3utqIE7OUx3pU',
+          },
+        },
+        {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: '6o83rchawGuC54cCsoZODf',
+          },
+        },
+      ],
+    },
+    members: {
+      'en-US': [
+        {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: '3Rsu13aXSheyBphmOnwEBq',
+          },
+        },
+      ],
+    },
+  },
+});
+
+export const getWorkingGroupContentfulEvent = (
+  id: string = 'wg-1',
+  eventType: WorkingGroupEvent = 'WorkingGroupsPublished',
+): EventBridgeEvent<
+  WorkingGroupEvent,
+  WebhookDetail<ContentfulWebhookPayload<'workingGroups'>>
+> =>
+  createEventBridgeEventMock(
+    getWorkingGroupContentfulWebhookDetail(id),
+    eventType,
+    id,
   );
 
 export const getContentfulGraphql = (props = {}) => {

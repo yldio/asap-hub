@@ -283,7 +283,7 @@ const serverlessConfig: AWS = {
       events: [
         {
           eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
+            eventBus: 'gp2-events-${self:provider.stage}',
             pattern: {
               source: [eventBusSourceContentful],
               'detail-type': ['CalendarsPublished'],

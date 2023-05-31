@@ -568,7 +568,7 @@ describe('Reminder Data Provider', () => {
         expect(result).toEqual({ items: [], total: 0 });
       });
 
-      test('Should return an empty result when research-output referencingTeamsContents property is null', async () => {
+      test('Should return an empty result when draft research-output team property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = null;
         squidexGraphqlResponse.draftResearchOutputs![0]!.flatData.teams = null;

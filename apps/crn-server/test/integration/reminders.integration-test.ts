@@ -421,6 +421,55 @@ describe('Reminders', () => {
       });
     });
 
+    test('Should see the reminder when the research output was created recently but the user is NOT associated with the team that owns it but is ASAP staff', async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      const anotherTeamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const researchOutputInput = getResearchOutputInputDraft(
+        teamId,
+        creatorId,
+      );
+      researchOutputInput.teamIds = [anotherTeamId];
+
+      await userDataProvider.update(creatorId, {
+        role: 'Staff',
+      });
+
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        { publish: false },
+      );
+
+      const researchOutput = await researchOutputDataProvider.fetchById(
+        researchOutputId,
+      );
+
+      const expectedReminder: ResearchOutputDraftReminder = {
+        id: `research-output-draft-${researchOutputId}`,
+        entity: 'Research Output',
+        type: 'Draft',
+        data: {
+          researchOutputId,
+          associationName: getTeamCreateDataObject().displayName,
+          associationType: 'team',
+          createdBy: creatorUsername,
+          title: researchOutputInput.title,
+          addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+        },
+      };
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch({
+          ...fetchRemindersOptions,
+          userId: creatorId,
+        });
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+    });
+
     test('Should not see the reminder when the research output was created over 24 hours ago and the user is associated with the team that owns it', async () => {
       jest.useFakeTimers();
 

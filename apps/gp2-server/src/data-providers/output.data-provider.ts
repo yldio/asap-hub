@@ -67,7 +67,6 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
     filter,
     includeDrafts,
   }: gp2Model.FetchOutputOptions) {
-    console.log('in fetch method');
     const containsFilters = (search || '')
       .split(' ')
       .filter(Boolean)
@@ -94,7 +93,6 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
       filtersAndSearch.length === 1 ? filtersAndSearch[0] : filtersAndSearch;
     const filterGraphql = buildODataFilter(query as Filter);
 
-    console.log('about to fetch', filterGraphql);
     const { queryOutputsContentsWithTotal } =
       await this.squidexGraphqlClient.request<
         FetchOutputsQuery,

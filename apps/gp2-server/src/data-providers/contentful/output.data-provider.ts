@@ -38,7 +38,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     take = 8,
     skip = 0,
     search,
-    filter,
     includeDrafts,
   }: gp2Model.FetchOutputOptions) {
     const searchFilter = search ? getSearchFilter(search) : {};
@@ -111,8 +110,10 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     const fields = cleanOutput({
       ...data,
     });
+    const authorIds = data.authors.map(getAuthorIdList);
     const result = await patchAndPublish(user, {
       ...fields,
+      authorIds,
     });
 
     const fetchEventById = () => this.fetchOutputById(id);
@@ -255,17 +256,17 @@ const getSearchFilter = (search: string) => {
 const cleanOutput = (outputToUpdate: gp2Model.OutputUpdateDataObject) =>
   Object.entries(outputToUpdate).reduce((acc, [key, value]) => {
     // authors, documentType, type, subtype
-    // if (key === 'avatar') {
-    //   return {
-    //     ...acc,
-    //     avatar: {
-    //       sys: {
-    //         type: 'Link',
-    //         linkType: 'Asset',
-    //         id: value,
-    //       },
-    //     },
-    //   };
-    // }
+    if (key === 'avatar') {
+      return {
+        ...acc,
+        avatar: {
+          sys: {
+            type: 'Link',
+            linkType: 'Asset',
+            id: value,
+          },
+        },
+      };
+    }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });

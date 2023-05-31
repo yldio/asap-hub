@@ -217,9 +217,15 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     researchOutputData?.descriptionMD ||
       richTextToMarkdown(researchOutputData?.description),
   );
+  const [
+    dismissedDescriptionChangePrompt,
+    setDismissedDescriptionChangePrompt,
+  ] = useState(false);
+
   const promptDescriptionChange =
     descriptionMD === researchOutputData?.descriptionMD &&
-    descriptionUnchangedWarning;
+    descriptionUnchangedWarning &&
+    !dismissedDescriptionChangePrompt;
   const [showDescriptionChangePrompt, setShowDescriptionChangePrompt] =
     useState<false | 'draft' | 'publish'>(false);
 
@@ -342,7 +348,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               return researchOutput;
             })();
           const confirmText = `Keep and ${
-            showDescriptionChangePrompt === 'draft' ? 'draft' : 'publish'
+            showDescriptionChangePrompt === 'draft' ? 'save' : 'publish'
           }`;
           return (
             <>
@@ -350,11 +356,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 <ConfirmModal
                   title="Keep the same description?"
                   cancelText="Cancel"
-                  onCancel={() => {
-                    setShowDescriptionChangePrompt(false);
-                  }}
+                  onCancel={() => setShowDescriptionChangePrompt(false)}
                   confirmText={confirmText}
                   onSave={async () => {
+                    setDismissedDescriptionChangePrompt(true);
                     const result = await save(
                       showDescriptionChangePrompt === 'draft',
                     );

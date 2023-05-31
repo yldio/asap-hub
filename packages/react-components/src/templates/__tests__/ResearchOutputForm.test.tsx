@@ -942,7 +942,7 @@ describe('form buttons', () => {
       });
       userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      expect(screen.getByText(/Keep and draft/i)).toBeVisible();
+      expect(screen.getByText(/Keep and save/i)).toBeVisible();
     });
     it('Shows correct button for publish save warning', async () => {
       await setupForm({
@@ -991,6 +991,30 @@ describe('form buttons', () => {
         expect(screen.queryByText(/Keep the same description/i)).toBeNull();
         expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
       });
+    });
+    it('Will not reappear once dismissed', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+
+        researchOutputData: {
+          ...createResearchOutputResponse(),
+          link: '',
+        },
+        published: false,
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      userEvent.click(
+        screen.getByRole('button', { name: /Keep and publish/i }),
+      );
+      await waitFor(() => {
+        expect(screen.queryByText(/Keep the same description/i)).toBeNull();
+        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.queryByText(/Keep the same description/i)).toBeNull();
     });
   });
 });

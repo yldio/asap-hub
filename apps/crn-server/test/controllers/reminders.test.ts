@@ -122,7 +122,7 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
 
         expect(items[0]).toMatchObject({
-          description: `**${reminder.data.createdBy}** on **${reminder.data.associationName}** created a draft output ${reminder.data.title}.`,
+          description: `**${reminder.data.createdBy}** on **${reminder.data.associationName}** created a draft output: ${reminder.data.title}.`,
           href: `/shared-research/some-research-output-id`,
         });
       });

@@ -1,17 +1,17 @@
 import { NotFoundError } from '@asap-hub/errors';
-import Groups from '../../src/controllers/groups';
+import InterestGroups from '../../src/controllers/interest-groups';
 import {
-  getGroupDataObject,
-  getGroupResponse,
-} from '../fixtures/groups.fixtures';
+  getInterestGroupDataObject,
+  getInterestGroupResponse,
+} from '../fixtures/interest-groups.fixtures';
 import { getUserDataObject } from '../fixtures/users.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Group controller', () => {
-  const groupDataProviderMock = getDataProviderMock();
+  const interestGroupDataProviderMock = getDataProviderMock();
   const userDataProviderMock = getDataProviderMock();
-  const groupController = new Groups(
-    groupDataProviderMock,
+  const interestGroupController = new InterestGroups(
+    interestGroupDataProviderMock,
     userDataProviderMock,
   );
 
@@ -21,14 +21,14 @@ describe('Group controller', () => {
 
   describe('Fetch', () => {
     test('Should return the groups', async () => {
-      groupDataProviderMock.fetch.mockResolvedValueOnce({
+      interestGroupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
-        items: [getGroupDataObject()],
+        items: [getInterestGroupDataObject()],
       });
 
-      const result = await groupController.fetch({});
+      const result = await interestGroupController.fetch({});
 
-      expect(result).toEqual({ items: [getGroupResponse()], total: 1 });
+      expect(result).toEqual({ items: [getInterestGroupResponse()], total: 1 });
     });
 
     test.each`
@@ -40,23 +40,23 @@ describe('Group controller', () => {
     `(
       `Should call data provider with correct filter when filter is $filter`,
       async ({ filter, filterValue }) => {
-        groupDataProviderMock.fetch.mockResolvedValueOnce({
+        interestGroupDataProviderMock.fetch.mockResolvedValueOnce({
           total: 1,
-          items: [getGroupDataObject()],
+          items: [getInterestGroupDataObject()],
         });
 
-        await groupController.fetch({ filter });
+        await interestGroupController.fetch({ filter });
 
-        expect(groupDataProviderMock.fetch).toBeCalledWith(filterValue);
+        expect(interestGroupDataProviderMock.fetch).toBeCalledWith(filterValue);
       },
     );
 
     test('Should return an empty list when there are no groups', async () => {
-      groupDataProviderMock.fetch.mockResolvedValueOnce({
+      interestGroupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 0,
         items: [],
       });
-      const result = await groupController.fetch({});
+      const result = await interestGroupController.fetch({});
 
       expect(result).toEqual({ items: [], total: 0 });
     });
@@ -64,20 +64,20 @@ describe('Group controller', () => {
 
   describe('Fetch-by-ID method', () => {
     test('Should throw when group is not found', async () => {
-      groupDataProviderMock.fetchById.mockResolvedValueOnce(null);
+      interestGroupDataProviderMock.fetchById.mockResolvedValueOnce(null);
 
-      await expect(groupController.fetchById('not-found')).rejects.toThrow(
-        NotFoundError,
-      );
+      await expect(
+        interestGroupController.fetchById('not-found'),
+      ).rejects.toThrow(NotFoundError);
     });
 
     test('Should return the group when it finds it', async () => {
-      groupDataProviderMock.fetchById.mockResolvedValueOnce(
-        getGroupDataObject(),
+      interestGroupDataProviderMock.fetchById.mockResolvedValueOnce(
+        getInterestGroupDataObject(),
       );
-      const result = await groupController.fetchById('group-id');
+      const result = await interestGroupController.fetchById('group-id');
 
-      expect(result).toEqual(getGroupResponse());
+      expect(result).toEqual(getInterestGroupResponse());
     });
   });
 
@@ -85,23 +85,23 @@ describe('Group controller', () => {
     const teamId = 'eb531b6e-195c-46e2-b347-58fb86715033';
 
     test('Should return the group', async () => {
-      groupDataProviderMock.fetch.mockResolvedValueOnce({
+      interestGroupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
-        items: [getGroupDataObject()],
+        items: [getInterestGroupDataObject()],
       });
-      const result = await groupController.fetchByTeamId(teamId, {});
+      const result = await interestGroupController.fetchByTeamId(teamId, {});
 
-      expect(result).toEqual({ items: [getGroupResponse()], total: 1 });
+      expect(result).toEqual({ items: [getInterestGroupResponse()], total: 1 });
     });
 
     test('Should call the data provider with correct parameters', async () => {
-      groupDataProviderMock.fetch.mockResolvedValueOnce({
+      interestGroupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
-        items: [getGroupDataObject()],
+        items: [getInterestGroupDataObject()],
       });
-      await groupController.fetchByTeamId(teamId, {});
+      await interestGroupController.fetchByTeamId(teamId, {});
 
-      expect(groupDataProviderMock.fetch).toBeCalledWith({
+      expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
         filter: { teamId: [teamId] },
       });
     });
@@ -112,13 +112,13 @@ describe('Group controller', () => {
         take: 13,
         skip: 3,
       };
-      groupDataProviderMock.fetch.mockResolvedValueOnce({
+      interestGroupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
-        items: [getGroupDataObject()],
+        items: [getInterestGroupDataObject()],
       });
-      await groupController.fetchByTeamId(teamIds, pagination);
+      await interestGroupController.fetchByTeamId(teamIds, pagination);
 
-      expect(groupDataProviderMock.fetch).toBeCalledWith({
+      expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
         filter: { teamId: teamIds },
         ...pagination,
       });
@@ -132,20 +132,20 @@ describe('Group controller', () => {
     test('Should throw an error if the user is not found', async () => {
       userDataProviderMock.fetchById.mockResolvedValueOnce(null);
 
-      await expect(groupController.fetchByUserId(userId)).rejects.toThrow(
-        NotFoundError,
-      );
+      await expect(
+        interestGroupController.fetchByUserId(userId),
+      ).rejects.toThrow(NotFoundError);
     });
 
     test('Should return the groups', async () => {
       userDataProviderMock.fetchById.mockResolvedValueOnce(getUserDataObject());
-      groupDataProviderMock.fetch.mockResolvedValue({
+      interestGroupDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [getGroupDataObject()],
+        items: [getInterestGroupDataObject()],
       });
-      const result = await groupController.fetchByUserId(userId);
+      const result = await interestGroupController.fetchByUserId(userId);
 
-      expect(result).toEqual({ items: [getGroupResponse()], total: 1 });
+      expect(result).toEqual({ items: [getInterestGroupResponse()], total: 1 });
     });
 
     test('Should call the data provider with correct parameters', async () => {
@@ -161,39 +161,39 @@ describe('Group controller', () => {
         },
       ];
       userDataProviderMock.fetchById.mockResolvedValueOnce(userDataObject);
-      groupDataProviderMock.fetch.mockResolvedValue({
+      interestGroupDataProviderMock.fetch.mockResolvedValue({
         total: 1,
-        items: [getGroupDataObject()],
+        items: [getInterestGroupDataObject()],
       });
 
-      await groupController.fetchByUserId(userId);
+      await interestGroupController.fetchByUserId(userId);
 
       expect(userDataProviderMock.fetchById).toBeCalledWith(userId);
-      expect(groupDataProviderMock.fetch).toBeCalledTimes(2);
-      expect(groupDataProviderMock.fetch).toBeCalledWith({
+      expect(interestGroupDataProviderMock.fetch).toBeCalledTimes(2);
+      expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
         filter: { teamId: teamIds },
       });
-      expect(groupDataProviderMock.fetch).toBeCalledWith({
+      expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
         filter: { userId },
       });
     });
 
     test('Should return the deduped result', async () => {
-      const groupDataObject1 = getGroupDataObject();
+      const groupDataObject1 = getInterestGroupDataObject();
       (groupDataObject1.id as string) = 'id-1';
-      const groupDataObject2 = getGroupDataObject();
+      const groupDataObject2 = getInterestGroupDataObject();
       (groupDataObject2.id as string) = 'id-2';
 
       userDataProviderMock.fetchById.mockResolvedValueOnce(getUserDataObject());
-      groupDataProviderMock.fetch.mockResolvedValueOnce({
+      interestGroupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 2,
         items: [groupDataObject1, groupDataObject2],
       });
-      groupDataProviderMock.fetch.mockResolvedValueOnce({
+      interestGroupDataProviderMock.fetch.mockResolvedValueOnce({
         total: 1,
         items: [groupDataObject2],
       });
-      const result = await groupController.fetchByUserId(userId);
+      const result = await interestGroupController.fetchByUserId(userId);
 
       expect(result).toEqual({
         items: [groupDataObject1, groupDataObject2],

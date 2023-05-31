@@ -42,7 +42,17 @@ export type ExternalAuthorPayload =
   | ExternalAuthorSquidexPayload
   | ExternalAuthorContentfulPayload;
 
-export type GroupPayload = SquidexWebhookPayload<Group, GroupEvent>;
+export type InterestGroupSquidexPayload = WebhookDetail<
+  SquidexWebhookPayload<Group, GroupEvent>
+>;
+
+export type InterestGroupContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'interestGroups'>
+>;
+
+export type InterestGroupPayload =
+  | InterestGroupSquidexPayload
+  | InterestGroupContentfulPayload;
 
 export type LabPayload = SquidexWebhookPayload<Lab, LabEvent>;
 

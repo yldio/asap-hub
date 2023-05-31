@@ -4,10 +4,10 @@ import { AuthHandler, permissionHandler } from '@asap-hub/server-common';
 import { Router } from 'express';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { listGroupsResponse } from '../fixtures/groups.fixtures';
+import { listInterestGroupsResponse } from '../fixtures/interest-groups.fixtures';
 import { pageResponse } from '../fixtures/page.fixtures';
 import { getUserResponse } from '../fixtures/users.fixtures';
-import { groupControllerMock } from '../mocks/group-controller.mock';
+import { interestGroupControllerMock } from '../mocks/interest-group-controller.mock';
 import { pageControllerMock } from '../mocks/page-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 
@@ -32,7 +32,7 @@ describe('Permission middleware', () => {
   );
 
   const appWithMockedAuth = appFactory({
-    groupController: groupControllerMock,
+    interestGroupController: interestGroupControllerMock,
     userController: userControllerMock,
     pageController: pageControllerMock,
     authHandler: authHandlerMock,
@@ -84,7 +84,9 @@ describe('Permission middleware', () => {
       });
 
       test('Should allow access to /groups endpoint', async () => {
-        groupControllerMock.fetch.mockResolvedValueOnce(listGroupsResponse);
+        interestGroupControllerMock.fetch.mockResolvedValueOnce(
+          listInterestGroupsResponse,
+        );
 
         const response = await supertest(appWithMockedAuth).get('/groups');
 

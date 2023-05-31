@@ -1,24 +1,23 @@
 import { FetchGroupOptions } from '@asap-hub/model';
-import { GroupSquidexDataProvider } from '../../src/data-providers/groups.data-provider';
+import { InterestGroupSquidexDataProvider } from '../../src/data-providers/interest-groups.data-provider';
 import {
-  getGroupDataObject,
-  getListGroupResponse,
-  getSquidexGroupGraphqlResponse,
-  getSquidexGroupsGraphqlResponse,
-} from '../fixtures/groups.fixtures';
+  getInterestGroupDataObject,
+  getListInterestGroupResponse,
+  getSquidexInterestGroupGraphqlResponse,
+  getSquidexInterestGroupsGraphqlResponse,
+} from '../fixtures/interest-groups.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
 
 describe('Group Data Provider', () => {
   const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const groupDataProvider = new GroupSquidexDataProvider(
+  const interestGroupDataProvider = new InterestGroupSquidexDataProvider(
     squidexGraphqlClientMock,
   );
 
   const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const groupDataProviderMockGraphql = new GroupSquidexDataProvider(
-    squidexGraphqlClientMockServer,
-  );
+  const interestGroupDataProviderMockGraphql =
+    new InterestGroupSquidexDataProvider(squidexGraphqlClientMockServer);
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -26,48 +25,51 @@ describe('Group Data Provider', () => {
 
   describe('Fetch method', () => {
     test('Should fetch the groups from squidex graphql', async () => {
-      const result = await groupDataProviderMockGraphql.fetch({});
+      const result = await interestGroupDataProviderMockGraphql.fetch({});
 
-      expect(result).toMatchObject({ total: 1, items: [getGroupDataObject()] });
+      expect(result).toMatchObject({
+        total: 1,
+        items: [getInterestGroupDataObject()],
+      });
     });
 
     test('Should return an empty result when the client returns an empty list', async () => {
-      const squidexGraphqlResponse = getSquidexGroupsGraphqlResponse();
+      const squidexGraphqlResponse = getSquidexInterestGroupsGraphqlResponse();
       squidexGraphqlResponse.queryGroupsContentsWithTotal!.total = 0;
       squidexGraphqlResponse.queryGroupsContentsWithTotal!.items = [];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
 
-      const result = await groupDataProvider.fetch({});
+      const result = await interestGroupDataProvider.fetch({});
       expect(result).toEqual({ items: [], total: 0 });
     });
 
     test('Should return an empty result when the client returns a response with queryGroupsContentsWithTotal property set to null', async () => {
-      const squidexGraphqlResponse = getSquidexGroupsGraphqlResponse();
+      const squidexGraphqlResponse = getSquidexInterestGroupsGraphqlResponse();
       squidexGraphqlResponse.queryGroupsContentsWithTotal = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
 
-      const result = await groupDataProvider.fetch({});
+      const result = await interestGroupDataProvider.fetch({});
       expect(result).toEqual({ items: [], total: 0 });
     });
 
     test('Should return an empty result when the client returns a response with items property set to null', async () => {
-      const squidexGraphqlResponse = getSquidexGroupsGraphqlResponse();
+      const squidexGraphqlResponse = getSquidexInterestGroupsGraphqlResponse();
       squidexGraphqlResponse.queryGroupsContentsWithTotal!.items = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
 
-      const result = await groupDataProvider.fetch({});
+      const result = await interestGroupDataProvider.fetch({});
       expect(result).toEqual({ items: [], total: 0 });
     });
 
     test('Should query with filters and return the groups', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexGroupsGraphqlResponse(),
+        getSquidexInterestGroupsGraphqlResponse(),
       );
 
       const fetchOptions: FetchGroupOptions = {
@@ -84,7 +86,7 @@ describe('Group Data Provider', () => {
         " or (contains(data/description/iv,'last'))" +
         " or (contains(data/tags/iv,'last')))";
 
-      const result = await groupDataProvider.fetch(fetchOptions);
+      const result = await interestGroupDataProvider.fetch(fetchOptions);
 
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
@@ -94,12 +96,15 @@ describe('Group Data Provider', () => {
           skip: 2,
         },
       );
-      expect(result).toEqual({ total: 1, items: [getGroupDataObject()] });
+      expect(result).toEqual({
+        total: 1,
+        items: [getInterestGroupDataObject()],
+      });
     });
 
     test('Should sanitise single quotes by doubling them', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexGroupsGraphqlResponse(),
+        getSquidexInterestGroupsGraphqlResponse(),
       );
 
       const fetchOptions: FetchGroupOptions = {
@@ -112,7 +117,7 @@ describe('Group Data Provider', () => {
         " or (contains(data/description/iv,''''))" +
         " or (contains(data/tags/iv,'''')))";
 
-      await groupDataProvider.fetch(fetchOptions);
+      await interestGroupDataProvider.fetch(fetchOptions);
 
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
@@ -126,7 +131,7 @@ describe('Group Data Provider', () => {
 
     test('Should sanitise double quotation mark by escaping it', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexGroupsGraphqlResponse(),
+        getSquidexInterestGroupsGraphqlResponse(),
       );
 
       const fetchOptions: FetchGroupOptions = {
@@ -139,7 +144,7 @@ describe('Group Data Provider', () => {
         " or (contains(data/description/iv,'\"'))" +
         " or (contains(data/tags/iv,'\"')))";
 
-      await groupDataProvider.fetch(fetchOptions);
+      await interestGroupDataProvider.fetch(fetchOptions);
 
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
@@ -154,10 +159,10 @@ describe('Group Data Provider', () => {
     test('Should apply the team and pagination filters', async () => {
       const teamId = 'eb531b6e-195c-46e2-b347-58fb86715033';
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexGroupsGraphqlResponse(),
+        getSquidexInterestGroupsGraphqlResponse(),
       );
 
-      await groupDataProvider.fetch({
+      await interestGroupDataProvider.fetch({
         filter: { teamId: [teamId] },
         take: 13,
         skip: 3,
@@ -180,10 +185,10 @@ describe('Group Data Provider', () => {
         'dc312b6e-195c-46e2-b347-58fb86715033',
       ];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexGroupsGraphqlResponse(),
+        getSquidexInterestGroupsGraphqlResponse(),
       );
 
-      await groupDataProvider.fetch({
+      await interestGroupDataProvider.fetch({
         filter: { teamId: teamIds },
         take: 13,
         skip: 3,
@@ -203,10 +208,10 @@ describe('Group Data Provider', () => {
     test('Should filter by user ID', async () => {
       const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
       squidexGraphqlClientMock.request.mockResolvedValue(
-        getSquidexGroupsGraphqlResponse(),
+        getSquidexInterestGroupsGraphqlResponse(),
       );
 
-      await groupDataProvider.fetch({ filter: { userId } });
+      await interestGroupDataProvider.fetch({ filter: { userId } });
 
       const userFilter = `data/leaders/iv/user eq '${userId}'`;
       expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -226,10 +231,10 @@ describe('Group Data Provider', () => {
       'Should filter by active field when its value is $active',
       async ({ active }) => {
         squidexGraphqlClientMock.request.mockResolvedValue(
-          getSquidexGroupsGraphqlResponse(),
+          getSquidexInterestGroupsGraphqlResponse(),
         );
 
-        await groupDataProvider.fetch({ filter: { active } });
+        await interestGroupDataProvider.fetch({ filter: { active } });
 
         expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
           expect.anything(),
@@ -248,10 +253,10 @@ describe('Group Data Provider', () => {
       const active = true;
 
       squidexGraphqlClientMock.request.mockResolvedValue(
-        getSquidexGroupsGraphqlResponse(),
+        getSquidexInterestGroupsGraphqlResponse(),
       );
 
-      await groupDataProvider.fetch({
+      await interestGroupDataProvider.fetch({
         filter: { userId, teamId: teamIds, active },
       });
 
@@ -273,19 +278,19 @@ describe('Group Data Provider', () => {
       const teamIds = ['team-id-1', 'team-id-3'];
 
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexGroupsGraphqlResponse(),
+        getSquidexInterestGroupsGraphqlResponse(),
       );
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexGroupsGraphqlResponse(),
+        getSquidexInterestGroupsGraphqlResponse(),
       );
 
-      const result = await groupDataProvider.fetch({
+      const result = await interestGroupDataProvider.fetch({
         filter: { userId, teamId: teamIds },
       });
 
       expect(result.items).toHaveLength(1);
       expect(result.total).toBe(1);
-      expect(result).toMatchObject(getListGroupResponse());
+      expect(result).toMatchObject(getListInterestGroupResponse());
     });
   });
 
@@ -293,32 +298,34 @@ describe('Group Data Provider', () => {
     const groupId = 'some-group-id';
 
     test('Should fetch the groups from squidex graphql', async () => {
-      const result = await groupDataProviderMockGraphql.fetchById('group-id-1');
+      const result = await interestGroupDataProviderMockGraphql.fetchById(
+        'group-id-1',
+      );
 
-      expect(result).toMatchObject(getGroupDataObject());
+      expect(result).toMatchObject(getInterestGroupDataObject());
     });
 
     test("Should return null when the group doesn't exist", async () => {
-      const squidexGraphqlResponse = getSquidexGroupGraphqlResponse();
+      const squidexGraphqlResponse = getSquidexInterestGroupGraphqlResponse();
       squidexGraphqlResponse.findGroupsContent = null;
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
 
-      expect(await groupDataProvider.fetchById(groupId)).toBeNull();
+      expect(await interestGroupDataProvider.fetchById(groupId)).toBeNull();
     });
 
     test('Should return the group when the leader user is undefined (ie entity marked as a draft) and skip the leader', async () => {
-      const squidexGraphqlResponse = getSquidexGroupGraphqlResponse();
+      const squidexGraphqlResponse = getSquidexInterestGroupGraphqlResponse();
       squidexGraphqlResponse.findGroupsContent!.flatData!.leaders![0]!.user =
         [];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
 
-      const result = await groupDataProvider.fetchById(groupId);
+      const result = await interestGroupDataProvider.fetchById(groupId);
 
-      const expectedGroupDataObject = getGroupDataObject();
+      const expectedGroupDataObject = getInterestGroupDataObject();
 
       expect(result).toEqual(
         expect.objectContaining({

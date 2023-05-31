@@ -5,12 +5,12 @@ import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import * as fixtures from '../fixtures/groups.fixtures';
+import * as fixtures from '../fixtures/interest-groups.fixtures';
 import {
   getListTeamResponse,
   getTeamResponse,
 } from '../fixtures/teams.fixtures';
-import { groupControllerMock } from '../mocks/group-controller.mock';
+import { interestGroupControllerMock } from '../mocks/interest-group-controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 import { teamControllerMock } from '../mocks/team-controller.mock';
 
@@ -30,7 +30,7 @@ describe('/teams/ route', () => {
     next();
   };
   const app = appFactory({
-    groupController: groupControllerMock,
+    interestGroupController: interestGroupControllerMock,
     teamController: teamControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
@@ -42,7 +42,7 @@ describe('/teams/ route', () => {
 
   describe('GET /teams/{team_id}/groups', () => {
     test('Should return 200 when no grups exist', async () => {
-      groupControllerMock.fetchByTeamId.mockResolvedValueOnce({
+      interestGroupControllerMock.fetchByTeamId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -57,17 +57,17 @@ describe('/teams/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      groupControllerMock.fetchByTeamId.mockResolvedValueOnce(
-        fixtures.listGroupsResponse,
+      interestGroupControllerMock.fetchByTeamId.mockResolvedValueOnce(
+        fixtures.listInterestGroupsResponse,
       );
 
       const response = await supertest(app).get('/teams/123/groups');
 
-      expect(response.body).toEqual(fixtures.listGroupsResponse);
+      expect(response.body).toEqual(fixtures.listInterestGroupsResponse);
     });
 
     test('Should call the controller with the right parameters', async () => {
-      groupControllerMock.fetchByTeamId.mockResolvedValueOnce({
+      interestGroupControllerMock.fetchByTeamId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -85,7 +85,7 @@ describe('/teams/ route', () => {
         search: 'something',
       };
 
-      expect(groupControllerMock.fetchByTeamId).toBeCalledWith(
+      expect(interestGroupControllerMock.fetchByTeamId).toBeCalledWith(
         teamId,
         expectedParams,
       );

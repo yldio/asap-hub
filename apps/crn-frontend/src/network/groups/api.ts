@@ -1,5 +1,9 @@
 import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
-import { GetListOptions, createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  GetListOptions,
+  createSentryHeaders,
+  createFeatureFlagHeaders,
+} from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../../config';
 import createListApiUrl from '../../CreateListApiUrl';
 
@@ -8,7 +12,11 @@ export const getGroups = async (
   authorization: string,
 ): Promise<ListGroupResponse> => {
   const resp = await fetch(createListApiUrl('groups', options).toString(), {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
 
   if (!resp.ok) {
@@ -23,7 +31,11 @@ export const getGroup = async (
   authorization: string,
 ): Promise<GroupResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/groups/${id}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

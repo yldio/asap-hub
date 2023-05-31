@@ -30,7 +30,10 @@ import {
 import { appName, baseUrl } from '../../src/config';
 import { eventUnreadyResponse } from '../../src/data-providers/contentful/event.data-provider';
 import { createEventBridgeEventMock } from '../helpers/events';
-import { getGroupResponse, getSquidexGraphqlGroup } from './groups.fixtures';
+import {
+  getInterestGroupResponse,
+  getSquidexGraphqlInterestGroup,
+} from './interest-groups.fixtures';
 import {
   getSquidexGraphqlWorkingGroup,
   getWorkingGroupResponse,
@@ -392,7 +395,7 @@ export const getEventDataObject = (): EventDataObject => ({
     groups: [],
     workingGroups: [],
   },
-  group: getGroupResponse(),
+  group: getInterestGroupResponse(),
   workingGroup: getWorkingGroupResponse(),
   speakers: [getEventSpeakerUser()],
 });
@@ -552,7 +555,7 @@ const squidexGraphqlEventsFlatData = (): EventContentFragment['flatData'] & {
         color: '#125A12' as const,
         name: 'Tech 1 - Sequencing/omics',
       },
-      referencingGroupsContents: [getSquidexGraphqlGroup()],
+      referencingGroupsContents: [getSquidexGraphqlInterestGroup()],
       referencingWorkingGroupsContents: [getSquidexGraphqlWorkingGroup()],
     },
   ],

@@ -6,10 +6,12 @@ import {
   ListGroupResponse,
 } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
-import { GroupDataProvider } from '../data-providers/groups.data-provider';
-import { UserDataProvider } from '../data-providers/types';
+import {
+  UserDataProvider,
+  InterestGroupDataProvider,
+} from '../data-providers/types';
 
-export interface GroupController {
+export interface InterestGroupController {
   fetch: (options: FetchOptions) => Promise<ListGroupResponse>;
   fetchById: (groupId: string) => Promise<GroupResponse>;
   fetchByTeamId: (
@@ -19,15 +21,15 @@ export interface GroupController {
   fetchByUserId: (userId: string) => Promise<ListGroupResponse>;
 }
 
-export default class Groups implements GroupController {
-  groupDataProvider: GroupDataProvider;
+export default class InterestGroups implements InterestGroupController {
+  interestGroupDataProvider: InterestGroupDataProvider;
   userDataProvider: UserDataProvider;
 
   constructor(
-    groupDataProvider: GroupDataProvider,
+    interestGroupDataProvider: InterestGroupDataProvider,
     userDataProvider: UserDataProvider,
   ) {
-    this.groupDataProvider = groupDataProvider;
+    this.interestGroupDataProvider = interestGroupDataProvider;
     this.userDataProvider = userDataProvider;
   }
 
@@ -43,7 +45,7 @@ export default class Groups implements GroupController {
           }
         : {};
 
-    const { total, items } = await this.groupDataProvider.fetch({
+    const { total, items } = await this.interestGroupDataProvider.fetch({
       ...fetchOptions,
       ...groupFilter,
     });
@@ -52,7 +54,7 @@ export default class Groups implements GroupController {
   }
 
   async fetchById(groupId: string): Promise<GroupResponse> {
-    const group = await this.groupDataProvider.fetchById(groupId);
+    const group = await this.interestGroupDataProvider.fetchById(groupId);
     if (!group) {
       throw new NotFoundError(undefined, `group with id ${groupId} not found`);
     }
@@ -65,7 +67,7 @@ export default class Groups implements GroupController {
     options: FetchPaginationOptions,
   ): Promise<ListGroupResponse> {
     const teamIds = Array.isArray(teamId) ? teamId : [teamId];
-    const { total, items } = await this.groupDataProvider.fetch({
+    const { total, items } = await this.interestGroupDataProvider.fetch({
       filter: {
         teamId: teamIds,
       },
@@ -83,12 +85,14 @@ export default class Groups implements GroupController {
     }
 
     const teamIds = user.teams.map((team) => team.id);
-    const { items: groupsByTeams } = await this.groupDataProvider.fetch({
-      filter: {
-        teamId: teamIds,
+    const { items: groupsByTeams } = await this.interestGroupDataProvider.fetch(
+      {
+        filter: {
+          teamId: teamIds,
+        },
       },
-    });
-    const { items: groupsByUser } = await this.groupDataProvider.fetch({
+    );
+    const { items: groupsByUser } = await this.interestGroupDataProvider.fetch({
       filter: {
         userId,
       },

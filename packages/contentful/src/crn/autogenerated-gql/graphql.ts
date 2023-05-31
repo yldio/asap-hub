@@ -175,6 +175,7 @@ export type AssetFilter = {
 export type AssetLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  interestGroupsCollection?: Maybe<InterestGroupsCollection>;
   newsCollection?: Maybe<NewsCollection>;
   usersCollection?: Maybe<UsersCollection>;
 };
@@ -187,6 +188,13 @@ export type AssetLinkingCollectionsEntryCollectionArgs = {
 };
 
 export type AssetLinkingCollectionsEventsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type AssetLinkingCollectionsInterestGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -305,6 +313,7 @@ export type CalendarsFilter = {
 export type CalendarsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  interestGroupsCollection?: Maybe<InterestGroupsCollection>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
 };
 
@@ -316,6 +325,13 @@ export type CalendarsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export type CalendarsLinkingCollectionsEventsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type CalendarsLinkingCollectionsInterestGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -1361,6 +1377,320 @@ export type ImageTransformOptions = {
   width?: InputMaybe<Scalars['Dimension']>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroupLeaders) */
+export type InterestGroupLeaders = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  inactiveSinceDate?: Maybe<Scalars['DateTime']>;
+  linkedFrom?: Maybe<InterestGroupLeadersLinkingCollections>;
+  role?: Maybe<Scalars['String']>;
+  sys: Sys;
+  user?: Maybe<Users>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroupLeaders) */
+export type InterestGroupLeadersInactiveSinceDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroupLeaders) */
+export type InterestGroupLeadersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroupLeaders) */
+export type InterestGroupLeadersRoleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroupLeaders) */
+export type InterestGroupLeadersUserArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type InterestGroupLeadersCollection = {
+  items: Array<Maybe<InterestGroupLeaders>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type InterestGroupLeadersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<InterestGroupLeadersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<InterestGroupLeadersFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user?: InputMaybe<CfUsersNestedFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type InterestGroupLeadersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  interestGroupsCollection?: Maybe<InterestGroupsCollection>;
+};
+
+export type InterestGroupLeadersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    skip?: InputMaybe<Scalars['Int']>;
+  };
+
+export enum InterestGroupLeadersOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroups = Entry & {
+  active?: Maybe<Scalars['Boolean']>;
+  calendar?: Maybe<Calendars>;
+  contentfulMetadata: ContentfulMetadata;
+  description?: Maybe<Scalars['String']>;
+  googleDrive?: Maybe<Scalars['String']>;
+  leadersCollection?: Maybe<InterestGroupsLeadersCollection>;
+  linkedFrom?: Maybe<InterestGroupsLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  slack?: Maybe<Scalars['String']>;
+  sys: Sys;
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  teamsCollection?: Maybe<InterestGroupsTeamsCollection>;
+  thumbnail?: Maybe<Asset>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsActiveArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsCalendarArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsGoogleDriveArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsLeadersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<InterestGroupsLeadersCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<InterestGroupLeadersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsSlackArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsTagsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsTeamsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<InterestGroupsTeamsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TeamsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsThumbnailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type InterestGroupsCollection = {
+  items: Array<Maybe<InterestGroups>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type InterestGroupsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<InterestGroupsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<InterestGroupsFilter>>>;
+  active?: InputMaybe<Scalars['Boolean']>;
+  active_exists?: InputMaybe<Scalars['Boolean']>;
+  active_not?: InputMaybe<Scalars['Boolean']>;
+  calendar?: InputMaybe<CfCalendarsNestedFilter>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleDrive?: InputMaybe<Scalars['String']>;
+  googleDrive_contains?: InputMaybe<Scalars['String']>;
+  googleDrive_exists?: InputMaybe<Scalars['Boolean']>;
+  googleDrive_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleDrive_not?: InputMaybe<Scalars['String']>;
+  googleDrive_not_contains?: InputMaybe<Scalars['String']>;
+  googleDrive_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  leaders?: InputMaybe<CfInterestGroupLeadersNestedFilter>;
+  leadersCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  slack?: InputMaybe<Scalars['String']>;
+  slack_contains?: InputMaybe<Scalars['String']>;
+  slack_exists?: InputMaybe<Scalars['Boolean']>;
+  slack_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  slack_not?: InputMaybe<Scalars['String']>;
+  slack_not_contains?: InputMaybe<Scalars['String']>;
+  slack_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  tags_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  tags_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  tags_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  tags_exists?: InputMaybe<Scalars['Boolean']>;
+  teams?: InputMaybe<CfTeamsNestedFilter>;
+  teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type InterestGroupsLeadersCollection = {
+  items: Array<Maybe<InterestGroupLeaders>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum InterestGroupsLeadersCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type InterestGroupsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type InterestGroupsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum InterestGroupsOrder {
+  ActiveAsc = 'active_ASC',
+  ActiveDesc = 'active_DESC',
+  GoogleDriveAsc = 'googleDrive_ASC',
+  GoogleDriveDesc = 'googleDrive_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SlackAsc = 'slack_ASC',
+  SlackDesc = 'slack_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type InterestGroupsTeamsCollection = {
+  items: Array<Maybe<Teams>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum InterestGroupsTeamsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/labs) */
 export type Labs = Entry & {
   contentfulMetadata: ContentfulMetadata;
@@ -1920,6 +2250,10 @@ export type Query = {
   externalAuthorsCollection?: Maybe<ExternalAuthorsCollection>;
   externalTools?: Maybe<ExternalTools>;
   externalToolsCollection?: Maybe<ExternalToolsCollection>;
+  interestGroupLeaders?: Maybe<InterestGroupLeaders>;
+  interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
+  interestGroups?: Maybe<InterestGroups>;
+  interestGroupsCollection?: Maybe<InterestGroupsCollection>;
   labs?: Maybe<Labs>;
   labsCollection?: Maybe<LabsCollection>;
   media?: Maybe<Media>;
@@ -2060,6 +2394,36 @@ export type QueryExternalToolsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ExternalToolsFilter>;
+};
+
+export type QueryInterestGroupLeadersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryInterestGroupLeadersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<InterestGroupLeadersOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<InterestGroupLeadersFilter>;
+};
+
+export type QueryInterestGroupsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryInterestGroupsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<InterestGroupsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<InterestGroupsFilter>;
 };
 
 export type QueryLabsArgs = {
@@ -2524,6 +2888,7 @@ export type TeamsFilter = {
 export type TeamsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
+  interestGroupsCollection?: Maybe<InterestGroupsCollection>;
   teamMembershipCollection?: Maybe<TeamMembershipCollection>;
 };
 
@@ -2535,6 +2900,13 @@ export type TeamsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export type TeamsLinkingCollectionsEventSpeakersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type TeamsLinkingCollectionsInterestGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -3137,6 +3509,7 @@ export enum UsersLabsCollectionOrder {
 export type UsersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
+  interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
   workingGroupLeadersOrWorkingGroupMembersCollection?: Maybe<WorkingGroupLeadersOrWorkingGroupMembersCollection>;
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
@@ -3150,6 +3523,13 @@ export type UsersLinkingCollectionsEntryCollectionArgs = {
 };
 
 export type UsersLinkingCollectionsEventSpeakersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsInterestGroupLeadersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -3873,6 +4253,30 @@ export type CfExternalToolsNestedFilter = {
   url_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type CfInterestGroupLeadersNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfInterestGroupLeadersNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfInterestGroupLeadersNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  role?: InputMaybe<Scalars['String']>;
+  role_contains?: InputMaybe<Scalars['String']>;
+  role_exists?: InputMaybe<Scalars['Boolean']>;
+  role_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  role_not?: InputMaybe<Scalars['String']>;
+  role_not_contains?: InputMaybe<Scalars['String']>;
+  role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type CfLabsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfLabsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfLabsNestedFilter>>>;
@@ -4468,6 +4872,12 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'InterestGroupLeaders' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'InterestGroups' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Labs' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -4561,6 +4971,12 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'ExternalTools' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'InterestGroupLeaders' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'InterestGroups' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Labs' } & {
@@ -4667,6 +5083,10 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'InterestGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -4718,6 +5138,10 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'InterestGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -4769,6 +5193,10 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'InterestGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -4891,6 +5319,12 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'InterestGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'InterestGroups' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -4946,6 +5380,12 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'InterestGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'InterestGroups' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -5001,6 +5441,12 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'InterestGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'InterestGroups' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -5143,6 +5589,12 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'InterestGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'InterestGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
@@ -5214,6 +5666,12 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'InterestGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'InterestGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
@@ -5283,6 +5741,12 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ExternalTools' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'InterestGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'InterestGroups' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
@@ -5450,6 +5914,12 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'InterestGroupLeaders';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'InterestGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -5534,6 +6004,12 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'InterestGroupLeaders';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'InterestGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -5616,6 +6092,12 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ExternalTools' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'InterestGroupLeaders';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'InterestGroups' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Labs' } & {
@@ -5800,6 +6282,12 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'InterestGroupLeaders';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'InterestGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -5884,6 +6372,12 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'InterestGroupLeaders';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'InterestGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -5966,6 +6460,12 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ExternalTools' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'InterestGroupLeaders';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'InterestGroups' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Labs' } & {
@@ -6150,6 +6650,12 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'InterestGroupLeaders';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'InterestGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6234,6 +6740,12 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'InterestGroupLeaders';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'InterestGroups' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Labs' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6316,6 +6828,12 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ExternalTools' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({
+                                        __typename: 'InterestGroupLeaders';
+                                      } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'InterestGroups' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Labs' } & {
@@ -6482,6 +7000,325 @@ export type FetchExternalAuthorsQuery = {
   >;
 };
 
+export type InterestGroupsContentFragment = Pick<
+  InterestGroups,
+  'name' | 'active' | 'tags' | 'description' | 'slack' | 'googleDrive'
+> & {
+  sys: Pick<
+    Sys,
+    'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+  >;
+  thumbnail?: Maybe<Pick<Asset, 'url'>>;
+  teamsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<
+          Teams,
+          | 'displayName'
+          | 'inactiveSince'
+          | 'expertiseAndResourceTags'
+          | 'projectTitle'
+        > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+      >
+    >;
+  }>;
+  leadersCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<InterestGroupLeaders, 'role' | 'inactiveSinceDate'> & {
+          sys: Pick<Sys, 'id' | 'publishedAt'>;
+          user?: Maybe<
+            Pick<
+              Users,
+              'firstName' | 'lastName' | 'email' | 'alumniSinceDate'
+            > & {
+              sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
+              avatar?: Maybe<Pick<Asset, 'url'>>;
+              teamsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<TeamMembership, 'role' | 'inactiveSinceDate'> & {
+                      team?: Maybe<
+                        Pick<Teams, 'inactiveSince' | 'displayName'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }>;
+            }
+          >;
+        }
+      >
+    >;
+  }>;
+  calendar?: Maybe<
+    Pick<Calendars, 'color' | 'googleCalendarId' | 'name'> & {
+      sys: Pick<Sys, 'id'>;
+    }
+  >;
+};
+
+export type FetchInterestGroupByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchInterestGroupByIdQuery = {
+  interestGroups?: Maybe<
+    Pick<
+      InterestGroups,
+      'name' | 'active' | 'tags' | 'description' | 'slack' | 'googleDrive'
+    > & {
+      sys: Pick<
+        Sys,
+        'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
+      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+      teamsCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<
+              Teams,
+              | 'displayName'
+              | 'inactiveSince'
+              | 'expertiseAndResourceTags'
+              | 'projectTitle'
+            > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+          >
+        >;
+      }>;
+      leadersCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<InterestGroupLeaders, 'role' | 'inactiveSinceDate'> & {
+              sys: Pick<Sys, 'id' | 'publishedAt'>;
+              user?: Maybe<
+                Pick<
+                  Users,
+                  'firstName' | 'lastName' | 'email' | 'alumniSinceDate'
+                > & {
+                  sys: Pick<Sys, 'id' | 'publishedAt' | 'firstPublishedAt'>;
+                  avatar?: Maybe<Pick<Asset, 'url'>>;
+                  teamsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<TeamMembership, 'role' | 'inactiveSinceDate'> & {
+                          team?: Maybe<
+                            Pick<Teams, 'inactiveSince' | 'displayName'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
+                          >;
+                        }
+                      >
+                    >;
+                  }>;
+                }
+              >;
+            }
+          >
+        >;
+      }>;
+      calendar?: Maybe<
+        Pick<Calendars, 'color' | 'googleCalendarId' | 'name'> & {
+          sys: Pick<Sys, 'id'>;
+        }
+      >;
+    }
+  >;
+};
+
+export type FetchInterestGroupsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    Array<InputMaybe<InterestGroupsOrder>> | InputMaybe<InterestGroupsOrder>
+  >;
+  where?: InputMaybe<InterestGroupsFilter>;
+}>;
+
+export type FetchInterestGroupsQuery = {
+  interestGroupsCollection?: Maybe<
+    Pick<InterestGroupsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<
+            InterestGroups,
+            'name' | 'active' | 'tags' | 'description' | 'slack' | 'googleDrive'
+          > & {
+            sys: Pick<
+              Sys,
+              'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+            thumbnail?: Maybe<Pick<Asset, 'url'>>;
+            teamsCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<
+                    Teams,
+                    | 'displayName'
+                    | 'inactiveSince'
+                    | 'expertiseAndResourceTags'
+                    | 'projectTitle'
+                  > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+                >
+              >;
+            }>;
+            leadersCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<InterestGroupLeaders, 'role' | 'inactiveSinceDate'> & {
+                    sys: Pick<Sys, 'id' | 'publishedAt'>;
+                    user?: Maybe<
+                      Pick<
+                        Users,
+                        'firstName' | 'lastName' | 'email' | 'alumniSinceDate'
+                      > & {
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedAt' | 'firstPublishedAt'
+                        >;
+                        avatar?: Maybe<Pick<Asset, 'url'>>;
+                        teamsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                TeamMembership,
+                                'role' | 'inactiveSinceDate'
+                              > & {
+                                team?: Maybe<
+                                  Pick<
+                                    Teams,
+                                    'inactiveSince' | 'displayName'
+                                  > & { sys: Pick<Sys, 'id'> }
+                                >;
+                              }
+                            >
+                          >;
+                        }>;
+                      }
+                    >;
+                  }
+                >
+              >;
+            }>;
+            calendar?: Maybe<
+              Pick<Calendars, 'color' | 'googleCalendarId' | 'name'> & {
+                sys: Pick<Sys, 'id'>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
+export type FetchInterestGroupsByUserIdQueryVariables = Exact<{
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchInterestGroupsByUserIdQuery = {
+  interestGroupLeadersCollection?: Maybe<
+    Pick<InterestGroupLeadersCollection, 'total'> & {
+      items: Array<
+        Maybe<{
+          linkedFrom?: Maybe<{
+            interestGroupsCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<
+                    InterestGroups,
+                    | 'name'
+                    | 'active'
+                    | 'tags'
+                    | 'description'
+                    | 'slack'
+                    | 'googleDrive'
+                  > & {
+                    sys: Pick<
+                      Sys,
+                      | 'id'
+                      | 'firstPublishedAt'
+                      | 'publishedAt'
+                      | 'publishedVersion'
+                    >;
+                    thumbnail?: Maybe<Pick<Asset, 'url'>>;
+                    teamsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<
+                            Teams,
+                            | 'displayName'
+                            | 'inactiveSince'
+                            | 'expertiseAndResourceTags'
+                            | 'projectTitle'
+                          > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+                        >
+                      >;
+                    }>;
+                    leadersCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<
+                            InterestGroupLeaders,
+                            'role' | 'inactiveSinceDate'
+                          > & {
+                            sys: Pick<Sys, 'id' | 'publishedAt'>;
+                            user?: Maybe<
+                              Pick<
+                                Users,
+                                | 'firstName'
+                                | 'lastName'
+                                | 'email'
+                                | 'alumniSinceDate'
+                              > & {
+                                sys: Pick<
+                                  Sys,
+                                  'id' | 'publishedAt' | 'firstPublishedAt'
+                                >;
+                                avatar?: Maybe<Pick<Asset, 'url'>>;
+                                teamsCollection?: Maybe<{
+                                  items: Array<
+                                    Maybe<
+                                      Pick<
+                                        TeamMembership,
+                                        'role' | 'inactiveSinceDate'
+                                      > & {
+                                        team?: Maybe<
+                                          Pick<
+                                            Teams,
+                                            'inactiveSince' | 'displayName'
+                                          > & { sys: Pick<Sys, 'id'> }
+                                        >;
+                                      }
+                                    >
+                                  >;
+                                }>;
+                              }
+                            >;
+                          }
+                        >
+                      >;
+                    }>;
+                    calendar?: Maybe<
+                      Pick<Calendars, 'color' | 'googleCalendarId' | 'name'> & {
+                        sys: Pick<Sys, 'id'>;
+                      }
+                    >;
+                  }
+                >
+              >;
+            }>;
+          }>;
+        }>
+      >;
+    }
+  >;
+};
+
 export type NewsContentFragment = Pick<
   News,
   'title' | 'shortText' | 'frequency' | 'link' | 'linkText' | 'publishDate'
@@ -6500,6 +7337,10 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'InterestGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -6567,6 +7408,12 @@ export type FetchNewsByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'InterestGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'InterestGroups' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -6657,6 +7504,12 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'InterestGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'InterestGroups' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                               sys: Pick<Sys, 'id'>;
@@ -6730,6 +7583,10 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'InterestGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -6802,6 +7659,12 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ExternalTools' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'InterestGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'InterestGroups' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
@@ -7442,6 +8305,10 @@ export type WorkingGroupsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'InterestGroupLeaders' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
+              | ({ __typename: 'InterestGroups' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -7543,6 +8410,12 @@ export type FetchWorkingGroupByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'InterestGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'InterestGroups' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -7671,6 +8544,12 @@ export type FetchWorkingGroupsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ExternalTools' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'InterestGroupLeaders' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'InterestGroups' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
@@ -8554,6 +9433,335 @@ export const ExternalAuthorsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ExternalAuthorsContentFragment, unknown>;
+export const InterestGroupsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'InterestGroupsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'InterestGroups' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'publishedVersion' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'active' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'slack' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'googleDrive' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'thumbnail' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teamsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '50' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'publishedAt' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'displayName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSince' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'expertiseAndResourceTags',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectTitle' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'leadersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'publishedAt' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'user' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'publishedAt',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'firstPublishedAt',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'alumniSinceDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamsCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '5' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'role' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'inactiveSinceDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'team' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'inactiveSince',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'displayName',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSinceDate' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'calendar' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'color' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'googleCalendarId' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<InterestGroupsContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -10872,6 +12080,338 @@ export const FetchExternalAuthorsDocument = {
 } as unknown as DocumentNode<
   FetchExternalAuthorsQuery,
   FetchExternalAuthorsQueryVariables
+>;
+export const FetchInterestGroupByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchInterestGroupById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'interestGroups' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'InterestGroupsContent' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...InterestGroupsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchInterestGroupByIdQuery,
+  FetchInterestGroupByIdQueryVariables
+>;
+export const FetchInterestGroupsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchInterestGroups' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'InterestGroupsOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'InterestGroupsFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'interestGroupsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'InterestGroupsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...InterestGroupsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchInterestGroupsQuery,
+  FetchInterestGroupsQueryVariables
+>;
+export const FetchInterestGroupsByUserIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchInterestGroupsByUserId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'interestGroupLeadersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'user' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'sys' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'id' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'linkedFrom' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'interestGroupsCollection',
+                              },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '1' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'FragmentSpread',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'InterestGroupsContent',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...InterestGroupsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchInterestGroupsByUserIdQuery,
+  FetchInterestGroupsByUserIdQueryVariables
 >;
 export const FetchNewsByIdDocument = {
   kind: 'Document',

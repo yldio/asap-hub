@@ -82,6 +82,7 @@ export const getGraphqlResponseFetchUsers = (): FetchUsersQuery =>
                 id: 'team-id-2',
                 flatData: {
                   displayName: 'Team B',
+                  inactiveSince: null,
                   proposal: [{ id: 'proposalId' }],
                 },
               },
@@ -167,7 +168,7 @@ export const getGraphQLUser = (
             id: 'team-id-0',
             flatData: {
               displayName: 'Team A',
-              inactiveSince: '',
+              inactiveSince: null,
               proposal: [{ id: 'proposalId1' }],
             },
           },
@@ -258,7 +259,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
       displayName: 'Unknown',
       id: 'team-id-1',
       role: 'Lead PI (Core Leadership)',
-      inactiveSinceDate: undefined,
+      inactiveSinceDate: '',
     },
     {
       displayName: 'Unknown',
@@ -397,6 +398,7 @@ export const fetchExpectation: ListUserResponse = {
           id: 'team-id-2',
           role: 'Project Manager',
           displayName: 'Team B',
+          teamInactiveSince: '',
           proposal: 'proposalId',
         },
       ],

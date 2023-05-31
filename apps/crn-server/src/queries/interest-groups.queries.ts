@@ -31,34 +31,13 @@ export const groupContentQueryFragment = gql`
             avatar {
               id
             }
-            biography
-            degree
             email
-            contactEmail
             firstName
-            institution
-            jobTitle
             lastModifiedDate
             lastName
-            country
-            city
-            onboarded
-            orcid
-            orcidLastModifiedDate
-            orcidLastSyncDate
-            orcidWorks {
-              doi
-              id
-              lastModifiedDate
-              publicationDate
-              title
-              type
-            }
-            questions {
-              question
-            }
-            expertiseAndResourceTags
-            expertiseAndResourceDescription
+            alumniSinceDate
+            jobTitle
+            institution
             teams {
               inactiveSinceDate
               role
@@ -66,35 +45,13 @@ export const groupContentQueryFragment = gql`
                 id
                 flatData {
                   displayName
+                  inactiveSince
                   proposal {
                     id
                   }
-                  inactiveSince
                 }
               }
             }
-            social {
-              github
-              googleScholar
-              linkedIn
-              researcherId
-              researchGate
-              twitter
-              website1
-              website2
-            }
-            role
-            responsibilities
-            researchInterests
-            reachOut
-            labs {
-              id
-              flatData {
-                name
-              }
-            }
-            alumniSinceDate
-            alumniLocation
           }
         }
       }
@@ -114,7 +71,7 @@ export const groupContentQueryFragment = gql`
   ${teamsContentQueryFragment}
 `;
 
-export const FETCH_GROUPS = gql`
+export const FETCH_INTEREST_GROUPS = gql`
   query FetchGroups($top: Int, $skip: Int, $filter: String) {
     queryGroupsContentsWithTotal(
       top: $top
@@ -131,7 +88,7 @@ export const FETCH_GROUPS = gql`
   ${groupContentQueryFragment}
 `;
 
-export const FETCH_GROUP = gql`
+export const FETCH_INTEREST_GROUP = gql`
   query FetchGroup($id: String!) {
     findGroupsContent(id: $id) {
       ...GroupsContent

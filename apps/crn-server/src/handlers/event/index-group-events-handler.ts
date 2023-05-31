@@ -26,13 +26,15 @@ import {
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { GroupPayload } from '../event-bus';
+import { InterestGroupPayload } from '../event-bus';
 
 export const indexGroupEventsHandler =
   (
     eventController: EventController,
     algoliaClient: AlgoliaSearchClient,
-  ): ((event: EventBridgeEvent<GroupEvent, GroupPayload>) => Promise<void>) =>
+  ): ((
+    event: EventBridgeEvent<GroupEvent, InterestGroupPayload>,
+  ) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 

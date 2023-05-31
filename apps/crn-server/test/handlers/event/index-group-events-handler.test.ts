@@ -1,7 +1,7 @@
 import { GroupEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import { GroupPayload } from '../../../src/handlers/event-bus';
+import { InterestGroupPayload } from '../../../src/handlers/event-bus';
 import { indexGroupEventsHandler } from '../../../src/handlers/event/index-group-events-handler';
 import { getListEventResponse } from '../../fixtures/events.fixtures';
 import { getInterestGroupEvent } from '../../fixtures/interest-groups.fixtures';
@@ -11,7 +11,10 @@ import { eventControllerMock } from '../../mocks/event-controller.mock';
 
 const mapPayload = toPayload('event');
 
-const possibleEvents: [string, EventBridgeEvent<GroupEvent, GroupPayload>][] = [
+const possibleEvents: [
+  string,
+  EventBridgeEvent<GroupEvent, InterestGroupPayload>,
+][] = [
   ['created', getInterestGroupEvent('group-id', 'GroupsCreated')],
   ['updated', getInterestGroupEvent('group-id', 'GroupsUpdated')],
   ['unpublished', getInterestGroupEvent('group-id', 'GroupsUnpublished')],

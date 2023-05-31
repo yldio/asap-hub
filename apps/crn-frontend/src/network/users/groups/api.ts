@@ -1,13 +1,20 @@
 import { ListGroupResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '@asap-hub/crn-frontend/src/config';
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  createSentryHeaders,
+  createFeatureFlagHeaders,
+} from '@asap-hub/frontend-utils';
 
 export const getUserGroups = async (
   id: string,
   authorization: string,
 ): Promise<ListGroupResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/users/${id}/groups`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

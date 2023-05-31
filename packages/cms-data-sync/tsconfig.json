@@ -11,6 +11,7 @@
     { "path": "../../packages/errors" },
     { "path": "../../packages/model" },
     { "path": "../../packages/contentful" },
-    { "path": "../../packages/squidex" }
+    { "path": "../../packages/squidex" },
+    { "path": "../../packages/server-common" }
   ]
 }

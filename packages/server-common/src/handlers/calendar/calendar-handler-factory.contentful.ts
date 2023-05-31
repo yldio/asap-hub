@@ -87,7 +87,10 @@ export const calendarCreatedContentfulHandlerFactory =
       googleApiMetadata?.resourceId
     ) {
       try {
-        await unsubscribe(googleApiMetadata.resourceId as string, calendarId);
+        await unsubscribe(
+          googleApiMetadata.resourceId as string,
+          `contentful__${calendarId}`,
+        );
 
         await calendarDataProvider.update(calendarId, {
           resourceId: null,
@@ -103,16 +106,16 @@ export const calendarCreatedContentfulHandlerFactory =
     }
 
     if (
-      googleApiMetadata?.associatedGoogleCalendarId !==
-        webhookEventGoogleCalendarId ||
       (!!webhookEventGoogleCalendarId &&
         !googleApiMetadata &&
-        webhookEventVersion === 1)
+        webhookEventVersion === 1) ||
+      googleApiMetadata?.associatedGoogleCalendarId !==
+        webhookEventGoogleCalendarId
     ) {
       try {
         const { resourceId, expiration } = await subscribe(
           webhookEventGoogleCalendarId,
-          calendarId,
+          `contentful__${calendarId}`,
         );
 
         await calendarDataProvider.update(calendarId, {

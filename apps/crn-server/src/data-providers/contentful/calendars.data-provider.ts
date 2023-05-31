@@ -124,10 +124,10 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
 
     const { resourceId, expirationDate, syncToken, ...otherFields } = update;
 
-    const calendarWithUpdatedFields = updateEntryFields(calendar, otherFields);
+    updateEntryFields(calendar, otherFields);
 
     if (resourceId || expirationDate || syncToken) {
-      calendarWithUpdatedFields.fields.googleApiMetadata = {
+      calendar.fields.googleApiMetadata = {
         'en-US': {
           ...(previousGoogleApiMetadata
             ? previousGoogleApiMetadata['en-US']
@@ -147,7 +147,7 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
       };
     }
 
-    const calendarUpdated = await calendarWithUpdatedFields.update();
+    const calendarUpdated = await calendar.update();
     await calendarUpdated.publish();
   }
 }

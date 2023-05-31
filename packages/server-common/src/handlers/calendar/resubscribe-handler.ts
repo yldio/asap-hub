@@ -6,18 +6,22 @@ import {
   UnsubscribeFromEventChanges,
 } from './subscribe-handler';
 
+const defaultGetCalendarId = (id: string): string => id;
+
 export const resubscribeCalendarsHandlerFactory =
   (
     calendarDataProvider: CalendarDataProvider | gp2.CalendarDataProvider,
     unsubscribe: UnsubscribeFromEventChanges,
     subscribe: SubscribeToEventChanges,
     logger: Logger,
+    getCalendarIdFunction?: (id: string) => string,
   ): ScheduledHandlerAsync =>
   async () => {
     const now = DateTime.local();
     const { items: calendars } = await calendarDataProvider.fetch({
       maxExpiration: now.plus({ days: 1 }).toMillis(),
     });
+    const getCalendarId = getCalendarIdFunction || defaultGetCalendarId;
 
     const calendarIds = calendars.map((calendar) => calendar.id);
     logger.info(
@@ -29,7 +33,7 @@ export const resubscribeCalendarsHandlerFactory =
       calendars.map(async (calendar) => {
         if (calendar.resourceId) {
           try {
-            await unsubscribe(calendar.resourceId, calendar.id);
+            await unsubscribe(calendar.resourceId, getCalendarId(calendar.id));
             await calendarDataProvider.update(calendar.id, {
               resourceId: null,
             });
@@ -41,7 +45,7 @@ export const resubscribeCalendarsHandlerFactory =
         try {
           const { expiration, resourceId } = await subscribe(
             calendar.googleCalendarId,
-            calendar.id,
+            getCalendarId(calendar.id),
           );
 
           await calendarDataProvider.update(calendar.id, {

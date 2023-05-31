@@ -28,6 +28,22 @@ describe('Resubscribe calendar handler', () => {
       createHandlerContext(),
     );
 
+  const getCalendarId = (id) => `cms:${id}`;
+
+  const resubscribeCalendarsHandlerWithIdFunction =
+    resubscribeCalendarsHandlerFactory(
+      calendarDataProviderMock,
+      unsubscribeMock,
+      subscribeMock,
+      logger,
+      getCalendarId,
+    );
+  const invokeHandlerWithIdFunction = () =>
+    resubscribeCalendarsHandlerWithIdFunction(
+      createEventBridgeScheduledEventMock(),
+      createHandlerContext(),
+    );
+
   const fakeNow = 1614697798681;
   const realDate = Date.now.bind(Date);
 
@@ -91,6 +107,43 @@ describe('Resubscribe calendar handler', () => {
     expect(subscribeMock).toHaveBeenCalledWith(
       calendarDataObject2.googleCalendarId,
       calendarDataObject2.id,
+    );
+  });
+
+  test('Should use `getCalendarId` function if provided when unsubscribing and subscribing', async () => {
+    const calendarDataObject1 = getCalendarDataObject();
+    const calendarDataObject2 = {
+      ...getCalendarDataObject(),
+      id: 'uuid2',
+      resourceId: 'resource-id-2',
+    };
+
+    calendarDataProviderMock.fetch.mockResolvedValueOnce({
+      items: [calendarDataObject1, calendarDataObject2],
+      total: 2,
+    });
+
+    const resourceId = 'some-resource-id';
+    const expiration = 123456;
+    subscribeMock.mockResolvedValue({ resourceId, expiration });
+
+    await invokeHandlerWithIdFunction();
+    console.log(unsubscribeMock.mock.calls);
+    expect(unsubscribeMock).toHaveBeenCalledWith(
+      calendarDataObject1.resourceId,
+      `cms:${calendarDataObject1.id}`,
+    );
+    expect(unsubscribeMock).toHaveBeenCalledWith(
+      calendarDataObject2.resourceId,
+      `cms:${calendarDataObject2.id}`,
+    );
+    expect(subscribeMock).toHaveBeenCalledWith(
+      calendarDataObject1.googleCalendarId,
+      `cms:${calendarDataObject1.id}`,
+    );
+    expect(subscribeMock).toHaveBeenCalledWith(
+      calendarDataObject2.googleCalendarId,
+      `cms:${calendarDataObject2.id}`,
     );
   });
 

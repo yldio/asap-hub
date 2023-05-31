@@ -162,7 +162,10 @@ describe('Calendar handler', () => {
 
     expect(res).toBe('OK');
     expect(unsubscribe).not.toHaveBeenCalled();
-    expect(subscribe).toHaveBeenCalledWith('calendar-1', 'calendar-1');
+    expect(subscribe).toHaveBeenCalledWith(
+      'calendar-1',
+      'contentful__calendar-1',
+    );
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
       expirationDate: expiration,
       resourceId,
@@ -214,14 +217,20 @@ describe('Calendar handler', () => {
     const res = await handler(event);
 
     expect(res).toBe('OK');
-    expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'calendar-1');
+    expect(unsubscribe).toHaveBeenCalledWith(
+      'resource-id-1',
+      'contentful__calendar-1',
+    );
     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
       1,
       'calendar-1',
       { resourceId: null },
     );
 
-    expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
+    expect(subscribe).toHaveBeenCalledWith(
+      'google-calendar-2',
+      'contentful__calendar-1',
+    );
 
     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
       2,
@@ -253,7 +262,10 @@ describe('Calendar handler', () => {
     const res = await handler(event);
 
     expect(res).toBe('OK');
-    expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'calendar-1');
+    expect(unsubscribe).toHaveBeenCalledWith(
+      'resource-id-1',
+      'contentful__calendar-1',
+    );
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
       resourceId: null,
     });
@@ -286,7 +298,10 @@ describe('Calendar handler', () => {
     expect(res).toBe('OK');
     expect(unsubscribe).not.toHaveBeenCalled();
 
-    expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
+    expect(subscribe).toHaveBeenCalledWith(
+      'google-calendar-2',
+      'contentful__calendar-1',
+    );
 
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
       resourceId,

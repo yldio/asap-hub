@@ -423,6 +423,7 @@ export const getInterestGroupPayload = (
 ): GroupPayload => ({
   type,
   timestamp: '2020-12-11T15:06:26Z',
+  resourceId: id,
   payload: {
     $type: 'EnrichedContentEvent',
     type: 'Updated',

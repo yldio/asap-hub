@@ -701,7 +701,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexGroupEvents: {
+    indexGroupEventsSquidex: {
       handler: './src/handlers/event/index-group-events-handler.handler',
       events: [
         {
@@ -723,6 +723,31 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    indexGroupEventsContentful: {
+      handler: './src/handlers/event/index-group-events-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'InterestGroupsPublished',
+                'InterestGroupsUpdated',
+                'InterestGroupsUnpublished',
+                'InterestGroupsDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
     indexLabUsers: {

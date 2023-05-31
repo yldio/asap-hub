@@ -74,14 +74,7 @@ export const getSquidexGraphqlOutput = (): NonNullable<
     authors: getSquidexOutputGraphqlResponseAuthors(),
     type: OutputsDataTypeEnum.Research,
     subtype: OutputsDataSubtypeEnum.Published,
-    workingGroups: [
-      {
-        id: '24',
-        flatData: {
-          title: 'A Working Group',
-        },
-      },
-    ],
+    workingGroups: [],
     projects: [
       {
         id: '42',
@@ -98,7 +91,7 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   created: '2020-09-23T16:34:26.842Z',
   documentType: 'Article',
   type: 'Research',
-  addedDate: '2021-05-21T13:18:31Z',
+  addedDate: '2021-05-21T13:18:31.000Z',
   title: 'Test Proposal 1234',
   link: 'http://a.link',
   authors: [
@@ -119,16 +112,12 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
       onboarded: true,
     },
   ],
-  publishDate: '2021-05-21T13:18:31Z',
+  publishDate: '2021-05-21T13:18:31.000Z',
   lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
   subtype: 'Published',
   projects: {
     id: '42',
     title: 'A Project',
-  },
-  workingGroups: {
-    id: '24',
-    title: 'A Working Group',
   },
 });
 
@@ -207,7 +196,7 @@ export const getRestOutputCreateData = (): gp2Squidex.InputOutput['data'] => ({
   documentType: { iv: 'Article' },
   link: { iv: 'http://a.link' },
   title: { iv: 'Test Proposal 1234' },
-  addedDate: { iv: '2021-05-21T13:18:31Z' },
+  addedDate: { iv: '2021-05-21T13:18:31.000Z' },
   subtype: {
     iv: 'Published',
   },
@@ -231,43 +220,48 @@ export const getContentfulGraphqlOutput = (
   props = {},
 ): NonNullable<NonNullable<gp2Contentful.FetchOutputByIdQuery['outputs']>> => ({
   sys: {
-    id: '79O26WlFXtkcue3wrg0gfY',
-    firstPublishedAt: '2023-05-30T11:07:50.172Z',
+    id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+    firstPublishedAt: '2020-09-23T16:34:26.842Z',
     publishedAt: '2023-05-30T11:07:50.172Z',
     publishedVersion: 12,
   },
-  title: 'test output title',
+  title: 'Test Proposal 1234',
   documentType: 'Article',
   type: 'Research',
   subtype: 'Published',
-  link: null,
-  addedDate: '2023-05-30T00:00:00.000+01:00',
-  publishDate: '2023-05-29T00:00:00.000+01:00',
-  lastUpdatedPartial: null,
+  link: 'http://a.link',
+  addedDate: '2021-05-21T13:18:31.000Z',
+  publishDate: '2021-05-21T13:18:31.000Z',
+  lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
   relatedEntity: {
-    __typename: 'WorkingGroups',
+    __typename: 'Projects',
     sys: {
-      id: '3h2tGZSNr4fX7UHDapR9ln',
+      id: '42',
     },
-    title: 'test (1)',
+    title: 'A Project',
   },
   authorsCollection: {
     total: 2,
     items: [
       {
-        __typename: 'ExternalUsers',
+        __typename: 'Users',
         sys: {
-          id: '3vjPnaODMSdK5KBffQ7YcW',
+          id: 'user-id-1',
         },
-        name: 'external 1',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        email: 'tony.stark@email.com',
+        avatar: null,
+        onboarded: true,
       },
       {
         __typename: 'Users',
         sys: {
-          id: '4qCkXfDfoyhsFcDMxQa5nd',
+          id: 'user-id-2',
         },
-        firstName: 'Jhonny',
-        lastName: 'Moreira',
+        firstName: 'Peter',
+        lastName: 'Parker',
+        email: 'peter.parker@email.com',
         avatar: null,
         onboarded: true,
       },

@@ -6413,7 +6413,7 @@ export type OutputsContentDataFragment = Pick<
               })
           | ({ __typename: 'Users' } & Pick<
               Users,
-              'firstName' | 'lastName' | 'onboarded'
+              'firstName' | 'lastName' | 'email' | 'onboarded'
             > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
         >
       >;
@@ -6460,7 +6460,7 @@ export type FetchOutputByIdQuery = {
                 > & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & Pick<
                   Users,
-                  'firstName' | 'lastName' | 'onboarded'
+                  'firstName' | 'lastName' | 'email' | 'onboarded'
                 > & {
                     sys: Pick<Sys, 'id'>;
                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -6522,7 +6522,7 @@ export type FetchOutputsQuery = {
                       > & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Users' } & Pick<
                         Users,
-                        'firstName' | 'lastName' | 'onboarded'
+                        'firstName' | 'lastName' | 'email' | 'onboarded'
                       > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -9147,6 +9147,10 @@ export const OutputsContentDataFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
                             },
                             {
                               kind: 'Field',

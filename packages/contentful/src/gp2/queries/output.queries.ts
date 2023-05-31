@@ -43,6 +43,7 @@ export const outputsContentQueryFragment = gql`
           }
           firstName
           lastName
+          email
           avatar {
             url
           }

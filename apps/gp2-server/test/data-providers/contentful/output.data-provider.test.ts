@@ -8,7 +8,6 @@ import {
 import { GenericError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { SquidexGraphqlError } from '@asap-hub/squidex';
-import nock from 'nock';
 import {
   OutputContentfulDataProvider,
   OutputItem,
@@ -613,14 +612,6 @@ describe('Outputs data provider', () => {
   });
 
   describe('Create and update', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
     describe('Create', () => {
       test('Should send the correct requests to Squidex and return its ID', async () => {
         const outputRequest = getOutputCreateDataObject();

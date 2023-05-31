@@ -347,9 +347,7 @@ describe('Outputs data provider', () => {
 
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.lastUpdatedPartial).toEqual(
-          squidexGraphqlResponse.findOutputsContent!.lastModified,
-        );
+        expect(result!.lastUpdatedPartial).toEqual('2021-05-14T14:48:46.000Z');
       });
 
       test('Should default to created-date if the last-updated-partial and last-modified are not present', async () => {

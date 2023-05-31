@@ -166,7 +166,10 @@ const getRelatedEntity = (related: OutputItem['relatedEntity']) => {
   }
   return {
     ...empty,
-    [related.__typename]: { id: related.sys.id, title: related.title },
+    [related.__typename.toLowerCase()]: {
+      id: related.sys.id,
+      title: related.title,
+    },
   };
 };
 
@@ -193,6 +196,8 @@ const getAuthors = (
               firstName: author.firstName || '',
               lastName: author.lastName || '',
               displayName: `${author.firstName} ${author.lastName}`,
+              email: author.email || '',
+              onboarded: author.onboarded || true,
               avatarUrl: author.avatar?.url ?? undefined,
             },
           ];

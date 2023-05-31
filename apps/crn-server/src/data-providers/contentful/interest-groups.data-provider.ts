@@ -67,7 +67,7 @@ export class InterestGroupContentfulDataProvider
     userId: string,
     options: FetchGroupOptions,
   ): Promise<ListGroupDataObject> {
-    const { take = 10, skip = 0 } = options;
+    const { take = 20, skip = 0 } = options;
     const { interestGroupLeadersCollection } =
       await this.contentfulClient.request<
         FetchInterestGroupsByUserIdQuery,

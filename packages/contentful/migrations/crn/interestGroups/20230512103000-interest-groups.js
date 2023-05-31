@@ -238,6 +238,13 @@ module.exports.up = function (migration) {
     showLinkEntityAction: false,
     showCreateEntityAction: true,
   });
+
+  interestGroups.changeFieldControl(
+    'description',
+    'builtin',
+    'multipleLine',
+    {},
+  );
 };
 
 module.exports.down = (migration) => {

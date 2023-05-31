@@ -410,7 +410,7 @@ describe('Calendars data provider', () => {
   });
 
   describe('Update method', () => {
-    test('Should update the calendar', async () => {
+    test('Should update the calendar - without new google api metadata - without previous google api metadata', async () => {
       const calendarId = 'calendar-id-1';
 
       const calendarMock = getEntry({});

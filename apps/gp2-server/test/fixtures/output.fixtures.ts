@@ -1,3 +1,4 @@
+import type { gp2 as gp2Contentful } from '@asap-hub/contentful';
 import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
 import { gp2 as gp2Squidex } from '@asap-hub/squidex';
 import {
@@ -225,3 +226,59 @@ export const getRestOutputUpdateData = (): gp2Squidex.InputOutput['data'] => {
   const { createdBy: _, ...outputData } = getRestOutputCreateData();
   return outputData;
 };
+
+export const getContentfulGraphqlOutput = (
+  props = {},
+): NonNullable<NonNullable<gp2Contentful.FetchOutputByIdQuery['outputs']>> => ({
+  sys: {
+    id: '79O26WlFXtkcue3wrg0gfY',
+    firstPublishedAt: '2023-05-30T11:07:50.172Z',
+    publishedAt: '2023-05-30T11:07:50.172Z',
+    publishedVersion: 12,
+  },
+  title: 'test output title',
+  documentType: 'Article',
+  type: 'Research',
+  subtype: 'Published',
+  link: null,
+  addedDate: '2023-05-30T00:00:00.000+01:00',
+  publishDate: '2023-05-29T00:00:00.000+01:00',
+  lastUpdatedPartial: null,
+  relatedEntity: {
+    __typename: 'WorkingGroups',
+    sys: {
+      id: '3h2tGZSNr4fX7UHDapR9ln',
+    },
+    title: 'test (1)',
+  },
+  authorsCollection: {
+    total: 2,
+    items: [
+      {
+        __typename: 'ExternalUsers',
+        sys: {
+          id: '3vjPnaODMSdK5KBffQ7YcW',
+        },
+        name: 'external 1',
+      },
+      {
+        __typename: 'Users',
+        sys: {
+          id: '4qCkXfDfoyhsFcDMxQa5nd',
+        },
+        firstName: 'Jhonny',
+        lastName: 'Moreira',
+        avatar: null,
+        onboarded: true,
+      },
+    ],
+  },
+});
+
+export const getContentfulOutputsGraphqlResponse =
+  (): gp2Contentful.FetchOutputsQuery => ({
+    outputsCollection: {
+      total: 1,
+      items: [getContentfulGraphqlOutput()],
+    },
+  });

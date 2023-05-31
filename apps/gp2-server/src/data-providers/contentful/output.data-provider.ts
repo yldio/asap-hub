@@ -15,7 +15,7 @@ export type OutputItem = NonNullable<
   >['items'][number]
 >;
 
-export class OutputSquidexDataProvider implements OutputDataProvider {
+export class OutputContentfulDataProvider implements OutputDataProvider {
   constructor(
     private graphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,

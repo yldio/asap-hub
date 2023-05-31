@@ -16,7 +16,6 @@ import { getCalendarDataProvider } from '../../dependencies/calendar.dependency'
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
-
 const getJWTCredentials = getJWTCredentialsFactory({
   googleApiCredentialsSecretId,
   region,

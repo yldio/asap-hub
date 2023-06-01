@@ -5,34 +5,16 @@ import {
   subscribeToEventChangesFactory,
   unsubscribeFromEventChangesFactory,
 } from '@asap-hub/server-common';
-import { RestCalendar, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import {
-  appName,
   asapApiUrl,
-  baseUrl,
   googleApiCredentialsSecretId,
   googleApiToken,
   googleApiUrl,
   region,
 } from '../../config';
-import { CalendarSquidexDataProvider } from '../../data-providers/calendar.data-provider';
-import { getAuthToken } from '../../utils/auth';
+import { getCalendarDataProvider } from '../../dependencies/calendar.dependency';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const calendarRestClient = new SquidexRest<RestCalendar>(
-  getAuthToken,
-  'calendars',
-  { appName, baseUrl },
-);
-const calendarDataProvider = new CalendarSquidexDataProvider(
-  calendarRestClient,
-  squidexGraphqlClient,
-);
 
 const getJWTCredentials = getJWTCredentialsFactory({
   googleApiCredentialsSecretId,
@@ -40,7 +22,7 @@ const getJWTCredentials = getJWTCredentialsFactory({
 });
 export const handler = sentryWrapper(
   resubscribeCalendarsHandlerFactory(
-    calendarDataProvider,
+    getCalendarDataProvider(),
     unsubscribeFromEventChangesFactory(getJWTCredentials, logger, {
       googleApiUrl,
     }),

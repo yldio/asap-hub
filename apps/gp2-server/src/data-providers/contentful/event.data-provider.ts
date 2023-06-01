@@ -7,6 +7,7 @@ import {
   pollContentfulGql,
   RichTextFromQuery,
   gp2,
+  createLink,
 } from '@asap-hub/contentful';
 import { EventStatus, gp2 as gp2Model, isEventStatus } from '@asap-hub/model';
 import { DateTime } from 'luxon';
@@ -15,9 +16,9 @@ import {
   getContentfulEventMaterial,
   MeetingMaterial,
   parseContentfulGraphqlCalendarPartialToDataObject,
-  parseContentfulWorkingGroupProject,
 } from '../../entities';
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendar.controller';
+import { parseContentfulWorkingGroupsProjects } from './utils';
 
 export type EventItem = NonNullable<
   NonNullable<gp2.FetchEventsQuery['eventsCollection']>['items'][number]
@@ -183,10 +184,18 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
 
   async create(create: gp2Model.EventCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
+
+    const { calendar, ...otherCreateFields } = create;
     const newEntry = await environment.createEntry('events', {
-      fields: addLocaleToFields(create),
+      fields: {
+        ...addLocaleToFields(otherCreateFields),
+        calendar: {
+          'en-US': createLink(calendar),
+        },
+      },
     });
 
+    await newEntry.publish();
     return newEntry.sys.id;
   }
 
@@ -196,7 +205,14 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
   ): Promise<void> {
     const environment = await this.getRestClient();
     const event = await environment.getEntry(id);
-    const result = await patchAndPublish(event, update);
+    const { calendar, ...otherUpdateFields } = update;
+
+    const updateWithCalendarLink = {
+      ...(calendar ? { calendar: createLink(calendar) } : {}),
+      ...otherUpdateFields,
+    };
+
+    const result = await patchAndPublish(event, updateWithCalendarLink);
 
     const fetchEventById = () => this.fetchEventById(id);
 
@@ -207,11 +223,6 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
     );
   }
 }
-
-export const eventUnreadyResponse = {
-  project: {} as gp2Model.ProjectResponse,
-  workingGroup: {} as gp2Model.WorkingGroupResponse,
-};
 
 type SpeakerItem = NonNullable<
   NonNullable<EventItem['speakersCollection']>['items'][number]
@@ -288,7 +299,7 @@ export const parseGraphQLEvent = (
 
   const calendar = parseCalendarDataObjectToResponse({
     ...parseContentfulGraphqlCalendarPartialToDataObject(item.calendar),
-    ...parseContentfulWorkingGroupProject(item.calendar),
+    ...parseContentfulWorkingGroupsProjects(item.calendar),
   });
 
   const startDate = DateTime.fromISO(item.startDate);
@@ -361,7 +372,8 @@ export const parseGraphQLEvent = (
     tags: (tags as string[] | undefined | null) ?? [],
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
-    ...eventUnreadyResponse,
+    workingGroup: calendar.workingGroups?.[0],
+    project: calendar.projects?.[0],
   };
 };
 

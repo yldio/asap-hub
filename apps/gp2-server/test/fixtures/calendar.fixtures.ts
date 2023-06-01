@@ -9,6 +9,12 @@ import {
 import { getGraphQLProject } from './project.fixtures';
 import { getGraphQLWorkingGroup } from './working-group.fixtures';
 
+export const getContentfulGraphql = () => ({
+  Calendars: () => getContentfulGraphqlCalendar(),
+  ProjectsCollection: () => getContentfulProjectsCollection(),
+  WorkingGroupsCollection: () => getContentfulWorkingGroupsCollection(),
+});
+
 export const getContentfulGraphqlCalendar = (): NonNullable<
   NonNullable<
     gp2Contentful.FetchCalendarsQuery['calendarsCollection']
@@ -20,7 +26,42 @@ export const getContentfulGraphqlCalendar = (): NonNullable<
     publishedAt: '2021-05-14T14:48:46Z',
     publishedVersion: 42,
   },
-  ...squidexGraphqlCalendarsFlatData(),
+  googleCalendarId: '3@group.calendar.google.com',
+  color: '#2952A3',
+  name: 'Tech 4a - iPSCs - 3D & Co-cultures',
+  googleApiMetadata: {
+    resourceId: 'resource-id',
+    syncToken: 'sync-token',
+    expirationDate: 1617196357000,
+  },
+  linkedFrom: {
+    projectsCollection: {
+      items: getContentfulProjectsCollection().items,
+    },
+    workingGroupsCollection: {
+      items: getContentfulWorkingGroupsCollection().items,
+    },
+  },
+});
+
+export const getContentfulProjectsCollection = () => ({
+  total: 1,
+  items: [
+    {
+      sys: { id: '7' },
+      title: 'a project title',
+    },
+  ],
+});
+
+export const getContentfulWorkingGroupsCollection = () => ({
+  total: 1,
+  items: [
+    {
+      sys: { id: '11' },
+      title: 'a working group title',
+    },
+  ],
 });
 
 export const getContentfulCalendarsGraphqlResponse =

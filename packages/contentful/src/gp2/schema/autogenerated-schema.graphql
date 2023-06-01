@@ -126,12 +126,10 @@ enum AssetOrder {
 type Calendars implements Entry {
   color(locale: String): String
   contentfulMetadata: ContentfulMetadata!
-  expirationDate(locale: String): Float
+  googleApiMetadata(locale: String): JSON
   googleCalendarId(locale: String): String
   linkedFrom(allowedLocales: [String]): CalendarsLinkingCollections
   name(locale: String): String
-  resourceId(locale: String): String
-  syncToken(locale: String): String
   sys: Sys!
 }
 
@@ -153,15 +151,7 @@ input CalendarsFilter {
   color_not_contains: String
   color_not_in: [String]
   contentfulMetadata: ContentfulMetadataFilter
-  expirationDate: Float
-  expirationDate_exists: Boolean
-  expirationDate_gt: Float
-  expirationDate_gte: Float
-  expirationDate_in: [Float]
-  expirationDate_lt: Float
-  expirationDate_lte: Float
-  expirationDate_not: Float
-  expirationDate_not_in: [Float]
+  googleApiMetadata_exists: Boolean
   googleCalendarId: String
   googleCalendarId_contains: String
   googleCalendarId_exists: Boolean
@@ -176,20 +166,6 @@ input CalendarsFilter {
   name_not: String
   name_not_contains: String
   name_not_in: [String]
-  resourceId: String
-  resourceId_contains: String
-  resourceId_exists: Boolean
-  resourceId_in: [String]
-  resourceId_not: String
-  resourceId_not_contains: String
-  resourceId_not_in: [String]
-  syncToken: String
-  syncToken_contains: String
-  syncToken_exists: Boolean
-  syncToken_in: [String]
-  syncToken_not: String
-  syncToken_not_contains: String
-  syncToken_not_in: [String]
   sys: SysFilter
 }
 
@@ -203,16 +179,10 @@ type CalendarsLinkingCollections {
 enum CalendarsOrder {
   color_ASC
   color_DESC
-  expirationDate_ASC
-  expirationDate_DESC
   googleCalendarId_ASC
   googleCalendarId_DESC
   name_ASC
   name_DESC
-  resourceId_ASC
-  resourceId_DESC
-  syncToken_ASC
-  syncToken_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2663,15 +2633,7 @@ input cfCalendarsNestedFilter {
   color_not_contains: String
   color_not_in: [String]
   contentfulMetadata: ContentfulMetadataFilter
-  expirationDate: Float
-  expirationDate_exists: Boolean
-  expirationDate_gt: Float
-  expirationDate_gte: Float
-  expirationDate_in: [Float]
-  expirationDate_lt: Float
-  expirationDate_lte: Float
-  expirationDate_not: Float
-  expirationDate_not_in: [Float]
+  googleApiMetadata_exists: Boolean
   googleCalendarId: String
   googleCalendarId_contains: String
   googleCalendarId_exists: Boolean
@@ -2686,20 +2648,6 @@ input cfCalendarsNestedFilter {
   name_not: String
   name_not_contains: String
   name_not_in: [String]
-  resourceId: String
-  resourceId_contains: String
-  resourceId_exists: Boolean
-  resourceId_in: [String]
-  resourceId_not: String
-  resourceId_not_contains: String
-  resourceId_not_in: [String]
-  syncToken: String
-  syncToken_contains: String
-  syncToken_exists: Boolean
-  syncToken_in: [String]
-  syncToken_not: String
-  syncToken_not_contains: String
-  syncToken_not_in: [String]
   sys: SysFilter
 }
 

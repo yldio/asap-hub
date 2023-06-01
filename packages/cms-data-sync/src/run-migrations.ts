@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createClient } from 'contentful-management';
+import { createClient, WebHooks } from 'contentful-management';
 import { migrateEvents } from './events/events.data-migration';
 import { migrateExternalAuthors } from './external-authors/external-authors.data-migration';
 import { migrateTeams } from './teams/teams.data-migration';
@@ -7,6 +7,7 @@ import { migrateCalendars } from './calendars/calendars.data-migration';
 import { migrateLabs } from './labs/labs.data-migration';
 import { migrateUsers } from './users/users.data-migration';
 import { logger } from './utils';
+import { contentfulRateLimiter } from './contentful-rate-limiter';
 
 export const runMigrations = async () => {
   const {
@@ -21,17 +22,26 @@ export const runMigrations = async () => {
 
   const contentfulSpace = await contentfulClient.getSpace(CONTENTFUL_SPACE_ID!);
 
-  let webhook;
-  let disabledWebhook;
+  const disabledWebhooks: WebHooks[] = [];
   try {
-    webhook = await contentfulSpace.getWebhook(
-      `${CONTENTFUL_ENV_ID!.toLowerCase()}-webhook`,
+    await contentfulRateLimiter.removeTokens(1);
+    const webhooks = await contentfulSpace.getWebhooks();
+    const currentEnvironmentWebhooks = webhooks.items.filter((webhook) =>
+      webhook.filters?.some(
+        (filter) =>
+          'equals' in filter &&
+          filter.equals[0].doc === 'sys.environment.sys.id' &&
+          filter.equals[1] === CONTENTFUL_ENV_ID,
+      ),
     );
 
-    webhook.active = false;
-    disabledWebhook = await webhook.update();
-
-    logger('Webhook deactivated');
+    for (const webhook of currentEnvironmentWebhooks) {
+      webhook.active = false;
+      await contentfulRateLimiter.removeTokens(1);
+      await webhook.update();
+      disabledWebhooks.push(webhook);
+    }
+    logger('Webhooks deactivated');
   } catch (error) {
     if (error instanceof Error) {
       const errorParsed = JSON.parse(error?.message);
@@ -50,7 +60,6 @@ export const runMigrations = async () => {
     await migrateCalendars();
     await migrateLabs();
     await migrateUsers();
-
     // The events migration needs to be done after
     // migrating teams, users, external authors
     // and calendars
@@ -59,10 +68,17 @@ export const runMigrations = async () => {
     error = err;
     logger('Error migrating data', 'ERROR');
   } finally {
-    if (disabledWebhook) {
-      disabledWebhook.active = true;
-      await disabledWebhook.update();
-      logger('Webhook activated');
+    if (disabledWebhooks.length > 0) {
+      for (const disabledWebhook of disabledWebhooks) {
+        disabledWebhook.active = true;
+        try {
+          await contentfulRateLimiter.removeTokens(1);
+          await disabledWebhook.update();
+        } catch (err) {
+          logger(`Error reactivating webhook ${disabledWebhook.name}`, 'ERROR');
+        }
+      }
+      logger('Webhooks activated');
     }
 
     if (error) {

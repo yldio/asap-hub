@@ -1,5 +1,10 @@
 import * as contentfulManagement from 'contentful-management';
-import { Space, WebHooks } from 'contentful-management';
+import {
+  Collection,
+  Space,
+  WebhookProps,
+  WebHooks,
+} from 'contentful-management';
 import { runMigrations } from '../src/run-migrations';
 import { BLUE_COLOR, RED_COLOR } from '../src/utils';
 
@@ -94,7 +99,7 @@ Object.defineProperty(webhookMock, 'active', {
 webhookMock.update.mockResolvedValue(webhookMock);
 
 const spaceMock = {
-  getWebhook: jest.fn().mockResolvedValue(webhookMock),
+  getWebhooks: jest.fn(),
 } as any as jest.Mocked<Space>;
 
 const getSpaceFn = jest.fn().mockResolvedValue(spaceMock);
@@ -104,10 +109,11 @@ mockContentfulManagement.createClient.mockReturnValue({
 
 describe('Migrations', () => {
   const consoleLogRef = console.log;
+  const currentEnvName = 'crn-env-id';
 
   beforeEach(() => {
     console.log = jest.fn();
-    process.env.CONTENTFUL_ENV_ID = 'crn-env-id';
+    process.env.CONTENTFUL_ENV_ID = currentEnvName;
     process.env.VERBOSE_DATA_SYNC = 'true';
     jest.clearAllMocks();
   });
@@ -117,16 +123,37 @@ describe('Migrations', () => {
   });
 
   it('deactivates webhook and activates it again after running the migrations', async () => {
+    const mockedTestEnvSetter = jest.fn();
+    const testEnvWebhook = {
+      update: jest.fn(),
+      active: true,
+      filters: [
+        {
+          equals: [
+            {
+              doc: 'sys.environment.sys.id',
+            },
+            currentEnvName,
+          ],
+        },
+      ],
+    };
+    Object.defineProperty(testEnvWebhook, 'active', {
+      set: mockedTestEnvSetter,
+    });
+    const webhooks = [testEnvWebhook];
+    spaceMock.getWebhooks.mockResolvedValue({
+      items: webhooks,
+    } as unknown as Collection<WebHooks, WebhookProps>);
+
     await runMigrations();
 
-    expect(spaceMock.getWebhook).toHaveBeenCalledWith('crn-env-id-webhook');
-    expect(webhookMock.update).toHaveBeenCalled();
+    expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(1, false);
     expect(console.log).toHaveBeenNthCalledWith(
       1,
       BLUE_COLOR,
-      '[DEBUG] Webhook deactivated',
+      '[DEBUG] Webhooks deactivated',
     );
-    expect(mockedSetter).toHaveBeenNthCalledWith(1, false);
 
     expect(migrateTeams).toHaveBeenCalled();
     expect(migrateExternalAuthors).toHaveBeenCalled();
@@ -137,56 +164,184 @@ describe('Migrations', () => {
     expect(console.log).toHaveBeenNthCalledWith(
       2,
       BLUE_COLOR,
-      '[DEBUG] Webhook activated',
+      '[DEBUG] Webhooks activated',
     );
-    expect(mockedSetter).toHaveBeenNthCalledWith(2, true);
+    expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
+    expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
+  });
+
+  it('deactivates only the webhooks associated with the current environment', async () => {
+    const mockedTestEnvSetter = jest.fn();
+    const testEnvWebhook = {
+      update: jest.fn(),
+      active: true,
+      filters: [
+        {
+          equals: [
+            {
+              doc: 'sys.environment.sys.id',
+            },
+            currentEnvName,
+          ],
+        },
+      ],
+    };
+    Object.defineProperty(testEnvWebhook, 'active', {
+      set: mockedTestEnvSetter,
+    });
+    const devEnvWebhook = {
+      update: jest.fn(),
+      active: true,
+      filters: [
+        {
+          equals: [
+            {
+              doc: 'sys.environment.sys.id',
+            },
+            'Development',
+          ],
+        },
+      ],
+    };
+    const webhooks = [testEnvWebhook, devEnvWebhook];
+    spaceMock.getWebhooks.mockResolvedValue({
+      items: webhooks,
+    } as unknown as Collection<WebHooks, WebhookProps>);
+
+    await runMigrations();
+
+    expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(1, false);
+
+    expect(migrateTeams).toHaveBeenCalled();
+    expect(migrateExternalAuthors).toHaveBeenCalled();
+    expect(migrateCalendars).toHaveBeenCalled();
+    expect(migrateLabs).toHaveBeenCalled();
+    expect(migrateUsers).toHaveBeenCalled();
+
+    expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
+    expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
+    expect(devEnvWebhook.update).not.toHaveBeenCalled();
+  });
+
+  it('deactivates all webhooks even if one of them fails to update', async () => {
+    const mockedTestEnvSetter = jest.fn();
+    const testEnvWebhook = {
+      name: 'some-test-webhook',
+      update: jest.fn(),
+      active: true,
+      filters: [
+        {
+          equals: [
+            {
+              doc: 'sys.environment.sys.id',
+            },
+            currentEnvName,
+          ],
+        },
+      ],
+    };
+    Object.defineProperty(testEnvWebhook, 'active', {
+      set: mockedTestEnvSetter,
+    });
+    const mockedTestEnvSetter2 = jest.fn();
+    const testEnvWebhook2 = {
+      name: 'other-test-webhook',
+      update: jest.fn(),
+      active: true,
+      filters: [
+        {
+          equals: [
+            {
+              doc: 'sys.environment.sys.id',
+            },
+            currentEnvName,
+          ],
+        },
+      ],
+    };
+    testEnvWebhook.update.mockResolvedValueOnce(undefined);
+    // throw on the second update call when trying to activate the webhook
+    testEnvWebhook.update.mockRejectedValueOnce(new Error());
+
+    Object.defineProperty(testEnvWebhook2, 'active', {
+      set: mockedTestEnvSetter2,
+    });
+    const webhooks = [testEnvWebhook, testEnvWebhook2];
+    spaceMock.getWebhooks.mockResolvedValue({
+      items: webhooks,
+    } as unknown as Collection<WebHooks, WebhookProps>);
+
+    await runMigrations();
+
+    expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(1, false);
+    expect(mockedTestEnvSetter2).toHaveBeenNthCalledWith(1, false);
+
+    expect(migrateTeams).toHaveBeenCalled();
+    expect(migrateExternalAuthors).toHaveBeenCalled();
+    expect(migrateCalendars).toHaveBeenCalled();
+    expect(migrateLabs).toHaveBeenCalled();
+    expect(migrateUsers).toHaveBeenCalled();
+
+    expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
+    expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
+    expect(testEnvWebhook2.update).toHaveBeenCalledTimes(2);
+    expect(console.log).toHaveBeenNthCalledWith(
+      2,
+      RED_COLOR,
+      '[ERROR] Error reactivating webhook some-test-webhook',
+    );
   });
 
   it('activates webhook back even if some migration failed', async () => {
-    mockMigrateExternalAuthors.mockRejectedValueOnce(new Error('ops'));
+    const mockedTestEnvSetter = jest.fn();
+    const testEnvWebhook = {
+      update: jest.fn(),
+      active: true,
+      filters: [
+        {
+          equals: [
+            {
+              doc: 'sys.environment.sys.id',
+            },
+            currentEnvName,
+          ],
+        },
+      ],
+    };
+    Object.defineProperty(testEnvWebhook, 'active', {
+      set: mockedTestEnvSetter,
+    });
+    const webhooks = [testEnvWebhook];
+    spaceMock.getWebhooks.mockResolvedValue({
+      items: webhooks,
+    } as unknown as Collection<WebHooks, WebhookProps>);
 
-    await expect(runMigrations()).rejects.toThrowError('ops');
+    mockMigrateExternalAuthors.mockRejectedValueOnce(new Error('whoops'));
 
-    expect(spaceMock.getWebhook).toHaveBeenCalledWith('crn-env-id-webhook');
-    expect(webhookMock.update).toHaveBeenCalled();
+    await expect(runMigrations()).rejects.toThrowError('whoops');
+
+    expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(1, false);
     expect(console.log).toHaveBeenNthCalledWith(
       1,
       BLUE_COLOR,
-      '[DEBUG] Webhook deactivated',
+      '[DEBUG] Webhooks deactivated',
     );
-    expect(mockedSetter).toHaveBeenNthCalledWith(1, false);
-
     expect(console.log).toHaveBeenNthCalledWith(
       2,
       RED_COLOR,
       '[ERROR] Error migrating data',
     );
-
+    expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
     expect(console.log).toHaveBeenNthCalledWith(
       3,
       BLUE_COLOR,
-      '[DEBUG] Webhook activated',
+      '[DEBUG] Webhooks activated',
     );
-    expect(mockedSetter).toHaveBeenNthCalledWith(2, true);
-  });
-
-  it('continues if webhook does not exist', async () => {
-    spaceMock.getWebhook.mockRejectedValue(
-      new Error(JSON.stringify({ status: 404 })),
-    );
-
-    await runMigrations();
-
-    expect(webhookMock.update).not.toHaveBeenCalled();
-    expect(migrateTeams).toHaveBeenCalled();
-    expect(migrateExternalAuthors).toHaveBeenCalled();
-    expect(migrateCalendars).toHaveBeenCalled();
-    expect(migrateLabs).toHaveBeenCalled();
-    expect(migrateUsers).toHaveBeenCalled();
+    expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
   });
 
   it('rejects if disabling webhook fails with any other error', async () => {
-    spaceMock.getWebhook.mockRejectedValue(
+    spaceMock.getWebhooks.mockRejectedValue(
       new Error(JSON.stringify({ status: 500 })),
     );
 
@@ -200,7 +355,7 @@ describe('Migrations', () => {
   });
 
   it('rejects if disabling webhook fails with a non-Error', async () => {
-    spaceMock.getWebhook.mockRejectedValue('not an Error');
+    spaceMock.getWebhooks.mockRejectedValue('not an Error');
 
     expect(async () => runMigrations()).rejects.toThrow();
 

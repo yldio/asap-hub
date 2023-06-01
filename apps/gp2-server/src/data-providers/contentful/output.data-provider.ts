@@ -38,47 +38,66 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     take = 8,
     skip = 0,
     search,
+    filter,
     includeDrafts,
   }: gp2Model.FetchOutputOptions) {
-    const searchFilter = search ? getSearchFilter(search) : {};
+    if (filter?.workingGroups) {
+      const { workingGroups } = await this.graphQLClient.request<
+        gp2Contentful.FetchOutputsByWorkingGroupIdQuery,
+        gp2Contentful.FetchOutputsByWorkingGroupIdQueryVariables
+      >(gp2Contentful.FETCH_OUTPUTS_BY_WORKING_GROUP_ID, {
+        limit: take,
+        skip,
+        id: filter.workingGroups,
+      });
+
+      const outputsCollection = workingGroups?.linkedFrom?.outputsCollection;
+
+      return parseOutputsCollection(outputsCollection);
+    }
+    if (filter?.projects) {
+      const { projects } = await this.graphQLClient.request<
+        gp2Contentful.FetchOutputsByProjectIdQuery,
+        gp2Contentful.FetchOutputsByProjectIdQueryVariables
+      >(gp2Contentful.FETCH_OUTPUTS_BY_PROJECT_ID, {
+        limit: take,
+        skip,
+        id: filter.projects,
+      });
+
+      const outputsCollection = projects?.linkedFrom?.outputsCollection;
+
+      return parseOutputsCollection(outputsCollection);
+    }
+    if (filter?.authors) {
+      const { users } = await this.graphQLClient.request<
+        gp2Contentful.FetchOutputsByUserIdQuery,
+        gp2Contentful.FetchOutputsByUserIdQueryVariables
+      >(gp2Contentful.FETCH_OUTPUTS_BY_USER_ID, {
+        limit: take,
+        skip,
+        id: filter.authors,
+      });
+
+      const outputsCollection = users?.linkedFrom?.outputsCollection;
+
+      return parseOutputsCollection(outputsCollection);
+    }
+    const searchWhere = search ? getSearchWhere(search) : [];
+    const filterWhere = filter ? getFilterWhere(filter) : [];
+    const where = [...searchWhere, ...filterWhere];
     const { outputsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchOutputsQuery,
       gp2Contentful.FetchOutputsQueryVariables
     >(gp2Contentful.FETCH_OUTPUTS, {
       limit: take,
       skip,
-      where: { ...searchFilter },
+      where: where.length ? { AND: where } : {},
       preview: includeDrafts === true,
+      order: [gp2Contentful.OutputsOrder.PublishDateDesc],
     });
 
-    if (!outputsCollection) {
-      logger.warn('Outputs returned null');
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    const { total, items: outputs } = outputsCollection;
-
-    if (outputs === null) {
-      logger.warn('outputs items returned null');
-      return {
-        total: 0,
-        items: [],
-      };
-    }
-
-    return {
-      total,
-      items: outputs.reduce((list: gp2Model.OutputDataObject[], item) => {
-        if (!item) {
-          return list;
-        }
-
-        return [...list, parseContentfulGraphQLOutput(item)];
-      }, []),
-    };
+    return parseOutputsCollection(outputsCollection);
   }
 
   async create({ publishDate: _, ...data }: gp2Model.OutputCreateDataObject) {
@@ -166,7 +185,7 @@ const getRelatedEntity = (related: OutputItem['relatedEntity']) => {
   }
   return {
     ...empty,
-    [related.__typename.toLowerCase()]: {
+    [related.__typename === 'Projects' ? 'projects' : 'workingGroups']: {
       id: related.sys.id,
       title: related.title,
     },
@@ -245,17 +264,32 @@ export const parseContentfulGraphQLOutput = (
   };
 };
 
-const getSearchFilter = (search: string) => {
+const getDocumentTypeFilter = (documentType: string | string[]) =>
+  Array.isArray(documentType)
+    ? [{ documentType_in: documentType }]
+    : [{ documentType }];
+const getFilterWhere = ({
+  title,
+  documentType,
+  link,
+}: gp2Model.FetchOutputFilter) => {
+  const titleFilter = title ? [{ title }] : [];
+  const linkFilter = link ? [{ link }] : [];
+  const documentTypeFilter = documentType
+    ? getDocumentTypeFilter(documentType)
+    : [];
+  return [...titleFilter, ...documentTypeFilter, ...linkFilter];
+};
+const getSearchWhere = (search: string) => {
   type SearchFields = Pick<gp2Contentful.OutputsFilter, 'title_contains'>;
-  const filter = search
+  const where = search
     .split(' ')
     .filter(Boolean) // removes whitespaces
     .reduce<SearchFields[]>(
       (acc, word: string) => [...acc, { title_contains: word }],
       [],
     );
-
-  return { AND: [...filter] };
+  return [{ OR: where }];
 };
 
 const cleanOutput = (outputToUpdate: gp2Model.OutputUpdateDataObject) =>
@@ -275,3 +309,35 @@ const cleanOutput = (outputToUpdate: gp2Model.OutputUpdateDataObject) =>
     }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
+
+type OutputsCollection = gp2Contentful.FetchOutputsQuery['outputsCollection'];
+const parseOutputsCollection = (outputsCollection: OutputsCollection) => {
+  if (!outputsCollection) {
+    logger.warn('Outputs returned null');
+    return {
+      total: 0,
+      items: [],
+    };
+  }
+
+  const { total, items: outputs } = outputsCollection;
+
+  if (outputs === null) {
+    logger.warn('outputs items returned null');
+    return {
+      total: 0,
+      items: [],
+    };
+  }
+
+  return {
+    total,
+    items: outputs.reduce((list: gp2Model.OutputDataObject[], item) => {
+      if (!item) {
+        return list;
+      }
+
+      return [...list, parseContentfulGraphQLOutput(item)];
+    }, []),
+  };
+};

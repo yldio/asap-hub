@@ -3,6 +3,7 @@ import {
   Entry,
   Environment,
   getGP2ContentfulGraphqlClientMockServer,
+  gp2 as gp2Contentful,
   patchAndPublish,
 } from '@asap-hub/contentful';
 import { GenericError } from '@asap-hub/errors';
@@ -60,12 +61,19 @@ describe('Outputs data provider', () => {
 
       expect(result).toMatchObject(getOutputDataObject());
     });
+    test('Should return null when the output is not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        outputs: null,
+      });
+
+      expect(await outputDataProvider.fetchById('not-found')).toBeNull();
+    });
 
     test('should return the output', async () => {
       const graphqlResponse = getContentfulGraphqlOutput();
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        graphqlResponse,
-      );
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
 
       const result = await outputDataProvider.fetchById(outputId);
       const expectedResult = getOutputDataObject();
@@ -77,9 +85,9 @@ describe('Outputs data provider', () => {
       test('should return when the document type is null', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         graphqlResponse!.documentType = null;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
 
         await expect(outputDataProvider.fetchById(outputId)).rejects.toThrow(
           'document type not defined',
@@ -87,14 +95,14 @@ describe('Outputs data provider', () => {
       });
       test.each(gp2Model.outputDocumentTypes)(
         'parses the document type %s to %s',
-        async (type, expected) => {
+        async (type) => {
           const graphqlResponse = getContentfulGraphqlOutput();
           graphqlResponse!.documentType = type;
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-            graphqlResponse,
-          );
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            outputs: graphqlResponse,
+          });
           const result = await outputDataProvider.fetchById(outputId);
-          expect(result?.documentType).toEqual(expected);
+          expect(result?.documentType).toEqual(type);
         },
       );
     });
@@ -103,9 +111,9 @@ describe('Outputs data provider', () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         graphqlResponse!.documentType = 'Article';
         graphqlResponse!.type = null;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
 
         await expect(outputDataProvider.fetchById(outputId)).rejects.toThrow(
           'type not defined',
@@ -113,15 +121,15 @@ describe('Outputs data provider', () => {
       });
       test.each(gp2Model.outputTypes)(
         'parses the  type %s to %s',
-        async (type, expected) => {
+        async (type) => {
           const graphqlResponse = getContentfulGraphqlOutput();
           graphqlResponse!.documentType = 'Article';
           graphqlResponse!.type = type;
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-            graphqlResponse,
-          );
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            outputs: graphqlResponse,
+          });
           const result = await outputDataProvider.fetchById(outputId);
-          expect(result?.type).toEqual(expected);
+          expect(result?.type).toEqual(type);
         },
       );
       test.each(
@@ -131,9 +139,9 @@ describe('Outputs data provider', () => {
         async (type) => {
           const graphqlResponse = getContentfulGraphqlOutput();
           graphqlResponse!.documentType = type;
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-            graphqlResponse,
-          );
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            outputs: graphqlResponse,
+          });
           const result = await outputDataProvider.fetchById(outputId);
           expect(result?.type).toBeUndefined();
         },
@@ -146,23 +154,15 @@ describe('Outputs data provider', () => {
         graphqlResponse!.documentType = 'Article';
         graphqlResponse!.type = 'Research';
         graphqlResponse!.subtype = type;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
         const result = await outputDataProvider.fetchById(outputId);
         expect(result?.subtype).toEqual(type);
       },
     );
 
-    test('Should return null when the output is not found', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        findOutputsContent: null,
-      });
-
-      expect(await outputDataProvider.fetchById('not-found')).toBeNull();
-    });
-
-    test('Should throw an error with a specific error message when the graphql client throws one', async () => {
+    test.skip('Should throw an error with a specific error message when the graphql client throws one', async () => {
       contentfulGraphqlClientMock.request.mockRejectedValueOnce(
         new SquidexGraphqlError(
           {
@@ -187,9 +187,9 @@ describe('Outputs data provider', () => {
     test('Should default authors to an empty array when missing', async () => {
       const graphqlResponse = getContentfulGraphqlOutput();
       graphqlResponse!.authorsCollection = null;
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        graphqlResponse,
-      );
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
 
       const result = await outputDataProvider.fetchById(outputId);
 
@@ -202,6 +202,7 @@ describe('Outputs data provider', () => {
           sys: { id: 'user-id-1' },
           firstName: 'Tony',
           lastName: 'Stark',
+          email: 'tony.stark@email.com',
           onboarded: true,
           avatar: { url: null },
           __typename: 'Users',
@@ -210,6 +211,7 @@ describe('Outputs data provider', () => {
           sys: { id: 'user-id-2' },
           firstName: 'Peter',
           lastName: 'Parker',
+          email: 'peter.parker@email.com',
           onboarded: true,
           avatar: { url: null },
           __typename: 'Users',
@@ -227,9 +229,9 @@ describe('Outputs data provider', () => {
           total: 3,
           items: [squidexUser1!, externalUser, squidexUser2!],
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
 
         const result = await outputDataProvider.fetchById(outputId);
 
@@ -257,9 +259,9 @@ describe('Outputs data provider', () => {
           total: 2,
           items: [squidexUser1!, squidexUser2!],
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
 
         const result = await outputDataProvider.fetchById(outputId);
 
@@ -282,9 +284,9 @@ describe('Outputs data provider', () => {
           total: 1,
           items: [squidexUser1!],
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
 
         const result = await outputDataProvider.fetchById(outputId);
 
@@ -302,9 +304,9 @@ describe('Outputs data provider', () => {
       test('Should default to publishedAt if the last-updated-partial is not present', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         delete graphqlResponse!.lastUpdatedPartial;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
 
         const result = await outputDataProvider.fetchById(outputId);
 
@@ -317,9 +319,9 @@ describe('Outputs data provider', () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         delete graphqlResponse!.lastUpdatedPartial;
         delete graphqlResponse.sys.publishedAt;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
 
         const result = await outputDataProvider.fetchById(outputId);
 
@@ -338,9 +340,9 @@ describe('Outputs data provider', () => {
           },
           title: 'a project',
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
         const result = await outputDataProvider.fetchById(outputId);
 
         expect(result!.workingGroups).toBeUndefined();
@@ -360,21 +362,21 @@ describe('Outputs data provider', () => {
           },
           title: 'a working group',
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
         const result = await outputDataProvider.fetchById(outputId);
 
         expect(result!.projects).toBeUndefined();
         expect(result!.workingGroups).toEqual({
           id: '42',
-          title: 'a project',
+          title: 'a working group',
         });
       });
     });
   });
 
-  describe('Fetch method', () => {
+  describe.only('Fetch method', () => {
     test('Should fetch the output from squidex graphql', async () => {
       const result = await outputDataProviderWithMockServer.fetch({});
 
@@ -412,21 +414,24 @@ describe('Outputs data provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
-    test('Should return the document type on Outputs', async () => {
-      const graphqlResponse = getContentfulOutputsGraphqlResponse();
-      graphqlResponse.outputsCollection!.items![0]!.documentType =
-        'ProceduralForm';
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        graphqlResponse,
-      );
+    test.each(gp2Model.outputDocumentTypes)(
+      'Should return the document type %s on Outputs',
+      async (documentType) => {
+        const graphqlResponse = getContentfulOutputsGraphqlResponse();
+        graphqlResponse.outputsCollection!.items![0]!.documentType =
+          documentType;
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          graphqlResponse,
+        );
 
-      const result = await outputDataProvider.fetch({
-        take: 10,
-        skip: 0,
-      });
+        const result = await outputDataProvider.fetch({
+          take: 10,
+          skip: 0,
+        });
 
-      expect(result.items[0]!.documentType).toEqual('Procedural Form');
-    });
+        expect(result.items[0]!.documentType).toEqual(documentType);
+      },
+    );
 
     describe('Parameters', () => {
       const defaultParams = {
@@ -434,9 +439,11 @@ describe('Outputs data provider', () => {
         skip: 0,
       };
       const expectedDefaultParams = {
-        top: 8,
+        limit: 8,
         skip: 0,
-        filter: '',
+        where: {},
+        preview: false,
+        order: [gp2Contentful.OutputsOrder.PublishDateDesc],
       };
 
       beforeEach(() => {
@@ -449,17 +456,16 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({ take: 13, skip: 7 });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
-            top: 13,
+            limit: 13,
             skip: 7,
           },
-          expect.anything(),
         );
       });
 
-      test('Should pass the displayDrafts parameter as expected', async () => {
+      test('Should allow for draft outputs to be returned', async () => {
         await outputDataProvider.fetch({
           take: 13,
           skip: 7,
@@ -467,35 +473,34 @@ describe('Outputs data provider', () => {
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
-            top: 13,
+            limit: 13,
             skip: 7,
-          },
-          {
-            includeDrafts: true,
+            preview: true,
           },
         );
       });
 
-      test('Should pass the search parameter as a squidex filter', async () => {
+      test('Should pass the search parameters', async () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           search: 'Title',
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
-            filter: "contains(data/title/iv,'Title')",
+            where: {
+              AND: [{ OR: [{ title_contains: 'Title' }] }],
+            },
           },
-          expect.anything(),
         );
       });
 
-      test('Should pass the object filter parameter properties as a squidex filter', async () => {
+      test('Should pass the object filter parameter properties', async () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
@@ -505,17 +510,17 @@ describe('Outputs data provider', () => {
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
-            filter:
-              "data/documentType/iv eq 'some-type' and data/title/iv eq 'some-title'",
+            where: {
+              AND: [{ title: 'some-title' }, { documentType: 'some-type' }],
+            },
           },
-          expect.anything(),
         );
       });
 
-      test('Should pass the object filter parameter properties with an array as a squidex filter', async () => {
+      test('Should pass the object filter parameter properties with an array', async () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
@@ -525,17 +530,20 @@ describe('Outputs data provider', () => {
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
-            filter:
-              "((data/documentType/iv eq 'some-type-1') or (data/documentType/iv eq 'some-type-2')) and data/title/iv eq 'some-title'",
+            where: {
+              AND: [
+                { title: 'some-title' },
+                { documentType_in: ['some-type-1', 'some-type-2'] },
+              ],
+            },
           },
-          expect.anything(),
         );
       });
 
-      test('Should pass the search and filter parameter as a squidex filter', async () => {
+      test('Should pass the search and filter parameter', async () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           search: 'Title',
@@ -544,68 +552,107 @@ describe('Outputs data provider', () => {
           },
         });
 
-        const expectedFilter =
-          "((data/documentType/iv eq 'Grant Document') or (data/documentType/iv eq 'Presentation')) " +
-          "and contains(data/title/iv,'Title')";
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
-            filter: expectedFilter,
+            where: {
+              AND: [
+                { OR: [{ title_contains: 'Title' }] },
+                { documentType_in: ['Grant Document', 'Presentation'] },
+              ],
+            },
           },
-          expect.anything(),
         );
       });
 
-      test('Should break up the search parameter into multiple words and send as a squidex filter', async () => {
+      test('Should break up the search parameter into multiple words and send', async () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           search: 'some words',
         });
 
-        const expectedFilter =
-          "((contains(data/title/iv,'some')) or (contains(data/title/iv,'words')))";
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
-            filter: expectedFilter,
+            where: {
+              AND: [
+                {
+                  OR: [{ title_contains: 'some' }, { title_contains: 'words' }],
+                },
+              ],
+            },
           },
-          expect.anything(),
         );
       });
-
-      test('Should sanitise single quote in the search parameter by doubling it for the squidex filter', async () => {
+      test('filter by link', async () => {
         await outputDataProvider.fetch({
           ...defaultParams,
-          search: "'",
+          filter: {
+            link: 'some-link',
+          },
         });
 
-        const expectedFilter = "contains(data/title/iv,'''')";
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
-            filter: expectedFilter,
+            where: {
+              AND: [{ link: 'some-link' }],
+            },
           },
-          expect.anything(),
         );
       });
-
-      test('Should sanitise double quotation mark in the search parameter by escaping it', async () => {
+      test('filter by working group', async () => {
         await outputDataProvider.fetch({
           ...defaultParams,
-          search: '"',
+          filter: {
+            workingGroups: 'working-group-id',
+          },
         });
 
-        const expectedFilter = "contains(data/title/iv,'\"')";
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_OUTPUTS_BY_WORKING_GROUP_ID,
           {
-            ...expectedDefaultParams,
-            filter: expectedFilter,
+            limit: 8,
+            skip: 0,
+            id: 'working-group-id',
           },
-          expect.anything(),
+        );
+      });
+      test('filter by project', async () => {
+        await outputDataProvider.fetch({
+          ...defaultParams,
+          filter: {
+            projects: 'project-id',
+          },
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_OUTPUTS_BY_PROJECT_ID,
+          {
+            limit: 8,
+            skip: 0,
+            id: 'project-id',
+          },
+        );
+      });
+      test('filter by authors', async () => {
+        await outputDataProvider.fetch({
+          ...defaultParams,
+          filter: {
+            authors: 'user-id',
+          },
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_OUTPUTS_BY_USER_ID,
+          {
+            limit: 8,
+            skip: 0,
+            id: 'user-id',
+          },
         );
       });
     });

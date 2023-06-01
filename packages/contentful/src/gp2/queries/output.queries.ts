@@ -92,3 +92,59 @@ export const FETCH_OUTPUTS = gql`
   }
   ${outputsContentQueryFragment}
 `;
+export const FETCH_OUTPUTS_BY_WORKING_GROUP_ID = gql`
+  query FetchOutputsByWorkingGroupId($id: String!, $limit: Int, $skip: Int) {
+    workingGroups(id: $id) {
+      sys {
+        id
+      }
+      linkedFrom {
+        outputsCollection(limit: $limit, skip: $skip) {
+          total
+          items {
+            ...OutputsContentData
+          }
+        }
+      }
+    }
+  }
+  ${outputsContentQueryFragment}
+`;
+
+export const FETCH_OUTPUTS_BY_USER_ID = gql`
+  query FetchOutputsByUserId($id: String!, $limit: Int, $skip: Int) {
+    users(id: $id) {
+      sys {
+        id
+      }
+      linkedFrom {
+        outputsCollection(limit: $limit, skip: $skip) {
+          total
+          items {
+            ...OutputsContentData
+          }
+        }
+      }
+    }
+  }
+  ${outputsContentQueryFragment}
+`;
+
+export const FETCH_OUTPUTS_BY_PROJECT_ID = gql`
+  query FetchOutputsByProjectId($id: String!, $limit: Int, $skip: Int) {
+    projects(id: $id) {
+      sys {
+        id
+      }
+      linkedFrom {
+        outputsCollection(limit: $limit, skip: $skip) {
+          total
+          items {
+            ...OutputsContentData
+          }
+        }
+      }
+    }
+  }
+  ${outputsContentQueryFragment}
+`;

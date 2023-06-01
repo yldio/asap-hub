@@ -134,7 +134,7 @@ export type FetchOutputFilter = {
   link?: string;
   workingGroups?: string;
   projects?: string;
-  authors?: string[];
+  authors?: string;
 };
 
 export type FetchOutputOptions = FetchOptions<FetchOutputFilter> & {

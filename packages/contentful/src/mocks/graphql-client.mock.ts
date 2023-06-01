@@ -87,6 +87,7 @@ export const getGP2ContentfulGraphqlClientMockServer = (
     MembersCollection: resultDto,
     MilestonesCollection: resultDto,
     NewsCollection: resultDto,
+    OutputsCollection: resultDto,
     PagesCollection: resultDto,
     ProjectMembershipCollection: resultDto,
     ProjectNetworkCollection: resultDto,

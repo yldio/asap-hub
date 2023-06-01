@@ -169,6 +169,26 @@ describe('Reminders', () => {
       });
     });
 
+    test('Should not see the reminder when the research output was created recently and the status is changed to Draft in squidex', async () => {
+      const researchOutputInput = getResearchOutputInput(teamId, creatorId);
+
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+      );
+
+      await researchOutputRestClient.publish(researchOutputId, 'Draft');
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+    });
+
     test('Should not see the reminder when the research output was created recently but the user is NOT associated with the team that owns it', async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
@@ -278,33 +298,33 @@ describe('Reminders', () => {
     });
 
     test('Should see the reminder when the research output was created recently and the user is associated with the team that owns it', async () => {
-      const researchOutputInput = getResearchOutputInputDraft(
-        teamId,
-        creatorId,
-      );
+      const researchOutputInput = {
+        ...getResearchOutputInputDraft(teamId, creatorId),
+        addedDate: undefined,
+      };
       const researchOutputId = await researchOutputDataProvider.create(
         researchOutputInput,
         { publish: false },
       );
 
-      const researchOutput = await researchOutputDataProvider.fetchById(
-        researchOutputId,
-      );
-
-      const expectedReminder: ResearchOutputDraftReminder = {
-        id: `research-output-draft-${researchOutputId}`,
-        entity: 'Research Output',
-        type: 'Draft',
-        data: {
-          researchOutputId,
-          associationName: getTeamCreateDataObject().displayName,
-          associationType: 'team',
-          createdBy: creatorUsername,
-          title: researchOutputInput.title,
-          addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
-        },
-      };
       await retryable(async () => {
+        const researchOutput = await researchOutputDataProvider.fetchById(
+          researchOutputId,
+        );
+
+        const expectedReminder: ResearchOutputDraftReminder = {
+          id: `research-output-draft-${researchOutputId}`,
+          entity: 'Research Output',
+          type: 'Draft',
+          data: {
+            researchOutputId,
+            associationName: getTeamCreateDataObject().displayName,
+            associationType: 'team',
+            createdBy: creatorUsername,
+            title: researchOutputInput.title,
+            addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+          },
+        };
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
         );
@@ -324,35 +344,34 @@ describe('Reminders', () => {
       );
       const workingGroupId = workingGroup.id;
 
-      const researchOutputInput = getResearchOutputInputDraft(
-        teamId,
-        creatorId,
-        workingGroupId,
-      );
+      const researchOutputInput = {
+        ...getResearchOutputInputDraft(teamId, creatorId, workingGroupId),
+        addedDate: undefined,
+      };
 
       const researchOutputId = await researchOutputDataProvider.create(
         researchOutputInput,
         { publish: false },
       );
 
-      const researchOutput = await researchOutputDataProvider.fetchById(
-        researchOutputId,
-      );
-
-      const expectedReminder: ResearchOutputDraftReminder = {
-        id: `research-output-draft-${researchOutputId}`,
-        entity: 'Research Output',
-        type: 'Draft',
-        data: {
-          researchOutputId,
-          associationName: workingGroup.data.title.iv,
-          associationType: 'working group',
-          createdBy: creatorUsername,
-          title: researchOutputInput.title,
-          addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
-        },
-      };
       await retryable(async () => {
+        const researchOutput = await researchOutputDataProvider.fetchById(
+          researchOutputId,
+        );
+
+        const expectedReminder: ResearchOutputDraftReminder = {
+          id: `research-output-draft-${researchOutputId}`,
+          entity: 'Research Output',
+          type: 'Draft',
+          data: {
+            researchOutputId,
+            associationName: workingGroup.data.title.iv,
+            associationType: 'working group',
+            createdBy: creatorUsername,
+            title: researchOutputInput.title,
+            addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+          },
+        };
         const reminders = await reminderDataProvider.fetch({
           ...fetchRemindersOptions,
           userId: creatorId,
@@ -426,10 +445,10 @@ describe('Reminders', () => {
       teamCreateDataObject.applicationNumber = chance.name();
       const anotherTeamId = await teamDataProvider.create(teamCreateDataObject);
 
-      const researchOutputInput = getResearchOutputInputDraft(
-        teamId,
-        creatorId,
-      );
+      const researchOutputInput = {
+        ...getResearchOutputInputDraft(teamId, creatorId),
+        addedDate: undefined,
+      };
       researchOutputInput.teamIds = [anotherTeamId];
 
       await userDataProvider.update(creatorId, {
@@ -441,24 +460,24 @@ describe('Reminders', () => {
         { publish: false },
       );
 
-      const researchOutput = await researchOutputDataProvider.fetchById(
-        researchOutputId,
-      );
-
-      const expectedReminder: ResearchOutputDraftReminder = {
-        id: `research-output-draft-${researchOutputId}`,
-        entity: 'Research Output',
-        type: 'Draft',
-        data: {
-          researchOutputId,
-          associationName: getTeamCreateDataObject().displayName,
-          associationType: 'team',
-          createdBy: creatorUsername,
-          title: researchOutputInput.title,
-          addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
-        },
-      };
       await retryable(async () => {
+        const researchOutput = await researchOutputDataProvider.fetchById(
+          researchOutputId,
+        );
+
+        const expectedReminder: ResearchOutputDraftReminder = {
+          id: `research-output-draft-${researchOutputId}`,
+          entity: 'Research Output',
+          type: 'Draft',
+          data: {
+            researchOutputId,
+            associationName: getTeamCreateDataObject().displayName,
+            associationType: 'team',
+            createdBy: creatorUsername,
+            title: researchOutputInput.title,
+            addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+          },
+        };
         const reminders = await reminderDataProvider.fetch({
           ...fetchRemindersOptions,
           userId: creatorId,
@@ -675,27 +694,50 @@ describe('Reminders', () => {
 
       const eventId = await eventDataProvider.create(eventInput);
 
-      const event = await eventDataProvider.fetchById(eventId);
-
-      const expectedReminder: EventHappeningNowReminder = {
-        id: `event-happening-now-${eventId}`,
-        entity: 'Event',
-        type: 'Happening Now',
-        data: {
-          eventId: event!.id,
-          startDate: event!.startDate,
-          endDate: event!.endDate,
-          title: event!.title,
-        },
-      };
-
       await retryable(async () => {
+        const event = await eventDataProvider.fetchById(eventId);
+
+        const expectedReminder: EventHappeningNowReminder = {
+          id: `event-happening-now-${eventId}`,
+          entity: 'Event',
+          type: 'Happening Now',
+          data: {
+            eventId: event!.id,
+            startDate: event!.startDate,
+            endDate: event!.endDate,
+            title: event!.title,
+          },
+        };
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
         );
         expect(reminders).toEqual({
           total: 1,
           items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the event has started but has not finished if it was made Draft in squidex', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+
+      const eventId = await eventDataProvider.create(eventInput);
+
+      await eventRestClient.publish(eventId, 'Draft');
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
         });
       });
     });
@@ -902,26 +944,56 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
       const eventId = await eventDataProvider.create(eventInput);
-      const event = await eventDataProvider.fetchById(eventId);
-
-      const expectedReminder: PublishMaterialReminder = {
-        id: `publish-material-${eventId}`,
-        entity: 'Event',
-        type: 'Publish Material',
-        data: {
-          eventId,
-          endDate: event!.endDate,
-          title: event!.title,
-        },
-      };
 
       await retryable(async () => {
+        const event = await eventDataProvider.fetchById(eventId);
+
+        const expectedReminder: PublishMaterialReminder = {
+          id: `publish-material-${eventId}`,
+          entity: 'Event',
+          type: 'Publish Material',
+          data: {
+            eventId,
+            endDate: event!.endDate,
+            title: event!.title,
+          },
+        };
+
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
         );
         expect(reminders).toEqual({
           total: 1,
           items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the event has finished and user is staff if the event as made Draft in squidex', async () => {
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+
+      const userCreateDataObject = getUserInput(teamId);
+      const userId = await userDataProvider.create({
+        ...userCreateDataObject,
+        role: 'Staff',
+      });
+      fetchRemindersOptions = { userId, timezone: 'Europe/London' };
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+      const eventId = await eventDataProvider.create(eventInput);
+
+      await eventRestClient.publish(eventId, 'Draft');
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
         });
       });
     });
@@ -1050,26 +1122,56 @@ describe('Reminders', () => {
         },
       ];
       const eventId = await eventDataProvider.create(eventInput);
-      const event = await eventDataProvider.fetchById(eventId);
-
-      const expectedReminder: UploadPresentationReminder = {
-        id: `upload-presentation-${eventId}`,
-        entity: 'Event',
-        type: 'Upload Presentation',
-        data: {
-          eventId,
-          endDate: event!.endDate,
-          title: event!.title,
-        },
-      };
 
       await retryable(async () => {
+        const event = await eventDataProvider.fetchById(eventId);
+
+        const expectedReminder: UploadPresentationReminder = {
+          id: `upload-presentation-${eventId}`,
+          entity: 'Event',
+          type: 'Upload Presentation',
+          data: {
+            eventId,
+            endDate: event!.endDate,
+            title: event!.title,
+          },
+        };
+
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
         );
         expect(reminders).toEqual({
           total: 1,
           items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the event has finished and user is a PM of one of the speaker teams if the event was changed to Draft in squidex', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+      eventInput.speakers = [
+        {
+          user: [userId],
+          team: [teamId],
+        },
+      ];
+      const eventId = await eventDataProvider.create(eventInput);
+
+      await eventRestClient.publish(eventId, 'Draft');
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
         });
       });
     });

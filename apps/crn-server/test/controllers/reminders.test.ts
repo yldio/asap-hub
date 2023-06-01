@@ -22,7 +22,8 @@ import {
   getSharePresentationReminder,
   getPublishMaterialReminder,
   getUploadPresentationReminder,
-  getResearchOutputDraftReminder,
+  getResearchOutputDraftTeamReminder,
+  getResearchOutputDraftWorkingGroupReminder,
 } from '../fixtures/reminders.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 import { crnMeetingMaterialsDrive } from '../../src/config';
@@ -101,7 +102,7 @@ describe('Reminder Controller', () => {
 
       test('Should return the correct description and href for the research-output-draft team reminder', async () => {
         const reminder: ResearchOutputDraftReminder = {
-          ...getResearchOutputDraftReminder(),
+          ...getResearchOutputDraftTeamReminder(),
           entity: 'Research Output',
           type: 'Draft',
           data: {
@@ -129,7 +130,7 @@ describe('Reminder Controller', () => {
 
       test('Should return the correct description and href for the research-output-draft working group reminder', async () => {
         const reminder: ResearchOutputDraftReminder = {
-          ...getResearchOutputDraftReminder(),
+          ...getResearchOutputDraftWorkingGroupReminder(),
           entity: 'Research Output',
           type: 'Draft',
           data: {

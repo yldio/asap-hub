@@ -22,8 +22,10 @@ import {
   getSharePresentationReminder,
   getPublishMaterialReminder,
   getUploadPresentationReminder,
-  getResearchOutputDraftReminder,
-  getSquidexReminderReseachOutputsDraftContents,
+  getResearchOutputDraftTeamReminder,
+  getResearchOutputDraftWorkingGroupReminder,
+  getSquidexReminderReseachOutputsDraftTeamContents,
+  getSquidexReminderReseachOutputsDraftWorkingGroupContents,
 } from '../fixtures/reminders.fixtures';
 import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
@@ -57,7 +59,7 @@ describe('Reminder Data Provider', () => {
         total: 2,
         items: [
           getResearchOutputPublishedReminder(),
-          getResearchOutputDraftReminder(),
+          getResearchOutputDraftTeamReminder(),
         ],
       });
     });
@@ -265,7 +267,7 @@ describe('Reminder Data Provider', () => {
       test('Should fetch the team draft reminders from squidex graphql', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [
-          getSquidexReminderReseachOutputsDraftContents(true),
+          getSquidexReminderReseachOutputsDraftTeamContents(),
         ];
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -275,14 +277,14 @@ describe('Reminder Data Provider', () => {
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({
           total: 1,
-          items: [getResearchOutputDraftReminder(true)],
+          items: [getResearchOutputDraftTeamReminder()],
         });
       });
 
       test('Should fetch the working group draft reminders from squidex graphql', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [
-          getSquidexReminderReseachOutputsDraftContents(false),
+          getSquidexReminderReseachOutputsDraftWorkingGroupContents(),
         ];
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -292,7 +294,7 @@ describe('Reminder Data Provider', () => {
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
         expect(result).toEqual({
           total: 1,
-          items: [getResearchOutputDraftReminder(false)],
+          items: [getResearchOutputDraftWorkingGroupReminder()],
         });
       });
 
@@ -352,7 +354,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [
-          getSquidexReminderReseachOutputsDraftContents(false),
+          getSquidexReminderReseachOutputsDraftWorkingGroupContents(),
         ];
         squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -362,7 +364,7 @@ describe('Reminder Data Provider', () => {
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
 
         expect(result).toEqual({
-          items: [getResearchOutputDraftReminder(false)],
+          items: [getResearchOutputDraftWorkingGroupReminder()],
           total: 1,
         });
       });
@@ -371,7 +373,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [
-          getSquidexReminderReseachOutputsDraftContents(true),
+          getSquidexReminderReseachOutputsDraftTeamContents(),
         ];
         squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
           '';
@@ -382,7 +384,7 @@ describe('Reminder Data Provider', () => {
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
 
         expect(result).toEqual({
-          items: [getResearchOutputDraftReminder(true)],
+          items: [getResearchOutputDraftTeamReminder()],
           total: 1,
         });
       });
@@ -390,7 +392,7 @@ describe('Reminder Data Provider', () => {
       test('Should return no team reminder when the team displayname is missing', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
-        const draft = getSquidexReminderReseachOutputsDraftContents(true);
+        const draft = getSquidexReminderReseachOutputsDraftTeamContents();
         draft.flatData.teams![0]!.flatData.displayName = null;
         squidexGraphqlResponse.draftResearchOutputs = [draft];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -408,7 +410,8 @@ describe('Reminder Data Provider', () => {
       test('Should return no working group reminder when the working group title is missing', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
-        const draft = getSquidexReminderReseachOutputsDraftContents(false);
+        const draft =
+          getSquidexReminderReseachOutputsDraftWorkingGroupContents();
         draft.flatData.workingGroups![0]!.flatData.title = null;
         squidexGraphqlResponse.draftResearchOutputs = [draft];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -426,7 +429,8 @@ describe('Reminder Data Provider', () => {
       test('Should return no reminder when the teams and working groups are missing', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
-        const draft = getSquidexReminderReseachOutputsDraftContents(false);
+        const draft =
+          getSquidexReminderReseachOutputsDraftWorkingGroupContents();
         draft.flatData.workingGroups = null;
         draft.flatData.teams = null;
         squidexGraphqlResponse.draftResearchOutputs = [draft];
@@ -445,7 +449,7 @@ describe('Reminder Data Provider', () => {
       test('Should return no reminder wnen the createdBy attribute is missing', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
-        const draft = getSquidexReminderReseachOutputsDraftContents(true);
+        const draft = getSquidexReminderReseachOutputsDraftTeamContents();
         draft.flatData.createdBy = null;
         squidexGraphqlResponse.draftResearchOutputs = [draft];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -464,7 +468,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [
-          getSquidexReminderReseachOutputsDraftContents(false),
+          getSquidexReminderReseachOutputsDraftWorkingGroupContents(),
         ];
         squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
         squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
@@ -482,7 +486,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [
-          getSquidexReminderReseachOutputsDraftContents(false),
+          getSquidexReminderReseachOutputsDraftWorkingGroupContents(),
         ];
         squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
         squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
@@ -495,7 +499,7 @@ describe('Reminder Data Provider', () => {
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
 
         expect(result).toEqual({
-          items: [getResearchOutputDraftReminder(false)],
+          items: [getResearchOutputDraftWorkingGroupReminder()],
           total: 1,
         });
       });
@@ -504,7 +508,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [
-          getSquidexReminderReseachOutputsDraftContents(true),
+          getSquidexReminderReseachOutputsDraftTeamContents(),
         ];
         squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
         squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
@@ -517,7 +521,7 @@ describe('Reminder Data Provider', () => {
         const result = await reminderDataProvider.fetch(fetchRemindersOptions);
 
         expect(result).toEqual({
-          items: [getResearchOutputDraftReminder(true)],
+          items: [getResearchOutputDraftTeamReminder()],
           total: 1,
         });
       });
@@ -554,7 +558,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [
-          getSquidexReminderReseachOutputsDraftContents(false),
+          getSquidexReminderReseachOutputsDraftWorkingGroupContents(),
         ];
 
         squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
@@ -597,13 +601,16 @@ describe('Reminder Data Provider', () => {
       test('Should sort the reminders by the created date', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = null;
-        const researchOutput1 = getSquidexReminderReseachOutputsDraftContents();
+        const researchOutput1 =
+          getSquidexReminderReseachOutputsDraftTeamContents();
         researchOutput1.id = 'research-output-1';
         researchOutput1.created = '2022-01-01T10:00:00Z';
-        const researchOutput2 = getSquidexReminderReseachOutputsDraftContents();
+        const researchOutput2 =
+          getSquidexReminderReseachOutputsDraftTeamContents();
         researchOutput2.id = 'research-output-2';
         researchOutput2.created = '2022-01-01T14:00:00Z';
-        const researchOutput3 = getSquidexReminderReseachOutputsDraftContents();
+        const researchOutput3 =
+          getSquidexReminderReseachOutputsDraftTeamContents();
         researchOutput3.id = 'research-output-3';
         researchOutput3.created = '2022-01-01T12:00:00Z';
 
@@ -2321,11 +2328,11 @@ describe('Reminder Data Provider', () => {
         researchOutput2.id = 'research-output-2';
         researchOutput2.flatData.addedDate = '2022-01-01T14:00:00Z';
         const researchOutputDraft1 =
-          getSquidexReminderReseachOutputsDraftContents();
+          getSquidexReminderReseachOutputsDraftTeamContents();
         researchOutputDraft1.id = 'research-output-draft-1';
         researchOutputDraft1.created = '2022-01-01T10:00:00Z';
         const researchOutputDraft2 =
-          getSquidexReminderReseachOutputsDraftContents();
+          getSquidexReminderReseachOutputsDraftTeamContents();
         researchOutputDraft2.id = 'research-output-draft-2';
         researchOutputDraft2.created = '2022-01-01T15:00:00Z';
 

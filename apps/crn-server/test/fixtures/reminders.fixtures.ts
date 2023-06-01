@@ -42,26 +42,41 @@ export const getResearchOutputPublishedReminder =
     };
   };
 
-export const getResearchOutputDraftReminder = (
-  teamAssociation: boolean = true,
-): ResearchOutputDraftReminder => {
-  const researchOutputDataObject = getResearchOutputDataObject();
-  return {
-    id: 'research-output-draft-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-    entity: 'Research Output',
-    type: 'Draft',
-    data: {
-      researchOutputId: researchOutputDataObject.id,
-      title: researchOutputDataObject.title,
-      addedDate: researchOutputDataObject.created,
-      associationName: teamAssociation
-        ? researchOutputDataObject.teams[0]?.displayName || ''
-        : 'Working Group 1',
-      associationType: teamAssociation ? 'team' : 'working group',
-      createdBy: 'Tom Hardy',
-    },
+export const getResearchOutputDraftTeamReminder =
+  (): ResearchOutputDraftReminder => {
+    const researchOutputDataObject = getResearchOutputDataObject();
+    return {
+      id: 'research-output-draft-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      entity: 'Research Output',
+      type: 'Draft',
+      data: {
+        researchOutputId: researchOutputDataObject.id,
+        title: researchOutputDataObject.title,
+        addedDate: researchOutputDataObject.created,
+        associationName: researchOutputDataObject.teams[0]?.displayName || '',
+        associationType: 'team',
+        createdBy: 'Tom Hardy',
+      },
+    };
   };
-};
+
+export const getResearchOutputDraftWorkingGroupReminder =
+  (): ResearchOutputDraftReminder => {
+    const researchOutputDataObject = getResearchOutputDataObject();
+    return {
+      id: 'research-output-draft-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      entity: 'Research Output',
+      type: 'Draft',
+      data: {
+        researchOutputId: researchOutputDataObject.id,
+        title: researchOutputDataObject.title,
+        addedDate: researchOutputDataObject.created,
+        associationName: 'Working Group 1',
+        associationType: 'working group',
+        createdBy: 'Tom Hardy',
+      },
+    };
+  };
 
 export const getEventHappeningTodayReminder =
   (): EventHappeningTodayReminder => {
@@ -238,7 +253,7 @@ export const getSquidexRemindersGraphqlResponse =
         ],
       },
     },
-    draftResearchOutputs: [getSquidexReminderReseachOutputsDraftContents()],
+    draftResearchOutputs: [getSquidexReminderReseachOutputsDraftTeamContents()],
     queryResearchOutputsContents: [getSquidexReminderReseachOutputsContents()],
     queryEventsContents: [getSquidexReminderEventsContents()],
   });
@@ -261,43 +276,73 @@ export const getSquidexReminderReseachOutputsContents = (): NonNullable<
     },
   };
 };
-export const getSquidexReminderReseachOutputsDraftContents = (
-  teamAssociation: boolean = true,
-): NonNullable<FetchReminderDataQuery['draftResearchOutputs']>[number] => {
-  const researchOutput = getSquidexGraphqlResearchOutput();
+export const getSquidexReminderReseachOutputsDraftTeamContents =
+  (): NonNullable<FetchReminderDataQuery['draftResearchOutputs']>[number] => {
+    const researchOutput = getSquidexGraphqlResearchOutput();
 
-  return {
-    id: researchOutput.id,
-    created: researchOutput.created,
-    status: 'Draft',
-    flatData: {
-      documentType: researchOutput.flatData.documentType,
-      title: researchOutput.flatData.title,
-      createdBy: [
-        { id: 'user-id-1', flatData: { firstName: 'Tom', lastName: 'Hardy' } },
-      ],
-      teams: [
-        {
-          id: researchOutput.flatData.teams![0]!.id,
-          flatData: {
-            displayName:
-              researchOutput.flatData.teams![0]!.flatData.displayName,
+    return {
+      id: researchOutput.id,
+      created: researchOutput.created,
+      status: 'Draft',
+      flatData: {
+        documentType: researchOutput.flatData.documentType,
+        title: researchOutput.flatData.title,
+        createdBy: [
+          {
+            id: 'user-id-1',
+            flatData: { firstName: 'Tom', lastName: 'Hardy' },
           },
-        },
-      ],
-      workingGroups: teamAssociation
-        ? []
-        : [
-            {
-              id: 'wg-id-1',
-              flatData: {
-                title: 'Working Group 1',
-              },
+        ],
+        teams: [
+          {
+            id: researchOutput.flatData.teams![0]!.id,
+            flatData: {
+              displayName:
+                researchOutput.flatData.teams![0]!.flatData.displayName,
             },
-          ],
-    },
+          },
+        ],
+        workingGroups: [],
+      },
+    };
   };
-};
+export const getSquidexReminderReseachOutputsDraftWorkingGroupContents =
+  (): NonNullable<FetchReminderDataQuery['draftResearchOutputs']>[number] => {
+    const researchOutput = getSquidexGraphqlResearchOutput();
+
+    return {
+      id: researchOutput.id,
+      created: researchOutput.created,
+      status: 'Draft',
+      flatData: {
+        documentType: researchOutput.flatData.documentType,
+        title: researchOutput.flatData.title,
+        createdBy: [
+          {
+            id: 'user-id-1',
+            flatData: { firstName: 'Tom', lastName: 'Hardy' },
+          },
+        ],
+        teams: [
+          {
+            id: researchOutput.flatData.teams![0]!.id,
+            flatData: {
+              displayName:
+                researchOutput.flatData.teams![0]!.flatData.displayName,
+            },
+          },
+        ],
+        workingGroups: [
+          {
+            id: 'wg-id-1',
+            flatData: {
+              title: 'Working Group 1',
+            },
+          },
+        ],
+      },
+    };
+  };
 
 export const getSquidexReminderEventsContents = (): NonNullable<
   FetchReminderDataQuery['queryEventsContents']

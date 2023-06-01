@@ -130,7 +130,7 @@ const getResearchOutputFilter = (): string => {
   date.setDate(date.getDate() - 1);
   const date24hAgo = date.toISOString();
 
-  const filter = `data/addedDate/iv ge ${date24hAgo}`;
+  const filter = `data/addedDate/iv ge ${date24hAgo} and status ne 'Draft'`;
   return filter;
 };
 
@@ -139,7 +139,7 @@ const getResearchOutputDraftFilter = (): string => {
   date.setDate(date.getDate() - 1);
   const date24hAgo = date.toISOString();
 
-  const filter = `created ge ${date24hAgo} and status eq 'Draft'`;
+  const filter = `created ge ${date24hAgo} and status eq 'Draft' and data/addedDate/iv eq null`;
   return filter;
 };
 
@@ -173,7 +173,10 @@ export const getEventFilter = (zone: string): string => {
     zone,
   }).toUTC();
 
-  return `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or data/notesUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}) or (data/endDate/iv ge ${last72HoursISO} and data/endDate/iv le ${now})`;
+  const eventFilter = `data/videoRecordingUpdatedAt/iv ge ${lastDayISO} or data/presentationUpdatedAt/iv ge ${lastDayISO} or data/notesUpdatedAt/iv ge ${lastDayISO} or (data/startDate/iv ge ${lastMidnightISO} and data/startDate/iv le ${todayMidnightISO}) or (data/endDate/iv ge ${last72HoursISO} and data/endDate/iv le ${now})`;
+  const eventFilterPublished = `(${eventFilter}) and status ne 'Draft'`;
+
+  return eventFilterPublished;
 };
 
 const getUserTeamIds = (

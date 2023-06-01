@@ -76,7 +76,7 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
       };
     }
 
-    const calendars: CalendarItem[] = calendarsCollection.items.filter(
+    let calendars: CalendarItem[] = calendarsCollection.items.filter(
       (x): x is CalendarItem => x !== null,
     );
 

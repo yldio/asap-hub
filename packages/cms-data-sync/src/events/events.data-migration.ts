@@ -76,7 +76,7 @@ export const migrateEvents = async () => {
       const speakersLinks = await Promise.all(
         speakers.map(async ({ team: squidexTeam, user: squidexUser }) => {
           const teamId = squidexTeam ? squidexTeam[0].id : null;
-          const userId = squidexUser ? squidexUser[0].id : null;
+          const userId = squidexUser ? squidexUser[0]?.id : null;
 
           try {
             const contentfulTeam = teamId
@@ -89,7 +89,7 @@ export const migrateEvents = async () => {
               : null;
             await contentfulRateLimiter.removeTokens(1);
 
-            if (contentfulTeam && contentfulUser) {
+            if (contentfulTeam) {
               const speakerEntry = await contentfulEnvironment.createEntry(
                 'eventSpeakers',
                 {
@@ -156,11 +156,6 @@ export const migrateEvents = async () => {
                 },
               };
             }
-            logger(
-              `There's a speaker without a user. Please review event with id ${eventId}`,
-              'ERROR',
-            );
-            return null;
           } catch {
             // edge case, this should not happen if the migration happened in the correct order
             logger(

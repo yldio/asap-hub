@@ -328,57 +328,7 @@ describe('Migrate events', () => {
     );
   });
 
-  it('outputs an error and does not create an eventSpeakers entry when speaker is not associated to a user', async () => {
-    const eventWithInvalidSpeaker = getEventSquidexResponse();
-    eventWithInvalidSpeaker.queryEventsContentsWithTotal!.items![0].flatData.speakers =
-      [
-        {
-          team: [
-            {
-              id: 'team-1',
-            },
-          ],
-          user: null,
-        },
-      ];
-    squidexGraphqlClientMock.request.mockResolvedValueOnce(
-      eventWithInvalidSpeaker,
-    );
-
-    jest
-      .spyOn(contentfulEnv, 'getEntries')
-      .mockReset()
-      .mockImplementation(() =>
-        Promise.resolve({
-          total: 0,
-          items: [],
-          skip: 0,
-          limit: 10,
-          toPlainObject: jest.fn(),
-          sys: { type: 'Array' },
-        }),
-      );
-
-    await migrateEvents();
-
-    expect(console.log).toHaveBeenCalledWith(
-      '\x1b[31m',
-      "[ERROR] There's a speaker without a user. Please review event with id event-1",
-    );
-
-    expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
-      'events',
-      'event-1',
-      {
-        fields: {
-          ...baseCreatePayload,
-          speakers: { 'en-US': [] },
-        },
-      },
-    );
-  });
-
-  it('creates eventSpeakers entries', async () => {
+  it('creates eventSpeakers entries when speakers format is as expected', async () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       getEventSquidexResponse(),
     );
@@ -391,6 +341,34 @@ describe('Migrate events', () => {
     await migrateEvents();
 
     expect(contentfulEnv.createEntry).toHaveBeenCalledTimes(2);
+    expect(eventSpeakersMock.publish).toHaveBeenCalled();
+  });
+
+  it('creates eventSpeakers entries when speakers user is an empty array', async () => {
+    const eventSquidexResponse = getEventSquidexResponse();
+    eventSquidexResponse.queryEventsContentsWithTotal!.items![0]!.flatData!.speakers =
+      [
+        {
+          team: [
+            {
+              id: 'team-1',
+            },
+          ],
+          user: [],
+        },
+      ];
+    squidexGraphqlClientMock.request.mockResolvedValueOnce(
+      eventSquidexResponse,
+    );
+
+    const eventSpeakersMock = getEntry({});
+    jest
+      .spyOn(contentfulEnv, 'createEntry')
+      .mockResolvedValue(eventSpeakersMock);
+
+    await migrateEvents();
+
+    expect(contentfulEnv.createEntry).toHaveBeenCalledTimes(1);
     expect(eventSpeakersMock.publish).toHaveBeenCalled();
   });
 

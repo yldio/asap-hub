@@ -172,14 +172,13 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
   }
 }
 
-const getAuthorIdList = (authorDataObject: gp2Model.AuthorUpsertDataObject) => {
-  if ('userId' in authorDataObject) {
-    return authorDataObject.userId;
-  }
-
-  return authorDataObject.externalUserId;
-};
-
+const getAuthorIdList = (
+  authorList: string[],
+  author: gp2Model.AuthorUpsertDataObject,
+) =>
+  author.externalUserId || author.userId
+    ? [...authorList, author.externalUserId ?? author.userId]
+    : authorList;
 const reverseDocumentTypeMap = reverseMap(documentTypeMap);
 const reverseTypeMap = reverseMap(typeMap);
 
@@ -195,5 +194,5 @@ const getOutputSquidexData = ({
     >) => ({
   documentType: reverseDocumentTypeMap[documentType],
   ...(type && { type: reverseTypeMap[type] }),
-  authors: authors.map(getAuthorIdList),
+  authors: authors.reduce<string[]>(getAuthorIdList, []),
 });

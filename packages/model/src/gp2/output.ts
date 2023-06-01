@@ -88,8 +88,8 @@ export type OutputDataObject = OutputCoreObject & {
 export type ListOutputDataObject = ListResponse<OutputDataObject>;
 
 export type AuthorUpsertDataObject =
-  | { userId: string }
-  | { externalUserId: string };
+  | { userId: string; externalUserId?: undefined }
+  | { externalUserId: string; userId?: undefined };
 
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];

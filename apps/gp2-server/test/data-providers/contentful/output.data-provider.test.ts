@@ -8,7 +8,6 @@ import {
 } from '@asap-hub/contentful';
 import { GenericError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { SquidexGraphqlError } from '@asap-hub/squidex';
 import {
   OutputContentfulDataProvider,
   OutputItem,
@@ -56,7 +55,7 @@ describe('Outputs data provider', () => {
   describe('Fetch by ID method', () => {
     const outputId = 'some-uuid';
 
-    test('Should fetch the output from squidex graphql', async () => {
+    test('Should fetch the output from graphql', async () => {
       const result = await outputDataProviderWithMockServer.fetchById(outputId);
 
       expect(result).toMatchObject(getOutputDataObject());
@@ -162,28 +161,6 @@ describe('Outputs data provider', () => {
       },
     );
 
-    test.skip('Should throw an error with a specific error message when the graphql client throws one', async () => {
-      contentfulGraphqlClientMock.request.mockRejectedValueOnce(
-        new SquidexGraphqlError(
-          {
-            status: 521,
-            errors: [
-              {
-                message: 'some error message',
-                path: ['asdasdas'],
-                locations: [],
-              },
-            ],
-          },
-          { query: 'some query' },
-        ),
-      );
-
-      await expect(outputDataProvider.fetchById(outputId)).rejects.toThrow(
-        'some error message',
-      );
-    });
-
     test('Should default authors to an empty array when missing', async () => {
       const graphqlResponse = getContentfulGraphqlOutput();
       graphqlResponse!.authorsCollection = null;
@@ -219,7 +196,7 @@ describe('Outputs data provider', () => {
       ];
       test('Should return a mix of internal and external authors', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
-        const [squidexUser1, squidexUser2] = getInternalUsers();
+        const [user1, user2] = getInternalUsers();
         const externalUser: ExternalUser = {
           __typename: 'ExternalUsers',
           sys: { id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482' },
@@ -227,7 +204,7 @@ describe('Outputs data provider', () => {
         };
         graphqlResponse!.authorsCollection = {
           total: 3,
-          items: [squidexUser1!, externalUser, squidexUser2!],
+          items: [user1!, externalUser, user2!],
         };
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
@@ -252,12 +229,12 @@ describe('Outputs data provider', () => {
       test('Should not return the non-onboarded authors', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
 
-        const [squidexUser1, squidexUser2] = getInternalUsers();
-        squidexUser1!.onboarded = false;
-        squidexUser2!.onboarded = true;
+        const [user1, user2] = getInternalUsers();
+        user1!.onboarded = false;
+        user2!.onboarded = true;
         graphqlResponse!.authorsCollection = {
           total: 2,
-          items: [squidexUser1!, squidexUser2!],
+          items: [user1!, user2!],
         };
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
@@ -278,11 +255,11 @@ describe('Outputs data provider', () => {
         const url = 'http://example.com/avatar-url';
         const graphqlResponse = getContentfulGraphqlOutput();
 
-        const [squidexUser1] = getInternalUsers();
-        squidexUser1!.avatar = { url };
+        const [user1] = getInternalUsers();
+        user1!.avatar = { url };
         graphqlResponse!.authorsCollection = {
           total: 1,
-          items: [squidexUser1!],
+          items: [user1!],
         };
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
@@ -376,8 +353,8 @@ describe('Outputs data provider', () => {
     });
   });
 
-  describe.only('Fetch method', () => {
-    test('Should fetch the output from squidex graphql', async () => {
+  describe('Fetch method', () => {
+    test('Should fetch the output from graphql', async () => {
       const result = await outputDataProviderWithMockServer.fetch({});
 
       expect(result).toMatchObject(getListOutputDataObject());
@@ -660,22 +637,29 @@ describe('Outputs data provider', () => {
 
   describe('Create and update', () => {
     describe('Create', () => {
-      test('Should send the correct requests to Squidex and return its ID', async () => {
+      test('Should send the correct requests and return its ID', async () => {
         const outputRequest = getOutputCreateDataObject();
         const outputId = 'created-output-id';
 
-        const userMock = getEntry({});
-        environmentMock.createEntry.mockResolvedValue(userMock);
-        userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
+        const outputMock = getEntry({}, outputId);
+        environmentMock.createEntry.mockResolvedValue(outputMock);
+        outputMock.publish = jest.fn().mockResolvedValueOnce(outputMock);
 
         const result = await outputDataProvider.create(outputRequest);
         expect(result).toEqual(outputId);
-        const fields = addLocaleToFields(outputRequest);
-        expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
+        const { publishDate: _, ...fieldsCreated } = outputRequest;
+        const fields = addLocaleToFields({
+          ...fieldsCreated,
+          authors: fieldsCreated.authors.map(
+            (author) => author.externalUserId || author.userId,
+          ),
+          updatedBy: outputRequest.createdBy,
+        });
+        expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
           fields,
         });
 
-        expect(userMock.publish).toHaveBeenCalled();
+        expect(outputMock.publish).toHaveBeenCalled();
       });
 
       test('Should use the correct IDs for authors', async () => {
@@ -686,17 +670,16 @@ describe('Outputs data provider', () => {
           },
           { userId: 'some-user-id' },
         ];
-        const userMock = getEntry({});
-        environmentMock.createEntry.mockResolvedValue(userMock);
-        userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
+        const outputMock = getEntry({});
+        environmentMock.createEntry.mockResolvedValue(outputMock);
+        outputMock.publish = jest.fn().mockResolvedValueOnce(outputMock);
 
         await outputDataProvider.create(OutputRequest);
-        expect(environmentMock.createEntry).toHaveBeenCalledWith(
-          'users',
-          expect.objectContaining({
+        expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
+          fields: expect.objectContaining({
             authors: { 'en-US': ['some-external-user-id', 'some-user-id'] },
           }),
-        );
+        });
       });
 
       test('Should throw when fails to create the output', async () => {
@@ -729,7 +712,7 @@ describe('Outputs data provider', () => {
           },
         } as Entry);
         contentfulGraphqlClientMock.request.mockResolvedValue({
-          users: {
+          outputs: {
             sys: {
               publishedVersion: 2,
             },
@@ -740,9 +723,14 @@ describe('Outputs data provider', () => {
       test('Should update the existing output', async () => {
         const outputUpdateData = getOutputUpdateDataObject();
 
-        const fields = addLocaleToFields(outputUpdateData);
-
         await outputDataProvider.update(outputId, outputUpdateData);
+        const { publishDate: _, ...fieldsCreated } = outputUpdateData;
+        const fields = addLocaleToFields({
+          ...fieldsCreated,
+          authors: fieldsCreated.authors.map(
+            (author) => author.externalUserId || author.userId,
+          ),
+        });
         expect(patchAndPublish).toHaveBeenCalledWith(entry, {
           ...fields,
         });

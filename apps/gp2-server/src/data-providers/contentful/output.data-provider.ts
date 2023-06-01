@@ -1,4 +1,5 @@
 import {
+  addLocaleToFields,
   Environment,
   gp2 as gp2Contentful,
   GraphQLClient,
@@ -105,14 +106,13 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
 
     const fields = cleanOutput({
       ...data,
-      updatedBy: data.createdBy,
     });
     const outputEntry = await environment.createEntry('outputs', {
-      fields: {
+      fields: addLocaleToFields({
         ...fields,
-        createdBy: [data.createdBy],
-        updatedBy: [data.createdBy],
-      },
+        createdBy: data.createdBy,
+        updatedBy: data.createdBy,
+      }),
     });
     await outputEntry.publish();
 
@@ -129,11 +129,14 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     const fields = cleanOutput({
       ...data,
     });
-    const authorIds = data.authors.map(getAuthorIdList);
-    const result = await patchAndPublish(user, {
-      ...fields,
-      authorIds,
-    });
+    const authors = data.authors.map(getAuthorIdList);
+    const result = await patchAndPublish(
+      user,
+      addLocaleToFields({
+        ...fields,
+        authors,
+      }),
+    );
 
     const fetchEventById = () => this.fetchOutputById(id);
     await pollContentfulGql<gp2Contentful.FetchOutputByIdQuery>(
@@ -292,19 +295,18 @@ const getSearchWhere = (search: string) => {
   return [{ OR: where }];
 };
 
-const cleanOutput = (outputToUpdate: gp2Model.OutputUpdateDataObject) =>
+const cleanOutput = (
+  outputToUpdate:
+    | gp2Model.OutputUpdateDataObject
+    | gp2Model.OutputCreateDataObject,
+) =>
   Object.entries(outputToUpdate).reduce((acc, [key, value]) => {
-    // authors, documentType, type, subtype
-    if (key === 'avatar') {
+    if (key === 'authors') {
       return {
         ...acc,
-        avatar: {
-          sys: {
-            type: 'Link',
-            linkType: 'Asset',
-            id: value,
-          },
-        },
+        authors: (value as gp2Model.OutputUpdateDataObject['authors']).map(
+          (author) => author.userId || author.externalUserId,
+        ),
       };
     }
     return { ...acc, [key]: value };

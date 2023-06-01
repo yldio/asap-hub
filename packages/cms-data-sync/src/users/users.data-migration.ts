@@ -23,6 +23,7 @@ type ContentfulUser = Omit<Users, 'sys' | 'contentfulMetadata' | 'avatar'> & {
   id: string;
   avatar: SysLink | undefined;
 };
+type SocialLinks = Partial<NonNullable<UserItem['flatData']['social']>[number]>;
 
 export const migrateUsers = async () => {
   const { contentfulEnvironment, squidexGraphqlClient } =
@@ -115,9 +116,15 @@ export const migrateUsers = async () => {
       }),
     );
 
+    const socialLinks: SocialLinks = social?.[0] || {};
+    // these field have pattern validation that fails on an empty string
+    // so replace empty values with null
+    socialLinks.website1 = socialLinks.website1 || null;
+    socialLinks.website2 = socialLinks.website2 || null;
+
     const userPayload = {
       ...props,
-      ...(social?.[0] || {}),
+      ...socialLinks,
       createdDate: created,
       // these field have pattern validation that fails on an empty string
       // so replace empty values with null

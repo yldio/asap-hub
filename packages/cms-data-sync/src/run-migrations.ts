@@ -7,6 +7,7 @@ import { migrateCalendars } from './calendars/calendars.data-migration';
 import { migrateLabs } from './labs/labs.data-migration';
 import { migrateUsers } from './users/users.data-migration';
 import { logger } from './utils';
+import { contentfulRateLimiter } from './contentful-rate-limiter';
 
 export const runMigrations = async () => {
   const {
@@ -23,6 +24,7 @@ export const runMigrations = async () => {
 
   const disabledWebhooks: WebHooks[] = [];
   try {
+    await contentfulRateLimiter.removeTokens(1);
     const webhooks = await contentfulSpace.getWebhooks();
     const currentEnvironmentWebhooks = webhooks.items.filter((webhook) =>
       webhook.filters?.some(
@@ -35,6 +37,7 @@ export const runMigrations = async () => {
 
     for (const webhook of currentEnvironmentWebhooks) {
       webhook.active = false;
+      await contentfulRateLimiter.removeTokens(1);
       await webhook.update();
       disabledWebhooks.push(webhook);
     }
@@ -69,6 +72,7 @@ export const runMigrations = async () => {
       for (const disabledWebhook of disabledWebhooks) {
         disabledWebhook.active = true;
         try {
+          await contentfulRateLimiter.removeTokens(1);
           await disabledWebhook.update();
         } catch (err) {
           logger(`Error reactivating webhook ${disabledWebhook.name}`, 'ERROR');

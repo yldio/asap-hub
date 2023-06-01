@@ -146,9 +146,9 @@ export const parseGraphQlCalendarToDataObject = (
 ): gp2Model.CalendarDataObject => ({
   id: item.sys.id,
   version: item.sys.publishedVersion ?? 1,
-  resourceId: item.googleApiMetadata.resourceId,
-  expirationDate: item.googleApiMetadata.expirationDate,
-  syncToken: item.googleApiMetadata.syncToken,
+  resourceId: item.googleApiMetadata?.resourceId,
+  expirationDate: item.googleApiMetadata?.expirationDate,
+  syncToken: item.googleApiMetadata?.syncToken,
   ...parseContentfulGraphqlCalendarPartialToDataObject(item),
   ...parseContentfulWorkingGroupsProjects(item),
 });

@@ -1,6 +1,8 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter, Router } from 'react-router-dom';
+import { InnerToastContext } from '@asap-hub/react-context';
+
 import {
   createResearchOutputResponse,
   createUserResponse,
@@ -796,6 +798,8 @@ describe('form buttons', () => {
       published = false,
       documentType = 'Article',
       researchTags = [{ id: '1', name: 'research tag 1' }],
+      descriptionUnchangedWarning = false,
+      researchOutputData = undefined,
     }: {
       canEditResearchOutput?: boolean;
       canPublishResearchOutput?: boolean;
@@ -803,32 +807,42 @@ describe('form buttons', () => {
       published?: boolean;
       documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
       researchTags?: ResearchTagResponse[];
+      descriptionUnchangedWarning?: ComponentProps<
+        typeof ResearchOutputForm
+      >['descriptionUnchangedWarning'];
+      researchOutputData?: ComponentProps<
+        typeof ResearchOutputForm
+      >['researchOutputData'];
     } = {
       documentType: 'Article',
       researchTags: [],
     },
   ) => {
     render(
-      <Router history={history}>
-        <ResearchOutputForm
-          {...props}
-          selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
-          documentType={documentType}
-          typeOptions={Array.from(
-            researchOutputDocumentTypeToType[documentType],
-          )}
-          onSave={saveFn}
-          getLabSuggestions={getLabSuggestions}
-          getAuthorSuggestions={getAuthorSuggestions}
-          researchTags={researchTags}
-          published={published}
-          permissions={{
-            canEditResearchOutput,
-            canPublishResearchOutput,
-            canShareResearchOutput: true,
-          }}
-        />
-      </Router>,
+      <InnerToastContext.Provider value={jest.fn()}>
+        <Router history={history}>
+          <ResearchOutputForm
+            {...props}
+            researchOutputData={researchOutputData}
+            descriptionUnchangedWarning={descriptionUnchangedWarning}
+            selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
+            documentType={documentType}
+            typeOptions={Array.from(
+              researchOutputDocumentTypeToType[documentType],
+            )}
+            onSave={saveFn}
+            getLabSuggestions={getLabSuggestions}
+            getAuthorSuggestions={getAuthorSuggestions}
+            researchTags={researchTags}
+            published={published}
+            permissions={{
+              canEditResearchOutput,
+              canPublishResearchOutput,
+              canShareResearchOutput: true,
+            }}
+          />
+        </Router>
+      </InnerToastContext.Provider>,
     );
   };
 
@@ -916,5 +930,91 @@ describe('form buttons', () => {
     const cancelButton = screen.getByRole('button', { name: /Cancel/i });
     expect(cancelButton).toBeInTheDocument();
     expect(cancelButton).toHaveStyle(`background-color:${notPrimaryButtonBg}`);
+  });
+  describe('descriptionUnchangedWarning', () => {
+    it('Shows correct button for draft save warning', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        published: false,
+        researchOutputData: createResearchOutputResponse(),
+      });
+      userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      expect(screen.getByText(/Keep and save/i)).toBeVisible();
+    });
+    it('Shows correct button for publish save warning', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        researchOutputData: createResearchOutputResponse(),
+        published: false,
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      expect(screen.getByText(/Keep and publish/i)).toBeVisible();
+    });
+    it('is cancelable', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        researchOutputData: createResearchOutputResponse(),
+        published: false,
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+      expect(screen.queryByText(/Keep the same description/i)).toBeNull();
+    });
+
+    it('Will be dismissed if there are errors on the form', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+
+        researchOutputData: {
+          ...createResearchOutputResponse(),
+          link: '',
+        },
+        published: false,
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      userEvent.click(
+        screen.getByRole('button', { name: /Keep and publish/i }),
+      );
+      await waitFor(() => {
+        expect(screen.queryByText(/Keep the same description/i)).toBeNull();
+        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
+      });
+    });
+    it('Will not reappear once dismissed', async () => {
+      await setupForm({
+        descriptionUnchangedWarning: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+
+        researchOutputData: {
+          ...createResearchOutputResponse(),
+          link: '',
+        },
+        published: false,
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.getByText(/Keep the same description/i)).toBeVisible();
+      userEvent.click(
+        screen.getByRole('button', { name: /Keep and publish/i }),
+      );
+      await waitFor(() => {
+        expect(screen.queryByText(/Keep the same description/i)).toBeNull();
+        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(screen.queryByText(/Keep the same description/i)).toBeNull();
+    });
   });
 });

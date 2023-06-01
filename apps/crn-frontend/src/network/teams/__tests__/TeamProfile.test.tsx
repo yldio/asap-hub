@@ -10,7 +10,7 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { ResearchOutputTeamResponse, TeamResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { network, sharedResearch } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -275,6 +275,7 @@ describe('Duplicate Output', () => {
       link: 'http://example.com',
     };
     mockGetResearchOutput.mockResolvedValue(researchOutput);
+    mockCreateResearchOutput.mockResolvedValue(researchOutput);
 
     const history = createMemoryHistory({
       initialEntries: [
@@ -301,7 +302,8 @@ describe('Duplicate Output', () => {
     );
     expect(screen.getByLabelText(/Title/i)).toHaveValue('Copy of Example');
     userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
-    userEvent.click(screen.getByText(/save/i));
+    userEvent.click(screen.getByText(/save draft/i));
+    userEvent.click(screen.getByText(/keep and/i));
     expect(mockCreateResearchOutput).toHaveBeenCalledWith(
       expect.objectContaining({
         title: 'Copy of Example',
@@ -310,11 +312,14 @@ describe('Duplicate Output', () => {
       expect.anything(),
     );
 
-    await waitFor(() =>
-      expect(history.location.pathname).not.toEqual(
-        `/network/teams/${teamResponse.id}/duplicate/${researchOutput.id}`,
-      ),
-    );
+    await waitFor(() => {
+      expect(history.location.pathname).toEqual(
+        sharedResearch({}).researchOutput({
+          researchOutputId: researchOutput.id,
+        }).$,
+      );
+      expect(screen.queryByText(/loading/i)).toBe(null);
+    });
   });
 
   it('will show a page not found if research output does not exist', async () => {

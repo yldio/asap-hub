@@ -17,7 +17,13 @@ import {
   TeamOutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, {
+  ComponentProps,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useTeamById } from './state';
 import {
   handleError,
@@ -43,10 +49,14 @@ const useParamOutputDocumentType = (
 type TeamOutputProps = {
   teamId: string;
   researchOutputData?: ResearchOutputResponse;
-};
+} & Pick<
+  ComponentProps<typeof ResearchOutputForm>,
+  'descriptionUnchangedWarning'
+>;
 const TeamOutput: React.FC<TeamOutputProps> = ({
   teamId,
   researchOutputData,
+  descriptionUnchangedWarning,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
   const documentType =
@@ -134,6 +144,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             )}
             published={published}
             permissions={permissions}
+            descriptionUnchangedWarning={descriptionUnchangedWarning}
             onSave={(output) =>
               researchOutputData?.id
                 ? updateAndPublishResearchOutput(researchOutputData.id, {

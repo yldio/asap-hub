@@ -125,20 +125,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
             id: workingGroup || project,
           },
         },
-        createdBy: {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: data.createdBy,
-          },
-        },
-        updatedBy: {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: data.createdBy,
-          },
-        },
       }),
     });
     await outputEntry.publish();
@@ -150,21 +136,16 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     id: string,
     { publishDate: _, ...data }: gp2Model.OutputUpdateDataObject,
   ) {
-    console.log('in update');
+    console.log('in update', JSON.stringify(data, undefined, 2));
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
 
     const fields = cleanOutput({
       ...data,
     });
-    const authors = data.authors.map(getAuthorIdList);
-    const result = await patchAndPublish(
-      user,
-      addLocaleToFields({
-        ...fields,
-        authors,
-      }),
-    );
+    const result = await patchAndPublish(user, {
+      ...fields,
+    });
 
     const fetchEventById = () => this.fetchOutputById(id);
     await pollContentfulGql<gp2Contentful.FetchOutputByIdQuery>(
@@ -174,14 +155,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     );
   }
 }
-
-const getAuthorIdList = (authorDataObject: gp2Model.AuthorUpsertDataObject) => {
-  if ('userId' in authorDataObject) {
-    return authorDataObject.userId;
-  }
-
-  return authorDataObject.externalUserId;
-};
 
 const getType = (
   documentType: gp2Model.OutputDocumentType,
@@ -341,6 +314,37 @@ const cleanOutput = (
             },
           }),
         ),
+      };
+    }
+    if (key === 'updatedBy') {
+      return {
+        ...acc,
+        updatedBy: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: value,
+          },
+        },
+        createdBy: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: value,
+          },
+        },
+      };
+    }
+    if (key === 'updatedBy') {
+      return {
+        ...acc,
+        updatedBy: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: value,
+          },
+        },
       };
     }
     return { ...acc, [key]: value };

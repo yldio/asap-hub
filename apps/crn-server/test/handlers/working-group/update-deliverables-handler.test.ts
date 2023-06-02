@@ -1,23 +1,28 @@
+import { WorkingGroupDeliverable } from '@asap-hub/model';
 import { workingGroupUpdateHandler } from '../../../src/handlers/working-group/update-deliverables-handler';
 import {
-  getWorkingGroupEvent,
+  getWorkingGroupSquidexEvent,
+  getWorkingGroupContentfulEvent,
   getWorkingGroupResponse,
 } from '../../fixtures/working-groups.fixtures';
 import { getDataProviderMock } from '../../mocks/data-provider.mock';
-import { WorkingGroupDeliverable } from '@asap-hub/model';
 
-describe('Working Group update handler', () => {
+describe.each`
+  cms             | getEventFunction
+  ${`Squidex`}    | ${getWorkingGroupSquidexEvent}
+  ${`Contentful`} | ${getWorkingGroupContentfulEvent}
+`('Working Group update handler', ({ cms, getEventFunction }) => {
   const workingGroupDataProviderMock = getDataProviderMock();
   const handler = workingGroupUpdateHandler(workingGroupDataProviderMock);
 
   afterEach(() => jest.clearAllMocks());
 
-  test('updates Pending/In Progress deliverable statuses to Not Started/Incomplete if working group is completed', async () => {
+  test(`updates Pending/In Progress deliverable statuses to Not Started/Incomplete if working group is completed for a ${cms} event`, async () => {
     const deliverables: WorkingGroupDeliverable[] = [
       { description: 'A pending deliverable', status: 'Pending' },
       { description: 'An in progress deliverable', status: 'In Progress' },
     ];
-    const event = getWorkingGroupEvent({ complete: true, deliverables });
+    const event = getEventFunction();
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: true, deliverables }),
     );
@@ -25,7 +30,7 @@ describe('Working Group update handler', () => {
     await handler(event);
 
     expect(workingGroupDataProviderMock.update).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
       {
         deliverables: [
           { description: 'A pending deliverable', status: 'Not Started' },
@@ -35,12 +40,12 @@ describe('Working Group update handler', () => {
     );
   });
 
-  test('does not alter the status of complete deliverables', async () => {
+  test(`does not alter the status of complete deliverables for a ${cms} event`, async () => {
     const deliverables: WorkingGroupDeliverable[] = [
       { description: 'A complete deliverable', status: 'Complete' },
       { description: 'An in progress deliverable', status: 'In Progress' },
     ];
-    const event = getWorkingGroupEvent({ complete: true, deliverables });
+    const event = getEventFunction();
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: true, deliverables }),
     );
@@ -48,7 +53,7 @@ describe('Working Group update handler', () => {
     await handler(event);
 
     expect(workingGroupDataProviderMock.update).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
       {
         deliverables: [
           { description: 'A complete deliverable', status: 'Complete' },
@@ -58,12 +63,12 @@ describe('Working Group update handler', () => {
     );
   });
 
-  test('updates Not Started/Incomplete deliverable statuses to Pending/In Progress if working group is uncompleted', async () => {
+  test(`updates Not Started/Incomplete deliverable statuses to Pending/In Progress if working group is uncompleted for a ${cms} event`, async () => {
     const deliverables: WorkingGroupDeliverable[] = [
       { description: 'A not-started deliverable', status: 'Not Started' },
       { description: 'An incomplete deliverable', status: 'Incomplete' },
     ];
-    const event = getWorkingGroupEvent({ complete: false, deliverables });
+    const event = getEventFunction();
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: false, deliverables }),
     );
@@ -71,7 +76,7 @@ describe('Working Group update handler', () => {
     await handler(event);
 
     expect(workingGroupDataProviderMock.update).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
       {
         deliverables: [
           { description: 'A not-started deliverable', status: 'Pending' },
@@ -81,12 +86,12 @@ describe('Working Group update handler', () => {
     );
   });
 
-  test('does not send update request if no changes are required', async () => {
+  test(`does not send update request if no changes are required for a ${cms} event`, async () => {
     const deliverables: WorkingGroupDeliverable[] = [
       { description: 'A pending deliverable', status: 'Pending' },
       { description: 'An in progress deliverable', status: 'In Progress' },
     ];
-    const event = getWorkingGroupEvent({ complete: false, deliverables });
+    const event = getEventFunction();
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: false, deliverables }),
     );
@@ -96,8 +101,8 @@ describe('Working Group update handler', () => {
     expect(workingGroupDataProviderMock.update).not.toHaveBeenCalled();
   });
 
-  test('does not send update request if working group has no deliverables', async () => {
-    const event = getWorkingGroupEvent({ complete: true, deliverables: [] });
+  test(`does not send update request if working group has no deliverables for a ${cms} event`, async () => {
+    const event = getEventFunction();
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(
       getWorkingGroupResponse({ complete: false, deliverables: [] }),
     );
@@ -107,12 +112,8 @@ describe('Working Group update handler', () => {
     expect(workingGroupDataProviderMock.update).not.toHaveBeenCalled();
   });
 
-  test('throws without sending update request if fetch does not return a value', async () => {
-    const deliverables: WorkingGroupDeliverable[] = [
-      { description: 'A pending deliverable', status: 'Pending' },
-      { description: 'An in progress deliverable', status: 'In Progress' },
-    ];
-    const event = getWorkingGroupEvent({ complete: true, deliverables });
+  test(`throws without sending update request if fetch does not return a value for a ${cms} event`, async () => {
+    const event = getEventFunction();
     workingGroupDataProviderMock.fetchById.mockResolvedValueOnce(null);
 
     await expect(handler(event)).rejects.toThrow();

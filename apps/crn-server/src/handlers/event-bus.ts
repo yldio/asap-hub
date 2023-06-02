@@ -61,10 +61,16 @@ export type ResearchOutputPayload = SquidexWebhookPayload<
   ResearchOutputEvent
 >;
 
-export type WorkingGroupPayload = SquidexWebhookPayload<
-  WorkingGroup,
-  WorkingGroupEvent
+export type WorkingGroupSquidexPayload = WebhookDetail<
+  SquidexWebhookPayload<WorkingGroup, WorkingGroupEvent>
 >;
+
+export type WorkingGroupContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'workingGroups'>
+>;
+export type WorkingGroupPayload =
+  | WorkingGroupSquidexPayload
+  | WorkingGroupContentfulPayload;
 
 export type TeamPayload = SquidexWebhookPayload<Team, TeamEvent>;
 

@@ -3,11 +3,6 @@ import 'source-map-support/register';
 import { Handler } from 'aws-lambda/handler';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import {
-  RestWorkingGroup,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
-import {
   WorkingGroupDeliverable,
   DeliverableStatus,
   WorkingGroupEvent,
@@ -16,9 +11,7 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { WorkingGroupPayload } from '../event-bus';
 import { WorkingGroupDataProvider } from '../../data-providers/types';
-import { WorkingGroupSquidexDataProvider } from '../../data-providers/working-groups.data-provider';
-import { getAuthToken } from '../../utils/auth';
-import { appName, baseUrl } from '../../config';
+import { getWorkingGroupDataProvider } from '../../dependencies/working-groups.dependencies';
 
 type DeliverableStatusMapping = {
   [S in DeliverableStatus]?: DeliverableStatus;
@@ -29,19 +22,15 @@ export const workingGroupUpdateHandler =
     dataProvider: WorkingGroupDataProvider,
   ): EventBridgeHandler<WorkingGroupEvent, WorkingGroupPayload> =>
   async (event) => {
+    const workingGroupId = event.detail.resourceId;
     logger.info(
-      `Received ${event.detail.type} event for ${event.detail.payload.data?.title?.iv}`,
+      `Received ${event['detail-type']} event for working group with id ${event.detail.resourceId}`,
     );
 
-    const {
-      detail: {
-        payload: { id },
-      },
-    } = event;
-    const workingGroup = await dataProvider.fetchById(id);
+    const workingGroup = await dataProvider.fetchById(workingGroupId);
 
     if (!workingGroup) {
-      throw new Error(`Working group ${id} could not be found.`);
+      throw new Error(`Working group ${workingGroupId} could not be found.`);
     }
 
     const mapping: DeliverableStatusMapping = workingGroup.complete
@@ -67,35 +56,16 @@ export const workingGroupUpdateHandler =
 
     if (changed) {
       logger.info(
-        `Updating deliverable statuses for working group ${event.detail.payload.data?.title?.iv}`,
+        `Updating deliverable statuses for working group with id ${workingGroupId}`,
       );
-      await dataProvider.update(id, { deliverables });
+      await dataProvider.update(workingGroupId, { deliverables });
     } else {
       logger.info(
-        `No deliverable statuses to update for working group ${event.detail.payload.data?.title?.iv}`,
+        `No deliverable statuses to update for working group with id ${workingGroupId}`,
       );
     }
   };
 
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-
-const squidexRestClient = new SquidexRest<RestWorkingGroup>(
-  getAuthToken,
-  'working-groups',
-  {
-    appName,
-    baseUrl,
-  },
-);
-
-const workingGroupDataProvider = new WorkingGroupSquidexDataProvider(
-  squidexGraphqlClient,
-  squidexRestClient,
-);
-
 export const handler: Handler = sentryWrapper(
-  workingGroupUpdateHandler(workingGroupDataProvider),
+  workingGroupUpdateHandler(getWorkingGroupDataProvider()),
 );

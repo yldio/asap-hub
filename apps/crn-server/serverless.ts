@@ -889,7 +889,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    updateWorkingGroupDeliverables: {
+    updateSquidexWorkingGroupDeliverables: {
       handler:
         './src/handlers/working-group/update-deliverables-handler.handler',
       events: [
@@ -905,6 +905,26 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'false',
+      },
+    },
+    updateContentfulWorkingGroupDeliverables: {
+      handler:
+        './src/handlers/working-group/update-deliverables-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['WorkingGroupsPublished'],
+            },
+          },
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
     squidexWebhook: {

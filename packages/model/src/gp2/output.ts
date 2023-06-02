@@ -75,9 +75,9 @@ type OutputOwner = {
   id: string;
   title: string;
 };
-
+export type OutputAuthor = UserAuthor | ExternalUserResponse;
 export type OutputDataObject = OutputCoreObject & {
-  authors: (UserAuthor | ExternalUserResponse)[];
+  authors: OutputAuthor[];
   created: string;
   id: string;
   lastUpdatedPartial: string;

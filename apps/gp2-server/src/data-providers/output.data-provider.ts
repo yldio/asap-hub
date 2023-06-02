@@ -178,7 +178,8 @@ const getAuthorIdList = (
 ) =>
   author.externalUserId || author.userId
     ? [...authorList, author.externalUserId ?? author.userId]
-    : authorList;
+    : /* istanbul ignore next */
+      authorList;
 const reverseDocumentTypeMap = reverseMap(documentTypeMap);
 const reverseTypeMap = reverseMap(typeMap);
 

@@ -208,40 +208,29 @@ const getRelatedEntity = (related: OutputItem['relatedEntity']) => {
       }
     : empty;
 };
-
-const getAuthors = (
-  authors?: NonNullable<OutputItem['authorsCollection']>['items'],
-) =>
+type GraphQLAuthors = NonNullable<OutputItem['authorsCollection']>['items'];
+type GraphQLAuthor = NonNullable<GraphQLAuthors[number]>;
+const getAuthors = (authors?: GraphQLAuthors) =>
   authors
     ?.filter(
       (author) => author?.__typename !== 'Users' || author.onboarded !== false,
     )
-    .reduce(
-      (
-        authorList: (gp2Model.UserAuthor | gp2Model.ExternalUserResponse)[],
-        author,
-      ) => {
-        if (!author?.__typename) {
-          return authorList;
-        }
-        const parsed =
-          author.__typename === 'Users'
-            ? {
-                id: author.sys.id,
-                firstName: author.firstName || '',
-                lastName: author.lastName || '',
-                displayName: `${author.firstName} ${author.lastName}`,
-                email: author.email || '',
-                onboarded: author.onboarded || true,
-                avatarUrl: author.avatar?.url ?? undefined,
-              }
-            : {
-                id: author.sys.id,
-                displayName: author.name || '',
-              };
-        return [...authorList, parsed];
-      },
-      [],
+    .filter((author): author is GraphQLAuthor => author !== null)
+    .map((author) =>
+      author.__typename === 'Users'
+        ? {
+            id: author.sys.id,
+            firstName: author.firstName || '',
+            lastName: author.lastName || '',
+            displayName: `${author.firstName} ${author.lastName}`,
+            email: author.email || '',
+            onboarded: author.onboarded || true,
+            avatarUrl: author.avatar?.url ?? undefined,
+          }
+        : {
+            id: author.sys.id,
+            displayName: author.name || '',
+          },
     ) || [];
 
 export const parseContentfulGraphQLOutput = (
@@ -344,24 +333,10 @@ const parseOutputsCollection = (outputsCollection: OutputsCollection) => {
     };
   }
 
-  const { total, items: outputs } = outputsCollection;
-
-  if (outputs === null) {
-    logger.warn('outputs items returned null');
-    return {
-      total: 0,
-      items: [],
-    };
-  }
-
   return {
-    total,
-    items: outputs.reduce((list: gp2Model.OutputDataObject[], item) => {
-      if (!item) {
-        return list;
-      }
-
-      return [...list, parseContentfulGraphQLOutput(item)];
-    }, []),
+    total: outputsCollection.total,
+    items: outputsCollection.items
+      .filter((item): item is OutputItem => item !== null)
+      .map(parseContentfulGraphQLOutput),
   };
 };

@@ -1,15 +1,15 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
+  AuthorSelect,
   Button,
   Form,
   FormCard,
   GlobeIcon,
   LabeledDropdown,
   LabeledTextField,
+  noop,
   pixels,
   usePushFromHere,
-  AuthorSelect,
-  noop,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
 
@@ -217,17 +217,17 @@ const OutputForm: React.FC<OutputFormType> = ({
                 primary
                 noMargin
                 onClick={async () => {
-                  const researchOutput = await getWrappedOnSave(() =>
+                  const output = await getWrappedOnSave(() =>
                     shareOutput(currentPayload),
                   )();
-                  if (researchOutput) {
+                  if (output) {
                     const path = gp2Routing.outputs({}).$;
                     setBannerMessage(
                       getBannerMessage(entityType, documentType, !title),
                     );
                     historyPush(path);
                   }
-                  return researchOutput;
+                  return output;
                 }}
                 enabled={!isSaving}
               >

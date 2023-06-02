@@ -4,6 +4,7 @@ import {
   FetchEventsByExternalAuthorIdQuery,
   FetchEventsByTeamIdQuery,
   ContentfulWebhookPayload,
+  FetchWorkingGroupCalendarQuery,
 } from '@asap-hub/contentful';
 import {
   EventCreateDataObject,
@@ -322,6 +323,17 @@ export const getEventsByTeamIdGraphqlResponse =
     },
   });
 
+export const getWorkingGroupCalendarResponse =
+  (): FetchWorkingGroupCalendarQuery => ({
+    workingGroups: {
+      calendars: {
+        sys: {
+          id: 'calendar-from-wg-id',
+        },
+      },
+    },
+  });
+
 export const getEventSpeakerUser = (): EventSpeakerUser => ({
   team: {
     id: 'team-id-3',
@@ -342,6 +354,7 @@ export const getEventSpeakerUser = (): EventSpeakerUser => ({
 export const getContentfulEventDataObject = (): EventDataObject => ({
   ...getEventDataObject(),
   ...eventUnreadyResponse,
+  workingGroup: undefined,
   notes: '<p>These are the notes from the meeting</p>',
   presentation: '<p><iframe src="https://example.com"/></p>',
   videoRecording:

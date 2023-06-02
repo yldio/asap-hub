@@ -5,6 +5,7 @@ import {
   patchAndPublish,
 } from '@asap-hub/contentful';
 import { EventSpeakerTeam } from '@asap-hub/model';
+
 import {
   EventContentfulDataProvider,
   parseGraphQLEvent,
@@ -20,7 +21,9 @@ import {
   getEventsByExternalAuthorIdGraphqlResponse,
   getEventsByTeamIdGraphqlResponse,
   getEventsByUserIdGraphqlResponse,
+  getWorkingGroupCalendarResponse,
 } from '../../fixtures/events.fixtures';
+import { getContentfulGraphqlWorkingGroup } from '../../fixtures/working-groups.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
@@ -44,6 +47,7 @@ describe('Events Contentful Data Provider', () => {
     getContentfulGraphqlClientMockServer({
       TeamMembership: () => getContentfulUserSpeakerTeams(),
       Events: () => getContentfulGraphqlEvent(),
+      WorkingGroups: () => getContentfulGraphqlWorkingGroup({}),
     });
 
   const eventDataProviderMockGraphql = new EventContentfulDataProvider(
@@ -59,7 +63,12 @@ describe('Events Contentful Data Provider', () => {
     test('Should fetch the events from Contentful graphql', async () => {
       const result = await eventDataProviderMockGraphql.fetch({});
 
-      expect(result).toMatchObject(getContentfulListEventDataObject());
+      const expectedResult = getContentfulListEventDataObject();
+      expectedResult.items[0]!.workingGroup! = {
+        id: '123',
+        title: 'Working Group Title',
+      };
+      expect(result).toMatchObject(expectedResult);
     });
 
     test('Should return an empty result when the client returns an empty array of data', async () => {
@@ -301,6 +310,42 @@ describe('Events Contentful Data Provider', () => {
         );
         expect(result).toEqual(getContentfulListEventDataObject());
       });
+
+      test('can filter by workingGroupId', async () => {
+        const workingGroupId = 'wg-1';
+
+        const workingGroupCalendar = getWorkingGroupCalendarResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          workingGroupCalendar,
+        );
+
+        const eventsGraphqlResponse = getContentfulGraphqlEventsResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          eventsGraphqlResponse,
+        );
+
+        const result = await eventDataProvider.fetch({
+          filter: { workingGroupId },
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            limit: 10,
+            skip: 0,
+            where: {
+              hidden_not: true,
+              calendar: {
+                sys: {
+                  id: 'calendar-from-wg-id',
+                },
+              },
+            },
+            order: undefined,
+          },
+        );
+        expect(result).toEqual(getContentfulListEventDataObject());
+      });
     });
   });
 
@@ -310,7 +355,12 @@ describe('Events Contentful Data Provider', () => {
     test('Should fetch the event from Contentful Graphql', async () => {
       const result = await eventDataProviderMockGraphql.fetchById(eventId);
 
-      expect(result).toMatchObject(getContentfulEventDataObject());
+      const expectedResult = getContentfulEventDataObject();
+      (expectedResult.workingGroup = {
+        id: '123',
+        title: 'Working Group Title',
+      }),
+        expect(result).toMatchObject(expectedResult);
     });
 
     test('Should return null when event is not found', async () => {
@@ -571,6 +621,93 @@ describe('Events Contentful Data Provider', () => {
             },
           },
         ]);
+      });
+    });
+
+    describe('working group', () => {
+      it('should return working group as undefined when linked from calendar is null', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = null;
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.workingGroup).toBeUndefined();
+      });
+
+      it('should return working group as undefined when workingGroupsCollection is null', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          workingGroupsCollection: null,
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.workingGroup).toBeUndefined();
+      });
+
+      it('should return working group as undefined when workingGroupsCollection items are empty', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          workingGroupsCollection: {
+            items: [],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.workingGroup).toBeUndefined();
+      });
+
+      it('should return working group as undefined when workingGroupsCollection items are null', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          workingGroupsCollection: {
+            items: [null, null],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.workingGroup).toBeUndefined();
+      });
+
+      it('should return working group when it is linked from calendar', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          workingGroupsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'wg-linked-from-calendar',
+                },
+                title: 'WG-1',
+              },
+            ],
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.workingGroup).toEqual({
+          id: 'wg-linked-from-calendar',
+          title: 'WG-1',
+        });
       });
     });
   });

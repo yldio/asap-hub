@@ -17,6 +17,7 @@ import {
   calendarUnreadyResponse,
 } from '../../../src/data-providers/contentful/calendars.data-provider';
 import { getEntry } from '../../fixtures/contentful.fixtures';
+import { getContentfulGraphqlWorkingGroup } from '../../fixtures/working-groups.fixtures';
 
 describe('Calendars data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -32,6 +33,7 @@ describe('Calendars data provider', () => {
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
       Calendars: () => getContentfulGraphqlCalendar(),
+      WorkingGroups: () => getContentfulGraphqlWorkingGroup({}),
     });
 
   const calendarDataProviderMock = new CalendarContentfulDataProvider(
@@ -288,9 +290,100 @@ describe('Calendars data provider', () => {
               calendarMatchingResourceIdWithinExpirationLimit.googleApiMetadata
                 .resourceId,
             groups: [],
+          },
+        ],
+      });
+    });
+
+    test('Should filter calendars by active', async () => {
+      const baseExpirationDate = 100;
+
+      const calendarWithActiveWorkingGroup = getCalendarResponse(
+        'calendar-with-active-wg',
+        'resource-id',
+        baseExpirationDate,
+        [
+          getWorkingGroupData({
+            workingGroupId: 'active-wg',
+            complete: false,
+          }),
+        ],
+      );
+
+      const calendarWithInactiveWorkingGroup = getCalendarResponse(
+        'calendar-with-inactive-wg',
+        'resource-id',
+        baseExpirationDate,
+        [
+          getWorkingGroupData({
+            workingGroupId: 'inactive-wg',
+            complete: true,
+          }),
+        ],
+      );
+
+      const calendarWithEmptyLinkedWorkingGroup = getCalendarResponse(
+        'calendar-with-empty-linked-wg',
+        'resource-id',
+        baseExpirationDate,
+        [],
+      );
+
+      const calendarWithoutLinkedWorkingGroup = getCalendarResponse(
+        'calendar-without-linked-working-group',
+        'resource-id',
+        baseExpirationDate,
+        null,
+      );
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        calendarsCollection: {
+          total: 4,
+          items: [
+            calendarWithActiveWorkingGroup,
+            calendarWithInactiveWorkingGroup,
+            calendarWithEmptyLinkedWorkingGroup,
+            calendarWithoutLinkedWorkingGroup,
+          ],
+        },
+      });
+
+      const result = await calendarDataProvider.fetch({
+        active: true,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          limit: 50,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {},
+        },
+      );
+
+      expect(result).toEqual({
+        items: [
+          {
+            ...getContentfulCalendarDataObject(),
+            id: 'calendar-with-active-wg',
+            expirationDate: baseExpirationDate,
+            workingGroups: [{ complete: false, id: 'active-wg' }],
+          },
+          {
+            ...getContentfulCalendarDataObject(),
+            id: 'calendar-with-empty-linked-wg',
+            expirationDate: baseExpirationDate,
+            workingGroups: [],
+          },
+          {
+            ...getContentfulCalendarDataObject(),
+            id: 'calendar-without-linked-working-group',
+            expirationDate: baseExpirationDate,
             workingGroups: [],
           },
         ],
+        total: 3,
       });
     });
 
@@ -413,6 +506,101 @@ describe('Calendars data provider', () => {
 
       expect(result!.color).toBe('#333333');
     });
+
+    describe('working group', () => {
+      it('should return working group as empty array when linkedFrom calendar is null', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlCalendar();
+        contentfulGraphQLResponse.linkedFrom = null;
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          calendars: contentfulGraphQLResponse,
+        });
+
+        const result = await calendarDataProvider.fetchById(id);
+
+        expect(result!.workingGroups).toEqual([]);
+      });
+
+      it('should return working group as empty array when workingGroupsCollection is null', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlCalendar();
+        contentfulGraphQLResponse.linkedFrom = {
+          workingGroupsCollection: null,
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          calendars: contentfulGraphQLResponse,
+        });
+
+        const result = await calendarDataProvider.fetchById(id);
+
+        expect(result!.workingGroups).toEqual([]);
+      });
+
+      it('should return working group as empty array when workingGroupsCollection items are empty', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlCalendar();
+        contentfulGraphQLResponse.linkedFrom = {
+          workingGroupsCollection: {
+            items: [],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          calendars: contentfulGraphQLResponse,
+        });
+
+        const result = await calendarDataProvider.fetchById(id);
+
+        expect(result!.workingGroups).toEqual([]);
+      });
+
+      it('should return working group as empty array when workingGroupsCollection items are null', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlCalendar();
+        contentfulGraphQLResponse.linkedFrom = {
+          workingGroupsCollection: {
+            items: [null, null],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          calendars: contentfulGraphQLResponse,
+        });
+
+        const result = await calendarDataProvider.fetchById(id);
+
+        expect(result!.workingGroups).toEqual([]);
+      });
+
+      it('should return working group when it is linked from calendar', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlCalendar();
+        contentfulGraphQLResponse!.linkedFrom = {
+          workingGroupsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'wg-linked-from-calendar',
+                },
+                complete: true,
+              },
+            ],
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          calendars: contentfulGraphQLResponse,
+        });
+
+        const result = await calendarDataProvider.fetchById(id);
+
+        expect(result!.workingGroups).toEqual([
+          {
+            id: 'wg-linked-from-calendar',
+            complete: true,
+          },
+        ]);
+      });
+    });
   });
 
   describe('Update method', () => {
@@ -533,6 +721,14 @@ const getCalendarResponse = (
   id: string,
   resourceId?: string,
   expirationDate?: number,
+  workingGroups?:
+    | {
+        sys: {
+          id: string;
+        };
+        complete: boolean;
+      }[]
+    | null,
 ) => {
   const baseCalendar = getContentfulGraphqlCalendar();
 
@@ -551,5 +747,27 @@ const getCalendarResponse = (
         ? { expirationDate }
         : { expirationDate: baseCalendar.googleApiMetadata.expirationDate }),
     },
+    ...(workingGroups === null
+      ? {
+          linkedFrom: {
+            workingGroupsCollection: null,
+          },
+        }
+      : {
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: workingGroups ?? [getWorkingGroupData({})],
+            },
+          },
+        }),
   };
 };
+export const getWorkingGroupData = ({
+  workingGroupId = '123',
+  complete = false,
+}) => ({
+  sys: {
+    id: workingGroupId,
+  },
+  complete: complete,
+});

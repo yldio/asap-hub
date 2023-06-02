@@ -1103,7 +1103,7 @@ describe('User data provider', () => {
     test.each`
       name          | value                 | fieldName
       ${'regions'}  | ${['Africa', 'Asia']} | ${'region'}
-      ${'keywords'} | ${['Bash', 'R']}      | ${'keywords'}
+      ${'keywords'} | ${['Aging', 'RNA']}   | ${'keywords'}
     `('Should query with $name filters', async ({ name, value, fieldName }) => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexUsersGraphqlResponse(),

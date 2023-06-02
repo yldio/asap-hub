@@ -1122,7 +1122,7 @@ describe('User data provider', () => {
     test.each`
       name          | value                 | fieldName
       ${'regions'}  | ${['Africa', 'Asia']} | ${'regions'}
-      ${'keywords'} | ${['Bash', 'R']}      | ${'keywords'}
+      ${'keywords'} | ${['Aging', 'RNA']}   | ${'keywords'}
     `('Should query with $name filters', async ({ name, value, fieldName }) => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         getContentfulUsersGraphqlResponse(),

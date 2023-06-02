@@ -722,7 +722,8 @@ describe('Outputs data provider', () => {
       test('Should update the existing output', async () => {
         const outputUpdateData = getOutputUpdateDataObject();
 
-        const restOutputUpdateData = getRestOutputUpdateData();
+        const { project: _, ...restOutputUpdateData } =
+          getRestOutputUpdateData();
         nock(baseUrl)
           .patch(`/api/content/${appName}/outputs/${outputId}`, {
             ...restOutputUpdateData,

@@ -81,8 +81,8 @@ export type OutputDataObject = OutputCoreObject & {
   created: string;
   id: string;
   lastUpdatedPartial: string;
-  workingGroups?: OutputOwner;
-  projects?: OutputOwner;
+  workingGroup?: OutputOwner;
+  project?: OutputOwner;
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;
@@ -94,8 +94,8 @@ export type AuthorUpsertDataObject =
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
-  workingGroups?: string[];
-  projects?: string[];
+  workingGroup?: string;
+  project?: string;
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
@@ -122,8 +122,8 @@ export type OutputPostRequest = {
   title: string;
   type?: OutputType;
   subtype?: OutputSubtype;
-  workingGroups?: string[];
-  projects?: string[];
+  workingGroup?: string;
+  project?: string;
 };
 
 export type OutputPutRequest = OutputPostRequest;

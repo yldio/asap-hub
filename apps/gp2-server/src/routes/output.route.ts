@@ -48,11 +48,13 @@ export const outputRouteFactory = (
       throw Boom.forbidden();
     }
 
+    console.log('controller create about to be called');
     const output = await outputController.create({
       ...createRequest,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       createdBy: loggedInUser!.id,
     });
+    console.log('controller create called');
 
     res.status(201).json(output);
   });

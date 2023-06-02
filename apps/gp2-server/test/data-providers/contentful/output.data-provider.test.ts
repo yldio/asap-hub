@@ -322,8 +322,8 @@ describe('Outputs data provider', () => {
         });
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.workingGroups).toBeUndefined();
-        expect(result!.projects).toEqual({
+        expect(result!.workingGroup).toBeUndefined();
+        expect(result!.project).toEqual({
           id: '42',
           title: 'a project',
         });
@@ -344,8 +344,8 @@ describe('Outputs data provider', () => {
         });
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.projects).toBeUndefined();
-        expect(result!.workingGroups).toEqual({
+        expect(result!.project).toBeUndefined();
+        expect(result!.workingGroup).toEqual({
           id: '42',
           title: 'a working group',
         });

@@ -375,7 +375,7 @@ describe('Outputs data provider', () => {
         );
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.workingGroups).toBeUndefined();
+        expect(result!.workingGroup).toBeUndefined();
       });
     });
     describe('projects', () => {
@@ -387,7 +387,7 @@ describe('Outputs data provider', () => {
         );
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.projects).toBeUndefined();
+        expect(result!.project).toBeUndefined();
       });
     });
   });

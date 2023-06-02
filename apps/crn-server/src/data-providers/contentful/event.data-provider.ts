@@ -15,6 +15,8 @@ import {
   FetchEventsByUserIdQueryVariables,
   FetchEventsQuery,
   FetchEventsQueryVariables,
+  FetchInterestGroupCalendarQuery,
+  FetchInterestGroupCalendarQueryVariables,
   FetchWorkingGroupCalendarQuery,
   FetchWorkingGroupCalendarQueryVariables,
   FETCH_EVENTS,
@@ -22,6 +24,7 @@ import {
   FETCH_EVENTS_BY_TEAM_ID,
   FETCH_EVENTS_BY_USER_ID,
   FETCH_EVENT_BY_ID,
+  FETCH_INTEREST_GROUP_CALENDAR,
   FETCH_WORKING_GROUP_CALENDAR,
   GraphQLClient,
   patchAndPublish,
@@ -37,7 +40,6 @@ import {
   EventSpeakerUserData,
   EventUpdateDataObject,
   FetchEventsOptions,
-  GroupResponse,
   isEventStatus,
   ListEventDataObject,
 } from '@asap-hub/model';
@@ -59,6 +61,14 @@ type WorkingGroupItem = NonNullable<
     NonNullable<
       NonNullable<EventItem['calendar']>['linkedFrom']
     >['workingGroupsCollection']
+  >['items'][number]
+>;
+
+type InterestGroupItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<EventItem['calendar']>['linkedFrom']
+    >['interestGroupsCollection']
   >['items'][number]
 >;
 
@@ -191,6 +201,21 @@ export class EventContentfulDataProvider implements EventDataProvider {
         };
       }
     }
+
+    if (filter?.groupId) {
+      const { interestGroups } = await this.contentfulClient.request<
+        FetchInterestGroupCalendarQuery,
+        FetchInterestGroupCalendarQueryVariables
+      >(FETCH_INTEREST_GROUP_CALENDAR, {
+        id: filter.groupId,
+      });
+
+      if (interestGroups?.calendar) {
+        calendarFilter = {
+          calendar: { sys: { id: interestGroups.calendar.sys.id } },
+        };
+      }
+    }
     const { eventsCollection } = await this.contentfulClient.request<
       FetchEventsQuery,
       FetchEventsQueryVariables
@@ -249,10 +274,6 @@ export class EventContentfulDataProvider implements EventDataProvider {
     );
   }
 }
-
-export const eventUnreadyResponse = {
-  group: {} as GroupResponse,
-};
 
 type SpeakerItem = NonNullable<
   NonNullable<EventItem['speakersCollection']>['items'][number]
@@ -382,6 +403,19 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     speakersCollection,
   } = item;
 
+  const group =
+    item.calendar.linkedFrom?.interestGroupsCollection?.items
+      .filter((x): x is InterestGroupItem => x !== null)
+      .map((ig) => ({
+        id: ig.sys.id,
+        name: ig.name || '',
+        active: !!ig.active,
+        tools: {
+          slack: ig.slack || undefined,
+          googleDrive: ig.googleDrive ?? undefined,
+        },
+      }))[0] || undefined;
+
   const workingGroup =
     item.calendar.linkedFrom?.workingGroupsCollection?.items
       .filter((x): x is WorkingGroupItem => x !== null)
@@ -445,8 +479,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
     workingGroup,
-    // TODO: implement below when interest groups (CT-13) is ready
-    ...eventUnreadyResponse,
+    group,
   };
 };
 

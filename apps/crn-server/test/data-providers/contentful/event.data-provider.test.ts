@@ -21,9 +21,17 @@ import {
   getEventsByExternalAuthorIdGraphqlResponse,
   getEventsByTeamIdGraphqlResponse,
   getEventsByUserIdGraphqlResponse,
+  getInterestGroupCalendarResponse,
   getWorkingGroupCalendarResponse,
 } from '../../fixtures/events.fixtures';
-import { getContentfulGraphqlWorkingGroup } from '../../fixtures/working-groups.fixtures';
+import {
+  getContentfulGraphqlInterestGroup,
+  getInterestGroupDataObject,
+} from '../../fixtures/interest-groups.fixtures';
+import {
+  getContentfulGraphqlWorkingGroup,
+  getWorkingGroupDataObject,
+} from '../../fixtures/working-groups.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
@@ -48,6 +56,7 @@ describe('Events Contentful Data Provider', () => {
       TeamMembership: () => getContentfulUserSpeakerTeams(),
       Events: () => getContentfulGraphqlEvent(),
       WorkingGroups: () => getContentfulGraphqlWorkingGroup({}),
+      InterestGroups: () => getContentfulGraphqlInterestGroup(),
     });
 
   const eventDataProviderMockGraphql = new EventContentfulDataProvider(
@@ -59,15 +68,29 @@ describe('Events Contentful Data Provider', () => {
     jest.clearAllMocks();
   });
 
+  const workingGroup = getWorkingGroupDataObject();
+  const eventWorkingGroup = {
+    id: workingGroup.id,
+    title: workingGroup.title,
+  };
+
+  const interestGroup = getInterestGroupDataObject();
+  const eventInterestGroup = {
+    id: interestGroup.id,
+    name: interestGroup.name,
+    active: interestGroup.active,
+    tools: {
+      slack: interestGroup.tools.slack,
+      googleDrive: interestGroup.tools.googleDrive,
+    },
+  };
   describe('Fetch', () => {
     test('Should fetch the events from Contentful graphql', async () => {
       const result = await eventDataProviderMockGraphql.fetch({});
 
       const expectedResult = getContentfulListEventDataObject();
-      expectedResult.items[0]!.workingGroup! = {
-        id: '123',
-        title: 'Working Group Title',
-      };
+      expectedResult.items[0]!.workingGroup! = eventWorkingGroup;
+      expectedResult.items[0]!.group! = eventInterestGroup;
       expect(result).toMatchObject(expectedResult);
     });
 
@@ -346,6 +369,41 @@ describe('Events Contentful Data Provider', () => {
         );
         expect(result).toEqual(getContentfulListEventDataObject());
       });
+
+      test('can filter by groupId', async () => {
+        const interestGroupId = 'wg-1';
+
+        const interestGroupCalendar = getInterestGroupCalendarResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          interestGroupCalendar,
+        );
+
+        const eventsGraphqlResponse = getContentfulGraphqlEventsResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          eventsGraphqlResponse,
+        );
+
+        const result = await eventDataProvider.fetch({
+          filter: { groupId: interestGroupId },
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            limit: 10,
+            skip: 0,
+            where: {
+              hidden_not: true,
+              calendar: {
+                sys: {
+                  id: 'calendar-from-ig-id',
+                },
+              },
+            },
+          },
+        );
+        expect(result).toEqual(getContentfulListEventDataObject());
+      });
     });
   });
 
@@ -356,11 +414,9 @@ describe('Events Contentful Data Provider', () => {
       const result = await eventDataProviderMockGraphql.fetchById(eventId);
 
       const expectedResult = getContentfulEventDataObject();
-      (expectedResult.workingGroup = {
-        id: '123',
-        title: 'Working Group Title',
-      }),
-        expect(result).toMatchObject(expectedResult);
+      expectedResult.workingGroup = eventWorkingGroup;
+      expectedResult.group = eventInterestGroup;
+      expect(result).toMatchObject(expectedResult);
     });
 
     test('Should return null when event is not found', async () => {
@@ -707,6 +763,99 @@ describe('Events Contentful Data Provider', () => {
         expect(result!.workingGroup).toEqual({
           id: 'wg-linked-from-calendar',
           title: 'WG-1',
+        });
+      });
+    });
+
+    describe('interest group', () => {
+      it('should return interest group as undefined when linked from calendar is null', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = null;
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.group).toBeUndefined();
+      });
+
+      it('should return interest group as undefined when workingGroupsCollection is null', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          interestGroupsCollection: null,
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.group).toBeUndefined();
+      });
+
+      it('should return interest group as undefined when workingGroupsCollection items are empty', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          interestGroupsCollection: {
+            items: [],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.group).toBeUndefined();
+      });
+
+      it('should return interest group as undefined when workingGroupsCollection items are null', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          interestGroupsCollection: {
+            items: [null, null],
+          },
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.group).toBeUndefined();
+      });
+
+      it('should return interest group when it is linked from calendar', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse!.calendar!.linkedFrom = {
+          interestGroupsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'ig-linked-from-calendar',
+                },
+                name: 'IG-1',
+                active: true,
+                slack: 'http://www.slack.com/ig1',
+              },
+            ],
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+
+        expect(result!.group).toEqual({
+          id: 'ig-linked-from-calendar',
+          name: 'IG-1',
+          active: true,
+          tools: {
+            slack: 'http://www.slack.com/ig1',
+          },
         });
       });
     });

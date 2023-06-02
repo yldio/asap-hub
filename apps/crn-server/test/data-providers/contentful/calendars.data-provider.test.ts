@@ -12,12 +12,10 @@ import {
 } from '../../fixtures/calendars.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
-import {
-  CalendarContentfulDataProvider,
-  calendarUnreadyResponse,
-} from '../../../src/data-providers/contentful/calendars.data-provider';
+import { CalendarContentfulDataProvider } from '../../../src/data-providers/contentful/calendars.data-provider';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import { getContentfulGraphqlWorkingGroup } from '../../fixtures/working-groups.fixtures';
+import { getContentfulGraphqlInterestGroup } from '../../fixtures/interest-groups.fixtures';
 
 describe('Calendars data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -34,6 +32,7 @@ describe('Calendars data provider', () => {
     getContentfulGraphqlClientMockServer({
       Calendars: () => getContentfulGraphqlCalendar(),
       WorkingGroups: () => getContentfulGraphqlWorkingGroup({}),
+      InterestGroups: () => getContentfulGraphqlInterestGroup(),
     });
 
   const calendarDataProviderMock = new CalendarContentfulDataProvider(
@@ -45,16 +44,11 @@ describe('Calendars data provider', () => {
     jest.resetAllMocks();
   });
 
-  const getContentfulCalendarDataObject = () => ({
-    ...getCalendarDataObject(),
-    ...calendarUnreadyResponse,
-  });
-
   describe('Fetch method', () => {
     test('Should fetch the list of calendars from Contentful GraphQl', async () => {
       const result = await calendarDataProviderMock.fetch({});
 
-      expect(result.items[0]).toMatchObject(getContentfulCalendarDataObject());
+      expect(result.items[0]).toMatchObject(getCalendarDataObject());
     });
 
     test('Should return an empty result when no calendars exist', async () => {
@@ -111,7 +105,7 @@ describe('Calendars data provider', () => {
 
       expect(result).toEqual({
         total: 1,
-        items: [getContentfulCalendarDataObject()],
+        items: [getCalendarDataObject()],
       });
 
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -166,7 +160,7 @@ describe('Calendars data provider', () => {
         total: 1,
         items: [
           {
-            ...getContentfulCalendarDataObject(),
+            ...getCalendarDataObject(),
             id: calendarWithMatchingResourceId.sys.id,
             resourceId: filterResourceId,
           },
@@ -215,7 +209,7 @@ describe('Calendars data provider', () => {
         total: 1,
         items: [
           {
-            ...getContentfulCalendarDataObject(),
+            ...getCalendarDataObject(),
             id: calendarWithinExpirationLimit.sys.id,
             expirationDate:
               calendarWithinExpirationLimit.googleApiMetadata.expirationDate,
@@ -289,7 +283,6 @@ describe('Calendars data provider', () => {
             resourceId:
               calendarMatchingResourceIdWithinExpirationLimit.googleApiMetadata
                 .resourceId,
-            groups: [],
           },
         ],
       });
@@ -308,6 +301,20 @@ describe('Calendars data provider', () => {
             complete: false,
           }),
         ],
+        null,
+      );
+
+      const calendarWithActiveInterestGroup = getCalendarResponse(
+        'calendar-with-active-ig',
+        'resource-id',
+        baseExpirationDate,
+        null,
+        [
+          getInterestGroupData({
+            interestGroupId: 'active-ig',
+            active: true,
+          }),
+        ],
       );
 
       const calendarWithInactiveWorkingGroup = getCalendarResponse(
@@ -320,6 +327,20 @@ describe('Calendars data provider', () => {
             complete: true,
           }),
         ],
+        null,
+      );
+
+      const calendarWithInactiveInterestGroup = getCalendarResponse(
+        'calendar-with-inactive-ig',
+        'resource-id',
+        baseExpirationDate,
+        null,
+        [
+          getInterestGroupData({
+            interestGroupId: 'inactive-ig',
+            active: false,
+          }),
+        ],
       );
 
       const calendarWithEmptyLinkedWorkingGroup = getCalendarResponse(
@@ -327,23 +348,37 @@ describe('Calendars data provider', () => {
         'resource-id',
         baseExpirationDate,
         [],
-      );
-
-      const calendarWithoutLinkedWorkingGroup = getCalendarResponse(
-        'calendar-without-linked-working-group',
-        'resource-id',
-        baseExpirationDate,
         null,
       );
 
+      const calendarWithEmptyLinkedInterestGroup = getCalendarResponse(
+        'calendar-with-empty-linked-ig',
+        'resource-id',
+        baseExpirationDate,
+        null,
+        [],
+      );
+
+      const calendarWithoutLinkedWorkingGroupAndInterestGroup =
+        getCalendarResponse(
+          'calendar-without-linked-working-group-and-interest-group',
+          'resource-id',
+          baseExpirationDate,
+          null,
+          null,
+        );
+
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         calendarsCollection: {
-          total: 4,
+          total: 7,
           items: [
             calendarWithActiveWorkingGroup,
+            calendarWithActiveInterestGroup,
             calendarWithInactiveWorkingGroup,
+            calendarWithInactiveInterestGroup,
             calendarWithEmptyLinkedWorkingGroup,
-            calendarWithoutLinkedWorkingGroup,
+            calendarWithEmptyLinkedInterestGroup,
+            calendarWithoutLinkedWorkingGroupAndInterestGroup,
           ],
         },
       });
@@ -365,25 +400,42 @@ describe('Calendars data provider', () => {
       expect(result).toEqual({
         items: [
           {
-            ...getContentfulCalendarDataObject(),
+            ...getCalendarDataObject(),
             id: 'calendar-with-active-wg',
             expirationDate: baseExpirationDate,
             workingGroups: [{ complete: false, id: 'active-wg' }],
+            groups: [],
           },
           {
-            ...getContentfulCalendarDataObject(),
+            ...getCalendarDataObject(),
+            id: 'calendar-with-active-ig',
+            expirationDate: baseExpirationDate,
+            workingGroups: [],
+            groups: [{ active: true, id: 'active-ig' }],
+          },
+          {
+            ...getCalendarDataObject(),
             id: 'calendar-with-empty-linked-wg',
             expirationDate: baseExpirationDate,
             workingGroups: [],
+            groups: [],
           },
           {
-            ...getContentfulCalendarDataObject(),
-            id: 'calendar-without-linked-working-group',
+            ...getCalendarDataObject(),
+            id: 'calendar-with-empty-linked-ig',
             expirationDate: baseExpirationDate,
             workingGroups: [],
+            groups: [],
+          },
+          {
+            ...getCalendarDataObject(),
+            id: 'calendar-without-linked-working-group-and-interest-group',
+            expirationDate: baseExpirationDate,
+            workingGroups: [],
+            groups: [],
           },
         ],
-        total: 3,
+        total: 5,
       });
     });
 
@@ -423,7 +475,7 @@ describe('Calendars data provider', () => {
       const calendarId = 'calendar-id-0';
       const result = await calendarDataProviderMock.fetchById(calendarId);
 
-      expect(result).toMatchObject(getContentfulCalendarDataObject());
+      expect(result).toMatchObject(getCalendarDataObject());
     });
 
     test('Should return null when the calendar is not found', async () => {
@@ -462,7 +514,7 @@ describe('Calendars data provider', () => {
 
       const result = await calendarDataProvider.fetchById(id);
 
-      expect(result).toEqual(getContentfulCalendarDataObject());
+      expect(result).toEqual(getCalendarDataObject());
       expect(contentfulGraphqlClientMock.request).toBeCalledWith(
         expect.anything(),
         expect.objectContaining({
@@ -729,8 +781,33 @@ const getCalendarResponse = (
         complete: boolean;
       }[]
     | null,
+  interestGroups?:
+    | {
+        sys: {
+          id: string;
+        };
+        active: boolean;
+      }[]
+    | null,
 ) => {
   const baseCalendar = getContentfulGraphqlCalendar();
+
+  const getLinkedFrom = () => ({
+    linkedFrom: {
+      workingGroupsCollection:
+        workingGroups === null
+          ? null
+          : {
+              items: workingGroups ?? [getWorkingGroupData({})],
+            },
+      interestGroupsCollection:
+        interestGroups === null
+          ? null
+          : {
+              items: interestGroups ?? [getInterestGroupData({})],
+            },
+    },
+  });
 
   return {
     ...baseCalendar,
@@ -747,19 +824,7 @@ const getCalendarResponse = (
         ? { expirationDate }
         : { expirationDate: baseCalendar.googleApiMetadata.expirationDate }),
     },
-    ...(workingGroups === null
-      ? {
-          linkedFrom: {
-            workingGroupsCollection: null,
-          },
-        }
-      : {
-          linkedFrom: {
-            workingGroupsCollection: {
-              items: workingGroups ?? [getWorkingGroupData({})],
-            },
-          },
-        }),
+    ...getLinkedFrom(),
   };
 };
 export const getWorkingGroupData = ({
@@ -769,5 +834,15 @@ export const getWorkingGroupData = ({
   sys: {
     id: workingGroupId,
   },
-  complete: complete,
+  complete,
+});
+
+export const getInterestGroupData = ({
+  interestGroupId = 'group-id-1',
+  active = true,
+}) => ({
+  sys: {
+    id: interestGroupId,
+  },
+  active,
 });

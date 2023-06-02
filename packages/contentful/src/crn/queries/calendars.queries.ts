@@ -23,6 +23,14 @@ export const calendarsContentQueryFragment = gql`
           complete
         }
       }
+      interestGroupsCollection(limit: 1) {
+        items {
+          sys {
+            id
+          }
+          active
+        }
+      }
     }
   }
 `;

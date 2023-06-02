@@ -126,6 +126,17 @@ export const eventsContentQueryFragment = gql`
             title
           }
         }
+        interestGroupsCollection(limit: 1) {
+          items {
+            sys {
+              id
+            }
+            name
+            active
+            slack
+            googleDrive
+          }
+        }
       }
     }
     thumbnail {
@@ -269,6 +280,18 @@ export const FETCH_WORKING_GROUP_CALENDAR = gql`
   query FetchWorkingGroupCalendar($id: String!) {
     workingGroups(id: $id) {
       calendars {
+        sys {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_INTEREST_GROUP_CALENDAR = gql`
+  query FetchInterestGroupCalendar($id: String!) {
+    interestGroups(id: $id) {
+      calendar {
         sys {
           id
         }

@@ -47,6 +47,16 @@ export const getContentfulGraphqlCalendar = (): NonNullable<
         },
       ],
     },
+    interestGroupsCollection: {
+      items: [
+        {
+          sys: {
+            id: 'group-id-1',
+          },
+          active: true,
+        },
+      ],
+    },
   },
 });
 

@@ -177,6 +177,7 @@ export const getOutputCreateDataObject =
     return {
       ...outputPostRequest,
       createdBy: 'userId',
+      project: project?.id,
       authors: authors.map(({ id }) => ({ userId: id })),
     };
   };

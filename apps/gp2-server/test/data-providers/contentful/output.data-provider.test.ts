@@ -1,4 +1,5 @@
 import {
+  addLocaleToFields,
   Entry,
   Environment,
   getGP2ContentfulGraphqlClientMockServer,
@@ -645,8 +646,13 @@ describe('Outputs data provider', () => {
 
       const result = await outputDataProvider.create(outputRequest);
       expect(result).toEqual(outputId);
-      const { publishDate: _, ...fieldsCreated } = outputRequest;
-      const fields = {
+      const {
+        publishDate: _,
+        workingGroup: __,
+        project,
+        ...fieldsCreated
+      } = outputRequest;
+      const fields = addLocaleToFields({
         ...fieldsCreated,
         authors: fieldsCreated.authors.map((author) => ({
           sys: {
@@ -655,6 +661,13 @@ describe('Outputs data provider', () => {
             id: author.externalUserId || author.userId,
           },
         })),
+        createdBy: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: outputRequest.createdBy,
+          },
+        },
         updatedBy: {
           sys: {
             type: 'Link',
@@ -662,7 +675,14 @@ describe('Outputs data provider', () => {
             id: outputRequest.createdBy,
           },
         },
-      };
+        relatedEntity: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: project,
+          },
+        },
+      });
       expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
         fields,
       });

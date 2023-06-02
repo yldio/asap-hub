@@ -585,7 +585,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            workingGroups: 'working-group-id',
+            workingGroup: 'working-group-id',
           },
         });
 
@@ -602,7 +602,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            projects: 'project-id',
+            project: 'project-id',
           },
         });
 
@@ -619,7 +619,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            authors: 'user-id',
+            author: 'user-id',
           },
         });
 

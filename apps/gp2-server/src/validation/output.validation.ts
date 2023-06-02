@@ -27,9 +27,9 @@ const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOpti
       filter: {
         type: 'object',
         properties: {
-          workingGroups: { type: 'string', nullable: true },
-          projects: { type: 'string', nullable: true },
-          authors: {
+          workingGroup: { type: 'string', nullable: true },
+          project: { type: 'string', nullable: true },
+          author: {
             type: 'string',
             nullable: true,
           },

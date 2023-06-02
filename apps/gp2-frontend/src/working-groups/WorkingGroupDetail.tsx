@@ -34,7 +34,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
   const { total: outputsTotal } = useOutputs({
-    filter: { workingGroups: workingGroupId },
+    filter: { workingGroup: workingGroupId },
   });
 
   const currentUser = useCurrentUserGP2();
@@ -126,7 +126,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList filters={{ workingGroups: workingGroupId }} />
+                <OutputList filters={{ workingGroup: workingGroupId }} />
               </Frame>
             </Route>
             <Route path={upcoming}>

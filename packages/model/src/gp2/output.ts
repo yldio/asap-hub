@@ -132,9 +132,9 @@ export type FetchOutputFilter = {
   documentType?: string | string[];
   title?: string;
   link?: string;
-  workingGroups?: string;
-  projects?: string;
-  authors?: string;
+  workingGroup?: string;
+  project?: string;
+  author?: string;
 };
 
 export type FetchOutputOptions = FetchOptions<FetchOutputFilter> & {

@@ -39,7 +39,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   const user = useUserById(userId);
 
   const { total: outputsTotal } = useOutputs({
-    filter: { authors: [userId] },
+    filter: { author: userId },
   });
 
   const userRoute = users({}).user({ userId });
@@ -145,7 +145,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
             </Route>
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList filters={{ authors: [userId] }} />
+                <OutputList filters={{ author: userId }} />
               </Frame>
             </Route>
             <Route path={upcoming}>

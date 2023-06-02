@@ -42,42 +42,42 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     filter,
     includeDrafts,
   }: gp2Model.FetchOutputOptions) {
-    if (filter?.workingGroups) {
+    if (filter?.workingGroup) {
       const { workingGroups } = await this.graphQLClient.request<
         gp2Contentful.FetchOutputsByWorkingGroupIdQuery,
         gp2Contentful.FetchOutputsByWorkingGroupIdQueryVariables
       >(gp2Contentful.FETCH_OUTPUTS_BY_WORKING_GROUP_ID, {
         limit: take,
         skip,
-        id: filter.workingGroups,
+        id: filter.workingGroup,
       });
 
       const outputsCollection = workingGroups?.linkedFrom?.outputsCollection;
 
       return parseOutputsCollection(outputsCollection);
     }
-    if (filter?.projects) {
+    if (filter?.project) {
       const { projects } = await this.graphQLClient.request<
         gp2Contentful.FetchOutputsByProjectIdQuery,
         gp2Contentful.FetchOutputsByProjectIdQueryVariables
       >(gp2Contentful.FETCH_OUTPUTS_BY_PROJECT_ID, {
         limit: take,
         skip,
-        id: filter.projects,
+        id: filter.project,
       });
 
       const outputsCollection = projects?.linkedFrom?.outputsCollection;
 
       return parseOutputsCollection(outputsCollection);
     }
-    if (filter?.authors) {
+    if (filter?.author) {
       const { users } = await this.graphQLClient.request<
         gp2Contentful.FetchOutputsByUserIdQuery,
         gp2Contentful.FetchOutputsByUserIdQueryVariables
       >(gp2Contentful.FETCH_OUTPUTS_BY_USER_ID, {
         limit: take,
         skip,
-        id: filter.authors,
+        id: filter.author,
       });
 
       const outputsCollection = users?.linkedFrom?.outputsCollection;

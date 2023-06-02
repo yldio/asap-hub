@@ -44,7 +44,7 @@ export function getLinkEntity(id: string, version: boolean = false): unknown {
   };
 }
 
-export const getEntities = <Version extends boolean>(
+export const getLinkEntities = <Version extends boolean>(
   entities: string[],
   version?: Version,
 ) => entities.map((id) => getLinkEntity<Version>(id, version));
@@ -55,6 +55,6 @@ export const getBulkPayload = <Version extends boolean>(
 ) => ({
   entities: {
     sys: { type: 'Array' as const },
-    items: getEntities<Version>(entities, version),
+    items: getLinkEntities<Version>(entities, version),
   },
 });

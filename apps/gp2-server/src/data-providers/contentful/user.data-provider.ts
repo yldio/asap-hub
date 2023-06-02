@@ -4,7 +4,7 @@ import {
   addLocaleToFields,
   Environment,
   getBulkPayload,
-  getEntities,
+  getLinkEntities,
   getLinkEntity,
   gp2 as gp2Contentful,
   GraphQLClient,
@@ -524,7 +524,7 @@ const getSearchFilter = (search: string) => {
 const getCohortFields = (nextContributingCohorts: string[] | undefined) =>
   nextContributingCohorts
     ? {
-        contributingCohorts: getEntities(nextContributingCohorts, false),
+        contributingCohorts: getLinkEntities(nextContributingCohorts, false),
       }
     : {};
 

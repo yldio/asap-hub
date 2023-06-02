@@ -3,7 +3,7 @@ import {
   addLocaleToFields,
   createLink,
   getBulkPayload,
-  getEntities,
+  getLinkEntities,
   getLinkEntity,
   updateEntryFields,
 } from '../../src/utils/parse-fields';
@@ -73,10 +73,10 @@ describe('getLinkEntity', () => {
   });
 });
 
-describe('getEntities', () => {
+describe('getLinkEntities', () => {
   test('version is false', () => {
     const id = '42';
-    expect(getEntities([id])).toEqual([
+    expect(getLinkEntities([id])).toEqual([
       {
         sys: {
           type: 'Link',
@@ -88,7 +88,7 @@ describe('getEntities', () => {
   });
   test('version is true', () => {
     const id = '42';
-    expect(getEntities([id], true)).toEqual([
+    expect(getLinkEntities([id], true)).toEqual([
       {
         sys: {
           type: 'Link',

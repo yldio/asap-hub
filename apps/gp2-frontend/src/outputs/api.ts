@@ -66,7 +66,6 @@ export const createOutput = async (
   output: gp2.OutputPostRequest,
   authorization: string,
 ): Promise<gp2.OutputResponse> => {
-  console.log(output);
   const resp = await fetch(`${API_BASE_URL}/outputs`, {
     method: 'POST',
     headers: {

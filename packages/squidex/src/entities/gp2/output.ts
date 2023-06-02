@@ -1,4 +1,5 @@
 import { gp2 } from '@asap-hub/model';
+import { GraphqlExternalUser } from '.';
 import {
   Entity,
   Graphql,
@@ -6,7 +7,6 @@ import {
   Rest,
   RestPayload,
 } from '../common';
-import { GraphqlExternalUser } from '.';
 import { GraphqlUserAssoc } from './user';
 
 export type RestOutputDocumentType =
@@ -35,6 +35,8 @@ export interface Output<TAuthorConnection = string, TUserConnection = string> {
   title: string;
   type?: RestOutputType;
   updatedBy?: TUserConnection[];
+  project?: string;
+  workingGroup?: string;
 }
 
 export interface RestOutput extends Entity, Rest<Output> {}

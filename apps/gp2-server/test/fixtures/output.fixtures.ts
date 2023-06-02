@@ -150,12 +150,15 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     ...outputResponse,
     link: 'http://a.link',
     type: 'Research',
+    project: project?.id,
     authors: authors.map(({ id }) => ({ userId: id })),
   };
 };
 
-export const getOutputPutRequest = (): gp2Model.OutputPutRequest =>
-  getOutputPostRequest();
+export const getOutputPutRequest = (): gp2Model.OutputPutRequest => {
+  const { project, ...data } = getOutputPostRequest();
+  return data;
+};
 
 export const getOutputCreateData = (): OutputCreateData => ({
   ...getOutputPostRequest(),
@@ -184,8 +187,11 @@ export const getOutputCreateDataObject =
 
 export const getOutputUpdateDataObject =
   (): gp2Model.OutputUpdateDataObject => {
-    const { createdBy: _, ...outputCreateDataObject } =
-      getOutputCreateDataObject();
+    const {
+      createdBy: _,
+      project: __,
+      ...outputCreateDataObject
+    } = getOutputCreateDataObject();
 
     return {
       ...outputCreateDataObject,
@@ -205,6 +211,7 @@ export const getRestOutputCreateData = (): gp2Squidex.InputOutput['data'] => ({
   authors: { iv: ['user-id-1', 'user-id-2'] },
   createdBy: { iv: ['userId'] },
   updatedBy: { iv: ['userId'] },
+  project: { iv: '42' },
 });
 
 export const getOutputUpdateData = (): OutputUpdateData => ({

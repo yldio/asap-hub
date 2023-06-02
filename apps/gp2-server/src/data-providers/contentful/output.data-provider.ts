@@ -42,38 +42,28 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     filter,
     includeDrafts,
   }: gp2Model.FetchOutputOptions) {
+    const outputs = await this.fetchOutputs(take, skip, {
+      filter,
+      search,
+      includeDrafts,
+    });
+
+    return parseOutputsCollection(outputs);
+  }
+
+  private async fetchOutputs(
+    take: number,
+    skip: number,
+    { search, filter, includeDrafts }: gp2Model.FetchOutputOptions,
+  ) {
     if (filter?.workingGroup) {
-      const { workingGroups } = await this.fetchOutputsByWorkingGroupId(
-        take,
-        skip,
-        filter.workingGroup,
-      );
-
-      const outputsCollection = workingGroups?.linkedFrom?.outputsCollection;
-
-      return parseOutputsCollection(outputsCollection);
+      return this.fetchOutputsByWorkingGroupId(take, skip, filter.workingGroup);
     }
     if (filter?.project) {
-      const { projects } = await this.fetchOutputsByProjectId(
-        take,
-        skip,
-        filter.project,
-      );
-
-      const outputsCollection = projects?.linkedFrom?.outputsCollection;
-
-      return parseOutputsCollection(outputsCollection);
+      return this.fetchOutputsByProjectId(take, skip, filter.project);
     }
     if (filter?.author) {
-      const { users } = await this.fetchOutputsByUserId(
-        take,
-        skip,
-        filter.author,
-      );
-
-      const outputsCollection = users?.linkedFrom?.outputsCollection;
-
-      return parseOutputsCollection(outputsCollection);
+      return this.fetchOutputsByUserId(take, skip, filter.author);
     }
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
@@ -88,12 +78,11 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       preview: includeDrafts === true,
       order: [gp2Contentful.OutputsOrder.PublishDateDesc],
     });
-
-    return parseOutputsCollection(outputsCollection);
+    return outputsCollection;
   }
 
   private async fetchOutputsByUserId(take: number, skip: number, id: string) {
-    return this.graphQLClient.request<
+    const { users } = await this.graphQLClient.request<
       gp2Contentful.FetchOutputsByUserIdQuery,
       gp2Contentful.FetchOutputsByUserIdQueryVariables
     >(gp2Contentful.FETCH_OUTPUTS_BY_USER_ID, {
@@ -101,6 +90,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       skip,
       id,
     });
+    return users?.linkedFrom?.outputsCollection;
   }
 
   private async fetchOutputsByProjectId(
@@ -108,7 +98,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     skip: number,
     id: string,
   ) {
-    return this.graphQLClient.request<
+    const { projects } = await this.graphQLClient.request<
       gp2Contentful.FetchOutputsByProjectIdQuery,
       gp2Contentful.FetchOutputsByProjectIdQueryVariables
     >(gp2Contentful.FETCH_OUTPUTS_BY_PROJECT_ID, {
@@ -116,6 +106,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       skip,
       id,
     });
+    return projects?.linkedFrom?.outputsCollection;
   }
 
   private async fetchOutputsByWorkingGroupId(
@@ -123,7 +114,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     skip: number,
     id: string,
   ) {
-    return this.graphQLClient.request<
+    const { workingGroups } = await this.graphQLClient.request<
       gp2Contentful.FetchOutputsByWorkingGroupIdQuery,
       gp2Contentful.FetchOutputsByWorkingGroupIdQueryVariables
     >(gp2Contentful.FETCH_OUTPUTS_BY_WORKING_GROUP_ID, {
@@ -131,6 +122,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       skip,
       id,
     });
+    return workingGroups?.linkedFrom?.outputsCollection;
   }
 
   async create({
@@ -165,6 +157,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     id: string,
     { publishDate: _, ...data }: gp2Model.OutputUpdateDataObject,
   ) {
+    console.log(JSON.stringify(data, null, 2));
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
 

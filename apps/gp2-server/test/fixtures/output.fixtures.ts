@@ -224,9 +224,9 @@ export const getRestOutputUpdateData = (): gp2Squidex.InputOutput['data'] => {
   return outputData;
 };
 
-export const getContentfulGraphqlOutput = (
-  props = {},
-): NonNullable<NonNullable<gp2Contentful.FetchOutputByIdQuery['outputs']>> => ({
+export const getContentfulGraphqlOutput = (): NonNullable<
+  NonNullable<gp2Contentful.FetchOutputByIdQuery['outputs']>
+> => ({
   sys: {
     id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
     firstPublishedAt: '2020-09-23T16:34:26.842Z',

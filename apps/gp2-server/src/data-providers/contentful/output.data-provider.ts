@@ -1,6 +1,7 @@
 import {
   addLocaleToFields,
   Environment,
+  getLinkEntity,
   gp2 as gp2Contentful,
   GraphQLClient,
   patchAndPublish,
@@ -131,21 +132,17 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     project,
     ...data
   }: gp2Model.OutputCreateDataObject) {
+    const relatedEntityId = workingGroup || project;
+    if (!relatedEntityId) {
+      throw new Error('invalid related entity');
+    }
     const environment = await this.getRestClient();
 
-    const fields = cleanOutput({
-      ...data,
-    });
+    const fields = cleanOutput(data);
     const outputEntry = await environment.createEntry('outputs', {
       fields: addLocaleToFields({
         ...fields,
-        relatedEntity: {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: workingGroup || project,
-          },
-        },
+        relatedEntity: getLinkEntity(relatedEntityId),
       }),
     });
     await outputEntry.publish();
@@ -157,16 +154,11 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     id: string,
     { publishDate: _, ...data }: gp2Model.OutputUpdateDataObject,
   ) {
-    console.log(JSON.stringify(data, null, 2));
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
 
-    const fields = cleanOutput({
-      ...data,
-    });
-    const result = await patchAndPublish(user, {
-      ...fields,
-    });
+    const fields = cleanOutput(data);
+    const result = await patchAndPublish(user, fields);
 
     const fetchEventById = () => this.fetchOutputById(id);
     await pollContentfulGql<gp2Contentful.FetchOutputByIdQuery>(
@@ -205,16 +197,16 @@ const getSubType = (
 
 const getRelatedEntity = (related: OutputItem['relatedEntity']) => {
   const empty = { project: undefined, workingGroup: undefined };
-  if (!related) {
-    return empty;
-  }
-  return {
-    ...empty,
-    [related.__typename === 'Projects' ? 'project' : 'workingGroup']: {
-      id: related.sys.id,
-      title: related.title,
-    },
-  };
+
+  return related
+    ? {
+        ...empty,
+        [related.__typename === 'Projects' ? 'project' : 'workingGroup']: {
+          id: related.sys.id,
+          title: related.title,
+        },
+      }
+    : empty;
 };
 
 const getAuthors = (
@@ -232,28 +224,22 @@ const getAuthors = (
         if (!author?.__typename) {
           return authorList;
         }
-        if (author.__typename === 'Users') {
-          return [
-            ...authorList,
-            {
-              id: author.sys.id,
-              firstName: author.firstName || '',
-              lastName: author.lastName || '',
-              displayName: `${author.firstName} ${author.lastName}`,
-              email: author.email || '',
-              onboarded: author.onboarded || true,
-              avatarUrl: author.avatar?.url ?? undefined,
-            },
-          ];
-        }
-
-        return [
-          ...authorList,
-          {
-            id: author.sys.id,
-            displayName: author.name || '',
-          },
-        ];
+        const parsed =
+          author.__typename === 'Users'
+            ? {
+                id: author.sys.id,
+                firstName: author.firstName || '',
+                lastName: author.lastName || '',
+                displayName: `${author.firstName} ${author.lastName}`,
+                email: author.email || '',
+                onboarded: author.onboarded || true,
+                avatarUrl: author.avatar?.url ?? undefined,
+              }
+            : {
+                id: author.sys.id,
+                displayName: author.name || '',
+              };
+        return [...authorList, parsed];
       },
       [],
     ) || [];
@@ -327,45 +313,22 @@ const cleanOutput = (
       return {
         ...acc,
         authors: (value as gp2Model.OutputUpdateDataObject['authors']).map(
-          (author) => ({
-            sys: {
-              type: 'Link',
-              linkType: 'Entry',
-              id: author.userId || author.externalUserId,
-            },
-          }),
+          (author) =>
+            getLinkEntity(author.userId || (author.externalUserId as string)),
         ),
       };
     }
     if (key === 'createdBy') {
       return {
         ...acc,
-        updatedBy: {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: value,
-          },
-        },
-        createdBy: {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: value,
-          },
-        },
+        updatedBy: getLinkEntity(value as string),
+        createdBy: getLinkEntity(value as string),
       };
     }
     if (key === 'updatedBy') {
       return {
         ...acc,
-        updatedBy: {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: value,
-          },
-        },
+        updatedBy: getLinkEntity(value as string),
       };
     }
     return { ...acc, [key]: value };

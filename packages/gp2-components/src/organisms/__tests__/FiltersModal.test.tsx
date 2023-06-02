@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import FiltersModal from '../FiltersModal';
 
-const { userRegions } = gp2Model;
+const { userRegions, keywords } = gp2Model;
 
 describe('FiltersModal', () => {
   const defaultProps = {
@@ -73,15 +73,14 @@ describe('FiltersModal', () => {
       screen.getByText(/sorry, no current regions match "lt"/i),
     ).toBeVisible();
   });
-  it('should select an expertise', () => {
+  it.each(keywords)('%s expertise is selectable', (keyword) => {
     render(<FiltersModal {...defaultProps} />);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`0 filters`);
     userEvent.click(getExpertiseField());
-    userEvent.type(getExpertiseField(), "Parkinson's");
-    userEvent.click(screen.getByText("Parkinson's disease"));
+    userEvent.click(screen.getByText(keyword));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
@@ -89,9 +88,9 @@ describe('FiltersModal', () => {
   });
   it('renders the no options message for expertise', () => {
     render(<FiltersModal {...defaultProps} />);
-    userEvent.type(getExpertiseField(), 'LTX');
+    userEvent.type(getExpertiseField(), 'LT');
     expect(
-      screen.getByText(/sorry, no current expertise \/ interests match "ltx"/i),
+      screen.getByText(/sorry, no current expertise \/ interests match "lt"/i),
     ).toBeVisible();
   });
   it('projects are selectable', () => {
@@ -163,11 +162,11 @@ describe('FiltersModal', () => {
   it('calls the onApplyClick function with correct expertise filters', () => {
     render(<FiltersModal {...defaultProps} />);
     userEvent.click(getExpertiseField());
-    userEvent.click(screen.getByText('RNA'));
+    userEvent.click(screen.getByText('R'));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
-      keywords: ['RNA'],
+      keywords: ['R'],
       projects: [],
       workingGroups: [],
     });
@@ -200,7 +199,7 @@ describe('FiltersModal', () => {
   it.each`
     name               | getField                 | value
     ${'region'}        | ${getRegionsField}       | ${'Asia'}
-    ${'expertise'}     | ${getExpertiseField}     | ${'Aging'}
+    ${'expertise'}     | ${getExpertiseField}     | ${'Bash'}
     ${'project'}       | ${getProjectsField}      | ${projects[0]!.title}
     ${'working group'} | ${getWorkingGroupsField} | ${workingGroups[0]!.title}
   `('resets selected filter, $name, on Reset', ({ getField, value }) => {
@@ -232,7 +231,7 @@ describe('FiltersModal', () => {
 
   it.each`
     name               | value                   | expected
-    ${'keywords'}      | ${'Aging'}              | ${'Aging'}
+    ${'keywords'}      | ${'Bash'}               | ${'Bash'}
     ${'regions'}       | ${'Asia'}               | ${'Asia'}
     ${'projects'}      | ${projects[0]!.id}      | ${projects[0]!.title}
     ${'workingGroups'} | ${workingGroups[0]!.id} | ${workingGroups[0]!.title}

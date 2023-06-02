@@ -1,5 +1,4 @@
 import {
-  addLocaleToFields,
   Entry,
   Environment,
   getGP2ContentfulGraphqlClientMockServer,
@@ -635,120 +634,156 @@ describe('Outputs data provider', () => {
     });
   });
 
-  describe('Create and update', () => {
-    describe('Create', () => {
-      test('Should send the correct requests and return its ID', async () => {
-        const outputRequest = getOutputCreateDataObject();
-        const outputId = 'created-output-id';
+  describe('Create', () => {
+    test('Should send the correct requests and return its ID', async () => {
+      const outputRequest = getOutputCreateDataObject();
+      const outputId = 'created-output-id';
 
-        const outputMock = getEntry({}, outputId);
-        environmentMock.createEntry.mockResolvedValue(outputMock);
-        outputMock.publish = jest.fn().mockResolvedValueOnce(outputMock);
+      const outputMock = getEntry({}, outputId);
+      environmentMock.createEntry.mockResolvedValue(outputMock);
+      outputMock.publish = jest.fn().mockResolvedValueOnce(outputMock);
 
-        const result = await outputDataProvider.create(outputRequest);
-        expect(result).toEqual(outputId);
-        const { publishDate: _, ...fieldsCreated } = outputRequest;
-        const fields = addLocaleToFields({
-          ...fieldsCreated,
-          authors: fieldsCreated.authors.map(
-            (author) => author.externalUserId || author.userId,
-          ),
-          updatedBy: outputRequest.createdBy,
-        });
-        expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
-          fields,
-        });
-
-        expect(outputMock.publish).toHaveBeenCalled();
-      });
-
-      test('Should use the correct IDs for authors', async () => {
-        const OutputRequest = getOutputCreateDataObject();
-        OutputRequest.authors = [
-          {
-            externalUserId: 'some-external-user-id',
+      const result = await outputDataProvider.create(outputRequest);
+      expect(result).toEqual(outputId);
+      const { publishDate: _, ...fieldsCreated } = outputRequest;
+      const fields = {
+        ...fieldsCreated,
+        authors: fieldsCreated.authors.map((author) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: author.externalUserId || author.userId,
           },
-          { userId: 'some-user-id' },
-        ];
-        const outputMock = getEntry({});
-        environmentMock.createEntry.mockResolvedValue(outputMock);
-        outputMock.publish = jest.fn().mockResolvedValueOnce(outputMock);
-
-        await outputDataProvider.create(OutputRequest);
-        expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
-          fields: expect.objectContaining({
-            authors: { 'en-US': ['some-external-user-id', 'some-user-id'] },
-          }),
-        });
+        })),
+        updatedBy: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: outputRequest.createdBy,
+          },
+        },
+      };
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
+        fields,
       });
 
-      test('Should throw when fails to create the output', async () => {
-        const OutputRequest = getOutputCreateDataObject();
-        environmentMock.createEntry.mockRejectedValueOnce(new GenericError());
+      expect(outputMock.publish).toHaveBeenCalled();
+    });
 
-        await expect(outputDataProvider.create(OutputRequest)).rejects.toThrow(
-          GenericError,
-        );
+    test('Should use the correct IDs for authors', async () => {
+      const OutputRequest = getOutputCreateDataObject();
+      OutputRequest.authors = [
+        {
+          externalUserId: 'some-external-user-id',
+        },
+        { userId: 'some-user-id' },
+      ];
+      const outputMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(outputMock);
+      outputMock.publish = jest.fn().mockResolvedValueOnce(outputMock);
+
+      await outputDataProvider.create(OutputRequest);
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
+        fields: expect.objectContaining({
+          authors: {
+            'en-US': [
+              {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'some-external-user-id',
+                },
+              },
+              {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'some-user-id',
+                },
+              },
+            ],
+          },
+        }),
       });
     });
 
-    describe('Update', () => {
-      const outputId = 'updated-output-id';
-      const entry = getEntry({
-        fields: {
-          title: 'Test',
-        },
-      });
+    test('Should throw when fails to create the output', async () => {
+      const OutputRequest = getOutputCreateDataObject();
+      environmentMock.createEntry.mockRejectedValueOnce(new GenericError());
 
-      beforeEach(() => {
-        jest.resetAllMocks();
-        environmentMock.getEntry.mockResolvedValueOnce(entry);
-        const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
-          typeof patchAndPublish
-        >;
-        mockPatchAndPublish.mockResolvedValue({
+      await expect(outputDataProvider.create(OutputRequest)).rejects.toThrow(
+        GenericError,
+      );
+    });
+  });
+
+  describe('Update', () => {
+    const outputId = 'updated-output-id';
+    const entry = getEntry({
+      fields: {
+        title: 'Test',
+      },
+    });
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+        typeof patchAndPublish
+      >;
+      mockPatchAndPublish.mockResolvedValue({
+        sys: {
+          publishedVersion: 2,
+        },
+      } as Entry);
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        outputs: {
           sys: {
             publishedVersion: 2,
           },
-        } as Entry);
-        contentfulGraphqlClientMock.request.mockResolvedValue({
-          outputs: {
-            sys: {
-              publishedVersion: 2,
-            },
+        },
+      });
+    });
+
+    test('Should update the existing output', async () => {
+      const outputUpdateData = getOutputUpdateDataObject();
+
+      await outputDataProvider.update(outputId, outputUpdateData);
+      const { publishDate: _, ...fieldsCreated } = outputUpdateData;
+      const fields = {
+        ...fieldsCreated,
+        authors: fieldsCreated.authors.map((author) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: author.externalUserId || author.userId,
           },
-        });
+        })),
+        updatedBy: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: fieldsCreated.updatedBy,
+          },
+        },
+      };
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        ...fields,
       });
+      expect(environmentMock.createEntry).toBeCalledTimes(0);
+      expect(environmentMock.createPublishBulkAction).not.toBeCalled();
+      expect(environmentMock.createUnpublishBulkAction).not.toBeCalled();
+      expect(environmentMock.getEntries).not.toBeCalled();
+    });
 
-      test('Should update the existing output', async () => {
-        const outputUpdateData = getOutputUpdateDataObject();
-
-        await outputDataProvider.update(outputId, outputUpdateData);
-        const { publishDate: _, ...fieldsCreated } = outputUpdateData;
-        const fields = addLocaleToFields({
-          ...fieldsCreated,
-          authors: fieldsCreated.authors.map(
-            (author) => author.externalUserId || author.userId,
-          ),
-        });
-        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-          ...fields,
-        });
-        expect(environmentMock.createEntry).toBeCalledTimes(0);
-        expect(environmentMock.createPublishBulkAction).not.toBeCalled();
-        expect(environmentMock.createUnpublishBulkAction).not.toBeCalled();
-        expect(environmentMock.getEntries).not.toBeCalled();
-      });
-
-      test('Should throw when fails to update the output', async () => {
-        const OutputRequest = getOutputUpdateDataObject();
-        (patchAndPublish as jest.MockedFunction<typeof patchAndPublish>)
-          .mockReset()
-          .mockRejectedValueOnce(new GenericError());
-        await expect(
-          outputDataProvider.update(outputId, OutputRequest),
-        ).rejects.toThrow(GenericError);
-      });
+    test('Should throw when fails to update the output', async () => {
+      const OutputRequest = getOutputUpdateDataObject();
+      (patchAndPublish as jest.MockedFunction<typeof patchAndPublish>)
+        .mockReset()
+        .mockRejectedValueOnce(new GenericError());
+      await expect(
+        outputDataProvider.update(outputId, OutputRequest),
+      ).rejects.toThrow(GenericError);
     });
   });
 });

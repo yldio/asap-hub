@@ -28,7 +28,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     >(gp2Contentful.FETCH_OUTPUT_BY_ID, { id });
   }
   async fetchById(id: string) {
-    console.log('in fetchById');
     const outputGraphqlResponse = await this.fetchOutputById(id);
 
     const { outputs } = outputGraphqlResponse;
@@ -43,7 +42,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     filter,
     includeDrafts,
   }: gp2Model.FetchOutputOptions) {
-    console.log('in fetch', { search, filter, includeDrafts });
     if (filter?.workingGroup) {
       const { workingGroups } = await this.graphQLClient.request<
         gp2Contentful.FetchOutputsByWorkingGroupIdQuery,
@@ -109,7 +107,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     project,
     ...data
   }: gp2Model.OutputCreateDataObject) {
-    console.log('in create');
     const environment = await this.getRestClient();
 
     const fields = cleanOutput({
@@ -136,7 +133,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     id: string,
     { publishDate: _, ...data }: gp2Model.OutputUpdateDataObject,
   ) {
-    console.log('in update', JSON.stringify(data, undefined, 2));
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
 
@@ -316,7 +312,7 @@ const cleanOutput = (
         ),
       };
     }
-    if (key === 'updatedBy') {
+    if (key === 'createdBy') {
       return {
         ...acc,
         updatedBy: {

@@ -47,7 +47,7 @@ export const mockedUser: gp2.UserResponse = {
     },
   ],
   fundingStreams: undefined,
-  keywords: ['Aging'],
+  keywords: ['Bash'],
   telephone: {
     countryCode: '+1',
     number: '0123456789',

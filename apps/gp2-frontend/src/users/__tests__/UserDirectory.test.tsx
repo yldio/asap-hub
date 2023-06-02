@@ -107,7 +107,7 @@ it('renders the filters modal', async () => {
 it.each`
   name               | value
   ${'regions'}       | ${'Asia'}
-  ${'keywords'}      | ${'Aging'}
+  ${'keywords'}      | ${'Bash'}
   ${'projects'}      | ${'42'}
   ${'workingGroups'} | ${'42'}
 `(

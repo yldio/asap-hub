@@ -98,6 +98,7 @@ type AssetLinkingCollections {
   eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
   interestGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupsCollection
   newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): NewsCollection
+  tutorialsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): TutorialsCollection
   usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
 }
 
@@ -1551,6 +1552,8 @@ type Query {
   teamMembershipCollection(limit: Int = 100, locale: String, order: [TeamMembershipOrder], preview: Boolean, skip: Int = 0, where: TeamMembershipFilter): TeamMembershipCollection
   teams(id: String!, locale: String, preview: Boolean): Teams
   teamsCollection(limit: Int = 100, locale: String, order: [TeamsOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): TeamsCollection
+  tutorials(id: String!, locale: String, preview: Boolean): Tutorials
+  tutorialsCollection(limit: Int = 100, locale: String, order: [TutorialsOrder], preview: Boolean, skip: Int = 0, where: TutorialsFilter): TutorialsCollection
   users(id: String!, locale: String, preview: Boolean): Users
   usersCollection(limit: Int = 100, locale: String, order: [UsersOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): UsersCollection
   workingGroupDeliverables(id: String!, locale: String, preview: Boolean): WorkingGroupDeliverables
@@ -1790,6 +1793,109 @@ enum TeamsToolsCollectionOrder {
   sys_publishedVersion_DESC
   url_ASC
   url_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials)"""
+type Tutorials implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  link(locale: String): String
+  linkText(locale: String): String
+  linkedFrom(allowedLocales: [String]): TutorialsLinkingCollections
+  shortText(locale: String): String
+  sys: Sys!
+  text(locale: String): TutorialsText
+  thumbnail(locale: String, preview: Boolean): Asset
+  title(locale: String): String
+}
+
+type TutorialsCollection {
+  items: [Tutorials]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input TutorialsFilter {
+  AND: [TutorialsFilter]
+  OR: [TutorialsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  link: String
+  linkText: String
+  linkText_contains: String
+  linkText_exists: Boolean
+  linkText_in: [String]
+  linkText_not: String
+  linkText_not_contains: String
+  linkText_not_in: [String]
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  shortText: String
+  shortText_contains: String
+  shortText_exists: Boolean
+  shortText_in: [String]
+  shortText_not: String
+  shortText_not_contains: String
+  shortText_not_in: [String]
+  sys: SysFilter
+  text_contains: String
+  text_exists: Boolean
+  text_not_contains: String
+  thumbnail_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type TutorialsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum TutorialsOrder {
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  shortText_ASC
+  shortText_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+type TutorialsText {
+  json: JSON!
+  links: TutorialsTextLinks!
+}
+
+type TutorialsTextAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type TutorialsTextEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type TutorialsTextLinks {
+  assets: TutorialsTextAssets!
+  entries: TutorialsTextEntries!
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users)"""

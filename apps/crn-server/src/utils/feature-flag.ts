@@ -6,6 +6,7 @@ import {
   UserDataProvider,
   InterestGroupDataProvider,
   WorkingGroupDataProvider,
+  TutorialsDataProvider,
 } from '../data-providers/types';
 
 const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
@@ -25,6 +26,7 @@ type DependencyList = {
   calendars: DependencySwitch<CalendarDataProvider>;
   events: DependencySwitch<EventDataProvider>;
   workingGroups: DependencySwitch<WorkingGroupDataProvider>;
+  tutorials: DependencySwitch<TutorialsDataProvider>;
 };
 
 export class FeatureFlagDependencySwitch {
@@ -61,6 +63,10 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       workingGroups: {
+        true: undefined,
+        false: undefined,
+      },
+      tutorials: {
         true: undefined,
         false: undefined,
       },

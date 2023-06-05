@@ -90,10 +90,9 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
       calendars = calendars.filter((calendar) => {
         if (
           (!calendar?.linkedFrom?.interestGroupsCollection ||
-            calendar?.linkedFrom?.interestGroupsCollection?.items?.length ===
-              0) &&
+            !calendar?.linkedFrom?.interestGroupsCollection?.items?.length) &&
           (!calendar?.linkedFrom?.workingGroupsCollection ||
-            calendar?.linkedFrom?.workingGroupsCollection?.items?.length === 0)
+            !calendar?.linkedFrom?.workingGroupsCollection?.items?.length)
         ) {
           return true;
         }

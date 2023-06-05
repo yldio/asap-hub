@@ -11,6 +11,7 @@ export interface SentryConfig {
 export const sentryWrapperFactory =
   (config: SentryConfig) =>
   (handler: Handler): Handler => {
+    // eslint-disable-next-line no-console
     console.log('sentryWrapperFactory dsn', config.sentryDsn);
     Sentry.AWSLambda.init({
       dsn: config.sentryDsn,
@@ -22,6 +23,7 @@ export const sentryWrapperFactory =
       environment: config.environment,
       release: config.currentRevision,
       onFatalError(error: Error) {
+        // eslint-disable-next-line no-console
         console.log('sentryWrapperFactory Fatal error', error);
       },
     });

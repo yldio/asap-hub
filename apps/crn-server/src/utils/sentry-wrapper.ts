@@ -1,14 +1,9 @@
 import { sentryWrapperFactory } from '@asap-hub/server-common';
-import {
-  currentRevision,
-  environment,
-  sentryDsn,
-  sentryTraceSampleRate,
-} from '../config';
+import { currentRevision, environment, sentryTraceSampleRate } from '../config';
 
 export const sentryWrapper = sentryWrapperFactory({
   currentRevision,
   environment,
-  sentryDsn,
+  sentryDsn: 'https://random@o1111815.ingest.sentry.io/6587137',
   sentryTraceSampleRate,
 });

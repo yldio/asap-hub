@@ -554,4 +554,68 @@ describe('Migrate events', () => {
       '[ERROR] Calendar calendar-1 does not exist in contentful. Event with id event-1 is going to be created without a calendar.',
     );
   });
+
+  it('creates a calendar as null if it comes as null', async () => {
+    const event = getEventSquidexResponse();
+    event.queryEventsContentsWithTotal!.items![0].flatData.calendar = null;
+    squidexGraphqlClientMock.request.mockResolvedValueOnce(event);
+
+    jest
+      .spyOn(contentfulEnv, 'getEntries')
+      .mockReset()
+      .mockImplementation(() =>
+        Promise.resolve({
+          total: 0,
+          items: [],
+          skip: 0,
+          limit: 10,
+          toPlainObject: jest.fn(),
+          sys: { type: 'Array' },
+        }),
+      );
+    await migrateEvents();
+
+    expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
+      'events',
+      'event-1',
+      {
+        fields: {
+          ...baseCreatePayload,
+          calendar: { 'en-US': null },
+        },
+      },
+    );
+  });
+
+  it('creates a calendar as null if it comes as empty array', async () => {
+    const event = getEventSquidexResponse();
+    event.queryEventsContentsWithTotal!.items![0].flatData.calendar = [];
+    squidexGraphqlClientMock.request.mockResolvedValueOnce(event);
+
+    jest
+      .spyOn(contentfulEnv, 'getEntries')
+      .mockReset()
+      .mockImplementation(() =>
+        Promise.resolve({
+          total: 0,
+          items: [],
+          skip: 0,
+          limit: 10,
+          toPlainObject: jest.fn(),
+          sys: { type: 'Array' },
+        }),
+      );
+    await migrateEvents();
+
+    expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
+      'events',
+      'event-1',
+      {
+        fields: {
+          ...baseCreatePayload,
+          calendar: { 'en-US': null },
+        },
+      },
+    );
+  });
 });

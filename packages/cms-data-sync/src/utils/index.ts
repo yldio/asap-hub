@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 export * from './assets';
+export * from './calendar';
 export * from './entries';
 export * from './external-tools';
 export * from './fetch';

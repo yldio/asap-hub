@@ -160,6 +160,19 @@ describe('Outputs data provider', () => {
         expect(result?.subtype).toEqual(type);
       },
     );
+    test('should throw when the subtype is null and is required', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlResponse!.documentType = 'Article';
+      graphqlResponse!.type = 'Research';
+      graphqlResponse!.subtype = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
+
+      await expect(outputDataProvider.fetchById(outputId)).rejects.toThrow(
+        'subtype not defined',
+      );
+    });
 
     test('Should default authors to an empty array when missing', async () => {
       const graphqlResponse = getContentfulGraphqlOutput();
@@ -307,8 +320,8 @@ describe('Outputs data provider', () => {
         );
       });
     });
-    describe('working groups', () => {
-      it('should return undefined if theres no working group', async () => {
+    describe('related entity', () => {
+      it('should return a project', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         graphqlResponse!.relatedEntity = {
           __typename: 'Projects',
@@ -328,9 +341,7 @@ describe('Outputs data provider', () => {
           title: 'a project',
         });
       });
-    });
-    describe('projects', () => {
-      it('should return undefined if theres no project', async () => {
+      it('should return working group', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         graphqlResponse!.relatedEntity = {
           __typename: 'WorkingGroups',
@@ -349,6 +360,17 @@ describe('Outputs data provider', () => {
           id: '42',
           title: 'a working group',
         });
+      });
+      it('should return empty if undefined', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        graphqlResponse!.relatedEntity = null;
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
+        const result = await outputDataProvider.fetchById(outputId);
+
+        expect(result!.project).toBeUndefined();
+        expect(result!.workingGroup).toBeUndefined();
       });
     });
   });
@@ -726,12 +748,23 @@ describe('Outputs data provider', () => {
         }),
       });
     });
+    test('Should throw when no related entity pass in', async () => {
+      const outputRequest = getOutputCreateDataObject();
+
+      await expect(
+        outputDataProvider.create({
+          ...outputRequest,
+          workingGroup: undefined,
+          project: undefined,
+        }),
+      ).rejects.toThrow(/invalid related entity/i);
+    });
 
     test('Should throw when fails to create the output', async () => {
-      const OutputRequest = getOutputCreateDataObject();
+      const outputRequest = getOutputCreateDataObject();
       environmentMock.createEntry.mockRejectedValueOnce(new GenericError());
 
-      await expect(outputDataProvider.create(OutputRequest)).rejects.toThrow(
+      await expect(outputDataProvider.create(outputRequest)).rejects.toThrow(
         GenericError,
       );
     });

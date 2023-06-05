@@ -5,7 +5,10 @@ import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { auth0SharedSecret } from '../../config';
 import Users, { UserController } from '../../controllers/user.controller';
-import { getAssetDataProvider, getUserDataProvider } from '../../dependencies/user.dependency';
+import {
+  getAssetDataProvider,
+  getUserDataProvider,
+} from '../../dependencies/user.dependency';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const fetchUserByCodeHandlerFactory = (

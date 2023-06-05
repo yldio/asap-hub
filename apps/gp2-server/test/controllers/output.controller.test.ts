@@ -355,7 +355,6 @@ describe('outputs controller', () => {
 
     test('Should update the output and return it', async () => {
       const outputUpdateData = getOutputUpdateData();
-      outputDataProviderMock.update.mockResolvedValueOnce(outputId);
 
       const result = await outputs.update(outputId, outputUpdateData);
 

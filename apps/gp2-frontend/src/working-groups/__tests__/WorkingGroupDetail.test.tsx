@@ -76,7 +76,7 @@ describe('WorkingGroupDetail', () => {
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
   const outputs = gp2Fixtures.createListOutputResponse(1);
-  outputs.items[0]!.workingGroups = {
+  outputs.items[0]!.workingGroup = {
     id: '42',
     title: 'Steering Committee',
   };

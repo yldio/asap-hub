@@ -5,7 +5,6 @@ import {
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
-import Boom from '@hapi/boom';
 import { Filter } from 'odata-query';
 import {
   FetchOutputQuery,
@@ -18,6 +17,7 @@ import { FETCH_OUTPUT, FETCH_OUTPUTS } from '../queries/outputs.queries';
 import logger from '../utils/logger';
 import { buildODataFilter } from '../utils/odata';
 import { reverseMap } from '../utils/reverse-map';
+import { OutputDataProvider } from './types';
 
 export const makeODataFilter = (
   filter?: gp2Model.FetchOutputFilter,
@@ -41,15 +41,6 @@ export const makeODataFilter = (
   return entries.length === 1 ? (entries[0] as Filter) : entries;
 };
 
-export interface OutputDataProvider {
-  fetchById(id: string): Promise<gp2Model.OutputDataObject | null>;
-  fetch(
-    options: gp2Model.FetchOutputOptions,
-  ): Promise<gp2Model.ListOutputDataObject>;
-  create(input: gp2Model.OutputCreateDataObject): Promise<string>;
-  update(id: string, input: gp2Model.OutputUpdateDataObject): Promise<string>;
-}
-
 export class OutputSquidexDataProvider implements OutputDataProvider {
   constructor(
     private squidexGraphqlClient: SquidexGraphqlClient,
@@ -58,7 +49,7 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
       gp2Squidex.InputOutput
     >,
   ) {}
-  async fetchById(id: string): Promise<gp2Model.OutputDataObject | null> {
+  async fetchById(id: string) {
     const outputGraphqlResponse = await this.squidexGraphqlClient.request<
       FetchOutputQuery,
       FetchOutputQueryVariables
@@ -66,11 +57,7 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
 
     const { findOutputsContent: outputContent } = outputGraphqlResponse;
 
-    if (!outputContent) {
-      throw Boom.notFound();
-    }
-
-    return parseGraphQLOutput(outputContent);
+    return outputContent ? parseGraphQLOutput(outputContent) : null;
   }
 
   async fetch({
@@ -79,7 +66,7 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
     search,
     filter,
     includeDrafts,
-  }: gp2Model.FetchOutputOptions): Promise<gp2Model.ListOutputDataObject> {
+  }: gp2Model.FetchOutputOptions) {
     const containsFilters = (search || '')
       .split(' ')
       .filter(Boolean)
@@ -150,7 +137,7 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
     type,
     publishDate: _,
     ...input
-  }: gp2Model.OutputCreateDataObject): Promise<string> {
+  }: gp2Model.OutputCreateDataObject) {
     const output = getOutputSquidexData({ authors, documentType, type });
 
     const parsedOutput = parseToSquidex({
@@ -173,7 +160,7 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
       publishDate: _,
       ...input
     }: gp2Model.OutputUpdateDataObject,
-  ): Promise<string> {
+  ) {
     const output = getOutputSquidexData({ authors, documentType, type });
 
     const parsedOutput = parseToSquidex({
@@ -182,19 +169,17 @@ export class OutputSquidexDataProvider implements OutputDataProvider {
       updatedBy: [input.updatedBy],
     });
     await this.squidexRestClient.patch(outputId, parsedOutput);
-
-    return outputId;
   }
 }
 
-const getAuthorIdList = (authorDataObject: gp2Model.AuthorUpsertDataObject) => {
-  if ('userId' in authorDataObject) {
-    return authorDataObject.userId;
-  }
-
-  return authorDataObject.externalUserId;
-};
-
+const getAuthorIdList = (
+  authorList: string[],
+  author: gp2Model.AuthorUpsertDataObject,
+) =>
+  author.externalUserId || author.userId
+    ? [...authorList, author.externalUserId ?? author.userId]
+    : /* istanbul ignore next */
+      authorList;
 const reverseDocumentTypeMap = reverseMap(documentTypeMap);
 const reverseTypeMap = reverseMap(typeMap);
 
@@ -210,5 +195,5 @@ const getOutputSquidexData = ({
     >) => ({
   documentType: reverseDocumentTypeMap[documentType],
   ...(type && { type: reverseTypeMap[type] }),
-  authors: authors.map(getAuthorIdList),
+  authors: authors.reduce<string[]>(getAuthorIdList, []),
 });

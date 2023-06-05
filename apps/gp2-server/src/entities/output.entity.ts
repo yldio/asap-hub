@@ -51,13 +51,13 @@ export const parseGraphQLOutput = (
   const documentType = documentTypeMap[data.documentType];
   const type = getType(data.documentType, data.type);
 
-  const workingGroups = data.workingGroups?.length
+  const workingGroup = data.workingGroups?.length
     ? {
         id: data.workingGroups[0]?.id || '',
         title: data.workingGroups[0]?.flatData.title || '',
       }
     : undefined;
-  const projects = data.projects?.length
+  const project = data.projects?.length
     ? {
         id: data.projects[0]?.id || '',
         title: data.projects[0]?.flatData.title || '',
@@ -100,12 +100,13 @@ export const parseGraphQLOutput = (
     documentType,
     type: type || undefined,
     title: data.title || '',
-    publishDate: data.publishDate || undefined,
-    addedDate: data.addedDate,
-    lastUpdatedPartial:
+    publishDate: parseDate(data.publishDate).toISOString(),
+    addedDate: parseDate(data.addedDate).toISOString(),
+    lastUpdatedPartial: parseDate(
       data.lastUpdatedPartial || output.lastModified || output.created,
+    ).toISOString(),
     subtype: data.subtype || undefined,
-    workingGroups,
-    projects,
+    workingGroup,
+    project,
   };
 };

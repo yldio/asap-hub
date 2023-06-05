@@ -11,6 +11,10 @@ export const outputDocumentTypes = [
 ] as const;
 
 export type OutputDocumentType = (typeof outputDocumentTypes)[number];
+export const isOutputDocumentType = (
+  data: string,
+): data is OutputDocumentType =>
+  outputDocumentTypes.includes(data as OutputDocumentType);
 
 export const outputTypes = [
   'Research',
@@ -20,9 +24,13 @@ export const outputTypes = [
   'Blog',
 ] as const;
 export type OutputType = (typeof outputTypes)[number];
+export const isOutputType = (data: string): data is OutputType =>
+  outputTypes.includes(data as OutputType);
 
 export const outputSubtypes = ['Preprints', 'Published'] as const;
 export type OutputSubtype = (typeof outputSubtypes)[number];
+export const isOutputSubType = (data: string): data is OutputSubtype =>
+  outputSubtypes.includes(data as OutputSubtype);
 
 export const outputDocumentTypeToType: Record<
   OutputDocumentType,
@@ -67,27 +75,27 @@ type OutputOwner = {
   id: string;
   title: string;
 };
-
+export type OutputAuthor = UserAuthor | ExternalUserResponse;
 export type OutputDataObject = OutputCoreObject & {
-  authors: (UserAuthor | ExternalUserResponse)[];
+  authors: OutputAuthor[];
   created: string;
   id: string;
   lastUpdatedPartial: string;
-  workingGroups?: OutputOwner;
-  projects?: OutputOwner;
+  workingGroup?: OutputOwner;
+  project?: OutputOwner;
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;
 
 export type AuthorUpsertDataObject =
-  | { userId: string }
-  | { externalUserId: string };
+  | { userId: string; externalUserId?: undefined }
+  | { externalUserId: string; userId?: undefined };
 
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
-  workingGroups?: string[];
-  projects?: string[];
+  workingGroup?: string;
+  project?: string;
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
@@ -114,8 +122,8 @@ export type OutputPostRequest = {
   title: string;
   type?: OutputType;
   subtype?: OutputSubtype;
-  workingGroups?: string[];
-  projects?: string[];
+  workingGroup?: string;
+  project?: string;
 };
 
 export type OutputPutRequest = OutputPostRequest;
@@ -124,9 +132,9 @@ export type FetchOutputFilter = {
   documentType?: string | string[];
   title?: string;
   link?: string;
-  workingGroups?: string;
-  projects?: string;
-  authors?: string[];
+  workingGroup?: string;
+  project?: string;
+  author?: string;
 };
 
 export type FetchOutputOptions = FetchOptions<FetchOutputFilter> & {

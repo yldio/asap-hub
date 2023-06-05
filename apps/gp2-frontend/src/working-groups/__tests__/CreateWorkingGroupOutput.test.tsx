@@ -2,8 +2,8 @@ import { gp2 } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
-  waitForElementToBeRemoved,
   screen,
+  waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -12,7 +12,7 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
 import { createOutput } from '../../outputs/api';
-import { getUsers, getExternalUsers } from '../../users/api';
+import { getExternalUsers, getUsers } from '../../users/api';
 import CreateWorkingGroupOutput from '../CreateWorkingGroupOutput';
 
 jest.mock('../../outputs/api');
@@ -107,8 +107,8 @@ it('publishes the output', async () => {
           externalUserId: '2',
         },
       ],
-      workingGroups: expect.arrayContaining(['working-group-id-1']),
-      projects: undefined,
+      workingGroup: 'working-group-id-1',
+      project: undefined,
     },
     expect.anything(),
   );

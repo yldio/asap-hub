@@ -64,6 +64,7 @@ import { ContributingCohortContentfulDataProvider } from './data-providers/conte
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
 import { ExternalUserContentfulDataProvider } from './data-providers/contentful/external-user.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
+import { OutputContentfulDataProvider } from './data-providers/contentful/output.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
 import { ProjectContentfulDataProvider } from './data-providers/contentful/project.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
@@ -73,16 +74,14 @@ import { ContributingCohortSquidexDataProvider } from './data-providers/contribu
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import { ExternalUserSquidexDataProvider } from './data-providers/external-user.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import {
-  OutputDataProvider,
-  OutputSquidexDataProvider,
-} from './data-providers/output.data-provider';
+import { OutputSquidexDataProvider } from './data-providers/output.data-provider';
 import { PageSquidexDataProvider } from './data-providers/page.data-provider';
 import { ProjectSquidexDataProvider } from './data-providers/project.data-provider';
 import {
   AssetDataProvider,
   ContributingCohortDataProvider,
   NewsDataProvider,
+  OutputDataProvider,
   PageDataProvider,
   UserDataProvider,
   WorkingGroupNetworkDataProvider,
@@ -276,9 +275,15 @@ export const appFactory = (libs: Libs = {}): Express => {
       contentfulGraphQLClient,
       getContentfulRestClientFactory,
     );
-  const outputDataProvider =
-    libs.outputDataProvider ||
+  const outputSquidexDataProvider =
+    libs.outputSquidexDataProvider ||
     new OutputSquidexDataProvider(squidexGraphqlClient, outputRestClient);
+  const outputContentfulDataProvider =
+    libs.outputContentfulDataProvider ||
+    new OutputContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
 
   const externalUserSquidexDataProvider =
     libs.externalUserSquidexDataProvider ||
@@ -343,6 +348,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.calendarDataProvider || isContentfulEnabled
       ? calendarContentfulDataProvider
       : calendarSquidexDataProvider;
+  const outputDataProvider =
+    libs.outputDataProvider || isContentfulEnabled
+      ? outputContentfulDataProvider
+      : outputSquidexDataProvider;
 
   // Controllers
 
@@ -487,8 +496,10 @@ export type Libs = {
   newsController?: NewsController;
   newsDataProvider?: NewsDataProvider;
   newsSquidexDataProvider?: NewsDataProvider;
+  outputContentfulDataProvider?: OutputDataProvider;
   outputController?: OutputController;
   outputDataProvider?: OutputDataProvider;
+  outputSquidexDataProvider?: OutputDataProvider;
   pageContentfulDataProvider?: PageDataProvider;
   pageController?: PageController;
   pageDataProvider?: PageDataProvider;

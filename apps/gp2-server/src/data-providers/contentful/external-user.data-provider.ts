@@ -29,15 +29,12 @@ export class ExternalUserContentfulDataProvider
     const { externalUsersCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchExternalUsersQuery,
       gp2Contentful.FetchExternalUsersQueryVariables
-    >(
-      gp2Contentful.FETCH_EXTERNAL_USERS,
-      expect.objectContaining({
-        limit: take,
-        skip,
-        where,
-        order: [gp2Contentful.ExternalUsersOrder.NameAsc],
-      }),
-    );
+    >(gp2Contentful.FETCH_EXTERNAL_USERS, {
+      limit: take,
+      skip,
+      where,
+      order: [gp2Contentful.ExternalUsersOrder.NameAsc],
+    });
 
     if (!externalUsersCollection?.items) {
       return {

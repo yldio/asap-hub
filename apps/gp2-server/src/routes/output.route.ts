@@ -2,7 +2,6 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
-import { isContentfulEnabled } from '../config';
 import { OutputController } from '../controllers/output.controller';
 import {
   validateOutputParameters,
@@ -19,20 +18,13 @@ export const outputRouteFactory = (
   outputRoutes.get(
     '/outputs',
     async (req, res: Response<gp2Model.ListOutputResponse>) => {
-      if (isContentfulEnabled) {
-        res.json({
-          total: 0,
-          items: [],
-        });
-      } else {
-        const { query } = req;
+      const { query } = req;
 
-        const options = validateOutputsParameters(query);
+      const options = validateOutputsParameters(query);
 
-        const result = await outputController.fetch(options);
+      const result = await outputController.fetch(options);
 
-        res.json(result);
-      }
+      res.json(result);
     },
   );
 

@@ -14,7 +14,7 @@ describe('OutputCard', () => {
     render(
       <OutputCard
         {...defaultProps}
-        projects={{ id: '42', title: 'project name' }}
+        project={{ id: '42', title: 'project name' }}
       />,
     );
     expect(screen.getByRole('link', { name: /project name/i })).toHaveAttribute(
@@ -27,7 +27,7 @@ describe('OutputCard', () => {
     render(
       <OutputCard
         {...defaultProps}
-        workingGroups={{ id: '42', title: 'working group name' }}
+        workingGroup={{ id: '42', title: 'working group name' }}
       />,
     );
     expect(

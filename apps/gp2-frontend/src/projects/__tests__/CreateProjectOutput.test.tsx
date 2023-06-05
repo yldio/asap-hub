@@ -2,8 +2,8 @@ import { gp2 } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
-  waitForElementToBeRemoved,
   screen,
+  waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -97,8 +97,8 @@ it('publishes the output', async () => {
       title,
       link,
       documentType: 'Procedural Form',
-      projects: expect.arrayContaining(['project-id-1']),
-      workingGroups: undefined,
+      project: 'project-id-1',
+      workingGroup: undefined,
       authors: [
         {
           userId: '1',

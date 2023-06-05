@@ -1,5 +1,5 @@
 import { ListResponse } from '../common';
-import { Calendar, Keyword, Member, Milestone, Resource } from './common';
+import { Calendar, Member, Milestone, Resource } from './common';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
 export type ProjectStatus = (typeof projectStatus)[number];
@@ -23,7 +23,7 @@ export type ProjectDataObject = {
   description?: string;
   endDate?: string;
   id: string;
-  keywords: Keyword[];
+  keywords: string[];
   leadEmail?: string;
   members: ProjectMember[];
   milestones: Milestone[];

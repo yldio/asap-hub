@@ -317,9 +317,6 @@ export const parseGraphQLUserToDataObject = ({
       (connection): connection is { code: string } => !!connection.code,
     ) || [];
 
-  if (user.keywords && !user.keywords.every(gp2Model.isKeyword)) {
-    throw new TypeError('Invalid keyword received from Squidex');
-  }
   const contributingCohorts = parseContributingCohorts(
     user.contributingCohorts,
   );

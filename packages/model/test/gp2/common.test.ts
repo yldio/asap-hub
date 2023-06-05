@@ -13,7 +13,7 @@ describe('common', () => {
     });
 
     it('should not recognise incorrect keyword', () => {
-      expect(isKeyword('not-a-keyword')).toEqual(false);
+      expect(isKeyword(null)).toEqual(false);
     });
   });
   describe('MilestoneStatus', () => {

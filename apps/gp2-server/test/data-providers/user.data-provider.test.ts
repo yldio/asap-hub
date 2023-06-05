@@ -183,15 +183,6 @@ describe('User data provider', () => {
       expect(result?.keywords).toEqual(expectedKeywords);
     });
 
-    test('keywords are valid', async () => {
-      const invalidKeywords = ['invalid-keyword'];
-      const user = getGraphQLUser();
-      user.flatData.keywords = invalidKeywords;
-      const mockResponse = getSquidexUserGraphqlResponse(user);
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-      expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();
-    });
-
     test('questions are added', async () => {
       const user = getGraphQLUser();
       user.flatData.questions = [{ question: 'a valid question' }];

@@ -22,8 +22,7 @@ export const isResourceLink = (resource: Resource): resource is ResourceLink =>
   resource.type === 'Link';
 
 export type Keyword = (typeof keywords)[number];
-export const isKeyword = (data: string | null): data is Keyword =>
-  keywords.includes(data as Keyword);
+export const isKeyword = (data: string | null): data is string => data !== null;
 
 export interface Calendar {
   id: string;

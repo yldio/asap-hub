@@ -25,6 +25,7 @@ describe('Sentry wrapper correctly calls functions', () => {
       environment,
       release: currentRevision,
       sampleRate: 1,
+      onFatalError: expect.any(Function),
     });
     expect(Sentry.AWSLambda.wrapHandler).toHaveBeenCalledWith(handler);
   });

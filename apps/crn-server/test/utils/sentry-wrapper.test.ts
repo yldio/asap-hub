@@ -4,7 +4,6 @@ import { sentryWrapper } from '../../src/utils/sentry-wrapper';
 import {
   currentRevision,
   environment,
-  sentryDsn,
   sentryTraceSampleRate,
 } from '../../src/config';
 
@@ -20,11 +19,12 @@ describe('Sentry wrapper correctly calls functions', () => {
     sentryWrapper(handler);
 
     expect(Sentry.AWSLambda.init).toHaveBeenCalledWith({
-      dsn: sentryDsn,
+      dsn: 'https://random@o1111815.ingest.sentry.io/6587137',
       tracesSampleRate: sentryTraceSampleRate,
       environment,
       release: currentRevision,
       sampleRate: 1,
+      onFatalError: expect.any(Function),
     });
     expect(Sentry.AWSLambda.wrapHandler).toHaveBeenCalledWith(handler);
   });

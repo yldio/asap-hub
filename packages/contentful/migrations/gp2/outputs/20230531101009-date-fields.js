@@ -18,20 +18,4 @@ module.exports.up = (migration) => {
 
 module.exports.down = (migration) => {
   const outputs = migration.editContentType('outputs');
-  outputs.editField('documentType').items({
-    type: 'Symbol',
-    validations: [
-      {
-        in: [],
-      },
-    ],
-  });
-  outputs.editField('type').items({
-    type: 'Symbol',
-    validations: [
-      {
-        in: [],
-      },
-    ],
-  });
 };

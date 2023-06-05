@@ -3,12 +3,9 @@ import { ValidationError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
-import { gp2 as gp2squidex, SquidexRest } from '@asap-hub/squidex';
-import { appName, auth0SharedSecret, baseUrl } from '../../config';
+import { auth0SharedSecret } from '../../config';
 import Users, { UserController } from '../../controllers/user.controller';
-import { AssetSquidexDataProvider } from '../../data-providers/asset.data-provider';
-import { getUserDataProvider } from '../../dependencies/user.dependency';
-import { getAuthToken } from '../../utils/auth';
+import { getAssetDataProvider, getUserDataProvider } from '../../dependencies/user.dependency';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const fetchUserByCodeHandlerFactory = (
@@ -33,15 +30,8 @@ export type GetValidUntilTimestampInSecondsArgs = {
   ttl: number;
 };
 
-const userRestClient = new SquidexRest<
-  gp2squidex.RestUser,
-  gp2squidex.InputUser
->(getAuthToken, 'users', {
-  appName,
-  baseUrl,
-});
 const userDataProvider = getUserDataProvider();
-const assetDataProvider = new AssetSquidexDataProvider(userRestClient);
+const assetDataProvider = getAssetDataProvider();
 
 /* istanbul ignore next */
 export const handler = sentryWrapper(

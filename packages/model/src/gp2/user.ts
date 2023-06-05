@@ -112,7 +112,7 @@ export type UserDataObject = {
   email: string;
   firstName: string;
   fundingStreams?: string;
-  keywords: Keyword[];
+  keywords: string[];
   lastName: string;
   onboarded: boolean;
   positions: UserPosition[];

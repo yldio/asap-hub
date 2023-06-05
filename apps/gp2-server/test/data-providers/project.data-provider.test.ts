@@ -382,13 +382,6 @@ describe('Project Data Provider', () => {
       expect(keywords).toEqual(expectedKeywords);
     });
 
-    test('keywords are valid', () => {
-      const expectedKeywords = ['invalid-keyword'];
-      const project = getGraphQLProject();
-      project.flatData.keywords = expectedKeywords;
-      expect(() => parseProjectToDataObject(project)).toThrow();
-    });
-
     describe('milestones', () => {
       test('undefined milestones returns empty array', () => {
         const project = getGraphQLProject();

@@ -115,11 +115,11 @@ describe('/users/ route', () => {
       test.each`
         name               | value
         ${'regions'}       | ${['Africa']}
-        ${'keywords'}      | ${['Bash']}
+        ${'keywords'}      | ${['Aging']}
         ${'projects'}      | ${['a project']}
         ${'workingGroups'} | ${['a working group']}
         ${'regions'}       | ${['Africa', 'Asia']}
-        ${'keywords'}      | ${['Bash', 'R']}
+        ${'keywords'}      | ${['Aging', 'RNA']}
         ${'projects'}      | ${['a project', 'another project']}
         ${'workingGroups'} | ${['a working group', 'another working group']}
       `(

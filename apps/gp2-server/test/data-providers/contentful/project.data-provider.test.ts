@@ -117,14 +117,6 @@ describe('Project Data Provider', () => {
           expect(projectDataObject?.keywords).toEqual(expectedKeywords);
         },
       );
-
-      test('keywords are valid', () => {
-        const project = getContentfulGraphqlProject();
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          projects: { ...project, keywords: ['invalid'] },
-        });
-        expect(() => projectDataProvider.fetchById('id')).rejects.toThrow();
-      });
     });
 
     describe('traineeProject', () => {

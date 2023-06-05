@@ -182,15 +182,6 @@ describe('User data provider', () => {
       expect(result?.keywords).toEqual(keywords);
     });
 
-    test('keywords are valid', async () => {
-      const keywords = ['invalid-keyword'];
-      const mockResponse = getContentfulGraphqlUser({ keywords });
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        users: mockResponse,
-      });
-      expect(() => userDataProvider.fetchById('user-id')).rejects.toThrow();
-    });
-
     test('questions are added', async () => {
       const questions = ['a valid question'];
       const mockResponse = getContentfulGraphqlUser({ questions });
@@ -1122,7 +1113,7 @@ describe('User data provider', () => {
     test.each`
       name          | value                 | fieldName
       ${'regions'}  | ${['Africa', 'Asia']} | ${'regions'}
-      ${'keywords'} | ${['Bash', 'R']}      | ${'keywords'}
+      ${'keywords'} | ${['Aging', 'RNA']}   | ${'keywords'}
     `('Should query with $name filters', async ({ name, value, fieldName }) => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         getContentfulUsersGraphqlResponse(),

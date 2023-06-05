@@ -1,3 +1,5 @@
+import { keywords } from './keywords';
+
 export const resourceTypes = ['Link', 'Note'] as const;
 type ResourceTypes = (typeof resourceTypes)[number];
 
@@ -18,51 +20,9 @@ export type Resource = ResourceNote | ResourceLink;
 
 export const isResourceLink = (resource: Resource): resource is ResourceLink =>
   resource.type === 'Link';
-export const keywords = [
-  'Epidemiology',
-  'Neurology',
-  'Genetics',
-  'Genomics',
-  'Data Science',
-  'GP2 PhD',
-  'Neurodegeneration',
-  'Pharmacogenomics',
-  'Movement Disorders',
-  'Communications',
-  'Patient Advocate',
-  'Machine Learning',
-  'Research Communications',
-  'Patient Engagement',
-  'R',
-  'Bash',
-  'Diversity',
-  'Laboratory Science',
-  'Operations',
-  'Project Management',
-  'Molecular Biology',
-  'Research Grants',
-  'Neurogenetics',
-  'Python',
-  'Biostatistics',
-  'Stata',
-  'Education',
-  'Program Management',
-  'Course Management',
-  'Training',
-  'Biobanking',
-  'Career Development',
-  'Administrative Support',
-  'GP2 Opportunities',
-  "GP2 Master's",
-  'Computer Science',
-  'Outreach',
-  'Neuroimaging',
-  `Parkinson's disease`,
-] as const;
 
 export type Keyword = (typeof keywords)[number];
-export const isKeyword = (data: string | null): data is Keyword =>
-  keywords.includes(data as Keyword);
+export const isKeyword = (data: string | null): data is string => data !== null;
 
 export interface Calendar {
   id: string;

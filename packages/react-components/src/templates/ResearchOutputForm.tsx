@@ -302,6 +302,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   return (
     <main css={mainStyles}>
       <Form<ResearchOutputResponse>
+        toastInner
         serverErrors={serverValidationErrors}
         dirty={!equal(remotePayload, currentPayload)}
       >

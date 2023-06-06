@@ -15,6 +15,7 @@ import Form from '../Form';
 
 const props: ComponentProps<typeof Form> = {
   dirty: false,
+  toastInner: true,
   children: () => null,
 };
 

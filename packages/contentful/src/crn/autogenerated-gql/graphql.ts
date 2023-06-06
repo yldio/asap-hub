@@ -4785,6 +4785,11 @@ export type CalendarsContentFragment = Pick<
         Maybe<Pick<WorkingGroups, 'complete'> & { sys: Pick<Sys, 'id'> }>
       >;
     }>;
+    interestGroupsCollection?: Maybe<{
+      items: Array<
+        Maybe<Pick<InterestGroups, 'active'> & { sys: Pick<Sys, 'id'> }>
+      >;
+    }>;
   }>;
 };
 
@@ -4806,6 +4811,11 @@ export type FetchCalendarByIdQuery = {
         workingGroupsCollection?: Maybe<{
           items: Array<
             Maybe<Pick<WorkingGroups, 'complete'> & { sys: Pick<Sys, 'id'> }>
+          >;
+        }>;
+        interestGroupsCollection?: Maybe<{
+          items: Array<
+            Maybe<Pick<InterestGroups, 'active'> & { sys: Pick<Sys, 'id'> }>
           >;
         }>;
       }>;
@@ -4840,6 +4850,13 @@ export type FetchCalendarsQuery = {
                 items: Array<
                   Maybe<
                     Pick<WorkingGroups, 'complete'> & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }>;
+              interestGroupsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<InterestGroups, 'active'> & { sys: Pick<Sys, 'id'> }
                   >
                 >;
               }>;
@@ -5267,6 +5284,16 @@ export type EventsContentFragment = Pick<
             Maybe<Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }>
           >;
         }>;
+        interestGroupsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<
+                InterestGroups,
+                'name' | 'active' | 'slack' | 'googleDrive'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        }>;
       }>;
     }
   >;
@@ -5527,6 +5554,16 @@ export type FetchEventByIdQuery = {
             workingGroupsCollection?: Maybe<{
               items: Array<
                 Maybe<Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
+            interestGroupsCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<
+                    InterestGroups,
+                    'name' | 'active' | 'slack' | 'googleDrive'
+                  > & { sys: Pick<Sys, 'id'> }
+                >
               >;
             }>;
           }>;
@@ -5848,6 +5885,16 @@ export type FetchEventsQuery = {
                     items: Array<
                       Maybe<
                         Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }>;
+                  interestGroupsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          InterestGroups,
+                          'name' | 'active' | 'slack' | 'googleDrive'
+                        > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
                   }>;
@@ -6225,6 +6272,19 @@ export type FetchEventsByUserIdQuery = {
                                     Pick<WorkingGroups, 'title'> & {
                                       sys: Pick<Sys, 'id'>;
                                     }
+                                  >
+                                >;
+                              }>;
+                              interestGroupsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<
+                                      InterestGroups,
+                                      | 'name'
+                                      | 'active'
+                                      | 'slack'
+                                      | 'googleDrive'
+                                    > & { sys: Pick<Sys, 'id'> }
                                   >
                                 >;
                               }>;
@@ -6611,6 +6671,19 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                   >
                                 >;
                               }>;
+                              interestGroupsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<
+                                      InterestGroups,
+                                      | 'name'
+                                      | 'active'
+                                      | 'slack'
+                                      | 'googleDrive'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
+                                >;
+                              }>;
                             }>;
                           }
                         >;
@@ -6994,6 +7067,19 @@ export type FetchEventsByTeamIdQuery = {
                                   >
                                 >;
                               }>;
+                              interestGroupsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<
+                                      InterestGroups,
+                                      | 'name'
+                                      | 'active'
+                                      | 'slack'
+                                      | 'googleDrive'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
+                                >;
+                              }>;
                             }>;
                           }
                         >;
@@ -7054,6 +7140,14 @@ export type FetchWorkingGroupCalendarQueryVariables = Exact<{
 
 export type FetchWorkingGroupCalendarQuery = {
   workingGroups?: Maybe<{ calendars?: Maybe<{ sys: Pick<Sys, 'id'> }> }>;
+};
+
+export type FetchInterestGroupCalendarQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchInterestGroupCalendarQuery = {
+  interestGroups?: Maybe<{ calendar?: Maybe<{ sys: Pick<Sys, 'id'> }> }>;
 };
 
 export type ExternalAuthorsContentFragment = Pick<
@@ -8848,6 +8942,48 @@ export const CalendarsContentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'interestGroupsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '1' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'active' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -9365,6 +9501,66 @@ export const EventsContentFragmentDoc = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'interestGroupsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '1' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'name' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'active' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'slack' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'googleDrive',
+                                    },
                                   },
                                 ],
                               },
@@ -12211,6 +12407,78 @@ export const FetchWorkingGroupCalendarDocument = {
 } as unknown as DocumentNode<
   FetchWorkingGroupCalendarQuery,
   FetchWorkingGroupCalendarQueryVariables
+>;
+export const FetchInterestGroupCalendarDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchInterestGroupCalendar' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'interestGroups' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'calendar' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchInterestGroupCalendarQuery,
+  FetchInterestGroupCalendarQueryVariables
 >;
 export const FetchExternalAuthorByIdDocument = {
   kind: 'Document',

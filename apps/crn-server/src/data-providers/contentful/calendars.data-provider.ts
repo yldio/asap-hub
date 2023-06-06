@@ -31,6 +31,12 @@ type WorkingGroupItem = NonNullable<
   >['items'][number]
 >;
 
+type InterestGroupItem = NonNullable<
+  NonNullable<
+    NonNullable<CalendarItem['linkedFrom']>['interestGroupsCollection']
+  >['items'][number]
+>;
+
 export class CalendarContentfulDataProvider implements CalendarDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
@@ -83,15 +89,22 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
     if (active === true) {
       calendars = calendars.filter((calendar) => {
         if (
-          !calendar?.linkedFrom?.workingGroupsCollection ||
-          calendar?.linkedFrom?.workingGroupsCollection?.items?.length === 0
+          (!calendar?.linkedFrom?.interestGroupsCollection ||
+            !calendar?.linkedFrom?.interestGroupsCollection?.items?.length) &&
+          (!calendar?.linkedFrom?.workingGroupsCollection ||
+            !calendar?.linkedFrom?.workingGroupsCollection?.items?.length)
         ) {
           return true;
         }
 
         return (
-          calendar?.linkedFrom?.workingGroupsCollection?.items || []
-        ).some((wg) => !wg?.complete);
+          (calendar?.linkedFrom?.interestGroupsCollection?.items || []).some(
+            (ig) => ig?.active,
+          ) ||
+          (calendar?.linkedFrom?.workingGroupsCollection?.items || []).some(
+            (wg) => !wg?.complete,
+          )
+        );
       });
     }
 
@@ -172,10 +185,6 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
   }
 }
 
-export const calendarUnreadyResponse = {
-  groups: [],
-};
-
 export const parseGraphQlCalendarToDataObject = (
   item: CalendarItem,
 ): CalendarDataObject => {
@@ -186,6 +195,13 @@ export const parseGraphQlCalendarToDataObject = (
       complete: !!wg.complete,
     }));
 
+  const groups = (item.linkedFrom?.interestGroupsCollection?.items || [])
+    .filter((ig): ig is InterestGroupItem => ig !== null)
+    .map((ig) => ({
+      id: ig.sys.id,
+      active: !!ig.active,
+    }));
+
   return {
     id: item.sys.id,
     version: item.sys.publishedVersion ?? 1,
@@ -193,10 +209,7 @@ export const parseGraphQlCalendarToDataObject = (
     expirationDate: item.googleApiMetadata?.expirationDate ?? undefined,
     syncToken: item.googleApiMetadata?.syncToken ?? undefined,
     workingGroups,
+    groups,
     ...parseContentfulGraphqlCalendarPartialToDataObject(item),
-    // TODO: implement this when
-    // CT-13 Interest Groups
-    // is ready
-    ...calendarUnreadyResponse,
   };
 };

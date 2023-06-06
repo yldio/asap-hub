@@ -7,6 +7,7 @@ import { migrateCalendars } from './calendars/calendars.data-migration';
 import { migrateLabs } from './labs/labs.data-migration';
 import { migrateUsers } from './users/users.data-migration';
 import { migrateInterestGroups } from './interest-groups/interest-groups.data-migration';
+import { migrateWorkingGroups } from './working-groups/working-groups.data-migration';
 import { logger } from './utils';
 import { contentfulRateLimiter } from './contentful-rate-limiter';
 
@@ -66,6 +67,10 @@ export const runMigrations = async () => {
     // and calendars
     await migrateEvents();
     await migrateInterestGroups();
+
+    // The working groups migration needs to be done after
+    // migrating users and calendars
+    await migrateWorkingGroups();
   } catch (err) {
     error = err;
     logger('Error migrating data', 'ERROR');

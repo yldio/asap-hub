@@ -6664,6 +6664,58 @@ export type FetchUsersQuery = {
   >;
 };
 
+export type FetchWorkingGroupsQueryVariables = Exact<{
+  take: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchWorkingGroupsQuery = {
+  queryWorkingGroupsContentsWithTotal: Maybe<
+    Pick<WorkingGroupsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<WorkingGroups, 'id'> & {
+            flatData: Pick<
+              WorkingGroupsFlatDataDto,
+              | 'title'
+              | 'description'
+              | 'externalLink'
+              | 'shortText'
+              | 'complete'
+            > & {
+              deliverables: Maybe<
+                Array<
+                  Pick<
+                    WorkingGroupsDataDeliverablesChildDto,
+                    'status' | 'description'
+                  >
+                >
+              >;
+              leaders: Maybe<
+                Array<
+                  Pick<
+                    WorkingGroupsDataLeadersChildDto,
+                    'workstreamRole' | 'role' | 'inactiveSinceDate'
+                  > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+                >
+              >;
+              members: Maybe<
+                Array<
+                  Pick<
+                    WorkingGroupsDataMembersChildDto,
+                    'inactiveSinceDate'
+                  > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+                >
+              >;
+              calendars: Maybe<Array<Pick<Calendars, 'id'>>>;
+            };
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export const FetchCalendarsDocument = {
   kind: 'Document',
   definitions: [
@@ -8100,3 +8152,205 @@ export const FetchUsersDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
+export const FetchWorkingGroupsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchWorkingGroups' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryWorkingGroupsContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'externalLink' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shortText' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'complete' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'deliverables' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'leaders' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'workstreamRole',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'role' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'inactiveSinceDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'user' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'members' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'inactiveSinceDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'user' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'calendars' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchWorkingGroupsQuery,
+  FetchWorkingGroupsQueryVariables
+>;

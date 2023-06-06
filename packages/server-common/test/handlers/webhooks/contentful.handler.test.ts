@@ -5,6 +5,20 @@ import { contentfulHandlerFactory } from '../../../src/handlers/webhooks';
 import { getNewsPublishContentfulWebhookPayload } from '../../fixtures/news.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
 import { loggerMock as logger } from '../../mocks/logger.mock';
+import { getCalendarFromDeliveryApi } from '../calendar/webhook-sync-calendar.fixtures';
+
+jest.mock('@asap-hub/contentful', () => ({
+  ...jest.requireActual('@asap-hub/contentful'),
+  getCDAClient: () => ({
+    getEntry: jest.fn().mockResolvedValue({
+      sys: {
+        id: '1',
+        revision: 5,
+      },
+      fields: {},
+    }),
+  }),
+}));
 
 describe('Contentful event webhook', () => {
   const eventBus = 'event-bus';
@@ -14,38 +28,46 @@ describe('Contentful event webhook', () => {
   } as unknown as jest.Mocked<EventBridge>;
   const contentfulWebhookAuthenticationToken =
     'contentful-webhook-authentication-token';
+  const headers = {
+    authorization: contentfulWebhookAuthenticationToken,
+    'x-contentful-topic': 'publish',
+  };
   const handler = contentfulHandlerFactory(
     contentfulWebhookAuthenticationToken,
     evenBridgeMock,
-    eventBus,
-    eventSource,
+    { eventBus, eventSource, space: '', environment: '', accessToken: '' },
     logger,
   );
 
   beforeEach(jest.resetAllMocks);
 
-  test('Should return 401 when the request has no Authorization header', async () => {
+  test('Should throw an error when the request has no Authorization header', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
     const event = getLambdaRequest(payload, {});
 
-    expect(handler(event)).rejects.toThrowError('Unauthorized');
+    await expect(handler(event)).rejects.toThrowError('Unauthorized');
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  test('Should return 401 when the request has an invalid authentication token', async () => {
+  test('Should throw an error when the request has an invalid authentication token', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
-    const headers = { authorization: 'invalid-token' };
+    const invalidAuthHeaders = { authorization: 'invalid-token' };
+    const event = getLambdaRequest(payload, invalidAuthHeaders);
+    await expect(handler(event)).rejects.toThrowError('Forbidden');
+    expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
+  });
+
+  test('Should throw an error when the request does not have the revision field', async () => {
+    const payload = getNewsPublishContentfulWebhookPayload();
+    delete (payload.sys as any).revision;
     const event = getLambdaRequest(payload, headers);
-    expect(handler(event)).rejects.toThrowError('Forbidden');
+
+    await expect(handler(event)).rejects.toThrowError('Invalid payload');
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
   test('Should put the news-published event into the event bus and return 200', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
-    const headers = {
-      authorization: contentfulWebhookAuthenticationToken,
-      'x-contentful-topic': 'publish',
-    };
     const event = getLambdaRequest(payload, headers);
     const { statusCode } = await handler(event);
 
@@ -74,18 +96,13 @@ describe('Contentful event webhook', () => {
 
   test('Should log errors when they occur', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
-    const headers = {
-      authorization: contentfulWebhookAuthenticationToken,
-      'x-contentful-topic': 'publish',
-    };
     evenBridgeMock.putEvents = jest
       .fn()
       .mockRejectedValue(new Error('error message from putEvents'));
     const handlerWithError = contentfulHandlerFactory(
       contentfulWebhookAuthenticationToken,
       evenBridgeMock,
-      eventBus,
-      eventSource,
+      { eventBus, eventSource, space: '', environment: '', accessToken: '' },
       logger,
     );
     const event = getLambdaRequest(payload, headers);

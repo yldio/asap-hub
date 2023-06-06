@@ -1,4 +1,8 @@
-import { ContentfulWebhookPayload } from '@asap-hub/contentful';
+import {
+  ContentfulWebhookPayload,
+  getCDAClient,
+  pollContentfulDeliveryApi,
+} from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
@@ -25,12 +29,18 @@ const getDetailFromRequest = (
   resourceId: request.payload.sys.id,
   ...request.payload,
 });
+type Config = {
+  eventBus: string;
+  eventSource: string;
+  space: string;
+  environment: string;
+  accessToken: string;
+};
 export const contentfulHandlerFactory =
   (
     webhookAuthenticationToken: string,
     eventBridge: EventBridge,
-    eventBus: string,
-    eventSource: string,
+    config: Config,
     logger: Logger,
   ): ((
     request: lambda.Request<ContentfulWebhookPayload>,
@@ -38,31 +48,46 @@ export const contentfulHandlerFactory =
   async (request) => {
     validateContentfulRequest(request, webhookAuthenticationToken);
 
-    try {
-      const detailType = getDetailTypeFromRequest(request);
-      const detail = getDetailFromRequest(request);
+    const detailType = getDetailTypeFromRequest(request);
+    const detail = getDetailFromRequest(request);
 
+    if (!detail.sys.revision) {
+      throw new Error('Invalid payload');
+    }
+
+    const entryVersion = detail.sys.revision;
+    const cdaClient = getCDAClient({
+      accessToken: config.accessToken,
+      space: config.space,
+      environment: config.environment,
+    });
+    const fetchEntryById = () => cdaClient.getEntry(detail.resourceId);
+    await pollContentfulDeliveryApi(fetchEntryById, entryVersion);
+
+    try {
       await eventBridge.putEvents({
         Entries: [
           {
-            EventBusName: eventBus,
-            Source: eventSource,
+            EventBusName: config.eventBus,
+            Source: config.eventSource,
             DetailType: detailType,
             Detail: JSON.stringify(detail),
           },
         ],
       });
       logger.debug(
-        `Event added to ${eventBus} detail Type: ${detailType} detail: ${JSON.stringify(
-          detail,
-        )}`,
+        `Event added to ${
+          config.eventBus
+        } detail Type: ${detailType} detail: ${JSON.stringify(detail)}`,
       );
 
       return {
         statusCode: 200,
       };
     } catch (err) {
-      logger.error(`An error occurred putting onto the event bus ${eventBus}`);
+      logger.error(
+        `An error occurred putting onto the event bus ${config.eventBus}`,
+      );
       if (err instanceof Error) {
         logger.error(`The error message: ${err.message}`);
       }

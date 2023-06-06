@@ -336,6 +336,17 @@ describe('Outputs data provider', () => {
       });
     });
 
+    test('Should default to return undefined if there is no publishDate', async () => {
+      const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
+      delete squidexGraphqlResponse.findOutputsContent!.flatData.publishDate;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await outputDataProvider.fetchById(outputId);
+
+      expect(result!.publishDate).toBeUndefined();
+    });
     describe('Last Updated Partial field', () => {
       test('Should default to last-modified if the last-updated-partial is not present', async () => {
         const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
@@ -543,6 +554,40 @@ describe('Outputs data provider', () => {
             ...expectedDefaultParams,
             filter:
               "data/documentType/iv eq 'some-type' and data/title/iv eq 'some-title'",
+          },
+          expect.anything(),
+        );
+      });
+      test('Should pass the object filter parameter project as a squidex filter', async () => {
+        await outputDataProvider.fetch({
+          ...defaultParams,
+          filter: {
+            project: 'some-project',
+          },
+        });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            filter: "data/projects/iv eq 'some-project'",
+          },
+          expect.anything(),
+        );
+      });
+      test('Should pass the object filter parameter workingGroup as a squidex filter', async () => {
+        await outputDataProvider.fetch({
+          ...defaultParams,
+          filter: {
+            workingGroup: 'some-working-group',
+          },
+        });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            filter: "data/workingGroups/iv eq 'some-working-group'",
           },
           expect.anything(),
         );

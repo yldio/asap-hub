@@ -2,7 +2,7 @@ import {
   addLocaleToFields,
   Entry,
   Environment,
-  getLinkEntities,
+  getEntities,
   patchAndPublish,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
@@ -67,7 +67,7 @@ const addNextResources = async (
   );
 };
 const getResourceFields = (nextResources: string[]) => ({
-  resources: getLinkEntities(nextResources, false),
+  resources: getEntities(nextResources, false),
 });
 const getResourceIdsToDelete = (
   previousWorkingGroup: Entry,

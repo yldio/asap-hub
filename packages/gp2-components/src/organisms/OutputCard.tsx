@@ -22,8 +22,8 @@ type OutputCardProps = Pick<
   | 'id'
   | 'addedDate'
   | 'title'
-  | 'workingGroup'
-  | 'project'
+  | 'workingGroups'
+  | 'projects'
   | 'authors'
   | 'link'
   | 'documentType'
@@ -37,8 +37,8 @@ const OutputCard: React.FC<OutputCardProps> = ({
   id,
   addedDate,
   title,
-  workingGroup,
-  project,
+  workingGroups,
+  projects,
   documentType,
   type,
   subtype,
@@ -52,8 +52,8 @@ const OutputCard: React.FC<OutputCardProps> = ({
         <SharedResearchMetadata
           pills={
             [
-              workingGroup && 'Working Group',
-              project && 'Project',
+              workingGroups && 'Working Group',
+              projects && 'Project',
               documentType,
               type,
               subtype,
@@ -97,27 +97,27 @@ const OutputCard: React.FC<OutputCardProps> = ({
         max={3}
       />
       <div css={css({ margin: `${rem(4)} 0 ${rem(32)}` })}>
-        {workingGroup && (
+        {workingGroups && (
           <IconWithLabel noMargin icon={workingGroupIcon}>
             <Link
               href={
                 gp2Routing
                   .workingGroups({})
-                  .workingGroup({ workingGroupId: workingGroup.id }).$
+                  .workingGroup({ workingGroupId: workingGroups.id }).$
               }
             >
-              {workingGroup.title}
+              {workingGroups.title}
             </Link>
           </IconWithLabel>
         )}
-        {project && (
+        {projects && (
           <IconWithLabel noMargin icon={projectIcon}>
             <Link
               href={
-                gp2Routing.projects({}).project({ projectId: project.id }).$
+                gp2Routing.projects({}).project({ projectId: projects.id }).$
               }
             >
-              {project.title}
+              {projects.title}
             </Link>
           </IconWithLabel>
         )}

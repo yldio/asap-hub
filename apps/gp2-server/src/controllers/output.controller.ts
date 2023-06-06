@@ -5,7 +5,7 @@ import {
   VALIDATION_ERROR_MESSAGE,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
-import { OutputDataProvider } from '../data-providers/types';
+import { OutputDataProvider } from '../data-providers/output.data-provider';
 import { ExternalUserDataProvider } from '../data-providers/types/external-user.data-provider.type';
 
 export default class Outputs implements OutputController {
@@ -63,8 +63,8 @@ export default class Outputs implements OutputController {
       subtype: outputCreateData.subtype,
       title: outputCreateData.title,
       type: outputCreateData.type,
-      workingGroup: outputCreateData.workingGroup,
-      project: outputCreateData.project,
+      workingGroups: outputCreateData.workingGroups,
+      projects: outputCreateData.projects,
     };
 
     const outputId = await this.outputDataProvider.create(
@@ -100,9 +100,12 @@ export default class Outputs implements OutputController {
       updatedBy: outputUpdateData.updatedBy,
     };
 
-    await this.outputDataProvider.update(id, outputUpdateDataObject);
+    const outputId = await this.outputDataProvider.update(
+      id,
+      outputUpdateDataObject,
+    );
 
-    return this.fetchById(id);
+    return this.fetchById(outputId);
   }
 
   private async validateOutput(

@@ -7,7 +7,7 @@ import { useAuthorSuggestions, useOutputById, useUpdateOutput } from './state';
 const ShareOutput: React.FC<Record<string, never>> = () => {
   const { outputId } = useRouteParams(gp2.outputs({}).output);
   const output = useOutputById(outputId);
-  const entityType = output?.workingGroup ? 'workingGroup' : 'project';
+  const entityType = output?.workingGroups ? 'workingGroup' : 'project';
   const shareOutput = useUpdateOutput(outputId);
   const getAuthorSuggestions = useAuthorSuggestions();
   if (!output) {

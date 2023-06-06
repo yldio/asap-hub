@@ -19,11 +19,11 @@ export const createOutputApiUrl = ({
   const addFilter = (name: string, items?: string[]) =>
     items?.forEach((item) => url.searchParams.append(`filter[${name}]`, item));
   addFilter(
-    'workingGroup',
-    filter?.workingGroup ? [filter?.workingGroup] : undefined,
+    'workingGroups',
+    filter?.workingGroups ? [filter?.workingGroups] : undefined,
   );
-  addFilter('project', filter?.project ? [filter?.project] : undefined);
-  addFilter('author', filter?.author ? [filter?.author] : undefined);
+  addFilter('projects', filter?.projects ? [filter?.projects] : undefined);
+  addFilter('authors', filter?.authors);
 
   return url;
 };

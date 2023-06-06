@@ -4,9 +4,9 @@ import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import {
   createOutput,
-  createOutputApiUrl,
   getOutput,
   getOutputs,
+  createOutputApiUrl,
   updateOutput,
 } from '../api';
 
@@ -156,17 +156,17 @@ describe('createOutputApiUrl', () => {
   });
 
   it.each`
-    name              | value
-    ${'project'}      | ${'a project'}
-    ${'workingGroup'} | ${'a working group'}
-    ${'author'}       | ${'an author'}
+    name               | value
+    ${'projects'}      | ${['a project']}
+    ${'workingGroups'} | ${['a working group']}
+    ${'authors'}       | ${['an author', 'another author']}
   `(
     'handles requests with filters for $name - new',
     async ({ name, value }) => {
       const url = createOutputApiUrl({
         filter: { [name]: value },
       });
-      expect(url.searchParams.getAll(`filter[${name}]`)).toEqual([value]);
+      expect(url.searchParams.getAll(`filter[${name}]`)).toEqual(value);
     },
   );
 });

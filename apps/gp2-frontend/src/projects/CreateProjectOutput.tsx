@@ -1,6 +1,6 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { FC } from 'react';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 
@@ -35,8 +35,8 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
         shareOutput={async (payload: gp2Model.OutputPostRequest) =>
           createOutput({
             ...payload,
-            workingGroup: undefined,
-            project: projectId,
+            workingGroups: undefined,
+            projects: [projectId],
           })
         }
         documentType={documentTypeMapper[outputDocumentType]}

@@ -4,7 +4,7 @@ import {
   addLocaleToFields,
   Environment,
   getBulkPayload,
-  getLinkEntities,
+  getEntities,
   getLinkEntity,
   gp2 as gp2Contentful,
   GraphQLClient,
@@ -497,12 +497,14 @@ const getEntityMembers = async (
 const getSearchFilter = (search: string) => {
   type SearchFields = {
     OR: (
-      | (Pick<gp2Contentful.UsersFilter, 'firstName_contains'> & {
+      | {
+          firstName_contains: string;
           lastName_contains?: undefined;
-        })
-      | (Pick<gp2Contentful.UsersFilter, 'lastName_contains'> & {
+        }
+      | {
+          lastName_contains: string;
           firstName_contains?: undefined;
-        })
+        }
     )[];
   };
 
@@ -524,7 +526,7 @@ const getSearchFilter = (search: string) => {
 const getCohortFields = (nextContributingCohorts: string[] | undefined) =>
   nextContributingCohorts
     ? {
-        contributingCohorts: getLinkEntities(nextContributingCohorts, false),
+        contributingCohorts: getEntities(nextContributingCohorts, false),
       }
     : {};
 

@@ -80,7 +80,7 @@ describe('Outputs data provider', () => {
     });
 
     describe('Document Types', () => {
-      test('should return when the document type is null', async () => {
+      test('should throw when the document type is null', async () => {
         const squidexGraphqlResponse = getSquidexOutputGraphqlResponse();
         squidexGraphqlResponse.findOutputsContent!.flatData.documentType = null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -174,12 +174,14 @@ describe('Outputs data provider', () => {
       },
     );
 
-    test('Should return null when the output is not found', async () => {
+    test('Should throw a Not Found error when the output is not found', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce({
         findOutputsContent: null,
       });
 
-      expect(await outputDataProvider.fetchById('not-found')).toBeNull();
+      await expect(outputDataProvider.fetchById(outputId)).rejects.toThrow(
+        'Not Found',
+      );
     });
 
     test('Should throw an error with a specific error message when the graphql client throws one', async () => {
@@ -347,7 +349,9 @@ describe('Outputs data provider', () => {
 
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.lastUpdatedPartial).toEqual('2021-05-14T14:48:46.000Z');
+        expect(result!.lastUpdatedPartial).toEqual(
+          squidexGraphqlResponse.findOutputsContent!.lastModified,
+        );
       });
 
       test('Should default to created-date if the last-updated-partial and last-modified are not present', async () => {
@@ -375,7 +379,7 @@ describe('Outputs data provider', () => {
         );
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.workingGroup).toBeUndefined();
+        expect(result!.workingGroups).toBeUndefined();
       });
     });
     describe('projects', () => {
@@ -387,7 +391,7 @@ describe('Outputs data provider', () => {
         );
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.project).toBeUndefined();
+        expect(result!.projects).toBeUndefined();
       });
     });
   });
@@ -719,11 +723,10 @@ describe('Outputs data provider', () => {
     describe('Update', () => {
       const outputId = 'updated-output-id';
 
-      test('Should update the existing output', async () => {
+      test('Should update the existing output and return its ID', async () => {
         const outputUpdateData = getOutputUpdateDataObject();
 
-        const { project: _, ...restOutputUpdateData } =
-          getRestOutputUpdateData();
+        const restOutputUpdateData = getRestOutputUpdateData();
         nock(baseUrl)
           .patch(`/api/content/${appName}/outputs/${outputId}`, {
             ...restOutputUpdateData,
@@ -731,8 +734,11 @@ describe('Outputs data provider', () => {
           })
           .reply(201, { id: outputId });
 
-        await outputDataProvider.update(outputId, outputUpdateData);
-        expect(nock.isDone()).toBe(true);
+        const result = await outputDataProvider.update(
+          outputId,
+          outputUpdateData,
+        );
+        expect(result).toEqual(outputId);
       });
 
       test('Should throw when fails to update the output - 400', async () => {

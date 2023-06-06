@@ -5,18 +5,18 @@ import {
   ProjectResources,
   ResourceModal,
 } from '@asap-hub/gp2-components';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { FC, lazy, useEffect } from 'react';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
-import Frame from '../Frame';
-import OutputList from '../outputs/OutputList';
+import { usePutProjectResources, useProjectById } from './state';
 import { useOutputs } from '../outputs/state';
-import { useProjectById, usePutProjectResources } from './state';
+import OutputList from '../outputs/OutputList';
+import Frame from '../Frame';
 
 const { projects } = gp2Routing;
 
@@ -35,7 +35,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
   const { total } = useOutputs({
-    filter: { project: projectId },
+    filter: { projects: projectId },
   });
 
   const currentUser = useCurrentUserGP2();
@@ -121,7 +121,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList filters={{ project: projectId }} />
+                <OutputList filters={{ projects: projectId }} />
               </Frame>
             </Route>
             <Route path={upcoming}>

@@ -25,8 +25,8 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         shareOutput={async (payload: gp2Model.OutputPostRequest) =>
           createOutput({
             ...payload,
-            workingGroup: workingGroupId,
-            project: undefined,
+            workingGroups: [workingGroupId],
+            projects: undefined,
           })
         }
         documentType={documentTypeMapper[outputDocumentType]}

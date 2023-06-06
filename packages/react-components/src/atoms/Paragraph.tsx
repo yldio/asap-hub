@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import * as colors from '../colors';
 import { perRem } from '../pixels';
 import { AccentColorName, layoutStyles } from '../text';
@@ -13,18 +13,21 @@ type ParagraphProps = {
   readonly primary?: boolean;
   readonly accent?: AccentColorName;
   readonly noMargin?: boolean;
+  readonly styles?: SerializedStyles;
 };
 
 const Paragraph: React.FC<ParagraphProps> = ({
   children,
   accent,
   noMargin = false,
+  styles,
 }) => (
   <p
     css={[
       noMargin ? { margin: 0 } : layoutStyles,
       primaryStyles,
       accent ? { color: colors[accent].rgb } : null,
+      styles,
     ]}
   >
     {children}

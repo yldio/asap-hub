@@ -336,7 +336,8 @@ describe('on submit', () => {
     fireEvent.change(screen.getByLabelText(/title/i), {
       target: { value: data.title },
     });
-    fireEvent.change(screen.getByLabelText(/description/i), {
+
+    fireEvent.change(screen.getByRole('textbox', { name: /description/i }), {
       target: { value: data.descriptionMD },
     });
 

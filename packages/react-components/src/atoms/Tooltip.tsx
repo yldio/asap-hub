@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import { themes } from '../theme';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 
 const triangleHeight = 5;
 
@@ -10,6 +10,11 @@ const positionerStyles = css({
   display: 'block',
   position: 'relative',
   height: 0,
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    position: 'absolute',
+    left: 0,
+    width: '100%',
+  },
 });
 const tooltipStyles = css({
   position: 'absolute',
@@ -30,6 +35,13 @@ const tooltipStyles = css({
     100% calc(100% - ${triangleHeight / perRem}em),
     100% 0
   )`,
+
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    width: '100vw',
+    transform: 'none',
+    left: 0,
+    clipPath: 'none',
+  },
 });
 const bubbleStyles = css({
   ...themes.dark,
@@ -40,6 +52,18 @@ const bubbleStyles = css({
   maxWidth: `${256 / perRem}em`,
 
   borderRadius: `${4 / perRem}em`,
+
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    maxWidth: '100%',
+    marginLeft: `${12 / perRem}em`,
+    marginRight: `${12 / perRem}em`,
+  },
+});
+
+const presentationStyles = css({
+  [`@media (max-width: ${tabletScreen.width - 1}px)`]: {
+    display: 'none',
+  },
 });
 
 interface TooltipProps {
@@ -52,7 +76,7 @@ const Tooltip: React.FC<TooltipProps> = ({ children, shown = false }) => (
       <span role="tooltip" css={bubbleStyles}>
         {children}
       </span>
-      <span role="presentation" css={themes.dark} />
+      <span role="presentation" css={[themes.dark, presentationStyles]} />
     </span>
   </span>
 );

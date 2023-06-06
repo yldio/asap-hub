@@ -38,11 +38,10 @@ it('renders the card with provided values', () => {
 });
 
 it.each`
-  title            | label             | error
-  ${'Description'} | ${/description/i} | ${'Please enter a description'}
-  ${'Url'}         | ${/URL/i}         | ${'Please enter a valid URL, starting with http://'}
-  ${'Title'}       | ${/title/i}       | ${'Please enter a title'}
-  ${'Type'}        | ${/type/i}        | ${'Please choose a type'}
+  title      | label       | error
+  ${'Url'}   | ${/URL/i}   | ${'Please enter a valid URL, starting with http://'}
+  ${'Title'} | ${/title/i} | ${'Please enter a title'}
+  ${'Type'}  | ${/type/i}  | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
   render(
     <ResearchOutputFormSharingCard
@@ -52,6 +51,22 @@ it.each`
     />,
   );
   const input = screen.getByLabelText(label);
+  fireEvent.focusOut(input);
+  expect(await screen.findByText(error)).toBeVisible();
+});
+
+it.each`
+  title            | label             | error
+  ${'Description'} | ${/description/i} | ${'Please enter a description'}
+`('shows error message for missing value $title', async ({ label, error }) => {
+  render(
+    <ResearchOutputFormSharingCard
+      {...props}
+      urlRequired
+      typeOptions={['3D Printing']}
+    />,
+  );
+  const input = screen.getByRole('textbox', { name: label });
   fireEvent.focusOut(input);
   expect(await screen.findByText(error)).toBeVisible();
 });
@@ -75,16 +90,28 @@ it('does not require an url', async () => {
 });
 
 it.each`
-  field            | label             | prop
-  ${'Description'} | ${/description/i} | ${'onChangeDescription'}
-  ${'Url'}         | ${/URL/i}         | ${'onChangeLink'}
-  ${'Title'}       | ${/title/i}       | ${'onChangeTitle'}
+  field      | label       | prop
+  ${'Url'}   | ${/URL/i}   | ${'onChangeLink'}
+  ${'Title'} | ${/title/i} | ${'onChangeTitle'}
 `('triggers an onchange event for $field', async ({ label, prop }) => {
   const onChangeFn = jest.fn();
   render(
     <ResearchOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
   );
   const input = screen.getByLabelText(label);
+  fireEvent.change(input, { target: { value: 'test' } });
+  expect(onChangeFn).toHaveBeenLastCalledWith('test');
+});
+
+it.each`
+  field            | label             | prop
+  ${'Description'} | ${/description/i} | ${'onChangeDescription'}
+`('triggers an onchange event for $field', async ({ label, prop }) => {
+  const onChangeFn = jest.fn();
+  render(
+    <ResearchOutputFormSharingCard {...{ ...props, [prop]: onChangeFn }} />,
+  );
+  const input = screen.getByRole('textbox', { name: label });
   fireEvent.change(input, { target: { value: 'test' } });
   expect(onChangeFn).toHaveBeenLastCalledWith('test');
 });

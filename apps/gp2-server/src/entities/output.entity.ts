@@ -100,7 +100,9 @@ export const parseGraphQLOutput = (
     documentType,
     type: type || undefined,
     title: data.title || '',
-    publishDate: parseDate(data.publishDate).toISOString(),
+    publishDate: data.publishDate
+      ? parseDate(data.publishDate).toISOString()
+      : undefined,
     addedDate: parseDate(data.addedDate).toISOString(),
     lastUpdatedPartial: parseDate(
       data.lastUpdatedPartial || output.lastModified || output.created,

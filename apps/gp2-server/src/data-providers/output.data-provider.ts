@@ -26,16 +26,26 @@ export const makeODataFilter = (
     return null;
   }
 
+  const keyName = (key: string) => {
+    if (key === 'project') {
+      return 'projects';
+    }
+    if (key === 'workingGroup') {
+      return 'workingGroups';
+    }
+    return key;
+  };
+
   const entries = Object.entries(filter).reduce<Filter[]>((res, [key, val]) => {
     if (Array.isArray(val)) {
       return res.concat({
         or: val.map((valElement) => ({
-          [`data/${key}/iv`]: valElement,
+          [`data/${keyName(key)}/iv`]: valElement,
         })),
       });
     }
 
-    return res.concat({ [`data/${key}/iv`]: val });
+    return res.concat({ [`data/${keyName(key)}/iv`]: val });
   }, []);
 
   return entries.length === 1 ? (entries[0] as Filter) : entries;

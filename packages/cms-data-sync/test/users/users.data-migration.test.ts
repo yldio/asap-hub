@@ -169,6 +169,8 @@ describe('Migrate users', () => {
             orcidLastModifiedDate: { 'en-US': null },
             contactEmail: { 'en-US': null },
             questions: { 'en-US': null },
+            website1: { 'en-US': null },
+            website2: { 'en-US': null },
             connections: { 'en-US': null },
             labs: { 'en-US': null },
             teams: { 'en-US': [] },
@@ -221,6 +223,32 @@ describe('Migrate users', () => {
           fields: expect.objectContaining({
             twitter: { 'en-US': '@asap' },
             github: { 'en-US': 'asap' },
+          }),
+        },
+      );
+    });
+
+    it('for a user with empty social.website1/2', async () => {
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        getUserSquidexResponse({
+          social: [
+            {
+              website1: '',
+              website2: '',
+            },
+          ],
+        }),
+      );
+
+      await migrateUsers();
+
+      expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
+        'users',
+        'user-1',
+        {
+          fields: expect.objectContaining({
+            website1: { 'en-US': null },
+            website2: { 'en-US': null },
           }),
         },
       );

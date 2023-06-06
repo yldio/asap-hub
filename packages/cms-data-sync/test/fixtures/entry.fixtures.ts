@@ -142,3 +142,15 @@ export const eventEntry = getEntry({
     'en-US': '1jhm4181bs6ck0esegje4nf6ur',
   },
 });
+
+export const interestGroupEntry = getEntry({
+  name: { 'en-US': 'Test Group' },
+  description: { 'en-US': 'Group description' },
+  active: { 'en-US': true },
+});
+
+export const interestGroupLeaderEntry = getEntry({
+  role: { 'en-US': 'Project Manager' },
+  inactiveSinceDate: null,
+  user: userEntry,
+});

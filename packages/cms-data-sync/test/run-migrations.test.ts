@@ -81,6 +81,20 @@ jest.mock('../src/users/users.data-migration', () => {
   };
 });
 
+var mockMigrateInterestGroups: jest.MockedFunction<
+  typeof migrateInterestGroups
+>;
+
+jest.mock('../src/interest-groups/interest-groups.data-migration', () => {
+  mockMigrateInterestGroups = jest.fn().mockReturnValue({});
+  return {
+    ...jest.requireActual(
+      '../src/interest-groups/interest-groups.data-migration',
+    ),
+    migrateInterestGroups: mockMigrateInterestGroups,
+  };
+});
+
 const mockContentfulManagement = contentfulManagement as jest.Mocked<
   typeof contentfulManagement
 >;

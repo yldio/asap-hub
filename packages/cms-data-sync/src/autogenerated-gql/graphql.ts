@@ -6438,6 +6438,45 @@ export type FetchExternalAuthorsQuery = {
   >;
 };
 
+export type FetchGroupsQueryVariables = Exact<{
+  take: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchGroupsQuery = {
+  queryGroupsContentsWithTotal: Maybe<
+    Pick<GroupsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
+            flatData: Pick<
+              GroupsFlatDataDto,
+              'name' | 'active' | 'tags' | 'description'
+            > & {
+              thumbnail: Maybe<
+                Array<Pick<Asset, 'id' | 'fileName' | 'mimeType' | 'fileType'>>
+              >;
+              tools: Maybe<
+                Array<Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>>
+              >;
+              calendars: Maybe<Array<Pick<Calendars, 'id'>>>;
+              teams: Maybe<Array<Pick<Teams, 'id'>>>;
+              leaders: Maybe<
+                Array<
+                  Pick<
+                    GroupsDataLeadersChildDto,
+                    'role' | 'inactiveSinceDate'
+                  > & { user: Maybe<Array<Pick<Users, 'id'>>> }
+                >
+              >;
+            };
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type FetchLabsQueryVariables = Exact<{
   take: InputMaybe<Scalars['Int']>;
   skip: InputMaybe<Scalars['Int']>;
@@ -7091,6 +7130,212 @@ export const FetchExternalAuthorsDocument = {
   FetchExternalAuthorsQuery,
   FetchExternalAuthorsQueryVariables
 >;
+export const FetchGroupsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchGroups' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryGroupsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'created' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastModified' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'version' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'active' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'tags' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'thumbnail' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'fileName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'mimeType' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'fileType' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'tools' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'slack' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'googleDrive',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'calendars' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teams' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'leaders' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'user' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'role' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'inactiveSinceDate',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FetchGroupsQuery, FetchGroupsQueryVariables>;
 export const FetchLabsDocument = {
   kind: 'Document',
   definitions: [

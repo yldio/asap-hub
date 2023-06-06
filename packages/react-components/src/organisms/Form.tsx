@@ -1,5 +1,5 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
-import { InnerToastContext } from '@asap-hub/react-context';
+import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Prompt, useHistory } from 'react-router-dom';
@@ -17,6 +17,7 @@ type FormProps<T> = {
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   serverErrors?: ValidationErrorResponse['data'];
+  toastType?: 'inner' | 'base';
   children: (state: {
     isSaving: boolean;
     setRedirectOnSave: (url: string) => void;
@@ -31,8 +32,11 @@ const Form = <T extends void | Record<string, unknown>>({
   children,
   validate = () => true,
   serverErrors = [],
+  toastType = 'base',
 }: FormProps<T>): React.ReactElement => {
-  const innerToast = useContext(InnerToastContext);
+  const toast = useContext(
+    toastType === 'inner' ? InnerToastContext : ToastContext,
+  );
   const history = useHistory();
 
   const pushFromHere = usePushFromHere();
@@ -70,13 +74,13 @@ const Form = <T extends void | Record<string, unknown>>({
         } catch {
           if (formRef.current) {
             setStatus('hasError');
-            innerToast(
+            toast(
               'There was an error and we were unable to save your changes. Please try again.',
             );
           }
         }
       } else {
-        innerToast(
+        toast(
           'There are some errors in the form. Please correct the fields below.',
         );
       }
@@ -97,7 +101,7 @@ const Form = <T extends void | Record<string, unknown>>({
           (status === 'initial' && dirty)
         }
         message={() => {
-          innerToast(null);
+          toast(null);
           return 'Are you sure you want to leave? Unsaved changes will be lost.';
         }}
       />

@@ -1,4 +1,4 @@
-import { InnerToastContext } from '@asap-hub/react-context';
+import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { act, render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory, History } from 'history';
@@ -15,7 +15,7 @@ import Form from '../Form';
 
 const props: ComponentProps<typeof Form> = {
   dirty: false,
-  toastInner: true,
+  toastType: 'inner',
   children: () => null,
 };
 
@@ -184,6 +184,33 @@ describe('when saving', () => {
 
       expect(handleValidate).toHaveBeenCalled();
       expect(handleSave).not.toHaveBeenCalled();
+    });
+
+    it('can use base toast', async () => {
+      const mockToast = jest.fn();
+      const handleValidate = jest.fn(() => false);
+      const { getByText } = render(
+        <ToastContext.Provider value={mockToast}>
+          <Router history={history}>
+            <Form {...props} validate={handleValidate} toastType="base" dirty>
+              {({ getWrappedOnSave }) => (
+                <>
+                  <input type="text" />
+                  <Button primary onClick={getWrappedOnSave(jest.fn())}>
+                    save
+                  </Button>
+                </>
+              )}
+            </Form>
+          </Router>
+        </ToastContext.Provider>,
+      );
+      userEvent.click(getByText(/^save/i));
+      await waitFor(() =>
+        expect(mockToast).toHaveBeenCalledWith(
+          'There are some errors in the form. Please correct the fields below.',
+        ),
+      );
     });
   });
 

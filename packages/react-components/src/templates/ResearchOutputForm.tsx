@@ -302,7 +302,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   return (
     <main css={mainStyles}>
       <Form<ResearchOutputResponse>
-        toastInner
+        toastType="inner"
         serverErrors={serverValidationErrors}
         dirty={!equal(remotePayload, currentPayload)}
       >

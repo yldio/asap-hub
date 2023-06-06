@@ -17,7 +17,7 @@ type FormProps<T> = {
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   serverErrors?: ValidationErrorResponse['data'];
-  toastInner?: boolean;
+  toastType?: 'inner' | 'base';
   children: (state: {
     isSaving: boolean;
     setRedirectOnSave: (url: string) => void;
@@ -32,9 +32,11 @@ const Form = <T extends void | Record<string, unknown>>({
   children,
   validate = () => true,
   serverErrors = [],
-  toastInner = false,
+  toastType = 'base',
 }: FormProps<T>): React.ReactElement => {
-  const toast = useContext(toastInner ? InnerToastContext : ToastContext);
+  const toast = useContext(
+    toastType === 'inner' ? InnerToastContext : ToastContext,
+  );
   const history = useHistory();
 
   const pushFromHere = usePushFromHere();

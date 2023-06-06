@@ -12,10 +12,13 @@ import {
   TeamRole,
   UploadPresentationReminder,
   UserCreateDataObject,
+  ResearchOutputDraftReminder,
+  DraftResearchOutputCreateDataObject,
 } from '@asap-hub/model';
 import {
   InputCalendar,
   InputUser,
+  InputWorkingGroup,
   RestCalendar,
   RestEvent,
   RestResearchOutput,
@@ -40,7 +43,6 @@ import { getUserCreateDataObject } from '../fixtures/users.fixtures';
 import { createRandomOrcid } from '../helpers/users';
 import { teardownHelper } from '../helpers/teardown';
 import { retryable } from '../helpers/retryable';
-
 jest.setTimeout(120000);
 
 describe('Reminders', () => {
@@ -52,6 +54,12 @@ describe('Reminders', () => {
   const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
     getAuthToken,
     'research-outputs',
+    { appName, baseUrl },
+  );
+
+  const workingGroupRestClient = new SquidexRest<InputWorkingGroup>(
+    getAuthToken,
+    'working-groups',
     { appName, baseUrl },
   );
   const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
@@ -105,6 +113,7 @@ describe('Reminders', () => {
     researchOutputRestClient,
     eventRestClient,
     calendarRestClient,
+    workingGroupRestClient,
   ]);
 
   afterEach(async () => {
@@ -156,6 +165,26 @@ describe('Reminders', () => {
         expect(reminders).toEqual({
           total: 1,
           items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the research output was created recently and the status is changed to Draft in squidex', async () => {
+      const researchOutputInput = getResearchOutputInput(teamId, creatorId);
+
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+      );
+
+      await researchOutputRestClient.publish(researchOutputId, 'Draft');
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
         });
       });
     });
@@ -239,6 +268,252 @@ describe('Reminders', () => {
           researchOutputId1,
         ]);
       });
+    });
+  });
+
+  describe('Research Output Draft Reminder', () => {
+    let creatorId: string;
+    let notCreatorId: string;
+    let creatorUsername: string;
+    let teamId: string;
+    let fetchRemindersOptions: FetchRemindersOptions;
+
+    beforeEach(async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      teamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const userCreateDataObject2 = getUserInput(teamId);
+
+      creatorId = await userDataProvider.create(userCreateDataObject2);
+      let creator = await userDataProvider.fetchById(creatorId);
+      creatorUsername = creator?.firstName + ' ' + creator?.lastName;
+
+      const userCreateDataObject = getUserInput(teamId);
+      const userId1 = await userDataProvider.create(userCreateDataObject);
+      notCreatorId = userId1;
+
+      const timezone = 'Europe/London';
+      fetchRemindersOptions = { userId: userId1, timezone };
+    });
+
+    test('Should see the reminder when the research output was created recently and the user is associated with the team that owns it', async () => {
+      const researchOutputInput = {
+        ...getResearchOutputInputDraft(teamId, creatorId),
+        addedDate: undefined,
+      };
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        { publish: false },
+      );
+
+      await retryable(async () => {
+        const researchOutput = await researchOutputDataProvider.fetchById(
+          researchOutputId,
+        );
+
+        const expectedReminder: ResearchOutputDraftReminder = {
+          id: `research-output-draft-${researchOutputId}`,
+          entity: 'Research Output',
+          type: 'Draft',
+          data: {
+            researchOutputId,
+            associationName: getTeamCreateDataObject().displayName,
+            associationType: 'team',
+            createdBy: creatorUsername,
+            title: researchOutputInput.title,
+            addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+          },
+        };
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should see the reminder when the research output was created recently and the user is associated with the working group that owns it', async () => {
+      const wgData = createWorkingGroup(creatorId);
+
+      const workingGroup = await workingGroupRestClient.create(
+        wgData as any,
+        true,
+      );
+      const workingGroupId = workingGroup.id;
+
+      const researchOutputInput = {
+        ...getResearchOutputInputDraft(teamId, creatorId, workingGroupId),
+        addedDate: undefined,
+      };
+
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        { publish: false },
+      );
+
+      await retryable(async () => {
+        const researchOutput = await researchOutputDataProvider.fetchById(
+          researchOutputId,
+        );
+
+        const expectedReminder: ResearchOutputDraftReminder = {
+          id: `research-output-draft-${researchOutputId}`,
+          entity: 'Research Output',
+          type: 'Draft',
+          data: {
+            researchOutputId,
+            associationName: workingGroup.data.title.iv,
+            associationType: 'working group',
+            createdBy: creatorUsername,
+            title: researchOutputInput.title,
+            addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+          },
+        };
+        const reminders = await reminderDataProvider.fetch({
+          ...fetchRemindersOptions,
+          userId: creatorId,
+        });
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the research output was created recently and the user is not associated with the working group that owns it', async () => {
+      const wgData = createWorkingGroup(creatorId);
+
+      const workingGroup = await workingGroupRestClient.create(
+        wgData as any,
+        true,
+      );
+      const workingGroupId = workingGroup.id;
+
+      const researchOutputInput = getResearchOutputInputDraft(
+        teamId,
+        creatorId,
+        workingGroupId,
+      );
+
+      await researchOutputDataProvider.create(researchOutputInput, {
+        publish: false,
+      });
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch({
+          ...fetchRemindersOptions,
+          userId: notCreatorId,
+        });
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the research output was created recently but the user is NOT associated with the team that owns it', async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      const anotherTeamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const researchOutputInput = getResearchOutputInputDraft(
+        teamId,
+        creatorId,
+      );
+      researchOutputInput.teamIds = [anotherTeamId];
+
+      await researchOutputDataProvider.create(researchOutputInput, {
+        publish: false,
+      });
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+    });
+
+    test('Should see the reminder when the research output was created recently but the user is NOT associated with the team that owns it but is ASAP staff', async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      const anotherTeamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const researchOutputInput = {
+        ...getResearchOutputInputDraft(teamId, creatorId),
+        addedDate: undefined,
+      };
+      researchOutputInput.teamIds = [anotherTeamId];
+
+      await userDataProvider.update(creatorId, {
+        role: 'Staff',
+      });
+
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        { publish: false },
+      );
+
+      await retryable(async () => {
+        const researchOutput = await researchOutputDataProvider.fetchById(
+          researchOutputId,
+        );
+
+        const expectedReminder: ResearchOutputDraftReminder = {
+          id: `research-output-draft-${researchOutputId}`,
+          entity: 'Research Output',
+          type: 'Draft',
+          data: {
+            researchOutputId,
+            associationName: getTeamCreateDataObject().displayName,
+            associationType: 'team',
+            createdBy: creatorUsername,
+            title: researchOutputInput.title,
+            addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+          },
+        };
+        const reminders = await reminderDataProvider.fetch({
+          ...fetchRemindersOptions,
+          userId: creatorId,
+        });
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the research output was created over 24 hours ago and the user is associated with the team that owns it', async () => {
+      jest.useFakeTimers();
+
+      const researchOutputInput = getResearchOutputInputDraft(
+        teamId,
+        creatorId,
+      );
+      await researchOutputDataProvider.create(researchOutputInput, {
+        publish: false,
+      });
+
+      const timeAfter24h = new Date(
+        new Date().getTime() + (24 * 60 * 60 * 1000 + 1000),
+      );
+      jest.setSystemTime(timeAfter24h);
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+      jest.useRealTimers();
     });
   });
 
@@ -419,27 +694,50 @@ describe('Reminders', () => {
 
       const eventId = await eventDataProvider.create(eventInput);
 
-      const event = await eventDataProvider.fetchById(eventId);
-
-      const expectedReminder: EventHappeningNowReminder = {
-        id: `event-happening-now-${eventId}`,
-        entity: 'Event',
-        type: 'Happening Now',
-        data: {
-          eventId: event!.id,
-          startDate: event!.startDate,
-          endDate: event!.endDate,
-          title: event!.title,
-        },
-      };
-
       await retryable(async () => {
+        const event = await eventDataProvider.fetchById(eventId);
+
+        const expectedReminder: EventHappeningNowReminder = {
+          id: `event-happening-now-${eventId}`,
+          entity: 'Event',
+          type: 'Happening Now',
+          data: {
+            eventId: event!.id,
+            startDate: event!.startDate,
+            endDate: event!.endDate,
+            title: event!.title,
+          },
+        };
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
         );
         expect(reminders).toEqual({
           total: 1,
           items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the event has started but has not finished if it was made Draft in squidex', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+
+      const eventId = await eventDataProvider.create(eventInput);
+
+      await eventRestClient.publish(eventId, 'Draft');
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
         });
       });
     });
@@ -646,26 +944,56 @@ describe('Reminders', () => {
       eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
       const eventId = await eventDataProvider.create(eventInput);
-      const event = await eventDataProvider.fetchById(eventId);
-
-      const expectedReminder: PublishMaterialReminder = {
-        id: `publish-material-${eventId}`,
-        entity: 'Event',
-        type: 'Publish Material',
-        data: {
-          eventId,
-          endDate: event!.endDate,
-          title: event!.title,
-        },
-      };
 
       await retryable(async () => {
+        const event = await eventDataProvider.fetchById(eventId);
+
+        const expectedReminder: PublishMaterialReminder = {
+          id: `publish-material-${eventId}`,
+          entity: 'Event',
+          type: 'Publish Material',
+          data: {
+            eventId,
+            endDate: event!.endDate,
+            title: event!.title,
+          },
+        };
+
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
         );
         expect(reminders).toEqual({
           total: 1,
           items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the event has finished and user is staff if the event as made Draft in squidex', async () => {
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+
+      const userCreateDataObject = getUserInput(teamId);
+      const userId = await userDataProvider.create({
+        ...userCreateDataObject,
+        role: 'Staff',
+      });
+      fetchRemindersOptions = { userId, timezone: 'Europe/London' };
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+      const eventId = await eventDataProvider.create(eventInput);
+
+      await eventRestClient.publish(eventId, 'Draft');
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
         });
       });
     });
@@ -794,26 +1122,56 @@ describe('Reminders', () => {
         },
       ];
       const eventId = await eventDataProvider.create(eventInput);
-      const event = await eventDataProvider.fetchById(eventId);
-
-      const expectedReminder: UploadPresentationReminder = {
-        id: `upload-presentation-${eventId}`,
-        entity: 'Event',
-        type: 'Upload Presentation',
-        data: {
-          eventId,
-          endDate: event!.endDate,
-          title: event!.title,
-        },
-      };
 
       await retryable(async () => {
+        const event = await eventDataProvider.fetchById(eventId);
+
+        const expectedReminder: UploadPresentationReminder = {
+          id: `upload-presentation-${eventId}`,
+          entity: 'Event',
+          type: 'Upload Presentation',
+          data: {
+            eventId,
+            endDate: event!.endDate,
+            title: event!.title,
+          },
+        };
+
         const reminders = await reminderDataProvider.fetch(
           fetchRemindersOptions,
         );
         expect(reminders).toEqual({
           total: 1,
           items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the event has finished and user is a PM of one of the speaker teams if the event was changed to Draft in squidex', async () => {
+      // setting system time to 10:05AM in UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+
+      const eventInput = getEventInput(calendarId);
+      // the event starts at 10AM and ends at 11AM in UTC
+      eventInput.startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      eventInput.endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+      eventInput.speakers = [
+        {
+          user: [userId],
+          team: [teamId],
+        },
+      ];
+      const eventId = await eventDataProvider.create(eventInput);
+
+      await eventRestClient.publish(eventId, 'Draft');
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
         });
       });
     });
@@ -1248,4 +1606,63 @@ describe('Reminders', () => {
     relatedResearchIds: [],
     addedDate: new Date().toISOString(),
   });
+
+  const getResearchOutputInputDraft = (
+    teamId: string,
+    creatorId: string,
+    workingGroupId: string = '',
+  ): DraftResearchOutputCreateDataObject => ({
+    ...getResearchOutputCreateDataObject(),
+    teamIds: [teamId],
+    workingGroups: workingGroupId ? [workingGroupId] : [],
+    createdBy: creatorId,
+    subtypeId: undefined,
+    link: chance.url(),
+    environmentIds: [],
+    organismIds: [],
+    methodIds: [],
+    keywordIds: [],
+    labIds: [],
+    authors: [],
+    relatedResearchIds: [],
+  });
 });
+
+const createWorkingGroup = (creatorId: string) => {
+  return {
+    title: {
+      iv: 'Created via test',
+    },
+    complete: {
+      iv: false,
+    },
+    description: {
+      iv: 'a short description',
+    },
+    shortText: {
+      iv: 'just a short text>',
+    },
+    calendars: {},
+    'external-link': {
+      iv: 'https://google.com',
+    },
+    deliverables: {
+      iv: [
+        {
+          description: '<string>',
+          status: 'In Progress',
+        },
+      ],
+    },
+    leaders: {
+      iv: [
+        {
+          user: [creatorId],
+          role: 'Project Manager',
+          workstreamRole: 'Test',
+        },
+      ],
+    },
+    members: {},
+  };
+};

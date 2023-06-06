@@ -243,11 +243,14 @@ export class Squidex<
     }
   }
 
-  async publish(id: string): Promise<T> {
+  async publish(
+    id: string,
+    status: 'Published' | 'Draft' = 'Published',
+  ): Promise<T> {
     try {
       const res = await this.client
         .put(`${this.collection}/${id}/status`, {
-          body: JSON.stringify({ status: 'Published' }),
+          body: JSON.stringify({ status }),
         })
         .json();
 

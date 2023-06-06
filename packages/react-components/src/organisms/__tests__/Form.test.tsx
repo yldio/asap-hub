@@ -192,7 +192,12 @@ describe('when saving', () => {
       const { getByText } = render(
         <ToastContext.Provider value={mockToast}>
           <Router history={history}>
-            <Form {...props} validate={handleValidate} toastType="base" dirty>
+            <Form
+              {...props}
+              validate={handleValidate}
+              toastType={undefined}
+              dirty
+            >
               {({ getWrappedOnSave }) => (
                 <>
                   <input type="text" />

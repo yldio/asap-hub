@@ -11,6 +11,7 @@ import {
   createAsset,
   paginatedFetch,
   clearContentfulEntries,
+  createCalendarLink,
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
 
@@ -102,17 +103,6 @@ export const migrateInterestGroups = async () => {
       }
     }
 
-    let calendar;
-    if (calendars && calendars.length && calendars[0].id) {
-      calendar = {
-        sys: {
-          type: 'Link',
-          linkType: 'Entry',
-          id: calendars[0].id,
-        },
-      };
-    }
-
     return {
       id,
       slack: tools?.[0]?.slack,
@@ -120,7 +110,13 @@ export const migrateInterestGroups = async () => {
       teams: teamLinks.filter(Boolean),
       leaders: leaderLinks.filter(Boolean),
       thumbnail: thumbnailAsset,
-      calendar,
+      calendar: calendars?.[0]?.id
+        ? await createCalendarLink(
+            contentfulEnvironment,
+            calendars[0].id,
+            `Interest Group with id ${id} is going to be created without a calendar.`,
+          )
+        : null,
       ...props,
     };
   };

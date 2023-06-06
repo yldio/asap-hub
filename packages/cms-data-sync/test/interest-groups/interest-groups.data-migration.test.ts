@@ -170,7 +170,7 @@ describe('Migrate interest groups', () => {
             slack: { 'en-US': undefined },
             googleDrive: { 'en-US': undefined },
             thumbnail: { 'en-US': undefined },
-            calendar: { 'en-US': undefined },
+            calendar: { 'en-US': null },
           },
         },
       );

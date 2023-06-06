@@ -7,6 +7,7 @@ import {
 import {
   convertHtmlToContentfulFormat,
   createAsset,
+  createCalendarLink,
   createInlineAssets,
   createMediaEntries,
   getSquidexAndContentfulClients,
@@ -173,36 +174,6 @@ export const migrateEvents = async () => {
     return null;
   };
 
-  const createCalendarLink = async (
-    calendar: EventItem['flatData']['calendar'],
-    eventId: string,
-  ) => {
-    if (calendar) {
-      const calendarId = calendar[0].id;
-
-      try {
-        await contentfulRateLimiter.removeTokens(1);
-        await contentfulEnvironment.getEntry(calendarId);
-
-        return {
-          sys: {
-            type: 'Link',
-            linkType: 'Entry',
-            id: calendarId,
-          },
-        };
-      } catch {
-        // edge case, this should not happen if the migration happened in the correct order
-        logger(
-          `Calendar ${calendarId} does not exist in contentful. Event with id ${eventId} is going to be created without a calendar.`,
-          'ERROR',
-        );
-      }
-    }
-
-    return null;
-  };
-
   const deletePreviousSpeakerReferences = async (contentfulEvent: Entry) => {
     if (contentfulEvent.fields.speakers) {
       await Promise.all(
@@ -294,7 +265,13 @@ export const migrateEvents = async () => {
       updateEntry: false,
       ...squidexFlatData,
       ...materialsSpeakersThumbAndMeetingLink,
-      calendar: await createCalendarLink(calendar, id),
+      calendar: calendar?.[0]?.id
+        ? await createCalendarLink(
+            contentfulEnvironment,
+            calendar[0].id,
+            `Event with id ${id} is going to be created without a calendar.`,
+          )
+        : null,
     };
   };
 

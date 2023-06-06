@@ -35,7 +35,7 @@ export const userFields = {
 
 type UserCSV = Record<keyof typeof userFields, CSVValue>;
 
-export const MAX_SQUIDEX_RESULTS = 200;
+export const MAX_RESULTS = 10;
 
 const getPositionString = (position?: gp2.UserPosition) =>
   position
@@ -114,12 +114,12 @@ export const squidexUsersResponseToStream = async (
     // We are doing this in chunks and streams to avoid blob/ram limits.
     // eslint-disable-next-line no-await-in-loop
     const data = await getResults({
-      skip: currentPage * MAX_SQUIDEX_RESULTS,
-      take: MAX_SQUIDEX_RESULTS,
+      skip: currentPage * MAX_RESULTS,
+      take: MAX_RESULTS,
     });
     data.items.map(transform).forEach((row) => csvStream.write(row));
     currentPage += 1;
-    morePages = currentPage * MAX_SQUIDEX_RESULTS < data.total;
+    morePages = currentPage * MAX_RESULTS < data.total;
   }
   csvStream.end();
 };

@@ -318,8 +318,8 @@ const generateFetchQueryFilter = (
   const filterCode = code ? { connections_contains_all: [code] } : {};
   const filterHidden = hidden ? { role_not: 'Hidden' } : {};
   const filterNonOnboarded = onlyOnboarded ? { onboarded: true } : {};
-  const filterRegions = regions ? { regions_in: regions } : {};
-  const filterKeywords = keywords ? { keywords_in: keywords } : {};
+  const filterRegions = regions ? { region_in: regions } : {};
+  const filterKeywords = keywords ? { keywords_contains_some: keywords } : {};
   const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =
     userIdFilter.length > 0 ? { sys: { id_in: userIdFilter } } : {};

@@ -157,7 +157,7 @@ export const FETCH_USERS_BY_PROJECT_ID = gql`
         sys {
           id
         }
-        membersCollection {
+        membersCollection(limit: 25) {
           total
           items {
             user {
@@ -184,7 +184,7 @@ export const FETCH_USERS_BY_WORKING_GROUP_ID = gql`
         sys {
           id
         }
-        membersCollection {
+        membersCollection(limit: 25) {
           total
           items {
             user {

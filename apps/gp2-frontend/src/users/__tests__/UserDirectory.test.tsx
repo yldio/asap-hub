@@ -16,7 +16,7 @@ import { useSearch } from '../../hooks/search';
 import { getProjects } from '../../projects/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import { getUsers } from '../api';
-import { MAX_SQUIDEX_RESULTS } from '../export';
+import { MAX_RESULTS } from '../export';
 import UserDirectory from '../UserDirectory';
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -157,7 +157,7 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
         },
         search: '',
         skip: 0,
-        take: MAX_SQUIDEX_RESULTS,
+        take: MAX_RESULTS,
       }),
       expect.anything(),
     ),

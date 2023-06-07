@@ -1,3 +1,4 @@
+export { default as actionIcon } from './action';
 export { default as alumniBadgeIcon } from './alumni-badge';
 export { default as article } from './article';
 export { default as asapLogo } from './asap-logo';

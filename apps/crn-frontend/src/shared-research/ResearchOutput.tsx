@@ -2,7 +2,7 @@ import { NotFoundPage, SharedResearchOutput } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { useRouteMatch, Route, Switch } from 'react-router-dom';
+import { useRouteMatch, Route, Switch, useLocation } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
 import { useResearchOutputById, useResearchOutputPermissions } from './state';
@@ -24,6 +24,7 @@ const ResearchOutput: React.FC = () => {
   const publishedNow = !!publishedNowPath;
 
   const { path } = useRouteMatch();
+  const urlSearchParams = new URLSearchParams(useLocation().search);
   const researchOutputData = useResearchOutputById(researchOutputId);
   const backHref = useBackHref() ?? sharedResearch({}).$;
 
@@ -51,6 +52,7 @@ const ResearchOutput: React.FC = () => {
                 {...researchOutputData}
                 backHref={backHref}
                 publishedNow={publishedNow}
+                draftCreated={urlSearchParams.get('draftCreated') === 'true'}
               />
             </Frame>
           </Route>

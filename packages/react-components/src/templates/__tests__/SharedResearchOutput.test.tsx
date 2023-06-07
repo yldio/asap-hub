@@ -16,6 +16,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   organisms: [],
   backHref: '#',
   publishedNow: false,
+  draftCreated: false,
 };
 describe('Grant Documents', () => {
   it('renders an output with title and content', () => {

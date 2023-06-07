@@ -2,7 +2,7 @@ import React, { ComponentProps, useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { sharedResearch, network } from '@asap-hub/routing';
+import { network, sharedResearch } from '@asap-hub/routing';
 
 import { Card, Headline2, Divider, Link, Markdown, Button } from '../atoms';
 import { mobileScreen, perRem, rem } from '../pixels';
@@ -19,7 +19,6 @@ import { createMailTo } from '../mail';
 import { editIcon } from '..';
 import { getResearchOutputAssociation } from '../utils';
 import { actionIcon, duplicateIcon } from '../icons';
-import { useLocation } from 'react-router-dom';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -72,6 +71,7 @@ type SharedResearchOutputProps = Pick<
     backHref: string;
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
     publishedNow: boolean;
+    draftCreated?: boolean;
   };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
@@ -84,6 +84,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   relatedResearch,
   published,
   publishedNow,
+  draftCreated,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -101,14 +102,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ResearchOutputPermissionsContext,
   );
 
-  const urlSearchParams = new URLSearchParams(useLocation().search);
   const hasDescription = description || descriptionMD;
 
   const association = getResearchOutputAssociation(props);
   const [publishedNowBanner, setPublishedNowBanner] = useState(published);
-  const [draftCreated, setDraftCreated] = useState(
-    urlSearchParams.get('draftCreated') === 'true',
-  );
+  const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
 
   const duplicateLink =
     props.workingGroups && props.workingGroups[0].id
@@ -129,8 +127,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
 
   return (
     <div>
-      {draftCreated && (
-        <Toast accent="successLarge" onClose={() => setDraftCreated(false)}>
+      {draftCreatedBanner && (
+        <Toast
+          accent="successLarge"
+          onClose={() => setDraftCreatedBanner(false)}
+        >
           {`Draft ${
             association === 'working group' ? 'Working Group' : 'Team '
           } ${props.documentType} created successfully.`}

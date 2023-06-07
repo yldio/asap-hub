@@ -5,7 +5,6 @@ import {
   telephoneCountryExpression,
   telephoneNumberExpression,
   urlExpression,
-  USER_SOCIAL_NOT_URL,
 } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
 
@@ -159,7 +158,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         },
         researcherId: {
           type: 'string',
-          pattern: USER_SOCIAL_NOT_URL.source,
+          pattern: urlExpression,
           nullable: true,
         },
         blog: { type: 'string', pattern: urlExpression, nullable: true },

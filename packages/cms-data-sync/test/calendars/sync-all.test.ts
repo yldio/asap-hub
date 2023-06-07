@@ -41,14 +41,16 @@ describe('Sync All Calendars', () => {
     jest.clearAllMocks();
   });
 
-  it('updates googleApiMetadata property to empty object', async () => {
+  it('updates googleApiMetadata.associatedGoogleCalendarId property to undefined', async () => {
     (fetchContentfulEntries as jest.Mock).mockResolvedValue([calendarEntry]);
 
     await syncCalendars({ dataProvider, logger });
 
     expect(dataProvider.update).toHaveBeenCalledTimes(1);
     expect(dataProvider.update).toHaveBeenCalledWith(calendarEntry.sys.id, {
-      googleApiMetadata: {},
+      googleApiMetadata: {
+        associatedGoogleCalendarId: undefined,
+      },
     });
   });
 
@@ -69,6 +71,23 @@ describe('Sync All Calendars', () => {
       'Calendar Syncing Error',
     );
 
+    expect(logger.error).toBeCalledWith(
+      err,
+      `Failed to sync calendar: ${calendarEntry.sys.id}`,
+    );
+  });
+
+  it('retries up to 3 times when api rate limit is hit', async () => {
+    const err = new Error('error');
+    err.name = 'RateLimitExceeded';
+    (fetchContentfulEntries as jest.Mock).mockResolvedValue([calendarEntry]);
+    dataProvider.update = jest.fn().mockRejectedValue(err);
+
+    await expect(syncCalendars({ dataProvider, logger })).rejects.toThrow(
+      'Calendar Syncing Error',
+    );
+
+    expect(dataProvider.update).toBeCalledTimes(4);
     expect(logger.error).toBeCalledWith(
       err,
       `Failed to sync calendar: ${calendarEntry.sys.id}`,

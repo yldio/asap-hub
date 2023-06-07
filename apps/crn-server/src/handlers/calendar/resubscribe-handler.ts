@@ -15,6 +15,7 @@ import {
 import { getCalendarDataProvider } from '../../dependencies/calendars.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import { getCalendarSubscriptionId } from '../../utils/get-calendar-subscription-id';
 
 /* istanbul ignore next */
 const getJWTCredentials = getJWTCredentialsFactory({
@@ -24,7 +25,7 @@ const getJWTCredentials = getJWTCredentialsFactory({
 
 /* istanbul ignore next */
 const getCalendarId = (id: string): string =>
-  isContentfulEnabledV2 ? `contentful__${id}` : id;
+  isContentfulEnabledV2 ? getCalendarSubscriptionId(id) : id;
 
 export const handler = sentryWrapper(
   resubscribeCalendarsHandlerFactory(

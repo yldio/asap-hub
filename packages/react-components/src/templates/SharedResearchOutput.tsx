@@ -4,7 +4,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { sharedResearch, network } from '@asap-hub/routing';
 
-import { Card, Headline2, Divider, Link, Markdown } from '../atoms';
+import { Card, Headline2, Divider, Link, Markdown, Button } from '../atoms';
 import { mobileScreen, perRem, rem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { CtaCard, TagList } from '../molecules';
@@ -18,7 +18,7 @@ import {
 import { createMailTo } from '../mail';
 import { editIcon } from '..';
 import { getResearchOutputAssociation } from '../utils';
-import { duplicateIcon } from '../icons';
+import { actionIcon, duplicateIcon } from '../icons';
 import { useLocation } from 'react-router-dom';
 
 const containerStyles = css({
@@ -29,11 +29,23 @@ const buttonsContainer = css({
   display: 'flex',
   flexFlow: 'column',
   [`@media (min-width: ${mobileScreen.max}px)`]: {
-    display: 'inline-flex',
+    display: 'flex',
+    width: '100%',
     flexFlow: 'row',
+    '& > *:last-child': {
+      alignSelf: 'flex-end',
+      marginLeft: 'auto',
+    },
   },
   gap: rem(16),
   paddingBottom: rem(32),
+});
+
+const childButton = css({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  maxWidth: rem(300),
 });
 
 const cardsStyles = css({
@@ -146,25 +158,34 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         {!isGrantDocument && (
           <div css={buttonsContainer}>
             {canEditResearchOutput && (
-              <Link
-                noMargin
-                href={
-                  sharedResearch({})
-                    .researchOutput({ researchOutputId: id })
-                    .editResearchOutput({}).$
-                }
-                buttonStyle
-                small
-                primary
-              >
-                {editIcon} Edit
-              </Link>
+              <div css={childButton}>
+                <Link
+                  noMargin
+                  href={
+                    sharedResearch({})
+                      .researchOutput({ researchOutputId: id })
+                      .editResearchOutput({}).$
+                  }
+                  buttonStyle
+                  small
+                  primary
+                >
+                  {editIcon} Edit
+                </Link>
+              </div>
             )}
             {canDuplicateResearchOutput && duplicateLink && (
-              <Link noMargin href={duplicateLink} buttonStyle small primary>
-                {duplicateIcon} Duplicate
-              </Link>
+              <div css={childButton}>
+                <Link noMargin href={duplicateLink} buttonStyle small primary>
+                  {duplicateIcon} Duplicate
+                </Link>
+              </div>
             )}
+            <div css={childButton}>
+              <Button noMargin small primary>
+                {actionIcon} Ready for PM Review
+              </Button>
+            </div>
           </div>
         )}
         <div css={cardsStyles}>

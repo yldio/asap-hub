@@ -26,15 +26,8 @@ export const makeODataFilter = (
     return null;
   }
 
-  const keyName = (key: string) => {
-    if (key === 'project') {
-      return 'projects';
-    }
-    if (key === 'workingGroup') {
-      return 'workingGroups';
-    }
-    return key;
-  };
+  const keyName = (key: string) =>
+    ['project', 'workingGroup', 'author'].includes(key) ? `${key}s` : key;
 
   const entries = Object.entries(filter).reduce<Filter[]>((res, [key, val]) => {
     if (Array.isArray(val)) {

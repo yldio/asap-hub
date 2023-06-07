@@ -592,6 +592,23 @@ describe('Outputs data provider', () => {
           expect.anything(),
         );
       });
+      test('Should pass the object filter parameter author as a squidex filter', async () => {
+        await outputDataProvider.fetch({
+          ...defaultParams,
+          filter: {
+            author: 'some-author',
+          },
+        });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            filter: "data/authors/iv eq 'some-author'",
+          },
+          expect.anything(),
+        );
+      });
 
       test('Should pass the object filter parameter properties with an array as a squidex filter', async () => {
         await outputDataProvider.fetch({

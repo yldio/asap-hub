@@ -1,7 +1,8 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
-import { Squidex } from '../src/rest';
-import { getAccessTokenMock } from './mocks/access-token.mock';
+import { Squidex } from '../rest';
+// eslint-disable-next-line jest/no-mocks-import
+import { getAccessTokenMock } from '../__mocks__/access-token.mock';
 
 interface Content {
   id: string;
@@ -22,6 +23,7 @@ describe('squidex wrapper', () => {
   });
 
   afterEach(() => {
+    // eslint-disable-next-line jest/no-standalone-expect
     expect(nock.isDone()).toBe(true);
   });
 

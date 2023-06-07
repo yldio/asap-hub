@@ -1,7 +1,8 @@
 import nock from 'nock';
 import { gql } from 'graphql-request';
-import { SquidexGraphql, SquidexGraphqlError } from '../src/graphql';
-import { getAccessTokenMock } from './mocks/access-token.mock';
+import { SquidexGraphql, SquidexGraphqlError } from '../graphql';
+// eslint-disable-next-line jest/no-mocks-import
+import { getAccessTokenMock } from '../__mocks__/access-token.mock';
 
 describe('Squidex Graphql Client', () => {
   afterEach(() => {

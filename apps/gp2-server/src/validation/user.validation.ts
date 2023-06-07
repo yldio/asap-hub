@@ -176,6 +176,7 @@ export const validateUserPatchRequest = validateInput(
   userPatchRequestValidationSchema,
   {
     skipNull: true,
+    nullableKeys: ['alternativeEmail'],
   },
 );
 

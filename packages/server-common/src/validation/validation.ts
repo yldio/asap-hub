@@ -25,6 +25,7 @@ export function validateInput<T, B extends boolean>(
   options?: {
     skipNull?: B;
     coerce?: boolean;
+    nullableKeys?: string[];
   },
 ): (
   data: Record<string, unknown>,
@@ -35,6 +36,7 @@ export function validateInput<T>(
   options?: {
     skipNull?: boolean;
     coerce?: boolean;
+    nullableKeys?: string[];
   },
 ): (
   data: Record<string, unknown>,
@@ -45,7 +47,10 @@ export function validateInput<T>(
     if (validate(ajvValidation, data)) {
       if (options?.skipNull) {
         return Object.entries(data).reduce(
-          (obj, [key, val]) => (val === null ? obj : { ...obj, [key]: val }),
+          (obj, [key, val]) =>
+            val === null && !options?.nullableKeys?.includes(key)
+              ? obj
+              : { ...obj, [key]: val },
           {} as NonNullable<T>,
         );
       }

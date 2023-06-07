@@ -336,6 +336,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 const { id } = researchOutput;
                 const savePath = sharedResearch({}).researchOutput({
                   researchOutputId: id,
+                  draftCreated: draftSave && !researchOutputData?.created,
                 }).$;
                 const publishPath = sharedResearch({})
                   .researchOutput({

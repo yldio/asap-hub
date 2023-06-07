@@ -19,6 +19,7 @@ import { createMailTo } from '../mail';
 import { editIcon } from '..';
 import { getResearchOutputAssociation } from '../utils';
 import { duplicateIcon } from '../icons';
+import { useLocation } from 'react-router-dom';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -87,10 +88,15 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const { canEditResearchOutput, canDuplicateResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
   );
+
+  const urlSearchParams = new URLSearchParams(useLocation().search);
   const hasDescription = description || descriptionMD;
 
   const association = getResearchOutputAssociation(props);
   const [publishedNowBanner, setPublishedNowBanner] = useState(published);
+  const [draftCreated, setDraftCreated] = useState(
+    urlSearchParams.get('draftCreated') === 'true',
+  );
 
   const duplicateLink =
     props.workingGroups && props.workingGroups[0].id
@@ -111,6 +117,13 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
 
   return (
     <div>
+      {draftCreated && (
+        <Toast accent="successLarge" onClose={() => setDraftCreated(false)}>
+          {`Draft ${
+            association === 'working group' ? 'Working Group' : 'Team '
+          } ${props.documentType} created successfully.`}
+        </Toast>
+      )}
       {(publishedNow || !published) && (
         <div>
           {publishedNowBanner && (

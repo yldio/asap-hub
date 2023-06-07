@@ -14,6 +14,8 @@ import { migrateEvents } from '../src/events/events.data-migration';
 import { migrateCalendars } from '../src/calendars/calendars.data-migration';
 import { migrateLabs } from '../src/labs/labs.data-migration';
 import { migrateUsers } from '../src/users/users.data-migration';
+import { migrateInterestGroups } from '../src/interest-groups/interest-groups.data-migration';
+import { migrateWorkingGroups } from '../src/working-groups/working-groups.data-migration';
 
 jest.mock('contentful-management');
 
@@ -92,6 +94,18 @@ jest.mock('../src/interest-groups/interest-groups.data-migration', () => {
       '../src/interest-groups/interest-groups.data-migration',
     ),
     migrateInterestGroups: mockMigrateInterestGroups,
+  };
+});
+
+var mockMigrateWorkingGroups: jest.MockedFunction<typeof migrateWorkingGroups>;
+
+jest.mock('../src/working-groups/working-groups.data-migration', () => {
+  mockMigrateWorkingGroups = jest.fn().mockReturnValue({});
+  return {
+    ...jest.requireActual(
+      '../src/working-groups/working-groups.data-migration',
+    ),
+    migrateWorkingGroups: mockMigrateWorkingGroups,
   };
 });
 

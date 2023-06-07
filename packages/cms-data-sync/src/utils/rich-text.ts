@@ -1,10 +1,13 @@
+import { Environment, Maybe } from '@asap-hub/contentful';
 import { Document } from '@contentful/rich-text-types';
 import {
   parseHtml,
   parseAssets,
   parseIFrames,
 } from 'contentful-html-rich-text-converter';
+import { createInlineAssets } from './assets';
 import { logger } from './logs';
+import { createMediaEntries } from './media';
 
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
   ...htmlDocument,
@@ -83,4 +86,18 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   );
 
   return { document, inlineAssetBodies, inlineIFramesBodies };
+};
+
+export const createDocumentIfNeeded = async (
+  contentfulEnvironment: Environment,
+  field: Maybe<string>,
+) => {
+  if (field) {
+    const { document, inlineAssetBodies, inlineIFramesBodies } =
+      convertHtmlToContentfulFormat(field);
+    await createInlineAssets(contentfulEnvironment, inlineAssetBodies);
+    await createMediaEntries(contentfulEnvironment, inlineIFramesBodies);
+    return document;
+  }
+  return null;
 };

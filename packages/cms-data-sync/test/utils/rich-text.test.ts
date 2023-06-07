@@ -1,4 +1,13 @@
-import { convertHtmlToContentfulFormat } from '../../src/utils';
+import { Environment } from 'contentful-management';
+import {
+  convertHtmlToContentfulFormat,
+  createDocumentIfNeeded,
+} from '../../src/utils';
+import { createInlineAssets } from '../../src/utils/assets';
+import { createMediaEntries } from '../../src/utils/media';
+
+jest.mock('../../src/utils/assets');
+jest.mock('../../src/utils/media');
 
 describe('convertHtmlToContentfulFormat', () => {
   it('converts simple html to contentful expected rich text format properly', () => {
@@ -283,5 +292,103 @@ describe('convertHtmlToContentfulFormat', () => {
         nodeType: 'paragraph',
       },
     ]);
+  });
+});
+
+describe('createDocumentIfNeeded', () => {
+  let envMock: Environment;
+
+  const createInlineAssetsMock = createInlineAssets as jest.Mock;
+  const createMediaEntriesMock = createMediaEntries as jest.Mock;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('returns document from html and creates inline assets and media', async () => {
+    const document = await createDocumentIfNeeded(
+      envMock,
+      '<p>Hello World</p><img src="asap-asset.png"/><iframe src="https://example.com"/>',
+    );
+
+    expect(document).toEqual({
+      content: [
+        {
+          content: [
+            { data: {}, marks: [], nodeType: 'text', value: 'Hello World' },
+          ],
+          data: {},
+          nodeType: 'paragraph',
+        },
+        {
+          content: [],
+          data: {
+            target: {
+              sys: { id: '125869887', linkType: 'Asset', type: 'Link' },
+            },
+          },
+          nodeType: 'embedded-asset-block',
+        },
+        {
+          content: [],
+          data: {
+            target: {
+              sys: { id: '632849614', linkType: 'Entry', type: 'Link' },
+            },
+          },
+          nodeType: 'embedded-entry-inline',
+        },
+      ],
+      data: {},
+      nodeType: 'document',
+    });
+    expect(createInlineAssetsMock).toHaveBeenCalledWith(envMock, [
+      [
+        expect.any(String),
+        {
+          fields: {
+            file: {
+              'en-US': {
+                contentType: 'image/png',
+                fileName: 'asap-asset.png',
+                upload: 'asap-asset.png',
+              },
+            },
+            title: {
+              'en-US': 'asap-asset.png',
+            },
+          },
+        },
+      ],
+    ]);
+
+    expect(createMediaEntriesMock).toHaveBeenCalledWith(envMock, [
+      [
+        expect.any(String),
+        {
+          fields: {
+            url: {
+              'en-US': 'https://example.com',
+            },
+          },
+        },
+      ],
+    ]);
+  });
+
+  it('returns null if html input is null and does not create asset/media', async () => {
+    const document = await createDocumentIfNeeded(envMock, null);
+
+    expect(document).toBe(null);
+    expect(createInlineAssetsMock).not.toHaveBeenCalled();
+    expect(createMediaEntriesMock).not.toHaveBeenCalled();
+  });
+
+  it('returns null if html input is an empty string and does not create asset/media', async () => {
+    const document = await createDocumentIfNeeded(envMock, '');
+
+    expect(document).toBe(null);
+    expect(createInlineAssetsMock).not.toHaveBeenCalled();
+    expect(createMediaEntriesMock).not.toHaveBeenCalled();
   });
 });

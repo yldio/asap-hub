@@ -1,5 +1,5 @@
-import { isCMSAdministrator } from '../../src/roles';
 import { Role, TeamRole } from '@asap-hub/model';
+import { isCMSAdministrator } from '../../roles';
 
 describe('isCMSAdministrator', () => {
   it.each`

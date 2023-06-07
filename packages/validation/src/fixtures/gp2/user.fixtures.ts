@@ -26,6 +26,6 @@ export const getUserResponse = (): gp2.UserResponse => ({
   degrees: ['PhD'],
   projects: [],
   workingGroups: [],
-  fundingStreams: null,
   contributingCohorts: [],
+  questions: [],
 });

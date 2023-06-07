@@ -17,7 +17,7 @@ import { getApiGatewayEvent } from '../../helpers/events';
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
-  getCDAClient: () => ({
+  getCPAClient: () => ({
     getEntry: jest.fn().mockResolvedValue({
       sys: {
         id: '1',

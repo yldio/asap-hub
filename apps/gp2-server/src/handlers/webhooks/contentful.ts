@@ -4,8 +4,8 @@ import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { APIGatewayEvent, Handler } from 'aws-lambda';
 import 'source-map-support/register';
 import {
-  contentfulAccessToken,
   contentfulEnvId,
+  contentfulPreviewAccessToken,
   contentfulSpaceId,
   contentfulWebhookAuthenticationToken,
   eventBus,
@@ -23,7 +23,7 @@ export const contentfulWebhookFactory = (
     {
       eventBus,
       eventSource,
-      accessToken: contentfulAccessToken,
+      previewAccessToken: contentfulPreviewAccessToken,
       environment: contentfulEnvId,
       space: contentfulSpaceId,
     },

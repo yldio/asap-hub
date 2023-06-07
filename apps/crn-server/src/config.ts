@@ -14,6 +14,7 @@ const {
   IS_CONTENTFUL_ENABLED_V2,
   CONTENTFUL_SPACE_ID,
   CONTENTFUL_ACCESS_TOKEN,
+  CONTENTFUL_PREVIEW_ACCESS_TOKEN,
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   CONTENTFUL_ENV_ID,
   CONTENTFUL_HOST,
@@ -87,6 +88,8 @@ export const sentryTraceSampleRate = 0.2;
 export const contentfulSpaceId = CONTENTFUL_SPACE_ID || 'contentful-space-id';
 export const contentfulAccessToken =
   CONTENTFUL_ACCESS_TOKEN || 'contentful-access-token';
+export const contentfulPreviewAccessToken =
+  CONTENTFUL_PREVIEW_ACCESS_TOKEN || 'contentful-preview-access-token';
 export const contentfulManagementAccessToken =
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN || 'contentful-management-access-token';
 export const contentfulEnvId = CONTENTFUL_ENV_ID || 'contentful-environment-id';

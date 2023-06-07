@@ -1,6 +1,6 @@
 import {
   ContentfulWebhookPayload,
-  getCDAClient,
+  getCPAClient,
   pollContentfulDeliveryApi,
 } from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
@@ -34,7 +34,7 @@ type Config = {
   eventSource: string;
   space: string;
   environment: string;
-  accessToken: string;
+  previewAccessToken: string;
 };
 export const contentfulHandlerFactory =
   (
@@ -56,12 +56,12 @@ export const contentfulHandlerFactory =
     }
 
     const entryVersion = detail.sys.revision;
-    const cdaClient = getCDAClient({
-      accessToken: config.accessToken,
+    const cpaClient = getCPAClient({
+      previewAccessToken: config.previewAccessToken,
       space: config.space,
       environment: config.environment,
     });
-    const fetchEntryById = () => cdaClient.getEntry(detail.resourceId);
+    const fetchEntryById = () => cpaClient.getEntry(detail.resourceId);
     await pollContentfulDeliveryApi(fetchEntryById, entryVersion);
 
     try {

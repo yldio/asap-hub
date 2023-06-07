@@ -7,6 +7,11 @@ export type CreateClientParams = {
   accessToken: string;
   environment: string;
 };
+type CreatePreviewClientParams = {
+  space: string;
+  previewAccessToken: string;
+  environment: string;
+};
 export const getGraphQLClient = ({
   space,
   accessToken,
@@ -41,4 +46,16 @@ export const getCDAClient = ({
     space,
     accessToken,
     environment,
+  });
+
+export const getCPAClient = ({
+  space,
+  previewAccessToken,
+  environment,
+}: CreatePreviewClientParams) =>
+  createCDAClient({
+    space,
+    accessToken: previewAccessToken,
+    environment,
+    host: 'preview.contentful.com',
   });

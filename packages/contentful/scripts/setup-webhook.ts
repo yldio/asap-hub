@@ -23,12 +23,7 @@ const app = async () => {
 
   const name = `${environmentId} Webhook`;
   const url = `${apiUrl}/webhook/contentful`;
-  const topics = [
-    'Entry.save',
-    'Entry.publish',
-    'Entry.unpublish',
-    'Entry.delete',
-  ];
+  const topics = ['Entry.publish', 'Entry.unpublish'];
   const filters: contentful.WebhookFilter[] = [
     {
       equals: [{ doc: 'sys.environment.sys.id' }, contentfulEnvironment],

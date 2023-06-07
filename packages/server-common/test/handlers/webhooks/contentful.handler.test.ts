@@ -5,11 +5,10 @@ import { contentfulHandlerFactory } from '../../../src/handlers/webhooks';
 import { getNewsPublishContentfulWebhookPayload } from '../../fixtures/news.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
 import { loggerMock as logger } from '../../mocks/logger.mock';
-import { getCalendarFromDeliveryApi } from '../calendar/webhook-sync-calendar.fixtures';
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
-  getCDAClient: () => ({
+  getCPAClient: () => ({
     getEntry: jest.fn().mockResolvedValue({
       sys: {
         id: '1',
@@ -35,7 +34,13 @@ describe('Contentful event webhook', () => {
   const handler = contentfulHandlerFactory(
     contentfulWebhookAuthenticationToken,
     evenBridgeMock,
-    { eventBus, eventSource, space: '', environment: '', accessToken: '' },
+    {
+      eventBus,
+      eventSource,
+      space: '',
+      environment: '',
+      previewAccessToken: '',
+    },
     logger,
   );
 
@@ -102,7 +107,13 @@ describe('Contentful event webhook', () => {
     const handlerWithError = contentfulHandlerFactory(
       contentfulWebhookAuthenticationToken,
       evenBridgeMock,
-      { eventBus, eventSource, space: '', environment: '', accessToken: '' },
+      {
+        eventBus,
+        eventSource,
+        space: '',
+        environment: '',
+        previewAccessToken: '',
+      },
       logger,
     );
     const event = getLambdaRequest(payload, headers);

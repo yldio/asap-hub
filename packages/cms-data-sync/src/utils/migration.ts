@@ -26,6 +26,7 @@ export const migrateFromSquidexToContentfulFactory =
     const entries = await Promise.all(
       data.map(async (item) => {
         const parsed = await parseData(item);
+
         const { id, updateEntry, ...payload } = parsed;
 
         try {

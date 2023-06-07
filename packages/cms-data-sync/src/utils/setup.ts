@@ -73,6 +73,35 @@ export const getSquidexAndContentfulClients = async () => {
   return { contentfulEnvironment, squidexGraphqlClient };
 };
 
+export const getContentfulClient = async () => {
+  [
+    'CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
+    'CONTENTFUL_SPACE_ID',
+    'CONTENTFUL_ENV_ID',
+  ].forEach((env) => {
+    assert.ok(process.env[env], `${env} not defined`);
+  });
+
+  const {
+    CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
+    CONTENTFUL_SPACE_ID,
+    CONTENTFUL_ENV_ID,
+  } = process.env;
+
+  const contentfulClient = createClient({
+    apiAdapter: new ApiAdapter({
+      accessToken: CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!,
+    }),
+  });
+
+  const contentfulSpace = await contentfulClient.getSpace(CONTENTFUL_SPACE_ID!);
+  const contentfulEnvironment = await contentfulSpace.getEnvironment(
+    CONTENTFUL_ENV_ID!,
+  );
+
+  return { contentfulEnvironment };
+};
+
 export const createAssetUrl = createUrlFactory({
   appName: process.env.CRN_SQUIDEX_APP_NAME!,
   baseUrl: process.env.SQUIDEX_BASE_URL!,

@@ -1,0 +1,58 @@
+name: Sync all Contentful calendars with google
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        required: true
+        description: The environment name
+        type: choice
+        options:
+          - Branch
+          - Development
+          - Production
+      contentful-env:
+        required: true
+        type: string
+        description: Choose which Contentful environment to sync to
+
+jobs:
+  sync_calenders:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Rebuild
+        uses: ./.github/actions/build-rebuild
+      - name: Run CMS sync
+        run: |
+          yarn build:babel
+          yarn build:typecheck
+          yarn workspace @asap-hub/cms-data-sync calendar:sync:all
+        env:
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs: [sync_calenders]
+    if: ${{ failure() && inputs.environment-name=='Production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: Syncing data from Squidex to Contentful failed
+          webhook: ${{ env.SLACK_WEBHOOK }}
+          status: failure

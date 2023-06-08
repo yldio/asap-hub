@@ -17,7 +17,7 @@ import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
 
 jest.mock('../../src/utils/setup');
 jest.mock('../../src/utils/entries');
-jest.mock('../../src/utils/assets');
+jest.mock('../../src/utils/assets-and-media');
 jest.mock('../../src/utils/rich-text');
 
 const squidexResponseWithTitleOnly = {

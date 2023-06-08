@@ -42,8 +42,6 @@ const ResearchOutput: React.FC = () => {
     researchOutputData?.published,
   );
 
-  console.log(permissions);
-
   if (researchOutputData) {
     return (
       <ResearchOutputPermissionsContext.Provider value={permissions}>

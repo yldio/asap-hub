@@ -5,6 +5,7 @@ import {
   useRef,
   ReactNode,
   MouseEventHandler,
+  ComponentProps,
 } from 'react';
 import { css, Theme } from '@emotion/react';
 import { Anchor, Button } from '../atoms';
@@ -108,27 +109,32 @@ const itemStyles = ({
     },
   });
 
-type LinkItemData = {
+type ItemData = {
   item: ReactNode;
+} & (LinkItemData | ButtonItemData);
+
+type LinkItemData = {
+  closeOnClick?: undefined;
   onClick?: undefined;
   href: string;
 };
 type ButtonItemData = {
-  item: ReactNode;
+  closeOnClick?: boolean;
   onClick: MouseEventHandler<HTMLButtonElement>;
   href?: undefined;
 };
 
 type DropdownButtonProps = {
-  children?: ReadonlyArray<LinkItemData | ButtonItemData>;
+  children?: ReadonlyArray<ItemData>;
   buttonChildren: (menuShown: boolean) => ReactNode;
   noMargin?: boolean;
-};
+} & Partial<Pick<ComponentProps<typeof Button>, 'primary'>>;
 
 const DropdownButton: React.FC<DropdownButtonProps> = ({
   children = [],
   buttonChildren,
   noMargin = false,
+  primary,
 }) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
@@ -152,34 +158,38 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
 
   return (
     <div css={containerStyles} ref={reference}>
-      <Button small noMargin={noMargin} onClick={handleClick}>
+      <Button small primary={primary} noMargin={noMargin} onClick={handleClick}>
         {buttonChildren(menuShown)}
       </Button>
       <div css={menuWrapperStyles}>
         <div css={[menuContainerStyles, menuShown && showMenuStyles]}>
           <ul css={listStyles}>
-            {children.map(({ item, href, onClick }, index) => (
-              <li
-                key={`drop-${index}`}
-                css={({ colors }) => itemStyles(colors)}
-              >
-                {href ? (
-                  <Anchor href={href}>
-                    <span css={itemContentStyles}>{item}</span>
-                  </Anchor>
-                ) : (
-                  <button
-                    css={resetButtonStyles}
-                    onClick={(e) => {
-                      setMenuShown(false);
-                      onClick && onClick(e);
-                    }}
-                  >
-                    <span css={itemContentStyles}>{item}</span>
-                  </button>
-                )}
-              </li>
-            ))}
+            {children.map(
+              ({ item, href, onClick, closeOnClick = true }, index) => (
+                <li
+                  key={`drop-${index}`}
+                  css={({ colors }) => itemStyles(colors)}
+                >
+                  {href ? (
+                    <Anchor href={href}>
+                      <span css={itemContentStyles}>{item}</span>
+                    </Anchor>
+                  ) : (
+                    <button
+                      css={resetButtonStyles}
+                      onClick={(e) => {
+                        if (closeOnClick) {
+                          setMenuShown(false);
+                        }
+                        onClick && onClick(e);
+                      }}
+                    >
+                      <span css={itemContentStyles}>{item}</span>
+                    </button>
+                  )}
+                </li>
+              ),
+            )}
           </ul>
         </div>
       </div>

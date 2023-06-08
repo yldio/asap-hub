@@ -217,6 +217,7 @@ export const useResearchOutputPermissions = (
 ) => {
   const user = useCurrentUserCRN();
   const userRole = getUserRole(user, association, associationIds);
+  const userProjectManager = isUserProjectManager(user, association, associationIds)
   const originalAssociationUserRole = getUserRole(
     user,
     association,

@@ -9,6 +9,7 @@ import { mobileScreen, perRem, rem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { CtaCard, TagList } from '../molecules';
 import {
+  ConfirmModal,
   RelatedResearch,
   RichText,
   SharedResearchAdditionalInformationCard,
@@ -16,9 +17,17 @@ import {
   Toast,
 } from '../organisms';
 import { createMailTo } from '../mail';
-import { editIcon } from '..';
+import { editIcon, steel } from '..';
 import { getResearchOutputAssociation } from '../utils';
 import { actionIcon, duplicateIcon } from '../icons';
+
+/*
+  1. Ask Tiff about error message
+  2. §Permissions (don't show button if currentUser is PM)
+  3. styiling cleanup
+  4. SharedResearchOutput unit tests
+  5. 
+*/
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -31,10 +40,6 @@ const buttonsContainer = css({
     display: 'flex',
     width: '100%',
     flexFlow: 'row',
-    '& > *:last-child': {
-      alignSelf: 'flex-end',
-      marginLeft: 'auto',
-    },
   },
   gap: rem(16),
   paddingBottom: rem(32),
@@ -44,7 +49,35 @@ const childButton = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  maxWidth: rem(300),
+  width: '100%',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 'auto',
+    maxWidth: rem(300),
+  },
+});
+
+const reviewButton = css({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  alignSelf: 'flex-end',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 'auto',
+    maxWidth: rem(300),
+  },
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    marginTop: rem(12),
+    paddingTop: rem(28),
+    borderTop: `1px solid ${steel.rgb}`,
+  },
+  strokeWidth: 0,
 });
 
 const cardsStyles = css({
@@ -107,6 +140,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const association = getResearchOutputAssociation(props);
   const [publishedNowBanner, setPublishedNowBanner] = useState(published);
   const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
+  const [displayModal, setDisplayModal] = useState(false);
 
   const duplicateLink =
     props.workingGroups && props.workingGroups[0].id
@@ -182,12 +216,33 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 </Link>
               </div>
             )}
-            <div css={childButton}>
-              <Button noMargin small primary>
-                {actionIcon} Ready for PM Review
-              </Button>
-            </div>
+            {!published && (
+              <div css={reviewButton}>
+                <Button
+                  noMargin
+                  small
+                  primary
+                  onClick={() => setDisplayModal(!displayModal)}
+                >
+                  {actionIcon} Ready for PM Review
+                </Button>
+              </div>
+            )}
           </div>
+        )}
+        {displayModal && (
+          <ConfirmModal
+            title="Output Ready for PM Review?"
+            description="All team members listed on this output will be notified and PMs will be able to review and publish this output."
+            cancelText="Cancel"
+            confirmText="Ready for PM Review"
+            onSave={() => {
+              setDisplayModal(false);
+            }}
+            onCancel={() => {
+              setDisplayModal(false);
+            }}
+          />
         )}
         <div css={cardsStyles}>
           <SharedResearchOutputHeaderCard {...props} published={published} />

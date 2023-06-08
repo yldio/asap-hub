@@ -2,9 +2,34 @@ import { User } from '@asap-hub/auth';
 import { UserRole, UserResponse } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
+type user = Omit<User, 'algoliaApiKey'> | UserResponse;
+type association = 'teams' | 'workingGroups';
+
+export const isUserProjectManager = (
+  user: user,
+  association: association,
+  associationIds: string[],
+): boolean =>
+  user[association].some(
+    (teamOrWorkingGroup) =>
+      associationIds?.includes(teamOrWorkingGroup.id) &&
+      teamOrWorkingGroup.role === 'Project Manager',
+  );
+
+export const isUserMember = (
+  user: user,
+  association: association,
+  associationIds: string[],
+): boolean =>
+  user[association].some(
+    (teamOrWorkingGroup) =>
+      associationIds.includes(teamOrWorkingGroup.id) &&
+      teamOrWorkingGroup.role !== 'Project Manager',
+  );
+
 export const getUserRole = (
-  user: Omit<User, 'algoliaApiKey'> | UserResponse | null,
-  association: 'teams' | 'workingGroups',
+  user: user | null,
+  association: association,
   associationIds: string[],
 ): UserRole => {
   if (user === null) {
@@ -15,21 +40,11 @@ export const getUserRole = (
     return 'Staff';
   }
 
-  const isUserProjectManager = user[association].some(
-    (teamOrWorkingGroup) =>
-      associationIds?.includes(teamOrWorkingGroup.id) &&
-      teamOrWorkingGroup.role === 'Project Manager',
-  );
-
-  if (isUserProjectManager) {
+  if (isUserProjectManager(user, association, associationIds)) {
     return 'Staff';
   }
 
-  const isUserMember = user[association].some((teamOrWorkingGroup) =>
-    associationIds.includes(teamOrWorkingGroup.id),
-  );
-
-  if (isUserMember) {
+  if (isUserMember(user, association, associationIds)) {
     return 'Member';
   }
 

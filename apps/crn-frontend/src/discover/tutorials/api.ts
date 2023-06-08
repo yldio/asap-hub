@@ -1,4 +1,5 @@
 import { TutorialsResponse } from '@asap-hub/model';
+import { createFeatureFlagHeaders } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../../config';
 
 export const getTutorialById = async (
@@ -6,7 +7,7 @@ export const getTutorialById = async (
   authorization: string,
 ): Promise<TutorialsResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/tutorials/${id}`, {
-    headers: { authorization },
+    headers: { authorization, ...createFeatureFlagHeaders() },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

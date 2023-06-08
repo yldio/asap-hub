@@ -1,12 +1,19 @@
 import { DiscoverResponse } from '@asap-hub/model';
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  createSentryHeaders,
+  createFeatureFlagHeaders,
+} from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../config';
 
 export const getDiscover = async (
   authorization: string,
 ): Promise<DiscoverResponse> => {
   const resp = await fetch(`${API_BASE_URL}/discover`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     throw new Error(

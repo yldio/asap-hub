@@ -9,6 +9,7 @@ import {
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
   hasDuplicateResearchOutputPermission,
+  isUserProjectManager,
 } from '@asap-hub/validation';
 import { useCallback } from 'react';
 import {
@@ -217,7 +218,11 @@ export const useResearchOutputPermissions = (
 ) => {
   const user = useCurrentUserCRN();
   const userRole = getUserRole(user, association, associationIds);
-  const userProjectManager = isUserProjectManager(user, association, associationIds)
+  const userProjectManager = isUserProjectManager(
+    user,
+    association,
+    associationIds,
+  );
   const originalAssociationUserRole = getUserRole(
     user,
     association,
@@ -233,5 +238,6 @@ export const useResearchOutputPermissions = (
     canDuplicateResearchOutput: hasDuplicateResearchOutputPermission(
       originalAssociationUserRole,
     ),
+    userProjectManager,
   };
 };

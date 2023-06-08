@@ -213,6 +213,15 @@ describe.each`
       ),
     ).toEqual(false);
   });
+
+  test(`isUserMember returns false when user data is null`, () => {
+    expect(isUserMember(null, association, [associationId])).toEqual(false);
+  });
+  test(`isUserProjectManager returns false when user data is null`, () => {
+    expect(isUserProjectManager(null, association, [associationId])).toEqual(
+      false,
+    );
+  });
 });
 
 describe('hasShareResearchOutputPermission', () => {

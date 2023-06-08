@@ -21,63 +21,54 @@ import { editIcon, steel } from '..';
 import { getResearchOutputAssociation } from '../utils';
 import { actionIcon, duplicateIcon } from '../icons';
 
-/*
-  1. Ask Tiff about error message
-  2. §Permissions (don't show button if currentUser is PM)
-  3. styiling cleanup
-  4. SharedResearchOutput unit tests
-  5. 
-*/
-
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-const buttonsContainer = css({
+const commonStyles = {
   display: 'flex',
-  flexFlow: 'column',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+};
+
+const commonMediaQueries = {
   [`@media (min-width: ${mobileScreen.max}px)`]: {
-    display: 'flex',
-    width: '100%',
-    flexFlow: 'row',
+    ...commonStyles,
+    width: 'auto',
+    maxWidth: rem(300),
   },
+};
+
+const buttonsContainer = css({
+  ...commonStyles,
+  flexFlow: 'column',
   gap: rem(16),
   paddingBottom: rem(32),
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    flexFlow: 'row',
+    width: '100%',
+  },
 });
 
 const childButton = css({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  ...commonStyles,
   width: '100%',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 'auto',
-    maxWidth: rem(300),
-  },
+  ...commonMediaQueries,
 });
 
 const reviewButton = css({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  ...commonStyles,
   width: '100%',
-  alignSelf: 'flex-end',
+  strokeWidth: 0,
   [`@media (min-width: ${mobileScreen.max}px)`]: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 'auto',
-    maxWidth: rem(300),
+    marginLeft: 'auto',
+    ...commonMediaQueries,
   },
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     marginTop: rem(12),
     paddingTop: rem(28),
     borderTop: `1px solid ${steel.rgb}`,
   },
-  strokeWidth: 0,
 });
 
 const cardsStyles = css({
@@ -131,9 +122,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ...(props.subtype ? [props.subtype] : []),
     ...props.keywords,
   ];
-  const { canEditResearchOutput, canDuplicateResearchOutput } = useContext(
-    ResearchOutputPermissionsContext,
-  );
+  const {
+    canEditResearchOutput,
+    canDuplicateResearchOutput,
+    userProjectManager,
+  } = useContext(ResearchOutputPermissionsContext);
 
   const hasDescription = description || descriptionMD;
 
@@ -216,7 +209,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 </Link>
               </div>
             )}
-            {!published && (
+            {!published && !userProjectManager && (
               <div css={reviewButton}>
                 <Button
                   noMargin

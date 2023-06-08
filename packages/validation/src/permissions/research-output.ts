@@ -6,26 +6,34 @@ type user = Omit<User, 'algoliaApiKey'> | UserResponse;
 type association = 'teams' | 'workingGroups';
 
 export const isUserProjectManager = (
-  user: user,
+  user: user | null,
   association: association,
   associationIds: string[],
-): boolean =>
-  user[association].some(
+): boolean => {
+  if (user === null) {
+    return false;
+  }
+  return user[association].some(
     (teamOrWorkingGroup) =>
       associationIds?.includes(teamOrWorkingGroup.id) &&
       teamOrWorkingGroup.role === 'Project Manager',
   );
+};
 
 export const isUserMember = (
-  user: user,
+  user: user | null,
   association: association,
   associationIds: string[],
-): boolean =>
-  user[association].some(
+): boolean => {
+  if (user === null) {
+    return false;
+  }
+  return user[association].some(
     (teamOrWorkingGroup) =>
-      associationIds.includes(teamOrWorkingGroup.id) &&
+      associationIds?.includes(teamOrWorkingGroup.id) &&
       teamOrWorkingGroup.role !== 'Project Manager',
   );
+};
 
 export const getUserRole = (
   user: user | null,

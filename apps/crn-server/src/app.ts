@@ -85,6 +85,7 @@ import { TeamContentfulDataProvider } from './data-providers/contentful/teams.da
 import { TutorialsContentfulDataProvider } from './data-providers/contentful/tutorials.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-groups.data-provider';
+import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
 import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
@@ -237,9 +238,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.dashboardDataProvider || isContentfulEnabled
       ? dashboardContentfulDataProvider
       : dashboardSquidexDataProvider;
-  const discoverDataProvider =
-    libs.discoverDataProvider ||
-    new DiscoverSquidexDataProvider(squidexGraphqlClient);
   const newsSquidexDataProvider =
     libs.newsSquidexDataProvider || new NewsSquidexDataProvider(newsRestClient);
   const newsContentfulDataProvider =
@@ -485,6 +483,27 @@ export const appFactory = (libs: Libs = {}): Express => {
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
+  featureFlagDependencySwitch.setDependency(
+    'discover',
+    libs.discoverSquidexDataProvider ||
+      new DiscoverSquidexDataProvider(squidexGraphqlClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'discover',
+    libs.discoverContentfulDataProvider ||
+      new DiscoverContentfulDataProvider(contentfulGraphQLClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+  const discoverDataProvider =
+    libs.discoverDataProvider ||
+    featureFlagDependencySwitch.getDependency(
+      'discover',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+
   const labDataProvider =
     libs.labDataProvider || new LabSquidexDataProvider(squidexGraphqlClient);
 
@@ -658,6 +677,8 @@ export type Libs = {
   dashboardSquidexDataProvider?: DashboardDataProvider;
   dashboardContentfulDataProvider?: DashboardDataProvider;
   discoverDataProvider?: DiscoverDataProvider;
+  discoverSquidexDataProvider?: DiscoverDataProvider;
+  discoverContentfulDataProvider?: DiscoverDataProvider;
   externalAuthorSquidexDataProvider?: ExternalAuthorDataProvider;
   externalAuthorContentfulDataProvider?: ExternalAuthorDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;

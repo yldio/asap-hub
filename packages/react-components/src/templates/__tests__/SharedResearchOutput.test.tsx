@@ -348,6 +348,20 @@ describe('a draft output', () => {
       queryByText('Team Article published successfully.'),
     ).not.toBeInTheDocument();
   });
+  it('can display the banner when it is created', () => {
+    const { getByText } = render(
+      <SharedResearchOutput
+        {...props}
+        published={false}
+        draftCreated={true}
+        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        workingGroups={undefined}
+      />,
+    );
+    expect(
+      getByText('Draft Team Grant Document created successfully.'),
+    ).toBeInTheDocument();
+  });
   it('shows the toast for team drafts that contain only one team', () => {
     const { getByText } = render(
       <SharedResearchOutput

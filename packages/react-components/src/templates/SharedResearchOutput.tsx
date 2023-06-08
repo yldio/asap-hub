@@ -167,7 +167,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           onClose={() => setDraftCreatedBanner(false)}
         >
           {`Draft ${
-            association === 'working group' ? 'Working Group' : 'Team '
+            association === 'working group' ? 'Working Group' : 'Team'
           } ${props.documentType} created successfully.`}
         </Toast>
       )}

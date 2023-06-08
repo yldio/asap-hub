@@ -29,13 +29,13 @@ const commonStyles = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-start',
+  width: '100%',
 };
 
 const commonMediaQueries = {
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     ...commonStyles,
     width: 'auto',
-    maxWidth: rem(300),
   },
 };
 
@@ -50,19 +50,17 @@ const buttonsContainer = css({
   },
 });
 
-const childButton = css({
+const leftButtons = css({
   ...commonStyles,
-  width: '100%',
   ...commonMediaQueries,
 });
 
 const reviewButton = css({
   ...commonStyles,
-  width: '100%',
   strokeWidth: 0,
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    marginLeft: 'auto',
+  ...{
     ...commonMediaQueries,
+    marginLeft: 'auto',
   },
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     marginTop: rem(12),
@@ -186,7 +184,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         {!isGrantDocument && (
           <div css={buttonsContainer}>
             {canEditResearchOutput && (
-              <div css={childButton}>
+              <div css={leftButtons}>
                 <Link
                   noMargin
                   href={
@@ -203,7 +201,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               </div>
             )}
             {canDuplicateResearchOutput && duplicateLink && (
-              <div css={childButton}>
+              <div css={leftButtons}>
                 <Link noMargin href={duplicateLink} buttonStyle small primary>
                   {duplicateIcon} Duplicate
                 </Link>

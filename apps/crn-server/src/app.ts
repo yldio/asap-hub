@@ -82,6 +82,7 @@ import { InterestGroupContentfulDataProvider } from './data-providers/contentful
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
+import { TutorialsContentfulDataProvider } from './data-providers/contentful/tutorials.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-groups.data-provider';
 import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
@@ -109,10 +110,7 @@ import {
   TeamDataProvider,
   TeamSquidexDataProvider,
 } from './data-providers/teams.data-provider';
-import {
-  TutorialsDataProvider,
-  TutorialsSquidexDataProvider,
-} from './data-providers/tutorials.data-provider';
+import { TutorialsSquidexDataProvider } from './data-providers/tutorials.data-provider';
 import {
   AssetDataProvider,
   InterestGroupDataProvider,
@@ -122,6 +120,7 @@ import {
   DashboardDataProvider,
   DiscoverDataProvider,
   WorkingGroupDataProvider,
+  TutorialsDataProvider,
 } from './data-providers/types';
 import { UserSquidexDataProvider } from './data-providers/users.data-provider';
 import { WorkingGroupSquidexDataProvider } from './data-providers/working-groups.data-provider';
@@ -284,9 +283,6 @@ export const appFactory = (libs: Libs = {}): Express => {
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
-  const tutorialsDataProvider =
-    libs.tutorialsDataProvider ||
-    new TutorialsSquidexDataProvider(squidexGraphqlClient);
   featureFlagDependencySwitch.setDependency(
     'assets',
     libs.assetSquidexDataProvider ||
@@ -465,6 +461,27 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.eventDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'events',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+
+  featureFlagDependencySwitch.setDependency(
+    'tutorials',
+    libs.tutorialsSquidexDataProvider ||
+      new TutorialsSquidexDataProvider(squidexGraphqlClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'tutorials',
+    libs.tutorialsContentfulDataProvider ||
+      new TutorialsContentfulDataProvider(contentfulGraphQLClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+  const tutorialsDataProvider =
+    libs.tutorialsDataProvider ||
+    featureFlagDependencySwitch.getDependency(
+      'tutorials',
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
@@ -660,6 +677,8 @@ export type Libs = {
   teamContentfulDataProvider?: TeamDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialsDataProvider?: TutorialsDataProvider;
+  tutorialsSquidexDataProvider?: TutorialsDataProvider;
+  tutorialsContentfulDataProvider?: TutorialsDataProvider;
   userDataProvider?: UserDataProvider;
   userSquidexDataProvider?: UserDataProvider;
   userContentfulDataProvider?: UserDataProvider;

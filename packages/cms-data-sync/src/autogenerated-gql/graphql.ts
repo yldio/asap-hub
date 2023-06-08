@@ -6559,6 +6559,32 @@ export type FetchTeamsQuery = {
   >;
 };
 
+export type FetchTutorialsQueryVariables = Exact<{
+  take: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchTutorialsQuery = {
+  queryTutorialsContentsWithTotal: Maybe<
+    Pick<TutorialsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<Tutorials, 'id'> & {
+            flatData: Pick<
+              TutorialsFlatDataDto,
+              'title' | 'shortText' | 'text' | 'link' | 'linkText'
+            > & {
+              thumbnail: Maybe<
+                Array<Pick<Asset, 'id' | 'fileName' | 'mimeType' | 'fileType'>>
+              >;
+            };
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type FetchUsersQueryVariables = Exact<{
   take: InputMaybe<Scalars['Int']>;
   skip: InputMaybe<Scalars['Int']>;
@@ -7712,6 +7738,125 @@ export const FetchTeamsDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchTeamsQuery, FetchTeamsQueryVariables>;
+export const FetchTutorialsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchTutorials' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryTutorialsContentsWithTotal' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shortText' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'text' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'thumbnail' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'fileName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'mimeType' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'fileType' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'link' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'linkText' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FetchTutorialsQuery, FetchTutorialsQueryVariables>;
 export const FetchUsersDocument = {
   kind: 'Document',
   definitions: [

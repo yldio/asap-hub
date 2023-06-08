@@ -8,6 +8,7 @@ import { migrateLabs } from './labs/labs.data-migration';
 import { migrateUsers } from './users/users.data-migration';
 import { migrateInterestGroups } from './interest-groups/interest-groups.data-migration';
 import { migrateWorkingGroups } from './working-groups/working-groups.data-migration';
+import { migrateTutorials } from './tutorials/tutorials.data-migration';
 import { logger } from './utils';
 import { contentfulRateLimiter } from './contentful-rate-limiter';
 
@@ -40,8 +41,8 @@ export const runMigrations = async () => {
     for (const webhook of currentEnvironmentWebhooks) {
       webhook.active = false;
       await contentfulRateLimiter.removeTokens(1);
-      await webhook.update();
-      disabledWebhooks.push(webhook);
+      const disabledWebhook = await webhook.update();
+      disabledWebhooks.push(disabledWebhook);
     }
     logger('Webhooks deactivated');
   } catch (error) {
@@ -61,16 +62,20 @@ export const runMigrations = async () => {
     await migrateExternalAuthors();
     await migrateCalendars();
     await migrateLabs();
+
+    // needs: teams, labs
     await migrateUsers();
-    // The events migration needs to be done after
-    // migrating teams, users, external authors
-    // and calendars
+
+    // needs: teams, users, external authors, calendars
     await migrateEvents();
+
+    // needs: teams, users, calendars
     await migrateInterestGroups();
 
-    // The working groups migration needs to be done after
-    // migrating users and calendars
+    // needs: users, calendars
     await migrateWorkingGroups();
+
+    await migrateTutorials();
   } catch (err) {
     error = err;
     logger('Error migrating data', 'ERROR');

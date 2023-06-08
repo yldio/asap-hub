@@ -177,6 +177,7 @@ export type AssetLinkingCollections = {
   eventsCollection?: Maybe<EventsCollection>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
   newsCollection?: Maybe<NewsCollection>;
+  tutorialsCollection?: Maybe<TutorialsCollection>;
   usersCollection?: Maybe<UsersCollection>;
 };
 
@@ -202,6 +203,13 @@ export type AssetLinkingCollectionsInterestGroupsCollectionArgs = {
 };
 
 export type AssetLinkingCollectionsNewsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type AssetLinkingCollectionsTutorialsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -2268,6 +2276,8 @@ export type Query = {
   teamMembershipCollection?: Maybe<TeamMembershipCollection>;
   teams?: Maybe<Teams>;
   teamsCollection?: Maybe<TeamsCollection>;
+  tutorials?: Maybe<Tutorials>;
+  tutorialsCollection?: Maybe<TutorialsCollection>;
   users?: Maybe<Users>;
   usersCollection?: Maybe<UsersCollection>;
   workingGroupDeliverables?: Maybe<WorkingGroupDeliverables>;
@@ -2529,6 +2539,21 @@ export type QueryTeamsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<TeamsFilter>;
+};
+
+export type QueryTutorialsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryTutorialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TutorialsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TutorialsFilter>;
 };
 
 export type QueryUsersArgs = {
@@ -2960,6 +2985,152 @@ export enum TeamsToolsCollectionOrder {
   UrlAsc = 'url_ASC',
   UrlDesc = 'url_DESC',
 }
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type Tutorials = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  link?: Maybe<Scalars['String']>;
+  linkText?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<TutorialsLinkingCollections>;
+  shortText?: Maybe<Scalars['String']>;
+  sys: Sys;
+  text?: Maybe<TutorialsText>;
+  thumbnail?: Maybe<Asset>;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsLinkTextArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsShortTextArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsTextArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsThumbnailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type TutorialsCollection = {
+  items: Array<Maybe<Tutorials>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type TutorialsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<TutorialsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<TutorialsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  link?: InputMaybe<Scalars['String']>;
+  linkText?: InputMaybe<Scalars['String']>;
+  linkText_contains?: InputMaybe<Scalars['String']>;
+  linkText_exists?: InputMaybe<Scalars['Boolean']>;
+  linkText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkText_not?: InputMaybe<Scalars['String']>;
+  linkText_not_contains?: InputMaybe<Scalars['String']>;
+  linkText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_contains?: InputMaybe<Scalars['String']>;
+  link_exists?: InputMaybe<Scalars['Boolean']>;
+  link_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_not?: InputMaybe<Scalars['String']>;
+  link_not_contains?: InputMaybe<Scalars['String']>;
+  link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortText?: InputMaybe<Scalars['String']>;
+  shortText_contains?: InputMaybe<Scalars['String']>;
+  shortText_exists?: InputMaybe<Scalars['Boolean']>;
+  shortText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortText_not?: InputMaybe<Scalars['String']>;
+  shortText_not_contains?: InputMaybe<Scalars['String']>;
+  shortText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  text_contains?: InputMaybe<Scalars['String']>;
+  text_exists?: InputMaybe<Scalars['Boolean']>;
+  text_not_contains?: InputMaybe<Scalars['String']>;
+  thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type TutorialsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type TutorialsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum TutorialsOrder {
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export type TutorialsText = {
+  json: Scalars['JSON'];
+  links: TutorialsTextLinks;
+};
+
+export type TutorialsTextAssets = {
+  block: Array<Maybe<Asset>>;
+  hyperlink: Array<Maybe<Asset>>;
+};
+
+export type TutorialsTextEntries = {
+  block: Array<Maybe<Entry>>;
+  hyperlink: Array<Maybe<Entry>>;
+  inline: Array<Maybe<Entry>>;
+};
+
+export type TutorialsTextLinks = {
+  assets: TutorialsTextAssets;
+  entries: TutorialsTextEntries;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type Users = Entry & {
@@ -4939,6 +5110,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Teams' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'Tutorials' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Users' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -5040,6 +5214,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Teams' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'Tutorials' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Users' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -5136,6 +5313,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'WorkingGroupDeliverables' } & {
                   sys: Pick<Sys, 'id'>;
@@ -5191,6 +5369,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'WorkingGroupDeliverables' } & {
                   sys: Pick<Sys, 'id'>;
@@ -5246,6 +5425,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'WorkingGroupDeliverables' } & {
                   sys: Pick<Sys, 'id'>;
@@ -5396,6 +5576,7 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupDeliverables' } & {
                       sys: Pick<Sys, 'id'>;
@@ -5457,6 +5638,7 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupDeliverables' } & {
                       sys: Pick<Sys, 'id'>;
@@ -5518,6 +5700,7 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupDeliverables' } & {
                       sys: Pick<Sys, 'id'>;
@@ -5688,6 +5871,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Tutorials' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupDeliverables' } & {
                             sys: Pick<Sys, 'id'>;
@@ -5765,6 +5951,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Tutorials' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupDeliverables' } & {
                             sys: Pick<Sys, 'id'>;
@@ -5842,6 +6031,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Tutorials' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupDeliverables' } & {
                             sys: Pick<Sys, 'id'>;
@@ -6042,6 +6234,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Teams' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Tutorials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6132,6 +6327,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Teams' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Tutorials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6220,6 +6418,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Teams' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Tutorials' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Users' } & {
@@ -6438,6 +6639,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Teams' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Tutorials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6528,6 +6732,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Teams' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Tutorials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6616,6 +6823,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Teams' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Tutorials' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Users' } & {
@@ -6834,6 +7044,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Teams' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Tutorials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6924,6 +7137,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Teams' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'Tutorials' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Users' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -7012,6 +7228,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Teams' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'Tutorials' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Users' } & {
@@ -7550,6 +7769,7 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'WorkingGroupDeliverables' } & {
                   sys: Pick<Sys, 'id'>;
@@ -7625,6 +7845,7 @@ export type FetchNewsByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupDeliverables' } & {
                       sys: Pick<Sys, 'id'>;
@@ -7723,6 +7944,9 @@ export type FetchNewsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Tutorials' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupDeliverables' } & {
                             sys: Pick<Sys, 'id'>;
@@ -7796,6 +8020,7 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'WorkingGroupDeliverables' } & {
                   sys: Pick<Sys, 'id'>;
@@ -7880,6 +8105,9 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Tutorials' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupDeliverables' } & {
                             sys: Pick<Sys, 'id'>;
@@ -8100,6 +8328,81 @@ export type FetchTeamsQuery = {
             }>;
           }
         >
+      >;
+    }
+  >;
+};
+
+export type FetchTutorialByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+export type FetchTutorialByIdQuery = {
+  tutorials?: Maybe<
+    Pick<Tutorials, 'title' | 'shortText' | 'link' | 'linkText'> & {
+      sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+      text?: Maybe<
+        Pick<TutorialsText, 'json'> & {
+          links: {
+            entries: {
+              inline: Array<
+                Maybe<
+                  | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalAuthors' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'InterestGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'InterestGroups' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Labs' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                  | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'TeamMembership' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupDeliverables' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroupLeaders' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({
+                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
+                    } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'WorkingGroupMembers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'WorkingGroups' } & { sys: Pick<Sys, 'id'> })
+                >
+              >;
+            };
+            assets: {
+              block: Array<
+                Maybe<
+                  Pick<
+                    Asset,
+                    'url' | 'description' | 'contentType' | 'width' | 'height'
+                  > & { sys: Pick<Sys, 'id'> }
+                >
+              >;
+            };
+          };
+        }
       >;
     }
   >;
@@ -8518,6 +8821,7 @@ export type WorkingGroupsContentFragment = Pick<
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'WorkingGroupDeliverables' } & {
                   sys: Pick<Sys, 'id'>;
@@ -8627,6 +8931,7 @@ export type FetchWorkingGroupByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupDeliverables' } & {
                       sys: Pick<Sys, 'id'>;
@@ -8765,6 +9070,9 @@ export type FetchWorkingGroupsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Tutorials' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Users' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupDeliverables' } & {
                             sys: Pick<Sys, 'id'>;
@@ -13361,6 +13669,232 @@ export const FetchTeamsDocument = {
     ...TeamsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchTeamsQuery, FetchTeamsQueryVariables>;
+export const FetchTutorialByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchTutorialById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tutorials' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'firstPublishedAt' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thumbnail' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'text' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'json' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'links' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'entries' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'inline' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: '__typename',
+                                          },
+                                        },
+                                        {
+                                          kind: 'InlineFragment',
+                                          typeCondition: {
+                                            kind: 'NamedType',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'Media',
+                                            },
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'url',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'assets' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'block' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'description',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'contentType',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'width',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'height',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchTutorialByIdQuery,
+  FetchTutorialByIdQueryVariables
+>;
 export const FetchUserByIdDocument = {
   kind: 'Document',
   definitions: [

@@ -154,3 +154,12 @@ export const interestGroupLeaderEntry = getEntry({
   inactiveSinceDate: null,
   user: userEntry,
 });
+
+export const tutorialEntry = getEntry({
+  title: { 'en-US': 'Tutorial' },
+  shortText: { 'en-US': 'Short Text' },
+  link: { 'en-US': 'https://example.com' },
+  linkText: { 'en-US': 'Example Dot Com' },
+  text: { 'en-US': { data: {}, content: [], nodeType: 'document' } },
+  thumbnail: { 'en-US': null },
+});

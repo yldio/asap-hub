@@ -1,6 +1,6 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { TutorialsResponse } from '@asap-hub/model';
-import { TutorialsDataProvider } from '../data-providers/tutorials.data-provider';
+import { TutorialsDataProvider } from '../data-providers/types';
 
 export interface TutorialsController {
   fetchById(id: string): Promise<TutorialsResponse>;

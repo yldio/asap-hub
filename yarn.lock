@@ -389,7 +389,7 @@ __metadata:
     "@graphql-tools/graphql-file-loader": 7.5.17
     "@graphql-tools/load": 7.8.14
     "@graphql-tools/mock": 8.7.20
-    "@graphql-tools/schema": 9.0.18
+    "@graphql-tools/schema": 9.0.19
     "@graphql-typed-document-node/core": 3.2.0
     "@types/contentful-html-rich-text-converter": "workspace:^"
     "@types/jest": ^29.4.0
@@ -622,7 +622,7 @@ __metadata:
     "@graphql-tools/graphql-file-loader": 7.5.17
     "@graphql-tools/load": 7.8.14
     "@graphql-tools/mock": 8.7.20
-    "@graphql-tools/schema": 9.0.18
+    "@graphql-tools/schema": 9.0.19
     "@graphql-typed-document-node/core": 3.2.0
     "@types/async-retry": ^1
     "@types/jest": ^29.4.0
@@ -814,7 +814,7 @@ __metadata:
     "@graphql-tools/graphql-file-loader": 7.5.17
     "@graphql-tools/load": 7.8.14
     "@graphql-tools/mock": 8.7.20
-    "@graphql-tools/schema": 9.0.18
+    "@graphql-tools/schema": 9.0.19
     "@graphql-typed-document-node/core": 3.2.0
     "@hapi/boom": 9.1.4
     "@hapi/bourne": 2.1.0
@@ -11783,7 +11783,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/schema@npm:9.0.18, @graphql-tools/schema@npm:^9.0.18":
+"@graphql-tools/schema@npm:9.0.19":
+  version: 9.0.19
+  resolution: "@graphql-tools/schema@npm:9.0.19"
+  dependencies:
+    "@graphql-tools/merge": ^8.4.1
+    "@graphql-tools/utils": ^9.2.1
+    tslib: ^2.4.0
+    value-or-promise: ^1.0.12
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+  checksum: 1be91f61bf4be0c1c9aa640a6ad5b58328d5434d15e78ba73a47263420939db6741ad6723dece4611257e7e1e56518e116b76513a3014305d3f52d67aafb62fb
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/schema@npm:^9.0.18":
   version: 9.0.18
   resolution: "@graphql-tools/schema@npm:9.0.18"
   dependencies:
@@ -45642,7 +45656,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"value-or-promise@npm:1.0.12":
+"value-or-promise@npm:1.0.12, value-or-promise@npm:^1.0.12":
   version: 1.0.12
   resolution: "value-or-promise@npm:1.0.12"
   checksum: f53a66c75b7447c90bbaf946a757ca09c094629cb80ba742f59c980ec3a69be0a385a0e75505dedb4e757862f1a994ca4beaf083a831f24d3ffb3d4bb18cd1e1

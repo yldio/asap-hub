@@ -7454,8 +7454,6 @@ export type FetchUsersQuery = {
 
 export type FetchUsersByProjectIdQueryVariables = Exact<{
   id: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FetchUsersByProjectIdQuery = {
@@ -7463,7 +7461,6 @@ export type FetchUsersByProjectIdQuery = {
     Pick<ProjectsCollection, 'total'> & {
       items: Array<
         Maybe<{
-          sys: Pick<Sys, 'id'>;
           membersCollection?: Maybe<
             Pick<ProjectsMembersCollection, 'total'> & {
               items: Array<Maybe<{ user?: Maybe<{ sys: Pick<Sys, 'id'> }> }>>;
@@ -7477,8 +7474,6 @@ export type FetchUsersByProjectIdQuery = {
 
 export type FetchUsersByWorkingGroupIdQueryVariables = Exact<{
   id: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 export type FetchUsersByWorkingGroupIdQuery = {
@@ -7486,7 +7481,6 @@ export type FetchUsersByWorkingGroupIdQuery = {
     Pick<WorkingGroupsCollection, 'total'> & {
       items: Array<
         Maybe<{
-          sys: Pick<Sys, 'id'>;
           membersCollection?: Maybe<
             Pick<WorkingGroupsMembersCollection, 'total'> & {
               items: Array<Maybe<{ user?: Maybe<{ sys: Pick<Sys, 'id'> }> }>>;
@@ -12947,19 +12941,6 @@ export const FetchUsersByProjectIdDocument = {
             },
           },
         },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'limit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -12971,18 +12952,7 @@ export const FetchUsersByProjectIdDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'limit' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'skip' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'skip' },
-                },
+                value: { kind: 'IntValue', value: '20' },
               },
               {
                 kind: 'Argument',
@@ -13023,20 +12993,14 @@ export const FetchUsersByProjectIdDocument = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
                         name: { kind: 'Name', value: 'membersCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '25' },
+                          },
+                        ],
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
@@ -13117,19 +13081,6 @@ export const FetchUsersByWorkingGroupIdDocument = {
             },
           },
         },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'limit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -13141,18 +13092,7 @@ export const FetchUsersByWorkingGroupIdDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'limit' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'skip' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'skip' },
-                },
+                value: { kind: 'IntValue', value: '20' },
               },
               {
                 kind: 'Argument',
@@ -13193,20 +13133,14 @@ export const FetchUsersByWorkingGroupIdDocument = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
                         name: { kind: 'Name', value: 'membersCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '25' },
+                          },
+                        ],
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [

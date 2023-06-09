@@ -1112,33 +1112,36 @@ describe('User data provider', () => {
 
     test.each`
       name          | value                 | fieldName
-      ${'regions'}  | ${['Africa', 'Asia']} | ${'regions'}
-      ${'keywords'} | ${['Aging', 'RNA']}   | ${'keywords'}
-    `('Should query with $name filters', async ({ name, value, fieldName }) => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        getContentfulUsersGraphqlResponse(),
-      );
-      const fetchOptions: gp2Model.FetchUsersOptions = {
-        take: 12,
-        skip: 2,
-        filter: {
-          [name]: value,
-        },
-      };
-      await userDataProvider.fetch(fetchOptions);
-
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        gp2Contentful.FETCH_USERS,
-        expect.objectContaining({
-          limit: 12,
+      ${'regions'}  | ${['Africa', 'Asia']} | ${'region_in'}
+      ${'keywords'} | ${['Aging', 'RNA']}   | ${'keywords_contains_some'}
+    `(
+      'Should query with region filters',
+      async ({ name, value, fieldName }) => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulUsersGraphqlResponse(),
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
           skip: 2,
-          where: expect.objectContaining({
-            role_not: 'Hidden',
-            [`${fieldName}_in`]: value,
+          filter: {
+            [name]: value,
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
+            skip: 2,
+            where: expect.objectContaining({
+              role_not: 'Hidden',
+              [fieldName]: value,
+            }),
           }),
-        }),
-      );
-    });
+        );
+      },
+    );
 
     describe('projects filter', () => {
       test('it should return empty when no members', async () => {

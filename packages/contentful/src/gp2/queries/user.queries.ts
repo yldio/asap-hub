@@ -146,18 +146,11 @@ export const FETCH_USERS = gql`
 `;
 
 export const FETCH_USERS_BY_PROJECT_ID = gql`
-  query FetchUsersByProjectId($id: [String]!, $limit: Int, $skip: Int) {
-    projectsCollection(
-      limit: $limit
-      skip: $skip
-      where: { sys: { id_in: $id } }
-    ) {
+  query FetchUsersByProjectId($id: [String]!) {
+    projectsCollection(limit: 20, where: { sys: { id_in: $id } }) {
       total
       items {
-        sys {
-          id
-        }
-        membersCollection {
+        membersCollection(limit: 25) {
           total
           items {
             user {
@@ -173,18 +166,11 @@ export const FETCH_USERS_BY_PROJECT_ID = gql`
 `;
 
 export const FETCH_USERS_BY_WORKING_GROUP_ID = gql`
-  query FetchUsersByWorkingGroupId($id: [String]!, $limit: Int, $skip: Int) {
-    workingGroupsCollection(
-      limit: $limit
-      skip: $skip
-      where: { sys: { id_in: $id } }
-    ) {
+  query FetchUsersByWorkingGroupId($id: [String]!) {
+    workingGroupsCollection(limit: 20, where: { sys: { id_in: $id } }) {
       total
       items {
-        sys {
-          id
-        }
-        membersCollection {
+        membersCollection(limit: 25) {
           total
           items {
             user {

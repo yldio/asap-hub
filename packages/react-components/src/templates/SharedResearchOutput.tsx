@@ -123,7 +123,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const {
     canEditResearchOutput,
     canDuplicateResearchOutput,
-    canPublishResearchOutput,
+    canReadyDraftForReview,
   } = useContext(ResearchOutputPermissionsContext);
 
   const hasDescription = description || descriptionMD;
@@ -207,7 +207,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 </Link>
               </div>
             )}
-            {!published && !canPublishResearchOutput && (
+            {!published && canReadyDraftForReview && (
               <div css={reviewButton}>
                 <Button
                   noMargin
@@ -224,7 +224,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         {displayModal && (
           <ConfirmModal
             title="Output Ready for PM Review?"
-            description="All team members listed on this output will be notified and PMs will be able to review and publish this output."
+            description={`All ${
+              association === 'working group' ? 'working group' : 'team'
+            } members listed on this output will be notified and PMs will be able to review and publish this output.`}
             cancelText="Cancel"
             confirmText="Ready for PM Review"
             onSave={() => {

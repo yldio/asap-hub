@@ -6,9 +6,8 @@ import {
   hasDuplicateResearchOutputPermission,
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
+  hasReadyDraftForReviewPermission,
   hasShareResearchOutputPermission,
-  isUserMember,
-  isUserProjectManager,
 } from '../../src/permissions/research-output';
 
 const user = createUserResponse();
@@ -89,141 +88,6 @@ describe.each`
   });
 });
 
-describe.each`
-  association        | associationId
-  ${`teams`}         | ${`team-1`}
-  ${`workingGroups`} | ${`wg-1`}
-`('For association - $association', ({ association, associationId }) => {
-  test(`isUserProjectManager returns true when user is Project Manager of ${association}`, () => {
-    expect(
-      isUserProjectManager(
-        {
-          ...user,
-          role: 'Grantee',
-          [association]: [
-            {
-              ...user[association][0],
-              id: associationId,
-              role: 'Project Manager',
-            },
-          ],
-        },
-        association,
-        [associationId],
-      ),
-    ).toEqual(true);
-  });
-
-  test(`isUserProjectManager returns false when user belongs to ${association} and they are not a PM`, () => {
-    expect(
-      isUserProjectManager(
-        {
-          ...user,
-          role: 'Grantee',
-          [association]: [
-            {
-              ...user[association][0],
-              id: associationId,
-              role: 'Collaborating PI',
-            },
-          ],
-        },
-        association,
-        [associationId],
-      ),
-    ).toEqual(false);
-  });
-
-  test(`isUserProjectManager returns false when user does not belong to ${association}`, () => {
-    expect(
-      isUserProjectManager(
-        {
-          ...user,
-          role: 'Grantee',
-          [association]: [
-            {
-              ...user[association][0],
-              id: associationId,
-              role: 'Collaborating PI',
-            },
-          ],
-        },
-        association,
-        ['does-not-belong'],
-      ),
-    ).toEqual(false);
-  });
-
-  test(`isUserMember returns false when user is Project Manager of ${association}`, () => {
-    expect(
-      isUserMember(
-        {
-          ...user,
-          role: 'Grantee',
-          [association]: [
-            {
-              ...user[association][0],
-              id: associationId,
-              role: 'Project Manager',
-            },
-          ],
-        },
-        association,
-        [associationId],
-      ),
-    ).toEqual(false);
-  });
-
-  test(`isUserMember returns false when user belongs to ${association} and they are not a PM`, () => {
-    expect(
-      isUserMember(
-        {
-          ...user,
-          role: 'Grantee',
-          [association]: [
-            {
-              ...user[association][0],
-              id: associationId,
-              role: 'Collaborating PI',
-            },
-          ],
-        },
-        association,
-        [associationId],
-      ),
-    ).toEqual(true);
-  });
-
-  test(`isUserMember returns false when user does not belong to ${association}`, () => {
-    expect(
-      isUserMember(
-        {
-          ...user,
-          role: 'Grantee',
-          [association]: [
-            {
-              ...user[association][0],
-              id: associationId,
-              role: 'Collaborating PI',
-            },
-          ],
-        },
-        association,
-        ['does-not-belong'],
-      ),
-    ).toEqual(false);
-  });
-
-  test(`isUserMember returns false when user data is null`, () => {
-    expect(isUserMember(null, association, [associationId])).toEqual(false);
-  });
-  test(`isUserProjectManager returns false when user data is null`, () => {
-    expect(isUserProjectManager(null, association, [associationId])).toEqual(
-      false,
-    );
-  });
-});
-
 describe('hasShareResearchOutputPermission', () => {
   test.each`
     userRole    | expected
@@ -261,6 +125,20 @@ describe('hasPublishResearchOutputPermission', () => {
     'returns $expected when user role is $userRole',
     ({ userRole, expected }) => {
       expect(hasPublishResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
+});
+
+describe('hasReadyDraftForReviewPermission', () => {
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${false}
+    ${`Member`} | ${true}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole',
+    ({ userRole, expected }) => {
+      expect(hasReadyDraftForReviewPermission(userRole)).toEqual(expected);
     },
   );
 });

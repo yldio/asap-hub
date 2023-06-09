@@ -9,6 +9,7 @@ import {
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
   hasDuplicateResearchOutputPermission,
+  hasReadyDraftForReviewPermission,
 } from '@asap-hub/validation';
 import { useCallback } from 'react';
 import {
@@ -232,5 +233,6 @@ export const useResearchOutputPermissions = (
     canDuplicateResearchOutput: hasDuplicateResearchOutputPermission(
       originalAssociationUserRole,
     ),
+    canReadyDraftForReview: hasReadyDraftForReviewPermission(userRole),
   };
 };

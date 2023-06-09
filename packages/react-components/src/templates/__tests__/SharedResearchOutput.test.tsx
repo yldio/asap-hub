@@ -544,13 +544,14 @@ describe('a newly published output', () => {
 });
 
 describe('the ready for pm review button', () => {
-  it('does not render for a PM or Staff', () => {
+  it('does not render if the user does not have ready for review permissions', () => {
     const { queryByText } = render(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: true,
           canPublishResearchOutput: true,
           canShareResearchOutput: true,
+          canReadyDraftForReview: false,
         }}
       >
         <SharedResearchOutput
@@ -570,6 +571,7 @@ describe('the ready for pm review button', () => {
           canEditResearchOutput: false,
           canPublishResearchOutput: false,
           canShareResearchOutput: true,
+          canReadyDraftForReview: true,
         }}
       >
         <SharedResearchOutput
@@ -582,13 +584,14 @@ describe('the ready for pm review button', () => {
     );
     expect(queryByText('Ready for PM Review.')).not.toBeInTheDocument();
   });
-  it('renders if user is not a PM and RO is draft', () => {
+  it('renders if user has ready for review permissions', () => {
     const { getByText } = render(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: false,
           canPublishResearchOutput: false,
           canShareResearchOutput: true,
+          canReadyDraftForReview: true,
         }}
       >
         <SharedResearchOutput
@@ -604,7 +607,7 @@ describe('the ready for pm review button', () => {
     expect(button).toBeVisible();
   });
   describe('displays the modal', () => {
-    it('and renders with the correct text fields', () => {
+    it('and renders with the correct text fields for a team research output', () => {
       const { getByText, getAllByText } = render(
         <MemoryRouter>
           <ResearchOutputPermissionsContext.Provider
@@ -612,12 +615,14 @@ describe('the ready for pm review button', () => {
               canEditResearchOutput: false,
               canPublishResearchOutput: false,
               canShareResearchOutput: true,
+              canReadyDraftForReview: true,
             }}
           >
             <SharedResearchOutput
               {...props}
               documentType="Article"
               published={false}
+              workingGroups={undefined}
             />
             ,
           </ResearchOutputPermissionsContext.Provider>
@@ -629,11 +634,46 @@ describe('the ready for pm review button', () => {
       expect(getByText('Output Ready for PM Review?')).toBeVisible();
       expect(
         getByText(
-          'All team members listed on this output will be notified and PMs will be able to review and publish this output.',
+          /All team members listed on this output will be notified and PMs will be able to review and publish this output./i,
         ),
       ).toBeVisible();
       expect(getByText('Cancel')).toBeVisible();
       expect(getAllByText('Ready for PM Review').length).toEqual(2);
+    });
+    it('and renders with the correct text fields for a working group research output', () => {
+      const { getByText } = render(
+        <MemoryRouter>
+          <ResearchOutputPermissionsContext.Provider
+            value={{
+              canEditResearchOutput: false,
+              canPublishResearchOutput: false,
+              canShareResearchOutput: true,
+              canReadyDraftForReview: true,
+            }}
+          >
+            <SharedResearchOutput
+              {...props}
+              documentType="Article"
+              published={false}
+              workingGroups={[
+                {
+                  id: 'wg1',
+                  title: 'wg 1',
+                },
+              ]}
+            />
+            ,
+          </ResearchOutputPermissionsContext.Provider>
+          ,
+        </MemoryRouter>,
+      );
+      const button = getByText('Ready for PM Review');
+      fireEvent.click(button);
+      expect(
+        getByText(
+          /All working group members listed on this output will be notified and PMs will be able to review and publish this output./i,
+        ),
+      ).toBeVisible();
     });
     it('and has the correct actions on the close and save buttons', () => {
       const { getByText, getAllByText, queryByText } = render(
@@ -643,6 +683,7 @@ describe('the ready for pm review button', () => {
               canEditResearchOutput: false,
               canPublishResearchOutput: false,
               canShareResearchOutput: true,
+              canReadyDraftForReview: true,
             }}
           >
             <SharedResearchOutput

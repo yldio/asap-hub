@@ -2,42 +2,9 @@ import { User } from '@asap-hub/auth';
 import { UserRole, UserResponse } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
-type user = Omit<User, 'algoliaApiKey'> | UserResponse;
-type association = 'teams' | 'workingGroups';
-
-export const isUserProjectManager = (
-  user: user | null,
-  association: association,
-  associationIds: string[],
-): boolean => {
-  if (user === null) {
-    return false;
-  }
-  return user[association].some(
-    (teamOrWorkingGroup) =>
-      associationIds?.includes(teamOrWorkingGroup.id) &&
-      teamOrWorkingGroup.role === 'Project Manager',
-  );
-};
-
-export const isUserMember = (
-  user: user | null,
-  association: association,
-  associationIds: string[],
-): boolean => {
-  if (user === null) {
-    return false;
-  }
-  return user[association].some(
-    (teamOrWorkingGroup) =>
-      associationIds?.includes(teamOrWorkingGroup.id) &&
-      teamOrWorkingGroup.role !== 'Project Manager',
-  );
-};
-
 export const getUserRole = (
-  user: user | null,
-  association: association,
+  user: Omit<User, 'algoliaApiKey'> | UserResponse | null,
+  association: 'teams' | 'workingGroups',
   associationIds: string[],
 ): UserRole => {
   if (user === null) {
@@ -48,16 +15,30 @@ export const getUserRole = (
     return 'Staff';
   }
 
-  if (isUserProjectManager(user, association, associationIds)) {
+  const isUserProjectManager = user[association].some(
+    (teamOrWorkingGroup) =>
+      associationIds?.includes(teamOrWorkingGroup.id) &&
+      teamOrWorkingGroup.role === 'Project Manager',
+  );
+
+  if (isUserProjectManager) {
     return 'Staff';
   }
 
-  if (isUserMember(user, association, associationIds)) {
+  const isUserMember = user[association].some((teamOrWorkingGroup) =>
+    associationIds.includes(teamOrWorkingGroup.id),
+  );
+
+  if (isUserMember) {
     return 'Member';
   }
 
   return 'None';
 };
+
+export const hasReadyDraftForReviewPermission = (
+  userRole: UserRole,
+): boolean => isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member';
 
 export const hasShareResearchOutputPermission = (userRole: UserRole): boolean =>
   userRole === 'Staff' ||

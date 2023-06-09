@@ -105,6 +105,7 @@ describe('outputs controller', () => {
 
   describe('Create method', () => {
     beforeEach(() => {
+      jest.resetAllMocks();
       outputDataProviderMock.fetch.mockResolvedValue({
         total: 0,
         items: [],
@@ -118,25 +119,6 @@ describe('outputs controller', () => {
       await expect(outputs.create(getOutputCreateData())).rejects.toThrow(
         GenericError,
       );
-    });
-
-    test('Should create the new output and return it', async () => {
-      const mockDate = new Date('2010-01-01');
-      jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-
-      const outputCreateData = getOutputCreateData();
-      const outputId = 'output-id-1';
-      outputDataProviderMock.create.mockResolvedValueOnce(outputId);
-
-      const result = await outputs.create(outputCreateData);
-
-      expect(result).toEqual(getOutputResponse());
-
-      const outputCreateDataObject = getOutputCreateDataObject();
-      expect(outputDataProviderMock.create).toBeCalledWith({
-        ...outputCreateDataObject,
-        addedDate: mockDate.toISOString(),
-      });
     });
 
     describe('Validating uniqueness', () => {
@@ -312,6 +294,25 @@ describe('outputs controller', () => {
             ],
           }),
         );
+      });
+    });
+
+    test('Should create the new output and return it', async () => {
+      const mockDate = new Date('2010-01-01');
+      jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+
+      const outputCreateData = getOutputCreateData();
+      const outputId = 'output-id-1';
+      outputDataProviderMock.create.mockResolvedValueOnce(outputId);
+
+      const result = await outputs.create(outputCreateData);
+
+      expect(result).toEqual(getOutputResponse());
+
+      const outputCreateDataObject = getOutputCreateDataObject();
+      expect(outputDataProviderMock.create).toBeCalledWith({
+        ...outputCreateDataObject,
+        addedDate: mockDate.toISOString(),
       });
     });
   });

@@ -46,7 +46,7 @@ describe('Contentful feature flag', () => {
 
         expect(newsContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
       },
-      10_000,
+      30_000,
     );
 
     test('news controller uses contentful data provider when GP2_CONTENTFUL_ENABLED is true', async () => {

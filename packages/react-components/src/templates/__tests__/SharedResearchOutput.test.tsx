@@ -544,14 +544,13 @@ describe('a newly published output', () => {
 });
 
 describe('the ready for pm review button', () => {
-  it('does not render for a PM', () => {
+  it('does not render for a PM or Staff', () => {
     const { queryByText } = render(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: true,
           canPublishResearchOutput: true,
           canShareResearchOutput: true,
-          userProjectManager: true,
         }}
       >
         <SharedResearchOutput
@@ -571,7 +570,6 @@ describe('the ready for pm review button', () => {
           canEditResearchOutput: false,
           canPublishResearchOutput: false,
           canShareResearchOutput: true,
-          userProjectManager: false,
         }}
       >
         <SharedResearchOutput
@@ -584,14 +582,13 @@ describe('the ready for pm review button', () => {
     );
     expect(queryByText('Ready for PM Review.')).not.toBeInTheDocument();
   });
-  it('renders if user is PM and RO is draft and shows the modal if clicked', () => {
+  it('renders if user is not a PM and RO is draft', () => {
     const { getByText } = render(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canEditResearchOutput: false,
           canPublishResearchOutput: false,
-          canShareResearchOutput: false,
-          userProjectManager: false,
+          canShareResearchOutput: true,
         }}
       >
         <SharedResearchOutput
@@ -614,8 +611,7 @@ describe('the ready for pm review button', () => {
             value={{
               canEditResearchOutput: false,
               canPublishResearchOutput: false,
-              canShareResearchOutput: false,
-              userProjectManager: false,
+              canShareResearchOutput: true,
             }}
           >
             <SharedResearchOutput
@@ -646,8 +642,7 @@ describe('the ready for pm review button', () => {
             value={{
               canEditResearchOutput: false,
               canPublishResearchOutput: false,
-              canShareResearchOutput: false,
-              userProjectManager: false,
+              canShareResearchOutput: true,
             }}
           >
             <SharedResearchOutput

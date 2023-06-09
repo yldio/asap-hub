@@ -123,7 +123,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const {
     canEditResearchOutput,
     canDuplicateResearchOutput,
-    userProjectManager,
+    canPublishResearchOutput,
   } = useContext(ResearchOutputPermissionsContext);
 
   const hasDescription = description || descriptionMD;
@@ -207,7 +207,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 </Link>
               </div>
             )}
-            {!published && !userProjectManager && (
+            {!published && !canPublishResearchOutput && (
               <div css={reviewButton}>
                 <Button
                   noMargin

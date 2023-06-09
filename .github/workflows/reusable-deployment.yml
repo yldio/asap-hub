@@ -234,6 +234,8 @@ jobs:
 
   crn-contentful-setup:
     needs: [crn-sls-deploy]
+    # Run for dev and prod, also run for branch-workflow but only when it has a dedicated environment
+    if: ${{ (inputs.environment-name == 'Branch' && inputs.crn-contentful-env != 'Development' &&  inputs.crn-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -262,7 +264,7 @@ jobs:
 
   crn-contentful-migrate:
     needs: [crn-sls-deploy]
-    # Run for branch-workflow only if the environment name is not that of dev or prod
+    # Run for dev and prod, also run for branch-workflow but only when it has a dedicated environment
     if: ${{ (inputs.environment-name == 'Branch' && inputs.crn-contentful-env != 'Development' &&  inputs.crn-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
@@ -289,6 +291,8 @@ jobs:
 
   gp2-contentful-setup:
     needs: [gp2-sls-deploy]
+    # Run for dev and prod, also run for branch-workflow but only when it has a dedicated environment
+    if: ${{ (inputs.environment-name == 'Branch' && inputs.gp2-contentful-env != 'Development' &&  inputs.gp2-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
@@ -317,7 +321,7 @@ jobs:
 
   gp2-contentful-migrate:
     needs: [gp2-sls-deploy]
-    # Run for branch-workflow only if the environment name is not that of dev or prod
+    # Run for dev and prod, also run for branch-workflow but only when it has a dedicated environment
     if: ${{ (inputs.environment-name == 'Branch' && inputs.gp2-contentful-env != 'Development' &&  inputs.gp2-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}

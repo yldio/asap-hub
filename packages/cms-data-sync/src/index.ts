@@ -1,4 +1,6 @@
 /* istanbul ignore file */
 import { runMigrations } from './run-migrations';
 
-runMigrations();
+const flags = process.argv.slice(2);
+
+runMigrations(flags);

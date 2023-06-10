@@ -6,7 +6,7 @@ import {
   hasDuplicateResearchOutputPermission,
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
-  hasReadyDraftForReviewPermission,
+  hasRequestForReviewPermission,
   hasShareResearchOutputPermission,
 } from '../../src/permissions/research-output';
 
@@ -129,7 +129,7 @@ describe('hasPublishResearchOutputPermission', () => {
   );
 });
 
-describe('hasReadyDraftForReviewPermission', () => {
+describe('hasRequestForReviewPermission', () => {
   test.each`
     userRole    | expected
     ${`Staff`}  | ${false}
@@ -138,7 +138,7 @@ describe('hasReadyDraftForReviewPermission', () => {
   `(
     'returns $expected when user role is $userRole',
     ({ userRole, expected }) => {
-      expect(hasReadyDraftForReviewPermission(userRole)).toEqual(expected);
+      expect(hasRequestForReviewPermission(userRole)).toEqual(expected);
     },
   );
 });

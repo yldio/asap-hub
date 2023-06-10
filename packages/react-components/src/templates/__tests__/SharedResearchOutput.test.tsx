@@ -551,7 +551,7 @@ describe('the ready for pm review button', () => {
           canEditResearchOutput: true,
           canPublishResearchOutput: true,
           canShareResearchOutput: true,
-          canReadyDraftForReview: false,
+          canRequestReview: false,
         }}
       >
         <SharedResearchOutput
@@ -571,7 +571,7 @@ describe('the ready for pm review button', () => {
           canEditResearchOutput: false,
           canPublishResearchOutput: false,
           canShareResearchOutput: true,
-          canReadyDraftForReview: true,
+          canRequestReview: true,
         }}
       >
         <SharedResearchOutput
@@ -591,7 +591,7 @@ describe('the ready for pm review button', () => {
           canEditResearchOutput: false,
           canPublishResearchOutput: false,
           canShareResearchOutput: true,
-          canReadyDraftForReview: true,
+          canRequestReview: true,
         }}
       >
         <SharedResearchOutput
@@ -615,7 +615,7 @@ describe('the ready for pm review button', () => {
               canEditResearchOutput: false,
               canPublishResearchOutput: false,
               canShareResearchOutput: true,
-              canReadyDraftForReview: true,
+              canRequestReview: true,
             }}
           >
             <SharedResearchOutput
@@ -648,7 +648,7 @@ describe('the ready for pm review button', () => {
               canEditResearchOutput: false,
               canPublishResearchOutput: false,
               canShareResearchOutput: true,
-              canReadyDraftForReview: true,
+              canRequestReview: true,
             }}
           >
             <SharedResearchOutput
@@ -683,7 +683,7 @@ describe('the ready for pm review button', () => {
               canEditResearchOutput: false,
               canPublishResearchOutput: false,
               canShareResearchOutput: true,
-              canReadyDraftForReview: true,
+              canRequestReview: true,
             }}
           >
             <SharedResearchOutput

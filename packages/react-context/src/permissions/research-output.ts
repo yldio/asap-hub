@@ -5,7 +5,7 @@ export type ResearchOutputPermissions = {
   canEditResearchOutput?: boolean;
   canPublishResearchOutput?: boolean;
   canDuplicateResearchOutput?: boolean;
-  canReadyDraftForReview?: boolean;
+  canRequestReview?: boolean;
 };
 
 export const ResearchOutputPermissionsContext =
@@ -14,7 +14,7 @@ export const ResearchOutputPermissionsContext =
     canEditResearchOutput: false,
     canPublishResearchOutput: false,
     canDuplicateResearchOutput: false,
-    canReadyDraftForReview: false,
+    canRequestReview: false,
   });
 
 export const useResearchOutputPermissionsContext =

@@ -1,7 +1,12 @@
 import * as gqlRequest from 'graphql-request';
 import * as contentfulManagement from 'contentful-management';
 import * as contentfulDeliveryApi from 'contentful';
-import { getGraphQLClient, getRestClient, getCDAClient } from '../src/client';
+import {
+  getGraphQLClient,
+  getRestClient,
+  getCDAClient,
+  getCPAClient,
+} from '../src/client';
 
 jest.mock('contentful-management');
 const mockContentfulManagement = contentfulManagement as jest.Mocked<
@@ -82,6 +87,27 @@ describe('getCDAClient', () => {
       space: spaceId,
       accessToken,
       environment: environmentId,
+    });
+  });
+});
+
+describe('getCPAClient', () => {
+  it('should create a client', () => {
+    const previewAccessToken = 'token';
+    const spaceId = 'space-id';
+    const environmentId = 'env-id';
+
+    getCPAClient({
+      space: spaceId,
+      previewAccessToken,
+      environment: environmentId,
+    });
+
+    expect(contentfulDeliveryApi.createClient).toHaveBeenCalledWith({
+      space: spaceId,
+      accessToken: previewAccessToken,
+      environment: environmentId,
+      host: 'preview.contentful.com',
     });
   });
 });

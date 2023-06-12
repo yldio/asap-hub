@@ -50,6 +50,9 @@ on:
       GP2_CONTENTFUL_ACCESS_TOKEN:
         description: 'GP2 Contentful Access Token'
         required: true
+      GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN:
+        description: 'GP2 Contentful Preview Access Token'
+        required: true
       GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
         description: 'GP2 Contentful Webhook Authentication Token'
         required: true
@@ -125,6 +128,7 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
           gp2-contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
+          gp2-contentful-preview-access-token: ${{ secrets.GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
           gp2-contentful-env: ${{ inputs.gp2-contentful-env }}
           gp2-contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           gp2-contentful-webhook-authentication-token: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}

@@ -49,7 +49,7 @@ export const usersContentQueryFragment = gql`
     avatar {
       url
     }
-    teamsCollection(limit: 100) {
+    teamsCollection(limit: 30) {
       items {
         team {
           sys {
@@ -57,6 +57,17 @@ export const usersContentQueryFragment = gql`
           }
           displayName
           inactiveSince
+          linkedFrom {
+            interestGroupsCollection(limit: 10) {
+              items {
+                sys {
+                  id
+                }
+                active
+                name
+              }
+            }
+          }
         }
         role
         inactiveSinceDate
@@ -68,6 +79,62 @@ export const usersContentQueryFragment = gql`
           id
         }
         name
+      }
+    }
+    linkedFrom {
+      workingGroupMembersCollection(limit: 10) {
+        items {
+          inactiveSinceDate
+          linkedFrom {
+            workingGroupsCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                }
+                title
+                complete
+              }
+            }
+          }
+          user {
+            lastName
+          }
+        }
+      }
+      workingGroupLeadersCollection(limit: 10) {
+        items {
+          role
+          inactiveSinceDate
+          linkedFrom {
+            workingGroupsCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                }
+                title
+                complete
+              }
+            }
+          }
+          user {
+            lastName
+          }
+        }
+      }
+      interestGroupLeadersCollection(limit: 10) {
+        items {
+          linkedFrom {
+            interestGroupsCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                }
+                active
+                name
+              }
+            }
+          }
+        }
       }
     }
   }

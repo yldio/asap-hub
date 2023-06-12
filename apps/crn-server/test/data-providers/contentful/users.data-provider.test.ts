@@ -51,7 +51,35 @@ describe('User data provider', () => {
           contentfulRestClientMock,
         );
       const result = await userDataProviderWithMockServer.fetchById('123');
-      const expectation = getUserDataObject();
+      const expectation = {
+        ...getUserDataObject(),
+        workingGroups: [
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Project Manager',
+          },
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Member',
+          },
+        ],
+        interestGroups: [
+          {
+            active: true,
+            id: 'ig-1',
+            name: 'interest-group-1',
+          },
+          {
+            active: false,
+            id: 'ig-2',
+            name: 'interest-group-2',
+          },
+        ],
+      };
       // TODO: team proposal
       expectation.teams[0]!.proposal = undefined;
       expect(result).toEqual(expectation);
@@ -100,6 +128,11 @@ describe('User data provider', () => {
                     id: '2',
                   },
                   displayName: 'Good team',
+                  linkedFrom: {
+                    interestGroupsCollection: {
+                      items: [],
+                    },
+                  },
                 },
               },
             ],
@@ -337,7 +370,35 @@ describe('User data provider', () => {
           contentfulRestClientMock,
         );
       const result = await userDataProviderWithMockServer.fetch({});
-      const expectation = getUserDataObject();
+      const expectation = {
+        ...getUserDataObject(),
+        workingGroups: [
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Project Manager',
+          },
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Member',
+          },
+        ],
+        interestGroups: [
+          {
+            active: true,
+            id: 'ig-1',
+            name: 'interest-group-1',
+          },
+          {
+            active: false,
+            id: 'ig-2',
+            name: 'interest-group-2',
+          },
+        ],
+      };
       // TODO: team proposal
       expectation.teams[0]!.proposal = undefined;
       expect(result.total).toEqual(1);

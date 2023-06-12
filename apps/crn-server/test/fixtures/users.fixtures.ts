@@ -791,6 +791,10 @@ export const getInputUser = (): InputUser['data'] => ({
 export const getContentfulGraphql = (props = {}) => {
   return {
     Users: () => getContentfulGraphqlUser(props),
+    InterestGroupsCollection: () => getInterestGroupsCollection(),
+    WorkingGroupMembersCollection: () => getWorkingGroupMembersCollection(),
+    WorkingGroupLeadersCollection: () => getWorkingGroupLeadersCollection(),
+    WorkingGroupsCollection: () => getWorkingGroupCollection(),
   };
 };
 
@@ -869,9 +873,16 @@ export const getContentfulGraphqlUser = (
             id: 'team-id-0',
           },
           displayName: 'Team A',
+          linkedFrom: {
+            interestGroupsCollection: getInterestGroupsCollection(),
+          },
         },
       },
     ],
+  },
+  linkedFrom: {
+    workingGroupMembersCollection: getWorkingGroupMembersCollection(),
+    workingGroupLeadersCollection: getWorkingGroupLeadersCollection(),
   },
   ...props,
 });
@@ -882,4 +893,71 @@ export const getContentfulRestUser = () => ({
     Promise.resolve({
       publish: jest.fn(),
     }),
+});
+
+const getInterestGroupsCollection = () => ({
+  items: [
+    { sys: { id: 'ig-1' }, name: 'interest-group-1', active: true },
+    { sys: { id: 'ig-2' }, name: 'interest-group-2', active: false },
+  ],
+});
+const getWorkingGroupMembersCollection = () => ({
+  items: [
+    {
+      inactiveSinceDate: '',
+      linkedFrom: {
+        workingGroupsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'wg-1',
+              },
+              title: 'working-group-1',
+              complete: false,
+            },
+          ],
+        },
+      },
+      user: {
+        lastName: 'simpson',
+      },
+    },
+  ],
+});
+
+const getWorkingGroupLeadersCollection = () => ({
+  items: [
+    {
+      inactiveSinceDate: '',
+      role: 'Project Manager',
+      linkedFrom: {
+        workingGroupsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'wg-1',
+              },
+              title: 'working-group-1',
+              complete: false,
+            },
+          ],
+        },
+      },
+      user: {
+        lastName: 'simpson',
+      },
+    },
+  ],
+});
+
+const getWorkingGroupCollection = () => ({
+  items: [
+    {
+      sys: {
+        id: 'wg-1',
+      },
+      title: 'working-group-1',
+      complete: true,
+    },
+  ],
 });

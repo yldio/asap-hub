@@ -18,7 +18,7 @@ const mockCreateAssetUrl = createUrlFactory({
 });
 
 jest.mock('../../src/utils/setup');
-jest.mock('../../src/utils/assets');
+jest.mock('../../src/utils/assets-and-media');
 jest.mock('../../src/utils/entries');
 
 createAssetUrl.mockImplementation(mockCreateAssetUrl);

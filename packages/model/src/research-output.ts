@@ -226,6 +226,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
       'id' | 'title' | 'type' | 'documentType' | 'teams'
     > & { isOwnRelatedResearchLink?: boolean }
   >;
+  reviewRequestedBy?: string;
 };
 
 export type ResearchOutputDraftDataObject = Omit<
@@ -279,6 +280,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   updatedBy: string;
   workingGroups: string[];
   relatedResearchIds?: string[];
+  reviewRequestedBy?: string;
 };
 
 export type ResearchOutputBaseResponse = Omit<

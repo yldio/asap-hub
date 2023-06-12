@@ -81,7 +81,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       skip,
       where: where.length ? { AND: where } : {},
       preview: includeDrafts === true,
-      order: [gp2Contentful.OutputsOrder.AddedDateAsc],
+      order: [gp2Contentful.OutputsOrder.AddedDateDesc],
     });
     return outputsCollection;
   }

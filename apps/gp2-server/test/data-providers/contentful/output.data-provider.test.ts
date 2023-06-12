@@ -439,7 +439,7 @@ describe('Outputs data provider', () => {
         skip: 0,
         where: {},
         preview: false,
-        order: [gp2Contentful.OutputsOrder.AddedDateAsc],
+        order: [gp2Contentful.OutputsOrder.AddedDateDesc],
       };
 
       beforeEach(() => {

@@ -223,7 +223,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         )}
         {displayModal && (
           <ConfirmModal
-            title="Output Ready for PM Review?"
+            title="Output ready for PM review?"
             description={`All ${
               association === 'working group' ? 'working group' : 'team'
             } members listed on this output will be notified and PMs will be able to review and publish this output.`}

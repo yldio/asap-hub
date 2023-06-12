@@ -631,7 +631,7 @@ describe('the ready for pm review button', () => {
       );
       const button = getByText('Ready for PM Review');
       fireEvent.click(button);
-      expect(getByText('Output Ready for PM Review?')).toBeVisible();
+      expect(getByText('Output ready for PM review?')).toBeVisible();
       expect(
         getByText(
           /All team members listed on this output will be notified and PMs will be able to review and publish this output./i,
@@ -698,11 +698,11 @@ describe('the ready for pm review button', () => {
       );
       const showModalButton = getByText('Ready for PM Review');
       fireEvent.click(showModalButton);
-      expect(queryByText('Output Ready for PM Review?')).toBeInTheDocument();
+      expect(queryByText('Output ready for PM review?')).toBeInTheDocument();
       const closeButton = getByText('Cancel');
       fireEvent.click(closeButton);
       expect(
-        queryByText('Output Ready for PM Review?'),
+        queryByText('Output ready for PM review?'),
       ).not.toBeInTheDocument();
       fireEvent.click(showModalButton);
       const saveButton = getAllByText('Ready for PM Review')[1];

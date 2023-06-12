@@ -161,6 +161,23 @@ describe('Migrations', () => {
     console.log = consoleLogRef;
   });
 
+  it('runs only a subset of migrations if flags are passed', async () => {
+    spaceMock.getWebhooks.mockResolvedValue({
+      items: [],
+    } as unknown as Collection<WebHooks, WebhookProps>);
+
+    await runMigrations('--teams');
+
+    expect(migrateTeams).toHaveBeenCalled();
+    expect(migrateExternalAuthors).not.toHaveBeenCalled();
+    expect(migrateCalendars).not.toHaveBeenCalled();
+    expect(migrateLabs).not.toHaveBeenCalled();
+    expect(migrateUsers).not.toHaveBeenCalled();
+    expect(migrateInterestGroups).not.toHaveBeenCalled();
+    expect(migrateWorkingGroups).not.toHaveBeenCalled();
+    expect(migrateTutorials).not.toHaveBeenCalled();
+  });
+
   it('deactivates webhook and activates it again after running the migrations', async () => {
     const mockedTestEnvSetter = jest.fn();
     const testEnvWebhook = {

@@ -12,7 +12,23 @@ import { migrateTutorials } from './tutorials/tutorials.data-migration';
 import { logger } from './utils';
 import { contentfulRateLimiter } from './contentful-rate-limiter';
 
-export const runMigrations = async () => {
+export const models = [
+  'teams',
+  'externalAuthors',
+  'calendars',
+  'labs',
+  'users',
+  'events',
+  'interestGroups',
+  'workingGroups',
+  'tutorials',
+];
+
+type ModelName = (typeof models)[number];
+
+export type Flag = `--${ModelName}`;
+
+export const runMigrations = async (flags: Flag[] = []) => {
   const {
     CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
     CONTENTFUL_SPACE_ID,
@@ -22,6 +38,9 @@ export const runMigrations = async () => {
   const contentfulClient = createClient({
     accessToken: CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!,
   });
+
+  const hasFlag = (flag: ModelName): boolean =>
+    flags.length === 0 || flags.includes(`--${flag}`);
 
   const contentfulSpace = await contentfulClient.getSpace(CONTENTFUL_SPACE_ID!);
 
@@ -58,24 +77,24 @@ export const runMigrations = async () => {
 
   let error;
   try {
-    await migrateTeams();
-    await migrateExternalAuthors();
-    await migrateCalendars();
-    await migrateLabs();
+    if (hasFlag('teams')) await migrateTeams();
+    if (hasFlag('externalAuthors')) await migrateExternalAuthors();
+    if (hasFlag('calendars')) await migrateCalendars();
+    if (hasFlag('labs')) await migrateLabs();
 
     // needs: teams, labs
-    await migrateUsers();
+    if (hasFlag('users')) await migrateUsers();
 
     // needs: teams, users, external authors, calendars
-    await migrateEvents();
+    if (hasFlag('events')) await migrateEvents();
 
     // needs: teams, users, calendars
-    await migrateInterestGroups();
+    if (hasFlag('interestGroups')) await migrateInterestGroups();
 
     // needs: users, calendars
-    await migrateWorkingGroups();
+    if (hasFlag('workingGroups')) await migrateWorkingGroups();
 
-    await migrateTutorials();
+    if (hasFlag('tutorials')) await migrateTutorials();
   } catch (err) {
     error = err;
     logger('Error migrating data', 'ERROR');

@@ -62,7 +62,10 @@ export const createAndPublishIfNonExistent = async (
     id: string,
   ) => Promise<boolean>,
   createFn: () => Promise<ContentfulAsset> | Promise<Entry>,
-  handleErrorFn: (contentfulEnvironment: Environment, id: string) => void,
+  handleErrorFn: (
+    contentfulEnvironment: Environment,
+    id: string,
+  ) => Promise<void>,
 ) => {
   const isAlreadyInContentful = await checkIfExistsFn(
     contentfulEnvironment,
@@ -79,7 +82,7 @@ export const createAndPublishIfNonExistent = async (
       if (error instanceof Error) {
         const errorParsed = JSON.parse(error?.message);
         if (errorParsed.status === 409) {
-          handleErrorFn(contentfulEnvironment, id);
+          await handleErrorFn(contentfulEnvironment, id);
           return;
         }
       }

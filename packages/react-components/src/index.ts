@@ -4,6 +4,7 @@ import * as pixels from './pixels';
 import * as text from './text';
 import * as utils from './utils';
 
+export * from './button';
 export * from './appearance';
 export {
   accents,

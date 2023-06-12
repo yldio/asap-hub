@@ -36,6 +36,9 @@ export const getUserRole = (
   return 'None';
 };
 
+export const hasRequestForReviewPermission = (userRole: UserRole): boolean =>
+  isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member';
+
 export const hasShareResearchOutputPermission = (userRole: UserRole): boolean =>
   userRole === 'Staff' ||
   (isEnabled('DRAFT_RESEARCH_OUTPUT') && userRole === 'Member');

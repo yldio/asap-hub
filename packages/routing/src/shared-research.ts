@@ -1,4 +1,4 @@
-import { route, stringParser } from 'typesafe-routes';
+import { booleanParser, route, stringParser } from 'typesafe-routes';
 
 const editResearchOutput = route(
   '/edit',
@@ -12,8 +12,11 @@ const researchOutputPublished = route(
 );
 
 const researchOutput = route(
-  '/:researchOutputId',
-  { researchOutputId: stringParser },
+  '/:researchOutputId&:draftCreated?',
+  {
+    researchOutputId: stringParser,
+    draftCreated: booleanParser,
+  },
   { editResearchOutput, researchOutputPublished },
 );
 

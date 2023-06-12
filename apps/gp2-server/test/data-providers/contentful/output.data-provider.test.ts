@@ -30,15 +30,17 @@ jest.mock('@asap-hub/contentful', () => ({
 }));
 
 describe('Outputs data provider', () => {
-  const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
+  const graphqlClientMock = getContentfulGraphqlClientMock();
+  const previewGraphqlClientMock = getContentfulGraphqlClientMock();
   const environmentMock = getContentfulEnvironmentMock();
-  const contentfulRestClientMock: () => Promise<Environment> = () =>
+  const restClientMock: () => Promise<Environment> = () =>
     Promise.resolve(environmentMock);
 
   const outputDataProvider: OutputDataProvider =
     new OutputContentfulDataProvider(
-      contentfulGraphqlClientMock,
-      contentfulRestClientMock,
+      graphqlClientMock,
+      previewGraphqlClientMock,
+      restClientMock,
     );
   const contentfulGraphqlClientMockServer =
     getGP2ContentfulGraphqlClientMockServer({
@@ -47,7 +49,8 @@ describe('Outputs data provider', () => {
   const outputDataProviderWithMockServer: OutputDataProvider =
     new OutputContentfulDataProvider(
       contentfulGraphqlClientMockServer,
-      contentfulRestClientMock,
+      contentfulGraphqlClientMockServer,
+      restClientMock,
     );
 
   beforeEach(jest.resetAllMocks);
@@ -61,7 +64,7 @@ describe('Outputs data provider', () => {
       expect(result).toMatchObject(getOutputDataObject());
     });
     test('Should return null when the output is not found', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+      graphqlClientMock.request.mockResolvedValueOnce({
         outputs: null,
       });
 
@@ -70,7 +73,7 @@ describe('Outputs data provider', () => {
 
     test('should return the output', async () => {
       const graphqlResponse = getContentfulGraphqlOutput();
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+      graphqlClientMock.request.mockResolvedValueOnce({
         outputs: graphqlResponse,
       });
 
@@ -84,7 +87,7 @@ describe('Outputs data provider', () => {
       test('should return when the document type is null', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         graphqlResponse!.documentType = null;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
 
@@ -97,7 +100,7 @@ describe('Outputs data provider', () => {
         async (type) => {
           const graphqlResponse = getContentfulGraphqlOutput();
           graphqlResponse!.documentType = type;
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          graphqlClientMock.request.mockResolvedValueOnce({
             outputs: graphqlResponse,
           });
           const result = await outputDataProvider.fetchById(outputId);
@@ -110,7 +113,7 @@ describe('Outputs data provider', () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         graphqlResponse!.documentType = 'Article';
         graphqlResponse!.type = null;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
 
@@ -124,7 +127,7 @@ describe('Outputs data provider', () => {
           const graphqlResponse = getContentfulGraphqlOutput();
           graphqlResponse!.documentType = 'Article';
           graphqlResponse!.type = type;
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          graphqlClientMock.request.mockResolvedValueOnce({
             outputs: graphqlResponse,
           });
           const result = await outputDataProvider.fetchById(outputId);
@@ -138,7 +141,7 @@ describe('Outputs data provider', () => {
         async (type) => {
           const graphqlResponse = getContentfulGraphqlOutput();
           graphqlResponse!.documentType = type;
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          graphqlClientMock.request.mockResolvedValueOnce({
             outputs: graphqlResponse,
           });
           const result = await outputDataProvider.fetchById(outputId);
@@ -153,7 +156,7 @@ describe('Outputs data provider', () => {
         graphqlResponse!.documentType = 'Article';
         graphqlResponse!.type = 'Research';
         graphqlResponse!.subtype = type;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
         const result = await outputDataProvider.fetchById(outputId);
@@ -165,7 +168,7 @@ describe('Outputs data provider', () => {
       graphqlResponse!.documentType = 'Article';
       graphqlResponse!.type = 'Research';
       graphqlResponse!.subtype = null;
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+      graphqlClientMock.request.mockResolvedValueOnce({
         outputs: graphqlResponse,
       });
 
@@ -177,7 +180,7 @@ describe('Outputs data provider', () => {
     test('Should default authors to an empty array when missing', async () => {
       const graphqlResponse = getContentfulGraphqlOutput();
       graphqlResponse!.authorsCollection = null;
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+      graphqlClientMock.request.mockResolvedValueOnce({
         outputs: graphqlResponse,
       });
 
@@ -219,7 +222,7 @@ describe('Outputs data provider', () => {
           total: 3,
           items: [user1!, externalUser, user2!],
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
 
@@ -249,7 +252,7 @@ describe('Outputs data provider', () => {
           total: 2,
           items: [user1!, user2!],
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
 
@@ -274,7 +277,7 @@ describe('Outputs data provider', () => {
           total: 1,
           items: [user1!],
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
 
@@ -294,7 +297,7 @@ describe('Outputs data provider', () => {
       test('Should default to publishedAt if the last-updated-partial is not present', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         delete graphqlResponse!.lastUpdatedPartial;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
 
@@ -309,7 +312,7 @@ describe('Outputs data provider', () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         delete graphqlResponse!.lastUpdatedPartial;
         delete graphqlResponse.sys.publishedAt;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
 
@@ -330,7 +333,7 @@ describe('Outputs data provider', () => {
           },
           title: 'a project',
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
         const result = await outputDataProvider.fetchById(outputId);
@@ -350,7 +353,7 @@ describe('Outputs data provider', () => {
           },
           title: 'a working group',
         };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
         const result = await outputDataProvider.fetchById(outputId);
@@ -364,7 +367,7 @@ describe('Outputs data provider', () => {
       it('should return empty if undefined', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
         graphqlResponse!.relatedEntity = null;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
         const result = await outputDataProvider.fetchById(outputId);
@@ -386,9 +389,7 @@ describe('Outputs data provider', () => {
       const graphqlResponse = getContentfulOutputsGraphqlResponse();
       graphqlResponse.outputsCollection!.total = 0;
       graphqlResponse.outputsCollection!.items = [];
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        graphqlResponse,
-      );
+      graphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
 
       const result = await outputDataProvider.fetch({
         take: 10,
@@ -401,9 +402,7 @@ describe('Outputs data provider', () => {
     test('Should return an empty result when the client returns a response with query property set to null', async () => {
       const graphqlResponse = getContentfulOutputsGraphqlResponse();
       graphqlResponse.outputsCollection = null;
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-        graphqlResponse,
-      );
+      graphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
 
       const result = await outputDataProvider.fetch({
         take: 10,
@@ -419,9 +418,7 @@ describe('Outputs data provider', () => {
         const graphqlResponse = getContentfulOutputsGraphqlResponse();
         graphqlResponse.outputsCollection!.items![0]!.documentType =
           documentType;
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          graphqlResponse,
-        );
+        graphqlClientMock.request.mockResolvedValueOnce(graphqlResponse);
 
         const result = await outputDataProvider.fetch({
           take: 10,
@@ -446,7 +443,8 @@ describe('Outputs data provider', () => {
       };
 
       beforeEach(() => {
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        jest.resetAllMocks();
+        graphqlClientMock.request.mockResolvedValueOnce(
           getContentfulOutputsGraphqlResponse(),
         );
       });
@@ -454,7 +452,8 @@ describe('Outputs data provider', () => {
       test('Should pass the pagination parameters as expected', async () => {
         await outputDataProvider.fetch({ take: 13, skip: 7 });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(previewGraphqlClientMock.request).not.toHaveBeenCalled();
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
@@ -465,13 +464,17 @@ describe('Outputs data provider', () => {
       });
 
       test('Should allow for draft outputs to be returned', async () => {
+        previewGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulOutputsGraphqlResponse(),
+        );
         await outputDataProvider.fetch({
           take: 13,
           skip: 7,
           includeDrafts: true,
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).not.toHaveBeenCalled();
+        expect(previewGraphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
@@ -488,7 +491,7 @@ describe('Outputs data provider', () => {
           search: 'Title',
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
@@ -508,7 +511,7 @@ describe('Outputs data provider', () => {
           },
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
@@ -528,7 +531,7 @@ describe('Outputs data provider', () => {
           },
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
@@ -551,7 +554,7 @@ describe('Outputs data provider', () => {
           },
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
@@ -571,7 +574,7 @@ describe('Outputs data provider', () => {
           search: 'some words',
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
@@ -593,7 +596,7 @@ describe('Outputs data provider', () => {
           },
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
@@ -611,7 +614,7 @@ describe('Outputs data provider', () => {
           },
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS_BY_WORKING_GROUP_ID,
           {
             limit: 8,
@@ -628,7 +631,7 @@ describe('Outputs data provider', () => {
           },
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS_BY_PROJECT_ID,
           {
             limit: 8,
@@ -645,7 +648,7 @@ describe('Outputs data provider', () => {
           },
         });
 
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS_BY_USER_ID,
           {
             limit: 8,
@@ -789,7 +792,7 @@ describe('Outputs data provider', () => {
           publishedVersion: 2,
         },
       } as Entry);
-      contentfulGraphqlClientMock.request.mockResolvedValue({
+      graphqlClientMock.request.mockResolvedValue({
         outputs: {
           sys: {
             publishedVersion: 2,

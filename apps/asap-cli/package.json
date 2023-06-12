@@ -46,7 +46,7 @@
     "@babel/plugin-transform-runtime": "7.21.4",
     "@babel/runtime-corejs3": "7.21.0",
     "@types/apr-intercept": "workspace:*",
-    "@types/babel__core": "7.20.0",
+    "@types/babel__core": "7.20.1",
     "@types/hapi__boom": "9.0.1",
     "@types/jest": "^29.4.0",
     "@types/jwt-decode": "2.2.1",

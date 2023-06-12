@@ -2,6 +2,7 @@ import {
   activeUserTag,
   FetchUsersOptions,
   inactiveUserTag,
+  InterestGroupMembership,
   isUserDegree,
   isUserRole,
   LabResponse,
@@ -11,6 +12,7 @@ import {
   UserSocialLinks,
   UserTeam,
   UserUpdateDataObject,
+  WorkingGroupMembership,
 } from '@asap-hub/model';
 
 import {
@@ -44,6 +46,22 @@ export type UserItem = NonNullable<
 export type TeamMembership = NonNullable<
   NonNullable<UserItem['teamsCollection']>['items'][number]
 >;
+export type GroupMemberItem = NonNullable<
+  NonNullable<
+    NonNullable<UserItem['linkedFrom']>['workingGroupMembersCollection']
+  >['items'][number]
+>;
+export type GroupLeaderItem = NonNullable<
+  NonNullable<
+    NonNullable<UserItem['linkedFrom']>['workingGroupLeadersCollection']
+  >['items'][number]
+>;
+
+export type InterestGroupItem = NonNullable<
+  NonNullable<
+    NonNullable<TeamMembership['team']>['linkedFrom']
+  >['interestGroupsCollection']
+>['items'][number];
 
 type OrcidWorkContentful = {
   id: string;
@@ -261,13 +279,32 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     item.orcidWorks || [],
   );
 
+  const isAlumni = !!item.alumniSinceDate;
+
+  const workingGroups = [
+    ...parseToWorkingGroup(
+      (item?.linkedFrom?.workingGroupLeadersCollection
+        ?.items as GroupLeaderItem[]) || [],
+      isAlumni,
+    ),
+    ...parseToWorkingGroup(
+      (item.linkedFrom?.workingGroupMembersCollection
+        ?.items as GroupMemberItem[]) || [],
+      isAlumni,
+    ),
+  ];
+
+  const interestGroups = parseToInterestGroups(
+    (item.teamsCollection?.items as TeamMembership[]) || [],
+  );
+
   return {
     id: item.sys.id,
     _tags: [item.alumniSinceDate ? inactiveUserTag : activeUserTag],
     createdDate: item.createdDate || item.sys.firstPublishedAt,
     lastModifiedDate: item.sys.publishedAt,
-    workingGroups: [],
-    interestGroups: [],
+    workingGroups,
+    interestGroups,
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : undefined,
     email: item.email ?? '',
     contactEmail: item.contactEmail ?? undefined,
@@ -340,3 +377,41 @@ const parseOrcidWorksContentful = (
     throw new Error(`Invalid ORCID works content data: ${e}`);
   }
 };
+
+const parseToWorkingGroup = (
+  users: (GroupMemberItem | GroupLeaderItem)[],
+  isAlumni: boolean,
+): WorkingGroupMembership[] =>
+  users.reduce(
+    (
+      workingGroups: WorkingGroupMembership[],
+      user: GroupMemberItem | GroupLeaderItem,
+    ) => {
+      const workingGroup = user.linkedFrom?.workingGroupsCollection?.items[0];
+      const isInActive = !!user.inactiveSinceDate;
+
+      workingGroups.push({
+        id: workingGroup?.sys.id,
+        name: workingGroup?.title,
+        role: (user as GroupLeaderItem).role || 'Member',
+        active: workingGroup?.complete ? false : !isAlumni && !isInActive,
+      } as WorkingGroupMembership);
+
+      return workingGroups;
+    },
+    [],
+  );
+
+const parseToInterestGroups = (teams: TeamMembership[]) =>
+  teams
+    .filter((t) => !!t)
+    .flatMap(({ team }) =>
+      (team?.linkedFrom?.interestGroupsCollection?.items || []).map(
+        (group: InterestGroupItem) =>
+          ({
+            id: group?.sys.id,
+            name: group?.name,
+            active: group?.active,
+          } as InterestGroupMembership),
+      ),
+    );

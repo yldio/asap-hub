@@ -57,6 +57,17 @@ export const usersContentQueryFragment = gql`
           }
           displayName
           inactiveSince
+          linkedFrom {
+            interestGroupsCollection {
+              items {
+                sys {
+                  id
+                }
+                active
+                name
+              }
+            }
+          }
         }
         role
         inactiveSinceDate
@@ -68,6 +79,47 @@ export const usersContentQueryFragment = gql`
           id
         }
         name
+      }
+    }
+    linkedFrom {
+      workingGroupMembersCollection(limit: 100) {
+        items {
+          inactiveSinceDate
+          linkedFrom {
+            workingGroupsCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                }
+                title
+                complete
+              }
+            }
+          }
+          user {
+            lastName
+          }
+        }
+      }
+      workingGroupLeadersCollection(limit: 100) {
+        items {
+          role
+          inactiveSinceDate
+          linkedFrom {
+            workingGroupsCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                }
+                title
+                complete
+              }
+            }
+          }
+          user {
+            lastName
+          }
+        }
       }
     }
   }

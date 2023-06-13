@@ -5,6 +5,7 @@ import {
   hasDuplicateResearchOutputPermission,
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
+  hasRequestForReviewPermission,
   hasShareResearchOutputPermission,
 } from '../../permissions/research-output';
 
@@ -132,6 +133,20 @@ describe('hasPublishResearchOutputPermission', () => {
     'returns $expected when user role is $userRole',
     ({ userRole, expected }) => {
       expect(hasPublishResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
+});
+
+describe('hasRequestForReviewPermission', () => {
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${false}
+    ${`Member`} | ${true}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole',
+    ({ userRole, expected }) => {
+      expect(hasRequestForReviewPermission(userRole)).toEqual(expected);
     },
   );
 });

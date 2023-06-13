@@ -5,9 +5,8 @@ import {
   parseAssets,
   parseIFrames,
 } from 'contentful-html-rich-text-converter';
-import { createInlineAssets } from './assets';
+import { createInlineAssets, createMediaEntries } from '.';
 import { logger } from './logs';
-import { createMediaEntries } from './media';
 
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
   ...htmlDocument,

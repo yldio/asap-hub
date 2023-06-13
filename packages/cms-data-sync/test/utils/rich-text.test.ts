@@ -3,11 +3,9 @@ import {
   convertHtmlToContentfulFormat,
   createDocumentIfNeeded,
 } from '../../src/utils';
-import { createInlineAssets } from '../../src/utils/assets';
-import { createMediaEntries } from '../../src/utils/media';
+import { createInlineAssets, createMediaEntries } from '../../src/utils';
 
-jest.mock('../../src/utils/assets');
-jest.mock('../../src/utils/media');
+jest.mock('../../src/utils/assets-and-media');
 
 describe('convertHtmlToContentfulFormat', () => {
   it('converts simple html to contentful expected rich text format properly', () => {

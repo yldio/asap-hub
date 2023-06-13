@@ -315,11 +315,21 @@ const generateFetchQueryFilter = (
     hidden = true,
   } = filter || {};
 
-  const filterCode = code ? { connections_contains_all: [code] } : {};
-  const filterHidden = hidden ? { role_not: 'Hidden' } : {};
-  const filterNonOnboarded = onlyOnboarded ? { onboarded: true } : {};
-  const filterRegions = regions ? { regions_in: regions } : {};
-  const filterKeywords = keywords ? { keywords_in: keywords } : {};
+  const filterCode: gp2Contentful.UsersFilter = code
+    ? { connections_contains_all: [code] }
+    : {};
+  const filterHidden: gp2Contentful.UsersFilter = hidden
+    ? { role_not: 'Hidden' }
+    : {};
+  const filterNonOnboarded: gp2Contentful.UsersFilter = onlyOnboarded
+    ? { onboarded: true }
+    : {};
+  const filterRegions: gp2Contentful.UsersFilter = regions
+    ? { region_in: regions }
+    : {};
+  const filterKeywords: gp2Contentful.UsersFilter = keywords
+    ? { keywords_contains_some: keywords }
+    : {};
   const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =
     userIdFilter.length > 0 ? { sys: { id_in: userIdFilter } } : {};

@@ -310,7 +310,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     keywords,
     published,
   });
-
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 
   return (
@@ -336,6 +335,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 const { id } = researchOutput;
                 const savePath = sharedResearch({}).researchOutput({
                   researchOutputId: id,
+                  draftCreated: draftSave && !researchOutputData?.id,
                 }).$;
                 const publishPath = sharedResearch({})
                   .researchOutput({

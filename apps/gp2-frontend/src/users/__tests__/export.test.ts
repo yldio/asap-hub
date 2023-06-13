@@ -4,7 +4,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { Stringifier } from 'csv-stringify';
 
 import {
-  MAX_SQUIDEX_RESULTS,
+  MAX_RESULTS,
   squidexUsersResponseToStream,
   userToCSV,
 } from '../export';
@@ -278,7 +278,7 @@ describe('squidexUsersResponseToStream', () => {
       mockCsvStream as unknown as Stringifier,
       jest.fn().mockResolvedValue({
         ...gp2Fixtures.createUsersResponse(),
-        total: MAX_SQUIDEX_RESULTS + 1,
+        total: MAX_RESULTS + 1,
       }),
       jest.fn((x) => x),
     );

@@ -139,8 +139,12 @@ export type UserCreateDataObject = Omit<
   avatar?: string;
 };
 
-export type UserUpdateDataObject = Partial<UserCreateDataObject> &
-  Partial<Pick<UserDataObject, 'connections'>>;
+export type UserUpdateDataObject = Partial<
+  Omit<UserCreateDataObject, 'alternativeEmail'>
+> &
+  Partial<Pick<UserDataObject, 'connections'>> & {
+    alternativeEmail?: string | null;
+  };
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
   'avatar' | 'connections' | 'email' | 'role' | 'createdDate' | 'activatedDate'

@@ -17,6 +17,7 @@ import { migrateLabs } from '../src/labs/labs.data-migration';
 import { migrateUsers } from '../src/users/users.data-migration';
 import { migrateInterestGroups } from '../src/interest-groups/interest-groups.data-migration';
 import { migrateWorkingGroups } from '../src/working-groups/working-groups.data-migration';
+import { migrateTutorials } from '../src/tutorials/tutorials.data-migration';
 
 jest.mock('contentful-management');
 
@@ -110,6 +111,16 @@ jest.mock('../src/working-groups/working-groups.data-migration', () => {
   };
 });
 
+var mockMigrateTutorials: jest.MockedFunction<typeof migrateTutorials>;
+
+jest.mock('../src/tutorials/tutorials.data-migration', () => {
+  mockMigrateTutorials = jest.fn().mockReturnValue({});
+  return {
+    ...jest.requireActual('../src/tutorials/tutorials.data-migration'),
+    migrateTutorials: mockMigrateTutorials,
+  };
+});
+
 const mockContentfulManagement = contentfulManagement as jest.Mocked<
   typeof contentfulManagement
 >;
@@ -151,6 +162,23 @@ describe('Migrations', () => {
     console.log = consoleLogRef;
   });
 
+  it('runs only a subset of migrations if flags are passed', async () => {
+    spaceMock.getWebhooks.mockResolvedValue({
+      items: [],
+    } as unknown as Collection<WebHooks, WebhookProps>);
+
+    await runMigrations('--teams');
+
+    expect(migrateTeams).toHaveBeenCalled();
+    expect(migrateExternalAuthors).not.toHaveBeenCalled();
+    expect(migrateCalendars).not.toHaveBeenCalled();
+    expect(migrateLabs).not.toHaveBeenCalled();
+    expect(migrateUsers).not.toHaveBeenCalled();
+    expect(migrateInterestGroups).not.toHaveBeenCalled();
+    expect(migrateWorkingGroups).not.toHaveBeenCalled();
+    expect(migrateTutorials).not.toHaveBeenCalled();
+  });
+
   it('deactivates webhook and activates it again after running the migrations', async () => {
     const mockedTestEnvSetter = jest.fn();
     const testEnvWebhook = {
@@ -167,6 +195,7 @@ describe('Migrations', () => {
         },
       ],
     };
+    testEnvWebhook.update.mockResolvedValue(testEnvWebhook);
     Object.defineProperty(testEnvWebhook, 'active', {
       set: mockedTestEnvSetter,
     });
@@ -189,6 +218,9 @@ describe('Migrations', () => {
     expect(migrateCalendars).toHaveBeenCalled();
     expect(migrateLabs).toHaveBeenCalled();
     expect(migrateUsers).toHaveBeenCalled();
+    expect(migrateInterestGroups).toHaveBeenCalled();
+    expect(migrateWorkingGroups).toHaveBeenCalled();
+    expect(migrateTutorials).toHaveBeenCalled();
 
     expect(console.log).toHaveBeenNthCalledWith(
       2,
@@ -215,6 +247,7 @@ describe('Migrations', () => {
         },
       ],
     };
+    testEnvWebhook.update.mockResolvedValue(testEnvWebhook);
     Object.defineProperty(testEnvWebhook, 'active', {
       set: mockedTestEnvSetter,
     });
@@ -246,6 +279,9 @@ describe('Migrations', () => {
     expect(migrateCalendars).toHaveBeenCalled();
     expect(migrateLabs).toHaveBeenCalled();
     expect(migrateUsers).toHaveBeenCalled();
+    expect(migrateInterestGroups).toHaveBeenCalled();
+    expect(migrateWorkingGroups).toHaveBeenCalled();
+    expect(migrateTutorials).toHaveBeenCalled();
 
     expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
     expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
@@ -288,9 +324,10 @@ describe('Migrations', () => {
         },
       ],
     };
-    testEnvWebhook.update.mockResolvedValueOnce(undefined);
+    testEnvWebhook.update.mockResolvedValueOnce(testEnvWebhook);
     // throw on the second update call when trying to activate the webhook
     testEnvWebhook.update.mockRejectedValueOnce(new Error());
+    testEnvWebhook2.update.mockResolvedValue(testEnvWebhook2);
 
     Object.defineProperty(testEnvWebhook2, 'active', {
       set: mockedTestEnvSetter2,
@@ -310,6 +347,9 @@ describe('Migrations', () => {
     expect(migrateCalendars).toHaveBeenCalled();
     expect(migrateLabs).toHaveBeenCalled();
     expect(migrateUsers).toHaveBeenCalled();
+    expect(migrateInterestGroups).toHaveBeenCalled();
+    expect(migrateWorkingGroups).toHaveBeenCalled();
+    expect(migrateTutorials).toHaveBeenCalled();
 
     expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
     expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
@@ -337,6 +377,7 @@ describe('Migrations', () => {
         },
       ],
     };
+    testEnvWebhook.update.mockResolvedValue(testEnvWebhook);
     Object.defineProperty(testEnvWebhook, 'active', {
       set: mockedTestEnvSetter,
     });
@@ -381,6 +422,9 @@ describe('Migrations', () => {
     expect(migrateCalendars).not.toHaveBeenCalled();
     expect(migrateLabs).not.toHaveBeenCalled();
     expect(migrateUsers).not.toHaveBeenCalled();
+    expect(migrateInterestGroups).not.toHaveBeenCalled();
+    expect(migrateWorkingGroups).not.toHaveBeenCalled();
+    expect(migrateTutorials).not.toHaveBeenCalled();
   });
 
   it('rejects if disabling webhook fails with a non-Error', async () => {
@@ -393,5 +437,8 @@ describe('Migrations', () => {
     expect(migrateCalendars).not.toHaveBeenCalled();
     expect(migrateLabs).not.toHaveBeenCalled();
     expect(migrateUsers).not.toHaveBeenCalled();
+    expect(migrateInterestGroups).not.toHaveBeenCalled();
+    expect(migrateWorkingGroups).not.toHaveBeenCalled();
+    expect(migrateTutorials).not.toHaveBeenCalled();
   });
 });

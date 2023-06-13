@@ -7,12 +7,11 @@ describe('MainNavigation', () => {
     expect(
       screen.getAllByRole('listitem').map(({ textContent }) => textContent),
     ).toEqual([
-      expect.stringMatching(/dashboard/i),
       expect.stringMatching(/people/i),
       expect.stringMatching(/working groups/i),
       expect.stringMatching(/projects/i),
-      expect.stringMatching(/events/i),
       expect.stringMatching(/outputs/i),
+      expect.stringMatching(/events/i),
     ]);
   });
 });

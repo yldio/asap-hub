@@ -768,9 +768,10 @@ describe('on submit', () => {
       ...expectedRequest,
       published: false,
     });
-    await waitFor(() =>
-      expect(history.location.pathname).toEqual(`/shared-research/${id}`),
-    );
+    await waitFor(() => {
+      expect(history.location.pathname).toEqual(`/shared-research/${id}`);
+      expect(history.location.search).toEqual('?draftCreated=true');
+    });
   });
 });
 

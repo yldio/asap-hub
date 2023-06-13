@@ -43,4 +43,18 @@ describe('Validate Input', () => {
   test('Should return validated parameters', async () => {
     expect(validateTestSchema({ param: 12345 })).toEqual({ param: 12345 });
   });
+
+  test('Should return validated params with skipNull', () => {
+    const validateTestSchema = validateInput(testSchema, {
+      skipNull: true,
+    });
+    expect(validateTestSchema({ param: null })).toEqual({});
+  });
+  test('Should return validated params with nullableKeys', () => {
+    const validateTestSchema = validateInput(testSchema, {
+      skipNull: true,
+      nullableKeys: ['param'],
+    });
+    expect(validateTestSchema({ param: null })).toEqual({ param: null });
+  });
 });

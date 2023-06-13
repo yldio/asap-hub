@@ -8,10 +8,27 @@ import { migrateLabs } from './labs/labs.data-migration';
 import { migrateUsers } from './users/users.data-migration';
 import { migrateInterestGroups } from './interest-groups/interest-groups.data-migration';
 import { migrateWorkingGroups } from './working-groups/working-groups.data-migration';
+import { migrateTutorials } from './tutorials/tutorials.data-migration';
 import { logger } from './utils';
 import { contentfulRateLimiter } from './contentful-rate-limiter';
 
-export const runMigrations = async () => {
+export const models = [
+  'teams',
+  'externalAuthors',
+  'calendars',
+  'labs',
+  'users',
+  'events',
+  'interestGroups',
+  'workingGroups',
+  'tutorials',
+];
+
+type ModelName = (typeof models)[number];
+
+export type Flag = `--${ModelName}`;
+
+export const runMigrations = async (flags: Flag[] = []) => {
   const {
     CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
     CONTENTFUL_SPACE_ID,
@@ -21,6 +38,9 @@ export const runMigrations = async () => {
   const contentfulClient = createClient({
     accessToken: CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!,
   });
+
+  const hasFlag = (flag: ModelName): boolean =>
+    flags.length === 0 || flags.includes(`--${flag}`);
 
   const contentfulSpace = await contentfulClient.getSpace(CONTENTFUL_SPACE_ID!);
 
@@ -40,8 +60,8 @@ export const runMigrations = async () => {
     for (const webhook of currentEnvironmentWebhooks) {
       webhook.active = false;
       await contentfulRateLimiter.removeTokens(1);
-      await webhook.update();
-      disabledWebhooks.push(webhook);
+      const disabledWebhook = await webhook.update();
+      disabledWebhooks.push(disabledWebhook);
     }
     logger('Webhooks deactivated');
   } catch (error) {
@@ -57,20 +77,24 @@ export const runMigrations = async () => {
 
   let error;
   try {
-    await migrateTeams();
-    await migrateExternalAuthors();
-    await migrateCalendars();
-    await migrateLabs();
-    await migrateUsers();
-    // The events migration needs to be done after
-    // migrating teams, users, external authors
-    // and calendars
-    await migrateEvents();
-    await migrateInterestGroups();
+    if (hasFlag('teams')) await migrateTeams();
+    if (hasFlag('externalAuthors')) await migrateExternalAuthors();
+    if (hasFlag('calendars')) await migrateCalendars();
+    if (hasFlag('labs')) await migrateLabs();
 
-    // The working groups migration needs to be done after
-    // migrating users and calendars
-    await migrateWorkingGroups();
+    // needs: teams, labs
+    if (hasFlag('users')) await migrateUsers();
+
+    // needs: teams, users, external authors, calendars
+    if (hasFlag('events')) await migrateEvents();
+
+    // needs: teams, users, calendars
+    if (hasFlag('interestGroups')) await migrateInterestGroups();
+
+    // needs: users, calendars
+    if (hasFlag('workingGroups')) await migrateWorkingGroups();
+
+    if (hasFlag('tutorials')) await migrateTutorials();
   } catch (err) {
     error = err;
     logger('Error migrating data', 'ERROR');

@@ -194,6 +194,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       title: normalisedResearchOutputUpdateData.title,
       type: normalisedResearchOutputUpdateData.type,
       updatedBy: normalisedResearchOutputUpdateData.updatedBy,
+      reviewRequestedBy: normalisedResearchOutputUpdateData.reviewRequestedBy,
       usageNotes: normalisedResearchOutputUpdateData.usageNotes,
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
       workingGroups: normalisedResearchOutputUpdateData.workingGroups,

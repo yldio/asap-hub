@@ -185,6 +185,126 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
     additionalProperties: false,
   };
 
+const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPutRequest> =
+  {
+    type: 'object',
+    properties: {
+      documentType: {
+        type: 'string',
+        enum: researchOutputDocumentTypes,
+      },
+      type: {
+        type: 'string',
+        enum: researchOutputTypes,
+        nullable: true,
+      },
+      description: { type: 'string', nullable: true },
+      descriptionMD: { type: 'string' },
+      methods: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      organisms: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      environments: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      subtype: {
+        type: 'string',
+        nullable: true,
+      },
+      keywords: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+      link: {
+        type: 'string',
+        nullable: true,
+        pattern: urlExpression,
+      },
+      title: { type: 'string' },
+      asapFunded: { type: 'boolean', nullable: true },
+      sharingStatus: { type: 'string' },
+      usedInPublication: { type: 'boolean', nullable: true },
+      publishDate: { type: 'string', format: 'date-time', nullable: true },
+      labs: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
+      relatedResearch: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
+      authors: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            userId: { type: 'string' },
+            externalAuthorId: { type: 'string' },
+            externalAuthorName: { type: 'string' },
+          },
+          oneOf: [
+            {
+              type: 'object',
+              required: ['userId'],
+            },
+            {
+              type: 'object',
+              required: ['externalAuthorId'],
+            },
+            {
+              type: 'object',
+              required: ['externalAuthorName'],
+            },
+          ],
+        },
+        nullable: true,
+      },
+      teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
+      reviewRequestedBy: { type: 'string', nullable: true },
+      workingGroups: { type: 'array', items: { type: 'string' }, minItems: 0 },
+      usageNotes: { type: 'string', nullable: true },
+      doi: {
+        type: 'string',
+        nullable: true,
+        pattern: ResearchOutputIdentifierValidationExpression.DOI,
+      },
+      accession: {
+        type: 'string',
+        nullable: true,
+        pattern:
+          ResearchOutputIdentifierValidationExpression['Accession Number'],
+      },
+      labCatalogNumber: { type: 'string', nullable: true },
+      rrid: {
+        type: 'string',
+        nullable: true,
+        pattern: ResearchOutputIdentifierValidationExpression.RRID,
+      },
+      published: {
+        type: 'boolean',
+      },
+    },
+    required: [
+      'documentType',
+      'descriptionMD',
+      'title',
+      'sharingStatus',
+      'teams',
+      'methods',
+      'organisms',
+      'environments',
+      'keywords',
+    ],
+    additionalProperties: false,
+  };
+
 export const validateResearchOutputPostRequestParameters = validateInput(
   researchOutputPostRequestValidationSchema,
   {
@@ -221,7 +341,7 @@ export const validateResearchOutputPostRequestParametersIdentifiers = (
 export const validateResearchOutputPutRequestParameters = validateInput<
   ResearchOutputPutRequest,
   true
->(researchOutputPostRequestValidationSchema, {
+>(researchOutputPutRequestValidationSchema, {
   skipNull: true,
   coerce: true,
 });

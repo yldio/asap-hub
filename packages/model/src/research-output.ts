@@ -338,7 +338,9 @@ export type ResearchOutputPostRequest = {
 
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 
-export type ResearchOutputPutRequest = ResearchOutputPostRequest;
+export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
+  reviewRequestedBy?: string;
+};
 
 type NonEmptyArray<T> = [T, ...T[]];
 

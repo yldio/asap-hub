@@ -20,6 +20,7 @@ export type OutputItem = NonNullable<
 export class OutputContentfulDataProvider implements OutputDataProvider {
   constructor(
     private graphQLClient: GraphQLClient,
+    private previewGraphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
   private fetchOutputById(id: string) {
@@ -69,7 +70,10 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
     const where = [...searchWhere, ...filterWhere];
-    const { outputsCollection } = await this.graphQLClient.request<
+    const client = includeDrafts
+      ? this.previewGraphQLClient
+      : this.graphQLClient;
+    const { outputsCollection } = await client.request<
       gp2Contentful.FetchOutputsQuery,
       gp2Contentful.FetchOutputsQueryVariables
     >(gp2Contentful.FETCH_OUTPUTS, {
@@ -77,7 +81,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       skip,
       where: where.length ? { AND: where } : {},
       preview: includeDrafts === true,
-      order: [gp2Contentful.OutputsOrder.AddedDateAsc],
+      order: [gp2Contentful.OutputsOrder.AddedDateDesc],
     });
     return outputsCollection;
   }

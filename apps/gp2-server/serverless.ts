@@ -18,6 +18,7 @@ import assert from 'assert';
   'GP2_SENTRY_DSN_HANDLERS',
   'GP2_CONTENTFUL_ENV',
   'GP2_CONTENTFUL_ACCESS_TOKEN',
+  'GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN',
   'GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN',
   'GP2_CONTENTFUL_SPACE_ID',
   'GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN',
@@ -45,6 +46,8 @@ const squidexClientSecret = process.env.GP2_SQUIDEX_API_CLIENT_SECRET!;
 const squidexSharedSecret = process.env.GP2_SQUIDEX_SHARED_SECRET!;
 const contentfulEnvironment = process.env.GP2_CONTENTFUL_ENV!;
 const contentfulAccessToken = process.env.GP2_CONTENTFUL_ACCESS_TOKEN!;
+const contentfulPreviewAccessToken =
+  process.env.GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN!;
 const contentfulManagementAccessToken =
   process.env.GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 const contentfulSpaceId = process.env.GP2_CONTENTFUL_SPACE_ID!;
@@ -221,6 +224,7 @@ const serverlessConfig: AWS = {
         APP_ORIGIN: appUrl,
         AUTH0_AUDIENCE: auth0Audience,
         AUTH0_CLIENT_ID: auth0ClientId,
+        CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
         SENTRY_DSN: sentryDsnApi,
       },
     },

@@ -44,6 +44,9 @@ inputs:
   gp2-contentful-access-token:
     description: 'GP2 Contentful Access Token'
     required: false
+  gp2-contentful-preview-access-token:
+    description: 'GP2 Contentful Preview Access Token'
+    required: false
   gp2-contentful-management-access-token:
     description: 'GP2 Contentful Management Access Token'
     required: false
@@ -107,11 +110,12 @@ runs:
         GP2_AUTH0_SHARED_SECRET: ${{ inputs.gp2-auth0-shared-secret }}
         GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
         GP2_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.gp2-contentful-access-token }}
+        GP2_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.gp2-contentful-enabled }}
         GP2_CONTENTFUL_ENV: ${{ inputs.gp2-contentful-env }}
         GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.gp2-contentful-management-access-token }}
-        GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.gp2-contentful-webhook-authentication-token }}
+        GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.gp2-contentful-preview-access-token }}
         GP2_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-        GP2_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.gp2-contentful-enabled }}
+        GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.gp2-contentful-webhook-authentication-token }}
         GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
         GP2_SENTRY_DSN_API: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
         GP2_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}

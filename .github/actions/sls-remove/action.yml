@@ -77,6 +77,7 @@ runs:
         GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: 'n-a'
         GP2_CONTENTFUL_ENV: 'n-a'
         GP2_CONTENTFUL_ACCESS_TOKEN: 'n-a'
+        GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: 'n-a'
         GP2_CONTENTFUL_SPACE_ID: 'n-a'
         GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
         GP2_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}

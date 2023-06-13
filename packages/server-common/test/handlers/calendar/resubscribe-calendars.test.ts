@@ -128,7 +128,6 @@ describe('Resubscribe calendar handler', () => {
     subscribeMock.mockResolvedValue({ resourceId, expiration });
 
     await invokeHandlerWithIdFunction();
-
     expect(unsubscribeMock).toHaveBeenCalledWith(
       calendarDataObject1.resourceId,
       `cms:${calendarDataObject1.id}`,

@@ -46,6 +46,7 @@
     "luxon": "1.28.1",
     "mime-types": "2.1.35",
     "odata-query": "7.0.3",
+    "p-throttle": "4.1.1",
     "parse-data-url": "3.0.0",
     "serverless-http": "2.7.0",
     "source-map-support": "0.5.21",

@@ -185,6 +185,13 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
       }
+      reviewRequestedBy {
+        id
+        flatData {
+          firstName
+          lastName
+        }
+      }
     }
     referencingResearchOutputsContents {
       id

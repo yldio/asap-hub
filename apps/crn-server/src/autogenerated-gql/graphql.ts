@@ -8708,6 +8708,13 @@ export type ResearchOutputContentFragment = Pick<
     >;
     subtype: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
     keywords: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
+    reviewRequestedBy: Maybe<
+      Array<
+        Pick<Users, 'id'> & {
+          flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+        }
+      >
+    >;
   };
   referencingResearchOutputsContents: Maybe<
     Array<
@@ -8926,6 +8933,13 @@ export type FetchResearchOutputQuery = {
         >;
         keywords: Maybe<
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+        >;
+        reviewRequestedBy: Maybe<
+          Array<
+            Pick<Users, 'id'> & {
+              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+            }
+          >
         >;
       };
       referencingResearchOutputsContents: Maybe<
@@ -9160,6 +9174,13 @@ export type FetchResearchOutputsQuery = {
               >;
               keywords: Maybe<
                 Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+              >;
+              reviewRequestedBy: Maybe<
+                Array<
+                  Pick<Users, 'id'> & {
+                    flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+                  }
+                >
               >;
             };
             referencingResearchOutputsContents: Maybe<
@@ -12565,6 +12586,33 @@ export const ResearchOutputContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'reviewRequestedBy' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
                             },
                           ],
                         },

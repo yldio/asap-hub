@@ -2,7 +2,7 @@ import { DecisionOption, ListResponse } from './common';
 import { ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 import { TeamResponse } from './team';
-import { UserResponse } from './user';
+import { UserDataObject, UserResponse } from './user';
 import { WorkingGroupResponse } from './working-group';
 
 export const researchOutputDocumentTypes = [
@@ -226,7 +226,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
       'id' | 'title' | 'type' | 'documentType' | 'teams'
     > & { isOwnRelatedResearchLink?: boolean }
   >;
-  reviewRequestedBy?: string;
+  reviewRequestedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
 };
 
 export type ResearchOutputDraftDataObject = Omit<

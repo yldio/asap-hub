@@ -4581,6 +4581,7 @@ type ResearchOutputsDataDto {
   organisms: ResearchOutputsDataOrganismsDto
   publishDate: ResearchOutputsDataPublishDateDto
   relatedResearch: ResearchOutputsDataRelatedResearchDto
+  reviewRequestedBy: ResearchOutputsDataReviewRequestedByDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
   subtype: ResearchOutputsDataSubtypeDto
@@ -4626,6 +4627,7 @@ input ResearchOutputsDataInputDto {
   organisms: ResearchOutputsDataOrganismsInputDto
   publishDate: ResearchOutputsDataPublishDateInputDto
   relatedResearch: ResearchOutputsDataRelatedResearchInputDto
+  reviewRequestedBy: ResearchOutputsDataReviewRequestedByInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
@@ -4736,6 +4738,16 @@ type ResearchOutputsDataRelatedResearchDto {
 
 """The structure of the Related Research field of the Research Outputs content input type."""
 input ResearchOutputsDataRelatedResearchInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Review requested by field of the Research Outputs content type."""
+type ResearchOutputsDataReviewRequestedByDto {
+  iv: [Users!]
+}
+
+"""The structure of the Review requested by field of the Research Outputs content input type."""
+input ResearchOutputsDataReviewRequestedByInputDto {
   iv: [String!]
 }
 
@@ -4892,6 +4904,7 @@ type ResearchOutputsFlatDataDto {
   """Date of publishing (outside the Hub). Only applies to outputs that have been published."""
   publishDate: Instant
   relatedResearch: [ResearchOutputs!]
+  reviewRequestedBy: [Users!]
   """
   This must start with "RRID:"
   """

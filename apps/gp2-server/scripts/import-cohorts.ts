@@ -2,6 +2,7 @@ import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/conten
 import { GenericError } from '@asap-hub/errors';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { parse } from '@asap-hub/server-common';
+import pThrottle from 'p-throttle';
 import {
   contentfulAccessToken,
   contentfulEnvId,
@@ -37,6 +38,14 @@ const app = async () => {
 
   const filePath = args[0];
 
+  const throttle = pThrottle({
+    limit: 2,
+    interval: 1000,
+  });
+  const throttledCreateCohort = throttle(
+    async (input: gp2Model.ContributingCohortCreateDataObject) =>
+      contributingCohortDataProvider.create(input),
+  );
   const csvImport = parse(
     (input): gp2Model.ContributingCohortCreateDataObject => {
       const data = input.map((s) => s.trim());
@@ -46,7 +55,7 @@ const app = async () => {
     },
     async (input) => {
       try {
-        await contributingCohortDataProvider.create(input);
+        await throttledCreateCohort(input);
         imported++;
       } catch (e) {
         if (

@@ -21,6 +21,10 @@ on:
         required: true
         type: string
         description: Choose the Contentful environment to rollback the last migration
+      content-type:
+        required: true
+        type: string
+        description: Choose the content-type that you want to rollback the last migration
 
 jobs:
   rollback_last_migration:
@@ -47,6 +51,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CRN_CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+          CONTENT_TYPE: ${{ inputs.content-type }}
 
       - name: Run GP2 Contentful rollback
         if: ${{ inputs.app-name=='GP2' }}
@@ -56,6 +61,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           GP2_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
           GP2_CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+          CONTENT_TYPE: ${{ inputs.content-type }}
 
   notify_failure:
     runs-on: ubuntu-latest

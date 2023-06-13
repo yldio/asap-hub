@@ -21,7 +21,7 @@ export const removeStylingTagsWrappingImgTags = (html: string): string =>
     '$3',
   );
 
-export const wrapIframeWithTag = (html: string): string => {
+export const wrapIframeWithPTag = (html: string): string => {
   const $ = cheerio.load(html);
   const iframe = $('iframe');
 
@@ -91,7 +91,7 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   processedHtml = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
   processedHtml = removeStylingTagsWrappingIFrameTags(processedHtml);
   processedHtml = removeStylingTagsWrappingImgTags(processedHtml);
-  processedHtml = wrapIframeWithTag(processedHtml);
+  processedHtml = wrapIframeWithPTag(processedHtml);
 
   // processedHtml = addPTagsToIframeTagNotWrappedByAnything(processedHtml);
   logger(`HTML pre-parsed:\n${html}`, 'DEBUG');

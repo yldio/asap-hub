@@ -23,6 +23,7 @@
     "@asap-hub/squidex": "workspace:*",
     "@babel/runtime-corejs3": "7.21.0",
     "@contentful/rich-text-types": "16.0.3",
+    "cheerio": "^1.0.0-rc.12",
     "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#v1.0.18",
     "contentful-management": "10.32.0",
     "graphql": "15.8.0",

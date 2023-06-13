@@ -9,7 +9,6 @@ import {
   LabeledTextField,
   noop,
   pixels,
-  usePushFromHere,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
 
@@ -86,7 +85,6 @@ const OutputForm: React.FC<OutputFormType> = ({
   subtype,
   authors,
 }) => {
-  const historyPush = usePushFromHere();
   const [newTitle, setTitle] = useState(title || '');
   const [newLink, setLink] = useState(link || '');
   const [newType, setType] = useState<gp2Model.OutputType | ''>(type || '');
@@ -137,7 +135,7 @@ const OutputForm: React.FC<OutputFormType> = ({
 
   return (
     <Form dirty={isFormDirty}>
-      {({ isSaving, getWrappedOnSave, onCancel }) => (
+      {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (
         <div css={containerStyles}>
           <FormCard title="What are you sharing?">
             <LabeledTextField
@@ -225,7 +223,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                     setBannerMessage(
                       getBannerMessage(entityType, documentType, !title),
                     );
-                    historyPush(path);
+                    setRedirectOnSave(path);
                   }
                   return output;
                 }}

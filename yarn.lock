@@ -634,7 +634,7 @@ __metadata:
     contentful-management: 10.32.0
     contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
     graphql: 15.8.0
-    graphql-request: 3.4.0
+    graphql-request: 6.1.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
     prettier: 2.8.7
@@ -1612,7 +1612,7 @@ __metadata:
     debug: 4.3.4
     got: 11.8.6
     graphql: 15.8.0
-    graphql-request: 3.4.0
+    graphql-request: 6.1.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     nock: 13.3.0
@@ -1646,7 +1646,7 @@ __metadata:
     debug: 4.3.4
     got: 11.8.6
     graphql: 15.8.0
-    graphql-request: 3.4.0
+    graphql-request: 6.1.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     luxon: 1.28.1
@@ -11907,7 +11907,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-typed-document-node/core@npm:3.2.0":
+"@graphql-typed-document-node/core@npm:3.2.0, @graphql-typed-document-node/core@npm:^3.2.0":
   version: 3.2.0
   resolution: "@graphql-typed-document-node/core@npm:3.2.0"
   peerDependencies:
@@ -23145,7 +23145,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:^3.0.4, cross-fetch@npm:^3.0.6, cross-fetch@npm:^3.1.4, cross-fetch@npm:^3.1.5":
+"cross-fetch@npm:^3.0.4, cross-fetch@npm:^3.1.4, cross-fetch@npm:^3.1.5":
   version: 3.1.6
   resolution: "cross-fetch@npm:3.1.6"
   dependencies:
@@ -28637,16 +28637,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:3.4.0":
-  version: 3.4.0
-  resolution: "graphql-request@npm:3.4.0"
+"graphql-request@npm:6.1.0":
+  version: 6.1.0
+  resolution: "graphql-request@npm:6.1.0"
   dependencies:
-    cross-fetch: "npm:^3.0.6"
-    extract-files: "npm:^9.0.0"
-    form-data: "npm:^3.0.0"
+    "@graphql-typed-document-node/core": ^3.2.0
+    cross-fetch: ^3.1.5
   peerDependencies:
-    graphql: 14.x || 15.x
-  checksum: 5be0398af5cd02694893169bcc3b92f454910dac3b257aa350fa59686d8ef24334619f0b5bdd2fdefea654eab9544ec6f270688255dde9eeff5475d5e64ea073
+    graphql: 14 - 16
+  checksum: 6d62630a0169574442320651c1f7626c0c602025c3c46b19e09417c9579bb209306ee63de9793a03be2e1701bb7f13971f8545d99bc6573e340f823af0ad35b2
   languageName: node
   linkType: hard
 

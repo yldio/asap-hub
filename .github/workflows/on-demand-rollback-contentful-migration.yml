@@ -25,6 +25,11 @@ on:
         required: true
         type: string
         description: Choose the content-type that you want to rollback the last migration
+      dry-run:
+        description: 'Dry run'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   rollback_last_migration:
@@ -52,6 +57,7 @@ jobs:
           CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CRN_CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
           CONTENT_TYPE: ${{ inputs.content-type }}
+          DRY_RUN: ${{ inputs.dry-run }}
 
       - name: Run GP2 Contentful rollback
         if: ${{ inputs.app-name=='GP2' }}
@@ -62,6 +68,7 @@ jobs:
           GP2_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
           GP2_CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
           CONTENT_TYPE: ${{ inputs.content-type }}
+          DRY_RUN: ${{ inputs.dry-run }}
 
   notify_failure:
     runs-on: ubuntu-latest

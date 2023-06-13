@@ -1,5 +1,5 @@
 import ResearchTags from '../../src/controllers/research-tags';
-import { ResearchTagDataProvider } from '../../src/data-providers/research-tags.data-provider';
+import { ResearchTagDataProvider } from '../../src/data-providers/types';
 import {
   getResearchTagDataObject,
   getResearchTagResponse,

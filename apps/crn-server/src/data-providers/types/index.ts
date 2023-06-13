@@ -4,6 +4,7 @@ export * from './discover.data-provider.types';
 export * from './interest-groups.data-provider.types';
 export * from './news.data-provider.types';
 export * from './pages.data-provider.types';
+export * from './research-tags.data-provider.types';
 export * from './tutorials.data-provider.types';
 export * from './users.data-provider.types';
 export * from './working-groups.data-provider.types';

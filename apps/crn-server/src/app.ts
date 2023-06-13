@@ -86,6 +86,8 @@ import { TutorialsContentfulDataProvider } from './data-providers/contentful/tut
 import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-groups.data-provider';
 import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
+import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tags.data-provider';
+
 import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
@@ -103,10 +105,7 @@ import {
   ResearchOutputDataProvider,
   ResearchOutputSquidexDataProvider,
 } from './data-providers/research-outputs.data-provider';
-import {
-  ResearchTagDataProvider,
-  ResearchTagSquidexDataProvider,
-} from './data-providers/research-tags.data-provider';
+import { ResearchTagSquidexDataProvider } from './data-providers/research-tags.data-provider';
 import {
   TeamDataProvider,
   TeamSquidexDataProvider,
@@ -122,6 +121,7 @@ import {
   DiscoverDataProvider,
   WorkingGroupDataProvider,
   TutorialsDataProvider,
+  ResearchTagDataProvider,
 } from './data-providers/types';
 import { UserSquidexDataProvider } from './data-providers/users.data-provider';
 import { WorkingGroupSquidexDataProvider } from './data-providers/working-groups.data-provider';
@@ -353,9 +353,6 @@ export const appFactory = (libs: Libs = {}): Express => {
       squidexGraphqlClient,
       researchOutputRestClient,
     );
-  const researchTagDataProvider =
-    libs.researchTagDataProvider ||
-    new ResearchTagSquidexDataProvider(squidexGraphqlClient);
 
   featureFlagDependencySwitch.setDependency(
     'externalAuthors',
@@ -501,6 +498,27 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.discoverDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'discover',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+
+  featureFlagDependencySwitch.setDependency(
+    'researchTags',
+    libs.researchTagSquidexDataProvider ||
+      new ResearchTagSquidexDataProvider(squidexGraphqlClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'researchTags',
+    libs.researchTagContentfulDataProvider ||
+      new ResearchTagContentfulDataProvider(contentfulGraphQLClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+  const researchTagDataProvider =
+    libs.researchTagDataProvider ||
+    featureFlagDependencySwitch.getDependency(
+      'researchTags',
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
@@ -694,6 +712,8 @@ export type Libs = {
   reminderDataProvider?: ReminderDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
+  researchTagSquidexDataProvider?: ResearchTagDataProvider;
+  researchTagContentfulDataProvider?: ResearchTagDataProvider;
   teamSquidexDataProvider?: TeamDataProvider;
   teamContentfulDataProvider?: TeamDataProvider;
   teamDataProvider?: TeamDataProvider;

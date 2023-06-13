@@ -4,7 +4,6 @@ import { auth0SharedSecret as secret } from '../../../src/config';
 import { fetchUserByCodeHandlerFactory } from '../../../src/handlers/webhooks/fetch-by-code';
 import { getApiGatewayEvent } from '../../fixtures/lambda.fixtures';
 import { getUserResponse } from '../../fixtures/user.fixtures';
-import { loggerMock } from '../../mocks/logger.mock';
 import { userControllerMock } from '../../mocks/user-controller.mock';
 
 const successfulApiGatewayEvent = getApiGatewayEvent({
@@ -17,7 +16,7 @@ const successfulApiGatewayEvent = getApiGatewayEvent({
 });
 
 describe('Fetch-user-by-code handler', () => {
-  const handler = fetchUserByCodeHandlerFactory(userControllerMock, loggerMock);
+  const handler = fetchUserByCodeHandlerFactory(userControllerMock);
 
   afterEach(jest.resetAllMocks);
 

@@ -163,3 +163,12 @@ export const tutorialEntry = getEntry({
   text: { 'en-US': { data: {}, content: [], nodeType: 'document' } },
   thumbnail: { 'en-US': null },
 });
+
+export const discoverEntry = getEntry({
+  members: { 'en-US': [] },
+  training: { 'en-US': [] },
+  scientificAdvisoryBoard: { 'en-US': [] },
+  pages: { 'en-US': [] },
+  membersTeam: { 'en-US': null },
+  aboutUs: { 'en-US': null },
+});

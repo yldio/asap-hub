@@ -28,11 +28,13 @@ export class TutorialsContentfulDataProvider implements TutorialsDataProvider {
       return null;
     }
 
-    return parseGraphQLTutorial(tutorials);
+    return parseContentfulGraphQlTutorials(tutorials);
   }
 }
 
-const parseGraphQLTutorial = (tutorial: TutorialItem): TutorialsDataObject => ({
+export const parseContentfulGraphQlTutorials = (
+  tutorial: TutorialItem,
+): TutorialsDataObject => ({
   id: tutorial.sys.id,
   created: tutorial.sys.firstPublishedAt,
   title: tutorial.title || '',

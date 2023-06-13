@@ -323,6 +323,272 @@ scalar DateTime
 """The 'Dimension' type represents dimensions as whole numeric values between `1` and `4000`."""
 scalar Dimension
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discover)"""
+type Discover implements Entry {
+  aboutUs(locale: String): DiscoverAboutUs
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): DiscoverLinkingCollections
+  membersCollection(limit: Int = 100, locale: String, order: [DiscoverMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): DiscoverMembersCollection
+  membersTeam(locale: String, preview: Boolean): Teams
+  pagesCollection(limit: Int = 100, locale: String, order: [DiscoverPagesCollectionOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): DiscoverPagesCollection
+  scientificAdvisoryBoardCollection(limit: Int = 100, locale: String, order: [DiscoverScientificAdvisoryBoardCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): DiscoverScientificAdvisoryBoardCollection
+  sys: Sys!
+  trainingCollection(limit: Int = 100, locale: String, order: [DiscoverTrainingCollectionOrder], preview: Boolean, skip: Int = 0, where: TutorialsFilter): DiscoverTrainingCollection
+}
+
+type DiscoverAboutUs {
+  json: JSON!
+  links: DiscoverAboutUsLinks!
+}
+
+type DiscoverAboutUsAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type DiscoverAboutUsEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type DiscoverAboutUsLinks {
+  assets: DiscoverAboutUsAssets!
+  entries: DiscoverAboutUsEntries!
+}
+
+type DiscoverCollection {
+  items: [Discover]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input DiscoverFilter {
+  AND: [DiscoverFilter]
+  OR: [DiscoverFilter]
+  aboutUs_contains: String
+  aboutUs_exists: Boolean
+  aboutUs_not_contains: String
+  contentfulMetadata: ContentfulMetadataFilter
+  members: cfUsersNestedFilter
+  membersCollection_exists: Boolean
+  membersTeam: cfTeamsNestedFilter
+  membersTeam_exists: Boolean
+  pages: cfPagesNestedFilter
+  pagesCollection_exists: Boolean
+  scientificAdvisoryBoard: cfUsersNestedFilter
+  scientificAdvisoryBoardCollection_exists: Boolean
+  sys: SysFilter
+  training: cfTutorialsNestedFilter
+  trainingCollection_exists: Boolean
+}
+
+type DiscoverLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+type DiscoverMembersCollection {
+  items: [Users]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum DiscoverMembersCollectionOrder {
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  city_ASC
+  city_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  country_ASC
+  country_DESC
+  createdDate_ASC
+  createdDate_DESC
+  degree_ASC
+  degree_DESC
+  dismissedGettingStarted_ASC
+  dismissedGettingStarted_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  institution_ASC
+  institution_DESC
+  jobTitle_ASC
+  jobTitle_DESC
+  lastName_ASC
+  lastName_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  onboarded_ASC
+  onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
+}
+
+enum DiscoverOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type DiscoverPagesCollection {
+  items: [Pages]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum DiscoverPagesCollectionOrder {
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  path_ASC
+  path_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type DiscoverScientificAdvisoryBoardCollection {
+  items: [Users]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum DiscoverScientificAdvisoryBoardCollectionOrder {
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  city_ASC
+  city_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  country_ASC
+  country_DESC
+  createdDate_ASC
+  createdDate_DESC
+  degree_ASC
+  degree_DESC
+  dismissedGettingStarted_ASC
+  dismissedGettingStarted_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  institution_ASC
+  institution_DESC
+  jobTitle_ASC
+  jobTitle_DESC
+  lastName_ASC
+  lastName_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  onboarded_ASC
+  onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
+}
+
+type DiscoverTrainingCollection {
+  items: [Tutorials]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum DiscoverTrainingCollectionOrder {
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  shortText_ASC
+  shortText_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 interface Entry {
   contentfulMetadata: ContentfulMetadata!
   sys: Sys!
@@ -1474,6 +1740,7 @@ input PagesFilter {
 
 type PagesLinkingCollections {
   dashboardCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DashboardCollection
+  discoverCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
@@ -1525,6 +1792,8 @@ type Query {
   calendarsCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], preview: Boolean, skip: Int = 0, where: CalendarsFilter): CalendarsCollection
   dashboard(id: String!, locale: String, preview: Boolean): Dashboard
   dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, where: DashboardFilter): DashboardCollection
+  discover(id: String!, locale: String, preview: Boolean): Discover
+  discoverCollection(limit: Int = 100, locale: String, order: [DiscoverOrder], preview: Boolean, skip: Int = 0, where: DiscoverFilter): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
   eventSpeakers(id: String!, locale: String, preview: Boolean): EventSpeakers
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [EventSpeakersOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventSpeakersCollection
@@ -1560,8 +1829,6 @@ type Query {
   workingGroupDeliverablesCollection(limit: Int = 100, locale: String, order: [WorkingGroupDeliverablesOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupDeliverablesFilter): WorkingGroupDeliverablesCollection
   workingGroupLeaders(id: String!, locale: String, preview: Boolean): WorkingGroupLeaders
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [WorkingGroupLeadersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersFilter): WorkingGroupLeadersCollection
-  workingGroupLeadersOrWorkingGroupMembers(id: String!, locale: String, preview: Boolean): WorkingGroupLeadersOrWorkingGroupMembers
-  workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersOrWorkingGroupMembersFilter): WorkingGroupLeadersOrWorkingGroupMembersCollection
   workingGroupMembers(id: String!, locale: String, preview: Boolean): WorkingGroupMembers
   workingGroupMembersCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembersFilter): WorkingGroupMembersCollection
   workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
@@ -1748,6 +2015,7 @@ input TeamsFilter {
 }
 
 type TeamsLinkingCollections {
+  discoverCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupsCollection
@@ -1855,6 +2123,7 @@ input TutorialsFilter {
 }
 
 type TutorialsLinkingCollections {
+  discoverCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
@@ -2221,11 +2490,11 @@ enum UsersLabsCollectionOrder {
 }
 
 type UsersLinkingCollections {
+  discoverCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupLeadersCollection
-  workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupLeadersOrWorkingGroupMembersCollection
   workingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupMembersCollection
 }
 
@@ -2424,44 +2693,6 @@ type WorkingGroupLeadersLinkingCollections {
   workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
-"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers)"""
-type WorkingGroupLeadersOrWorkingGroupMembers implements Entry {
-  contentfulMetadata: ContentfulMetadata!
-  inactiveSinceDate(locale: String): DateTime
-  linkedFrom(allowedLocales: [String]): WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections
-  sys: Sys!
-  user(locale: String, preview: Boolean): Users
-}
-
-type WorkingGroupLeadersOrWorkingGroupMembersCollection {
-  items: [WorkingGroupLeadersOrWorkingGroupMembers]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-input WorkingGroupLeadersOrWorkingGroupMembersFilter {
-  AND: [WorkingGroupLeadersOrWorkingGroupMembersFilter]
-  OR: [WorkingGroupLeadersOrWorkingGroupMembersFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  inactiveSinceDate: DateTime
-  inactiveSinceDate_exists: Boolean
-  inactiveSinceDate_gt: DateTime
-  inactiveSinceDate_gte: DateTime
-  inactiveSinceDate_in: [DateTime]
-  inactiveSinceDate_lt: DateTime
-  inactiveSinceDate_lte: DateTime
-  inactiveSinceDate_not: DateTime
-  inactiveSinceDate_not_in: [DateTime]
-  sys: SysFilter
-  user: cfUsersNestedFilter
-  user_exists: Boolean
-}
-
-type WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-}
-
 enum WorkingGroupLeadersOrder {
   inactiveSinceDate_ASC
   inactiveSinceDate_DESC
@@ -2540,7 +2771,7 @@ type WorkingGroups implements Entry {
   description(locale: String): WorkingGroupsDescription
   externalLink(locale: String): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
-  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersOrWorkingGroupMembersFilter): WorkingGroupsMembersCollection
+  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsMembersCollection
   shortText(locale: String): String
   sys: Sys!
   title(locale: String): String
@@ -2615,7 +2846,6 @@ input WorkingGroupsFilter {
   externalLink_not: String
   externalLink_not_contains: String
   externalLink_not_in: [String]
-  members: cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter
   membersCollection_exists: Boolean
   shortText: String
   shortText_contains: String
@@ -2941,6 +3171,45 @@ input cfTeamsNestedFilter {
   toolsCollection_exists: Boolean
 }
 
+input cfTutorialsNestedFilter {
+  AND: [cfTutorialsNestedFilter]
+  OR: [cfTutorialsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  link: String
+  linkText: String
+  linkText_contains: String
+  linkText_exists: Boolean
+  linkText_in: [String]
+  linkText_not: String
+  linkText_not_contains: String
+  linkText_not_in: [String]
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  shortText: String
+  shortText_contains: String
+  shortText_exists: Boolean
+  shortText_in: [String]
+  shortText_not: String
+  shortText_not_contains: String
+  shortText_not_in: [String]
+  sys: SysFilter
+  text_contains: String
+  text_exists: Boolean
+  text_not_contains: String
+  thumbnail_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
 input cfUsersNestedFilter {
   AND: [cfUsersNestedFilter]
   OR: [cfUsersNestedFilter]
@@ -3207,21 +3476,4 @@ input cfWorkingGroupDeliverablesNestedFilter {
   status_not_contains: String
   status_not_in: [String]
   sys: SysFilter
-}
-
-input cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter {
-  AND: [cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter]
-  OR: [cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  inactiveSinceDate: DateTime
-  inactiveSinceDate_exists: Boolean
-  inactiveSinceDate_gt: DateTime
-  inactiveSinceDate_gte: DateTime
-  inactiveSinceDate_in: [DateTime]
-  inactiveSinceDate_lt: DateTime
-  inactiveSinceDate_lte: DateTime
-  inactiveSinceDate_not: DateTime
-  inactiveSinceDate_not_in: [DateTime]
-  sys: SysFilter
-  user_exists: Boolean
 }

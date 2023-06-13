@@ -6348,6 +6348,24 @@ export type FetchCalendarsQuery = {
   >;
 };
 
+export type FetchDiscoverQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchDiscoverQuery = {
+  queryDiscoverContents: Maybe<
+    Array<
+      Pick<Discover, 'id'> & {
+        flatData: Pick<DiscoverFlatDataDto, 'aboutUs'> & {
+          training: Maybe<Array<Pick<Tutorials, 'id'>>>;
+          pages: Maybe<Array<Pick<Pages, 'id'>>>;
+          members: Maybe<Array<Pick<Users, 'id'>>>;
+          membersTeam: Maybe<Array<Pick<Teams, 'id'>>>;
+          scientificAdvisoryBoard: Maybe<Array<Pick<Users, 'id'>>>;
+        };
+      }
+    >
+  >;
+};
+
 export type FetchEventsQueryVariables = Exact<{
   take: InputMaybe<Scalars['Int']>;
   skip: InputMaybe<Scalars['Int']>;
@@ -6789,6 +6807,112 @@ export const FetchCalendarsDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchCalendarsQuery, FetchCalendarsQueryVariables>;
+export const FetchDiscoverDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchDiscover' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'queryDiscoverContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'aboutUs' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'training' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'pages' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'members' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'membersTeam' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'scientificAdvisoryBoard',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FetchDiscoverQuery, FetchDiscoverQueryVariables>;
 export const FetchEventsDocument = {
   kind: 'Document',
   definitions: [

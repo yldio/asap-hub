@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { Environment } from 'contentful-management';
 import { migrateLabs } from '../../src/labs/labs.data-migration';

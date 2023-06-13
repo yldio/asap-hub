@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { Environment } from 'contentful-management';
 import { migrateNews } from '../../src/news/news.data-migration';
@@ -141,7 +142,7 @@ describe('Migrate news', () => {
 
       const createAssetMock = createAsset as jest.Mock;
       createAssetMock.mockResolvedValueOnce(
-        contenfulUploadAssetFields['file']['en-US'],
+        contenfulUploadAssetFields.file['en-US'],
       );
 
       await migrateNews();
@@ -166,7 +167,7 @@ describe('Migrate news', () => {
             linkText: { 'en-US': undefined },
             shortText: { 'en-US': undefined },
             text: { 'en-US': null },
-            thumbnail: { 'en-US': contenfulUploadAssetFields['file']['en-US'] },
+            thumbnail: { 'en-US': contenfulUploadAssetFields.file['en-US'] },
             title: { 'en-US': 'news' },
             publishDate: { 'en-US': undefined },
           },
@@ -289,9 +290,7 @@ describe('Migrate news', () => {
         .mockImplementationOnce(() => {
           throw new Error();
         })
-        .mockImplementationOnce(() => {
-          return Promise.resolve(newsEntry);
-        });
+        .mockImplementationOnce(() => Promise.resolve(newsEntry));
 
       await migrateNews();
 

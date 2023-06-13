@@ -13,9 +13,10 @@ export const teardownHelper = (
   let toDelete: RecordToDelete[] = [];
 
   for (const client of clients) {
-    const create = client.create;
+    const { create } = client;
     client.create = async (...args) => {
       const result: Response = await create.apply(client, args);
+      // eslint-disable-next-line no-loop-func
       toDelete.push({ client, id: result.id });
       return result;
     };

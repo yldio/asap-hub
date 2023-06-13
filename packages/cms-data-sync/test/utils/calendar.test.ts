@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Environment } from '@asap-hub/contentful';
 import { createCalendarLink } from '../../src/utils';
 import { calendarEntry } from '../fixtures';

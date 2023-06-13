@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom';
 import { validateContentfulRequest } from '../../src/utils/validate-contentful-request';
+
 const authenticationToken = 'shared_secret';
 
 describe('Verifies Squidex webhook payload signature', () => {

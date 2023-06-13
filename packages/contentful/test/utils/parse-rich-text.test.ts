@@ -1,3 +1,4 @@
+// eslint-disable-file camelcase no-useless-escape
 import { BLOCKS, TopLevelBlockEnum } from '@contentful/rich-text-types';
 import { parseRichText } from '../../src/utils';
 import {

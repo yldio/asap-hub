@@ -39,9 +39,7 @@ describe('Sentry Error middleware', () => {
   test('Should handle any unhandled rejection', async () => {
     const mockRoutes = Router();
     const err = new Error('error');
-    mockRoutes.get('/example', async (_, __) => {
-      return Promise.reject(err);
-    });
+    mockRoutes.get('/example', async (_, __) => Promise.reject(err));
 
     const app = appFactory({
       logger: loggerMock,

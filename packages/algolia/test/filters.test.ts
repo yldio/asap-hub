@@ -1,4 +1,5 @@
 import { getEventFilters } from '../src/filters';
+
 describe('Filters', () => {
   test('before date is set', () => {
     expect(getEventFilters({ before: '2021-12-28' })).toEqual(

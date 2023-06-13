@@ -38,13 +38,10 @@ export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
   return users.create(user as RestUser['data']);
 };
 
-export const createRandomOrcid = () => {
-  return (
-    [
-      chance.string({ length: 4, numeric: true }),
-      chance.string({ length: 4, numeric: true }),
-      chance.string({ length: 4, numeric: true }),
-      chance.string({ length: 3, numeric: true }),
-    ].join('-') + chance.string({ length: 1, pool: '0123456789X' })
-  );
-};
+export const createRandomOrcid = () =>
+  [
+    chance.string({ length: 4, numeric: true }),
+    chance.string({ length: 4, numeric: true }),
+    chance.string({ length: 4, numeric: true }),
+    chance.string({ length: 3, numeric: true }),
+  ].join('-') + chance.string({ length: 1, pool: '0123456789X' });

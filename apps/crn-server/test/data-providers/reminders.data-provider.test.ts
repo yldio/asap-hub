@@ -962,8 +962,6 @@ describe('Reminder Data Provider', () => {
         jest.useRealTimers();
       });
 
-      beforeEach(async () => {});
-
       test('Should fetch the reminder when it has already started', async () => {
         // set current time to one minute after the start of the fixture event
         jest.setSystemTime(DateTime.fromISO('2022-01-01T08:01:00Z').toJSDate());
@@ -1555,7 +1553,7 @@ describe('Reminder Data Provider', () => {
         });
       });
 
-      describe('When there is no related PM ', () => {
+      describe('When there is no related PM', () => {
         const speakerUserData = {
           id: 'user-id',
           flatData: {

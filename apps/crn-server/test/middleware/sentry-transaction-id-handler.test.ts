@@ -12,9 +12,7 @@ jest.mock('@sentry/serverless', () => ({
 
 describe('Sentry Transaction Id  middleware', () => {
   const mockRoutes = Router();
-  mockRoutes.get('/example', async (req, res) => {
-    return res.json({ response: 'OK' });
-  });
+  mockRoutes.get('/example', async (req, res) => res.json({ response: 'OK' }));
 
   const app = appFactory({
     logger: loggerMock,

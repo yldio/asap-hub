@@ -7,11 +7,7 @@ import { apiGatewayEvent } from '../helpers/events';
 
 test('http returns 400 on invalid body', async () => {
   const spy = jest.spyOn(helpers, 'errorResponse');
-  const handler = http(async (_) => {
-    return {
-      statusCode: 200,
-    };
-  });
+  const handler = http(async (_) => ({ statusCode: 200 }));
 
   const result = await handler(
     apiGatewayEvent({

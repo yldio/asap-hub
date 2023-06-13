@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { Environment } from 'contentful-management';
 import { migrateExternalAuthors } from '../../src/external-authors/external-authors.data-migration';

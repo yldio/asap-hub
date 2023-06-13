@@ -1,11 +1,11 @@
-import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { Environment } from 'contentful-management';
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
+import { CalendarDataProvider } from '@asap-hub/model';
+import { Logger } from '@asap-hub/server-common';
 import { syncCalendars } from '../../src/calendars/sync-all';
 import { calendarEntry } from '../fixtures';
 import { getContentfulClient, fetchContentfulEntries } from '../../src/utils';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
-import { CalendarDataProvider } from '@asap-hub/model';
-import { Logger } from '@asap-hub/server-common';
 import { getDataProviderMock } from '../../../../apps/crn-server/test/mocks/data-provider.mock';
 import { loggerMock } from '../../../../apps/crn-server/test/mocks/logger.mock';
 

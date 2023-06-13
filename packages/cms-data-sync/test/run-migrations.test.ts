@@ -1,3 +1,4 @@
+/* eslint-disable vars-on-top, @typescript-eslint/no-explicit-any, no-console, jest/valid-expect */
 import * as contentfulManagement from 'contentful-management';
 import {
   Collection,

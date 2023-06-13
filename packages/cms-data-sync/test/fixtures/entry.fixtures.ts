@@ -3,9 +3,9 @@ import {
   contenfulSpaceLink,
   contentfulEnvironmentLink,
   contenfulUserLink,
-} from './';
+} from '.';
 
-type Field = Record<string, any>;
+type Field = Record<string, unknown>;
 
 export const getEntry = (fields: Field): Entry => ({
   update: jest.fn(),

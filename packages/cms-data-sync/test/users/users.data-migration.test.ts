@@ -1,12 +1,8 @@
+/* eslint-disable no-console */
 import { SquidexGraphqlClient, createUrlFactory } from '@asap-hub/squidex';
 import { Environment } from 'contentful-management';
 import { migrateUsers } from '../../src/users/users.data-migration';
-import {
-  getEntry,
-  userEntry,
-  teamMembershipEntry,
-  contenfulAsset,
-} from '../fixtures';
+import { userEntry, teamMembershipEntry } from '../fixtures';
 import {
   clearContentfulEntries,
   createAsset,

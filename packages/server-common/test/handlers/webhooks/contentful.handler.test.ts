@@ -1,11 +1,15 @@
 import {
   ContentfulClientApi,
   ContentfulWebhookPublishPayload,
+  ContentfulWebhookUnpublishPayload,
 } from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { contentfulHandlerFactory } from '../../../src/handlers/webhooks';
-import { getNewsPublishContentfulWebhookPayload } from '../../fixtures/news.fixtures';
+import {
+  getNewsPublishContentfulWebhookPayload,
+  getNewsUnpublishContentfulWebhookPayload,
+} from '../../fixtures/news.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
 import { loggerMock as logger } from '../../mocks/logger.mock';
 
@@ -30,7 +34,7 @@ describe('Contentful event webhook', () => {
     'contentful-webhook-authentication-token';
   const headers = {
     authorization: contentfulWebhookAuthenticationToken,
-    'x-contentful-topic': 'publish',
+    'x-contentful-topic': 'ContentManagement.Entry.publish',
   };
   const handler = contentfulHandlerFactory(
     contentfulWebhookAuthenticationToken,
@@ -145,11 +149,55 @@ describe('Contentful event webhook', () => {
     expect(statusCode).toStrictEqual(500);
   });
 
-  test('Should put the news-published event into the event bus and return 200', async () => {
+  test('Should put the news-unpublished event to event bus and return 200 when the entry has been deleted', async () => {
     mockGetEntry.mockReset();
     mockGetEntry.mockRejectedValue(
       new Error('The resource could not be found'),
     );
+    const payload = getNewsUnpublishContentfulWebhookPayload();
+    const headers = {
+      authorization: contentfulWebhookAuthenticationToken,
+      'x-contentful-topic': 'ContentManagement.Entry.unpublish',
+    };
+    const event = getLambdaRequest(payload, headers);
+    const { statusCode } = await handler(event);
+
+    const expectedDetail: WebhookDetail<
+      ContentfulWebhookUnpublishPayload<'news'>
+    > = {
+      resourceId: payload.sys.id,
+      ...payload,
+    };
+
+    expect(statusCode).toStrictEqual(200);
+    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
+      Entries: [
+        {
+          EventBusName: eventBus,
+          Source: eventSource,
+          DetailType: 'NewsUnpublished' satisfies WebhookDetailType,
+          Detail: JSON.stringify(expectedDetail),
+        },
+      ],
+    });
+    expect(logger.debug).toBeCalledWith(
+      expect.stringMatching(/Event added to event-bus/i),
+    );
+  });
+
+  test('Should put the news-published event to event bus and return 200 when the entry is not available at first but then is fetched at a later attempt', async () => {
+    mockGetEntry.mockReset();
+    mockGetEntry.mockRejectedValueOnce(
+      new Error('The resource could not be found'),
+    );
+    mockGetEntry.mockResolvedValue({
+      sys: {
+        id: '1',
+        revision: 5,
+      },
+      fields: {},
+    } as any);
+
     const payload = getNewsPublishContentfulWebhookPayload();
     const event = getLambdaRequest(payload, headers);
     const { statusCode } = await handler(event);

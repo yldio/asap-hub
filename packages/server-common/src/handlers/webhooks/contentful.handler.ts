@@ -9,11 +9,17 @@ import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { Logger } from '../../utils';
 import { validateContentfulRequest } from '../../utils/validate-contentful-request';
 
+const getActionFromRequest = (
+  request: lambda.Request<ContentfulWebhookPayload>,
+): 'publish' | 'unpublish' => {
+  const actions = request.headers['x-contentful-topic']?.split('.') ?? [];
+  return actions[actions.length - 1] as 'publish' | 'unpublish';
+};
+
 const getDetailTypeFromRequest = (
   request: lambda.Request<ContentfulWebhookPayload>,
 ): WebhookDetailType => {
-  const actions = request.headers['x-contentful-topic']?.split('.') ?? [];
-  const action = actions[actions.length - 1] as 'publish' | 'unpublish';
+  const action = getActionFromRequest(request);
   const contentType = request.payload.sys.contentType.sys.id;
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -50,6 +56,7 @@ export const contentfulHandlerFactory =
 
     const detailType = getDetailTypeFromRequest(request);
     const detail = getDetailFromRequest(request);
+    const action = getActionFromRequest(request);
 
     if (!detail.sys.revision) {
       throw new Error('Invalid payload');
@@ -68,7 +75,8 @@ export const contentfulHandlerFactory =
       } catch (error) {
         if (
           error instanceof Error &&
-          error.message.match(/The resource could not be found/)
+          error.message.match(/The resource could not be found/) &&
+          action === 'unpublish'
         ) {
           return undefined;
         }

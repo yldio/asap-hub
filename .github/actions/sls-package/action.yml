@@ -112,7 +112,6 @@ runs:
         GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
         GP2_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.gp2-contentful-access-token }}
         GP2_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.gp2-contentful-enabled }}
-        GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.gp2-contentful-preview-access-token }}
         GP2_CONTENTFUL_ENV: ${{ inputs.gp2-contentful-env }}
         GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.gp2-contentful-management-access-token }}
         GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.gp2-contentful-preview-access-token }}

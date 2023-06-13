@@ -1,0 +1,71 @@
+name: Rollback contentful last migration
+on:
+  workflow_dispatch:
+    inputs:
+      app-name:
+        required: true
+        description: The app name
+        type: choice
+        options:
+          - CRN
+          - GP2
+      environment-name:
+        required: true
+        description: The environment name
+        type: choice
+        options:
+          - Branch
+          - Development
+          - Production
+      contentful-env:
+        required: true
+        type: string
+        description: Choose the Contentful environment to rollback the last migration
+
+jobs:
+  rollback_last_migration:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Run CRN Contentful rollback
+        if: ${{ inputs.app-name=='CRN' }}
+        run: |
+          yarn contentful:rollback-migration:crn
+        env:
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          CRN_CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+
+      - name: Run GP2 Contentful rollback
+        if: ${{ inputs.app-name=='GP2' }}
+        run: |
+          yarn contentful:rollback-migration:gp2
+        env:
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          GP2_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+          GP2_CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs: [rollback_last_migration]
+    if: ${{ failure() && inputs.environment-name=='Production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: Rollback last Contentful migration failed
+          webhook: ${{ env.SLACK_WEBHOOK }}
+          status: failure

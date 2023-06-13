@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import EmailSection from '../EmailSection';
 
@@ -36,4 +36,16 @@ describe('EmailSection', () => {
       'test@example.com',
     );
   });
+  it('copy button displays tooltip', async () => {
+    render(<EmailSection {...defaultProps} />);
+    const copyButton = screen.getByRole('button', { name: 'Copy' });
+    expect(copyButton).toBeVisible();
+    expect(screen.getByText('Email copied')).not.toBeVisible();
+    userEvent.click(copyButton);
+    expect(screen.getByText('Email copied')).toBeVisible();
+    await waitFor(
+      () => expect(screen.getByText('Email copied')).not.toBeVisible(),
+      { timeout: 20000 },
+    );
+  }, 30000);
 });

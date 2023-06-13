@@ -52,9 +52,7 @@ describe('Layout', () => {
       expect(screen.getByLabelText(/close/i)).toBeVisible();
     });
 
-    userEvent.click(
-      screen.getAllByText(/dashboard/i, { selector: 'nav *' })[0]!,
-    );
+    userEvent.click(screen.getAllByText(/people/i, { selector: 'nav *' })[0]!);
     await waitFor(() => {
       expect(screen.getByLabelText(/close/i)).not.toBeVisible();
     });
@@ -67,9 +65,7 @@ describe('Layout', () => {
       </MemoryRouter>,
     );
 
-    userEvent.click(
-      screen.getAllByText(/dashboard/i, { selector: 'nav *' })[0]!,
-    );
+    userEvent.click(screen.getAllByText(/people/i, { selector: 'nav *' })[0]!);
     expect(screen.getByRole('main').scrollTo).toHaveBeenCalled();
   });
 });

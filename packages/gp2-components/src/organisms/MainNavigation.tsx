@@ -3,7 +3,6 @@ import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
 import {
-  dashboardIcon,
   eventsIcon,
   outputsIcon,
   projectIcon,
@@ -65,11 +64,6 @@ const MainNavigation: React.FC = () => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={'/'} icon={dashboardIcon}>
-          Dashboard
-        </NavigationLink>
-      </li>
-      <li>
         <NavigationLink href={users({}).$} icon={usersIcon}>
           People
         </NavigationLink>
@@ -89,13 +83,13 @@ const MainNavigation: React.FC = () => (
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={events({}).$} icon={eventsIcon}>
-          Events
+        <NavigationLink href={outputs({}).$} icon={outputsIcon}>
+          Outputs
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={outputs({}).$} icon={outputsIcon}>
-          Outputs
+        <NavigationLink href={events({}).$} icon={eventsIcon}>
+          Events
         </NavigationLink>
       </li>
     </ul>

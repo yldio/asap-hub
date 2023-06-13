@@ -1,6 +1,12 @@
 import { DropdownButton, pixels, plusIcon } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
+import outputArticleIcon from '../icons/output-article';
+import outputCodeSoftwareIcon from '../icons/output-code-software';
+import outputDatasetIcon from '../icons/output-dataset';
+import outputFormIcon from '../icons/output-form';
+import outputGP2ReportsIcon from '../icons/output-gp2-reports';
+import outputTrainingMarerialsIcon from '../icons/output-training-materials';
 
 type ShareOutputButtonProps = {
   entityType: 'workingGroup' | 'project';
@@ -34,35 +40,35 @@ const ShareOutputButton: React.FC<ShareOutputButtonProps> = ({
       )}
     >
       {{
-        item: <>Article</>,
+        item: <>{outputArticleIcon} Article</>,
         href: route.createOutput({ outputDocumentType: 'article' }).$,
       }}
       {{
-        item: <>Code/Software</>,
+        item: <>{outputCodeSoftwareIcon} Code/Software</>,
         href: route.createOutput({
           outputDocumentType: 'code-software',
         }).$,
       }}
       {{
-        item: <>Data Release</>,
+        item: <>{outputDatasetIcon} Data Release</>,
         href: route.createOutput({
           outputDocumentType: 'data-release',
         }).$,
       }}
       {{
-        item: <>Form</>,
+        item: <>{outputFormIcon} Form</>,
         href: route.createOutput({
           outputDocumentType: 'procedural-form',
         }).$,
       }}
       {{
-        item: <>Training Materials</>,
+        item: <>{outputTrainingMarerialsIcon} Training Materials</>,
         href: route.createOutput({
           outputDocumentType: 'training-materials',
         }).$,
       }}
       {{
-        item: <>Update</>,
+        item: <>{outputGP2ReportsIcon} Update</>,
         href: route.createOutput({
           outputDocumentType: 'update',
         }).$,

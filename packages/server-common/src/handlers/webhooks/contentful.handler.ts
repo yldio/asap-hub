@@ -61,8 +61,29 @@ export const contentfulHandlerFactory =
       space: config.space,
       environment: config.environment,
     });
-    const fetchEntryById = () => cpaClient.getEntry(detail.resourceId);
-    await pollContentfulDeliveryApi(fetchEntryById, entryVersion);
+    const fetchEntryById = async () => {
+      try {
+        const entry = await cpaClient.getEntry(detail.resourceId);
+        return entry;
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          error.message.match(/The resource could not be found/)
+        ) {
+          return undefined;
+        }
+        throw error;
+      }
+    };
+
+    try {
+      await pollContentfulDeliveryApi(fetchEntryById, entryVersion);
+    } catch (error) {
+      // skip if the entry is not found as it may have been deleted
+      if (!(error instanceof Error && error.message === 'Not found')) {
+        throw error;
+      }
+    }
 
     try {
       await eventBridge.putEvents({

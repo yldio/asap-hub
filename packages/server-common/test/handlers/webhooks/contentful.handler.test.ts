@@ -1,4 +1,7 @@
-import { ContentfulWebhookPublishPayload } from '@asap-hub/contentful';
+import {
+  ContentfulClientApi,
+  ContentfulWebhookPublishPayload,
+} from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { contentfulHandlerFactory } from '../../../src/handlers/webhooks';
@@ -6,16 +9,14 @@ import { getNewsPublishContentfulWebhookPayload } from '../../fixtures/news.fixt
 import { getLambdaRequest } from '../../helpers/events';
 import { loggerMock as logger } from '../../mocks/logger.mock';
 
+const mockGetEntry: jest.MockedFunction<
+  ContentfulClientApi<undefined>['getEntry']
+> = jest.fn();
+
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
   getCPAClient: () => ({
-    getEntry: jest.fn().mockResolvedValue({
-      sys: {
-        id: '1',
-        revision: 5,
-      },
-      fields: {},
-    }),
+    getEntry: mockGetEntry,
   }),
 }));
 
@@ -45,6 +46,16 @@ describe('Contentful event webhook', () => {
   );
 
   beforeEach(jest.resetAllMocks);
+
+  beforeEach(() => {
+    mockGetEntry.mockResolvedValue({
+      sys: {
+        id: '1',
+        revision: 5,
+      },
+      fields: {},
+    } as any);
+  });
 
   test('Should throw an error when the request has no Authorization header', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
@@ -132,5 +143,37 @@ describe('Contentful event webhook', () => {
       ),
     );
     expect(statusCode).toStrictEqual(500);
+  });
+
+  test('Should put the news-published event into the event bus and return 200', async () => {
+    mockGetEntry.mockReset();
+    mockGetEntry.mockRejectedValue(
+      new Error('The resource could not be found'),
+    );
+    const payload = getNewsPublishContentfulWebhookPayload();
+    const event = getLambdaRequest(payload, headers);
+    const { statusCode } = await handler(event);
+
+    const expectedDetail: WebhookDetail<
+      ContentfulWebhookPublishPayload<'news'>
+    > = {
+      resourceId: payload.sys.id,
+      ...payload,
+    };
+
+    expect(statusCode).toStrictEqual(200);
+    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
+      Entries: [
+        {
+          EventBusName: eventBus,
+          Source: eventSource,
+          DetailType: 'NewsPublished' satisfies WebhookDetailType,
+          Detail: JSON.stringify(expectedDetail),
+        },
+      ],
+    });
+    expect(logger.debug).toBeCalledWith(
+      expect.stringMatching(/Event added to event-bus/i),
+    );
   });
 });

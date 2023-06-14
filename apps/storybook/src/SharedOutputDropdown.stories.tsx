@@ -1,4 +1,4 @@
-import { SharedOutputDropdown } from '@asap-hub/react-components';
+import { SharedOutputDropdown, LibraryIcon } from '@asap-hub/react-components';
 
 export default {
   title: 'Organisms / Shared Output Dropdown',
@@ -33,5 +33,5 @@ export const Normal = () => (
       ),
       href: '#',
     }}
-  </DropdownButton>
+  </SharedOutputDropdown>
 );

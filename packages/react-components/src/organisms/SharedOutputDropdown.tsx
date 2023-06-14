@@ -1,5 +1,14 @@
 import { useState } from 'react';
 import { css } from '@emotion/react';
+
+import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
+import {
+  getUserRole,
+  hasShareResearchOutputPermission,
+} from '@asap-hub/validation';
+
 import {
   article,
   bioinformatics,
@@ -15,14 +24,7 @@ import {
 } from '../icons';
 import { DropdownButton } from '../molecules';
 import { perRem } from '../pixels';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
 import { Ellipsis } from '../atoms';
-import {
-  getUserRole,
-  hasShareResearchOutputPermission,
-} from '@asap-hub/validation';
 
 const iconStyles = css({
   display: 'flex',
@@ -69,7 +71,7 @@ const AssociationItem: React.FC<{
 type SharedOutputDropdownProps = {
   children?: never;
 };
-const SharedOutputDropdown: React.FC<SharedOutputDropdownProps> = ({}) => {
+const SharedOutputDropdown: React.FC<SharedOutputDropdownProps> = () => {
   const user = useCurrentUserCRN();
   const [selectedAssociation, setSelectedAssociation] = useState<
     Association | undefined

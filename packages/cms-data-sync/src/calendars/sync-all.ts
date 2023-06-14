@@ -1,5 +1,6 @@
 import { Logger } from '@asap-hub/server-common';
 import { CalendarDataProvider } from '@asap-hub/model';
+import { Entry } from 'contentful-management';
 
 import { fetchContentfulEntries, getContentfulClient } from '../utils';
 
@@ -22,26 +23,40 @@ export async function syncCalendars({
     return;
   }
 
-  const promises = await Promise.allSettled(
-    calendars.map(async (calendar) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await dataProvider.update(calendar.sys.id, { googleApiMetadata: {} });
-    }),
-  );
+  const updateCalendar = async (
+    calendar: Entry,
+    retries = 0,
+  ): Promise<void> => {
+    try {
+      await dataProvider.update(calendar.sys.id, {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        googleApiMetadata: {
+          ...calendar.fields?.googleApiMetadata?.['en-US'],
+          associatedGoogleCalendarId: undefined,
+        },
+      });
+    } catch (error) {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      if ((error as any)?.name === 'RateLimitExceeded' && retries < 3) {
+        const attempts = retries + 1;
+        await updateCalendar(calendar, attempts);
+      } else {
+        throw error;
+      }
+    }
+  };
 
   let hasErrored = false;
 
-  promises.forEach((promise, i) => {
-    if (promise.status === 'rejected') {
+  for (const calendar of calendars) {
+    try {
+      await updateCalendar(calendar);
+    } catch (error) {
       hasErrored = true;
-      const calendar = calendars[i];
-      logger.error(
-        promise.reason,
-        `Failed to sync calendar: ${calendar.sys.id}`,
-      );
+      logger.error(error, `Failed to sync calendar: ${calendar.sys.id}`);
     }
-  });
+  }
 
   if (hasErrored) {
     throw new Error('Calendar Syncing Error');

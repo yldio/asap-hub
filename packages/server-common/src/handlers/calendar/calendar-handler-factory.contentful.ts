@@ -31,6 +31,8 @@ type CalendarSkeleton = {
   };
 };
 
+const defaultGetCalendarId = (id: string): string => id;
+
 export const calendarCreatedContentfulHandlerFactory =
   (
     subscribe: SubscribeToEventChanges,
@@ -39,6 +41,7 @@ export const calendarCreatedContentfulHandlerFactory =
     alerts: Alerts,
     logger: Logger,
     contentfulDeliveryApiConfig: ContentfulDeliveryApiConfig,
+    getCalendarSubscriptionIdFunction?: (id: string) => string,
   ) =>
   async (
     event: EventBridgeEvent<CalendarEvent, CalendarContentfulPayload>,
@@ -54,6 +57,8 @@ export const calendarCreatedContentfulHandlerFactory =
 
     const webhookEventVersion = sys.revision;
     const webhookEventGoogleCalendarId = fields.googleCalendarId['en-US'];
+    const getCalendarSubscriptionId =
+      getCalendarSubscriptionIdFunction || defaultGetCalendarId;
 
     logger.info(
       `Received a '${eventType}' event for the calendar ${calendarId}`,
@@ -89,7 +94,7 @@ export const calendarCreatedContentfulHandlerFactory =
       try {
         await unsubscribe(
           googleApiMetadata.resourceId as string,
-          `contentful__${calendarId}`,
+          getCalendarSubscriptionId(calendarId),
         );
 
         await calendarDataProvider.update(calendarId, {
@@ -115,7 +120,7 @@ export const calendarCreatedContentfulHandlerFactory =
       try {
         const { resourceId, expiration } = await subscribe(
           webhookEventGoogleCalendarId,
-          `contentful__${calendarId}`,
+          getCalendarSubscriptionId(calendarId),
         );
 
         await calendarDataProvider.update(calendarId, {

@@ -57,6 +57,7 @@ jobs:
     strategy:
       matrix:
         app:
+          - date-field-as-first-published-at
           - disabled-fields
           - event-additional-materials
           - event-speakers-title

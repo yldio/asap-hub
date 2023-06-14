@@ -29,6 +29,9 @@ outputs:
   cache-prefix-transpile:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
+  contentful-app-date-field-as-first-published-at:
+    description: 'Contentful App Extension Date Field as firstPublishedAt'
+    value: ${{ steps.vars.outputs.contentful-app-date-field-as-first-published-at }}
   contentful-app-disabled-fields:
     description: 'Contentful App Extension Disabled Fields Id'
     value: ${{ steps.vars.outputs.contentful-app-disabled-fields }}

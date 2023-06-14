@@ -396,6 +396,7 @@ __metadata:
     "@types/jest-when": 3.5.2
     "@types/node": 18.15.11
     "@types/prettier": 2.7.2
+    cheerio: ^1.0.0-rc.12
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.18"
     contentful-management: 10.32.0
     graphql: 15.8.0
@@ -21437,7 +21438,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cheerio@npm:^1.0.0-rc.3":
+"cheerio@npm:^1.0.0-rc.12, cheerio@npm:^1.0.0-rc.3":
   version: 1.0.0-rc.12
   resolution: "cheerio@npm:1.0.0-rc.12"
   dependencies:

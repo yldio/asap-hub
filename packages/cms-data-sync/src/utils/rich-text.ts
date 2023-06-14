@@ -1,3 +1,4 @@
+import * as cheerio from 'cheerio';
 import { Environment, Maybe } from '@asap-hub/contentful';
 import { Document } from '@contentful/rich-text-types';
 import {
@@ -7,6 +8,31 @@ import {
 } from 'contentful-html-rich-text-converter';
 import { createInlineAssets, createMediaEntries } from '.';
 import { logger } from './logs';
+
+export const removeStylingTagsWrappingIFrameTags = (html: string): string =>
+  html.replace(
+    /(<(strong|em|i|b)>)+(<iframe [^>]*><\/iframe>)(<(\/strong|\/em|\/i|\/b)>)+/gi,
+    '$3',
+  );
+
+export const removeStylingTagsWrappingImgTags = (html: string): string =>
+  html.replace(
+    /(<(strong|em|i|b)>)+(<img [^>]*\/>)(<(\/strong|\/em|\/i|\/b)>)+/gi,
+    '$3',
+  );
+
+export const wrapIframeWithPTag = (html: string): string => {
+  const $ = cheerio.load(html);
+  const iframe = $('iframe');
+
+  if (iframe.length > 0 && iframe.parent().is('body')) {
+    iframe.wrap('<p></p>');
+  }
+
+  const output = $('body').html();
+
+  return output ?? html;
+};
 
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
   ...htmlDocument,
@@ -61,13 +87,19 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   // does not know how to deal with div, but they are not
   // an important part of rich text input anyway, so we
   // can just remove them here
-  const htmlWithoutDivTag = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
-  logger(`HTML pre-parsed:\n${html}`, 'DEBUG');
-  logger(`HTML post-parsed:\n${htmlWithoutDivTag}`, 'DEBUG');
+  let processedHtml;
+  processedHtml = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
+  processedHtml = removeStylingTagsWrappingIFrameTags(processedHtml);
+  processedHtml = removeStylingTagsWrappingImgTags(processedHtml);
+  processedHtml = wrapIframeWithPTag(processedHtml);
 
-  const parsedHtml = parseHtml(htmlWithoutDivTag) as Document;
-  const inlineAssetBodies = parseAssets(htmlWithoutDivTag);
-  const inlineIFramesBodies = parseIFrames(htmlWithoutDivTag);
+  // processedHtml = addPTagsToIframeTagNotWrappedByAnything(processedHtml);
+  logger(`HTML pre-parsed:\n${html}`, 'DEBUG');
+  logger(`HTML post-parsed:\n${processedHtml}`, 'DEBUG');
+
+  const parsedHtml = parseHtml(processedHtml) as Document;
+  const inlineAssetBodies = parseAssets(processedHtml);
+  const inlineIFramesBodies = parseIFrames(processedHtml);
 
   logger(
     `Parsed HTML in Contentful format:\n${JSON.stringify(

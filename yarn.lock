@@ -1319,6 +1319,7 @@ __metadata:
     nock: 13.3.0
     node-dev: 6.7.0
     odata-query: 7.0.3
+    p-throttle: 4.1.1
     parse-data-url: 3.0.0
     serverless: 3.30.1
     serverless-http: 2.7.0

@@ -437,6 +437,34 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/contentful-app-date-field-as-first-published-at@workspace:packages/contentful-app-extensions/date-field-as-first-published-at":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/contentful-app-date-field-as-first-published-at@workspace:packages/contentful-app-extensions/date-field-as-first-published-at"
+  dependencies:
+    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-sdk": 4.17.0
+    "@contentful/f36-components": 4.34.1
+    "@contentful/f36-tokens": 4.0.1
+    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/rich-text-html-renderer": 16.0.3
+    "@testing-library/jest-dom": ^5.16.5
+    "@testing-library/react": 11.2.7
+    "@tsconfig/create-react-app": 1.0.3
+    "@types/jest": ^29.4.0
+    "@types/node": 18.15.11
+    "@types/react": 17.0.58
+    "@types/react-dom": 17.0.19
+    "@types/testing-library__jest-dom": 5.14.5
+    contentful-management: 10.32.0
+    cross-env: 7.0.3
+    emotion: 10.0.27
+    react: 17.0.2
+    react-dom: 17.0.2
+    react-scripts: 5.0.1
+    typescript: 4.9.5
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields"

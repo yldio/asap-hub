@@ -8,6 +8,7 @@ const editQuestions = route('/edit-questions', {}, {});
 const editFundingStreams = route('/edit-funding-streams', {}, {});
 const editContributingCohorts = route('/edit-contributing-cohorts', {}, {});
 const editExternalProfiles = route('/edit-external-profiles', {}, {});
+const publish = route('/publish', {}, {});
 
 const coreDetails = route(
   '/core-details',
@@ -42,6 +43,7 @@ const preview = route(
     editFundingStreams,
     editContributingCohorts,
     editExternalProfiles,
+    publish,
   },
 );
 

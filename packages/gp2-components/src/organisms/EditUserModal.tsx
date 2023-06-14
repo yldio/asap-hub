@@ -31,10 +31,11 @@ type EditUserModalProps = Partial<gp2.UserResponse> & {
   dirty: boolean;
   backHref: string;
   onSave?: () => void | Promise<void>;
-  children: (
+  children?: (
     state: { isSaving: boolean },
     asyncWrapper: (cb: () => void | Promise<void>) => void,
   ) => ReactNode;
+  buttonText?: string;
 };
 
 const EditUserModal: React.FC<EditUserModalProps> = ({
@@ -44,6 +45,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   backHref,
   dirty,
   onSave = noop,
+  buttonText = 'Save',
 }) => (
   <EditModal
     title={title}
@@ -58,9 +60,11 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
           <Headline3>{title}</Headline3>
           <Paragraph accent="lead">{description}</Paragraph>
         </header>
-        <div css={[formContainer, padding24Styles]}>
-          {children({ isSaving }, asyncWrapper)}
-        </div>
+        {children ? (
+          <div css={[formContainer, padding24Styles]}>
+            {children({ isSaving }, asyncWrapper)}
+          </div>
+        ) : null}
         <footer css={[footerStyles, padding24Styles]}>
           <div css={buttonStyles}>
             <Link href={backHref} buttonStyle fullWidth noMargin>
@@ -75,7 +79,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
               enabled={!isSaving}
               noMargin
             >
-              Save
+              {buttonText}
             </Button>
           </div>
         </footer>

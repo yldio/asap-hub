@@ -8,6 +8,7 @@ import {
   KeywordsModal,
   OnboardingPreview,
   OpenQuestionsModal,
+  PublishModal,
 } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
@@ -48,6 +49,7 @@ const Preview: React.FC<Record<string, never>> = () => {
     editFundingStreams,
     editContributingCohorts,
     editExternalProfiles,
+    publish,
   } = onboarding({}).preview({});
 
   const cohortOptions = useContributingCohorts();
@@ -109,6 +111,9 @@ const Preview: React.FC<Record<string, never>> = () => {
         </Route>
         <Route path={editExternalProfiles({}).$}>
           <ExternalProfilesModal {...userData} {...commonModalProps} />
+        </Route>
+        <Route path={publish({}).$}>
+          <PublishModal {...commonModalProps} />
         </Route>
       </>
     );

@@ -423,8 +423,8 @@ __metadata:
     "@tsconfig/create-react-app": 1.0.3
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.5
     contentful-management: 10.32.0
     cross-env: 7.0.3
@@ -451,8 +451,8 @@ __metadata:
     "@tsconfig/create-react-app": 1.0.3
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.5
     contentful-management: 10.32.0
     cross-env: 7.0.3
@@ -478,8 +478,8 @@ __metadata:
     "@tsconfig/create-react-app": 1.0.3
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.5
     contentful-management: 10.32.0
     cross-env: 7.0.3
@@ -507,8 +507,8 @@ __metadata:
     "@tsconfig/create-react-app": 1.0.3
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.5
     contentful-management: 10.32.0
     cross-env: 7.0.3
@@ -535,8 +535,8 @@ __metadata:
     "@tsconfig/create-react-app": 1.0.3
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.5
     contentful-management: 10.32.0
     cross-env: 7.0.3
@@ -562,8 +562,8 @@ __metadata:
     "@tsconfig/create-react-app": 1.0.3
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.5
     contentful-management: 10.32.0
     cross-env: 7.0.3
@@ -591,8 +591,8 @@ __metadata:
     "@tsconfig/create-react-app": 1.0.3
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.5
     contentful-management: 10.32.0
     cross-env: 7.0.3
@@ -659,8 +659,8 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/jsdom": 16.2.15
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
@@ -711,8 +711,8 @@ __metadata:
     "@types/nock": 11.1.0
     "@types/node": 18.15.11
     "@types/qs": 6.9.7
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": 2.0.1
@@ -767,8 +767,8 @@ __metadata:
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.1
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     aws-sdk: 2.1360.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
@@ -1016,7 +1016,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
+    "@types/react": 17.0.62
     "@types/react-router-dom": 5.3.3
     "@types/streamsaver": 2.0.1
     "@types/testing-library__jest-dom": 5.14.5
@@ -1064,8 +1064,8 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/jsdom": 16.2.15
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
@@ -1113,8 +1113,8 @@ __metadata:
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
     "@types/react-test-renderer": 17.0.2
@@ -1178,8 +1178,8 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/nock": 11.1.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": 2.0.1
@@ -1232,8 +1232,8 @@ __metadata:
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.1
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     aws-sdk: 2.1360.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
@@ -1351,8 +1351,8 @@ __metadata:
     "@emotion/react": 11.10.6
     "@emotion/server": 11.10.0
     "@types/babel__core": 7.20.1
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.30.1
@@ -1421,8 +1421,8 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": ^29.4.0
     "@types/ramda": 0.27.20
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
@@ -1495,7 +1495,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": ^29.4.0
-    "@types/react": 17.0.58
+    "@types/react": 17.0.62
     "@types/testing-library__jest-dom": 5.14.5
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
@@ -1672,7 +1672,7 @@ __metadata:
     "@storybook/manager-webpack5": ^6.5.13
     "@storybook/react": 6.5.16
     "@types/history": 4.7.11
-    "@types/react": 17.0.58
+    "@types/react": 17.0.62
     "@types/react-router-dom": 5.3.3
     babel-preset-react-app: 10.0.1
     core-js: 3.30.1
@@ -1697,8 +1697,8 @@ __metadata:
     "@babel/preset-react": 7.18.6
     "@babel/runtime-corejs3": 7.21.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
     react: 17.0.2
     react-dom: 17.0.2
   languageName: unknown
@@ -16510,12 +16510,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:17.0.19":
-  version: 17.0.19
-  resolution: "@types/react-dom@npm:17.0.19"
+"@types/react-dom@npm:17.0.20":
+  version: 17.0.20
+  resolution: "@types/react-dom@npm:17.0.20"
   dependencies:
     "@types/react": ^17
-  checksum: 875a472d868b235435c905ded16cf92297bd2afb20a5a78f5dccd54312f6f038ccf452ea92bb41c0b39150c2f16f3ddff0265a2de756c6f63b0971dd5719578b
+  checksum: 525439fb14a033fc5dbe74711ecc50ec82273a528df9656594066a6219401e975101dafffd15d9a1a57a9442d52ea0c92eaacae09554dde27cd792e773f67467
   languageName: node
   linkType: hard
 
@@ -16642,14 +16642,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.58":
-  version: 17.0.58
-  resolution: "@types/react@npm:17.0.58"
+"@types/react@npm:17.0.62":
+  version: 17.0.62
+  resolution: "@types/react@npm:17.0.62"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 4eaf32b86c43f388c681e34a00921c508dd88a1d1022aebfadc5fe802b7c5bed863de1a17eed31e43ca2d65222952dfe79a022055a0e6e4e1ad89fc5a42ec05e
+  checksum: 428a5aff44824ef504e9a9259b5894fe44a5db1c344b536990f07e132900ff5b34cbef0be77a84f30f37be1f88fc8b56dce328f568de8d65de3bfe414c05b2e1
   languageName: node
   linkType: hard
 

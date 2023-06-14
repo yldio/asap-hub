@@ -1,5 +1,5 @@
 import { DocumentNode } from 'graphql';
-import { ClientError, GraphQLClient } from 'graphql-request';
+import { ClientError, GraphQLClient, Variables } from 'graphql-request';
 import { GetAccessToken, SquidexConfig } from './auth';
 
 type SquidexRequestOptions = {
@@ -30,7 +30,7 @@ export class SquidexGraphql implements SquidexGraphqlClient {
     this.getAccessToken = getAccessToken;
   }
 
-  async request<T, V>(
+  async request<T, V extends Variables>(
     query: string | DocumentNode,
     variables?: V,
     options?: SquidexRequestOptions,
@@ -41,7 +41,7 @@ export class SquidexGraphql implements SquidexGraphqlClient {
     if (options?.includeDrafts) {
       this.client.setHeader('X-Unpublished', 'true');
     }
-    return this.client.request<T, V>(query, variables);
+    return this.client.request(query, variables);
   }
 }
 

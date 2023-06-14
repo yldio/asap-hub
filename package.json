@@ -35,6 +35,8 @@
     "contentful:migration:dryrun:gp2": "APP=gp2 ./packages/contentful/scripts/migration-dryrun.sh",
     "contentful:migration:generate:crn": "APP=crn ./packages/contentful/scripts/migration-generate.sh",
     "contentful:migration:generate:gp2": "APP=gp2 ./packages/contentful/scripts/migration-generate.sh",
+    "contentful:rollback-migration:crn": "APP=crn ./packages/contentful/scripts/migration-rollback-run.sh",
+    "contentful:rollback-migration:gp2": "APP=gp2 ./packages/contentful/scripts/migration-rollback-run.sh",
     "contentful:migration:run:crn": "APP=crn ./packages/contentful/scripts/migration-run.sh",
     "contentful:migration:run:gp2": "APP=gp2 ./packages/contentful/scripts/migration-run.sh",
     "contentful:schema:update": "yarn contentful:schema:update:crn && yarn contentful:schema:update:gp2",

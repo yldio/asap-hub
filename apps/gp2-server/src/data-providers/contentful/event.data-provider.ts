@@ -81,6 +81,13 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
       calendarId = projects?.calendar?.sys.id;
     }
 
+    if ((filter?.projectId || filter?.workingGroupId) && !calendarId) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
     if (filter?.userId) {
       const { users } = await this.contentfulClient.request<
         gp2.FetchEventsByUserIdQuery,

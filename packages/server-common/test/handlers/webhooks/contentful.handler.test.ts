@@ -2,6 +2,7 @@ import {
   ContentfulClientApi,
   ContentfulWebhookPublishPayload,
   ContentfulWebhookUnpublishPayload,
+  pollContentfulDeliveryApi,
 } from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
@@ -22,6 +23,7 @@ jest.mock('@asap-hub/contentful', () => ({
   getCPAClient: () => ({
     getEntry: mockGetEntry,
   }),
+  pollContentfulDeliveryApi: jest.fn(),
 }));
 
 describe('Contentful event webhook', () => {
@@ -59,6 +61,14 @@ describe('Contentful event webhook', () => {
       },
       fields: {},
     } as any);
+
+    (
+      pollContentfulDeliveryApi as jest.MockedFunction<
+        typeof pollContentfulDeliveryApi
+      >
+    ).mockImplementation(
+      jest.requireActual('@asap-hub/contentful').pollContentfulDeliveryApi,
+    );
   });
 
   test('Should throw an error when the request has no Authorization header', async () => {
@@ -222,6 +232,22 @@ describe('Contentful event webhook', () => {
     });
     expect(logger.debug).toBeCalledWith(
       expect.stringMatching(/Event added to event-bus/i),
+    );
+  });
+
+  test('Should return 500 when polling fails for a reason other than the not-found error', async () => {
+    const payload = getNewsPublishContentfulWebhookPayload();
+    const event = getLambdaRequest(payload, headers);
+    (
+      pollContentfulDeliveryApi as jest.MockedFunction<
+        typeof pollContentfulDeliveryApi
+      >
+    ).mockRejectedValueOnce(new Error('some error'));
+    const { statusCode } = await handler(event);
+
+    expect(statusCode).toStrictEqual(500);
+    expect(logger.error).toBeCalledWith(
+      expect.stringMatching(/The error message\: some error/i),
     );
   });
 });

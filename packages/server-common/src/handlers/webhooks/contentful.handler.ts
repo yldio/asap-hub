@@ -89,7 +89,12 @@ export const contentfulHandlerFactory =
     } catch (error) {
       // skip if the entry is not found as it may have been deleted
       if (!(error instanceof Error && error.message === 'Not found')) {
-        throw error;
+        if (error instanceof Error) {
+          logger.error(`The error message: ${error.message}`);
+        }
+        return {
+          statusCode: 500,
+        };
       }
     }
 

@@ -48,7 +48,6 @@ describe('Events Contentful Data Provider', () => {
   );
 
   afterEach(() => {
-    jest.clearAllMocks();
     jest.resetAllMocks();
   });
 

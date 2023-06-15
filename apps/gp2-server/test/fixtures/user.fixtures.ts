@@ -726,6 +726,7 @@ export const getContentfulGraphqlWorkingGroupMembership = () => ({
         sys: {
           id: '42',
         },
+        onboarded: true,
       },
       role: 'Co-lead',
     },
@@ -751,6 +752,7 @@ export const getContentfulGraphqlWorkingGroupMembers = () => ({
         sys: {
           id: 'user-id-2',
         },
+        onboarded: true,
       },
     },
     {
@@ -759,6 +761,7 @@ export const getContentfulGraphqlWorkingGroupMembers = () => ({
         sys: {
           id: 'user-id-3',
         },
+        onboarded: true,
       },
     },
   ],
@@ -771,6 +774,7 @@ export const getContentfulGraphqlProjectMembership = () => ({
         sys: {
           id: '42',
         },
+        onboarded: true,
       },
       role: 'Investigator',
     },
@@ -797,6 +801,7 @@ export const getContentfulGraphqlProjectMembers = () => ({
         sys: {
           id: 'user-id-0',
         },
+        onboarded: true,
       },
     },
     {
@@ -805,6 +810,7 @@ export const getContentfulGraphqlProjectMembers = () => ({
         sys: {
           id: 'user-id-1',
         },
+        onboarded: true,
       },
     },
   ],

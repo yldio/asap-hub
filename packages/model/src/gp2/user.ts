@@ -35,7 +35,7 @@ export type UserDegree = (typeof userDegrees)[number];
 export const userRegions = [
   'Africa',
   'Asia',
-  'Australia/Australiasia',
+  'Australia/Australasia',
   'Europe',
   'Latin America',
   'North America',
@@ -43,14 +43,6 @@ export const userRegions = [
 ] as const;
 
 export type UserRegion = (typeof userRegions)[number];
-
-export const isUserRole = (data: string): data is UserRole =>
-  userRoles.includes(data as UserRole);
-
-export const isUserDegree = (data: string | null): data is UserDegree =>
-  userDegrees.includes(data as UserDegree);
-export const isUserRegion = (data: string): data is UserRegion =>
-  userRegions.includes(data as UserRegion);
 
 export type UserPosition = {
   role: string;
@@ -79,11 +71,6 @@ export const userContributingCohortRole = [
 ] as const;
 export type UserContributingCohortRole =
   (typeof userContributingCohortRole)[number];
-
-export const isUserContributingCohortRole = (
-  data: string | null,
-): data is UserContributingCohortRole =>
-  userContributingCohortRole.includes(data as UserContributingCohortRole);
 
 export type UserContributingCohort = {
   role: UserContributingCohortRole;

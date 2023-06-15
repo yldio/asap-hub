@@ -18,22 +18,17 @@ export const parseMilestones = (
     (
       milestoneList: gp2Model.Milestone[],
       milestone: GraphQLProjectMilestone | GraphQLWorkingGroupMilestone,
-    ) => {
-      if (
-        !(milestone?.status && gp2Model.isMilestoneStatus(milestone.status))
-      ) {
-        return milestoneList;
-      }
-
-      return [
-        ...milestoneList,
-        {
-          title: milestone.title || '',
-          status: milestone.status,
-          link: milestone.externalLink || undefined,
-          description: milestone.description || undefined,
-        },
-      ];
-    },
+    ) =>
+      milestone
+        ? [
+            ...milestoneList,
+            {
+              title: milestone.title || '',
+              status: milestone.status as gp2Model.MilestoneStatus,
+              link: milestone.externalLink || undefined,
+              description: milestone.description || undefined,
+            },
+          ]
+        : milestoneList,
     [],
   ) || [];

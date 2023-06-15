@@ -17,29 +17,26 @@ export const parseResources = (
     | GraphQLWorkingGroup['resourcesCollection']
     | GraphQLProject['resourcesCollection'],
 ): gp2Model.Resource[] =>
-  resources?.items.reduce((resourceList: gp2Model.Resource[], resource) => {
-    if (
-      !(resource?.title && resource.type) ||
-      (resource.type === 'Link' && !resource.externalLink)
-    ) {
-      return resourceList;
-    }
-
-    return [
-      ...resourceList,
-      {
-        id: resource.sys.id,
-        title: resource.title,
-        description: resource.description || undefined,
-        ...(resource.type === 'Note'
-          ? { type: 'Note' }
-          : {
-              type: 'Link',
-              externalLink: resource.externalLink || '',
-            }),
-      },
-    ];
-  }, []) || [];
+  resources?.items.reduce(
+    (resourceList: gp2Model.Resource[], resource) =>
+      resource
+        ? [
+            ...resourceList,
+            {
+              id: resource.sys.id,
+              title: resource.title || '',
+              description: resource.description || undefined,
+              ...(resource.type === 'Note'
+                ? { type: 'Note' }
+                : {
+                    type: 'Link',
+                    externalLink: resource.externalLink || '',
+                  }),
+            },
+          ]
+        : resourceList,
+    [],
+  ) || [];
 
 const addNextResources = async (
   environment: Environment,

@@ -176,28 +176,16 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
 const getType = (
   documentType: gp2Model.OutputDocumentType,
   type?: string | null,
-) => {
-  if (documentType !== 'Article') {
-    return undefined;
-  }
-  if (!(type && gp2Model.isOutputType(type))) {
-    throw new TypeError('type not defined');
-  }
-  return type;
-};
+) => (documentType === 'Article' ? (type as gp2Model.OutputType) : undefined);
+
 const getSubType = (
   documentType: gp2Model.OutputDocumentType,
   type?: gp2Model.OutputType,
   subtype?: string | null,
-) => {
-  if (!(documentType === 'Article' && type === 'Research')) {
-    return undefined;
-  }
-  if (!(subtype && gp2Model.isOutputSubType(subtype))) {
-    throw new TypeError('subtype not defined');
-  }
-  return subtype;
-};
+) =>
+  documentType === 'Article' && type === 'Research'
+    ? (subtype as gp2Model.OutputSubtype)
+    : undefined;
 
 const getRelatedEntity = (related: OutputItem['relatedEntity']) => {
   const empty = { project: undefined, workingGroup: undefined };
@@ -240,20 +228,16 @@ const getAuthors = (authors?: GraphQLAuthors) =>
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
 ): gp2Model.OutputDataObject => {
-  if (
-    !(data.documentType && gp2Model.isOutputDocumentType(data.documentType))
-  ) {
-    throw new TypeError('document type not defined');
-  }
-  const type = getType(data.documentType, data.type);
-  const subtype = getSubType(data.documentType, type, data.subtype);
+  const documentType = data.documentType as gp2Model.OutputDocumentType;
+  const type = getType(documentType, data.type);
+  const subtype = getSubType(documentType, type, data.subtype);
   const authors = getAuthors(data.authorsCollection?.items);
   const relatedEntity = getRelatedEntity(data.relatedEntity);
   return {
     id: data.sys.id,
     created: data.sys.firstPublishedAt,
     link: data.link || undefined,
-    documentType: data.documentType,
+    documentType,
     type,
     subtype,
     title: data.title || '',

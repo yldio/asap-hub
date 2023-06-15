@@ -65,15 +65,6 @@ describe('Project Data Provider', () => {
       const expected = getProjectDataObject();
       expect(projectDataObject).toEqual(expected);
     });
-    test.each([null, 'invalid-status'])('with no status %s', (status) => {
-      const project = getContentfulGraphqlProject();
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        projects: { ...project, status },
-      });
-      expect(() => projectDataProvider.fetchById('id')).rejects.toThrowError(
-        new TypeError('status is unknown'),
-      );
-    });
     test('pm emails are added if available', async () => {
       const email = 'tony@starkenterprises.com';
       const project = getContentfulGraphqlProject();
@@ -216,28 +207,6 @@ describe('Project Data Provider', () => {
         });
         const projectDataObject = await projectDataProvider.fetchById('id');
         expect(projectDataObject?.members).toEqual([]);
-      });
-      test('should throw if the role property is invalid', () => {
-        const project = {
-          ...getContentfulGraphqlProject(),
-          membersCollection: {
-            total: 0,
-            items: [
-              {
-                sys: { id: '11' },
-                role: 'invalid-role',
-                user: {
-                  sys: { id: '42 ' },
-                  onboarded: true,
-                },
-              },
-            ],
-          },
-        };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          projects: project,
-        });
-        expect(() => projectDataProvider.fetchById('id')).rejects.toThrow();
       });
 
       test.each([false, undefined])(
@@ -389,75 +358,6 @@ describe('Project Data Provider', () => {
           },
         ]);
       });
-      test('should ignore a resource if title is undefined.', async () => {
-        const project = {
-          ...getContentfulGraphqlProject(),
-          resourcesCollection: {
-            total: 0,
-            items: [
-              {
-                sys: {
-                  id: '27',
-                },
-                type: 'Link',
-                title: null,
-                description: 'Project resource description',
-              },
-            ],
-          },
-        };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          projects: project,
-        });
-        const projectDataObject = await projectDataProvider.fetchById('id');
-        expect(projectDataObject?.resources).toStrictEqual([]);
-      });
-      test('should return a resource if description is undefined.', async () => {
-        const project = {
-          ...getContentfulGraphqlProject(),
-          resourcesCollection: {
-            total: 0,
-            items: [
-              {
-                sys: {
-                  id: '27',
-                },
-                type: 'Link',
-                title: 'Project resource title',
-                description: null,
-              },
-            ],
-          },
-        };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          projects: project,
-        });
-        const projectDataObject = await projectDataProvider.fetchById('id');
-        expect(projectDataObject?.resources![0]?.description).toBeUndefined();
-      });
-      test('should ignore a resource if external Link is undefined for a Link.', async () => {
-        const project = {
-          ...getContentfulGraphqlProject(),
-          resourcesCollection: {
-            total: 0,
-            items: [
-              {
-                sys: {
-                  id: '27',
-                },
-                type: 'Link',
-                title: 'Project resource title',
-                externalLink: null,
-              },
-            ],
-          },
-        };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          projects: project,
-        });
-        const projectDataObject = await projectDataProvider.fetchById('id');
-        expect(projectDataObject?.resources).toStrictEqual([]);
-      });
       test('empty resources returns empty array', async () => {
         const project = {
           ...getContentfulGraphqlProject(),
@@ -537,28 +437,6 @@ describe('Project Data Provider', () => {
         expect(projectDataObject?.milestones[0]?.description).toEqual(
           description,
         );
-      });
-      test('throws if status is not provided', async () => {
-        const project = {
-          ...getContentfulGraphqlProject(),
-          milestonesCollection: {
-            total: 0,
-            items: [
-              {
-                sys: {
-                  id: '23',
-                },
-                status: undefined,
-                title: 'A project milestone',
-              },
-            ],
-          },
-        };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          projects: project,
-        });
-        const projectDataObject = await projectDataProvider.fetchById('id');
-        expect(projectDataObject?.milestones).toEqual([]);
       });
     });
   });

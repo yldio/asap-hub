@@ -22,7 +22,6 @@ export const isResourceLink = (resource: Resource): resource is ResourceLink =>
   resource.type === 'Link';
 
 export type Keyword = (typeof keywords)[number];
-export const isKeyword = (data: string | null): data is string => data !== null;
 
 export interface Calendar {
   id: string;
@@ -32,8 +31,6 @@ export interface Calendar {
 export const milestoneStatus = ['Active', 'Not Started', 'Completed'] as const;
 export type MilestoneStatus = (typeof milestoneStatus)[number];
 
-export const isMilestoneStatus = (data: string): data is MilestoneStatus =>
-  milestoneStatus.includes(data as MilestoneStatus);
 export type Milestone = {
   description?: string;
   link?: string;

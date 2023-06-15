@@ -135,7 +135,7 @@ describe('User data provider', () => {
       region                                       | expected
       ${UsersDataRegionEnum.Africa}                | ${'Africa'}
       ${UsersDataRegionEnum.Asia}                  | ${'Asia'}
-      ${UsersDataRegionEnum.AustraliaAustraliasia} | ${'Australia/Australiasia'}
+      ${UsersDataRegionEnum.AustraliaAustraliasia} | ${'Australia/Australasia'}
       ${UsersDataRegionEnum.Europe}                | ${'Europe'}
       ${UsersDataRegionEnum.NorthAmerica}          | ${'North America'}
       ${UsersDataRegionEnum.SouthAmerica}          | ${'South America'}
@@ -775,14 +775,14 @@ describe('User data provider', () => {
       expect(nock.isDone()).toBe(true);
     });
     test.each`
-      region                      | expected
-      ${'Africa'}                 | ${UsersDataRegionEnum.Africa}
-      ${'Asia'}                   | ${UsersDataRegionEnum.Asia}
-      ${'Australia/Australiasia'} | ${UsersDataRegionEnum.AustraliaAustraliasia}
-      ${'Europe'}                 | ${UsersDataRegionEnum.Europe}
-      ${'North America'}          | ${UsersDataRegionEnum.NorthAmerica}
-      ${'South America'}          | ${UsersDataRegionEnum.SouthAmerica}
-      ${'Latin America'}          | ${UsersDataRegionEnum.LatinAmerica}
+      region                     | expected
+      ${'Africa'}                | ${UsersDataRegionEnum.Africa}
+      ${'Asia'}                  | ${UsersDataRegionEnum.Asia}
+      ${'Australia/Australasia'} | ${UsersDataRegionEnum.AustraliaAustraliasia}
+      ${'Europe'}                | ${UsersDataRegionEnum.Europe}
+      ${'North America'}         | ${UsersDataRegionEnum.NorthAmerica}
+      ${'South America'}         | ${UsersDataRegionEnum.SouthAmerica}
+      ${'Latin America'}         | ${UsersDataRegionEnum.LatinAmerica}
     `(
       'Should update the region $region => $expected',
       async ({ region, expected }) => {
@@ -904,14 +904,14 @@ describe('User data provider', () => {
     });
 
     test.each`
-      region                      | expected
-      ${'Africa'}                 | ${UsersDataRegionEnum.Africa}
-      ${'Asia'}                   | ${UsersDataRegionEnum.Asia}
-      ${'Australia/Australiasia'} | ${UsersDataRegionEnum.AustraliaAustraliasia}
-      ${'Europe'}                 | ${UsersDataRegionEnum.Europe}
-      ${'North America'}          | ${UsersDataRegionEnum.NorthAmerica}
-      ${'South America'}          | ${UsersDataRegionEnum.SouthAmerica}
-      ${'Latin America'}          | ${UsersDataRegionEnum.LatinAmerica}
+      region                     | expected
+      ${'Africa'}                | ${UsersDataRegionEnum.Africa}
+      ${'Asia'}                  | ${UsersDataRegionEnum.Asia}
+      ${'Australia/Australasia'} | ${UsersDataRegionEnum.AustraliaAustraliasia}
+      ${'Europe'}                | ${UsersDataRegionEnum.Europe}
+      ${'North America'}         | ${UsersDataRegionEnum.NorthAmerica}
+      ${'South America'}         | ${UsersDataRegionEnum.SouthAmerica}
+      ${'Latin America'}         | ${UsersDataRegionEnum.LatinAmerica}
     `(
       'Should create a user with the region $region => $expected',
       async ({ region, expected }) => {

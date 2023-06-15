@@ -9,7 +9,7 @@ import {
   gp2,
   createLink,
 } from '@asap-hub/contentful';
-import { EventStatus, gp2 as gp2Model, isEventStatus } from '@asap-hub/model';
+import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
 import {
@@ -262,46 +262,43 @@ export const parseEventSpeakerExternalUser = (
 export const parseGraphQLSpeakers = (
   speakers: SpeakerItem[],
 ): gp2Model.EventSpeaker[] =>
-  (speakers || []).reduce(
-    (speakerList: gp2Model.EventSpeaker[], { title, user }) => {
-      if (user?.__typename === 'ExternalUsers') {
-        speakerList.push({
-          speaker: parseEventSpeakerExternalUser(user),
-          topic: title || undefined,
-        });
-        return speakerList;
-      }
-
-      if (!user) {
-        speakerList.push({
-          speaker: undefined,
-          topic: title || undefined,
-        });
-        return speakerList;
-      }
-
-      if (user.onboarded !== true) {
-        return speakerList;
-      }
-
+  (speakers || []).reduce((speakerList: gp2Model.EventSpeaker[], speaker) => {
+    if (!speaker) {
+      return speakerList;
+    }
+    const { title, user } = speaker;
+    if (user?.__typename === 'ExternalUsers') {
       speakerList.push({
-        speaker: parseEventSpeakerUser(user),
+        speaker: parseEventSpeakerExternalUser(user),
         topic: title || undefined,
       });
       return speakerList;
-    },
-    [],
-  );
+    }
+
+    if (!user) {
+      speakerList.push({
+        speaker: undefined,
+        topic: title || undefined,
+      });
+      return speakerList;
+    }
+
+    if (user.onboarded !== true) {
+      return speakerList;
+    }
+
+    speakerList.push({
+      speaker: parseEventSpeakerUser(user),
+      topic: title || undefined,
+    });
+    return speakerList;
+  }, []);
 
 export const parseGraphQLEvent = (
   item: EventItem,
-): gp2Model.EventDataObject => {
+): gp2Model.EventDataObject | null => {
   if (!item.calendar) {
-    throw new Error(`Event (${item.sys.id}) doesn't have a calendar"`);
-  }
-
-  if (item.status && !isEventStatus(item.status)) {
-    throw new Error(`Invalid event (${item.sys.id}) status "${item.status}"`);
+    return null;
   }
 
   const calendar = parseCalendarDataObjectToResponse({
@@ -394,10 +391,13 @@ const getEventDataObject = (
     };
   }
 
+  const items = eventsCollection.items
+    .filter((item: unknown): item is EventItem => item !== null)
+    .map(parseGraphQLEvent)
+    .filter((item): item is gp2Model.EventDataObject => item !== null);
+
   return {
-    total: eventsCollection.total,
-    items: eventsCollection.items
-      .filter((item: unknown): item is EventItem => item !== null)
-      .map(parseGraphQLEvent),
+    total: items.length,
+    items,
   };
 };

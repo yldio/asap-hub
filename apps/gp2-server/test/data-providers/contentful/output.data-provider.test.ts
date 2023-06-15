@@ -84,17 +84,6 @@ describe('Outputs data provider', () => {
     });
 
     describe('Document Types', () => {
-      test('should return when the document type is null', async () => {
-        const graphqlResponse = getContentfulGraphqlOutput();
-        graphqlResponse!.documentType = null;
-        graphqlClientMock.request.mockResolvedValueOnce({
-          outputs: graphqlResponse,
-        });
-
-        await expect(outputDataProvider.fetchById(outputId)).rejects.toThrow(
-          'document type not defined',
-        );
-      });
       test.each(gp2Model.outputDocumentTypes)(
         'parses the document type %s to %s',
         async (type) => {
@@ -109,18 +98,6 @@ describe('Outputs data provider', () => {
       );
     });
     describe('Types', () => {
-      test('should throw when the type is null', async () => {
-        const graphqlResponse = getContentfulGraphqlOutput();
-        graphqlResponse!.documentType = 'Article';
-        graphqlResponse!.type = null;
-        graphqlClientMock.request.mockResolvedValueOnce({
-          outputs: graphqlResponse,
-        });
-
-        await expect(outputDataProvider.fetchById(outputId)).rejects.toThrow(
-          'type not defined',
-        );
-      });
       test.each(gp2Model.outputTypes)(
         'parses the  type %s to %s',
         async (type) => {
@@ -163,19 +140,6 @@ describe('Outputs data provider', () => {
         expect(result?.subtype).toEqual(type);
       },
     );
-    test('should throw when the subtype is null and is required', async () => {
-      const graphqlResponse = getContentfulGraphqlOutput();
-      graphqlResponse!.documentType = 'Article';
-      graphqlResponse!.type = 'Research';
-      graphqlResponse!.subtype = null;
-      graphqlClientMock.request.mockResolvedValueOnce({
-        outputs: graphqlResponse,
-      });
-
-      await expect(outputDataProvider.fetchById(outputId)).rejects.toThrow(
-        'subtype not defined',
-      );
-    });
 
     test('Should default authors to an empty array when missing', async () => {
       const graphqlResponse = getContentfulGraphqlOutput();

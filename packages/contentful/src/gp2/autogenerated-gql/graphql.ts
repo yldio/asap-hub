@@ -7749,7 +7749,11 @@ export type UsersContentDataFragment = Pick<
                         items: Array<
                           Maybe<
                             Pick<ProjectMembership, 'role'> & {
-                              user?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                              user?: Maybe<
+                                Pick<Users, 'onboarded'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >;
                             }
                           >
                         >;
@@ -7778,7 +7782,11 @@ export type UsersContentDataFragment = Pick<
                         items: Array<
                           Maybe<
                             Pick<WorkingGroupMembership, 'role'> & {
-                              user?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                              user?: Maybe<
+                                Pick<Users, 'onboarded'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
+                              >;
                             }
                           >
                         >;
@@ -7863,7 +7871,11 @@ export type FetchUserByIdQuery = {
                             items: Array<
                               Maybe<
                                 Pick<ProjectMembership, 'role'> & {
-                                  user?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                                  user?: Maybe<
+                                    Pick<Users, 'onboarded'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >;
                                 }
                               >
                             >;
@@ -7892,7 +7904,11 @@ export type FetchUserByIdQuery = {
                             items: Array<
                               Maybe<
                                 Pick<WorkingGroupMembership, 'role'> & {
-                                  user?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                                  user?: Maybe<
+                                    Pick<Users, 'onboarded'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >;
                                 }
                               >
                             >;
@@ -7987,7 +8003,11 @@ export type FetchUsersQuery = {
                                   items: Array<
                                     Maybe<
                                       Pick<ProjectMembership, 'role'> & {
-                                        user?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                                        user?: Maybe<
+                                          Pick<Users, 'onboarded'> & {
+                                            sys: Pick<Sys, 'id'>;
+                                          }
+                                        >;
                                       }
                                     >
                                   >;
@@ -8016,7 +8036,11 @@ export type FetchUsersQuery = {
                                   items: Array<
                                     Maybe<
                                       Pick<WorkingGroupMembership, 'role'> & {
-                                        user?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                                        user?: Maybe<
+                                          Pick<Users, 'onboarded'> & {
+                                            sys: Pick<Sys, 'id'>;
+                                          }
+                                        >;
                                       }
                                     >
                                   >;
@@ -10720,6 +10744,14 @@ export const UsersContentDataFragmentDoc = {
                                                                         ],
                                                                     },
                                                                 },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'onboarded',
+                                                                  },
+                                                                },
                                                               ],
                                                             },
                                                           },
@@ -10918,6 +10950,14 @@ export const UsersContentDataFragmentDoc = {
                                                                           },
                                                                         ],
                                                                     },
+                                                                },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'onboarded',
+                                                                  },
                                                                 },
                                                               ],
                                                             },

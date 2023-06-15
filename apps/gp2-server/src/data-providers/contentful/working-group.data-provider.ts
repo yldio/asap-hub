@@ -98,7 +98,6 @@ export const parseWorkingGroupToDataObject = (
 ): gp2Model.WorkingGroupDataObject => {
   const members = parseMembers<gp2Model.WorkingGroupMemberRole>(
     workingGroup.membersCollection,
-    gp2Model.isWorkingGroupMemberRole,
   );
   const milestones = parseMilestones(workingGroup.milestonesCollection);
   const resources = parseResources(workingGroup.resourcesCollection);

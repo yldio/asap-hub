@@ -779,6 +779,11 @@ describe('ResearchOutputs controller', () => {
         ...getResearchOutputDataObject(),
         published: false,
         addedDate: undefined,
+        reviewRequestedBy: {
+          id: 'review-requested-by-id',
+          firstName: 'First',
+          lastName: 'Last',
+        },
       });
       researchOutputDataProviderMock.update.mockResolvedValueOnce(
         researchOutputId,
@@ -787,12 +792,18 @@ describe('ResearchOutputs controller', () => {
       const result = await researchOutputs.update(researchOutputId, {
         ...getResearchOutputUpdateData(),
         published: false,
+        reviewRequestedBy: 'review-requested-by-id',
       });
 
       expect(result).toEqual({
         ...getResearchOutputResponse(),
         published: false,
         addedDate: undefined,
+        reviewRequestedBy: {
+          id: 'review-requested-by-id',
+          firstName: 'First',
+          lastName: 'Last',
+        },
       });
 
       expect(researchOutputDataProviderMock.update).toBeCalledWith(
@@ -800,6 +811,7 @@ describe('ResearchOutputs controller', () => {
         {
           ...getResearchOutputUpdateDataObject(),
           addedDate: undefined,
+          reviewRequestedBy: 'review-requested-by-id',
         },
         { publish: false },
       );

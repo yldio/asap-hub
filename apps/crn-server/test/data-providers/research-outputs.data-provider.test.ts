@@ -77,6 +77,16 @@ describe('ResearchOutputs data provider', () => {
 
     test('should return the research output', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.reviewRequestedBy =
+        [
+          {
+            id: 'review-requested-by-id',
+            flatData: {
+              firstName: 'First',
+              lastName: 'Last',
+            },
+          },
+        ];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
@@ -85,6 +95,11 @@ describe('ResearchOutputs data provider', () => {
         researchOutputId,
       );
       const expectedResult = getResearchOutputDataObject();
+      expectedResult.reviewRequestedBy = {
+        id: 'review-requested-by-id',
+        firstName: 'First',
+        lastName: 'Last',
+      };
 
       expect(result).toEqual(expectedResult);
     });
@@ -1075,6 +1090,33 @@ describe('ResearchOutputs data provider', () => {
             {
               ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+            },
+          )
+          .reply(201);
+
+        await expect(
+          researchOutputDataProvider.update(
+            researchOutputId,
+            researchOutputUpdateData,
+            { publish: false },
+          ),
+        ).resolves.not.toThrow();
+      });
+
+      test('Should request a PM review for the existing research-output', async () => {
+        const researchOutputUpdateData = getResearchOutputUpdateDataObject();
+        researchOutputUpdateData.reviewRequestedBy = 'some-user-id';
+
+        const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
+        nock(baseUrl)
+          .patch(
+            `/api/content/${appName}/research-outputs/${researchOutputId}`,
+            {
+              ...restResearchOutputUpdateData,
+              updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+              reviewRequestedBy: {
+                iv: [researchOutputUpdateData.reviewRequestedBy],
+              },
             },
           )
           .reply(201);

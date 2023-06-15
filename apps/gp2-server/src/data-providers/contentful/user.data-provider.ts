@@ -328,8 +328,8 @@ type ContributingCohorts = NonNullable<
   NonNullable<gp2Contentful.FetchUsersQuery['usersCollection']>['items'][number]
 >['contributingCohortsCollection'];
 
-const parseContributingCohorts = (cohorts: ContributingCohorts) =>
-  cohorts?.items.reduce(
+const parseContributingCohorts = (contributingCohorts: ContributingCohorts) =>
+  contributingCohorts?.items.reduce(
     (cohorts: gp2Model.UserDataObject['contributingCohorts'], cohort) =>
       cohort?.contributingCohort?.name && cohort.role
         ? [
@@ -398,9 +398,9 @@ const parseProjects = (
   projects: LinkedProject,
 ): gp2Model.UserDataObject['projects'] =>
   projects?.items
-    .reduce((projects: LinkedProjectItem[], project) => {
+    .reduce((projectList: LinkedProjectItem[], project) => {
       const linked = project?.linkedFrom?.projectsCollection?.items[0];
-      return linked ? [...projects, linked] : projects;
+      return linked ? [...projectList, linked] : projectList;
     }, [])
     .map((project) => {
       const projectId = project.sys.id;

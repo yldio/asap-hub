@@ -43,7 +43,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       skip,
     });
 
-    const projectsCollection = res.projectsCollection;
+    const { projectsCollection } = res;
     if (!projectsCollection) {
       return {
         total: 0,

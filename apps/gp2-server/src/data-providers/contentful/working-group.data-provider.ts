@@ -69,7 +69,7 @@ export class WorkingGroupContentfulDataProvider
     await deleteResources(idsToDelete, environment);
     const fetchEventById = () => this.fetchWorkingGroupById(id);
     await pollContentfulGql<gp2Contentful.FetchWorkingGroupByIdQuery>(
-      result.sys.publishedVersion || Infinity,
+      result.sys.publishedVersion ?? Infinity,
       fetchEventById,
       'workingGroups',
     );
@@ -105,12 +105,12 @@ export const parseWorkingGroupToDataObject = (
 
   return {
     id: workingGroup.sys.id,
-    title: workingGroup.title || '',
-    shortDescription: workingGroup.shortDescription || '',
-    description: workingGroup.description || '',
-    primaryEmail: workingGroup.primaryEmail || undefined,
-    secondaryEmail: workingGroup.secondaryEmail || undefined,
-    leadingMembers: workingGroup.leadingMembers || '',
+    title: workingGroup.title ?? '',
+    shortDescription: workingGroup.shortDescription ?? '',
+    description: workingGroup.description ?? '',
+    primaryEmail: workingGroup.primaryEmail ?? undefined,
+    secondaryEmail: workingGroup.secondaryEmail ?? undefined,
+    leadingMembers: workingGroup.leadingMembers ?? '',
     members,
     milestones,
     resources,

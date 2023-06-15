@@ -23,15 +23,13 @@ const parseMember = <T extends string>(
   firstName: string;
   lastName: string;
   avatarUrl?: string;
-} => {
-  return {
-    userId: user.sys.id,
-    role: role as T,
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
-    avatarUrl: user.avatar?.url || undefined,
-  };
-};
+} => ({
+  userId: user.sys.id,
+  role: role as T,
+  firstName: user.firstName ?? '',
+  lastName: user.lastName ?? '',
+  avatarUrl: user.avatar?.url ?? undefined,
+});
 
 export const parseMembers = <T extends string>(
   members:

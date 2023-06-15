@@ -23,10 +23,10 @@ export const parseMilestones = (
         ? [
             ...milestoneList,
             {
-              title: milestone.title || '',
+              title: milestone.title ?? '',
               status: milestone.status as gp2Model.MilestoneStatus,
-              link: milestone.externalLink || undefined,
-              description: milestone.description || undefined,
+              link: milestone.externalLink ?? undefined,
+              description: milestone.description ?? undefined,
             },
           ]
         : milestoneList,

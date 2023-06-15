@@ -9,7 +9,7 @@ export const parseCalendar = (
   calendar
     ? {
         id: calendar.sys.id,
-        name: calendar.name || '',
+        name: calendar.name ?? '',
       }
     : undefined;
 
@@ -42,14 +42,14 @@ export const parseContentfulWorkingGroupsProjects = (calendar?: {
 }): ProjectsWorkingGroups => {
   const projects =
     calendar?.linkedFrom?.projectsCollection?.items.map((item) => ({
-      id: item?.sys.id || '',
-      title: item?.title || '',
+      id: item?.sys.id ?? '',
+      title: item?.title ?? '',
     })) || [];
 
   const workingGroups =
     calendar?.linkedFrom?.workingGroupsCollection?.items.map((item) => ({
-      id: item?.sys.id || '',
-      title: item?.title || '',
+      id: item?.sys.id ?? '',
+      title: item?.title ?? '',
     })) || [];
 
   return { projects, workingGroups };

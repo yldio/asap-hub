@@ -24,13 +24,13 @@ export const parseResources = (
             ...resourceList,
             {
               id: resource.sys.id,
-              title: resource.title || '',
-              description: resource.description || undefined,
+              title: resource.title ?? '',
+              description: resource.description ?? undefined,
               ...(resource.type === 'Note'
                 ? { type: 'Note' }
                 : {
                     type: 'Link',
-                    externalLink: resource.externalLink || '',
+                    externalLink: resource.externalLink ?? '',
                   }),
             },
           ]

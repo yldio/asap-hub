@@ -166,7 +166,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
 
     const fetchEventById = () => this.fetchOutputById(id);
     await pollContentfulGql<gp2Contentful.FetchOutputByIdQuery>(
-      result.sys.publishedVersion || Infinity,
+      result.sys.publishedVersion ?? Infinity,
       fetchEventById,
       'outputs',
     );
@@ -212,11 +212,11 @@ const getAuthors = (authors?: GraphQLAuthors) =>
       author.__typename === 'Users'
         ? {
             id: author.sys.id,
-            firstName: author.firstName || '',
-            lastName: author.lastName || '',
+            firstName: author.firstName ?? '',
+            lastName: author.lastName ?? '',
             displayName: `${author.firstName} ${author.lastName}`,
-            email: author.email || '',
-            onboarded: author.onboarded || true,
+            email: author.email ?? '',
+            onboarded: author.onboarded ?? true,
             avatarUrl: author.avatar?.url ?? undefined,
           }
         : {
@@ -236,16 +236,16 @@ export const parseContentfulGraphQLOutput = (
   return {
     id: data.sys.id,
     created: data.sys.firstPublishedAt,
-    link: data.link || undefined,
+    link: data.link ?? undefined,
     documentType,
     type,
     subtype,
-    title: data.title || '',
+    title: data.title ?? '',
     publishDate: data.publishDate,
-    addedDate: data.addedDate || '',
+    addedDate: data.addedDate ?? '',
     lastUpdatedPartial:
-      data.lastUpdatedPartial ||
-      data.sys.publishedAt ||
+      data.lastUpdatedPartial ??
+      data.sys.publishedAt ??
       data.sys.firstPublishedAt,
     authors,
     ...relatedEntity,

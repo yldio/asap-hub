@@ -159,7 +159,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     );
     const fetchEventById = () => this.fetchUserById(id);
     await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(
-      result.sys.publishedVersion || Infinity,
+      result.sys.publishedVersion ?? Infinity,
       fetchEventById,
       'users',
     );
@@ -233,8 +233,8 @@ export const parseUserToDataObject = (
   const telephone =
     user.telephoneNumber || user.telephoneCountryCode
       ? {
-          countryCode: user.telephoneCountryCode || undefined,
-          number: user.telephoneNumber || undefined,
+          countryCode: user.telephoneCountryCode ?? undefined,
+          number: user.telephoneNumber ?? undefined,
         }
       : undefined;
   const contributingCohorts = parseContributingCohorts(
@@ -262,7 +262,7 @@ export const parseUserToDataObject = (
     avatarUrl: user.avatar?.url ?? undefined,
     questions,
     role: user.role as gp2Model.UserRole,
-    degrees: (user.degrees as gp2Model.UserDegree[]) || [],
+    degrees: (user.degrees as gp2Model.UserDegree[]) ?? [],
     connections: connections.map((connection) => ({ code: connection })),
     keywords,
     telephone,
@@ -411,7 +411,7 @@ const parseProjects = (
       return {
         id: projectId,
         status,
-        title: project.title || '',
+        title: project.title ?? '',
         members,
       };
     }) || [];
@@ -432,7 +432,7 @@ const parseWorkingGroups = (
       );
       return {
         id: workingGroupId,
-        title: workingGroup.title || '',
+        title: workingGroup.title ?? '',
         members,
       };
     }) || [];

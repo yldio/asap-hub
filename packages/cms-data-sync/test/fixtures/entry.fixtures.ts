@@ -172,3 +172,7 @@ export const discoverEntry = getEntry({
   membersTeam: { 'en-US': null },
   aboutUs: { 'en-US': null },
 });
+
+export const researchTagEntry = getEntry({
+  name: 'Research tag',
+});

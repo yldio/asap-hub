@@ -4,7 +4,7 @@ import {
   ListResearchTagResponse,
   ResearchTagDataObject,
 } from '@asap-hub/model';
-import { ResearchTagDataProvider } from '../data-providers/research-tags.data-provider';
+import { ResearchTagDataProvider } from '../data-providers/types';
 import { fetchAll } from '../utils/fetch-all';
 
 type FetchAllOptions = Omit<FetchResearchTagsOptions, 'take' | 'skip'>;

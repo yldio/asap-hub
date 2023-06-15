@@ -19,6 +19,8 @@ const documents = {
     graphql.FetchNewsDocument,
   '\n  query FetchPages {\n    queryPagesContents(top: 100) {\n      id\n      flatData {\n        title\n        path\n        shortText\n        text\n        link\n        linkText\n      }\n    }\n  }\n':
     graphql.FetchPagesDocument,
+  '\n  query FetchResearchTags($take: Int, $skip: Int) {\n    queryResearchTagsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        created\n        lastModified\n        flatData {\n          name\n          category\n          types\n          entities\n        }\n      }\n    }\n  }\n':
+    graphql.FetchResearchTagsDocument,
   '\n  query FetchTeams {\n    queryTeamsContents(top: 100) {\n      id\n      created\n      lastModified\n      version\n      flatData {\n        applicationNumber\n        displayName\n        inactiveSince\n        projectSummary\n        projectTitle\n        expertiseAndResourceTags\n        tools {\n          description\n          name\n          url\n        }\n      }\n    }\n  }\n':
     graphql.FetchTeamsDocument,
   '\n  query FetchTutorials($take: Int, $skip: Int) {\n    queryTutorialsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        flatData {\n          title\n          shortText\n          text\n          thumbnail {\n            id\n            fileName\n            mimeType\n            fileType\n          }\n          link\n          linkText\n        }\n      }\n    }\n  }\n':
@@ -53,6 +55,9 @@ export function gql(
 export function gql(
   source: '\n  query FetchPages {\n    queryPagesContents(top: 100) {\n      id\n      flatData {\n        title\n        path\n        shortText\n        text\n        link\n        linkText\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchPages {\n    queryPagesContents(top: 100) {\n      id\n      flatData {\n        title\n        path\n        shortText\n        text\n        link\n        linkText\n      }\n    }\n  }\n'];
+export function gql(
+  source: '\n  query FetchResearchTags($take: Int, $skip: Int) {\n    queryResearchTagsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        created\n        lastModified\n        flatData {\n          name\n          category\n          types\n          entities\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query FetchResearchTags($take: Int, $skip: Int) {\n    queryResearchTagsContentsWithTotal(top: $take, skip: $skip) {\n      total\n      items {\n        id\n        created\n        lastModified\n        flatData {\n          name\n          category\n          types\n          entities\n        }\n      }\n    }\n  }\n'];
 export function gql(
   source: '\n  query FetchTeams {\n    queryTeamsContents(top: 100) {\n      id\n      created\n      lastModified\n      version\n      flatData {\n        applicationNumber\n        displayName\n        inactiveSince\n        projectSummary\n        projectTitle\n        expertiseAndResourceTags\n        tools {\n          description\n          name\n          url\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchTeams {\n    queryTeamsContents(top: 100) {\n      id\n      created\n      lastModified\n      version\n      flatData {\n        applicationNumber\n        displayName\n        inactiveSince\n        projectSummary\n        projectTitle\n        expertiseAndResourceTags\n        tools {\n          description\n          name\n          url\n        }\n      }\n    }\n  }\n'];

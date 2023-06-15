@@ -18,6 +18,7 @@ import { migrateInterestGroups } from '../src/interest-groups/interest-groups.da
 import { migrateWorkingGroups } from '../src/working-groups/working-groups.data-migration';
 import { migrateTutorials } from '../src/tutorials/tutorials.data-migration';
 import { migrateDiscover } from '../src/discover/discover.data-migration';
+import { migrateResearchTags } from '../src/research-tags/research-tags.data-migration';
 
 jest.mock('contentful-management');
 
@@ -131,6 +132,16 @@ jest.mock('../src/discover/discover.data-migration', () => {
   };
 });
 
+var mockMigrateResearchTags: jest.MockedFunction<typeof migrateResearchTags>;
+
+jest.mock('../src/research-tags/research-tags.data-migration', () => {
+  mockMigrateResearchTags = jest.fn().mockReturnValue({});
+  return {
+    ...jest.requireActual('../src/research-tags/research-tags.data-migration'),
+    migrateResearchTags: mockMigrateResearchTags,
+  };
+});
+
 const mockContentfulManagement = contentfulManagement as jest.Mocked<
   typeof contentfulManagement
 >;
@@ -187,6 +198,8 @@ describe('Migrations', () => {
     expect(migrateInterestGroups).not.toHaveBeenCalled();
     expect(migrateWorkingGroups).not.toHaveBeenCalled();
     expect(migrateTutorials).not.toHaveBeenCalled();
+    expect(migrateDiscover).not.toHaveBeenCalled();
+    expect(migrateResearchTags).not.toHaveBeenCalled();
   });
 
   it('deactivates webhook and activates it again after running the migrations', async () => {
@@ -232,6 +245,7 @@ describe('Migrations', () => {
     expect(migrateWorkingGroups).toHaveBeenCalled();
     expect(migrateTutorials).toHaveBeenCalled();
     expect(migrateDiscover).toHaveBeenCalled();
+    expect(migrateResearchTags).toHaveBeenCalled();
 
     expect(console.log).toHaveBeenNthCalledWith(
       2,
@@ -294,6 +308,7 @@ describe('Migrations', () => {
     expect(migrateWorkingGroups).toHaveBeenCalled();
     expect(migrateTutorials).toHaveBeenCalled();
     expect(migrateDiscover).toHaveBeenCalled();
+    expect(migrateResearchTags).toHaveBeenCalled();
 
     expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
     expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
@@ -363,6 +378,7 @@ describe('Migrations', () => {
     expect(migrateWorkingGroups).toHaveBeenCalled();
     expect(migrateTutorials).toHaveBeenCalled();
     expect(migrateDiscover).toHaveBeenCalled();
+    expect(migrateResearchTags).toHaveBeenCalled();
 
     expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
     expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
@@ -439,6 +455,7 @@ describe('Migrations', () => {
     expect(migrateWorkingGroups).not.toHaveBeenCalled();
     expect(migrateTutorials).not.toHaveBeenCalled();
     expect(migrateDiscover).not.toHaveBeenCalled();
+    expect(migrateResearchTags).not.toHaveBeenCalled();
   });
 
   it('rejects if disabling webhook fails with a non-Error', async () => {
@@ -455,5 +472,6 @@ describe('Migrations', () => {
     expect(migrateWorkingGroups).not.toHaveBeenCalled();
     expect(migrateTutorials).not.toHaveBeenCalled();
     expect(migrateDiscover).not.toHaveBeenCalled();
+    expect(migrateResearchTags).not.toHaveBeenCalled();
   });
 });

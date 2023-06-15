@@ -3105,6 +3105,8 @@ export type Query = {
   newsCollection?: Maybe<NewsCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
+  researchTags?: Maybe<ResearchTags>;
+  researchTagsCollection?: Maybe<ResearchTagsCollection>;
   teamMembership?: Maybe<TeamMembership>;
   teamMembershipCollection?: Maybe<TeamMembershipCollection>;
   teams?: Maybe<Teams>;
@@ -3357,6 +3359,21 @@ export type QueryPagesCollectionArgs = {
   where?: InputMaybe<PagesFilter>;
 };
 
+export type QueryResearchTagsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryResearchTagsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ResearchTagsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
 export type QueryTeamMembershipArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -3476,6 +3493,104 @@ export type QueryWorkingGroupsCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<WorkingGroupsFilter>;
 };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags) */
+export type ResearchTags = Entry & {
+  category?: Maybe<Scalars['String']>;
+  contentfulMetadata: ContentfulMetadata;
+  entities?: Maybe<Array<Maybe<Scalars['String']>>>;
+  linkedFrom?: Maybe<ResearchTagsLinkingCollections>;
+  name?: Maybe<Scalars['String']>;
+  sys: Sys;
+  types?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags) */
+export type ResearchTagsCategoryArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags) */
+export type ResearchTagsEntitiesArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags) */
+export type ResearchTagsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags) */
+export type ResearchTagsNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags) */
+export type ResearchTagsTypesArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ResearchTagsCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ResearchTagsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ResearchTagsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ResearchTagsFilter>>>;
+  category?: InputMaybe<Scalars['String']>;
+  category_contains?: InputMaybe<Scalars['String']>;
+  category_exists?: InputMaybe<Scalars['Boolean']>;
+  category_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  category_not?: InputMaybe<Scalars['String']>;
+  category_not_contains?: InputMaybe<Scalars['String']>;
+  category_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  entities_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  entities_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  entities_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  entities_exists?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  types_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  types_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  types_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  types_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResearchTagsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ResearchTagsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum ResearchTagsOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export type Sys = {
   environmentId: Scalars['String'];
@@ -6202,6 +6317,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Pages' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'ResearchTags' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'TeamMembership' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -6304,6 +6422,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Pages' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'ResearchTags' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'TeamMembership' } & {
@@ -6432,6 +6553,9 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'Pages' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'ResearchTags' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'TeamMembership' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -6534,6 +6658,9 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'Pages' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'ResearchTags' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'TeamMembership' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -6614,6 +6741,9 @@ export type FetchDiscoverQuery = {
                     | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'ResearchTags' } & {
+                        sys: Pick<Sys, 'id'>;
+                      })
                     | ({ __typename: 'TeamMembership' } & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -6734,6 +6864,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
@@ -6788,6 +6919,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
@@ -6842,6 +6974,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
@@ -6989,6 +7122,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'TeamMembership' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -7049,6 +7183,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'TeamMembership' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -7109,6 +7244,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'TeamMembership' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -7280,6 +7416,9 @@ export type FetchEventsQuery = {
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ResearchTags' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'TeamMembership' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -7360,6 +7499,9 @@ export type FetchEventsQuery = {
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ResearchTags' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'TeamMembership' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -7440,6 +7582,9 @@ export type FetchEventsQuery = {
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ResearchTags' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'TeamMembership' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -7641,6 +7786,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ResearchTags' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'TeamMembership' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -7734,6 +7882,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ResearchTags' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'TeamMembership' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -7825,6 +7976,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Pages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResearchTags' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'TeamMembership' } & {
@@ -8046,6 +8200,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ResearchTags' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'TeamMembership' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8139,6 +8296,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ResearchTags' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'TeamMembership' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8230,6 +8390,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Pages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResearchTags' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'TeamMembership' } & {
@@ -8451,6 +8614,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ResearchTags' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'TeamMembership' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8544,6 +8710,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'ResearchTags' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'TeamMembership' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8635,6 +8804,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Pages' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'ResearchTags' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'TeamMembership' } & {
@@ -9178,6 +9350,7 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
@@ -9250,6 +9423,7 @@ export type FetchNewsByIdQuery = {
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'TeamMembership' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -9349,6 +9523,9 @@ export type FetchNewsQuery = {
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ResearchTags' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'TeamMembership' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -9425,6 +9602,7 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
@@ -9508,6 +9686,9 @@ export type FetchPagesQuery = {
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ResearchTags' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'TeamMembership' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -9548,6 +9729,34 @@ export type FetchPagesQuery = {
                 };
               }
             >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
+export type ResearchTagsContentFragment = Pick<
+  ResearchTags,
+  'name' | 'category' | 'types' | 'entities'
+> & { sys: Pick<Sys, 'id'> };
+
+export type FetchResearchTagsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchTagsOrder>> | InputMaybe<ResearchTagsOrder>
+  >;
+  where?: InputMaybe<ResearchTagsFilter>;
+}>;
+
+export type FetchResearchTagsQuery = {
+  researchTagsCollection?: Maybe<
+    Pick<ResearchTagsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<ResearchTags, 'name' | 'category' | 'types' | 'entities'> & {
+            sys: Pick<Sys, 'id'>;
           }
         >
       >;
@@ -9767,6 +9976,7 @@ export type TutorialsContentFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
@@ -9836,6 +10046,7 @@ export type FetchTutorialByIdQuery = {
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'TeamMembership' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -10284,6 +10495,7 @@ export type WorkingGroupsContentFragment = Pick<
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'TeamMembership' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Teams' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Tutorials' } & { sys: Pick<Sys, 'id'> })
@@ -10390,6 +10602,7 @@ export type FetchWorkingGroupByIdQuery = {
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'TeamMembership' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -10529,6 +10742,9 @@ export type FetchWorkingGroupsQuery = {
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'ResearchTags' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'TeamMembership' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -12324,6 +12540,38 @@ export const PageContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageContentFragment, unknown>;
+export const ResearchTagsContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ResearchTagsContent' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ResearchTags' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'types' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'entities' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ResearchTagsContentFragment, unknown>;
 export const TeamsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -15542,6 +15790,122 @@ export const FetchPagesDocument = {
     ...PageContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchPagesQuery, FetchPagesQueryVariables>;
+export const FetchResearchTagsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchResearchTags' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'ResearchTagsOrder' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ResearchTagsFilter' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'researchTagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'ResearchTagsContent' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...ResearchTagsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchResearchTagsQuery,
+  FetchResearchTagsQueryVariables
+>;
 export const FetchTeamByIdDocument = {
   kind: 'Document',
   definitions: [

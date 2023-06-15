@@ -18,6 +18,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   backHref: '#',
   publishedNow: false,
   draftCreated: false,
+  onRequestReview: jest.fn(),
 };
 describe('Grant Documents', () => {
   it('renders an output with title and content', () => {

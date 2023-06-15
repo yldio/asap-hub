@@ -1,14 +1,14 @@
-import React, { ComponentProps, useContext, useEffect, useState } from 'react';
+import React, { ComponentProps, useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import {
   ResearchOutputPutRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { network } from '@asap-hub/routing';
 
-import { Card, Headline2, Divider, Link, Markdown, Button } from '../atoms';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { Card, Headline2, Divider, Markdown } from '../atoms';
+import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { CtaCard, TagList } from '../molecules';
 import {
@@ -19,7 +19,6 @@ import {
   SharedResearchOutputBanners,
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
-  Toast,
 } from '../organisms';
 import { createMailTo } from '../mail';
 import {
@@ -59,7 +58,7 @@ type SharedResearchOutputProps = Pick<
     draftCreated?: boolean;
     rod?: ResearchOutputResponse;
     currentUserId?: string;
-    onRequestReview: (
+    onRequestReview?: (
       output: ResearchOutputPutRequest,
     ) => Promise<ResearchOutputResponse | void>;
   };
@@ -109,7 +108,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const [displayModal, setDisplayModal] = useState(false);
 
   const toggleReview = async (shouldReview: boolean) => {
-    if (!rod || !currentUserId) return;
+    if (!rod || !currentUserId || !onRequestReview) return;
 
     const req = {
       ...transformResearchOutputResponseToRequest(rod),

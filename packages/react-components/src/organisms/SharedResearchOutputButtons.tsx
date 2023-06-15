@@ -1,10 +1,8 @@
-// SharedResearchOutputButtons.tsx
-
 import React from 'react';
 import { css } from '@emotion/react';
 import { mobileScreen, rem } from '../pixels';
 import { Link, Button } from '../atoms';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { sharedResearch } from '@asap-hub/routing';
 import { editIcon, steel, duplicateIcon, actionIcon } from '..';
 import { ResearchOutputResponse } from '@asap-hub/model';
 

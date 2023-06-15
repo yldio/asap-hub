@@ -52,7 +52,7 @@ describe('Onboarding', () => {
       'active-link',
     );
   });
-  it('reach publish profile if user profile is completed', async () => {
+  it('reaches publish link if user profile is completed', async () => {
     const user: gp2.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
       onboarded: false,

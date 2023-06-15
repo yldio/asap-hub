@@ -15,6 +15,19 @@ import {
 } from '../../fixtures/teams.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 
+jest.mock('@asap-hub/contentful', () => ({
+  ...jest.requireActual('@asap-hub/contentful'),
+  getCPAClient: () => ({
+    getEntry: jest.fn().mockResolvedValue({
+      sys: {
+        id: '1',
+        revision: 5,
+      },
+      fields: {},
+    }),
+  }),
+}));
+
 describe('Contentful event webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn(),

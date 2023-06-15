@@ -32,6 +32,9 @@ on:
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: 'CRN Contentful Access Token'
         required: true
+      CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN:
+        description: 'CRN Contentful Preview Access Token'
+        required: true
       CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
         description: 'CRN Contentful Webhook Authentication Token'
         required: true
@@ -96,6 +99,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           crn-contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          crn-contentful-preview-access-token: ${{ secrets.CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
           crn-contentful-env: ${{ inputs.crn-contentful-env }}
           crn-contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           crn-contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}

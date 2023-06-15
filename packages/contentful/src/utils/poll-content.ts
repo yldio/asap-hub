@@ -18,7 +18,9 @@ type Data = {
   [K in Entity]?: DataContent | null;
 };
 const pollContentful = async <T extends EntrySkeletonType<FieldsType, string>>(
-  fetchEntry: (() => Promise<CDAEntry<T>>) | (() => Promise<Data>),
+  fetchEntry:
+    | (() => Promise<CDAEntry<T> | undefined>)
+    | (() => Promise<Data | undefined>),
   revision: number,
   entity?: Entity,
 ) =>
@@ -55,12 +57,12 @@ const pollContentful = async <T extends EntrySkeletonType<FieldsType, string>>(
 export const pollContentfulDeliveryApi = async <
   T extends EntrySkeletonType<FieldsType, string>,
 >(
-  fetchEntry: () => Promise<CDAEntry<T>>,
+  fetchEntry: () => Promise<CDAEntry<T> | undefined>,
   revision: number,
 ) => pollContentful(fetchEntry, revision) as Promise<CDAEntry<T>>;
 
 export const pollContentfulGql = async <FetchType extends Data>(
   version: number,
-  fetchData: () => Promise<FetchType>,
+  fetchData: () => Promise<FetchType | undefined>,
   entity: Entity,
 ) => pollContentful(fetchData, version, entity) as Promise<void>;

@@ -150,6 +150,8 @@ export {
   SearchAndFilter,
   SharedOutputDropdown,
   SharedOutputDropdownBase,
+  SharedResearchOutputBanners,
+  SharedResearchOutputButtons,
   SharedResearchCard,
   SharedResearchListCard,
   SharedResearchMetadata,

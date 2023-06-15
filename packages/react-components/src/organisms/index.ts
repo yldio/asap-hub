@@ -54,6 +54,8 @@ export {
   SharedOutputDropdownBase,
 } from './SharedOutputDropdown';
 export { default as SharedResearchAdditionalInformationCard } from './SharedResearchAdditionalInformationCard';
+export { default as SharedResearchOutputBanners } from './SharedResearchOutputBanners';
+export { default as SharedResearchOutputButtons } from './SharedResearchOutputButtons';
 export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as SharedResearchListCard } from './SharedResearchListCard';
 export { default as SharedResearchMetadata } from './SharedResearchMetadata';

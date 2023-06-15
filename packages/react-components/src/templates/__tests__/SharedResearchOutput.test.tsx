@@ -18,7 +18,6 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   backHref: '#',
   publishedNow: false,
   draftCreated: false,
-  onRequestReview: jest.fn(),
 };
 describe('Grant Documents', () => {
   it('renders an output with title and content', () => {
@@ -676,43 +675,50 @@ describe('the ready for pm review button', () => {
         ),
       ).toBeVisible();
     });
-    it('and has the correct actions on the close and save buttons', () => {
-      const { getByText, getAllByText, queryByText } = render(
-        <MemoryRouter>
-          <ResearchOutputPermissionsContext.Provider
-            value={{
-              canEditResearchOutput: false,
-              canPublishResearchOutput: false,
-              canShareResearchOutput: true,
-              canRequestReview: true,
-            }}
-          >
-            <SharedResearchOutput
-              {...props}
-              documentType="Article"
-              published={false}
-            />
+    describe('and has the correct actions on the close and save buttons', () => {
+      it('requests a review', () => {
+        const { getByText, getAllByText, queryByText } = render(
+          <MemoryRouter>
+            <ResearchOutputPermissionsContext.Provider
+              value={{
+                canEditResearchOutput: false,
+                canPublishResearchOutput: false,
+                canShareResearchOutput: true,
+                canRequestReview: true,
+              }}
+            >
+              <SharedResearchOutput
+                {...props}
+                documentType="Article"
+                published={false}
+                onRequestReview={jest.fn().mockResolvedValue(true)}
+              />
+              ,
+            </ResearchOutputPermissionsContext.Provider>
             ,
-          </ResearchOutputPermissionsContext.Provider>
-          ,
-        </MemoryRouter>,
-      );
-      const showModalButton = getByText('Ready for PM Review');
-      fireEvent.click(showModalButton);
-      expect(queryByText('Output ready for PM review?')).toBeInTheDocument();
-      const closeButton = getByText('Cancel');
-      fireEvent.click(closeButton);
-      expect(
-        queryByText('Output ready for PM review?'),
-      ).not.toBeInTheDocument();
-      fireEvent.click(showModalButton);
-      const saveButton = getAllByText('Ready for PM Review')[1];
-      fireEvent.click(saveButton as HTMLElement);
-      expect(
-        queryByText(
-          'All team members listed on this output will be notified and PMs will be able to review and publish this output.',
-        ),
-      ).not.toBeInTheDocument();
+          </MemoryRouter>,
+        );
+        const showModalButton = getByText('Ready for PM Review');
+        fireEvent.click(showModalButton);
+        expect(queryByText('Output ready for PM review?')).toBeInTheDocument();
+        const closeButton = getByText('Cancel');
+        fireEvent.click(closeButton);
+        expect(
+          queryByText('Output ready for PM review?'),
+        ).not.toBeInTheDocument();
+        fireEvent.click(showModalButton);
+        const saveButton = getAllByText('Ready for PM Review')[1];
+        fireEvent.click(saveButton as HTMLElement);
+        expect(
+          queryByText(
+            'All team members listed on this output will be notified and PMs will be able to review and publish this output.',
+          ),
+        ).not.toBeInTheDocument();
+      });
+      // it requests a switch back to draft
+      // Test that the review requested banner is visible
+      // test that the switched back to draft banner is visible
+      // test that the review requested blue banner is visible
     });
   });
 });

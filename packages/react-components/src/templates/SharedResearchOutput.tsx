@@ -1,4 +1,4 @@
-import React, { ComponentProps, useContext, useState } from 'react';
+import React, { ComponentProps, useContext, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import {
   ResearchOutputPutRequest,
@@ -16,63 +16,19 @@ import {
   RelatedResearch,
   RichText,
   SharedResearchAdditionalInformationCard,
+  SharedResearchOutputBanners,
+  SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
   Toast,
 } from '../organisms';
 import { createMailTo } from '../mail';
-import { editIcon, steel } from '..';
 import {
   getResearchOutputAssociation,
   transformResearchOutputResponseToRequest,
 } from '../utils';
-import { actionIcon, duplicateIcon } from '../icons';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
-});
-
-const commonStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-start',
-  width: '100%',
-};
-
-const commonMediaQueries = {
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    ...commonStyles,
-    width: 'auto',
-  },
-};
-
-const buttonsContainer = css({
-  ...commonStyles,
-  flexFlow: 'column',
-  gap: rem(16),
-  paddingBottom: rem(32),
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    flexFlow: 'row',
-    width: '100%',
-  },
-});
-
-const leftButtons = css({
-  ...commonStyles,
-  ...commonMediaQueries,
-});
-
-const reviewButton = css({
-  ...commonStyles,
-  strokeWidth: 0,
-  ...{
-    ...commonMediaQueries,
-    marginLeft: 'auto',
-  },
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    marginTop: rem(12),
-    paddingTop: rem(28),
-    borderTop: `1px solid ${steel.rgb}`,
-  },
 });
 
 const cardsStyles = css({
@@ -140,6 +96,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     canEditResearchOutput,
     canDuplicateResearchOutput,
     canRequestReview,
+    canPublishResearchOutput,
   } = useContext(ResearchOutputPermissionsContext);
 
   const hasDescription = description || descriptionMD;
@@ -147,18 +104,23 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const association = getResearchOutputAssociation(props);
   const [publishedNowBanner, setPublishedNowBanner] = useState(published);
   const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
+  const [reviewRequestedBanner, setReviewRequestedBanner] = useState(false);
+  const [reviewDismissedBanner, setReviewDismissedBanner] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);
 
-  const toggleReview = (shouldReview: boolean) => {
-    if (rod && currentUserId) {
-      const req = {
-        ...transformResearchOutputResponseToRequest(rod),
-        reviewRequestedBy: shouldReview ? currentUserId : undefined,
-      };
-      onRequestReview(req);
-      setDisplayModal(false);
-      //should disable the button while the request is being made or keep the modal open with buttons disabled
-    }
+  const toggleReview = async (shouldReview: boolean) => {
+    if (!rod || !currentUserId) return;
+
+    const req = {
+      ...transformResearchOutputResponseToRequest(rod),
+      reviewRequestedBy: shouldReview ? currentUserId : undefined,
+    };
+
+    await onRequestReview(req);
+
+    setDisplayModal(false);
+    setReviewRequestedBanner(shouldReview);
+    setReviewDismissedBanner(!shouldReview);
   };
 
   const duplicateLink =
@@ -180,94 +142,35 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
 
   return (
     <div>
-      {draftCreatedBanner && (
-        <Toast
-          accent="successLarge"
-          onClose={() => setDraftCreatedBanner(false)}
-        >
-          {`Draft ${
-            association === 'working group' ? 'Working Group' : 'Team'
-          } ${props.documentType} created successfully.`}
-        </Toast>
-      )}
-      {reviewRequestedBy && (
-        <Toast accent="info">
-          {`${reviewRequestedBy.firstName}  ${
-            reviewRequestedBy.lastName
-          } on AssociationName requested PMs to review this output. This draft is only available to members in the ${
-            association === 'working group' ? 'working group' : 'teams'
-          } listed below.`}
-        </Toast>
-      )}
-      {(publishedNow || !published) && (
-        <div>
-          {publishedNowBanner && (
-            <Toast
-              accent="successLarge"
-              onClose={() => setPublishedNowBanner(false)}
-            >
-              {`${
-                association === 'working group' ? 'Working Group' : 'Team '
-              } ${props.documentType} published successfully.`}
-            </Toast>
-          )}
-          {!published && !reviewRequestedBy && (
-            <Toast accent="warning">{`This draft is available to members in the ${association}
-   listed below. Only PMs can publish this output.`}</Toast>
-          )}
-        </div>
-      )}
+      <SharedResearchOutputBanners
+        draftCreatedBanner={draftCreatedBanner}
+        setDraftCreatedBanner={setDraftCreatedBanner}
+        reviewRequestedBanner={reviewRequestedBanner}
+        setReviewRequestedBanner={setReviewRequestedBanner}
+        reviewDismissedBanner={reviewDismissedBanner}
+        setReviewDismissedBanner={setReviewDismissedBanner}
+        association={association}
+        documentType={props.documentType}
+        publishedNowBanner={publishedNowBanner}
+        setPublishedNowBanner={setPublishedNowBanner}
+        published={published}
+        reviewRequestedBy={reviewRequestedBy}
+        publishedNow={publishedNow}
+      />
       <div css={containerStyles}>
         {!isGrantDocument && (
-          <div css={buttonsContainer}>
-            {canEditResearchOutput && (
-              <div css={leftButtons}>
-                <Link
-                  noMargin
-                  href={
-                    sharedResearch({})
-                      .researchOutput({ researchOutputId: id })
-                      .editResearchOutput({}).$
-                  }
-                  buttonStyle
-                  small
-                  primary
-                >
-                  {editIcon} Edit
-                </Link>
-              </div>
-            )}
-            {canDuplicateResearchOutput && duplicateLink && (
-              <div css={leftButtons}>
-                <Link noMargin href={duplicateLink} buttonStyle small primary>
-                  {duplicateIcon} Duplicate
-                </Link>
-              </div>
-            )}
-            {!published && canRequestReview && !reviewRequestedBy && (
-              <div css={reviewButton}>
-                <Button
-                  noMargin
-                  small
-                  primary
-                  onClick={() => setDisplayModal(!displayModal)}
-                >
-                  {actionIcon} Ready for PM Review
-                </Button>
-              </div>
-            )}
-            {!published && reviewRequestedBy && (
-              <div css={reviewButton}>
-                <Button
-                  noMargin
-                  small
-                  onClick={() => setDisplayModal(!displayModal)}
-                >
-                  Switch to draft
-                </Button>
-              </div>
-            )}
-          </div>
+          <SharedResearchOutputButtons
+            canEditResearchOutput={canEditResearchOutput}
+            canDuplicateResearchOutput={canDuplicateResearchOutput}
+            canRequestReview={canRequestReview}
+            canPublishResearchOutput={canPublishResearchOutput}
+            id={id}
+            displayModal={displayModal}
+            setDisplayModal={setDisplayModal}
+            reviewRequestedBy={reviewRequestedBy}
+            duplicateLink={duplicateLink}
+            published={published}
+          />
         )}
         {displayModal && (
           <ConfirmModal
@@ -290,7 +193,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           />
         )}
         <div css={cardsStyles}>
-          <SharedResearchOutputHeaderCard {...props} published={published} />
+          <SharedResearchOutputHeaderCard
+            {...props}
+            published={published}
+            reviewRequestedBy={reviewRequestedBy}
+          />
           {((hasDescription && !isGrantDocument) || !!tags.length) && (
             <Card>
               {hasDescription && !isGrantDocument && (

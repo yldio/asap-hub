@@ -198,6 +198,9 @@ export const getPayload = ({
   published,
 });
 
+
+//verify this crap
+//tests
 export function transformResearchOutputResponseToRequest({
   authors,
   teams,

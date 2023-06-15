@@ -59,13 +59,9 @@ const ResearchOutput: React.FC = () => {
               <SharedResearchOutput
                 {...researchOutputData}
                 backHref={backHref}
-                onRequestReview={(output) => {
-                  console.log('aci fute pe masa ?');
-                  updateResearchOutput(researchOutputData.id, {
-                    ...output,
-                    published: false,
-                  });
-                }}
+                onRequestReview={(output) =>
+                  updateResearchOutput(researchOutputData.id, output)
+                }
                 rod={researchOutputData}
                 publishedNow={publishedNow}
                 currentUserId={currentUser?.id}

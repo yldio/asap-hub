@@ -1,8 +1,9 @@
 import { css, CSSObject } from '@emotion/react';
 import * as colors from '../colors';
+import { info100, info900 } from '../colors';
 import { lineHeight, perRem } from '../pixels';
 
-export type AccentVariant = 'default' | 'green';
+export type AccentVariant = 'default' | 'green' | 'blue';
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {
@@ -12,6 +13,10 @@ export const accents: Record<AccentVariant, CSSObject> = {
   green: {
     backgroundColor: colors.mint.rgb,
     color: colors.fern.rgb,
+  },
+  blue: {
+    backgroundColor: info100.rgb,
+    color: info900.rgb,
   },
 };
 

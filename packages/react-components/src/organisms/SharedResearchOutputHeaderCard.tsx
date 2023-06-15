@@ -50,6 +50,7 @@ type SharedResearchOutputHeaderCardProps = Pick<
   | 'type'
   | 'workingGroups'
   | 'published'
+  | 'reviewRequestedBy'
 >;
 
 const SharedResearchOutputHeaderCard: React.FC<
@@ -67,6 +68,7 @@ const SharedResearchOutputHeaderCard: React.FC<
   type,
   link,
   published,
+  reviewRequestedBy,
 }) => (
   <Card>
     <SharedResearchMetadata
@@ -79,7 +81,12 @@ const SharedResearchOutputHeaderCard: React.FC<
     />
     <span css={headerStyle}>
       <Display styleAsHeading={3}>{title}</Display>
-      {!published && <StateTag label="Draft" />}
+      {!published && (
+        <StateTag
+          label={reviewRequestedBy ? 'In Review' : 'Draft'}
+          accent={reviewRequestedBy ? 'blue' : undefined}
+        />
+      )}
     </span>
 
     <UsersList

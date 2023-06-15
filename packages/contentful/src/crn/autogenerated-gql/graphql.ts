@@ -191,6 +191,9 @@ export type AssetLinkingCollectionsEntryCollectionArgs = {
 export type AssetLinkingCollectionsEventsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AssetLinkingCollectionsEventsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -198,6 +201,9 @@ export type AssetLinkingCollectionsEventsCollectionArgs = {
 export type AssetLinkingCollectionsInterestGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AssetLinkingCollectionsInterestGroupsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -205,6 +211,9 @@ export type AssetLinkingCollectionsInterestGroupsCollectionArgs = {
 export type AssetLinkingCollectionsNewsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AssetLinkingCollectionsNewsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -212,6 +221,9 @@ export type AssetLinkingCollectionsNewsCollectionArgs = {
 export type AssetLinkingCollectionsTutorialsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AssetLinkingCollectionsTutorialsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -219,9 +231,179 @@ export type AssetLinkingCollectionsTutorialsCollectionArgs = {
 export type AssetLinkingCollectionsUsersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AssetLinkingCollectionsUsersCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum AssetLinkingCollectionsEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export enum AssetLinkingCollectionsInterestGroupsCollectionOrder {
+  ActiveAsc = 'active_ASC',
+  ActiveDesc = 'active_DESC',
+  GoogleDriveAsc = 'googleDrive_ASC',
+  GoogleDriveDesc = 'googleDrive_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SlackAsc = 'slack_ASC',
+  SlackDesc = 'slack_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AssetLinkingCollectionsNewsCollectionOrder {
+  FrequencyAsc = 'frequency_ASC',
+  FrequencyDesc = 'frequency_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AssetLinkingCollectionsTutorialsCollectionOrder {
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum AssetLinkingCollectionsUsersCollectionOrder {
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  JobTitleAsc = 'jobTitle_ASC',
+  JobTitleDesc = 'jobTitle_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
 
 export enum AssetOrder {
   ContentTypeAsc = 'contentType_ASC',
@@ -335,6 +517,9 @@ export type CalendarsLinkingCollectionsEntryCollectionArgs = {
 export type CalendarsLinkingCollectionsEventsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<CalendarsLinkingCollectionsEventsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -342,6 +527,9 @@ export type CalendarsLinkingCollectionsEventsCollectionArgs = {
 export type CalendarsLinkingCollectionsInterestGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<CalendarsLinkingCollectionsInterestGroupsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -349,9 +537,95 @@ export type CalendarsLinkingCollectionsInterestGroupsCollectionArgs = {
 export type CalendarsLinkingCollectionsWorkingGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<CalendarsLinkingCollectionsWorkingGroupsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum CalendarsLinkingCollectionsEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export enum CalendarsLinkingCollectionsInterestGroupsCollectionOrder {
+  ActiveAsc = 'active_ASC',
+  ActiveDesc = 'active_DESC',
+  GoogleDriveAsc = 'googleDrive_ASC',
+  GoogleDriveDesc = 'googleDrive_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SlackAsc = 'slack_ASC',
+  SlackDesc = 'slack_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum CalendarsLinkingCollectionsWorkingGroupsCollectionOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export enum CalendarsOrder {
   ColorAsc = 'color_ASC',
@@ -937,9 +1211,59 @@ export type EventSpeakersLinkingCollectionsEntryCollectionArgs = {
 export type EventSpeakersLinkingCollectionsEventsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<EventSpeakersLinkingCollectionsEventsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
 
 export enum EventSpeakersOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -1501,9 +1825,25 @@ export type ExternalAuthorsLinkingCollectionsEntryCollectionArgs = {
 export type ExternalAuthorsLinkingCollectionsEventSpeakersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder>
+    >
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum ExternalAuthorsOrder {
   NameAsc = 'name_ASC',
@@ -1600,9 +1940,29 @@ export type ExternalToolsLinkingCollectionsEntryCollectionArgs = {
 export type ExternalToolsLinkingCollectionsTeamsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ExternalToolsLinkingCollectionsTeamsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum ExternalToolsOrder {
   DescriptionAsc = 'description_ASC',
@@ -1795,9 +2155,33 @@ export type InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionArgs =
   {
     limit?: InputMaybe<Scalars['Int']>;
     locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionOrder>
+      >
+    >;
     preview?: InputMaybe<Scalars['Boolean']>;
     skip?: InputMaybe<Scalars['Int']>;
   };
+
+export enum InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionOrder {
+  ActiveAsc = 'active_ASC',
+  ActiveDesc = 'active_DESC',
+  GoogleDriveAsc = 'googleDrive_ASC',
+  GoogleDriveDesc = 'googleDrive_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SlackAsc = 'slack_ASC',
+  SlackDesc = 'slack_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum InterestGroupLeadersOrder {
   InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
@@ -2084,9 +2468,75 @@ export type LabsLinkingCollectionsEntryCollectionArgs = {
 export type LabsLinkingCollectionsUsersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<LabsLinkingCollectionsUsersCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum LabsLinkingCollectionsUsersCollectionOrder {
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  JobTitleAsc = 'jobTitle_ASC',
+  JobTitleDesc = 'jobTitle_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
 
 export enum LabsOrder {
   NameAsc = 'name_ASC',
@@ -2365,6 +2815,9 @@ export type NewsLinkingCollections = {
 export type NewsLinkingCollectionsDashboardCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<NewsLinkingCollectionsDashboardCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -2375,6 +2828,17 @@ export type NewsLinkingCollectionsEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum NewsLinkingCollectionsDashboardCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum NewsOrder {
   FrequencyAsc = 'frequency_ASC',
@@ -2525,6 +2989,9 @@ export type PagesLinkingCollections = {
 export type PagesLinkingCollectionsDashboardCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<PagesLinkingCollectionsDashboardCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -2532,6 +2999,9 @@ export type PagesLinkingCollectionsDashboardCollectionArgs = {
 export type PagesLinkingCollectionsDiscoverCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<PagesLinkingCollectionsDiscoverCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -2542,6 +3012,28 @@ export type PagesLinkingCollectionsEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum PagesLinkingCollectionsDashboardCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum PagesLinkingCollectionsDiscoverCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum PagesOrder {
   LinkTextAsc = 'linkText_ASC',
@@ -3109,9 +3601,75 @@ export type TeamMembershipLinkingCollectionsEntryCollectionArgs = {
 export type TeamMembershipLinkingCollectionsUsersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamMembershipLinkingCollectionsUsersCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  JobTitleAsc = 'jobTitle_ASC',
+  JobTitleDesc = 'jobTitle_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
 
 export enum TeamMembershipOrder {
   InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
@@ -3261,6 +3819,9 @@ export type TeamsLinkingCollections = {
 export type TeamsLinkingCollectionsDiscoverCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsDiscoverCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -3275,6 +3836,9 @@ export type TeamsLinkingCollectionsEntryCollectionArgs = {
 export type TeamsLinkingCollectionsEventSpeakersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsEventSpeakersCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -3282,6 +3846,9 @@ export type TeamsLinkingCollectionsEventSpeakersCollectionArgs = {
 export type TeamsLinkingCollectionsInterestGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsInterestGroupsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -3289,9 +3856,68 @@ export type TeamsLinkingCollectionsInterestGroupsCollectionArgs = {
 export type TeamsLinkingCollectionsTeamMembershipCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsTeamMembershipCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum TeamsLinkingCollectionsDiscoverCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum TeamsLinkingCollectionsEventSpeakersCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
+  ActiveAsc = 'active_ASC',
+  ActiveDesc = 'active_DESC',
+  GoogleDriveAsc = 'googleDrive_ASC',
+  GoogleDriveDesc = 'googleDrive_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SlackAsc = 'slack_ASC',
+  SlackDesc = 'slack_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum TeamsLinkingCollectionsTeamMembershipCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum TeamsOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
@@ -3437,6 +4063,9 @@ export type TutorialsLinkingCollections = {
 export type TutorialsLinkingCollectionsDiscoverCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TutorialsLinkingCollectionsDiscoverCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -3447,6 +4076,17 @@ export type TutorialsLinkingCollectionsEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum TutorialsLinkingCollectionsDiscoverCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum TutorialsOrder {
   LinkTextAsc = 'linkText_ASC',
@@ -4045,6 +4685,9 @@ export type UsersLinkingCollections = {
 export type UsersLinkingCollectionsDiscoverCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsDiscoverCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -4059,6 +4702,9 @@ export type UsersLinkingCollectionsEntryCollectionArgs = {
 export type UsersLinkingCollectionsEventSpeakersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsEventSpeakersCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -4066,6 +4712,11 @@ export type UsersLinkingCollectionsEventSpeakersCollectionArgs = {
 export type UsersLinkingCollectionsInterestGroupLeadersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<UsersLinkingCollectionsInterestGroupLeadersCollectionOrder>
+    >
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -4073,6 +4724,9 @@ export type UsersLinkingCollectionsInterestGroupLeadersCollectionArgs = {
 export type UsersLinkingCollectionsWorkingGroupLeadersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -4080,9 +4734,79 @@ export type UsersLinkingCollectionsWorkingGroupLeadersCollectionArgs = {
 export type UsersLinkingCollectionsWorkingGroupMembersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsWorkingGroupMembersCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum UsersLinkingCollectionsDiscoverCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsInterestGroupLeadersCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  WorkstreamRoleAsc = 'workstreamRole_ASC',
+  WorkstreamRoleDesc = 'workstreamRole_DESC',
+}
+
+export enum UsersLinkingCollectionsWorkingGroupMembersCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum UsersOrder {
   AlumniLocationAsc = 'alumniLocation_ASC',
@@ -4237,9 +4961,31 @@ export type WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCollectionArg
   {
     limit?: InputMaybe<Scalars['Int']>;
     locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCollectionOrder>
+      >
+    >;
     preview?: InputMaybe<Scalars['Boolean']>;
     skip?: InputMaybe<Scalars['Int']>;
   };
+
+export enum WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCollectionOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export enum WorkingGroupDeliverablesOrder {
   StatusAsc = 'status_ASC',
@@ -4345,9 +5091,31 @@ export type WorkingGroupLeadersLinkingCollectionsEntryCollectionArgs = {
 export type WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionOrder>
+    >
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export enum WorkingGroupLeadersOrder {
   InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
@@ -4431,9 +5199,31 @@ export type WorkingGroupMembersLinkingCollectionsEntryCollectionArgs = {
 export type WorkingGroupMembersLinkingCollectionsWorkingGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<WorkingGroupMembersLinkingCollectionsWorkingGroupsCollectionOrder>
+    >
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum WorkingGroupMembersLinkingCollectionsWorkingGroupsCollectionOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export enum WorkingGroupMembersOrder {
   InactiveSinceDateAsc = 'inactiveSinceDate_ASC',

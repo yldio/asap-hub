@@ -95,8 +95,106 @@ input AssetFilter {
 
 type AssetLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
-  usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+  usersCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
+}
+
+enum AssetLinkingCollectionsEventsCollectionOrder {
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+enum AssetLinkingCollectionsUsersCollectionOrder {
+  activatedDate_ASC
+  activatedDate_DESC
+  alternativeEmail_ASC
+  alternativeEmail_DESC
+  blog_ASC
+  blog_DESC
+  city_ASC
+  city_DESC
+  country_ASC
+  country_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  lastName_ASC
+  lastName_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  onboarded_ASC
+  onboarded_DESC
+  orcid_ASC
+  orcid_DESC
+  region_ASC
+  region_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  telephoneCountryCode_ASC
+  telephoneCountryCode_DESC
+  telephoneNumber_ASC
+  telephoneNumber_DESC
+  twitter_ASC
+  twitter_DESC
 }
 
 enum AssetOrder {
@@ -171,9 +269,106 @@ input CalendarsFilter {
 
 type CalendarsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
-  projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum CalendarsLinkingCollectionsEventsCollectionOrder {
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+enum CalendarsLinkingCollectionsProjectsCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
+enum CalendarsLinkingCollectionsWorkingGroupsCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum CalendarsOrder {
@@ -247,8 +442,23 @@ input ContributingCohortsFilter {
 }
 
 type ContributingCohortsLinkingCollections {
-  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ContributingCohortsMembershipCollection
+  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder], preview: Boolean, skip: Int = 0): ContributingCohortsMembershipCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder {
+  role_ASC
+  role_DESC
+  studyLink_ASC
+  studyLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership)"""
@@ -293,7 +503,58 @@ input ContributingCohortsMembershipFilter {
 
 type ContributingCohortsMembershipLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
+  usersCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
+}
+
+enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
+  activatedDate_ASC
+  activatedDate_DESC
+  alternativeEmail_ASC
+  alternativeEmail_DESC
+  blog_ASC
+  blog_DESC
+  city_ASC
+  city_DESC
+  country_ASC
+  country_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  lastName_ASC
+  lastName_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  onboarded_ASC
+  onboarded_DESC
+  orcid_ASC
+  orcid_DESC
+  region_ASC
+  region_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  telephoneCountryCode_ASC
+  telephoneCountryCode_DESC
+  telephoneNumber_ASC
+  telephoneNumber_DESC
+  twitter_ASC
+  twitter_DESC
 }
 
 enum ContributingCohortsMembershipOrder {
@@ -398,7 +659,54 @@ input EventSpeakersFilter {
 
 type EventSpeakersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [EventSpeakersLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+}
+
+enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
 }
 
 enum EventSpeakersOrder {
@@ -775,8 +1083,50 @@ input ExternalUsersFilter {
 
 type ExternalUsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
-  outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
+  eventSpeakersCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+}
+
+enum ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum ExternalUsersLinkingCollectionsOutputsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
 }
 
 enum ExternalUsersOrder {
@@ -1044,8 +1394,58 @@ input MilestonesFilter {
 
 type MilestonesLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum MilestonesLinkingCollectionsProjectsCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
+enum MilestonesLinkingCollectionsWorkingGroupsCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum MilestonesOrder {
@@ -1481,7 +1881,36 @@ input ProjectMembershipFilter {
 
 type ProjectMembershipLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ProjectMembershipLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+}
+
+enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
 }
 
 enum ProjectMembershipOrder {
@@ -1617,7 +2046,36 @@ input ProjectsFilter {
 
 type ProjectsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [ProjectsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+}
+
+enum ProjectsLinkingCollectionsOutputsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
 }
 
 type ProjectsMembersCollection {
@@ -1823,8 +2281,58 @@ input ResourcesFilter {
 
 type ResourcesLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  projectsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectsCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum ResourcesLinkingCollectionsProjectsCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
+enum ResourcesLinkingCollectionsWorkingGroupsCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum ResourcesOrder {
@@ -2138,10 +2646,78 @@ input UsersFilter {
 
 type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventSpeakersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventSpeakersCollection
-  outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
-  projectMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): ProjectMembershipCollection
-  workingGroupMembershipCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupMembershipCollection
+  eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  projectMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCollectionOrder], preview: Boolean, skip: Int = 0): ProjectMembershipCollection
+  workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupMembershipCollection
+}
+
+enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum UsersLinkingCollectionsOutputsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum UsersLinkingCollectionsProjectMembershipCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum UsersOrder {
@@ -2229,7 +2805,28 @@ input WorkingGroupMembershipFilter {
 
 type WorkingGroupMembershipLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum WorkingGroupMembershipOrder {
@@ -2488,8 +3085,48 @@ input WorkingGroupsFilter {
 
 type WorkingGroupsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  outputsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsCollection
-  workingGroupNetworkCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupNetworkCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupNetworkCollection
+}
+
+enum WorkingGroupsLinkingCollectionsOutputsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 type WorkingGroupsMembersCollection {

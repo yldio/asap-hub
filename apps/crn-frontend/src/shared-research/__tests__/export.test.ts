@@ -47,6 +47,7 @@ describe('researchOutputToCSV', () => {
       usedInPublication: false,
       methods: ['Activity Assay', 'RNA Single Cell'],
       keywords: ['Keyword1', 'Keyword2'],
+      reviewRequestedBy: { id: 'user-id', firstName: 'John', lastName: 'Doe' },
     };
     expect(researchOutputToCSV(output)).toEqual({
       created: 'created',
@@ -80,6 +81,7 @@ describe('researchOutputToCSV', () => {
       environments: 'In Cellulo,In Vivo',
       subtype: 'Metabolite',
       published: true,
+      reviewRequestedBy: 'John Doe',
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {

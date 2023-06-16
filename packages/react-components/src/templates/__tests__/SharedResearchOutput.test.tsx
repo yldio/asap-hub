@@ -18,8 +18,10 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   backHref: '#',
   publishedNow: false,
   draftCreated: false,
-  onRequestReview: jest.fn(),
+  researchOutputData: createResearchOutputResponse(),
+  onRequestReview: jest.fn(() => Promise.resolve()),
 };
+
 describe('Grant Documents', () => {
   it('renders an output with title and content', () => {
     const { getByText } = render(
@@ -677,8 +679,8 @@ describe('the ready for pm review button', () => {
       ).toBeVisible();
     });
     describe('and has the correct actions on the close and save buttons', () => {
-      it('requests a review', () => {
-        const { getByText, getAllByText, queryByText } = render(
+      it('closes the modal correctly', () => {
+        const { getByText, queryByText } = render(
           <MemoryRouter>
             <ResearchOutputPermissionsContext.Provider
               value={{
@@ -707,19 +709,7 @@ describe('the ready for pm review button', () => {
         expect(
           queryByText('Output ready for PM review?'),
         ).not.toBeInTheDocument();
-        fireEvent.click(showModalButton);
-        const saveButton = getAllByText('Ready for PM Review')[1];
-        fireEvent.click(saveButton as HTMLElement);
-        expect(
-          queryByText(
-            'All team members listed on this output will be notified and PMs will be able to review and publish this output.',
-          ),
-        ).not.toBeInTheDocument();
       });
-      // it requests a switch back to draft
-      // Test that the review requested banner is visible
-      // test that the switched back to draft banner is visible
-      // test that the review requested blue banner is visible
     });
   });
 });

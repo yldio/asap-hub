@@ -89,6 +89,12 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ).items,
   published: boolean('Published', true),
   publishedNow: boolean('Is Published Now', false),
+  researchOutputData: { ...createResearchOutputResponse() },
+  reviewRequestedBy: {
+    id: 'userId',
+    firstName: 'firstName',
+    lastName: 'lastName',
+  },
 });
 
 export const Normal = () => (

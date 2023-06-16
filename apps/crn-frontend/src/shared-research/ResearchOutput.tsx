@@ -62,7 +62,7 @@ const ResearchOutput: React.FC = () => {
                 onRequestReview={(output) =>
                   updateResearchOutput(researchOutputData.id, output)
                 }
-                rod={researchOutputData}
+                researchOutputData={researchOutputData}
                 publishedNow={publishedNow}
                 currentUserId={currentUser?.id}
                 draftCreated={urlSearchParams.get('draftCreated') === 'true'}

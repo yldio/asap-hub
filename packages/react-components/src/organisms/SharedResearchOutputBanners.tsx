@@ -1,8 +1,6 @@
-// Toasts.tsx
-
 import React, { Dispatch, SetStateAction } from 'react';
-import { Toast } from '../organisms';
 import { ResearchOutputResponse } from '@asap-hub/model';
+import Toast from './Toast';
 
 interface SharedResearchOutputBannersProps {
   draftCreatedBanner: boolean | undefined;

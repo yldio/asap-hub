@@ -1,10 +1,11 @@
 import React from 'react';
 import { css } from '@emotion/react';
+import { ResearchOutputResponse } from '@asap-hub/model';
+import { sharedResearch } from '@asap-hub/routing';
 import { mobileScreen, rem } from '../pixels';
 import { Link, Button } from '../atoms';
-import { sharedResearch } from '@asap-hub/routing';
-import { editIcon, steel, duplicateIcon, actionIcon } from '..';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { editIcon, duplicateIcon, actionIcon } from '../icons';
+import { steel } from '../colors';
 
 const commonStyles = {
   display: 'flex',
@@ -107,7 +108,7 @@ const SharedResearchOutputButtons: React.FC<
       </div>
     )}
     {/* !canRequestReview in order to see the button as PM */}
-    {!published && !canRequestReview && !reviewRequestedBy && (
+    {!published && canRequestReview && !reviewRequestedBy && (
       <div css={reviewButton}>
         <Button
           noMargin

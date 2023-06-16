@@ -56,7 +56,7 @@ type SharedResearchOutputProps = Pick<
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
     publishedNow: boolean;
     draftCreated?: boolean;
-    rod?: ResearchOutputResponse;
+    researchOutputData: ResearchOutputResponse;
     currentUserId?: string;
     onRequestReview?: (
       output: ResearchOutputPutRequest,
@@ -74,7 +74,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   published,
   publishedNow,
   draftCreated,
-  rod,
+  researchOutputData,
   currentUserId,
   reviewRequestedBy,
   onRequestReview,
@@ -108,14 +108,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const [displayModal, setDisplayModal] = useState(false);
 
   const toggleReview = async (shouldReview: boolean) => {
-    if (!rod || !currentUserId || !onRequestReview) return;
+    if (!currentUserId || !onRequestReview) return;
 
-    const req = {
-      ...transformResearchOutputResponseToRequest(rod),
+    await onRequestReview({
+      ...transformResearchOutputResponseToRequest(researchOutputData),
       reviewRequestedBy: shouldReview ? currentUserId : undefined,
-    };
-
-    await onRequestReview(req);
+    });
 
     setDisplayModal(false);
     setReviewRequestedBanner(shouldReview);
@@ -185,7 +183,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             confirmText={`${
               reviewRequestedBy ? 'Switch to Draft' : 'Ready for PM Review'
             }`}
-            onSave={() => toggleReview(reviewRequestedBy ? false : true)}
+            onSave={() => toggleReview(!reviewRequestedBy)}
             onCancel={() => {
               setDisplayModal(false);
             }}

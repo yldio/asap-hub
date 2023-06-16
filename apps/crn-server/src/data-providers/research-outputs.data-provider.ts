@@ -289,7 +289,9 @@ export class ResearchOutputSquidexDataProvider
       subtype: (subtypeId && [subtypeId]) || [],
       keywords: keywordIds,
       updatedBy: [researchOutputData.updatedBy],
-      reviewRequestedBy: [researchOutputData.reviewRequestedBy],
+      reviewRequestedBy: researchOutputData.reviewRequestedBy
+        ? [researchOutputData.reviewRequestedBy]
+        : [],
     });
 
     await this.researchOutputSquidexRestClient.patch(researchOutputId, {

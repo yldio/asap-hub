@@ -1090,6 +1090,7 @@ describe('ResearchOutputs data provider', () => {
             {
               ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+              reviewRequestedBy: { iv: [] },
             },
           )
           .reply(201);
@@ -1140,6 +1141,7 @@ describe('ResearchOutputs data provider', () => {
             {
               ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+              reviewRequestedBy: { iv: [] },
             },
           )
           .reply(201, { id: researchOutputId });
@@ -1172,6 +1174,7 @@ describe('ResearchOutputs data provider', () => {
             {
               ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
+              reviewRequestedBy: { iv: [] },
             },
           )
           .reply(201);

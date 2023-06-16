@@ -89,7 +89,7 @@
     "jest-when": "3.5.2",
     "jwt-encode": "1.0.1",
     "lodash.matches": "4.6.0",
-    "nock": "13.3.0",
+    "nock": "13.3.1",
     "node-dev": "6.7.0",
     "serverless": "3.30.1",
     "serverless-s3-sync": "3.1.0",

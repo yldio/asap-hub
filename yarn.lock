@@ -286,7 +286,7 @@ __metadata:
     got: 11.8.6
     jwt-encode: 1.0.1
     luxon: 1.28.1
-    nock: 13.3.0
+    nock: 13.3.1
     prettier: 2.8.8
     pump: 3.0.0
     through2-concurrent: 2.0.0
@@ -351,7 +351,7 @@ __metadata:
     auth0-deploy-cli: ^7.15.1
     got: 11.8.6
     js-yaml: ^4.1.0
-    nock: 13.3.0
+    nock: 13.3.1
     ts-node: 10.9.1
   languageName: unknown
   linkType: soft
@@ -730,7 +730,7 @@ __metadata:
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jose: 2.0.6
-    nock: 13.3.0
+    nock: 13.3.1
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.5
     qs: 6.11.1
@@ -884,7 +884,7 @@ __metadata:
     lodash.uniqby: 4.7.0
     luxon: 1.28.1
     mime-types: 2.1.35
-    nock: 13.3.0
+    nock: 13.3.1
     node-dev: 6.7.0
     odata-query: 7.0.4
     p-throttle: 4.1.1
@@ -1196,7 +1196,7 @@ __metadata:
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jose: 2.0.6
-    nock: 13.3.0
+    nock: 13.3.1
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.5
     react: 17.0.2
@@ -1316,7 +1316,7 @@ __metadata:
     lodash.matches: 4.6.0
     luxon: 1.28.1
     mime-types: 2.1.35
-    nock: 13.3.0
+    nock: 13.3.1
     node-dev: 6.7.0
     odata-query: 7.0.4
     p-throttle: 4.1.1
@@ -1571,7 +1571,7 @@ __metadata:
     jsonwebtoken: 9.0.0
     jwt-encode: 1.0.1
     luxon: 1.28.1
-    nock: 13.3.0
+    nock: 13.3.1
     pino: 8.8.0
     pino-http: 8.3.3
     pino-lambda: 4.1.0
@@ -1615,7 +1615,7 @@ __metadata:
     graphql-request: 3.4.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
-    nock: 13.3.0
+    nock: 13.3.1
   languageName: unknown
   linkType: soft
 
@@ -1650,7 +1650,7 @@ __metadata:
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     luxon: 1.28.1
-    nock: 13.3.0
+    nock: 13.3.1
   languageName: unknown
   linkType: soft
 
@@ -19151,7 +19151,7 @@ __metadata:
     jest-watch-select-projects: 2.0.0
     jest-watch-suspend: 1.1.2
     jest-watch-typeahead: 0.6.5
-    nock: 13.3.0
+    nock: 13.3.1
     node-fetch: 3.0.0-beta.9
     prettier: 2.8.8
     react-test-renderer: 17.0.2
@@ -35620,15 +35620,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:13.3.0":
-  version: 13.3.0
-  resolution: "nock@npm:13.3.0"
+"nock@npm:13.3.1":
+  version: 13.3.1
+  resolution: "nock@npm:13.3.1"
   dependencies:
     debug: ^4.1.0
     json-stringify-safe: ^5.0.1
     lodash: ^4.17.21
     propagate: ^2.0.0
-  checksum: 118d04e95a17f493898a82b5dfecc03762776e1980d9c3b2077479747e60b77109c5f7c0df969d1a8f6039260abe5961733553a5841f0f627bb35238576a0009
+  checksum: 0f2a73e8432f6b5650656c53eef99f9e5bbde3df538dc2f07057edc4438cfc61a394c9d06dd82e60f6e86d42433f20f3c04364a1f088beee7bf03a24e3f0fdd0
   languageName: node
   linkType: hard
 

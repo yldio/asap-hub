@@ -263,9 +263,6 @@ export const parseGraphQLSpeakers = (
   speakers: SpeakerItem[],
 ): gp2Model.EventSpeaker[] =>
   (speakers || []).reduce((speakerList: gp2Model.EventSpeaker[], speaker) => {
-    if (!speaker) {
-      return speakerList;
-    }
     const { title, user } = speaker;
     if (user?.__typename === 'ExternalUsers') {
       speakerList.push({

@@ -20,6 +20,7 @@ import {
   getContentfulUsersByProjectId,
   getContentfulUsersByWorkingGroupId,
   getContentfulUsersGraphqlResponse,
+  getProjectGraphQL,
   getUserCreateDataObject,
   getUserDataObject,
 } from '../../fixtures/user.fixtures';
@@ -191,6 +192,17 @@ describe('User data provider', () => {
       });
     });
     describe('contributing cohorts', () => {
+      test('Should return empty array if cohorts collection have not been defined', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          contributingCohortsCollection: null,
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.contributingCohorts).toEqual([]);
+      });
       test('Should return empty array if cohorts have not been defined', async () => {
         const mockResponse = getContentfulGraphqlUser({
           contributingCohortsCollection: { items: [], total: 0 },
@@ -282,59 +294,30 @@ describe('User data provider', () => {
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.projects).toEqual([]);
       });
-      const getProjectGraphQL = ({
-        status = 'Active',
-        role = 'Investigator',
-        user = {
-          sys: {
-            id: '42',
-          },
-          onboarded: true,
-        },
-        projectId = '11',
-        hasMembers = true,
-      }: {
-        status?: string | null;
-        role?: string | null;
-        user?: { sys: { id: string }; onboarded: boolean } | null;
-        projectId?: string | null;
-        hasMembers?: boolean;
-      } = {}) => ({
-        user: {
-          sys: {
-            id: '42',
-          },
-        },
-        role: 'Project lead',
-        linkedFrom: {
-          projectsCollection: {
-            items: [
-              {
-                sys: {
-                  id: projectId,
-                },
-                title: 'Test Project',
-                status,
-                membersCollection: hasMembers
-                  ? {
-                      items: [
-                        {
-                          user,
-                          role,
-                        },
-                      ],
-                    }
-                  : null,
-              },
-            ],
-          },
-        },
-      });
       test('Should return empty when no members', async () => {
         const mockResponse = getContentfulGraphqlUser({
           linkedFrom: {
             projectMembershipCollection: {
               items: [getProjectGraphQL({ hasMembers: false })],
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.projects[0]?.members).toHaveLength(0);
+      });
+      test('Should return empty when not onboarded', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            projectMembershipCollection: {
+              items: [
+                getProjectGraphQL({
+                  user: { sys: { id: '42' }, onboarded: false },
+                }),
+              ],
             },
           },
         });
@@ -467,7 +450,7 @@ describe('User data provider', () => {
         hasMembers = true,
       }: {
         role?: string | null;
-        user?: { sys: { id: string }; onboarded: true } | null;
+        user?: { sys: { id: string }; onboarded: boolean } | null;
         workingGroupId?: string | null;
         hasMembers?: boolean;
       } = {}) => ({
@@ -553,6 +536,25 @@ describe('User data provider', () => {
 
         const result = await userDataProvider.fetchById('user-id');
         expect(result?.workingGroups[0]?.members).toHaveLength(0);
+      });
+      test('Should return empty when not onboarded', async () => {
+        const mockResponse = getContentfulGraphqlUser({
+          linkedFrom: {
+            workingGroupMembershipCollection: {
+              items: [
+                getWorkingGroupGraphQL({
+                  user: { sys: { id: '42' }, onboarded: false },
+                }),
+              ],
+            },
+          },
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.projects[0]?.members).toHaveLength(0);
       });
 
       test.each(gp2Model.workingGroupMemberRole)(

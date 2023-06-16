@@ -708,7 +708,7 @@ describe('Events Contentful Data Provider', () => {
   });
 
   describe('parseGraphQLEvent', () => {
-    test(`throws when provided event doesn't have a calendar`, () => {
+    test(`returns null when provided event doesn't have a calendar`, () => {
       const graphqlEvent = getContentfulGraphqlEvent();
       graphqlEvent.sys.id = 'example';
       graphqlEvent.calendar = null;

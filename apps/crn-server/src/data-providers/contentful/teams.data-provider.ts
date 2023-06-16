@@ -123,14 +123,21 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
 
     const team = await environment.getEntry(id);
 
-    const tools = publishedTools.map((tool) => ({
+    const previousToolsLinks = team.fields.tools
+      ? team.fields.tools['en-US']
+      : [];
+
+    const newToolsLinks = publishedTools.map((tool) => ({
       sys: {
         type: 'Link',
         linkType: 'Entry',
         id: tool.sys.id,
       },
     }));
-    await patchAndPublish(team, { tools });
+
+    await patchAndPublish(team, {
+      tools: [...previousToolsLinks, ...newToolsLinks],
+    });
   }
 
   async create(input: TeamCreateDataObject): Promise<string> {

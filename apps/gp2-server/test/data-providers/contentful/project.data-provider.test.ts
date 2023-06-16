@@ -185,30 +185,6 @@ describe('Project Data Provider', () => {
         expect(projectDataObject?.members[0]?.avatarUrl).toEqual(url);
       });
 
-      test('should skip the user from the result if the role property is undefined', async () => {
-        const project = getContentfulGraphqlProject();
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          projects: {
-            ...project,
-            membersCollection: {
-              total: 0,
-              items: [
-                {
-                  sys: { id: '11' },
-                  role: undefined,
-                  user: {
-                    sys: { id: '42 ' },
-                    onboarded: true,
-                  },
-                },
-              ],
-            },
-          },
-        });
-        const projectDataObject = await projectDataProvider.fetchById('id');
-        expect(projectDataObject?.members).toEqual([]);
-      });
-
       test.each([false, undefined])(
         'should skip the user from the result if the user is not onboarded',
         async (onboarded) => {

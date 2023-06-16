@@ -331,12 +331,12 @@ type ContributingCohorts = NonNullable<
 const parseContributingCohorts = (contributingCohorts: ContributingCohorts) =>
   contributingCohorts?.items.reduce(
     (cohorts: gp2Model.UserDataObject['contributingCohorts'], cohort) =>
-      cohort?.contributingCohort?.name && cohort.role
+      cohort?.contributingCohort
         ? [
             ...cohorts,
             {
               contributingCohortId: cohort.contributingCohort.sys.id,
-              name: cohort.contributingCohort.name,
+              name: cohort.contributingCohort.name ?? '',
               role: cohort.role as gp2Model.UserContributingCohortRole,
               ...(cohort.studyLink && { studyUrl: cohort.studyLink }),
             },

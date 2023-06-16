@@ -2,21 +2,14 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { GraphQLProject } from '../project.data-provider';
 import { GraphQLWorkingGroup } from '../working-group.data-provider';
 
-export type GraphQLProjectMember = NonNullable<
-  NonNullable<GraphQLProject['membersCollection']>
->['items'][number];
-type GraphQLProjectMemberUser = NonNullable<
-  NonNullable<GraphQLProjectMember>['user']
->;
-type GraphQLWorkingGroupMemberUser = NonNullable<
-  NonNullable<
-    NonNullable<GraphQLWorkingGroup['membersCollection']>['items'][number]
-  >['user']
->;
+type MembersItem =
+  | GraphQLWorkingGroup['membersCollection']
+  | GraphQLProject['membersCollection'];
 
+type MemberItem = NonNullable<NonNullable<MembersItem>['items'][number]>;
 const parseMember = <T extends string>(
-  user: GraphQLProjectMemberUser | GraphQLWorkingGroupMemberUser,
-  role: string,
+  user: NonNullable<MemberItem['user']>,
+  role: MemberItem['role'],
 ): {
   userId: string;
   role: T;
@@ -25,7 +18,7 @@ const parseMember = <T extends string>(
   avatarUrl?: string;
 } => ({
   userId: user.sys.id,
-  role: role as T,
+  role: (role ?? '') as T,
   firstName: user.firstName ?? '',
   lastName: user.lastName ?? '',
   avatarUrl: user.avatar?.url ?? undefined,
@@ -36,11 +29,13 @@ export const parseMembers = <T extends string>(
     | GraphQLWorkingGroup['membersCollection']
     | GraphQLProject['membersCollection'],
 ) =>
-  members?.items.reduce((membersList: gp2Model.Member<T>[], member) => {
-    const user = member?.user;
-    if (!(user && member.role && user.onboarded)) {
-      return membersList;
-    }
-    const groupMember = parseMember<T>(user, member.role);
-    return [...membersList, groupMember];
-  }, []) || [];
+  members?.items
+    .filter((member): member is MemberItem => member !== null)
+    .reduce((membersList: gp2Model.Member<T>[], member) => {
+      const user = member?.user;
+      if (!user?.onboarded) {
+        return membersList;
+      }
+      const groupMember = parseMember<T>(user, member.role);
+      return [...membersList, groupMember];
+    }, []) || [];

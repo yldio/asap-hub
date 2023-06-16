@@ -240,6 +240,24 @@ describe('User data provider', () => {
           expect(result?.contributingCohorts[0]?.role).toEqual(role);
         },
       );
+      test('should return empty if no cohort related', async () => {
+        const contributingCohortsCollection = {
+          items: [
+            {
+              role: 'Investigator',
+              studyLink: 'http://example.com/test',
+            },
+          ],
+        };
+        const mockResponse = getContentfulGraphqlUser({
+          contributingCohortsCollection,
+        });
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: mockResponse,
+        });
+        const result = await userDataProvider.fetchById('user-id');
+        expect(result?.contributingCohorts).toEqual([]);
+      });
     });
 
     describe('projects', () => {

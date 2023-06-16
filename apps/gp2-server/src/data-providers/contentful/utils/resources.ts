@@ -9,34 +9,29 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { GraphQLProject } from '../project.data-provider';
 import { GraphQLWorkingGroup } from '../working-group.data-provider';
 
-export type GraphQLWorkingGroupResource = NonNullable<
-  NonNullable<GraphQLWorkingGroup['resourcesCollection']>
->['items'][number];
+type ResourcesItem =
+  | GraphQLWorkingGroup['resourcesCollection']
+  | GraphQLProject['resourcesCollection'];
+
+type ResourceItem = NonNullable<NonNullable<ResourcesItem>['items'][number]>;
 export const parseResources = (
   resources:
     | GraphQLWorkingGroup['resourcesCollection']
     | GraphQLProject['resourcesCollection'],
 ): gp2Model.Resource[] =>
-  resources?.items.reduce(
-    (resourceList: gp2Model.Resource[], resource) =>
-      resource
-        ? [
-            ...resourceList,
-            {
-              id: resource.sys.id,
-              title: resource.title ?? '',
-              description: resource.description ?? undefined,
-              ...(resource.type === 'Note'
-                ? { type: 'Note' }
-                : {
-                    type: 'Link',
-                    externalLink: resource.externalLink ?? '',
-                  }),
-            },
-          ]
-        : resourceList,
-    [],
-  ) || [];
+  resources?.items
+    .filter((resource): resource is ResourceItem => resource !== null)
+    .map((resource) => ({
+      id: resource.sys.id,
+      title: resource.title ?? '',
+      description: resource.description ?? undefined,
+      ...(resource.type === 'Note'
+        ? { type: 'Note' }
+        : {
+            type: 'Link',
+            externalLink: resource.externalLink ?? '',
+          }),
+    })) || [];
 
 const addNextResources = async (
   environment: Environment,

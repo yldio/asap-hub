@@ -142,31 +142,7 @@ describe('Working Group Data Provider', () => {
         );
         expect(workingGroupDataObject?.members[0]?.avatarUrl).toEqual(url);
       });
-      test('should skip if the role property is undefined', async () => {
-        const workingGroup = {
-          ...getContentfulGraphqlWorkingGroup(),
-          membersCollection: {
-            total: 0,
-            items: [
-              {
-                sys: { id: '11' },
-                role: undefined,
-                user: {
-                  sys: { id: '42 ' },
-                  onboarded: true,
-                },
-              },
-            ],
-          },
-        };
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-          workingGroups: workingGroup,
-        });
-        const workingGroupDataObject = await workingGroupDataProvider.fetchById(
-          'id',
-        );
-        expect(workingGroupDataObject?.members).toEqual([]);
-      });
+
       test.each([false, undefined])(
         'should skip the user from the result if the user is not onboarded',
         async (onboarded) => {

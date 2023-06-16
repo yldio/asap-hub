@@ -24,6 +24,7 @@ export { default as Milestones } from './Milestones';
 export { default as ProjectsBody } from './ProjectsBody';
 export { default as ProjectSummaryFooter } from './ProjectSummaryFooter';
 export { default as ProjectSummaryHeader } from './ProjectSummaryHeader';
+export { default as PublishModal } from './PublishModal';
 export { default as ResourceModal } from './ResourceModal';
 export { default as Resources } from './Resources';
 export { default as UserBiography } from './UserBiography';

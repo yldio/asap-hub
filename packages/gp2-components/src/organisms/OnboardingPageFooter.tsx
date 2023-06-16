@@ -1,12 +1,7 @@
 import { css } from '@emotion/react';
 import { logout } from '@asap-hub/routing';
-import {
-  Button,
-  Link,
-  pixels,
-  usePushFromHere,
-} from '@asap-hub/react-components';
-import { useState } from 'react';
+import { Link, pixels } from '@asap-hub/react-components';
+
 import { mobileQuery, nonMobileQuery } from '../layout';
 
 const { rem } = pixels;
@@ -41,7 +36,7 @@ const buttonWrapperStyle = css({
 
 type OnboardingPageFooterProps = {
   isContinueEnabled: boolean;
-  publishUser: () => Promise<void>;
+  publishHref: string;
   previousHref?: string;
   continueHref?: string;
 };
@@ -50,71 +45,45 @@ const OnboardingPageFooter: React.FC<OnboardingPageFooterProps> = ({
   previousHref,
   continueHref,
   isContinueEnabled,
-  publishUser,
-}) => {
-  const [status, setStatus] = useState<
-    'initial' | 'isSaving' | 'hasError' | 'hasSaved'
-  >('initial');
-  const historyPush = usePushFromHere();
-
-  // we don't have an error state design yet, so we can't test for it
-  /* istanbul ignore next */
-  const onPublish = async () => {
-    setStatus('isSaving');
-    try {
-      await publishUser();
-      setStatus('hasSaved');
-      historyPush('/');
-    } catch (e) {
-      setStatus('hasError');
-    }
-  };
-  return (
-    <footer css={footerStyles}>
-      <div css={signOutStyles}>
-        <Link fullWidth buttonStyle noMargin href={logout({}).$}>
-          Sign Out
+  publishHref,
+}) => (
+  <footer css={footerStyles}>
+    <div css={signOutStyles}>
+      <Link fullWidth buttonStyle noMargin href={logout({}).$}>
+        Sign Out
+      </Link>
+    </div>
+    <div css={css(footerEditStyles)}>
+      <div css={buttonWrapperStyle}>
+        <Link
+          enabled={!!previousHref}
+          fullWidth
+          buttonStyle
+          noMargin
+          href={previousHref}
+        >
+          Previous
         </Link>
       </div>
-      <div css={css(footerEditStyles)}>
-        <div css={buttonWrapperStyle}>
+      <div css={buttonWrapperStyle}>
+        {continueHref ? (
           <Link
-            enabled={!!previousHref}
             fullWidth
             buttonStyle
+            enabled={isContinueEnabled}
             noMargin
-            href={previousHref}
+            href={continueHref}
+            primary
           >
-            Previous
+            Continue
           </Link>
-        </div>
-        <div css={buttonWrapperStyle}>
-          {continueHref ? (
-            <Link
-              fullWidth
-              buttonStyle
-              enabled={isContinueEnabled}
-              noMargin
-              href={continueHref}
-              primary
-            >
-              Continue
-            </Link>
-          ) : (
-            <Button
-              noMargin
-              fullWidth
-              primary
-              enabled={status !== 'isSaving'}
-              onClick={onPublish}
-            >
-              Publish
-            </Button>
-          )}
-        </div>
+        ) : (
+          <Link fullWidth buttonStyle noMargin href={publishHref} primary>
+            Publish
+          </Link>
+        )}
       </div>
-    </footer>
-  );
-};
-
+    </div>
+  </footer>
+);
 export default OnboardingPageFooter;

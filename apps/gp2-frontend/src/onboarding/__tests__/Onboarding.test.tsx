@@ -13,7 +13,7 @@ import { RecoilRoot } from 'recoil';
 import { gp2 } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getUser, patchUser } from '../../users/api';
+import { getUser } from '../../users/api';
 import Onboarding from '../Onboarding';
 
 jest.mock('../../users/api');
@@ -43,7 +43,6 @@ const renderOnboarding = async (id: string) => {
 describe('Onboarding', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
-  const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
   it('has core details activated', async () => {
     const user = gp2Fixtures.createUserResponse();
@@ -53,7 +52,7 @@ describe('Onboarding', () => {
       'active-link',
     );
   });
-  it('can publish profile if user profile is completed', async () => {
+  it('reaches publish link if user profile is completed', async () => {
     const user: gp2.UserResponse = {
       ...gp2Fixtures.createUserResponse(),
       onboarded: false,
@@ -66,11 +65,6 @@ describe('Onboarding', () => {
     userEvent.click(screen.getByRole('link', { name: 'Continue' }));
     userEvent.click(screen.getByRole('link', { name: 'Continue' }));
     userEvent.click(screen.getByRole('link', { name: 'Continue' }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    expect(mockPatchUser).toHaveBeenCalledWith(
-      expect.anything(),
-      { onboarded: true },
-      expect.anything(),
-    );
+    expect(screen.getByRole('link', { name: 'Publish' })).toBeVisible();
   });
 });

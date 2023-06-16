@@ -1,12 +1,11 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import OnboardingPageFooter from '../OnboardingPageFooter';
 
 describe('OnboardingPageFooter', () => {
   const defaultProps = {
     isContinueEnabled: false,
-    publishUser: jest.fn(),
+    publishHref: '/publish',
   };
   it('renders the links with the right props', () => {
     render(
@@ -32,7 +31,7 @@ describe('OnboardingPageFooter', () => {
       expect.stringMatching('/next'),
     ]);
   });
-  it('renders publish button if theres on continueHref', () => {
+  it('renders publish button if theres no continueHref', () => {
     render(
       <OnboardingPageFooter
         {...defaultProps}
@@ -46,25 +45,6 @@ describe('OnboardingPageFooter', () => {
     expect(
       screen.queryByRole('link', { name: 'Continue' }),
     ).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Publish' })).toBeVisible();
-  });
-  it('calls the publishUser function when pressing the publish button', async () => {
-    const publishUser = jest.fn();
-    render(
-      <OnboardingPageFooter
-        {...defaultProps}
-        continueHref={undefined}
-        isContinueEnabled
-        publishUser={publishUser}
-      />,
-      {
-        wrapper: MemoryRouter,
-      },
-    );
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    expect(publishUser).toHaveBeenCalled();
-    await waitFor(() =>
-      expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled(),
-    );
+    expect(screen.getByRole('link', { name: 'Publish' })).toBeVisible();
   });
 });

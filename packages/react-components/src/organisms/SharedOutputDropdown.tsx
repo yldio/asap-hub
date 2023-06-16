@@ -25,13 +25,14 @@ import {
 import { DropdownButton } from '../molecules';
 import { perRem } from '../pixels';
 import { Ellipsis } from '../atoms';
+import { User } from '@asap-hub/auth';
 
 const iconStyles = css({
   display: 'flex',
   marginRight: `${8 / perRem}em`,
 });
 
-type Association = WorkingGroupMembership | UserTeam;
+export type Association = WorkingGroupMembership | UserTeam;
 
 const isWGMembership = (
   association: Association,
@@ -48,7 +49,7 @@ const itemStyles = css({
   textAlign: 'left',
 });
 
-const AssociationItem: React.FC<{
+export const AssociationItem: React.FC<{
   association: Association;
   open?: boolean;
 }> = ({ association, open = false }) => (
@@ -70,9 +71,12 @@ const AssociationItem: React.FC<{
 
 type SharedOutputDropdownProps = {
   children?: never;
+  user: User | null;
 };
-const SharedOutputDropdown: React.FC<SharedOutputDropdownProps> = () => {
-  const user = useCurrentUserCRN();
+
+export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
+  user,
+}) => {
   const [selectedAssociation, setSelectedAssociation] = useState<
     Association | undefined
   >(undefined);
@@ -231,6 +235,11 @@ const SharedOutputDropdown: React.FC<SharedOutputDropdownProps> = () => {
           ]}
     </DropdownButton>
   );
+};
+
+const SharedOutputDropdown = () => {
+  const user = useCurrentUserCRN();
+  return <SharedOutputDropdownBase user={user} />;
 };
 
 export default SharedOutputDropdown;

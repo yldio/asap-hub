@@ -426,7 +426,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     contentful-management: 10.32.0
     cross-env: 7.0.3
     emotion: 10.0.27
@@ -454,7 +454,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     contentful-management: 10.32.0
     cross-env: 7.0.3
     emotion: 10.0.27
@@ -481,7 +481,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     contentful-management: 10.32.0
     cross-env: 7.0.3
     emotion: 10.0.27
@@ -510,7 +510,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     contentful-management: 10.32.0
     cross-env: 7.0.3
     emotion: 10.0.27
@@ -538,7 +538,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     contentful-management: 10.32.0
     cross-env: 7.0.3
     emotion: 10.0.27
@@ -565,7 +565,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     contentful-management: 10.32.0
     cross-env: 7.0.3
     emotion: 10.0.27
@@ -594,7 +594,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     contentful-management: 10.32.0
     cross-env: 7.0.3
     emotion: 10.0.27
@@ -663,7 +663,7 @@ __metadata:
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     "@types/testing-library__react": 10.0.1
     cross-env: 7.0.3
     history: 4.10.1
@@ -717,7 +717,7 @@ __metadata:
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": 2.0.1
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
@@ -1020,7 +1020,7 @@ __metadata:
     "@types/react": 17.0.62
     "@types/react-router-dom": 5.3.3
     "@types/streamsaver": 2.0.1
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     "@types/testing-library__react": 10.0.1
     csv-stringify: 6.3.2
     date-fns: 2.29.3
@@ -1068,7 +1068,7 @@ __metadata:
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     "@types/testing-library__react": 10.0.1
     cross-env: 7.0.3
     history: 4.10.1
@@ -1119,7 +1119,7 @@ __metadata:
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
     "@types/react-test-renderer": 17.0.2
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
@@ -1184,7 +1184,7 @@ __metadata:
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
     "@types/streamsaver": 2.0.1
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
@@ -1430,7 +1430,7 @@ __metadata:
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
     "@types/react-test-renderer": 17.0.2
     "@types/rehype-slug": "workspace:*"
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
@@ -1498,7 +1498,7 @@ __metadata:
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": ^29.4.0
     "@types/react": 17.0.62
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/testing-library__jest-dom": 5.14.6
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     core-js: 3.30.1
@@ -16893,12 +16893,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/testing-library__jest-dom@npm:5.14.5":
-  version: 5.14.5
-  resolution: "@types/testing-library__jest-dom@npm:5.14.5"
+"@types/testing-library__jest-dom@npm:5.14.6":
+  version: 5.14.6
+  resolution: "@types/testing-library__jest-dom@npm:5.14.6"
   dependencies:
     "@types/jest": "*"
-  checksum: dcb05416758fe88c1f4f3aa97b4699fcb46a5ed8f53c6b81721e66155452a48caf12ecb97dfdfd4130678e65efd66b9fca0ac434b3d63affec84842a84a6bf38
+  checksum: 92f81cefeacba3b5c06d4b3fbea0341fe2bcaa6e425c026ae262de39f1148c2588cf3003112aa4ac0880c3972ffb77641a863f3be71518d1d8080402c944e326
   languageName: node
   linkType: hard
 

@@ -18,12 +18,12 @@
     "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "7.21.0",
     "algoliasearch": "4.17.2",
-    "prettier": "2.8.7"
+    "prettier": "2.8.8"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
     "@types/node": "18.15.11",
-    "@types/prettier": "2.7.2"
+    "@types/prettier": "2.7.3"
   }
 }

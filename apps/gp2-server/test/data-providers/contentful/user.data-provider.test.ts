@@ -554,7 +554,7 @@ describe('User data provider', () => {
         });
 
         const result = await userDataProvider.fetchById('user-id');
-        expect(result?.projects[0]?.members).toHaveLength(0);
+        expect(result?.workingGroups[0]?.members).toHaveLength(0);
       });
 
       test.each(gp2Model.workingGroupMemberRole)(

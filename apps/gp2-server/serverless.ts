@@ -398,6 +398,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
         CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
           contentfulWebhookAuthenticationToken,
+        CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
       },
     },
     eventsUpdatedSquidex: {

@@ -451,9 +451,9 @@ __metadata:
     "@tsconfig/create-react-app": 1.0.3
     "@types/jest": ^29.4.0
     "@types/node": 18.15.11
-    "@types/react": 17.0.58
-    "@types/react-dom": 17.0.19
-    "@types/testing-library__jest-dom": 5.14.5
+    "@types/react": 17.0.62
+    "@types/react-dom": 17.0.20
+    "@types/testing-library__jest-dom": 5.14.6
     contentful-management: 10.32.0
     cross-env: 7.0.3
     emotion: 10.0.27
@@ -16546,15 +16546,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:17.0.19":
-  version: 17.0.19
-  resolution: "@types/react-dom@npm:17.0.19"
-  dependencies:
-    "@types/react": ^17
-  checksum: 875a472d868b235435c905ded16cf92297bd2afb20a5a78f5dccd54312f6f038ccf452ea92bb41c0b39150c2f16f3ddff0265a2de756c6f63b0971dd5719578b
-  languageName: node
-  linkType: hard
-
 "@types/react-dom@npm:17.0.20":
   version: 17.0.20
   resolution: "@types/react-dom@npm:17.0.20"
@@ -16684,17 +16675,6 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: 4b49644466c72c4fc2eafa16f8c787eac09d84117b3ab7d17d547f938cdb7bdce7cac92cb12c94d860bbdc0316802eca5af01afd7ed4ef06f6009b4bae8a494b
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:17.0.58":
-  version: 17.0.58
-  resolution: "@types/react@npm:17.0.58"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 4eaf32b86c43f388c681e34a00921c508dd88a1d1022aebfadc5fe802b7c5bed863de1a17eed31e43ca2d65222952dfe79a022055a0e6e4e1ad89fc5a42ec05e
   languageName: node
   linkType: hard
 
@@ -16944,15 +16924,6 @@ __metadata:
   dependencies:
     pretty-format: "npm:^25.1.0"
   checksum: c8b107ff93ed851cd0808f100895a6219b6dea395f61baf43543c16b354a7d642192906a07d4339de3dc23d097e355389467047265f05b84d339fa8ce10d57c6
-  languageName: node
-  linkType: hard
-
-"@types/testing-library__jest-dom@npm:5.14.5":
-  version: 5.14.5
-  resolution: "@types/testing-library__jest-dom@npm:5.14.5"
-  dependencies:
-    "@types/jest": "*"
-  checksum: dcb05416758fe88c1f4f3aa97b4699fcb46a5ed8f53c6b81721e66155452a48caf12ecb97dfdfd4130678e65efd66b9fca0ac434b3d63affec84842a84a6bf38
   languageName: node
   linkType: hard
 

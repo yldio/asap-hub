@@ -244,9 +244,9 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.21.0
     "@types/node": 18.15.11
-    "@types/prettier": 2.7.2
+    "@types/prettier": 2.7.3
     algoliasearch: 4.17.2
-    prettier: 2.8.7
+    prettier: 2.8.8
   languageName: unknown
   linkType: soft
 
@@ -272,7 +272,7 @@ __metadata:
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": 1.27.1
-    "@types/prettier": 2.7.2
+    "@types/prettier": 2.7.3
     "@types/pump": 1.1.1
     "@types/through2-concurrent": 2.0.1
     "@types/uuid": 8.3.4
@@ -287,7 +287,7 @@ __metadata:
     jwt-encode: 1.0.1
     luxon: 1.28.1
     nock: 13.3.0
-    prettier: 2.8.7
+    prettier: 2.8.8
     pump: 3.0.0
     through2-concurrent: 2.0.0
     uuid: 8.3.2
@@ -395,7 +395,7 @@ __metadata:
     "@types/jest": ^29.4.0
     "@types/jest-when": 3.5.2
     "@types/node": 18.15.11
-    "@types/prettier": 2.7.2
+    "@types/prettier": 2.7.3
     cheerio: ^1.0.0-rc.12
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.18"
     contentful-management: 10.32.0
@@ -404,7 +404,7 @@ __metadata:
     graphql-typescript-integration: 1.2.1
     jest-when: 3.5.2
     limiter: ^2.1.0
-    prettier: 2.8.7
+    prettier: 2.8.8
     ts-node: 10.9.1
   languageName: unknown
   linkType: soft
@@ -637,7 +637,7 @@ __metadata:
     graphql-request: 3.4.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
-    prettier: 2.8.7
+    prettier: 2.8.8
     ts-node: 10.9.1
   languageName: unknown
   linkType: soft
@@ -967,7 +967,7 @@ __metadata:
     eslint-plugin-react: 7.32.2
     eslint-plugin-react-hooks: 4.6.0
     jest-config: 27.5.1
-    prettier: 2.8.7
+    prettier: 2.8.8
   languageName: unknown
   linkType: soft
 
@@ -16420,10 +16420,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prettier@npm:2.7.2":
-  version: 2.7.2
-  resolution: "@types/prettier@npm:2.7.2"
-  checksum: b47d76a5252265f8d25dd2fe2a5a61dc43ba0e6a96ffdd00c594cb4fd74c1982c2e346497e3472805d97915407a09423804cc2110a0b8e1b22cffcab246479b7
+"@types/prettier@npm:2.7.3":
+  version: 2.7.3
+  resolution: "@types/prettier@npm:2.7.3"
+  checksum: 705384209cea6d1433ff6c187c80dcc0b95d99d5c5ce21a46a9a58060c527973506822e428789d842761e0280d25e3359300f017fbe77b9755bc772ab3dc2f83
   languageName: node
   linkType: hard
 
@@ -19153,7 +19153,7 @@ __metadata:
     jest-watch-typeahead: 0.6.5
     nock: 13.3.0
     node-fetch: 3.0.0-beta.9
-    prettier: 2.8.7
+    prettier: 2.8.8
     react-test-renderer: 17.0.2
     rimraf: 3.0.2
     ts-node: 10.9.1
@@ -38558,12 +38558,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.7":
-  version: 2.8.7
-  resolution: "prettier@npm:2.8.7"
+"prettier@npm:2.8.8":
+  version: 2.8.8
+  resolution: "prettier@npm:2.8.8"
   bin:
     prettier: bin-prettier.js
-  checksum: fdc8f2616f099f5f0d685907f4449a70595a0fc1d081a88919604375989e0d5e9168d6121d8cc6861f21990b31665828e00472544d785d5940ea08a17660c3a6
+  checksum: b49e409431bf129dd89238d64299ba80717b57ff5a6d1c1a8b1a28b590d998a34e083fa13573bc732bb8d2305becb4c9a4407f8486c81fa7d55100eb08263cf8
   languageName: node
   linkType: hard
 

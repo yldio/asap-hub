@@ -8,6 +8,7 @@ import {
   getUserRole,
   hasShareResearchOutputPermission,
 } from '@asap-hub/validation';
+import { User } from '@asap-hub/auth';
 
 import {
   article,
@@ -25,7 +26,6 @@ import {
 import DropdownButton, { ItemType } from '../molecules/DropdownButton';
 import { perRem } from '../pixels';
 import { Ellipsis } from '../atoms';
-import { User } from '@asap-hub/auth';
 
 const iconStyles = css({
   display: 'flex',

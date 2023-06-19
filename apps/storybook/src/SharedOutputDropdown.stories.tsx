@@ -11,6 +11,7 @@ const workingGroups: WorkingGroupMembership[] = [
   {
     name: 'A Working Group',
     id: '1',
+    // eslint-disable-next-line @typescript-eslint/prefer-as-const
     role: 'Chair' as 'Chair',
     active: true,
   },
@@ -27,4 +28,5 @@ const user = {
   workingGroups,
   teams,
 };
+
 export const Normal = () => <SharedOutputDropdownBase user={user} />;

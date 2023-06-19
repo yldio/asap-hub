@@ -8,7 +8,6 @@ it('renders a DropdownButton', () => {
   );
   expect(getByRole('button').textContent).toContain('Example');
 });
-
 it('renders a DropdownButton link item', () => {
   const { getByText, getByRole } = render(
     <DropdownButton buttonChildren={() => <>Example</>}>
@@ -71,4 +70,18 @@ it('renders calendar links on modal and hides it on outside click', () => {
   getAllByRole('listitem').forEach((e) => expect(e).toBeVisible());
   fireEvent.mouseDown(getByRole('heading'));
   queryAllByRole('listitem').forEach((e) => expect(e).not.toBeVisible());
+});
+
+it('can render title and inner items', () => {
+  const { getByRole, getAllByRole } = render(
+    <>
+      <h1>Element</h1>
+      <DropdownButton buttonChildren={() => <>test</>}>
+        {{ item: 'title', href: '#', type: 'title' }}
+        {{ item: 'inner element', href: '#', type: 'inner' }}
+      </DropdownButton>
+    </>,
+  );
+  fireEvent.click(getByRole('button'));
+  getAllByRole('listitem').forEach((e) => expect(e).toBeVisible());
 });

@@ -22,7 +22,7 @@ import {
   chevronRightIcon,
   chevronLeftIcon,
 } from '../icons';
-import { DropdownButton } from '../molecules';
+import DropdownButton, { ItemType } from '../molecules/DropdownButton';
 import { perRem } from '../pixels';
 import { Ellipsis } from '../atoms';
 import { User } from '@asap-hub/auth';
@@ -95,13 +95,14 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
             {
               item: <AssociationItem open association={selectedAssociation} />,
               closeOnClick: false,
-              forceHover: true,
+              type: 'title',
               onClick: () => setSelectedAssociation(undefined),
             },
             ...(isWGMembership(selectedAssociation)
               ? [
                   {
                     item: <>{article} Article</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
@@ -111,6 +112,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                   {
                     item: <>{bioinformatics} Bioinformatics</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
@@ -120,6 +122,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                   {
                     item: <>{dataset} Dataset</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
@@ -129,6 +132,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                   {
                     item: <>{labResource} Lab Resource</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
@@ -138,6 +142,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                   {
                     item: <>{protocol} Protocol</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
@@ -147,6 +152,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                   {
                     item: <>{crnReportIcon} CRN Report</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
@@ -158,6 +164,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
               : [
                   {
                     item: <>{article} Article</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .teams({})
                       .team({ teamId: selectedAssociation.id })
@@ -167,6 +174,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                   {
                     item: <>{bioinformatics} Bioinformatics</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .teams({})
                       .team({ teamId: selectedAssociation.id })
@@ -176,6 +184,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                   {
                     item: <>{dataset} Dataset</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .teams({})
                       .team({ teamId: selectedAssociation.id })
@@ -185,6 +194,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                   {
                     item: <>{labResource} Lab Resource</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .teams({})
                       .team({ teamId: selectedAssociation.id })
@@ -194,6 +204,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                   {
                     item: <>{protocol} Protocol</>,
+                    type: 'inner' as ItemType,
                     href: network({})
                       .teams({})
                       .team({ teamId: selectedAssociation.id })

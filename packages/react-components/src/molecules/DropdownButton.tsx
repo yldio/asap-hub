@@ -19,6 +19,8 @@ import {
   mint,
   lead,
   pine,
+  silver,
+  neutral200,
 } from '../colors';
 
 const containerStyles = css({
@@ -93,14 +95,22 @@ const resetButtonStyles = css({
   },
 });
 
+export type ItemType = 'title' | 'inner' | 'default';
+
 const itemStyles = ({
   primary100 = mint,
   primary900 = pine,
-}: Theme['colors'] = {}) =>
+  type = 'default',
+}: { type?: ItemType } & Theme['colors'] = {}) =>
   css({
     whiteSpace: 'nowrap',
     color: lead.rgb,
-
+    backgroundColor:
+      type === 'title'
+        ? silver.rgba
+        : type === 'inner'
+        ? neutral200.rgba
+        : 'none',
     ':hover': {
       backgroundColor: primary100.rgba,
       span: {
@@ -111,6 +121,8 @@ const itemStyles = ({
 
 type ItemData = {
   item: ReactNode;
+  type?: ItemType;
+  asTitle?: boolean;
 } & (LinkItemData | ButtonItemData);
 
 type LinkItemData = {
@@ -165,10 +177,10 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
         <div css={[menuContainerStyles, menuShown && showMenuStyles]}>
           <ul css={listStyles}>
             {children.map(
-              ({ item, href, onClick, closeOnClick = true }, index) => (
+              ({ item, type, href, onClick, closeOnClick = true }, index) => (
                 <li
                   key={`drop-${index}`}
-                  css={({ colors }) => itemStyles(colors)}
+                  css={({ colors }) => itemStyles({ ...colors, type })}
                 >
                   {href ? (
                     <Anchor href={href}>

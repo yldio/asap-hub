@@ -148,6 +148,7 @@ export {
   RichTextCard,
   SearchAndFilter,
   SharedOutputDropdown,
+  SharedOutputDropdownBase,
   SharedResearchCard,
   SharedResearchListCard,
   SharedResearchMetadata,

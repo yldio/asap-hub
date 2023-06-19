@@ -8,6 +8,7 @@ import {
   getUserRole,
   hasShareResearchOutputPermission,
 } from '@asap-hub/validation';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { User } from '@asap-hub/auth';
 
 import {

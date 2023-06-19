@@ -83,6 +83,18 @@ describe('ShareOutputDropdown', () => {
       expect(getByText('Correct team')).toBeInTheDocument();
       expect(queryByText('Wrong team')).not.toBeInTheDocument();
     });
+    it('does not display the button if no association available', () => {
+      const { queryByText } = renderWithContent({
+        groups: [
+          { name: 'Wrong group', id: '2', active: false, role: 'Member' },
+        ],
+        teams: [
+          { displayName: 'Wrong team', id: '2', role: 'Collaborating PI' },
+        ],
+      });
+
+      expect(queryByText('Share an output')).not.toBeInTheDocument();
+    });
   });
   describe('list view', () => {
     it('let you select a team', () => {

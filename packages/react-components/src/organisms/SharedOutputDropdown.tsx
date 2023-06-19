@@ -82,6 +82,37 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
     Association | undefined
   >(undefined);
 
+  const associations = [
+    ...(user?.teams ?? [])
+      .concat()
+      .filter((team) => {
+        const userRole = getUserRole(user, 'teams', [team.id]);
+        return hasShareResearchOutputPermission(userRole);
+      })
+      .sort((a, b) => (a.displayName ?? '').localeCompare(b.displayName ?? ''))
+      .map((team) => ({
+        item: <AssociationItem association={team} />,
+        closeOnClick: false,
+        onClick: () => setSelectedAssociation(team),
+      })),
+    ...(user?.workingGroups ?? [])
+      .concat()
+      .filter((workingGroup) => {
+        const userRole = getUserRole(user, 'workingGroups', [workingGroup.id]);
+        return hasShareResearchOutputPermission(userRole);
+      })
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((wg) => ({
+        item: <AssociationItem association={wg} />,
+        closeOnClick: false,
+        onClick: () => setSelectedAssociation(wg),
+      })),
+  ];
+
+  if (associations.length === 0) {
+    return <></>;
+  }
+
   return (
     <DropdownButton
       primary
@@ -215,36 +246,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                   },
                 ]),
           ]
-        : [
-            ...(user?.teams ?? [])
-              .concat()
-              .filter((team) => {
-                const userRole = getUserRole(user, 'teams', [team.id]);
-                return hasShareResearchOutputPermission(userRole);
-              })
-              .sort((a, b) =>
-                (a.displayName ?? '').localeCompare(b.displayName ?? ''),
-              )
-              .map((team) => ({
-                item: <AssociationItem association={team} />,
-                closeOnClick: false,
-                onClick: () => setSelectedAssociation(team),
-              })),
-            ...(user?.workingGroups ?? [])
-              .concat()
-              .filter((workingGroup) => {
-                const userRole = getUserRole(user, 'workingGroups', [
-                  workingGroup.id,
-                ]);
-                return hasShareResearchOutputPermission(userRole);
-              })
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((wg) => ({
-                item: <AssociationItem association={wg} />,
-                closeOnClick: false,
-                onClick: () => setSelectedAssociation(wg),
-              })),
-          ]}
+        : associations}
     </DropdownButton>
   );
 };

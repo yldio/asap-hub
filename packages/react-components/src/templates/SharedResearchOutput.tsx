@@ -1,9 +1,6 @@
 import React, { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
-import {
-  ResearchOutputPutRequest,
-  ResearchOutputResponse,
-} from '@asap-hub/model';
+import { ResearchOutputResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Card, Headline2, Divider, Markdown } from '../atoms';
@@ -23,7 +20,6 @@ import { createMailTo } from '../mail';
 import {
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
-  transformResearchOutputResponseToRequest,
 } from '../utils';
 
 const containerStyles = css({
@@ -56,10 +52,9 @@ type SharedResearchOutputProps = Pick<
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
     publishedNow: boolean;
     draftCreated?: boolean;
-    researchOutputData: ResearchOutputResponse;
     currentUserId?: string;
     onRequestReview?: (
-      output: ResearchOutputPutRequest,
+      shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
   };
 
@@ -74,7 +69,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   published,
   publishedNow,
   draftCreated,
-  researchOutputData,
   currentUserId,
   reviewRequestedBy,
   onRequestReview,
@@ -102,10 +96,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const toggleReview = async (shouldReview: boolean) => {
     if (!currentUserId || !onRequestReview) return;
 
-    await onRequestReview({
-      ...transformResearchOutputResponseToRequest(researchOutputData),
-      reviewRequestedBy: shouldReview ? currentUserId : undefined,
-    });
+    await onRequestReview(shouldReview);
 
     setDisplayModal(false);
     setReviewToggled(true);

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { render, waitFor, screen } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
@@ -18,6 +18,7 @@ import { User } from '@asap-hub/auth';
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
 import { refreshResearchOutputState } from '../state';
+import * as teamApis from '../../network/teams/api';
 
 jest.setTimeout(30000);
 jest.mock('../../network/teams/api');
@@ -30,6 +31,11 @@ const id = '42';
 const mockGetResearchOutput = getResearchOutput as jest.MockedFunction<
   typeof getResearchOutput
 >;
+const mockUpdateTeamResearchOutput = jest.spyOn(
+  teamApis,
+  'updateTeamResearchOutput',
+);
+
 beforeEach(() => {
   mockGetResearchOutput.mockClear();
   mockGetResearchOutput.mockResolvedValue({
@@ -298,4 +304,93 @@ it('renders the 404 page for a missing research output', async () => {
   mockGetResearchOutput.mockResolvedValue(undefined);
   const { getByText } = await renderComponent(researchOutputRoute.$);
   expect(getByText(/sorry.+page/i)).toBeVisible();
+});
+
+it('switches a draft research output to in review', async () => {
+  const researchOutput = createResearchOutputResponse();
+  mockGetResearchOutput.mockResolvedValue({
+    ...researchOutput,
+    documentType: 'Article',
+    published: false,
+    workingGroups: undefined,
+  });
+
+  const { queryByText, getAllByText } = await renderComponent(
+    researchOutputRoute.$,
+    {
+      ...defaultUser,
+      teams: [
+        {
+          id: researchOutput.teams[0]!.id,
+          role: 'Key Personnel',
+          displayName: researchOutput.teams[0]!.displayName,
+        },
+      ],
+    },
+  );
+
+  const showModalButton = queryByText('Ready for PM Review');
+
+  expect(showModalButton).toBeVisible();
+
+  fireEvent.click(showModalButton as HTMLElement);
+  const saveButton = getAllByText('Ready for PM Review')[1];
+
+  fireEvent.click(saveButton as HTMLElement);
+  await waitFor(() => {
+    expect(saveButton).toBeEnabled();
+  });
+
+  expect(mockUpdateTeamResearchOutput).toHaveBeenCalledWith(
+    researchOutput.id,
+    expect.objectContaining({
+      reviewRequestedBy: defaultUser.id,
+    }),
+    expect.anything(),
+  );
+});
+
+it('switches a in review research output back to draft', async () => {
+  const researchOutput = createResearchOutputResponse();
+  mockGetResearchOutput.mockResolvedValue({
+    ...researchOutput,
+    documentType: 'Article',
+    published: false,
+    workingGroups: undefined,
+    reviewRequestedBy: { ...defaultUser },
+  });
+
+  const { queryByText, getAllByText } = await renderComponent(
+    researchOutputRoute.$,
+    {
+      ...defaultUser,
+      teams: [
+        {
+          id: researchOutput.teams[0]!.id,
+          role: 'Project Manager',
+          displayName: researchOutput.teams[0]!.displayName,
+        },
+      ],
+    },
+  );
+
+  const showModalButton = queryByText('Switch to Draft');
+
+  expect(showModalButton).toBeVisible();
+
+  fireEvent.click(showModalButton as HTMLElement);
+  const saveButton = getAllByText('Switch to Draft')[1];
+
+  fireEvent.click(saveButton as HTMLElement);
+  await waitFor(() => {
+    expect(saveButton).toBeEnabled();
+  });
+
+  expect(mockUpdateTeamResearchOutput).toHaveBeenCalledWith(
+    researchOutput.id,
+    expect.objectContaining({
+      reviewRequestedBy: undefined,
+    }),
+    expect.anything(),
+  );
 });

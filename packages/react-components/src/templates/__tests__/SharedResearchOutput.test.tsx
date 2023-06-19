@@ -18,7 +18,6 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   backHref: '#',
   publishedNow: false,
   draftCreated: false,
-  researchOutputData: createResearchOutputResponse(),
   onRequestReview: jest.fn(() => Promise.resolve()),
 };
 
@@ -750,7 +749,6 @@ describe('the ready for pm review button', () => {
                 {...props}
                 documentType="Article"
                 published={false}
-                researchOutputData={createResearchOutputResponse()}
                 currentUserId="user1"
                 onRequestReview={requestReviewFn}
               />
@@ -1001,7 +999,6 @@ describe('the switch to draft button', () => {
                 {...props}
                 documentType="Article"
                 published={false}
-                researchOutputData={createResearchOutputResponse()}
                 currentUserId="user1"
                 onRequestReview={switchToDraft}
                 reviewRequestedBy={{

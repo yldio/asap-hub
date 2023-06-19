@@ -69,15 +69,6 @@ export const getIdentifierType = (
     : ResearchOutputIdentifierType.Empty;
 };
 
-export const isIdentifierModified = (
-  researchOutputData: ResearchOutputResponse,
-  identifier?: string,
-): boolean =>
-  researchOutputData.doi !== identifier &&
-  researchOutputData.accession !== identifier &&
-  researchOutputData.rrid !== identifier &&
-  identifier !== '';
-
 export const getPostAuthors = (
   authors: ComponentPropsWithRef<typeof AuthorSelect>['values'],
 ) =>

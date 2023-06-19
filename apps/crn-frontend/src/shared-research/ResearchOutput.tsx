@@ -1,6 +1,7 @@
 import { NotFoundPage, SharedResearchOutput } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
+import { transformResearchOutputResponseToRequest } from '@asap-hub/react-components/build/utils';
 import {
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
@@ -59,10 +60,16 @@ const ResearchOutput: React.FC = () => {
               <SharedResearchOutput
                 {...researchOutputData}
                 backHref={backHref}
-                onRequestReview={(output) =>
-                  updateResearchOutput(researchOutputData.id, output)
+                onRequestReview={(shouldReview) =>
+                  updateResearchOutput(researchOutputData.id, {
+                    ...transformResearchOutputResponseToRequest(
+                      researchOutputData,
+                    ),
+                    reviewRequestedBy: shouldReview
+                      ? currentUser?.id
+                      : undefined,
+                  })
                 }
-                researchOutputData={researchOutputData}
                 publishedNow={publishedNow}
                 currentUserId={currentUser?.id}
                 draftCreated={urlSearchParams.get('draftCreated') === 'true'}

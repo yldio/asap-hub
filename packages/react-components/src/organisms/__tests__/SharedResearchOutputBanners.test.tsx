@@ -1,8 +1,9 @@
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import SharedResearchOutputBanners, {
   SharedResearchOutputBannersProps,
 } from '../SharedResearchOutputBanners';
-import { render, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 const defaultProps: SharedResearchOutputBannersProps = {
   association: 'working group',

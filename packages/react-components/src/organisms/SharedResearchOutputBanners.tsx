@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import Toast from './Toast';
 
-interface SharedResearchOutputBannersProps {
+export interface SharedResearchOutputBannersProps {
   association: string;
   documentType: string;
   published: boolean;
@@ -62,7 +62,7 @@ const SharedResearchOutputBanners: React.FC<
 
       {reviewRequestedBy && !published && (
         <Toast accent="info">
-          {`${reviewRequestedBy.firstName}  ${reviewRequestedBy.lastName} on ${associationName} requested PMs to review this output. This draft is only available to members in the ${association} listed below.`}
+          {`${reviewRequestedBy.firstName} ${reviewRequestedBy.lastName} on ${associationName} requested PMs to review this output. This draft is only available to members in the ${association} listed below.`}
         </Toast>
       )}
       {(publishedNow || !published) && (
@@ -73,7 +73,7 @@ const SharedResearchOutputBanners: React.FC<
               onClose={() => setPublishedNowBanner(false)}
             >
               {`${
-                association === 'working group' ? 'Working Group' : 'Team '
+                association === 'working group' ? 'Working Group' : 'Team'
               } ${documentType} published successfully.`}
             </Toast>
           )}

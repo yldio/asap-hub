@@ -1,12 +1,15 @@
-import { NotFoundPage, SharedResearchOutput } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  SharedResearchOutput,
+  utils,
+} from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
-import { transformResearchOutputResponseToRequest } from '@asap-hub/react-components/build/utils';
 import {
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
 } from '@asap-hub/react-context';
-import { useRouteMatch, Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
 import { useResearchOutputById, useResearchOutputPermissions } from './state';
@@ -62,7 +65,7 @@ const ResearchOutput: React.FC = () => {
                 backHref={backHref}
                 onRequestReview={(shouldReview) =>
                   updateResearchOutput(researchOutputData.id, {
-                    ...transformResearchOutputResponseToRequest(
+                    ...utils.transformResearchOutputResponseToRequest(
                       researchOutputData,
                     ),
                     reviewRequestedBy: shouldReview

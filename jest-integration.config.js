@@ -5,5 +5,5 @@ const {
 
 module.exports = {
   ...base,
-  testMatch: ['**/*.integration-test.{js,jsx,ts,tsx}'],
+  testMatch: ['<rootDir>/*.integration-test.{js,jsx,ts,tsx}'],
 };

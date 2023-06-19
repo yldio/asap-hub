@@ -1,4 +1,6 @@
-import * as contentful from 'contentful-management';
+import { createClient } from 'contentful-management';
+import minimist from 'minimist';
+import retry from 'async-retry';
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID!;
 const contentfulEnvId = process.env.CONTENTFUL_ENV_ID!;
@@ -7,13 +9,38 @@ const contentfulAccessToken = process.env.CONTENTFUL_ACCESS_TOKEN!;
 const contentfulManagementAccessToken =
   process.env.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 
-const client = contentful.createClient({
+const client = createClient({
   accessToken: contentfulManagementAccessToken,
 });
 
-const app = async () => {
-  const space = await client.getSpace(spaceId);
+const args = minimist(process.argv.slice(2));
+const interval = 10000;
 
+const retryCreateEnvironment = async () =>
+  retry(
+    async (bail) => {
+      try {
+        await createEnvironment();
+      } catch (e: any) {
+        if (e.name === 'QuotaReached') {
+          throw e;
+        }
+        bail(e);
+      }
+    },
+    {
+      retries: Math.round(args.timeout / interval),
+      minTimeout: interval,
+      maxTimeout: interval,
+      factor: 1,
+      randomize: false,
+      onRetry: () =>
+        console.log('No available environments. Retrying in 10s...'),
+    },
+  );
+
+const createEnvironment = async (): Promise<void> => {
+  const space = await client.getSpace(spaceId);
   await space.createEnvironmentWithId(
     contentfulEnvId,
     {
@@ -21,6 +48,16 @@ const app = async () => {
     },
     contentfulSourceEnv,
   );
+};
+
+const app = async () => {
+  const space = await client.getSpace(spaceId);
+
+  if (args.timeout) {
+    await retryCreateEnvironment();
+  } else {
+    await createEnvironment();
+  }
 
   console.log(`Environment ${contentfulEnvId} created`);
 

@@ -46,8 +46,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   researchOutputData,
   descriptionUnchangedWarning,
 }) => {
-  console.log('workingGroupId', workingGroupId);
-  console.log('researchOutputData', researchOutputData);
   const route = network({})
     .workingGroups({})
     .workingGroup({ workingGroupId }).createOutput;
@@ -95,7 +93,6 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     published,
   );
 
-  console.log(researchTags);
   const researchSuggestions = researchTags
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);

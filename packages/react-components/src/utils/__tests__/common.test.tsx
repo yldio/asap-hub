@@ -10,6 +10,7 @@ import {
   isLink,
   splitListBy,
   getResearchOutputAssociation,
+  getResearchOutputAssociationName,
 } from '../index';
 
 describe('getSvgAspectRatio', () => {
@@ -166,6 +167,40 @@ describe('getResearchOutputAssociation', () => {
     };
     expect(getResearchOutputAssociation(researchOutput)).toEqual(
       'working group',
+    );
+  });
+});
+
+describe('getResearchOutputAssociationName', () => {
+  it('returns team name for a team research output', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [{ id: '1', displayName: 'Team ASAP' }],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationName(researchOutput)).toEqual(
+      'Team ASAP',
+    );
+  });
+  it('returns an empty string for a team research output with an empty displayname', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [{ id: '1', displayName: '' }],
+      workingGroups: undefined,
+    };
+    expect(getResearchOutputAssociationName(researchOutput)).toEqual('');
+  });
+  it('returns working group name for a working group research output', () => {
+    const researchOutput: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      teams: [
+        { id: '1', displayName: 'Team ASAP' },
+        { id: '2', displayName: 'Second team' },
+      ],
+      workingGroups: [{ id: '1', title: 'My new Working Group' }],
+    };
+    expect(getResearchOutputAssociationName(researchOutput)).toEqual(
+      'My new Working Group',
     );
   });
 });

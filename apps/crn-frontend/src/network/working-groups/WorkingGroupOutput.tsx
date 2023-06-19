@@ -146,6 +146,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
+                    reviewRequestedBy: researchOutputData.reviewRequestedBy?.id,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,
@@ -159,6 +160,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: false,
+                    reviewRequestedBy: researchOutputData.reviewRequestedBy?.id,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,

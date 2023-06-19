@@ -103,6 +103,7 @@ const mandatoryFields = async (
   userEvent.click(screen.getByText('Abu-Remaileh, M 1'));
   const button = screen.getByRole('button', { name: /Publish/i });
   const saveDraftButton = screen.getByRole('button', { name: /Save Draft/i });
+  const updatePublishedButton = screen.getByRole('button', { name: /Save/i });
   return {
     publish: async () => {
       userEvent.click(button);
@@ -114,6 +115,12 @@ const mandatoryFields = async (
       userEvent.click(saveDraftButton);
       await waitFor(() => {
         expect(saveDraftButton).toBeEnabled();
+      });
+    },
+    updatePublished: async () => {
+      userEvent.click(updatePublishedButton);
+      await waitFor(() => {
+        expect(updatePublishedButton).toBeEnabled();
       });
     },
   };
@@ -459,6 +466,11 @@ it.each([
         title,
         descriptionMD,
         published,
+        reviewRequestedBy: {
+          id: 'user-id-1',
+          firstName: 'User',
+          lastName: 'One',
+        },
       },
       history,
     });
@@ -483,6 +495,7 @@ it.each([
         descriptionMD,
         workingGroups: [workingGroupId],
         published: shouldPublish,
+        reviewRequestedBy: 'user-id-1',
       }),
       expect.anything(),
     );

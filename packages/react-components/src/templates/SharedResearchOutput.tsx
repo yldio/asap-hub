@@ -1,10 +1,9 @@
-import React, { ComponentProps, useContext, useState } from 'react';
+import React, { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
 import {
   ResearchOutputPutRequest,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 
 import { Card, Headline2, Divider, Markdown } from '../atoms';
@@ -23,6 +22,7 @@ import {
 import { createMailTo } from '../mail';
 import {
   getResearchOutputAssociation,
+  getResearchOutputAssociationName,
   transformResearchOutputResponseToRequest,
 } from '../utils';
 
@@ -91,20 +91,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ...(props.subtype ? [props.subtype] : []),
     ...props.keywords,
   ];
-  const {
-    canEditResearchOutput,
-    canDuplicateResearchOutput,
-    canRequestReview,
-    canPublishResearchOutput,
-  } = useContext(ResearchOutputPermissionsContext);
 
   const hasDescription = description || descriptionMD;
 
   const association = getResearchOutputAssociation(props);
-  const [publishedNowBanner, setPublishedNowBanner] = useState(published);
-  const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
-  const [reviewRequestedBanner, setReviewRequestedBanner] = useState(false);
-  const [reviewDismissedBanner, setReviewDismissedBanner] = useState(false);
+  const associationName = getResearchOutputAssociationName(props);
+  const [reviewToggled, setReviewToggled] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);
 
   const toggleReview = async (shouldReview: boolean) => {
@@ -116,8 +108,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     });
 
     setDisplayModal(false);
-    setReviewRequestedBanner(shouldReview);
-    setReviewDismissedBanner(!shouldReview);
+    setReviewToggled(true);
   };
 
   const duplicateLink =
@@ -140,27 +131,18 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   return (
     <div>
       <SharedResearchOutputBanners
-        draftCreatedBanner={draftCreatedBanner}
-        setDraftCreatedBanner={setDraftCreatedBanner}
-        reviewRequestedBanner={reviewRequestedBanner}
-        setReviewRequestedBanner={setReviewRequestedBanner}
-        reviewDismissedBanner={reviewDismissedBanner}
-        setReviewDismissedBanner={setReviewDismissedBanner}
+        published={published}
+        draftCreated={draftCreated}
         association={association}
         documentType={props.documentType}
-        publishedNowBanner={publishedNowBanner}
-        setPublishedNowBanner={setPublishedNowBanner}
-        published={published}
         reviewRequestedBy={reviewRequestedBy}
         publishedNow={publishedNow}
+        reviewToggled={reviewToggled}
+        associationName={associationName}
       />
       <div css={containerStyles}>
         {!isGrantDocument && (
           <SharedResearchOutputButtons
-            canEditResearchOutput={canEditResearchOutput}
-            canDuplicateResearchOutput={canDuplicateResearchOutput}
-            canRequestReview={canRequestReview}
-            canPublishResearchOutput={canPublishResearchOutput}
             id={id}
             displayModal={displayModal}
             setDisplayModal={setDisplayModal}
@@ -173,12 +155,16 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           <ConfirmModal
             title={`${
               reviewRequestedBy
-                ? 'Switch output to Draft?'
+                ? 'Switch output to draft?'
                 : 'Output ready for PM review?'
             }`}
             description={`All ${
               association === 'working group' ? 'working group' : 'team'
-            } members listed on this output will be notified and PMs will be able to review and publish this output.`}
+            } members listed on this output will be notified and ${
+              reviewRequestedBy
+                ? 'will be able to edit this output again.'
+                : 'PMs will be able to review and publish this output.'
+            }`}
             cancelText="Cancel"
             confirmText={`${
               reviewRequestedBy ? 'Switch to Draft' : 'Ready for PM Review'

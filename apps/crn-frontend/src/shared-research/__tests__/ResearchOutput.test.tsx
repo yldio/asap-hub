@@ -18,7 +18,7 @@ import { User } from '@asap-hub/auth';
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
 import { refreshResearchOutputState } from '../state';
-import * as teamApis from '../../network/teams/api';
+import { updateTeamResearchOutput } from '../../network/teams/api';
 
 jest.setTimeout(30000);
 jest.mock('../../network/teams/api');
@@ -31,10 +31,10 @@ const id = '42';
 const mockGetResearchOutput = getResearchOutput as jest.MockedFunction<
   typeof getResearchOutput
 >;
-const mockUpdateTeamResearchOutput = jest.spyOn(
-  teamApis,
-  'updateTeamResearchOutput',
-);
+const mockUpdateTeamResearchOutput =
+  updateTeamResearchOutput as jest.MockedFunction<
+    typeof updateTeamResearchOutput
+  >;
 
 beforeEach(() => {
   mockGetResearchOutput.mockClear();

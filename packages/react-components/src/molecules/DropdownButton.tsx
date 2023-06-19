@@ -101,7 +101,7 @@ const itemStyles = ({
   primary100 = mint,
   primary900 = pine,
   type = 'default',
-}: { type?: ItemType } & Theme['colors'] = {}) =>
+}: { type?: ItemType } & Theme['colors']) =>
   css({
     whiteSpace: 'nowrap',
     color: lead.rgb,

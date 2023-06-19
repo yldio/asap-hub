@@ -708,26 +708,12 @@ describe('Events Contentful Data Provider', () => {
   });
 
   describe('parseGraphQLEvent', () => {
-    test(`throws when provided event doesn't have a calendar`, () => {
+    test(`returns null when provided event doesn't have a calendar`, () => {
       const graphqlEvent = getContentfulGraphqlEvent();
       graphqlEvent.sys.id = 'example';
       graphqlEvent.calendar = null;
 
-      expect(() => parseGraphQLEvent(graphqlEvent)).toThrowError(
-        `Event (example) doesn't have a calendar`,
-      );
-    });
-
-    test('throws when provided an invalid event status', () => {
-      const graphqlEvent = getContentfulGraphqlEvent();
-      graphqlEvent.sys.id = 'example';
-      graphqlEvent.status = 'invalid';
-
-      expect(() =>
-        parseGraphQLEvent(graphqlEvent),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `"Invalid event (example) status "invalid""`,
-      );
+      expect(parseGraphQLEvent(graphqlEvent)).toBeNull();
     });
   });
 });

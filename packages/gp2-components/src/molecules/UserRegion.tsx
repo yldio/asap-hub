@@ -11,7 +11,7 @@ import IconWithLabel from './IconWithLabel';
 const regionIcons: { [key in gp2.UserRegion]: JSX.Element } = {
   Africa: regionAfricaIcon,
   Asia: regionAsia,
-  'Australia/Australiasia': regionAustralasiaIcon,
+  'Australia/Australasia': regionAustralasiaIcon,
   Europe: regionEuropeIcon,
   'North America': regionNorthAmericaIcon,
   'Latin America': regionLatinAmericaIcon,

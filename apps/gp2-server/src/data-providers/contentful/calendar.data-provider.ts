@@ -80,7 +80,7 @@ export class CalendarContentfulDataProvider
       return {
         total: (filteredCalendarItems || [])?.length,
         items: (filteredCalendarItems || [])
-          .filter((x): x is CalendarItem => x !== null)
+          .filter((calendar): calendar is CalendarItem => calendar !== null)
           .map(parseGraphQlCalendarToDataObject),
       };
     }

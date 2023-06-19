@@ -4,17 +4,17 @@ import UserRegion from '../UserRegion';
 
 describe('UserRegion', () => {
   it.each(
-    gp2.userRegions.filter((region) => region !== 'Australia/Australiasia'),
+    gp2.userRegions.filter((region) => region !== 'Australia/Australasia'),
   )('renders the right icon and name for %s', (region) => {
     render(<UserRegion region={region} />);
     expect(screen.getByTitle(region)).toBeInTheDocument();
     expect(screen.getByText(region, { selector: 'span' })).toBeInTheDocument();
   });
   it('renders the right icon and name for Australasia', () => {
-    render(<UserRegion region={'Australia/Australiasia'} />);
+    render(<UserRegion region={'Australia/Australasia'} />);
     expect(screen.getByTitle('Australasia')).toBeInTheDocument();
     expect(
-      screen.getByText('Australia/Australiasia', { selector: 'span' }),
+      screen.getByText('Australia/Australasia', { selector: 'span' }),
     ).toBeInTheDocument();
   });
 });

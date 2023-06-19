@@ -5,6 +5,7 @@ import {
   SquidexGraphqlError,
   SquidexRest,
 } from '@asap-hub/squidex';
+import { GraphQLError } from 'graphql';
 import matches from 'lodash.matches';
 import nock from 'nock';
 import {
@@ -192,7 +193,7 @@ describe('Outputs data provider', () => {
                 message: 'some error message',
                 path: ['asdasdas'],
                 locations: [],
-              },
+              } as unknown as GraphQLError,
             ],
           },
           { query: 'some query' },

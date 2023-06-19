@@ -77,6 +77,7 @@ export const usersContentQueryFragment = gql`
                       sys {
                         id
                       }
+                      onboarded
                     }
                   }
                 }
@@ -107,6 +108,7 @@ export const usersContentQueryFragment = gql`
                       sys {
                         id
                       }
+                      onboarded
                     }
                   }
                 }

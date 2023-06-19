@@ -35,7 +35,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
   async fetch(options: FetchOptions): Promise<gp2Model.ListProjectDataObject> {
     const { take = 10, skip = 0 } = options;
-    const { projectsCollection } = await this.graphQLClient.request<
+    const res = await this.graphQLClient.request<
       gp2Contentful.FetchProjectsQuery,
       gp2Contentful.FetchProjectsQueryVariables
     >(gp2Contentful.FETCH_PROJECTS, {
@@ -43,6 +43,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       skip,
     });
 
+    const { projectsCollection } = res;
     if (!projectsCollection) {
       return {
         total: 0,
@@ -80,7 +81,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     await deleteResources(idsToDelete, environment);
     const fetchEventById = () => this.fetchProjectById(id);
     await pollContentfulGql<gp2Contentful.FetchProjectByIdQuery>(
-      result.sys.publishedVersion || Infinity,
+      result.sys.publishedVersion ?? Infinity,
       fetchEventById,
       'projects',
     );
@@ -96,37 +97,29 @@ export type GraphQLProjectCalendar = NonNullable<GraphQLProject['calendar']>;
 export function parseProjectToDataObject(
   project: GraphQLProject,
 ): gp2Model.ProjectDataObject {
-  if (!(project.status && gp2Model.isProjectStatus(project.status))) {
-    throw new TypeError('status is unknown');
-  }
   const members = parseMembers<gp2Model.ProjectMemberRole>(
     project.membersCollection,
-    gp2Model.isProjectMemberRole,
   );
   const milestones = parseMilestones(project.milestonesCollection);
   const resources = parseResources(project.resourcesCollection);
   const calendar = parseCalendar(project.calendar);
 
-  if (project.keywords && !project.keywords.every(gp2Model.isKeyword)) {
-    throw new TypeError('Invalid keyword received');
-  }
-
   return {
     id: project.sys.id,
-    title: project.title || '',
-    startDate: project.startDate || '',
-    endDate: project.endDate || undefined,
-    status: project.status,
-    projectProposalUrl: project.projectProposal || undefined,
-    pmEmail: project.pmEmail || undefined,
-    leadEmail: project.leadEmail || undefined,
-    description: project.description || undefined,
+    title: project.title ?? '',
+    startDate: project.startDate ?? '',
+    endDate: project.endDate ?? undefined,
+    status: project.status as gp2Model.ProjectStatus,
+    projectProposalUrl: project.projectProposal ?? undefined,
+    pmEmail: project.pmEmail ?? undefined,
+    leadEmail: project.leadEmail ?? undefined,
+    description: project.description ?? undefined,
     members,
-    keywords: project.keywords || [],
+    keywords: (project.keywords as gp2Model.Keyword[]) ?? [],
     milestones,
     resources,
-    traineeProject: project.traineeProject || false,
-    opportunitiesLink: project.opportunitiesLink || undefined,
+    traineeProject: project.traineeProject ?? false,
+    opportunitiesLink: project.opportunitiesLink ?? undefined,
     calendar,
   };
 }

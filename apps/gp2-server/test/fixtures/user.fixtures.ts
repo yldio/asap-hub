@@ -726,6 +726,7 @@ export const getContentfulGraphqlWorkingGroupMembership = () => ({
         sys: {
           id: '42',
         },
+        onboarded: true,
       },
       role: 'Co-lead',
     },
@@ -751,6 +752,7 @@ export const getContentfulGraphqlWorkingGroupMembers = () => ({
         sys: {
           id: 'user-id-2',
         },
+        onboarded: true,
       },
     },
     {
@@ -759,6 +761,7 @@ export const getContentfulGraphqlWorkingGroupMembers = () => ({
         sys: {
           id: 'user-id-3',
         },
+        onboarded: true,
       },
     },
   ],
@@ -771,6 +774,7 @@ export const getContentfulGraphqlProjectMembership = () => ({
         sys: {
           id: '42',
         },
+        onboarded: true,
       },
       role: 'Investigator',
     },
@@ -797,6 +801,7 @@ export const getContentfulGraphqlProjectMembers = () => ({
         sys: {
           id: 'user-id-0',
         },
+        onboarded: true,
       },
     },
     {
@@ -805,6 +810,7 @@ export const getContentfulGraphqlProjectMembers = () => ({
         sys: {
           id: 'user-id-1',
         },
+        onboarded: true,
       },
     },
   ],
@@ -879,5 +885,53 @@ export const getContentfulUsersByWorkingGroupId = (
         },
       },
     ],
+  },
+});
+export const getProjectGraphQL = ({
+  status = 'Active',
+  role = 'Investigator',
+  user = {
+    sys: {
+      id: '42',
+    },
+    onboarded: true,
+  },
+  projectId = '11',
+  hasMembers = true,
+}: {
+  status?: string | null;
+  role?: string | null;
+  user?: { sys: { id: string }; onboarded: boolean } | null;
+  projectId?: string | null;
+  hasMembers?: boolean;
+} = {}) => ({
+  user: {
+    sys: {
+      id: '42',
+    },
+  },
+  role: 'Project lead',
+  linkedFrom: {
+    projectsCollection: {
+      items: [
+        {
+          sys: {
+            id: projectId,
+          },
+          title: 'Test Project',
+          status,
+          membersCollection: hasMembers
+            ? {
+                items: [
+                  {
+                    user,
+                    role,
+                  },
+                ],
+              }
+            : null,
+        },
+      ],
+    },
   },
 });

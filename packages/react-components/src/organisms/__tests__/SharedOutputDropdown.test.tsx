@@ -140,6 +140,12 @@ describe('ShareOutputDropdown', () => {
             active: true,
             role: 'Project Manager',
           },
+          {
+            name: 'Group Two',
+            id: '2',
+            active: true,
+            role: 'Project Manager',
+          },
         ],
       });
 

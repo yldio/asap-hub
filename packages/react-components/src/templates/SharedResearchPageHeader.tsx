@@ -1,11 +1,12 @@
 import { css } from '@emotion/react';
 
 import { Display, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { mobileScreen, perRem, rem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { noop } from '../utils';
 import ResearchOutputsSearch from './ResearchOutputsSearch';
+import { SharedOutputDropdown } from '../organisms';
 
 const visualHeaderStyles = css({
   marginBottom: `${30 / perRem}em`,
@@ -21,7 +22,13 @@ const controlsStyles = css({
 });
 
 const textStyles = css({
-  maxWidth: `${610 / perRem}em`,
+  display: 'grid',
+  columnGap: `${39 / perRem}em`,
+  rowGap: `${9 / perRem}em`,
+  maxWidth: rem(610 + 39 + 158),
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    gridTemplateColumns: '1fr auto',
+  },
 });
 
 type SharedResearchPageHeaderProps = {
@@ -47,6 +54,9 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
           be mindful to respect intellectual boundaries and not share outside of
           the Network
         </Paragraph>
+        <div>
+          <SharedOutputDropdown />
+        </div>
       </div>
     </div>
     <div css={controlsStyles}>

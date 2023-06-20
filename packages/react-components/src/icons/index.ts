@@ -10,6 +10,8 @@ export { default as chevronCircleDownIcon } from './chevron-circle-down';
 export { default as chevronCircleLeftIcon } from './chevron-circle-left';
 export { default as chevronCircleUpIcon } from './chevron-circle-up';
 export { default as chevronDownIcon } from './chevron-down';
+export { default as chevronLeftIcon } from './chevron-left';
+export { default as chevronRightIcon } from './chevron-right';
 export { default as chevronUpIcon } from './chevron-up';
 export { default as clockIcon } from './clock';
 export { default as confidentialIcon } from './confidential';

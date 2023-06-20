@@ -1,3 +1,4 @@
+export * from './auth';
 export { default as AdditionalMaterials } from './AdditionalMaterials';
 export { default as AuthorSelect } from './AuthorSelect';
 export { default as CalendarList } from './CalendarList';
@@ -38,6 +39,7 @@ export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as RecentSharedOutputs } from './RecentSharedOutputs';
+export { default as RelatedResearch } from './RelatedResearch';
 export { default as RemindersCard } from './RemindersCard';
 export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
 export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';
@@ -46,8 +48,11 @@ export { default as ResearchOutputRelatedResearchCard } from './ResearchOutputRe
 export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';
-export { default as RelatedResearch } from './RelatedResearch';
 export { default as SearchAndFilter } from './SearchAndFilter';
+export {
+  default as SharedOutputDropdown,
+  SharedOutputDropdownBase,
+} from './SharedOutputDropdown';
 export { default as SharedResearchAdditionalInformationCard } from './SharedResearchAdditionalInformationCard';
 export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as SharedResearchListCard } from './SharedResearchListCard';
@@ -75,4 +80,3 @@ export { default as WelcomeCard } from './WelcomeCard';
 export { default as WorkingGroupCard } from './WorkingGroupCard';
 export { default as WorkingGroupMembers } from './WorkingGroupMembers';
 export { default as WorkingGroupsTabbedCard } from './WorkingGroupsTabbedCard';
-export * from './auth';

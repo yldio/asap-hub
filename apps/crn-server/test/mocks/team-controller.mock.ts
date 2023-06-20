@@ -1,4 +1,4 @@
-import { TeamController } from '../../src/controllers/teams';
+import { TeamController } from '../../src/controllers/teams.controller';
 
 export const teamControllerMock: jest.Mocked<TeamController> = {
   fetch: jest.fn(),

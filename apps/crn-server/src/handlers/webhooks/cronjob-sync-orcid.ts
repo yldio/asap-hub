@@ -2,7 +2,7 @@ import { framework as lambda } from '@asap-hub/services-common';
 import pThrottle from 'p-throttle';
 import { DateTime } from 'luxon';
 import { UserDataObject, UserResponse } from '@asap-hub/model';
-import Users from '../../controllers/users';
+import Users from '../../controllers/users.controller';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
   getAssetDataProvider,

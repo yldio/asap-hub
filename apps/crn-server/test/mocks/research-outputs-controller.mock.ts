@@ -1,4 +1,4 @@
-import { ResearchOutputController } from '../../src/controllers/research-outputs';
+import { ResearchOutputController } from '../../src/controllers/research-outputs.controller';
 
 export const researchOutputControllerMock: jest.Mocked<ResearchOutputController> =
   {

@@ -20,7 +20,7 @@ import {
 } from '../../config';
 import ResearchOutputs, {
   ResearchOutputController,
-} from '../../controllers/research-outputs';
+} from '../../controllers/research-outputs.controller';
 import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-authors.data-provider';
 import { ResearchOutputSquidexDataProvider } from '../../data-providers/research-outputs.data-provider';
 import { ResearchTagSquidexDataProvider } from '../../data-providers/research-tags.data-provider';

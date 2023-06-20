@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
-import { ResearchOutputController } from '../controllers/research-outputs';
+import { ResearchOutputController } from '../controllers/research-outputs.controller';
 import {
   validateResearchOutputParameters,
   validateResearchOutputPostRequestParameters,

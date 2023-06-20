@@ -1,4 +1,4 @@
-import { InterestGroupController } from '../../src/controllers/interest-groups';
+import { InterestGroupController } from '../../src/controllers/interest-groups.controller';
 
 export const interestGroupControllerMock: jest.Mocked<InterestGroupController> =
   {

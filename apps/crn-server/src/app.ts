@@ -48,29 +48,37 @@ import {
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
-import Calendars from './controllers/calendars';
-import Dashboard, { DashboardController } from './controllers/dashboard';
-import Discover, { DiscoverController } from './controllers/discover';
-import Events from './controllers/events';
+import Calendars from './controllers/calendars.controller';
+import Dashboard, {
+  DashboardController,
+} from './controllers/dashboard.controller';
+import Discover, {
+  DiscoverController,
+} from './controllers/discover.controller';
+import Events from './controllers/events.controller';
 import InterestGroups, {
   InterestGroupController,
-} from './controllers/interest-groups';
-import Labs, { LabsController } from './controllers/labs';
-import News, { NewsController } from './controllers/news';
-import Pages, { PageController } from './controllers/pages';
-import Reminders, { ReminderController } from './controllers/reminders';
+} from './controllers/interest-groups.controller';
+import Labs, { LabsController } from './controllers/labs.controller';
+import News, { NewsController } from './controllers/news.controller';
+import Pages, { PageController } from './controllers/pages.controller';
+import Reminders, {
+  ReminderController,
+} from './controllers/reminders.controller';
 import ResearchOutputs, {
   ResearchOutputController,
-} from './controllers/research-outputs';
+} from './controllers/research-outputs.controller';
 import ResearchTags, {
   ResearchTagController,
-} from './controllers/research-tags';
-import Teams, { TeamController } from './controllers/teams';
-import Tutorials, { TutorialsController } from './controllers/tutorials';
-import Users, { UserController } from './controllers/users';
+} from './controllers/research-tags.controller';
+import Teams, { TeamController } from './controllers/teams.controller';
+import Tutorials, {
+  TutorialsController,
+} from './controllers/tutorials.controller';
+import Users, { UserController } from './controllers/users.controller';
 import WorkingGroups, {
   WorkingGroupController,
-} from './controllers/working-groups';
+} from './controllers/working-groups.controller';
 import { AssetSquidexDataProvider } from './data-providers/assets.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';

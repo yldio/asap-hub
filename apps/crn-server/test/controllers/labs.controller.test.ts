@@ -1,4 +1,4 @@
-import Labs from '../../src/controllers/labs';
+import Labs from '../../src/controllers/labs.controller';
 import { LabDataProvider } from '../../src/data-providers/labs.data-provider';
 import {
   getListLabDataObject,

@@ -8,7 +8,7 @@ import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ExternalAuthors, {
   ExternalAuthorsController,
-} from '../../controllers/external-authors';
+} from '../../controllers/external-authors.controller';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalAuthorPayload } from '../event-bus';

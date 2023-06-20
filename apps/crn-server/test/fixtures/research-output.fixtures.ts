@@ -25,7 +25,7 @@ import {
 import {
   ResearchOutputCreateData,
   ResearchOutputUpdateData,
-} from '../../src/controllers/research-outputs';
+} from '../../src/controllers/research-outputs.controller';
 import { createEventBridgeEventMock } from '../helpers/events';
 import { getSquidexGraphqlTeam } from './teams.fixtures';
 import {

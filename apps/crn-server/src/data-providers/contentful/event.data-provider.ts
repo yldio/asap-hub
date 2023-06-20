@@ -45,7 +45,7 @@ import {
 } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
-import { parseCalendarDataObjectToResponse } from '../../controllers/calendars';
+import { parseCalendarDataObjectToResponse } from '../../controllers/calendars.controller';
 import {
   getContentfulEventMaterial,
   MeetingMaterial,

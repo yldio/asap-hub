@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import InterestGroups from '../../src/controllers/interest-groups';
+import InterestGroups from '../../src/controllers/interest-groups.controller';
 import {
   getInterestGroupDataObject,
   getInterestGroupResponse,

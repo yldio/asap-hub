@@ -1,4 +1,4 @@
-import Dashboard from '../../src/controllers/dashboard';
+import Dashboard from '../../src/controllers/dashboard.controller';
 import {
   getDashboardResponse,
   getDashboardDataObject,

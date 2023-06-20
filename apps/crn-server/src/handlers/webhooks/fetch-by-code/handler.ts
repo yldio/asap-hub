@@ -2,7 +2,7 @@
 import { algoliaSearchClientNativeFactory } from '@asap-hub/algolia';
 import { Handler } from 'aws-lambda/handler';
 import { algoliaApiKey, algoliaAppId } from '../../../config';
-import Users from '../../../controllers/users';
+import Users from '../../../controllers/users.controller';
 import { fetchUserByCodeHandlerFactory } from './fetch-by-code';
 import { sentryWrapper } from '../../../utils/sentry-wrapper';
 import {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TutorialsController } from '../controllers/tutorials';
+import { TutorialsController } from '../controllers/tutorials.controller';
 import { validateTutorialParameters } from '../validation/tutorial.validation';
 
 export const tutorialsRouteFactory = (

@@ -1,4 +1,4 @@
-import Discover from '../../src/controllers/discover';
+import Discover from '../../src/controllers/discover.controller';
 import {
   getDiscoverResponse,
   getDiscoverDataObject,

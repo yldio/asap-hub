@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import Tutorials from '../../src/controllers/tutorials';
+import Tutorials from '../../src/controllers/tutorials.controller';
 import {
   getTutorialsDataObject,
   getTutorialResponse,

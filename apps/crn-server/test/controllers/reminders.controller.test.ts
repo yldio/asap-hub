@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/model';
 import Reminders, {
   formattedMaterialByEventType,
-} from '../../src/controllers/reminders';
+} from '../../src/controllers/reminders.controller';
 import {
   getResearchOutputPublishedReminder,
   getReminderResponse,

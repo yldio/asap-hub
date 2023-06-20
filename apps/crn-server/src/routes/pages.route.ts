@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { PageController } from '../controllers/pages';
+import { PageController } from '../controllers/pages.controller';
 
 export const pageRouteFactory = (pageController: PageController): Router => {
   const pageRoutes = Router();

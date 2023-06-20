@@ -280,7 +280,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   updatedBy: string;
   workingGroups: string[];
   relatedResearchIds?: string[];
-  reviewRequestedBy?: string;
+  reviewRequestedById?: string;
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -339,7 +339,7 @@ export type ResearchOutputPostRequest = {
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
-  reviewRequestedBy?: string;
+  reviewRequestedById?: string;
 };
 
 type NonEmptyArray<T> = [T, ...T[]];

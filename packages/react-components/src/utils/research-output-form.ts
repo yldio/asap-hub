@@ -1,13 +1,13 @@
 import {
-  ResearchOutputResponse,
-  ResearchOutputIdentifierType,
-  DecisionOption,
-  TeamResponse,
-  ResearchOutputPostRequest,
   convertDecisionToBoolean,
-  ResearchOutputDocumentType,
+  DecisionOption,
   ResearchOutputDataObject,
+  ResearchOutputDocumentType,
+  ResearchOutputIdentifierType,
+  ResearchOutputPostRequest,
   ResearchOutputPutRequest,
+  ResearchOutputResponse,
+  TeamResponse,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { ComponentProps, ComponentPropsWithRef } from 'react';
@@ -245,6 +245,6 @@ export function transformResearchOutputResponseToRequest({
     teams: teams.map((team) => team.id),
     workingGroups: workingGroups ? workingGroups.map((wg) => wg.id) : [],
     relatedResearch: relatedResearch.map((research) => research.id),
-    reviewRequestedBy: reviewRequestedBy ? reviewRequestedBy.id : undefined,
+    reviewRequestedById: reviewRequestedBy ? reviewRequestedBy.id : undefined,
   };
 }

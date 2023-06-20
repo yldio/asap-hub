@@ -1,19 +1,19 @@
 import { NotFoundError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import {
-  AuthorUpsertDataObject,
   AuthorPostRequest,
+  AuthorUpsertDataObject,
   ListResearchOutputResponse,
   ResearchOutputCreateDataObject,
+  ResearchOutputDataObject,
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
   ResearchOutputResponse,
+  ResearchOutputUpdateDataObject,
   ResearchTagCategory,
   ResearchTagDataObject,
-  ValidationErrorResponse,
   VALIDATION_ERROR_MESSAGE,
-  ResearchOutputUpdateDataObject,
-  ResearchOutputDataObject,
+  ValidationErrorResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
 import {
@@ -194,7 +194,8 @@ export default class ResearchOutputs implements ResearchOutputController {
       title: normalisedResearchOutputUpdateData.title,
       type: normalisedResearchOutputUpdateData.type,
       updatedBy: normalisedResearchOutputUpdateData.updatedBy,
-      reviewRequestedBy: normalisedResearchOutputUpdateData.reviewRequestedBy,
+      reviewRequestedById:
+        normalisedResearchOutputUpdateData.reviewRequestedById,
       usageNotes: normalisedResearchOutputUpdateData.usageNotes,
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
       workingGroups: normalisedResearchOutputUpdateData.workingGroups,

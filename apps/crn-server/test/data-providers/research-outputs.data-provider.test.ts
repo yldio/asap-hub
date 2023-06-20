@@ -1106,7 +1106,7 @@ describe('ResearchOutputs data provider', () => {
 
       test('Should request a PM review for the existing research-output', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateDataObject();
-        researchOutputUpdateData.reviewRequestedBy = 'some-user-id';
+        researchOutputUpdateData.reviewRequestedById = 'some-user-id';
 
         const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
         nock(baseUrl)
@@ -1116,7 +1116,7 @@ describe('ResearchOutputs data provider', () => {
               ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
               reviewRequestedBy: {
-                iv: [researchOutputUpdateData.reviewRequestedBy],
+                iv: [researchOutputUpdateData.reviewRequestedById],
               },
             },
           )

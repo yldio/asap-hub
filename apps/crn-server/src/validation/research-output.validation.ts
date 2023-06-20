@@ -1,11 +1,11 @@
 import {
+  FetchOptions,
   researchOutputDocumentTypes,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
   researchOutputToIdentifierType,
   researchOutputTypes,
-  FetchOptions,
 } from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
@@ -267,7 +267,7 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
         nullable: true,
       },
       teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
-      reviewRequestedBy: { type: 'string', nullable: true },
+      reviewRequestedById: { type: 'string', nullable: true },
       workingGroups: { type: 'array', items: { type: 'string' }, minItems: 0 },
       usageNotes: { type: 'string', nullable: true },
       doi: {

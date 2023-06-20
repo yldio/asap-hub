@@ -24,7 +24,7 @@ import {
 } from '@testing-library/react';
 import userEvent, { specialChars } from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { Router, Route } from 'react-router-dom';
+import { Route, Router } from 'react-router-dom';
 import { createMemoryHistory, History } from 'history';
 import { RecoilRoot } from 'recoil';
 import {
@@ -495,7 +495,7 @@ it.each([
         descriptionMD,
         workingGroups: [workingGroupId],
         published: shouldPublish,
-        reviewRequestedBy: 'user-id-1',
+        reviewRequestedById: 'user-id-1',
       }),
       expect.anything(),
     );

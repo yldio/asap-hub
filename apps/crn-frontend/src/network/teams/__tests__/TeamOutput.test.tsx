@@ -25,8 +25,8 @@ import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import {
   createResearchOutput,
-  updateTeamResearchOutput,
   getTeam,
+  updateTeamResearchOutput,
 } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput from '../TeamOutput';
@@ -414,7 +414,7 @@ it('can edit and publish a draft research output', async () => {
       title,
       published: true,
       teams: [teamId],
-      reviewRequestedBy: 'user-2-id',
+      reviewRequestedById: 'user-2-id',
     }),
     expect.anything(),
   );

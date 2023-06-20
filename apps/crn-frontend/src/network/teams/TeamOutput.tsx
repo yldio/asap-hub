@@ -1,8 +1,8 @@
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
-  ValidationErrorResponse,
-  ResearchOutputResponse,
   researchOutputDocumentTypeToType,
+  ResearchOutputResponse,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
   NotFoundPage,
@@ -30,11 +30,11 @@ import {
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
   useLabSuggestions,
-  useTeamSuggestions,
-  useResearchTags,
-  usePutResearchOutput,
   usePostResearchOutput,
+  usePutResearchOutput,
   useRelatedResearchSuggestions,
+  useResearchTags,
+  useTeamSuggestions,
 } from '../../shared-research';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 
@@ -150,7 +150,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                 ? updateAndPublishResearchOutput(researchOutputData.id, {
                     ...output,
                     published: true,
-                    reviewRequestedBy: researchOutputData.reviewRequestedBy?.id,
+                    reviewRequestedById:
+                      researchOutputData.reviewRequestedBy?.id,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({ ...output, published: true }).catch(
                     handleError(['/link', '/title'], setErrors),
@@ -161,7 +162,8 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                 ? updateResearchOutput(researchOutputData.id, {
                     ...output,
                     published: false,
-                    reviewRequestedBy: researchOutputData.reviewRequestedBy?.id,
+                    reviewRequestedById:
+                      researchOutputData.reviewRequestedBy?.id,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,

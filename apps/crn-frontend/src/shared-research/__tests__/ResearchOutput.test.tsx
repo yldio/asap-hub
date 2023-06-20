@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
-import { render, waitFor, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
 import {
-  createUserResponse,
   createResearchOutputResponse,
+  createUserResponse,
 } from '@asap-hub/fixtures';
 
 import { RecoilRoot } from 'recoil';
@@ -344,7 +344,7 @@ it('switches a draft research output to in review', async () => {
   expect(mockUpdateTeamResearchOutput).toHaveBeenCalledWith(
     researchOutput.id,
     expect.objectContaining({
-      reviewRequestedBy: defaultUser.id,
+      reviewRequestedById: defaultUser.id,
     }),
     expect.anything(),
   );
@@ -389,7 +389,7 @@ it('switches a in review research output back to draft', async () => {
   expect(mockUpdateTeamResearchOutput).toHaveBeenCalledWith(
     researchOutput.id,
     expect.objectContaining({
-      reviewRequestedBy: undefined,
+      reviewRequestedById: undefined,
     }),
     expect.anything(),
   );

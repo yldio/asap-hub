@@ -1,8 +1,8 @@
 import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
-  ValidationErrorResponse,
-  ResearchOutputResponse,
   researchOutputDocumentTypeToType,
+  ResearchOutputResponse,
+  ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
   NotFoundPage,
@@ -14,11 +14,11 @@ import {
 import { InnerToastContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import React, {
+  ComponentProps,
   ReactNode,
   useCallback,
   useEffect,
   useState,
-  ComponentProps,
 } from 'react';
 import { useWorkingGroupById } from './state';
 import {
@@ -26,11 +26,11 @@ import {
   paramOutputDocumentTypeToResearchOutputDocumentType,
   useAuthorSuggestions,
   useLabSuggestions,
-  useTeamSuggestions,
-  useResearchTags,
   usePostResearchOutput,
   usePutResearchOutput,
   useRelatedResearchSuggestions,
+  useResearchTags,
+  useTeamSuggestions,
 } from '../../shared-research';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 
@@ -146,7 +146,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
-                    reviewRequestedBy: researchOutputData.reviewRequestedBy?.id,
+                    reviewRequestedById:
+                      researchOutputData.reviewRequestedBy?.id,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,
@@ -160,7 +161,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: false,
-                    reviewRequestedBy: researchOutputData.reviewRequestedBy?.id,
+                    reviewRequestedById:
+                      researchOutputData.reviewRequestedBy?.id,
                   }).catch(handleError(['/link', '/title'], setErrors))
                 : createResearchOutput({
                     ...output,

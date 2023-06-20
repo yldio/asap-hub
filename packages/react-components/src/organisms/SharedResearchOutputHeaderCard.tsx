@@ -31,9 +31,15 @@ const associationStyles = css({
 
 const headerStyle = css({
   display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: `${15 / perRem}em`,
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  paddingBottom: `${24 / perRem}em`,
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: `${15 / perRem}em`,
+  },
 });
 
 type SharedResearchOutputHeaderCardProps = Pick<

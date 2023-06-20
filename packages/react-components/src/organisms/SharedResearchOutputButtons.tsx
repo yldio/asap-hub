@@ -108,8 +108,7 @@ const SharedResearchOutputButtons: React.FC<
           </Link>
         </div>
       )}
-      {/* !canRequestReview in order to see the button as PM */}
-      {!published && canRequestReview && !reviewRequestedBy && (
+      {!published && !canRequestReview && !reviewRequestedBy && (
         <div css={reviewButton}>
           <Button
             noMargin

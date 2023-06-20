@@ -2,6 +2,7 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
   researchOutputDocumentTypes,
   ResearchOutputIdentifierType,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
   getDecision,
@@ -166,7 +167,7 @@ describe('getOwnRelatedResearchLinks', () => {
 
 describe('transformResearchOutputResponseToRequest', () => {
   it('transforms a research output response to a research output put request', () => {
-    const researchOutputResponse = {
+    const researchOutputResponse: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
       usageNotes: 'usage notes',
       link: 'https://www.google.com',
@@ -177,6 +178,15 @@ describe('transformResearchOutputResponseToRequest', () => {
       labCatalogNumber: '123',
       labs: [{ id: 'l99', name: 'l99' }],
       reviewRequestedBy: { id: 'u99', firstName: 'u99', lastName: 'uu99' },
+      relatedResearch: [
+        {
+          id: 'r99',
+          title: 'r99',
+          type: '3D Printing',
+          documentType: 'Grant Document',
+          teams: [],
+        },
+      ],
     };
     expect(
       transformResearchOutputResponseToRequest(researchOutputResponse),

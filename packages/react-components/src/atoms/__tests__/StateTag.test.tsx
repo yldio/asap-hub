@@ -50,5 +50,5 @@ it('applies blue variant colors (info100/info900)', () => {
   );
 
   expect(backgroundColor).toMatchInlineSnapshot(`"rgb(230, 243, 249)"`);
-  expect(color).toMatchInlineSnapshot(`"rgb(0, 106, 146)"`);
+  expect(color).toMatchInlineSnapshot(`"rgb(12, 141, 195)"`);
 });

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import Toast from './Toast';
 import { css } from '@emotion/react';
+import Toast from './Toast';
 import { rem } from '../pixels';
 
 export interface SharedResearchOutputBannersProps {

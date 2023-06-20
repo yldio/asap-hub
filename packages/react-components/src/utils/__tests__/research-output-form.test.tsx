@@ -7,12 +7,12 @@ import {
 import {
   getDecision,
   getIdentifierType,
-  getPublishDate,
-  getPayload,
-  ResearchOutputPayload,
   getOwnRelatedResearchLinks,
-  transformResearchOutputResponseToRequest,
+  getPayload,
   getPostAuthors,
+  getPublishDate,
+  ResearchOutputPayload,
+  transformResearchOutputResponseToRequest,
 } from '../research-output-form';
 
 describe('getPublishDate', () => {
@@ -224,7 +224,7 @@ describe('transformResearchOutputResponseToRequest', () => {
       relatedResearch: researchOutputResponse.relatedResearch.map(
         (research) => research.id,
       ),
-      reviewRequestedBy: researchOutputResponse.reviewRequestedBy
+      reviewRequestedById: researchOutputResponse.reviewRequestedBy
         ? researchOutputResponse.reviewRequestedBy.id
         : undefined,
     });

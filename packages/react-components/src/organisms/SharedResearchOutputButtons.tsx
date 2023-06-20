@@ -80,27 +80,25 @@ const SharedResearchOutputButtons: React.FC<
 
   return (
     <div css={buttonsContainer}>
-      {canEditResearchOutput && (
-        <div css={leftButtons}>
-          <Link
-            noMargin
-            href={
-              sharedResearch({})
-                .researchOutput({ researchOutputId: id })
-                .editResearchOutput({}).$
-            }
-            buttonStyle
-            enabled={
-              !reviewRequestedBy ||
-              (reviewRequestedBy && canPublishResearchOutput)
-            }
-            small
-            primary
-          >
-            {editIcon} Edit
-          </Link>
-        </div>
-      )}
+      {canEditResearchOutput &&
+        (!reviewRequestedBy ||
+          (reviewRequestedBy && canPublishResearchOutput)) && (
+          <div css={leftButtons}>
+            <Link
+              noMargin
+              href={
+                sharedResearch({})
+                  .researchOutput({ researchOutputId: id })
+                  .editResearchOutput({}).$
+              }
+              buttonStyle
+              small
+              primary
+            >
+              {editIcon} Edit
+            </Link>
+          </div>
+        )}
       {canDuplicateResearchOutput && duplicateLink && (
         <div css={leftButtons}>
           <Link noMargin href={duplicateLink} buttonStyle small primary>

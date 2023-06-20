@@ -54,6 +54,44 @@ it('displays edit button when user has permission', () => {
   expect(queryByTitle('Edit')).toBeInTheDocument();
 });
 
+it('does not display the edit button if someone requested a review and you are a non pm member', () => {
+  const { queryByTitle } = render(
+    <ResearchOutputPermissionsContext.Provider
+      value={{
+        canEditResearchOutput: true,
+        canPublishResearchOutput: false,
+        canShareResearchOutput: false,
+      }}
+    >
+      <SharedResearchOutputButtons
+        {...props}
+        reviewRequestedBy={{ id: 'u1', firstName: 'John', lastName: 'Doe' }}
+      />
+      ,
+    </ResearchOutputPermissionsContext.Provider>,
+  );
+  expect(queryByTitle('Edit')).toBeNull();
+});
+
+it('does display the edit button if someone requested a review and you are a pm member', () => {
+  const { queryByTitle } = render(
+    <ResearchOutputPermissionsContext.Provider
+      value={{
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        canShareResearchOutput: false,
+      }}
+    >
+      <SharedResearchOutputButtons
+        {...props}
+        reviewRequestedBy={{ id: 'u1', firstName: 'John', lastName: 'Doe' }}
+      />
+      ,
+    </ResearchOutputPermissionsContext.Provider>,
+  );
+  expect(queryByTitle('Edit')).toBeInTheDocument();
+});
+
 it('displays duplicate button when user has permission', () => {
   const { queryByTitle, rerender } = render(
     <ResearchOutputPermissionsContext.Provider

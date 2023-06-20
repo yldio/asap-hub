@@ -72,6 +72,7 @@ const users = route('/users', {}, { user });
 
 export type TeamOutputDocumentTypeParameter =
   | 'article'
+  | 'report'
   | 'bioinformatics'
   | 'dataset'
   | 'lab-resource'
@@ -140,11 +141,11 @@ const workingGroupOutputDocumentTypeParser = {
 };
 export type WorkingGroupOutputDocumentTypeParameter =
   | 'article'
-  | 'report'
   | 'bioinformatics'
   | 'dataset'
   | 'lab-resource'
-  | 'protocol';
+  | 'protocol'
+  | 'report';
 
 const workingGroup = (() => {
   const draftOutputs = route('/draft-outputs', {}, {});

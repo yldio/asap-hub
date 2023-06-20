@@ -202,6 +202,12 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
                 }).$,
               }}
               {{
+                item: <>{crnReportIcon} CRN Report</>,
+                href: route.createOutput({
+                  workingGroupOutputDocumentType: 'report',
+                }).$,
+              }}
+              {{
                 item: <>{dataset} Dataset</>,
                 href: route.createOutput({
                   workingGroupOutputDocumentType: 'dataset',
@@ -217,12 +223,6 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
                 item: <>{protocol} Protocol</>,
                 href: route.createOutput({
                   workingGroupOutputDocumentType: 'protocol',
-                }).$,
-              }}
-              {{
-                item: <>{crnReportIcon} CRN Report</>,
-                href: route.createOutput({
-                  workingGroupOutputDocumentType: 'report',
                 }).$,
               }}
             </DropdownButton>

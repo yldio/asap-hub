@@ -8,6 +8,7 @@ import { lead, paper, pine } from '../colors';
 import {
   article,
   bioinformatics,
+  crnReportIcon,
   dataset,
   inactiveBadgeIcon,
   labIcon,
@@ -196,6 +197,12 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                 item: <>{bioinformatics} Bioinformatics</>,
                 href: route.createOutput({
                   teamOutputDocumentType: 'bioinformatics',
+                }).$,
+              }}
+              {{
+                item: <>{crnReportIcon} CRN Report</>,
+                href: route.createOutput({
+                  teamOutputDocumentType: 'report',
                 }).$,
               }}
               {{

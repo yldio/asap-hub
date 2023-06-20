@@ -108,7 +108,7 @@ const SharedResearchOutputButtons: React.FC<
           </Link>
         </div>
       )}
-      {!published && !canRequestReview && !reviewRequestedBy && (
+      {!published && canRequestReview && !reviewRequestedBy && (
         <div css={reviewButton}>
           <Button
             noMargin

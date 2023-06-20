@@ -246,7 +246,7 @@
         "name": "reviewRequestedBy",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": false,
+        "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",

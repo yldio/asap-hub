@@ -7,18 +7,25 @@ export type CreateClientParams = {
   accessToken: string;
   environment: string;
 };
+type CreatePreviewClientParams = {
+  space: string;
+  previewAccessToken: string;
+  environment: string;
+};
 export const getGraphQLClient = ({
   space,
   accessToken,
   environment,
-}: CreateClientParams) => {
-  const endpoint = `https://graphql.contentful.com/content/v1/spaces/${space}/environments/${environment}`;
-  return new GraphQLClient(endpoint, {
-    headers: {
-      authorization: `Bearer ${accessToken}`,
+}: CreateClientParams) =>
+  new GraphQLClient(
+    `https://graphql.contentful.com/content/v1/spaces/${space}/environments/${environment}`,
+    {
+      errorPolicy: 'ignore',
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
     },
-  });
-};
+  );
 
 export const getRestClient = async ({
   space: spaceId,
@@ -41,4 +48,16 @@ export const getCDAClient = ({
     space,
     accessToken,
     environment,
+  });
+
+export const getCPAClient = ({
+  space,
+  previewAccessToken,
+  environment,
+}: CreatePreviewClientParams) =>
+  createCDAClient({
+    space,
+    accessToken: previewAccessToken,
+    environment,
+    host: 'preview.contentful.com',
   });

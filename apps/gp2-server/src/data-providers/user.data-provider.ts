@@ -352,7 +352,7 @@ export const parseGraphQLUserToDataObject = ({
 const regionMap: Record<UsersDataRegionEnum, gp2Model.UserRegion> = {
   [UsersDataRegionEnum.Africa]: 'Africa',
   [UsersDataRegionEnum.Asia]: 'Asia',
-  [UsersDataRegionEnum.AustraliaAustraliasia]: 'Australia/Australiasia',
+  [UsersDataRegionEnum.AustraliaAustraliasia]: 'Australia/Australasia',
   [UsersDataRegionEnum.Europe]: 'Europe',
   [UsersDataRegionEnum.LatinAmerica]: 'Latin America',
   [UsersDataRegionEnum.NorthAmerica]: 'North America',

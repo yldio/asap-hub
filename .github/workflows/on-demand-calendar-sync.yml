@@ -43,6 +43,7 @@ jobs:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+          IS_CONTENTFUL_ENABLED_V2: true
 
   notify_failure:
     runs-on: ubuntu-latest

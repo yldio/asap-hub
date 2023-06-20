@@ -5,7 +5,7 @@ import { OnboardingPage } from '..';
 describe('OnboardingPage', () => {
   const defaultProps = {
     steps: [],
-    publishUser: jest.fn(),
+    publishHref: '/publish',
     isContinueEnabled: false,
   };
   it('renders the header', () => {

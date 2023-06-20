@@ -23,6 +23,9 @@ inputs:
   crn-contentful-management-access-token:
     description: 'CRN Contentful Management Access Token'
     required: false
+  crn-contentful-preview-access-token:
+    description: 'CRN Contentful Preview Access Token'
+    required: false
   crn-contentful-webhook-authentication-token:
     description: 'CRN Contentful Webhook Authentication Token'
     required: false
@@ -43,6 +46,9 @@ inputs:
     required: false
   gp2-contentful-access-token:
     description: 'GP2 Contentful Access Token'
+    required: false
+  gp2-contentful-preview-access-token:
+    description: 'GP2 Contentful Preview Access Token'
     required: false
   gp2-contentful-enabled:
     description: 'Is GP2 Contentful Enabled'
@@ -107,6 +113,7 @@ runs:
         CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}
         CRN_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.crn-aws-acm-certificate-arn }}
         CRN_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.crn-contentful-access-token }}
+        CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.crn-contentful-preview-access-token }}
         CRN_CONTENTFUL_ENV: ${{ inputs.crn-contentful-env }}
         CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.crn-contentful-management-access-token }}
         CRN_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
@@ -123,6 +130,7 @@ runs:
         GP2_AUTH0_SHARED_SECRET: ${{ inputs.gp2-auth0-shared-secret }}
         GP2_AWS_ACM_CERTIFICATE_ARN: ${{ steps.setup.outputs.gp2-aws-acm-certificate-arn }}
         GP2_CONTENTFUL_ACCESS_TOKEN: ${{ inputs.gp2-contentful-access-token }}
+        GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ inputs.gp2-contentful-preview-access-token }}
         GP2_CONTENTFUL_ENV: ${{ inputs.gp2-contentful-env }}
         GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.gp2-contentful-management-access-token }}
         GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.gp2-contentful-webhook-authentication-token }}

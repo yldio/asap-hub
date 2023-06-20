@@ -7,6 +7,8 @@ import {
   InterestGroupDataProvider,
   WorkingGroupDataProvider,
   TutorialsDataProvider,
+  DiscoverDataProvider,
+  ResearchTagDataProvider,
 } from '../data-providers/types';
 
 const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
@@ -27,6 +29,8 @@ type DependencyList = {
   events: DependencySwitch<EventDataProvider>;
   workingGroups: DependencySwitch<WorkingGroupDataProvider>;
   tutorials: DependencySwitch<TutorialsDataProvider>;
+  discover: DependencySwitch<DiscoverDataProvider>;
+  researchTags: DependencySwitch<ResearchTagDataProvider>;
 };
 
 export class FeatureFlagDependencySwitch {
@@ -67,6 +71,14 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       tutorials: {
+        true: undefined,
+        false: undefined,
+      },
+      discover: {
+        true: undefined,
+        false: undefined,
+      },
+      researchTags: {
         true: undefined,
         false: undefined,
       },

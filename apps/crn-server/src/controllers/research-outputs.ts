@@ -20,7 +20,7 @@ import {
   FetchResearchOutputOptions,
   ResearchOutputDataProvider,
 } from '../data-providers/research-outputs.data-provider';
-import { ResearchTagDataProvider } from '../data-providers/research-tags.data-provider';
+import { ResearchTagDataProvider } from '../data-providers/types';
 import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
 import { fetchAll } from '../utils/fetch-all';
 

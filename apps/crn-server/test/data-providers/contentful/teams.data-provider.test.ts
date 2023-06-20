@@ -685,7 +685,7 @@ describe('Teams data provider', () => {
   });
 
   describe('Update method', () => {
-    test('Should update the team', async () => {
+    test("Should update the team when there isn't tools previously", async () => {
       const teamId = 'team-id-1';
       const tool = {
         name: 'Youtube Channel',
@@ -724,6 +724,91 @@ describe('Teams data provider', () => {
               {
                 sys: {
                   id: 'entry-id',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      ]);
+
+      expect(teamMockUpdated.publish).toHaveBeenCalled();
+    });
+
+    test('Should update the team when the field tools is populated previously', async () => {
+      const teamId = 'team-id-1';
+      const tool = {
+        name: 'Youtube Channel',
+        description: 'Youtube channel with team videos',
+        url: 'http://www.youtube.com/abcde',
+      };
+
+      const toolMock = getEntry({});
+      toolMock.sys.id = 'new-tool';
+      environmentMock.createEntry.mockResolvedValueOnce(toolMock);
+      toolMock.publish = jest.fn().mockResolvedValueOnce(toolMock);
+
+      const teamMock = getEntry({
+        tools: {
+          'en-US': [
+            {
+              sys: {
+                id: 'old-tool-1',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+            {
+              sys: {
+                id: 'old-tool-2',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(teamMock);
+      const teamMockUpdated = getEntry({});
+      teamMock.patch = jest.fn().mockResolvedValueOnce(teamMockUpdated);
+
+      await teamDataProviderMock.update(teamId, { tools: [tool] });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(teamId);
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'externalTools',
+        {
+          fields: {
+            description: { 'en-US': tool.description },
+            name: { 'en-US': tool.name },
+            url: { 'en-US': tool.url },
+          },
+        },
+      );
+      expect(teamMock.patch).toHaveBeenCalledWith([
+        {
+          op: 'replace',
+          path: '/fields/tools',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'old-tool-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'old-tool-2',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'new-tool',
                   linkType: 'Entry',
                   type: 'Link',
                 },

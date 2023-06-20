@@ -3,8 +3,6 @@ import { Calendar, Member, Milestone, Resource } from './common';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
 export type ProjectStatus = (typeof projectStatus)[number];
-export const isProjectStatus = (data: string): data is ProjectStatus =>
-  projectStatus.includes(data as ProjectStatus);
 
 export const projectMemberRole = [
   'Contributor',
@@ -14,8 +12,6 @@ export const projectMemberRole = [
   'Project manager',
 ] as const;
 export type ProjectMemberRole = (typeof projectMemberRole)[number];
-export const isProjectMemberRole = (data: string): data is ProjectMemberRole =>
-  projectMemberRole.includes(data as ProjectMemberRole);
 
 export type ProjectMember = Member<ProjectMemberRole>;
 

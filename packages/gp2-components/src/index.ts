@@ -42,6 +42,7 @@ export {
   Milestone,
   Milestones,
   ProjectsBody,
+  PublishModal,
   ProjectSummaryFooter,
   ProjectSummaryHeader,
   ResourceModal,

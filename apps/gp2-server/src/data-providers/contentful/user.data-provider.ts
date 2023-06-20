@@ -49,7 +49,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
   async fetchById(id: string) {
     const { users } = await this.fetchUserById(id);
-    return users ? parseContentfulGraphQLUsers(users) : null;
+    return users ? parseUserToDataObject(users) : null;
   }
 
   private getUserIdFilter = async ({
@@ -82,10 +82,10 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const result = await this.fetchUsers(options, userIdFilter);
 
     const items = {
-      total: result?.total,
-      items: result?.items
+      total: result.total,
+      items: result.items
         .filter((user: unknown): user is UserItem => user !== null)
-        .map(parseContentfulGraphQLUsers),
+        .map(parseUserToDataObject),
     };
 
     logger.debug(JSON.stringify(items, undefined, 2));
@@ -134,43 +134,35 @@ export class UserContentfulDataProvider implements UserDataProvider {
   }
 
   async update(id: string, data: gp2Model.UserUpdateDataObject) {
-    try {
-      const fields = cleanUser(data);
-      const environment = await this.getRestClient();
-      const user = await environment.getEntry(id);
-      const previousContributingCohorts = user.fields.contributingCohorts;
+    const fields = cleanUser(data);
+    const environment = await this.getRestClient();
+    const user = await environment.getEntry(id);
+    const previousContributingCohorts = user.fields.contributingCohorts;
 
-      logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
+    logger.debug(`The user: ${JSON.stringify(user, undefined, 2)}`);
 
-      const nextContributingCohorts = await addNextCohorts(
-        environment,
-        data.contributingCohorts,
-      );
+    const nextContributingCohorts = await addNextCohorts(
+      environment,
+      data.contributingCohorts,
+    );
 
-      const cohortFields = getCohortFields(nextContributingCohorts);
-      const result = await patchAndPublish(user, {
-        ...fields,
-        ...cohortFields,
-      });
+    const cohortFields = getCohortFields(nextContributingCohorts);
+    const result = await patchAndPublish(user, {
+      ...fields,
+      ...cohortFields,
+    });
 
-      await removePreviousCohorts(
-        environment,
-        data.contributingCohorts,
-        previousContributingCohorts,
-      );
-      const fetchEventById = () => this.fetchUserById(id);
-      await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(
-        result.sys.publishedVersion || Infinity,
-        fetchEventById,
-        'users',
-      );
-    } catch (err) {
-      logger.error(`An error occurred updating a user ${id} - ${data}`);
-      if (err instanceof Error) {
-        logger.error(`The error message: ${err.message}`);
-      }
-      throw err;
-    }
+    await removePreviousCohorts(
+      environment,
+      data.contributingCohorts,
+      previousContributingCohorts,
+    );
+    const fetchEventById = () => this.fetchUserById(id);
+    await pollContentfulGql<gp2Contentful.FetchUserByIdQuery>(
+      result.sys.publishedVersion ?? Infinity,
+      fetchEventById,
+      'users',
+    );
   }
 }
 
@@ -223,38 +215,26 @@ const cleanUser = (userToUpdate: gp2Model.UserUpdateDataObject) =>
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 
-export const parseContentfulGraphQLUsers = (
+export const parseUserToDataObject = (
   user: UserItem,
 ): gp2Model.UserDataObject => {
   const normaliseArray = (
-    input: Maybe<Maybe<string>[]> | undefined,
+    inputs: Maybe<Maybe<string>[]> | undefined,
   ): string[] =>
-    (input || []).reduce(
-      (arr: string[], str: Maybe<string>) => (str ? [...arr, str] : arr),
+    (inputs || []).reduce<string[]>(
+      (parsed, input) => (input ? [...parsed, input] : parsed),
       [],
     );
 
-  if (!(user.region && gp2Model.isUserRegion(user.region))) {
-    throw new Error(`Region not defined: ${user.region}`);
-  }
-  if (!(user.role && gp2Model.isUserRole(user.role))) {
-    throw new Error(`Role not defined: ${user.role}`);
-  }
   const questions = normaliseArray(user.questions);
   const connections = normaliseArray(user.connections);
-
-  if (user.degrees && !user.degrees.every(gp2Model.isUserDegree)) {
-    throw new TypeError('Invalid degree received');
-  }
-  if (user.keywords && !user.keywords.every(gp2Model.isKeyword)) {
-    throw new TypeError('Invalid keyword received');
-  }
+  const keywords = normaliseArray(user.keywords);
 
   const telephone =
     user.telephoneNumber || user.telephoneCountryCode
       ? {
-          countryCode: user.telephoneCountryCode || undefined,
-          number: user.telephoneNumber || undefined,
+          countryCode: user.telephoneCountryCode ?? undefined,
+          number: user.telephoneNumber ?? undefined,
         }
       : undefined;
   const contributingCohorts = parseContributingCohorts(
@@ -278,13 +258,13 @@ export const parseContentfulGraphQLUsers = (
     biography: user.biography ?? undefined,
     city: user.city ?? undefined,
     country: user.country ?? '',
-    region: user.region,
+    region: user.region as gp2Model.UserRegion,
     avatarUrl: user.avatar?.url ?? undefined,
     questions,
-    role: user.role,
-    degrees: user.degrees || [],
+    role: user.role as gp2Model.UserRole,
+    degrees: (user.degrees as gp2Model.UserDegree[]) ?? [],
     connections: connections.map((connection) => ({ code: connection })),
-    keywords: user.keywords || [],
+    keywords,
     telephone,
     fundingStreams: user.fundingStreams ?? undefined,
     social: {
@@ -344,114 +324,116 @@ const generateFetchQueryFilter = (
   };
 };
 
-const parseContributingCohorts = (
-  cohorts: NonNullable<
+type ContributingCohorts = NonNullable<
+  NonNullable<gp2Contentful.FetchUsersQuery['usersCollection']>['items'][number]
+>['contributingCohortsCollection'];
+
+const parseContributingCohorts = (contributingCohorts: ContributingCohorts) =>
+  contributingCohorts?.items.reduce(
+    (cohorts: gp2Model.UserDataObject['contributingCohorts'], cohort) =>
+      cohort?.contributingCohort
+        ? [
+            ...cohorts,
+            {
+              contributingCohortId: cohort.contributingCohort.sys.id,
+              name: cohort.contributingCohort.name ?? '',
+              role: cohort.role as gp2Model.UserContributingCohortRole,
+              ...(cohort.studyLink && { studyUrl: cohort.studyLink }),
+            },
+          ]
+        : cohorts,
+    [],
+  ) || [];
+
+type LinkedProject = NonNullable<
+  NonNullable<
     NonNullable<
       gp2Contentful.FetchUsersQuery['usersCollection']
     >['items'][number]
-  >['contributingCohortsCollection'],
-): gp2Model.UserDataObject['contributingCohorts'] =>
-  cohorts?.items.map((cohort) => {
-    if (
-      !(
-        cohort &&
-        cohort.contributingCohort?.name &&
-        cohort.role &&
-        cohort.contributingCohort.sys.id
-      )
-    ) {
-      throw new Error('Invalid Contributing Cohort');
-    }
-    if (!gp2Model.isUserContributingCohortRole(cohort.role)) {
-      throw new Error('Invalid Contributing Cohort Role');
-    }
-    return {
-      contributingCohortId: cohort.contributingCohort.sys.id,
-      name: cohort.contributingCohort.name,
-      role: cohort.role,
-      ...(cohort.studyLink && { studyUrl: cohort.studyLink }),
-    };
-  }) || [];
-
-const parseProjects = (
-  projects: NonNullable<
+  >['linkedFrom']
+>['projectMembershipCollection'];
+type LinkedWorkingGroup = NonNullable<
+  NonNullable<
+    NonNullable<
+      gp2Contentful.FetchUsersQuery['usersCollection']
+    >['items'][number]
+  >['linkedFrom']
+>['workingGroupMembershipCollection'];
+type LinkedProjectItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<NonNullable<LinkedProject>['items'][number]>['linkedFrom']
+    >['projectsCollection']
+  >['items'][number]
+>;
+type LinkedProjectMembers = LinkedProjectItem['membersCollection'];
+type LinkedWorkingGroupItem = NonNullable<
+  NonNullable<
     NonNullable<
       NonNullable<
-        gp2Contentful.FetchUsersQuery['usersCollection']
-      >['items'][number]
-    >['linkedFrom']
-  >['projectMembershipCollection'],
+        NonNullable<LinkedWorkingGroup>['items'][number]
+      >['linkedFrom']
+    >['workingGroupsCollection']
+  >['items'][number]
+>;
+
+type LinkedWorkingGroupMembers = LinkedWorkingGroupItem['membersCollection'];
+export type Member<T> = {
+  userId: string;
+  role: T;
+};
+export const parseMembers = <T extends string>(
+  members: LinkedProjectMembers | LinkedWorkingGroupMembers,
+) =>
+  members?.items.reduce((membersList: Member<T>[], member) => {
+    const user = member?.user;
+    const role = member?.role as T;
+    if (!(user && user.onboarded)) {
+      return membersList;
+    }
+    const groupMember = { role, userId: user.sys.id };
+    return [...membersList, groupMember];
+  }, []) || [];
+const parseProjects = (
+  projects: LinkedProject,
 ): gp2Model.UserDataObject['projects'] =>
   projects?.items
-    ?.filter(
-      (project) =>
-        project?.linkedFrom?.projectsCollection?.items &&
-        project.linkedFrom.projectsCollection.items.length > 0,
-    )
+    .reduce((projectList: LinkedProjectItem[], project) => {
+      const linked = project?.linkedFrom?.projectsCollection?.items[0];
+      return linked ? [...projectList, linked] : projectList;
+    }, [])
     .map((project) => {
-      const linkedProject = project?.linkedFrom?.projectsCollection?.items[0];
-      const projectId = linkedProject?.sys.id;
-      if (!projectId) {
-        throw new Error('Project not defined.');
-      }
-
-      const status = linkedProject?.status;
-      if (!(status && gp2Model.isProjectStatus(status))) {
-        throw new TypeError('Status not defined');
-      }
+      const projectId = project.sys.id;
+      const status = project.status as gp2Model.ProjectStatus;
+      const members = parseMembers<gp2Model.ProjectMemberRole>(
+        project.membersCollection,
+      );
       return {
         id: projectId,
         status,
-        title: linkedProject.title || '',
-        members:
-          linkedProject.membersCollection?.items.map((member) => {
-            const user = member?.user;
-            const role = member?.role;
-
-            if (!(role && user && gp2Model.isProjectMemberRole(role))) {
-              throw new Error('Invalid project members');
-            }
-            return { role, userId: user.sys.id };
-          }) || [],
+        title: project.title ?? '',
+        members,
       };
     }) || [];
 
 const parseWorkingGroups = (
-  workingGroupItems: NonNullable<
-    NonNullable<
-      NonNullable<
-        gp2Contentful.FetchUsersQuery['usersCollection']
-      >['items'][number]
-    >['linkedFrom']
-  >['workingGroupMembershipCollection'],
+  workingGroupItems: LinkedWorkingGroup,
 ): gp2Model.UserDataObject['workingGroups'] =>
   workingGroupItems?.items
-    ?.filter(
-      (workingGroup) =>
-        workingGroup?.linkedFrom?.workingGroupsCollection?.items &&
-        workingGroup.linkedFrom.workingGroupsCollection.items.length > 0,
-    )
-    .map((workingGroup) => {
-      const linkedWorkingGroup =
+    .reduce((workingGroups: LinkedWorkingGroupItem[], workingGroup) => {
+      const linked =
         workingGroup?.linkedFrom?.workingGroupsCollection?.items[0];
-
-      const workingGroupId = linkedWorkingGroup?.sys.id;
-      if (!workingGroupId) {
-        throw new Error('Working Group not defined.');
-      }
+      return linked ? [...workingGroups, linked] : workingGroups;
+    }, [])
+    .map((workingGroup) => {
+      const workingGroupId = workingGroup.sys.id;
+      const members = parseMembers<gp2Model.WorkingGroupMemberRole>(
+        workingGroup.membersCollection,
+      );
       return {
         id: workingGroupId,
-        title: linkedWorkingGroup.title || '',
-        members:
-          linkedWorkingGroup.membersCollection?.items.map((member) => {
-            const user = member?.user;
-            const role = member?.role;
-
-            if (!(role && user && gp2Model.isWorkingGroupMemberRole(role))) {
-              throw new Error('Invalid working group members');
-            }
-            return { role, userId: user.sys.id };
-          }) || [],
+        title: workingGroup.title ?? '',
+        members,
       };
     }) || [];
 
@@ -468,19 +450,14 @@ const parsePositions = (
       department,
       institution,
     }: {
-      role?: string;
-      department?: string;
-      institution?: string;
-    }) => {
-      if (!(role && department && institution)) {
-        throw new Error('Position not defined');
-      }
-      return {
-        role,
-        department,
-        institution,
-      };
-    },
+      role: string;
+      department: string;
+      institution: string;
+    }) => ({
+      role,
+      department,
+      institution,
+    }),
   ) || [];
 
 const getEntityMembers = async (

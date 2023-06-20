@@ -1,4 +1,7 @@
-import { ContentfulWebhookPublishPayload } from '@asap-hub/contentful';
+import {
+  ContentfulWebhookPublishPayload,
+  ContentfulWebhookUnpublishPayload,
+} from '@asap-hub/contentful';
 
 export const getNewsPublishContentfulWebhookPayload =
   (): ContentfulWebhookPublishPayload<'news'> => ({
@@ -80,5 +83,38 @@ export const getNewsPublishContentfulWebhookPayload =
       publishDate: {
         'en-US': '2023-03-21T00:00+00:00',
       },
+    },
+  });
+
+export const getNewsUnpublishContentfulWebhookPayload =
+  (): ContentfulWebhookUnpublishPayload<'news'> => ({
+    sys: {
+      type: 'DeletedEntry',
+      id: '4fTQlBcDyPBvUIwpjm96JU',
+      space: {
+        sys: {
+          type: 'Link',
+          linkType: 'Space',
+          id: '5v6w5j61tndm',
+        },
+      },
+      environment: {
+        sys: {
+          id: 'crn-2802',
+          type: 'Link',
+          linkType: 'Environment',
+        },
+      },
+      contentType: {
+        sys: {
+          type: 'Link',
+          linkType: 'ContentType',
+          id: 'news',
+        },
+      },
+      revision: 2,
+      createdAt: '2023-03-23T08:54:29.958Z',
+      updatedAt: '2023-03-23T08:54:29.958Z',
+      deletedAt: '2023-03-23T08:54:29.958Z',
     },
   });

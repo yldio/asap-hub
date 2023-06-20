@@ -44,6 +44,23 @@ describe('Calendar handler', () => {
     },
   );
 
+  const getCalendarId = (id) => `cms:${id}`;
+
+  const handlerWithCalendarSubscriptionIdFunction =
+    calendarCreatedContentfulHandlerFactory(
+      subscribe,
+      unsubscribe,
+      calendarDataProviderMock,
+      alerts,
+      logger,
+      {
+        environment,
+        space,
+        accessToken,
+      },
+      getCalendarId,
+    );
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -162,10 +179,7 @@ describe('Calendar handler', () => {
 
     expect(res).toBe('OK');
     expect(unsubscribe).not.toHaveBeenCalled();
-    expect(subscribe).toHaveBeenCalledWith(
-      'calendar-1',
-      'contentful__calendar-1',
-    );
+    expect(subscribe).toHaveBeenCalledWith('calendar-1', 'calendar-1');
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
       expirationDate: expiration,
       resourceId,
@@ -217,10 +231,46 @@ describe('Calendar handler', () => {
     const res = await handler(event);
 
     expect(res).toBe('OK');
-    expect(unsubscribe).toHaveBeenCalledWith(
-      'resource-id-1',
-      'contentful__calendar-1',
+    expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'calendar-1');
+    expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
+      1,
+      'calendar-1',
+      { resourceId: null },
     );
+
+    expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
+
+    expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
+      2,
+      'calendar-1',
+      { resourceId, expirationDate: expiration },
+    );
+  });
+
+  test('Should use `getCalendarSubscriptionId` function if provided when  unsubscribing and subscribing to google calendar', async () => {
+    const resourceId = 'some-resource-id';
+    const expiration = 123456;
+    subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
+    const event = getCalendarContentfulEvent({
+      googleCalendarId: 'google-calendar-2',
+      resourceId: 'resource-id-1',
+    });
+
+    const calendarResponse = getCalendarFromDeliveryApi({
+      googleCalendarId: 'google-calendar-2',
+      associatedGoogleCalendarId: 'calendar-1',
+      resourceId: 'resource-id-1',
+    });
+
+    (getCDAClient as jest.Mock).mockReturnValue({
+      getEntry: jest.fn().mockResolvedValue(calendarResponse),
+    });
+
+    const res = await handlerWithCalendarSubscriptionIdFunction(event);
+
+    expect(res).toBe('OK');
+    expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'cms:calendar-1');
     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
       1,
       'calendar-1',
@@ -229,7 +279,7 @@ describe('Calendar handler', () => {
 
     expect(subscribe).toHaveBeenCalledWith(
       'google-calendar-2',
-      'contentful__calendar-1',
+      'cms:calendar-1',
     );
 
     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
@@ -262,10 +312,7 @@ describe('Calendar handler', () => {
     const res = await handler(event);
 
     expect(res).toBe('OK');
-    expect(unsubscribe).toHaveBeenCalledWith(
-      'resource-id-1',
-      'contentful__calendar-1',
-    );
+    expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'calendar-1');
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
       resourceId: null,
     });
@@ -298,10 +345,7 @@ describe('Calendar handler', () => {
     expect(res).toBe('OK');
     expect(unsubscribe).not.toHaveBeenCalled();
 
-    expect(subscribe).toHaveBeenCalledWith(
-      'google-calendar-2',
-      'contentful__calendar-1',
-    );
+    expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
 
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
       resourceId,

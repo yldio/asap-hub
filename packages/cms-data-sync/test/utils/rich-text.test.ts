@@ -2,6 +2,9 @@ import { Environment } from 'contentful-management';
 import {
   convertHtmlToContentfulFormat,
   createDocumentIfNeeded,
+  removeStylingTagsWrappingIFrameTags,
+  removeStylingTagsWrappingImgTags,
+  wrapIframeWithPTag,
 } from '../../src/utils';
 import { createInlineAssets, createMediaEntries } from '../../src/utils';
 
@@ -328,13 +331,19 @@ describe('createDocumentIfNeeded', () => {
           nodeType: 'embedded-asset-block',
         },
         {
-          content: [],
-          data: {
-            target: {
-              sys: { id: '632849614', linkType: 'Entry', type: 'Link' },
+          content: [
+            {
+              content: [],
+              data: {
+                target: {
+                  sys: { id: '632849614', linkType: 'Entry', type: 'Link' },
+                },
+              },
+              nodeType: 'embedded-entry-inline',
             },
-          },
-          nodeType: 'embedded-entry-inline',
+          ],
+          data: {},
+          nodeType: 'paragraph',
         },
       ],
       data: {},
@@ -388,5 +397,88 @@ describe('createDocumentIfNeeded', () => {
     expect(document).toBe(null);
     expect(createInlineAssetsMock).not.toHaveBeenCalled();
     expect(createMediaEntriesMock).not.toHaveBeenCalled();
+  });
+});
+
+describe('removeStylingTagsWrappingIFrameTags', () => {
+  it.each`
+    tag
+    ${`strong`}
+    ${`em`}
+    ${`b`}
+    ${`i`}
+  `('removes $tag tag wrapping iframe tag', ({ tag }) => {
+    const html = `<strong>Presentation title</strong></p>\n<p><${tag}><iframe src="https://drive.google.com/file/d/id" width="640" height="480"></iframe></${tag}></p>`;
+    expect(removeStylingTagsWrappingIFrameTags(html)).toEqual(
+      '<strong>Presentation title</strong></p>\n<p><iframe src="https://drive.google.com/file/d/id" width="640" height="480"></iframe></p>',
+    );
+  });
+
+  it('removes more than one styling tag wrapping iframe tags', () => {
+    const html = '<strong><em><iframe src="video"></iframe></em></strong>';
+    expect(removeStylingTagsWrappingIFrameTags(html)).toEqual(
+      '<iframe src="video"></iframe>',
+    );
+  });
+
+  it('removes styling tag properly when there is more than one iframe in the html', () => {
+    const html =
+      '<strong><em><iframe src="video-1"></iframe></em></strong><p><strong>Another video</strong></p><p><strong><iframe src="video-2"></iframe></strong></p>';
+    expect(removeStylingTagsWrappingIFrameTags(html)).toEqual(
+      '<iframe src="video-1"></iframe><p><strong>Another video</strong></p><p><iframe src="video-2"></iframe></p>',
+    );
+  });
+});
+
+describe('removeStylingTagsWrappingImgTags', () => {
+  it.each`
+    tag
+    ${`strong`}
+    ${`em`}
+    ${`b`}
+    ${`i`}
+  `('removes $tag tag wrapping img tag', ({ tag }) => {
+    const html = `<strong>Image</strong></p>\n<p><${tag}><img src="https://example/image.png"/></${tag}></p>`;
+    expect(removeStylingTagsWrappingImgTags(html)).toEqual(
+      '<strong>Image</strong></p>\n<p><img src="https://example/image.png"/></p>',
+    );
+  });
+
+  it('removes more than one styling tag wrapping img tags', () => {
+    const html = '<strong><em><img src="image.png"/></em></strong>';
+    expect(removeStylingTagsWrappingImgTags(html)).toEqual(
+      '<img src="image.png"/>',
+    );
+  });
+
+  it('removes styling tag properly when there is more than one img in the html', () => {
+    const html =
+      '<strong><em><img src="img-1"/></em></strong><p><strong>Another image</strong></p><p><strong><img src="img-2"/></strong></p>';
+    expect(removeStylingTagsWrappingImgTags(html)).toEqual(
+      '<img src="img-1"/><p><strong>Another image</strong></p><p><img src="img-2"/></p>',
+    );
+  });
+});
+
+describe('wrapIframeWithPTag', () => {
+  it('wraps iframe with p tag if not wrapped already', () => {
+    const html = '<iframe src="video"></iframe>';
+    expect(wrapIframeWithPTag(html)).toEqual(
+      '<p><iframe src="video"></iframe></p>',
+    );
+  });
+
+  it('does not wrap iframe with p tag if wrapped already', () => {
+    const html = '<p><iframe src="video"></iframe></p>';
+    expect(wrapIframeWithPTag(html)).toEqual(
+      '<p><iframe src="video"></iframe></p>',
+    );
+  });
+
+  it('does not wrap iframe with p tag is wrapped already by a parent element', () => {
+    const html = '<p>Presenter 1<br /><iframe src="video"></iframe></p>';
+    expect(wrapIframeWithPTag(html)).toEqual(
+      '<p>Presenter 1<br><iframe src="video"></iframe></p>',
+    );
   });
 });

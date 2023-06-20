@@ -48,7 +48,7 @@ describe('Events Contentful Data Provider', () => {
   );
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   describe('Fetch', () => {
@@ -388,6 +388,40 @@ describe('Events Contentful Data Provider', () => {
         );
         expect(result).toEqual(getContentfulListEventDataObject());
       });
+
+      test.each`
+        filterValue           | filterBy            | resultParamName    | query
+        ${'working-group-id'} | ${'workingGroupId'} | ${'workingGroups'} | ${gp2Contentful.FETCH_WORKING_GROUP_CALENDAR}
+        ${'project-id'}       | ${'projectId'}      | ${'projects'}      | ${gp2Contentful.FETCH_PROJECT_CALENDAR}
+      `(
+        'should return empty result if there is no calendar associated to the provided $filterBy',
+        async ({ filterValue, filterBy, resultParamName, query }) => {
+          const calendarResponse = { [resultParamName]: null };
+
+          const eventsGraphqlResponse = getContentfulGraphqlEventsResponse();
+          contentfulGraphqlClientMock.request
+            .mockResolvedValueOnce(calendarResponse)
+            .mockResolvedValueOnce(eventsGraphqlResponse);
+          const result = await eventDataProvider.fetch({
+            filter: { [filterBy]: filterValue },
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            query,
+            {
+              id: filterValue,
+            },
+          );
+          expect(contentfulGraphqlClientMock.request).not.toHaveBeenCalledWith(
+            gp2Contentful.FETCH_EVENTS,
+            expect.anything(),
+          );
+          expect(result).toEqual({
+            total: 0,
+            items: [],
+          });
+        },
+      );
     });
   });
 
@@ -674,26 +708,12 @@ describe('Events Contentful Data Provider', () => {
   });
 
   describe('parseGraphQLEvent', () => {
-    test(`throws when provided event doesn't have a calendar`, () => {
+    test(`returns null when provided event doesn't have a calendar`, () => {
       const graphqlEvent = getContentfulGraphqlEvent();
       graphqlEvent.sys.id = 'example';
       graphqlEvent.calendar = null;
 
-      expect(() => parseGraphQLEvent(graphqlEvent)).toThrowError(
-        `Event (example) doesn't have a calendar`,
-      );
-    });
-
-    test('throws when provided an invalid event status', () => {
-      const graphqlEvent = getContentfulGraphqlEvent();
-      graphqlEvent.sys.id = 'example';
-      graphqlEvent.status = 'invalid';
-
-      expect(() =>
-        parseGraphQLEvent(graphqlEvent),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `"Invalid event (example) status "invalid""`,
-      );
+      expect(parseGraphQLEvent(graphqlEvent)).toBeNull();
     });
   });
 });

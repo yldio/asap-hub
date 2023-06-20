@@ -11,6 +11,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
+    "space:rollback-migration": "yarn ctf-migrate down -c $CONTENT_TYPE -d $DRY_RUN",
     "space:migrate:run": "yarn ctf-migrate up --all",
     "space:migrate:dryrun": "yarn ctf-migrate up --all --dry-run",
     "space:migrate:count": "yarn ctf-migrate list --all | grep \\\\[pending\\\\] | wc -l",
@@ -34,7 +35,7 @@
     "contentful-management": "10.32.0",
     "contentful-migrate": "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212",
     "graphql": "15.8.0",
-    "graphql-request": "3.4.0",
+    "graphql-request": "6.1.0",
     "graphql-tag": "2.12.6"
   },
   "devDependencies": {
@@ -51,7 +52,7 @@
     "@types/node": "18.15.11",
     "contentful-cli": "1.19.1",
     "graphql-typescript-integration": "1.2.1",
-    "prettier": "2.8.7",
+    "prettier": "2.8.8",
     "ts-node": "10.9.1"
   }
 }

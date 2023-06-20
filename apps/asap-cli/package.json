@@ -26,7 +26,7 @@
     "@asap-hub/squidex": "workspace:*",
     "@hapi/boom": "9.1.4",
     "@types/yargs": "17.0.5",
-    "algoliasearch": "4.17.0",
+    "algoliasearch": "4.17.2",
     "apr-intercept": "3.0.4",
     "async-sema": "3.1.1",
     "aws-sdk": "2.1360.0",
@@ -34,7 +34,7 @@
     "got": "11.8.6",
     "jwt-encode": "1.0.1",
     "luxon": "1.28.1",
-    "prettier": "2.8.7",
+    "prettier": "2.8.8",
     "pump": "3.0.0",
     "through2-concurrent": "2.0.0",
     "uuid": "8.3.2",
@@ -52,11 +52,11 @@
     "@types/jwt-decode": "2.2.1",
     "@types/jwt-encode": "workspace:*",
     "@types/luxon": "1.27.1",
-    "@types/prettier": "2.7.2",
+    "@types/prettier": "2.7.3",
     "@types/pump": "1.1.1",
     "@types/through2-concurrent": "2.0.1",
     "@types/uuid": "8.3.4",
     "@yarnpkg/pnpify": "3.1.6",
-    "nock": "13.3.0"
+    "nock": "13.3.1"
   }
 }

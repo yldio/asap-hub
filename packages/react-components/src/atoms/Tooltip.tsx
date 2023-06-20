@@ -69,10 +69,24 @@ const presentationStyles = css({
 interface TooltipProps {
   children: ReactNode;
   shown?: boolean;
+  maxContent?: boolean;
+  bottom?: string;
 }
-const Tooltip: React.FC<TooltipProps> = ({ children, shown = false }) => (
+const Tooltip: React.FC<TooltipProps> = ({
+  children,
+  shown = false,
+  maxContent = false,
+  bottom,
+}) => (
   <span css={positionerStyles}>
-    <span css={[tooltipStyles, shown || { display: 'none' }]}>
+    <span
+      css={[
+        tooltipStyles,
+        shown || { display: 'none' },
+        maxContent && { width: 'max-content' },
+        bottom && { bottom },
+      ]}
+    >
       <span role="tooltip" css={bubbleStyles}>
         {children}
       </span>

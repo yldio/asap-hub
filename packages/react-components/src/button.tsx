@@ -144,7 +144,7 @@ const primaryStyles = ({
       color: paper.rgb,
     },
   });
-const secondaryStyles = css({
+export const secondaryStyles = css({
   backgroundColor: paper.rgb,
   borderColor: steel.rgb,
   boxShadow: boxShadow(steel),

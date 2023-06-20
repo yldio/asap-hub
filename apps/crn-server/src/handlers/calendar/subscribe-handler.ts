@@ -22,6 +22,7 @@ import {
 import { getCalendarDataProvider } from '../../dependencies/calendars.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import { getCalendarSubscriptionId } from '../../utils/get-calendar-subscription-id';
 
 /* istanbul ignore next */
 const getJWTCredentialsAWS = getJWTCredentialsFactory({
@@ -49,6 +50,7 @@ export const webhookHandler = isContentfulEnabledV2
         space: contentfulSpaceId,
         accessToken: contentfulAccessToken,
       },
+      getCalendarSubscriptionId,
     )
   : calendarCreatedSquidexHandlerFactory(
       subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {

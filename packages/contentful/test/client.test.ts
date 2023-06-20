@@ -1,87 +1,126 @@
 import * as gqlRequest from 'graphql-request';
 import * as contentfulManagement from 'contentful-management';
 import * as contentfulDeliveryApi from 'contentful';
-import { getGraphQLClient, getRestClient, getCDAClient } from '../src/client';
+import {
+  getGraphQLClient,
+  getRestClient,
+  getCDAClient,
+  getCPAClient,
+} from '../src/client';
 
 jest.mock('contentful-management');
-const mockContentfulManagement = contentfulManagement as jest.Mocked<
-  typeof contentfulManagement
->;
-const space = { getEnvironment: jest.fn() };
-const getSpaceFn = jest.fn().mockResolvedValue(space);
-mockContentfulManagement.createClient.mockReturnValue({
-  getSpace: getSpaceFn,
-} as any as jest.Mocked<contentfulManagement.PlainClientAPI>);
-
-describe('getRestClient', () => {
-  it('should create a client', async () => {
-    const accessToken = 'token';
-    const spaceId = 'space-id';
-    const environmentId = 'env-id';
-
-    await getRestClient({
-      space: spaceId,
-      accessToken,
-      environment: environmentId,
-    });
-
-    expect(contentfulManagement.createClient).toHaveBeenCalledWith({
-      accessToken,
-    });
-    expect(getSpaceFn).toHaveBeenCalledWith(spaceId);
-    expect(space.getEnvironment).toHaveBeenCalledWith(environmentId);
-  });
-});
-
 jest.mock('graphql-request');
-const mockgqlRequest = gqlRequest as jest.Mocked<typeof gqlRequest>;
-mockgqlRequest.GraphQLClient.mockReturnValue(
-  {} as any as jest.Mocked<gqlRequest.GraphQLClient>,
-);
+jest.mock('contentful');
 
-describe('getGraphQLClient', () => {
-  it('should create a client', async () => {
-    const accessToken = 'token';
-    const spaceId = 'space-id';
-    const environmentId = 'env-id';
-
-    await getGraphQLClient({
-      space: spaceId,
-      accessToken,
-      environment: environmentId,
+describe('graphQL and Rest clients', () => {
+  beforeEach(jest.resetAllMocks);
+  describe('getRestClient', () => {
+    const getEnvironment = jest.fn();
+    const space = { getEnvironment };
+    const getSpaceFn = jest.fn();
+    beforeEach(() => {
+      getSpaceFn.mockResolvedValue(space);
+      const mockContentfulManagement = contentfulManagement as jest.Mocked<
+        typeof contentfulManagement
+      >;
+      mockContentfulManagement.createClient.mockReturnValue({
+        getSpace: getSpaceFn,
+      } as any as jest.Mocked<contentfulManagement.PlainClientAPI>);
     });
 
-    expect(gqlRequest.GraphQLClient).toHaveBeenCalledWith(
-      `https://graphql.contentful.com/content/v1/spaces/${spaceId}/environments/${environmentId}`,
-      { headers: { authorization: `Bearer ${accessToken}` } },
-    );
+    it('should create a client', async () => {
+      const accessToken = 'token';
+      const spaceId = 'space-id';
+      const environmentId = 'env-id';
+
+      await getRestClient({
+        space: spaceId,
+        accessToken,
+        environment: environmentId,
+      });
+
+      expect(contentfulManagement.createClient).toHaveBeenCalledWith({
+        accessToken,
+      });
+      expect(getSpaceFn).toHaveBeenCalledWith(spaceId);
+      expect(getEnvironment).toHaveBeenCalledWith(environmentId);
+    });
+  });
+
+  describe('getGraphQLClient', () => {
+    beforeEach(() => {
+      const mockgqlRequest = gqlRequest as jest.Mocked<typeof gqlRequest>;
+      mockgqlRequest.GraphQLClient.mockReturnValue(
+        {} as any as jest.Mocked<gqlRequest.GraphQLClient>,
+      );
+    });
+    it('should create a client', async () => {
+      const accessToken = 'token';
+      const spaceId = 'space-id';
+      const environmentId = 'env-id';
+
+      getGraphQLClient({
+        space: spaceId,
+        accessToken,
+        environment: environmentId,
+      });
+
+      expect(gqlRequest.GraphQLClient).toHaveBeenCalledWith(
+        `https://graphql.contentful.com/content/v1/spaces/${spaceId}/environments/${environmentId}`,
+        {
+          errorPolicy: 'ignore',
+          headers: { authorization: `Bearer ${accessToken}` },
+        },
+      );
+    });
+  });
+
+  describe('getCDAClient', () => {
+    beforeEach(() => {
+      const mockContentful = contentfulDeliveryApi as jest.Mocked<
+        typeof contentfulDeliveryApi
+      >;
+      mockContentful.createClient.mockReturnValue({
+        getEntry: jest.fn(),
+      } as any as jest.Mocked<contentfulDeliveryApi.ContentfulClientApi<undefined>>);
+    });
+    it('should create a client', () => {
+      const accessToken = 'token';
+      const spaceId = 'space-id';
+      const environmentId = 'env-id';
+
+      getCDAClient({
+        space: spaceId,
+        accessToken,
+        environment: environmentId,
+      });
+
+      expect(contentfulDeliveryApi.createClient).toHaveBeenCalledWith({
+        space: spaceId,
+        accessToken,
+        environment: environmentId,
+      });
+    });
   });
 });
 
-jest.mock('contentful');
-const mockContentful = contentfulDeliveryApi as jest.Mocked<
-  typeof contentfulDeliveryApi
->;
-mockContentful.createClient.mockReturnValue({
-  getEntry: jest.fn(),
-} as any as jest.Mocked<contentfulDeliveryApi.ContentfulClientApi<undefined>>);
-
-describe('getCDAClient', () => {
+describe('getCPAClient', () => {
   it('should create a client', () => {
-    const accessToken = 'token';
+    const previewAccessToken = 'token';
     const spaceId = 'space-id';
     const environmentId = 'env-id';
 
-    getCDAClient({
+    getCPAClient({
       space: spaceId,
-      accessToken,
+      previewAccessToken,
       environment: environmentId,
     });
 
     expect(contentfulDeliveryApi.createClient).toHaveBeenCalledWith({
       space: spaceId,
-      accessToken,
+      accessToken: previewAccessToken,
       environment: environmentId,
+      host: 'preview.contentful.com',
     });
   });
 });

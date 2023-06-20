@@ -1,10 +1,30 @@
-import { ContentfulWebhookPublishPayload } from '@asap-hub/contentful';
+import {
+  ContentfulClientApi,
+  ContentfulWebhookPublishPayload,
+  ContentfulWebhookUnpublishPayload,
+  pollContentfulDeliveryApi,
+} from '@asap-hub/contentful';
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { contentfulHandlerFactory } from '../../../src/handlers/webhooks';
-import { getNewsPublishContentfulWebhookPayload } from '../../fixtures/news.fixtures';
+import {
+  getNewsPublishContentfulWebhookPayload,
+  getNewsUnpublishContentfulWebhookPayload,
+} from '../../fixtures/news.fixtures';
 import { getLambdaRequest } from '../../helpers/events';
 import { loggerMock as logger } from '../../mocks/logger.mock';
+
+const mockGetEntry: jest.MockedFunction<
+  ContentfulClientApi<undefined>['getEntry']
+> = jest.fn();
+
+jest.mock('@asap-hub/contentful', () => ({
+  ...jest.requireActual('@asap-hub/contentful'),
+  getCPAClient: () => ({
+    getEntry: mockGetEntry,
+  }),
+  pollContentfulDeliveryApi: jest.fn(),
+}));
 
 describe('Contentful event webhook', () => {
   const eventBus = 'event-bus';
@@ -14,38 +34,70 @@ describe('Contentful event webhook', () => {
   } as unknown as jest.Mocked<EventBridge>;
   const contentfulWebhookAuthenticationToken =
     'contentful-webhook-authentication-token';
+  const headers = {
+    authorization: contentfulWebhookAuthenticationToken,
+    'x-contentful-topic': 'ContentManagement.Entry.publish',
+  };
   const handler = contentfulHandlerFactory(
     contentfulWebhookAuthenticationToken,
     evenBridgeMock,
-    eventBus,
-    eventSource,
+    {
+      eventBus,
+      eventSource,
+      space: '',
+      environment: '',
+      previewAccessToken: '',
+    },
     logger,
   );
 
   beforeEach(jest.resetAllMocks);
 
-  test('Should return 401 when the request has no Authorization header', async () => {
+  beforeEach(() => {
+    mockGetEntry.mockResolvedValue({
+      sys: {
+        id: '1',
+        revision: 5,
+      },
+      fields: {},
+    } as any);
+
+    (
+      pollContentfulDeliveryApi as jest.MockedFunction<
+        typeof pollContentfulDeliveryApi
+      >
+    ).mockImplementation(
+      jest.requireActual('@asap-hub/contentful').pollContentfulDeliveryApi,
+    );
+  });
+
+  test('Should throw an error when the request has no Authorization header', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
     const event = getLambdaRequest(payload, {});
 
-    expect(handler(event)).rejects.toThrowError('Unauthorized');
+    await expect(handler(event)).rejects.toThrowError('Unauthorized');
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  test('Should return 401 when the request has an invalid authentication token', async () => {
+  test('Should throw an error when the request has an invalid authentication token', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
-    const headers = { authorization: 'invalid-token' };
+    const invalidAuthHeaders = { authorization: 'invalid-token' };
+    const event = getLambdaRequest(payload, invalidAuthHeaders);
+    await expect(handler(event)).rejects.toThrowError('Forbidden');
+    expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
+  });
+
+  test('Should throw an error when the request does not have the revision field', async () => {
+    const payload = getNewsPublishContentfulWebhookPayload();
+    delete (payload.sys as any).revision;
     const event = getLambdaRequest(payload, headers);
-    expect(handler(event)).rejects.toThrowError('Forbidden');
+
+    await expect(handler(event)).rejects.toThrowError('Invalid payload');
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
   test('Should put the news-published event into the event bus and return 200', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
-    const headers = {
-      authorization: contentfulWebhookAuthenticationToken,
-      'x-contentful-topic': 'publish',
-    };
     const event = getLambdaRequest(payload, headers);
     const { statusCode } = await handler(event);
 
@@ -74,18 +126,19 @@ describe('Contentful event webhook', () => {
 
   test('Should log errors when they occur', async () => {
     const payload = getNewsPublishContentfulWebhookPayload();
-    const headers = {
-      authorization: contentfulWebhookAuthenticationToken,
-      'x-contentful-topic': 'publish',
-    };
     evenBridgeMock.putEvents = jest
       .fn()
       .mockRejectedValue(new Error('error message from putEvents'));
     const handlerWithError = contentfulHandlerFactory(
       contentfulWebhookAuthenticationToken,
       evenBridgeMock,
-      eventBus,
-      eventSource,
+      {
+        eventBus,
+        eventSource,
+        space: '',
+        environment: '',
+        previewAccessToken: '',
+      },
       logger,
     );
     const event = getLambdaRequest(payload, headers);
@@ -104,5 +157,97 @@ describe('Contentful event webhook', () => {
       ),
     );
     expect(statusCode).toStrictEqual(500);
+  });
+
+  test('Should put the news-unpublished event to event bus and return 200 when the entry has been deleted', async () => {
+    mockGetEntry.mockReset();
+    mockGetEntry.mockRejectedValue(
+      new Error('The resource could not be found'),
+    );
+    const payload = getNewsUnpublishContentfulWebhookPayload();
+    const headers = {
+      authorization: contentfulWebhookAuthenticationToken,
+      'x-contentful-topic': 'ContentManagement.Entry.unpublish',
+    };
+    const event = getLambdaRequest(payload, headers);
+    const { statusCode } = await handler(event);
+
+    const expectedDetail: WebhookDetail<
+      ContentfulWebhookUnpublishPayload<'news'>
+    > = {
+      resourceId: payload.sys.id,
+      ...payload,
+    };
+
+    expect(statusCode).toStrictEqual(200);
+    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
+      Entries: [
+        {
+          EventBusName: eventBus,
+          Source: eventSource,
+          DetailType: 'NewsUnpublished' satisfies WebhookDetailType,
+          Detail: JSON.stringify(expectedDetail),
+        },
+      ],
+    });
+    expect(logger.debug).toBeCalledWith(
+      expect.stringMatching(/Event added to event-bus/i),
+    );
+  });
+
+  test('Should put the news-published event to event bus and return 200 when the entry is not available at first but then is fetched at a later attempt', async () => {
+    mockGetEntry.mockReset();
+    mockGetEntry.mockRejectedValueOnce(
+      new Error('The resource could not be found'),
+    );
+    mockGetEntry.mockResolvedValue({
+      sys: {
+        id: '1',
+        revision: 5,
+      },
+      fields: {},
+    } as any);
+
+    const payload = getNewsPublishContentfulWebhookPayload();
+    const event = getLambdaRequest(payload, headers);
+    const { statusCode } = await handler(event);
+
+    const expectedDetail: WebhookDetail<
+      ContentfulWebhookPublishPayload<'news'>
+    > = {
+      resourceId: payload.sys.id,
+      ...payload,
+    };
+
+    expect(statusCode).toStrictEqual(200);
+    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
+      Entries: [
+        {
+          EventBusName: eventBus,
+          Source: eventSource,
+          DetailType: 'NewsPublished' satisfies WebhookDetailType,
+          Detail: JSON.stringify(expectedDetail),
+        },
+      ],
+    });
+    expect(logger.debug).toBeCalledWith(
+      expect.stringMatching(/Event added to event-bus/i),
+    );
+  });
+
+  test('Should return 500 when polling fails for a reason other than the not-found error', async () => {
+    const payload = getNewsPublishContentfulWebhookPayload();
+    const event = getLambdaRequest(payload, headers);
+    (
+      pollContentfulDeliveryApi as jest.MockedFunction<
+        typeof pollContentfulDeliveryApi
+      >
+    ).mockRejectedValueOnce(new Error('some error'));
+    const { statusCode } = await handler(event);
+
+    expect(statusCode).toStrictEqual(500);
+    expect(logger.error).toBeCalledWith(
+      expect.stringMatching(/The error message\: some error/i),
+    );
   });
 });

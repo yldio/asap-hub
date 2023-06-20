@@ -20,15 +20,18 @@ const {
 const rootDir = resolve(__dirname, '..');
 const packagesDir = resolve(rootDir, 'packages');
 const appsDir = resolve(rootDir, 'apps');
+const contentfulAppsDir = resolve(
+  rootDir,
+  'packages/contentful-app-extensions',
+);
 
 const compositeProjectPaths = [];
 const configErrors = [];
 
-[packagesDir, appsDir].forEach((parentDir) => {
+[packagesDir, appsDir, contentfulAppsDir].forEach((parentDir) => {
   const projects = readdirSync(parentDir);
   projects.forEach((projectDir) => {
     const dir = resolve(parentDir, projectDir);
-
     let dependencies;
     let devDependencies;
     // read package.json
@@ -46,7 +49,6 @@ const configErrors = [];
       // non-TypeScript project, pretend it doesn't exist
       return;
     }
-
     // read tsconfig.json
     const { error, config } = readConfigFile(tsconfigPath, tsSys.readFile);
     if (error) {

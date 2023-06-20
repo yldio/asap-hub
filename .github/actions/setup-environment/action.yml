@@ -119,6 +119,9 @@ outputs:
   crn-sentry-dsn-handlers:
     description: 'CRN Sentry DSN Handlers'
     value: ${{ steps.vars.outputs.crn-sentry-dsn-handlers }}
+  crn-ses-region:
+    description: 'CRN SES Region'
+    value: ${{ steps.vars.outputs.crn-ses-region }}
   crn-squidex-api-client-id:
     description: 'CRN API Squidex Client ID'
     value: ${{ steps.vars.outputs.crn-squidex-api-client-id }}
@@ -188,6 +191,9 @@ outputs:
   gp2-sentry-dsn-handlers:
     description: 'GP2 Sentry DSN Handlers'
     value: ${{ steps.vars.outputs.gp2-sentry-dsn-handlers }}
+  gp2-ses-region:
+    description: 'GP2 SES Region'
+    value: ${{ steps.vars.outputs.gp2-ses-region }}
   gp2-squidex-api-client-id:
     description: 'GP2 API Squidex Client ID'
     value: ${{ steps.vars.outputs.gp2-squidex-api-client-id }}
@@ -224,9 +230,6 @@ outputs:
   react-app-gtm-container-id:
     description: 'React App GTM Container ID'
     value: ${{ steps.vars.outputs.react-app-gtm-container-id }}
-  ses-region:
-    description: 'SES Region'
-    value: ${{ steps.vars.outputs.ses-region }}
   sls-stage:
     description: 'SLS Stage'
     value: ${{ steps.vars.outputs.sls-stage }}

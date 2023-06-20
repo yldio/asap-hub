@@ -399,6 +399,7 @@ const serverlessConfig: AWS = {
         CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
         CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
           contentfulWebhookAuthenticationToken,
+        CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
       },
     },
     eventsUpdatedSquidex: {

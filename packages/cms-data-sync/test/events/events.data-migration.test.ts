@@ -1,4 +1,5 @@
-import { SquidexGraphqlClient, createUrlFactory } from '@asap-hub/squidex';
+/* eslint-disable no-console */
+import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { Environment } from 'contentful-management';
 import { when } from 'jest-when';
 

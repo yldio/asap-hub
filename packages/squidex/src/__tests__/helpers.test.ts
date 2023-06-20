@@ -1,5 +1,5 @@
 import { HTTPError } from 'got';
-import { parseErrorResponseBody } from '../src/helpers';
+import { parseErrorResponseBody } from '../helpers';
 
 describe('parseErrorResponse', () => {
   const body = {
@@ -18,7 +18,7 @@ describe('parseErrorResponse', () => {
   test('body is Json', async () => {
     const err = {
       response: {
-        body: body,
+        body,
       },
     } as HTTPError;
     const result = parseErrorResponseBody(err);

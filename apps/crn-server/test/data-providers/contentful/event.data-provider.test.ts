@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions, no-sequences */
 import {
   Entry,
   Environment,

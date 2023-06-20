@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
-import { isUserOnboardable } from '../../src/gp2/user';
-import { getUserResponse } from '../fixtures/gp2/user.fixtures';
+import { isUserOnboardable } from '../../gp2/user';
+import { getUserResponse } from '../../fixtures/gp2/user.fixtures';
 
 describe('isUserOnboardable validation', () => {
   it('Should pass if the user profile is complete', async () => {
@@ -19,8 +19,10 @@ describe('isUserOnboardable validation', () => {
     'keywords',
     'degrees',
   ])('Should fail if %s is missing from user profile', async (fieldName) => {
-    const userResponse: gp2.UserResponse = getUserResponse();
-    userResponse[fieldName] = null;
+    const userResponse: gp2.UserResponse = {
+      ...getUserResponse(),
+      [fieldName]: null,
+    };
 
     expect(isUserOnboardable(userResponse)).toEqual({
       isOnboardable: false,

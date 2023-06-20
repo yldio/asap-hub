@@ -1,6 +1,6 @@
 import { UserResponse } from '@asap-hub/model';
-import { isUserOnboardable } from '../src/user';
-import { getUserResponse } from './fixtures/user.fixtures';
+import { isUserOnboardable } from '../user';
+import { getUserResponse } from '../fixtures/user.fixtures';
 
 describe('isUserOnboardable validation', () => {
   it('Should pass if the user profile is complete', async () => {
@@ -9,9 +9,11 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  it('Should fail if Resonsibilities are missing from user profile', async () => {
-    const userResponse: UserResponse = getUserResponse();
-    userResponse.responsibilities = null;
+  it('Should fail if Responsibilities are missing from user profile', async () => {
+    const userResponse: UserResponse = {
+      ...getUserResponse(),
+      responsibilities: undefined,
+    };
 
     expect(isUserOnboardable(userResponse)).toEqual({
       isOnboardable: false,
@@ -125,7 +127,7 @@ describe('isUserOnboardable validation', () => {
       const userResponse: UserResponse = {
         ...getUserResponse(),
         role: 'Grantee',
-        researchInterests: null,
+        researchInterests: undefined,
       };
 
       expect(isUserOnboardable(userResponse)).toEqual({
@@ -174,7 +176,7 @@ describe('isUserOnboardable validation', () => {
       const userResponse: UserResponse = {
         ...getUserResponse(),
         role: 'Staff',
-        researchInterests: null,
+        researchInterests: undefined,
       };
 
       expect(isUserOnboardable(userResponse)).toEqual({

@@ -1743,6 +1743,7 @@ __metadata:
     "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.21.0
+    "@types/jest": ^29.4.0
   languageName: unknown
   linkType: soft
 

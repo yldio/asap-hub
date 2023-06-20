@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { Entry, Environment } from 'contentful-management';
 import { getSquidexAndContentfulClients } from '../../src/utils/setup';
@@ -8,6 +9,22 @@ import { convertHtmlToContentfulFormat } from '../../src/utils/rich-text';
 
 jest.mock('../../src/utils/setup');
 jest.mock('../../src/utils/rich-text');
+
+const pagesSquidexGraphqlResponse: FetchPagesQuery = {
+  queryPagesContents: [
+    {
+      id: 'page-id-1',
+      flatData: {
+        title: 'Page 1',
+        text: '<p>Hello world</p>',
+        link: 'https://www.example.com/page1',
+        linkText: 'Page 1 link text',
+        path: '/page1',
+        shortText: 'Page 1 short text',
+      },
+    },
+  ],
+};
 
 describe('Migrate Pages', () => {
   const squidexGraphqlClientMock: jest.Mocked<SquidexGraphqlClient> = {
@@ -161,19 +178,3 @@ describe('Migrate Pages', () => {
     );
   });
 });
-
-const pagesSquidexGraphqlResponse: FetchPagesQuery = {
-  queryPagesContents: [
-    {
-      id: 'page-id-1',
-      flatData: {
-        title: 'Page 1',
-        text: '<p>Hello world</p>',
-        link: 'https://www.example.com/page1',
-        linkText: 'Page 1 link text',
-        path: '/page1',
-        shortText: 'Page 1 short text',
-      },
-    },
-  ],
-};

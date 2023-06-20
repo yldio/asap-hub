@@ -1,6 +1,6 @@
 import nock from 'nock';
 import encode from 'jwt-encode';
-import { getAccessTokenFactory, SquidexGraphql, SquidexRest } from '../src';
+import { getAccessTokenFactory, SquidexGraphql, SquidexRest } from '..';
 
 describe('Squidex package', () => {
   const mockToken = encode(

@@ -63,4 +63,5 @@ describe('Users Dependencies', () => {
 });
 
 // necessary to avoid " cannot be compiled under '--isolatedModules' because it is considered a global script file"
+// eslint-disable-next-line jest/no-export
 export {};

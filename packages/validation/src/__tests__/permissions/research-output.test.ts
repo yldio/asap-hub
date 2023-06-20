@@ -1,6 +1,5 @@
 import { createUserResponse } from '@asap-hub/fixtures';
 import { disable } from '@asap-hub/flags';
-import { UserResponse } from '@asap-hub/model';
 import {
   getUserRole,
   hasDuplicateResearchOutputPermission,
@@ -8,7 +7,7 @@ import {
   hasPublishResearchOutputPermission,
   hasRequestForReviewPermission,
   hasShareResearchOutputPermission,
-} from '../../src/permissions/research-output';
+} from '../../permissions/research-output';
 
 const user = createUserResponse();
 
@@ -16,77 +15,86 @@ describe.each`
   association        | associationId
   ${`teams`}         | ${`team-1`}
   ${`workingGroups`} | ${`wg-1`}
-`('getUserRole - $association', ({ association, associationId }) => {
-  test('returns Staff when user has asap role as staff', () => {
-    expect(
-      getUserRole({ ...user, role: 'Staff' }, association, associationId),
-    ).toEqual('Staff');
-  });
+`(
+  'getUserRole - $association',
+  ({
+    association,
+    associationId,
+  }: {
+    association: 'teams' | 'workingGroups';
+    associationId: string;
+  }) => {
+    test('returns Staff when user has asap role as staff', () => {
+      expect(
+        getUserRole({ ...user, role: 'Staff' }, association, [associationId]),
+      ).toEqual('Staff');
+    });
 
-  test(`returns Staff when user is Project Manager of ${association}`, () => {
-    expect(
-      getUserRole(
-        {
-          ...user,
-          role: 'Grantee',
-          [association]: [
-            {
-              ...user[association][0],
-              id: associationId,
-              role: 'Project Manager',
-            },
-          ],
-        },
-        association,
-        [associationId],
-      ),
-    ).toEqual('Staff');
-  });
+    test(`returns Staff when user is Project Manager of ${association}`, () => {
+      expect(
+        getUserRole(
+          {
+            ...user,
+            role: 'Grantee',
+            [association]: [
+              {
+                ...user[association][0],
+                id: associationId,
+                role: 'Project Manager',
+              },
+            ],
+          },
+          association,
+          [associationId],
+        ),
+      ).toEqual('Staff');
+    });
 
-  test(`returns Member when user belongs to ${association} and they are not a PM`, () => {
-    expect(
-      getUserRole(
-        {
-          ...user,
-          role: 'Grantee',
-          [association]: [
-            {
-              ...user[association][0],
-              id: associationId,
-              role: 'Collaborating PI',
-            },
-          ],
-        },
-        association,
-        [associationId],
-      ),
-    ).toEqual('Member');
-  });
+    test(`returns Member when user belongs to ${association} and they are not a PM`, () => {
+      expect(
+        getUserRole(
+          {
+            ...user,
+            role: 'Grantee',
+            [association]: [
+              {
+                ...user[association][0],
+                id: associationId,
+                role: 'Collaborating PI',
+              },
+            ],
+          },
+          association,
+          [associationId],
+        ),
+      ).toEqual('Member');
+    });
 
-  test(`returns None when user does not belong to ${association}`, () => {
-    expect(
-      getUserRole(
-        {
-          ...user,
-          role: 'Grantee',
-          [association]: [
-            {
-              ...user[association][0],
-              id: associationId,
-              role: 'Collaborating PI',
-            },
-          ],
-        },
-        association,
-        ['does-not-belong'],
-      ),
-    ).toEqual('None');
-  });
+    test(`returns None when user does not belong to ${association}`, () => {
+      expect(
+        getUserRole(
+          {
+            ...user,
+            role: 'Grantee',
+            [association]: [
+              {
+                ...user[association][0],
+                id: associationId,
+                role: 'Collaborating PI',
+              },
+            ],
+          },
+          association,
+          ['does-not-belong'],
+        ),
+      ).toEqual('None');
+    });
 
-  test(`returns None when user data is null`, () => {
-    expect(getUserRole(null, association, [associationId])).toEqual('None');
-  });
-});
+    test(`returns None when user data is null`, () => {
+      expect(getUserRole(null, association, [associationId])).toEqual('None');
+    });
+  },
+);
 
 describe('hasShareResearchOutputPermission', () => {
   test.each`

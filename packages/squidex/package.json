@@ -26,6 +26,7 @@
     "graphql": "15.8.0",
     "graphql-request": "6.1.0",
     "jwt-decode": "2.2.0",
+    "jwt-encode": "1.0.1",
     "luxon": "1.28.1"
   },
   "devDependencies": {

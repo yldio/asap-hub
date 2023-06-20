@@ -1,3 +1,4 @@
+// eslint-disable-file @typescript-eslint/ban-ts-comment jest/expect-expect
 import { gp2 } from '@asap-hub/model';
 import { AuthHandler } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';

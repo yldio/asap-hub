@@ -1,12 +1,8 @@
+/* eslint-disable no-console */
 import { SquidexGraphqlClient, createUrlFactory } from '@asap-hub/squidex';
 import { Environment } from 'contentful-management';
 import { migrateInterestGroups } from '../../src/interest-groups/interest-groups.data-migration';
-import {
-  getEntry,
-  interestGroupEntry,
-  interestGroupLeaderEntry,
-  contenfulAsset,
-} from '../fixtures';
+import { interestGroupEntry, interestGroupLeaderEntry } from '../fixtures';
 import {
   clearContentfulEntries,
   createAsset,
@@ -387,7 +383,7 @@ describe('Migrate interest groups', () => {
 
     await migrateInterestGroups();
 
-    expect(contentfulEnv.createEntry).not.toHaveBeenCalled;
+    expect(contentfulEnv.createEntry).not.toHaveBeenCalled();
 
     expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
       'interestGroups',

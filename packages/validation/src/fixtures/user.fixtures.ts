@@ -29,6 +29,8 @@ export const getUserResponse = (): UserResponse => ({
       role: 'Collaborating PI',
     },
   ],
+  workingGroups: [],
+  interestGroups: [],
   orcid: '363-98-9330',
   orcidWorks: [],
   social: {

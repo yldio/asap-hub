@@ -1,10 +1,10 @@
 import { ResearchOutputResponse } from '@asap-hub/model/src/research-output';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { ResearchOutputPostRequest } from '@asap-hub/model';
 import {
   isResearchOutputWorkingGroup,
   isResearchOutputWorkingGroupRequest,
-} from '../src/research-output-guards';
-import { ResearchOutputPostRequest } from '@asap-hub/model';
+} from '../research-output-guards';
 
 describe('isResearchOutputWorkingGroup', () => {
   test.each`
@@ -27,6 +27,7 @@ describe('isResearchOutputWorkingGroupRequest', () => {
     ${'returns true when workingGroups is not empty'} | ${['working-group']} | ${true}
   `('$description', ({ workingGroups, expected }) => {
     const researchOutput: ResearchOutputPostRequest = {
+      published: true,
       teams: ['90210'],
       documentType: 'Bioinformatics',
       link: 'http://a-link',
@@ -36,13 +37,15 @@ describe('isResearchOutputWorkingGroupRequest', () => {
       sharingStatus: 'Public',
       publishDate: undefined,
       description: '',
-      tags: [],
+      descriptionMD: '',
       type: 'Software',
       labs: ['lab1'],
       methods: [],
       organisms: [],
       environments: [],
       workingGroups,
+      keywords: [],
+      relatedResearch: [],
     };
     expect(isResearchOutputWorkingGroupRequest(researchOutput)).toEqual(
       expected,

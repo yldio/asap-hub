@@ -3,7 +3,7 @@ import {
   createUrlFactory,
   parseToSquidex,
   sanitiseForSquidex,
-} from '../src/utils';
+} from '../utils';
 
 describe('Squidex Utils', () => {
   describe('createUrl - generate asset url from cms assets list', () => {

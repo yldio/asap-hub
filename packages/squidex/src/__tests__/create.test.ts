@@ -1,8 +1,9 @@
-import { GenericError, ValidationError } from '@asap-hub/errors';
+import { GenericError } from '@asap-hub/errors';
 import nock from 'nock';
-import * as helpers from '../src/helpers';
-import { Squidex } from '../src/rest';
-import { getAccessTokenMock } from './mocks/access-token.mock';
+import * as helpers from '../helpers';
+import { Squidex } from '../rest';
+// eslint-disable-next-line jest/no-mocks-import
+import { getAccessTokenMock } from '../__mocks__/access-token.mock';
 
 interface Content {
   id: string;
@@ -23,6 +24,7 @@ describe('squidex wrapper', () => {
   });
 
   afterEach(() => {
+    // eslint-disable-next-line jest/no-standalone-expect
     expect(nock.isDone()).toBe(true);
   });
 
@@ -194,7 +196,3 @@ describe('squidex wrapper', () => {
     });
   });
 });
-
-function parseErrorResponse(err: { response: { body: string } }) {
-  throw new Error('Function not implemented.');
-}

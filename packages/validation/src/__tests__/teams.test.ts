@@ -1,4 +1,4 @@
-import { TEAM_TOOL_URL } from '../src/teams';
+import { TEAM_TOOL_URL } from '../teams';
 
 it('validates the url protocol', () => {
   expect(TEAM_TOOL_URL.test('http://ww')).toBe(true);

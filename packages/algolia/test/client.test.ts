@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import { SearchResponse } from '@algolia/client-search';
 import {
   ExternalAuthorResponse,
@@ -15,9 +16,9 @@ import {
   EntityRecord,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   USER_ENTITY_TYPE,
+  EVENT_ENTITY_TYPE,
 } from '../src/client';
 import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
-import { EVENT_ENTITY_TYPE } from '../src/client';
 
 describe('Algolia Search Client', () => {
   const algoliaSearchIndex = getAlgoliaSearchIndexMock();

@@ -927,7 +927,7 @@ describe('Teams data provider', () => {
       const teamMock = getEntry({});
       environmentMock.createEntry.mockResolvedValue(teamMock);
 
-      const { tools, ...teamDataObject } = getTeamCreateDataObject();
+      const { tools: _tools, ...teamDataObject } = getTeamCreateDataObject();
       await teamDataProviderMock.create(teamDataObject);
 
       const createEntryFn = environmentMock.createEntry;

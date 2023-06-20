@@ -22,6 +22,7 @@ describe('shouldHandleError', () => {
         statusCode,
       } as unknown as Response;
       const httpError = new HTTPError(errResponse);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       // https://github.com/sindresorhus/got/issues/1210#issuecomment-623534449
       httpError.response = errResponse;

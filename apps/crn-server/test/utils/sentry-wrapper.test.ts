@@ -13,9 +13,7 @@ describe('Sentry wrapper correctly calls functions', () => {
     Sentry.AWSLambda.init = jest.fn((_) => true);
     Sentry.AWSLambda.wrapHandler = jest.fn((handler: Handler) => handler);
 
-    const handler = async (event: unknown, _context: unknown) => {
-      return event;
-    };
+    const handler = async (event: unknown, _context: unknown) => event;
 
     sentryWrapper(handler);
 

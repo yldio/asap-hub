@@ -1,9 +1,7 @@
 import { ExternalAuthorResponse } from '@asap-hub/model';
-import {
-  createUserResponse,
-  createSpeakerUserResponse,
-} from '@asap-hub/fixtures';
-import { isExternalUser, isInternalUser } from '../src/user-guards';
+import { createUserResponse } from '@asap-hub/fixtures';
+import { isExternalUser, isInternalUser } from '../user-guards';
+
 describe('isInternalAuthor', () => {
   it('should return true when author is internal', () => {
     expect(isInternalUser(createUserResponse())).toEqual(true);

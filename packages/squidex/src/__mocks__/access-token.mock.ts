@@ -1,5 +1,5 @@
 import encode from 'jwt-encode';
-import { GetAccessToken } from '../../src/auth';
+import { GetAccessToken } from '../auth';
 
 export const getAccessTokenMock: jest.MockedFunction<GetAccessToken> = jest
   .fn()

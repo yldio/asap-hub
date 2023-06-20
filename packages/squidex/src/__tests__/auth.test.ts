@@ -1,6 +1,7 @@
 import nock from 'nock';
-import { GetAccessToken, getAccessTokenFactory } from '../src/auth';
-import { getMockToken } from './mocks/access-token.mock';
+import { GetAccessToken, getAccessTokenFactory } from '../auth';
+// eslint-disable-next-line jest/no-mocks-import
+import { getMockToken } from '../__mocks__/access-token.mock';
 
 describe('Get Access Token', () => {
   let getAccessToken: GetAccessToken;
@@ -39,7 +40,6 @@ describe('Get Access Token', () => {
 
   describe('Expiration and caching for multiple requests', () => {
     test('Should use the cached token with expiration date ahead of current time', async () => {
-      const oneHourFromNow = new Date(new Date().getTime() + 3600 * 1000);
       const mockTokenFresh = getMockToken(oneHourFromNow);
 
       const nockScope = nock(baseUrl)
@@ -124,7 +124,7 @@ describe('Get Access Token', () => {
 
     await Promise.all([p1, p2]);
 
-    scope.isDone();
+    expect(scope.isDone()).toBe(true);
   });
 
   test('Should retry after a failed attempt', async () => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { Environment } from 'contentful-management';
 import { migrateTeams } from '../../src/teams/teams.data-migration';
@@ -314,14 +315,14 @@ describe('Migrate teams', () => {
   });
 
   it('still creates the team even if there is a tool with invalid link', async () => {
-    const tool = {
+    const tool2 = {
       name: 'Invalid link',
       description: 'It contains a not valid url',
       url: '123',
     };
     const teamWithInvalidURLTool = getTeamSquidexResponse();
     teamWithInvalidURLTool.id = 'team-invalid-url-tool';
-    teamWithInvalidURLTool.flatData.tools = [tool];
+    teamWithInvalidURLTool.flatData.tools = [tool2];
 
     squidexGraphqlClientMock.request.mockResolvedValueOnce({
       queryTeamsContents: [teamWithInvalidURLTool],

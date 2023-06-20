@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import Toast from './Toast';
+import { css } from '@emotion/react';
+import { rem } from '../pixels';
 
 export interface SharedResearchOutputBannersProps {
   association: string;
@@ -12,6 +14,12 @@ export interface SharedResearchOutputBannersProps {
   reviewToggled: boolean;
   associationName: string;
 }
+
+const toastContainer = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(4),
+});
 
 const SharedResearchOutputBanners: React.FC<
   SharedResearchOutputBannersProps
@@ -38,7 +46,7 @@ const SharedResearchOutputBanners: React.FC<
   }, [reviewToggled, reviewRequestedBy]);
 
   return (
-    <>
+    <div css={toastContainer}>
       {draftCreatedBanner && (
         <Toast
           accent="successLarge"
@@ -83,7 +91,7 @@ const SharedResearchOutputBanners: React.FC<
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

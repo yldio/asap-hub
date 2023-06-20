@@ -35,5 +35,6 @@ is-contentful-enabled=true
 react-app-crn-sentry-dsn=https://8cd3c59be8ec4118aa6f6c59487b9e56@o850903.ingest.sentry.io/5893160
 react-app-environment=development
 react-app-gp2-sentry-dsn=https://a087618d35f54407bf1919bf82da2cc6@o850903.ingest.sentry.io/4504769246461952
-ses-region=eu-west-1
+crn-ses-region=eu-west-1
+gp2-ses-region=eu-west-1
 sls-stage=dev

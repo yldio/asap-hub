@@ -20,6 +20,9 @@ inputs:
   crn-contentful-management-access-token:
     description: 'CRN Contentful Management Access Token'
     required: false
+  crn-contentful-preview-access-token:
+    description: 'CRN Contentful Preview Access Token'
+    required: false
   crn-contentful-webhook-authentication-token:
     description: 'CRN Contentful Webhook Authentication Token'
     required: false

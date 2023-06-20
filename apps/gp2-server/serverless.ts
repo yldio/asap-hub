@@ -396,6 +396,7 @@ const serverlessConfig: AWS = {
         EVENT_BUS: eventBus,
         EVENT_SOURCE: eventBusSourceContentful,
         SENTRY_DSN: sentryDsnHandlers,
+        CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
         CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
           contentfulWebhookAuthenticationToken,
       },

@@ -1,11 +1,5 @@
 import { ListResponse } from '../common';
-import {
-  Calendar,
-  Member,
-  Milestone,
-  Resource,
-  UpdateMemberProperties,
-} from './common';
+import { Calendar, Member, Milestone, Resource, UpdateMember } from './common';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
 export type ProjectStatus = (typeof projectStatus)[number];
@@ -48,7 +42,7 @@ export type ListProjectResponse = ListResponse<ProjectResponse>;
 export type ProjectUpdateDataObject = Partial<
   Pick<ProjectDataObject, 'resources'>
 > & {
-  members?: Pick<ProjectMember, UpdateMemberProperties>[];
+  members?: UpdateMember<ProjectMemberRole>[];
 };
 
 export type ProjectUpdateRequest = ProjectUpdateDataObject;

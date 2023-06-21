@@ -1,11 +1,5 @@
 import { ListResponse } from '../common';
-import {
-  Calendar,
-  Member,
-  Milestone,
-  Resource,
-  UpdateMemberProperties,
-} from './common';
+import { Calendar, Member, Milestone, Resource, UpdateMember } from './common';
 
 export const workingGroupMemberRole = [
   'Lead',
@@ -39,7 +33,7 @@ export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
 export type WorkingGroupUpdateDataObject = Partial<
   Pick<WorkingGroupDataObject, 'resources'>
 > & {
-  members?: Pick<WorkingGroupMember, UpdateMemberProperties>[];
+  members?: UpdateMember<WorkingGroupMemberRole>[];
 };
 
 export type WorkingGroupUpdateRequest = WorkingGroupUpdateDataObject;

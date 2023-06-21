@@ -47,5 +47,4 @@ export type Member<T> = {
   avatarUrl?: string;
 };
 
-export type UpdateMemberProperties = 'id' | 'userId' | 'role';
-export type UpdateMember<T> = Pick<Member<T>, UpdateMemberProperties>;
+export type UpdateMember<T> = Pick<Member<T>, 'id' | 'userId' | 'role'>;

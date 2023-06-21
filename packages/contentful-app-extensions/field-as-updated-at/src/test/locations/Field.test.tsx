@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import React from 'react';
 import Field from '../../locations/Field';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
 import { useSDK } from '@contentful/react-apps-toolkit';
 
@@ -99,6 +99,7 @@ describe('Field component', () => {
     const mockTestSdk = {
       field: {
         getValue: jest.fn(() => '2023-04-13T16:05:00.000Z'),
+        setValue: jest.fn(),
       },
       parameters: {
         instance: {
@@ -106,6 +107,7 @@ describe('Field component', () => {
         },
       },
       entry: {
+        publish: jest.fn(),
         getSys: jest.fn(() => ({
           publishedCounter: 1,
         })),
@@ -130,5 +132,12 @@ describe('Field component', () => {
     expect(mockTestSdk.entry.getSys).toHaveBeenCalled();
     expect(mockTestSdk.entry.onSysChanged).toHaveBeenCalled();
     expect(screen.getByText('2023-04-14T18:00:00.000Z')).toBeInTheDocument();
+
+    expect(mockTestSdk.field.setValue).toHaveBeenCalledWith(
+      '2023-04-14T18:00:00.000Z',
+    );
+    waitFor(() => {
+      expect(mockTestSdk.entry.publish).toHaveBeenCalled();
+    });
   });
 });

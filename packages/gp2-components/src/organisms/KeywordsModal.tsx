@@ -35,9 +35,9 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
             subtitle="(required)"
             description={
               <>
-                Select up to ten.{' '}
+                Select up to ten keywords that best describe you.{' '}
                 <span css={{ fontStyle: 'italic' }}>
-                  <ContactSupport preContactText="Need to request a new keyword?" />{' '}
+                  <ContactSupport preContactText="Want to add more keywords to the list?" />{' '}
                 </span>
               </>
             }

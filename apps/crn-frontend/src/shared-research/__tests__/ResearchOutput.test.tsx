@@ -394,3 +394,48 @@ it('switches a in review research output back to draft', async () => {
     expect.anything(),
   );
 });
+
+it('publishes a research output ', async () => {
+  const researchOutput = createResearchOutputResponse();
+  mockGetResearchOutput.mockResolvedValue({
+    ...researchOutput,
+    documentType: 'Article',
+    published: false,
+    workingGroups: undefined,
+    reviewRequestedBy: { ...defaultUser },
+  });
+
+  const { queryByText, getByText } = await renderComponent(
+    researchOutputRoute.$,
+    {
+      ...defaultUser,
+      teams: [
+        {
+          id: researchOutput.teams[0]!.id,
+          role: 'Project Manager',
+          displayName: researchOutput.teams[0]!.displayName,
+        },
+      ],
+    },
+  );
+
+  const showPublishModalButton = queryByText('Publish');
+
+  expect(showPublishModalButton).toBeVisible();
+
+  fireEvent.click(showPublishModalButton as HTMLElement);
+  const publishButton = getByText('Publish Output');
+
+  fireEvent.click(publishButton);
+  await waitFor(() => {
+    expect(publishButton).toBeEnabled();
+  });
+
+  expect(mockUpdateTeamResearchOutput).toHaveBeenCalledWith(
+    researchOutput.id,
+    expect.objectContaining({
+      published: true,
+    }),
+    expect.anything(),
+  );
+});

@@ -79,10 +79,10 @@ const ResearchOutput: React.FC = () => {
                     ...utils.transformResearchOutputResponseToRequest(
                       researchOutputData,
                     ),
+                    published: true,
                   })
                 }
                 publishedNow={publishedNow}
-                currentUserId={currentUser?.id}
                 draftCreated={urlSearchParams.get('draftCreated') === 'true'}
               />
             </Frame>

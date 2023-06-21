@@ -1,6 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
-  CalendarController,
   CalendarDataObject,
   CalendarDataProvider,
   CalendarResponse,
@@ -8,7 +7,7 @@ import {
   ListCalendarResponse,
 } from '@asap-hub/model';
 
-export default class Calendars implements CalendarController {
+export default class CalendarController {
   constructor(private dataProvider: CalendarDataProvider) {}
 
   async fetch(): Promise<ListCalendarResponse> {

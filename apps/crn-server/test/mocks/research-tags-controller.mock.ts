@@ -1,6 +1,6 @@
-import { ResearchTagController } from '../../src/controllers/research-tags.controller';
+import ResearchTagController from '../../src/controllers/research-tags.controller';
 
-export const researchTagControllerMock: jest.Mocked<ResearchTagController> = {
+export const researchTagControllerMock = {
   fetch: jest.fn(),
   fetchAll: jest.fn(),
-};
+} as unknown as jest.Mocked<ResearchTagController>;

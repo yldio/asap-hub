@@ -17,9 +17,7 @@ import {
   appName,
   baseUrl,
 } from '../../config';
-import ResearchOutputs, {
-  ResearchOutputController,
-} from '../../controllers/research-outputs.controller';
+import ResearchOutputController from '../../controllers/research-outputs.controller';
 import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-authors.data-provider';
 import { ResearchOutputSquidexDataProvider } from '../../data-providers/research-outputs.data-provider';
 import { ResearchTagSquidexDataProvider } from '../../data-providers/research-tags.data-provider';
@@ -93,7 +91,7 @@ const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
 
 export const handler = sentryWrapper(
   indexResearchOutputByTeamHandler(
-    new ResearchOutputs(
+    new ResearchOutputController(
       researchOutputDataProvider,
       researchTagDataProvider,
       externalAuthorDataProvider,

@@ -1,13 +1,13 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { LabsController } from '../../src/controllers/labs.controller';
+import LabController from '../../src/controllers/labs.controller';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/labs/ route', () => {
-  const labsControlerMock: jest.Mocked<LabsController> = {
+  const labsControlerMock = {
     fetch: jest.fn(),
-  };
+  } as unknown as jest.Mocked<LabController>;
   const app = appFactory({
     labsController: labsControlerMock,
     authHandler: authHandlerMock,

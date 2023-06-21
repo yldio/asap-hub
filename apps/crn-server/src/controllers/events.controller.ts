@@ -1,6 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
-  EventController,
   EventCreateRequest,
   EventDataProvider,
   EventResponse,
@@ -9,7 +8,7 @@ import {
   ListEventResponse,
 } from '@asap-hub/model';
 
-export default class Events implements EventController {
+export default class EventController {
   constructor(private dataProvider: EventDataProvider) {}
 
   async fetch(options: FetchEventsOptions): Promise<ListEventResponse> {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { DashboardController } from '../controllers/dashboard.controller';
+import DashboardController from '../controllers/dashboard.controller';
 
 export const dashboardRouteFactory = (
   dashboardController: DashboardController,

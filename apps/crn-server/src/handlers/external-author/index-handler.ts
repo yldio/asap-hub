@@ -6,9 +6,7 @@ import { ExternalAuthorEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import ExternalAuthors, {
-  ExternalAuthorsController,
-} from '../../controllers/external-authors.controller';
+import ExternalAuthorController from '../../controllers/external-authors.controller';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalAuthorPayload } from '../event-bus';
@@ -16,7 +14,7 @@ import { getExternalAuthorDataProvider } from '../../dependencies/external-autho
 
 export const indexExternalAuthorHandler =
   (
-    externalAuthorController: ExternalAuthorsController,
+    externalAuthorController: ExternalAuthorController,
     algoliaClient: AlgoliaSearchClient,
   ): EventBridgeHandler<ExternalAuthorEvent, ExternalAuthorPayload> =>
   async (event) => {
@@ -56,7 +54,7 @@ export const indexExternalAuthorHandler =
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexExternalAuthorHandler(
-    new ExternalAuthors(getExternalAuthorDataProvider()),
+    new ExternalAuthorController(getExternalAuthorDataProvider()),
     algoliaSearchClientFactory({
       algoliaApiKey,
       algoliaAppId,
@@ -67,5 +65,5 @@ export const handler = sentryWrapper(
 
 export type ExternalAuthorIndexEventBridgeEvent = EventBridgeEvent<
   ExternalAuthorEvent,
-  ExternalAuthorsController
+  ExternalAuthorController
 >;

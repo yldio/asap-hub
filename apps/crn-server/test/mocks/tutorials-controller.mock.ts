@@ -1,5 +1,5 @@
-import { TutorialsController } from '../../src/controllers/tutorials.controller';
+import TutorialController from '../../src/controllers/tutorials.controller';
 
-export const tutorialsControllerMock: jest.Mocked<TutorialsController> = {
+export const tutorialsControllerMock = {
   fetchById: jest.fn(),
-};
+} as unknown as jest.Mocked<TutorialController>;

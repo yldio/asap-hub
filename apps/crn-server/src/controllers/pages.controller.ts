@@ -3,7 +3,7 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 
 import { PageDataProvider } from '../data-providers/types';
 
-export default class Pages implements PageController {
+export default class PageController {
   constructor(private pageDataProvider: PageDataProvider) {}
 
   async fetchByPath(path: string): Promise<PageResponse> {
@@ -21,8 +21,4 @@ export default class Pages implements PageController {
 
     return result.items[0];
   }
-}
-
-export interface PageController {
-  fetchByPath: (path: string) => Promise<PageResponse>;
 }

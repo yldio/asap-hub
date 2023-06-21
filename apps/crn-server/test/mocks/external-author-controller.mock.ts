@@ -1,7 +1,6 @@
-import { ExternalAuthorsController } from '../../src/controllers/external-authors.controller';
+import ExternalAuthorController from '../../src/controllers/external-authors.controller';
 
-export const externalAuthorControllerMock: jest.Mocked<ExternalAuthorsController> =
-  {
-    fetch: jest.fn(),
-    fetchById: jest.fn(),
-  };
+export const externalAuthorControllerMock = {
+  fetch: jest.fn(),
+  fetchById: jest.fn(),
+} as unknown as jest.Mocked<ExternalAuthorController>;

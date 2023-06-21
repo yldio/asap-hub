@@ -11,17 +11,7 @@ import {
   InterestGroupDataProvider,
 } from '../data-providers/types';
 
-export interface InterestGroupController {
-  fetch: (options: FetchOptions) => Promise<ListGroupResponse>;
-  fetchById: (groupId: string) => Promise<GroupResponse>;
-  fetchByTeamId: (
-    teamId: string | string[],
-    options: FetchOptions,
-  ) => Promise<ListGroupResponse>;
-  fetchByUserId: (userId: string) => Promise<ListGroupResponse>;
-}
-
-export default class InterestGroups implements InterestGroupController {
+export default class InterestGroupController {
   interestGroupDataProvider: InterestGroupDataProvider;
   userDataProvider: UserDataProvider;
 

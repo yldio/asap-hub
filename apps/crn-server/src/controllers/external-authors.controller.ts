@@ -6,12 +6,7 @@ import {
 } from '@asap-hub/model';
 import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
 
-export interface ExternalAuthorsController {
-  fetch(options: FetchOptions): Promise<ListExternalAuthorResponse>;
-  fetchById(id: string): Promise<ExternalAuthorResponse>;
-}
-
-export default class ExternalAuthors implements ExternalAuthorsController {
+export default class ExternalAuthorController {
   constructor(private externalAuthorDataProvider: ExternalAuthorDataProvider) {}
 
   async fetch(options: FetchOptions): Promise<ListExternalAuthorResponse> {

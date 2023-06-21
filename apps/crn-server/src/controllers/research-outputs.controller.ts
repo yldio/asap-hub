@@ -24,7 +24,7 @@ import { ResearchTagDataProvider } from '../data-providers/types';
 import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
 import { fetchAll } from '../utils/fetch-all';
 
-export default class ResearchOutputs implements ResearchOutputController {
+export default class ResearchOutputController {
   constructor(
     private researchOutputDataProvider: ResearchOutputDataProvider,
     private researchTagDataProvider: ResearchTagDataProvider,
@@ -403,19 +403,6 @@ export default class ResearchOutputs implements ResearchOutputController {
   });
 }
 
-export interface ResearchOutputController {
-  fetch: (
-    options: ResearchOutputFetchOptions,
-  ) => Promise<ListResearchOutputResponse>;
-  fetchById: (id: string) => Promise<ResearchOutputResponse>;
-  create: (
-    researchOutputRequest: ResearchOutputCreateData,
-  ) => Promise<ResearchOutputResponse | null>;
-  update: (
-    id: string,
-    researchOutputRequest: ResearchOutputUpdateData,
-  ) => Promise<ResearchOutputResponse | null>;
-}
 export type ResearchOutputCreateData = ResearchOutputPostRequest & {
   createdBy: string;
 };

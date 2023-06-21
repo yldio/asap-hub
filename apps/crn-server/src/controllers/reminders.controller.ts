@@ -8,10 +8,6 @@ import {
 import { ReminderDataProvider } from '../data-providers/reminders.data-provider';
 import { crnMeetingMaterialsDrive } from '../config';
 
-export interface ReminderController {
-  fetch: (options: FetchRemindersOptions) => Promise<ListReminderResponse>;
-}
-
 export const formattedMaterialByEventType = (
   type: EventReminderType,
 ): string => {
@@ -27,7 +23,7 @@ export const formattedMaterialByEventType = (
   }
 };
 
-export default class Reminders implements ReminderController {
+export default class ReminderController {
   constructor(private reminderDataProvider: ReminderDataProvider) {}
 
   async fetch(options: FetchRemindersOptions): Promise<ListReminderResponse> {

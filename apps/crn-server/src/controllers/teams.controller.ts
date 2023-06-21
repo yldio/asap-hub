@@ -7,20 +7,11 @@ import {
 } from '@asap-hub/model';
 import { TeamDataProvider } from '../data-providers/teams.data-provider';
 
-export interface TeamController {
-  update: (id: string, tools: TeamTool[]) => Promise<TeamResponse>;
-  fetch: (options: FetchTeamsOptions) => Promise<ListTeamResponse>;
-  fetchById: (
-    teamId: string,
-    options?: FetchTeamOptions,
-  ) => Promise<TeamResponse>;
-}
-
 type FetchTeamOptions = {
   showTools: boolean;
 };
 
-export default class Teams implements TeamController {
+export default class TeamController {
   teamDataProvider: TeamDataProvider;
 
   constructor(teamsDataProvider: TeamDataProvider) {

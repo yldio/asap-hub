@@ -1,6 +1,6 @@
 import { UserEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
-import Users, { UserController } from '../../controllers/users.controller';
+import UserController from '../../controllers/users.controller';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
@@ -30,6 +30,6 @@ export const syncOrcidUserHandler =
 
 export const handler = sentryWrapper(
   syncOrcidUserHandler(
-    new Users(getUserDataProvider(), getAssetDataProvider()),
+    new UserController(getUserDataProvider(), getAssetDataProvider()),
   ),
 );

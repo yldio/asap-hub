@@ -2,7 +2,6 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import {
   FetchUsersOptions,
   ListUserResponse,
-  UserController as UserControllerBase,
   UserResponse,
   UserUpdateDataObject,
   UserUpdateRequest,
@@ -13,23 +12,7 @@ import { parseUserToResponse } from '../data-providers/users.data-provider';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import logger from '../utils/logger';
 
-export interface UserController extends UserControllerBase<UserResponse> {
-  fetch(options: FetchUsersOptions): Promise<ListUserResponse>;
-  fetchByCode(code: string): Promise<UserResponse>;
-  fetchById(id: string): Promise<UserResponse>;
-  update(id: string, update: UserUpdateRequest): Promise<UserResponse>;
-  updateAvatar(
-    id: string,
-    avatar: Buffer,
-    contentType: string,
-  ): Promise<UserResponse>;
-  syncOrcidProfile(
-    id: string,
-    cachedUser: UserResponse | undefined,
-  ): Promise<UserResponse>;
-}
-
-export default class Users implements UserController {
+export default class UserController {
   constructor(
     private userDataProvider: UserDataProvider,
     private assetDataProvider: AssetDataProvider,

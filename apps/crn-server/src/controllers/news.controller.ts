@@ -6,12 +6,7 @@ import {
 } from '@asap-hub/model';
 import { NewsDataProvider } from '../data-providers/types';
 
-export interface NewsController {
-  fetch: (options?: FetchNewsOptions) => Promise<ListNewsResponse>;
-  fetchById: (id: string) => Promise<NewsResponse>;
-}
-
-export default class News implements NewsController {
+export default class NewsController {
   constructor(private newsDataProvider: NewsDataProvider) {}
 
   async fetch(options?: FetchNewsOptions): Promise<ListNewsResponse> {

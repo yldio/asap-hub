@@ -7,12 +7,7 @@ import {
 import { WorkingGroupDataProvider } from '../data-providers/types';
 import { toWorkingGroupResponse } from '../entities/working-group';
 
-export interface WorkingGroupController {
-  fetch: (options: FetchOptions) => Promise<WorkingGroupListResponse>;
-  fetchById: (groupId: string) => Promise<WorkingGroupResponse>;
-}
-
-export default class WorkingGroups implements WorkingGroupController {
+export default class WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}
 
   async fetch(options: FetchOptions): Promise<WorkingGroupListResponse> {

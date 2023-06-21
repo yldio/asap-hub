@@ -9,14 +9,7 @@ import { fetchAll } from '../utils/fetch-all';
 
 type FetchAllOptions = Omit<FetchResearchTagsOptions, 'take' | 'skip'>;
 
-export interface ResearchTagController {
-  fetch: (
-    options: FetchResearchTagsOptions,
-  ) => Promise<ListResearchTagResponse>;
-  fetchAll: (options: FetchAllOptions) => Promise<ListResearchTagResponse>;
-}
-
-export default class ResearchTags implements ResearchTagController {
+export default class ResearchTagController {
   constructor(private researchTagsDataProvider: ResearchTagDataProvider) {}
 
   async fetch(

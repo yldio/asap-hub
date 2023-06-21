@@ -1,9 +1,8 @@
-import { ResearchOutputController } from '../../src/controllers/research-outputs.controller';
+import ResearchOutputController from '../../src/controllers/research-outputs.controller';
 
-export const researchOutputControllerMock: jest.Mocked<ResearchOutputController> =
-  {
-    fetch: jest.fn(),
-    fetchById: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-  };
+export const researchOutputControllerMock = {
+  fetch: jest.fn(),
+  fetchById: jest.fn(),
+  create: jest.fn(),
+  update: jest.fn(),
+} as unknown as jest.Mocked<ResearchOutputController>;

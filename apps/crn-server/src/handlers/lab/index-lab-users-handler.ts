@@ -5,7 +5,7 @@ import {
 import { LabEvent, ListResponse, UserResponse } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import Users, { UserController } from '../../controllers/users.controller';
+import UserController from '../../controllers/users.controller';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
@@ -65,7 +65,7 @@ export const indexLabUsersHandler =
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexLabUsersHandler(
-    new Users(getUserDataProvider(), getAssetDataProvider()),
+    new UserController(getUserDataProvider(), getAssetDataProvider()),
     algoliaSearchClientFactory({
       algoliaApiKey,
       algoliaAppId,

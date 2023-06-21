@@ -1,11 +1,7 @@
 import { FetchOptions, ListLabsResponse } from '@asap-hub/model';
 import { LabDataProvider } from '../data-providers/labs.data-provider';
 
-export interface LabsController {
-  fetch: (options: FetchOptions) => Promise<ListLabsResponse>;
-}
-
-export default class Labs implements LabsController {
+export default class LabController {
   constructor(private labDataProvider: LabDataProvider) {}
 
   async fetch(options: FetchOptions): Promise<ListLabsResponse> {

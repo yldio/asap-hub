@@ -7,7 +7,7 @@ import {
   algoliaApiKeyTtl,
   auth0SharedSecret,
 } from '../../../config';
-import { UserController } from '../../../controllers/users.controller';
+import UserController from '../../../controllers/users.controller';
 import { validateParams } from '../../../validation/fetch-by-code.validation';
 
 export const fetchUserByCodeHandlerFactory = (

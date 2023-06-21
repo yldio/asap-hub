@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { TutorialsController } from '../controllers/tutorials.controller';
+import TutorialController from '../controllers/tutorials.controller';
 import { validateTutorialParameters } from '../validation/tutorial.validation';
 
 export const tutorialsRouteFactory = (
-  tutorialsController: TutorialsController,
+  tutorialsController: TutorialController,
 ): Router => {
   const tutorialsRoutes = Router();
 

@@ -75,7 +75,7 @@ const ResearchOutput: React.FC = () => {
                   })
                 }
                 onPublish={() =>
-                  updateResearchOutput(researchOutputData.id, {
+                  publishResearchOutput(researchOutputData.id, {
                     ...utils.transformResearchOutputResponseToRequest(
                       researchOutputData,
                     ),

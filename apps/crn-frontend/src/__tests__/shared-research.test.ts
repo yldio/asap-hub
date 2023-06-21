@@ -1,4 +1,4 @@
-import { TeamOutputDocumentTypeParameter } from '@asap-hub/routing';
+import { OutputDocumentTypeParameter } from '@asap-hub/routing';
 import { ResearchOutputDocumentType } from '@asap-hub/model';
 
 import { paramOutputDocumentTypeToResearchOutputDocumentType } from '../shared-research';
@@ -17,7 +17,7 @@ it.each<{
   { param: 'protocol', outputType: 'Protocol' },
   { param: 'report', outputType: 'Report' },
   {
-    param: 'unknown' as TeamOutputDocumentTypeParameter,
+    param: 'unknown' as OutputDocumentTypeParameter,
     outputType: 'Article',
   },
 ])('maps from $param to $outputType', ({ param, outputType }) => {

@@ -12,10 +12,7 @@ import {
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import {
-  network,
-  WorkingGroupOutputDocumentTypeParameter,
-} from '@asap-hub/routing';
+import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -135,20 +132,20 @@ const renderPage = async ({
     ],
   },
   workingGroupId = 'wg1',
-  workingGroupOutputDocumentType = 'article',
+  outputDocumentType = 'article',
   researchOutputData,
   history = createMemoryHistory({
     initialEntries: [
       network({})
         .workingGroups({})
         .workingGroup({ workingGroupId })
-        .createOutput({ workingGroupOutputDocumentType }).$,
+        .createOutput({ outputDocumentType }).$,
     ],
   }),
 }: {
   user?: UserResponse;
   workingGroupId?: string;
-  workingGroupOutputDocumentType?: WorkingGroupOutputDocumentTypeParameter;
+  outputDocumentType?: OutputDocumentTypeParameter;
   canEditResearchOutput?: boolean;
   researchOutputData?: ResearchOutputResponse;
   history?: History;
@@ -187,7 +184,7 @@ const renderPage = async ({
 
 it('Renders the working group research output form with relevant fields', async () => {
   await renderPage({
-    workingGroupOutputDocumentType: 'article',
+    outputDocumentType: 'article',
   });
 
   expect(
@@ -204,7 +201,7 @@ it('Renders the working group research output form with relevant fields', async 
 it('shows the sorry not found page when the working group does not exist', async () => {
   mockGetWorkingGroup.mockResolvedValueOnce(undefined);
   await renderPage({
-    workingGroupOutputDocumentType: 'article',
+    outputDocumentType: 'article',
   });
   expect(screen.getByText(/sorry.+page/i)).toBeVisible();
 });
@@ -215,20 +212,20 @@ it('can submit a form when form data is valid', async () => {
   const descriptionMD = 'example42 description';
   const type = 'Preprint';
   const doi = '10.0777';
-  const workingGroupOutputDocumentType = 'article';
+  const outputDocumentType = 'article';
 
   const history = createMemoryHistory({
     initialEntries: [
       network({})
         .workingGroups({})
         .workingGroup({ workingGroupId })
-        .createOutput({ workingGroupOutputDocumentType }).$,
+        .createOutput({ outputDocumentType }).$,
     ],
   });
 
   await renderPage({
     workingGroupId,
-    workingGroupOutputDocumentType,
+    outputDocumentType,
     history,
   });
 
@@ -291,20 +288,20 @@ it('can save draft when form data is valid', async () => {
   const descriptionMD = 'example42 description';
   const type = 'Preprint';
   const doi = '10.0777';
-  const workingGroupOutputDocumentType = 'article';
+  const outputDocumentType = 'article';
 
   const history = createMemoryHistory({
     initialEntries: [
       network({})
         .workingGroups({})
         .workingGroup({ workingGroupId })
-        .createOutput({ workingGroupOutputDocumentType }).$,
+        .createOutput({ outputDocumentType }).$,
     ],
   });
 
   await renderPage({
     workingGroupId,
-    workingGroupOutputDocumentType,
+    outputDocumentType,
     history,
   });
 
@@ -375,7 +372,7 @@ it('will show server side validation error for link', async () => {
   );
 
   await renderPage({
-    workingGroupOutputDocumentType: 'article',
+    outputDocumentType: 'article',
   });
   const { publish } = await mandatoryFields({}, true);
 
@@ -403,7 +400,7 @@ it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
   await renderPage({
-    workingGroupOutputDocumentType: 'article',
+    outputDocumentType: 'article',
   });
 
   const { publish } = await mandatoryFields({}, true);
@@ -446,19 +443,19 @@ it.each([
     const link = 'https://example42.com';
     const title = 'example42 title';
     const descriptionMD = 'example42 description';
-    const workingGroupOutputDocumentType = 'report';
+    const outputDocumentType = 'report';
 
     const history = createMemoryHistory({
       initialEntries: [
         network({})
           .workingGroups({})
           .workingGroup({ workingGroupId })
-          .createOutput({ workingGroupOutputDocumentType }).$,
+          .createOutput({ outputDocumentType }).$,
       ],
     });
     await renderPage({
       workingGroupId,
-      workingGroupOutputDocumentType,
+      outputDocumentType,
       researchOutputData: {
         ...createResearchOutputResponse(),
         id,

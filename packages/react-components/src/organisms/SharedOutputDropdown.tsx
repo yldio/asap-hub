@@ -139,7 +139,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
                       .createOutput({
-                        workingGroupOutputDocumentType: 'article',
+                        outputDocumentType: 'article',
                       }).$,
                   },
                   {
@@ -149,7 +149,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
                       .createOutput({
-                        workingGroupOutputDocumentType: 'bioinformatics',
+                        outputDocumentType: 'bioinformatics',
                       }).$,
                   },
                   {
@@ -159,7 +159,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
                       .createOutput({
-                        workingGroupOutputDocumentType: 'dataset',
+                        outputDocumentType: 'dataset',
                       }).$,
                   },
                   {
@@ -169,7 +169,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
                       .createOutput({
-                        workingGroupOutputDocumentType: 'lab-resource',
+                        outputDocumentType: 'lab-resource',
                       }).$,
                   },
                   {
@@ -179,7 +179,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
                       .createOutput({
-                        workingGroupOutputDocumentType: 'protocol',
+                        outputDocumentType: 'protocol',
                       }).$,
                   },
                   {
@@ -189,7 +189,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .workingGroups({})
                       .workingGroup({ workingGroupId: selectedAssociation.id })
                       .createOutput({
-                        workingGroupOutputDocumentType: 'report',
+                        outputDocumentType: 'report',
                       }).$,
                   },
                 ]
@@ -201,7 +201,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .teams({})
                       .team({ teamId: selectedAssociation.id })
                       .createOutput({
-                        teamOutputDocumentType: 'article',
+                        outputDocumentType: 'article',
                       }).$,
                   },
                   {
@@ -211,7 +211,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .teams({})
                       .team({ teamId: selectedAssociation.id })
                       .createOutput({
-                        teamOutputDocumentType: 'bioinformatics',
+                        outputDocumentType: 'bioinformatics',
                       }).$,
                   },
                   {
@@ -221,7 +221,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .teams({})
                       .team({ teamId: selectedAssociation.id })
                       .createOutput({
-                        teamOutputDocumentType: 'dataset',
+                        outputDocumentType: 'dataset',
                       }).$,
                   },
                   {
@@ -231,7 +231,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .teams({})
                       .team({ teamId: selectedAssociation.id })
                       .createOutput({
-                        teamOutputDocumentType: 'lab-resource',
+                        outputDocumentType: 'lab-resource',
                       }).$,
                   },
                   {
@@ -241,7 +241,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
                       .teams({})
                       .team({ teamId: selectedAssociation.id })
                       .createOutput({
-                        teamOutputDocumentType: 'protocol',
+                        outputDocumentType: 'protocol',
                       }).$,
                   },
                 ]),

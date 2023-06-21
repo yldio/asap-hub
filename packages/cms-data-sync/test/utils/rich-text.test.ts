@@ -294,6 +294,37 @@ describe('convertHtmlToContentfulFormat', () => {
       },
     ]);
   });
+
+  it('converts <a> inside heading properly', async () => {
+    const html = `<h4>Team presenting:<strong>Alessi - <a href="https://www.hub.com/id">Person</a></strong></h4>`;
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [
+          { data: {}, marks: [], nodeType: 'text', value: 'Team presenting:' },
+          {
+            data: {},
+            marks: [{ type: 'bold' }],
+            nodeType: 'text',
+            value: 'Alessi - ',
+          },
+          {
+            content: [
+              {
+                data: {},
+                marks: [{ type: 'bold' }],
+                nodeType: 'text',
+                value: 'Person',
+              },
+            ],
+            data: { uri: 'https://www.hub.com/id' },
+            nodeType: 'hyperlink',
+          },
+        ],
+        data: {},
+        nodeType: 'heading-4',
+      },
+    ]);
+  });
 });
 
 describe('createDocumentIfNeeded', () => {

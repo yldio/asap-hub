@@ -125,6 +125,18 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
+      {!published && canPublishResearchOutput && (
+        <div css={leftButtons}>
+          <Button
+            noMargin
+            primary
+            small
+            onClick={() => setDisplayModal(!displayModal)}
+          >
+            Publish
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

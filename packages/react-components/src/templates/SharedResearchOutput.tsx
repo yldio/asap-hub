@@ -56,6 +56,7 @@ type SharedResearchOutputProps = Pick<
     onRequestReview?: (
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
+    onPublish?: () => Promise<ResearchOutputResponse | void>;
   };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
@@ -72,6 +73,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   currentUserId,
   reviewRequestedBy,
   onRequestReview,
+  onPublish,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(

@@ -51,6 +51,7 @@ const ResearchOutput: React.FC = () => {
   );
 
   const updateResearchOutput = usePutResearchOutput();
+  const publishResearchOutput = usePutResearchOutput(true);
 
   const currentUser = useCurrentUserCRN();
 
@@ -71,6 +72,13 @@ const ResearchOutput: React.FC = () => {
                     reviewRequestedById: shouldReview
                       ? currentUser?.id
                       : undefined,
+                  })
+                }
+                onPublish={() =>
+                  updateResearchOutput(researchOutputData.id, {
+                    ...utils.transformResearchOutputResponseToRequest(
+                      researchOutputData,
+                    ),
                   })
                 }
                 publishedNow={publishedNow}

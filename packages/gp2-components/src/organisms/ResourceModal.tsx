@@ -10,6 +10,7 @@ import {
   Paragraph,
   pixels,
   utils,
+  usePushFromHere,
 } from '@asap-hub/react-components';
 import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
@@ -58,6 +59,9 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
   const [newType, setNewType] = useState<'Link' | 'Note' | ''>(
     props.type || '',
   );
+  const historyPush = usePushFromHere();
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const [newTitle, setNewTitle] = useState(title || '');
   const [newDescription, setNewDescription] = useState(description || '');
   const [newExternalLink, setNewExternalLink] = useState(externalLink || '');
@@ -74,7 +78,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
     return (
       props.type !== newType ||
       title !== newTitle ||
-      description !== newDescription
+      (!!description && description !== newDescription)
     );
   };
 
@@ -103,6 +107,13 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
     return onSave(resource);
   };
 
+  const onDeleteFunction = async () => {
+    setIsDeleting(true);
+    await onDelete();
+    setIsDeleting(false);
+    historyPush(backHref);
+  };
+
   return (
     <EditModal
       title={modalTitle}
@@ -129,7 +140,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
               required
               getValidationMessage={() => 'Please enter a valid type'}
               onChange={setNewType}
-              enabled={!isSaving}
+              enabled={!isSaving && !isDeleting}
             />
             {newType === 'Link' && (
               <LabeledTextField
@@ -140,7 +151,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
                 getValidationMessage={() => 'Please enter a valid link'}
                 required
                 pattern={urlExpression}
-                enabled={!isSaving}
+                enabled={!isSaving && !isDeleting}
               />
             )}
             <LabeledTextField
@@ -150,13 +161,13 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
               value={newTitle}
               getValidationMessage={() => 'Please enter a title'}
               onChange={setNewTitle}
-              enabled={newType !== '' && !isSaving}
+              enabled={newType !== '' && !isSaving && !isDeleting}
             />
             <LabeledTextArea
               title="Description"
               value={newDescription}
               onChange={setNewDescription}
-              enabled={newType !== '' && !isSaving}
+              enabled={newType !== '' && !isSaving && !isDeleting}
             />
           </div>
           <footer css={[footerStyles, padding24Styles]}>
@@ -167,7 +178,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
             </div>
             <div css={css(divWithActionsStyle)}>
               {onDelete !== noop && (
-                <Button noMargin onClick={() => asyncFunctionWrapper(onDelete)}>
+                <Button noMargin onClick={onDeleteFunction}>
                   Delete
                 </Button>
               )}
@@ -175,7 +186,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
                 noMargin
                 primary
                 onClick={() => asyncFunctionWrapper(onSaveFunction)}
-                enabled={!isSaving}
+                enabled={!isSaving && !isDeleting}
               >
                 Save
               </Button>

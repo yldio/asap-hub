@@ -1,9 +1,5 @@
 import {
-  addLocaleToFields,
-  Entry,
   Environment,
-  getLinkEntities,
-  getLinkEntity,
   gp2 as gp2Contentful,
   GraphQLClient,
   patchAndPublish,
@@ -13,11 +9,11 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
 import {
   deleteEntities,
-  getIdsToDelete,
   parseCalendar,
   parseMembers,
   parseMilestones,
   parseResources,
+  processMembers,
   processResources,
 } from './utils';
 
@@ -68,11 +64,12 @@ export class WorkingGroupContentfulDataProvider
         previousWorkingGroupDataObject?.resources,
       );
     const { memberFields, idsToDelete: memberIdsToDelete } =
-      await processMembers(
+      await processMembers<gp2Model.WorkingGroupMemberRole>(
         environment,
         workingGroup.members,
         previousWorkingGroup,
         previousWorkingGroupDataObject?.members,
+        'workingGroupMembership',
       );
     const result = await patchAndPublish(previousWorkingGroup, {
       ...workingGroup,
@@ -133,84 +130,4 @@ export const parseWorkingGroupToDataObject = (
     resources,
     calendar,
   };
-};
-const addNextMember = async (
-  environment: Environment,
-  members: gp2Model.WorkingGroupUpdateDataObject['members'] | undefined,
-): Promise<string[]> => {
-  const nextMembers = members?.filter((member) => !member.id);
-  if (!nextMembers?.length) {
-    return [];
-  }
-  return Promise.all(
-    nextMembers.map(async (member) => {
-      const entry = await environment.createEntry('workingGroupMembership', {
-        fields: addLocaleToFields({
-          role: member.role,
-          user: getLinkEntity(member.userId),
-        }),
-      });
-      await entry.publish();
-      return entry.sys.id;
-    }),
-  );
-};
-const outUnchangedMembers =
-  (previousMembers: gp2Model.WorkingGroupMember[] | undefined) =>
-  (member: gp2Model.WorkingGroupMember) => {
-    const previousMember = previousMembers?.filter(
-      (previous) => previous.id === member.id,
-    );
-    return !(
-      previousMember?.[0]?.role === member.role ||
-      previousMember?.[0]?.userId === member.userId
-    );
-  };
-type MemberWithId = gp2Model.WorkingGroupMember & {
-  id: string;
-};
-const updateMembers = async (
-  members: gp2Model.WorkingGroupUpdateDataObject['members'] | undefined,
-  idsToDelete: string[],
-  previousMembers: gp2Model.WorkingGroupMember[] | undefined,
-  environment: Environment,
-): Promise<string[]> => {
-  const toUpdate = (members || []).filter(
-    (member): member is MemberWithId =>
-      !!member.id && !idsToDelete.includes(member.id),
-  );
-  await Promise.all(
-    toUpdate
-      .filter(outUnchangedMembers(previousMembers))
-      .map(async ({ id, role, userId }) => {
-        const updatable = await environment.getEntry(id);
-        return patchAndPublish(updatable, {
-          role,
-          user: getLinkEntity(userId),
-        });
-      }),
-  );
-  return toUpdate.map(({ id }) => id);
-};
-const getMemberFields = (nextMembers: string[]) => ({
-  members: getLinkEntities(nextMembers, false),
-});
-const processMembers = async (
-  environment: Environment,
-  members: gp2Model.WorkingGroupUpdateDataObject['members'] | undefined,
-  previousEntry: Entry,
-  previousMembers: gp2Model.WorkingGroupMember[] | undefined,
-) => {
-  const nextMembers = await addNextMember(environment, members);
-
-  const idsToDelete = getIdsToDelete(previousEntry, members, 'members');
-  const updatedIds = await updateMembers(
-    members,
-    idsToDelete,
-    previousMembers,
-    environment,
-  );
-
-  const memberFields = getMemberFields([...nextMembers, ...updatedIds]);
-  return { memberFields, idsToDelete };
 };

@@ -1,12 +1,18 @@
 import { ListResponse } from '../common';
-import { Calendar, Member, Milestone, Resource } from './common';
+import {
+  Calendar,
+  Member,
+  Milestone,
+  Resource,
+  UpdateMemberProperties,
+} from './common';
 
 export const workingGroupMemberRole = [
   'Lead',
   'Co-lead',
   'Working group member',
 ] as const;
-export type WorkingGroupMemberRole = typeof workingGroupMemberRole[number];
+export type WorkingGroupMemberRole = (typeof workingGroupMemberRole)[number];
 
 export type WorkingGroupMember = Member<WorkingGroupMemberRole>;
 
@@ -33,7 +39,7 @@ export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
 export type WorkingGroupUpdateDataObject = Partial<
   Pick<WorkingGroupDataObject, 'resources'>
 > & {
-  members?: Pick<WorkingGroupMember, 'id' | 'userId' | 'role'>[];
+  members?: Pick<WorkingGroupMember, UpdateMemberProperties>[];
 };
 
 export type WorkingGroupUpdateRequest = WorkingGroupUpdateDataObject;

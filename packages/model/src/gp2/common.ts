@@ -1,7 +1,7 @@
 import { keywords } from './keywords';
 
 export const resourceTypes = ['Link', 'Note'] as const;
-type ResourceTypes = typeof resourceTypes[number];
+type ResourceTypes = (typeof resourceTypes)[number];
 
 interface ResourceBase {
   id?: string;
@@ -21,7 +21,7 @@ export type Resource = ResourceNote | ResourceLink;
 export const isResourceLink = (resource: Resource): resource is ResourceLink =>
   resource.type === 'Link';
 
-export type Keyword = typeof keywords[number];
+export type Keyword = (typeof keywords)[number];
 
 export interface Calendar {
   id: string;
@@ -29,7 +29,7 @@ export interface Calendar {
 }
 
 export const milestoneStatus = ['Active', 'Not Started', 'Completed'] as const;
-export type MilestoneStatus = typeof milestoneStatus[number];
+export type MilestoneStatus = (typeof milestoneStatus)[number];
 
 export type Milestone = {
   description?: string;
@@ -46,3 +46,6 @@ export type Member<T> = {
   lastName: string;
   avatarUrl?: string;
 };
+
+export type UpdateMemberProperties = 'id' | 'userId' | 'role';
+export type UpdateMember<T> = Pick<Member<T>, UpdateMemberProperties>;

@@ -62,17 +62,6 @@ const addNextResources = async (
 const getResourceFields = (nextResources: string[]) => ({
   resources: getLinkEntities(nextResources, false),
 });
-export const deleteResources = async (
-  idsToDelete: string[],
-  environment: Environment,
-) =>
-  Promise.all(
-    idsToDelete.map(async (id) => {
-      const deletable = await environment.getEntry(id);
-      await deletable.unpublish();
-      return deletable.delete();
-    }),
-  );
 
 type ResourceWithId = gp2Model.Resource & {
   id: string;

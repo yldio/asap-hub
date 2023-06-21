@@ -6,7 +6,7 @@ export const workingGroupMemberRole = [
   'Co-lead',
   'Working group member',
 ] as const;
-export type WorkingGroupMemberRole = (typeof workingGroupMemberRole)[number];
+export type WorkingGroupMemberRole = typeof workingGroupMemberRole[number];
 
 export type WorkingGroupMember = Member<WorkingGroupMemberRole>;
 
@@ -33,7 +33,7 @@ export type ListWorkingGroupResponse = ListResponse<WorkingGroupResponse>;
 export type WorkingGroupUpdateDataObject = Partial<
   Pick<WorkingGroupDataObject, 'resources'>
 > & {
-  members?: Pick<WorkingGroupMember, 'userId' | 'role'>[];
+  members?: Pick<WorkingGroupMember, 'id' | 'userId' | 'role'>[];
 };
 
 export type WorkingGroupUpdateRequest = WorkingGroupUpdateDataObject;

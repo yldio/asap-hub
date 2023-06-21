@@ -861,6 +861,319 @@ describe('Working Group Data Provider', () => {
         },
       );
     });
+    describe('members', () => {
+      test('It should create the member and associate it to the working group', async () => {
+        const workingGroupId = '11';
+        const memberId = '23';
+        const createdMemberMock = getEntry({}, memberId);
+        const userId = '42';
+        const role = 'Lead';
+        const existingworkingGroupMock = getEntry({
+          fields: { members: [] },
+        });
+        environmentMock.getEntry.mockResolvedValueOnce(
+          existingworkingGroupMock,
+        );
+        environmentMock.createEntry.mockResolvedValueOnce(createdMemberMock);
+        createdMemberMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdMemberMock);
+        await workingGroupDataProvider.update(workingGroupId, {
+          members: [{ userId, role }],
+        });
+        expect(environmentMock.createEntry).toHaveBeenCalledWith(
+          'workingGroupMembership',
+          {
+            fields: {
+              role: { 'en-US': role },
+              user: {
+                'en-US': {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: userId,
+                  },
+                },
+              },
+            },
+          },
+        );
+
+        expect(createdMemberMock.publish).toHaveBeenCalled();
+        expect(patchAndPublish).toHaveBeenCalledWith(existingworkingGroupMock, {
+          members: [{ sys: { id: memberId, linkType: 'Entry', type: 'Link' } }],
+        });
+      });
+      test('It should delete the member and unassociate it to the working group if no members passed', async () => {
+        const workingGroupId = '42';
+        const existingMemberId = '11';
+        const existingworkingGroupMock = getEntry(
+          {
+            fields: {
+              members: {
+                'en-US': [
+                  {
+                    sys: { id: existingMemberId },
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                ],
+              },
+            },
+          },
+          workingGroupId,
+        );
+        const existingMemberMock = getEntry({}, existingMemberId);
+        const unpublishSpy = jest.fn();
+        const deleteSpy = jest.fn();
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingworkingGroupMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        existingMemberMock.unpublish = unpublishSpy;
+        existingMemberMock.delete = deleteSpy;
+        await workingGroupDataProvider.update(workingGroupId, {
+          members: [],
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(existingworkingGroupMock, {
+          members: [],
+        });
+        expect(unpublishSpy).toBeCalled();
+        expect(deleteSpy).toBeCalled();
+        expect(environmentMock.createEntry).not.toBeCalled();
+      });
+      test('It should update the member', async () => {
+        const userId = '42';
+        const role = 'Lead';
+        const workingGroupId = '42';
+        const existingMemberId = '11';
+        const existingworkingGroupMock = getEntry(
+          {
+            fields: {
+              members: {
+                'en-US': [
+                  {
+                    sys: { id: existingMemberId },
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                ],
+              },
+            },
+          },
+          workingGroupId,
+        );
+        const existingMemberMock = getEntry({}, existingMemberId);
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingworkingGroupMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        await workingGroupDataProvider.update(workingGroupId, {
+          members: [{ id: existingMemberId, userId, role }],
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(1, existingMemberMock, {
+          role,
+          user: {
+            sys: {
+              id: userId,
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(
+          2,
+          existingworkingGroupMock,
+          {
+            members: [
+              {
+                sys: {
+                  id: existingMemberId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        );
+        expect(environmentMock.createEntry).not.toBeCalled();
+      });
+      test.each([
+        {
+          role: 'new role',
+        },
+        {
+          userId: 'new user',
+        },
+      ])('It should update the member if has changed', async (override) => {
+        const role = 'Lead';
+        const workingGroupId = '42';
+        const existingMemberId = '11';
+        const userId = '23';
+        const workingGroup = getContentfulGraphqlWorkingGroup();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          workingGroups: {
+            ...workingGroup,
+            membersCollection: {
+              total: 1,
+              items: [
+                {
+                  user: { sys: { id: userId } },
+                  role,
+                },
+              ],
+            },
+          },
+        });
+        const existingworkingGroupMock = getEntry(
+          {
+            fields: {
+              members: {
+                'en-US': [
+                  {
+                    sys: { id: existingMemberId },
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                ],
+              },
+            },
+          },
+          workingGroupId,
+        );
+        const existingMemberMock = getEntry(
+          {
+            fields: {
+              role,
+              user: {
+                sys: {
+                  id: userId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            },
+          },
+          existingMemberId,
+        );
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingworkingGroupMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        await workingGroupDataProvider.update(workingGroupId, {
+          members: [
+            {
+              id: existingMemberId,
+              userId,
+              role,
+              ...(override as Partial<gp2Model.WorkingGroupMember>),
+            },
+          ],
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(1, existingMemberMock, {
+          user: {
+            sys: {
+              id: override.userId ?? userId,
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+          role: override.role ?? role,
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(
+          2,
+          existingworkingGroupMock,
+          {
+            members: [
+              {
+                sys: {
+                  id: existingMemberId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        );
+        expect(environmentMock.createEntry).not.toBeCalled();
+      });
+      test('It should not update the resource if it is the same', async () => {
+        const role = 'Lead';
+        const workingGroupId = '42';
+        const existingMemberId = '11';
+        const userId = '23';
+        const workingGroup = getContentfulGraphqlWorkingGroup();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          workingGroups: {
+            ...workingGroup,
+            membersCollection: {
+              total: 1,
+              items: [
+                {
+                  sys: { id: existingMemberId },
+                  role,
+                  user: {
+                    sys: { id: userId },
+                    onboarded: true,
+                  },
+                },
+              ],
+            },
+          },
+        });
+        const existingworkingGroupMock = getEntry(
+          {
+            fields: {
+              members: {
+                'en-US': [
+                  {
+                    sys: { id: existingMemberId },
+                    linkType: 'Entry',
+                    type: 'Link',
+                  },
+                ],
+              },
+            },
+          },
+          workingGroupId,
+        );
+        const existingMemberMock = getEntry(
+          {
+            fields: {
+              role,
+              sys: { id: userId },
+            },
+          },
+          existingMemberId,
+        );
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingworkingGroupMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        const memberToUpdate: NonNullable<
+          gp2Model.WorkingGroupUpdateDataObject['members']
+        >[number] = {
+          id: existingMemberId,
+          userId,
+          role,
+        };
+        await workingGroupDataProvider.update(workingGroupId, {
+          members: [memberToUpdate],
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(
+          1,
+          existingworkingGroupMock,
+          {
+            members: [
+              {
+                sys: {
+                  id: existingMemberId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        );
+        expect(environmentMock.createEntry).not.toBeCalled();
+      });
+    });
     test('checks version of published data and polls until they match', async () => {
       const existingWorkingGroupMock = getEntry({
         fields: { resources: [] },

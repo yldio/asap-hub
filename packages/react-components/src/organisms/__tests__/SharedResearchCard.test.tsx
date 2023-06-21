@@ -141,3 +141,19 @@ it('displays draft tag when research output not published', () => {
   );
   expect(queryByText('Draft')).toBeNull();
 });
+
+it('displays in review tag when research output not published and someone requested a review', () => {
+  const { getByText, queryByText, rerender } = render(
+    <SharedResearchCard
+      {...sharedResearchCardProps}
+      published={false}
+      reviewRequestedBy={{ id: 'user', firstName: 'John', lastName: 'Doe' }}
+    />,
+  );
+  expect(getByText('In Review')).toBeVisible();
+
+  rerender(
+    <SharedResearchCard {...sharedResearchCardProps} published={true} />,
+  );
+  expect(queryByText('In Review')).toBeNull();
+});

@@ -2,7 +2,7 @@ import { DecisionOption, ListResponse } from './common';
 import { ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 import { TeamResponse } from './team';
-import { UserResponse } from './user';
+import { UserDataObject, UserResponse } from './user';
 import { WorkingGroupResponse } from './working-group';
 
 export const researchOutputDocumentTypes = [
@@ -226,6 +226,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
       'id' | 'title' | 'type' | 'documentType' | 'teams'
     > & { isOwnRelatedResearchLink?: boolean }
   >;
+  reviewRequestedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
 };
 
 export type ResearchOutputDraftDataObject = Omit<
@@ -279,6 +280,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   updatedBy: string;
   workingGroups: string[];
   relatedResearchIds?: string[];
+  reviewRequestedById?: string;
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -336,7 +338,9 @@ export type ResearchOutputPostRequest = {
 
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 
-export type ResearchOutputPutRequest = ResearchOutputPostRequest;
+export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
+  reviewRequestedById?: string;
+};
 
 type NonEmptyArray<T> = [T, ...T[]];
 

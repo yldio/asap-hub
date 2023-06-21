@@ -25,8 +25,8 @@ import { Route, StaticRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import {
   createResearchOutput,
-  updateTeamResearchOutput,
   getTeam,
+  updateTeamResearchOutput,
 } from '../api';
 import { refreshTeamState } from '../state';
 import TeamOutput from '../TeamOutput';
@@ -344,7 +344,6 @@ it('can edit a draft research output', async () => {
   await renderPage({
     teamId: '42',
     teamOutputDocumentType: 'article',
-    researchOutputData: { ...researchOutput, doi, published: false },
   });
 
   const { saveDraft } = await mandatoryFields(
@@ -382,7 +381,16 @@ it('can edit and publish a draft research output', async () => {
   await renderPage({
     teamId: '42',
     teamOutputDocumentType: 'article',
-    researchOutputData: { ...researchOutput, doi, published: false },
+    researchOutputData: {
+      ...researchOutput,
+      doi,
+      published: false,
+      reviewRequestedBy: {
+        firstName: 'John',
+        lastName: 'Doe',
+        id: 'user-2-id',
+      },
+    },
   });
 
   const initiallyPublished = false;
@@ -406,6 +414,7 @@ it('can edit and publish a draft research output', async () => {
       title,
       published: true,
       teams: [teamId],
+      reviewRequestedById: 'user-2-id',
     }),
     expect.anything(),
   );

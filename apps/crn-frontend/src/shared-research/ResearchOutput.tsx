@@ -1,13 +1,21 @@
-import { NotFoundPage, SharedResearchOutput } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  SharedResearchOutput,
+  utils,
+} from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { useRouteMatch, Route, Switch, useLocation } from 'react-router-dom';
+import {
+  ResearchOutputPermissionsContext,
+  useCurrentUserCRN,
+} from '@asap-hub/react-context';
+import { Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
 
 import { useResearchOutputById, useResearchOutputPermissions } from './state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
+import { usePutResearchOutput } from '../shared-research';
 
 const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
@@ -42,6 +50,10 @@ const ResearchOutput: React.FC = () => {
     researchOutputData?.published,
   );
 
+  const updateResearchOutput = usePutResearchOutput();
+
+  const currentUser = useCurrentUserCRN();
+
   if (researchOutputData) {
     return (
       <ResearchOutputPermissionsContext.Provider value={permissions}>
@@ -51,7 +63,18 @@ const ResearchOutput: React.FC = () => {
               <SharedResearchOutput
                 {...researchOutputData}
                 backHref={backHref}
+                onRequestReview={(shouldReview) =>
+                  updateResearchOutput(researchOutputData.id, {
+                    ...utils.transformResearchOutputResponseToRequest(
+                      researchOutputData,
+                    ),
+                    reviewRequestedById: shouldReview
+                      ? currentUser?.id
+                      : undefined,
+                  })
+                }
                 publishedNow={publishedNow}
+                currentUserId={currentUser?.id}
                 draftCreated={urlSearchParams.get('draftCreated') === 'true'}
               />
             </Frame>

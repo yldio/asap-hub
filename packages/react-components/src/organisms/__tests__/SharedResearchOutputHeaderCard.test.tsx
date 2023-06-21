@@ -86,6 +86,17 @@ it('shows draft state tag', () => {
   expect(getByText(/Draft/i)).toBeVisible();
 });
 
+it('shows in review state tag', () => {
+  const { getByText } = render(
+    <SharedResearchOutputHeaderCard
+      {...createResearchOutputResponse()}
+      published={false}
+      reviewRequestedBy={{ id: 'user', firstName: 'John', lastName: 'Doe' }}
+    />,
+  );
+  expect(getByText(/In Review/i)).toBeVisible();
+});
+
 it('renders an output with document type and type', () => {
   const { getAllByRole, rerender } = render(
     <SharedResearchOutputHeaderCard

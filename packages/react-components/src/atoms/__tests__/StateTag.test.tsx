@@ -40,3 +40,15 @@ it('applies green variant colors (mint/fern)', () => {
   expect(backgroundColor).toMatchInlineSnapshot(`"rgb(228, 245, 238)"`);
   expect(color).toMatchInlineSnapshot(`"rgb(52, 162, 112)"`);
 });
+
+it('applies blue variant colors (info100/info900)', () => {
+  const { container } = render(<StateTag label="Text" accent="blue" />);
+
+  expect(container.firstElementChild).toBeDefined();
+  const { backgroundColor, color } = getComputedStyle(
+    container.firstElementChild as Element,
+  );
+
+  expect(backgroundColor).toMatchInlineSnapshot(`"rgb(230, 243, 249)"`);
+  expect(color).toMatchInlineSnapshot(`"rgb(12, 141, 195)"`);
+});

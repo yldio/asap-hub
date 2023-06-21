@@ -136,6 +136,13 @@ export const parseGraphQLResearchOutput = (
         title: group.flatData.title || '',
       })) || [],
     published: output.status === EnrichedContentEventType.Published,
+    reviewRequestedBy: data.reviewRequestedBy?.[0]
+      ? {
+          id: data.reviewRequestedBy[0].id,
+          firstName: data.reviewRequestedBy[0].flatData?.firstName || '',
+          lastName: data.reviewRequestedBy[0].flatData?.lastName || '',
+        }
+      : undefined,
   };
 };
 

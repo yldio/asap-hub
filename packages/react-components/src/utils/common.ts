@@ -98,3 +98,13 @@ export const getResearchOutputAssociation = (
   researchOutputData.workingGroups
     ? 'working group'
     : `team${researchOutputData.teams.length > 1 ? 's' : ''}`;
+
+export const getResearchOutputAssociationName = (
+  researchOutputData: Pick<ResearchOutputResponse, 'workingGroups' | 'teams'>,
+): string => {
+  if (researchOutputData.workingGroups) {
+    return researchOutputData.workingGroups[0].title;
+  }
+
+  return researchOutputData.teams[0]?.displayName || '';
+};

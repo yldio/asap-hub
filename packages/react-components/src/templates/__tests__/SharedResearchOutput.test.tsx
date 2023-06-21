@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
@@ -18,7 +18,9 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   backHref: '#',
   publishedNow: false,
   draftCreated: false,
+  onRequestReview: jest.fn(() => Promise.resolve()),
 };
+
 describe('Grant Documents', () => {
   it('renders an output with title and content', () => {
     const { getByText } = render(
@@ -564,6 +566,31 @@ describe('the ready for pm review button', () => {
     );
     expect(queryByText('Ready for PM Review.')).not.toBeInTheDocument();
   });
+  it('does not render if someone requested a review', () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: false,
+          canPublishResearchOutput: false,
+          canShareResearchOutput: false,
+          canRequestReview: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          published={false}
+          reviewRequestedBy={{
+            id: 'user-1',
+            firstName: 'User',
+            lastName: 'One',
+          }}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByText('Ready for PM Review.')).not.toBeInTheDocument();
+  });
   it('does not render if the research output was published', () => {
     const { queryByText } = render(
       <ResearchOutputPermissionsContext.Provider
@@ -606,7 +633,7 @@ describe('the ready for pm review button', () => {
     const button = getByText('Ready for PM Review');
     expect(button).toBeVisible();
   });
-  describe('displays the modal', () => {
+  describe('displays the request review modal', () => {
     it('and renders with the correct text fields for a team research output', () => {
       const { getByText, getAllByText } = render(
         <MemoryRouter>
@@ -675,43 +702,326 @@ describe('the ready for pm review button', () => {
         ),
       ).toBeVisible();
     });
-    it('and has the correct actions on the close and save buttons', () => {
-      const { getByText, getAllByText, queryByText } = render(
+    describe('and has the correct actions on the  buttons', () => {
+      it('closes the modal correctly', () => {
+        const { getByText, queryByText } = render(
+          <MemoryRouter>
+            <ResearchOutputPermissionsContext.Provider
+              value={{
+                canEditResearchOutput: false,
+                canPublishResearchOutput: false,
+                canShareResearchOutput: true,
+                canRequestReview: true,
+              }}
+            >
+              <SharedResearchOutput
+                {...props}
+                documentType="Article"
+                published={false}
+              />
+              ,
+            </ResearchOutputPermissionsContext.Provider>
+            ,
+          </MemoryRouter>,
+        );
+        const showModalButton = getByText('Ready for PM Review');
+        fireEvent.click(showModalButton);
+        expect(queryByText('Output ready for PM review?')).toBeInTheDocument();
+        const closeButton = getByText('Cancel');
+        fireEvent.click(closeButton);
+        expect(
+          queryByText('Output ready for PM review?'),
+        ).not.toBeInTheDocument();
+      });
+      it('and requests a review from a PM on the right button', async () => {
+        const requestReviewFn = jest.fn();
+        const { getByText, getAllByText } = render(
+          <MemoryRouter>
+            <ResearchOutputPermissionsContext.Provider
+              value={{
+                canEditResearchOutput: false,
+                canPublishResearchOutput: false,
+                canShareResearchOutput: true,
+                canRequestReview: true,
+              }}
+            >
+              <SharedResearchOutput
+                {...props}
+                documentType="Article"
+                published={false}
+                currentUserId="user1"
+                onRequestReview={requestReviewFn}
+              />
+              ,
+            </ResearchOutputPermissionsContext.Provider>
+            ,
+          </MemoryRouter>,
+        );
+        const showModalButton = getByText('Ready for PM Review');
+        fireEvent.click(showModalButton);
+        const saveButton = getAllByText('Ready for PM Review')[1];
+
+        fireEvent.click(saveButton as HTMLElement);
+        await waitFor(() => {
+          expect(saveButton).toBeEnabled();
+        });
+        expect(requestReviewFn).toHaveBeenCalled();
+      });
+    });
+  });
+});
+
+describe('the switch to draft button', () => {
+  it('does not render if the user does not staff level permissions', () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: true,
+          canPublishResearchOutput: false,
+          canShareResearchOutput: true,
+          canRequestReview: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          published={false}
+          reviewRequestedBy={{
+            id: 'user-1',
+            firstName: 'User',
+            lastName: 'One',
+          }}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByText('Switch to draft')).not.toBeInTheDocument();
+  });
+  it('does not render if the research output was published', () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: true,
+          canPublishResearchOutput: true,
+          canShareResearchOutput: true,
+          canRequestReview: false,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          published={true}
+          reviewRequestedBy={{
+            id: 'user-1',
+            firstName: 'User',
+            lastName: 'One',
+          }}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByText('Switch to draft')).not.toBeInTheDocument();
+  });
+  it('does not render if no one requested a review', () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: true,
+          canPublishResearchOutput: true,
+          canShareResearchOutput: true,
+          canRequestReview: false,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          published={false}
+          reviewRequestedBy={undefined}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByText('Switch to draft')).not.toBeInTheDocument();
+  });
+  it('renders if someone requested a review and user is staff', () => {
+    const { getByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: false,
+          canPublishResearchOutput: true,
+          canShareResearchOutput: false,
+          canRequestReview: false,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          published={false}
+          reviewRequestedBy={{
+            id: 'user-1',
+            firstName: 'User',
+            lastName: 'One',
+          }}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = getByText('Switch to Draft');
+    expect(button).toBeVisible();
+  });
+  describe('displays the switch to draft modal', () => {
+    it('and renders with the correct text fields for a team research output', () => {
+      const { getByText, getAllByText } = render(
         <MemoryRouter>
           <ResearchOutputPermissionsContext.Provider
             value={{
               canEditResearchOutput: false,
-              canPublishResearchOutput: false,
-              canShareResearchOutput: true,
-              canRequestReview: true,
+              canPublishResearchOutput: true,
+              canShareResearchOutput: false,
+              canRequestReview: false,
             }}
           >
             <SharedResearchOutput
               {...props}
               documentType="Article"
               published={false}
+              workingGroups={undefined}
+              reviewRequestedBy={{
+                id: 'user-1',
+                firstName: 'User',
+                lastName: 'One',
+              }}
             />
             ,
           </ResearchOutputPermissionsContext.Provider>
           ,
         </MemoryRouter>,
       );
-      const showModalButton = getByText('Ready for PM Review');
-      fireEvent.click(showModalButton);
-      expect(queryByText('Output ready for PM review?')).toBeInTheDocument();
-      const closeButton = getByText('Cancel');
-      fireEvent.click(closeButton);
+      const button = getByText('Switch to Draft');
+      fireEvent.click(button);
+      expect(getByText('Switch output to draft?')).toBeVisible();
       expect(
-        queryByText('Output ready for PM review?'),
-      ).not.toBeInTheDocument();
-      fireEvent.click(showModalButton);
-      const saveButton = getAllByText('Ready for PM Review')[1];
-      fireEvent.click(saveButton as HTMLElement);
-      expect(
-        queryByText(
-          'All team members listed on this output will be notified and PMs will be able to review and publish this output.',
+        getByText(
+          /All team members listed on this output will be notified and will be able to edit this output again./i,
         ),
-      ).not.toBeInTheDocument();
+      ).toBeVisible();
+      expect(getByText('Cancel')).toBeVisible();
+      expect(getAllByText('Switch to Draft').length).toEqual(2);
+    });
+    it('and renders with the correct text fields for a working group research output', () => {
+      const { getByText } = render(
+        <MemoryRouter>
+          <ResearchOutputPermissionsContext.Provider
+            value={{
+              canEditResearchOutput: false,
+              canPublishResearchOutput: true,
+              canShareResearchOutput: false,
+              canRequestReview: false,
+            }}
+          >
+            <SharedResearchOutput
+              {...props}
+              documentType="Article"
+              published={false}
+              workingGroups={[
+                {
+                  id: 'wg1',
+                  title: 'wg 1',
+                },
+              ]}
+              reviewRequestedBy={{
+                id: 'user-1',
+                firstName: 'User',
+                lastName: 'One',
+              }}
+            />
+            ,
+          </ResearchOutputPermissionsContext.Provider>
+          ,
+        </MemoryRouter>,
+      );
+      const button = getByText('Switch to Draft');
+      fireEvent.click(button);
+      expect(
+        getByText(
+          /All working group members listed on this output will be notified and will be able to edit this output again./i,
+        ),
+      ).toBeVisible();
+    });
+    describe('and has the correct actions on the buttons', () => {
+      it('closes the modal correctly', () => {
+        const { getByText, queryByText } = render(
+          <MemoryRouter>
+            <ResearchOutputPermissionsContext.Provider
+              value={{
+                canEditResearchOutput: false,
+                canPublishResearchOutput: true,
+                canShareResearchOutput: false,
+                canRequestReview: false,
+              }}
+            >
+              <SharedResearchOutput
+                {...props}
+                documentType="Article"
+                published={false}
+                reviewRequestedBy={{
+                  id: 'user-1',
+                  firstName: 'User',
+                  lastName: 'One',
+                }}
+              />
+              ,
+            </ResearchOutputPermissionsContext.Provider>
+            ,
+          </MemoryRouter>,
+        );
+        const showModalButton = getByText('Switch to Draft');
+        fireEvent.click(showModalButton);
+        expect(getByText('Switch output to draft?')).toBeVisible();
+        const closeButton = getByText('Cancel');
+        fireEvent.click(closeButton);
+        expect(queryByText('Switch output to draft?')).not.toBeInTheDocument();
+      });
+      it('and switches back into draft', async () => {
+        const switchToDraft = jest.fn();
+        const { getByText, getAllByText } = render(
+          <MemoryRouter>
+            <ResearchOutputPermissionsContext.Provider
+              value={{
+                canEditResearchOutput: false,
+                canPublishResearchOutput: true,
+                canShareResearchOutput: false,
+                canRequestReview: false,
+              }}
+            >
+              <SharedResearchOutput
+                {...props}
+                documentType="Article"
+                published={false}
+                currentUserId="user1"
+                onRequestReview={switchToDraft}
+                reviewRequestedBy={{
+                  id: 'user-1',
+                  firstName: 'User',
+                  lastName: 'One',
+                }}
+              />
+              ,
+            </ResearchOutputPermissionsContext.Provider>
+            ,
+          </MemoryRouter>,
+        );
+        const showModalButton = getByText('Switch to Draft');
+        fireEvent.click(showModalButton);
+        const saveButton = getAllByText('Switch to Draft')[1];
+
+        fireEvent.click(saveButton as HTMLElement);
+        await waitFor(() => {
+          expect(saveButton).toBeEnabled();
+        });
+        expect(switchToDraft).toHaveBeenCalled();
+      });
     });
   });
 });

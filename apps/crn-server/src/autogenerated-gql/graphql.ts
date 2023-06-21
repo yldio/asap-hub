@@ -4389,6 +4389,7 @@ export type ResearchOutputsDataDto = {
   organisms: Maybe<ResearchOutputsDataOrganismsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
   relatedResearch: Maybe<ResearchOutputsDataRelatedResearchDto>;
+  reviewRequestedBy: Maybe<ResearchOutputsDataReviewRequestedByDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
@@ -4434,6 +4435,7 @@ export type ResearchOutputsDataInputDto = {
   organisms: InputMaybe<ResearchOutputsDataOrganismsInputDto>;
   publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
   relatedResearch: InputMaybe<ResearchOutputsDataRelatedResearchInputDto>;
+  reviewRequestedBy: InputMaybe<ResearchOutputsDataReviewRequestedByInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
@@ -4540,6 +4542,16 @@ export type ResearchOutputsDataRelatedResearchDto = {
 
 /** The structure of the Related Research field of the Research Outputs content input type. */
 export type ResearchOutputsDataRelatedResearchInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Review requested by field of the Research Outputs content type. */
+export type ResearchOutputsDataReviewRequestedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Review requested by field of the Research Outputs content input type. */
+export type ResearchOutputsDataReviewRequestedByInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -4690,6 +4702,7 @@ export type ResearchOutputsFlatDataDto = {
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
   relatedResearch: Maybe<Array<ResearchOutputs>>;
+  reviewRequestedBy: Maybe<Array<Users>>;
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
@@ -8695,6 +8708,13 @@ export type ResearchOutputContentFragment = Pick<
     >;
     subtype: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
     keywords: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
+    reviewRequestedBy: Maybe<
+      Array<
+        Pick<Users, 'id'> & {
+          flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+        }
+      >
+    >;
   };
   referencingResearchOutputsContents: Maybe<
     Array<
@@ -8913,6 +8933,13 @@ export type FetchResearchOutputQuery = {
         >;
         keywords: Maybe<
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+        >;
+        reviewRequestedBy: Maybe<
+          Array<
+            Pick<Users, 'id'> & {
+              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+            }
+          >
         >;
       };
       referencingResearchOutputsContents: Maybe<
@@ -9147,6 +9174,13 @@ export type FetchResearchOutputsQuery = {
               >;
               keywords: Maybe<
                 Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
+              >;
+              reviewRequestedBy: Maybe<
+                Array<
+                  Pick<Users, 'id'> & {
+                    flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+                  }
+                >
               >;
             };
             referencingResearchOutputsContents: Maybe<
@@ -12552,6 +12586,33 @@ export const ResearchOutputContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'reviewRequestedBy' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
                             },
                           ],
                         },

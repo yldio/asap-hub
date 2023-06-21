@@ -1,12 +1,12 @@
 import {
   AuthorUpsertDataObject,
   convertBooleanToDecision,
+  DataProvider,
   FetchOptions,
   ListResearchOutputDataObject,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
   ResearchOutputUpdateDataObject,
-  DataProvider,
 } from '@asap-hub/model';
 import {
   InputResearchOutput,
@@ -264,6 +264,7 @@ export class ResearchOutputSquidexDataProvider
     const {
       authors,
       teamIds: _teamIds,
+      reviewRequestedById,
       labIds,
       relatedResearchIds,
       methodIds,
@@ -289,6 +290,7 @@ export class ResearchOutputSquidexDataProvider
       subtype: (subtypeId && [subtypeId]) || [],
       keywords: keywordIds,
       updatedBy: [researchOutputData.updatedBy],
+      reviewRequestedBy: reviewRequestedById ? [reviewRequestedById] : [],
     });
 
     await this.researchOutputSquidexRestClient.patch(researchOutputId, {

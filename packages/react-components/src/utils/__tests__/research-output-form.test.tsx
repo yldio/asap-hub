@@ -2,14 +2,17 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
   researchOutputDocumentTypes,
   ResearchOutputIdentifierType,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
   getDecision,
   getIdentifierType,
-  getPublishDate,
-  getPayload,
-  ResearchOutputPayload,
   getOwnRelatedResearchLinks,
+  getPayload,
+  getPostAuthors,
+  getPublishDate,
+  ResearchOutputPayload,
+  transformResearchOutputResponseToRequest,
 } from '../research-output-form';
 
 describe('getPublishDate', () => {
@@ -159,5 +162,71 @@ describe('getOwnRelatedResearchLinks', () => {
         documentType: 'Grant Document',
       },
     ]);
+  });
+});
+
+describe('transformResearchOutputResponseToRequest', () => {
+  it('transforms a research output response to a research output put request', () => {
+    const researchOutputResponse: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      usageNotes: 'usage notes',
+      link: 'https://www.google.com',
+      asapFunded: true,
+      id: 'tavi',
+      usedInPublication: true,
+      publishDate: new Date('2020-01-01').toISOString(),
+      labCatalogNumber: '123',
+      labs: [{ id: 'l99', name: 'l99' }],
+      reviewRequestedBy: { id: 'u99', firstName: 'u99', lastName: 'uu99' },
+      relatedResearch: [
+        {
+          id: 'r99',
+          title: 'r99',
+          type: '3D Printing',
+          documentType: 'Grant Document',
+          teams: [],
+        },
+      ],
+    };
+    expect(
+      transformResearchOutputResponseToRequest(researchOutputResponse),
+    ).toEqual({
+      documentType: researchOutputResponse.documentType,
+      link: researchOutputResponse.link,
+      description: researchOutputResponse.description,
+      title: researchOutputResponse.title,
+      type: researchOutputResponse.type,
+      usageNotes: researchOutputResponse.usageNotes,
+      asapFunded: researchOutputResponse.asapFunded,
+      usedInPublication: researchOutputResponse.usedInPublication,
+      sharingStatus: researchOutputResponse.sharingStatus,
+      publishDate: researchOutputResponse.publishDate,
+      labCatalogNumber: researchOutputResponse.labCatalogNumber,
+      methods: researchOutputResponse.methods,
+      organisms: researchOutputResponse.organisms,
+      environments: researchOutputResponse.environments,
+      subtype: researchOutputResponse.subtype,
+      keywords: researchOutputResponse.keywords,
+      published: researchOutputResponse.published,
+      authors: getPostAuthors(
+        researchOutputResponse.authors.map((author) => ({
+          author,
+          value: author.id,
+          label: author.displayName,
+        })),
+      ),
+      descriptionMD: researchOutputResponse.descriptionMD || '',
+      labs: researchOutputResponse.labs.map(({ id }) => id),
+      teams: researchOutputResponse.teams.map((team) => team.id),
+      workingGroups: researchOutputResponse.workingGroups
+        ? researchOutputResponse.workingGroups.map((wg) => wg.id)
+        : [],
+      relatedResearch: researchOutputResponse.relatedResearch.map(
+        (research) => research.id,
+      ),
+      reviewRequestedById: researchOutputResponse.reviewRequestedBy
+        ? researchOutputResponse.reviewRequestedBy.id
+        : undefined,
+    });
   });
 });

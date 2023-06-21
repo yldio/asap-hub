@@ -92,4 +92,27 @@ describe('parseGraphQLResearchOutput', () => {
     output.flatData.keywords = null;
     expect(parseGraphQLResearchOutput(output).keywords).toStrictEqual([]);
   });
+
+  test('should not return reviewRequestedBy', () => {
+    expect(
+      parseGraphQLResearchOutput(output).reviewRequestedBy,
+    ).toBeUndefined();
+  });
+
+  test('should return reviewRequestedBy', () => {
+    output.flatData.reviewRequestedBy = [
+      {
+        id: 'review-requested-by-id',
+        flatData: {
+          firstName: 'First',
+          lastName: 'Last',
+        },
+      },
+    ];
+    expect(parseGraphQLResearchOutput(output).reviewRequestedBy).toStrictEqual({
+      id: 'review-requested-by-id',
+      firstName: 'First',
+      lastName: 'Last',
+    });
+  });
 });

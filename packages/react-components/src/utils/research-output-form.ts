@@ -1,12 +1,13 @@
 import {
-  ResearchOutputResponse,
-  ResearchOutputIdentifierType,
-  DecisionOption,
-  TeamResponse,
-  ResearchOutputPostRequest,
   convertDecisionToBoolean,
-  ResearchOutputDocumentType,
+  DecisionOption,
   ResearchOutputDataObject,
+  ResearchOutputDocumentType,
+  ResearchOutputIdentifierType,
+  ResearchOutputPostRequest,
+  ResearchOutputPutRequest,
+  ResearchOutputResponse,
+  TeamResponse,
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { ComponentProps, ComponentPropsWithRef } from 'react';
@@ -67,15 +68,6 @@ export const getIdentifierType = (
     ? ResearchOutputIdentifierType.None
     : ResearchOutputIdentifierType.Empty;
 };
-
-export const isIdentifierModified = (
-  researchOutputData: ResearchOutputResponse,
-  identifier?: string,
-): boolean =>
-  researchOutputData.doi !== identifier &&
-  researchOutputData.accession !== identifier &&
-  researchOutputData.rrid !== identifier &&
-  identifier !== '';
 
 export const getPostAuthors = (
   authors: ComponentPropsWithRef<typeof AuthorSelect>['values'],
@@ -196,3 +188,63 @@ export const getPayload = ({
   keywords,
   published,
 });
+
+export function transformResearchOutputResponseToRequest({
+  authors,
+  teams,
+  labs,
+  relatedResearch,
+  documentType,
+  link,
+  description,
+  descriptionMD,
+  title,
+  type,
+  usageNotes,
+  asapFunded,
+  usedInPublication,
+  sharingStatus,
+  publishDate,
+  workingGroups,
+  labCatalogNumber,
+  methods,
+  organisms,
+  environments,
+  subtype,
+  keywords,
+  published,
+  reviewRequestedBy,
+}: ResearchOutputResponse): ResearchOutputPutRequest {
+  return {
+    documentType,
+    link,
+    description,
+    title,
+    type,
+    usageNotes,
+    asapFunded,
+    usedInPublication,
+    sharingStatus,
+    publishDate,
+    labCatalogNumber,
+    methods,
+    organisms,
+    environments,
+    subtype,
+    keywords,
+    published,
+    authors: getPostAuthors(
+      authors.map((author) => ({
+        author,
+        value: author.id,
+        label: author.displayName,
+      })),
+    ),
+    descriptionMD: descriptionMD || '',
+    labs: labs.map(({ id }) => id),
+    teams: teams.map((team) => team.id),
+    workingGroups: workingGroups ? workingGroups.map((wg) => wg.id) : [],
+    relatedResearch: relatedResearch.map((research) => research.id),
+    reviewRequestedById: reviewRequestedBy ? reviewRequestedBy.id : undefined,
+  };
+}

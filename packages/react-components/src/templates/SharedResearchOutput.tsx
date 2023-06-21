@@ -1,11 +1,10 @@
-import React, { ComponentProps, useContext, useState } from 'react';
+import React, { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { network } from '@asap-hub/routing';
 
-import { Card, Headline2, Divider, Link, Markdown, Button } from '../atoms';
-import { mobileScreen, perRem, rem } from '../pixels';
+import { Card, Headline2, Divider, Markdown } from '../atoms';
+import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { CtaCard, TagList } from '../molecules';
 import {
@@ -13,60 +12,18 @@ import {
   RelatedResearch,
   RichText,
   SharedResearchAdditionalInformationCard,
+  SharedResearchOutputBanners,
+  SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
-  Toast,
 } from '../organisms';
 import { createMailTo } from '../mail';
-import { editIcon, steel } from '..';
-import { getResearchOutputAssociation } from '../utils';
-import { actionIcon, duplicateIcon } from '../icons';
+import {
+  getResearchOutputAssociation,
+  getResearchOutputAssociationName,
+} from '../utils';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
-});
-
-const commonStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-start',
-  width: '100%',
-};
-
-const commonMediaQueries = {
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    ...commonStyles,
-    width: 'auto',
-  },
-};
-
-const buttonsContainer = css({
-  ...commonStyles,
-  flexFlow: 'column',
-  gap: rem(16),
-  paddingBottom: rem(32),
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
-    flexFlow: 'row',
-    width: '100%',
-  },
-});
-
-const leftButtons = css({
-  ...commonStyles,
-  ...commonMediaQueries,
-});
-
-const reviewButton = css({
-  ...commonStyles,
-  strokeWidth: 0,
-  ...{
-    ...commonMediaQueries,
-    marginLeft: 'auto',
-  },
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    marginTop: rem(12),
-    paddingTop: rem(28),
-    borderTop: `1px solid ${steel.rgb}`,
-  },
 });
 
 const cardsStyles = css({
@@ -88,12 +45,17 @@ type SharedResearchOutputProps = Pick<
   | 'id'
   | 'relatedResearch'
   | 'published'
+  | 'reviewRequestedBy'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
     publishedNow: boolean;
     draftCreated?: boolean;
+    currentUserId?: string;
+    onRequestReview?: (
+      shouldReview: boolean,
+    ) => Promise<ResearchOutputResponse | void>;
   };
 
 const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
@@ -107,6 +69,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   published,
   publishedNow,
   draftCreated,
+  currentUserId,
+  reviewRequestedBy,
+  onRequestReview,
   ...props
 }) => {
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
@@ -120,18 +85,22 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     ...(props.subtype ? [props.subtype] : []),
     ...props.keywords,
   ];
-  const {
-    canEditResearchOutput,
-    canDuplicateResearchOutput,
-    canRequestReview,
-  } = useContext(ResearchOutputPermissionsContext);
 
   const hasDescription = description || descriptionMD;
 
   const association = getResearchOutputAssociation(props);
-  const [publishedNowBanner, setPublishedNowBanner] = useState(published);
-  const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
+  const associationName = getResearchOutputAssociationName(props);
+  const [reviewToggled, setReviewToggled] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);
+
+  const toggleReview = async (shouldReview: boolean) => {
+    if (!currentUserId || !onRequestReview) return;
+
+    await onRequestReview(shouldReview);
+
+    setDisplayModal(false);
+    setReviewToggled(true);
+  };
 
   const duplicateLink =
     props.workingGroups && props.workingGroups[0].id
@@ -152,93 +121,57 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
 
   return (
     <div>
-      {draftCreatedBanner && (
-        <Toast
-          accent="successLarge"
-          onClose={() => setDraftCreatedBanner(false)}
-        >
-          {`Draft ${
-            association === 'working group' ? 'Working Group' : 'Team'
-          } ${props.documentType} created successfully.`}
-        </Toast>
-      )}
-      {(publishedNow || !published) && (
-        <div>
-          {publishedNowBanner && (
-            <Toast
-              accent="successLarge"
-              onClose={() => setPublishedNowBanner(false)}
-            >
-              {`${
-                association === 'working group' ? 'Working Group' : 'Team '
-              } ${props.documentType} published successfully.`}
-            </Toast>
-          )}
-          {!published && (
-            <Toast accent="warning">{`This draft is available to members in the ${association}
-   listed below. Only PMs can publish this output.`}</Toast>
-          )}
-        </div>
-      )}
+      <SharedResearchOutputBanners
+        published={published}
+        draftCreated={draftCreated}
+        association={association}
+        documentType={props.documentType}
+        reviewRequestedBy={reviewRequestedBy}
+        publishedNow={publishedNow}
+        reviewToggled={reviewToggled}
+        associationName={associationName}
+      />
       <div css={containerStyles}>
         {!isGrantDocument && (
-          <div css={buttonsContainer}>
-            {canEditResearchOutput && (
-              <div css={leftButtons}>
-                <Link
-                  noMargin
-                  href={
-                    sharedResearch({})
-                      .researchOutput({ researchOutputId: id })
-                      .editResearchOutput({}).$
-                  }
-                  buttonStyle
-                  small
-                  primary
-                >
-                  {editIcon} Edit
-                </Link>
-              </div>
-            )}
-            {canDuplicateResearchOutput && duplicateLink && (
-              <div css={leftButtons}>
-                <Link noMargin href={duplicateLink} buttonStyle small primary>
-                  {duplicateIcon} Duplicate
-                </Link>
-              </div>
-            )}
-            {!published && canRequestReview && (
-              <div css={reviewButton}>
-                <Button
-                  noMargin
-                  small
-                  primary
-                  onClick={() => setDisplayModal(!displayModal)}
-                >
-                  {actionIcon} Ready for PM Review
-                </Button>
-              </div>
-            )}
-          </div>
+          <SharedResearchOutputButtons
+            id={id}
+            displayModal={displayModal}
+            setDisplayModal={setDisplayModal}
+            reviewRequestedBy={reviewRequestedBy}
+            duplicateLink={duplicateLink}
+            published={published}
+          />
         )}
         {displayModal && (
           <ConfirmModal
-            title="Output ready for PM review?"
+            title={`${
+              reviewRequestedBy
+                ? 'Switch output to draft?'
+                : 'Output ready for PM review?'
+            }`}
             description={`All ${
               association === 'working group' ? 'working group' : 'team'
-            } members listed on this output will be notified and PMs will be able to review and publish this output.`}
+            } members listed on this output will be notified and ${
+              reviewRequestedBy
+                ? 'will be able to edit this output again.'
+                : 'PMs will be able to review and publish this output.'
+            }`}
             cancelText="Cancel"
-            confirmText="Ready for PM Review"
-            onSave={() => {
-              setDisplayModal(false);
-            }}
+            confirmText={`${
+              reviewRequestedBy ? 'Switch to Draft' : 'Ready for PM Review'
+            }`}
+            onSave={() => toggleReview(!reviewRequestedBy)}
             onCancel={() => {
               setDisplayModal(false);
             }}
           />
         )}
         <div css={cardsStyles}>
-          <SharedResearchOutputHeaderCard {...props} published={published} />
+          <SharedResearchOutputHeaderCard
+            {...props}
+            published={published}
+            reviewRequestedBy={reviewRequestedBy}
+          />
           {((hasDescription && !isGrantDocument) || !!tags.length) && (
             <Card>
               {hasDescription && !isGrantDocument && (

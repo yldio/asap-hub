@@ -6,7 +6,8 @@ module.exports.up = (migration) => {
     .name('Guides')
     .description('')
     .displayField('name');
-  guides.createField('name')
+  guides
+    .createField('name')
     .name('Name')
     .type('Symbol')
     .localized(false)
@@ -14,9 +15,8 @@ module.exports.up = (migration) => {
     .validations([])
     .disabled(false)
     .omitted(false);
-
-}
+};
 
 module.exports.down = (migration) => {
-    migration.deleteContentType('guides');
-}
+  migration.deleteContentType('guides');
+};

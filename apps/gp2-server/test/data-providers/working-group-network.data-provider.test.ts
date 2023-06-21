@@ -35,6 +35,9 @@ describe('Working Group Network Data Provider', () => {
             workingGroups: [
               {
                 ...expected,
+                members: expected.members!.map(
+                  ({ id: _, ...member }) => member,
+                ),
                 resources: expected.resources!.map(
                   ({ id: _, ...resource }) => resource,
                 ),
@@ -46,6 +49,9 @@ describe('Working Group Network Data Provider', () => {
             workingGroups: [
               {
                 ...expected,
+                members: expected.members!.map(
+                  ({ id: _, ...member }) => member,
+                ),
                 resources: expected.resources!.map(
                   ({ id: _, ...resource }) => resource,
                 ),
@@ -57,6 +63,9 @@ describe('Working Group Network Data Provider', () => {
             workingGroups: [
               {
                 ...expected,
+                members: expected.members!.map(
+                  ({ id: _, ...member }) => member,
+                ),
                 resources: expected.resources!.map(
                   ({ id: _, ...resource }) => resource,
                 ),
@@ -68,6 +77,9 @@ describe('Working Group Network Data Provider', () => {
             workingGroups: [
               {
                 ...expected,
+                members: expected.members!.map(
+                  ({ id: _, ...member }) => member,
+                ),
                 resources: expected.resources!.map(
                   ({ id: _, ...resource }) => resource,
                 ),
@@ -109,6 +121,7 @@ describe('Working Group Network Data Provider', () => {
           workingGroups: [
             {
               ...expected,
+              members: expected.members!.map(({ id: _, ...member }) => member),
               resources: expected.resources!.map(
                 ({ id: _, ...resource }) => resource,
               ),
@@ -120,6 +133,7 @@ describe('Working Group Network Data Provider', () => {
           workingGroups: [
             {
               ...expected,
+              members: expected.members!.map(({ id: _, ...member }) => member),
               resources: expected.resources!.map(
                 ({ id: _, ...resource }) => resource,
               ),
@@ -131,6 +145,7 @@ describe('Working Group Network Data Provider', () => {
           workingGroups: [
             {
               ...expected,
+              members: expected.members!.map(({ id: _, ...member }) => member),
               resources: expected.resources!.map(
                 ({ id: _, ...resource }) => resource,
               ),
@@ -142,6 +157,7 @@ describe('Working Group Network Data Provider', () => {
           workingGroups: [
             {
               ...expected,
+              members: expected.members!.map(({ id: _, ...member }) => member),
               resources: expected.resources!.map(
                 ({ id: _, ...resource }) => resource,
               ),

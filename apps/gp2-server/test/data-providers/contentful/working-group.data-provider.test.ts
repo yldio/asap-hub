@@ -92,6 +92,7 @@ describe('Working Group Data Provider', () => {
         );
         expect(workingGroupDataObject?.members).toEqual([
           {
+            id: '32',
             userId: '11',
             role: 'Lead',
             firstName: 'Tony',

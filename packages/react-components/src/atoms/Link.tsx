@@ -89,6 +89,7 @@ type LinkProps = {
   readonly applyIconTheme?: boolean;
   readonly ellipsed?: boolean;
   readonly underlined?: boolean;
+  readonly icon?: 'left' | 'right';
 } & (NormalLinkProps | ButtonStyleLinkProps);
 
 const Link: React.FC<LinkProps> = ({
@@ -105,6 +106,7 @@ const Link: React.FC<LinkProps> = ({
   fullWidth = false,
   ellipsed = false,
   underlined = false,
+  icon,
 }) => {
   const linkStyles = ({ colors }: Theme) =>
     buttonStyle
@@ -117,6 +119,7 @@ const Link: React.FC<LinkProps> = ({
             noMargin,
             fullWidth,
             colors,
+            icon,
           }),
         ]
       : [

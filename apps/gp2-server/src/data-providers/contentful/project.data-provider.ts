@@ -12,12 +12,13 @@ import {
 import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
 import { ProjectDataProvider } from '../types/project.data-provider.type';
 import {
-  deleteResources,
   parseCalendar,
   parseMembers,
   parseMilestones,
   parseResources,
   processResources,
+  deleteEntities,
+  getIdsToDelete,
 } from './utils';
 
 export class ProjectContentfulDataProvider implements ProjectDataProvider {
@@ -91,8 +92,10 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       ...(project.members && { ...memberFields }),
     });
 
-    await deleteResources(resourceIdsToDelete, environment);
-    await deleteMembers(memberIdsToDelete, environment);
+    await deleteEntities(
+      [...resourceIdsToDelete, ...memberIdsToDelete],
+      environment,
+    );
     const fetchEventById = () => this.fetchProjectById(id);
     await pollContentfulGql<gp2Contentful.FetchProjectByIdQuery>(
       result.sys.publishedVersion ?? Infinity,
@@ -150,7 +153,7 @@ const addNextMember = async (
       const entry = await environment.createEntry('projectMembership', {
         fields: addLocaleToFields({
           role: member.role,
-          user: { sys: { id: member.userId, type: 'Link', linkType: 'Entry' } },
+          user: getLinkEntity(member.userId),
         }),
       });
       await entry.publish();
@@ -158,28 +161,16 @@ const addNextMember = async (
     }),
   );
 };
-const getMemberIdsToDelete = (
-  previousEntry: Entry,
-  members: gp2Model.ProjectUpdateDataObject['members'] | undefined,
-): string[] => {
-  const previousMembers = previousEntry.fields.members;
-  if (!previousMembers?.['en-US']) {
-    return [];
-  }
-  const existingIds: string[] = previousMembers['en-US'].map(
-    ({ sys: { id } }: { sys: { id: string } }) => id,
-  );
-  const nextIds = (members || []).map(({ id }) => id);
-
-  return existingIds.filter((id) => !nextIds.includes(id));
-};
 const outUnchangedMembers =
   (previousMembers: gp2Model.ProjectMember[] | undefined) =>
   (member: gp2Model.ProjectMember) => {
     const previousMember = previousMembers?.filter(
-      (previous) => previous.userId === member.userId,
+      (previous) => previous.id === member.id,
     );
-    return !(previousMember?.[0]?.role === member.role);
+    return !(
+      previousMember?.[0]?.role === member.role ||
+      previousMember?.[0]?.userId === member.userId
+    );
   };
 type MemberWithId = gp2Model.ProjectMember & {
   id: string;
@@ -216,9 +207,9 @@ const processMembers = async (
   previousEntry: Entry,
   previousMembers: gp2Model.ProjectMember[] | undefined,
 ) => {
-  const nextMembers: string[] = await addNextMember(environment, members);
+  const nextMembers = await addNextMember(environment, members);
 
-  const idsToDelete = getMemberIdsToDelete(previousEntry, members);
+  const idsToDelete = getIdsToDelete(previousEntry, members, 'members');
   const updatedIds = await updateMembers(
     members,
     idsToDelete,
@@ -229,14 +220,3 @@ const processMembers = async (
   const memberFields = getMemberFields([...nextMembers, ...updatedIds]);
   return { memberFields, idsToDelete };
 };
-export const deleteMembers = async (
-  idsToDelete: string[],
-  environment: Environment,
-) =>
-  Promise.all(
-    idsToDelete.map(async (id) => {
-      const deletable = await environment.getEntry(id);
-      await deletable.unpublish();
-      return deletable.delete();
-    }),
-  );

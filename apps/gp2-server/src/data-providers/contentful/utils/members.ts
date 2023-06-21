@@ -7,16 +7,20 @@ type MembersItem =
   | GraphQLProject['membersCollection'];
 
 type MemberItem = NonNullable<NonNullable<MembersItem>['items'][number]>;
+export type Member = gp2Model.ProjectDataObject['members'][number];
 const parseMember = <T extends string>(
+  id: string,
   user: NonNullable<MemberItem['user']>,
   role: MemberItem['role'],
 ): {
+  id: string;
   userId: string;
   role: T;
   firstName: string;
   lastName: string;
   avatarUrl?: string;
 } => ({
+  id,
   userId: user.sys.id,
   role: (role ?? '') as T,
   firstName: user.firstName ?? '',
@@ -36,6 +40,6 @@ export const parseMembers = <T extends string>(
       if (!user?.onboarded) {
         return membersList;
       }
-      const groupMember = parseMember<T>(user, member.role);
+      const groupMember = parseMember<T>(member.sys.id, user, member.role);
       return [...membersList, groupMember];
     }, []) || [];

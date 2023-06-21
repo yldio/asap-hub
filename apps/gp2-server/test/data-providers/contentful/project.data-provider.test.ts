@@ -43,9 +43,8 @@ describe('Project Data Provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('FetchById', () => {
-    test('Should fetch the project from squidex graphql', async () => {
+    test('Should fetch the project from graphql', async () => {
       const result = await projectDataProviderWithMockServer.fetchById('id');
-
       expect(result).toMatchObject(getProjectDataObject());
     });
 
@@ -57,13 +56,11 @@ describe('Project Data Provider', () => {
       expect(await projectDataProvider.fetchById('not-found')).toBeNull();
     });
     test('the project is parsed', async () => {
-      const project = getContentfulGraphqlProject();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        projects: project,
+        projects: getContentfulGraphqlProject(),
       });
       const projectDataObject = await projectDataProvider.fetchById('id');
-      const expected = getProjectDataObject();
-      expect(projectDataObject).toEqual(expected);
+      expect(projectDataObject).toEqual(getProjectDataObject());
     });
     test('pm emails are added if available', async () => {
       const email = 'tony@starkenterprises.com';
@@ -111,7 +108,7 @@ describe('Project Data Provider', () => {
     });
 
     describe('traineeProject', () => {
-      test('if doesnt exist it returns as false', async () => {
+      test('if doesnt exist returns as false', async () => {
         const project = getContentfulGraphqlProject();
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, traineeProject: null },
@@ -130,7 +127,7 @@ describe('Project Data Provider', () => {
       });
     });
     describe('opportunitiesLink', () => {
-      test('if doesnt exist it returns as false', async () => {
+      test('if doesnt exist returns as false', async () => {
         const project = getContentfulGraphqlProject();
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, opportunitiesLink: null },
@@ -350,7 +347,7 @@ describe('Project Data Provider', () => {
       });
     });
     describe('milestones', () => {
-      test('undefined milestones returns empty array', async () => {
+      test('empty milestones returns empty array', async () => {
         const project = {
           ...getContentfulGraphqlProject(),
           milestonesCollection: {
@@ -423,13 +420,13 @@ describe('Project Data Provider', () => {
       skip: 0,
     };
 
-    test('Should fetch the project from squidex graphql', async () => {
+    test('Should fetch the project from graphql', async () => {
       const result = await projectDataProviderWithMockServer.fetch(options);
 
       expect(result).toMatchObject(getListProjectDataObject());
     });
 
-    test('Should return null when the project is not found', async () => {
+    test('Should return empty result when no projects are found', async () => {
       const mockResponse = getContentfulGraphqlProjectsResponse();
       mockResponse.projectsCollection!.items = [];
       mockResponse.projectsCollection!.total = 0;
@@ -440,15 +437,6 @@ describe('Project Data Provider', () => {
     });
 
     test('Should return an empty result if the client returns a response with a null items property', async () => {
-      const mockResponse = getContentfulGraphqlProjectsResponse();
-      mockResponse.projectsCollection = null;
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await projectDataProvider.fetch(options);
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-
-    test('Should return an empty result if the client returns a response with a null query property', async () => {
       const mockResponse = getContentfulGraphqlProjectsResponse();
       mockResponse.projectsCollection = null;
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
@@ -778,7 +766,7 @@ describe('Project Data Provider', () => {
         },
       );
       test.each<gp2Model.Resource['type']>(['Link', 'Note'])(
-        'It should not update the resource only if it is the same',
+        'It should not update the resource if it is the same',
         async (type) => {
           const title = 'a title 2';
           const description = 'a description';
@@ -1092,7 +1080,7 @@ describe('Project Data Provider', () => {
         );
         expect(environmentMock.createEntry).not.toBeCalled();
       });
-      test('It should not update the resource only if it is the same', async () => {
+      test('It should not update the resource if it is the same', async () => {
         const role = 'Contributor';
         const projectId = '42';
         const existingMemberId = '11';

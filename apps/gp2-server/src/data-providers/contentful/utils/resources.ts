@@ -62,10 +62,10 @@ const getResourceFields = (nextResources: string[]) => ({
   resources: getLinkEntities(nextResources, false),
 });
 const getResourceIdsToDelete = (
-  previousWorkingGroup: Entry,
+  previousEntry: Entry,
   resources: gp2Model.Resource[] | undefined,
 ): string[] => {
-  const previousResources = previousWorkingGroup.fields.resources;
+  const previousResources = previousEntry.fields.resources;
   if (!previousResources?.['en-US']) {
     return [];
   }
@@ -132,7 +132,7 @@ const outUnchangedResources =
 export const processResources = async (
   environment: Environment,
   resources: gp2Model.Resource[] | undefined,
-  previousWorkingGroup: Entry,
+  previousEntry: Entry,
   previousResources: gp2Model.Resource[] | undefined,
 ) => {
   const nextResources: string[] = await addNextResources(
@@ -140,7 +140,7 @@ export const processResources = async (
     resources,
   );
 
-  const idsToDelete = getResourceIdsToDelete(previousWorkingGroup, resources);
+  const idsToDelete = getResourceIdsToDelete(previousEntry, resources);
   const updatedIds = await updateResources(
     resources,
     idsToDelete,

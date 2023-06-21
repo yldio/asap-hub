@@ -7,7 +7,9 @@ import {
   contentfulEnvId,
   contentfulSpaceId,
 } from '../src/config';
+import { ProjectContentfulDataProvider } from '../src/data-providers/contentful/project.data-provider';
 import { UserContentfulDataProvider } from '../src/data-providers/contentful/user.data-provider';
+import { WorkingGroupContentfulDataProvider } from '../src/data-providers/contentful/working-group.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependency';
 
 console.log('Importing users...');
@@ -22,11 +24,22 @@ const userDataProvider = new UserContentfulDataProvider(
   contentfulGraphQLClient,
   getContentfulRestClientFactory,
 );
+const projectDataProvider = new ProjectContentfulDataProvider(
+  contentfulGraphQLClient,
+  getContentfulRestClientFactory,
+);
+const workingGroupDataProvider = new WorkingGroupContentfulDataProvider(
+  contentfulGraphQLClient,
+  getContentfulRestClientFactory,
+);
 const app = async () => {
   let numberOfImportedUsers = 0;
   let usersAlreadyExist = 0;
   let usersFailed = 0;
 
+  const workingGroups = (await workingGroupDataProvider.fetch()).items;
+  const projects = (await projectDataProvider.fetch({ skip: 0, take: 200 }))
+    .items;
   const args = process.argv.slice(2);
 
   if (typeof args[0] !== 'string') {
@@ -36,32 +49,61 @@ const app = async () => {
   const filePath = args[0];
 
   const userCsvImport = parse(
-    (input): gp2.UserCreateDataObject => {
+    (
+      input,
+    ): gp2.UserCreateDataObject & {
+      workingGroup?: gp2.WorkingGroupDataObject;
+      project?: gp2.ProjectDataObject;
+    } => {
       const data = input.map((s) => s.trim());
+      const userWorkingGroup = workingGroups.find(
+        (wg) => wg.title === data[10]!,
+      );
+      const userProject = projects.find((p) => p.title === data[16]!);
       return {
-        firstName: data[1]!,
-        lastName: data[2]!,
-        country: data[5]!,
-        email: data[3]!,
-        region: data[6] as gp2.UserRegion,
+        firstName: data[0]!,
+        lastName: data[1]!,
+        country: data[4]!,
+        email: data[2] || data[3]!,
+        alternativeEmail: data[3]!,
+        region: data[5] as gp2.UserRegion,
         positions: [
           {
-            institution: data[7]!,
-            department: data[8]!,
-            role: data[9]!,
+            institution: data[6] || 'Unknown',
+            department: data[7] || 'Unknown',
+            role: data[8] || 'Unknown',
           },
         ],
         role: 'Network Collaborator',
-        onboarded: false,
-        degrees: [data[10]! as gp2.UserDegree],
+        onboarded: true,
+        degrees: [],
+        fundingStreams: data[13]!,
         keywords: [],
         questions: [],
         contributingCohorts: [],
+        workingGroup: userWorkingGroup,
+        project: userProject,
       };
     },
-    async (input) => {
+    async ({ workingGroup, project, ...input }) => {
       try {
-        await userDataProvider.create(input);
+        const user = await userDataProvider.create(input);
+        if (workingGroup) {
+          workingGroupDataProvider.update(workingGroup.id, {
+            members: [
+              ...workingGroup.members,
+              { userId: user, role: 'Working group member' },
+            ],
+          });
+        }
+        if (project) {
+          projectDataProvider.update(project.id, {
+            members: [
+              ...project.members,
+              { userId: user, role: 'Contributor' },
+            ],
+          });
+        }
         numberOfImportedUsers++;
       } catch (e) {
         if (

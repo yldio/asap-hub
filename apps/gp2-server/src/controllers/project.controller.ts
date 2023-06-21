@@ -47,7 +47,9 @@ export default class Projects implements ProjectController {
     update: gp2.ProjectUpdateRequest,
     loggedInUserId: string,
   ): Promise<gp2.ProjectResponse> {
-    await this.projectDataProvider.update(id, update);
+    await this.projectDataProvider.update(id, {
+      ...update,
+    });
     return this.fetchById(id, loggedInUserId);
   }
 }

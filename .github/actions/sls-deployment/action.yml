@@ -120,6 +120,7 @@ runs:
         CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.crn-contentful-webhook-authentication-token }}
         CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
         CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
+        CRN_SES_REGION: ${{ steps.setup.outputs.crn-ses-region }}
         CRN_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-api-client-id }}
         CRN_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.crn-squidex-api-client-secret }}
         CRN_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
@@ -139,6 +140,7 @@ runs:
         GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
         GP2_SENTRY_DSN_API: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
         GP2_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
+        GP2_SES_REGION: ${{ steps.setup.outputs.gp2-ses-region }}
         GP2_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-api-client-id }}
         GP2_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.gp2-squidex-api-client-secret }}
         GP2_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}

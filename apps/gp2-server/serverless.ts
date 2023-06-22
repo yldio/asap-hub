@@ -16,6 +16,7 @@ import assert from 'assert';
   'GP2_SQUIDEX_SHARED_SECRET',
   'GP2_SENTRY_DSN_API',
   'GP2_SENTRY_DSN_HANDLERS',
+  'GP2_SES_REGION',
   'GP2_CONTENTFUL_ENV',
   'GP2_CONTENTFUL_ACCESS_TOKEN',
   'GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN',
@@ -71,6 +72,8 @@ const appUrl = `https://${appHostname}`;
 const apiUrl = `https://${apiHostname}`;
 const currentRevision = process.env.CI_COMMIT_SHA;
 const nodeEnv = 'production';
+const sesRegion = process.env.GP2_SES_REGION!;
+
 export const plugins = [
   './serverless-plugins/serverless-webpack',
   './serverless-plugins/serverless-s3-sync',
@@ -359,7 +362,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        SES_REGION: `\${ssm:ses-region-${envAlias}}`,
+        SES_REGION: sesRegion,
         EMAIL_SENDER: `\${ssm:email-invite-sender-gp2-${envAlias}}`,
         EMAIL_BCC: `\${ssm:email-invite-bcc-gp2-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-gp2-${envAlias}}`,

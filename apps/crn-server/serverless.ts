@@ -13,6 +13,7 @@ if (NODE_ENV === 'production') {
     'CRN_AUTH0_CLIENT_ID',
     'CRN_SENTRY_DSN_API',
     'CRN_SENTRY_DSN_HANDLERS',
+    'CRN_SES_REGION',
     'CRN_CONTENTFUL_ENV',
     'CRN_CONTENTFUL_ACCESS_TOKEN',
     'CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN',
@@ -34,6 +35,7 @@ const {
   ALGOLIA_INDEX,
   CRN_SENTRY_DSN_API,
   CRN_SENTRY_DSN_HANDLERS,
+  CRN_SES_REGION,
   CRN_AUTH0_AUDIENCE,
   CRN_AUTH0_CLIENT_ID,
   CRN_SQUIDEX_APP_NAME,
@@ -78,6 +80,7 @@ const contentfulWebhookAuthenticationToken =
 const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
 const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
 const isContentfulEnabledV2 = IS_CONTENTFUL_ENABLED_V2;
+const sesRegion = CRN_SES_REGION!;
 
 const algoliaIndex = ALGOLIA_INDEX
   ? '${env:ALGOLIA_INDEX}'
@@ -452,7 +455,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        SES_REGION: `\${ssm:ses-region-${envAlias}}`,
+        SES_REGION: sesRegion,
         EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
         EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,

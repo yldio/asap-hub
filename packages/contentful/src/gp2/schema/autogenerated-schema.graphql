@@ -1251,7 +1251,7 @@ type LatestStats implements Entry {
   cohortCount(locale: String): Int
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): LatestStatsLinkingCollections
-  samplesCount(locale: String): Int
+  sampleCount(locale: String): Int
   sys: Sys!
 }
 
@@ -1284,15 +1284,15 @@ input LatestStatsFilter {
   cohortCount_not: Int
   cohortCount_not_in: [Int]
   contentfulMetadata: ContentfulMetadataFilter
-  samplesCount: Int
-  samplesCount_exists: Boolean
-  samplesCount_gt: Int
-  samplesCount_gte: Int
-  samplesCount_in: [Int]
-  samplesCount_lt: Int
-  samplesCount_lte: Int
-  samplesCount_not: Int
-  samplesCount_not_in: [Int]
+  sampleCount: Int
+  sampleCount_exists: Boolean
+  sampleCount_gt: Int
+  sampleCount_gte: Int
+  sampleCount_in: [Int]
+  sampleCount_lt: Int
+  sampleCount_lte: Int
+  sampleCount_not: Int
+  sampleCount_not_in: [Int]
   sys: SysFilter
 }
 
@@ -1305,8 +1305,8 @@ enum LatestStatsOrder {
   articleCount_DESC
   cohortCount_ASC
   cohortCount_DESC
-  samplesCount_ASC
-  samplesCount_DESC
+  sampleCount_ASC
+  sampleCount_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC

@@ -7,5 +7,6 @@ export * from './output.queries';
 export * from './page.queries';
 export * from './project.queries';
 export * from './user.queries';
+export * from './stats.queries';
 export * from './working-group-network.queries';
 export * from './working-group.queries';

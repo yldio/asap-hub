@@ -1,13 +1,21 @@
 import gql from 'graphql-tag';
 
+export const statsContentQueryFragment = gql`
+  fragment LatestStatsContentData on LatestStats {
+    sampleCount
+    articleCount
+    cohortCount
+  }
+`;
+
 export const FETCH_STATS = gql`
-  query FetchPages() {
+  query FetchLatestStats(
+  ) {
     latestStatsCollection(limit: 1) {
       items {
-        sampleCount
-        cohortCount
-        articleCount
+        ...LatestStatsContentData
       }
     }
   }
+  ${statsContentQueryFragment}
 `;

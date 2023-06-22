@@ -1713,7 +1713,7 @@ export type LatestStats = Entry & {
   cohortCount?: Maybe<Scalars['Int']>;
   contentfulMetadata: ContentfulMetadata;
   linkedFrom?: Maybe<LatestStatsLinkingCollections>;
-  samplesCount?: Maybe<Scalars['Int']>;
+  sampleCount?: Maybe<Scalars['Int']>;
   sys: Sys;
 };
 
@@ -1733,7 +1733,7 @@ export type LatestStatsLinkedFromArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats) */
-export type LatestStatsSamplesCountArgs = {
+export type LatestStatsSampleCountArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -1766,15 +1766,15 @@ export type LatestStatsFilter = {
   cohortCount_not?: InputMaybe<Scalars['Int']>;
   cohortCount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  samplesCount?: InputMaybe<Scalars['Int']>;
-  samplesCount_exists?: InputMaybe<Scalars['Boolean']>;
-  samplesCount_gt?: InputMaybe<Scalars['Int']>;
-  samplesCount_gte?: InputMaybe<Scalars['Int']>;
-  samplesCount_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
-  samplesCount_lt?: InputMaybe<Scalars['Int']>;
-  samplesCount_lte?: InputMaybe<Scalars['Int']>;
-  samplesCount_not?: InputMaybe<Scalars['Int']>;
-  samplesCount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  sampleCount?: InputMaybe<Scalars['Int']>;
+  sampleCount_exists?: InputMaybe<Scalars['Boolean']>;
+  sampleCount_gt?: InputMaybe<Scalars['Int']>;
+  sampleCount_gte?: InputMaybe<Scalars['Int']>;
+  sampleCount_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  sampleCount_lt?: InputMaybe<Scalars['Int']>;
+  sampleCount_lte?: InputMaybe<Scalars['Int']>;
+  sampleCount_not?: InputMaybe<Scalars['Int']>;
+  sampleCount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
   sys?: InputMaybe<SysFilter>;
 };
 
@@ -1794,8 +1794,8 @@ export enum LatestStatsOrder {
   ArticleCountDesc = 'articleCount_DESC',
   CohortCountAsc = 'cohortCount_ASC',
   CohortCountDesc = 'cohortCount_DESC',
-  SamplesCountAsc = 'samplesCount_ASC',
-  SamplesCountDesc = 'samplesCount_DESC',
+  SampleCountAsc = 'sampleCount_ASC',
+  SampleCountDesc = 'sampleCount_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',

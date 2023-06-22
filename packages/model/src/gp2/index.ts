@@ -2,6 +2,7 @@ export * from './calendar';
 export * from './common';
 export * from './contributing-cohort';
 export * from './controllers';
+export * from './dashboard';
 export * from './data-providers';
 export * from './event';
 export * from './external-user';

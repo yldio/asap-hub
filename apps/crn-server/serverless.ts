@@ -326,8 +326,8 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    subscribeCalendarSquidex: {
-      handler: './src/handlers/calendar/subscribe-handler.handler',
+    gcalSubscribeCalendarSquidex: {
+      handler: './src/handlers/calendar/gcal-subscribe-handler.handler',
       events: [
         {
           eventBridge: {
@@ -346,8 +346,8 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'false',
       },
     },
-    subscribeCalendarContentful: {
-      handler: './src/handlers/calendar/subscribe-handler.handler',
+    gcalSubscribeCalendarContentful: {
+      handler: './src/handlers/calendar/gcal-subscribe-handler.handler',
       events: [
         {
           eventBridge: {
@@ -366,8 +366,8 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
-    resubscribeCalendarsSquidex: {
-      handler: './src/handlers/calendar/resubscribe-handler.handler',
+    gcalResubscribeCalendarsSquidex: {
+      handler: './src/handlers/calendar/gcal-resubscribe-handler.handler',
       timeout: 120,
       events: [
         {
@@ -381,8 +381,8 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'false',
       },
     },
-    resubscribeCalendarsContentful: {
-      handler: './src/handlers/calendar/resubscribe-handler.handler',
+    gcalResubscribeCalendarsContentful: {
+      handler: './src/handlers/calendar/gcal-resubscribe-handler.handler',
       timeout: 120,
       events: [
         {
@@ -781,9 +781,9 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    eventsUpdatedSquidex: {
+    gcalEventsUpdatedSquidex: {
       timeout: 300,
-      handler: './src/handlers/webhooks/webhook-events-updated.handler',
+      handler: './src/handlers/webhooks/gcal-webhook-events-updated.handler',
       events: [
         {
           httpApi: {
@@ -799,9 +799,9 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'false',
       },
     },
-    eventsUpdatedContentful: {
+    gcalEventsUpdatedContentful: {
       timeout: 300,
-      handler: './src/handlers/webhooks/webhook-events-updated.handler',
+      handler: './src/handlers/webhooks/gcal-webhook-events-updated.handler',
       events: [
         {
           httpApi: {
@@ -1623,7 +1623,7 @@ const serverlessConfig: AWS = {
       },
     },
     extensions: {
-      SubscribeCalendarSquidexLambdaFunction: {
+      GcalSubscribeCalendarSquidexLambdaFunction: {
         Properties: {
           DeadLetterConfig: {
             TargetArn: {
@@ -1632,7 +1632,7 @@ const serverlessConfig: AWS = {
           },
         },
       },
-      SubscribeCalendarContentfulLambdaFunction: {
+      GcalSubscribeCalendarContentfulLambdaFunction: {
         Properties: {
           DeadLetterConfig: {
             TargetArn: {

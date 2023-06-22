@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import { toPayload } from '../../helpers/algolia';
-import { indexTeamUsersHandler } from '../../../src/handlers/teams/index-team-users-handler';
+import { indexTeamUsersHandler } from '../../../src/handlers/teams/algolia-index-team-users-handler';
 import {
   getListUserResponse,
   getUserResponse,

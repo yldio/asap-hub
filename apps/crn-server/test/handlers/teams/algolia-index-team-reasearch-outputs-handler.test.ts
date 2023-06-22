@@ -1,5 +1,5 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/index-team-reasearch-outputs-handler';
+import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/algolia-index-team-reasearch-outputs-handler';
 import { TeamPayload } from '../../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../../helpers/events';
 import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';

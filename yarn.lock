@@ -869,6 +869,7 @@ __metadata:
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
+    "@types/lodash": ^4
     "@types/lodash.get": 4.4.7
     "@types/lodash.matches": 4.6.7
     "@types/lodash.uniqby": 4.7.7
@@ -910,6 +911,7 @@ __metadata:
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
     limiter: ^2.1.0
+    lodash: ^4.17.21
     lodash.get: 4.4.2
     lodash.matches: 4.6.0
     lodash.uniqby: 4.7.0
@@ -16268,6 +16270,13 @@ __metadata:
   version: 4.14.157
   resolution: "@types/lodash@npm:4.14.157"
   checksum: 57919bfa3c4bb40c9de7d6004e33d7f441ae6cffe550081a22a2554a5b70e5df3db68ebdb1ff0a9f209d24a7aba1e7c15886e3788b9f5df60fd34dea5b86c29a
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4":
+  version: 4.14.195
+  resolution: "@types/lodash@npm:4.14.195"
+  checksum: 39b75ca635b3fa943d17d3d3aabc750babe4c8212485a4df166fe0516e39288e14b0c60afc6e21913cc0e5a84734633c71e617e2bd14eaa1cf51b8d7799c432e
   languageName: node
   linkType: hard
 

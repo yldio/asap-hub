@@ -17,7 +17,7 @@ const Field = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   let unsubscribe = () => {};
-  unsubscribe = sdk.entry.onSysChanged((sys: EntrySys) => {
+  unsubscribe = sdk.entry.onSysChanged(async (sys: EntrySys) => {
     const currentPublishedVersion = sys.publishedCounter;
     const currentValue = documentToHtmlString(
       sdk.entry.fields[observedField].getValue(),
@@ -30,6 +30,8 @@ const Field = () => {
       currentValue !== initialValue
     ) {
       setField(currentValue ? sys.publishedAt : undefined);
+      await sdk.field.setValue(sys.publishedAt);
+      await sdk.entry.publish();
       unsubscribe();
     }
   });

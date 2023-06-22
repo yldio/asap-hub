@@ -2,7 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 
 import { gp2 as gp2Contentful, GraphQLClient } from '@asap-hub/contentful';
 
-import {  DashboardDataProvider } from '../types';
+import { DashboardDataProvider } from '../types';
 
 export type DashboardStats = NonNullable<
   NonNullable<gp2Contentful.Query['latestStatsCollection']>['items'][number]
@@ -12,21 +12,19 @@ export class DashboardContentfulDataProvider implements DashboardDataProvider {
   constructor(private graphQLClient: GraphQLClient) {}
 
   async fetch() {
-    const { latestStats } = await this.graphQLClient.request<
-      gp2Contentful.Query
-    >(gp2Contentful.FETCH_STATS);
+    const { latestStatsCollection } =
+      await this.graphQLClient.request<gp2Contentful.FetchLatestStatsQuery>(
+        gp2Contentful.FETCH_STATS,
+      );
 
-    if (!latestStats?.items) {
-      return {
-        total: 0,
-        items: [],
-      };
+    if (!latestStatsCollection?.items) {
+      return { total: 0, items: [] };
     }
 
     return {
-      total: newsCollection?.total,
-      items: newsCollection?.items
-        .filter((news): news is DashboardStats => news !== null)
+      total: latestStatsCollection.items.length,
+      items: latestStatsCollection.items
+        .filter((stats): stats is DashboardStats => stats !== null)
         .map(parseContentfulGraphQlStats),
     };
   }

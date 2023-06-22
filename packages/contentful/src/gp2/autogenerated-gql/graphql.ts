@@ -7840,6 +7840,21 @@ export type FetchProjectsQuery = {
   >;
 };
 
+export type LatestStatsContentDataFragment = Pick<
+  LatestStats,
+  'sampleCount' | 'articleCount' | 'cohortCount'
+>;
+
+export type FetchLatestStatsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchLatestStatsQuery = {
+  latestStatsCollection?: Maybe<{
+    items: Array<
+      Maybe<Pick<LatestStats, 'sampleCount' | 'articleCount' | 'cohortCount'>>
+    >;
+  }>;
+};
+
 export type UsersContentDataFragment = Pick<
   Users,
   | 'activatedDate'
@@ -10583,6 +10598,27 @@ export const ProjectsContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ProjectsContentDataFragment, unknown>;
+export const LatestStatsContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'LatestStatsContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'LatestStats' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'sampleCount' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'articleCount' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'cohortCount' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<LatestStatsContentDataFragment, unknown>;
 export const UsersContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -13533,6 +13569,54 @@ export const FetchProjectsDocument = {
     ...ProjectsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchProjectsQuery, FetchProjectsQueryVariables>;
+export const FetchLatestStatsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchLatestStats' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'latestStatsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'LatestStatsContentData' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...LatestStatsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchLatestStatsQuery,
+  FetchLatestStatsQueryVariables
+>;
 export const FetchUserByIdDocument = {
   kind: 'Document',
   definitions: [

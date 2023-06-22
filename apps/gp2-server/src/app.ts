@@ -42,6 +42,9 @@ import Calendars from './controllers/calendar.controller';
 import ContributingCohorts, {
   ContributingCohortController,
 } from './controllers/contributing-cohort.controller';
+import Dashboard, {
+  DashboardController,
+} from './controllers/dashboard.controller';
 import Events from './controllers/event.controller';
 import ExternalUsers, {
   ExternalUsersController,
@@ -62,6 +65,7 @@ import { CalendarSquidexDataProvider } from './data-providers/calendar.data-prov
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendar.data-provider';
 import { ContributingCohortContentfulDataProvider } from './data-providers/contentful/contributing-cohort.data-provider';
+import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
 import { ExternalUserContentfulDataProvider } from './data-providers/contentful/external-user.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
@@ -81,6 +85,7 @@ import { ProjectSquidexDataProvider } from './data-providers/project.data-provid
 import {
   AssetDataProvider,
   ContributingCohortDataProvider,
+  DashboardDataProvider,
   NewsDataProvider,
   OutputDataProvider,
   PageDataProvider,
@@ -96,6 +101,7 @@ import { WorkingGroupSquidexDataProvider } from './data-providers/working-group.
 import { getContentfulRestClientFactory } from './dependencies/clients.dependency';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
+import { dashboardRouteFactory } from './routes/dashboard.route';
 import { eventRouteFactory } from './routes/event.route';
 import { externalUserRouteFactory } from './routes/external-user.route';
 import { newsRouteFactory } from './routes/news.route';
@@ -236,6 +242,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsContentfulDataProvider =
     libs.newsContentfulDataProvider ||
     new NewsContentfulDataProvider(contentfulGraphQLClient);
+  const dashboardContentfulDataProvider =
+    libs.dashboardContentfulDataProvider ||
+    new DashboardContentfulDataProvider(contentfulGraphQLClient);
   const workingGroupSquidexDataProvider =
     libs.workingGroupSquidexDataProvider ||
     new WorkingGroupSquidexDataProvider(
@@ -369,6 +378,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     new WorkingGroupNetwork(workingGroupNetworkDataProvider);
   const projectController =
     libs.projectController || new Projects(projectDataProvider);
+  const dashboardController =
+    libs.dashboardController || new Dashboard(dashboardContentfulDataProvider);
   const newsController = libs.newsController || new News(newsDataProvider);
   const pageController = libs.pageController || new Pages(pageDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
@@ -406,6 +417,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController);
   const newsRoutes = newsRouteFactory(newsController);
+  const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const pageRoutes = pageRouteFactory(pageController);
   const contributingCohortRoutes = contributingCohortRouteFactory(
     contributingCohortController,
@@ -448,6 +460,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   /**
    * Routes requiring onboarding below
    */
+  app.use(dashboardRoutes);
   app.use(newsRoutes);
   app.use(workingGroupRoutes);
   app.use(workingGroupNetworkRoutes);
@@ -490,6 +503,8 @@ export type Libs = {
   contributingCohortController?: ContributingCohortController;
   contributingCohortDataProvider?: ContributingCohortDataProvider;
   contributingCohortSquidexDataProvider?: ContributingCohortDataProvider;
+  dashboardContentfulDataProvider?: DashboardDataProvider;
+  dashboardController?: DashboardController;
   eventContentfulDataProvider?: gp2.EventDataProvider;
   eventController?: gp2.EventController;
   eventDataProvider?: gp2.EventDataProvider;

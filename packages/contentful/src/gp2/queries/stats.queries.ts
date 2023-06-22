@@ -9,8 +9,7 @@ export const statsContentQueryFragment = gql`
 `;
 
 export const FETCH_STATS = gql`
-  query FetchLatestStats(
-  ) {
+  query FetchLatestStats {
     latestStatsCollection(limit: 1) {
       items {
         ...LatestStatsContentData

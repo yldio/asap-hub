@@ -1,3 +1,5 @@
+import { ListResponse } from '../common';
+
 export type DashboardDataObject = {
   sampleCount: number;
   articleCount: number;
@@ -5,3 +7,5 @@ export type DashboardDataObject = {
 };
 
 export type DashboardResponse = DashboardDataObject;
+
+export type ListDashboardResponse = ListResponse<DashboardResponse>;

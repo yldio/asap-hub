@@ -1,5 +1,5 @@
-import { ReminderController } from '../../src/controllers/reminders';
+import ReminderController from '../../src/controllers/reminders.controller';
 
-export const reminderControllerMock: jest.Mocked<ReminderController> = {
+export const reminderControllerMock = {
   fetch: jest.fn(),
-};
+} as unknown as jest.Mocked<ReminderController>;

@@ -5,7 +5,7 @@ import {
 import { ListResponse, TeamEvent, UserResponse } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import Users, { UserController } from '../../controllers/users';
+import UserController from '../../controllers/users.controller';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
@@ -63,7 +63,7 @@ export const indexTeamUsersHandler =
   };
 
 const rawHandler = indexTeamUsersHandler(
-  new Users(getUserDataProvider(), getAssetDataProvider()),
+  new UserController(getUserDataProvider(), getAssetDataProvider()),
   algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
 );
 

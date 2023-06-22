@@ -1,8 +1,6 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import {
-  CalendarController,
   CalendarDataProvider,
-  EventController,
   EventDataProvider,
   UserResponse,
 } from '@asap-hub/model';
@@ -48,29 +46,21 @@ import {
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
-import Calendars from './controllers/calendars';
-import Dashboard, { DashboardController } from './controllers/dashboard';
-import Discover, { DiscoverController } from './controllers/discover';
-import Events from './controllers/events';
-import InterestGroups, {
-  InterestGroupController,
-} from './controllers/interest-groups';
-import Labs, { LabsController } from './controllers/labs';
-import News, { NewsController } from './controllers/news';
-import Pages, { PageController } from './controllers/pages';
-import Reminders, { ReminderController } from './controllers/reminders';
-import ResearchOutputs, {
-  ResearchOutputController,
-} from './controllers/research-outputs';
-import ResearchTags, {
-  ResearchTagController,
-} from './controllers/research-tags';
-import Teams, { TeamController } from './controllers/teams';
-import Tutorials, { TutorialsController } from './controllers/tutorials';
-import Users, { UserController } from './controllers/users';
-import WorkingGroups, {
-  WorkingGroupController,
-} from './controllers/working-groups';
+import CalendarController from './controllers/calendars.controller';
+import DashboardController from './controllers/dashboard.controller';
+import DiscoverController from './controllers/discover.controller';
+import EventController from './controllers/events.controller';
+import InterestGroupController from './controllers/interest-groups.controller';
+import LabController from './controllers/labs.controller';
+import NewsController from './controllers/news.controller';
+import PageController from './controllers/pages.controller';
+import ReminderController from './controllers/reminders.controller';
+import ResearchOutputController from './controllers/research-outputs.controller';
+import ResearchTagController from './controllers/research-tags.controller';
+import TeamController from './controllers/teams.controller';
+import TutorialController from './controllers/tutorials.controller';
+import UserController from './controllers/users.controller';
+import WorkingGroupController from './controllers/working-groups.controller';
 import { AssetSquidexDataProvider } from './data-providers/assets.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';
@@ -527,36 +517,44 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Controllers
   const calendarController =
-    libs.calendarController || new Calendars(calendarDataProvider);
+    libs.calendarController || new CalendarController(calendarDataProvider);
   const dashboardController =
-    libs.dashboardController || new Dashboard(dashboardDataProvider);
-  const newsController = libs.newsController || new News(newsDataProvider);
+    libs.dashboardController || new DashboardController(dashboardDataProvider);
+  const newsController =
+    libs.newsController || new NewsController(newsDataProvider);
   const discoverController =
-    libs.discoverController || new Discover(discoverDataProvider);
-  const eventController = libs.eventController || new Events(eventDataProvider);
+    libs.discoverController || new DiscoverController(discoverDataProvider);
+  const eventController =
+    libs.eventController || new EventController(eventDataProvider);
   const interestGroupController =
     libs.interestGroupController ||
-    new InterestGroups(interestGroupDataProvider, userDataProvider);
-  const pageController = libs.pageController || new Pages(pageDataProvider);
+    new InterestGroupController(interestGroupDataProvider, userDataProvider);
+  const pageController =
+    libs.pageController || new PageController(pageDataProvider);
   const reminderController =
-    libs.reminderController || new Reminders(reminderDataProvider);
+    libs.reminderController || new ReminderController(reminderDataProvider);
   const researchOutputController =
     libs.researchOutputController ||
-    new ResearchOutputs(
+    new ResearchOutputController(
       researchOutputDataProvider,
       researchTagDataProvider,
       externalAuthorDataProvider,
     );
   const researchTagController =
-    libs.researchTagController || new ResearchTags(researchTagDataProvider);
-  const teamController = libs.teamController || new Teams(teamDataProvider);
+    libs.researchTagController ||
+    new ResearchTagController(researchTagDataProvider);
+  const teamController =
+    libs.teamController || new TeamController(teamDataProvider);
   const tutorialsController =
-    libs.tutorialsController || new Tutorials(tutorialsDataProvider);
+    libs.tutorialsController || new TutorialController(tutorialsDataProvider);
   const userController =
-    libs.userController || new Users(userDataProvider, assetDataProvider);
-  const labsController = libs.labsController || new Labs(labDataProvider);
+    libs.userController ||
+    new UserController(userDataProvider, assetDataProvider);
+  const labsController =
+    libs.labsController || new LabController(labDataProvider);
   const workingGroupsController =
-    libs.workingGroupsController || new WorkingGroups(workingGroupDataProvider);
+    libs.workingGroupsController ||
+    new WorkingGroupController(workingGroupDataProvider);
 
   // Handlers
   const authHandler =
@@ -675,14 +673,14 @@ export type Libs = {
   discoverController?: DiscoverController;
   eventController?: EventController;
   interestGroupController?: InterestGroupController;
-  labsController?: LabsController;
+  labsController?: LabController;
   newsController?: NewsController;
   pageController?: PageController;
   reminderController?: ReminderController;
   researchOutputController?: ResearchOutputController;
   researchTagController?: ResearchTagController;
   teamController?: TeamController;
-  tutorialsController?: TutorialsController;
+  tutorialsController?: TutorialController;
   userController?: UserController;
   workingGroupsController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;

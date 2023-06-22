@@ -1,7 +1,7 @@
-import { CalendarController } from '@asap-hub/model';
+import CalendarController from '../../src/controllers/calendars.controller';
 
-export const calendarControllerMock: jest.Mocked<CalendarController> = {
+export const calendarControllerMock = {
   fetch: jest.fn(),
   fetchById: jest.fn(),
   update: jest.fn(),
-};
+} as unknown as jest.Mocked<CalendarController>;

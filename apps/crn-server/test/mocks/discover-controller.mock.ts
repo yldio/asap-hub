@@ -1,5 +1,5 @@
-import { DiscoverController } from '../../src/controllers/discover';
+import DiscoverController from '../../src/controllers/discover.controller';
 
-export const discoverControllerMock: jest.Mocked<DiscoverController> = {
+export const discoverControllerMock = {
   fetch: jest.fn(),
-};
+} as unknown as jest.Mocked<DiscoverController>;

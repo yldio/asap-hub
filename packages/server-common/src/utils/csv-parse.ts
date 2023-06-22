@@ -14,7 +14,7 @@ export const parse =
       pump(
         createReadStream(src),
         csvParse({ from_line: 2 }),
-        through.obj({ maxConcurrency: 10 }, async (chunk, _, callback) => {
+        through.obj({ maxConcurrency: 1 }, async (chunk, _, callback) => {
           await transformer(parser(chunk));
           return callback(null);
         }),

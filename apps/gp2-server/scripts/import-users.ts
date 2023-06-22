@@ -53,7 +53,7 @@ const app = async () => {
   const filePath = args[0];
 
   const throttle = pThrottle({
-    limit: 2,
+    limit: 1,
     interval: 1000,
   });
 
@@ -83,15 +83,26 @@ const app = async () => {
       project?: gp2.ProjectDataObject;
     } => {
       const data = input.map((s) => s.trim());
+      const email = data[2] || data[3]!;
+      const workingGroupTitle = data[10]!;
       const userWorkingGroup = workingGroups.find(
-        (wg) => wg.title === data[10]!,
+        (wg) => wg.title === workingGroupTitle,
       );
-      const userProject = projects.find((p) => p.title === data[16]!);
+      if (workingGroupTitle.length > 0 && !userWorkingGroup) {
+        console.warn(
+          `Working group "${workingGroupTitle}" not found for ${email}`,
+        );
+      }
+      const projectTitle = data[16]!;
+      const userProject = projects.find((p) => p.title === projectTitle);
+      if (projectTitle.length > 0 && !userProject) {
+        console.warn(`Project "${projectTitle}" not found for ${email}`);
+      }
       return {
         firstName: data[0]!,
         lastName: data[1]!,
         country: data[4]!,
-        email: data[2] || data[3]!,
+        email,
         alternativeEmail: data[3] || undefined,
         region: data[5] as gp2.UserRegion,
         positions: [

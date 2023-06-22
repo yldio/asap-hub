@@ -22,28 +22,25 @@ const EditResourceModal: React.FC<EditResponseModalProps> = ({
   const index = parseInt(resourceIndex, 10);
   const resource = resources[index];
 
-  if (resource) {
-    return (
-      <ResourceModal
-        {...resource}
-        modalTitle={'Edit Resource'}
-        modalDescription={
-          'Edit or delete an existing resource that is being shared privately with your group.'
-        }
-        backHref={backHref}
-        onSave={(updated: gp2Model.Resource) => {
-          const updatedResources = resources.map((item, idx) =>
-            idx === index ? updated : item,
-          );
-          return updateResources(updatedResources);
-        }}
-        onDelete={() => {
-          const updatedResources = resources.filter((_, idx) => idx !== index);
-          return updateResources(updatedResources);
-        }}
-      />
-    );
-  }
-  return <NotFoundPage />;
+  return (
+    <ResourceModal
+      {...resource}
+      modalTitle={'Edit Resource'}
+      modalDescription={
+        'Edit or delete an existing resource that is being shared privately with your group.'
+      }
+      backHref={backHref}
+      onSave={(updated: gp2Model.Resource) => {
+        const updatedResources = resources.map((item, idx) =>
+          idx === index ? updated : item,
+        );
+        return updateResources(updatedResources);
+      }}
+      onDelete={() => {
+        const updatedResources = resources.filter((_, idx) => idx !== index);
+        return updateResources(updatedResources);
+      }}
+    />
+  );
 };
 export default EditResourceModal;

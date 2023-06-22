@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   getUserRole,
   hasShareResearchOutputPermission,
@@ -110,8 +110,21 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
   ];
 
   if (associations.length === 0) {
-    return <></>;
+    return null;
   }
+
+  const routeLink = (
+    association: Association,
+    outputDocumentType: OutputDocumentTypeParameter,
+  ) =>
+    isWGMembership(association)
+      ? network({})
+          .workingGroups({})
+          .workingGroup({ workingGroupId: association.id })
+          .createOutput({ outputDocumentType }).$
+      : network({}).teams({}).team({ teamId: association.id }).createOutput({
+          outputDocumentType,
+        }).$;
 
   return (
     <DropdownButton
@@ -130,121 +143,36 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
               type: 'title',
               onClick: () => setSelectedAssociation(undefined),
             },
-            ...(isWGMembership(selectedAssociation)
-              ? [
-                  {
-                    item: <>{article} Article</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .workingGroups({})
-                      .workingGroup({ workingGroupId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'article',
-                      }).$,
-                  },
-                  {
-                    item: <>{bioinformatics} Bioinformatics</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .workingGroups({})
-                      .workingGroup({ workingGroupId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'bioinformatics',
-                      }).$,
-                  },
-                  {
-                    item: <>{dataset} Dataset</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .workingGroups({})
-                      .workingGroup({ workingGroupId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'dataset',
-                      }).$,
-                  },
-                  {
-                    item: <>{labResource} Lab Resource</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .workingGroups({})
-                      .workingGroup({ workingGroupId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'lab-resource',
-                      }).$,
-                  },
-                  {
-                    item: <>{protocol} Protocol</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .workingGroups({})
-                      .workingGroup({ workingGroupId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'protocol',
-                      }).$,
-                  },
-                  {
-                    item: <>{crnReportIcon} CRN Report</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .workingGroups({})
-                      .workingGroup({ workingGroupId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'report',
-                      }).$,
-                  },
-                ]
-              : [
-                  {
-                    item: <>{article} Article</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .teams({})
-                      .team({ teamId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'article',
-                      }).$,
-                  },
-                  {
-                    item: <>{bioinformatics} Bioinformatics</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .teams({})
-                      .team({ teamId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'bioinformatics',
-                      }).$,
-                  },
-                  {
-                    item: <>{dataset} Dataset</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .teams({})
-                      .team({ teamId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'dataset',
-                      }).$,
-                  },
-                  {
-                    item: <>{labResource} Lab Resource</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .teams({})
-                      .team({ teamId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'lab-resource',
-                      }).$,
-                  },
-                  {
-                    item: <>{protocol} Protocol</>,
-                    type: 'inner' as ItemType,
-                    href: network({})
-                      .teams({})
-                      .team({ teamId: selectedAssociation.id })
-                      .createOutput({
-                        outputDocumentType: 'protocol',
-                      }).$,
-                  },
-                ]),
+            {
+              item: <>{article} Article</>,
+              type: 'inner' as ItemType,
+              href: routeLink(selectedAssociation, 'article'),
+            },
+            {
+              item: <>{bioinformatics} Bioinformatics</>,
+              type: 'inner' as ItemType,
+              href: routeLink(selectedAssociation, 'bioinformatics'),
+            },
+            {
+              item: <>{crnReportIcon} CRN Report</>,
+              type: 'inner' as ItemType,
+              href: routeLink(selectedAssociation, 'report'),
+            },
+            {
+              item: <>{dataset} Dataset</>,
+              type: 'inner' as ItemType,
+              href: routeLink(selectedAssociation, 'dataset'),
+            },
+            {
+              item: <>{labResource} Lab Resource</>,
+              type: 'inner' as ItemType,
+              href: routeLink(selectedAssociation, 'lab-resource'),
+            },
+            {
+              item: <>{protocol} Protocol</>,
+              type: 'inner' as ItemType,
+              href: routeLink(selectedAssociation, 'protocol'),
+            },
           ]
         : associations}
     </DropdownButton>

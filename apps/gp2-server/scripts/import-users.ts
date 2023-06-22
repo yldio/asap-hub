@@ -114,9 +114,12 @@ const app = async () => {
             `about to update working group ${workingGroup.title} for user: ${user.email}`,
           );
           await rateLimiter.removeTokens(5);
+          const latestWorkingGroup = await workingGroupDataProvider.fetchById(
+            workingGroup.id,
+          );
           await workingGroupDataProvider.update(workingGroup.id, {
             members: [
-              ...workingGroup.members,
+              ...(latestWorkingGroup?.members || []),
               { userId, role: 'Working group member' },
             ],
           });
@@ -129,8 +132,12 @@ const app = async () => {
             `about to update project ${project.title} for user: ${user.email}`,
           );
           await rateLimiter.removeTokens(5);
+          const latestProject = await projectDataProvider.fetchById(project.id);
           await projectDataProvider.update(project.id, {
-            members: [...project.members, { userId, role: 'Contributor' }],
+            members: [
+              ...(latestProject?.members || []),
+              { userId, role: 'Contributor' },
+            ],
           });
           console.log(
             `updated project ${project.title} for user: ${user.email}`,

@@ -480,7 +480,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        SES_REGION: `\${ssm:ses-region-dev}`,
+        SES_REGION: sesRegion,
         EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
         EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,

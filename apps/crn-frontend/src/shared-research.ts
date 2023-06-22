@@ -1,7 +1,4 @@
-import {
-  TeamOutputDocumentTypeParameter,
-  WorkingGroupOutputDocumentTypeParameter,
-} from '@asap-hub/routing';
+import { OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   BackendError,
   validationErrorsAreSupported,
@@ -32,9 +29,7 @@ import {
 } from './shared-research/state';
 
 export function paramOutputDocumentTypeToResearchOutputDocumentType(
-  data:
-    | TeamOutputDocumentTypeParameter
-    | WorkingGroupOutputDocumentTypeParameter,
+  data: OutputDocumentTypeParameter,
 ): ResearchOutputDocumentType {
   switch (data) {
     case 'article':

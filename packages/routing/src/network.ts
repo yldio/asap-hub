@@ -70,18 +70,18 @@ const user = (() => {
 })();
 const users = route('/users', {}, { user });
 
-export type TeamOutputDocumentTypeParameter =
+const outputDocumentTypeParser = {
+  parse: (data: string): OutputDocumentTypeParameter =>
+    data as OutputDocumentTypeParameter,
+  serialize: (data: OutputDocumentTypeParameter): string => data,
+};
+export type OutputDocumentTypeParameter =
   | 'article'
   | 'bioinformatics'
   | 'dataset'
   | 'lab-resource'
-  | 'protocol';
-
-const teamOutputDocumentTypeParser = {
-  parse: (data: string): TeamOutputDocumentTypeParameter =>
-    data as TeamOutputDocumentTypeParameter,
-  serialize: (data: TeamOutputDocumentTypeParameter): string => data,
-};
+  | 'protocol'
+  | 'report';
 
 const team = (() => {
   const draftOutputs = route('/draft-outputs', {}, {});
@@ -93,8 +93,8 @@ const team = (() => {
   const tools = route('/tools', {}, { tool });
   const workspace = route('/workspace', {}, { tools });
   const createOutput = route(
-    '/create-output/:teamOutputDocumentType',
-    { teamOutputDocumentType: teamOutputDocumentTypeParser },
+    '/create-output/:outputDocumentType',
+    { outputDocumentType: outputDocumentTypeParser },
     {},
   );
   const duplicateOutput = route('/duplicate/:id', { id: stringParser }, {});
@@ -133,26 +133,13 @@ const group = (() => {
 })();
 const groups = route('/interest-groups', {}, { group });
 
-const workingGroupOutputDocumentTypeParser = {
-  parse: (data: string): WorkingGroupOutputDocumentTypeParameter =>
-    data as WorkingGroupOutputDocumentTypeParameter,
-  serialize: (data: WorkingGroupOutputDocumentTypeParameter): string => data,
-};
-export type WorkingGroupOutputDocumentTypeParameter =
-  | 'article'
-  | 'report'
-  | 'bioinformatics'
-  | 'dataset'
-  | 'lab-resource'
-  | 'protocol';
-
 const workingGroup = (() => {
   const draftOutputs = route('/draft-outputs', {}, {});
   const about = route('/about', {}, {});
   const outputs = route('/outputs', {}, {});
   const createOutput = route(
-    '/create-output/:workingGroupOutputDocumentType',
-    { workingGroupOutputDocumentType: workingGroupOutputDocumentTypeParser },
+    '/create-output/:outputDocumentType',
+    { outputDocumentType: outputDocumentTypeParser },
     {},
   );
   const duplicateOutput = route('/duplicate/:id', { id: stringParser }, {});

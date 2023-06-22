@@ -1,6 +1,6 @@
 import csvParse from 'csv-parse';
-import pump from 'pump';
 import { createReadStream } from 'fs';
+import pump from 'pump';
 import through from 'through2-concurrent';
 
 export const parse =

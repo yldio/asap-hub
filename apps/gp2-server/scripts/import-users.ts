@@ -2,6 +2,7 @@ import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/conten
 import { GenericError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { parse } from '@asap-hub/server-common';
+import pThrottle from 'p-throttle';
 import {
   contentfulAccessToken,
   contentfulEnvId,
@@ -37,9 +38,12 @@ const app = async () => {
   let usersAlreadyExist = 0;
   let usersFailed = 0;
 
+  console.log(`starting import for ${contentfulEnvId}`);
   const workingGroups = (await workingGroupDataProvider.fetch()).items;
-  const projects = (await projectDataProvider.fetch({ skip: 0, take: 200 }))
+  console.debug(`working groups ${JSON.stringify(workingGroups, null, 2)}`);
+  const projects = (await projectDataProvider.fetch({ skip: 0, take: 20 }))
     .items;
+  console.debug(`projects ${JSON.stringify(projects, null, 2)}`);
   const args = process.argv.slice(2);
 
   if (typeof args[0] !== 'string') {
@@ -48,6 +52,29 @@ const app = async () => {
 
   const filePath = args[0];
 
+  const throttle = pThrottle({
+    limit: 2,
+    interval: 1000,
+  });
+
+  const throttledUserCreate = throttle(
+    async (input: gp2.UserCreateDataObject) => userDataProvider.create(input),
+  );
+  const throttledWorkingGroupUpdate = throttle(
+    async (userId: string, workingGroup: gp2.WorkingGroupDataObject) =>
+      workingGroupDataProvider.update(workingGroup.id, {
+        members: [
+          ...workingGroup.members,
+          { userId, role: 'Working group member' },
+        ],
+      }),
+  );
+  const throttledProjectUpdate = throttle(
+    async (userId: string, project: gp2.ProjectDataObject) =>
+      projectDataProvider.update(project.id, {
+        members: [...project.members, { userId, role: 'Contributor' }],
+      }),
+  );
   const userCsvImport = parse(
     (
       input,
@@ -65,7 +92,7 @@ const app = async () => {
         lastName: data[1]!,
         country: data[4]!,
         email: data[2] || data[3]!,
-        alternativeEmail: data[3]!,
+        alternativeEmail: data[3] || undefined,
         region: data[5] as gp2.UserRegion,
         positions: [
           {
@@ -85,26 +112,33 @@ const app = async () => {
         project: userProject,
       };
     },
-    async ({ workingGroup, project, ...input }) => {
+    async ({ workingGroup, project, ...user }) => {
       try {
-        const user = await userDataProvider.create(input);
+        console.log(`about to create user: ${user.email}`);
+        const userId = await throttledUserCreate(user);
+        console.log(`created user: ${user.email} with id: ${userId}`);
         if (workingGroup) {
-          workingGroupDataProvider.update(workingGroup.id, {
-            members: [
-              ...workingGroup.members,
-              { userId: user, role: 'Working group member' },
-            ],
-          });
+          console.log(
+            `about to update working group ${workingGroup.title} for user: ${user.email}`,
+          );
+          await throttledWorkingGroupUpdate(userId, workingGroup);
+          console.log(
+            `updated working group ${workingGroup.title} for user: ${user.email}`,
+          );
         }
         if (project) {
-          projectDataProvider.update(project.id, {
-            members: [
-              ...project.members,
-              { userId: user, role: 'Contributor' },
-            ],
-          });
+          console.log(
+            `about to update project ${project.title} for user: ${user.email}`,
+          );
+          await throttledProjectUpdate(userId, project);
+          console.log(
+            `updated project ${project.title} for user: ${user.email}`,
+          );
         }
         numberOfImportedUsers++;
+        console.log(
+          `number of users imported so far: ${numberOfImportedUsers} `,
+        );
       } catch (e) {
         if (
           e &&
@@ -128,10 +162,10 @@ const app = async () => {
             typeof e.httpResponseBody === 'string' &&
             e.httpResponseBody.includes('Validation error')
           ) {
-            console.log(
+            console.error(
               `Validation error(s):\n` +
                 `- ${(e as any).details.join('\n- ')}\n` +
-                `Input: ${Object.entries(input)
+                `Input: ${Object.entries(user)
                   .map(
                     ([k, v]) =>
                       `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`,
@@ -142,7 +176,7 @@ const app = async () => {
           }
           console.log(JSON.stringify(e, null, 2));
         }
-        console.log({ input, e });
+        console.log({ user, e });
       }
     },
   );

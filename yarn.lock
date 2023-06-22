@@ -1313,6 +1313,7 @@ __metadata:
     jest-when: 3.5.2
     jsonwebtoken: 9.0.0
     jwt-encode: 1.0.1
+    limiter: ^2.1.0
     lodash.matches: 4.6.0
     luxon: 1.28.1
     mime-types: 2.1.35

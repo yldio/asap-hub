@@ -2,7 +2,7 @@ import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/conten
 import { GenericError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { parse } from '@asap-hub/server-common';
-import pThrottle from 'p-throttle';
+import { RateLimiter } from 'limiter';
 import {
   contentfulAccessToken,
   contentfulEnvId,
@@ -39,6 +39,10 @@ const app = async () => {
   let usersFailed = 0;
 
   console.log(`starting import for ${contentfulEnvId}`);
+  const rateLimiter = new RateLimiter({
+    tokensPerInterval: 5,
+    interval: 5000,
+  });
   const workingGroups = (await workingGroupDataProvider.fetch()).items;
   console.debug(`working groups ${JSON.stringify(workingGroups, null, 2)}`);
   const projects = (await projectDataProvider.fetch({ skip: 0, take: 20 }))
@@ -49,32 +53,8 @@ const app = async () => {
   if (typeof args[0] !== 'string') {
     throw new Error('Please provide a path to the CSV file');
   }
-
   const filePath = args[0];
 
-  const throttle = pThrottle({
-    limit: 1,
-    interval: 1000,
-  });
-
-  const throttledUserCreate = throttle(
-    async (input: gp2.UserCreateDataObject) => userDataProvider.create(input),
-  );
-  const throttledWorkingGroupUpdate = throttle(
-    async (userId: string, workingGroup: gp2.WorkingGroupDataObject) =>
-      workingGroupDataProvider.update(workingGroup.id, {
-        members: [
-          ...workingGroup.members,
-          { userId, role: 'Working group member' },
-        ],
-      }),
-  );
-  const throttledProjectUpdate = throttle(
-    async (userId: string, project: gp2.ProjectDataObject) =>
-      projectDataProvider.update(project.id, {
-        members: [...project.members, { userId, role: 'Contributor' }],
-      }),
-  );
   const userCsvImport = parse(
     (
       input,
@@ -126,13 +106,20 @@ const app = async () => {
     async ({ workingGroup, project, ...user }) => {
       try {
         console.log(`about to create user: ${user.email}`);
-        const userId = await throttledUserCreate(user);
+        await rateLimiter.removeTokens(5);
+        const userId = await userDataProvider.create(user);
         console.log(`created user: ${user.email} with id: ${userId}`);
         if (workingGroup) {
           console.log(
             `about to update working group ${workingGroup.title} for user: ${user.email}`,
           );
-          await throttledWorkingGroupUpdate(userId, workingGroup);
+          await rateLimiter.removeTokens(5);
+          await workingGroupDataProvider.update(workingGroup.id, {
+            members: [
+              ...workingGroup.members,
+              { userId, role: 'Working group member' },
+            ],
+          });
           console.log(
             `updated working group ${workingGroup.title} for user: ${user.email}`,
           );
@@ -141,7 +128,10 @@ const app = async () => {
           console.log(
             `about to update project ${project.title} for user: ${user.email}`,
           );
-          await throttledProjectUpdate(userId, project);
+          await rateLimiter.removeTokens(5);
+          await projectDataProvider.update(project.id, {
+            members: [...project.members, { userId, role: 'Contributor' }],
+          });
           console.log(
             `updated project ${project.title} for user: ${user.email}`,
           );

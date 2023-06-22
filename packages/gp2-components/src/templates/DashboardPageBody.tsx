@@ -208,6 +208,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         />
       </Card>
       {!!news.total && <DashboardNews items={news.items} />}
+      <h2>Latest Stats</h2>
       <div>
         <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
         <div css={infoStyles}>

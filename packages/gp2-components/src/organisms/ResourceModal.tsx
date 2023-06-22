@@ -58,6 +58,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
   const [newType, setNewType] = useState<'Link' | 'Note' | ''>(
     props.type || '',
   );
+
   const [newTitle, setNewTitle] = useState(title || '');
   const [newDescription, setNewDescription] = useState(description || '');
   const [newExternalLink, setNewExternalLink] = useState(externalLink || '');
@@ -74,7 +75,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
     return (
       props.type !== newType ||
       title !== newTitle ||
-      description !== newDescription
+      (!!description && description !== newDescription)
     );
   };
 

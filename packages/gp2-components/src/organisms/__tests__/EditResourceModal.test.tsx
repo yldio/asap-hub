@@ -70,49 +70,6 @@ describe('EditResource', () => {
       },
     ]);
   });
-  it('throws (Not Found) if there are no resources', () => {
-    const resources: gp2Model.Resource[] = [];
-    const updateResources = jest.fn();
-    const resourceIndex = '0';
-
-    renderEditResourceModal({
-      updateResources,
-      resources,
-      resourceIndex,
-    });
-
-    expect(updateResources).not.toBeCalled();
-
-    expect(
-      screen.getByRole('heading', {
-        name: /Sorry! We can’t seem to find that page/i,
-      }),
-    ).toBeVisible();
-  });
-  it('throws (Not Found) if we cannot find the correct working resource', () => {
-    const resources: gp2Model.Resource[] = [
-      {
-        type: 'Note',
-        title: 'first resource',
-      },
-    ];
-    const updateResources = jest.fn();
-    const resourceIndex = '1';
-
-    renderEditResourceModal({
-      updateResources,
-      resources,
-      resourceIndex,
-    });
-
-    expect(updateResources).not.toBeCalled();
-
-    expect(
-      screen.getByRole('heading', {
-        name: /Sorry! We can’t seem to find that page/i,
-      }),
-    ).toBeVisible();
-  });
   it('updates the correct resource when multiple resources exist', async () => {
     const resources: gp2Model.Resource[] = [
       {

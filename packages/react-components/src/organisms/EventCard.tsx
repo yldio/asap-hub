@@ -14,6 +14,7 @@ import { perRem, mobileScreen } from '../pixels';
 import { Link } from '../atoms';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
+import { externalLinkIcon } from '../icons';
 
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
@@ -36,6 +37,12 @@ const buttonStyle = css({
     marginTop: `${15 / perRem}em`,
     width: '100%',
   },
+});
+
+const externalIconStyle = css({
+  display: 'flex',
+  alignSelf: 'center',
+  marginLeft: `${8 / perRem}em`,
 });
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -86,7 +93,8 @@ const EventCard: React.FC<EventCardProps> = ({
                   buttonStyle
                   small
                 >
-                  Join meeting now
+                  Join now
+                  <span css={externalIconStyle}>{externalLinkIcon}</span>
                 </Link>
               </div>
             )}

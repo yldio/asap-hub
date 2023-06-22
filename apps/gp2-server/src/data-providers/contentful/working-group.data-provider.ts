@@ -8,7 +8,7 @@ import {
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
 import {
-  deleteEntities,
+  deleteEntries,
   parseCalendar,
   parseMembers,
   parseMilestones,
@@ -77,7 +77,7 @@ export class WorkingGroupContentfulDataProvider
       ...(workingGroup.members && { ...memberFields }),
     });
 
-    await deleteEntities(
+    await deleteEntries(
       [...resourceIdsToDelete, ...memberIdsToDelete],
       environment,
     );

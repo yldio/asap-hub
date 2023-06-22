@@ -1,6 +1,6 @@
 import { Entry, Environment } from '@asap-hub/contentful';
 
-export const deleteEntities = async (
+export const deleteEntries = async (
   idsToDelete: string[],
   environment: Environment,
 ) =>

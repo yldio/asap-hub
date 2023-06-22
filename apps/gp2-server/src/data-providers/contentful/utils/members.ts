@@ -16,7 +16,6 @@ type MembersItem =
   | GraphQLProject['membersCollection'];
 
 type MemberItem = NonNullable<NonNullable<MembersItem>['items'][number]>;
-export type Member = gp2Model.ProjectDataObject['members'][number];
 const parseMember = <T extends string>(
   id: string,
   user: NonNullable<MemberItem['user']>,

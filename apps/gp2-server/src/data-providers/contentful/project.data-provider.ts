@@ -8,7 +8,7 @@ import {
 import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
 import { ProjectDataProvider } from '../types/project.data-provider.type';
 import {
-  deleteEntities,
+  deleteEntries,
   parseCalendar,
   parseMembers,
   parseMilestones,
@@ -89,7 +89,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       ...(project.members && { ...memberFields }),
     });
 
-    await deleteEntities(
+    await deleteEntries(
       [...resourceIdsToDelete, ...memberIdsToDelete],
       environment,
     );

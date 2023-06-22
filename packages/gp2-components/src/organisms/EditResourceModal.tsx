@@ -1,5 +1,4 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
 import ResourceModal from './ResourceModal';

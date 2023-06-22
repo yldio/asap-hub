@@ -92,7 +92,6 @@ const EventCard: React.FC<EventCardProps> = ({
                   primary
                   buttonStyle
                   small
-                  icon="right"
                 >
                   Join now
                   <span css={externalIconStyle}>{externalLinkIcon}</span>

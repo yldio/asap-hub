@@ -115,14 +115,6 @@ const smallIconOnlyStyles = css({
   paddingRight: `${(9 - borderWidth) / perRem}em`,
 });
 
-const smallIconOnLeftStyles = css({
-  paddingLeft: `${(9 - borderWidth) / perRem}em`,
-});
-
-const smallIconOnRightStyles = css({
-  paddingRight: `${(9 - borderWidth) / perRem}em`,
-});
-
 const boxShadow = (opaqueColor: OpaqueColor | TransparentColor) =>
   `0px 2px 4px -2px ${opaqueColor.rgba}`;
 
@@ -221,7 +213,6 @@ export const getButtonStyles = ({
   noMargin = false,
   fullWidth = false,
   colors,
-  icon,
 }: {
   colors?: Theme['colors'];
   primary?: boolean;
@@ -231,7 +222,6 @@ export const getButtonStyles = ({
   noMargin?: boolean;
   fullWidth?: boolean;
   children?: React.ReactNode;
-  icon?: 'left' | 'right';
 }) =>
   css([
     styles,
@@ -256,8 +246,6 @@ export const getButtonStyles = ({
       : typeof children === 'string') ||
       (small ? smallIconOnlyStyles : largeIconOnlyStyles),
     fullWidth && fullWidthStyles,
-    icon && icon === 'left' && smallIconOnLeftStyles,
-    icon && icon === 'right' && smallIconOnRightStyles,
   ]);
 
 export const getButtonChildren = (children = [] as React.ReactNode) =>

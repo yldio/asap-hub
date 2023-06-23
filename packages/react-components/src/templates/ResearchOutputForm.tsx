@@ -19,6 +19,7 @@ import {
   Form,
   ResearchOutputExtraInformationCard,
   ResearchOutputFormSharingCard,
+  ResearchOutputRelatedEventsCard,
 } from '../organisms';
 import { mobileScreen, perRem } from '../pixels';
 import { Button } from '../atoms';
@@ -454,6 +455,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   getRelatedResearchSuggestions={getRelatedResearchSuggestions}
                   isEditMode={!!researchOutputData}
                 />
+                <ResearchOutputRelatedEventsCard />
                 <div css={formControlsContainerStyles}>
                   <div
                     css={

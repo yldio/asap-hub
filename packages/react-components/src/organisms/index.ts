@@ -39,7 +39,7 @@ export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as RecentSharedOutputs } from './RecentSharedOutputs';
-export { default as RelatedEventsCard } from './RelatedEventsCard';
+export { default as ResearchOutputRelatedEventsCard } from './ResearchOutputRelatedEventsCard';
 export { default as RelatedResearch } from './RelatedResearch';
 export { default as RemindersCard } from './RemindersCard';
 export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';

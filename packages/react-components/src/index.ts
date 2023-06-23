@@ -139,7 +139,7 @@ export {
   ProfileExpertiseAndResources,
   QuestionsSection,
   RecentSharedOutputs,
-  RelatedEventsCard,
+  ResearchOutputRelatedEventsCard,
   RelatedResearch,
   RemindersCard,
   ResearchOutputExtraInformationCard,

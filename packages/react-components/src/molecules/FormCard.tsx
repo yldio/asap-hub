@@ -28,7 +28,7 @@ const FormCard: React.FC<FormCardProps> = ({
     </div>
     {!!description && (
       <div css={[paddingStyles, descriptionStyles]}>
-        <Paragraph>{description}</Paragraph>
+        <Paragraph accent="lead">{description}</Paragraph>
       </div>
     )}
     <div css={[paddingStyles]}>{children}</div>

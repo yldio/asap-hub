@@ -1,6 +1,5 @@
 import {
   addLocaleToFields,
-  Entry,
   Environment,
   getLinkEntities,
   patchAndPublish,
@@ -106,7 +105,6 @@ const outUnchangedResources =
 export const processResources = async (
   environment: Environment,
   resources: gp2Model.Resource[] | undefined,
-  previousEntry: Entry,
   previousResources: gp2Model.Resource[] | undefined,
 ) => {
   const nextResources: string[] = await addNextResources(
@@ -114,7 +112,7 @@ export const processResources = async (
     resources,
   );
 
-  const idsToDelete = getIdsToDelete(previousEntry, resources, 'resources');
+  const idsToDelete = getIdsToDelete(previousResources, resources);
   const updatedIds = await updateResources(
     resources,
     idsToDelete,

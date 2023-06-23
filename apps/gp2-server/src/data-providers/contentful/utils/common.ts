@@ -1,4 +1,4 @@
-import { Entry, Environment } from '@asap-hub/contentful';
+import { Environment } from '@asap-hub/contentful';
 
 export const deleteEntries = async (
   idsToDelete: string[],
@@ -12,17 +12,15 @@ export const deleteEntries = async (
     }),
   );
 export const getIdsToDelete = (
-  previousEntry: Entry,
+  previous: { id?: string }[] | undefined,
   entities: { id?: string }[] | undefined,
-  fieldName: string,
 ): string[] => {
-  const previousMembers = previousEntry.fields[fieldName];
-  if (!previousMembers?.['en-US']) {
+  if (!previous || previous.length === 0) {
     return [];
   }
-  const existingIds: string[] = previousMembers['en-US'].map(
-    ({ sys: { id } }: { sys: { id: string } }) => id,
-  );
+  const existingIds = previous
+    .filter((existing): existing is { id: string } => !!existing.id)
+    .map(({ id }) => id);
   const nextIds = (entities || []).map(({ id }) => id);
 
   return existingIds.filter((id) => !nextIds.includes(id));

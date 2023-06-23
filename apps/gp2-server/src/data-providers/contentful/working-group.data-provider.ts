@@ -54,23 +54,22 @@ export class WorkingGroupContentfulDataProvider
   ): Promise<void> {
     const previousWorkingGroupDataObject = await this.fetchById(id);
     const environment = await this.getRestClient();
-    const previousWorkingGroup = await environment.getEntry(id);
 
     const { resourceFields, idsToDelete: resourceIdsToDelete } =
       await processResources(
         environment,
         workingGroup.resources,
-        previousWorkingGroup,
         previousWorkingGroupDataObject?.resources,
       );
     const { memberFields, idsToDelete: memberIdsToDelete } =
       await processMembers<gp2Model.WorkingGroupMemberRole>(
         environment,
         workingGroup.members,
-        previousWorkingGroup,
         previousWorkingGroupDataObject?.members,
         'workingGroupMembership',
       );
+
+    const previousWorkingGroup = await environment.getEntry(id);
     const result = await patchAndPublish(previousWorkingGroup, {
       ...workingGroup,
       ...(workingGroup.resources && { ...resourceFields }),

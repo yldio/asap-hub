@@ -1,6 +1,5 @@
 import {
   addLocaleToFields,
-  Entry,
   Environment,
   getLinkEntities,
   getLinkEntity,
@@ -113,13 +112,12 @@ const getMemberFields = (nextMembers: string[]) => ({
 export const processMembers = async <T extends string>(
   environment: Environment,
   members: gp2Model.UpdateMember<T>[] | undefined,
-  previousEntry: Entry,
   previousMembers: gp2Model.Member<T>[] | undefined,
   entryName: string,
 ) => {
   const nextMembers = await addNextMember(environment, members, entryName);
 
-  const idsToDelete = getIdsToDelete(previousEntry, members, 'members');
+  const idsToDelete = getIdsToDelete(previousMembers, members);
   const updatedIds = await updateMembers(
     members,
     idsToDelete,

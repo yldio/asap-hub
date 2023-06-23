@@ -33,7 +33,7 @@ const SharedResearchOutputBanners: React.FC<
   reviewToggled,
   associationName,
 }) => {
-  const [publishedNowBanner, setPublishedNowBanner] = useState(published);
+  const [publishedNowBanner, setPublishedNowBanner] = useState(publishedNow);
   const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
   const [reviewBannerState, setReviewBannerState] = useState(
     reviewToggled ? (reviewRequestedBy ? 'requested' : 'dismissed') : null,
@@ -43,7 +43,8 @@ const SharedResearchOutputBanners: React.FC<
     setReviewBannerState(
       reviewToggled ? (reviewRequestedBy ? 'requested' : 'dismissed') : null,
     );
-  }, [reviewToggled, reviewRequestedBy]);
+    setPublishedNowBanner(publishedNow);
+  }, [reviewToggled, reviewRequestedBy, publishedNow]);
 
   return (
     <div css={toastContainer}>
@@ -67,29 +68,24 @@ const SharedResearchOutputBanners: React.FC<
           {`In review ${association} ${documentType} switched to draft successfully.`}
         </Toast>
       )}
-
-      {reviewRequestedBy && !published && (
+      {!published && reviewRequestedBy && (
         <Toast accent="info">
           {`${reviewRequestedBy.firstName} ${reviewRequestedBy.lastName} on ${associationName} requested PMs to review this output. This draft is only available to members in the ${association} listed below.`}
         </Toast>
       )}
-      {(publishedNow || !published) && (
-        <div>
-          {publishedNowBanner && (
-            <Toast
-              accent="successLarge"
-              onClose={() => setPublishedNowBanner(false)}
-            >
-              {`${
-                association === 'working group' ? 'Working Group' : 'Team'
-              } ${documentType} published successfully.`}
-            </Toast>
-          )}
-          {!published && !reviewRequestedBy && (
-            <Toast accent="warning">{`This draft is available to members in the ${association}
+      {publishedNowBanner && (
+        <Toast
+          accent="successLarge"
+          onClose={() => setPublishedNowBanner(false)}
+        >
+          {`${
+            association === 'working group' ? 'Working Group' : 'Team'
+          } ${documentType} published successfully.`}
+        </Toast>
+      )}
+      {!published && !reviewRequestedBy && (
+        <Toast accent="warning">{`This draft is available to members in the ${association}
                 listed below. Only PMs can publish this output.`}</Toast>
-          )}
-        </div>
       )}
     </div>
   );

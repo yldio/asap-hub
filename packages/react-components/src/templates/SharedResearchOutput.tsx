@@ -1,9 +1,9 @@
 import React, { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { network, sharedResearch } from '@asap-hub/routing';
 
-import { Card, Headline2, Divider, Markdown } from '../atoms';
+import { Card, Headline2, Divider, Markdown, Link } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { CtaCard, TagList } from '../molecules';
@@ -21,6 +21,7 @@ import {
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
 } from '../utils';
+import { mail } from '..';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -52,7 +53,6 @@ type SharedResearchOutputProps = Pick<
   } & ComponentProps<typeof SharedResearchAdditionalInformationCard> & {
     publishedNow: boolean;
     draftCreated?: boolean;
-    currentUserId?: string;
     onRequestReview?: (
       shouldReview: boolean,
     ) => Promise<ResearchOutputResponse | void>;
@@ -70,7 +70,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   published,
   publishedNow,
   draftCreated,
-  currentUserId,
   reviewRequestedBy,
   onRequestReview,
   onPublish,
@@ -79,7 +78,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
     props.documentType,
   );
-
   const tags = [
     ...props.methods,
     ...props.organisms,
@@ -89,19 +87,26 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   ];
 
   const hasDescription = description || descriptionMD;
-
+  const { mailToSupport } = mail;
   const association = getResearchOutputAssociation(props);
   const associationName = getResearchOutputAssociationName(props);
   const [reviewToggled, setReviewToggled] = useState(false);
-  const [displayModal, setDisplayModal] = useState(false);
+  const [displayReviewModal, setDisplayReviewModal] = useState(false);
+  const [displayPublishModal, setDisplayPublishModal] = useState(false);
 
   const toggleReview = async (shouldReview: boolean) => {
-    if (!currentUserId || !onRequestReview) return;
+    if (!onRequestReview) return;
 
     await onRequestReview(shouldReview);
 
-    setDisplayModal(false);
+    setDisplayReviewModal(false);
     setReviewToggled(true);
+  };
+
+  const publishOutput = async () => {
+    if (!onPublish) return;
+    await onPublish();
+    setDisplayPublishModal(false);
   };
 
   const duplicateLink =
@@ -137,14 +142,16 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         {!isGrantDocument && (
           <SharedResearchOutputButtons
             id={id}
-            displayModal={displayModal}
-            setDisplayModal={setDisplayModal}
+            displayReviewModal={displayReviewModal}
+            setDisplayReviewModal={setDisplayReviewModal}
             reviewRequestedBy={reviewRequestedBy}
             duplicateLink={duplicateLink}
             published={published}
+            displayPublishModal={displayPublishModal}
+            setDisplayPublishModal={setDisplayPublishModal}
           />
         )}
-        {displayModal && (
+        {displayReviewModal && (
           <ConfirmModal
             title={`${
               reviewRequestedBy
@@ -164,7 +171,33 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             }`}
             onSave={() => toggleReview(!reviewRequestedBy)}
             onCancel={() => {
-              setDisplayModal(false);
+              setDisplayReviewModal(false);
+            }}
+          />
+        )}
+        {displayPublishModal && (
+          <ConfirmModal
+            title={'Publish output for the whole hub?'}
+            description={
+              <>
+                {`All ${
+                  association === 'working group' ? 'working group' : 'team'
+                } members listed on this output will be notified and all
+                CRN members will be able to access it. If you want to switch to
+                draft after the output was published you need to contact`}
+                <Link href={mailToSupport()}> techsupport@asap.science</Link>.
+              </>
+            }
+            cancelText="Cancel"
+            confirmText="Publish Output"
+            onSave={() => publishOutput()}
+            successHref={
+              sharedResearch({})
+                .researchOutput({ researchOutputId: id })
+                .researchOutputPublished({}).$
+            }
+            onCancel={() => {
+              setDisplayPublishModal(false);
             }}
           />
         )}

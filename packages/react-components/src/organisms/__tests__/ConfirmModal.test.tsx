@@ -21,6 +21,26 @@ it('renders the title', () => {
   ).toBeVisible();
 });
 
+it('renders the description when it is a string', () => {
+  const { getByText } = render(
+    <ConfirmModal {...props} description="test description" />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+  expect(getByText('test description', { selector: 'p' })).toBeVisible();
+});
+
+it('renders the description when it is a react node', () => {
+  const { getByText } = render(
+    <ConfirmModal {...props} description={<span>test description</span>} />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+  expect(getByText('test description', { selector: 'span' })).toBeVisible();
+});
+
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(

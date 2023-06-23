@@ -6,8 +6,10 @@ import SharedResearchOutputButtons from '../SharedResearchOutputButtons';
 
 const props: ComponentProps<typeof SharedResearchOutputButtons> = {
   id: 'ro1',
-  displayModal: false,
-  setDisplayModal: jest.fn(),
+  displayReviewModal: false,
+  setDisplayReviewModal: jest.fn(),
+  displayPublishModal: false,
+  setDisplayPublishModal: jest.fn(),
   reviewRequestedBy: undefined,
   duplicateLink: 'duplicateLink',
   published: false,
@@ -198,7 +200,7 @@ describe('ready for review button', () => {
     expect(queryByText('Ready for PM Review')).toBeNull();
   });
   it('gets displayed when all the conditions are met and clicking it calls its function', async () => {
-    const mockDisplayModal = jest.fn();
+    const mockDisplayReviewModal = jest.fn();
     const { queryByText } = render(
       <ResearchOutputPermissionsContext.Provider
         value={{
@@ -211,7 +213,7 @@ describe('ready for review button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={false}
-          setDisplayModal={mockDisplayModal}
+          setDisplayReviewModal={mockDisplayReviewModal}
           reviewRequestedBy={undefined}
         />
         ,
@@ -221,7 +223,7 @@ describe('ready for review button', () => {
     const button = queryByText('Ready for PM Review');
     expect(button).toBeInTheDocument();
     fireEvent.click(button!);
-    expect(mockDisplayModal).toHaveBeenCalled();
+    expect(mockDisplayReviewModal).toHaveBeenCalled();
   });
 });
 
@@ -287,7 +289,7 @@ describe('the switch to draft button', () => {
     expect(queryByText('Switch to Draft')).toBeNull();
   });
   it('gets displayed when all the conditions are met and clicking it calls its function', async () => {
-    const mockDisplayModal = jest.fn();
+    const mockDisplayReviewModal = jest.fn();
     const { queryByText } = render(
       <ResearchOutputPermissionsContext.Provider
         value={{
@@ -300,7 +302,7 @@ describe('the switch to draft button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={false}
-          setDisplayModal={mockDisplayModal}
+          setDisplayReviewModal={mockDisplayReviewModal}
           reviewRequestedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
         />
         ,
@@ -310,6 +312,61 @@ describe('the switch to draft button', () => {
     const button = queryByText('Switch to Draft');
     expect(button).toBeInTheDocument();
     fireEvent.click(button!);
-    expect(mockDisplayModal).toHaveBeenCalled();
+    expect(mockDisplayReviewModal).toHaveBeenCalled();
+  });
+});
+
+describe('the publish draft button', () => {
+  it('does not get displayed when the user does not have staff permission', () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: true,
+          canPublishResearchOutput: false,
+          canShareResearchOutput: false,
+          canRequestReview: true,
+        }}
+      >
+        <SharedResearchOutputButtons {...props} published={false} />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByText('Publish')).toBeNull();
+  });
+  it('does not get displayed when the RO was published', () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canEditResearchOutput: false,
+          canPublishResearchOutput: true,
+          canShareResearchOutput: false,
+          canRequestReview: false,
+        }}
+      >
+        <SharedResearchOutputButtons {...props} published={true} />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByText('Publish')).toBeNull();
+  });
+  it('gets displayed when all the conditions are met and clicking it calls its function', async () => {
+    const mockDisplayPublishModal = jest.fn();
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canPublishResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutputButtons
+          {...props}
+          published={false}
+          setDisplayPublishModal={mockDisplayPublishModal}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = queryByText('Publish');
+    expect(button).toBeInTheDocument();
+    fireEvent.click(button!);
+    expect(mockDisplayPublishModal).toHaveBeenCalled();
   });
 });

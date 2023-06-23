@@ -13,11 +13,6 @@ export default class Dashboard implements DashboardController {
     if (items.length === 0) {
       throw new Error('No dashboard data found');
     }
-    // const dashboard = items[0];
-    // if (!dashboard) {
-    //   throw new Error('No dashboard data found');
-    // }
-    // return dashboard;
 
     return {
       total,

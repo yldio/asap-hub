@@ -15,3 +15,19 @@ export const getNews = async (
   }
   return resp.json();
 };
+
+export const getDashboardStats = async (
+  authorization: string,
+): Promise<gp2.ListDashboardResponse> => {
+  const response = await fetch(`${API_BASE_URL}/dashboard`, {
+    headers: { authorization, ...createSentryHeaders() },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch dashboard.Expected status 2xx. Received status ${`${response.status} ${response.statusText}`.trim()}.`,
+    );
+  }
+
+  return response.json();
+};

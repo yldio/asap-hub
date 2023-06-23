@@ -1,7 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { atom, selector, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getNews } from './api';
+import { getDashboardStats, getNews } from './api';
 
 const fetchNewsState = selector<gp2.ListNewsResponse>({
   key: 'fetchNewsState',
@@ -14,3 +14,15 @@ const newsState = atom<gp2.ListNewsResponse>({
 });
 
 export const useNews = () => useRecoilValue(newsState);
+
+const fetchDashboardState = selector<gp2.ListDashboardResponse>({
+  key: 'fetchDashboardState',
+  get: ({ get }) => getDashboardStats(get(authorizationState)),
+});
+
+const dashboardState = atom<gp2.ListDashboardResponse>({
+  key: 'dashboard',
+  default: fetchDashboardState,
+});
+
+export const useDashboard = () => useRecoilValue(dashboardState);

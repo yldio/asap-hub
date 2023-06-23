@@ -8,8 +8,10 @@ import {
   EventCard,
   ExternalLink,
   Headline2,
+  LabIcon,
   lead,
   learnIcon,
+  LibraryIcon,
   Paragraph,
   pixels,
   Subtitle,
@@ -19,7 +21,9 @@ import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { useHistory } from 'react-router-dom';
-import { graduateIcon, projectIcon } from '../icons';
+import { ArticleIcon, graduateIcon, projectIcon } from '../icons';
+import { mobileQuery } from '../layout';
+import InfoCard from '../molecules/InfoCard';
 import DashboardNews from '../organisms/DashboardNews';
 
 const { rem } = pixels;
@@ -40,14 +44,32 @@ const accodionItemStyles = css({
   gap: '32px',
 });
 
+const latestStatsWrapperStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+const latestStatsCardsStyles = css({
+  display: 'flex',
+  gap: '24px',
+  width: '100%',
+  justifyContent: 'center',
+  marginTop: '32px',
+  [mobileQuery]: {
+    flexDirection: 'column',
+  },
+});
+
 type DashboardPageBodyProps = {
   news: gp2.ListNewsResponse;
+  latestStats: gp2.DashboardResponse;
   totalOfUpcomingEvents: number;
   upcomingEvents: ComponentProps<typeof EventCard>[];
 };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   news,
+  latestStats,
   totalOfUpcomingEvents,
   upcomingEvents,
 }) => {
@@ -55,6 +77,29 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
 
   return (
     <>
+      <div css={latestStatsWrapperStyles}>
+        <Headline2>Latest Stats</Headline2>
+        <Paragraph accent="lead" noMargin>
+          Here are some key actions to take within the GP2 network:
+        </Paragraph>
+        <div css={latestStatsCardsStyles}>
+          <InfoCard
+            icon={<LabIcon color="#00202C" size={40} />}
+            title="Samples Completed"
+            total={latestStats.sampleCount}
+          />
+          <InfoCard
+            icon={<LibraryIcon color="#00202C" size={40} />}
+            title="Cohorts"
+            total={latestStats.cohortCount}
+          />
+          <InfoCard
+            icon={<ArticleIcon color="#00202C" size={40} />}
+            title="Article Numbers"
+            total={latestStats.articleCount}
+          />
+        </div>
+      </div>
       <Card>
         <Headline2>Tools and Tutorials</Headline2>
         <Paragraph accent="lead">
@@ -208,7 +253,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         />
       </Card>
       {!!news.total && <DashboardNews items={news.items} />}
-      <h2>Latest Stats</h2>
+
       <div>
         <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
         <div css={infoStyles}>

@@ -10,7 +10,7 @@ import {
   bioinformatics,
   dataset,
   inactiveBadgeIcon,
-  labIcon,
+  LabIcon,
   labResource,
   plusIcon,
   protocol,
@@ -173,7 +173,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         )}
         {labCount > 0 && (
           <div css={labCountStyles}>
-            <span css={iconStyles}>{labIcon} </span>
+            <span css={iconStyles}>
+              <LabIcon />{' '}
+            </span>
             <span>{getCounterString(labCount, 'Lab')}</span>
           </div>
         )}

@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 const { rem } = pixels;
 
 type IconWithLabelProps = {
-  readonly icon: JSX.Element;
+  readonly icon: JSX.Element | React.FC;
   readonly noMargin?: boolean;
 };
 

@@ -46,7 +46,7 @@ export const InfoCircleYellow = () => components.infoCircleYellowIcon;
 export const InfoInfo = () => components.infoInfoIcon;
 export const Information = () => components.informationIcon;
 export const InterestGroups = () => <components.InterestGroupsIcon />;
-export const Lab = () => components.labIcon;
+export const Lab = () => <components.LabIcon />;
 export const LastPage = () => components.lastPageIcon;
 export const Learn = () => components.learnIcon;
 export const Link = () => components.linkIcon;

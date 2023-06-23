@@ -181,6 +181,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       'organisms',
       'environments',
       'keywords',
+      'published',
     ],
     additionalProperties: false,
   };

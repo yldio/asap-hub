@@ -675,6 +675,7 @@ describe('/research-outputs/ route', () => {
         'title',
         'sharingStatus',
         'teams',
+        'published',
       ])(
         'Should return a validation error when %s is missing',
         async (field) => {

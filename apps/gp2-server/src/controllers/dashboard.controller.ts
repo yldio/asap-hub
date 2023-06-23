@@ -10,9 +10,6 @@ export default class Dashboard implements DashboardController {
 
   async fetch(): Promise<gp2.ListDashboardResponse> {
     const { total, items } = await this.dashboardDataProvider.fetch(null);
-    if (items.length === 0) {
-      throw new Error('No dashboard data found');
-    }
 
     return {
       total,

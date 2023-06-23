@@ -7848,11 +7848,13 @@ export type LatestStatsContentDataFragment = Pick<
 export type FetchLatestStatsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchLatestStatsQuery = {
-  latestStatsCollection?: Maybe<{
-    items: Array<
-      Maybe<Pick<LatestStats, 'sampleCount' | 'articleCount' | 'cohortCount'>>
-    >;
-  }>;
+  latestStatsCollection?: Maybe<
+    Pick<LatestStatsCollection, 'total'> & {
+      items: Array<
+        Maybe<Pick<LatestStats, 'sampleCount' | 'articleCount' | 'cohortCount'>>
+      >;
+    }
+  >;
 };
 
 export type UsersContentDataFragment = Pick<
@@ -13592,6 +13594,7 @@ export const FetchLatestStatsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'items' },

@@ -11,6 +11,7 @@ export const statsContentQueryFragment = gql`
 export const FETCH_STATS = gql`
   query FetchLatestStats {
     latestStatsCollection(limit: 1) {
+      total
       items {
         ...LatestStatsContentData
       }

@@ -6,6 +6,8 @@ export type DashboardDataObject = {
   cohortCount: number;
 };
 
+export type ListDashboardDataObject = ListResponse<DashboardDataObject>;
+
 export type DashboardResponse = DashboardDataObject;
 
 export type ListDashboardResponse = ListResponse<DashboardResponse>;

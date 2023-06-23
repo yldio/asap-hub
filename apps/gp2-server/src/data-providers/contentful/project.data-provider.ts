@@ -66,25 +66,30 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
   ): Promise<void> {
     const previousProjectDataObject = await this.fetchById(id);
     const environment = await this.getRestClient();
+    const doNotProcessEntity = { fields: {}, idsToDelete: [] };
 
-    const { resourceFields, idsToDelete: resourceIdsToDelete } =
-      await processResources(
-        environment,
-        project.resources,
-        previousProjectDataObject?.resources,
-      );
-    const { memberFields, idsToDelete: memberIdsToDelete } =
-      await processMembers<gp2Model.ProjectMemberRole>(
-        environment,
-        project.members,
-        previousProjectDataObject?.members,
-        'projectMembership',
-      );
+    const { fields: resourceFields, idsToDelete: resourceIdsToDelete } =
+      project.resources
+        ? await processResources(
+            environment,
+            project.resources,
+            previousProjectDataObject?.resources,
+          )
+        : doNotProcessEntity;
+    const { fields: memberFields, idsToDelete: memberIdsToDelete } =
+      project.members
+        ? await processMembers<gp2Model.ProjectMemberRole>(
+            environment,
+            project.members,
+            previousProjectDataObject?.members,
+            'projectMembership',
+          )
+        : doNotProcessEntity;
     const previousProject = await environment.getEntry(id);
     const result = await patchAndPublish(previousProject, {
       ...project,
-      ...(project.resources && { ...resourceFields }),
-      ...(project.members && { ...memberFields }),
+      ...resourceFields,
+      ...memberFields,
     });
 
     await deleteEntries(

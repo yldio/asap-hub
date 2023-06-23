@@ -503,6 +503,20 @@ describe('Project Data Provider', () => {
         const title = 'a title 2';
         const type = 'Note';
         const existingProjectMock = getEntry({});
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 0,
+              items: [],
+            },
+          },
+        });
         environmentMock.getEntry.mockResolvedValueOnce(existingProjectMock);
         environmentMock.createEntry.mockResolvedValueOnce(createdResourceMock);
         createdResourceMock.publish = jest
@@ -526,6 +540,48 @@ describe('Project Data Provider', () => {
             { sys: { id: resourceId, linkType: 'Entry', type: 'Link' } },
           ],
         });
+      });
+      test('It should not remove the existing resource', async () => {
+        const existingResourceId = '32';
+        const projectId = '11';
+        const memberId = '23';
+        const createdMemberMock = getEntry({}, memberId);
+        const existingProjectMock = getEntry({});
+        const existingMemberMock = getEntry({}, existingResourceId);
+        const unpublishSpy = jest.fn();
+        const deleteSpy = jest.fn();
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [
+                {
+                  sys: { id: existingResourceId },
+                },
+              ],
+            },
+            membersCollection: {
+              total: 1,
+              items: [],
+            },
+          },
+        });
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingProjectMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        existingMemberMock.unpublish = unpublishSpy;
+        existingMemberMock.delete = deleteSpy;
+        environmentMock.createEntry.mockResolvedValueOnce(createdMemberMock);
+        createdMemberMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdMemberMock);
+        await projectDataProvider.update(projectId, {
+          members: [],
+        });
+        expect(unpublishSpy).not.toHaveBeenCalled();
+        expect(deleteSpy).not.toHaveBeenCalled();
       });
       test('It should create the Link resource and associate it to the project', async () => {
         const projectId = '11';
@@ -795,6 +851,20 @@ describe('Project Data Provider', () => {
         const userId = '42';
         const role = 'Project manager';
         const existingProjectMock = getEntry({});
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 0,
+              items: [],
+            },
+          },
+        });
         environmentMock.getEntry.mockResolvedValueOnce(existingProjectMock);
         environmentMock.createEntry.mockResolvedValueOnce(createdMemberMock);
         createdMemberMock.publish = jest
@@ -825,6 +895,50 @@ describe('Project Data Provider', () => {
         expect(patchAndPublish).toHaveBeenCalledWith(existingProjectMock, {
           members: [{ sys: { id: memberId, linkType: 'Entry', type: 'Link' } }],
         });
+      });
+      test('It should not remove the existing member', async () => {
+        const existingMemberId = '32';
+        const projectId = '11';
+        const memberId = '23';
+        const createdMemberMock = getEntry({}, memberId);
+        const existingProjectMock = getEntry({});
+        const existingMemberMock = getEntry({}, existingMemberId);
+        const unpublishSpy = jest.fn();
+        const deleteSpy = jest.fn();
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 1,
+              items: [
+                {
+                  sys: { id: existingMemberId },
+                  role: 'Investigator',
+                  user: { sys: { id: '32' }, onboarded: true },
+                },
+              ],
+            },
+          },
+        });
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingProjectMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        existingMemberMock.unpublish = unpublishSpy;
+        existingMemberMock.delete = deleteSpy;
+        environmentMock.createEntry.mockResolvedValueOnce(createdMemberMock);
+        createdMemberMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdMemberMock);
+        await projectDataProvider.update(projectId, {
+          resources: [],
+        });
+        expect(unpublishSpy).not.toHaveBeenCalled();
+        expect(deleteSpy).not.toHaveBeenCalled();
       });
       test('It should delete the member and unassociate it to the project if no members passed', async () => {
         const projectId = '42';

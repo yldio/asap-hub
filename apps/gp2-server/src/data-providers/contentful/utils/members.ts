@@ -125,6 +125,6 @@ export const processMembers = async <T extends string>(
     environment,
   );
 
-  const memberFields = getMemberFields([...nextMembers, ...updatedIds]);
-  return { memberFields, idsToDelete };
+  const fields = getMemberFields([...nextMembers, ...updatedIds]);
+  return { fields, idsToDelete };
 };

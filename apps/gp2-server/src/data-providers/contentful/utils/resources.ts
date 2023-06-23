@@ -120,6 +120,6 @@ export const processResources = async (
     environment,
   );
 
-  const resourceFields = getResourceFields([...nextResources, ...updatedIds]);
-  return { resourceFields, idsToDelete };
+  const fields = getResourceFields([...nextResources, ...updatedIds]);
+  return { fields, idsToDelete };
 };

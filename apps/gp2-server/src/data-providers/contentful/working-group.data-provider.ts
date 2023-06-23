@@ -54,26 +54,31 @@ export class WorkingGroupContentfulDataProvider
   ): Promise<void> {
     const previousWorkingGroupDataObject = await this.fetchById(id);
     const environment = await this.getRestClient();
+    const doNotProcessEntity = { fields: {}, idsToDelete: [] };
 
-    const { resourceFields, idsToDelete: resourceIdsToDelete } =
-      await processResources(
-        environment,
-        workingGroup.resources,
-        previousWorkingGroupDataObject?.resources,
-      );
-    const { memberFields, idsToDelete: memberIdsToDelete } =
-      await processMembers<gp2Model.WorkingGroupMemberRole>(
-        environment,
-        workingGroup.members,
-        previousWorkingGroupDataObject?.members,
-        'workingGroupMembership',
-      );
+    const { fields: resourceFields, idsToDelete: resourceIdsToDelete } =
+      workingGroup.resources
+        ? await processResources(
+            environment,
+            workingGroup.resources,
+            previousWorkingGroupDataObject?.resources,
+          )
+        : doNotProcessEntity;
+    const { fields: memberFields, idsToDelete: memberIdsToDelete } =
+      workingGroup.members
+        ? await processMembers<gp2Model.WorkingGroupMemberRole>(
+            environment,
+            workingGroup.members,
+            previousWorkingGroupDataObject?.members,
+            'workingGroupMembership',
+          )
+        : doNotProcessEntity;
 
     const previousWorkingGroup = await environment.getEntry(id);
     const result = await patchAndPublish(previousWorkingGroup, {
       ...workingGroup,
-      ...(workingGroup.resources && { ...resourceFields }),
-      ...(workingGroup.members && { ...memberFields }),
+      ...resourceFields,
+      ...memberFields,
     });
 
     await deleteEntries(

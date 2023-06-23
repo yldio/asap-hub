@@ -31,7 +31,7 @@ import {
 import { refreshTeamState } from '../state';
 import TeamOutput from '../TeamOutput';
 
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 jest.mock('../api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');

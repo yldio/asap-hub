@@ -506,7 +506,7 @@ describe('Working Group Data Provider', () => {
     describe('resource', () => {
       test('It should create the Note resource and associate it to the working group', async () => {
         const workingGroupId = '11';
-        const resourceId = '11';
+        const resourceId = '32';
         const createdResourceMock = getEntry({}, resourceId);
         const title = 'a title 2';
         const type = 'Note';
@@ -536,6 +536,50 @@ describe('Working Group Data Provider', () => {
             { sys: { id: resourceId, linkType: 'Entry', type: 'Link' } },
           ],
         });
+      });
+      test('It should not remove the existing resource', async () => {
+        const existingResourceId = '32';
+        const workingGroupId = '11';
+        const memberId = '23';
+        const createdMemberMock = getEntry({}, memberId);
+        const userId = '42';
+        const role = 'Lead';
+        const existingWorkingGroupMock = getEntry({});
+        const existingMemberMock = getEntry({}, existingResourceId);
+        const unpublishSpy = jest.fn();
+        const deleteSpy = jest.fn();
+        const workingGroup = getContentfulGraphqlWorkingGroup();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          workingGroups: {
+            ...workingGroup,
+            resourcesCollection: {
+              total: 0,
+              items: [
+                {
+                  sys: { id: existingResourceId },
+                },
+              ],
+            },
+            membersCollection: {
+              total: 1,
+              items: [],
+            },
+          },
+        });
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingWorkingGroupMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        existingMemberMock.unpublish = unpublishSpy;
+        existingMemberMock.delete = deleteSpy;
+        environmentMock.createEntry.mockResolvedValueOnce(createdMemberMock);
+        createdMemberMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdMemberMock);
+        await workingGroupDataProvider.update(workingGroupId, {
+          members: [{ userId, role }],
+        });
+        expect(unpublishSpy).not.toHaveBeenCalled();
+        expect(deleteSpy).not.toHaveBeenCalled();
       });
       test('It should create the Link resource and associate it to the working group', async () => {
         const workingGroupId = '11';
@@ -807,6 +851,20 @@ describe('Working Group Data Provider', () => {
         const userId = '42';
         const role = 'Lead';
         const existingworkingGroupMock = getEntry({});
+        const workingGroup = getContentfulGraphqlWorkingGroup();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          workingGroups: {
+            ...workingGroup,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 0,
+              items: [],
+            },
+          },
+        });
         environmentMock.getEntry.mockResolvedValueOnce(
           existingworkingGroupMock,
         );
@@ -839,6 +897,50 @@ describe('Working Group Data Provider', () => {
         expect(patchAndPublish).toHaveBeenCalledWith(existingworkingGroupMock, {
           members: [{ sys: { id: memberId, linkType: 'Entry', type: 'Link' } }],
         });
+      });
+      test('It should not remove the existing member', async () => {
+        const existingMemberId = '32';
+        const workingGroupId = '11';
+        const memberId = '23';
+        const createdMemberMock = getEntry({}, memberId);
+        const existingWorkingGroupMock = getEntry({});
+        const existingMemberMock = getEntry({}, existingMemberId);
+        const unpublishSpy = jest.fn();
+        const deleteSpy = jest.fn();
+        const workingGroup = getContentfulGraphqlWorkingGroup();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          workingGroups: {
+            ...workingGroup,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 1,
+              items: [
+                {
+                  sys: { id: existingMemberId },
+                  role: 'Investigator',
+                  user: { sys: { id: '32' }, onboarded: true },
+                },
+              ],
+            },
+          },
+        });
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingWorkingGroupMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        existingMemberMock.unpublish = unpublishSpy;
+        existingMemberMock.delete = deleteSpy;
+        environmentMock.createEntry.mockResolvedValueOnce(createdMemberMock);
+        createdMemberMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdMemberMock);
+        await workingGroupDataProvider.update(workingGroupId, {
+          resources: [],
+        });
+        expect(unpublishSpy).not.toHaveBeenCalled();
+        expect(deleteSpy).not.toHaveBeenCalled();
       });
       test('It should delete the member and unassociate it to the working group if no members passed', async () => {
         const workingGroupId = '42';

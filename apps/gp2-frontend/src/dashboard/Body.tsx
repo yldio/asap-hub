@@ -18,10 +18,16 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
       pageSize,
     }),
   );
+
+  const stats = dashboardStats.items[0] || {
+    sampleCount: 0,
+    cohortCount: 0,
+    articleCount: 0,
+  };
   return (
     <DashboardPageBody
       news={news}
-      latestStats={dashboardStats.items[0]}
+      latestStats={stats}
       upcomingEvents={items.map(eventMapper)}
       totalOfUpcomingEvents={total}
     />

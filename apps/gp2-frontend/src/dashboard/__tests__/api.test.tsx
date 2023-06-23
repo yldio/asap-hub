@@ -2,7 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getNews } from '../api';
+import { getDashboardStats, getNews } from '../api';
 
 jest.mock('../../config');
 
@@ -47,7 +47,7 @@ describe('getDashboardStats', () => {
       .get('/dashboard')
       .reply(200, dashboardResponse);
 
-    const result = await getNews('Bearer x');
+    const result = await getDashboardStats('Bearer x');
     expect(result).toEqual(dashboardResponse);
   });
 
@@ -57,7 +57,7 @@ describe('getDashboardStats', () => {
       .reply(500);
 
     await expect(
-      getNews('Bearer x'),
+      getDashboardStats('Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the Dashboard Stats. Expected status 2xx. Received status 500."`,
     );

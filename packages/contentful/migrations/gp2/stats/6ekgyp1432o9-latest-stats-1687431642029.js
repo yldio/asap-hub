@@ -1,4 +1,6 @@
-module.exports = function (migration) {
+module.exports.description = 'Create latest stats content model';
+
+module.exports.up = function (migration) {
   const latestStats = migration
     .createContentType('latestStats')
     .name('Latest Stats')
@@ -46,4 +48,8 @@ module.exports = function (migration) {
   latestStats.changeFieldControl('sampleCount', 'builtin', 'numberEditor', {});
   latestStats.changeFieldControl('cohortCount', 'builtin', 'numberEditor', {});
   latestStats.changeFieldControl('articleCount', 'builtin', 'numberEditor', {});
+};
+
+module.exports.down = (migration) => {
+  migration.deleteContentType('latestStats');
 };

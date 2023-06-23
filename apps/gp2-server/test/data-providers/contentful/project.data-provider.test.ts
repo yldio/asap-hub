@@ -43,9 +43,8 @@ describe('Project Data Provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('FetchById', () => {
-    test('Should fetch the project from squidex graphql', async () => {
+    test('Should fetch the project from graphql', async () => {
       const result = await projectDataProviderWithMockServer.fetchById('id');
-
       expect(result).toMatchObject(getProjectDataObject());
     });
 
@@ -57,13 +56,11 @@ describe('Project Data Provider', () => {
       expect(await projectDataProvider.fetchById('not-found')).toBeNull();
     });
     test('the project is parsed', async () => {
-      const project = getContentfulGraphqlProject();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        projects: project,
+        projects: getContentfulGraphqlProject(),
       });
       const projectDataObject = await projectDataProvider.fetchById('id');
-      const expected = getProjectDataObject();
-      expect(projectDataObject).toEqual(expected);
+      expect(projectDataObject).toEqual(getProjectDataObject());
     });
     test('pm emails are added if available', async () => {
       const email = 'tony@starkenterprises.com';
@@ -111,7 +108,7 @@ describe('Project Data Provider', () => {
     });
 
     describe('traineeProject', () => {
-      test('if doesnt exist it returns as false', async () => {
+      test('if doesnt exist returns as false', async () => {
         const project = getContentfulGraphqlProject();
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, traineeProject: null },
@@ -130,7 +127,7 @@ describe('Project Data Provider', () => {
       });
     });
     describe('opportunitiesLink', () => {
-      test('if doesnt exist it returns as false', async () => {
+      test('if doesnt exist returns as false', async () => {
         const project = getContentfulGraphqlProject();
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           projects: { ...project, opportunitiesLink: null },
@@ -350,7 +347,7 @@ describe('Project Data Provider', () => {
       });
     });
     describe('milestones', () => {
-      test('undefined milestones returns empty array', async () => {
+      test('empty milestones returns empty array', async () => {
         const project = {
           ...getContentfulGraphqlProject(),
           milestonesCollection: {
@@ -423,13 +420,13 @@ describe('Project Data Provider', () => {
       skip: 0,
     };
 
-    test('Should fetch the project from squidex graphql', async () => {
+    test('Should fetch the project from graphql', async () => {
       const result = await projectDataProviderWithMockServer.fetch(options);
 
       expect(result).toMatchObject(getListProjectDataObject());
     });
 
-    test('Should return null when the project is not found', async () => {
+    test('Should return empty result when no projects are found', async () => {
       const mockResponse = getContentfulGraphqlProjectsResponse();
       mockResponse.projectsCollection!.items = [];
       mockResponse.projectsCollection!.total = 0;
@@ -440,15 +437,6 @@ describe('Project Data Provider', () => {
     });
 
     test('Should return an empty result if the client returns a response with a null items property', async () => {
-      const mockResponse = getContentfulGraphqlProjectsResponse();
-      mockResponse.projectsCollection = null;
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const result = await projectDataProvider.fetch(options);
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-
-    test('Should return an empty result if the client returns a response with a null query property', async () => {
       const mockResponse = getContentfulGraphqlProjectsResponse();
       mockResponse.projectsCollection = null;
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
@@ -510,12 +498,24 @@ describe('Project Data Provider', () => {
     describe('resource', () => {
       test('It should create the Note resource and associate it to the project', async () => {
         const projectId = '11';
-        const resourceId = '11';
+        const resourceId = '23';
         const createdResourceMock = getEntry({}, resourceId);
         const title = 'a title 2';
         const type = 'Note';
-        const existingProjectMock = getEntry({
-          fields: { resources: [] },
+        const existingProjectMock = getEntry({});
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 0,
+              items: [],
+            },
+          },
         });
         environmentMock.getEntry.mockResolvedValueOnce(existingProjectMock);
         environmentMock.createEntry.mockResolvedValueOnce(createdResourceMock);
@@ -541,17 +541,57 @@ describe('Project Data Provider', () => {
           ],
         });
       });
+      test('It should not remove the existing resource', async () => {
+        const existingResourceId = '32';
+        const projectId = '11';
+        const memberId = '23';
+        const createdMemberMock = getEntry({}, memberId);
+        const existingProjectMock = getEntry({});
+        const existingMemberMock = getEntry({}, existingResourceId);
+        const unpublishSpy = jest.fn();
+        const deleteSpy = jest.fn();
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [
+                {
+                  sys: { id: existingResourceId },
+                },
+              ],
+            },
+            membersCollection: {
+              total: 1,
+              items: [],
+            },
+          },
+        });
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingProjectMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        existingMemberMock.unpublish = unpublishSpy;
+        existingMemberMock.delete = deleteSpy;
+        environmentMock.createEntry.mockResolvedValueOnce(createdMemberMock);
+        createdMemberMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdMemberMock);
+        await projectDataProvider.update(projectId, {
+          members: [],
+        });
+        expect(unpublishSpy).not.toHaveBeenCalled();
+        expect(deleteSpy).not.toHaveBeenCalled();
+      });
       test('It should create the Link resource and associate it to the project', async () => {
         const projectId = '11';
-        const resourceId = '11';
+        const resourceId = '23';
         const createdResourceMock = getEntry({}, resourceId);
         const title = 'a title 2';
         const description = 'a description 2';
         const externalLink = 'http://example.com/a-link';
         const type = 'Link';
-        const existingProjectMock = getEntry({
-          fields: { resources: [] },
-        });
+        const existingProjectMock = getEntry({});
         environmentMock.getEntry.mockResolvedValueOnce(existingProjectMock);
         environmentMock.createEntry.mockResolvedValueOnce(createdResourceMock);
         createdResourceMock.publish = jest
@@ -579,22 +619,25 @@ describe('Project Data Provider', () => {
       test('It should delete the resource and unassociate it to the project if no resources passed', async () => {
         const projectId = '42';
         const existingResourceId = '11';
-        const existingProjectMock = getEntry(
-          {
-            fields: {
-              resources: {
-                'en-US': [
-                  {
-                    sys: { id: existingResourceId },
-                    linkType: 'Entry',
-                    type: 'Link',
-                  },
-                ],
-              },
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 1,
+              items: [
+                {
+                  sys: { id: existingResourceId },
+                },
+              ],
+            },
+            membersCollection: {
+              total: 0,
+              items: [],
             },
           },
-          projectId,
-        );
+        });
+        const existingProjectMock = getEntry({}, projectId);
         const existingResourceMock = getEntry({}, existingResourceId);
         const unpublishSpy = jest.fn();
         const deleteSpy = jest.fn();
@@ -618,26 +661,11 @@ describe('Project Data Provider', () => {
         const type = 'Note';
         const projectId = '42';
         const existingResourceId = '11';
-        const existingProjectMock = getEntry(
-          {
-            fields: {
-              resources: {
-                'en-US': [
-                  {
-                    sys: { id: existingResourceId },
-                    linkType: 'Entry',
-                    type: 'Link',
-                  },
-                ],
-              },
-            },
-          },
-          projectId,
-        );
+        const existingProjectMock = getEntry({}, projectId);
         const existingResourceMock = getEntry({}, existingResourceId);
         environmentMock.getEntry
-          .mockResolvedValueOnce(existingProjectMock)
-          .mockResolvedValueOnce(existingResourceMock);
+          .mockResolvedValueOnce(existingResourceMock)
+          .mockResolvedValueOnce(existingProjectMock);
         await projectDataProvider.update(projectId, {
           resources: [{ id: existingResourceId, title, type }],
         });
@@ -680,7 +708,7 @@ describe('Project Data Provider', () => {
           externalLink: 'http://example.com/new-link',
         },
       ])(
-        'It should not update the resource only if it is the same',
+        'It should update the resource if it has changed',
         async (override) => {
           const title = 'a title 2';
           const type = 'Link' as const;
@@ -692,6 +720,10 @@ describe('Project Data Provider', () => {
           contentfulGraphqlClientMock.request.mockResolvedValueOnce({
             projects: {
               ...project,
+              membersCollection: {
+                total: 0,
+                items: [],
+              },
               resourcesCollection: {
                 total: 1,
                 items: [
@@ -706,36 +738,11 @@ describe('Project Data Provider', () => {
               },
             },
           });
-          const existingProjectMock = getEntry(
-            {
-              fields: {
-                resources: {
-                  'en-US': [
-                    {
-                      sys: { id: existingResourceId },
-                      linkType: 'Entry',
-                      type: 'Link',
-                    },
-                  ],
-                },
-              },
-            },
-            projectId,
-          );
-          const existingResourceMock = getEntry(
-            {
-              fields: {
-                type,
-                title,
-                description,
-                externalLink,
-              },
-            },
-            existingResourceId,
-          );
+          const existingProjectMock = getEntry({}, projectId);
+          const existingResourceMock = getEntry({}, existingResourceId);
           environmentMock.getEntry
-            .mockResolvedValueOnce(existingProjectMock)
-            .mockResolvedValueOnce(existingResourceMock);
+            .mockResolvedValueOnce(existingResourceMock)
+            .mockResolvedValueOnce(existingProjectMock);
           await projectDataProvider.update(projectId, {
             resources: [
               {
@@ -778,7 +785,7 @@ describe('Project Data Provider', () => {
         },
       );
       test.each<gp2Model.Resource['type']>(['Link', 'Note'])(
-        'It should not update the resource only if it is the same',
+        'It should not update the resource if it is the same',
         async (type) => {
           const title = 'a title 2';
           const description = 'a description';
@@ -803,33 +810,8 @@ describe('Project Data Provider', () => {
               },
             },
           });
-          const existingProjectMock = getEntry(
-            {
-              fields: {
-                resources: {
-                  'en-US': [
-                    {
-                      sys: { id: existingResourceId },
-                      linkType: 'Entry',
-                      type: 'Link',
-                    },
-                  ],
-                },
-              },
-            },
-            projectId,
-          );
-          const existingResourceMock = getEntry(
-            {
-              fields: {
-                type,
-                title,
-                description,
-                ...(type === 'Link' ? { externalLink } : {}),
-              },
-            },
-            existingResourceId,
-          );
+          const existingProjectMock = getEntry({}, projectId);
+          const existingResourceMock = getEntry({}, existingResourceId);
           environmentMock.getEntry
             .mockResolvedValueOnce(existingProjectMock)
             .mockResolvedValueOnce(existingResourceMock);
@@ -861,10 +843,318 @@ describe('Project Data Provider', () => {
         },
       );
     });
-    test('checks version of published data and polls until they match', async () => {
-      const existingProjectMock = getEntry({
-        fields: { resources: [] },
+    describe('members', () => {
+      test('It should create the member and associate it to the project', async () => {
+        const projectId = '11';
+        const memberId = '23';
+        const createdMemberMock = getEntry({}, memberId);
+        const userId = '42';
+        const role = 'Project manager';
+        const existingProjectMock = getEntry({});
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 0,
+              items: [],
+            },
+          },
+        });
+        environmentMock.getEntry.mockResolvedValueOnce(existingProjectMock);
+        environmentMock.createEntry.mockResolvedValueOnce(createdMemberMock);
+        createdMemberMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdMemberMock);
+        await projectDataProvider.update(projectId, {
+          members: [{ userId, role }],
+        });
+        expect(environmentMock.createEntry).toHaveBeenCalledWith(
+          'projectMembership',
+          {
+            fields: {
+              role: { 'en-US': role },
+              user: {
+                'en-US': {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: userId,
+                  },
+                },
+              },
+            },
+          },
+        );
+
+        expect(createdMemberMock.publish).toHaveBeenCalled();
+        expect(patchAndPublish).toHaveBeenCalledWith(existingProjectMock, {
+          members: [{ sys: { id: memberId, linkType: 'Entry', type: 'Link' } }],
+        });
       });
+      test('It should not remove the existing member', async () => {
+        const existingMemberId = '32';
+        const projectId = '11';
+        const memberId = '23';
+        const createdMemberMock = getEntry({}, memberId);
+        const existingProjectMock = getEntry({});
+        const existingMemberMock = getEntry({}, existingMemberId);
+        const unpublishSpy = jest.fn();
+        const deleteSpy = jest.fn();
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 1,
+              items: [
+                {
+                  sys: { id: existingMemberId },
+                  role: 'Investigator',
+                  user: { sys: { id: '32' }, onboarded: true },
+                },
+              ],
+            },
+          },
+        });
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingProjectMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        existingMemberMock.unpublish = unpublishSpy;
+        existingMemberMock.delete = deleteSpy;
+        environmentMock.createEntry.mockResolvedValueOnce(createdMemberMock);
+        createdMemberMock.publish = jest
+          .fn()
+          .mockResolvedValueOnce(createdMemberMock);
+        await projectDataProvider.update(projectId, {
+          resources: [],
+        });
+        expect(unpublishSpy).not.toHaveBeenCalled();
+        expect(deleteSpy).not.toHaveBeenCalled();
+      });
+      test('It should delete the member and unassociate it to the project if no members passed', async () => {
+        const projectId = '42';
+        const existingMemberId = '11';
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 1,
+              items: [
+                {
+                  sys: { id: existingMemberId },
+                  user: { sys: { id: '32' }, onboarded: true },
+                  role: 'Investigator',
+                },
+              ],
+            },
+          },
+        });
+        const existingProjectMock = getEntry({}, projectId);
+        const existingMemberMock = getEntry({}, existingMemberId);
+        const unpublishSpy = jest.fn();
+        const deleteSpy = jest.fn();
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingProjectMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        existingMemberMock.unpublish = unpublishSpy;
+        existingMemberMock.delete = deleteSpy;
+        await projectDataProvider.update(projectId, {
+          members: [],
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(existingProjectMock, {
+          members: [],
+        });
+        expect(unpublishSpy).toBeCalled();
+        expect(deleteSpy).toBeCalled();
+        expect(environmentMock.createEntry).not.toBeCalled();
+      });
+      test('It should update the member', async () => {
+        const userId = '42';
+        const role = 'Project manager';
+        const projectId = '42';
+        const existingMemberId = '11';
+        const existingProjectMock = getEntry({}, projectId);
+        const existingMemberMock = getEntry({}, existingMemberId);
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingMemberMock)
+          .mockResolvedValueOnce(existingProjectMock);
+        await projectDataProvider.update(projectId, {
+          members: [{ id: existingMemberId, userId, role }],
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(1, existingMemberMock, {
+          role,
+          user: {
+            sys: {
+              id: userId,
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(
+          2,
+          existingProjectMock,
+          {
+            members: [
+              {
+                sys: {
+                  id: existingMemberId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        );
+        expect(environmentMock.createEntry).not.toBeCalled();
+      });
+      test.each([
+        {
+          role: 'new role',
+        },
+        {
+          userId: 'new user',
+        },
+      ])('It should update the member if has changed', async (override) => {
+        const role = 'Contributor';
+        const projectId = '42';
+        const existingMemberId = '11';
+        const userId = '23';
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            resourcesCollection: {
+              total: 0,
+              items: [],
+            },
+            membersCollection: {
+              total: 1,
+              items: [
+                {
+                  sys: { id: existingMemberId },
+                  user: { sys: { id: userId } },
+                  role,
+                },
+              ],
+            },
+          },
+        });
+        const existingProjectMock = getEntry({}, projectId);
+        const existingMemberMock = getEntry({}, existingMemberId);
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingMemberMock)
+          .mockResolvedValueOnce(existingProjectMock);
+        await projectDataProvider.update(projectId, {
+          members: [
+            {
+              id: existingMemberId,
+              userId,
+              role,
+              ...(override as Partial<gp2Model.ProjectMember>),
+            },
+          ],
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(1, existingMemberMock, {
+          user: {
+            sys: {
+              id: override.userId ?? userId,
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+          role: override.role ?? role,
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(
+          2,
+          existingProjectMock,
+          {
+            members: [
+              {
+                sys: {
+                  id: existingMemberId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        );
+        expect(environmentMock.createEntry).not.toBeCalled();
+      });
+      test('It should not update the member if it is the same', async () => {
+        const role = 'Contributor';
+        const projectId = '42';
+        const existingMemberId = '11';
+        const userId = '23';
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            membersCollection: {
+              total: 1,
+              items: [
+                {
+                  sys: { id: existingMemberId },
+                  role,
+                  user: {
+                    sys: { id: userId },
+                    onboarded: true,
+                  },
+                },
+              ],
+            },
+          },
+        });
+        const existingProjectMock = getEntry({}, projectId);
+        const existingMemberMock = getEntry({}, existingMemberId);
+        environmentMock.getEntry
+          .mockResolvedValueOnce(existingProjectMock)
+          .mockResolvedValueOnce(existingMemberMock);
+        const memberToUpdate: NonNullable<
+          gp2Model.ProjectUpdateDataObject['members']
+        >[number] = {
+          id: existingMemberId,
+          userId,
+          role,
+        };
+        await projectDataProvider.update(projectId, {
+          members: [memberToUpdate],
+        });
+        expect(patchAndPublish).toHaveBeenNthCalledWith(
+          1,
+          existingProjectMock,
+          {
+            members: [
+              {
+                sys: {
+                  id: existingMemberId,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        );
+        expect(environmentMock.createEntry).not.toBeCalled();
+      });
+    });
+    test('checks version of published data and polls until they match', async () => {
+      const existingProjectMock = getEntry({});
       environmentMock.getEntry.mockResolvedValueOnce(existingProjectMock);
       const createdResourceMock = getEntry({});
       environmentMock.createEntry.mockResolvedValueOnce(createdResourceMock);

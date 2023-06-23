@@ -1,6 +1,5 @@
 import {
   addLocaleToFields,
-  Entry,
   Environment,
   getLinkEntities,
   patchAndPublish,
@@ -8,6 +7,7 @@ import {
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { GraphQLProject } from '../project.data-provider';
 import { GraphQLWorkingGroup } from '../working-group.data-provider';
+import { getIdsToDelete } from './common';
 
 type ResourcesItem =
   | GraphQLWorkingGroup['resourcesCollection']
@@ -61,33 +61,6 @@ const addNextResources = async (
 const getResourceFields = (nextResources: string[]) => ({
   resources: getLinkEntities(nextResources, false),
 });
-const getResourceIdsToDelete = (
-  previousWorkingGroup: Entry,
-  resources: gp2Model.Resource[] | undefined,
-): string[] => {
-  const previousResources = previousWorkingGroup.fields.resources;
-  if (!previousResources?.['en-US']) {
-    return [];
-  }
-  const existingIds: string[] = previousResources['en-US'].map(
-    ({ sys: { id } }: { sys: { id: string } }) => id,
-  );
-  const nextIds = (resources || []).map(({ id }) => id);
-
-  return existingIds.filter((id) => !nextIds.includes(id));
-};
-
-export const deleteResources = async (
-  idsToDelete: string[],
-  environment: Environment,
-) =>
-  Promise.all(
-    idsToDelete.map(async (id) => {
-      const deletable = await environment.getEntry(id);
-      await deletable.unpublish();
-      return deletable.delete();
-    }),
-  );
 
 type ResourceWithId = gp2Model.Resource & {
   id: string;
@@ -132,7 +105,6 @@ const outUnchangedResources =
 export const processResources = async (
   environment: Environment,
   resources: gp2Model.Resource[] | undefined,
-  previousWorkingGroup: Entry,
   previousResources: gp2Model.Resource[] | undefined,
 ) => {
   const nextResources: string[] = await addNextResources(
@@ -140,7 +112,7 @@ export const processResources = async (
     resources,
   );
 
-  const idsToDelete = getResourceIdsToDelete(previousWorkingGroup, resources);
+  const idsToDelete = getIdsToDelete(previousResources, resources);
   const updatedIds = await updateResources(
     resources,
     idsToDelete,
@@ -148,6 +120,6 @@ export const processResources = async (
     environment,
   );
 
-  const resourceFields = getResourceFields([...nextResources, ...updatedIds]);
-  return { resourceFields, idsToDelete };
+  const fields = getResourceFields([...nextResources, ...updatedIds]);
+  return { fields, idsToDelete };
 };

@@ -8,11 +8,12 @@ import {
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
 import {
-  deleteResources,
+  deleteEntries,
   parseCalendar,
   parseMembers,
   parseMilestones,
   parseResources,
+  processMembers,
   processResources,
 } from './utils';
 
@@ -53,20 +54,37 @@ export class WorkingGroupContentfulDataProvider
   ): Promise<void> {
     const previousWorkingGroupDataObject = await this.fetchById(id);
     const environment = await this.getRestClient();
-    const previousWorkingGroup = await environment.getEntry(id);
+    const doNotProcessEntity = { fields: {}, idsToDelete: [] };
 
-    const { resourceFields, idsToDelete } = await processResources(
-      environment,
-      workingGroup.resources,
-      previousWorkingGroup,
-      previousWorkingGroupDataObject?.resources,
-    );
+    const { fields: resourceFields, idsToDelete: resourceIdsToDelete } =
+      workingGroup.resources
+        ? await processResources(
+            environment,
+            workingGroup.resources,
+            previousWorkingGroupDataObject?.resources,
+          )
+        : doNotProcessEntity;
+    const { fields: memberFields, idsToDelete: memberIdsToDelete } =
+      workingGroup.members
+        ? await processMembers<gp2Model.WorkingGroupMemberRole>(
+            environment,
+            workingGroup.members,
+            previousWorkingGroupDataObject?.members,
+            'workingGroupMembership',
+          )
+        : doNotProcessEntity;
+
+    const previousWorkingGroup = await environment.getEntry(id);
     const result = await patchAndPublish(previousWorkingGroup, {
       ...workingGroup,
       ...resourceFields,
+      ...memberFields,
     });
 
-    await deleteResources(idsToDelete, environment);
+    await deleteEntries(
+      [...resourceIdsToDelete, ...memberIdsToDelete],
+      environment,
+    );
     const fetchEventById = () => this.fetchWorkingGroupById(id);
     await pollContentfulGql<gp2Contentful.FetchWorkingGroupByIdQuery>(
       result.sys.publishedVersion ?? Infinity,

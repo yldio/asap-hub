@@ -61,6 +61,9 @@ describe('Working Group Data Provider', () => {
         items: [
           {
             ...workingGroupDataObject,
+            members: workingGroupDataObject.members?.map(
+              ({ id: _, ...member }) => member,
+            ),
             resources: workingGroupDataObject.resources?.map(
               ({ id: _, ...resource }) => resource,
             ),
@@ -137,6 +140,9 @@ describe('Working Group Data Provider', () => {
       const workingGroupDataObject = getWorkingGroupDataObject();
       expect(result).toMatchObject({
         ...workingGroupDataObject,
+        members: workingGroupDataObject.members?.map(
+          ({ id: _, ...member }) => member,
+        ),
         resources: workingGroupDataObject.resources!.map(
           ({ id: _, ...resource }) => resource,
         ),
@@ -251,6 +257,9 @@ describe('Working Group Data Provider', () => {
       const workingGroupDataObject = getWorkingGroupDataObject();
       expect(result).toMatchObject({
         ...workingGroupDataObject,
+        members: workingGroupDataObject.members?.map(
+          ({ id: _, ...member }) => member,
+        ),
         resources: workingGroupDataObject.resources!.map(
           ({ id: _, ...resource }) => resource,
         ),

@@ -34,3 +34,32 @@ describe('getNews', () => {
     );
   });
 });
+
+describe('getDashboardStats', () => {
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+    nock.cleanAll();
+  });
+  it('returns a successfully fetched dashboard stats', async () => {
+    const dashboardResponse: gp2Model.ListDashboardResponse =
+      gp2Fixtures.createDashboardStatsResponse();
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/dashboard')
+      .reply(200, dashboardResponse);
+
+    const result = await getNews('Bearer x');
+    expect(result).toEqual(dashboardResponse);
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/dashboard')
+      .reply(500);
+
+    await expect(
+      getNews('Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch the Dashboard Stats. Expected status 2xx. Received status 500."`,
+    );
+  });
+});

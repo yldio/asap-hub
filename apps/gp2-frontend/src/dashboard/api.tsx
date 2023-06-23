@@ -25,7 +25,7 @@ export const getDashboardStats = async (
 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch dashboard.Expected status 2xx. Received status ${`${response.status} ${response.statusText}`.trim()}.`,
+      `Failed to fetch the Dashboard Stats. Expected status 2xx. Received status ${`${response.status} ${response.statusText}`.trim()}.`,
     );
   }
 

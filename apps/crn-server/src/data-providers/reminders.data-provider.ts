@@ -1,21 +1,22 @@
 import {
-  VideoEventReminder,
+  DataProvider,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
+  EventNotesReminder,
   FetchRemindersOptions,
   isResearchOutputDocumentType,
   ListReminderDataObject,
-  ReminderDataObject,
-  ResearchOutputPublishedReminder,
   PresentationUpdatedReminder,
-  EventNotesReminder,
-  SharePresentationReminder,
-  Role,
-  TeamRole,
   PublishMaterialReminder,
-  UploadPresentationReminder,
-  DataProvider,
+  ReminderDataObject,
   ResearchOutputDraftReminder,
+  ResearchOutputInReviewReminder,
+  ResearchOutputPublishedReminder,
+  Role,
+  SharePresentationReminder,
+  TeamRole,
+  UploadPresentationReminder,
+  VideoEventReminder,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { isCMSAdministrator } from '@asap-hub/validation';
@@ -50,11 +51,13 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
   async fetch(options: FetchRemindersOptions): Promise<ListReminderDataObject> {
     const researchOutputFilter = getResearchOutputFilter();
     const researchOutputDraftFilter = getResearchOutputDraftFilter();
+    const researchOutputInReviewFilter = getResearchOutputInReviewFilter();
 
     const {
       findUsersContent,
       queryResearchOutputsContents,
       draftResearchOutputs,
+      inReviewResearchOutputs,
       queryEventsContents,
     } = await this.squidexGraphqlClient.request<
       FetchReminderDataQuery,
@@ -64,6 +67,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       {
         researchOutputFilter,
         researchOutputDraftFilter,
+        researchOutputInReviewFilter,
         eventFilter: getEventFilter(options.timezone),
         userId: options.userId,
       },
@@ -78,6 +82,12 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
     const researchOutputDraftReminders =
       getResearchOutputDraftRemindersFromQuery(
         draftResearchOutputs,
+        findUsersContent,
+      );
+
+    const inReviewResearchOutputReminders =
+      getResearchOutputInReviewRemindersFromQuery(
+        inReviewResearchOutputs,
         findUsersContent,
       );
 
@@ -109,6 +119,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       ...publishPresentationReminders,
       ...uploadPresentationReminders,
       ...researchOutputDraftReminders,
+      ...inReviewResearchOutputReminders,
     ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
@@ -139,8 +150,12 @@ const getResearchOutputDraftFilter = (): string => {
   date.setDate(date.getDate() - 1);
   const date24hAgo = date.toISOString();
 
-  const filter = `created ge ${date24hAgo} and status eq 'Draft' and data/addedDate/iv eq null`;
+  const filter = `created ge ${date24hAgo} and status eq 'Draft' and data/addedDate/iv eq null and empty(data/reviewRequestedBy/iv)`;
   return filter;
+};
+
+const getResearchOutputInReviewFilter = (): string => {
+  return `status eq 'Draft' and data/addedDate/iv eq null and exists(data/reviewRequestedBy/iv)`;
 };
 
 export const getEventFilter = (zone: string): string => {
@@ -335,6 +350,99 @@ const getResearchOutputDraftRemindersFromQuery = (
           title: researchOutput.flatData.title,
           addedDate: researchOutput.created,
           createdBy: userName,
+          associationType,
+          associationName,
+        },
+      });
+
+      return researchOutputReminders;
+    },
+    [],
+  );
+};
+
+const getResearchOutputInReviewRemindersFromQuery = (
+  queryResearchOutputsContents: FetchReminderDataQuery['inReviewResearchOutputs'],
+  findUsersContent: FetchReminderDataQuery['findUsersContent'],
+): ResearchOutputInReviewReminder[] => {
+  if (!findUsersContent || !findUsersContent.flatData.teams) {
+    return [];
+  }
+
+  const userTeamIds = getUserTeamIds(findUsersContent.flatData.teams);
+  const userWorkingGroupIds = getUserWorkingGroupIds(
+    findUsersContent.referencingWorkingGroupsContents,
+  );
+
+  const isAsapStaff = findUsersContent.flatData.role === 'Staff';
+
+  if (!queryResearchOutputsContents) {
+    return [];
+  }
+
+  return queryResearchOutputsContents.reduce<ResearchOutputInReviewReminder[]>(
+    (researchOutputReminders, researchOutput) => {
+      const userName = getUserName(researchOutput);
+      const { associationName, associationType } =
+        getAssociationNameAndType(researchOutput);
+
+      if (
+        !researchOutput.flatData.teams ||
+        !researchOutput.flatData.title ||
+        userName === null ||
+        associationName === null ||
+        associationType === null ||
+        !researchOutput.flatData.reviewRequestedBy?.[0]
+      ) {
+        return researchOutputReminders;
+      }
+
+      const researchOutputTeams = researchOutput.flatData.teams.map(
+        (team) => team.id,
+      );
+
+      const isInTeam = researchOutputTeams.some((team) =>
+        userTeamIds.includes(team),
+      );
+
+      const researchOutputWorkingGroups = (
+        researchOutput.flatData.workingGroups || []
+      ).map((workingGroup) => workingGroup.id);
+
+      const isInWorkingGroup = researchOutputWorkingGroups.some(
+        (workingGroup) => userWorkingGroupIds.includes(workingGroup),
+      );
+
+      if (
+        (associationType === 'team' && !isInTeam && !isAsapStaff) ||
+        (associationType === 'working group' &&
+          !isInWorkingGroup &&
+          !isAsapStaff)
+      ) {
+        return researchOutputReminders;
+      }
+
+      if (
+        !researchOutput.flatData.documentType ||
+        !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
+        !researchOutput.flatData.title
+      ) {
+        return researchOutputReminders;
+      }
+
+      const { firstName, lastName } =
+        researchOutput.flatData.reviewRequestedBy[0].flatData;
+
+      researchOutputReminders.push({
+        id: `research-output-in-review-${researchOutput.id}`,
+        entity: 'Research Output',
+        type: 'In Review',
+        data: {
+          researchOutputId: researchOutput.id,
+          title: researchOutput.flatData.title,
+          addedDate: researchOutput.created,
+          documentType: researchOutput.flatData.documentType,
+          reviewRequestedBy: `${firstName} ${lastName}`,
           associationType,
           associationName,
         },

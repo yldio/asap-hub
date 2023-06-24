@@ -5,6 +5,7 @@ export const FETCH_REMINDER_DATA = gql`
     $userId: String!
     $researchOutputFilter: String!
     $researchOutputDraftFilter: String!
+    $researchOutputInReviewFilter: String!
     $eventFilter: String!
   ) {
     findUsersContent(id: $userId) {
@@ -63,6 +64,36 @@ export const FETCH_REMINDER_DATA = gql`
           id
           flatData {
             title
+          }
+        }
+      }
+    }
+    inReviewResearchOutputs: queryResearchOutputsContents(
+      filter: $researchOutputInReviewFilter
+    ) {
+      id
+      created
+      status
+      flatData {
+        documentType
+        title
+        teams {
+          id
+          flatData {
+            displayName
+          }
+        }
+        workingGroups {
+          id
+          flatData {
+            title
+          }
+        }
+        reviewRequestedBy {
+          id
+          flatData {
+            firstName
+            lastName
           }
         }
       }

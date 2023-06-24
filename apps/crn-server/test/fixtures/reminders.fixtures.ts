@@ -9,6 +9,7 @@ import {
   ReminderEventResponse,
   ReminderResponse,
   ResearchOutputDraftReminder,
+  ResearchOutputInReviewReminder,
   ResearchOutputPublishedReminder,
   SharePresentationReminder,
   UploadPresentationReminder,
@@ -74,6 +75,44 @@ export const getResearchOutputDraftWorkingGroupReminder =
         associationName: 'Working Group 1',
         associationType: 'working group',
         createdBy: 'Tom Hardy',
+      },
+    };
+  };
+
+export const getResearchOutputInReviewTeamReminder =
+  (): ResearchOutputInReviewReminder => {
+    const researchOutputDataObject = getResearchOutputDataObject();
+    return {
+      id: 'research-output-in-review-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      entity: 'Research Output',
+      type: 'In Review',
+      data: {
+        researchOutputId: researchOutputDataObject.id,
+        title: researchOutputDataObject.title,
+        addedDate: researchOutputDataObject.created,
+        associationName: researchOutputDataObject.teams[0]?.displayName || '',
+        associationType: 'team',
+        documentType: researchOutputDataObject.documentType,
+        reviewRequestedBy: 'Tom Hardy',
+      },
+    };
+  };
+
+export const getResearchOutputInReviewWorkingGroupReminder =
+  (): ResearchOutputInReviewReminder => {
+    const researchOutputDataObject = getResearchOutputDataObject();
+    return {
+      id: 'research-output-in-review-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      entity: 'Research Output',
+      type: 'In Review',
+      data: {
+        researchOutputId: researchOutputDataObject.id,
+        title: researchOutputDataObject.title,
+        addedDate: researchOutputDataObject.created,
+        associationName: 'Working Group 1',
+        associationType: 'working group',
+        documentType: researchOutputDataObject.documentType,
+        reviewRequestedBy: 'Tom Hardy',
       },
     };
   };

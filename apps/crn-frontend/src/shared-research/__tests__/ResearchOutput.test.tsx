@@ -395,7 +395,7 @@ it('switches a in review research output back to draft', async () => {
   );
 });
 
-it('publishes a research output ', async () => {
+it('publishes a research output', async () => {
   const researchOutput = createResearchOutputResponse();
   mockGetResearchOutput.mockResolvedValue({
     ...researchOutput,

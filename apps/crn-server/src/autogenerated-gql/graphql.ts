@@ -8471,13 +8471,6 @@ export type FetchReminderDataQuery = {
     Array<
       Pick<ResearchOutputs, 'id' | 'created' | 'status'> & {
         flatData: Pick<ResearchOutputsFlatDataDto, 'documentType' | 'title'> & {
-          createdBy: Maybe<
-            Array<
-              Pick<Users, 'id'> & {
-                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
-              }
-            >
-          >;
           teams: Maybe<
             Array<
               Pick<Teams, 'id'> & {
@@ -14792,36 +14785,6 @@ export const FetchReminderDataDocument = {
                         name: { kind: 'Name', value: 'documentType' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'createdBy' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'flatData' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'firstName' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'lastName' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'teams' },

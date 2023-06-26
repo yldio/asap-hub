@@ -16,12 +16,11 @@ import {
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
 } from '../organisms';
-import { createMailTo } from '../mail';
+import { createMailTo, TECH_SUPPORT_EMAIL, mailToSupport } from '../mail';
 import {
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
 } from '../utils';
-import { mail } from '..';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -87,7 +86,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   ];
 
   const hasDescription = description || descriptionMD;
-  const { mailToSupport } = mail;
   const association = getResearchOutputAssociation(props);
   const associationName = getResearchOutputAssociationName(props);
   const [reviewToggled, setReviewToggled] = useState(false);
@@ -185,7 +183,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 } members listed on this output will be notified and all
                 CRN members will be able to access it. If you want to switch to
                 draft after the output was published you need to contact`}
-                <Link href={mailToSupport()}> techsupport@asap.science</Link>.
+                <Link href={mailToSupport()}> {TECH_SUPPORT_EMAIL}</Link>.
               </>
             }
             cancelText="Cancel"

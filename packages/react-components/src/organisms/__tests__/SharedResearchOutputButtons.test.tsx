@@ -349,7 +349,7 @@ describe('the publish draft button', () => {
   });
   it('gets displayed when all the conditions are met and clicking it calls its function', async () => {
     const mockDisplayPublishModal = jest.fn();
-    const { queryByText } = render(
+    const { getByText } = render(
       <ResearchOutputPermissionsContext.Provider
         value={{
           canPublishResearchOutput: true,
@@ -364,9 +364,9 @@ describe('the publish draft button', () => {
       </ResearchOutputPermissionsContext.Provider>,
     );
 
-    const button = queryByText('Publish');
+    const button = getByText('Publish');
     expect(button).toBeInTheDocument();
-    fireEvent.click(button!);
+    fireEvent.click(button);
     expect(mockDisplayPublishModal).toHaveBeenCalled();
   });
 });

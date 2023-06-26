@@ -43,8 +43,7 @@ const SharedResearchOutputBanners: React.FC<
     setReviewBannerState(
       reviewToggled ? (reviewRequestedBy ? 'requested' : 'dismissed') : null,
     );
-    setPublishedNowBanner(publishedNow);
-  }, [reviewToggled, reviewRequestedBy, publishedNow]);
+  }, [reviewToggled, reviewRequestedBy]);
 
   return (
     <div css={toastContainer}>

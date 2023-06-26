@@ -367,12 +367,6 @@ export const getSquidexReminderReseachOutputsInReviewTeamContents =
         ],
         documentType: researchOutput.flatData.documentType,
         title: researchOutput.flatData.title,
-        createdBy: [
-          {
-            id: 'user-id-1',
-            flatData: { firstName: 'Tom', lastName: 'Hardy' },
-          },
-        ],
         teams: [
           {
             id: researchOutput.flatData.teams![0]!.id,
@@ -437,12 +431,6 @@ export const getSquidexReminderReseachOutputsInReviewWorkingGroupContents =
       flatData: {
         documentType: researchOutput.flatData.documentType,
         title: researchOutput.flatData.title,
-        createdBy: [
-          {
-            id: 'user-id-1',
-            flatData: { firstName: 'Tom', lastName: 'Hardy' },
-          },
-        ],
         teams: [
           {
             id: researchOutput.flatData.teams![0]!.id,

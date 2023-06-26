@@ -35,8 +35,12 @@ export type ReminderDataProvider = DataProvider<
   FetchRemindersOptions
 >;
 
-type ResearchOutputQueried = NonNullable<
+type DraftResearchOutputQueried = NonNullable<
   FetchReminderDataQuery['draftResearchOutputs']
+>[number];
+
+type InReviewResearchOutputQueried = NonNullable<
+  FetchReminderDataQuery['inReviewResearchOutputs']
 >[number];
 
 export class ReminderSquidexDataProvider implements ReminderDataProvider {
@@ -760,7 +764,7 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
 };
 
 const getAssociationNameAndType = (
-  researchOutput: ResearchOutputQueried,
+  researchOutput: DraftResearchOutputQueried | InReviewResearchOutputQueried,
 ): {
   associationType: 'team' | 'working group' | null;
   associationName: string | null;
@@ -788,7 +792,7 @@ const getAssociationNameAndType = (
   };
 };
 
-const getUserName = (researchOutput: ResearchOutputQueried) => {
+const getUserName = (researchOutput: DraftResearchOutputQueried) => {
   if (
     researchOutput.flatData &&
     researchOutput.flatData.createdBy &&

@@ -26,7 +26,7 @@ const app = async () => {
   const topics = ['Entry.publish', 'Entry.unpublish'];
   const filters: contentful.WebhookFilter[] = [
     {
-      equals: [{ doc: 'sys.environment.sys.id' }, contentfulEnvironment],
+      in: [{ doc: 'sys.environment.sys.id' }, ['Production', 'master']],
     },
   ];
   const headers = [

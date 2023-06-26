@@ -424,6 +424,52 @@ export const getSquidexReminderReseachOutputsDraftWorkingGroupContents =
     };
   };
 
+export const getSquidexReminderReseachOutputsInReviewWorkingGroupContents =
+  (): NonNullable<
+    FetchReminderDataQuery['inReviewResearchOutputs']
+  >[number] => {
+    const researchOutput = getSquidexGraphqlResearchOutput();
+
+    return {
+      id: researchOutput.id,
+      created: researchOutput.created,
+      status: 'Draft',
+      flatData: {
+        documentType: researchOutput.flatData.documentType,
+        title: researchOutput.flatData.title,
+        createdBy: [
+          {
+            id: 'user-id-1',
+            flatData: { firstName: 'Tom', lastName: 'Hardy' },
+          },
+        ],
+        teams: [
+          {
+            id: researchOutput.flatData.teams![0]!.id,
+            flatData: {
+              displayName:
+                researchOutput.flatData.teams![0]!.flatData.displayName,
+            },
+          },
+        ],
+        workingGroups: [
+          {
+            id: 'wg-id-1',
+            flatData: {
+              title: 'Working Group 1',
+            },
+          },
+        ],
+        reviewRequestedBy: [
+          {
+            id: 'user-id-1',
+            flatData: { firstName: 'Tom', lastName: 'Hardy' },
+          },
+        ],
+      },
+    };
+  };
+
 export const getSquidexReminderEventsContents = (): NonNullable<
   FetchReminderDataQuery['queryEventsContents']
 >[number] => {

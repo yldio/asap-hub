@@ -382,16 +382,16 @@ const getResearchOutputInReviewRemindersFromQuery = (
 
   return queryResearchOutputsContents.reduce<ResearchOutputInReviewReminder[]>(
     (researchOutputReminders, researchOutput) => {
-      const userName = getUserName(researchOutput);
       const { associationName, associationType } =
         getAssociationNameAndType(researchOutput);
 
       if (
         !researchOutput.flatData.teams ||
         !researchOutput.flatData.title ||
-        userName === null ||
         associationName === null ||
         associationType === null ||
+        !researchOutput.flatData.documentType ||
+        !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
         !researchOutput.flatData.reviewRequestedBy?.[0]
       ) {
         return researchOutputReminders;
@@ -418,14 +418,6 @@ const getResearchOutputInReviewRemindersFromQuery = (
         (associationType === 'working group' &&
           !isInWorkingGroup &&
           !isAsapStaff)
-      ) {
-        return researchOutputReminders;
-      }
-
-      if (
-        !researchOutput.flatData.documentType ||
-        !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
-        !researchOutput.flatData.title
       ) {
         return researchOutputReminders;
       }

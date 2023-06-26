@@ -155,13 +155,16 @@ describe('/research-outputs/ route', () => {
       });
 
       test('Should call the controller with the right parameters', async () => {
-        await supertest(app).get('/research-outputs').query({
-          take: 15,
-          skip: 5,
-          status: 'draft',
-          teamId: 'team-id-0',
-          workingGroupId: 'workingGroup-id-0',
-        });
+        await supertest(app)
+          .get('/research-outputs')
+          .query({
+            take: 15,
+            skip: 5,
+            status: 'draft',
+            teamId: 'team-id-0',
+            workingGroupId: 'workingGroup-id-0',
+            filter: ['one', 'two'],
+          });
 
         const expectedParams = {
           take: 15,
@@ -170,6 +173,7 @@ describe('/research-outputs/ route', () => {
             teamId: 'team-id-0',
             status: 'draft',
             workingGroupId: 'workingGroup-id-0',
+            documentType: ['one', 'two'],
           },
           includeDrafts: true,
         };

@@ -86,7 +86,7 @@ describe('ResearchTags controller', () => {
 
     test('Should pass the pagination parameters as expected', async () => {
       const tags = {
-        items: Array.from({ length: 200 }, getResearchTagDataObject),
+        items: Array.from({ length: 100 }, getResearchTagDataObject),
         total: 400,
       };
 
@@ -97,14 +97,14 @@ describe('ResearchTags controller', () => {
       });
 
       expect(researchTagDataProvider.fetch).toHaveBeenCalledWith({
-        take: 200,
+        take: 100,
         skip: 0,
         filter: { entity: 'Research Output', type: 'some-type' },
       });
 
       expect(researchTagDataProvider.fetch).toHaveBeenCalledWith({
-        take: 200,
-        skip: 200,
+        take: 100,
+        skip: 100,
         filter: { entity: 'Research Output', type: 'some-type' },
       });
     });
@@ -124,7 +124,7 @@ describe('ResearchTags controller', () => {
       });
 
       expect(researchTagDataProvider.fetch).toHaveBeenCalledWith({
-        take: 200,
+        take: 100,
         skip: 0,
         filter: {
           entity: 'Research Output',
@@ -147,7 +147,7 @@ describe('ResearchTags controller', () => {
       });
 
       expect(researchTagDataProvider.fetch).toHaveBeenCalledWith({
-        take: 200,
+        take: 100,
         skip: 0,
         filter: {
           type: 'Software',
@@ -171,7 +171,7 @@ describe('ResearchTags controller', () => {
       });
 
       expect(researchTagDataProvider.fetch).toHaveBeenCalledWith({
-        take: 200,
+        take: 100,
         skip: 0,
         filter: {
           entity: 'Research Output',

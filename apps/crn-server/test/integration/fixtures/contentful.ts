@@ -1,4 +1,6 @@
+import { omit } from 'lodash';
 import { addLocaleToFields, getLinkEntity } from '@asap-hub/contentful';
+import { parseHtml } from 'contentful-html-rich-text-converter';
 import {
   createClient,
   RestAdapter,
@@ -14,6 +16,7 @@ import {
   UserCreateDataObject,
   TeamCreateDataObject,
   InterestGroupCreateDataObject,
+  WorkingGroupCreateDataObject,
 } from './types';
 
 import {
@@ -40,7 +43,7 @@ class ApiAdapter extends RestAdapter {
         Handle an issue with the type definitions for `makeRequest` in contentful-management
         The exported types insist `sys` cannot exist on the return value when it patently does
         https://github.com/contentful/contentful-management.js/blob/v10.32.0/lib/contentful-management.ts#L94-L96
-      */
+        */
       // @ts-ignore
       if (typeof result?.sys?.id === 'string') {
         // @ts-ignore
@@ -50,6 +53,17 @@ class ApiAdapter extends RestAdapter {
     return result;
   }
 }
+
+export const getEnvironment = async () => {
+  const apiAdapter = new ApiAdapter({
+    accessToken: contentfulManagementAccessToken!,
+  });
+  const client = createClient({
+    apiAdapter,
+  });
+  const space = await client.getSpace(contentfulSpaceId);
+  return space.getEnvironment(contentfulEnvId);
+};
 
 export class ContentfulFixture implements Fixture {
   private apiAdapter: ApiAdapter;
@@ -153,6 +167,47 @@ export class ContentfulFixture implements Fixture {
     };
   }
 
+  private async prepareWorkingGroup(props: WorkingGroupCreateDataObject) {
+    const environment = await this.getEnvironment();
+    const leaders = await Promise.all(
+      (props.leaders || []).map(async (leader) => {
+        const leadership = await environment.createEntry(
+          'workingGroupLeaders',
+          {
+            fields: addLocaleToFields({
+              user: getLinkEntity(leader.user),
+              role: leader.role,
+              workstreamRole: leader.workstreamRole || 'Test',
+              inactiveSinceDate: leader.inactiveSinceDate,
+            }),
+          },
+        );
+        await leadership.publish();
+        return getLinkEntity(leadership.sys.id);
+      }),
+    );
+    const members = await Promise.all(
+      (props.members || []).map(async (member) => {
+        const membership = await environment.createEntry(
+          'workingGroupMembers',
+          {
+            fields: addLocaleToFields({
+              user: getLinkEntity(member),
+              inactiveSinceDate: null,
+            }),
+          },
+        );
+        await membership.publish();
+        return getLinkEntity(membership.sys.id);
+      }),
+    );
+    return {
+      ...omit(props, 'leaders'),
+      description: parseHtml(props.description),
+      members: [...leaders, ...members],
+    };
+  }
+
   async createCalendar(calendar: CalendarCreateDataObject) {
     const environment = await this.getEnvironment();
     const input = await this.prepareCalendar(calendar);
@@ -228,6 +283,19 @@ export class ContentfulFixture implements Fixture {
     return {
       id: result.sys.id,
       ...interestGroup,
+    };
+  }
+
+  async createWorkingGroup(workingGroup: WorkingGroupCreateDataObject) {
+    const environment = await this.getEnvironment();
+    const input = await this.prepareWorkingGroup(workingGroup);
+    const result = await environment.createEntry('workingGroups', {
+      fields: addLocaleToFields(input),
+    });
+    await result.publish();
+    return {
+      id: result.sys.id,
+      ...workingGroup,
     };
   }
 

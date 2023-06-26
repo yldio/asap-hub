@@ -4,6 +4,8 @@ import {
   InputUser,
   RestTeam,
   RestGroup,
+  RestWorkingGroup,
+  InputWorkingGroup,
   SquidexRest,
   parseToSquidex,
   RestEvent,
@@ -16,6 +18,7 @@ import {
   UserCreateDataObject,
   TeamCreateDataObject,
   InterestGroupCreateDataObject,
+  WorkingGroupCreateDataObject,
 } from './types';
 import { appName, baseUrl } from '../../../src/config';
 
@@ -42,6 +45,10 @@ const eventRestClient = getSquidexClient<RestEvent>('events');
 const userRestClient = getSquidexClient<RestUser, InputUser>('users');
 const teamRestClient = getSquidexClient<RestTeam>('teams');
 const interestGroupRestClient = getSquidexClient<RestGroup>('groups');
+const workingGroupRestClient = getSquidexClient<
+  RestWorkingGroup,
+  InputWorkingGroup
+>('working-groups');
 
 export class SquidexFixture implements Fixture {
   private teardownHelper = teardownHelper([
@@ -50,6 +57,7 @@ export class SquidexFixture implements Fixture {
     userRestClient,
     teamRestClient,
     interestGroupRestClient,
+    workingGroupRestClient,
   ]);
 
   private async prepareCalendar(props: CalendarCreateDataObject) {
@@ -106,6 +114,20 @@ export class SquidexFixture implements Fixture {
       tools: [],
       tags: [],
       thumbnail: null,
+    };
+  }
+
+  private async prepareWorkingGroup(props: WorkingGroupCreateDataObject) {
+    return {
+      ...props,
+      leaders: props.leaders?.map((leader) => ({
+        user: [leader.user],
+        role: leader.role,
+        workstreamRole: leader.workstreamRole,
+        inactiveSinceDate: leader.inactiveSinceDate,
+      })),
+      members: props.members?.map((user) => ({ user: [user] })),
+      calendars: [],
     };
   }
 
@@ -169,6 +191,19 @@ export class SquidexFixture implements Fixture {
     const result = await interestGroupRestClient.create(parseToSquidex(input));
     if (!result) {
       throw new Error('Could not create interest group');
+    }
+    return {
+      id: result.id,
+      ...group,
+    };
+  }
+
+  async createWorkingGroup(group: WorkingGroupCreateDataObject) {
+    const input = await this.prepareWorkingGroup(group);
+    const result = await workingGroupRestClient.create(parseToSquidex(input));
+
+    if (!result) {
+      throw new Error('Could not create working group');
     }
     return {
       id: result.id,

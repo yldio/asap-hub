@@ -42,6 +42,7 @@ import {
   auth0Audience,
   baseUrl,
   contentfulAccessToken,
+  contentfulPreviewAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
   isContentfulEnabled,
@@ -78,6 +79,7 @@ import { UserContentfulDataProvider } from './data-providers/contentful/user.dat
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
 import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
 import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
+import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
 import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
 
 import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
@@ -90,10 +92,7 @@ import { InterestGroupSquidexDataProvider } from './data-providers/interest-grou
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import { PageSquidexDataProvider } from './data-providers/page.data-provider';
 import { ReminderSquidexDataProvider } from './data-providers/reminder.data-provider';
-import {
-  ResearchOutputDataProvider,
-  ResearchOutputSquidexDataProvider,
-} from './data-providers/research-output.data-provider';
+import { ResearchOutputSquidexDataProvider } from './data-providers/research-output.data-provider';
 import { ResearchTagSquidexDataProvider } from './data-providers/research-tag.data-provider';
 import {
   TeamDataProvider,
@@ -112,6 +111,7 @@ import {
   WorkingGroupDataProvider,
   TutorialDataProvider,
   ResearchTagDataProvider,
+  ResearchOutputDataProvider,
   ReminderDataProvider,
 } from './data-providers/types';
 import { UserSquidexDataProvider } from './data-providers/user.data-provider';
@@ -151,6 +151,12 @@ export const appFactory = (libs: Libs = {}): Express => {
   const contentfulGraphQLClient = getContentfulGraphQLClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
+    environment: contentfulEnvId,
+  });
+
+  const contentfulPreviewGraphQLClient = getContentfulGraphQLClient({
+    space: contentfulSpaceId,
+    accessToken: contentfulPreviewAccessToken,
     environment: contentfulEnvId,
   });
 
@@ -359,13 +365,6 @@ export const appFactory = (libs: Libs = {}): Express => {
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
-  const researchOutputDataProvider =
-    libs.researchOutputDataProvider ||
-    new ResearchOutputSquidexDataProvider(
-      squidexGraphqlClient,
-      researchOutputRestClient,
-    );
-
   featureFlagDependencySwitch.setDependency(
     'externalAuthors',
     libs.externalAuthorSquidexDataProvider ||
@@ -535,6 +534,33 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.researchTagDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'researchTags',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+
+  featureFlagDependencySwitch.setDependency(
+    'researchOutputs',
+    libs.researchOutputSquidexDataProvider ||
+      new ResearchOutputSquidexDataProvider(
+        squidexGraphqlClient,
+        researchOutputRestClient,
+      ),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'researchOutputs',
+    libs.researchOutputContentfulDataProvider ||
+      new ResearchOutputContentfulDataProvider(
+        contentfulPreviewGraphQLClient,
+        getContentfulRestClientFactory,
+      ),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
+  const researchOutputDataProvider =
+    libs.researchOutputDataProvider ||
+    featureFlagDependencySwitch.getDependency(
+      'researchOutputs',
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
@@ -743,6 +769,8 @@ export type Libs = {
   reminderSquidexDataProvider?: ReminderDataProvider;
   reminderContentfulDataProvider?: ReminderDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;
+  researchOutputSquidexDataProvider?: ResearchOutputDataProvider;
+  researchOutputContentfulDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
   researchTagSquidexDataProvider?: ResearchTagDataProvider;
   researchTagContentfulDataProvider?: ResearchTagDataProvider;

@@ -19,8 +19,8 @@ import {
 import {
   FetchResearchOutputOptions,
   ResearchOutputDataProvider,
-} from '../data-providers/research-output.data-provider';
-import { ResearchTagDataProvider } from '../data-providers/types';
+  ResearchTagDataProvider,
+} from '../data-providers/types';
 import { ExternalAuthorDataProvider } from '../data-providers/external-author.data-provider';
 import { fetchAll } from '../utils/fetch-all';
 
@@ -455,7 +455,7 @@ const mapResearchTag = (
 type ResearchOutputFilter =
   | string[]
   | {
-      documentType?: string;
+      documentType?: string | string[];
       title?: string;
       link?: string;
       status?: string;

@@ -734,4 +734,42 @@ describe('User data provider', () => {
       ).rejects.toThrow();
     });
   });
+
+  describe('parseToWorkingGroups', () => {
+    test('should discard working group roles that are not linked to a working group', async () => {
+      const contentfulGraphqlClientMockServer =
+        getContentfulGraphqlClientMockServer({
+          ...getContentfulGraphql(),
+          WorkingGroupsCollection: () => ({
+            items: [],
+          }),
+        });
+
+      const userDataProviderWithMockServer: UserDataProvider =
+        new UserContentfulDataProvider(
+          contentfulGraphqlClientMockServer,
+          contentfulRestClientMock,
+        );
+      const result = await userDataProviderWithMockServer.fetchById('123');
+      const expectation = {
+        ...getUserDataObject(),
+        workingGroups: [],
+        interestGroups: [
+          {
+            active: true,
+            id: 'ig-1',
+            name: 'interest-group-1',
+          },
+          {
+            active: false,
+            id: 'ig-2',
+            name: 'interest-group-2',
+          },
+        ],
+      };
+      // TODO: team proposal
+      expectation.teams[0]!.proposal = undefined;
+      expect(result).toEqual(expectation);
+    });
+  });
 });

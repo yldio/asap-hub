@@ -288,19 +288,17 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
 
   const isAlumni = !!item.alumniSinceDate;
 
-  const workingGroupLeadersCollection = cleanArray<GroupLeaderItem>(
+  const workingGroupLeadersCollection = cleanArray(
     item.linkedFrom?.workingGroupLeadersCollection?.items,
   );
-  const workingGroupMembersCollection = cleanArray<GroupMemberItem>(
+  const workingGroupMembersCollection = cleanArray(
     item.linkedFrom?.workingGroupMembersCollection?.items,
   );
-  const interestGroupLeadersCollection = cleanArray<InterestGroupLeaderItem>(
+  const interestGroupLeadersCollection = cleanArray(
     item?.linkedFrom?.interestGroupLeadersCollection?.items,
   );
 
-  const teamsCollection = cleanArray<TeamMembership>(
-    item?.teamsCollection?.items,
-  );
+  const teamsCollection = cleanArray(item?.teamsCollection?.items);
 
   const workingGroups = [
     ...parseToWorkingGroups(workingGroupLeadersCollection, isAlumni),
@@ -397,41 +395,41 @@ const parseToWorkingGroups = (
   isAlumni: boolean,
 ): WorkingGroupMembership[] =>
   users.reduce(
-    (
-      workingGroups: WorkingGroupMembership[],
-      user: GroupMemberItem | GroupLeaderItem,
-    ) => {
+    (workingGroups: WorkingGroupMembership[], user: GroupLeaderItem) => {
       const workingGroup = user.linkedFrom?.workingGroupsCollection?.items[0];
       const isInActive = !!user.inactiveSinceDate;
 
+      if (!workingGroup) {
+        return workingGroups;
+      }
+
       workingGroups.push({
-        id: workingGroup?.sys.id,
-        name: workingGroup?.title,
-        role: (user as GroupLeaderItem).role || 'Member',
+        id: workingGroup.sys.id,
+        name: workingGroup.title || '',
+        role: (user.role as WorkingGroupMembership['role']) || 'Member',
         active: workingGroup?.complete ? false : !isAlumni && !isInActive,
-      } as WorkingGroupMembership);
+      });
 
       return workingGroups;
     },
     [],
   );
 
-const parseToInterestGroups = (teams: TeamMembership[]) =>
+const parseToInterestGroups = (
+  teams: TeamMembership[],
+): InterestGroupMembership[] =>
   teams.flatMap(({ team }) => {
-    const items = cleanArray<InterestGroupItem>(
-      team?.linkedFrom?.interestGroupsCollection?.items,
-    );
-    return items.map(
-      (group: InterestGroupItem) =>
-        ({
-          id: group?.sys.id,
-          name: group?.name,
-          active: group?.active,
-        } as InterestGroupMembership),
-    );
+    const items = cleanArray(team?.linkedFrom?.interestGroupsCollection?.items);
+    return items.map((group) => ({
+      id: group.sys.id,
+      name: group.name || '',
+      active: !!group.active,
+    }));
   });
 
-const parseLeadersToInterestGroups = (leaders: InterestGroupLeaderItem[]) =>
+const parseLeadersToInterestGroups = (
+  leaders: InterestGroupLeaderItem[],
+): InterestGroupMembership[] =>
   leaders.reduce(
     (
       interestGroups: InterestGroupMembership[],
@@ -450,16 +448,15 @@ const parseLeadersToInterestGroups = (leaders: InterestGroupLeaderItem[]) =>
     [],
   );
 
-const removeDuplicates = (interestGroups: InterestGroupMembership[]) => {
+const removeDuplicates = (
+  interestGroups: InterestGroupMembership[],
+): InterestGroupMembership[] => {
   const duplicates = new Map();
-  return interestGroups.reduce(
-    (groups: InterestGroupMembership[], group: InterestGroupMembership) => {
-      if (!duplicates.has(group.id)) {
-        duplicates.set(group.id, group);
-        groups.push(group as InterestGroupMembership);
-      }
-      return groups;
-    },
-    [],
-  );
+  return interestGroups.reduce((groups: InterestGroupMembership[], group) => {
+    if (!duplicates.has(group.id)) {
+      duplicates.set(group.id, group);
+      groups.push(group);
+    }
+    return groups;
+  }, []);
 };

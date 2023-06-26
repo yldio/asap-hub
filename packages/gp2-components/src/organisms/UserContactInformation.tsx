@@ -36,7 +36,7 @@ const UserContactInformation: React.FC<UserContactInformationProps> = ({
       />
       {editHref && !alternativeEmail ? (
         <UserProfilePlaceholderCard>
-          Provide alternative contact details.
+          You can also add an alternative email by editing this field.
         </UserProfilePlaceholderCard>
       ) : (
         <EmailSection

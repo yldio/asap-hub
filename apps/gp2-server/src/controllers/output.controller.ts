@@ -139,7 +139,6 @@ export default class Outputs implements OutputController {
         documentType: outputData.documentType,
         title: outputData.title,
       },
-      includeDrafts: true,
     });
 
     if (result.total === 0) {
@@ -169,7 +168,6 @@ export default class Outputs implements OutputController {
       filter: {
         link: outputData.link || '',
       },
-      includeDrafts: true,
     });
 
     if (result.total === 0) {

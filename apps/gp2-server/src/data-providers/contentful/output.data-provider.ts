@@ -20,7 +20,6 @@ export type OutputItem = NonNullable<
 export class OutputContentfulDataProvider implements OutputDataProvider {
   constructor(
     private graphQLClient: GraphQLClient,
-    private previewGraphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
   private fetchOutputById(id: string) {
@@ -42,12 +41,10 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     skip = 0,
     search,
     filter,
-    includeDrafts,
   }: gp2Model.FetchOutputOptions) {
     const outputs = await this.fetchOutputs(take, skip, {
       filter,
       search,
-      includeDrafts,
     });
 
     return parseOutputsCollection(outputs);
@@ -56,7 +53,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
   private async fetchOutputs(
     take: number,
     skip: number,
-    { search, filter, includeDrafts }: gp2Model.FetchOutputOptions,
+    { search, filter }: gp2Model.FetchOutputOptions,
   ) {
     if (filter?.workingGroup) {
       return this.fetchOutputsByWorkingGroupId(take, skip, filter.workingGroup);
@@ -70,17 +67,14 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
     const where = [...searchWhere, ...filterWhere];
-    const client = includeDrafts
-      ? this.previewGraphQLClient
-      : this.graphQLClient;
-    const { outputsCollection } = await client.request<
+
+    const { outputsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchOutputsQuery,
       gp2Contentful.FetchOutputsQueryVariables
     >(gp2Contentful.FETCH_OUTPUTS, {
       limit: take,
       skip,
       where: where.length ? { AND: where } : {},
-      preview: includeDrafts === true,
       order: [gp2Contentful.OutputsOrder.AddedDateDesc],
     });
     return outputsCollection;

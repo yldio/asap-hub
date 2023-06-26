@@ -13,7 +13,11 @@ module.exports.up = (migration) => {
     .type('Symbol')
     .localized(false)
     .required(true)
-    .validations([])
+    .validations([
+      {
+        unique: true,
+      },
+    ])
     .disabled(false)
     .omitted(false);
 

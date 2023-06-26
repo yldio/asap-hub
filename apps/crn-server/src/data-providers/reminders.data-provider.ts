@@ -154,9 +154,8 @@ const getResearchOutputDraftFilter = (): string => {
   return filter;
 };
 
-const getResearchOutputInReviewFilter = (): string => {
-  return `status eq 'Draft' and data/addedDate/iv eq null and exists(data/reviewRequestedBy/iv)`;
-};
+const getResearchOutputInReviewFilter = (): string =>
+  `status eq 'Draft' and data/addedDate/iv eq null and exists(data/reviewRequestedBy/iv)`;
 
 export const getEventFilter = (zone: string): string => {
   const lastMidnightISO = DateTime.fromObject({

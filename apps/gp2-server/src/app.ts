@@ -288,7 +288,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.outputContentfulDataProvider ||
     new OutputContentfulDataProvider(
       contentfulGraphQLClient,
-      contentfulPreviewGraphQLClient,
       getContentfulRestClientFactory,
     );
 

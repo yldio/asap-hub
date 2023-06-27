@@ -1,12 +1,13 @@
-import { FormCard, LabeledMultiSelect } from '../molecules';
+import { EventResponse } from '@asap-hub/model';
 import { components } from 'react-select';
+import { ComponentPropsWithRef } from 'react';
+import { css } from '@emotion/react';
+
+import { FormCard, LabeledMultiSelect } from '../molecules';
 import { perRem } from '../pixels';
 import { MultiSelectOptionsType, Pill } from '../atoms';
-import { EventResponse } from '@asap-hub/model';
-import { ComponentPropsWithRef } from 'react';
 import { noop } from '../utils';
 import { formatDateToTimezone } from '../date';
-import { css } from '@emotion/react';
 
 export type ResearchOutputRelatedEventsOption = Pick<EventResponse, 'endDate'> &
   MultiSelectOptionsType;
@@ -15,7 +16,7 @@ type ResearchOutputRelatedEventsCardProps = {
   readonly relatedEvents: ComponentPropsWithRef<
     typeof LabeledMultiSelect<ResearchOutputRelatedEventsOption>
   >['values'];
-  readonly getRelatedEventSuggestions: ComponentPropsWithRef<
+  readonly getRelatedEventSuggestions?: ComponentPropsWithRef<
     typeof LabeledMultiSelect<ResearchOutputRelatedEventsOption>
   >['loadOptions'];
   readonly onChangeRelatedEvents?: ComponentPropsWithRef<

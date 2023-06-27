@@ -45,6 +45,7 @@ export const researchOutputToCSV = (
     )
     .join(','),
   relatedResearch: output.relatedResearch.map(({ title }) => title).join(','),
+  relatedEvents: output.relatedEvents.map(({ title }) => title).join(','),
   workingGroups: output.workingGroups
     ? output.workingGroups
         .map((wg) => wg.title)

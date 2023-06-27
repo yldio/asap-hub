@@ -223,11 +223,13 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
       ComponentProps<typeof ResearchOutputRelatedEventsCard>['relatedEvents']
     >
   >(
-    (researchOutputData?.relatedEvents ?? []).map(({ title, id, endDate }) => ({
-      label: title,
-      value: id,
-      endDate,
-    })),
+    (researchOutputData?.relatedEvents ?? []).map(
+      ({ title: label, id, endDate }) => ({
+        value: id,
+        label,
+        endDate,
+      }),
+    ),
   );
 
   const [descriptionMD, setDescription] = useState<

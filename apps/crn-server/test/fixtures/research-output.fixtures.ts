@@ -126,6 +126,12 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
         },
       },
     ],
+    relatedEvents: [
+      {
+        id: 'related-event-id-0',
+        flatData: { title: 'Related Event 1', endDate: '2021-05-21T13:18:31Z' },
+      },
+    ],
     labs: [
       {
         id: '99c78dd7-627e-4fbd-aaec-d1977895189e',
@@ -208,6 +214,13 @@ export const getResearchOutputDataObject =
         documentType: 'Bioinformatics',
         teams: [{ displayName: 'Team B', id: 'team-id-1' }],
         isOwnRelatedResearchLink: false,
+      },
+    ],
+    relatedEvents: [
+      {
+        id: 'related-event-id-0',
+        title: 'Related Event 1',
+        endDate: '2021-05-21T13:18:31.000Z',
       },
     ],
     publishDate: '2021-05-21T13:18:31Z',
@@ -317,6 +330,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     workingGroups,
     relatedResearch,
     published: _published,
+    relatedEvents,
     ...researchOutputResponse
   } = getResearchOutputResponse();
   return {
@@ -329,6 +343,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     authors: authors.map(({ id }) => ({ userId: id })),
     teams: teams.map(({ id }) => id),
     relatedResearch: relatedResearch.map(({ id }) => id),
+    relatedEvents: relatedEvents.map(({ id }) => id),
     workingGroups: workingGroups ? workingGroups.map(({ id }) => id) : [],
     published: true,
   };
@@ -349,6 +364,7 @@ export const getResearchOutputCreateDataObject =
       labs,
       authors,
       relatedResearch,
+      relatedEvents,
       methods: _methods,
       environments: _environments,
       organisms: _organisms,
@@ -370,6 +386,7 @@ export const getResearchOutputCreateDataObject =
       teamIds: teams.map(({ id }) => id),
       labIds: labs.map(({ id }) => id),
       relatedResearchIds: relatedResearch?.map(({ id }) => id) || [],
+      relatedEventIds: relatedEvents?.map(({ id }) => id) || [],
       methodIds: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
       organismIds: ['d77a7607-7b9a-4ef1-99ee-c389b33ea95b'],
       environmentIds: ['8a936e45-6d5e-42a6-8acd-b849ab10f3f8'],
@@ -434,6 +451,9 @@ export const getRestResearchOutputCreateData =
     },
     relatedResearch: {
       iv: ['related-research-id-0', 'related-referencing-research-id'],
+    },
+    relatedEvents: {
+      iv: ['related-event-id-0'],
     },
     authors: { iv: ['user-id-1', 'user-id-2'] },
     createdBy: { iv: ['userId'] },

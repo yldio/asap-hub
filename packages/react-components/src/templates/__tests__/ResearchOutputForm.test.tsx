@@ -280,6 +280,7 @@ describe('on submit', () => {
     relatedResearch: [],
     keywords: [],
     published: false,
+    relatedEvents: [],
   };
   type Data = Pick<
     ResearchOutputPostRequest,

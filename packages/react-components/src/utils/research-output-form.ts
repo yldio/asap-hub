@@ -220,6 +220,7 @@ export function transformResearchOutputResponseToRequest({
   keywords,
   published,
   reviewRequestedBy,
+  relatedEvents,
 }: ResearchOutputResponse): ResearchOutputPutRequest {
   return {
     documentType,
@@ -251,6 +252,7 @@ export function transformResearchOutputResponseToRequest({
     teams: teams.map((team) => team.id),
     workingGroups: workingGroups ? workingGroups.map((wg) => wg.id) : [],
     relatedResearch: relatedResearch.map((research) => research.id),
+    relatedEvents: relatedEvents.map((event) => event.id),
     reviewRequestedById: reviewRequestedBy ? reviewRequestedBy.id : undefined,
   };
 }

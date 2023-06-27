@@ -597,6 +597,25 @@
         }
       },
       {
+        "name": "relatedEvents",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "editor": "List",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "schemaIds": ["events"],
+          "label": "Related Events"
+        }
+      },
+      {
         "name": "Compliance",
         "isHidden": false,
         "isLocked": false,

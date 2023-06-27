@@ -75,6 +75,7 @@ describe('researchOutputToCSV', () => {
       teams: expect.anything(),
       workingGroups: expect.anything(),
       relatedResearch: '',
+      relatedEvents: 'Example Event',
       methods: 'Activity Assay,RNA Single Cell',
       keywords: 'Keyword1,Keyword2',
       organisms: 'C. Elegans,Rat',

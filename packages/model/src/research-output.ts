@@ -258,6 +258,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   teamIds: string[];
   workingGroups?: string[];
   relatedResearchIds?: string[];
+  relatedEventIds?: string[];
 };
 
 export type PublishedResearchOutputCreateDataObject =
@@ -282,6 +283,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   updatedBy: string;
   workingGroups: string[];
   relatedResearchIds?: string[];
+  relatedEventIds?: string[];
   reviewRequestedById?: string;
 };
 
@@ -336,7 +338,7 @@ export type ResearchOutputPostRequest = {
   usageNotes?: string;
   usedInPublication?: boolean;
   published: boolean;
-  relatedEvents?: string[];
+  relatedEvents: string[];
 };
 
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';

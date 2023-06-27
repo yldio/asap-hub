@@ -121,6 +121,11 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         items: { type: 'string' },
         nullable: true,
       },
+      relatedEvents: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
       authors: {
         type: 'array',
         items: {
@@ -237,6 +242,11 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
         nullable: true,
       },
       relatedResearch: {
+        type: 'array',
+        items: { type: 'string' },
+        nullable: true,
+      },
+      relatedEvents: {
         type: 'array',
         items: { type: 'string' },
         nullable: true,

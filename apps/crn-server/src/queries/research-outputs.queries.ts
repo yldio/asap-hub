@@ -127,6 +127,13 @@ export const researchOutputContentQueryFragment = gql`
           }
         }
       }
+      relatedEvents {
+        id
+        flatData {
+          title
+          endDate
+        }
+      }
       labs {
         id
         flatData {

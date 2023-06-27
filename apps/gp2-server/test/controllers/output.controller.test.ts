@@ -54,7 +54,6 @@ describe('outputs controller', () => {
 
       const fetchOptions: gp2Model.FetchOutputOptions = {
         filter: { documentType: 'document-type', link: 'link', title: 'title' },
-        includeDrafts: true,
         search: 'search',
         skip: 13,
         take: 7,
@@ -133,7 +132,6 @@ describe('outputs controller', () => {
               title: outputRequest.title,
               documentType: outputRequest.documentType,
             },
-            includeDrafts: true,
           })
           .mockResolvedValueOnce({
             total: 1,
@@ -143,7 +141,6 @@ describe('outputs controller', () => {
         when(outputDataProviderMock.fetch)
           .calledWith({
             filter: { link: outputRequest.link },
-            includeDrafts: true,
           })
           .mockResolvedValueOnce({
             total: 0,
@@ -171,7 +168,6 @@ describe('outputs controller', () => {
         when(outputDataProviderMock.fetch)
           .calledWith({
             filter: { link: outputRequest.link },
-            includeDrafts: true,
           })
           .mockResolvedValueOnce({
             total: 1,
@@ -183,7 +179,6 @@ describe('outputs controller', () => {
               title: outputRequest.title,
               documentType: outputRequest.documentType,
             },
-            includeDrafts: true,
           })
           .mockResolvedValueOnce({
             total: 0,
@@ -214,7 +209,6 @@ describe('outputs controller', () => {
               title: outputRequest.title,
               documentType: outputRequest.documentType,
             },
-            includeDrafts: true,
           })
           .mockResolvedValueOnce({
             total: 1,
@@ -223,7 +217,6 @@ describe('outputs controller', () => {
         when(outputDataProviderMock.fetch)
           .calledWith({
             filter: { link: outputRequest.link },
-            includeDrafts: true,
           })
           .mockResolvedValueOnce({
             total: 1,
@@ -386,7 +379,6 @@ describe('outputs controller', () => {
                 title: outputRequest.title,
                 documentType: outputRequest.documentType,
               },
-              includeDrafts: true,
             })
             .mockResolvedValueOnce({
               total: 2,
@@ -396,7 +388,6 @@ describe('outputs controller', () => {
           when(outputDataProviderMock.fetch)
             .calledWith({
               filter: { link: outputRequest.link },
-              includeDrafts: true,
             })
             .mockResolvedValueOnce({
               total: 1,
@@ -427,7 +418,6 @@ describe('outputs controller', () => {
           when(outputDataProviderMock.fetch)
             .calledWith({
               filter: { link: outputRequest.link },
-              includeDrafts: true,
             })
             .mockResolvedValueOnce({
               total: 2,
@@ -441,7 +431,6 @@ describe('outputs controller', () => {
                 title: outputRequest.title,
                 documentType: outputRequest.documentType,
               },
-              includeDrafts: true,
             })
             .mockResolvedValueOnce({
               total: 1,
@@ -474,7 +463,6 @@ describe('outputs controller', () => {
                 title: outputRequest.title,
                 documentType: outputRequest.documentType,
               },
-              includeDrafts: true,
             })
             .mockResolvedValueOnce({
               total: 2,
@@ -483,7 +471,6 @@ describe('outputs controller', () => {
           when(outputDataProviderMock.fetch)
             .calledWith({
               filter: { link: outputRequest.link },
-              includeDrafts: true,
             })
             .mockResolvedValueOnce({
               total: 2,

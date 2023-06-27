@@ -34,7 +34,6 @@ import {
   clientSecret,
   contentfulAccessToken,
   contentfulEnvId,
-  contentfulPreviewAccessToken,
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
@@ -120,11 +119,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   const contentfulGraphQLClient = getContentfulGraphQLClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
-    environment: contentfulEnvId,
-  });
-  const contentfulPreviewGraphQLClient = getContentfulGraphQLClient({
-    space: contentfulSpaceId,
-    accessToken: contentfulPreviewAccessToken,
     environment: contentfulEnvId,
   });
 
@@ -297,7 +291,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.outputContentfulDataProvider ||
     new OutputContentfulDataProvider(
       contentfulGraphQLClient,
-      contentfulPreviewGraphQLClient,
       getContentfulRestClientFactory,
     );
 

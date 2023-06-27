@@ -116,11 +116,6 @@ export const appFactory = (libs: Libs = {}): Express => {
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,
   });
-  const contentfulPreviewGraphQLClient = getContentfulGraphQLClient({
-    space: contentfulSpaceId,
-    accessToken: contentfulPreviewAccessToken,
-    environment: contentfulEnvId,
-  });
 
   // Libs
   const logger = libs.logger || pinoLogger;

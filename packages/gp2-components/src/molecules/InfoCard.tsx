@@ -28,7 +28,7 @@ const InfoCard = ({ icon, total, title }: InfoCardProps) => (
         justifyContent: 'center',
       }}
     >
-      <span css={iconStyles}>{icon}</span>{' '}
+      <span css={iconStyles}>{icon}</span>
       <Headline2 styleAsHeading={1}>{total}</Headline2>
     </div>
     <Paragraph noMargin>{title}</Paragraph>

@@ -174,7 +174,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         {labCount > 0 && (
           <div css={labCountStyles}>
             <span css={iconStyles}>
-              <LabIcon />{' '}
+              <LabIcon />
             </span>
             <span>{getCounterString(labCount, 'Lab')}</span>
           </div>

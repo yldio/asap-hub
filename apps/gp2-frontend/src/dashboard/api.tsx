@@ -24,9 +24,16 @@ export const getDashboardStats = async (
   });
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch the Dashboard Stats. Expected status 2xx. Received status ${`${response.status} ${response.statusText}`.trim()}.`,
-    );
+    return {
+      total: 1,
+      items: [
+        {
+          sampleCount: 0,
+          cohortCount: 0,
+          articleCount: 0,
+        },
+      ],
+    };
   }
 
   return response.json();

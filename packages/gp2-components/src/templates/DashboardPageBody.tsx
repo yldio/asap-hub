@@ -41,7 +41,7 @@ const viewAllStyles = css({
 const accodionItemStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: '32px',
+  gap: rem(32),
 });
 
 const latestStatsWrapperStyles = css({
@@ -51,10 +51,10 @@ const latestStatsWrapperStyles = css({
 
 const latestStatsCardsStyles = css({
   display: 'flex',
-  gap: '24px',
+  gap: rem(24),
   width: '100%',
   justifyContent: 'center',
-  marginTop: '32px',
+  marginTop: rem(32),
   [mobileQuery]: {
     flexDirection: 'column',
   },

@@ -34,7 +34,6 @@ import {
   clientSecret,
   contentfulAccessToken,
   contentfulEnvId,
-  contentfulPreviewAccessToken,
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';

@@ -16,7 +16,10 @@ describe('Dashboard controller', () => {
       });
       const result = await dashboardController.fetch();
 
-      expect(result).toEqual({ items: [], total: 0 });
+      expect(result).toEqual({
+        items: [{ sampleCount: 0, cohortCount: 0, articleCount: 0 }],
+        total: 1,
+      });
     });
 
     test('Should fetch the dashboard', async () => {

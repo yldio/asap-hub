@@ -10525,6 +10525,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@contentful/rich-text-html-renderer@npm:^16.1.0":
+  version: 16.1.0
+  resolution: "@contentful/rich-text-html-renderer@npm:16.1.0"
+  dependencies:
+    "@contentful/rich-text-types": ^16.2.0
+    escape-html: ^1.0.3
+  checksum: 06234d94ce5077a7d9f5c5a41911017431d4bc24a4783f5d0133ba010ac3aa43a456c765707d3b803044331c6b309029f3f1eb7f76a1603c7dfe58e91638a3e1
+  languageName: node
+  linkType: hard
+
 "@contentful/rich-text-react-renderer@npm:^15.16.4":
   version: 15.16.4
   resolution: "@contentful/rich-text-react-renderer@npm:15.16.4"
@@ -10548,6 +10558,13 @@ __metadata:
   version: 16.1.0
   resolution: "@contentful/rich-text-types@npm:16.1.0"
   checksum: 191927b41b63b4b3fb4d53edfff37ea67fd01fae538aa29c5ee2ee7d7b8060fe10eac082ed3a2ff63b2b24b5e4d4e4ad88479d8edd61f32ad218edf915fc07f4
+  languageName: node
+  linkType: hard
+
+"@contentful/rich-text-types@npm:^16.2.0":
+  version: 16.2.0
+  resolution: "@contentful/rich-text-types@npm:16.2.0"
+  checksum: ec9390201e7e7c1419b61efee12845169665b336fe866132515f61ed7ab6753a997d1336b13cb2962eb48db01deef4a5a035e929344eec41f1b58227d78ecff9
   languageName: node
   linkType: hard
 
@@ -19155,6 +19172,7 @@ __metadata:
     "@babel/preset-react": 7.18.6
     "@babel/preset-typescript": 7.21.4
     "@babel/runtime-corejs3": 7.21.0
+    "@contentful/rich-text-html-renderer": ^16.1.0
     "@emotion/jest": ^11.10.5
     "@jeysal/babel-plugin-ramda": 2.0.1
     "@peculiar/webcrypto": 1.4.3
@@ -19169,6 +19187,7 @@ __metadata:
     babel-plugin-transform-inline-environment-variables: 0.5.0-alpha.42
     babel-preset-react-app: 10.0.1
     bundlewatch: 0.3.3
+    contentful: ^10.3.0
     dotenv: 16.0.3
     escape-string-regexp: 4.0.0
     eslint: 8.23.1
@@ -22727,6 +22746,20 @@ __metadata:
     json-stringify-safe: ^5.0.1
     type-fest: ^3.1.0
   checksum: 47c7f9e61cfa69bf7e3e827dadb58695dcc335809157d0b8c76b8776d9fc227c370709973731ab4ed7194884b7facc998d026ea5cd161af8f9528f7bc4eabb40
+  languageName: node
+  linkType: hard
+
+"contentful@npm:^10.3.0":
+  version: 10.3.0
+  resolution: "contentful@npm:10.3.0"
+  dependencies:
+    "@contentful/rich-text-types": ^16.0.2
+    axios: ^0.26.1
+    contentful-resolve-response: ^1.3.6
+    contentful-sdk-core: ^7.0.2
+    json-stringify-safe: ^5.0.1
+    type-fest: ^3.1.0
+  checksum: 3d5f9d28667575441f7f66de3c8c27fdc2f99f056c99609aa6661f5b1b755190eef594c8761a81d52edfece1d0eaf8fc9fb356fda4e8d0cb15ab0b20fbef2e84
   languageName: node
   linkType: hard
 

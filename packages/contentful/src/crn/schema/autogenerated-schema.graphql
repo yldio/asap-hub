@@ -579,7 +579,7 @@ type Discover implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): DiscoverLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [DiscoverMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): DiscoverMembersCollection
-  membersTeam(locale: String, preview: Boolean): Teams
+  membersTeam(locale: String, preview: Boolean, where: TeamsFilter): Teams
   pagesCollection(limit: Int = 100, locale: String, order: [DiscoverPagesCollectionOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): DiscoverPagesCollection
   scientificAdvisoryBoardCollection(limit: Int = 100, locale: String, order: [DiscoverScientificAdvisoryBoardCollectionOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): DiscoverScientificAdvisoryBoardCollection
   sys: Sys!
@@ -874,7 +874,7 @@ type EventSpeakers implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
   sys: Sys!
-  team(locale: String, preview: Boolean): Teams
+  team(locale: String, preview: Boolean, where: TeamsFilter): Teams
   user(locale: String, preview: Boolean): EventSpeakersUser
 }
 
@@ -962,7 +962,7 @@ union EventSpeakersUser = ExternalAuthors | Users
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events)"""
 type Events implements Entry {
-  calendar(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   endDate(locale: String): DateTime
@@ -1535,7 +1535,7 @@ type InterestGroupLeaders implements Entry {
   linkedFrom(allowedLocales: [String]): InterestGroupLeadersLinkingCollections
   role(locale: String): String
   sys: Sys!
-  user(locale: String, preview: Boolean): Users
+  user(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type InterestGroupLeadersCollection {
@@ -1612,7 +1612,7 @@ enum InterestGroupLeadersOrder {
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups)"""
 type InterestGroups implements Entry {
   active(locale: String): Boolean
-  calendar(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   googleDrive(locale: String): String
@@ -2396,7 +2396,7 @@ type TeamMembership implements Entry {
   linkedFrom(allowedLocales: [String]): TeamMembershipLinkingCollections
   role(locale: String): String
   sys: Sys!
-  team(locale: String, preview: Boolean): Teams
+  team(locale: String, preview: Boolean, where: TeamsFilter): Teams
 }
 
 type TeamMembershipCollection {
@@ -3367,7 +3367,7 @@ type WorkingGroupLeaders implements Entry {
   linkedFrom(allowedLocales: [String]): WorkingGroupLeadersLinkingCollections
   role(locale: String): String
   sys: Sys!
-  user(locale: String, preview: Boolean): Users
+  user(locale: String, preview: Boolean, where: UsersFilter): Users
   workstreamRole(locale: String): String
 }
 
@@ -3455,7 +3455,7 @@ type WorkingGroupMembers implements Entry {
   inactiveSinceDate(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): WorkingGroupMembersLinkingCollections
   sys: Sys!
-  user(locale: String, preview: Boolean): Users
+  user(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type WorkingGroupMembersCollection {
@@ -3520,7 +3520,7 @@ enum WorkingGroupMembersOrder {
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups)"""
 type WorkingGroups implements Entry {
-  calendars(locale: String, preview: Boolean): Calendars
+  calendars(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   complete(locale: String): Boolean
   contentfulMetadata: ContentfulMetadata!
   deliverablesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsDeliverablesCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupDeliverablesFilter): WorkingGroupsDeliverablesCollection

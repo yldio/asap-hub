@@ -673,6 +673,7 @@ export type ContributingCohortsMembership = Entry & {
 export type ContributingCohortsMembershipContributingCohortArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ContributingCohortsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
@@ -1024,6 +1025,7 @@ export type Events = Entry & {
 export type EventsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CalendarsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
@@ -2333,6 +2335,7 @@ export type OutputsAuthorsCollectionArgs = {
 export type OutputsCreatedByArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -2385,6 +2388,7 @@ export type OutputsTypeArgs = {
 export type OutputsUpdatedByArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 export type OutputsAuthorsCollection = {
@@ -2701,6 +2705,7 @@ export type ProjectMembershipRoleArgs = {
 export type ProjectMembershipUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 export type ProjectMembershipCollection = {
@@ -2818,6 +2823,7 @@ export type Projects = Entry & {
 export type ProjectsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CalendarsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
@@ -4357,6 +4363,7 @@ export type WorkingGroupMembershipRoleArgs = {
 export type WorkingGroupMembershipUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 export type WorkingGroupMembershipCollection = {
@@ -4682,6 +4689,7 @@ export type WorkingGroups = Entry & {
 export type WorkingGroupsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CalendarsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */

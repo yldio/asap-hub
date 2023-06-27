@@ -67,6 +67,11 @@ type ResearchOutputFormProps = Pick<
         typeof ResearchOutputRelatedResearchCard
       >['getRelatedResearchSuggestions']
     >;
+    getRelatedEventSuggestions?: NonNullable<
+      ComponentProps<
+        typeof ResearchOutputRelatedEventsCard
+      >['getRelatedEventSuggestions']
+    >;
     researchOutputData?: ResearchOutputResponse;
     tagSuggestions: string[];
     permissions: ResearchOutputPermissions;
@@ -155,6 +160,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
   getRelatedResearchSuggestions = noop,
+  getRelatedEventSuggestions = noop,
   researchTags,
   serverValidationErrors,
   clearServerValidationError,
@@ -211,6 +217,18 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
       >['relatedResearch']
     >
   >(getOwnRelatedResearchLinks(researchOutputData?.relatedResearch));
+
+  const [relatedEvents, setRelatedEvents] = useState<
+    NonNullable<
+      ComponentProps<typeof ResearchOutputRelatedEventsCard>['relatedEvents']
+    >
+  >(
+    (researchOutputData?.relatedEvents ?? []).map(({ title, id, endDate }) => ({
+      label: title,
+      value: id,
+      endDate,
+    })),
+  );
 
   const [descriptionMD, setDescription] = useState<
     ResearchOutputPostRequest['descriptionMD']
@@ -310,6 +328,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     subtype,
     keywords,
     published,
+    relatedEvents,
   });
   const [remotePayload, setRemotePayload] = useState(currentPayload);
 
@@ -455,7 +474,13 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   getRelatedResearchSuggestions={getRelatedResearchSuggestions}
                   isEditMode={!!researchOutputData}
                 />
-                <ResearchOutputRelatedEventsCard />
+                <ResearchOutputRelatedEventsCard
+                  getRelatedEventSuggestions={getRelatedEventSuggestions}
+                  isSaving={isSaving}
+                  relatedEvents={relatedEvents}
+                  onChangeRelatedEvents={setRelatedEvents}
+                  isEditMode={!!researchOutputData}
+                />
                 <div css={formControlsContainerStyles}>
                   <div
                     css={

@@ -100,6 +100,7 @@ describe('getResearchOutputPayload', () => {
       organisms: [],
       environments: [],
       keywords: [],
+      relatedEvents: [],
       relatedResearch: [
         {
           value: 'r99',

@@ -3,7 +3,7 @@ import {
   Card,
   Headline2,
   Paragraph,
-  labIcon,
+  LabIcon,
   Divider,
   newsPlaceholder,
   Subtitle,
@@ -91,7 +91,7 @@ const DashboardNews: React.FC<DashboardNewsProps> = ({ items }) => {
     the GP2 programme. Here is just a snippet of what you can read about:`}
       </Paragraph>
       <div css={countsContainerStyles}>
-        <IconWithLabel noMargin icon={labIcon}>
+        <IconWithLabel noMargin icon={<LabIcon />}>
           Samples completed: <strong>{firstNews.sampleCount}</strong>
         </IconWithLabel>
         <IconWithLabel noMargin icon={locationIcon}>

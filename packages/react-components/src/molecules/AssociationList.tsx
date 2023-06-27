@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
 import {
-  labIcon,
+  LabIcon,
   TeamIcon,
   inactiveBadgeIcon,
   WorkingGroupsIcon,
@@ -90,7 +90,7 @@ interface AssociationListProps {
   readonly more?: number;
 }
 const icon: Record<AssociationListProps['type'], React.ReactElement> = {
-  Lab: labIcon,
+  Lab: <LabIcon />,
   Team: <TeamIcon />,
   'Working Group': <WorkingGroupsIcon />,
 };

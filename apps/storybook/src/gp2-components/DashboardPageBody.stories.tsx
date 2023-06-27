@@ -6,9 +6,16 @@ export default {
   component: DashboardPageBody,
 };
 
+const mockedDashboardStats = {
+  articleCount: 31,
+  cohortCount: 12,
+  sampleCount: 32131,
+};
+
 export const Normal = () => (
   <DashboardPageBody
     news={gp2.createNewsResponse()}
+    latestStats={mockedDashboardStats}
     upcomingEvents={gp2
       .createListEventResponse(3)
       .items.map(({ speakers, ...event }) => ({

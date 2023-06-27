@@ -4,11 +4,28 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 import DashboardPageBody from '../DashboardPageBody';
 
+const mockStats = {
+  sampleCount: 0,
+  cohortCount: 0,
+  articleCount: 0,
+};
 describe('DashboardPageBody', () => {
+  it('should render latest stats', () => {
+    render(
+      <DashboardPageBody
+        news={{ total: 0, items: [] }}
+        latestStats={mockStats}
+        upcomingEvents={[]}
+        totalOfUpcomingEvents={0}
+      />,
+    );
+    expect(screen.getByRole('heading', { name: 'Latest Stats' })).toBeVisible();
+  });
   it('should render tools and tutorials', () => {
     render(
       <DashboardPageBody
         news={{ total: 0, items: [] }}
+        latestStats={mockStats}
         upcomingEvents={[]}
         totalOfUpcomingEvents={0}
       />,
@@ -22,6 +39,7 @@ describe('DashboardPageBody', () => {
     render(
       <DashboardPageBody
         news={gp2.createNewsResponse()}
+        latestStats={mockStats}
         upcomingEvents={[]}
         totalOfUpcomingEvents={0}
       />,
@@ -36,6 +54,7 @@ describe('DashboardPageBody', () => {
       render(
         <DashboardPageBody
           news={{ total: 0, items: [] }}
+          latestStats={mockStats}
           upcomingEvents={[]}
           totalOfUpcomingEvents={0}
         />,
@@ -50,6 +69,7 @@ describe('DashboardPageBody', () => {
       render(
         <DashboardPageBody
           news={{ total: 0, items: [] }}
+          latestStats={mockStats}
           upcomingEvents={gp2
             .createListEventResponse(1)
             .items.map(({ speakers, ...event }) => ({
@@ -75,6 +95,7 @@ describe('DashboardPageBody', () => {
         <Router history={history}>
           <DashboardPageBody
             news={{ total: 0, items: [] }}
+            latestStats={mockStats}
             upcomingEvents={gp2
               .createListEventResponse(4)
               .items.map(({ speakers, ...event }) => ({

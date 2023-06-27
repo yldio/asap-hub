@@ -51,6 +51,7 @@ import {
 import Calendars from './controllers/calendars';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Discover, { DiscoverController } from './controllers/discover';
+import Guide, { GuideController } from './controllers/guides';
 import Events from './controllers/events';
 import InterestGroups, {
   InterestGroupController,
@@ -119,6 +120,7 @@ import {
   UserDataProvider,
   DashboardDataProvider,
   DiscoverDataProvider,
+  GuideDataProvider,
   WorkingGroupDataProvider,
   TutorialsDataProvider,
   ResearchTagDataProvider,
@@ -130,6 +132,7 @@ import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
+import { guideRouteFactory } from './routes/guides.route';
 import { eventRouteFactory } from './routes/events.route';
 import { interestGroupRouteFactory } from './routes/interest-groups.route';
 import { labsRouteFactory } from './routes/labs.route';
@@ -501,6 +504,10 @@ export const appFactory = (libs: Libs = {}): Express => {
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
+  const guideDataProvider = 
+    libs.guideDataProvider || 
+    featureFlagDependencySwitch.getDependency('guide', 'IS_CONTENTFUL_ENABLED_V2');
+
   featureFlagDependencySwitch.setDependency(
     'researchTags',
     libs.researchTagSquidexDataProvider ||
@@ -533,6 +540,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsController = libs.newsController || new News(newsDataProvider);
   const discoverController =
     libs.discoverController || new Discover(discoverDataProvider);
+  const guideController =
+    libs.guideController || new Guide(guideDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
   const interestGroupController =
     libs.interestGroupController ||
@@ -575,6 +584,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const calendarRoutes = calendarRouteFactory(calendarController);
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const discoverRoutes = discoverRouteFactory(discoverController);
+  const guideRoutes = guideRouteFactory(guideController);
   const eventRoutes = eventRouteFactory(eventController);
   const interestGroupRoutes = interestGroupRouteFactory(
     interestGroupController,
@@ -639,6 +649,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(calendarRoutes);
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
+  app.use(guideRoutes);
   app.use(eventRoutes);
   app.use(interestGroupRoutes);
   app.use(labsRoutes);
@@ -673,6 +684,7 @@ export type Libs = {
   calendarController?: CalendarController;
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;
+  guideController?: GuideController;
   eventController?: EventController;
   interestGroupController?: InterestGroupController;
   labsController?: LabsController;
@@ -697,6 +709,7 @@ export type Libs = {
   discoverDataProvider?: DiscoverDataProvider;
   discoverSquidexDataProvider?: DiscoverDataProvider;
   discoverContentfulDataProvider?: DiscoverDataProvider;
+  guideDataProvider?: GuideDataProvider;
   externalAuthorSquidexDataProvider?: ExternalAuthorDataProvider;
   externalAuthorContentfulDataProvider?: ExternalAuthorDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;

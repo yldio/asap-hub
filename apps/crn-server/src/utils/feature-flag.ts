@@ -8,6 +8,7 @@ import {
   WorkingGroupDataProvider,
   TutorialsDataProvider,
   DiscoverDataProvider,
+  GuideDataProvider,
   ResearchTagDataProvider,
 } from '../data-providers/types';
 
@@ -30,6 +31,7 @@ type DependencyList = {
   workingGroups: DependencySwitch<WorkingGroupDataProvider>;
   tutorials: DependencySwitch<TutorialsDataProvider>;
   discover: DependencySwitch<DiscoverDataProvider>;
+  guide: DependencySwitch<GuideDataProvider>;
   researchTags: DependencySwitch<ResearchTagDataProvider>;
 };
 
@@ -75,6 +77,10 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       discover: {
+        true: undefined,
+        false: undefined,
+      },
+      guide: {
         true: undefined,
         false: undefined,
       },

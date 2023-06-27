@@ -12,6 +12,7 @@ export * from './event-common';
 export * from './external-author';
 export * as gp2 from './gp2';
 export * from './group';
+export * from './guide';
 export * from './lab';
 export * from './news';
 export * from './page';

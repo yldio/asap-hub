@@ -464,7 +464,7 @@ enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectio
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership)"""
 type ContributingCohortsMembership implements Entry {
   contentfulMetadata: ContentfulMetadata!
-  contributingCohort(locale: String, preview: Boolean): ContributingCohorts
+  contributingCohort(locale: String, preview: Boolean, where: ContributingCohortsFilter): ContributingCohorts
   linkedFrom(allowedLocales: [String]): ContributingCohortsMembershipLinkingCollections
   role(locale: String): String
   studyLink(locale: String): String
@@ -726,7 +726,7 @@ union EventSpeakersUser = ExternalUsers | Users
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events)"""
 type Events implements Entry {
-  calendar(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   endDate(locale: String): DateTime
@@ -1593,7 +1593,7 @@ type Outputs implements Entry {
   adminNotes(locale: String): String
   authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
-  createdBy(locale: String, preview: Boolean): Users
+  createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   documentType(locale: String): String
   lastUpdatedPartial(locale: String): DateTime
   link(locale: String): String
@@ -1604,7 +1604,7 @@ type Outputs implements Entry {
   sys: Sys!
   title(locale: String): String
   type(locale: String): String
-  updatedBy(locale: String, preview: Boolean): Users
+  updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type OutputsAuthorsCollection {
@@ -1853,7 +1853,7 @@ type ProjectMembership implements Entry {
   linkedFrom(allowedLocales: [String]): ProjectMembershipLinkingCollections
   role(locale: String): String
   sys: Sys!
-  user(locale: String, preview: Boolean): Users
+  user(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type ProjectMembershipCollection {
@@ -1928,7 +1928,7 @@ enum ProjectMembershipOrder {
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects)"""
 type Projects implements Entry {
-  calendar(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   endDate(locale: String): DateTime
@@ -2777,7 +2777,7 @@ type WorkingGroupMembership implements Entry {
   linkedFrom(allowedLocales: [String]): WorkingGroupMembershipLinkingCollections
   role(locale: String): String
   sys: Sys!
-  user(locale: String, preview: Boolean): Users
+  user(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type WorkingGroupMembershipCollection {
@@ -3004,7 +3004,7 @@ enum WorkingGroupNetworkSupportCollectionOrder {
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)"""
 type WorkingGroups implements Entry {
-  calendar(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   leadingMembers(locale: String): String

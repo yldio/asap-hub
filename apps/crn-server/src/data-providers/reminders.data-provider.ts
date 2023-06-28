@@ -375,7 +375,7 @@ const getResearchOutputInReviewRemindersFromQuery = (
   }
 
   const leadTeams = findUsersContent.flatData.teams.filter(({ role }) =>
-    ['ASAP Staff', 'Project Manager'].includes(role!),
+    ['ASAP Staff', 'Project Manager'].includes(role || ''),
   );
   const leadTeamIds = getUserTeamIds(leadTeams);
 

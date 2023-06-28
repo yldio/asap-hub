@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { GuideController } from '../controllers/guides';
+import { GuideController } from '../controllers/guides.controller';
 
 export const guideRouteFactory = (guideController: GuideController): Router => {
   const guideRoutes = Router();

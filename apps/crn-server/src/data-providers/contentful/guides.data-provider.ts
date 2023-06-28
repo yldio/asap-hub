@@ -43,6 +43,5 @@ const parseGraphQLGuide = (guide: GuideItem): GuideDataObject => ({
     : [],
 });
 
-const parseGraphQLGuides = (guides: GuideItem[]): GuideDataObject[] => {
-  return guides.map((guide) => parseGraphQLGuide(guide));
-};
+const parseGraphQLGuides = (guides: GuideItem[]): GuideDataObject[] =>
+  guides.map((guide) => parseGraphQLGuide(guide));

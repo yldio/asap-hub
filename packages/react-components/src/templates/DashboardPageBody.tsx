@@ -84,29 +84,25 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
-  const guideAccordion = guides.map((guide) => {
-    return {
-      icon: <></>,
-      title: guide.title,
-      description: guide.content.map((content) => {
-        return (
-          <div key={content.text}>
-            <Paragraph>{content.text}</Paragraph>
+  const guideAccordion = guides.map((guide) => ({
+    icon: <></>,
+    title: guide.title,
+    description: guide.content.map((content) => (
+      <div key={content.text}>
+        <Paragraph>{content.text}</Paragraph>
+        <div css={{ width: 'fit-content' }}>
+          {content.linkUrl && (
             <div css={{ width: 'fit-content' }}>
-              {content.linkUrl && (
-                <div css={{ width: 'fit-content' }}>
-                  <Link buttonStyle small primary href={content.linkUrl}>
-                    {content.linkText}{' '}
-                    {!isInternalLink(content.linkUrl)[0] && externalLinkIcon}
-                  </Link>
-                </div>
-              )}
+              <Link buttonStyle small primary href={content.linkUrl}>
+                {content.linkText}{' '}
+                {!isInternalLink(content.linkUrl)[0] && externalLinkIcon}
+              </Link>
             </div>
-          </div>
-        );
-      }),
-    };
-  });
+          )}
+        </div>
+      </div>
+    )),
+  }));
 
   return (
     <div css={styles}>

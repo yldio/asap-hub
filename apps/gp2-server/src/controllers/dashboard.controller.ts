@@ -13,7 +13,7 @@ export default class Dashboard implements DashboardController {
 
     if (items.length === 0) {
       return {
-        total: 1,
+        total: 0,
         items: [
           {
             sampleCount: 0,

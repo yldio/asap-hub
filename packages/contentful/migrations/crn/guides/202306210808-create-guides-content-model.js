@@ -1,12 +1,12 @@
-module.exports.description = 'Create external authors content model';
+module.exports.description = 'Create guide content model';
 
 module.exports.up = (migration) => {
   const guideContent = migration
-  .createContentType('guideContent')
+    .createContentType('guideContent')
     .name('Guide Content')
     .description('')
     .displayField('title');
- guideContent 
+  guideContent
     .createField('title')
     .name('Title')
     .type('Symbol')
@@ -39,12 +39,12 @@ module.exports.up = (migration) => {
             '^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$',
           flags: null,
         },
-      }, 
+      },
     ])
     .disabled(false)
     .omitted(false);
 
-    guideContent
+  guideContent
     .createField('text')
     .name('Text')
     .type('Text')
@@ -69,7 +69,7 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
-   guides 
+  guides
     .createField('content')
     .name('Content')
     .type('Array')

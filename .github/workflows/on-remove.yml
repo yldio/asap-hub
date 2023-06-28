@@ -150,7 +150,7 @@ jobs:
       - name: Contentful Environment Teardown
         id: contentful-env-teardown
         shell: bash
-        run: bash .github/scripts/contentful/teardown.sh
+        run: yarn workspace @asap-hub/contentful space:remove-environment
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

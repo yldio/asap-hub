@@ -883,6 +883,11 @@ export type DiscoverAboutUsEntries = {
 export type DiscoverAboutUsLinks = {
   assets: DiscoverAboutUsAssets;
   entries: DiscoverAboutUsEntries;
+  resources: DiscoverAboutUsResources;
+};
+
+export type DiscoverAboutUsResources = {
+  block: Array<ResourceLink>;
 };
 
 export type DiscoverCollection = {
@@ -1652,6 +1657,11 @@ export type EventsNotesEntries = {
 export type EventsNotesLinks = {
   assets: EventsNotesAssets;
   entries: EventsNotesEntries;
+  resources: EventsNotesResources;
+};
+
+export type EventsNotesResources = {
+  block: Array<ResourceLink>;
 };
 
 export enum EventsOrder {
@@ -1720,6 +1730,11 @@ export type EventsPresentationEntries = {
 export type EventsPresentationLinks = {
   assets: EventsPresentationAssets;
   entries: EventsPresentationEntries;
+  resources: EventsPresentationResources;
+};
+
+export type EventsPresentationResources = {
+  block: Array<ResourceLink>;
 };
 
 export type EventsSpeakersCollection = {
@@ -1759,6 +1774,11 @@ export type EventsVideoRecordingEntries = {
 export type EventsVideoRecordingLinks = {
   assets: EventsVideoRecordingAssets;
   entries: EventsVideoRecordingEntries;
+  resources: EventsVideoRecordingResources;
+};
+
+export type EventsVideoRecordingResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
@@ -2883,6 +2903,11 @@ export type NewsTextEntries = {
 export type NewsTextLinks = {
   assets: NewsTextAssets;
   entries: NewsTextEntries;
+  resources: NewsTextResources;
+};
+
+export type NewsTextResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/pages) */
@@ -3076,6 +3101,11 @@ export type PagesTextEntries = {
 export type PagesTextLinks = {
   assets: PagesTextAssets;
   entries: PagesTextEntries;
+  resources: PagesTextResources;
+};
+
+export type PagesTextResources = {
+  block: Array<ResourceLink>;
 };
 
 export type Query = {
@@ -3596,6 +3626,16 @@ export enum ResearchTagsOrder {
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
+
+export type ResourceLink = {
+  sys: ResourceSys;
+};
+
+export type ResourceSys = {
+  linkType: Scalars['String'];
+  type: Scalars['String'];
+  urn: Scalars['String'];
+};
 
 export type Sys = {
   environmentId: Scalars['String'];
@@ -4247,6 +4287,11 @@ export type TutorialsTextEntries = {
 export type TutorialsTextLinks = {
   assets: TutorialsTextAssets;
   entries: TutorialsTextEntries;
+  resources: TutorialsTextResources;
+};
+
+export type TutorialsTextResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -5479,6 +5524,11 @@ export type WorkingGroupsDescriptionEntries = {
 export type WorkingGroupsDescriptionLinks = {
   assets: WorkingGroupsDescriptionAssets;
   entries: WorkingGroupsDescriptionEntries;
+  resources: WorkingGroupsDescriptionResources;
+};
+
+export type WorkingGroupsDescriptionResources = {
+  block: Array<ResourceLink>;
 };
 
 export type WorkingGroupsFilter = {

@@ -1359,6 +1359,11 @@ export type EventsNotesEntries = {
 export type EventsNotesLinks = {
   assets: EventsNotesAssets;
   entries: EventsNotesEntries;
+  resources: EventsNotesResources;
+};
+
+export type EventsNotesResources = {
+  block: Array<ResourceLink>;
 };
 
 export enum EventsOrder {
@@ -1427,6 +1432,11 @@ export type EventsPresentationEntries = {
 export type EventsPresentationLinks = {
   assets: EventsPresentationAssets;
   entries: EventsPresentationEntries;
+  resources: EventsPresentationResources;
+};
+
+export type EventsPresentationResources = {
+  block: Array<ResourceLink>;
 };
 
 export type EventsSpeakersCollection = {
@@ -1468,6 +1478,11 @@ export type EventsVideoRecordingEntries = {
 export type EventsVideoRecordingLinks = {
   assets: EventsVideoRecordingAssets;
   entries: EventsVideoRecordingEntries;
+  resources: EventsVideoRecordingResources;
+};
+
+export type EventsVideoRecordingResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
@@ -2680,6 +2695,11 @@ export type PagesTextEntries = {
 export type PagesTextLinks = {
   assets: PagesTextAssets;
   entries: PagesTextEntries;
+  resources: PagesTextResources;
+};
+
+export type PagesTextResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
@@ -3532,6 +3552,16 @@ export type QueryWorkingGroupsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<WorkingGroupsFilter>;
+};
+
+export type ResourceLink = {
+  sys: ResourceSys;
+};
+
+export type ResourceSys = {
+  linkType: Scalars['String'];
+  type: Scalars['String'];
+  urn: Scalars['String'];
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
@@ -4783,6 +4813,11 @@ export type WorkingGroupsDescriptionEntries = {
 export type WorkingGroupsDescriptionLinks = {
   assets: WorkingGroupsDescriptionAssets;
   entries: WorkingGroupsDescriptionEntries;
+  resources: WorkingGroupsDescriptionResources;
+};
+
+export type WorkingGroupsDescriptionResources = {
+  block: Array<ResourceLink>;
 };
 
 export type WorkingGroupsFilter = {

@@ -39,9 +39,12 @@ export type Milestone = {
 };
 
 export type Member<T> = {
+  id?: string;
   userId: string;
   role: T;
   firstName: string;
   lastName: string;
   avatarUrl?: string;
 };
+
+export type UpdateMember<T> = Pick<Member<T>, 'id' | 'userId' | 'role'>;

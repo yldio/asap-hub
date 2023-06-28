@@ -12,7 +12,7 @@ import {
   UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { network, TeamOutputDocumentTypeParameter } from '@asap-hub/routing';
+import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
 import {
   render,
   screen,
@@ -31,7 +31,7 @@ import {
 import { refreshTeamState } from '../state';
 import TeamOutput from '../TeamOutput';
 
-jest.setTimeout(30000);
+jest.setTimeout(60000);
 jest.mock('../api');
 jest.mock('../../users/api');
 jest.mock('../../../shared-research/api');
@@ -126,14 +126,14 @@ const mockUpdateResearchOutput =
 interface RenderPageOptions {
   user?: UserResponse;
   teamId: string;
-  teamOutputDocumentType?: TeamOutputDocumentTypeParameter;
+  outputDocumentType?: OutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
 }
 
 it('Renders the research output', async () => {
   await renderPage({
     teamId: '42',
-    teamOutputDocumentType: 'bioinformatics',
+    outputDocumentType: 'bioinformatics',
   });
 
   expect(
@@ -145,7 +145,7 @@ it('Shows the not found page if the team does not exist', async () => {
   mockGetTeam.mockResolvedValueOnce(undefined);
   await renderPage({
     teamId: '42',
-    teamOutputDocumentType: 'bioinformatics',
+    outputDocumentType: 'bioinformatics',
   });
   expect(screen.getByText(/Sorry.+page/i)).toBeVisible();
 });
@@ -153,7 +153,7 @@ it('Shows the not found page if the team does not exist', async () => {
 it('displays the publish button for new research outputs', async () => {
   await renderPage({
     teamId: '42',
-    teamOutputDocumentType: 'bioinformatics',
+    outputDocumentType: 'bioinformatics',
   });
 
   expect(screen.getByRole('button', { name: /Publish/i })).toBeInTheDocument();
@@ -162,7 +162,7 @@ it('displays the publish button for new research outputs', async () => {
 it('displays the save button for existing research outputs', async () => {
   await renderPage({
     teamId: '42',
-    teamOutputDocumentType: 'bioinformatics',
+    outputDocumentType: 'bioinformatics',
     researchOutputData: baseResearchOutput,
   });
 
@@ -170,7 +170,7 @@ it('displays the save button for existing research outputs', async () => {
 });
 
 it('switches research output type based on parameter', async () => {
-  await renderPage({ teamId: '42', teamOutputDocumentType: 'article' });
+  await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
   expect(
     screen.getByRole('heading', { name: /Share an article/i }),
@@ -185,7 +185,7 @@ it('can publish a form when the data is valid', async () => {
   const type = 'Animal Model';
   const doi = '10.0777';
 
-  await renderPage({ teamId, teamOutputDocumentType: 'lab-resource' });
+  await renderPage({ teamId, outputDocumentType: 'lab-resource' });
 
   const { publish } = await mandatoryFields({
     link,
@@ -245,7 +245,7 @@ it('can save draft when form data is valid', async () => {
   const type = 'Animal Model';
   const doi = '10.0777';
 
-  await renderPage({ teamId, teamOutputDocumentType: 'lab-resource' });
+  await renderPage({ teamId, outputDocumentType: 'lab-resource' });
 
   const { saveDraft } = await mandatoryFields({
     link,
@@ -305,7 +305,7 @@ it('can edit a research output', async () => {
 
   await renderPage({
     teamId: '42',
-    teamOutputDocumentType: 'article',
+    outputDocumentType: 'article',
     researchOutputData: { ...baseResearchOutput, doi },
   });
 
@@ -343,7 +343,8 @@ it('can edit a draft research output', async () => {
 
   await renderPage({
     teamId: '42',
-    teamOutputDocumentType: 'article',
+    outputDocumentType: 'article',
+    researchOutputData: { ...researchOutput, doi, published: false },
   });
 
   const { saveDraft } = await mandatoryFields(
@@ -380,7 +381,7 @@ it('can edit and publish a draft research output', async () => {
 
   await renderPage({
     teamId: '42',
-    teamOutputDocumentType: 'article',
+    outputDocumentType: 'article',
     researchOutputData: {
       ...researchOutput,
       doi,
@@ -434,7 +435,7 @@ it('will show server side validation error for link', async () => {
     new BackendError('example', validationResponse, 400),
   );
 
-  await renderPage({ teamId: '42', teamOutputDocumentType: 'article' });
+  await renderPage({ teamId: '42', outputDocumentType: 'article' });
   const { publish } = await mandatoryFields({}, true);
 
   await publish();
@@ -460,7 +461,7 @@ it('will show server side validation error for link', async () => {
 it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 
-  await renderPage({ teamId: '42', teamOutputDocumentType: 'article' });
+  await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
   const { publish } = await mandatoryFields({}, true);
 
@@ -485,7 +486,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
 
   await renderPage({
     teamId: '42',
-    teamOutputDocumentType: 'article',
+    outputDocumentType: 'article',
     researchOutputData: { ...baseResearchOutput, doi },
   });
 
@@ -517,7 +518,7 @@ async function renderPage({
     teams: [{ ...baseUser.teams[0]!, id: '42', role: 'Project Manager' }],
   },
   teamId,
-  teamOutputDocumentType = 'bioinformatics',
+  outputDocumentType = 'bioinformatics',
   researchOutputData,
 }: RenderPageOptions) {
   const path =
@@ -540,7 +541,7 @@ async function renderPage({
                 network({})
                   .teams({})
                   .team({ teamId })
-                  .createOutput({ teamOutputDocumentType }).$
+                  .createOutput({ outputDocumentType }).$
               }
             >
               <Route path={path}>

@@ -49,13 +49,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const route = network({})
     .workingGroups({})
     .workingGroup({ workingGroupId }).createOutput;
-  const { workingGroupOutputDocumentType } = useRouteParams(route);
+  const { outputDocumentType } = useRouteParams(route);
 
   const documentType =
     researchOutputData?.documentType ||
-    paramOutputDocumentTypeToResearchOutputDocumentType(
-      workingGroupOutputDocumentType,
-    );
+    paramOutputDocumentTypeToResearchOutputDocumentType(outputDocumentType);
 
   const workingGroup = useWorkingGroupById(workingGroupId);
 

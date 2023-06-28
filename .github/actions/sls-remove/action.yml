@@ -69,6 +69,7 @@ runs:
         CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN: 'n-a'
         CRN_CONTENTFUL_SPACE_ID: 'n-a'
         CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: 'n-a'
+        CRN_SES_REGION: ${{ steps.setup.outputs.crn-ses-region }}
         CURRENT_REVISION: ${{ github.sha }}
         GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
         GP2_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.gp2-auth0-client-id }}
@@ -90,5 +91,6 @@ runs:
         CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
         GP2_SENTRY_DSN_API: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
         GP2_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
+        GP2_SES_REGION: ${{ steps.setup.outputs.gp2-ses-region }}
         SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
         SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}

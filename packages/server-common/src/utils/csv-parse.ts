@@ -1,6 +1,6 @@
 import csvParse from 'csv-parse';
-import pump from 'pump';
 import { createReadStream } from 'fs';
+import pump from 'pump';
 import through from 'through2-concurrent';
 
 export const parse =
@@ -14,7 +14,7 @@ export const parse =
       pump(
         createReadStream(src),
         csvParse({ from_line: 2 }),
-        through.obj({ maxConcurrency: 10 }, async (chunk, _, callback) => {
+        through.obj({ maxConcurrency: 1 }, async (chunk, _, callback) => {
           await transformer(parser(chunk));
           return callback(null);
         }),

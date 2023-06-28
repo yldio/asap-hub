@@ -1,6 +1,6 @@
 import { validateFetchOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
-import { WorkingGroupController } from '../controllers/working-groups';
+import WorkingGroupController from '../controllers/working-groups.controller';
 import { validateWorkingGroupParameters } from '../validation/working-group.validation';
 
 export const workingGroupRouteFactory = (

@@ -1,6 +1,7 @@
 export * from './auth';
 export * from './external-users';
 export * from './calendars';
+export * from './dashboard';
 export * from './events';
 export * from './outputs';
 export * from './news';

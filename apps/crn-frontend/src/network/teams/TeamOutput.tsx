@@ -14,7 +14,7 @@ import {
 import { InnerToastContext } from '@asap-hub/react-context';
 import {
   network,
-  TeamOutputDocumentTypeParameter,
+  OutputDocumentTypeParameter,
   useRouteParams,
 } from '@asap-hub/routing';
 import React, {
@@ -40,10 +40,10 @@ import { useResearchOutputPermissions } from '../../shared-research/state';
 
 const useParamOutputDocumentType = (
   teamId: string,
-): TeamOutputDocumentTypeParameter => {
+): OutputDocumentTypeParameter => {
   const route = network({}).teams({}).team({ teamId }).createOutput;
-  const { teamOutputDocumentType } = useRouteParams(route);
-  return teamOutputDocumentType;
+  const { outputDocumentType } = useRouteParams(route);
+  return outputDocumentType;
 };
 
 type TeamOutputProps = {

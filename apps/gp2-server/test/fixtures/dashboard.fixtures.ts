@@ -1,0 +1,40 @@
+import { gp2 as gp2Contentful } from '@asap-hub/contentful';
+import { gp2 as gp2Model } from '@asap-hub/model';
+
+export const getContentfulGraphqlDashboard = (): NonNullable<
+  NonNullable<
+    gp2Contentful.FetchLatestStatsQuery['latestStatsCollection']
+  >['items'][number]
+> => ({
+  sampleCount: 3,
+  articleCount: 11,
+  cohortCount: 43,
+});
+
+export const getContentfulDashboardGraphqlResponse =
+  (): gp2Contentful.FetchLatestStatsQuery => ({
+    latestStatsCollection: {
+      total: 1,
+      items: [getContentfulGraphqlDashboard()],
+    },
+  });
+
+export const getDashboardDataObject = (): gp2Model.DashboardDataObject => ({
+  sampleCount: 3,
+  articleCount: 11,
+  cohortCount: 43,
+});
+
+export const getListDashboardDataObject =
+  (): gp2Model.ListDashboardDataObject => ({
+    total: 1,
+    items: [getDashboardDataObject()],
+  });
+
+export const getDashboardResponse = (): gp2Model.DashboardResponse =>
+  getDashboardDataObject();
+
+export const getListDashboardResponse = (): gp2Model.ListDashboardResponse => ({
+  total: 1,
+  items: [getDashboardResponse()],
+});

@@ -1,7 +1,7 @@
 import { EventController } from '@asap-hub/model';
 import { validateFetchOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
-import { InterestGroupController } from '../controllers/interest-groups';
+import InterestGroupController from '../controllers/interest-groups.controller';
 import { validateEventFetchParameters } from '../validation/event.validation';
 import { validateGroupParameters } from '../validation/group.validation';
 

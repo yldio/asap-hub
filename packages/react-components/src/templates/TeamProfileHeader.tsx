@@ -8,9 +8,10 @@ import { lead, paper, pine } from '../colors';
 import {
   article,
   bioinformatics,
+  crnReportIcon,
   dataset,
   inactiveBadgeIcon,
-  labIcon,
+  LabIcon,
   labResource,
   plusIcon,
   protocol,
@@ -173,7 +174,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         )}
         {labCount > 0 && (
           <div css={labCountStyles}>
-            <span css={iconStyles}>{labIcon} </span>
+            <span css={iconStyles}>
+              <LabIcon />
+            </span>
             <span>{getCounterString(labCount, 'Lab')}</span>
           </div>
         )}
@@ -189,30 +192,33 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             >
               {{
                 item: <>{article} Article</>,
-                href: route.createOutput({ teamOutputDocumentType: 'article' })
-                  .$,
+                href: route.createOutput({ outputDocumentType: 'article' }).$,
               }}
               {{
                 item: <>{bioinformatics} Bioinformatics</>,
                 href: route.createOutput({
-                  teamOutputDocumentType: 'bioinformatics',
+                  outputDocumentType: 'bioinformatics',
+                }).$,
+              }}
+              {{
+                item: <>{crnReportIcon} CRN Report</>,
+                href: route.createOutput({
+                  outputDocumentType: 'report',
                 }).$,
               }}
               {{
                 item: <>{dataset} Dataset</>,
-                href: route.createOutput({ teamOutputDocumentType: 'dataset' })
-                  .$,
+                href: route.createOutput({ outputDocumentType: 'dataset' }).$,
               }}
               {{
                 item: <>{labResource} Lab Resource</>,
                 href: route.createOutput({
-                  teamOutputDocumentType: 'lab-resource',
+                  outputDocumentType: 'lab-resource',
                 }).$,
               }}
               {{
                 item: <>{protocol} Protocol</>,
-                href: route.createOutput({ teamOutputDocumentType: 'protocol' })
-                  .$,
+                href: route.createOutput({ outputDocumentType: 'protocol' }).$,
               }}
             </DropdownButton>
           </div>

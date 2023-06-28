@@ -25,6 +25,7 @@ export const getProjectDataObject = (): gp2Model.ProjectDataObject => ({
   projectProposalUrl: 'http://a-proposal',
   members: [
     {
+      id: '32',
       userId: '11',
       firstName: 'Tony',
       lastName: 'Stark',
@@ -184,7 +185,7 @@ export const getContentfulGraphqlProjectMembers = () => ({
   items: [
     {
       sys: {
-        id: '11',
+        id: '32',
       },
       role: 'Project manager',
       user: {

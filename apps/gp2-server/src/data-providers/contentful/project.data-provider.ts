@@ -8,11 +8,12 @@ import {
 import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
 import { ProjectDataProvider } from '../types/project.data-provider.type';
 import {
-  deleteResources,
+  deleteEntries,
   parseCalendar,
   parseMembers,
   parseMilestones,
   parseResources,
+  processMembers,
   processResources,
 } from './utils';
 
@@ -65,20 +66,36 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
   ): Promise<void> {
     const previousProjectDataObject = await this.fetchById(id);
     const environment = await this.getRestClient();
-    const previousProject = await environment.getEntry(id);
+    const doNotProcessEntity = { fields: {}, idsToDelete: [] };
 
-    const { resourceFields, idsToDelete } = await processResources(
-      environment,
-      project.resources,
-      previousProject,
-      previousProjectDataObject?.resources,
-    );
+    const { fields: resourceFields, idsToDelete: resourceIdsToDelete } =
+      project.resources
+        ? await processResources(
+            environment,
+            project.resources,
+            previousProjectDataObject?.resources,
+          )
+        : doNotProcessEntity;
+    const { fields: memberFields, idsToDelete: memberIdsToDelete } =
+      project.members
+        ? await processMembers<gp2Model.ProjectMemberRole>(
+            environment,
+            project.members,
+            previousProjectDataObject?.members,
+            'projectMembership',
+          )
+        : doNotProcessEntity;
+    const previousProject = await environment.getEntry(id);
     const result = await patchAndPublish(previousProject, {
       ...project,
       ...resourceFields,
+      ...memberFields,
     });
 
-    await deleteResources(idsToDelete, environment);
+    await deleteEntries(
+      [...resourceIdsToDelete, ...memberIdsToDelete],
+      environment,
+    );
     const fetchEventById = () => this.fetchProjectById(id);
     await pollContentfulGql<gp2Contentful.FetchProjectByIdQuery>(
       result.sys.publishedVersion ?? Infinity,

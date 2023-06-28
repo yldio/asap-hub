@@ -66,6 +66,9 @@ describe('Project Data Provider', () => {
         items: [
           {
             ...projectDataObject,
+            members: projectDataObject.members?.map(
+              ({ id: _, ...member }) => member,
+            ),
             resources: projectDataObject.resources?.map(
               ({ id: _, ...resource }) => resource,
             ),
@@ -140,6 +143,9 @@ describe('Project Data Provider', () => {
       const projectDataObject = getProjectDataObject();
       expect(result).toMatchObject({
         ...projectDataObject,
+        members: projectDataObject.members!.map(
+          ({ id: _, ...member }) => member,
+        ),
         resources: projectDataObject.resources!.map(
           ({ id: _, ...resource }) => resource,
         ),
@@ -162,6 +168,7 @@ describe('Project Data Provider', () => {
       const expected = getProjectDataObject();
       expect(projectDataObject).toEqual({
         ...expected,
+        members: expected.members!.map(({ id: _, ...member }) => member),
         resources: expected.resources!.map(
           ({ id: _, ...resource }) => resource,
         ),

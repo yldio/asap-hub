@@ -7,7 +7,7 @@ import { EventBridgeHandler, UserPayload } from '@asap-hub/server-common';
 import { isBoom, Boom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import Users, { UserController } from '../../controllers/users';
+import UserController from '../../controllers/users.controller';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
@@ -57,7 +57,7 @@ export const indexUserHandler =
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexUserHandler(
-    new Users(getUserDataProvider(), getAssetDataProvider()),
+    new UserController(getUserDataProvider(), getAssetDataProvider()),
     algoliaSearchClientFactory({ algoliaApiKey, algoliaAppId, algoliaIndex }),
   ),
 );

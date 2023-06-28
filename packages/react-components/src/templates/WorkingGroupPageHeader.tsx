@@ -192,37 +192,37 @@ const WorkingGroupPageHeader: React.FC<WorkingGroupPageHeaderProps> = ({
               {{
                 item: <>{article} Article</>,
                 href: route.createOutput({
-                  workingGroupOutputDocumentType: 'article',
+                  outputDocumentType: 'article',
                 }).$,
               }}
               {{
                 item: <>{bioinformatics} Bioinformatics</>,
                 href: route.createOutput({
-                  workingGroupOutputDocumentType: 'bioinformatics',
-                }).$,
-              }}
-              {{
-                item: <>{dataset} Dataset</>,
-                href: route.createOutput({
-                  workingGroupOutputDocumentType: 'dataset',
-                }).$,
-              }}
-              {{
-                item: <>{labResource} Lab Resource</>,
-                href: route.createOutput({
-                  workingGroupOutputDocumentType: 'lab-resource',
-                }).$,
-              }}
-              {{
-                item: <>{protocol} Protocol</>,
-                href: route.createOutput({
-                  workingGroupOutputDocumentType: 'protocol',
+                  outputDocumentType: 'bioinformatics',
                 }).$,
               }}
               {{
                 item: <>{crnReportIcon} CRN Report</>,
                 href: route.createOutput({
-                  workingGroupOutputDocumentType: 'report',
+                  outputDocumentType: 'report',
+                }).$,
+              }}
+              {{
+                item: <>{dataset} Dataset</>,
+                href: route.createOutput({
+                  outputDocumentType: 'dataset',
+                }).$,
+              }}
+              {{
+                item: <>{labResource} Lab Resource</>,
+                href: route.createOutput({
+                  outputDocumentType: 'lab-resource',
+                }).$,
+              }}
+              {{
+                item: <>{protocol} Protocol</>,
+                href: route.createOutput({
+                  outputDocumentType: 'protocol',
                 }).$,
               }}
             </DropdownButton>

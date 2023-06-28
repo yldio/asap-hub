@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { DiscoverController } from '../controllers/discover';
+import DiscoverController from '../controllers/discover.controller';
 
 export const discoverRouteFactory = (
   discoverController: DiscoverController,

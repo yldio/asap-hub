@@ -26,7 +26,13 @@ export const getWorkingGroupDataObject =
     secondaryEmail: 'secondary.email@example.com',
     leadingMembers: 'Leading members',
     members: [
-      { userId: '11', firstName: 'Tony', lastName: 'Stark', role: 'Lead' },
+      {
+        id: '32',
+        userId: '11',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: 'Lead',
+      },
     ],
     milestones: [
       {
@@ -176,7 +182,7 @@ export const getContentfulGraphqlWorkingGroupMembers = () => ({
   items: [
     {
       sys: {
-        id: '11',
+        id: '32',
       },
       role: 'Lead',
       user: {

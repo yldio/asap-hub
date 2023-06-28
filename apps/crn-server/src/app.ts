@@ -79,6 +79,7 @@ import { UserContentfulDataProvider } from './data-providers/contentful/users.da
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-groups.data-provider';
 import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
 import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tags.data-provider';
+import { ReminderContentfulDataProvider } from './data-providers/contentful/reminders.data-provider';
 
 import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
@@ -89,10 +90,7 @@ import {
 import { InterestGroupSquidexDataProvider } from './data-providers/interest-groups.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import { PageSquidexDataProvider } from './data-providers/pages.data-provider';
-import {
-  ReminderDataProvider,
-  ReminderSquidexDataProvider,
-} from './data-providers/reminders.data-provider';
+import { ReminderSquidexDataProvider } from './data-providers/reminders.data-provider';
 import {
   ResearchOutputDataProvider,
   ResearchOutputSquidexDataProvider,
@@ -115,6 +113,7 @@ import {
   WorkingGroupDataProvider,
   TutorialsDataProvider,
   ResearchTagDataProvider,
+  ReminderDataProvider,
 } from './data-providers/types';
 import { UserSquidexDataProvider } from './data-providers/users.data-provider';
 import { WorkingGroupSquidexDataProvider } from './data-providers/working-groups.data-provider';
@@ -339,9 +338,28 @@ export const appFactory = (libs: Libs = {}): Express => {
       'interestGroups',
       'IS_CONTENTFUL_ENABLED_V2',
     );
+
+  featureFlagDependencySwitch.setDependency(
+    'reminders',
+    libs.reminderSquidexDataProvider ||
+      new ReminderSquidexDataProvider(squidexGraphqlClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'reminders',
+    libs.reminderContentfulDataProvider ||
+      new ReminderContentfulDataProvider(contentfulGraphQLClient),
+    'IS_CONTENTFUL_ENABLED_V2',
+    true,
+  );
   const reminderDataProvider =
     libs.reminderDataProvider ||
-    new ReminderSquidexDataProvider(squidexGraphqlClient);
+    featureFlagDependencySwitch.getDependency(
+      'reminders',
+      'IS_CONTENTFUL_ENABLED_V2',
+    );
+
   const researchOutputDataProvider =
     libs.researchOutputDataProvider ||
     new ResearchOutputSquidexDataProvider(
@@ -722,6 +740,8 @@ export type Libs = {
   pageSquidexDataProvider?: PageDataProvider;
   pageContentfulDataProvider?: PageDataProvider;
   reminderDataProvider?: ReminderDataProvider;
+  reminderSquidexDataProvider?: ReminderDataProvider;
+  reminderContentfulDataProvider?: ReminderDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
   researchTagSquidexDataProvider?: ResearchTagDataProvider;

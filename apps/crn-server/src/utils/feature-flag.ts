@@ -9,6 +9,7 @@ import {
   TutorialsDataProvider,
   DiscoverDataProvider,
   ResearchTagDataProvider,
+  ReminderDataProvider,
 } from '../data-providers/types';
 
 const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
@@ -31,6 +32,7 @@ type DependencyList = {
   tutorials: DependencySwitch<TutorialsDataProvider>;
   discover: DependencySwitch<DiscoverDataProvider>;
   researchTags: DependencySwitch<ResearchTagDataProvider>;
+  reminders: DependencySwitch<ReminderDataProvider>;
 };
 
 export class FeatureFlagDependencySwitch {
@@ -79,6 +81,10 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       researchTags: {
+        true: undefined,
+        false: undefined,
+      },
+      reminders: {
         true: undefined,
         false: undefined,
       },

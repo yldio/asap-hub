@@ -21,7 +21,7 @@ it('calls back with the user profile object', () => {
 
   fetchOrcidUserProfile(
     {},
-    { id_token: sign(idToken, '', { algorithm: 'none' }) },
+    { id_token: sign(idToken, 'privateKey', { algorithm: 'none' }) },
     cb,
   );
   expect(cb).toHaveBeenCalled();

@@ -8481,7 +8481,15 @@ export type FetchReminderDataQuery = {
           workingGroups: Maybe<
             Array<
               Pick<WorkingGroups, 'id'> & {
-                flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+                flatData: Pick<WorkingGroupsFlatDataDto, 'title'> & {
+                  leaders: Maybe<
+                    Array<
+                      Pick<WorkingGroupsDataLeadersChildDto, 'role'> & {
+                        user: Maybe<Array<Pick<Users, 'id'>>>;
+                      }
+                    >
+                  >;
+                };
               }
             >
           >;
@@ -14833,6 +14841,35 @@ export const FetchReminderDataDocument = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'title' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'leaders' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'role' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'user' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
                                   },
                                 ],
                               },

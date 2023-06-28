@@ -87,6 +87,12 @@ export const FETCH_REMINDER_DATA = gql`
           id
           flatData {
             title
+            leaders {
+              role
+              user {
+                id
+              }
+            }
           }
         }
         reviewRequestedBy {

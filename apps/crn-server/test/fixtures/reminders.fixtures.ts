@@ -444,6 +444,16 @@ export const getSquidexReminderReseachOutputsInReviewWorkingGroupContents =
           {
             id: 'wg-id-1',
             flatData: {
+              leaders: [
+                {
+                  role: 'Project Manager',
+                  user: [
+                    {
+                      id: 'user-id',
+                    },
+                  ],
+                },
+              ],
               title: 'Working Group 1',
             },
           },

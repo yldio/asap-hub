@@ -93,6 +93,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       getResearchOutputInReviewRemindersFromQuery(
         inReviewResearchOutputs,
         findUsersContent,
+        options.userId,
       );
 
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
@@ -367,12 +368,17 @@ const getResearchOutputDraftRemindersFromQuery = (
 const getResearchOutputInReviewRemindersFromQuery = (
   queryResearchOutputsContents: FetchReminderDataQuery['inReviewResearchOutputs'],
   findUsersContent: FetchReminderDataQuery['findUsersContent'],
+  userId: string,
 ): ResearchOutputInReviewReminder[] => {
   if (!findUsersContent || !findUsersContent.flatData.teams) {
     return [];
   }
 
-  const userTeamIds = getUserTeamIds(findUsersContent.flatData.teams);
+  const leadTeams = findUsersContent.flatData.teams.filter(({ role }) =>
+    ['ASAP Staff', 'Project Manager'].includes(role!),
+  );
+  const leadTeamIds = getUserTeamIds(leadTeams);
+
   const userWorkingGroupIds = getUserWorkingGroupIds(
     findUsersContent.referencingWorkingGroupsContents,
   );
@@ -404,22 +410,26 @@ const getResearchOutputInReviewRemindersFromQuery = (
         (team) => team.id,
       );
 
-      const isInTeam = researchOutputTeams.some((team) =>
-        userTeamIds.includes(team),
+      const isTeamLeader = researchOutputTeams.some((team) =>
+        leadTeamIds.includes(team),
       );
 
-      const researchOutputWorkingGroups = (
-        researchOutput.flatData.workingGroups || []
-      ).map((workingGroup) => workingGroup.id);
-
-      const isInWorkingGroup = researchOutputWorkingGroups.some(
-        (workingGroup) => userWorkingGroupIds.includes(workingGroup),
-      );
+      let isWorkingGroupPM = false;
+      (researchOutput.flatData.workingGroups || [])
+        .filter((workingGroup) => userWorkingGroupIds.includes(workingGroup.id))
+        .forEach((workingGroup) => {
+          const pms = workingGroup.flatData.leaders?.filter(
+            (leader) => leader.role === 'Project Manager',
+          );
+          if (pms?.find((pm) => pm.user?.some((u) => u.id === userId))) {
+            isWorkingGroupPM = true;
+          }
+        });
 
       if (
-        (associationType === 'team' && !isInTeam && !isAsapStaff) ||
+        (associationType === 'team' && !isTeamLeader && !isAsapStaff) ||
         (associationType === 'working group' &&
-          !isInWorkingGroup &&
+          !isWorkingGroupPM &&
           !isAsapStaff)
       ) {
         return researchOutputReminders;

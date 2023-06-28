@@ -91,7 +91,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       title: guide.title,
       description: guide.content.map((content) => {
         return (
-          <div>
+          <div key={content.text}>
             <Paragraph>{content.text}</Paragraph>
             <div css={{ width: 'fit-content' }}>
               {content.linkUrl && (

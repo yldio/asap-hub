@@ -8,7 +8,6 @@ import {
   WorkingGroupDataProvider,
   TutorialsDataProvider,
   DiscoverDataProvider,
-  GuideDataProvider,
   ResearchTagDataProvider,
 } from '../data-providers/types';
 
@@ -76,10 +75,6 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       discover: {
-        true: undefined,
-        false: undefined,
-      },
-      guide: {
         true: undefined,
         false: undefined,
       },

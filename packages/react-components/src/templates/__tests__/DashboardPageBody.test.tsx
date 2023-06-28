@@ -26,6 +26,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   teamId: '1337',
   roles: [],
   reminders: [],
+  guides: [],
   dismissedGettingStarted: false,
   upcomingEvents: undefined,
   recentSharedOutputs: createListResearchOutputResponse(5),

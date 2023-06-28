@@ -64,7 +64,6 @@ type DashboardPageBodyProps = Pick<
   } & Pick<UserResponse, 'dismissedGettingStarted'> & {
     pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
     roles: TeamRole[];
-  } & {
     guides: GuideDataObject[];
     recentSharedOutputs?: ListResearchOutputResponse;
     recommendedUsers: UserResponse[];

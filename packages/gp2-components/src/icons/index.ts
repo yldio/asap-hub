@@ -1,4 +1,5 @@
 export { default as addIcon } from './add-icon';
+export { default as ArticleIcon } from './article';
 export { default as binIcon } from './bin-icon';
 export { default as copyIcon } from './copy-icon';
 export { default as eventsIcon } from './events-icon';
@@ -23,6 +24,12 @@ export { default as regionNorthAmericaIcon } from './region-north-america-icon';
 export { default as regionSouthAmericaIcon } from './region-south-america-icon';
 export { default as onboardingDisabledIcon } from './onboarding-disabled-icon';
 export { default as onboardingCompletedIcon } from './onboarding-completed-icon';
+export { default as outputArticle } from './output-article';
+export { default as outputCode } from './output-code-software';
+export { default as outputDataset } from './output-dataset';
+export { default as outputForm } from './output-form';
+export { default as outputReport } from './output-gp2-reports';
+export { default as outputMaterial } from './output-training-materials';
 export { default as outputsIcon } from './outputs-icon';
 export { default as rightArrowIcon } from './right-arrow-icon';
 export { default as roleIcon } from './role-icon';

@@ -52,7 +52,7 @@ export { default as infoCircleYellowIcon } from './info-circle-yellow';
 export { default as informationIcon } from './information';
 export { default as infoIcon } from './info';
 export { default as infoInfoIcon } from './info-info';
-export { default as labIcon } from './lab';
+export { default as LabIcon } from './lab';
 export { default as labResource } from './lab-resource';
 export { default as lastPageIcon } from './last-page';
 export { default as learnIcon } from './learn';

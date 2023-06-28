@@ -23,11 +23,9 @@ describe('UserContactInformation', () => {
   describe('if no alternative email', () => {
     it('renders placeholder when theres an edit link', () => {
       const { rerender } = render(<UserContactInformation email="" />);
-      expect(
-        screen.queryByText(/provide alternative/i),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText(/alternative email/i)).not.toBeInTheDocument();
       rerender(<UserContactInformation email="" editHref="/" />);
-      expect(screen.getByText(/provide alternative/i)).toBeVisible();
+      expect(screen.getByText(/alternative email/i)).toBeVisible();
     });
   });
 });

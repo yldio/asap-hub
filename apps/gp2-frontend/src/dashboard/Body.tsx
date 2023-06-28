@@ -3,7 +3,7 @@ import { DashboardPageBody } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
 import { eventMapper } from '../events/EventsList';
 import { useEvents } from '../events/state';
-import { useNews } from './state';
+import { useDashboard, useNews } from './state';
 
 const pageSize = 3;
 
@@ -11,15 +11,24 @@ type DashboardBodyProps = { currentTime: Date };
 
 const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
   const news = useNews();
+  const dashboardStats = useDashboard();
   const { items, total } = useEvents(
     getEventListOptions<gp2.EventConstraint>(currentTime, {
       past: false,
       pageSize,
     }),
   );
+
+  const stats = dashboardStats.items[0] || {
+    sampleCount: 0,
+    cohortCount: 0,
+    articleCount: 0,
+  };
+
   return (
     <DashboardPageBody
       news={news}
+      latestStats={stats}
       upcomingEvents={items.map(eventMapper)}
       totalOfUpcomingEvents={total}
     />

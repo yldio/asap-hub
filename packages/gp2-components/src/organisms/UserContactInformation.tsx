@@ -1,8 +1,17 @@
 import { gp2 } from '@asap-hub/model';
-import { UserProfilePlaceholderCard } from '@asap-hub/react-components';
+import { pixels, UserProfilePlaceholderCard } from '@asap-hub/react-components';
+import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import EditableCard from '../molecules/EditableCard';
 import EmailSection from './EmailSection';
+
+const { rem } = pixels;
+
+const containerStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(24),
+});
 
 type UserContactInformationProps = Pick<
   gp2.UserResponse,
@@ -21,18 +30,22 @@ const UserContactInformation: React.FC<UserContactInformationProps> = ({
     optional
     edit={!!alternativeEmail}
   >
-    {editHref && !alternativeEmail ? (
-      <UserProfilePlaceholderCard>
-        Provide alternative contact details.
-      </UserProfilePlaceholderCard>
-    ) : (
+    <div css={containerStyles}>
       <EmailSection
-        contactEmails={[
-          { email, contact: 'Institutional email' },
-          { email: alternativeEmail, contact: 'Alternative email' },
-        ]}
+        contactEmails={[{ email, contact: 'Institutional email' }]}
       />
-    )}
+      {editHref && !alternativeEmail ? (
+        <UserProfilePlaceholderCard>
+          You can also add an alternative email by editing this field.
+        </UserProfilePlaceholderCard>
+      ) : (
+        <EmailSection
+          contactEmails={[
+            { email: alternativeEmail, contact: 'Alternative email' },
+          ]}
+        />
+      )}
+    </div>
   </EditableCard>
 );
 

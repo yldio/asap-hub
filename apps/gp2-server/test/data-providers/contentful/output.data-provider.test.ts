@@ -31,24 +31,18 @@ jest.mock('@asap-hub/contentful', () => ({
 
 describe('Outputs data provider', () => {
   const graphqlClientMock = getContentfulGraphqlClientMock();
-  const previewGraphqlClientMock = getContentfulGraphqlClientMock();
   const environmentMock = getContentfulEnvironmentMock();
   const restClientMock: () => Promise<Environment> = () =>
     Promise.resolve(environmentMock);
 
   const outputDataProvider: OutputDataProvider =
-    new OutputContentfulDataProvider(
-      graphqlClientMock,
-      previewGraphqlClientMock,
-      restClientMock,
-    );
+    new OutputContentfulDataProvider(graphqlClientMock, restClientMock);
   const contentfulGraphqlClientMockServer =
     getGP2ContentfulGraphqlClientMockServer({
       Outputs: () => getContentfulGraphqlOutput(),
     });
   const outputDataProviderWithMockServer: OutputDataProvider =
     new OutputContentfulDataProvider(
-      contentfulGraphqlClientMockServer,
       contentfulGraphqlClientMockServer,
       restClientMock,
     );
@@ -402,7 +396,6 @@ describe('Outputs data provider', () => {
         limit: 8,
         skip: 0,
         where: {},
-        preview: false,
         order: [gp2Contentful.OutputsOrder.AddedDateDesc],
       };
 
@@ -416,35 +409,12 @@ describe('Outputs data provider', () => {
       test('Should pass the pagination parameters as expected', async () => {
         await outputDataProvider.fetch({ take: 13, skip: 7 });
 
-        expect(previewGraphqlClientMock.request).not.toHaveBeenCalled();
         expect(graphqlClientMock.request).toHaveBeenCalledWith(
           gp2Contentful.FETCH_OUTPUTS,
           {
             ...expectedDefaultParams,
             limit: 13,
             skip: 7,
-          },
-        );
-      });
-
-      test('Should allow for draft outputs to be returned', async () => {
-        previewGraphqlClientMock.request.mockResolvedValueOnce(
-          getContentfulOutputsGraphqlResponse(),
-        );
-        await outputDataProvider.fetch({
-          take: 13,
-          skip: 7,
-          includeDrafts: true,
-        });
-
-        expect(graphqlClientMock.request).not.toHaveBeenCalled();
-        expect(previewGraphqlClientMock.request).toHaveBeenCalledWith(
-          gp2Contentful.FETCH_OUTPUTS,
-          {
-            ...expectedDefaultParams,
-            limit: 13,
-            skip: 7,
-            preview: true,
           },
         );
       });

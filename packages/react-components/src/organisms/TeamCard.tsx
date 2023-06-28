@@ -5,7 +5,7 @@ import { network } from '@asap-hub/routing';
 import { Card, Anchor, Paragraph, StateTag } from '../atoms';
 import { perRem, mobileScreen } from '../pixels';
 import { lead } from '../colors';
-import { TeamIcon, labIcon, inactiveBadgeIcon } from '../icons';
+import { TeamIcon, LabIcon, inactiveBadgeIcon } from '../icons';
 import { LinkHeadline, TagList } from '../molecules';
 import { getCounterString } from '../utils';
 
@@ -91,7 +91,9 @@ const TeamCard: React.FC<TeamCardProps> = ({
       </div>
       {labCount > 0 && (
         <div>
-          <span css={iconStyles}>{labIcon} </span>
+          <span css={iconStyles}>
+            <LabIcon />{' '}
+          </span>
           <span>{getCounterString(labCount, 'Lab')}</span>
         </div>
       )}

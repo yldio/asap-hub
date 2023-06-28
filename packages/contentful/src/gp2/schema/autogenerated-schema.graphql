@@ -464,7 +464,7 @@ enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectio
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership)"""
 type ContributingCohortsMembership implements Entry {
   contentfulMetadata: ContentfulMetadata!
-  contributingCohort(locale: String, preview: Boolean): ContributingCohorts
+  contributingCohort(locale: String, preview: Boolean, where: ContributingCohortsFilter): ContributingCohorts
   linkedFrom(allowedLocales: [String]): ContributingCohortsMembershipLinkingCollections
   role(locale: String): String
   studyLink(locale: String): String
@@ -726,7 +726,7 @@ union EventSpeakersUser = ExternalUsers | Users
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events)"""
 type Events implements Entry {
-  calendar(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   endDate(locale: String): DateTime
@@ -1245,6 +1245,78 @@ input ImageTransformOptions {
 """The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
 scalar JSON
 
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats)"""
+type LatestStats implements Entry {
+  articleCount(locale: String): Int
+  cohortCount(locale: String): Int
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): LatestStatsLinkingCollections
+  sampleCount(locale: String): Int
+  sys: Sys!
+}
+
+type LatestStatsCollection {
+  items: [LatestStats]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input LatestStatsFilter {
+  AND: [LatestStatsFilter]
+  OR: [LatestStatsFilter]
+  articleCount: Int
+  articleCount_exists: Boolean
+  articleCount_gt: Int
+  articleCount_gte: Int
+  articleCount_in: [Int]
+  articleCount_lt: Int
+  articleCount_lte: Int
+  articleCount_not: Int
+  articleCount_not_in: [Int]
+  cohortCount: Int
+  cohortCount_exists: Boolean
+  cohortCount_gt: Int
+  cohortCount_gte: Int
+  cohortCount_in: [Int]
+  cohortCount_lt: Int
+  cohortCount_lte: Int
+  cohortCount_not: Int
+  cohortCount_not_in: [Int]
+  contentfulMetadata: ContentfulMetadataFilter
+  sampleCount: Int
+  sampleCount_exists: Boolean
+  sampleCount_gt: Int
+  sampleCount_gte: Int
+  sampleCount_in: [Int]
+  sampleCount_lt: Int
+  sampleCount_lte: Int
+  sampleCount_not: Int
+  sampleCount_not_in: [Int]
+  sys: SysFilter
+}
+
+type LatestStatsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum LatestStatsOrder {
+  articleCount_ASC
+  articleCount_DESC
+  cohortCount_ASC
+  cohortCount_DESC
+  sampleCount_ASC
+  sampleCount_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)"""
 type Media implements Entry {
   contentfulMetadata: ContentfulMetadata!
@@ -1593,7 +1665,7 @@ type Outputs implements Entry {
   adminNotes(locale: String): String
   authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
-  createdBy(locale: String, preview: Boolean): Users
+  createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   documentType(locale: String): String
   lastUpdatedPartial(locale: String): DateTime
   link(locale: String): String
@@ -1604,7 +1676,7 @@ type Outputs implements Entry {
   sys: Sys!
   title(locale: String): String
   type(locale: String): String
-  updatedBy(locale: String, preview: Boolean): Users
+  updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type OutputsAuthorsCollection {
@@ -1853,7 +1925,7 @@ type ProjectMembership implements Entry {
   linkedFrom(allowedLocales: [String]): ProjectMembershipLinkingCollections
   role(locale: String): String
   sys: Sys!
-  user(locale: String, preview: Boolean): Users
+  user(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type ProjectMembershipCollection {
@@ -1928,7 +2000,7 @@ enum ProjectMembershipOrder {
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects)"""
 type Projects implements Entry {
-  calendar(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   endDate(locale: String): DateTime
@@ -2198,6 +2270,8 @@ type Query {
   eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): EventsCollection
   externalUsers(id: String!, locale: String, preview: Boolean): ExternalUsers
   externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersFilter): ExternalUsersCollection
+  latestStats(id: String!, locale: String, preview: Boolean): LatestStats
+  latestStatsCollection(limit: Int = 100, locale: String, order: [LatestStatsOrder], preview: Boolean, skip: Int = 0, where: LatestStatsFilter): LatestStatsCollection
   media(id: String!, locale: String, preview: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
   migration(id: String!, locale: String, preview: Boolean): Migration
@@ -2777,7 +2851,7 @@ type WorkingGroupMembership implements Entry {
   linkedFrom(allowedLocales: [String]): WorkingGroupMembershipLinkingCollections
   role(locale: String): String
   sys: Sys!
-  user(locale: String, preview: Boolean): Users
+  user(locale: String, preview: Boolean, where: UsersFilter): Users
 }
 
 type WorkingGroupMembershipCollection {
@@ -3004,7 +3078,7 @@ enum WorkingGroupNetworkSupportCollectionOrder {
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)"""
 type WorkingGroups implements Entry {
-  calendar(locale: String, preview: Boolean): Calendars
+  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   leadingMembers(locale: String): String

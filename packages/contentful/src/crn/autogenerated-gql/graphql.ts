@@ -829,6 +829,7 @@ export type DiscoverMembersCollectionArgs = {
 export type DiscoverMembersTeamArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discover) */
@@ -882,6 +883,11 @@ export type DiscoverAboutUsEntries = {
 export type DiscoverAboutUsLinks = {
   assets: DiscoverAboutUsAssets;
   entries: DiscoverAboutUsEntries;
+  resources: DiscoverAboutUsResources;
+};
+
+export type DiscoverAboutUsResources = {
+  block: Array<ResourceLink>;
 };
 
 export type DiscoverCollection = {
@@ -1171,6 +1177,7 @@ export type EventSpeakersLinkedFromArgs = {
 export type EventSpeakersTeamArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/eventSpeakers) */
@@ -1316,6 +1323,7 @@ export type Events = Entry & {
 export type EventsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CalendarsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
@@ -1649,6 +1657,11 @@ export type EventsNotesEntries = {
 export type EventsNotesLinks = {
   assets: EventsNotesAssets;
   entries: EventsNotesEntries;
+  resources: EventsNotesResources;
+};
+
+export type EventsNotesResources = {
+  block: Array<ResourceLink>;
 };
 
 export enum EventsOrder {
@@ -1717,6 +1730,11 @@ export type EventsPresentationEntries = {
 export type EventsPresentationLinks = {
   assets: EventsPresentationAssets;
   entries: EventsPresentationEntries;
+  resources: EventsPresentationResources;
+};
+
+export type EventsPresentationResources = {
+  block: Array<ResourceLink>;
 };
 
 export type EventsSpeakersCollection = {
@@ -1756,6 +1774,11 @@ export type EventsVideoRecordingEntries = {
 export type EventsVideoRecordingLinks = {
   assets: EventsVideoRecordingAssets;
   entries: EventsVideoRecordingEntries;
+  resources: EventsVideoRecordingResources;
+};
+
+export type EventsVideoRecordingResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthors) */
@@ -2105,6 +2128,7 @@ export type InterestGroupLeadersRoleArgs = {
 export type InterestGroupLeadersUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 export type InterestGroupLeadersCollection = {
@@ -2224,6 +2248,7 @@ export type InterestGroupsActiveArgs = {
 export type InterestGroupsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CalendarsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
@@ -2878,6 +2903,11 @@ export type NewsTextEntries = {
 export type NewsTextLinks = {
   assets: NewsTextAssets;
   entries: NewsTextEntries;
+  resources: NewsTextResources;
+};
+
+export type NewsTextResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/pages) */
@@ -3071,6 +3101,11 @@ export type PagesTextEntries = {
 export type PagesTextLinks = {
   assets: PagesTextAssets;
   entries: PagesTextEntries;
+  resources: PagesTextResources;
+};
+
+export type PagesTextResources = {
+  block: Array<ResourceLink>;
 };
 
 export type Query = {
@@ -3592,6 +3627,16 @@ export enum ResearchTagsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type ResourceLink = {
+  sys: ResourceSys;
+};
+
+export type ResourceSys = {
+  linkType: Scalars['String'];
+  type: Scalars['String'];
+  urn: Scalars['String'];
+};
+
 export type Sys = {
   environmentId: Scalars['String'];
   firstPublishedAt?: Maybe<Scalars['DateTime']>;
@@ -3667,6 +3712,7 @@ export type TeamMembershipRoleArgs = {
 export type TeamMembershipTeamArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamsFilter>;
 };
 
 export type TeamMembershipCollection = {
@@ -4241,6 +4287,11 @@ export type TutorialsTextEntries = {
 export type TutorialsTextLinks = {
   assets: TutorialsTextAssets;
   entries: TutorialsTextEntries;
+  resources: TutorialsTextResources;
+};
+
+export type TutorialsTextResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
@@ -5145,6 +5196,7 @@ export type WorkingGroupLeadersRoleArgs = {
 export type WorkingGroupLeadersUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeaders) */
@@ -5272,6 +5324,7 @@ export type WorkingGroupMembersLinkedFromArgs = {
 export type WorkingGroupMembersUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 export type WorkingGroupMembersCollection = {
@@ -5372,6 +5425,7 @@ export type WorkingGroups = Entry & {
 export type WorkingGroupsCalendarsArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CalendarsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
@@ -5470,6 +5524,11 @@ export type WorkingGroupsDescriptionEntries = {
 export type WorkingGroupsDescriptionLinks = {
   assets: WorkingGroupsDescriptionAssets;
   entries: WorkingGroupsDescriptionEntries;
+  resources: WorkingGroupsDescriptionResources;
+};
+
+export type WorkingGroupsDescriptionResources = {
+  block: Array<ResourceLink>;
 };
 
 export type WorkingGroupsFilter = {

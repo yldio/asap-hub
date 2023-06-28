@@ -4,7 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getNews } from '../api';
+import { getDashboardStats, getNews } from '../api';
 import { getEvents } from '../../events/api';
 import Dashboard from '../Dashboard';
 
@@ -33,9 +33,13 @@ const renderDashboard = async ({ user = {} }: { user?: Partial<User> }) => {
 };
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
 const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+const mockDashboard = getDashboardStats as jest.MockedFunction<
+  typeof getDashboardStats
+>;
 it('renders dashboard header', async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(gp2.createListEventResponse(1));
+  mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   await renderDashboard({});
   expect(
     await screen.getByRole('heading', { name: 'Dashboard' }),
@@ -45,6 +49,7 @@ it('renders dashboard header', async () => {
 it('doesnt render the welcome back banner when its disabled', async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(gp2.createListEventResponse(1));
+  mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   await renderDashboard({
     user: { firstName: 'Tony' },
   });
@@ -56,6 +61,7 @@ it('doesnt render the welcome back banner when its disabled', async () => {
 it('renders the news when theres at least one news', async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(gp2.createListEventResponse(1));
+  mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   await renderDashboard({});
   expect(
     screen.getByRole('heading', { name: 'News and Updates' }),
@@ -65,6 +71,7 @@ it('renders the news when theres at least one news', async () => {
 it("renders the upcoming events with events when there's at least one upcoming event", async () => {
   mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
   mockGetEvents.mockResolvedValueOnce(gp2.createListEventResponse(1));
+  mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   await renderDashboard({});
   expect(
     screen.getByRole('heading', { name: 'Upcoming Events' }),

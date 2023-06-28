@@ -28,21 +28,21 @@ import {
   SquidexRest,
 } from '@asap-hub/squidex';
 import { Chance } from 'chance';
-import { appName, baseUrl } from '../../src/config';
-import { CalendarSquidexDataProvider } from '../../src/data-providers/calendars.data-provider';
-import { EventSquidexDataProvider } from '../../src/data-providers/event.data-provider';
-import { ReminderSquidexDataProvider } from '../../src/data-providers/reminders.data-provider';
-import { ResearchOutputSquidexDataProvider } from '../../src/data-providers/research-outputs.data-provider';
-import { TeamSquidexDataProvider } from '../../src/data-providers/teams.data-provider';
-import { UserSquidexDataProvider } from '../../src/data-providers/users.data-provider';
-import { getAuthToken } from '../../src/utils/auth';
-import { getCalendarCreateDataObject } from '../fixtures/calendars.fixtures';
-import { getResearchOutputCreateDataObject } from '../fixtures/research-output.fixtures';
-import { getTeamCreateDataObject } from '../fixtures/teams.fixtures';
-import { getUserCreateDataObject } from '../fixtures/users.fixtures';
-import { createRandomOrcid } from '../helpers/users';
-import { teardownHelper } from '../helpers/teardown';
-import { retryable } from '../helpers/retryable';
+import { appName, baseUrl } from '../../../src/config';
+import { CalendarSquidexDataProvider } from '../../../src/data-providers/calendars.data-provider';
+import { EventSquidexDataProvider } from '../../../src/data-providers/event.data-provider';
+import { ReminderSquidexDataProvider } from '../../../src/data-providers/reminders.data-provider';
+import { ResearchOutputSquidexDataProvider } from '../../../src/data-providers/research-outputs.data-provider';
+import { TeamSquidexDataProvider } from '../../../src/data-providers/teams.data-provider';
+import { UserSquidexDataProvider } from '../../../src/data-providers/users.data-provider';
+import { getAuthToken } from '../../../src/utils/auth';
+import { getCalendarCreateDataObject } from '../../fixtures/calendars.fixtures';
+import { getResearchOutputCreateDataObject } from '../../fixtures/research-output.fixtures';
+import { getTeamCreateDataObject } from '../../fixtures/teams.fixtures';
+import { getUserCreateDataObject } from '../../fixtures/users.fixtures';
+import { createRandomOrcid } from '../../helpers/users';
+import { teardownHelper } from '../../helpers/teardown';
+import { retryable } from '../../helpers/retryable';
 jest.setTimeout(120000);
 
 describe('Reminders', () => {

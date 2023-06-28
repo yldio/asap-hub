@@ -3,12 +3,16 @@ import { FC } from 'react';
 
 interface LibraryIconProps {
   readonly color?: string;
+  readonly size?: number;
 }
 
-const LibraryIcon: FC<LibraryIconProps> = ({ color = '#4D646B' }) => (
+const LibraryIcon: FC<LibraryIconProps> = ({
+  color = '#4D646B',
+  size = 24,
+}) => (
   <svg
-    width="24px"
-    height="24px"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"

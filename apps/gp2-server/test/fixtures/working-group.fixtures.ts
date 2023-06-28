@@ -167,7 +167,7 @@ export const getGraphQLWorkingGroup = (): GraphQLWorkingGroup => ({
   flatData: {
     title: 'a working group title',
     shortDescription: 'Short description',
-    description: 'longer description',
+    description: '<p>longer description</p>',
     primaryEmail: 'primary.email@example.com',
     secondaryEmail: 'secondary.email@example.com',
     leadingMembers: 'Leading members',

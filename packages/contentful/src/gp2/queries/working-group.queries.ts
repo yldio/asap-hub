@@ -12,7 +12,9 @@ export const workingGroupsContentQueryFragment = gql`
     }
     title
     shortDescription
-    description
+    description {
+      json
+    }
     primaryEmail
     secondaryEmail
     leadingMembers

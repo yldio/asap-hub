@@ -10525,16 +10525,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-html-renderer@npm:^16.1.0":
-  version: 16.1.0
-  resolution: "@contentful/rich-text-html-renderer@npm:16.1.0"
-  dependencies:
-    "@contentful/rich-text-types": ^16.2.0
-    escape-html: ^1.0.3
-  checksum: 06234d94ce5077a7d9f5c5a41911017431d4bc24a4783f5d0133ba010ac3aa43a456c765707d3b803044331c6b309029f3f1eb7f76a1603c7dfe58e91638a3e1
-  languageName: node
-  linkType: hard
-
 "@contentful/rich-text-react-renderer@npm:^15.16.4":
   version: 15.16.4
   resolution: "@contentful/rich-text-react-renderer@npm:15.16.4"
@@ -10558,13 +10548,6 @@ __metadata:
   version: 16.1.0
   resolution: "@contentful/rich-text-types@npm:16.1.0"
   checksum: 191927b41b63b4b3fb4d53edfff37ea67fd01fae538aa29c5ee2ee7d7b8060fe10eac082ed3a2ff63b2b24b5e4d4e4ad88479d8edd61f32ad218edf915fc07f4
-  languageName: node
-  linkType: hard
-
-"@contentful/rich-text-types@npm:^16.2.0":
-  version: 16.2.0
-  resolution: "@contentful/rich-text-types@npm:16.2.0"
-  checksum: ec9390201e7e7c1419b61efee12845169665b336fe866132515f61ed7ab6753a997d1336b13cb2962eb48db01deef4a5a035e929344eec41f1b58227d78ecff9
   languageName: node
   linkType: hard
 
@@ -19172,7 +19155,6 @@ __metadata:
     "@babel/preset-react": 7.18.6
     "@babel/preset-typescript": 7.21.4
     "@babel/runtime-corejs3": 7.21.0
-    "@contentful/rich-text-html-renderer": ^16.1.0
     "@emotion/jest": ^11.10.5
     "@jeysal/babel-plugin-ramda": 2.0.1
     "@peculiar/webcrypto": 1.4.3

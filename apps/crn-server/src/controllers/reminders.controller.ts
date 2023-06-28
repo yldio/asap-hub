@@ -74,23 +74,13 @@ export default class ReminderController {
           reminder.entity === 'Research Output' &&
           reminder.type === 'In Review'
         ) {
-          if (reminder.data.associationType === 'team') {
-            return {
-              id: reminder.id,
-              entity: reminder.entity,
-              href: sharedResearch({}).researchOutput({
-                researchOutputId: reminder.data.researchOutputId,
-              }).$,
-              description: `**${reminder.data.reviewRequestedBy}** on **${reminder.data.associationName}** requested PMs to review a team ${reminder.data.documentType} output: ${reminder.data.title}.`,
-            };
-          }
           return {
             id: reminder.id,
             entity: reminder.entity,
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `**${reminder.data.reviewRequestedBy}** on **${reminder.data.associationName}** requested PMs to review a working group ${reminder.data.documentType} output: ${reminder.data.title}.`,
+            description: `**${reminder.data.reviewRequestedBy}** on **${reminder.data.associationName}** requested PMs to review a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
           };
         }
 

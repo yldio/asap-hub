@@ -31,7 +31,6 @@ type DependencyList = {
   workingGroups: DependencySwitch<WorkingGroupDataProvider>;
   tutorials: DependencySwitch<TutorialsDataProvider>;
   discover: DependencySwitch<DiscoverDataProvider>;
-  guide: DependencySwitch<GuideDataProvider>;
   researchTags: DependencySwitch<ResearchTagDataProvider>;
 };
 

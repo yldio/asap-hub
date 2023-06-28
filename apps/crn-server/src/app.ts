@@ -154,6 +154,7 @@ import {
   LabSquidexDataProvider,
 } from './data-providers/labs.data-provider';
 import { DiscoverSquidexDataProvider } from './data-providers/discover.data-provider';
+import { GuideContentfulDataProvider } from './data-providers/contentful/guides.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -504,9 +505,7 @@ export const appFactory = (libs: Libs = {}): Express => {
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
-  const guideDataProvider = 
-    libs.guideDataProvider || 
-    featureFlagDependencySwitch.getDependency('guide', 'IS_CONTENTFUL_ENABLED_V2');
+  const guideDataProvider = libs.guideDataProvider || new GuideContentfulDataProvider(contentfulGraphQLClient)
 
   featureFlagDependencySwitch.setDependency(
     'researchTags',

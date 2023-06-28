@@ -1,40 +1,48 @@
-import { GuideDataObject } from '@asap-hub/model';
+import { GuideDataObject, ListGuideResponse } from '@asap-hub/model';
 import {
   GraphQLClient,
   FETCH_GUIDE,
   FetchGuideQuery,
+  GuideContent,
 } from '@asap-hub/contentful';
 import { GuideDataProvider } from '../types';
 
 type GuideItem = NonNullable<
-  NonNullable<FetchGuideQuery['guideCollection']>['items']
+  NonNullable<FetchGuideQuery['guidesCollection']>['items']
 >[number];
 
 type GuideContentItem = NonNullable<
-  NonNullable<FetchGuideQuery['guideContentCollection']>['items']
+  Pick<GuideContent, 'text' | 'title' | 'linkUrl' | 'linkText'>[]
 >[number];
 
 export class GuideContentfulDataProvider implements GuideDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
 
-  async fetch(): Promise<GuideDataObject> {
-    const { guideCollection } =
+  async fetch(): Promise<ListGuideResponse> {
+    const { guidesCollection } =
       await this.contentfulClient.request<FetchGuideQuery>(FETCH_GUIDE);
-
-    return parseGraphQLGuide(guideCollection?.items[0] || null);
+    return {
+      items: parseGraphQLGuides(guidesCollection?.items || []),
+      total: guidesCollection?.items.length || 0,
+    };
   }
 }
 const parseGuideContent = (guideContent: GuideContentItem | null) => ({
-  text:'',
-  title: '',
-  linkURL: '',
-  linkText: '',
+  text: guideContent?.text || '',
+  title: guideContent?.title || '',
+  linkUrl: guideContent?.linkUrl || '',
+  linkText: guideContent?.linkText || '',
 });
 
-const parseGraphQLGuide= (
-  guide: GuideItem | null,
-): GuideDataObject => ({
-  content: guide?.content
-    ? parseGuideContent(guide.content)
-    : '',
+const parseGraphQLGuide = (guide: GuideItem): GuideDataObject => ({
+  title: guide?.title ? guide.title : '',
+  content: guide?.contentCollection
+    ? guide.contentCollection.items.map((content: GuideContentItem | null) =>
+        parseGuideContent(content),
+      )
+    : [],
 });
+
+const parseGraphQLGuides = (guides: GuideItem[]): GuideDataObject[] => {
+  return guides.map((guide) => parseGraphQLGuide(guide));
+};

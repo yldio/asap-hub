@@ -1,5 +1,5 @@
-import { GuideDataObject } from '@asap-hub/model';
+import { ListGuideResponse } from '@asap-hub/model';
 
 export type GuideDataProvider = {
-  fetch: () => Promise<GuideDataObject>;
+  fetch: () => Promise<ListGuideResponse>;
 };

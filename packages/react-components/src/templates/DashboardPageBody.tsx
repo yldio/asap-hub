@@ -12,6 +12,7 @@ import {
   UserResponse,
   ListResearchOutputResponse,
   NewsResponse,
+  GuideDataObject,
 } from '@asap-hub/model';
 import {
   NewsSection,
@@ -58,6 +59,7 @@ type DashboardPageBodyProps = Pick<
     pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
     roles: TeamRole[];
   } & {
+    guides: GuideDataObject[];
     recentSharedOutputs?: ListResearchOutputResponse;
     recommendedUsers: UserResponse[];
   };
@@ -68,6 +70,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   news,
   roles,
   reminders,
+  guides,
   pastEvents,
   dismissedGettingStarted,
   upcomingEvents,
@@ -75,6 +78,16 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   recommendedUsers,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
+
+  const guideAccordion = guides.map((guide) => {
+    return {
+      icon: learnIcon,
+      title: guide.title,
+      description: guide.content[0]?.text,
+      hrefText: guide.content[0]?.linkText,
+      href: guide.content[0]?.linkUrl,
+    };
+  });
 
   return (
     <div css={styles}>
@@ -87,6 +100,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <Card accent="neutral200" padding={false}>
             <Accordion
               items={[
+                ...guideAccordion,
                 {
                   icon: learnIcon,
                   title: 'How to use the Hub?',

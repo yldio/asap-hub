@@ -12,7 +12,7 @@ import { eventMapper } from '../events/EventList';
 
 type BodyProps = Omit<
   ComponentProps<typeof DashboardPageBody>,
-  'pastEvents' | 'recommendedUsers'
+  'pastEvents' | 'recommendedUsers' | 'guides'
 > & {
   date: Date;
   user: User;
@@ -51,17 +51,12 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
     pageSize: 3,
   }).items;
 
-  const guides = useGuides({
-    searchQuery: '',
-    filters: new Set(),
-    currentPage: 0,
-    pageSize: 5,
-  });
+  const guides = useGuides();
 
   return (
     <DashboardPageBody
       {...props}
-      guides={guides}
+      guides={guides.items}
       pastEvents={pastEvents}
       upcomingEvents={items.map(eventMapper)}
       recentSharedOutputs={recentSharedOutputs}

@@ -23,10 +23,16 @@ import {
   RecentSharedOutputs,
 } from '../organisms';
 import { rem } from '../pixels';
-import { Link, Headline2, Card } from '../atoms';
+import { Link, Headline2, Card, Paragraph } from '../atoms';
 import { DashboardRecommendedUsers, lead } from '..';
 import { Accordion } from '../molecules';
-import { confidentialIcon, giftIcon, learnIcon } from '../icons';
+import {
+  confidentialIcon,
+  externalLinkIcon,
+  giftIcon,
+  learnIcon,
+} from '../icons';
+import { isInternalLink } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -81,11 +87,25 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
 
   const guideAccordion = guides.map((guide) => {
     return {
-      icon: learnIcon,
+      icon: <></>,
       title: guide.title,
-      description: guide.content[0]?.text,
-      hrefText: guide.content[0]?.linkText,
-      href: guide.content[0]?.linkUrl,
+      description: guide.content.map((content) => {
+        return (
+          <div>
+            <Paragraph>{content.text}</Paragraph>
+            <div css={{ width: 'fit-content' }}>
+              {content.linkUrl && (
+                <div css={{ width: 'fit-content' }}>
+                  <Link buttonStyle small primary href={content.linkUrl}>
+                    {content.linkText}{' '}
+                    {!isInternalLink(content.linkUrl)[0] && externalLinkIcon}
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }),
     };
   });
 

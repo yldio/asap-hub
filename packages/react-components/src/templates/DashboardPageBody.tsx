@@ -114,33 +114,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </div>
           <Card accent="neutral200" padding={false}>
             <Accordion
-              items={[
-                ...guideAccordion,
-                {
-                  icon: learnIcon,
-                  title: 'How to use the Hub?',
-                  description:
-                    'Explore a series of short videos that highlight the many different aspects of the Hub.',
-                  hrefText: 'Explore videos',
-                  href: 'https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42',
-                },
-                {
-                  icon: giftIcon,
-                  title: 'Grant Welcome Packet',
-                  description:
-                    'All you need to know about the Network, the Hub, sharing, meetings, communications, publishing and more.',
-                  hrefText: 'Open the packet',
-                  href: 'https://drive.google.com/file/d/1E-wPBbVQnVHpBBP24pgIo87AOVoO15Gr/view',
-                },
-                {
-                  icon: confidentialIcon,
-                  title: 'Confidentiality Rules',
-                  description:
-                    'View all confidentiality rules related to the Hub.',
-                  hrefText: 'Read more',
-                  href: 'https://hub.asap.science/terms-and-conditions',
-                },
-              ]}
+              items={guideAccordion}
               info={{
                 href: dashboard({}).dismissGettingStarted({}).$,
                 hrefText: 'Don’t Show Again',

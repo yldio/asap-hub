@@ -494,13 +494,6 @@ export const getSquidexReminderEventsContents = (): NonNullable<
   };
 };
 
-export const getContentfulRemindersGraphqlResponse =
-  (): FetchRemindersQuery => ({
-    eventsCollection: {
-      items: [getContentfulReminderEventsCollectionItem()],
-    },
-  });
-
 export const getContentfulReminderEventsCollectionItem = (): NonNullable<
   FetchRemindersQuery['eventsCollection']
 >['items'][number] => {

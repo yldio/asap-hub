@@ -372,10 +372,10 @@ const getUploadPresentationRemindersFromQuery = (
 ): UploadPresentationReminder[] => {
   const uploadPresentationReminders: UploadPresentationReminder[] = [];
 
-  if (isCMSAdministrator(users?.role as Role))
+  if (isCMSAdministrator(user?.role as Role))
     return uploadPresentationReminders;
 
-  const teamsIAmAProjectManager = users?.teamsCollection?.items
+  const teamsIAmAProjectManager = user?.teamsCollection?.items
     .map((item) => {
       if (item?.role === 'Project Manager') {
         return item.team?.sys.id;

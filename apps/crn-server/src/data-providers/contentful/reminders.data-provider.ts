@@ -368,7 +368,7 @@ const getPublishMaterialRemindersFromQuery = (
 
 const getUploadPresentationRemindersFromQuery = (
   eventsEndedInLast72Hours: EventItem[],
-  users: User,
+  user: User,
 ): UploadPresentationReminder[] => {
   const uploadPresentationReminders: UploadPresentationReminder[] = [];
 

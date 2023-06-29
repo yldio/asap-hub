@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
+import { GuideDataObject } from '@asap-hub/model';
 import {
   createListEventResponse,
   createListResearchOutputResponse,
@@ -32,6 +33,30 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   recentSharedOutputs: createListResearchOutputResponse(5),
   recommendedUsers: createListUserResponse(3).items,
 };
+
+it('renders guides', () => {
+  const guides: GuideDataObject[] = [
+    {
+      title: 'Guide Title',
+      content: [
+        {
+          title: '',
+          text: '',
+          linkText: 'Test Link',
+          linkUrl: 'https://test.com',
+        },
+      ],
+    },
+  ];
+  render(<DashboardPageBody {...props} guides={guides} />);
+
+  const guideTitle = screen.getByText('Guide Title');
+  expect(guideTitle).toBeInTheDocument();
+  guideTitle.click();
+  const linkButton = screen.getByText('Test Link');
+  expect(linkButton.closest('a')).toHaveAttribute('href', 'https://test.com');
+});
+
 it('renders multiple news cards', () => {
   render(
     <DashboardPageBody

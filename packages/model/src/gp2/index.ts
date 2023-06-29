@@ -1,3 +1,4 @@
+export * from './announcement';
 export * from './calendar';
 export * from './common';
 export * from './contributing-cohort';
@@ -10,6 +11,7 @@ export * from './keywords';
 export * from './news';
 export * from './output';
 export * from './project';
+export * from './stats';
 export * from './user';
 export * from './working-group-network';
 export * from './working-group';

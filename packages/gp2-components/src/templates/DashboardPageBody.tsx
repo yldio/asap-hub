@@ -62,7 +62,7 @@ const latestStatsCardsStyles = css({
 
 type DashboardPageBodyProps = {
   news: gp2.ListNewsResponse;
-  latestStats: gp2.DashboardResponse;
+  latestStats: gp2.StatsDataObject;
   totalOfUpcomingEvents: number;
   upcomingEvents: ComponentProps<typeof EventCard>[];
 };

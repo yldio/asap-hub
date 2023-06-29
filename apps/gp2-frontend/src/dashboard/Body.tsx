@@ -11,7 +11,7 @@ type DashboardBodyProps = { currentTime: Date };
 
 const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
   const news = useNews();
-  const dashboardStats = useDashboard();
+  const dashboard = useDashboard();
   const { items, total } = useEvents(
     getEventListOptions<gp2.EventConstraint>(currentTime, {
       past: false,
@@ -19,11 +19,13 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
     }),
   );
 
-  const stats = dashboardStats.items[0] || {
-    sampleCount: 0,
-    cohortCount: 0,
-    articleCount: 0,
-  };
+  const stats = dashboard.items[0]
+    ? dashboard.items[0].latestStats
+    : {
+        sampleCount: 0,
+        cohortCount: 0,
+        articleCount: 0,
+      };
 
   return (
     <DashboardPageBody

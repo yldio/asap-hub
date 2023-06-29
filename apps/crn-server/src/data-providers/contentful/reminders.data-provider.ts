@@ -68,10 +68,11 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       (x): x is EventItem => x !== null,
     );
 
-    const eventHappeningReminders = getEventHappeningRemindersFromQuery(
-      eventsCollectionItems,
-      timezone,
-    );
+    const eventHappeningNowOrTodayReminders =
+      getEventHappeningNowOrTodayRemindersFromQuery(
+        eventsCollectionItems,
+        timezone,
+      );
 
     const eventsEndedInLast72Hours = eventsCollectionItems.filter((event) =>
       hasEventEndedInLast72hours(event, timezone),
@@ -100,7 +101,7 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
     );
 
     const reminders = [
-      ...eventHappeningReminders,
+      ...eventHappeningNowOrTodayReminders,
       ...sharePresentationReminders,
       ...publishPresentationReminders,
       ...uploadPresentationReminders,
@@ -232,7 +233,7 @@ const inLast24Hours = (date: string, zone: string) => {
   return convertedDate >= last24HoursISO && convertedDate <= now;
 };
 
-const getEventHappeningRemindersFromQuery = (
+const getEventHappeningNowOrTodayRemindersFromQuery = (
   eventsCollection: EventItem[],
   zone: string,
 ): (EventHappeningTodayReminder | EventHappeningNowReminder)[] => {

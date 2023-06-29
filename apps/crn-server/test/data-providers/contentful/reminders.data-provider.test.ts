@@ -269,104 +269,100 @@ describe('Reminders data provider', () => {
     });
 
     describe('Share Presentation Reminder', () => {
-      describe('When the user is one of the speakers and less than 72 hours have passed since the event ended', () => {
-        it.each`
-          asapRole     | teamRole
-          ${`Grantee`} | ${`Lead PI (Core Leadership)`}
-          ${`Grantee`} | ${'Co-PI (Core Leadership)'}
-          ${`Grantee`} | ${'Collaborating PI'}
-          ${`Grantee`} | ${`Key Personnel`}
-          ${`Grantee`} | ${`Scientific Advisory Board`}
-        `(
-          `Should fetch the reminder when user has asap role $asapRole and team role $teamRole`,
-          async ({ asapRole, teamRole }) => {
-            const startDate = '2023-01-01T08:00:00Z';
-            const endDate = '2023-01-01T10:00:00Z';
-            jest.setSystemTime(
-              DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
-            );
+      it.each`
+        asapRole     | teamRole
+        ${`Grantee`} | ${`Lead PI (Core Leadership)`}
+        ${`Grantee`} | ${'Co-PI (Core Leadership)'}
+        ${`Grantee`} | ${'Collaborating PI'}
+        ${`Grantee`} | ${`Key Personnel`}
+        ${`Grantee`} | ${`Scientific Advisory Board`}
+      `(
+        `Should fetch the reminder when user has asap role $asapRole and team role $teamRole`,
+        async ({ asapRole, teamRole }) => {
+          const startDate = '2023-01-01T08:00:00Z';
+          const endDate = '2023-01-01T10:00:00Z';
+          jest.setSystemTime(
+            DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
+          );
 
-            const eventMockResponse =
-              getContentfulReminderEventsCollectionItem();
-            eventMockResponse!.startDate = startDate;
-            eventMockResponse!.endDate = endDate;
+          const eventMockResponse = getContentfulReminderEventsCollectionItem();
+          eventMockResponse!.startDate = startDate;
+          eventMockResponse!.endDate = endDate;
 
-            const users = getContentfulReminderUsersContent();
-            users!.role = asapRole;
-            users!.teamsCollection!.items[0]!.role = teamRole;
+          const users = getContentfulReminderUsersContent();
+          users!.role = asapRole;
+          users!.teamsCollection!.items[0]!.role = teamRole;
 
-            contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-              eventsCollection: {
-                items: [eventMockResponse],
-              },
-              users,
-            });
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            eventsCollection: {
+              items: [eventMockResponse],
+            },
+            users,
+          });
 
-            contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-              getTeamProjectManagerResponse(),
-            );
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            getTeamProjectManagerResponse(),
+          );
 
-            const result = await remindersDataProvider.fetch(
-              fetchRemindersOptions,
-            );
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
 
-            const sharePresentationReminder = getSharePresentationReminder();
-            sharePresentationReminder.data.endDate = endDate;
-            sharePresentationReminder.data.pmId = 'project-manager-1';
-            expect(result).toEqual({
-              total: 1,
-              items: [sharePresentationReminder],
-            });
-          },
-        );
+          const sharePresentationReminder = getSharePresentationReminder();
+          sharePresentationReminder.data.endDate = endDate;
+          sharePresentationReminder.data.pmId = 'project-manager-1';
+          expect(result).toEqual({
+            total: 1,
+            items: [sharePresentationReminder],
+          });
+        },
+      );
 
-        it.each`
-          asapRole     | teamRole
-          ${`Grantee`} | ${`Project Manager`}
-          ${`Grantee`} | ${`ASAP Staff`}
-          ${`Staff`}   | ${`Lead PI (Core Leadership)`}
-          ${`Staff`}   | ${`Lead PI (Core Leadership)`}
-          ${`Staff`}   | ${'Co-PI (Core Leadership)'}
-          ${`Staff`}   | ${'Collaborating PI'}
-          ${`Staff`}   | ${`Key Personnel`}
-          ${`Staff`}   | ${`Scientific Advisory Board`}
-          ${`Staff`}   | ${`Project Manager`}
-          ${`Staff`}   | ${`ASAP Staff`}
-        `(
-          `Should not fetch the reminder when user has asap role $asapRole and team role $teamRole`,
-          async ({ asapRole, teamRole }) => {
-            const startDate = '2023-01-01T08:00:00Z';
-            const endDate = '2023-01-01T10:00:00Z';
-            jest.setSystemTime(
-              DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
-            );
+      it.each`
+        asapRole     | teamRole
+        ${`Grantee`} | ${`Project Manager`}
+        ${`Grantee`} | ${`ASAP Staff`}
+        ${`Staff`}   | ${`Lead PI (Core Leadership)`}
+        ${`Staff`}   | ${`Lead PI (Core Leadership)`}
+        ${`Staff`}   | ${'Co-PI (Core Leadership)'}
+        ${`Staff`}   | ${'Collaborating PI'}
+        ${`Staff`}   | ${`Key Personnel`}
+        ${`Staff`}   | ${`Scientific Advisory Board`}
+        ${`Staff`}   | ${`Project Manager`}
+        ${`Staff`}   | ${`ASAP Staff`}
+      `(
+        `Should not fetch the reminder when user has asap role $asapRole and team role $teamRole`,
+        async ({ asapRole, teamRole }) => {
+          const startDate = '2023-01-01T08:00:00Z';
+          const endDate = '2023-01-01T10:00:00Z';
+          jest.setSystemTime(
+            DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
+          );
 
-            const eventMockResponse =
-              getContentfulReminderEventsCollectionItem();
-            eventMockResponse!.startDate = startDate;
-            eventMockResponse!.endDate = endDate;
+          const eventMockResponse = getContentfulReminderEventsCollectionItem();
+          eventMockResponse!.startDate = startDate;
+          eventMockResponse!.endDate = endDate;
 
-            const users = getContentfulReminderUsersContent();
-            users!.role = asapRole;
-            users!.teamsCollection!.items[0]!.role = teamRole;
+          const users = getContentfulReminderUsersContent();
+          users!.role = asapRole;
+          users!.teamsCollection!.items[0]!.role = teamRole;
 
-            contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-              eventsCollection: {
-                items: [eventMockResponse],
-              },
-              users,
-            });
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            eventsCollection: {
+              items: [eventMockResponse],
+            },
+            users,
+          });
 
-            const result = await remindersDataProvider.fetch(
-              fetchRemindersOptions,
-            );
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
 
-            expect(result.items.map((r) => r.type)).not.toContain(
-              'Share Presentation',
-            );
-          },
-        );
-      });
+          expect(result.items.map((r) => r.type)).not.toContain(
+            'Share Presentation',
+          );
+        },
+      );
 
       it('Should not fetch the reminder when user is not one of the speakers', async () => {
         const startDate = '2023-01-01T08:00:00Z';
@@ -504,8 +500,46 @@ describe('Reminders data provider', () => {
     });
 
     describe('Publish Material Reminder', () => {
-      describe('When less than 72 hours have passed since the event ended', () => {
-        it('Should fetch the reminder if the user asap role is Staff', async () => {
+      it('Should fetch the reminder if the user asap role is Staff', async () => {
+        const startDate = '2023-01-01T08:00:00Z';
+        const endDate = '2023-01-01T10:00:00Z';
+        jest.setSystemTime(DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate());
+
+        const eventMockResponse = getContentfulReminderEventsCollectionItem();
+        eventMockResponse!.startDate = startDate;
+        eventMockResponse!.endDate = endDate;
+
+        const users = getContentfulReminderUsersContent();
+        users!.role = 'Staff';
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          eventsCollection: {
+            items: [eventMockResponse],
+          },
+          users,
+        });
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+
+        const publishMaterialReminder = getPublishMaterialReminder();
+        publishMaterialReminder.data.endDate = endDate;
+
+        expect(result.items.map((r) => r.type)).toContain('Publish Material');
+
+        expect(result).toEqual({
+          total: 1,
+          items: [publishMaterialReminder],
+        });
+      });
+
+      it.each`
+        asapRole
+        ${`Grantee`}
+        ${`Guest`}
+        ${`Hidden`}
+      `(
+        `Should not fetch the reminder if user has asap role $asapRole`,
+        async ({ asapRole }) => {
           const startDate = '2023-01-01T08:00:00Z';
           const endDate = '2023-01-01T10:00:00Z';
           jest.setSystemTime(
@@ -517,7 +551,7 @@ describe('Reminders data provider', () => {
           eventMockResponse!.endDate = endDate;
 
           const users = getContentfulReminderUsersContent();
-          users!.role = 'Staff';
+          users!.role = asapRole;
 
           contentfulGraphqlClientMock.request.mockResolvedValueOnce({
             eventsCollection: {
@@ -526,64 +560,19 @@ describe('Reminders data provider', () => {
             users,
           });
 
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+            getTeamProjectManagerResponse(),
+          );
+
           const result = await remindersDataProvider.fetch(
             fetchRemindersOptions,
           );
 
-          const publishMaterialReminder = getPublishMaterialReminder();
-          publishMaterialReminder.data.endDate = endDate;
-
-          expect(result.items.map((r) => r.type)).toContain('Publish Material');
-
-          expect(result).toEqual({
-            total: 1,
-            items: [publishMaterialReminder],
-          });
-        });
-
-        it.each`
-          asapRole
-          ${`Grantee`}
-          ${`Guest`}
-          ${`Hidden`}
-        `(
-          `Should not fetch the reminder if user has asap role $asapRole`,
-          async ({ asapRole }) => {
-            const startDate = '2023-01-01T08:00:00Z';
-            const endDate = '2023-01-01T10:00:00Z';
-            jest.setSystemTime(
-              DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
-            );
-
-            const eventMockResponse =
-              getContentfulReminderEventsCollectionItem();
-            eventMockResponse!.startDate = startDate;
-            eventMockResponse!.endDate = endDate;
-
-            const users = getContentfulReminderUsersContent();
-            users!.role = asapRole;
-
-            contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-              eventsCollection: {
-                items: [eventMockResponse],
-              },
-              users,
-            });
-
-            contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-              getTeamProjectManagerResponse(),
-            );
-
-            const result = await remindersDataProvider.fetch(
-              fetchRemindersOptions,
-            );
-
-            expect(result.items.map((r) => r.type)).not.toContain(
-              'Publish Material',
-            );
-          },
-        );
-      });
+          expect(result.items.map((r) => r.type)).not.toContain(
+            'Publish Material',
+          );
+        },
+      );
 
       it('Should fetch the reminder up until 72 hours of the end of the event', async () => {
         const startDate = '2023-01-01T08:00:00Z';
@@ -698,55 +687,52 @@ describe('Reminders data provider', () => {
     });
 
     describe('Upload Presentation Reminder', () => {
-      describe('When less than 72 hours have passed since the event ended', () => {
-        it.each`
-          asapRole
-          ${`Grantee`}
-          ${`Guest`}
-          ${`Hidden`}
-        `(
-          `Should fetch the reminder when user asap role is $asapRole and user is Project Manager of one of the speakers team`,
-          async ({ asapRole }) => {
-            const startDate = '2023-01-01T08:00:00Z';
-            const endDate = '2023-01-01T10:00:00Z';
-            jest.setSystemTime(
-              DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
-            );
+      it.each`
+        asapRole
+        ${`Grantee`}
+        ${`Guest`}
+        ${`Hidden`}
+      `(
+        `Should fetch the reminder when user asap role is $asapRole and user is Project Manager of one of the speakers team`,
+        async ({ asapRole }) => {
+          const startDate = '2023-01-01T08:00:00Z';
+          const endDate = '2023-01-01T10:00:00Z';
+          jest.setSystemTime(
+            DateTime.fromISO('2023-01-02T09:00:00Z').toJSDate(),
+          );
 
-            const eventMockResponse =
-              getContentfulReminderEventsCollectionItem();
-            eventMockResponse!.startDate = startDate;
-            eventMockResponse!.endDate = endDate;
+          const eventMockResponse = getContentfulReminderEventsCollectionItem();
+          eventMockResponse!.startDate = startDate;
+          eventMockResponse!.endDate = endDate;
 
-            const users = getContentfulReminderUsersContent();
-            users!.role = asapRole;
-            users!.teamsCollection!.items[0]!.role = 'Project Manager';
+          const users = getContentfulReminderUsersContent();
+          users!.role = asapRole;
+          users!.teamsCollection!.items[0]!.role = 'Project Manager';
 
-            contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-              eventsCollection: {
-                items: [eventMockResponse],
-              },
-              users,
-            });
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            eventsCollection: {
+              items: [eventMockResponse],
+            },
+            users,
+          });
 
-            const result = await remindersDataProvider.fetch(
-              fetchRemindersOptions,
-            );
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
 
-            const uploadPresentationReminder = getUploadPresentationReminder();
-            uploadPresentationReminder.data.endDate = endDate;
+          const uploadPresentationReminder = getUploadPresentationReminder();
+          uploadPresentationReminder.data.endDate = endDate;
 
-            expect(result.items.map((r) => r.type)).toContain(
-              'Upload Presentation',
-            );
+          expect(result.items.map((r) => r.type)).toContain(
+            'Upload Presentation',
+          );
 
-            expect(result).toEqual({
-              total: 1,
-              items: [uploadPresentationReminder],
-            });
-          },
-        );
-      });
+          expect(result).toEqual({
+            total: 1,
+            items: [uploadPresentationReminder],
+          });
+        },
+      );
 
       it.each`
         asapRole     | teamRole

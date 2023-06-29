@@ -1,4 +1,4 @@
-/* instanbul */
+/* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
 

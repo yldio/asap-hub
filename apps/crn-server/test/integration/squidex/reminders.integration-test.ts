@@ -1,19 +1,20 @@
 import {
   CalendarCreateDataObject,
+  DraftResearchOutputCreateDataObject,
   EventCreateDataObject,
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   EventStatus,
   FetchRemindersOptions,
-  PublishMaterialReminder,
   PublishedResearchOutputCreateDataObject,
+  PublishMaterialReminder,
+  ResearchOutputDraftReminder,
+  ResearchOutputInReviewReminder,
   ResearchOutputPublishedReminder,
   SharePresentationReminder,
   TeamRole,
   UploadPresentationReminder,
   UserCreateDataObject,
-  ResearchOutputDraftReminder,
-  DraftResearchOutputCreateDataObject,
 } from '@asap-hub/model';
 import {
   InputCalendar,
@@ -43,6 +44,7 @@ import { getUserCreateDataObject } from '../../fixtures/users.fixtures';
 import { createRandomOrcid } from '../../helpers/users';
 import { teardownHelper } from '../../helpers/teardown';
 import { retryable } from '../../helpers/retryable';
+
 jest.setTimeout(120000);
 
 describe('Reminders', () => {
@@ -514,6 +516,314 @@ describe('Reminders', () => {
         });
       });
       jest.useRealTimers();
+    });
+  });
+
+  describe('Research Output In Review Reminder', () => {
+    let creatorId: string;
+    let projectManager: string;
+    let creatorUsername: string;
+    let teamId: string;
+    let fetchRemindersOptions: FetchRemindersOptions;
+
+    beforeEach(async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      teamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const userCreateDataObject2 = getUserInput(teamId);
+
+      creatorId = await userDataProvider.create(userCreateDataObject2);
+      let creator = await userDataProvider.fetchById(creatorId);
+      creatorUsername = creator?.firstName + ' ' + creator?.lastName;
+
+      const userCreateDataObject = getUserInput(teamId, 'Project Manager');
+      const userId1 = await userDataProvider.create(userCreateDataObject);
+      projectManager = userId1;
+
+      const timezone = 'Europe/London';
+      fetchRemindersOptions = { userId: userId1, timezone };
+    });
+
+    test.only('Should see the reminder when the user is PM within the team that owns the RO', async () => {
+      const researchOutputInput = {
+        ...getResearchOutputInputDraft(teamId, creatorId),
+        addedDate: undefined,
+      };
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        { publish: false },
+      );
+
+      await researchOutputDataProvider.update(researchOutputId, {
+        reviewRequestedById: creatorId,
+        documentType: researchOutputInput.documentType,
+        sharingStatus: researchOutputInput.sharingStatus,
+        title: researchOutputInput.title,
+        authors: researchOutputInput.authors,
+        environmentIds: researchOutputInput.environmentIds,
+        labIds: researchOutputInput.labIds,
+        methodIds: researchOutputInput.methodIds,
+        organismIds: researchOutputInput.organismIds,
+        keywordIds: researchOutputInput.keywordIds,
+        teamIds: researchOutputInput.teamIds,
+        updatedBy: creatorId,
+        workingGroups: researchOutputInput.workingGroups || [],
+      });
+
+      await retryable(async () => {
+        const researchOutput = await researchOutputDataProvider.fetchById(
+          researchOutputId,
+        );
+
+        const expectedReminder: ResearchOutputInReviewReminder = {
+          id: `research-output-in-review-${researchOutputId}`,
+          entity: 'Research Output',
+          type: 'In Review',
+          data: {
+            researchOutputId,
+            associationName: getTeamCreateDataObject().displayName,
+            associationType: 'team',
+            title: researchOutputInput.title,
+            addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+            documentType: researchOutputInput.documentType,
+            reviewRequestedBy: creatorUsername,
+          },
+        };
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should see the reminder when the user is PM within the working group that owns the RO', async () => {
+      const wgData = createWorkingGroup(projectManager);
+
+      const workingGroup = await workingGroupRestClient.create(
+        wgData as any,
+        true,
+      );
+      const workingGroupId = workingGroup.id;
+
+      const researchOutputInput = {
+        ...getResearchOutputInputDraft(teamId, creatorId, workingGroupId),
+        addedDate: undefined,
+      };
+
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        { publish: false },
+      );
+
+      await researchOutputDataProvider.update(researchOutputId, {
+        reviewRequestedById: creatorId,
+        documentType: researchOutputInput.documentType,
+        sharingStatus: researchOutputInput.sharingStatus,
+        title: researchOutputInput.title,
+        authors: researchOutputInput.authors,
+        environmentIds: researchOutputInput.environmentIds,
+        labIds: researchOutputInput.labIds,
+        methodIds: researchOutputInput.methodIds,
+        organismIds: researchOutputInput.organismIds,
+        keywordIds: researchOutputInput.keywordIds,
+        teamIds: researchOutputInput.teamIds,
+        updatedBy: creatorId,
+        workingGroups: researchOutputInput.workingGroups || [],
+      });
+
+      await retryable(async () => {
+        const researchOutput = await researchOutputDataProvider.fetchById(
+          researchOutputId,
+        );
+
+        const expectedReminder: ResearchOutputInReviewReminder = {
+          id: `research-output-in-review-${researchOutputId}`,
+          entity: 'Research Output',
+          type: 'In Review',
+          data: {
+            researchOutputId,
+            associationName: workingGroup.data.title.iv,
+            associationType: 'working group',
+            title: researchOutputInput.title,
+            addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+            documentType: researchOutputInput.documentType,
+            reviewRequestedBy: creatorUsername,
+          },
+        };
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the user is not PM within the working group that owns the RO', async () => {
+      const wgData = createWorkingGroup(creatorId);
+
+      const workingGroup = await workingGroupRestClient.create(
+        wgData as any,
+        true,
+      );
+      const workingGroupId = workingGroup.id;
+
+      const researchOutputInput = getResearchOutputInputDraft(
+        teamId,
+        creatorId,
+        workingGroupId,
+      );
+
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        {
+          publish: false,
+        },
+      );
+
+      await researchOutputDataProvider.update(researchOutputId, {
+        reviewRequestedById: creatorId,
+        documentType: researchOutputInput.documentType,
+        sharingStatus: researchOutputInput.sharingStatus,
+        title: researchOutputInput.title,
+        authors: researchOutputInput.authors,
+        environmentIds: researchOutputInput.environmentIds,
+        labIds: researchOutputInput.labIds,
+        methodIds: researchOutputInput.methodIds,
+        organismIds: researchOutputInput.organismIds,
+        keywordIds: researchOutputInput.keywordIds,
+        teamIds: researchOutputInput.teamIds,
+        updatedBy: creatorId,
+        workingGroups: researchOutputInput.workingGroups || [],
+      });
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch({
+          ...fetchRemindersOptions,
+          userId: projectManager,
+        });
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+    });
+
+    test('Should not see the reminder when the user is not PM within the team that owns the RO', async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      const anotherTeamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const researchOutputInput = getResearchOutputInputDraft(
+        teamId,
+        creatorId,
+      );
+      researchOutputInput.teamIds = [anotherTeamId];
+
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        {
+          publish: false,
+        },
+      );
+
+      await researchOutputDataProvider.update(researchOutputId, {
+        reviewRequestedById: creatorId,
+        documentType: researchOutputInput.documentType,
+        sharingStatus: researchOutputInput.sharingStatus,
+        title: researchOutputInput.title,
+        authors: researchOutputInput.authors,
+        environmentIds: researchOutputInput.environmentIds,
+        labIds: researchOutputInput.labIds,
+        methodIds: researchOutputInput.methodIds,
+        organismIds: researchOutputInput.organismIds,
+        keywordIds: researchOutputInput.keywordIds,
+        teamIds: researchOutputInput.teamIds,
+        updatedBy: creatorId,
+        workingGroups: researchOutputInput.workingGroups || [],
+      });
+
+      await retryable(async () => {
+        const reminders = await reminderDataProvider.fetch(
+          fetchRemindersOptions,
+        );
+        expect(reminders).toEqual({
+          total: 0,
+          items: [],
+        });
+      });
+    });
+
+    test.only('Should see the reminder when the user is ASAP staff', async () => {
+      const teamCreateDataObject = getTeamCreateDataObject();
+      teamCreateDataObject.applicationNumber = chance.name();
+      const anotherTeamId = await teamDataProvider.create(teamCreateDataObject);
+
+      const researchOutputInput = {
+        ...getResearchOutputInputDraft(teamId, creatorId),
+        addedDate: undefined,
+      };
+      researchOutputInput.teamIds = [anotherTeamId];
+
+      await userDataProvider.update(creatorId, {
+        role: 'Staff',
+      });
+
+      const researchOutputId = await researchOutputDataProvider.create(
+        researchOutputInput,
+        { publish: false },
+      );
+
+      await researchOutputDataProvider.update(researchOutputId, {
+        reviewRequestedById: creatorId,
+        documentType: researchOutputInput.documentType,
+        sharingStatus: researchOutputInput.sharingStatus,
+        title: researchOutputInput.title,
+        authors: researchOutputInput.authors,
+        environmentIds: researchOutputInput.environmentIds,
+        labIds: researchOutputInput.labIds,
+        methodIds: researchOutputInput.methodIds,
+        organismIds: researchOutputInput.organismIds,
+        keywordIds: researchOutputInput.keywordIds,
+        teamIds: researchOutputInput.teamIds,
+        updatedBy: creatorId,
+        workingGroups: researchOutputInput.workingGroups || [],
+      });
+
+      await retryable(async () => {
+        const researchOutput = await researchOutputDataProvider.fetchById(
+          researchOutputId,
+        );
+
+        const expectedReminder: ResearchOutputInReviewReminder = {
+          id: `research-output-in-review-${researchOutputId}`,
+          entity: 'Research Output',
+          type: 'In Review',
+          data: {
+            researchOutputId,
+            associationName: getTeamCreateDataObject().displayName,
+            associationType: 'team',
+            title: researchOutputInput.title,
+            addedDate: researchOutput?.created.slice(0, -5) + 'Z' || '',
+            documentType: researchOutputInput.documentType,
+            reviewRequestedBy: creatorUsername,
+          },
+        };
+        const reminders = await reminderDataProvider.fetch({
+          ...fetchRemindersOptions,
+          userId: creatorId,
+        });
+        expect(reminders).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
     });
   });
 

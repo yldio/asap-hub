@@ -26,12 +26,7 @@ import { rem } from '../pixels';
 import { Link, Headline2, Card, Paragraph } from '../atoms';
 import { DashboardRecommendedUsers, lead } from '..';
 import { Accordion } from '../molecules';
-import {
-  confidentialIcon,
-  externalLinkIcon,
-  giftIcon,
-  learnIcon,
-} from '../icons';
+import { externalLinkIcon } from '../icons';
 import { isInternalLink } from '../utils';
 
 const styles = css({

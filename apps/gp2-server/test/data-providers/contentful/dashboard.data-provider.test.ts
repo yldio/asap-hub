@@ -17,7 +17,7 @@ describe('Dashboard data provider', () => {
 
   const contentfulGraphqlClientMockServer =
     getGP2ContentfulGraphqlClientMockServer({
-      LatestStats: () => getContentfulGraphqlDashboard(),
+      Dashboard: () => getContentfulGraphqlDashboard(),
     });
 
   const dashboardDataProviderMockGraphql = new DashboardContentfulDataProvider(
@@ -27,22 +27,22 @@ describe('Dashboard data provider', () => {
   afterEach(jest.resetAllMocks);
 
   describe('Fetch method', () => {
-    test('Should fetch the list of latest stats for dashboard from Contentful GraphQl', async () => {
-      const result = await dashboardDataProviderMockGraphql.fetch();
+    test('Should fetch the list of dashboards from Contentful GraphQl', async () => {
+      const result = await dashboardDataProviderMockGraphql.fetch({});
 
       expect(result).toMatchObject(getListDashboardDataObject());
     });
 
     test('Should return an empty result when no news exist', async () => {
       const contentfulGraphQLResponse = getContentfulDashboardGraphqlResponse();
-      contentfulGraphQLResponse.latestStatsCollection!.total = 0;
-      contentfulGraphQLResponse.latestStatsCollection!.items = [];
+      contentfulGraphQLResponse.dashboardCollection!.total = 0;
+      contentfulGraphQLResponse.dashboardCollection!.items = [];
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
-      const result = await dashboardDataProvider.fetch();
+      const result = await dashboardDataProvider.fetch({});
 
       expect(result).toEqual({
         items: [],
@@ -55,20 +55,20 @@ describe('Dashboard data provider', () => {
         new GraphQLError('some error message'),
       );
 
-      await expect(dashboardDataProvider.fetch()).rejects.toThrow(
+      await expect(dashboardDataProvider.fetch({})).rejects.toThrow(
         'some error message',
       );
     });
 
     test('Should return an empty result when the query is returned as null', async () => {
       const contentfulGraphQLResponse = getContentfulDashboardGraphqlResponse();
-      contentfulGraphQLResponse.latestStatsCollection = null;
+      contentfulGraphQLResponse.dashboardCollection = null;
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
-      const result = await dashboardDataProvider.fetch();
+      const result = await dashboardDataProvider.fetch({});
 
       expect(result).toEqual({
         items: [],
@@ -80,7 +80,7 @@ describe('Dashboard data provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         getContentfulDashboardGraphqlResponse(),
       );
-      const result = await dashboardDataProvider.fetch();
+      const result = await dashboardDataProvider.fetch({});
 
       expect(result).toEqual(getListDashboardDataObject());
     });

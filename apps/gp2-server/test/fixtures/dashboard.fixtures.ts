@@ -3,26 +3,42 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 
 export const getContentfulGraphqlDashboard = (): NonNullable<
   NonNullable<
-    gp2Contentful.FetchLatestStatsQuery['latestStatsCollection']
+    gp2Contentful.FetchDashboardQuery['dashboardCollection']
   >['items'][number]
 > => ({
-  sampleCount: 3,
-  articleCount: 11,
-  cohortCount: 43,
+  latestStats: {
+    sampleCount: 3,
+    articleCount: 11,
+    cohortCount: 43,
+  },
+  announcementsCollection: {
+    items: [
+      {
+        description: 'Test',
+        deadline: '2029-10-24T16:30:54.000Z',
+        link: 'https://google.com',
+      },
+    ],
+  },
 });
 
 export const getContentfulDashboardGraphqlResponse =
-  (): gp2Contentful.FetchLatestStatsQuery => ({
-    latestStatsCollection: {
+  (): gp2Contentful.FetchDashboardQuery => ({
+    dashboardCollection: {
       total: 1,
       items: [getContentfulGraphqlDashboard()],
     },
   });
 
 export const getDashboardDataObject = (): gp2Model.DashboardDataObject => ({
-  sampleCount: 3,
-  articleCount: 11,
-  cohortCount: 43,
+  latestStats: { sampleCount: 3, articleCount: 11, cohortCount: 43 },
+  announcements: [
+    {
+      description: 'Test',
+      deadline: '2029-10-24T16:30:54.000Z',
+      link: 'https://google.com',
+    },
+  ],
 });
 
 export const getListDashboardDataObject =

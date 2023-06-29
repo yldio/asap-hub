@@ -421,7 +421,7 @@ const getResearchOutputInReviewRemindersFromQuery = (
         leadTeamIds.includes(team),
       );
 
-      let isWorkingGroupPM = (researchOutput.flatData.workingGroups || []).some(
+      const isWorkingGroupPM = (researchOutput.flatData.workingGroups || []).some(
         (workingGroup) => userIsPmInWorkingGroups.includes(workingGroup.id),
       );
 

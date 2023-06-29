@@ -25,7 +25,7 @@ export class DashboardContentfulDataProvider implements DashboardDataProvider {
             .DeadlineDesc;
       }
 
-      if (sortBy === 'created') {
+      if (sortBy === 'published') {
         if (sortOrder === 'asc')
           return gp2Contentful.DashboardAnnouncementsCollectionOrder
             .SysPublishedAtAsc;

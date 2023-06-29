@@ -14,6 +14,6 @@ export type DashboardResponse = DashboardDataObject;
 export type ListDashboardResponse = ListResponse<DashboardResponse>;
 
 export type FetchDashboardOptions = AllOrNone<{
-  sortBy: 'deadline' | 'created';
+  sortBy: 'deadline' | 'published';
   sortOrder: 'asc' | 'desc';
 }>;

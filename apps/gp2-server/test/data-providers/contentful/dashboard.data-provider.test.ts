@@ -1,4 +1,7 @@
-import { getGP2ContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import {
+  getGP2ContentfulGraphqlClientMockServer,
+  gp2,
+} from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
 import { DashboardContentfulDataProvider } from '../../../src/data-providers/contentful/dashboard.data-provider';
 import {
@@ -76,7 +79,7 @@ describe('Dashboard data provider', () => {
       });
     });
 
-    test('Should return dashboard stats', async () => {
+    test('Should return dashboard', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         getContentfulDashboardGraphqlResponse(),
       );
@@ -92,6 +95,53 @@ describe('Dashboard data provider', () => {
       await expect(dashboardDataProvider.fetchById()).rejects.toThrow(
         /Method not implemented/i,
       );
+    });
+  });
+
+  describe('Sorting', () => {
+    test.each`
+      sortBy         | sortOrder | order
+      ${'deadline'}  | ${'asc'}  | ${'deadline_ASC'}
+      ${'deadline'}  | ${'desc'} | ${'deadline_DESC'}
+      ${'published'} | ${'asc'}  | ${'sys_publishedAt_ASC'}
+      ${'published'} | ${'desc'} | ${'sys_publishedAt_DESC'}
+    `(
+      'Should apply the "orderBy" option using the $sortBy field and $sortOrder order',
+      async ({ sortBy, sortOrder, order }) => {
+        const dashboardGraphqlResponse =
+          getContentfulDashboardGraphqlResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          dashboardGraphqlResponse,
+        );
+        const result = await dashboardDataProvider.fetch({
+          sortBy,
+          sortOrder,
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2.FETCH_DASHBOARD,
+          {
+            orderAnnouncements: order,
+          },
+        );
+        expect(result).toEqual(getListDashboardDataObject());
+      },
+    );
+
+    test('Should not apply any order if the parameters are not provided', async () => {
+      const dashboardGraphqlResponse = getContentfulDashboardGraphqlResponse();
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        dashboardGraphqlResponse,
+      );
+      const result = await dashboardDataProvider.fetch({});
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2.FETCH_DASHBOARD,
+        {
+          orderAnnouncements: undefined,
+        },
+      );
+      expect(result).toEqual(getListDashboardDataObject());
     });
   });
 });

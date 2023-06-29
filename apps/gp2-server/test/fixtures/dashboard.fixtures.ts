@@ -18,6 +18,10 @@ export const getContentfulGraphqlDashboard = (): NonNullable<
         deadline: '2029-10-24T16:30:54.000Z',
         link: 'https://google.com',
       },
+      {
+        description: 'Test 2',
+        deadline: '2028-10-24T16:30:54.000Z',
+      },
     ],
   },
 });
@@ -37,6 +41,10 @@ export const getDashboardDataObject = (): gp2Model.DashboardDataObject => ({
       description: 'Test',
       deadline: '2029-10-24T16:30:54.000Z',
       link: 'https://google.com',
+    },
+    {
+      description: 'Test 2',
+      deadline: '2028-10-24T16:30:54.000Z',
     },
   ],
 });

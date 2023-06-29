@@ -3,6 +3,7 @@ import {
   gp2,
 } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
+import { DateTime } from 'luxon';
 import { DashboardContentfulDataProvider } from '../../../src/data-providers/contentful/dashboard.data-provider';
 import {
   getListDashboardDataObject,
@@ -142,6 +143,52 @@ describe('Dashboard data provider', () => {
         },
       );
       expect(result).toEqual(getListDashboardDataObject());
+    });
+  });
+  describe('announcements', () => {
+    test('no announcements returns empty array', async () => {
+      const dashboard = {
+        ...getContentfulGraphqlDashboard(),
+        announcementsCollection: {
+          total: 0,
+          items: [],
+        },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        dashboardCollection: {
+          total: 1,
+          items: [dashboard],
+        },
+      });
+      const dashboardDataObject = await dashboardDataProvider.fetch({});
+      console.log(dashboardDataObject);
+      expect(dashboardDataObject?.items[0]?.announcements).toEqual([]);
+    });
+
+    test('if present it parses the deadline', async () => {
+      const deadline = DateTime.fromISO('2023-09-06');
+      const dashboard = {
+        ...getContentfulGraphqlDashboard(),
+        announcementsCollection: {
+          total: 1,
+          items: [
+            {
+              deadline,
+              description: 'test',
+            },
+          ],
+        },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        dashboardCollection: {
+          total: 1,
+          items: [dashboard],
+        },
+      });
+      const dashboardDataObject = await dashboardDataProvider.fetch({});
+      expect(dashboardDataObject.items[0]?.announcements[0]?.deadline).toEqual(
+        deadline.toUTC().toString(),
+      );
     });
   });
 });

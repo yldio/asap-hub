@@ -545,7 +545,7 @@ describe('Reminders', () => {
       fetchRemindersOptions = { userId: userId1, timezone };
     });
 
-    test.only('Should see the reminder when the user is PM within the team that owns the RO', async () => {
+    test('Should see the reminder when the user is PM within the team that owns the RO', async () => {
       const researchOutputInput = {
         ...getResearchOutputInputDraft(teamId, creatorId),
         addedDate: undefined,
@@ -760,7 +760,7 @@ describe('Reminders', () => {
       });
     });
 
-    test.only('Should see the reminder when the user is ASAP staff', async () => {
+    test('Should see the reminder when the user is ASAP staff', async () => {
       const teamCreateDataObject = getTeamCreateDataObject();
       teamCreateDataObject.applicationNumber = chance.name();
       const anotherTeamId = await teamDataProvider.create(teamCreateDataObject);

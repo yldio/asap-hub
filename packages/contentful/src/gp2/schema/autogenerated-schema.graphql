@@ -933,6 +933,11 @@ type EventsNotesEntries {
 type EventsNotesLinks {
   assets: EventsNotesAssets!
   entries: EventsNotesEntries!
+  resources: EventsNotesResources!
+}
+
+type EventsNotesResources {
+  block: [ResourceLink!]!
 }
 
 enum EventsOrder {
@@ -1001,6 +1006,11 @@ type EventsPresentationEntries {
 type EventsPresentationLinks {
   assets: EventsPresentationAssets!
   entries: EventsPresentationEntries!
+  resources: EventsPresentationResources!
+}
+
+type EventsPresentationResources {
+  block: [ResourceLink!]!
 }
 
 type EventsSpeakersCollection {
@@ -1042,6 +1052,11 @@ type EventsVideoRecordingEntries {
 type EventsVideoRecordingLinks {
   assets: EventsVideoRecordingAssets!
   entries: EventsVideoRecordingEntries!
+  resources: EventsVideoRecordingResources!
+}
+
+type EventsVideoRecordingResources {
+  block: [ResourceLink!]!
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers)"""
@@ -1917,6 +1932,11 @@ type PagesTextEntries {
 type PagesTextLinks {
   assets: PagesTextAssets!
   entries: PagesTextEntries!
+  resources: PagesTextResources!
+}
+
+type PagesTextResources {
+  block: [ResourceLink!]!
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership)"""
@@ -2298,6 +2318,16 @@ type Query {
   workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupNetworkFilter): WorkingGroupNetworkCollection
   workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
   workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupsCollection
+}
+
+type ResourceLink {
+  sys: ResourceSys!
+}
+
+type ResourceSys {
+  linkType: String!
+  type: String!
+  urn: String!
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources)"""

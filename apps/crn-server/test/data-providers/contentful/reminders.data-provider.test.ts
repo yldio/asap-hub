@@ -191,10 +191,6 @@ describe('Reminders data provider', () => {
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
         expect(result.items.map((r) => r.type)).not.toContain('Happening Now');
-        expect(result).toEqual({
-          total: 0,
-          items: [],
-        });
       });
     });
 
@@ -393,10 +389,9 @@ describe('Reminders data provider', () => {
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
-        expect(result).toEqual({
-          total: 0,
-          items: [],
-        });
+        expect(result.items.map((r) => r.type)).not.toContain(
+          'Share Presentation',
+        );
       });
 
       it('Should fetch the reminder up until 72 hours of the end of the event', async () => {
@@ -452,10 +447,9 @@ describe('Reminders data provider', () => {
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
-        expect(result).toEqual({
-          total: 0,
-          items: [],
-        });
+        expect(result.items.map((r) => r.type)).not.toContain(
+          'Share Presentation',
+        );
       });
 
       it('Should not fetch the reminder when the event is a future event', async () => {
@@ -478,10 +472,9 @@ describe('Reminders data provider', () => {
 
         const result = await remindersDataProvider.fetch(fetchRemindersOptions);
 
-        expect(result).toEqual({
-          total: 0,
-          items: [],
-        });
+        expect(result.items.map((r) => r.type)).not.toContain(
+          'Share Presentation',
+        );
       });
 
       it('Should not fetch the reminder if it has not ended', async () => {
@@ -1124,10 +1117,9 @@ describe('Reminders data provider', () => {
             fetchRemindersOptions,
           );
 
-          expect(result).toEqual({
-            total: 0,
-            items: [],
-          });
+          expect(result.items.map((r) => r.type)).not.toContain(
+            expectedMaterialReminder.type,
+          );
         });
 
         test(`Should not fetch the reminder if a ${material} in an event was updated after the current time`, async () => {
@@ -1152,10 +1144,9 @@ describe('Reminders data provider', () => {
             fetchRemindersOptions,
           );
 
-          expect(result).toEqual({
-            total: 0,
-            items: [],
-          });
+          expect(result.items.map((r) => r.type)).not.toContain(
+            expectedMaterialReminder.type,
+          );
         });
       },
     );

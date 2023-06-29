@@ -3110,7 +3110,7 @@ enum WorkingGroupNetworkSupportCollectionOrder {
 type WorkingGroups implements Entry {
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
-  description(locale: String): String
+  description(locale: String): WorkingGroupsDescription
   leadingMembers(locale: String): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCollection
@@ -3130,19 +3130,41 @@ type WorkingGroupsCollection {
   total: Int!
 }
 
+type WorkingGroupsDescription {
+  json: JSON!
+  links: WorkingGroupsDescriptionLinks!
+}
+
+type WorkingGroupsDescriptionAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type WorkingGroupsDescriptionEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type WorkingGroupsDescriptionLinks {
+  assets: WorkingGroupsDescriptionAssets!
+  entries: WorkingGroupsDescriptionEntries!
+  resources: WorkingGroupsDescriptionResources!
+}
+
+type WorkingGroupsDescriptionResources {
+  block: [ResourceLink!]!
+}
+
 input WorkingGroupsFilter {
   AND: [WorkingGroupsFilter]
   OR: [WorkingGroupsFilter]
   calendar: cfCalendarsNestedFilter
   calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
-  description: String
   description_contains: String
   description_exists: Boolean
-  description_in: [String]
-  description_not: String
   description_not_contains: String
-  description_not_in: [String]
   leadingMembers: String
   leadingMembers_contains: String
   leadingMembers_exists: Boolean
@@ -3689,13 +3711,9 @@ input cfWorkingGroupsNestedFilter {
   OR: [cfWorkingGroupsNestedFilter]
   calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
-  description: String
   description_contains: String
   description_exists: Boolean
-  description_in: [String]
-  description_not: String
   description_not_contains: String
-  description_not_in: [String]
   leadingMembers: String
   leadingMembers_contains: String
   leadingMembers_exists: Boolean

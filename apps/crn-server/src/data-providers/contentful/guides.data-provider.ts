@@ -34,7 +34,7 @@ const parseGuideContent = (guideContent: GuideContentItem | null) => ({
   linkText: guideContent?.linkText || '',
 });
 
-const parseGraphQLGuide = (guide: GuideItem): GuideDataObject => ({
+export const parseGraphQLGuide = (guide: GuideItem): GuideDataObject => ({
   title: guide?.title ? guide.title : '',
   content: guide?.contentCollection
     ? guide.contentCollection.items.map((content: GuideContentItem | null) =>

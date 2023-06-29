@@ -1,5 +1,8 @@
 import { GuideDataProvider } from '../../../src/data-providers/types';
-import { GuideContentfulDataProvider } from '../../../src/data-providers/contentful/guides.data-provider';
+import {
+  GuideContentfulDataProvider,
+  parseGraphQLGuide,
+} from '../../../src/data-providers/contentful/guides.data-provider';
 import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
@@ -70,5 +73,14 @@ describe('Guide data provider', () => {
         total: 0,
       });
     });
+  });
+});
+
+describe('parseGraphQLGuide', () => {
+  it('returns an empty content array when contentCollection is not available', () => {
+    const guideData = {
+      title: 'a title',
+    };
+    expect(parseGraphQLGuide(guideData).content).toStrictEqual([]);
   });
 });

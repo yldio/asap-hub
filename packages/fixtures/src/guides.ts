@@ -18,7 +18,7 @@ export const createGuides = ({
     ],
   }));
 
-export const createListGuidesResponse = (items: number): ListGuideResponse => ({
+export const createListGuidesResponse = (items = 1): ListGuideResponse => ({
   total: items,
   items: createGuides({ guides: items }),
 });

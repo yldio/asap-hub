@@ -35,6 +35,123 @@ export type Scalars = {
   Quality: any;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
+export type Announcements = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  deadline?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<AnnouncementsLinkingCollections>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
+export type AnnouncementsDeadlineArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
+export type AnnouncementsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
+export type AnnouncementsLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
+export type AnnouncementsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type AnnouncementsCollection = {
+  items: Array<Maybe<Announcements>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type AnnouncementsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<AnnouncementsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<AnnouncementsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  deadline?: InputMaybe<Scalars['DateTime']>;
+  deadline_exists?: InputMaybe<Scalars['Boolean']>;
+  deadline_gt?: InputMaybe<Scalars['DateTime']>;
+  deadline_gte?: InputMaybe<Scalars['DateTime']>;
+  deadline_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  deadline_lt?: InputMaybe<Scalars['DateTime']>;
+  deadline_lte?: InputMaybe<Scalars['DateTime']>;
+  deadline_not?: InputMaybe<Scalars['DateTime']>;
+  deadline_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link?: InputMaybe<Scalars['String']>;
+  link_contains?: InputMaybe<Scalars['String']>;
+  link_exists?: InputMaybe<Scalars['Boolean']>;
+  link_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_not?: InputMaybe<Scalars['String']>;
+  link_not_contains?: InputMaybe<Scalars['String']>;
+  link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type AnnouncementsLinkingCollections = {
+  dashboardCollection?: Maybe<DashboardCollection>;
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type AnnouncementsLinkingCollectionsDashboardCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AnnouncementsLinkingCollectionsDashboardCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type AnnouncementsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum AnnouncementsLinkingCollectionsDashboardCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AnnouncementsOrder {
+  DeadlineAsc = 'deadline_ASC',
+  DeadlineDesc = 'deadline_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** Represents a binary file in a space. An asset can be any file type. */
 export type Asset = {
   contentType?: Maybe<Scalars['String']>;
@@ -826,6 +943,101 @@ export enum ContributingCohortsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard) */
+export type Dashboard = Entry & {
+  announcementsCollection?: Maybe<DashboardAnnouncementsCollection>;
+  contentfulMetadata: ContentfulMetadata;
+  latestStats?: Maybe<LatestStats>;
+  linkedFrom?: Maybe<DashboardLinkingCollections>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard) */
+export type DashboardAnnouncementsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DashboardAnnouncementsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<AnnouncementsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard) */
+export type DashboardLatestStatsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<LatestStatsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard) */
+export type DashboardLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type DashboardAnnouncementsCollection = {
+  items: Array<Maybe<Announcements>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum DashboardAnnouncementsCollectionOrder {
+  DeadlineAsc = 'deadline_ASC',
+  DeadlineDesc = 'deadline_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type DashboardCollection = {
+  items: Array<Maybe<Dashboard>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type DashboardFilter = {
+  AND?: InputMaybe<Array<InputMaybe<DashboardFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<DashboardFilter>>>;
+  announcements?: InputMaybe<CfAnnouncementsNestedFilter>;
+  announcementsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  latestStats?: InputMaybe<CfLatestStatsNestedFilter>;
+  latestStats_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type DashboardLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type DashboardLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum DashboardOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type Entry = {
   contentfulMetadata: ContentfulMetadata;
   sys: Sys;
@@ -1359,6 +1571,11 @@ export type EventsNotesEntries = {
 export type EventsNotesLinks = {
   assets: EventsNotesAssets;
   entries: EventsNotesEntries;
+  resources: EventsNotesResources;
+};
+
+export type EventsNotesResources = {
+  block: Array<ResourceLink>;
 };
 
 export enum EventsOrder {
@@ -1427,6 +1644,11 @@ export type EventsPresentationEntries = {
 export type EventsPresentationLinks = {
   assets: EventsPresentationAssets;
   entries: EventsPresentationEntries;
+  resources: EventsPresentationResources;
+};
+
+export type EventsPresentationResources = {
+  block: Array<ResourceLink>;
 };
 
 export type EventsSpeakersCollection = {
@@ -1468,6 +1690,11 @@ export type EventsVideoRecordingEntries = {
 export type EventsVideoRecordingLinks = {
   assets: EventsVideoRecordingAssets;
   entries: EventsVideoRecordingEntries;
+  resources: EventsVideoRecordingResources;
+};
+
+export type EventsVideoRecordingResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
@@ -1781,7 +2008,18 @@ export type LatestStatsFilter = {
 };
 
 export type LatestStatsLinkingCollections = {
+  dashboardCollection?: Maybe<DashboardCollection>;
   entryCollection?: Maybe<EntryCollection>;
+};
+
+export type LatestStatsLinkingCollectionsDashboardCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<LatestStatsLinkingCollectionsDashboardCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
 };
 
 export type LatestStatsLinkingCollectionsEntryCollectionArgs = {
@@ -1790,6 +2028,17 @@ export type LatestStatsLinkingCollectionsEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum LatestStatsLinkingCollectionsDashboardCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum LatestStatsOrder {
   ArticleCountAsc = 'articleCount_ASC',
@@ -2680,6 +2929,11 @@ export type PagesTextEntries = {
 export type PagesTextLinks = {
   assets: PagesTextAssets;
   entries: PagesTextEntries;
+  resources: PagesTextResources;
+};
+
+export type PagesTextResources = {
+  block: Array<ResourceLink>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
@@ -3165,6 +3419,8 @@ export enum ProjectsResourcesCollectionOrder {
 }
 
 export type Query = {
+  announcements?: Maybe<Announcements>;
+  announcementsCollection?: Maybe<AnnouncementsCollection>;
   asset?: Maybe<Asset>;
   assetCollection?: Maybe<AssetCollection>;
   calendars?: Maybe<Calendars>;
@@ -3173,6 +3429,8 @@ export type Query = {
   contributingCohortsCollection?: Maybe<ContributingCohortsCollection>;
   contributingCohortsMembership?: Maybe<ContributingCohortsMembership>;
   contributingCohortsMembershipCollection?: Maybe<ContributingCohortsMembershipCollection>;
+  dashboard?: Maybe<Dashboard>;
+  dashboardCollection?: Maybe<DashboardCollection>;
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakers?: Maybe<EventSpeakers>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
@@ -3208,6 +3466,21 @@ export type Query = {
   workingGroupNetworkCollection?: Maybe<WorkingGroupNetworkCollection>;
   workingGroups?: Maybe<WorkingGroups>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+};
+
+export type QueryAnnouncementsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryAnnouncementsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AnnouncementsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<AnnouncementsFilter>;
 };
 
 export type QueryAssetArgs = {
@@ -3268,6 +3541,21 @@ export type QueryContributingCohortsMembershipCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ContributingCohortsMembershipFilter>;
+};
+
+export type QueryDashboardArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryDashboardCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DashboardOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<DashboardFilter>;
 };
 
 export type QueryEntryCollectionArgs = {
@@ -3532,6 +3820,16 @@ export type QueryWorkingGroupsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<WorkingGroupsFilter>;
+};
+
+export type ResourceLink = {
+  sys: ResourceSys;
+};
+
+export type ResourceSys = {
+  linkType: Scalars['String'];
+  type: Scalars['String'];
+  urn: Scalars['String'];
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
@@ -4989,6 +5287,36 @@ export enum WorkingGroupsResourcesCollectionOrder {
   TypeDesc = 'type_DESC',
 }
 
+export type CfAnnouncementsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  deadline?: InputMaybe<Scalars['DateTime']>;
+  deadline_exists?: InputMaybe<Scalars['Boolean']>;
+  deadline_gt?: InputMaybe<Scalars['DateTime']>;
+  deadline_gte?: InputMaybe<Scalars['DateTime']>;
+  deadline_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  deadline_lt?: InputMaybe<Scalars['DateTime']>;
+  deadline_lte?: InputMaybe<Scalars['DateTime']>;
+  deadline_not?: InputMaybe<Scalars['DateTime']>;
+  deadline_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link?: InputMaybe<Scalars['String']>;
+  link_contains?: InputMaybe<Scalars['String']>;
+  link_exists?: InputMaybe<Scalars['Boolean']>;
+  link_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  link_not?: InputMaybe<Scalars['String']>;
+  link_not_contains?: InputMaybe<Scalars['String']>;
+  link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
 export type CfCalendarsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfCalendarsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfCalendarsNestedFilter>>>;
@@ -5071,6 +5399,40 @@ export type CfEventSpeakersNestedFilter = {
   title_not_contains?: InputMaybe<Scalars['String']>;
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CfLatestStatsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfLatestStatsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfLatestStatsNestedFilter>>>;
+  articleCount?: InputMaybe<Scalars['Int']>;
+  articleCount_exists?: InputMaybe<Scalars['Boolean']>;
+  articleCount_gt?: InputMaybe<Scalars['Int']>;
+  articleCount_gte?: InputMaybe<Scalars['Int']>;
+  articleCount_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  articleCount_lt?: InputMaybe<Scalars['Int']>;
+  articleCount_lte?: InputMaybe<Scalars['Int']>;
+  articleCount_not?: InputMaybe<Scalars['Int']>;
+  articleCount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  cohortCount?: InputMaybe<Scalars['Int']>;
+  cohortCount_exists?: InputMaybe<Scalars['Boolean']>;
+  cohortCount_gt?: InputMaybe<Scalars['Int']>;
+  cohortCount_gte?: InputMaybe<Scalars['Int']>;
+  cohortCount_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  cohortCount_lt?: InputMaybe<Scalars['Int']>;
+  cohortCount_lte?: InputMaybe<Scalars['Int']>;
+  cohortCount_not?: InputMaybe<Scalars['Int']>;
+  cohortCount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  sampleCount?: InputMaybe<Scalars['Int']>;
+  sampleCount_exists?: InputMaybe<Scalars['Boolean']>;
+  sampleCount_gt?: InputMaybe<Scalars['Int']>;
+  sampleCount_gte?: InputMaybe<Scalars['Int']>;
+  sampleCount_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  sampleCount_lt?: InputMaybe<Scalars['Int']>;
+  sampleCount_lte?: InputMaybe<Scalars['Int']>;
+  sampleCount_not?: InputMaybe<Scalars['Int']>;
+  sampleCount_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']>>>;
+  sys?: InputMaybe<SysFilter>;
 };
 
 export type CfMilestonesNestedFilter = {
@@ -5406,6 +5768,25 @@ export type CfWorkingGroupsNestedFilter = {
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type AnnouncementsContentDataFragment = Pick<
+  Announcements,
+  'description' | 'deadline' | 'link'
+>;
+
+export type FetchAnnouncementsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchAnnouncementsQuery = {
+  announcementsCollection?: Maybe<
+    Pick<AnnouncementsCollection, 'total'> & {
+      items: Array<
+        Maybe<Pick<Announcements, 'description' | 'deadline' | 'link'>>
+      >;
+    }
+  >;
+};
+
 export type CalendarsContentDataFragment = Pick<
   Calendars,
   'googleCalendarId' | 'name' | 'color' | 'googleApiMetadata'
@@ -5521,6 +5902,32 @@ export type FetchContributingCohortsQuery = {
   >;
 };
 
+export type FetchDashboardQueryVariables = Exact<{
+  orderAnnouncements?: InputMaybe<
+    | Array<InputMaybe<DashboardAnnouncementsCollectionOrder>>
+    | InputMaybe<DashboardAnnouncementsCollectionOrder>
+  >;
+}>;
+
+export type FetchDashboardQuery = {
+  dashboardCollection?: Maybe<
+    Pick<DashboardCollection, 'total'> & {
+      items: Array<
+        Maybe<{
+          latestStats?: Maybe<
+            Pick<LatestStats, 'sampleCount' | 'articleCount' | 'cohortCount'>
+          >;
+          announcementsCollection?: Maybe<{
+            items: Array<
+              Maybe<Pick<Announcements, 'description' | 'deadline' | 'link'>>
+            >;
+          }>;
+        }>
+      >;
+    }
+  >;
+};
+
 export type EventsContentDataFragment = Pick<
   Events,
   | 'description'
@@ -5551,6 +5958,7 @@ export type EventsContentDataFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ContributingCohorts' } & {
                   sys: Pick<Sys, 'id'>;
@@ -5558,6 +5966,7 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'ContributingCohortsMembership' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
@@ -5603,6 +6012,7 @@ export type EventsContentDataFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ContributingCohorts' } & {
                   sys: Pick<Sys, 'id'>;
@@ -5610,6 +6020,7 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'ContributingCohortsMembership' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
@@ -5655,6 +6066,7 @@ export type EventsContentDataFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ContributingCohorts' } & {
                   sys: Pick<Sys, 'id'>;
@@ -5662,6 +6074,7 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'ContributingCohortsMembership' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
@@ -5774,6 +6187,7 @@ export type FetchEventByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ContributingCohorts' } & {
                       sys: Pick<Sys, 'id'>;
@@ -5781,6 +6195,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ContributingCohortsMembership' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
@@ -5828,6 +6243,7 @@ export type FetchEventByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ContributingCohorts' } & {
                       sys: Pick<Sys, 'id'>;
@@ -5835,6 +6251,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ContributingCohortsMembership' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
@@ -5882,6 +6299,7 @@ export type FetchEventByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ContributingCohorts' } & {
                       sys: Pick<Sys, 'id'>;
@@ -5889,6 +6307,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ContributingCohortsMembership' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
@@ -6014,6 +6433,9 @@ export type FetchEventsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -6021,6 +6443,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'EventSpeakers' } & {
@@ -6090,6 +6515,9 @@ export type FetchEventsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -6097,6 +6525,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'EventSpeakers' } & {
@@ -6166,6 +6597,9 @@ export type FetchEventsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -6173,6 +6607,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'EventSpeakers' } & {
@@ -6333,6 +6770,9 @@ export type FetchEventsByUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6342,6 +6782,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({
                                         __typename: 'ContributingCohortsMembership';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Dashboard' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6420,6 +6863,9 @@ export type FetchEventsByUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6429,6 +6875,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({
                                         __typename: 'ContributingCohortsMembership';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Dashboard' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6507,6 +6956,9 @@ export type FetchEventsByUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6516,6 +6968,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({
                                         __typename: 'ContributingCohortsMembership';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Dashboard' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6700,6 +7155,9 @@ export type FetchEventsByExternalUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6709,6 +7167,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({
                                         __typename: 'ContributingCohortsMembership';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Dashboard' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6787,6 +7248,9 @@ export type FetchEventsByExternalUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6796,6 +7260,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({
                                         __typename: 'ContributingCohortsMembership';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Dashboard' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6874,6 +7341,9 @@ export type FetchEventsByExternalUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Announcements' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Calendars' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6883,6 +7353,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({
                                         __typename: 'ContributingCohortsMembership';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Dashboard' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'EventSpeakers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -7496,6 +7969,7 @@ export type PageContentDataFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ContributingCohorts' } & {
                   sys: Pick<Sys, 'id'>;
@@ -7503,6 +7977,7 @@ export type PageContentDataFragment = Pick<
               | ({ __typename: 'ContributingCohortsMembership' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'Dashboard' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
@@ -7561,6 +8036,9 @@ export type FetchPagesQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Announcements' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -7568,6 +8046,9 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ContributingCohortsMembership' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Dashboard' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'EventSpeakers' } & {
@@ -9054,6 +9535,27 @@ export type FetchWorkingGroupsQuery = {
   >;
 };
 
+export const AnnouncementsContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AnnouncementsContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Announcements' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'deadline' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AnnouncementsContentDataFragment, unknown>;
 export const CalendarsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -11592,6 +12094,71 @@ export const WorkingGroupNetworkContentDataFragmentDoc = {
     ...WorkingGroupsContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<WorkingGroupNetworkContentDataFragment, unknown>;
+export const FetchAnnouncementsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchAnnouncements' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'announcementsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: {
+                          kind: 'Name',
+                          value: 'AnnouncementsContentData',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...AnnouncementsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchAnnouncementsQuery,
+  FetchAnnouncementsQueryVariables
+>;
 export const FetchCalendarByIdDocument = {
   kind: 'Document',
   definitions: [
@@ -11860,6 +12427,136 @@ export const FetchContributingCohortsDocument = {
   FetchContributingCohortsQuery,
   FetchContributingCohortsQueryVariables
 >;
+export const FetchDashboardDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchDashboard' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderAnnouncements' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: {
+                kind: 'Name',
+                value: 'DashboardAnnouncementsCollectionOrder',
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'dashboardCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'latestStats' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sampleCount' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'articleCount' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'cohortCount' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'announcementsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order' },
+                            value: {
+                              kind: 'Variable',
+                              name: {
+                                kind: 'Name',
+                                value: 'orderAnnouncements',
+                              },
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'deadline' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'link' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FetchDashboardQuery, FetchDashboardQueryVariables>;
 export const FetchEventByIdDocument = {
   kind: 'Document',
   definitions: [

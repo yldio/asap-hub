@@ -269,7 +269,7 @@ export const getReferencingWorkingGroupsContents = () => {
           inactiveSinceDate: null,
           user: [
             {
-              id: '5678',
+              id: 'user-id',
             },
           ],
         },
@@ -444,16 +444,6 @@ export const getSquidexReminderReseachOutputsInReviewWorkingGroupContents =
           {
             id: 'wg-id-1',
             flatData: {
-              leaders: [
-                {
-                  role: 'Project Manager',
-                  user: [
-                    {
-                      id: 'user-id',
-                    },
-                  ],
-                },
-              ],
               title: 'Working Group 1',
             },
           },

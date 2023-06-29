@@ -379,9 +379,16 @@ const getResearchOutputInReviewRemindersFromQuery = (
   );
   const leadTeamIds = getUserTeamIds(leadTeams);
 
-  const userWorkingGroupIds = getUserWorkingGroupIds(
-    findUsersContent.referencingWorkingGroupsContents,
-  );
+  const userIsPmInWorkingGroups: string[] = [];
+  findUsersContent.referencingWorkingGroupsContents?.forEach((workingGroup) => {
+    workingGroup.flatData.leaders
+      ?.filter((leader) => leader.role === 'Project Manager')
+      .forEach((leader) => {
+        if (leader.user?.find((user) => user.id === userId)) {
+          userIsPmInWorkingGroups.push(workingGroup.id);
+        }
+      });
+  });
 
   const isAsapStaff = findUsersContent.flatData.role === 'Staff';
 
@@ -414,17 +421,9 @@ const getResearchOutputInReviewRemindersFromQuery = (
         leadTeamIds.includes(team),
       );
 
-      let isWorkingGroupPM = false;
-      (researchOutput.flatData.workingGroups || [])
-        .filter((workingGroup) => userWorkingGroupIds.includes(workingGroup.id))
-        .forEach((workingGroup) => {
-          const pms = workingGroup.flatData.leaders?.filter(
-            (leader) => leader.role === 'Project Manager',
-          );
-          if (pms?.find((pm) => pm.user?.some((u) => u.id === userId))) {
-            isWorkingGroupPM = true;
-          }
-        });
+      let isWorkingGroupPM = (researchOutput.flatData.workingGroups || []).some(
+        (workingGroup) => userIsPmInWorkingGroups.includes(workingGroup.id),
+      );
 
       if (
         (associationType === 'team' && !isTeamLeader && !isAsapStaff) ||

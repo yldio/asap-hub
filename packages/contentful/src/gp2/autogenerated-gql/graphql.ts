@@ -4776,7 +4776,6 @@ export type WorkingGroups = Entry & {
   linkedFrom?: Maybe<WorkingGroupsLinkingCollections>;
   membersCollection?: Maybe<WorkingGroupsMembersCollection>;
   milestonesCollection?: Maybe<WorkingGroupsMilestonesCollection>;
-  oldDescription?: Maybe<Scalars['String']>;
   primaryEmail?: Maybe<Scalars['String']>;
   resourcesCollection?: Maybe<WorkingGroupsResourcesCollection>;
   secondaryEmail?: Maybe<Scalars['String']>;
@@ -4825,11 +4824,6 @@ export type WorkingGroupsMilestonesCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<MilestonesFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
-export type WorkingGroupsOldDescriptionArgs = {
-  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
@@ -4915,13 +4909,6 @@ export type WorkingGroupsFilter = {
   membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   milestones?: InputMaybe<CfMilestonesNestedFilter>;
   milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  oldDescription?: InputMaybe<Scalars['String']>;
-  oldDescription_contains?: InputMaybe<Scalars['String']>;
-  oldDescription_exists?: InputMaybe<Scalars['Boolean']>;
-  oldDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  oldDescription_not?: InputMaybe<Scalars['String']>;
-  oldDescription_not_contains?: InputMaybe<Scalars['String']>;
-  oldDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   primaryEmail?: InputMaybe<Scalars['String']>;
   primaryEmail_contains?: InputMaybe<Scalars['String']>;
   primaryEmail_exists?: InputMaybe<Scalars['Boolean']>;
@@ -5518,13 +5505,6 @@ export type CfWorkingGroupsNestedFilter = {
   leadingMembers_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  oldDescription?: InputMaybe<Scalars['String']>;
-  oldDescription_contains?: InputMaybe<Scalars['String']>;
-  oldDescription_exists?: InputMaybe<Scalars['Boolean']>;
-  oldDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  oldDescription_not?: InputMaybe<Scalars['String']>;
-  oldDescription_not_contains?: InputMaybe<Scalars['String']>;
-  oldDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   primaryEmail?: InputMaybe<Scalars['String']>;
   primaryEmail_contains?: InputMaybe<Scalars['String']>;
   primaryEmail_exists?: InputMaybe<Scalars['Boolean']>;

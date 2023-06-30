@@ -3152,7 +3152,6 @@ type WorkingGroups implements Entry {
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCollection
   milestonesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): WorkingGroupsMilestonesCollection
-  oldDescription(locale: String): String
   primaryEmail(locale: String): String
   resourcesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): WorkingGroupsResourcesCollection
   secondaryEmail(locale: String): String
@@ -3214,13 +3213,6 @@ input WorkingGroupsFilter {
   membersCollection_exists: Boolean
   milestones: cfMilestonesNestedFilter
   milestonesCollection_exists: Boolean
-  oldDescription: String
-  oldDescription_contains: String
-  oldDescription_exists: Boolean
-  oldDescription_in: [String]
-  oldDescription_not: String
-  oldDescription_not_contains: String
-  oldDescription_not_in: [String]
   primaryEmail: String
   primaryEmail_contains: String
   primaryEmail_exists: Boolean
@@ -3782,13 +3774,6 @@ input cfWorkingGroupsNestedFilter {
   leadingMembers_not_in: [String]
   membersCollection_exists: Boolean
   milestonesCollection_exists: Boolean
-  oldDescription: String
-  oldDescription_contains: String
-  oldDescription_exists: Boolean
-  oldDescription_in: [String]
-  oldDescription_not: String
-  oldDescription_not_contains: String
-  oldDescription_not_in: [String]
   primaryEmail: String
   primaryEmail_contains: String
   primaryEmail_exists: Boolean

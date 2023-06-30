@@ -18,12 +18,35 @@ export const getGuidesResponse = (): ListGuideResponse => ({
 });
 
 export const getContentfulGraphqlGuides = () => ({
-  items: [
-    {
-      title: 'Item 1',
-    },
-    {
-      title: 'Item 2',
-    },
-  ],
+  title: 'Item 1',
+  contentCollection: {
+    items: [
+      {
+        sys: { id: 'guide-content-id-0' },
+      },
+    ],
+  },
+});
+
+export const getContentfulGraphqlGuideContent = () => ({
+  sys: {
+    id: 'guide-content-id-0',
+  },
+  title: '',
+  text: 'guide content text',
+  linkUrl: 'https://example.com',
+  linkText: 'link text',
+});
+
+export const getContentfulGraphql = () => ({
+  Guides: () => getContentfulGraphqlGuides(),
+  GuidesCollection: () => ({
+    total: 1,
+    items: [{}],
+  }),
+  GuideContent: () => getContentfulGraphqlGuideContent(),
+  GuideContentCollection: () => ({
+    total: 1,
+    items: [{}],
+  }),
 });

@@ -6,7 +6,7 @@ import {
 import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
-import { getContentfulGraphqlGuides } from '../../fixtures/guides.fixture';
+import { getContentfulGraphql } from '../../fixtures/guides.fixture';
 
 describe('Guide data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -17,30 +17,25 @@ describe('Guide data provider', () => {
   describe('Fetch', () => {
     test('it should return the guides from the mock server', async () => {
       const contentfulGraphqlClientMockServer =
-        getContentfulGraphqlClientMockServer({
-          GuidesCollection: () => getContentfulGraphqlGuides(),
-        });
+        getContentfulGraphqlClientMockServer(getContentfulGraphql());
       const dataProviderWithMockServer: GuideDataProvider =
         new GuideContentfulDataProvider(contentfulGraphqlClientMockServer);
       const result = await dataProviderWithMockServer.fetch();
-      const guideContentItem = {
-        title: 'Hello World',
-        text: 'Hello World',
-        linkUrl: 'Hello World',
-        linkText: 'Hello World',
-      };
       const expectation = {
         items: [
           {
             title: 'Item 1',
-            content: [guideContentItem, guideContentItem],
-          },
-          {
-            title: 'Item 2',
-            content: [guideContentItem, guideContentItem],
+            content: [
+              {
+                title: '',
+                text: 'guide content text',
+                linkUrl: 'https://example.com',
+                linkText: 'link text',
+              },
+            ],
           },
         ],
-        total: 2,
+        total: 1,
       };
 
       expect(result).toMatchObject(expectation);

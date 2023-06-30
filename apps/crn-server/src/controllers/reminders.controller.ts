@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { sharedResearch, events, network } from '@asap-hub/routing';
+import { events, network, sharedResearch } from '@asap-hub/routing';
 import {
   EventReminderType,
   FetchRemindersOptions,
@@ -67,6 +67,20 @@ export default class ReminderController {
               researchOutputId: reminder.data.researchOutputId,
             }).$,
             description: `**${reminder.data.createdBy}** created a draft output for **${reminder.data.associationName}**: ${reminder.data.title}.`,
+          };
+        }
+
+        if (
+          reminder.entity === 'Research Output' &&
+          reminder.type === 'In Review'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: sharedResearch({}).researchOutput({
+              researchOutputId: reminder.data.researchOutputId,
+            }).$,
+            description: `**${reminder.data.reviewRequestedBy}** on **${reminder.data.associationName}** requested PMs to review a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
           };
         }
 

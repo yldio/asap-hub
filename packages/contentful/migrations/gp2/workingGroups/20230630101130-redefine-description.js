@@ -102,4 +102,20 @@ module.exports.up = (migration) => {
 module.exports.down = (migration) => {
   const workingGroups = migration.editContentType('workingGroups');
   workingGroups.deleteField('oldDescription');
+
+  workingGroups
+    .createField('description')
+    .name('Description')
+    .type('Text')
+    .localized(false)
+    .required(true)
+    .validations([
+      {
+        size: {
+          max: 2500,
+        },
+      },
+    ])
+    .disabled(false)
+    .omitted(false);
 };

@@ -6,11 +6,18 @@ import {
   RestGroup,
   SquidexRest,
   parseToSquidex,
+  RestEvent,
+  RestCalendar,
+  InputCalendar,
 } from '@asap-hub/squidex';
 import {
+  CalendarCreateDataObject,
+  EventCreateDataObject,
+  EventUpdateDataObject,
   UserCreateDataObject,
   TeamCreateDataObject,
   InterestGroupCreateDataObject,
+  EventFixture,
 } from './types';
 import { appName, baseUrl } from '../../../src/config';
 
@@ -30,16 +37,41 @@ const getSquidexClient = <
     baseUrl,
   });
 
+const calendarRestClient = getSquidexClient<RestCalendar, InputCalendar>(
+  'calendars',
+);
+const eventRestClient = getSquidexClient<RestEvent>('events');
 const userRestClient = getSquidexClient<RestUser, InputUser>('users');
 const teamRestClient = getSquidexClient<RestTeam>('teams');
 const interestGroupRestClient = getSquidexClient<RestGroup>('groups');
 
 export class SquidexFixture implements Fixture {
   private teardownHelper = teardownHelper([
+    calendarRestClient,
+    eventRestClient,
     userRestClient,
     teamRestClient,
     interestGroupRestClient,
   ]);
+
+  private async prepareCalendar(props: CalendarCreateDataObject) {
+    return props;
+  }
+
+  private async prepareEvent(props: EventCreateDataObject) {
+    return {
+      ...props,
+      calendar: [props.calendar],
+    };
+  }
+
+  private async preparePatchEvent(props: EventUpdateDataObject) {
+    return {
+      notes: props.notes ?? undefined,
+      presentation: props.presentation ?? undefined,
+      videoRecording: props.videoRecording ?? undefined,
+    };
+  }
 
   private async prepareUser(props: UserCreateDataObject) {
     let avatar: string[] | null = null;
@@ -82,6 +114,48 @@ export class SquidexFixture implements Fixture {
       tags: [],
       thumbnail: null,
     };
+  }
+
+  async createCalendar(calendar: CalendarCreateDataObject) {
+    const input = await this.prepareCalendar(calendar);
+    const result = await calendarRestClient.create(parseToSquidex(input));
+    if (!result) {
+      throw new Error('Could not create calendar');
+    }
+    return {
+      id: result.id,
+      ...calendar,
+    };
+  }
+
+  async createEvent(event: EventCreateDataObject) {
+    const input = await this.prepareEvent(event);
+    const result = await eventRestClient.create(parseToSquidex(input));
+    if (!result) {
+      throw new Error('Could not create event');
+    }
+    return {
+      id: result.id,
+      ...event,
+    };
+  }
+  async updateEvent(id: string, event: EventUpdateDataObject) {
+    const input = await this.preparePatchEvent(event);
+    const result = await eventRestClient.patch(id, parseToSquidex(input));
+    if (!result) {
+      throw new Error('Could not update event');
+    }
+    return {
+      ...result.data,
+      id: result.id,
+    } as unknown as EventFixture;
+  }
+
+  async publishEvent(id: string, status?: 'Published' | 'Draft') {
+    const result = await eventRestClient.publish(id, status);
+    if (!result) {
+      throw new Error('Could not publish event');
+    }
   }
 
   async createUser(user: UserCreateDataObject) {

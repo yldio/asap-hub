@@ -1,4 +1,8 @@
-import { addLocaleToFields, getLinkEntity } from '@asap-hub/contentful';
+import {
+  addLocaleToFields,
+  getLinkEntity,
+  patchAndPublish,
+} from '@asap-hub/contentful';
 
 import {
   createClient,
@@ -10,9 +14,13 @@ import { RateLimiter } from 'limiter';
 
 import {
   Fixture,
+  CalendarCreateDataObject,
+  EventCreateDataObject,
   UserCreateDataObject,
   TeamCreateDataObject,
   InterestGroupCreateDataObject,
+  EventUpdateDataObject,
+  EventFixture,
 } from './types';
 
 import {
@@ -67,6 +75,22 @@ export class ContentfulFixture implements Fixture {
     return space.getEnvironment(contentfulEnvId);
   }
 
+  private async prepareCalendar(props: CalendarCreateDataObject) {
+    return props;
+  }
+
+  private async prepareEvent(props: EventCreateDataObject) {
+    return props;
+  }
+
+  private async preparePatchEvent(props: EventUpdateDataObject) {
+    return {
+      notes: props.notes ?? undefined,
+      presentation: props.presentation ?? undefined,
+      videoRecording: props.videoRecording ?? undefined,
+    };
+  }
+
   private async prepareUser(props: UserCreateDataObject) {
     const environment = await this.getEnvironment();
     return {
@@ -115,6 +139,61 @@ export class ContentfulFixture implements Fixture {
       ),
       teams: (props.teams || []).map((team) => getLinkEntity(team.id)),
     };
+  }
+
+  async createCalendar(calendar: CalendarCreateDataObject) {
+    const environment = await this.getEnvironment();
+    const input = await this.prepareCalendar(calendar);
+    const result = await environment.createEntry('calendars', {
+      fields: addLocaleToFields(input),
+    });
+    await result.publish();
+    return {
+      id: result.sys.id,
+      ...calendar,
+    };
+  }
+
+  async createEvent(event: EventCreateDataObject) {
+    const environment = await this.getEnvironment();
+    const input = await this.prepareEvent(event);
+    const result = await environment.createEntry('events', {
+      fields: addLocaleToFields(input),
+    });
+    await result.publish();
+    return {
+      id: result.sys.id,
+      ...event,
+    };
+  }
+
+  async updateEvent(id: string, event: EventUpdateDataObject) {
+    const input = await this.preparePatchEvent(event);
+
+    const environment = await this.getEnvironment();
+    const entry = await environment.getEntry(id);
+    const result = await patchAndPublish(entry, input);
+
+    if (!result) {
+      throw new Error('Could not update event');
+    }
+    return {
+      ...result,
+      id: result.sys.id,
+    } as unknown as EventFixture;
+  }
+
+  async publishEvent(id: string, status?: 'Published' | 'Draft') {
+    const environment = await this.getEnvironment();
+    const entry = await environment.getEntry(id);
+
+    if (status === 'Draft' && entry.isPublished()) {
+      await entry.unpublish();
+    }
+
+    if (status === 'Published' && entry.isDraft()) {
+      await entry.publish();
+    }
   }
 
   async createUser(user: UserCreateDataObject) {

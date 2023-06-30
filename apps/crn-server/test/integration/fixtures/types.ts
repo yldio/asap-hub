@@ -1,4 +1,7 @@
 import {
+  CalendarCreateDataObject as CommonCalendarCreateDataObject,
+  EventCreateDataObject as CommonEventCreateDataObject,
+  EventUpdateDataObject as CommonEventUpdateDataObject,
   UserCreateDataObject as CommonUserCreateDataObject,
   TeamCreateDataObject as CommonTeamCreateDataObject,
   ResearchOutputCreateDataObject as CommonResearchOutputCreateDataObject,
@@ -6,6 +9,12 @@ import {
   GroupRole,
 } from '@asap-hub/model';
 
+export type CalendarCreateDataObject = CommonCalendarCreateDataObject;
+export type EventCreateDataObject = CommonEventCreateDataObject;
+export type EventUpdateDataObject = Pick<
+  CommonEventUpdateDataObject,
+  'notes' | 'presentation' | 'videoRecording'
+>;
 export type UserCreateDataObject = Omit<CommonUserCreateDataObject, 'labIds'>;
 export type TeamCreateDataObject = CommonTeamCreateDataObject;
 export type ResearchOutputCreateDataObject = Omit<
@@ -45,11 +54,22 @@ export type InterestGroupCreateDataObject = Omit<
 
 type EntryFixture<T> = T & { id: string };
 
+export type CalendarFixture = EntryFixture<CalendarCreateDataObject>;
+export type EventFixture = EntryFixture<EventCreateDataObject>;
 export type UserFixture = EntryFixture<UserCreateDataObject>;
 export type TeamFixture = EntryFixture<TeamCreateDataObject>;
 export type InterestGroupFixture = EntryFixture<InterestGroupCreateDataObject>;
 
 export interface Fixture {
+  createCalendar: (
+    calendar: CalendarCreateDataObject,
+  ) => Promise<CalendarFixture>;
+  createEvent: (event: EventCreateDataObject) => Promise<EventFixture>;
+  updateEvent: (
+    id: string,
+    event: EventUpdateDataObject,
+  ) => Promise<EventFixture>;
+  publishEvent: (id: string, status?: 'Published' | 'Draft') => Promise<void>;
   createUser: (user: UserCreateDataObject) => Promise<UserFixture>;
   createTeam: (team: TeamCreateDataObject) => Promise<TeamFixture>;
   createInterestGroup: (

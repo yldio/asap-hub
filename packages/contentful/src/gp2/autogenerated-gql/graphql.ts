@@ -4771,7 +4771,7 @@ export enum WorkingGroupNetworkSupportCollectionOrder {
 export type WorkingGroups = Entry & {
   calendar?: Maybe<Calendars>;
   contentfulMetadata: ContentfulMetadata;
-  description?: Maybe<WorkingGroupsDescription>;
+  description?: Maybe<Scalars['String']>;
   leadingMembers?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<WorkingGroupsLinkingCollections>;
   membersCollection?: Maybe<WorkingGroupsMembersCollection>;
@@ -4863,41 +4863,19 @@ export type WorkingGroupsCollection = {
   total: Scalars['Int'];
 };
 
-export type WorkingGroupsDescription = {
-  json: Scalars['JSON'];
-  links: WorkingGroupsDescriptionLinks;
-};
-
-export type WorkingGroupsDescriptionAssets = {
-  block: Array<Maybe<Asset>>;
-  hyperlink: Array<Maybe<Asset>>;
-};
-
-export type WorkingGroupsDescriptionEntries = {
-  block: Array<Maybe<Entry>>;
-  hyperlink: Array<Maybe<Entry>>;
-  inline: Array<Maybe<Entry>>;
-};
-
-export type WorkingGroupsDescriptionLinks = {
-  assets: WorkingGroupsDescriptionAssets;
-  entries: WorkingGroupsDescriptionEntries;
-  resources: WorkingGroupsDescriptionResources;
-};
-
-export type WorkingGroupsDescriptionResources = {
-  block: Array<ResourceLink>;
-};
-
 export type WorkingGroupsFilter = {
   AND?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<WorkingGroupsFilter>>>;
   calendar?: InputMaybe<CfCalendarsNestedFilter>;
   calendar_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
   description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   leadingMembers?: InputMaybe<Scalars['String']>;
   leadingMembers_contains?: InputMaybe<Scalars['String']>;
   leadingMembers_exists?: InputMaybe<Scalars['Boolean']>;
@@ -5493,9 +5471,13 @@ export type CfWorkingGroupsNestedFilter = {
   OR?: InputMaybe<Array<InputMaybe<CfWorkingGroupsNestedFilter>>>;
   calendar_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
   description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   leadingMembers?: InputMaybe<Scalars['String']>;
   leadingMembers_contains?: InputMaybe<Scalars['String']>;
   leadingMembers_exists?: InputMaybe<Scalars['Boolean']>;
@@ -8471,6 +8453,7 @@ export type WorkingGroupNetworkContentDataFragment = {
             WorkingGroups,
             | 'title'
             | 'shortDescription'
+            | 'description'
             | 'primaryEmail'
             | 'secondaryEmail'
             | 'leadingMembers'
@@ -8479,7 +8462,6 @@ export type WorkingGroupNetworkContentDataFragment = {
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
-            description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -8537,6 +8519,7 @@ export type WorkingGroupNetworkContentDataFragment = {
             WorkingGroups,
             | 'title'
             | 'shortDescription'
+            | 'description'
             | 'primaryEmail'
             | 'secondaryEmail'
             | 'leadingMembers'
@@ -8545,7 +8528,6 @@ export type WorkingGroupNetworkContentDataFragment = {
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
-            description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -8603,6 +8585,7 @@ export type WorkingGroupNetworkContentDataFragment = {
             WorkingGroups,
             | 'title'
             | 'shortDescription'
+            | 'description'
             | 'primaryEmail'
             | 'secondaryEmail'
             | 'leadingMembers'
@@ -8611,7 +8594,6 @@ export type WorkingGroupNetworkContentDataFragment = {
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
-            description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -8669,6 +8651,7 @@ export type WorkingGroupNetworkContentDataFragment = {
             WorkingGroups,
             | 'title'
             | 'shortDescription'
+            | 'description'
             | 'primaryEmail'
             | 'secondaryEmail'
             | 'leadingMembers'
@@ -8677,7 +8660,6 @@ export type WorkingGroupNetworkContentDataFragment = {
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
-            description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -8746,6 +8728,7 @@ export type FetchWorkingGroupNetworkQuery = {
                     WorkingGroups,
                     | 'title'
                     | 'shortDescription'
+                    | 'description'
                     | 'primaryEmail'
                     | 'secondaryEmail'
                     | 'leadingMembers'
@@ -8757,7 +8740,6 @@ export type FetchWorkingGroupNetworkQuery = {
                       | 'publishedAt'
                       | 'publishedVersion'
                     >;
-                    description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -8821,6 +8803,7 @@ export type FetchWorkingGroupNetworkQuery = {
                     WorkingGroups,
                     | 'title'
                     | 'shortDescription'
+                    | 'description'
                     | 'primaryEmail'
                     | 'secondaryEmail'
                     | 'leadingMembers'
@@ -8832,7 +8815,6 @@ export type FetchWorkingGroupNetworkQuery = {
                       | 'publishedAt'
                       | 'publishedVersion'
                     >;
-                    description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -8896,6 +8878,7 @@ export type FetchWorkingGroupNetworkQuery = {
                     WorkingGroups,
                     | 'title'
                     | 'shortDescription'
+                    | 'description'
                     | 'primaryEmail'
                     | 'secondaryEmail'
                     | 'leadingMembers'
@@ -8907,7 +8890,6 @@ export type FetchWorkingGroupNetworkQuery = {
                       | 'publishedAt'
                       | 'publishedVersion'
                     >;
-                    description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -8971,6 +8953,7 @@ export type FetchWorkingGroupNetworkQuery = {
                     WorkingGroups,
                     | 'title'
                     | 'shortDescription'
+                    | 'description'
                     | 'primaryEmail'
                     | 'secondaryEmail'
                     | 'leadingMembers'
@@ -8982,7 +8965,6 @@ export type FetchWorkingGroupNetworkQuery = {
                       | 'publishedAt'
                       | 'publishedVersion'
                     >;
-                    description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
                     membersCollection?: Maybe<
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
@@ -9048,6 +9030,7 @@ export type WorkingGroupsContentDataFragment = Pick<
   WorkingGroups,
   | 'title'
   | 'shortDescription'
+  | 'description'
   | 'primaryEmail'
   | 'secondaryEmail'
   | 'leadingMembers'
@@ -9056,7 +9039,6 @@ export type WorkingGroupsContentDataFragment = Pick<
     Sys,
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
   >;
-  description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
   membersCollection?: Maybe<
     Pick<WorkingGroupsMembersCollection, 'total'> & {
       items: Array<
@@ -9110,6 +9092,7 @@ export type FetchWorkingGroupByIdQuery = {
       WorkingGroups,
       | 'title'
       | 'shortDescription'
+      | 'description'
       | 'primaryEmail'
       | 'secondaryEmail'
       | 'leadingMembers'
@@ -9118,7 +9101,6 @@ export type FetchWorkingGroupByIdQuery = {
         Sys,
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
       >;
-      description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
       membersCollection?: Maybe<
         Pick<WorkingGroupsMembersCollection, 'total'> & {
           items: Array<
@@ -9176,6 +9158,7 @@ export type FetchWorkingGroupsQuery = {
             WorkingGroups,
             | 'title'
             | 'shortDescription'
+            | 'description'
             | 'primaryEmail'
             | 'secondaryEmail'
             | 'leadingMembers'
@@ -9184,7 +9167,6 @@ export type FetchWorkingGroupsQuery = {
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
-            description?: Maybe<Pick<WorkingGroupsDescription, 'json'>>;
             membersCollection?: Maybe<
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
@@ -11406,16 +11388,7 @@ export const WorkingGroupsContentDataFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'description' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'json' } },
-              ],
-            },
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'primaryEmail' } },
           { kind: 'Field', name: { kind: 'Name', value: 'secondaryEmail' } },
           { kind: 'Field', name: { kind: 'Name', value: 'leadingMembers' } },

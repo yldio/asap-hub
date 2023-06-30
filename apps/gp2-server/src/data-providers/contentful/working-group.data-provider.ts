@@ -2,10 +2,8 @@ import {
   Environment,
   gp2 as gp2Contentful,
   GraphQLClient,
-  parseRichText,
   patchAndPublish,
   pollContentfulGql,
-  RichTextFromQuery,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../types/working-group.data-provider.type';
@@ -127,9 +125,7 @@ export const parseWorkingGroupToDataObject = (
     id: workingGroup.sys.id,
     title: workingGroup.title ?? '',
     shortDescription: workingGroup.shortDescription ?? '',
-    description: workingGroup.description
-      ? parseRichText(workingGroup.description as RichTextFromQuery)
-      : '',
+    description: workingGroup.description ?? '',
     primaryEmail: workingGroup.primaryEmail ?? undefined,
     secondaryEmail: workingGroup.secondaryEmail ?? undefined,
     leadingMembers: workingGroup.leadingMembers ?? '',

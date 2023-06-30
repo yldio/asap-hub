@@ -4,8 +4,37 @@ module.exports.up = (migration) => {
   const workingGroups = migration.editContentType('workingGroups');
 
   workingGroups
-    .editField('description')
+    .createField('oldDescription')
+    .name('Old Description')
+    .type('Text')
+    .localized(false)
+    .required(true)
+    .validations([
+      {
+        size: {
+          max: 2500,
+        },
+      },
+    ])
+    .disabled(false)
+    .omitted(false);
+
+  migration.transformEntries({
+    contentType: 'workingGroups',
+    from: ['description'],
+    to: ['oldDescription'],
+    transformEntryForLocale: function (fromFields, currentLocale) {
+      return { oldDescription: fromFields.description[currentLocale] };
+    },
+  });
+
+  workingGroups.deleteField('description');
+  workingGroups
+    .createField('description')
+    .name('Description')
     .type('RichText')
+    .localized(false)
+    .required(true)
     .validations([
       {
         size: {
@@ -37,9 +66,22 @@ module.exports.up = (migration) => {
       {
         nodes: {},
       },
-    ]);
+    ])
+    .disabled(false)
+    .omitted(false);
+
+  migration.transformEntries({
+    contentType: 'workingGroups',
+    from: ['oldDescription'],
+    to: ['description'],
+    transformEntryForLocale: function (fromFields, currentLocale) {
+      return { description: fromFields.oldDescription[currentLocale] };
+    },
+  });
+  migration.deleteField('oldDescription');
 };
 
 module.exports.down = (migration) => {
   const workingGroups = migration.editContentType('workingGroups');
+  workingGroups.deleteField('oldDescription');
 };

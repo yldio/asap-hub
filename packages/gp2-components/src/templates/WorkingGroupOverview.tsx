@@ -6,7 +6,6 @@ import {
   Headline3,
   MembersList,
   pixels,
-  RichText,
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
@@ -63,9 +62,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
     <Card overrideStyles={cardStyles}>
       <Headline3 noMargin>Description</Headline3>
       <div css={contentStyles}>
-        <ExpandableText>
-          <RichText text={description} />
-        </ExpandableText>
+        <ExpandableText>{description}</ExpandableText>
       </div>
     </Card>
     <div css={columnStyles}>

@@ -21,7 +21,7 @@ export const getWorkingGroupDataObject =
     id: '11',
     title: 'a working group title',
     shortDescription: 'Short description',
-    description: '<p>longer description</p>',
+    description: 'longer description',
     primaryEmail: 'primary.email@example.com',
     secondaryEmail: 'secondary.email@example.com',
     leadingMembers: 'Leading members',
@@ -167,7 +167,7 @@ export const getGraphQLWorkingGroup = (): GraphQLWorkingGroup => ({
   flatData: {
     title: 'a working group title',
     shortDescription: 'Short description',
-    description: '<p>longer description</p>',
+    description: 'longer description',
     primaryEmail: 'primary.email@example.com',
     secondaryEmail: 'secondary.email@example.com',
     leadingMembers: 'Leading members',
@@ -233,26 +233,7 @@ export const getContentfulGraphqlWorkingGroup = (
   },
   title: 'a working group title',
   shortDescription: 'Short description',
-  description: {
-    json: {
-      nodeType: 'document',
-      data: {},
-      content: [
-        {
-          nodeType: 'paragraph',
-          data: {},
-          content: [
-            {
-              nodeType: 'text',
-              value: 'longer description',
-              marks: [],
-              data: {},
-            },
-          ],
-        },
-      ],
-    },
-  },
+  description: 'longer description',
   primaryEmail: 'primary.email@example.com',
   secondaryEmail: 'secondary.email@example.com',
   leadingMembers: 'Leading members',

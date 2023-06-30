@@ -654,6 +654,7 @@ input EventSpeakersFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+  user: cfExternalUsersOrUsersNestedFilter
   user_exists: Boolean
 }
 
@@ -1142,6 +1143,39 @@ enum ExternalUsersLinkingCollectionsOutputsCollectionOrder {
   title_DESC
   type_ASC
   type_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers)"""
+type ExternalUsersOrUsers implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ExternalUsersOrUsersLinkingCollections
+  orcid(locale: String): String
+  sys: Sys!
+}
+
+type ExternalUsersOrUsersCollection {
+  items: [ExternalUsersOrUsers]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ExternalUsersOrUsersFilter {
+  AND: [ExternalUsersOrUsersFilter]
+  OR: [ExternalUsersOrUsersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+type ExternalUsersOrUsersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum ExternalUsersOrder {
@@ -1678,7 +1712,7 @@ enum NewsOrder {
 type Outputs implements Entry {
   addedDate(locale: String): DateTime
   adminNotes(locale: String): String
-  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): OutputsAuthorsCollection
+  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): OutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   documentType(locale: String): String
@@ -1729,6 +1763,7 @@ input OutputsFilter {
   adminNotes_not: String
   adminNotes_not_contains: String
   adminNotes_not_in: [String]
+  authors: cfExternalUsersOrUsersNestedFilter
   authorsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   createdBy: cfUsersNestedFilter
@@ -2290,6 +2325,8 @@ type Query {
   eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): EventsCollection
   externalUsers(id: String!, locale: String, preview: Boolean): ExternalUsers
   externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersFilter): ExternalUsersCollection
+  externalUsersOrUsers(id: String!, locale: String, preview: Boolean): ExternalUsersOrUsers
+  externalUsersOrUsersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): ExternalUsersOrUsersCollection
   latestStats(id: String!, locale: String, preview: Boolean): LatestStats
   latestStatsCollection(limit: Int = 100, locale: String, order: [LatestStatsOrder], preview: Boolean, skip: Int = 0, where: LatestStatsFilter): LatestStatsCollection
   media(id: String!, locale: String, preview: Boolean): Media
@@ -3110,7 +3147,7 @@ enum WorkingGroupNetworkSupportCollectionOrder {
 type WorkingGroups implements Entry {
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
-  description(locale: String): WorkingGroupsDescription
+  description(locale: String): String
   leadingMembers(locale: String): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCollection
@@ -3130,41 +3167,19 @@ type WorkingGroupsCollection {
   total: Int!
 }
 
-type WorkingGroupsDescription {
-  json: JSON!
-  links: WorkingGroupsDescriptionLinks!
-}
-
-type WorkingGroupsDescriptionAssets {
-  block: [Asset]!
-  hyperlink: [Asset]!
-}
-
-type WorkingGroupsDescriptionEntries {
-  block: [Entry]!
-  hyperlink: [Entry]!
-  inline: [Entry]!
-}
-
-type WorkingGroupsDescriptionLinks {
-  assets: WorkingGroupsDescriptionAssets!
-  entries: WorkingGroupsDescriptionEntries!
-  resources: WorkingGroupsDescriptionResources!
-}
-
-type WorkingGroupsDescriptionResources {
-  block: [ResourceLink!]!
-}
-
 input WorkingGroupsFilter {
   AND: [WorkingGroupsFilter]
   OR: [WorkingGroupsFilter]
   calendar: cfCalendarsNestedFilter
   calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
+  description: String
   description_contains: String
   description_exists: Boolean
+  description_in: [String]
+  description_not: String
   description_not_contains: String
+  description_not_in: [String]
   leadingMembers: String
   leadingMembers_contains: String
   leadingMembers_exists: Boolean
@@ -3426,6 +3441,20 @@ input cfEventSpeakersNestedFilter {
   title_not_contains: String
   title_not_in: [String]
   user_exists: Boolean
+}
+
+input cfExternalUsersOrUsersNestedFilter {
+  AND: [cfExternalUsersOrUsersNestedFilter]
+  OR: [cfExternalUsersOrUsersNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
 }
 
 input cfMilestonesNestedFilter {
@@ -3711,9 +3740,13 @@ input cfWorkingGroupsNestedFilter {
   OR: [cfWorkingGroupsNestedFilter]
   calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
+  description: String
   description_contains: String
   description_exists: Boolean
+  description_in: [String]
+  description_not: String
   description_not_contains: String
+  description_not_in: [String]
   leadingMembers: String
   leadingMembers_contains: String
   leadingMembers_exists: Boolean

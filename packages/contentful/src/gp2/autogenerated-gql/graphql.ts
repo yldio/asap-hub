@@ -900,6 +900,7 @@ export type EventSpeakersFilter = {
   title_not?: InputMaybe<Scalars['String']>;
   title_not_contains?: InputMaybe<Scalars['String']>;
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  user?: InputMaybe<CfExternalUsersOrUsersNestedFilter>;
   user_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1613,6 +1614,56 @@ export enum ExternalUsersLinkingCollectionsOutputsCollectionOrder {
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
 }
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers) */
+export type ExternalUsersOrUsers = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<ExternalUsersOrUsersLinkingCollections>;
+  orcid?: Maybe<Scalars['String']>;
+  sys: Sys;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers) */
+export type ExternalUsersOrUsersLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers) */
+export type ExternalUsersOrUsersOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type ExternalUsersOrUsersCollection = {
+  items: Array<Maybe<ExternalUsersOrUsers>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ExternalUsersOrUsersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ExternalUsersOrUsersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ExternalUsersOrUsersFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ExternalUsersOrUsersLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type ExternalUsersOrUsersLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
 
 export enum ExternalUsersOrder {
   NameAsc = 'name_ASC',
@@ -2344,6 +2395,7 @@ export type OutputsAuthorsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ExternalUsersOrUsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -2441,6 +2493,7 @@ export type OutputsFilter = {
   adminNotes_not?: InputMaybe<Scalars['String']>;
   adminNotes_not_contains?: InputMaybe<Scalars['String']>;
   adminNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  authors?: InputMaybe<CfExternalUsersOrUsersNestedFilter>;
   authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   createdBy?: InputMaybe<CfUsersNestedFilter>;
@@ -3200,6 +3253,8 @@ export type Query = {
   eventsCollection?: Maybe<EventsCollection>;
   externalUsers?: Maybe<ExternalUsers>;
   externalUsersCollection?: Maybe<ExternalUsersCollection>;
+  externalUsersOrUsers?: Maybe<ExternalUsersOrUsers>;
+  externalUsersOrUsersCollection?: Maybe<ExternalUsersOrUsersCollection>;
   latestStats?: Maybe<LatestStats>;
   latestStatsCollection?: Maybe<LatestStatsCollection>;
   media?: Maybe<Media>;
@@ -3342,6 +3397,20 @@ export type QueryExternalUsersCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ExternalUsersFilter>;
+};
+
+export type QueryExternalUsersOrUsersArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryExternalUsersOrUsersCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ExternalUsersOrUsersFilter>;
 };
 
 export type QueryLatestStatsArgs = {
@@ -5103,6 +5172,20 @@ export type CfEventSpeakersNestedFilter = {
   user_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type CfExternalUsersOrUsersNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfExternalUsersOrUsersNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfExternalUsersOrUsersNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
 export type CfMilestonesNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
@@ -5591,6 +5674,9 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
               | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -5643,6 +5729,9 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
               | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -5695,6 +5784,9 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
               | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -5814,6 +5906,9 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -5868,6 +5963,9 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -5922,6 +6020,9 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -6060,6 +6161,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'LatestStats' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -6136,6 +6240,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'LatestStats' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -6210,6 +6317,9 @@ export type FetchEventsQuery = {
                           })
                         | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ExternalUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'LatestStats' } & {
@@ -6381,6 +6491,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6468,6 +6581,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6555,6 +6671,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6748,6 +6867,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6835,6 +6957,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6922,6 +7047,9 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({ __typename: 'ExternalUsers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({
+                                        __typename: 'ExternalUsersOrUsers';
+                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -7536,6 +7664,9 @@ export type PageContentDataFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'ExternalUsersOrUsers' } & {
+                  sys: Pick<Sys, 'id'>;
+                })
               | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -7605,6 +7736,9 @@ export type FetchPagesQuery = {
                           })
                         | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ExternalUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'ExternalUsersOrUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'LatestStats' } & {

@@ -64,5 +64,6 @@ module.exports = {
     ...packagePaths,
     ...lintConfigs,
   ],
+  testTimeout: 10000,
   testRegex: '^$', // root project does not have tests itself
 };

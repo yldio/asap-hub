@@ -1,12 +1,12 @@
 import {
-  GraphQLClient,
+  EventsFilter,
   FETCH_REMINDERS,
+  FETCH_TEAM_PROJECT_MANAGER,
   FetchRemindersQuery,
   FetchRemindersQueryVariables,
-  FETCH_TEAM_PROJECT_MANAGER,
   FetchTeamProjectManagerQuery,
   FetchTeamProjectManagerQueryVariables,
-  EventsFilter,
+  GraphQLClient,
 } from '@asap-hub/contentful';
 import {
   EventHappeningNowReminder,
@@ -18,6 +18,7 @@ import {
   PublishMaterialReminder,
   ReminderDataObject,
   ResearchOutputDraftReminder,
+  ResearchOutputInReviewReminder,
   ResearchOutputPublishedReminder,
   Role,
   SharePresentationReminder,
@@ -126,7 +127,9 @@ const getSortDate = (
   reminder: Exclude<
     ReminderDataObject,
     // TODO: add these types back when implementing RO reminders
-    ResearchOutputPublishedReminder | ResearchOutputDraftReminder
+    | ResearchOutputPublishedReminder
+    | ResearchOutputDraftReminder
+    | ResearchOutputInReviewReminder
   >,
 ): DateTime => {
   if (reminder.type === 'Happening Today') {

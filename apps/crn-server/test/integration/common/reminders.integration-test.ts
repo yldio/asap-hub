@@ -28,8 +28,7 @@ jest.mock('../../../src/config', () => ({
 
 jest.setTimeout(120000);
 
-// THIS WILL BE CHANGED AFTER ADDING CONTENTFUL REMINDER DATA PROVIDER
-const fixtures = FixtureFactory('squidex');
+const fixtures = FixtureFactory(process.env.INTEGRATION_TEST_CMS);
 
 type AppResponse<T> = {
   status: number;

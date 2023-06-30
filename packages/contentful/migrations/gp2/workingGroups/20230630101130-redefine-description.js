@@ -78,7 +78,7 @@ module.exports.up = (migration) => {
       return { description: fromFields.oldDescription[currentLocale] };
     },
   });
-  migration.deleteField('oldDescription');
+  workingGroups.deleteField('oldDescription');
 };
 
 module.exports.down = (migration) => {

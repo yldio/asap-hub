@@ -75,7 +75,25 @@ module.exports.up = (migration) => {
     from: ['oldDescription'],
     to: ['description'],
     transformEntryForLocale: function (fromFields, currentLocale) {
-      return { description: fromFields.oldDescription[currentLocale] };
+      const richTextDescription = {
+        nodeType: 'document',
+        data: {},
+        content: [
+          {
+            nodeType: 'paragraph',
+            data: {},
+            content: [
+              {
+                data: {},
+                marks: [],
+                value: fromFields.oldDescription[currentLocale],
+                nodeType: 'text',
+              },
+            ],
+          },
+        ],
+      };
+      return { description: richTextDescription };
     },
   });
   workingGroups.deleteField('oldDescription');

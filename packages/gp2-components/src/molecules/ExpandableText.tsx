@@ -70,7 +70,7 @@ const ExpandableText: React.FC = ({ children }) => {
 
   return (
     <div>
-      <div
+      <p
         css={[
           textStyles,
           expanded ? expandedTextStyles : showToggle && expandableTextStyles,
@@ -78,7 +78,7 @@ const ExpandableText: React.FC = ({ children }) => {
         ref={textElement}
       >
         {children}
-      </div>
+      </p>
       {showToggle && (
         <div css={buttonContainerStyles}>
           <Button linkStyle onClick={() => setExpanded(!expanded)}>

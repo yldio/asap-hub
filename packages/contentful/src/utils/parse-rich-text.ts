@@ -6,7 +6,7 @@ type InlineEntry = { sys: Pick<Sys, 'id'>; url: string };
 
 export type RichTextFromQuery = {
   json: Document;
-  links?: {
+  links: {
     entries: {
       inline: InlineEntry[];
     };
@@ -38,7 +38,7 @@ type EntryById = {
 };
 
 export const parseRichText = (rtf: RichTextFromQuery) => {
-  const assetById: AssetById | undefined = rtf.links?.assets.block?.reduce(
+  const assetById: AssetById = rtf.links.assets.block?.reduce(
     (assetInfoById: AssetById, asset) => ({
       ...assetInfoById,
       [asset.sys.id]: {
@@ -47,7 +47,7 @@ export const parseRichText = (rtf: RichTextFromQuery) => {
     }),
     {},
   );
-  const entryById: EntryById | undefined = rtf.links?.entries.inline?.reduce(
+  const entryById: EntryById = rtf.links.entries.inline?.reduce(
     (entryInfoById: EntryById, entry: InlineEntry) => ({
       ...entryInfoById,
       [entry.sys.id]: {
@@ -72,7 +72,7 @@ export const parseRichText = (rtf: RichTextFromQuery) => {
       'embedded-asset-block': (node: Node) => {
         const assetId = node.data.target.sys.id as string;
 
-        if (assetById && assetById[assetId]) {
+        if (assetId && assetById[assetId]) {
           const { url, description, contentType, width, height } =
             assetById[assetId];
           const dimensions =

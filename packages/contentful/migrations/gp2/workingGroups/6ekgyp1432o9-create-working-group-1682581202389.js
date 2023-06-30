@@ -30,7 +30,7 @@ module.exports.up = (migration) => {
   workingGroups
     .createField('description')
     .name('Description')
-    .type('RichText')
+    .type('Text')
     .localized(false)
     .required(true)
     .validations([
@@ -38,31 +38,6 @@ module.exports.up = (migration) => {
         size: {
           max: 2500,
         },
-      },
-      {
-        enabledMarks: ['bold', 'italic', 'underline', 'code'],
-        message: 'Only bold, italic, underline, and code marks are allowed',
-      },
-      {
-        enabledNodeTypes: [
-          'heading-1',
-          'heading-2',
-          'heading-3',
-          'heading-4',
-          'heading-5',
-          'heading-6',
-          'embedded-entry-block',
-          'hyperlink',
-          'entry-hyperlink',
-          'asset-hyperlink',
-          'embedded-entry-inline',
-        ],
-
-        message:
-          'Only heading 1, heading 2, heading 3, heading 4, heading 5, heading 6, block entry, link to Url, link to entry, link to asset, and inline entry nodes are allowed',
-      },
-      {
-        nodes: {},
       },
     ])
     .disabled(false)

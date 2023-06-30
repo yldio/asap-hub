@@ -7,7 +7,7 @@ import {
 
 type ReminderEntity = 'Research Output' | 'Event';
 
-type ResearchOutputReminderType = 'Published' | 'Draft';
+type ResearchOutputReminderType = 'Published' | 'Draft' | 'In Review';
 
 export type EventReminderType =
   | 'Happening Today'
@@ -64,6 +64,20 @@ export interface ResearchOutputDraftReminder extends ResearchOutputReminder {
     createdBy: string;
     associationType: 'team' | 'working group';
     associationName: string;
+  };
+}
+
+export interface ResearchOutputInReviewReminder extends ResearchOutputReminder {
+  entity: 'Research Output';
+  type: 'In Review';
+  data: {
+    researchOutputId: ResearchOutputDraftDataObject['id'];
+    title: ResearchOutputDraftDataObject['title'];
+    documentType: ResearchOutputPublishedDataObject['documentType'];
+    addedDate: ResearchOutputDraftDataObject['created'];
+    associationType: 'team' | 'working group';
+    associationName: string;
+    reviewRequestedBy: string;
   };
 }
 
@@ -152,6 +166,7 @@ export interface PresentationUpdatedReminder extends EventReminder {
 export type ReminderDataObject =
   | ResearchOutputPublishedReminder
   | ResearchOutputDraftReminder
+  | ResearchOutputInReviewReminder
   | EventHappeningTodayReminder
   | EventHappeningNowReminder
   | VideoEventReminder

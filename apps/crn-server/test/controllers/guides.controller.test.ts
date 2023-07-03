@@ -9,21 +9,15 @@ describe('Guide controller', () => {
   describe('Fetch method', () => {
     test('Should return an empty result when the data provider returns an empty list', async () => {
       guidesDataProviderMock.fetch.mockResolvedValue({
-        aboutUs: '',
-        training: [],
-        members: [],
-        scientificAdvisoryBoard: [],
-        pages: [],
+        items: [],
+        total: 0,
       });
 
       const result = await guides.fetch();
 
       expect(result).toEqual({
-        aboutUs: '',
-        training: [],
-        members: [],
-        scientificAdvisoryBoard: [],
-        pages: [],
+        items: [],
+        total: 0,
       });
     });
 

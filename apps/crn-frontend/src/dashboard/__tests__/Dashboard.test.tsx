@@ -36,7 +36,7 @@ const mockGetDashboard = getDashboard as jest.MockedFunction<
 const mockGetReminders = getReminders as jest.MockedFunction<
   typeof getReminders
 >;
-// const mockGetGuides = getGuides as jest.MockedFunction<typeof getGuides>;
+
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;

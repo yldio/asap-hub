@@ -1,4 +1,8 @@
-import { GuideDataObject, ListGuideResponse } from '@asap-hub/model';
+import {
+  GuideContentDataObject,
+  GuideDataObject,
+  ListGuideResponse,
+} from '@asap-hub/model';
 import {
   GraphQLClient,
   FETCH_GUIDE,
@@ -27,19 +31,33 @@ export class GuideContentfulDataProvider implements GuideDataProvider {
     };
   }
 }
-const parseGuideContent = (guideContent: GuideContentItem | null) => ({
+
+const parseGuideContent = (
+  guideContent: GuideContentItem | null,
+): GuideContentDataObject => ({
   text: guideContent?.text || '',
   title: guideContent?.title || '',
   linkUrl: guideContent?.linkUrl || '',
   linkText: guideContent?.linkText || '',
 });
 
+const reducer =
+  <T, K>(fn: (item: NonNullable<T>) => K) =>
+  (acc: K[], item: T) => {
+    if (!item) {
+      return acc;
+    }
+    return [...acc, fn(item)];
+  };
+
+const reduceContent = reducer<GuideContentItem | null, GuideContentDataObject>(
+  parseGuideContent,
+);
+
 export const parseGraphQLGuide = (guide: GuideItem): GuideDataObject => ({
   title: guide?.title ? guide.title : '',
   content: guide?.contentCollection
-    ? guide.contentCollection.items.map((content: GuideContentItem | null) =>
-        parseGuideContent(content),
-      )
+    ? guide.contentCollection.items.reduce(reduceContent, [])
     : [],
 });
 

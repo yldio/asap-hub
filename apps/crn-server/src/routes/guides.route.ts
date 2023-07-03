@@ -4,7 +4,7 @@ import { GuideController } from '../controllers/guides.controller';
 export const guideRouteFactory = (guideController: GuideController): Router => {
   const guideRoutes = Router();
 
-  guideRoutes.get('/guide', async (_req, res) => {
+  guideRoutes.get('/guides', async (_req, res) => {
     const result = await guideController.fetch();
 
     res.json(result);

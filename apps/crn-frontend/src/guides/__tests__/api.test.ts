@@ -14,7 +14,7 @@ describe('getGuides', () => {
   it('returns successfully fetched guides', async () => {
     const guideResponse = createListGuidesResponse();
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/guide')
+      .get('/guides')
       .reply(200, guideResponse);
 
     const result = await getGuides('Bearer x');
@@ -23,7 +23,7 @@ describe('getGuides', () => {
 
   it('errors for error status', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/guide')
+      .get('/guides')
       .reply(500);
 
     await expect(

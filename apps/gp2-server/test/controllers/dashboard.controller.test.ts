@@ -14,10 +14,15 @@ describe('Dashboard controller', () => {
         total: 0,
         items: [],
       });
-      const result = await dashboardController.fetch();
+      const result = await dashboardController.fetch({});
 
       expect(result).toEqual({
-        items: [{ sampleCount: 0, cohortCount: 0, articleCount: 0 }],
+        items: [
+          {
+            latestStats: { sampleCount: 0, cohortCount: 0, articleCount: 0 },
+            announcements: [],
+          },
+        ],
         total: 1,
       });
     });
@@ -27,7 +32,7 @@ describe('Dashboard controller', () => {
         getListDashboardDataObject(),
       );
 
-      const result = await dashboardController.fetch();
+      const result = await dashboardController.fetch({});
 
       expect(result).toMatchObject(getListDashboardResponse());
     });

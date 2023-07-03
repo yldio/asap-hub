@@ -1,5 +1,7 @@
+export * from './announcements.queries';
 export * from './calendar.queries';
 export * from './contributing-cohort.queries';
+export * from './dashboard.queries';
 export * from './event.queries';
 export * from './external-user.queries';
 export * from './news.queries';

@@ -1,24 +1,30 @@
 import { gp2 } from '@asap-hub/model';
+import { FetchDashboardOptions } from '@asap-hub/model/src/gp2';
 import { DashboardDataProvider } from '../data-providers/types/dashboard.data-provider.type';
 
 export interface DashboardController {
-  fetch: () => Promise<gp2.ListDashboardResponse>;
+  fetch: (options: FetchDashboardOptions) => Promise<gp2.ListDashboardResponse>;
 }
 
 export default class Dashboard implements DashboardController {
   constructor(private dashboardDataProvider: DashboardDataProvider) {}
 
-  async fetch(): Promise<gp2.ListDashboardResponse> {
-    const { total, items } = await this.dashboardDataProvider.fetch(null);
+  async fetch(
+    options: FetchDashboardOptions,
+  ): Promise<gp2.ListDashboardResponse> {
+    const { total, items } = await this.dashboardDataProvider.fetch(options);
 
     if (items.length === 0) {
       return {
         total: 1,
         items: [
           {
-            sampleCount: 0,
-            cohortCount: 0,
-            articleCount: 0,
+            latestStats: {
+              sampleCount: 0,
+              cohortCount: 0,
+              articleCount: 0,
+            },
+            announcements: [],
           },
         ],
       };

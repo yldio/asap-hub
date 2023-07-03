@@ -2,6 +2,86 @@ schema {
   query: Query
 }
 
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements)"""
+type Announcements implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  deadline(locale: String): DateTime
+  description(locale: String): String
+  link(locale: String): String
+  linkedFrom(allowedLocales: [String]): AnnouncementsLinkingCollections
+  sys: Sys!
+}
+
+type AnnouncementsCollection {
+  items: [Announcements]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input AnnouncementsFilter {
+  AND: [AnnouncementsFilter]
+  OR: [AnnouncementsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  deadline: DateTime
+  deadline_exists: Boolean
+  deadline_gt: DateTime
+  deadline_gte: DateTime
+  deadline_in: [DateTime]
+  deadline_lt: DateTime
+  deadline_lte: DateTime
+  deadline_not: DateTime
+  deadline_not_in: [DateTime]
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  link: String
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  sys: SysFilter
+}
+
+type AnnouncementsLinkingCollections {
+  dashboardCollection(limit: Int = 100, locale: String, order: [AnnouncementsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0): DashboardCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum AnnouncementsLinkingCollectionsDashboardCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum AnnouncementsOrder {
+  deadline_ASC
+  deadline_DESC
+  description_ASC
+  description_DESC
+  link_ASC
+  link_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """Represents a binary file in a space. An asset can be any file type."""
 type Asset {
   contentType(locale: String): String
@@ -575,6 +655,72 @@ enum ContributingCohortsMembershipOrder {
 enum ContributingCohortsOrder {
   name_ASC
   name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard)"""
+type Dashboard implements Entry {
+  announcementsCollection(limit: Int = 100, locale: String, order: [DashboardAnnouncementsCollectionOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): DashboardAnnouncementsCollection
+  contentfulMetadata: ContentfulMetadata!
+  latestStats(locale: String, preview: Boolean, where: LatestStatsFilter): LatestStats
+  linkedFrom(allowedLocales: [String]): DashboardLinkingCollections
+  sys: Sys!
+}
+
+type DashboardAnnouncementsCollection {
+  items: [Announcements]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum DashboardAnnouncementsCollectionOrder {
+  deadline_ASC
+  deadline_DESC
+  description_ASC
+  description_DESC
+  link_ASC
+  link_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type DashboardCollection {
+  items: [Dashboard]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input DashboardFilter {
+  AND: [DashboardFilter]
+  OR: [DashboardFilter]
+  announcements: cfAnnouncementsNestedFilter
+  announcementsCollection_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  latestStats: cfLatestStatsNestedFilter
+  latestStats_exists: Boolean
+  sys: SysFilter
+}
+
+type DashboardLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum DashboardOrder {
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -1346,7 +1492,19 @@ input LatestStatsFilter {
 }
 
 type LatestStatsLinkingCollections {
+  dashboardCollection(limit: Int = 100, locale: String, order: [LatestStatsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0): DashboardCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum LatestStatsLinkingCollectionsDashboardCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum LatestStatsOrder {
@@ -2310,6 +2468,8 @@ enum ProjectsResourcesCollectionOrder {
 scalar Quality
 
 type Query {
+  announcements(id: String!, locale: String, preview: Boolean): Announcements
+  announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): AnnouncementsCollection
   asset(id: String!, locale: String, preview: Boolean): Asset
   assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, where: AssetFilter): AssetCollection
   calendars(id: String!, locale: String, preview: Boolean): Calendars
@@ -2318,6 +2478,8 @@ type Query {
   contributingCohortsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsFilter): ContributingCohortsCollection
   contributingCohortsMembership(id: String!, locale: String, preview: Boolean): ContributingCohortsMembership
   contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsMembershipFilter): ContributingCohortsMembershipCollection
+  dashboard(id: String!, locale: String, preview: Boolean): Dashboard
+  dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, where: DashboardFilter): DashboardCollection
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
   eventSpeakers(id: String!, locale: String, preview: Boolean): EventSpeakers
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [EventSpeakersOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventSpeakersCollection
@@ -3385,6 +3547,36 @@ enum WorkingGroupsResourcesCollectionOrder {
   type_DESC
 }
 
+input cfAnnouncementsNestedFilter {
+  AND: [cfAnnouncementsNestedFilter]
+  OR: [cfAnnouncementsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  deadline: DateTime
+  deadline_exists: Boolean
+  deadline_gt: DateTime
+  deadline_gte: DateTime
+  deadline_in: [DateTime]
+  deadline_lt: DateTime
+  deadline_lte: DateTime
+  deadline_not: DateTime
+  deadline_not_in: [DateTime]
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  link: String
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  sys: SysFilter
+}
+
 input cfCalendarsNestedFilter {
   AND: [cfCalendarsNestedFilter]
   OR: [cfCalendarsNestedFilter]
@@ -3476,6 +3668,40 @@ input cfExternalUsersOrUsersNestedFilter {
   orcid_not: String
   orcid_not_contains: String
   orcid_not_in: [String]
+  sys: SysFilter
+}
+
+input cfLatestStatsNestedFilter {
+  AND: [cfLatestStatsNestedFilter]
+  OR: [cfLatestStatsNestedFilter]
+  articleCount: Int
+  articleCount_exists: Boolean
+  articleCount_gt: Int
+  articleCount_gte: Int
+  articleCount_in: [Int]
+  articleCount_lt: Int
+  articleCount_lte: Int
+  articleCount_not: Int
+  articleCount_not_in: [Int]
+  cohortCount: Int
+  cohortCount_exists: Boolean
+  cohortCount_gt: Int
+  cohortCount_gte: Int
+  cohortCount_in: [Int]
+  cohortCount_lt: Int
+  cohortCount_lte: Int
+  cohortCount_not: Int
+  cohortCount_not_in: [Int]
+  contentfulMetadata: ContentfulMetadataFilter
+  sampleCount: Int
+  sampleCount_exists: Boolean
+  sampleCount_gt: Int
+  sampleCount_gte: Int
+  sampleCount_in: [Int]
+  sampleCount_lt: Int
+  sampleCount_lte: Int
+  sampleCount_not: Int
+  sampleCount_not_in: [Int]
   sys: SysFilter
 }
 

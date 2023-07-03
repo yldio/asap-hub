@@ -48,6 +48,28 @@ describe('DashboardPageBody', () => {
       screen.getByRole('heading', { name: 'News and Updates' }),
     ).toBeVisible();
   });
+  describe('Announcements', () => {
+    it('should render announcements if there is an announcement', () => {
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          latestStats={mockStats}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+          announcements={[
+            {
+              id: '123',
+              description: 'This is an announcement',
+            },
+          ]}
+        />,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Announcements' }),
+      ).toBeVisible();
+      expect(screen.getByText('This is an announcement')).toBeVisible();
+    });
+  });
 
   describe('Upcoming Events', () => {
     it('should render no events if there is no upcoming event items', () => {

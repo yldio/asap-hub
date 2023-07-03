@@ -14,6 +14,7 @@ import {
   LibraryIcon,
   Paragraph,
   pixels,
+  RemindersCard,
   Subtitle,
   toolsIcon,
 } from '@asap-hub/react-components';
@@ -44,9 +45,9 @@ const accodionItemStyles = css({
   gap: rem(32),
 });
 
-const latestStatsWrapperStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
+const columnContainer = css({
+  display: 'grid',
+  gridTemplateColumns: '1fr',
 });
 
 const latestStatsCardsStyles = css({
@@ -64,6 +65,7 @@ type DashboardPageBodyProps = {
   news: gp2.ListNewsResponse;
   latestStats: gp2.DashboardResponse;
   totalOfUpcomingEvents: number;
+  announcements?: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
 };
 
@@ -71,13 +73,23 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   news,
   latestStats,
   totalOfUpcomingEvents,
+  announcements,
   upcomingEvents,
 }) => {
   const history = useHistory();
 
   return (
     <>
-      <div css={latestStatsWrapperStyles}>
+      {announcements ? (
+        <div css={columnContainer}>
+          <Headline2>Announcements</Headline2>
+          <Paragraph accent="lead" noMargin>
+            Here are the latest announcements from admins.
+          </Paragraph>
+          <RemindersCard reminders={announcements} canPublish />
+        </div>
+      ) : null}
+      <div css={columnContainer}>
         <Headline2>Latest Stats</Headline2>
         <Paragraph accent="lead" noMargin>
           Here are some key actions to take within the GP2 network:

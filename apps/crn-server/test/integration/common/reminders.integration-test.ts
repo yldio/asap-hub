@@ -126,7 +126,7 @@ describe('Reminders', () => {
       );
     });
 
-    test.only('Should see two reminders for two events from two different calendars happening today', async () => {
+    test('Should see two reminders for two events from two different calendars happening today', async () => {
       const now = new Date('2022-08-10T05:00:00.0Z');
       const startDate1 = new Date('2022-08-10T18:00:00.0Z').toISOString();
       const endDate1 = new Date('2022-08-11T18:00:00.0Z').toISOString();

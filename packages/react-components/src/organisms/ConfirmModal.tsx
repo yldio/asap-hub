@@ -59,7 +59,7 @@ const backStyles = css({
 type ConfirmModalProps = {
   readonly error?: string;
   readonly title: string;
-  readonly description?: string;
+  readonly description?: string | React.ReactNode;
   readonly confirmText?: string;
   readonly cancelText?: string;
 

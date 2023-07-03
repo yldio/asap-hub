@@ -51,6 +51,7 @@ const ResearchOutput: React.FC = () => {
   );
 
   const updateResearchOutput = usePutResearchOutput();
+  const publishResearchOutput = usePutResearchOutput(true);
 
   const currentUser = useCurrentUserCRN();
 
@@ -73,8 +74,15 @@ const ResearchOutput: React.FC = () => {
                       : undefined,
                   })
                 }
+                onPublish={() =>
+                  publishResearchOutput(researchOutputData.id, {
+                    ...utils.transformResearchOutputResponseToRequest(
+                      researchOutputData,
+                    ),
+                    published: true,
+                  })
+                }
                 publishedNow={publishedNow}
-                currentUserId={currentUser?.id}
                 draftCreated={urlSearchParams.get('draftCreated') === 'true'}
               />
             </Frame>

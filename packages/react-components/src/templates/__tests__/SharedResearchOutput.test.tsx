@@ -19,6 +19,7 @@ const props: ComponentProps<typeof SharedResearchOutput> = {
   publishedNow: false,
   draftCreated: false,
   onRequestReview: jest.fn(() => Promise.resolve()),
+  onPublish: jest.fn(() => Promise.resolve()),
 };
 
 describe('Grant Documents', () => {
@@ -749,7 +750,6 @@ describe('the ready for pm review button', () => {
                 {...props}
                 documentType="Article"
                 published={false}
-                currentUserId="user1"
                 onRequestReview={requestReviewFn}
               />
               ,
@@ -999,7 +999,6 @@ describe('the switch to draft button', () => {
                 {...props}
                 documentType="Article"
                 published={false}
-                currentUserId="user1"
                 onRequestReview={switchToDraft}
                 reviewRequestedBy={{
                   id: 'user-1',
@@ -1021,6 +1020,221 @@ describe('the switch to draft button', () => {
           expect(saveButton).toBeEnabled();
         });
         expect(switchToDraft).toHaveBeenCalled();
+      });
+    });
+  });
+});
+
+describe('the publish button', () => {
+  it('does not render if the user is not staff', () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canPublishResearchOutput: false,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          published={false}
+          reviewRequestedBy={{
+            id: 'user-1',
+            firstName: 'User',
+            lastName: 'One',
+          }}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByText('Publish')).not.toBeInTheDocument();
+  });
+  it('does not render if the research output was published', () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canPublishResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          published={true}
+          reviewRequestedBy={{
+            id: 'user-1',
+            firstName: 'User',
+            lastName: 'One',
+          }}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+    expect(queryByText('Publish')).not.toBeInTheDocument();
+  });
+  it('renders if user is staff and output is not published', () => {
+    const { getByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canPublishResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutput
+          {...props}
+          documentType="Article"
+          published={false}
+          reviewRequestedBy={{
+            id: 'user-1',
+            firstName: 'User',
+            lastName: 'One',
+          }}
+        />
+        ,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = getByText('Publish');
+    expect(button).toBeVisible();
+  });
+  describe('displays the publish modal', () => {
+    it('and renders with the correct text fields for a team research output', () => {
+      const { getByText, getByRole } = render(
+        <MemoryRouter>
+          <ResearchOutputPermissionsContext.Provider
+            value={{
+              canPublishResearchOutput: true,
+            }}
+          >
+            <SharedResearchOutput
+              {...props}
+              documentType="Article"
+              published={false}
+              workingGroups={undefined}
+              reviewRequestedBy={{
+                id: 'user-1',
+                firstName: 'User',
+                lastName: 'One',
+              }}
+            />
+            ,
+          </ResearchOutputPermissionsContext.Provider>
+          ,
+        </MemoryRouter>,
+      );
+      const showModalButton = getByText('Publish');
+      fireEvent.click(showModalButton);
+      const description =
+        'All team members listed on this output will be notified and all CRN members will be able to access it. If you want to switch to draft after the output was published you need to contact.';
+
+      expect(getByText('Publish output for the whole hub?')).toBeVisible();
+      expect(getByText(description)).toBeVisible();
+      expect(
+        getByRole('link', { name: 'techsupport@asap.science' }),
+      ).toBeVisible();
+      expect(getByText('Cancel')).toBeVisible();
+      expect(getByText('Publish Output')).toBeVisible();
+    });
+    it('and renders with the correct text fields for a working group research output', () => {
+      const { getByText } = render(
+        <MemoryRouter>
+          <ResearchOutputPermissionsContext.Provider
+            value={{
+              canPublishResearchOutput: true,
+            }}
+          >
+            <SharedResearchOutput
+              {...props}
+              documentType="Article"
+              published={false}
+              workingGroups={[
+                {
+                  id: 'wg1',
+                  title: 'wg 1',
+                },
+              ]}
+              reviewRequestedBy={{
+                id: 'user-1',
+                firstName: 'User',
+                lastName: 'One',
+              }}
+            />
+            ,
+          </ResearchOutputPermissionsContext.Provider>
+          ,
+        </MemoryRouter>,
+      );
+      const showModalButton = getByText('Publish');
+      fireEvent.click(showModalButton);
+      const description =
+        'All working group members listed on this output will be notified and all CRN members will be able to access it. If you want to switch to draft after the output was published you need to contact.';
+
+      expect(getByText(description)).toBeVisible();
+    });
+    describe('and has the correct actions on the buttons', () => {
+      it('closes the modal correctly', () => {
+        const { getByText, queryByText } = render(
+          <MemoryRouter>
+            <ResearchOutputPermissionsContext.Provider
+              value={{
+                canPublishResearchOutput: true,
+              }}
+            >
+              <SharedResearchOutput
+                {...props}
+                documentType="Article"
+                published={false}
+                reviewRequestedBy={{
+                  id: 'user-1',
+                  firstName: 'User',
+                  lastName: 'One',
+                }}
+              />
+              ,
+            </ResearchOutputPermissionsContext.Provider>
+            ,
+          </MemoryRouter>,
+        );
+        const showModalButton = getByText('Publish');
+        fireEvent.click(showModalButton);
+        expect(getByText('Publish output for the whole hub?')).toBeVisible();
+        const closeButton = getByText('Cancel');
+        fireEvent.click(closeButton);
+        expect(
+          queryByText('Publish output for the whole hub?'),
+        ).not.toBeInTheDocument();
+      });
+      it('publishes a research output', async () => {
+        const publishOutput = jest.fn();
+        const { getByText } = render(
+          <MemoryRouter>
+            <ResearchOutputPermissionsContext.Provider
+              value={{
+                canPublishResearchOutput: true,
+              }}
+            >
+              <SharedResearchOutput
+                {...props}
+                documentType="Article"
+                published={false}
+                onPublish={publishOutput}
+                reviewRequestedBy={{
+                  id: 'user-1',
+                  firstName: 'User',
+                  lastName: 'One',
+                }}
+              />
+              ,
+            </ResearchOutputPermissionsContext.Provider>
+            ,
+          </MemoryRouter>,
+        );
+        const showModalButton = getByText('Publish');
+        fireEvent.click(showModalButton);
+        const publishButton = getByText('Publish Output');
+
+        fireEvent.click(publishButton);
+        await waitFor(() => {
+          expect(publishButton).toBeEnabled();
+        });
+        expect(publishOutput).toHaveBeenCalled();
       });
     });
   });

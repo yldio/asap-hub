@@ -78,6 +78,7 @@ export interface Fixture {
     event: EventUpdateDataObject,
   ) => Promise<EventFixture>;
   publishEvent: (id: string, status?: 'Published' | 'Draft') => Promise<void>;
+  deleteEvents: () => Promise<void>;
   createUser: (user: UserCreateDataObject) => Promise<UserFixture>;
   createTeam: (team: TeamCreateDataObject) => Promise<TeamFixture>;
   createInterestGroup: (

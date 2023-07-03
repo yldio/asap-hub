@@ -228,6 +228,21 @@ export class ContentfulFixture implements Fixture {
     }
   }
 
+  async deleteEvents() {
+    const environment = await this.getEnvironment();
+    const entries = await environment.getEntries({ content_type: 'events' });
+    await Promise.all(
+      entries.items.map(async (entry) => {
+        if (entry.isPublished()) {
+          const unpublishedEntry = await entry.unpublish();
+          await unpublishedEntry.delete();
+        } else {
+          await entry.delete();
+        }
+      }),
+    );
+  }
+
   async createUser(user: UserCreateDataObject) {
     const environment = await this.getEnvironment();
     const input = await this.prepareUser(user);
@@ -270,6 +285,7 @@ export class ContentfulFixture implements Fixture {
   async teardown() {
     const environment = await this.getEnvironment();
     while (this.apiAdapter.created.length) {
+      console.log('this.apiAdapter.created', this.apiAdapter.created);
       const id = this.apiAdapter.created.pop();
       if (id) {
         const toDelete = await environment.getEntry(id);

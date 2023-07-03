@@ -41,7 +41,7 @@ describe('Reminders', () => {
   let notLoggedInUser: UserFixture;
   let team: TeamFixture;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     jest.useFakeTimers();
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
@@ -80,7 +80,7 @@ describe('Reminders', () => {
     await fixtures.teardown();
   });
 
-  afterAll(() => {
+  afterAll(async () => {
     jest.useRealTimers();
   });
 
@@ -682,6 +682,7 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
+      console.log('expectReminderWithId', response.body.items);
       expect(response.body.items.map((reminder) => reminder.id)).toContain(id);
     });
   };
@@ -697,6 +698,8 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
+      console.log('expectNotToContainingReminderWithId', response.body.items);
+
       expect(response.body.items.map((reminder) => reminder.id)).not.toContain(
         id,
       );

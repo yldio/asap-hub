@@ -2301,6 +2301,8 @@ type Query {
   workingGroupDeliverablesCollection(limit: Int = 100, locale: String, order: [WorkingGroupDeliverablesOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupDeliverablesFilter): WorkingGroupDeliverablesCollection
   workingGroupLeaders(id: String!, locale: String, preview: Boolean): WorkingGroupLeaders
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [WorkingGroupLeadersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersFilter): WorkingGroupLeadersCollection
+  workingGroupLeadersOrWorkingGroupMembers(id: String!, locale: String, preview: Boolean): WorkingGroupLeadersOrWorkingGroupMembers
+  workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersOrWorkingGroupMembersFilter): WorkingGroupLeadersOrWorkingGroupMembersCollection
   workingGroupMembers(id: String!, locale: String, preview: Boolean): WorkingGroupMembers
   workingGroupMembersCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembersFilter): WorkingGroupMembersCollection
   workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
@@ -3178,6 +3180,7 @@ type UsersLinkingCollections {
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupLeadersCollection
+  workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupLeadersOrWorkingGroupMembersCollection
   workingGroupMembersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupMembersCollection
 }
 
@@ -3477,6 +3480,44 @@ enum WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionOrder {
   title_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers)"""
+type WorkingGroupLeadersOrWorkingGroupMembers implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  inactiveSinceDate(locale: String): DateTime
+  linkedFrom(allowedLocales: [String]): WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections
+  sys: Sys!
+  user(locale: String, preview: Boolean, where: UsersFilter): Users
+}
+
+type WorkingGroupLeadersOrWorkingGroupMembersCollection {
+  items: [WorkingGroupLeadersOrWorkingGroupMembers]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input WorkingGroupLeadersOrWorkingGroupMembersFilter {
+  AND: [WorkingGroupLeadersOrWorkingGroupMembersFilter]
+  OR: [WorkingGroupLeadersOrWorkingGroupMembersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  sys: SysFilter
+  user: cfUsersNestedFilter
+  user_exists: Boolean
+}
+
+type WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
 enum WorkingGroupLeadersOrder {
   inactiveSinceDate_ASC
   inactiveSinceDate_DESC
@@ -3572,7 +3613,7 @@ type WorkingGroups implements Entry {
   description(locale: String): WorkingGroupsDescription
   externalLink(locale: String): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
-  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupsMembersCollection
+  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersOrWorkingGroupMembersFilter): WorkingGroupsMembersCollection
   shortText(locale: String): String
   sys: Sys!
   title(locale: String): String
@@ -3652,6 +3693,7 @@ input WorkingGroupsFilter {
   externalLink_not: String
   externalLink_not_contains: String
   externalLink_not_in: [String]
+  members: cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter
   membersCollection_exists: Boolean
   shortText: String
   shortText_contains: String
@@ -4282,4 +4324,21 @@ input cfWorkingGroupDeliverablesNestedFilter {
   status_not_contains: String
   status_not_in: [String]
   sys: SysFilter
+}
+
+input cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter {
+  AND: [cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter]
+  OR: [cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  sys: SysFilter
+  user_exists: Boolean
 }

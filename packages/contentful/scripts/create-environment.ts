@@ -61,6 +61,22 @@ const app = async () => {
 
   console.log(`Environment ${contentfulEnvId} created`);
 
+  retry(
+    async () => {
+      const environment = await space.getEnvironment(contentfulEnvId);
+      if (environment.sys.status.sys.id !== 'ready') {
+        throw new Error('Not ready');
+      }
+    },
+    {
+      retries: 60,
+      minTimeout: 1000,
+      maxTimeout: 1000,
+      factor: 1,
+      randomize: false,
+    },
+  );
+
   const keys = await space.getApiKeys();
   const apiKey = keys.items.find(
     (key) => key.accessToken === contentfulAccessToken,

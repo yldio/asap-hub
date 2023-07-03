@@ -161,7 +161,6 @@ describe('Dashboard data provider', () => {
         },
       });
       const dashboardDataObject = await dashboardDataProvider.fetch({});
-      console.log(dashboardDataObject);
       expect(dashboardDataObject?.items[0]?.announcements).toEqual([]);
     });
 

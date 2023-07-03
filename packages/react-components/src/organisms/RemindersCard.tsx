@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ComponentProps, useState } from 'react';
 import { ReminderResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
@@ -25,7 +25,8 @@ const expandLink = css({ justifyContent: 'center', display: 'flex' });
 
 type ReminderProps = {
   canPublish: boolean;
-  reminders: ReminderResponse[];
+  reminders: (Pick<ReminderResponse, 'id'> &
+    ComponentProps<typeof ReminderItem>)[];
   limit?: number;
 };
 

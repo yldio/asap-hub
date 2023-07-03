@@ -2,7 +2,7 @@ import { ResearchOutputEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { ResearchOutputPayload } from '../../../src/handlers/event-bus';
-import { indexResearchOutputHandler } from '../../../src/handlers/research-output/index-handler';
+import { indexResearchOutputHandler } from '../../../src/handlers/research-output/algolia-index-research-output-handler';
 import {
   getResearchOutputEvent,
   getResearchOutputResponse,

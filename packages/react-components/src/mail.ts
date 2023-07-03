@@ -3,6 +3,9 @@ interface MailOptions {
   body?: string;
 }
 
+export const TECH_SUPPORT_EMAIL = 'techsupport@asap.science';
+export const GRANTS_EMAIL = 'grants@parkinsonsroadmap.org';
+
 export const createMailTo = (
   emailOrList: string | string[],
   { subject, body }: MailOptions = {},
@@ -24,19 +27,19 @@ export const createMailTo = (
 };
 
 export const mailToFeedback = (overrides?: MailOptions): string =>
-  createMailTo('techsupport@asap.science', {
+  createMailTo(TECH_SUPPORT_EMAIL, {
     subject: 'ASAP Hub: Hub Feedback',
     ...overrides,
   });
 
 export const mailToGrants = (overrides?: MailOptions): string =>
-  createMailTo('grants@parkinsonsroadmap.org', {
+  createMailTo(GRANTS_EMAIL, {
     subject: 'ASAP Hub: Grant support',
     ...overrides,
   });
 
 export const mailToSupport = (overrides?: MailOptions): string =>
-  createMailTo('techsupport@asap.science', {
+  createMailTo(TECH_SUPPORT_EMAIL, {
     subject: 'ASAP Hub: Tech support',
     ...overrides,
   });

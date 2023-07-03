@@ -2,7 +2,7 @@ import { ExternalAuthorEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { ExternalAuthorSquidexPayload } from '../../../src/handlers/event-bus';
-import { indexExternalAuthorEventsHandler } from '../../../src/handlers/event/index-external-author-events-handler';
+import { indexExternalAuthorEventsHandler } from '../../../src/handlers/event/algolia-index-external-author-events-handler';
 import { getListEventResponse } from '../../fixtures/events.fixtures';
 import { getExternalAuthorSquidexEvent } from '../../fixtures/external-authors.fixtures';
 import { toPayload } from '../../helpers/algolia';

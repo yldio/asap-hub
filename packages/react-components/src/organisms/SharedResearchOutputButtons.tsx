@@ -54,22 +54,26 @@ const reviewButton = css({
 
 type SharedResearchOutputButtonsProps = {
   id: string;
-  displayModal: boolean;
-  setDisplayModal: (state: boolean) => void;
+  displayReviewModal: boolean;
+  setDisplayReviewModal: (state: boolean) => void;
   reviewRequestedBy: ResearchOutputResponse['reviewRequestedBy'];
   duplicateLink: string | undefined;
   published: boolean;
+  displayPublishModal: boolean;
+  setDisplayPublishModal: (state: boolean) => void;
 };
 
 const SharedResearchOutputButtons: React.FC<
   SharedResearchOutputButtonsProps
 > = ({
   id,
-  displayModal,
-  setDisplayModal,
+  displayReviewModal,
+  setDisplayReviewModal,
   reviewRequestedBy,
   duplicateLink,
   published,
+  displayPublishModal,
+  setDisplayPublishModal,
 }) => {
   const {
     canEditResearchOutput,
@@ -112,7 +116,7 @@ const SharedResearchOutputButtons: React.FC<
             noMargin
             small
             primary
-            onClick={() => setDisplayModal(!displayModal)}
+            onClick={() => setDisplayReviewModal(!displayReviewModal)}
           >
             {actionIcon} Ready for PM Review
           </Button>
@@ -120,8 +124,24 @@ const SharedResearchOutputButtons: React.FC<
       )}
       {!published && reviewRequestedBy && canPublishResearchOutput && (
         <div css={reviewButton}>
-          <Button noMargin small onClick={() => setDisplayModal(!displayModal)}>
+          <Button
+            noMargin
+            small
+            onClick={() => setDisplayReviewModal(!displayReviewModal)}
+          >
             Switch to Draft
+          </Button>
+        </div>
+      )}
+      {!published && canPublishResearchOutput && (
+        <div css={reviewRequestedBy ? leftButtons : reviewButton}>
+          <Button
+            noMargin
+            primary
+            small
+            onClick={() => setDisplayPublishModal(!displayPublishModal)}
+          >
+            Publish
           </Button>
         </div>
       )}

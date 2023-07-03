@@ -161,8 +161,6 @@ export class SquidexFixture implements Fixture {
     }
   }
 
-  async deleteEvents() {}
-
   async createUser(user: UserCreateDataObject) {
     const input = await this.prepareUser(user);
     const result = await userRestClient.create(parseToSquidex(input));

@@ -10,6 +10,7 @@ import {
   GuideContent,
 } from '@asap-hub/contentful';
 import { GuideDataProvider } from '../types';
+import reducer from '../../utils/reducer';
 
 type GuideItem = NonNullable<
   NonNullable<FetchGuideQuery['guidesCollection']>['items']
@@ -40,15 +41,6 @@ const parseGuideContent = (
   linkUrl: guideContent?.linkUrl || '',
   linkText: guideContent?.linkText || '',
 });
-
-const reducer =
-  <T, K>(fn: (item: NonNullable<T>) => K) =>
-  (acc: K[], item: T) => {
-    if (!item) {
-      return acc;
-    }
-    return [...acc, fn(item)];
-  };
 
 const reduceContent = reducer<GuideContentItem | null, GuideContentDataObject>(
   parseGuideContent,

@@ -11,6 +11,7 @@ import { parseContentfulGraphQlUsers } from './users.data-provider';
 import { parseUserToResponse } from '../users.data-provider';
 import { parseContentfulGraphQlPages } from './pages.data-provider';
 import { parseContentfulGraphQlTutorials } from './tutorials.data-provider';
+import reducer from '../../utils/reducer';
 
 type DiscoverItem = NonNullable<
   NonNullable<FetchDiscoverQuery['discoverCollection']>['items']
@@ -42,15 +43,6 @@ export class DiscoverContentfulDataProvider implements DiscoverDataProvider {
     return parseGraphQLDiscover(discoverCollection?.items[0] || null);
   }
 }
-
-const reducer =
-  <T, K>(fn: (item: NonNullable<T>) => K) =>
-  (acc: K[], item: T) => {
-    if (!item) {
-      return acc;
-    }
-    return [...acc, fn(item)];
-  };
 
 const reduceUsers = reducer<UserItem, UserResult>(parseContentfulGraphQlUsers);
 const reduceTutorials = reducer<TutorialItem, TutorialResult>(

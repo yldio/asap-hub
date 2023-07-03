@@ -6,8 +6,8 @@ import { validateEventFetchParameters } from '../validation/event.validation';
 import { validateGroupParameters } from '../validation/group.validation';
 
 export const interestGroupRouteFactory = (
-  groupsController: InterestGroupController,
-  eventsController: EventController,
+  groupController: InterestGroupController,
+  eventController: EventController,
 ): Router => {
   const interestGroupRoutes = Router();
 
@@ -16,7 +16,7 @@ export const interestGroupRouteFactory = (
 
     const query = validateFetchOptions(parameters);
 
-    const result = await groupsController.fetch(query);
+    const result = await groupController.fetch(query);
 
     res.json(result);
   });
@@ -26,7 +26,7 @@ export const interestGroupRouteFactory = (
     async (req, res) => {
       const { params } = req;
       const { groupId } = validateGroupParameters(params);
-      const result = await groupsController.fetchById(groupId);
+      const result = await groupController.fetchById(groupId);
 
       res.json(result);
     },
@@ -37,7 +37,7 @@ export const interestGroupRouteFactory = (
     const { params } = req;
     const { groupId } = validateGroupParameters(params);
 
-    const result = await eventsController.fetch({
+    const result = await eventController.fetch({
       filter: { groupId },
       ...query,
     });

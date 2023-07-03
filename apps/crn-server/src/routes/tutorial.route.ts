@@ -2,8 +2,8 @@ import { Router } from 'express';
 import TutorialController from '../controllers/tutorial.controller';
 import { validateTutorialParameters } from '../validation/tutorial.validation';
 
-export const tutorialsRouteFactory = (
-  tutorialsController: TutorialController,
+export const tutorialRouteFactory = (
+  tutorialController: TutorialController,
 ): Router => {
   const tutorialsRoutes = Router();
 
@@ -11,7 +11,7 @@ export const tutorialsRouteFactory = (
     '/tutorials/:tutorialId',
     async (req, res) => {
       const { tutorialId } = validateTutorialParameters(req.params);
-      const result = await tutorialsController.fetchById(tutorialId);
+      const result = await tutorialController.fetchById(tutorialId);
 
       res.json(result);
     },

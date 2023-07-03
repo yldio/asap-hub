@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { pageResponse } from '../fixtures/page.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
-import { pageControllerMock } from '../mocks/page-controller.mock';
+import { pageControllerMock } from '../mocks/page.controller.mock';
 
 describe('/pages/ route', () => {
   const app = appFactory({

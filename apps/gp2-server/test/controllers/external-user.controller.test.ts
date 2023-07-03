@@ -4,7 +4,7 @@ import {
   getExternalUserDataObject,
   getExternalUserResponse,
 } from '../fixtures/external-users.fixtures';
-import { externalUserDataProviderMock } from '../mocks/external-user-data-provider.mock';
+import { externalUserDataProviderMock } from '../mocks/external-user.data-provider.mock';
 
 describe('External Users controller', () => {
   const userController = new ExternalUsers(externalUserDataProviderMock);

@@ -4,7 +4,7 @@ import WorkingGroupController from '../controllers/working-group.controller';
 import { validateWorkingGroupParameters } from '../validation/working-group.validation';
 
 export const workingGroupRouteFactory = (
-  workingGroupsController: WorkingGroupController,
+  workingGroupController: WorkingGroupController,
 ): Router => {
   const workingGroupRoutes = Router();
 
@@ -13,7 +13,7 @@ export const workingGroupRouteFactory = (
     async (req, res) => {
       const { params } = req;
       const { workingGroupId } = validateWorkingGroupParameters(params);
-      const result = await workingGroupsController.fetchById(workingGroupId);
+      const result = await workingGroupController.fetchById(workingGroupId);
 
       res.json(result);
     },
@@ -22,7 +22,7 @@ export const workingGroupRouteFactory = (
   workingGroupRoutes.get('/working-groups', async (req, res) => {
     const { query } = req;
     const options = validateFetchOptions(query);
-    const result = await workingGroupsController.fetch(options);
+    const result = await workingGroupController.fetch(options);
 
     res.json(result);
   });

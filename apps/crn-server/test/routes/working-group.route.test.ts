@@ -6,7 +6,7 @@ import { appFactory } from '../../src/app';
 import { getWorkingGroupResponse } from '../fixtures/working-groups.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
-import { workingGroupControllerMock } from '../mocks/working-group-controller.mock';
+import { workingGroupControllerMock } from '../mocks/working-group.controller.mock';
 
 describe('/working-groups/ route', () => {
   const app = appFactory({

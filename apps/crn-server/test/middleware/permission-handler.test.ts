@@ -7,9 +7,9 @@ import { appFactory } from '../../src/app';
 import { listInterestGroupsResponse } from '../fixtures/interest-groups.fixtures';
 import { pageResponse } from '../fixtures/page.fixtures';
 import { getUserResponse } from '../fixtures/users.fixtures';
-import { interestGroupControllerMock } from '../mocks/interest-group-controller.mock';
-import { pageControllerMock } from '../mocks/page-controller.mock';
-import { userControllerMock } from '../mocks/user-controller.mock';
+import { interestGroupControllerMock } from '../mocks/interest-group.controller.mock';
+import { pageControllerMock } from '../mocks/page.controller.mock';
+import { userControllerMock } from '../mocks/user.controller.mock';
 
 describe('Permission middleware', () => {
   const mockUser = createUserResponse();

@@ -3,7 +3,7 @@ import {
   getListNewsDataObject,
   getListNewsResponse,
 } from '../fixtures/news.fixtures';
-import { newsDataProviderMock } from '../mocks/news-data-provider.mock';
+import { newsDataProviderMock } from '../mocks/news.data-provider.mock';
 
 describe('News controller', () => {
   const newsController = new News(newsDataProviderMock);

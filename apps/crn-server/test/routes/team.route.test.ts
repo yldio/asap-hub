@@ -10,9 +10,9 @@ import {
   getListTeamResponse,
   getTeamResponse,
 } from '../fixtures/teams.fixtures';
-import { interestGroupControllerMock } from '../mocks/interest-group-controller.mock';
+import { interestGroupControllerMock } from '../mocks/interest-group.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
-import { teamControllerMock } from '../mocks/team-controller.mock';
+import { teamControllerMock } from '../mocks/team.controller.mock';
 
 describe('/teams/ route', () => {
   const loggedUser: User = {

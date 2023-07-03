@@ -127,14 +127,14 @@ import { discoverRouteFactory } from './routes/discover.route';
 import { guideRouteFactory } from './routes/guides.route';
 import { eventRouteFactory } from './routes/event.route';
 import { interestGroupRouteFactory } from './routes/interest-group.route';
-import { labsRouteFactory } from './routes/lab.route';
+import { labRouteFactory } from './routes/lab.route';
 import { newsRouteFactory } from './routes/news.route';
 import { pageRouteFactory } from './routes/page.route';
 import { reminderRouteFactory } from './routes/reminder.route';
 import { researchOutputRouteFactory } from './routes/research-output.route';
-import { researchTagsRouteFactory } from './routes/research-tag.route';
+import { researchTagRouteFactory } from './routes/research-tag.route';
 import { teamRouteFactory } from './routes/team.route';
-import { tutorialsRouteFactory } from './routes/tutorial.route';
+import { tutorialRouteFactory } from './routes/tutorial.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { workingGroupRouteFactory } from './routes/working-group.route';
 import assignUserToContext from './utils/assign-user-to-context';
@@ -609,16 +609,16 @@ export const appFactory = (libs: Libs = {}): Express => {
     interestGroupController,
     eventController,
   );
-  const labsRoutes = labsRouteFactory(labsController);
+  const labsRoutes = labRouteFactory(labsController);
   const newsRoutes = newsRouteFactory(newsController);
   const pageRoutes = pageRouteFactory(pageController);
   const reminderRoutes = reminderRouteFactory(reminderController);
   const researchOutputsRoutes = researchOutputRouteFactory(
     researchOutputController,
   );
-  const researchTagsRoutes = researchTagsRouteFactory(researchTagController);
+  const researchTagsRoutes = researchTagRouteFactory(researchTagController);
   const teamRoutes = teamRouteFactory(interestGroupController, teamController);
-  const tutorialsRoutes = tutorialsRouteFactory(tutorialsController);
+  const tutorialsRoutes = tutorialRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController, interestGroupController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);

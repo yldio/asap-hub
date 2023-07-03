@@ -3,7 +3,7 @@ import { Response, Router } from 'express';
 import ResearchTagController from '../controllers/research-tag.controller';
 import { validateResearchTagFetchPaginationOptions } from '../validation/research-tag.validation';
 
-export const researchTagsRouteFactory = (
+export const researchTagRouteFactory = (
   researchTagController: ResearchTagController,
 ): Router => {
   const researchTagsRoutes = Router();

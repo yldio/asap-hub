@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getTutorialResponse } from '../fixtures/tutorials.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
-import { tutorialsControllerMock } from '../mocks/tutorials-controller.mock';
+import { tutorialsControllerMock } from '../mocks/tutorials.controller.mock';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 
 describe('/tutorials/ route', () => {

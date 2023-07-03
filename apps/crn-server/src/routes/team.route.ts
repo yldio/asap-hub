@@ -15,8 +15,8 @@ import {
 } from '../validation/team.validation';
 
 export const teamRouteFactory = (
-  interestGroupsController: InterestGroupController,
-  teamsController: TeamController,
+  interestGroupController: InterestGroupController,
+  teamController: TeamController,
 ): Router => {
   const teamRoutes = Router();
 
@@ -25,7 +25,7 @@ export const teamRouteFactory = (
 
     const options = validateFetchOptions(query);
 
-    const result = await teamsController.fetch({
+    const result = await teamController.fetch({
       ...options,
       showTeamTools: req.loggedInUser?.teams.map((team) => team.id),
     });
@@ -43,7 +43,7 @@ export const teamRouteFactory = (
         (team) => team.id === teamId,
       );
 
-      const result = await teamsController.fetchById(teamId, { showTools });
+      const result = await teamController.fetchById(teamId, { showTools });
 
       res.json(result);
     },
@@ -61,7 +61,7 @@ export const teamRouteFactory = (
         throw Boom.forbidden();
       }
 
-      const result = await teamsController.update(teamId, tools);
+      const result = await teamController.update(teamId, tools);
 
       res.json(result);
     },
@@ -74,7 +74,7 @@ export const teamRouteFactory = (
       const { teamId } = validateTeamParameters(params);
       const options = validateFetchOptions(query);
 
-      const result = await interestGroupsController.fetchByTeamId(
+      const result = await interestGroupController.fetchByTeamId(
         teamId,
         options,
       );

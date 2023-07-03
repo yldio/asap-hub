@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getListReminderResponse } from '../fixtures/reminders.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
-import { reminderControllerMock } from '../mocks/reminder-controller.mock';
+import { reminderControllerMock } from '../mocks/reminder.controller.mock';
 
 describe('/reminders/ route', () => {
   const getLoggedUser = jest.fn().mockReturnValue(createAuthUser());

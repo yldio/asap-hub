@@ -50,7 +50,7 @@ export const userPublicRouteFactory = (
 
 export const userRouteFactory = (
   userController: UserController,
-  interestGroupsController: InterestGroupController,
+  interestGroupController: InterestGroupController,
 ): Router => {
   const userRoutes = Router();
 
@@ -93,7 +93,7 @@ export const userRouteFactory = (
 
       const { userId } = validateUserParameters(params);
 
-      const result = await interestGroupsController.fetchByUserId(userId);
+      const result = await interestGroupController.fetchByUserId(userId);
 
       res.json(result);
     },

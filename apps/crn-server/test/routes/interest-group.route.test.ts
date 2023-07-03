@@ -12,8 +12,8 @@ import {
   getListInterestGroupResponse,
 } from '../fixtures/interest-groups.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { eventControllerMock } from '../mocks/event-controller.mock';
-import { interestGroupControllerMock } from '../mocks/interest-group-controller.mock';
+import { eventControllerMock } from '../mocks/event.controller.mock';
+import { interestGroupControllerMock } from '../mocks/interest-group.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/groups/ route', () => {

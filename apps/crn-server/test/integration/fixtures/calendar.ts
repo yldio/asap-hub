@@ -9,9 +9,6 @@ export const getCalendarFixture = (
   return {
     color: '#2952A3',
     name: chance.string(),
-    syncToken: chance.string(),
-    expirationDate: chance.integer(),
-    resourceId: chance.string(),
     googleCalendarId: chance.email(),
     ...props,
   };

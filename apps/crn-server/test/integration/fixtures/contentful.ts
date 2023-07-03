@@ -3,7 +3,6 @@ import {
   getLinkEntity,
   patchAndPublish,
 } from '@asap-hub/contentful';
-
 import {
   createClient,
   RestAdapter,
@@ -80,14 +79,42 @@ export class ContentfulFixture implements Fixture {
   }
 
   private async prepareEvent(props: EventCreateDataObject) {
-    return props;
+    const environment = await this.getEnvironment();
+    const addLocale = true;
+    return {
+      ...props,
+      calendar: getLinkEntity(props.calendar),
+      speakers: await Promise.all(
+        (props.speakers || [])
+          .map(async (speaker) => {
+            if (speaker.team[0] && speaker.user[0]) {
+              const eventSpeaker = await environment.createEntry(
+                'eventSpeakers',
+                {
+                  fields: addLocaleToFields({
+                    team: getLinkEntity(speaker.team[0]),
+                    user: getLinkEntity(speaker.user[0]),
+                  }),
+                },
+              );
+              await eventSpeaker.publish();
+              return getLinkEntity(eventSpeaker.sys.id);
+            }
+            return null;
+          })
+          .filter(Boolean),
+      ),
+      notes: getMaterial(props.notes, addLocale),
+      presentation: getMaterial(props.presentation, addLocale),
+      videoRecording: getMaterial(props.videoRecording, addLocale),
+    };
   }
 
   private async preparePatchEvent(props: EventUpdateDataObject) {
     return {
-      notes: props.notes ?? undefined,
-      presentation: props.presentation ?? undefined,
-      videoRecording: props.videoRecording ?? undefined,
+      notes: getMaterial(props.notes),
+      presentation: getMaterial(props.presentation),
+      videoRecording: getMaterial(props.videoRecording),
     };
   }
 
@@ -249,3 +276,31 @@ export class ContentfulFixture implements Fixture {
     }
   }
 }
+
+const getRichTextDocument = (text: string) => ({
+  data: {
+    nodeType: 'document',
+    data: {},
+    content: [
+      {
+        nodeType: 'paragraph',
+        data: {},
+        content: [
+          {
+            nodeType: 'text',
+            value: text,
+            marks: [],
+            data: {},
+          },
+        ],
+      },
+    ],
+  },
+});
+
+const getMaterial = (material?: string | null, addLocale: boolean = false) => {
+  if (!material) return undefined;
+
+  const document = getRichTextDocument(material);
+  return addLocale ? { 'en-US': document } : document;
+};

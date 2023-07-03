@@ -10,7 +10,15 @@ import {
 } from '@asap-hub/model';
 
 export type CalendarCreateDataObject = CommonCalendarCreateDataObject;
-export type EventCreateDataObject = CommonEventCreateDataObject;
+export type EventCreateDataObject = CommonEventCreateDataObject & {
+  speakers?: {
+    user: string[];
+    team: string[];
+  }[];
+  notes?: string | null;
+  videoRecording?: string | null;
+  presentation?: string | null;
+};
 export type EventUpdateDataObject = Pick<
   CommonEventUpdateDataObject,
   'notes' | 'presentation' | 'videoRecording'

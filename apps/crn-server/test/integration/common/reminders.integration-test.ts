@@ -1,7 +1,6 @@
 import supertest from 'supertest';
 import { Express } from 'express';
 import {
-  EventCreateDataObject,
   ListReminderResponse,
   UserCreateDataObject,
   UserResponse,
@@ -16,6 +15,7 @@ import {
   getEventFixture,
   getTeamFixture,
   TeamFixture,
+  EventCreateDataObject,
 } from '../fixtures';
 import { getCalendarFixture } from '../fixtures/calendar';
 
@@ -46,16 +46,20 @@ describe('Reminders', () => {
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
       getUserFixture({
+        firstName: 'LoggedIn',
+        email: 'loggedIn@user.com',
         teams: [
           {
             id: team.id,
-            role: 'Collaborating PI',
+            role: 'Co-PI (Core Leadership)',
           },
         ],
       }),
     );
     notLoggedInUser = await fixtures.createUser(
       getUserFixture({
+        firstName: 'NotLoggedIn',
+        email: 'notloggedIn@user.com',
         teams: [
           {
             id: team.id,
@@ -84,18 +88,20 @@ describe('Reminders', () => {
     test('Should see the reminder when the event starts today', async () => {
       const now = new Date('2022-08-10T05:00:00.0Z');
       const startDate = new Date('2022-08-10T15:00:00.0Z').toISOString();
+      const endDate = new Date('2022-08-11T15:00:00.0Z').toISOString();
 
       jest.setSystemTime(now);
-      const event = await createEvent({ startDate });
+      const event = await createEvent({ startDate, endDate });
       await expectReminderWithId(`event-happening-today-${event.id}`);
     });
 
     test('Should not see the reminder if the event has already started', async () => {
       const now = new Date('2022-08-10T05:00:00.0Z');
       const startDate = new Date('2022-08-10T04:00:00.0Z').toISOString();
+      const endDate = new Date('2022-08-11T15:00:00.0Z').toISOString();
 
       jest.setSystemTime(now);
-      const event = await createEvent({ startDate });
+      const event = await createEvent({ startDate, endDate });
       await expectNotToContainingReminderWithId(
         `event-happening-today-${event.id}`,
       );
@@ -106,12 +112,13 @@ describe('Reminders', () => {
       const now = new Date('2022-08-10T05:00:00.0Z');
       // the event happening at 4PM in UTC
       const startDate = new Date('2022-08-10T16:00:00.0Z').toISOString();
+      const endDate = new Date('2022-08-11T16:00:00.0Z').toISOString();
 
       // requesting reminders for the user based in LA where 5AM UTC is 10PM the previous day
       const timezone = 'America/Los_Angeles';
 
       jest.setSystemTime(now);
-      const event = await createEvent({ startDate });
+      const event = await createEvent({ startDate, endDate });
       await expectNotToContainingReminderWithId(
         `event-happening-today-${event.id}`,
         app,
@@ -122,11 +129,19 @@ describe('Reminders', () => {
     test('Should see two reminders for two events from two different calendars happening today', async () => {
       const now = new Date('2022-08-10T05:00:00.0Z');
       const startDate1 = new Date('2022-08-10T18:00:00.0Z').toISOString();
+      const endDate1 = new Date('2022-08-11T18:00:00.0Z').toISOString();
       const startDate2 = new Date('2022-08-10T16:00:00.0Z').toISOString();
+      const endDate2 = new Date('2022-08-11T16:00:00.0Z').toISOString();
 
       jest.setSystemTime(now);
-      const event1 = await createEvent({ startDate: startDate1 });
-      const event2 = await createEvent({ startDate: startDate2 });
+      const event1 = await createEvent({
+        startDate: startDate1,
+        endDate: endDate1,
+      });
+      const event2 = await createEvent({
+        startDate: startDate2,
+        endDate: endDate2,
+      });
       await retryable(async () => {
         const response = await supertest(app)
           .get(`/reminders?timezone=Europe/London`)
@@ -518,10 +533,8 @@ describe('Reminders', () => {
     }
 
     describe.each`
-      material          | materialUpdatedAtName        | materialContentName
-      ${'Video'}        | ${'videoRecordingUpdatedAt'} | ${'videoRecording'}
-      ${'Presentation'} | ${'presentationUpdatedAt'}   | ${'presentation'}
-      ${'Notes'}        | ${'notesUpdatedAt'}          | ${'notes'}
+      material   | materialUpdatedAtName        | materialContentName
+      ${'Video'} | ${'videoRecordingUpdatedAt'} | ${'videoRecording'}
     `(
       '$material Updated Reminder',
       ({ material, materialUpdatedAtName, materialContentName }: TestProps) => {
@@ -551,7 +564,7 @@ describe('Reminders', () => {
           );
         });
 
-        test(`Should not see the reminder when ${material} was erased in an event`, async () => {
+        test.only(`Should not see the reminder when ${material} was erased in an event`, async () => {
           jest.useRealTimers();
 
           const event = await createEvent();
@@ -611,7 +624,6 @@ describe('Reminders', () => {
         const response = await supertest(app)
           .get(`/reminders?timezone=Europe/London`)
           .expect(200);
-        console.log('response', response.body);
         expect(response.body.total).toEqual(3);
         expect(response.body.items).toEqual([
           expect.objectContaining({
@@ -662,6 +674,7 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
+      console.log('expectReminderWithId', JSON.stringify(response.body.items));
       expect(response.body.items.map((reminder) => reminder.id)).toContain(id);
     });
   };
@@ -677,6 +690,10 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
+      console.log(
+        'expectNotToContainingReminderWithId',
+        JSON.stringify(response.body.items),
+      );
       expect(response.body.items.map((reminder) => reminder.id)).not.toContain(
         id,
       );

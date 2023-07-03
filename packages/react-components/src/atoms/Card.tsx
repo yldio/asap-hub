@@ -6,7 +6,7 @@ import { themes } from '../theme';
 
 const containerStyles = css({
   boxSizing: 'border-box',
-  maxWidth: '100%',
+  width: '100%',
   borderWidth: 1,
   borderStyle: 'solid',
   borderRadius: `${borderRadius / perRem}em`,

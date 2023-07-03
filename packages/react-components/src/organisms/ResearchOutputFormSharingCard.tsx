@@ -111,6 +111,24 @@ const ResearchOutputFormSharingCard: React.FC<
   return (
     <FormCard title="What are you sharing?">
       <LabeledTextField
+        title="Title"
+        maxLength={350}
+        subtitle="(required)"
+        onChange={(newValue) => {
+          clearServerValidationError('/title');
+          onChangeTitle(newValue);
+        }}
+        customValidationMessage={titleValidationMessage}
+        getValidationMessage={(validationState) =>
+          validationState.valueMissing || validationState.patternMismatch
+            ? 'Please enter a title'
+            : undefined
+        }
+        value={title}
+        required
+        enabled={!isSaving}
+      />
+      <LabeledTextField
         title="URL"
         subtitle={urlRequired ? '(required)' : '(optional)'}
         required={urlRequired}
@@ -167,24 +185,6 @@ const ResearchOutputFormSharingCard: React.FC<
           placeholder="Select subtype"
         />
       )}
-      <LabeledTextField
-        title="Title"
-        maxLength={350}
-        subtitle="(required)"
-        onChange={(newValue) => {
-          clearServerValidationError('/title');
-          onChangeTitle(newValue);
-        }}
-        customValidationMessage={titleValidationMessage}
-        getValidationMessage={(validationState) =>
-          validationState.valueMissing || validationState.patternMismatch
-            ? 'Please enter a title'
-            : undefined
-        }
-        value={title}
-        required
-        enabled={!isSaving}
-      />
       <LabeledTextArea
         title="Description"
         subtitle="(required)"

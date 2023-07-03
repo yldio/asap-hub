@@ -3,7 +3,7 @@ import * as graphql from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
 const documents = {
-  '\n  fragment AnnouncementsContentData on Announcements {\n    description\n    deadline\n    link\n  }\n':
+  '\n  fragment AnnouncementsContentData on Announcements {\n    sys {\n      id\n    }\n    description\n    deadline\n    link\n  }\n':
     graphql.AnnouncementsContentDataFragmentDoc,
   '\n  query FetchAnnouncements($limit: Int) {\n    announcementsCollection(limit: $limit) {\n      total\n      items {\n        ...AnnouncementsContentData\n      }\n    }\n  }\n  \n':
     graphql.FetchAnnouncementsDocument,
@@ -92,8 +92,8 @@ const documents = {
 };
 
 export function gql(
-  source: '\n  fragment AnnouncementsContentData on Announcements {\n    description\n    deadline\n    link\n  }\n',
-): (typeof documents)['\n  fragment AnnouncementsContentData on Announcements {\n    description\n    deadline\n    link\n  }\n'];
+  source: '\n  fragment AnnouncementsContentData on Announcements {\n    sys {\n      id\n    }\n    description\n    deadline\n    link\n  }\n',
+): (typeof documents)['\n  fragment AnnouncementsContentData on Announcements {\n    sys {\n      id\n    }\n    description\n    deadline\n    link\n  }\n'];
 export function gql(
   source: '\n  query FetchAnnouncements($limit: Int) {\n    announcementsCollection(limit: $limit) {\n      total\n      items {\n        ...AnnouncementsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchAnnouncements($limit: Int) {\n    announcementsCollection(limit: $limit) {\n      total\n      items {\n        ...AnnouncementsContentData\n      }\n    }\n  }\n  \n'];

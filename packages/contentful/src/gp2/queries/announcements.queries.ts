@@ -4,6 +4,9 @@ import { gql } from 'graphql-tag';
 
 export const announcementsContentQueryFragment = gql`
   fragment AnnouncementsContentData on Announcements {
+    sys {
+      id
+    }
     description
     deadline
     link

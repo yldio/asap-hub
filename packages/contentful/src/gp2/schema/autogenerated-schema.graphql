@@ -2,9 +2,7 @@ schema {
   query: Query
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements)"""
 type Announcements implements Entry {
   contentfulMetadata: ContentfulMetadata!
   deadline(locale: String): DateTime
@@ -52,19 +50,8 @@ input AnnouncementsFilter {
 }
 
 type AnnouncementsLinkingCollections {
-  dashboardCollection(
-    limit: Int = 100
-    locale: String
-    order: [AnnouncementsLinkingCollectionsDashboardCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): DashboardCollection
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  dashboardCollection(limit: Int = 100, locale: String, order: [AnnouncementsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0): DashboardCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum AnnouncementsLinkingCollectionsDashboardCollectionOrder {
@@ -95,9 +82,7 @@ enum AnnouncementsOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-Represents a binary file in a space. An asset can be any file type.
-"""
+"""Represents a binary file in a space. An asset can be any file type."""
 type Asset {
   contentType(locale: String): String
   contentfulMetadata: ContentfulMetadata!
@@ -189,26 +174,9 @@ input AssetFilter {
 }
 
 type AssetLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  eventsCollection(
-    limit: Int = 100
-    locale: String
-    order: [AssetLinkingCollectionsEventsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): EventsCollection
-  usersCollection(
-    limit: Int = 100
-    locale: String
-    order: [AssetLinkingCollectionsUsersCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): UsersCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+  usersCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
 }
 
 enum AssetLinkingCollectionsEventsCollectionOrder {
@@ -332,9 +300,7 @@ enum AssetOrder {
   width_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars)"""
 type Calendars implements Entry {
   color(locale: String): String
   contentfulMetadata: ContentfulMetadata!
@@ -382,33 +348,10 @@ input CalendarsFilter {
 }
 
 type CalendarsLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  eventsCollection(
-    limit: Int = 100
-    locale: String
-    order: [CalendarsLinkingCollectionsEventsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): EventsCollection
-  projectsCollection(
-    limit: Int = 100
-    locale: String
-    order: [CalendarsLinkingCollectionsProjectsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): ProjectsCollection
-  workingGroupsCollection(
-    limit: Int = 100
-    locale: String
-    order: [CalendarsLinkingCollectionsWorkingGroupsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): WorkingGroupsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum CalendarsLinkingCollectionsEventsCollectionOrder {
@@ -549,9 +492,7 @@ type ContentfulTag {
   name: String
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts)"""
 type ContributingCohorts implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ContributingCohortsLinkingCollections
@@ -581,19 +522,8 @@ input ContributingCohortsFilter {
 }
 
 type ContributingCohortsLinkingCollections {
-  contributingCohortsMembershipCollection(
-    limit: Int = 100
-    locale: String
-    order: [ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): ContributingCohortsMembershipCollection
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder], preview: Boolean, skip: Int = 0): ContributingCohortsMembershipCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder {
@@ -611,19 +541,11 @@ enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectio
   sys_publishedVersion_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership)"""
 type ContributingCohortsMembership implements Entry {
   contentfulMetadata: ContentfulMetadata!
-  contributingCohort(
-    locale: String
-    preview: Boolean
-    where: ContributingCohortsFilter
-  ): ContributingCohorts
-  linkedFrom(
-    allowedLocales: [String]
-  ): ContributingCohortsMembershipLinkingCollections
+  contributingCohort(locale: String, preview: Boolean, where: ContributingCohortsFilter): ContributingCohorts
+  linkedFrom(allowedLocales: [String]): ContributingCohortsMembershipLinkingCollections
   role(locale: String): String
   studyLink(locale: String): String
   sys: Sys!
@@ -660,19 +582,8 @@ input ContributingCohortsMembershipFilter {
 }
 
 type ContributingCohortsMembershipLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  usersCollection(
-    limit: Int = 100
-    locale: String
-    order: [ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): UsersCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  usersCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
 }
 
 enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
@@ -754,24 +665,11 @@ enum ContributingCohortsOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard)"""
 type Dashboard implements Entry {
-  announcementsCollection(
-    limit: Int = 100
-    locale: String
-    order: [DashboardAnnouncementsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: AnnouncementsFilter
-  ): DashboardAnnouncementsCollection
+  announcementsCollection(limit: Int = 100, locale: String, order: [DashboardAnnouncementsCollectionOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): DashboardAnnouncementsCollection
   contentfulMetadata: ContentfulMetadata!
-  latestStats(
-    locale: String
-    preview: Boolean
-    where: LatestStatsFilter
-  ): LatestStats
+  latestStats(locale: String, preview: Boolean, where: LatestStatsFilter): LatestStats
   linkedFrom(allowedLocales: [String]): DashboardLinkingCollections
   sys: Sys!
 }
@@ -819,12 +717,7 @@ input DashboardFilter {
 }
 
 type DashboardLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum DashboardOrder {
@@ -846,9 +739,7 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z,
 """
 scalar DateTime
 
-"""
-The 'Dimension' type represents dimensions as whole numeric values between `1` and `4000`.
-"""
+"""The 'Dimension' type represents dimensions as whole numeric values between `1` and `4000`."""
 scalar Dimension
 
 interface Entry {
@@ -881,9 +772,7 @@ enum EntryOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers)"""
 type EventSpeakers implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
@@ -916,19 +805,8 @@ input EventSpeakersFilter {
 }
 
 type EventSpeakersLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  eventsCollection(
-    limit: Int = 100
-    locale: String
-    order: [EventSpeakersLinkingCollectionsEventsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): EventsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [EventSpeakersLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
 }
 
 enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
@@ -993,9 +871,7 @@ enum EventSpeakersOrder {
 
 union EventSpeakersUser = ExternalUsers | Users
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events)"""
 type Events implements Entry {
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
@@ -1016,14 +892,7 @@ type Events implements Entry {
   presentation(locale: String): EventsPresentation
   presentationPermanentlyUnavailable(locale: String): Boolean
   presentationUpdatedAt(locale: String): DateTime
-  speakersCollection(
-    limit: Int = 100
-    locale: String
-    order: [EventsSpeakersCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: EventSpeakersFilter
-  ): EventsSpeakersCollection
+  speakersCollection(limit: Int = 100, locale: String, order: [EventsSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventsSpeakersCollection
   startDate(locale: String): DateTime
   startDateTimeZone(locale: String): String
   status(locale: String): String
@@ -1189,12 +1058,7 @@ input EventsFilter {
 }
 
 type EventsLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 type EventsNotes {
@@ -1342,9 +1206,7 @@ type EventsVideoRecordingResources {
   block: [ResourceLink!]!
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers)"""
 type ExternalUsers implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ExternalUsersLinkingCollections
@@ -1382,26 +1244,9 @@ input ExternalUsersFilter {
 }
 
 type ExternalUsersLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  eventSpeakersCollection(
-    limit: Int = 100
-    locale: String
-    order: [ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): EventSpeakersCollection
-  outputsCollection(
-    limit: Int = 100
-    locale: String
-    order: [ExternalUsersLinkingCollectionsOutputsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): OutputsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventSpeakersCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
 }
 
 enum ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder {
@@ -1446,9 +1291,7 @@ enum ExternalUsersLinkingCollectionsOutputsCollectionOrder {
   type_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsersOrUsers)"""
 type ExternalUsersOrUsers implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ExternalUsersOrUsersLinkingCollections
@@ -1478,12 +1321,7 @@ input ExternalUsersOrUsersFilter {
 }
 
 type ExternalUsersOrUsersLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum ExternalUsersOrder {
@@ -1501,16 +1339,12 @@ enum ExternalUsersOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-The 'HexColor' type represents color in `rgb:ffffff` string format.
-"""
+"""The 'HexColor' type represents color in `rgb:ffffff` string format."""
 scalar HexColor
 
 enum ImageFormat {
   AVIF
-  """
-  JPG image format.
-  """
+  """JPG image format."""
   JPG
   """
   Progressive JPG format stores multiple passes of an image in progressively higher detail.
@@ -1519,93 +1353,57 @@ enum ImageFormat {
           early as possible to make the layout look as designed.
   """
   JPG_PROGRESSIVE
-  """
-  PNG image format
-  """
+  """PNG image format"""
   PNG
   """
   8-bit PNG images support up to 256 colors and weigh less than the standard 24-bit PNG equivalent.
           The 8-bit PNG format is mostly used for simple images, such as icons or logos.
   """
   PNG8
-  """
-  WebP image format.
-  """
+  """WebP image format."""
   WEBP
 }
 
 enum ImageResizeFocus {
-  """
-  Focus the resizing on the bottom.
-  """
+  """Focus the resizing on the bottom."""
   BOTTOM
-  """
-  Focus the resizing on the bottom left.
-  """
+  """Focus the resizing on the bottom left."""
   BOTTOM_LEFT
-  """
-  Focus the resizing on the bottom right.
-  """
+  """Focus the resizing on the bottom right."""
   BOTTOM_RIGHT
-  """
-  Focus the resizing on the center.
-  """
+  """Focus the resizing on the center."""
   CENTER
-  """
-  Focus the resizing on the largest face.
-  """
+  """Focus the resizing on the largest face."""
   FACE
-  """
-  Focus the resizing on the area containing all the faces.
-  """
+  """Focus the resizing on the area containing all the faces."""
   FACES
-  """
-  Focus the resizing on the left.
-  """
+  """Focus the resizing on the left."""
   LEFT
-  """
-  Focus the resizing on the right.
-  """
+  """Focus the resizing on the right."""
   RIGHT
-  """
-  Focus the resizing on the top.
-  """
+  """Focus the resizing on the top."""
   TOP
-  """
-  Focus the resizing on the top left.
-  """
+  """Focus the resizing on the top left."""
   TOP_LEFT
-  """
-  Focus the resizing on the top right.
-  """
+  """Focus the resizing on the top right."""
   TOP_RIGHT
 }
 
 enum ImageResizeStrategy {
-  """
-  Crops a part of the original image to fit into the specified dimensions.
-  """
+  """Crops a part of the original image to fit into the specified dimensions."""
   CROP
-  """
-  Resizes the image to the specified dimensions, cropping the image if needed.
-  """
+  """Resizes the image to the specified dimensions, cropping the image if needed."""
   FILL
-  """
-  Resizes the image to fit into the specified dimensions.
-  """
+  """Resizes the image to fit into the specified dimensions."""
   FIT
   """
   Resizes the image to the specified dimensions, padding the image if needed.
           Uses desired background color as padding color.
   """
   PAD
-  """
-  Resizes the image to the specified dimensions, changing the original aspect ratio if needed.
-  """
+  """Resizes the image to the specified dimensions, changing the original aspect ratio if needed."""
   SCALE
-  """
-  Creates a thumbnail from the image.
-  """
+  """Creates a thumbnail from the image."""
   THUMB
 }
 
@@ -1622,41 +1420,27 @@ input ImageTransformOptions {
           unless the format is `JPG` or `JPG_PROGRESSIVE` and resize strategy is `PAD`, then defaults to white.
   """
   cornerRadius: Int
-  """
-  Desired image format. Defaults to the original image format.
-  """
+  """Desired image format. Defaults to the original image format."""
   format: ImageFormat
-  """
-  Desired height in pixels. Defaults to the original image height.
-  """
+  """Desired height in pixels. Defaults to the original image height."""
   height: Dimension
   """
   Desired quality of the image in percents.
           Used for `PNG8`, `JPG`, `JPG_PROGRESSIVE` and `WEBP` formats.
   """
   quality: Quality
-  """
-  Desired resize focus area. Defaults to `CENTER`.
-  """
+  """Desired resize focus area. Defaults to `CENTER`."""
   resizeFocus: ImageResizeFocus
-  """
-  Desired resize strategy. Defaults to `FIT`.
-  """
+  """Desired resize strategy. Defaults to `FIT`."""
   resizeStrategy: ImageResizeStrategy
-  """
-  Desired width in pixels. Defaults to the original image width.
-  """
+  """Desired width in pixels. Defaults to the original image width."""
   width: Dimension
 }
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
+"""The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
 scalar JSON
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats)"""
 type LatestStats implements Entry {
   articleCount(locale: String): Int
   cohortCount(locale: String): Int
@@ -1708,19 +1492,8 @@ input LatestStatsFilter {
 }
 
 type LatestStatsLinkingCollections {
-  dashboardCollection(
-    limit: Int = 100
-    locale: String
-    order: [LatestStatsLinkingCollectionsDashboardCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): DashboardCollection
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  dashboardCollection(limit: Int = 100, locale: String, order: [LatestStatsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0): DashboardCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum LatestStatsLinkingCollectionsDashboardCollectionOrder {
@@ -1751,9 +1524,7 @@ enum LatestStatsOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)
-"""
+"""Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)"""
 type Media implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): MediaLinkingCollections
@@ -1783,12 +1554,7 @@ input MediaFilter {
 }
 
 type MediaLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum MediaOrder {
@@ -1804,9 +1570,7 @@ enum MediaOrder {
   url_DESC
 }
 
-"""
-Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)
-"""
+"""Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)"""
 type Migration implements Entry {
   contentTypeId(locale: String): String
   contentfulMetadata: ContentfulMetadata!
@@ -1838,12 +1602,7 @@ input MigrationFilter {
 }
 
 type MigrationLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum MigrationOrder {
@@ -1859,9 +1618,7 @@ enum MigrationOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones)"""
 type Milestones implements Entry {
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
@@ -1915,26 +1672,9 @@ input MilestonesFilter {
 }
 
 type MilestonesLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  projectsCollection(
-    limit: Int = 100
-    locale: String
-    order: [MilestonesLinkingCollectionsProjectsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): ProjectsCollection
-  workingGroupsCollection(
-    limit: Int = 100
-    locale: String
-    order: [MilestonesLinkingCollectionsWorkingGroupsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): WorkingGroupsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum MilestonesLinkingCollectionsProjectsCollectionOrder {
@@ -2006,9 +1746,7 @@ enum MilestonesOrder {
   title_DESC
 }
 
-"""
-Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)
-"""
+"""Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
 type News implements Entry {
   articleCount(locale: String): Int
   cohortCount(locale: String): Int
@@ -2102,12 +1840,7 @@ input NewsFilter {
 }
 
 type NewsLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum NewsOrder {
@@ -2133,19 +1866,11 @@ enum NewsOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs)"""
 type Outputs implements Entry {
   addedDate(locale: String): DateTime
   adminNotes(locale: String): String
-  authorsCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-    where: ExternalUsersOrUsersFilter
-  ): OutputsAuthorsCollection
+  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): OutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   documentType(locale: String): String
@@ -2261,12 +1986,7 @@ input OutputsFilter {
 }
 
 type OutputsLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum OutputsOrder {
@@ -2300,9 +2020,7 @@ enum OutputsOrder {
 
 union OutputsRelatedEntity = Projects | WorkingGroups
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages)"""
 type Pages implements Entry {
   contentfulMetadata: ContentfulMetadata!
   link(locale: String): String
@@ -2368,12 +2086,7 @@ input PagesFilter {
 }
 
 type PagesLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum PagesOrder {
@@ -2419,9 +2132,7 @@ type PagesTextResources {
   block: [ResourceLink!]!
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership)"""
 type ProjectMembership implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ProjectMembershipLinkingCollections
@@ -2454,19 +2165,8 @@ input ProjectMembershipFilter {
 }
 
 type ProjectMembershipLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  projectsCollection(
-    limit: Int = 100
-    locale: String
-    order: [ProjectMembershipLinkingCollectionsProjectsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): ProjectsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ProjectMembershipLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
 }
 
 enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
@@ -2511,9 +2211,7 @@ enum ProjectMembershipOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects)"""
 type Projects implements Entry {
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
@@ -2522,33 +2220,12 @@ type Projects implements Entry {
   keywords(locale: String): [String]
   leadEmail(locale: String): String
   linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
-  membersCollection(
-    limit: Int = 100
-    locale: String
-    order: [ProjectsMembersCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ProjectMembershipFilter
-  ): ProjectsMembersCollection
-  milestonesCollection(
-    limit: Int = 100
-    locale: String
-    order: [ProjectsMilestonesCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: MilestonesFilter
-  ): ProjectsMilestonesCollection
+  membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectsMembersCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [ProjectsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): ProjectsMilestonesCollection
   opportunitiesLink(locale: String): String
   pmEmail(locale: String): String
   projectProposal(locale: String): String
-  resourcesCollection(
-    limit: Int = 100
-    locale: String
-    order: [ProjectsResourcesCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ResourcesFilter
-  ): ProjectsResourcesCollection
+  resourcesCollection(limit: Int = 100, locale: String, order: [ProjectsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): ProjectsResourcesCollection
   startDate(locale: String): DateTime
   status(locale: String): String
   sys: Sys!
@@ -2653,19 +2330,8 @@ input ProjectsFilter {
 }
 
 type ProjectsLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  outputsCollection(
-    limit: Int = 100
-    locale: String
-    order: [ProjectsLinkingCollectionsOutputsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): OutputsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [ProjectsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
 }
 
 enum ProjectsLinkingCollectionsOutputsCollectionOrder {
@@ -2798,259 +2464,59 @@ enum ProjectsResourcesCollectionOrder {
   type_DESC
 }
 
-"""
-The 'Quality' type represents quality as whole numeric values between `1` and `100`.
-"""
+"""The 'Quality' type represents quality as whole numeric values between `1` and `100`."""
 scalar Quality
 
 type Query {
   announcements(id: String!, locale: String, preview: Boolean): Announcements
-  announcementsCollection(
-    limit: Int = 100
-    locale: String
-    order: [AnnouncementsOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: AnnouncementsFilter
-  ): AnnouncementsCollection
+  announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): AnnouncementsCollection
   asset(id: String!, locale: String, preview: Boolean): Asset
-  assetCollection(
-    limit: Int = 100
-    locale: String
-    order: [AssetOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: AssetFilter
-  ): AssetCollection
+  assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, where: AssetFilter): AssetCollection
   calendars(id: String!, locale: String, preview: Boolean): Calendars
-  calendarsCollection(
-    limit: Int = 100
-    locale: String
-    order: [CalendarsOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: CalendarsFilter
-  ): CalendarsCollection
-  contributingCohorts(
-    id: String!
-    locale: String
-    preview: Boolean
-  ): ContributingCohorts
-  contributingCohortsCollection(
-    limit: Int = 100
-    locale: String
-    order: [ContributingCohortsOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ContributingCohortsFilter
-  ): ContributingCohortsCollection
-  contributingCohortsMembership(
-    id: String!
-    locale: String
-    preview: Boolean
-  ): ContributingCohortsMembership
-  contributingCohortsMembershipCollection(
-    limit: Int = 100
-    locale: String
-    order: [ContributingCohortsMembershipOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ContributingCohortsMembershipFilter
-  ): ContributingCohortsMembershipCollection
+  calendarsCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], preview: Boolean, skip: Int = 0, where: CalendarsFilter): CalendarsCollection
+  contributingCohorts(id: String!, locale: String, preview: Boolean): ContributingCohorts
+  contributingCohortsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsFilter): ContributingCohortsCollection
+  contributingCohortsMembership(id: String!, locale: String, preview: Boolean): ContributingCohortsMembership
+  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsMembershipFilter): ContributingCohortsMembershipCollection
   dashboard(id: String!, locale: String, preview: Boolean): Dashboard
-  dashboardCollection(
-    limit: Int = 100
-    locale: String
-    order: [DashboardOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: DashboardFilter
-  ): DashboardCollection
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    order: [EntryOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: EntryFilter
-  ): EntryCollection
+  dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, where: DashboardFilter): DashboardCollection
+  entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
   eventSpeakers(id: String!, locale: String, preview: Boolean): EventSpeakers
-  eventSpeakersCollection(
-    limit: Int = 100
-    locale: String
-    order: [EventSpeakersOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: EventSpeakersFilter
-  ): EventSpeakersCollection
+  eventSpeakersCollection(limit: Int = 100, locale: String, order: [EventSpeakersOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventSpeakersCollection
   events(id: String!, locale: String, preview: Boolean): Events
-  eventsCollection(
-    limit: Int = 100
-    locale: String
-    order: [EventsOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: EventsFilter
-  ): EventsCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): EventsCollection
   externalUsers(id: String!, locale: String, preview: Boolean): ExternalUsers
-  externalUsersCollection(
-    limit: Int = 100
-    locale: String
-    order: [ExternalUsersOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ExternalUsersFilter
-  ): ExternalUsersCollection
-  externalUsersOrUsers(
-    id: String!
-    locale: String
-    preview: Boolean
-  ): ExternalUsersOrUsers
-  externalUsersOrUsersCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-    where: ExternalUsersOrUsersFilter
-  ): ExternalUsersOrUsersCollection
+  externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersFilter): ExternalUsersCollection
+  externalUsersOrUsers(id: String!, locale: String, preview: Boolean): ExternalUsersOrUsers
+  externalUsersOrUsersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalUsersOrUsersFilter): ExternalUsersOrUsersCollection
   latestStats(id: String!, locale: String, preview: Boolean): LatestStats
-  latestStatsCollection(
-    limit: Int = 100
-    locale: String
-    order: [LatestStatsOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: LatestStatsFilter
-  ): LatestStatsCollection
+  latestStatsCollection(limit: Int = 100, locale: String, order: [LatestStatsOrder], preview: Boolean, skip: Int = 0, where: LatestStatsFilter): LatestStatsCollection
   media(id: String!, locale: String, preview: Boolean): Media
-  mediaCollection(
-    limit: Int = 100
-    locale: String
-    order: [MediaOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: MediaFilter
-  ): MediaCollection
+  mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
   migration(id: String!, locale: String, preview: Boolean): Migration
-  migrationCollection(
-    limit: Int = 100
-    locale: String
-    order: [MigrationOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: MigrationFilter
-  ): MigrationCollection
+  migrationCollection(limit: Int = 100, locale: String, order: [MigrationOrder], preview: Boolean, skip: Int = 0, where: MigrationFilter): MigrationCollection
   milestones(id: String!, locale: String, preview: Boolean): Milestones
-  milestonesCollection(
-    limit: Int = 100
-    locale: String
-    order: [MilestonesOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: MilestonesFilter
-  ): MilestonesCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [MilestonesOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): MilestonesCollection
   news(id: String!, locale: String, preview: Boolean): News
-  newsCollection(
-    limit: Int = 100
-    locale: String
-    order: [NewsOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: NewsFilter
-  ): NewsCollection
+  newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
   outputs(id: String!, locale: String, preview: Boolean): Outputs
-  outputsCollection(
-    limit: Int = 100
-    locale: String
-    order: [OutputsOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: OutputsFilter
-  ): OutputsCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [OutputsOrder], preview: Boolean, skip: Int = 0, where: OutputsFilter): OutputsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
-  pagesCollection(
-    limit: Int = 100
-    locale: String
-    order: [PagesOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: PagesFilter
-  ): PagesCollection
-  projectMembership(
-    id: String!
-    locale: String
-    preview: Boolean
-  ): ProjectMembership
-  projectMembershipCollection(
-    limit: Int = 100
-    locale: String
-    order: [ProjectMembershipOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ProjectMembershipFilter
-  ): ProjectMembershipCollection
+  pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
+  projectMembership(id: String!, locale: String, preview: Boolean): ProjectMembership
+  projectMembershipCollection(limit: Int = 100, locale: String, order: [ProjectMembershipOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectMembershipCollection
   projects(id: String!, locale: String, preview: Boolean): Projects
-  projectsCollection(
-    limit: Int = 100
-    locale: String
-    order: [ProjectsOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ProjectsFilter
-  ): ProjectsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ProjectsOrder], preview: Boolean, skip: Int = 0, where: ProjectsFilter): ProjectsCollection
   resources(id: String!, locale: String, preview: Boolean): Resources
-  resourcesCollection(
-    limit: Int = 100
-    locale: String
-    order: [ResourcesOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ResourcesFilter
-  ): ResourcesCollection
+  resourcesCollection(limit: Int = 100, locale: String, order: [ResourcesOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): ResourcesCollection
   users(id: String!, locale: String, preview: Boolean): Users
-  usersCollection(
-    limit: Int = 100
-    locale: String
-    order: [UsersOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: UsersFilter
-  ): UsersCollection
-  workingGroupMembership(
-    id: String!
-    locale: String
-    preview: Boolean
-  ): WorkingGroupMembership
-  workingGroupMembershipCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupMembershipOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: WorkingGroupMembershipFilter
-  ): WorkingGroupMembershipCollection
-  workingGroupNetwork(
-    id: String!
-    locale: String
-    preview: Boolean
-  ): WorkingGroupNetwork
-  workingGroupNetworkCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupNetworkOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: WorkingGroupNetworkFilter
-  ): WorkingGroupNetworkCollection
+  usersCollection(limit: Int = 100, locale: String, order: [UsersOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): UsersCollection
+  workingGroupMembership(id: String!, locale: String, preview: Boolean): WorkingGroupMembership
+  workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupMembershipCollection
+  workingGroupNetwork(id: String!, locale: String, preview: Boolean): WorkingGroupNetwork
+  workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupNetworkFilter): WorkingGroupNetworkCollection
   workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
-  workingGroupsCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupsOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: WorkingGroupsFilter
-  ): WorkingGroupsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupsCollection
 }
 
 type ResourceLink {
@@ -3063,9 +2529,7 @@ type ResourceSys {
   urn: String!
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources)"""
 type Resources implements Entry {
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
@@ -3119,26 +2583,9 @@ input ResourcesFilter {
 }
 
 type ResourcesLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  projectsCollection(
-    limit: Int = 100
-    locale: String
-    order: [ResourcesLinkingCollectionsProjectsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): ProjectsCollection
-  workingGroupsCollection(
-    limit: Int = 100
-    locale: String
-    order: [ResourcesLinkingCollectionsWorkingGroupsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): WorkingGroupsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum ResourcesLinkingCollectionsProjectsCollectionOrder {
@@ -3256,9 +2703,7 @@ input SysFilter {
   publishedVersion_not_in: [Float]
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users)"""
 type Users implements Entry {
   activatedDate(locale: String): DateTime
   alternativeEmail(locale: String): String
@@ -3268,14 +2713,7 @@ type Users implements Entry {
   city(locale: String): String
   connections(locale: String): [String]
   contentfulMetadata: ContentfulMetadata!
-  contributingCohortsCollection(
-    limit: Int = 100
-    locale: String
-    order: [UsersContributingCohortsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ContributingCohortsMembershipFilter
-  ): UsersContributingCohortsCollection
+  contributingCohortsCollection(limit: Int = 100, locale: String, order: [UsersContributingCohortsCollectionOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsMembershipFilter): UsersContributingCohortsCollection
   country(locale: String): String
   degrees(locale: String): [String]
   email(locale: String): String
@@ -3510,40 +2948,11 @@ input UsersFilter {
 }
 
 type UsersLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  eventSpeakersCollection(
-    limit: Int = 100
-    locale: String
-    order: [UsersLinkingCollectionsEventSpeakersCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): EventSpeakersCollection
-  outputsCollection(
-    limit: Int = 100
-    locale: String
-    order: [UsersLinkingCollectionsOutputsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): OutputsCollection
-  projectMembershipCollection(
-    limit: Int = 100
-    locale: String
-    order: [UsersLinkingCollectionsProjectMembershipCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): ProjectMembershipCollection
-  workingGroupMembershipCollection(
-    limit: Int = 100
-    locale: String
-    order: [UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): WorkingGroupMembershipCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  projectMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCollectionOrder], preview: Boolean, skip: Int = 0): ProjectMembershipCollection
+  workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupMembershipCollection
 }
 
 enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
@@ -3665,9 +3074,7 @@ enum UsersOrder {
   twitter_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership)"""
 type WorkingGroupMembership implements Entry {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): WorkingGroupMembershipLinkingCollections
@@ -3700,19 +3107,8 @@ input WorkingGroupMembershipFilter {
 }
 
 type WorkingGroupMembershipLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  workingGroupsCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): WorkingGroupsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder {
@@ -3749,44 +3145,14 @@ enum WorkingGroupMembershipOrder {
   sys_publishedVersion_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork)"""
 type WorkingGroupNetwork implements Entry {
-  complexDiseaseCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupNetworkComplexDiseaseCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: WorkingGroupsFilter
-  ): WorkingGroupNetworkComplexDiseaseCollection
+  complexDiseaseCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkComplexDiseaseCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkComplexDiseaseCollection
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): WorkingGroupNetworkLinkingCollections
-  monogenicCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupNetworkMonogenicCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: WorkingGroupsFilter
-  ): WorkingGroupNetworkMonogenicCollection
-  operationalCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupNetworkOperationalCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: WorkingGroupsFilter
-  ): WorkingGroupNetworkOperationalCollection
-  supportCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupNetworkSupportCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: WorkingGroupsFilter
-  ): WorkingGroupNetworkSupportCollection
+  monogenicCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkMonogenicCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkMonogenicCollection
+  operationalCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOperationalCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkOperationalCollection
+  supportCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkSupportCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkSupportCollection
   sys: Sys!
 }
 
@@ -3841,12 +3207,7 @@ input WorkingGroupNetworkFilter {
 }
 
 type WorkingGroupNetworkLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 type WorkingGroupNetworkMonogenicCollection {
@@ -3944,40 +3305,17 @@ enum WorkingGroupNetworkSupportCollectionOrder {
   title_DESC
 }
 
-"""
-[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)
-"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)"""
 type WorkingGroups implements Entry {
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): WorkingGroupsDescription
   leadingMembers(locale: String): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
-  membersCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupsMembersCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: WorkingGroupMembershipFilter
-  ): WorkingGroupsMembersCollection
-  milestonesCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupsMilestonesCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: MilestonesFilter
-  ): WorkingGroupsMilestonesCollection
+  membersCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): WorkingGroupsMilestonesCollection
   primaryEmail(locale: String): String
-  resourcesCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupsResourcesCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-    where: ResourcesFilter
-  ): WorkingGroupsResourcesCollection
+  resourcesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): WorkingGroupsResourcesCollection
   secondaryEmail(locale: String): String
   shortDescription(locale: String): String
   sys: Sys!
@@ -4071,26 +3409,9 @@ input WorkingGroupsFilter {
 }
 
 type WorkingGroupsLinkingCollections {
-  entryCollection(
-    limit: Int = 100
-    locale: String
-    preview: Boolean
-    skip: Int = 0
-  ): EntryCollection
-  outputsCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupsLinkingCollectionsOutputsCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): OutputsCollection
-  workingGroupNetworkCollection(
-    limit: Int = 100
-    locale: String
-    order: [WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionOrder]
-    preview: Boolean
-    skip: Int = 0
-  ): WorkingGroupNetworkCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupNetworkCollection
 }
 
 enum WorkingGroupsLinkingCollectionsOutputsCollectionOrder {

@@ -5872,7 +5872,7 @@ export type CfWorkingGroupsNestedFilter = {
 export type AnnouncementsContentDataFragment = Pick<
   Announcements,
   'description' | 'deadline' | 'link'
->;
+> & { sys: Pick<Sys, 'id'> };
 
 export type FetchAnnouncementsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -5882,7 +5882,11 @@ export type FetchAnnouncementsQuery = {
   announcementsCollection?: Maybe<
     Pick<AnnouncementsCollection, 'total'> & {
       items: Array<
-        Maybe<Pick<Announcements, 'description' | 'deadline' | 'link'>>
+        Maybe<
+          Pick<Announcements, 'description' | 'deadline' | 'link'> & {
+            sys: Pick<Sys, 'id'>;
+          }
+        >
       >;
     }
   >;
@@ -9700,6 +9704,16 @@ export const AnnouncementsContentDataFragmentDoc = {
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'deadline' } },
           { kind: 'Field', name: { kind: 'Name', value: 'link' } },

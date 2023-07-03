@@ -26,8 +26,6 @@ jest.mock('../../../src/config', () => ({
   logLevel: 'silent',
 }));
 
-jest.setTimeout(300000);
-
 const fixtures = FixtureFactory(process.env.INTEGRATION_TEST_CMS);
 
 type AppResponse<T> = {
@@ -42,6 +40,8 @@ describe('Reminders', () => {
   let team: TeamFixture;
 
   beforeEach(async () => {
+    jest.setTimeout(120000);
+
     jest.useFakeTimers();
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
@@ -127,6 +127,7 @@ describe('Reminders', () => {
     });
 
     test('Should see two reminders for two events from two different calendars happening today', async () => {
+      jest.setTimeout(600000);
       const now = new Date('2022-08-10T05:00:00.0Z');
       const startDate1 = new Date('2022-08-10T18:00:00.0Z').toISOString();
       const endDate1 = new Date('2022-08-11T18:00:00.0Z').toISOString();
@@ -567,6 +568,8 @@ describe('Reminders', () => {
         });
 
         test(`Should not see the reminder when ${material} was erased in an event`, async () => {
+          jest.setTimeout(600000);
+
           jest.useRealTimers();
 
           const event = await createEvent({

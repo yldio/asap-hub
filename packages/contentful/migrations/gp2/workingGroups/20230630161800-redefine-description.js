@@ -101,7 +101,34 @@ module.exports.up = (migration) => {
 
 module.exports.down = (migration) => {
   const workingGroups = migration.editContentType('workingGroups');
-  workingGroups.deleteField('oldDescription');
+
+  workingGroups
+    .createField('oldDescription')
+    .name('Old Description')
+    .type('Text')
+    .localized(false)
+    .required(true)
+    .validations([
+      {
+        size: {
+          max: 2500,
+        },
+      },
+    ])
+    .disabled(false)
+    .omitted(false);
+
+  migration.transformEntries({
+    contentType: 'workingGroups',
+    from: ['description'],
+    to: ['oldDescription'],
+    transformEntryForLocale: function (fromFields, currentLocale) {
+      const richTextDescription = fromFields.description[currentLocale];
+      return { oldDescription: richTextDescription };
+    },
+  });
+
+  workingGroups.deleteField('description');
 
   workingGroups
     .createField('description')
@@ -118,4 +145,15 @@ module.exports.down = (migration) => {
     ])
     .disabled(false)
     .omitted(false);
+
+  migration.transformEntries({
+    contentType: 'workingGroups',
+    from: ['oldDescription'],
+    to: ['description'],
+    transformEntryForLocale: function (fromFields, currentLocale) {
+      return { description: fromFields.oldDescription[currentLocale] };
+    },
+  });
+
+  workingGroups.deleteField('oldDescription');
 };

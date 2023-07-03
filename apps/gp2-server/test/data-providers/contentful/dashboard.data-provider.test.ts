@@ -149,10 +149,7 @@ describe('Dashboard data provider', () => {
     test('no announcements returns empty array', async () => {
       const dashboard = {
         ...getContentfulGraphqlDashboard(),
-        announcementsCollection: {
-          total: 0,
-          items: [],
-        },
+        announcementsCollection: undefined,
       };
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         dashboardCollection: {

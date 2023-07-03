@@ -583,13 +583,11 @@ describe('Reminders', () => {
             },
           );
 
-          setTimeout(async () => {
-            await expectReminderWithId(
-              `${material.toLowerCase()}-event-updated-${
-                updatedEventWithMaterial.id
-              }`,
-            );
-          }, 600000);
+          await expectReminderWithId(
+            `${material.toLowerCase()}-event-updated-${
+              updatedEventWithMaterial.id
+            }`,
+          );
 
           // user erases material
           const updatedEventWithoutMaterial = await fixtures.updateEvent(
@@ -599,13 +597,11 @@ describe('Reminders', () => {
             },
           );
 
-          setTimeout(async () => {
-            await expectNotToContainingReminderWithId(
-              `${material.toLowerCase()}-event-updated-${
-                updatedEventWithoutMaterial.id
-              }`,
-            );
-          }, 600000);
+          await expectNotToContainingReminderWithId(
+            `${material.toLowerCase()}-event-updated-${
+              updatedEventWithoutMaterial.id
+            }`,
+          );
         });
       },
     );

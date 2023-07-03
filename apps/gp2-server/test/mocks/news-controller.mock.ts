@@ -1,5 +1,5 @@
-import { NewsController } from '../../src/controllers/news.controller';
+import NewsController from '../../src/controllers/news.controller';
 
-export const newsControllerMock: jest.Mocked<NewsController> = {
+export const newsControllerMock = {
   fetch: jest.fn(),
-};
+} as unknown as jest.Mocked<NewsController>;

@@ -1,4 +1,4 @@
-import ResearchTagController from '../../src/controllers/research-tags.controller';
+import ResearchTagController from '../../src/controllers/research-tag.controller';
 
 export const researchTagControllerMock = {
   fetch: jest.fn(),

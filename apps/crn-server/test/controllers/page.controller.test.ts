@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import Pages from '../../src/controllers/pages.controller';
+import Pages from '../../src/controllers/page.controller';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Page controller', () => {

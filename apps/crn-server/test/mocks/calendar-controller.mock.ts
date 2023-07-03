@@ -1,4 +1,4 @@
-import CalendarController from '../../src/controllers/calendars.controller';
+import CalendarController from '../../src/controllers/calendar.controller';
 
 export const calendarControllerMock = {
   fetch: jest.fn(),

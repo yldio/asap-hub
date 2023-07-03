@@ -1,4 +1,4 @@
-import InterestGroupController from '../../src/controllers/interest-groups.controller';
+import InterestGroupController from '../../src/controllers/interest-group.controller';
 
 export const interestGroupControllerMock = {
   fetch: jest.fn(),

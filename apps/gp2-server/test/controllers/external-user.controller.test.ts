@@ -1,5 +1,5 @@
 import { FetchOptions } from '@asap-hub/model';
-import ExternalUsers from '../../src/controllers/external-users.controller';
+import ExternalUsers from '../../src/controllers/external-user.controller';
 import {
   getExternalUserDataObject,
   getExternalUserResponse,

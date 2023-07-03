@@ -1,6 +1,5 @@
-import { ContributingCohortController } from '../../src/controllers/contributing-cohort.controller';
+import ContributingCohortController from '../../src/controllers/contributing-cohort.controller';
 
-export const contributingCohortControllerMock: jest.Mocked<ContributingCohortController> =
-  {
-    fetch: jest.fn(),
-  };
+export const contributingCohortControllerMock = {
+  fetch: jest.fn(),
+} as unknown as jest.Mocked<ContributingCohortController>;

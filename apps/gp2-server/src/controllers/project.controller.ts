@@ -3,20 +3,7 @@ import { FetchOptions, gp2 } from '@asap-hub/model';
 import { ProjectDataProvider } from '../data-providers/types/project.data-provider.type';
 import { removeNotAllowedResources } from '../utils/resources';
 
-export interface ProjectController {
-  fetchById(id: string, loggedInUserId: string): Promise<gp2.ProjectResponse>;
-  fetch(
-    options: FetchOptions,
-    loggedInUserId: string,
-  ): Promise<gp2.ListProjectResponse>;
-  update(
-    id: string,
-    update: gp2.ProjectUpdateRequest,
-    loggedInUserId: string,
-  ): Promise<gp2.ProjectResponse>;
-}
-
-export default class Projects implements ProjectController {
+export default class ProjectController {
   constructor(private projectDataProvider: ProjectDataProvider) {}
 
   async fetch(

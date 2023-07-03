@@ -1,6 +1,6 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import nock from 'nock';
-import Users from '../../src/controllers/users.controller';
+import Users from '../../src/controllers/user.controller';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import { getUserDataObject, getUserResponse } from '../fixtures/users.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';

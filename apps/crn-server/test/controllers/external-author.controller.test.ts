@@ -1,4 +1,4 @@
-import ExternalAuthors from '../../src/controllers/external-authors.controller';
+import ExternalAuthors from '../../src/controllers/external-author.controller';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('External Authors controller', () => {

@@ -10,8 +10,8 @@ import { isUserOnboardable } from '@asap-hub/validation';
 import Boom, { isBoom } from '@hapi/boom';
 import { Response, Router } from 'express';
 import parseURI from 'parse-data-url';
-import InterestGroupController from '../controllers/interest-groups.controller';
-import UserController from '../controllers/users.controller';
+import InterestGroupController from '../controllers/interest-group.controller';
+import UserController from '../controllers/user.controller';
 import {
   validateUserParameters,
   validateUserPatchRequest,

@@ -1,4 +1,4 @@
-import EventController from '../../src/controllers/events.controller';
+import EventController from '../../src/controllers/event.controller';
 
 export const eventControllerMock = {
   create: jest.fn(),

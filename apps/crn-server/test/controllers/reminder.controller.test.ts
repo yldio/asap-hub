@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/model';
 import Reminders, {
   formattedMaterialByEventType,
-} from '../../src/controllers/reminders.controller';
+} from '../../src/controllers/reminder.controller';
 import {
   getEventHappeningNowReminder,
   getEventHappeningTodayReminder,

@@ -4,7 +4,7 @@ import { gp2 } from '@asap-hub/model';
 import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { auth0SharedSecret } from '../../config';
-import Users, { UserController } from '../../controllers/user.controller';
+import UserController from '../../controllers/user.controller';
 import {
   getAssetDataProvider,
   getUserDataProvider,
@@ -38,7 +38,9 @@ const assetDataProvider = getAssetDataProvider();
 
 /* istanbul ignore next */
 export const handler = sentryWrapper(
-  fetchUserByCodeHandlerFactory(new Users(userDataProvider, assetDataProvider)),
+  fetchUserByCodeHandlerFactory(
+    new UserController(userDataProvider, assetDataProvider),
+  ),
 );
 
 const validateParams = (

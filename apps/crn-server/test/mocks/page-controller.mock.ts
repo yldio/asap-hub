@@ -1,4 +1,4 @@
-import PageController from '../../src/controllers/pages.controller';
+import PageController from '../../src/controllers/page.controller';
 
 export const pageControllerMock = {
   fetchByPath: jest.fn(),

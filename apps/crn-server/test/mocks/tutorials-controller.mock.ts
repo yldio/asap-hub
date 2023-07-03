@@ -1,4 +1,4 @@
-import TutorialController from '../../src/controllers/tutorials.controller';
+import TutorialController from '../../src/controllers/tutorial.controller';
 
 export const tutorialsControllerMock = {
   fetchById: jest.fn(),

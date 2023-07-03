@@ -4,7 +4,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getFetchExternalUsersResponse } from '../fixtures/external-users.fixtures';
 import { getUserResponse } from '../fixtures/user.fixtures';
-import { ExternalUsersControllerMock } from '../mocks/external-users.controller.mock';
+import { ExternalUserControllerMock } from '../mocks/external-user.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/external-users route', () => {
@@ -19,7 +19,7 @@ describe('/external-users route', () => {
     next();
   };
   const app = appFactory({
-    externalUserController: ExternalUsersControllerMock,
+    externalUserController: ExternalUserControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });
@@ -32,7 +32,7 @@ describe('/external-users route', () => {
 
   describe('GET /external-users', () => {
     test('Should return 200 when no users exist', async () => {
-      ExternalUsersControllerMock.fetch.mockResolvedValueOnce({
+      ExternalUserControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -47,7 +47,7 @@ describe('/external-users route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      ExternalUsersControllerMock.fetch.mockResolvedValueOnce(
+      ExternalUserControllerMock.fetch.mockResolvedValueOnce(
         getFetchExternalUsersResponse(),
       );
 
@@ -58,7 +58,7 @@ describe('/external-users route', () => {
     });
 
     test('Should call the controller method with the correct parameters', async () => {
-      ExternalUsersControllerMock.fetch.mockResolvedValueOnce({
+      ExternalUserControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
@@ -76,7 +76,7 @@ describe('/external-users route', () => {
         search: 'something',
       };
 
-      expect(ExternalUsersControllerMock.fetch).toBeCalledWith(expectedParams);
+      expect(ExternalUserControllerMock.fetch).toBeCalledWith(expectedParams);
     });
 
     describe('Parameter validation', () => {

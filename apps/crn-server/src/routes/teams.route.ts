@@ -7,8 +7,8 @@ import {
 import { validateFetchOptions } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
-import InterestGroupController from '../controllers/interest-groups.controller';
-import TeamController from '../controllers/teams.controller';
+import InterestGroupController from '../controllers/interest-group.controller';
+import TeamController from '../controllers/team.controller';
 import {
   validateTeamParameters,
   validateTeamPatchRequest,

@@ -1,4 +1,4 @@
-import ReminderController from '../../src/controllers/reminders.controller';
+import ReminderController from '../../src/controllers/reminder.controller';
 
 export const reminderControllerMock = {
   fetch: jest.fn(),

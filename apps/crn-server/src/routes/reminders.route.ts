@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import Boom from '@hapi/boom';
 import { ListReminderResponse } from '@asap-hub/model';
 import { Response, Router } from 'express';
-import ReminderController from '../controllers/reminders.controller';
+import ReminderController from '../controllers/reminder.controller';
 import { validateReminderParameters } from '../validation/reminder.validation';
 
 export const reminderRouteFactory = (

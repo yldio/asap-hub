@@ -1,4 +1,4 @@
-import ExternalAuthorController from '../../src/controllers/external-authors.controller';
+import ExternalAuthorController from '../../src/controllers/external-author.controller';
 
 export const externalAuthorControllerMock = {
   fetch: jest.fn(),

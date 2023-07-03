@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import Teams from '../../src/controllers/teams.controller';
+import Teams from '../../src/controllers/team.controller';
 import { getTeamDataObject, getTeamResponse } from '../fixtures/teams.fixtures';
 
 import { getDataProviderMock } from '../mocks/data-provider.mock';

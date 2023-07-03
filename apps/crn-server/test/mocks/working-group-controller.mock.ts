@@ -1,4 +1,4 @@
-import WorkingGroupController from '../../src/controllers/working-groups.controller';
+import WorkingGroupController from '../../src/controllers/working-group.controller';
 
 export const workingGroupControllerMock = {
   fetchById: jest.fn(),

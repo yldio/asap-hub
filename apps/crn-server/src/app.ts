@@ -46,23 +46,22 @@ import {
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
-
 import Guide, { GuideController } from './controllers/guides.controller';
-import CalendarController from './controllers/calendars.controller';
+import CalendarController from './controllers/calendar.controller';
 import DashboardController from './controllers/dashboard.controller';
 import DiscoverController from './controllers/discover.controller';
-import EventController from './controllers/events.controller';
-import InterestGroupController from './controllers/interest-groups.controller';
-import LabController from './controllers/labs.controller';
+import EventController from './controllers/event.controller';
+import InterestGroupController from './controllers/interest-group.controller';
+import LabController from './controllers/lab.controller';
 import NewsController from './controllers/news.controller';
-import PageController from './controllers/pages.controller';
-import ReminderController from './controllers/reminders.controller';
-import ResearchOutputController from './controllers/research-outputs.controller';
-import ResearchTagController from './controllers/research-tags.controller';
-import TeamController from './controllers/teams.controller';
-import TutorialController from './controllers/tutorials.controller';
-import UserController from './controllers/users.controller';
-import WorkingGroupController from './controllers/working-groups.controller';
+import PageController from './controllers/page.controller';
+import ReminderController from './controllers/reminder.controller';
+import ResearchOutputController from './controllers/research-output.controller';
+import ResearchTagController from './controllers/research-tag.controller';
+import TeamController from './controllers/team.controller';
+import TutorialController from './controllers/tutorial.controller';
+import UserController from './controllers/user.controller';
+import WorkingGroupController from './controllers/working-group.controller';
 import { AssetSquidexDataProvider } from './data-providers/assets.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';

@@ -1,13 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { ExternalUserDataProvider } from '../data-providers/types/external-user.data-provider.type';
 
-export interface ExternalUsersController {
-  fetch(
-    options: gp2.FetchExternalUsersOptions,
-  ): Promise<gp2.ListExternalUserResponse>;
-}
-
-export default class ExternalUsers implements ExternalUsersController {
+export default class ExternalUserController {
   constructor(private externalUserDataProvider: ExternalUserDataProvider) {}
 
   async fetch(

@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import Calendars from '../../src/controllers/calendars.controller';
+import Calendars from '../../src/controllers/calendar.controller';
 import {
   getCalendarResponse,
   getListCalendarResponse,

@@ -1,4 +1,4 @@
-import UserController from '../../src/controllers/users.controller';
+import UserController from '../../src/controllers/user.controller';
 
 export const userControllerMock = {
   fetch: jest.fn(),

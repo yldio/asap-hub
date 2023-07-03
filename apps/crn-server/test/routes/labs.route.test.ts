@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import LabController from '../../src/controllers/labs.controller';
+import LabController from '../../src/controllers/lab.controller';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
 

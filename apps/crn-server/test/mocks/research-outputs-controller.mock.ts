@@ -1,4 +1,4 @@
-import ResearchOutputController from '../../src/controllers/research-outputs.controller';
+import ResearchOutputController from '../../src/controllers/research-output.controller';
 
 export const researchOutputControllerMock = {
   fetch: jest.fn(),

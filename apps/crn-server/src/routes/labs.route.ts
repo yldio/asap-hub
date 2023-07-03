@@ -1,6 +1,6 @@
 import { validateFetchOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
-import LabController from '../controllers/labs.controller';
+import LabController from '../controllers/lab.controller';
 
 export const labsRouteFactory = (labsController: LabController): Router => {
   const labsRoutes = Router();

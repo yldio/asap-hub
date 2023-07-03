@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import WorkingGroups from '../../src/controllers/working-groups.controller';
+import WorkingGroups from '../../src/controllers/working-group.controller';
 import {
   getWorkingGroupDataObject,
   getWorkingGroupResponse,

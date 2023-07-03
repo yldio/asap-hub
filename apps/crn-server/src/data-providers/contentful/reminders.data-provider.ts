@@ -45,9 +45,6 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
   async fetch(options: FetchRemindersOptions): Promise<ListReminderDataObject> {
     const { timezone, userId } = options;
     const eventFilter = getEventFilter(timezone);
-    console.log('timezone', timezone);
-    console.log('userId', userId);
-    console.log('eventFilter', JSON.stringify(eventFilter, null, 2));
 
     const { eventsCollection, users } = await this.contentfulClient.request<
       FetchRemindersQuery,
@@ -57,7 +54,6 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       eventFilter,
     });
 
-    console.log('eventsCollection', JSON.stringify(eventsCollection, null, 2));
     const fetchTeamProjectManager = async (
       teamId: string,
     ): Promise<FetchTeamProjectManagerQuery['teamMembershipCollection']> => {
@@ -252,23 +248,6 @@ const getEventHappeningNowOrTodayRemindersFromQuery = (
     const startDate = convertEventDate(event.startDate, zone);
     const endDate = convertEventDate(event.endDate, zone);
 
-    if (event.title === 'Event Title') {
-      console.log('startDate', startDate.toISO());
-      console.log('endDate', endDate.toISO());
-      console.log('now', now.toISO());
-      console.log('startDate < now', startDate < now);
-      console.log('now < endDate', now < endDate);
-      console.log(
-        'startDate > lastMidnightISO',
-        lastMidnightISO.toISO(),
-        startDate > lastMidnightISO,
-      );
-      console.log(
-        'startDate < todayMidnightISO',
-        todayMidnightISO.toISO(),
-        startDate < todayMidnightISO,
-      );
-    }
     if (startDate < now && now < endDate) {
       return [
         ...events,

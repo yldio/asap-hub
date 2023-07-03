@@ -111,10 +111,15 @@ export class ContentfulFixture implements Fixture {
   }
 
   private async preparePatchEvent(props: EventUpdateDataObject) {
+    const addLocale = false;
     return {
-      notes: getMaterial(props.notes),
-      presentation: getMaterial(props.presentation),
-      videoRecording: getMaterial(props.videoRecording),
+      ...(props.notes ? { notes: getMaterial(props.notes, addLocale) } : {}),
+      ...(props.presentation
+        ? { presentation: getMaterial(props.presentation, addLocale) }
+        : {}),
+      ...(props.videoRecording
+        ? { videoRecording: getMaterial(props.videoRecording, addLocale) }
+        : {}),
     };
   }
 
@@ -199,8 +204,8 @@ export class ContentfulFixture implements Fixture {
 
     const environment = await this.getEnvironment();
     const entry = await environment.getEntry(id);
-    const result = await patchAndPublish(entry, input);
 
+    const result = await patchAndPublish(entry, input);
     if (!result) {
       throw new Error('Could not update event');
     }
@@ -302,5 +307,5 @@ const getMaterial = (material?: string | null, addLocale: boolean = false) => {
   if (!material) return undefined;
 
   const document = getRichTextDocument(material);
-  return addLocale ? { 'en-US': document } : document;
+  return addLocale ? { 'en-US': document } : document.data;
 };

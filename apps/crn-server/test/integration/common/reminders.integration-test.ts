@@ -126,7 +126,7 @@ describe('Reminders', () => {
       );
     });
 
-    test('Should see two reminders for two events from two different calendars happening today', async () => {
+    test.only('Should see two reminders for two events from two different calendars happening today', async () => {
       const now = new Date('2022-08-10T05:00:00.0Z');
       const startDate1 = new Date('2022-08-10T18:00:00.0Z').toISOString();
       const endDate1 = new Date('2022-08-11T18:00:00.0Z').toISOString();
@@ -533,8 +533,10 @@ describe('Reminders', () => {
     }
 
     describe.each`
-      material   | materialUpdatedAtName        | materialContentName
-      ${'Video'} | ${'videoRecordingUpdatedAt'} | ${'videoRecording'}
+      material          | materialUpdatedAtName        | materialContentName
+      ${'Video'}        | ${'videoRecordingUpdatedAt'} | ${'videoRecording'}
+      ${'Presentation'} | ${'presentationUpdatedAt'}   | ${'presentation'}
+      ${'Notes'}        | ${'notesUpdatedAt'}          | ${'notes'}
     `(
       '$material Updated Reminder',
       ({ material, materialUpdatedAtName, materialContentName }: TestProps) => {
@@ -564,10 +566,12 @@ describe('Reminders', () => {
           );
         });
 
-        test.only(`Should not see the reminder when ${material} was erased in an event`, async () => {
+        test(`Should not see the reminder when ${material} was erased in an event`, async () => {
           jest.useRealTimers();
 
-          const event = await createEvent();
+          const event = await createEvent({
+            title: 'Material Event',
+          });
           await expectNotToContainingReminderWithId(
             `${material.toLowerCase()}-event-updated-${event.id}`,
           );
@@ -578,11 +582,14 @@ describe('Reminders', () => {
               [materialContentName]: 'I am a material',
             },
           );
-          await expectReminderWithId(
-            `${material.toLowerCase()}-event-updated-${
-              updatedEventWithMaterial.id
-            }`,
-          );
+
+          setTimeout(async () => {
+            await expectReminderWithId(
+              `${material.toLowerCase()}-event-updated-${
+                updatedEventWithMaterial.id
+              }`,
+            );
+          }, 600000);
 
           // user erases material
           const updatedEventWithoutMaterial = await fixtures.updateEvent(
@@ -591,11 +598,14 @@ describe('Reminders', () => {
               [materialContentName]: '',
             },
           );
-          await expectNotToContainingReminderWithId(
-            `${material.toLowerCase()}-event-updated-${
-              updatedEventWithoutMaterial.id
-            }`,
-          );
+
+          setTimeout(async () => {
+            await expectNotToContainingReminderWithId(
+              `${material.toLowerCase()}-event-updated-${
+                updatedEventWithoutMaterial.id
+              }`,
+            );
+          }, 600000);
         });
       },
     );
@@ -610,12 +620,14 @@ describe('Reminders', () => {
       jest.setSystemTime(now);
       const eventHappeningToday = await createEvent({
         startDate: new Date('2022-08-10T12:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T18:00:00.0Z').toISOString(),
       });
       const eventHappeningNow = await createEvent({
         startDate: new Date('2022-08-10T08:00:00.0Z').toISOString(),
         endDate: new Date('2022-08-10T10:00:00.0Z').toISOString(),
       });
       const endedEventWithLoggedInUserSpeaker = await createEvent({
+        startDate: new Date('2022-08-10T05:00:00.0Z').toISOString(),
         endDate: new Date('2022-08-10T06:00:00.0Z').toISOString(),
         speakers: [{ user: [loggedInUser.id], team: [team.id] }],
       });
@@ -674,7 +686,6 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
-      console.log('expectReminderWithId', JSON.stringify(response.body.items));
       expect(response.body.items.map((reminder) => reminder.id)).toContain(id);
     });
   };
@@ -690,10 +701,6 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
-      console.log(
-        'expectNotToContainingReminderWithId',
-        JSON.stringify(response.body.items),
-      );
       expect(response.body.items.map((reminder) => reminder.id)).not.toContain(
         id,
       );

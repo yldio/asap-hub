@@ -62,6 +62,9 @@ export class SquidexFixture implements Fixture {
     return {
       ...props,
       calendar: [props.calendar],
+      notes: props.notes ?? undefined,
+      presentation: props.presentation ?? undefined,
+      videoRecording: props.videoRecording ?? undefined,
     };
   }
 

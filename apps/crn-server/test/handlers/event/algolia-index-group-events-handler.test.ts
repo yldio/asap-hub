@@ -2,7 +2,7 @@ import { GroupEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { InterestGroupPayload } from '../../../src/handlers/event-bus';
-import { indexGroupEventsHandler } from '../../../src/handlers/event/index-group-events-handler';
+import { indexGroupEventsHandler } from '../../../src/handlers/event/algolia-index-group-events-handler';
 import { getListEventResponse } from '../../fixtures/events.fixtures';
 import { getInterestGroupEvent } from '../../fixtures/interest-groups.fixtures';
 import { toPayload } from '../../helpers/algolia';

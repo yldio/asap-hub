@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { indexExternalAuthorHandler } from '../../../src/handlers/external-author/index-handler';
+import { indexExternalAuthorHandler } from '../../../src/handlers/external-author/algolia-index-external-author-handler';
 import {
   getExternalAuthorSquidexEvent,
   getExternalAuthorResponse,

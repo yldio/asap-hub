@@ -488,8 +488,9 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
-    indexResearchOutput: {
-      handler: './src/handlers/research-output/index-handler.handler',
+    algoliaIndexResearchOutput: {
+      handler:
+        './src/handlers/research-output/algolia-index-research-output-handler.handler',
       events: [
         {
           eventBridge: {
@@ -512,8 +513,8 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexUser: {
-      handler: './src/handlers/user/index-handler.handler',
+    algoliaIndexUser: {
+      handler: './src/handlers/user/algolia-index-user-handler.handler',
       events: [
         {
           eventBridge: {
@@ -537,8 +538,9 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexExternalAuthorSquidex: {
-      handler: './src/handlers/external-author/index-handler.handler',
+    algoliaIndexExternalAuthorSquidex: {
+      handler:
+        './src/handlers/external-author/algolia-index-external-author-handler.handler',
       events: [
         {
           eventBridge: {
@@ -562,8 +564,9 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'false',
       },
     },
-    indexExternalAuthorContentful: {
-      handler: './src/handlers/external-author/index-handler.handler',
+    algoliaIndexExternalAuthorContentful: {
+      handler:
+        './src/handlers/external-author/algolia-index-external-author-handler.handler',
       events: [
         {
           eventBridge: {
@@ -587,8 +590,8 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
-    indexEventsSquidex: {
-      handler: './src/handlers/event/index-event-handler.handler',
+    algoliaIndexEventsSquidex: {
+      handler: './src/handlers/event/algolia-index-event-handler.handler',
       events: [
         {
           eventBridge: {
@@ -612,8 +615,8 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'false',
       },
     },
-    indexEventsContentful: {
-      handler: './src/handlers/event/index-event-handler.handler',
+    algoliaIndexEventsContentful: {
+      handler: './src/handlers/event/algolia-index-event-handler.handler',
       events: [
         {
           eventBridge: {
@@ -635,8 +638,8 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
-    indexUserEvents: {
-      handler: './src/handlers/event/index-user-events-handler.handler',
+    algoliaIndexUserEvents: {
+      handler: './src/handlers/event/algolia-index-user-events-handler.handler',
       events: [
         {
           eventBridge: {
@@ -659,9 +662,9 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexExternalUserEvents: {
+    algoliaIndexExternalUserEvents: {
       handler:
-        './src/handlers/event/index-external-author-events-handler.handler',
+        './src/handlers/event/algolia-index-external-author-events-handler.handler',
       events: [
         {
           eventBridge: {
@@ -684,8 +687,8 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexTeamEvents: {
-      handler: './src/handlers/event/index-team-events-handler.handler',
+    algoliaIndexTeamEvents: {
+      handler: './src/handlers/event/algolia-index-team-events-handler.handler',
       events: [
         {
           eventBridge: {
@@ -708,8 +711,9 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexGroupEventsSquidex: {
-      handler: './src/handlers/event/index-group-events-handler.handler',
+    algoliaIndexGroupEventsSquidex: {
+      handler:
+        './src/handlers/event/algolia-index-group-events-handler.handler',
       events: [
         {
           eventBridge: {
@@ -732,8 +736,9 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexGroupEventsContentful: {
-      handler: './src/handlers/event/index-group-events-handler.handler',
+    algoliaIndexGroupEventsContentful: {
+      handler:
+        './src/handlers/event/algolia-index-group-events-handler.handler',
       events: [
         {
           eventBridge: {
@@ -757,8 +762,8 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED_V2: 'true',
       },
     },
-    indexLabUsers: {
-      handler: './src/handlers/lab/index-lab-users-handler.handler',
+    algoliaIndexLabUsers: {
+      handler: './src/handlers/lab/algolia-index-lab-users-handler.handler',
       events: [
         {
           eventBridge: {
@@ -857,9 +862,9 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexTeamResearchOutputs: {
+    algoliaIndexTeamResearchOutputs: {
       handler:
-        './src/handlers/teams/index-team-reasearch-outputs-handler.handler',
+        './src/handlers/teams/algolia-index-team-reasearch-outputs-handler.handler',
       events: [
         {
           eventBridge: {
@@ -877,8 +882,8 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    indexTeamUsers: {
-      handler: './src/handlers/teams/index-team-users-handler.handler',
+    algoliaIndexTeamUsers: {
+      handler: './src/handlers/teams/algolia-index-team-users-handler.handler',
       events: [
         {
           eventBridge: {

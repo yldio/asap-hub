@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import { toPayload } from '../../helpers/algolia';
-import { indexLabUsersHandler } from '../../../src/handlers/lab/index-lab-users-handler';
+import { indexLabUsersHandler } from '../../../src/handlers/lab/algolia-index-lab-users-handler';
 import {
   createEvent,
   deleteEvent,

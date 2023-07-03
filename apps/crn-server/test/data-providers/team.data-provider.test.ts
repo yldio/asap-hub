@@ -2,7 +2,7 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { RestTeam, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
-import { TeamSquidexDataProvider } from '../../src/data-providers/teams.data-provider';
+import { TeamSquidexDataProvider } from '../../src/data-providers/team.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import {
   getInputTeam,

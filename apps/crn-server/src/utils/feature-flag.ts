@@ -1,6 +1,6 @@
 import { CalendarDataProvider, EventDataProvider } from '@asap-hub/model';
-import { ExternalAuthorDataProvider } from '../data-providers/external-authors.data-provider';
-import { TeamDataProvider } from '../data-providers/teams.data-provider';
+import { ExternalAuthorDataProvider } from '../data-providers/external-author.data-provider';
+import { TeamDataProvider } from '../data-providers/team.data-provider';
 import {
   AssetDataProvider,
   UserDataProvider,

@@ -5,7 +5,7 @@ import {
   TeamResponse,
   TeamTool,
 } from '@asap-hub/model';
-import { TeamDataProvider } from '../data-providers/teams.data-provider';
+import { TeamDataProvider } from '../data-providers/team.data-provider';
 
 type FetchTeamOptions = {
   showTools: boolean;

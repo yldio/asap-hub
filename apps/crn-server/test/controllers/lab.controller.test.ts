@@ -1,5 +1,5 @@
 import Labs from '../../src/controllers/lab.controller';
-import { LabDataProvider } from '../../src/data-providers/labs.data-provider';
+import { LabDataProvider } from '../../src/data-providers/lab.data-provider';
 import {
   getListLabDataObject,
   getListLabsResponse,

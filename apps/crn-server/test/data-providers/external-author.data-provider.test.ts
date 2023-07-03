@@ -2,7 +2,7 @@ import { GenericError } from '@asap-hub/errors';
 import { RestExternalAuthor, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
-import { ExternalAuthorSquidexDataProvider } from '../../src/data-providers/external-authors.data-provider';
+import { ExternalAuthorSquidexDataProvider } from '../../src/data-providers/external-author.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import {
   getExternalAuthorDataObject,

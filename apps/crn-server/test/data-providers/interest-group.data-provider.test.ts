@@ -1,5 +1,5 @@
 import { FetchGroupOptions } from '@asap-hub/model';
-import { InterestGroupSquidexDataProvider } from '../../src/data-providers/interest-groups.data-provider';
+import { InterestGroupSquidexDataProvider } from '../../src/data-providers/interest-group.data-provider';
 import {
   getInterestGroupDataObject,
   getListInterestGroupResponse,

@@ -16,7 +16,7 @@ import { ExternalAuthorContentfulDataProvider } from '../data-providers/contentf
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
-} from '../data-providers/external-authors.data-provider';
+} from '../data-providers/external-author.data-provider';
 import { getAuthToken } from '../utils/auth';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 

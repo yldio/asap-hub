@@ -1,5 +1,5 @@
 import { appName, baseUrl } from '../../src/config';
-import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-groups.data-provider';
+import { WorkingGroupSquidexDataProvider } from '../../src/data-providers/working-group.data-provider';
 import { createUrl } from '../../src/utils/urls';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
 import {

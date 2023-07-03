@@ -13,9 +13,9 @@ import ExternalAuthors from '../src/controllers/external-author.controller';
 import Labs from '../src/controllers/lab.controller';
 import ResearchOutputs from '../src/controllers/research-output.controller';
 import Users from '../src/controllers/user.controller';
-import { LabSquidexDataProvider } from '../src/data-providers/labs.data-provider';
-import { ResearchOutputSquidexDataProvider } from '../src/data-providers/research-outputs.data-provider';
-import { ResearchTagSquidexDataProvider } from '../src/data-providers/research-tags.data-provider';
+import { LabSquidexDataProvider } from '../src/data-providers/lab.data-provider';
+import { ResearchOutputSquidexDataProvider } from '../src/data-providers/research-output.data-provider';
+import { ResearchTagSquidexDataProvider } from '../src/data-providers/research-tag.data-provider';
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
 import { getExternalAuthorDataProvider } from '../src/dependencies/external-authors.dependencies';
 import {

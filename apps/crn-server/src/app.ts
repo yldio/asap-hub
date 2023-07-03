@@ -62,8 +62,8 @@ import TeamController from './controllers/team.controller';
 import TutorialController from './controllers/tutorial.controller';
 import UserController from './controllers/user.controller';
 import WorkingGroupController from './controllers/working-group.controller';
-import { AssetSquidexDataProvider } from './data-providers/assets.data-provider';
-import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
+import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
+import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';
 import { AssetContentfulDataProvider } from './data-providers/contentful/assets.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
@@ -85,21 +85,24 @@ import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
-} from './data-providers/external-authors.data-provider';
-import { InterestGroupSquidexDataProvider } from './data-providers/interest-groups.data-provider';
+} from './data-providers/external-author.data-provider';
+import { InterestGroupSquidexDataProvider } from './data-providers/interest-group.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import { PageSquidexDataProvider } from './data-providers/pages.data-provider';
-import { ReminderSquidexDataProvider } from './data-providers/reminders.data-provider';
+import { PageSquidexDataProvider } from './data-providers/page.data-provider';
+import {
+  ReminderDataProvider,
+  ReminderSquidexDataProvider,
+} from './data-providers/reminder.data-provider';
 import {
   ResearchOutputDataProvider,
   ResearchOutputSquidexDataProvider,
-} from './data-providers/research-outputs.data-provider';
-import { ResearchTagSquidexDataProvider } from './data-providers/research-tags.data-provider';
+} from './data-providers/research-output.data-provider';
+import { ResearchTagSquidexDataProvider } from './data-providers/research-tag.data-provider';
 import {
   TeamDataProvider,
   TeamSquidexDataProvider,
-} from './data-providers/teams.data-provider';
-import { TutorialsSquidexDataProvider } from './data-providers/tutorials.data-provider';
+} from './data-providers/team.data-provider';
+import { TutorialsSquidexDataProvider } from './data-providers/tutorial.data-provider';
 import {
   AssetDataProvider,
   InterestGroupDataProvider,
@@ -114,26 +117,26 @@ import {
   ResearchTagDataProvider,
   ReminderDataProvider,
 } from './data-providers/types';
-import { UserSquidexDataProvider } from './data-providers/users.data-provider';
-import { WorkingGroupSquidexDataProvider } from './data-providers/working-groups.data-provider';
+import { UserSquidexDataProvider } from './data-providers/user.data-provider';
+import { WorkingGroupSquidexDataProvider } from './data-providers/working-group.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
-import { calendarRouteFactory } from './routes/calendars.route';
+import { calendarRouteFactory } from './routes/calendar.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
 import { guideRouteFactory } from './routes/guides.route';
-import { eventRouteFactory } from './routes/events.route';
-import { interestGroupRouteFactory } from './routes/interest-groups.route';
-import { labsRouteFactory } from './routes/labs.route';
+import { eventRouteFactory } from './routes/event.route';
+import { interestGroupRouteFactory } from './routes/interest-group.route';
+import { labsRouteFactory } from './routes/lab.route';
 import { newsRouteFactory } from './routes/news.route';
-import { pageRouteFactory } from './routes/pages.route';
-import { reminderRouteFactory } from './routes/reminders.route';
-import { researchOutputRouteFactory } from './routes/research-outputs.route';
-import { researchTagsRouteFactory } from './routes/research-tags.route';
-import { teamRouteFactory } from './routes/teams.route';
-import { tutorialsRouteFactory } from './routes/tutorials.route';
+import { pageRouteFactory } from './routes/page.route';
+import { reminderRouteFactory } from './routes/reminder.route';
+import { researchOutputRouteFactory } from './routes/research-output.route';
+import { researchTagsRouteFactory } from './routes/research-tag.route';
+import { teamRouteFactory } from './routes/team.route';
+import { tutorialsRouteFactory } from './routes/tutorial.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
-import { workingGroupRouteFactory } from './routes/working-groups.route';
+import { workingGroupRouteFactory } from './routes/working-group.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
@@ -141,7 +144,7 @@ import pinoLogger from './utils/logger';
 import {
   LabDataProvider,
   LabSquidexDataProvider,
-} from './data-providers/labs.data-provider';
+} from './data-providers/lab.data-provider';
 import { DiscoverSquidexDataProvider } from './data-providers/discover.data-provider';
 import { GuideContentfulDataProvider } from './data-providers/contentful/guides.data-provider';
 

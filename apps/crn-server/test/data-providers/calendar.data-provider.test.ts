@@ -14,7 +14,7 @@ import {
   getSquidexGraphqlCalendar,
 } from '../fixtures/calendars.fixtures';
 import { GenericError } from '@asap-hub/errors';
-import { CalendarSquidexDataProvider } from '../../src/data-providers/calendars.data-provider';
+import { CalendarSquidexDataProvider } from '../../src/data-providers/calendar.data-provider';
 import { getSquidexGraphqlWorkingGroup } from '../fixtures/working-groups.fixtures';
 
 describe('Calendars data provider', () => {

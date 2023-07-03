@@ -8,7 +8,7 @@ import {
 } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
-import { parseUserToResponse } from '../data-providers/users.data-provider';
+import { parseUserToResponse } from '../data-providers/user.data-provider';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import logger from '../utils/logger';
 

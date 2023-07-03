@@ -18,7 +18,7 @@ import {
   parseUserToResponse,
   removeDuplicates,
   UserSquidexDataProvider,
-} from '../../src/data-providers/users.data-provider';
+} from '../../src/data-providers/user.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import logger from '../../src/utils/logger';
 import {

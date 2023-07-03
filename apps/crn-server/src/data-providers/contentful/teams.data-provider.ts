@@ -25,7 +25,7 @@ import {
 
 import { isTeamRole, priorities } from '../../entities';
 
-import { TeamDataProvider } from '../teams.data-provider';
+import { TeamDataProvider } from '../team.data-provider';
 
 export type TeamItem = NonNullable<
   NonNullable<FetchTeamsQuery['teamsCollection']>['items'][number]

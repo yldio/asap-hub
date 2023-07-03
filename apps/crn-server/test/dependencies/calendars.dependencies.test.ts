@@ -7,7 +7,7 @@ describe('Calendars Dependencies', () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
 
     const { CalendarSquidexDataProvider } = await import(
-      '../../src/data-providers/calendars.data-provider'
+      '../../src/data-providers/calendar.data-provider'
     );
     const getCalendarDataProviderModule = await import(
       '../../src/dependencies/calendars.dependencies'

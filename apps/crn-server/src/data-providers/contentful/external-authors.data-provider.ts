@@ -18,7 +18,7 @@ import {
   GraphQLClient,
 } from '@asap-hub/contentful';
 
-import { ExternalAuthorDataProvider } from '../external-authors.data-provider';
+import { ExternalAuthorDataProvider } from '../external-author.data-provider';
 
 export type ExternalAuthorItem = NonNullable<
   NonNullable<

@@ -7,7 +7,7 @@ describe('Working Groups Dependencies', () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
 
     const { WorkingGroupSquidexDataProvider } = await import(
-      '../../src/data-providers/working-groups.data-provider'
+      '../../src/data-providers/working-group.data-provider'
     );
     const getWorkingGroupDataProviderModule = await import(
       '../../src/dependencies/working-groups.dependencies'

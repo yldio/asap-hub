@@ -8,7 +8,7 @@ describe('Users Dependencies', () => {
       process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
 
       const { UserSquidexDataProvider } = await import(
-        '../../src/data-providers/users.data-provider'
+        '../../src/data-providers/user.data-provider'
       );
       const getDependenciesModule = await import(
         '../../src/dependencies/users.dependencies'
@@ -37,7 +37,7 @@ describe('Users Dependencies', () => {
       process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
 
       const { AssetSquidexDataProvider } = await import(
-        '../../src/data-providers/assets.data-provider'
+        '../../src/data-providers/asset.data-provider'
       );
       const getDependenciesModule = await import(
         '../../src/dependencies/users.dependencies'

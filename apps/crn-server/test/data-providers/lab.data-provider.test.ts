@@ -1,5 +1,5 @@
 import { FetchOptions } from '@asap-hub/model';
-import { LabSquidexDataProvider } from '../../src/data-providers/labs.data-provider';
+import { LabSquidexDataProvider } from '../../src/data-providers/lab.data-provider';
 import {
   getListLabDataObject,
   getSquidexLabsGraphqlResponse,

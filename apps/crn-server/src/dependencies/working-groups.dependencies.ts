@@ -13,7 +13,7 @@ import {
   isContentfulEnabledV2,
 } from '../config';
 import { WorkingGroupContentfulDataProvider } from '../data-providers/contentful/working-groups.data-provider';
-import { WorkingGroupSquidexDataProvider } from '../data-providers/working-groups.data-provider';
+import { WorkingGroupSquidexDataProvider } from '../data-providers/working-group.data-provider';
 
 import { WorkingGroupDataProvider } from '../data-providers/types';
 import { getAuthToken } from '../utils/auth';

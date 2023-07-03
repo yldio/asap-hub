@@ -1,4 +1,4 @@
-import { ResearchTagSquidexDataProvider } from '../../src/data-providers/research-tags.data-provider';
+import { ResearchTagSquidexDataProvider } from '../../src/data-providers/research-tag.data-provider';
 import {
   getListResearchTagDataObject,
   getSquidexResearchTagsGraphqlResponse,

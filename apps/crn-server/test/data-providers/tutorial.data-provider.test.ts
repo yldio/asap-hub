@@ -1,4 +1,4 @@
-import { TutorialsSquidexDataProvider } from '../../src/data-providers/tutorials.data-provider';
+import { TutorialsSquidexDataProvider } from '../../src/data-providers/tutorial.data-provider';
 import {
   getTutorialsDataObject,
   getSquidexTeamGraphqlResponse,

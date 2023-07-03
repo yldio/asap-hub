@@ -14,7 +14,7 @@ import {
   makeDraftFilter,
   makeODataFilter,
   ResearchOutputSquidexDataProvider,
-} from '../../src/data-providers/research-outputs.data-provider';
+} from '../../src/data-providers/research-output.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import {
   getListResearchOutputDataObject,

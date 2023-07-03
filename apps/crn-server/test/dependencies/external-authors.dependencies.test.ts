@@ -7,7 +7,7 @@ describe('External Authors Dependencies', () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
 
     const { ExternalAuthorSquidexDataProvider } = await import(
-      '../../src/data-providers/external-authors.data-provider'
+      '../../src/data-providers/external-author.data-provider'
     );
     const getExternalAuthorDataProviderModule = await import(
       '../../src/dependencies/external-authors.dependencies'

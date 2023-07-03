@@ -1,6 +1,6 @@
 import nock from 'nock';
 import { RestPage, SquidexRest } from '@asap-hub/squidex';
-import { PageSquidexDataProvider } from '../../src/data-providers/pages.data-provider';
+import { PageSquidexDataProvider } from '../../src/data-providers/page.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import { appName, baseUrl } from '../../src/config';
 import { identity } from '../helpers/squidex';

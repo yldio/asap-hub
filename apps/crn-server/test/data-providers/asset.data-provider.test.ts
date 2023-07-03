@@ -1,7 +1,7 @@
 import { InputUser, RestUser, SquidexRest } from '@asap-hub/squidex';
 import nock from 'nock';
 import { appName, baseUrl } from '../../src/config';
-import { AssetSquidexDataProvider } from '../../src/data-providers/assets.data-provider';
+import { AssetSquidexDataProvider } from '../../src/data-providers/asset.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import { identity } from '../helpers/squidex';
 

@@ -8,7 +8,7 @@ import { DateTime } from 'luxon';
 import {
   getEventFilter,
   ReminderSquidexDataProvider,
-} from '../../src/data-providers/reminders.data-provider';
+} from '../../src/data-providers/reminder.data-provider';
 import {
   getEventHappeningNowReminder,
   getEventHappeningTodayReminder,

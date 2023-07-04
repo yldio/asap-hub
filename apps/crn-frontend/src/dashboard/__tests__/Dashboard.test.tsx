@@ -16,10 +16,12 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshDashboardState } from '../state';
 import { getDashboard, getReminders } from '../api';
 import { getUser, getUsers, patchUser } from '../../network/users/api';
+// import { getGuides } from '../../guides/api';
 import { refreshUserState } from '../../network/users/state';
 
 jest.mock('../api');
 jest.mock('../../events/api');
+jest.mock('../../guides/api');
 jest.mock('../../shared-research/api');
 jest.mock('../../network/teams/api');
 jest.mock('../../network/users/api');
@@ -34,6 +36,7 @@ const mockGetDashboard = getDashboard as jest.MockedFunction<
 const mockGetReminders = getReminders as jest.MockedFunction<
   typeof getReminders
 >;
+
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;

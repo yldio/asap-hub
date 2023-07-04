@@ -46,6 +46,8 @@ import {
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
+
+import Guide, { GuideController } from './controllers/guides.controller';
 import CalendarController from './controllers/calendars.controller';
 import DashboardController from './controllers/dashboard.controller';
 import DiscoverController from './controllers/discover.controller';
@@ -109,6 +111,7 @@ import {
   UserDataProvider,
   DashboardDataProvider,
   DiscoverDataProvider,
+  GuideDataProvider,
   WorkingGroupDataProvider,
   TutorialsDataProvider,
   ResearchTagDataProvider,
@@ -120,6 +123,7 @@ import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
+import { guideRouteFactory } from './routes/guides.route';
 import { eventRouteFactory } from './routes/events.route';
 import { interestGroupRouteFactory } from './routes/interest-groups.route';
 import { labsRouteFactory } from './routes/labs.route';
@@ -141,6 +145,7 @@ import {
   LabSquidexDataProvider,
 } from './data-providers/labs.data-provider';
 import { DiscoverSquidexDataProvider } from './data-providers/discover.data-provider';
+import { GuideContentfulDataProvider } from './data-providers/contentful/guides.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -491,6 +496,10 @@ export const appFactory = (libs: Libs = {}): Express => {
       'IS_CONTENTFUL_ENABLED_V2',
     );
 
+  const guideDataProvider =
+    libs.guideDataProvider ||
+    new GuideContentfulDataProvider(contentfulGraphQLClient);
+
   featureFlagDependencySwitch.setDependency(
     'researchTags',
     libs.researchTagSquidexDataProvider ||
@@ -526,6 +535,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.discoverController || new DiscoverController(discoverDataProvider);
   const eventController =
     libs.eventController || new EventController(eventDataProvider);
+  const guideController = libs.guideController || new Guide(guideDataProvider);
   const interestGroupController =
     libs.interestGroupController ||
     new InterestGroupController(interestGroupDataProvider, userDataProvider);
@@ -573,6 +583,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const calendarRoutes = calendarRouteFactory(calendarController);
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const discoverRoutes = discoverRouteFactory(discoverController);
+  const guideRoutes = guideRouteFactory(guideController);
   const eventRoutes = eventRouteFactory(eventController);
   const interestGroupRoutes = interestGroupRouteFactory(
     interestGroupController,
@@ -637,6 +648,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(calendarRoutes);
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
+  app.use(guideRoutes);
   app.use(eventRoutes);
   app.use(interestGroupRoutes);
   app.use(labsRoutes);
@@ -671,6 +683,7 @@ export type Libs = {
   calendarController?: CalendarController;
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;
+  guideController?: GuideController;
   eventController?: EventController;
   interestGroupController?: InterestGroupController;
   labsController?: LabController;
@@ -695,6 +708,7 @@ export type Libs = {
   discoverDataProvider?: DiscoverDataProvider;
   discoverSquidexDataProvider?: DiscoverDataProvider;
   discoverContentfulDataProvider?: DiscoverDataProvider;
+  guideDataProvider?: GuideDataProvider;
   externalAuthorSquidexDataProvider?: ExternalAuthorDataProvider;
   externalAuthorContentfulDataProvider?: ExternalAuthorDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;

@@ -12,6 +12,7 @@ import {
   UserResponse,
   ListResearchOutputResponse,
   NewsResponse,
+  GuideDataObject,
 } from '@asap-hub/model';
 import {
   NewsSection,
@@ -22,10 +23,11 @@ import {
   RecentSharedOutputs,
 } from '../organisms';
 import { rem } from '../pixels';
-import { Link, Headline2, Card } from '../atoms';
+import { Link, Headline2, Card, Paragraph } from '../atoms';
 import { DashboardRecommendedUsers, lead } from '..';
 import { Accordion } from '../molecules';
-import { confidentialIcon, giftIcon, learnIcon } from '../icons';
+import { externalLinkIcon } from '../icons';
+import { isInternalLink } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -57,7 +59,7 @@ type DashboardPageBodyProps = Pick<
   } & Pick<UserResponse, 'dismissedGettingStarted'> & {
     pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
     roles: TeamRole[];
-  } & {
+    guides: GuideDataObject[];
     recentSharedOutputs?: ListResearchOutputResponse;
     recommendedUsers: UserResponse[];
   };
@@ -68,6 +70,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   news,
   roles,
   reminders,
+  guides,
   pastEvents,
   dismissedGettingStarted,
   upcomingEvents,
@@ -75,6 +78,26 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   recommendedUsers,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
+
+  const guideAccordion = guides.map((guide) => ({
+    icon: <></>,
+    title: guide.title,
+    description: guide.content.map((content) => (
+      <div key={content.text}>
+        <Paragraph>{content.text}</Paragraph>
+        <div css={{ width: 'fit-content' }}>
+          {content.linkUrl && (
+            <div css={{ width: 'fit-content' }}>
+              <Link buttonStyle small primary href={content.linkUrl}>
+                {content.linkText}{' '}
+                {!isInternalLink(content.linkUrl)[0] && externalLinkIcon}
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+    )),
+  }));
 
   return (
     <div css={styles}>
@@ -86,32 +109,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </div>
           <Card accent="neutral200" padding={false}>
             <Accordion
-              items={[
-                {
-                  icon: learnIcon,
-                  title: 'How to use the Hub?',
-                  description:
-                    'Explore a series of short videos that highlight the many different aspects of the Hub.',
-                  hrefText: 'Explore videos',
-                  href: 'https://hub.asap.science/discover/tutorials/d9c82f68-3f43-4dd8-83c0-179592fc8e42',
-                },
-                {
-                  icon: giftIcon,
-                  title: 'Grant Welcome Packet',
-                  description:
-                    'All you need to know about the Network, the Hub, sharing, meetings, communications, publishing and more.',
-                  hrefText: 'Open the packet',
-                  href: 'https://drive.google.com/file/d/1E-wPBbVQnVHpBBP24pgIo87AOVoO15Gr/view',
-                },
-                {
-                  icon: confidentialIcon,
-                  title: 'Confidentiality Rules',
-                  description:
-                    'View all confidentiality rules related to the Hub.',
-                  hrefText: 'Read more',
-                  href: 'https://hub.asap.science/terms-and-conditions',
-                },
-              ]}
+              items={guideAccordion}
               info={{
                 href: dashboard({}).dismissGettingStarted({}).$,
                 hrefText: 'Don’t Show Again',

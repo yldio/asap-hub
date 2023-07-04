@@ -1450,6 +1450,167 @@ enum ExternalToolsOrder {
   url_DESC
 }
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guideContent)"""
+type GuideContent implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkText(locale: String): String
+  linkUrl(locale: String): String
+  linkedFrom(allowedLocales: [String]): GuideContentLinkingCollections
+  sys: Sys!
+  text(locale: String): String
+  title(locale: String): String
+}
+
+type GuideContentCollection {
+  items: [GuideContent]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input GuideContentFilter {
+  AND: [GuideContentFilter]
+  OR: [GuideContentFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  linkText: String
+  linkText_contains: String
+  linkText_exists: Boolean
+  linkText_in: [String]
+  linkText_not: String
+  linkText_not_contains: String
+  linkText_not_in: [String]
+  linkURL: String
+  linkURL_contains: String
+  linkURL_exists: Boolean
+  linkURL_in: [String]
+  linkURL_not: String
+  linkURL_not_contains: String
+  linkURL_not_in: [String]
+  sys: SysFilter
+  text: String
+  text_contains: String
+  text_exists: Boolean
+  text_in: [String]
+  text_not: String
+  text_not_contains: String
+  text_not_in: [String]
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type GuideContentLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  guidesCollection(limit: Int = 100, locale: String, order: [GuideContentLinkingCollectionsGuidesCollectionOrder], preview: Boolean, skip: Int = 0): GuidesCollection
+}
+
+enum GuideContentLinkingCollectionsGuidesCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum GuideContentOrder {
+  linkText_ASC
+  linkText_DESC
+  linkURL_ASC
+  linkURL_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guides)"""
+type Guides implements Entry {
+  contentCollection(limit: Int = 100, locale: String, order: [GuidesContentCollectionOrder], preview: Boolean, skip: Int = 0, where: GuideContentFilter): GuidesContentCollection
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): GuidesLinkingCollections
+  sys: Sys!
+  title(locale: String): String
+}
+
+type GuidesCollection {
+  items: [Guides]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type GuidesContentCollection {
+  items: [GuideContent]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum GuidesContentCollectionOrder {
+  linkText_ASC
+  linkText_DESC
+  linkURL_ASC
+  linkURL_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+input GuidesFilter {
+  AND: [GuidesFilter]
+  OR: [GuidesFilter]
+  content: cfGuideContentNestedFilter
+  contentCollection_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type GuidesLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+}
+
+enum GuidesOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 """The 'HexColor' type represents color in `rgb:ffffff` string format."""
 scalar HexColor
 
@@ -2273,6 +2434,10 @@ type Query {
   externalAuthorsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsOrder], preview: Boolean, skip: Int = 0, where: ExternalAuthorsFilter): ExternalAuthorsCollection
   externalTools(id: String!, locale: String, preview: Boolean): ExternalTools
   externalToolsCollection(limit: Int = 100, locale: String, order: [ExternalToolsOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): ExternalToolsCollection
+  guideContent(id: String!, locale: String, preview: Boolean): GuideContent
+  guideContentCollection(limit: Int = 100, locale: String, order: [GuideContentOrder], preview: Boolean, skip: Int = 0, where: GuideContentFilter): GuideContentCollection
+  guides(id: String!, locale: String, preview: Boolean): Guides
+  guidesCollection(limit: Int = 100, locale: String, order: [GuidesOrder], preview: Boolean, skip: Int = 0, where: GuidesFilter): GuidesCollection
   interestGroupLeaders(id: String!, locale: String, preview: Boolean): InterestGroupLeaders
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [InterestGroupLeadersOrder], preview: Boolean, skip: Int = 0, where: InterestGroupLeadersFilter): InterestGroupLeadersCollection
   interestGroups(id: String!, locale: String, preview: Boolean): InterestGroups
@@ -3806,6 +3971,41 @@ input cfExternalToolsNestedFilter {
   url_not: String
   url_not_contains: String
   url_not_in: [String]
+}
+
+input cfGuideContentNestedFilter {
+  AND: [cfGuideContentNestedFilter]
+  OR: [cfGuideContentNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  linkText: String
+  linkText_contains: String
+  linkText_exists: Boolean
+  linkText_in: [String]
+  linkText_not: String
+  linkText_not_contains: String
+  linkText_not_in: [String]
+  linkURL: String
+  linkURL_contains: String
+  linkURL_exists: Boolean
+  linkURL_in: [String]
+  linkURL_not: String
+  linkURL_not_contains: String
+  linkURL_not_in: [String]
+  sys: SysFilter
+  text: String
+  text_contains: String
+  text_exists: Boolean
+  text_in: [String]
+  text_not: String
+  text_not_contains: String
+  text_not_in: [String]
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
 }
 
 input cfInterestGroupLeadersNestedFilter {

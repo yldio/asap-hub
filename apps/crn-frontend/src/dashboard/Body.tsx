@@ -5,13 +5,14 @@ import { activeUserTag } from '@asap-hub/model';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 
 import { useEvents } from '../events/state';
+import { useGuides } from '../guides/state';
 import { useResearchOutputs } from '../shared-research/state';
 import { useUsers } from '../network/users/state';
 import { eventMapper } from '../events/EventList';
 
 type BodyProps = Omit<
   ComponentProps<typeof DashboardPageBody>,
-  'pastEvents' | 'recommendedUsers'
+  'pastEvents' | 'recommendedUsers' | 'guides'
 > & {
   date: Date;
   user: User;
@@ -50,9 +51,12 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
     pageSize: 3,
   }).items;
 
+  const guides = useGuides();
+
   return (
     <DashboardPageBody
       {...props}
+      guides={guides.items}
       pastEvents={pastEvents}
       upcomingEvents={items.map(eventMapper)}
       recentSharedOutputs={recentSharedOutputs}

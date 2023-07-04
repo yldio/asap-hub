@@ -5,6 +5,7 @@ export * from './discover';
 export * from './events';
 export * as gp2 from './gp2';
 export * from './groups';
+export * from './guides';
 export * from './labs';
 export * from './news';
 export * from './pages';

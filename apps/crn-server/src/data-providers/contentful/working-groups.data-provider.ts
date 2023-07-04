@@ -26,7 +26,7 @@ import {
 } from '@asap-hub/contentful';
 
 import { WorkingGroupDataProvider } from '../types';
-import { parseContentfulGraphqlCalendarToResponse } from '../entities';
+import { parseContentfulGraphqlCalendarToResponse } from '../transformers';
 import logger from '../../utils/logger';
 
 export type WorkingGroupItem = NonNullable<

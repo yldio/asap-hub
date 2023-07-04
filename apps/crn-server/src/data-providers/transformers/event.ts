@@ -21,8 +21,8 @@ import {
   parseGraphqlCalendarToResponse,
   parseGraphQLInterestGroup,
   parseGraphQlWorkingGroup,
-  toWorkingGroupResponse,
-} from './index';
+} from '.';
+import { toWorkingGroupResponse } from '../../controllers/working-group.controller';
 
 export const getMeetingMaterial = <T>(
   material: T,

@@ -19,7 +19,7 @@ import {
   CalendarsOrder,
   updateEntryFields,
 } from '@asap-hub/contentful';
-import { parseContentfulGraphqlCalendarPartialToDataObject } from '../entities';
+import { parseContentfulGraphqlCalendarPartialToDataObject } from '../transformers';
 
 export type CalendarItem = NonNullable<
   NonNullable<FetchCalendarsQuery['calendarsCollection']>['items'][number]

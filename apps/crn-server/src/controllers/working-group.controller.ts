@@ -1,11 +1,11 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
   FetchOptions,
+  WorkingGroupDataObject,
   WorkingGroupListResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../data-providers/types';
-import { toWorkingGroupResponse } from '../data-providers/entities';
 
 export default class WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}
@@ -42,3 +42,23 @@ export default class WorkingGroupController {
     return toWorkingGroupResponse(workingGroup);
   }
 }
+
+export const toWorkingGroupResponse = (
+  workingGroup: WorkingGroupDataObject,
+): WorkingGroupResponse => ({
+  ...workingGroup,
+  leaders: workingGroup.leaders.map((leader) => ({
+    ...leader,
+    isActive: workingGroup.complete
+      ? false
+      : !!leader?.user?.alumniSinceDate === false &&
+        !!leader?.inactiveSinceDate === false,
+  })),
+  members: workingGroup.members.map((member) => ({
+    ...member,
+    isActive: workingGroup.complete
+      ? false
+      : !!member?.user?.alumniSinceDate === false &&
+        !!member?.inactiveSinceDate === false,
+  })),
+});

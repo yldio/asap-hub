@@ -7,7 +7,7 @@ import {
   parseGraphQLEvent,
   parseGraphQLSpeakers,
   parseGraphQLWorkingGroupProjects,
-} from '../../src/data-providers/entities/event.entity';
+} from '../../../src/data-providers/transformers/event.entity';
 import {
   getEventExternalSpeaker,
   getEventSpeaker,
@@ -15,9 +15,9 @@ import {
   getSquidexGraphqlEvent,
   getSquidexGraphqlEventSpeakerWithExternalUser,
   getSquidexGraphqlEventSpeakerWithUser,
-} from '../fixtures/event.fixtures';
-import { getGraphQLProject } from '../fixtures/project.fixtures';
-import { getGraphQLWorkingGroup } from '../fixtures/working-group.fixtures';
+} from '../../fixtures/event.fixtures';
+import { getGraphQLProject } from '../../fixtures/project.fixtures';
+import { getGraphQLWorkingGroup } from '../../fixtures/working-group.fixtures';
 
 describe('events entity', () => {
   const graphqlEvent = getSquidexGraphqlEvent();

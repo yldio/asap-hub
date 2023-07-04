@@ -26,7 +26,7 @@ import { InterestGroupDataProvider } from '../types';
 import {
   parseContentfulGraphqlCalendarToResponse,
   parseInterestGroupLeader,
-} from '../entities';
+} from '../transformers';
 import { parseContentfulGraphQlUsers } from './users.data-provider';
 import { parseContentfulGraphQlTeams } from './teams.data-provider';
 

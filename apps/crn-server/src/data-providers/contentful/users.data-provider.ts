@@ -36,14 +36,18 @@ import {
   UsersFilter,
   UsersOrder,
 } from '@asap-hub/contentful';
-import { isTeamRole } from '../entities';
+import { isTeamRole } from '../transformers';
 import { UserDataProvider } from '../types';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import { parseOrcidWorkFromCMS } from '../../entities/users';
 import { cleanArray } from '../../utils/clean-array';
 =======
 import { parseOrcidWorkFromCMS } from '../entities/users';
 >>>>>>> 81eb46382 (Moved entity to data-providers and renamed the folder to transformers)
+=======
+import { parseOrcidWorkFromCMS } from '../transformers/users';
+>>>>>>> ffb872e52 (Moved entity tests to data-providers/transformers, renamed entity to transformers)
 
 export type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]

@@ -11,7 +11,7 @@ import {
   FetchCalendarProviderOptions,
   gp2 as gp2Model,
 } from '@asap-hub/model';
-import { parseContentfulGraphqlCalendarPartialToDataObject } from '../entities';
+import { parseContentfulGraphqlCalendarPartialToDataObject } from '../transformers';
 import { parseContentfulWorkingGroupsProjects } from './utils';
 
 export type CalendarItem = NonNullable<

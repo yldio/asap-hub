@@ -10,14 +10,14 @@ import {
   parseGraphQLEvent,
   parseGraphQLSpeakers,
   getContentfulEventMaterial,
-} from '../../src/data-providers/entities/event';
+} from '../../../src/data-providers/transformers/event';
 import {
   getEventSpeakerUser,
   getSquidexGraphqlEvent,
   getSquidexGraphqlEventSpeakerWithExternalUser,
   getSquidexGraphqlEventSpeakerWithUser,
-} from '../fixtures/events.fixtures';
-import { getWorkingGroupDataObject } from '../fixtures/working-groups.fixtures';
+} from '../../fixtures/events.fixtures';
+import { getWorkingGroupDataObject } from '../../fixtures/working-groups.fixtures';
 
 describe('events entity', () => {
   const graphqlEvent = getSquidexGraphqlEvent();

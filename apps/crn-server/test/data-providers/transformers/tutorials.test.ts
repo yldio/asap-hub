@@ -1,7 +1,7 @@
-import { appName, baseUrl } from '../../src/config';
-import { parseGraphQLTutorials } from '../../src/data-providers/entities';
+import { appName, baseUrl } from '../../../src/config';
+import { parseGraphQLTutorials } from '../../../src/data-providers/transformers';
 
-describe('parse GraphQL tutorials entities', () => {
+describe('parse GraphQL tutorials transformers', () => {
   test.each`
     description       | thumbnail           | expected
     ${'no thumbnail'} | ${undefined}        | ${undefined}

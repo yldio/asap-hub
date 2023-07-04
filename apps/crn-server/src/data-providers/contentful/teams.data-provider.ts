@@ -23,7 +23,7 @@ import {
   addLocaleToFields,
 } from '@asap-hub/contentful';
 
-import { isTeamRole, priorities } from '../entities';
+import { isTeamRole, priorities } from '../transformers';
 
 import { TeamDataProvider } from '../team.data-provider';
 

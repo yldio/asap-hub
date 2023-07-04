@@ -1,4 +1,4 @@
-import { parseGraphQLResearchOutput } from '../../src/entities/research-output';
+import { parseGraphQLResearchOutput } from '../../src/data-providers/entities/research-output';
 import { getSquidexGraphqlResearchOutput } from '../fixtures/research-output.fixtures';
 
 describe('parseGraphQLResearchOutput', () => {

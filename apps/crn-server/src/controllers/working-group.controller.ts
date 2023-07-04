@@ -5,7 +5,7 @@ import {
   WorkingGroupResponse,
 } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../data-providers/types';
-import { toWorkingGroupResponse } from '../entities';
+import { toWorkingGroupResponse } from '../data-providers/entities';
 
 export default class WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}

@@ -10,7 +10,7 @@ import {
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
-import { parseGraphQLExternalAuthor } from '../entities';
+import { parseGraphQLExternalAuthor } from './entities';
 import {
   FetchExternalAuthorQuery,
   FetchExternalAuthorQueryVariables,

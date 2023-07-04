@@ -29,7 +29,7 @@ import {
   FETCH_RESEARCH_OUTPUT,
   FETCH_RESEARCH_OUTPUTS,
 } from '../queries/research-outputs.queries';
-import { parseGraphQLResearchOutput } from '../entities/research-output';
+import { parseGraphQLResearchOutput } from './entities/research-output';
 import logger from '../utils/logger';
 import { buildODataFilter, ResearchOutputFilter } from '../utils/odata';
 import { FETCH_RESEARCH_TAGS } from '../queries/research-tags.queries';

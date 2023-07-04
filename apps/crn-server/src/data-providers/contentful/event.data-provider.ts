@@ -50,7 +50,7 @@ import {
   getContentfulEventMaterial,
   MeetingMaterial,
   parseContentfulGraphqlCalendarPartialToDataObject,
-} from '../../entities';
+} from '../entities';
 
 export type EventItem = NonNullable<
   NonNullable<FetchEventsQuery['eventsCollection']>['items'][number]

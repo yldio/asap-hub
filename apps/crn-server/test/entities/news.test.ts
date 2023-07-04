@@ -1,5 +1,5 @@
 import { appName, baseUrl } from '../../src/config';
-import { parseGraphQLNews } from '../../src/entities';
+import { parseGraphQLNews } from '../../src/data-providers/entities';
 
 describe('parse GraphQL news entities', () => {
   test.each`

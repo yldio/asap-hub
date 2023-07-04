@@ -1,4 +1,7 @@
-import { OrcidWorkCMS, parseOrcidWorkFromCMS } from '../../src/entities/users';
+import {
+  OrcidWorkCMS,
+  parseOrcidWorkFromCMS,
+} from '../../src/data-providers/entities/users';
 
 describe('parseOrcidWorkFromCMS', () => {
   const getOrcidWorks = (): OrcidWorkCMS => ({

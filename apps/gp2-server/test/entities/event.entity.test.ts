@@ -7,7 +7,7 @@ import {
   parseGraphQLEvent,
   parseGraphQLSpeakers,
   parseGraphQLWorkingGroupProjects,
-} from '../../src/entities/event.entity';
+} from '../../src/data-providers/entities/event.entity';
 import {
   getEventExternalSpeaker,
   getEventSpeaker,

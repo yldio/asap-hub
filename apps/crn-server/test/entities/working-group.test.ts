@@ -6,7 +6,7 @@ import {
 import {
   parseGraphQlWorkingGroup,
   toWorkingGroupResponse,
-} from '../../src/entities/working-group';
+} from '../../src/data-providers/entities/working-group';
 
 import {
   createWorkingGroupMembers,

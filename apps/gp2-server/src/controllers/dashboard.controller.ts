@@ -1,6 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { FetchDashboardOptions } from '@asap-hub/model/src/gp2';
 import { DashboardDataProvider } from '../data-providers/types/dashboard.data-provider.type';
+
 export default class DashboardController {
   constructor(private dashboardDataProvider: DashboardDataProvider) {}
 

@@ -84,6 +84,29 @@ describe('parseGraphQLResearchOutput', () => {
     ]);
   });
 
+  test('should flatten related events data', () => {
+    const relatedEvents: NonNullable<
+      typeof output.flatData.relatedEvents
+    >[number] = {
+      id: '123',
+      flatData: {
+        title: 'RelatedR1',
+        endDate: '2023-06-29T15:55:41.641Z',
+      },
+    };
+    output.flatData.relatedEvents = [relatedEvents];
+    expect(parseGraphQLResearchOutput(output).relatedEvents).toStrictEqual([
+      {
+        id: '123',
+        title: 'RelatedR1',
+        endDate: '2023-06-29T15:55:41.641Z',
+      },
+    ]);
+
+    output.flatData.relatedEvents = null;
+    expect(parseGraphQLResearchOutput(output).relatedEvents).toStrictEqual([]);
+  });
+
   test('should flatten keywords data', () => {
     expect(parseGraphQLResearchOutput(output).keywords).toStrictEqual([
       'Keyword1',

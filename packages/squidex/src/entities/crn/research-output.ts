@@ -52,6 +52,7 @@ export interface ResearchOutput<
   usedInAPublication: DecisionOption;
   workingGroups: string[];
   relatedResearch?: string[];
+  relatedEvents?: string[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

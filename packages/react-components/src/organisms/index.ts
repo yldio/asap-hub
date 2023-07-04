@@ -39,6 +39,7 @@ export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as RecentSharedOutputs } from './RecentSharedOutputs';
+export { default as ResearchOutputRelatedEventsCard } from './ResearchOutputRelatedEventsCard';
 export { default as RelatedResearch } from './RelatedResearch';
 export { default as RemindersCard } from './RemindersCard';
 export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
@@ -54,11 +55,11 @@ export {
   SharedOutputDropdownBase,
 } from './SharedOutputDropdown';
 export { default as SharedResearchAdditionalInformationCard } from './SharedResearchAdditionalInformationCard';
-export { default as SharedResearchOutputBanners } from './SharedResearchOutputBanners';
-export { default as SharedResearchOutputButtons } from './SharedResearchOutputButtons';
 export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as SharedResearchListCard } from './SharedResearchListCard';
 export { default as SharedResearchMetadata } from './SharedResearchMetadata';
+export { default as SharedResearchOutputBanners } from './SharedResearchOutputBanners';
+export { default as SharedResearchOutputButtons } from './SharedResearchOutputButtons';
 export { default as SharedResearchOutputHeaderCard } from './SharedResearchOutputHeaderCard';
 export { default as SpeakerList } from './SpeakerList';
 export { default as TeamCard } from './TeamCard';

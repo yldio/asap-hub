@@ -100,6 +100,7 @@ describe('getResearchOutputPayload', () => {
       organisms: [],
       environments: [],
       keywords: [],
+      relatedEvents: [],
       relatedResearch: [
         {
           value: 'r99',
@@ -187,6 +188,13 @@ describe('transformResearchOutputResponseToRequest', () => {
           teams: [],
         },
       ],
+      relatedEvents: [
+        {
+          endDate: new Date('2020-01-01').toISOString(),
+          id: 'e99',
+          title: 'title e999',
+        },
+      ],
     };
     expect(
       transformResearchOutputResponseToRequest(researchOutputResponse),
@@ -223,6 +231,9 @@ describe('transformResearchOutputResponseToRequest', () => {
         : [],
       relatedResearch: researchOutputResponse.relatedResearch.map(
         (research) => research.id,
+      ),
+      relatedEvents: researchOutputResponse.relatedEvents.map(
+        (event) => event.id,
       ),
       reviewRequestedById: researchOutputResponse.reviewRequestedBy
         ? researchOutputResponse.reviewRequestedBy.id

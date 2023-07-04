@@ -1914,6 +1914,7 @@ describe('Reminders', () => {
     labIds: [],
     authors: [],
     relatedResearchIds: [],
+    relatedEventIds: [],
     addedDate: new Date().toISOString(),
   });
 
@@ -1935,6 +1936,7 @@ describe('Reminders', () => {
     labIds: [],
     authors: [],
     relatedResearchIds: [],
+    relatedEventIds: [],
   });
 });
 

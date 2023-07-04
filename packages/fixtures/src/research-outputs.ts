@@ -36,6 +36,13 @@ const researchOutputResponse: Omit<
       title: 'Example Working Group',
     },
   ],
+  relatedEvents: [
+    {
+      id: 'e12729e0-bfdd-471f-a554-7b58eae83a8d',
+      title: 'Example Event',
+      endDate: '2020-12-10T20:36:54Z',
+    },
+  ],
   relatedResearch: [],
   sharingStatus: 'Public',
   contactEmails: [],

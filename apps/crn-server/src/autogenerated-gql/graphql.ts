@@ -2559,6 +2559,10 @@ export type Events = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -2634,6 +2638,24 @@ export type EventsReferencesUsersContentsArgs = {
 
 /** The structure of a Events content type. */
 export type EventsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencingResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4045,6 +4067,10 @@ export type ResearchOutputs = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Events content items. */
+  referencesEventsContents: Maybe<Array<Events>>;
+  /** Query Events content items with total count. */
+  referencesEventsContentsWithTotal: Maybe<EventsResultDto>;
   /** Query External authors content items. */
   referencesExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
   /** Query External authors content items with total count. */
@@ -4089,6 +4115,24 @@ export type ResearchOutputs = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesEventsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesEventsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
@@ -4388,6 +4432,7 @@ export type ResearchOutputsDataDto = {
   methods: Maybe<ResearchOutputsDataMethodsDto>;
   organisms: Maybe<ResearchOutputsDataOrganismsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
+  relatedEvents: Maybe<ResearchOutputsDataRelatedEventsDto>;
   relatedResearch: Maybe<ResearchOutputsDataRelatedResearchDto>;
   reviewRequestedBy: Maybe<ResearchOutputsDataReviewRequestedByDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
@@ -4434,6 +4479,7 @@ export type ResearchOutputsDataInputDto = {
   methods: InputMaybe<ResearchOutputsDataMethodsInputDto>;
   organisms: InputMaybe<ResearchOutputsDataOrganismsInputDto>;
   publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
+  relatedEvents: InputMaybe<ResearchOutputsDataRelatedEventsInputDto>;
   relatedResearch: InputMaybe<ResearchOutputsDataRelatedResearchInputDto>;
   reviewRequestedBy: InputMaybe<ResearchOutputsDataReviewRequestedByInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
@@ -4533,6 +4579,16 @@ export type ResearchOutputsDataPublishDateDto = {
 export type ResearchOutputsDataPublishDateInputDto = {
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Related Events field of the Research Outputs content type. */
+export type ResearchOutputsDataRelatedEventsDto = {
+  iv: Maybe<Array<Events>>;
+};
+
+/** The structure of the Related Events field of the Research Outputs content input type. */
+export type ResearchOutputsDataRelatedEventsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Related Research field of the Research Outputs content type. */
@@ -4701,6 +4757,7 @@ export type ResearchOutputsFlatDataDto = {
   organisms: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
+  relatedEvents: Maybe<Array<Events>>;
   relatedResearch: Maybe<Array<ResearchOutputs>>;
   reviewRequestedBy: Maybe<Array<Users>>;
   /** This must start with "RRID:" */
@@ -8713,6 +8770,13 @@ export type ResearchOutputContentFragment = Pick<
         }
       >
     >;
+    relatedEvents: Maybe<
+      Array<
+        Pick<Events, 'id'> & {
+          flatData: Pick<EventsFlatDataDto, 'title' | 'endDate'>;
+        }
+      >
+    >;
     labs: Maybe<
       Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
     >;
@@ -8930,6 +8994,13 @@ export type FetchResearchOutputQuery = {
                   >
                 >;
               };
+            }
+          >
+        >;
+        relatedEvents: Maybe<
+          Array<
+            Pick<Events, 'id'> & {
+              flatData: Pick<EventsFlatDataDto, 'title' | 'endDate'>;
             }
           >
         >;
@@ -9166,6 +9237,13 @@ export type FetchResearchOutputsQuery = {
                         >
                       >;
                     };
+                  }
+                >
+              >;
+              relatedEvents: Maybe<
+                Array<
+                  Pick<Events, 'id'> & {
+                    flatData: Pick<EventsFlatDataDto, 'title' | 'endDate'>;
                   }
                 >
               >;
@@ -12365,6 +12443,33 @@ export const ResearchOutputContentFragmentDoc = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'relatedEvents' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'endDate' },
                             },
                           ],
                         },

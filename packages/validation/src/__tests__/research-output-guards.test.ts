@@ -46,6 +46,7 @@ describe('isResearchOutputWorkingGroupRequest', () => {
       workingGroups,
       keywords: [],
       relatedResearch: [],
+      relatedEvents: [],
     };
     expect(isResearchOutputWorkingGroupRequest(researchOutput)).toEqual(
       expected,

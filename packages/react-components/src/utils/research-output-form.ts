@@ -15,6 +15,7 @@ import AuthorSelect from '../organisms/AuthorSelect';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
 import { MultiSelectOptionsType } from '../atoms';
+import { ResearchOutputRelatedEventsCard } from '../organisms';
 
 export type getTeamState = {
   team: TeamResponse | undefined;
@@ -135,6 +136,9 @@ export type ResearchOutputPayload = {
   subtype?: string;
   keywords: string[];
   published: boolean;
+  relatedEvents: NonNullable<
+    ComponentProps<typeof ResearchOutputRelatedEventsCard>['relatedEvents']
+  >;
 };
 
 export const getPayload = ({
@@ -162,6 +166,7 @@ export const getPayload = ({
   subtype,
   keywords,
   published,
+  relatedEvents,
 }: ResearchOutputPayload): ResearchOutputPostRequest => ({
   ...createIdentifierField(identifierType, identifier),
   documentType,
@@ -187,6 +192,7 @@ export const getPayload = ({
   subtype,
   keywords,
   published,
+  relatedEvents: relatedEvents.map(({ value }) => value),
 });
 
 export function transformResearchOutputResponseToRequest({
@@ -214,6 +220,7 @@ export function transformResearchOutputResponseToRequest({
   keywords,
   published,
   reviewRequestedBy,
+  relatedEvents,
 }: ResearchOutputResponse): ResearchOutputPutRequest {
   return {
     documentType,
@@ -245,6 +252,7 @@ export function transformResearchOutputResponseToRequest({
     teams: teams.map((team) => team.id),
     workingGroups: workingGroups ? workingGroups.map((wg) => wg.id) : [],
     relatedResearch: relatedResearch.map((research) => research.id),
+    relatedEvents: relatedEvents.map((event) => event.id),
     reviewRequestedById: reviewRequestedBy ? reviewRequestedBy.id : undefined,
   };
 }

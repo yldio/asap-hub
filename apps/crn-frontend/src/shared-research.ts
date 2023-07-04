@@ -27,6 +27,7 @@ import {
   useInvalidateResearchOutputIndex,
   useSetResearchOutputItem,
 } from './shared-research/state';
+import { getEvents } from './events/api';
 
 export function paramOutputDocumentTypeToResearchOutputDocumentType(
   data: OutputDocumentTypeParameter,
@@ -93,6 +94,24 @@ export const useRelatedResearchSuggestions = () => {
         value: id,
         type,
         documentType,
+      })),
+    );
+};
+
+export const useRelatedEventsSuggestions = () => {
+  const algoliaClient = useAlgolia();
+  return (searchQuery: string) =>
+    getEvents(algoliaClient.client, {
+      searchQuery,
+      filters: new Set(),
+      currentPage: null,
+      pageSize: null,
+      after: '',
+    }).then(({ items }) =>
+      items.map(({ id, title, endDate }) => ({
+        label: title,
+        value: id,
+        endDate,
       })),
     );
 };

@@ -106,6 +106,12 @@ export const parseGraphQLResearchOutput = (
     asapFunded: convertDecisionToBoolean(data.asapFunded),
     usedInPublication: convertDecisionToBoolean(data.usedInAPublication),
     contactEmails: uniqueContactEmails,
+    relatedEvents:
+      data.relatedEvents?.map(({ id, flatData: { endDate, title } }) => ({
+        id,
+        endDate: endDate ? parseDate(endDate).toISOString() : '',
+        title: title || '',
+      })) || [],
     labs:
       data.labs
         ?.filter((lab): lab is LabWithName => lab.flatData.name !== null)

@@ -1,4 +1,5 @@
 import { DecisionOption, ListResponse } from './common';
+import { EventDataObject } from './event';
 import { ExternalAuthorResponse } from './external-author';
 import { LabResponse } from './lab';
 import { TeamResponse } from './team';
@@ -226,6 +227,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
       'id' | 'title' | 'type' | 'documentType' | 'teams'
     > & { isOwnRelatedResearchLink?: boolean }
   >;
+  relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;
   reviewRequestedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
 };
 
@@ -256,6 +258,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   teamIds: string[];
   workingGroups?: string[];
   relatedResearchIds?: string[];
+  relatedEventIds?: string[];
 };
 
 export type PublishedResearchOutputCreateDataObject =
@@ -280,6 +283,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   updatedBy: string;
   workingGroups: string[];
   relatedResearchIds?: string[];
+  relatedEventIds?: string[];
   reviewRequestedById?: string;
 };
 
@@ -334,6 +338,7 @@ export type ResearchOutputPostRequest = {
   usageNotes?: string;
   usedInPublication?: boolean;
   published: boolean;
+  relatedEvents: string[];
 };
 
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';

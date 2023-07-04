@@ -39,7 +39,7 @@
     "@babel/core": "7.22.6",
     "@babel/preset-react": "7.22.5",
     "@sentry/react": "6.19.7",
-    "@testing-library/dom": "8.20.0",
+    "@testing-library/dom": "8.20.1",
     "@testing-library/react": "11.2.7",
     "@types/history": "4.7.11",
     "@types/jest": "^29.4.0",

@@ -25,7 +25,7 @@
   "dependencies": {
     "@asap-hub/errors": "workspace:*",
     "@asap-hub/model": "workspace:*",
-    "@babel/runtime-corejs3": "7.21.0",
+    "@babel/runtime-corejs3": "7.22.6",
     "@contentful/rich-text-html-renderer": "16.0.3",
     "@contentful/rich-text-types": "16.0.3",
     "@graphql-tools/graphql-file-loader": "7.5.17",

@@ -13,13 +13,13 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.21.0",
+    "@babel/runtime-corejs3": "7.22.6",
     "core-js": "3.30.1",
     "jsdom": "16.7.0"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/core": "7.21.4",
+    "@babel/core": "7.22.6",
     "@types/jest": "^29.4.0",
     "@types/jsdom": "16.2.15",
     "@types/node": "18.15.11"

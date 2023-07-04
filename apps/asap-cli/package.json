@@ -41,10 +41,10 @@
     "yargs": "17.3.1"
   },
   "devDependencies": {
-    "@babel/core": "7.21.4",
-    "@babel/plugin-transform-modules-commonjs": "7.21.2",
-    "@babel/plugin-transform-runtime": "7.21.4",
-    "@babel/runtime-corejs3": "7.21.0",
+    "@babel/core": "7.22.6",
+    "@babel/plugin-transform-modules-commonjs": "7.22.5",
+    "@babel/plugin-transform-runtime": "7.22.6",
+    "@babel/runtime-corejs3": "7.22.6",
     "@types/apr-intercept": "workspace:*",
     "@types/babel__core": "7.20.1",
     "@types/hapi__boom": "9.0.1",

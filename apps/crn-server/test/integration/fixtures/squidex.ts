@@ -13,11 +13,9 @@ import {
 import {
   CalendarCreateDataObject,
   EventCreateDataObject,
-  EventUpdateDataObject,
   UserCreateDataObject,
   TeamCreateDataObject,
   InterestGroupCreateDataObject,
-  EventFixture,
 } from './types';
 import { appName, baseUrl } from '../../../src/config';
 
@@ -62,14 +60,6 @@ export class SquidexFixture implements Fixture {
     return {
       ...props,
       calendar: [props.calendar],
-      notes: props.notes ?? undefined,
-      presentation: props.presentation ?? undefined,
-      videoRecording: props.videoRecording ?? undefined,
-    };
-  }
-
-  private async preparePatchEvent(props: EventUpdateDataObject) {
-    return {
       notes: props.notes ?? undefined,
       presentation: props.presentation ?? undefined,
       videoRecording: props.videoRecording ?? undefined,
@@ -141,17 +131,6 @@ export class SquidexFixture implements Fixture {
       id: result.id,
       ...event,
     };
-  }
-  async updateEvent(id: string, event: EventUpdateDataObject) {
-    const input = await this.preparePatchEvent(event);
-    const result = await eventRestClient.patch(id, parseToSquidex(input));
-    if (!result) {
-      throw new Error('Could not update event');
-    }
-    return {
-      ...result.data,
-      id: result.id,
-    } as unknown as EventFixture;
   }
 
   async publishEvent(id: string, status?: 'Published' | 'Draft') {

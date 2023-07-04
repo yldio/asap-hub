@@ -73,10 +73,6 @@ export interface Fixture {
     calendar: CalendarCreateDataObject,
   ) => Promise<CalendarFixture>;
   createEvent: (event: EventCreateDataObject) => Promise<EventFixture>;
-  updateEvent: (
-    id: string,
-    event: EventUpdateDataObject,
-  ) => Promise<EventFixture>;
   publishEvent: (id: string, status?: 'Published' | 'Draft') => Promise<void>;
   deleteEvents: (ids: string[]) => Promise<void>;
   createUser: (user: UserCreateDataObject) => Promise<UserFixture>;

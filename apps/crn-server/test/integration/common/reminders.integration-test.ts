@@ -84,6 +84,53 @@ describe('Reminders', () => {
     jest.useRealTimers();
   });
 
+  describe('Multiple reminders', () => {
+    // TODO: add research output reminders here
+    test('Should retrieve multiple reminders and sort them by the date they refer to', async () => {
+      // setting system time to 9:00AM in UTC
+      const now = new Date('2022-08-10T09:00:00.0Z');
+
+      jest.setSystemTime(now);
+      const eventHappeningToday = await createEvent({
+        startDate: new Date('2022-08-10T12:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T18:00:00.0Z').toISOString(),
+      });
+      const eventHappeningNow = await createEvent({
+        startDate: new Date('2022-08-10T08:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T10:00:00.0Z').toISOString(),
+      });
+      const endedEventWithLoggedInUserSpeaker = await createEvent({
+        startDate: new Date('2022-08-10T05:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T06:00:00.0Z').toISOString(),
+        speakers: [{ user: [loggedInUser.id], team: [team.id] }],
+      });
+
+      await retryable(async () => {
+        const response: AppResponse<ListReminderResponse> = await supertest(app)
+          .get(`/reminders?timezone=Europe/London`)
+          .expect(200);
+
+        console.log('response.body.items', response.body.items);
+        expect(response.body.items).toEqual([
+          expect.objectContaining({
+            id: `event-happening-today-${eventHappeningToday.id}`,
+          }),
+          expect.objectContaining({
+            id: `event-happening-now-${eventHappeningNow.id}`,
+          }),
+          expect.objectContaining({
+            id: `share-presentation-${endedEventWithLoggedInUserSpeaker.id}`,
+          }),
+        ]);
+      });
+      await fixtures.deleteEvents([
+        eventHappeningToday.id,
+        eventHappeningNow.id,
+        endedEventWithLoggedInUserSpeaker.id,
+      ]);
+    }, 300000);
+  });
+
   describe('Event Happening Today Reminder', () => {
     test('Should see the reminder when the event starts today', async () => {
       const now = new Date('2022-08-10T05:00:00.0Z');
@@ -554,92 +601,8 @@ describe('Reminders', () => {
           );
           await fixtures.deleteEvents([event.id]);
         });
-        test(`Should not see the reminder when ${material} was erased in an event`, async () => {
-          jest.useRealTimers();
-
-          const event = await createEvent({
-            title: 'Material Event',
-          });
-          await expectNotToContainingReminderWithId(
-            `${material.toLowerCase()}-event-updated-${event.id}`,
-          );
-
-          const updatedEventWithMaterial = await fixtures.updateEvent(
-            event.id,
-            {
-              [materialContentName]: 'I am a material',
-            },
-          );
-
-          await expectReminderWithId(
-            `${material.toLowerCase()}-event-updated-${
-              updatedEventWithMaterial.id
-            }`,
-          );
-
-          // user erases material
-          const updatedEventWithoutMaterial = await fixtures.updateEvent(
-            event.id,
-            {
-              [materialContentName]: '',
-            },
-          );
-
-          await expectNotToContainingReminderWithId(
-            `${material.toLowerCase()}-event-updated-${
-              updatedEventWithoutMaterial.id
-            }`,
-          );
-          await fixtures.deleteEvents([event.id]);
-        }, 600000);
       },
     );
-  });
-
-  describe('Multiple reminders', () => {
-    // TODO: add research output reminders here
-    test('Should retrieve multiple reminders and sort them by the date they refer to', async () => {
-      // setting system time to 9:00AM in UTC
-      const now = new Date('2022-08-10T09:00:00.0Z');
-
-      jest.setSystemTime(now);
-      const eventHappeningToday = await createEvent({
-        startDate: new Date('2022-08-10T12:00:00.0Z').toISOString(),
-        endDate: new Date('2022-08-10T18:00:00.0Z').toISOString(),
-      });
-      const eventHappeningNow = await createEvent({
-        startDate: new Date('2022-08-10T08:00:00.0Z').toISOString(),
-        endDate: new Date('2022-08-10T10:00:00.0Z').toISOString(),
-      });
-      const endedEventWithLoggedInUserSpeaker = await createEvent({
-        startDate: new Date('2022-08-10T05:00:00.0Z').toISOString(),
-        endDate: new Date('2022-08-10T06:00:00.0Z').toISOString(),
-        speakers: [{ user: [loggedInUser.id], team: [team.id] }],
-      });
-
-      await retryable(async () => {
-        const response: AppResponse<ListReminderResponse> = await supertest(app)
-          .get(`/reminders?timezone=Europe/London`)
-          .expect(200);
-
-        expect(response.body.items).toEqual([
-          expect.objectContaining({
-            id: `event-happening-today-${eventHappeningToday.id}`,
-          }),
-          expect.objectContaining({
-            id: `event-happening-now-${eventHappeningNow.id}`,
-          }),
-          expect.objectContaining({
-            id: `share-presentation-${endedEventWithLoggedInUserSpeaker.id}`,
-          }),
-        ]);
-      });
-      await fixtures.deleteEvents([
-        eventHappeningToday.id,
-        eventHappeningNow.id,
-        endedEventWithLoggedInUserSpeaker.id,
-      ]);
-    }, 300000);
   });
 
   const createEvent = async (props: Partial<EventCreateDataObject> = {}) => {

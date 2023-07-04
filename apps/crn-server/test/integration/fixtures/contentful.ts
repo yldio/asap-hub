@@ -1,8 +1,4 @@
-import {
-  addLocaleToFields,
-  getLinkEntity,
-  patchAndPublish,
-} from '@asap-hub/contentful';
+import { addLocaleToFields, getLinkEntity } from '@asap-hub/contentful';
 import {
   createClient,
   RestAdapter,
@@ -18,8 +14,6 @@ import {
   UserCreateDataObject,
   TeamCreateDataObject,
   InterestGroupCreateDataObject,
-  EventUpdateDataObject,
-  EventFixture,
 } from './types';
 
 import {
@@ -110,19 +104,6 @@ export class ContentfulFixture implements Fixture {
     };
   }
 
-  private async preparePatchEvent(props: EventUpdateDataObject) {
-    const addLocale = false;
-    return {
-      ...(props.notes ? { notes: getMaterial(props.notes, addLocale) } : {}),
-      ...(props.presentation
-        ? { presentation: getMaterial(props.presentation, addLocale) }
-        : {}),
-      ...(props.videoRecording
-        ? { videoRecording: getMaterial(props.videoRecording, addLocale) }
-        : {}),
-    };
-  }
-
   private async prepareUser(props: UserCreateDataObject) {
     const environment = await this.getEnvironment();
     return {
@@ -199,22 +180,6 @@ export class ContentfulFixture implements Fixture {
     };
   }
 
-  async updateEvent(id: string, event: EventUpdateDataObject) {
-    const input = await this.preparePatchEvent(event);
-
-    const environment = await this.getEnvironment();
-    const entry = await environment.getEntry(id);
-
-    const result = await patchAndPublish(entry, input);
-    if (!result) {
-      throw new Error('Could not update event');
-    }
-    return {
-      ...result,
-      id: result.sys.id,
-    } as unknown as EventFixture;
-  }
-
   async publishEvent(id: string, status?: 'Published' | 'Draft') {
     const environment = await this.getEnvironment();
     const entry = await environment.getEntry(id);
@@ -278,9 +243,7 @@ export class ContentfulFixture implements Fixture {
             await toDelete.unpublish();
           }
           await toDelete.delete();
-        } catch {
-          // console.log(err);
-        }
+        } catch {}
       }
     }
   }

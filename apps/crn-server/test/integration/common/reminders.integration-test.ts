@@ -42,7 +42,6 @@ describe('Reminders', () => {
   let team: TeamFixture;
 
   beforeAll(async () => {
-    jest.useFakeTimers();
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
       getUserFixture({
@@ -74,6 +73,10 @@ describe('Reminders', () => {
         next();
       },
     });
+  });
+
+  beforeEach(async () => {
+    jest.useFakeTimers();
   });
 
   afterAll(async () => {

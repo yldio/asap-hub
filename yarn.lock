@@ -417,7 +417,7 @@ __metadata:
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
-    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.0.3
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
@@ -445,7 +445,7 @@ __metadata:
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
-    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -472,7 +472,7 @@ __metadata:
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
-    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
@@ -500,7 +500,7 @@ __metadata:
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
-    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -529,7 +529,7 @@ __metadata:
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
-    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -556,7 +556,7 @@ __metadata:
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
-    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.0.3
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
@@ -584,7 +584,7 @@ __metadata:
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
-    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -613,7 +613,7 @@ __metadata:
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
-    "@contentful/react-apps-toolkit": 1.2.15
+    "@contentful/react-apps-toolkit": 1.2.16
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -10929,15 +10929,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/react-apps-toolkit@npm:1.2.15":
-  version: 1.2.15
-  resolution: "@contentful/react-apps-toolkit@npm:1.2.15"
+"@contentful/react-apps-toolkit@npm:1.2.16":
+  version: 1.2.16
+  resolution: "@contentful/react-apps-toolkit@npm:1.2.16"
   dependencies:
     contentful-management: ">=7.30.0"
   peerDependencies:
     "@contentful/app-sdk": ">=4.0.0"
     react: ">=16.8.0"
-  checksum: 8b0f0ac7f5bc11d0518b71b1fe3163c995205109cc9c19adbffbd0e169e9958772fb43a1d0656aa1a2d47bad3a787c08c9661b1200cc02ad261b18f6403dff92
+  checksum: 73509d5ae668a50237b0cbed682c6d51c4a9408007c75658c43e84fe66e03d36a7a6be1e6d40f5d59456cf3a8a2824a07ab9d613267dcd7f77aa0028be0da040
   languageName: node
   linkType: hard
 

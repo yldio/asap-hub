@@ -39,7 +39,6 @@ const contentStyles = css({
 });
 const cardStyles = css({
   padding: rem(24),
-  overflowX: 'scroll',
 });
 const columnStyles = css({
   display: 'grid',

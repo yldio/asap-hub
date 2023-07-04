@@ -49,7 +49,6 @@ const columnStyles = css({
 });
 const cardStyles = css({
   padding: rem(24),
-  overflowX: 'scroll',
 });
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   description,

@@ -74,7 +74,6 @@ export class ContentfulFixture implements Fixture {
 
   private async prepareEvent(props: EventCreateDataObject) {
     const environment = await this.getEnvironment();
-    const addLocale = true;
     return {
       ...props,
       calendar: getLinkEntity(props.calendar),
@@ -98,9 +97,9 @@ export class ContentfulFixture implements Fixture {
           })
           .filter(Boolean),
       ),
-      notes: getMaterial(props.notes, addLocale),
-      presentation: getMaterial(props.presentation, addLocale),
-      videoRecording: getMaterial(props.videoRecording, addLocale),
+      notes: getMaterial(props.notes),
+      presentation: getMaterial(props.presentation),
+      videoRecording: getMaterial(props.videoRecording),
     };
   }
 
@@ -282,9 +281,9 @@ const getRichTextDocument = (text: string) => ({
   },
 });
 
-const getMaterial = (material?: string | null, addLocale: boolean = false) => {
+const getMaterial = (material?: string | null) => {
   if (!material) return undefined;
 
   const document = getRichTextDocument(material);
-  return addLocale ? { 'en-US': document } : document.data;
+  return { 'en-US': document };
 };

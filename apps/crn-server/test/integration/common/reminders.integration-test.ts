@@ -110,7 +110,6 @@ describe('Reminders', () => {
           .get(`/reminders?timezone=Europe/London`)
           .expect(200);
 
-        console.log('response.body.items', response.body.items);
         expect(response.body.items).toEqual([
           expect.objectContaining({
             id: `event-happening-today-${eventHappeningToday.id}`,

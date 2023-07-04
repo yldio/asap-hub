@@ -156,7 +156,7 @@ export class SquidexFixture implements Fixture {
     const input = await this.prepareTeam(team);
     const result = await teamRestClient.create(parseToSquidex(input));
     if (!result) {
-      throw new Error('Could not create user');
+      throw new Error('Could not create team');
     }
     return {
       id: result.id,
@@ -168,7 +168,7 @@ export class SquidexFixture implements Fixture {
     const input = await this.prepareInterestGroup(group);
     const result = await interestGroupRestClient.create(parseToSquidex(input));
     if (!result) {
-      throw new Error('Could not create user');
+      throw new Error('Could not create interest group');
     }
     return {
       id: result.id,

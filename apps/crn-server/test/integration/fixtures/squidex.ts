@@ -200,4 +200,10 @@ export class SquidexFixture implements Fixture {
   async teardown() {
     return this.teardownHelper();
   }
+
+  async deleteEvents(ids: string[]) {
+    for (const id of ids) {
+      await eventRestClient.delete(id);
+    }
+  }
 }

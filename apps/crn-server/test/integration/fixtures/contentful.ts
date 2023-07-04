@@ -272,12 +272,28 @@ export class ContentfulFixture implements Fixture {
     while (this.apiAdapter.created.length) {
       const id = this.apiAdapter.created.pop();
       if (id) {
-        const toDelete = await environment.getEntry(id);
-        if (toDelete.isPublished()) {
-          await toDelete.unpublish();
+        try {
+          const toDelete = await environment.getEntry(id);
+          if (toDelete.isPublished()) {
+            await toDelete.unpublish();
+          }
+          await toDelete.delete();
+        } catch {
+          // console.log(err);
         }
-        await toDelete.delete();
       }
+    }
+  }
+
+  async deleteEvents(ids: string[]) {
+    const environment = await this.getEnvironment();
+
+    for (const id of ids) {
+      const toDelete = await environment.getEntry(id);
+      if (toDelete.isPublished()) {
+        await toDelete.unpublish();
+      }
+      await toDelete.delete();
     }
   }
 }

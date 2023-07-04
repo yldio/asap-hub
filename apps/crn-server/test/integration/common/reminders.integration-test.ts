@@ -42,6 +42,7 @@ describe('Reminders', () => {
   let team: TeamFixture;
 
   beforeAll(async () => {
+    jest.useFakeTimers();
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
       getUserFixture({
@@ -75,10 +76,6 @@ describe('Reminders', () => {
     });
   });
 
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
   afterAll(async () => {
     await fixtures.teardown();
     jest.useRealTimers();
@@ -93,6 +90,7 @@ describe('Reminders', () => {
       jest.setSystemTime(now);
       const event = await createEvent({ startDate, endDate });
       await expectReminderWithId(`event-happening-today-${event.id}`);
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder if the event has already started', async () => {
@@ -105,6 +103,7 @@ describe('Reminders', () => {
       await expectNotToContainingReminderWithId(
         `event-happening-today-${event.id}`,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test("Should not see the reminder if the event is happening on the next day of the user's timezone", async () => {
@@ -124,6 +123,7 @@ describe('Reminders', () => {
         app,
         timezone,
       );
+      await fixtures.deleteEvents([event.id]);
     });
   });
 
@@ -136,6 +136,7 @@ describe('Reminders', () => {
       jest.setSystemTime(now);
       const event = await createEvent({ startDate, endDate });
       await expectReminderWithId(`event-happening-now-${event.id}`);
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event is happening but its status is Draft', async () => {
@@ -148,6 +149,7 @@ describe('Reminders', () => {
       await expectNotToContainingReminderWithId(
         `event-happening-now-${event.id}`,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has already ended', async () => {
@@ -160,6 +162,7 @@ describe('Reminders', () => {
       await expectNotToContainingReminderWithId(
         `event-happening-now-${event.id}`,
       );
+      await fixtures.deleteEvents([event.id]);
     });
   });
 
@@ -181,6 +184,7 @@ describe('Reminders', () => {
         ],
       });
       await expectReminderWithId(`share-presentation-${event.id}`);
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has finished and user is not a speaker', async () => {
@@ -203,6 +207,7 @@ describe('Reminders', () => {
       await expectNotToContainingReminderWithId(
         `share-presentation-${event.id}`,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has finished, user is a speaker but it is also a PM', async () => {
@@ -237,6 +242,7 @@ describe('Reminders', () => {
         `share-presentation-${event.id}`,
         appWithPMLoggedUser,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has not finished', async () => {
@@ -258,6 +264,7 @@ describe('Reminders', () => {
       await expectNotToContainingReminderWithId(
         `share-presentation-${event.id}`,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event is a future event', async () => {
@@ -279,6 +286,7 @@ describe('Reminders', () => {
       await expectNotToContainingReminderWithId(
         `share-presentation-${event.id}`,
       );
+      await fixtures.deleteEvents([event.id]);
     });
   });
 
@@ -299,6 +307,7 @@ describe('Reminders', () => {
         `publish-material-${event.id}`,
         appWithStaffLoggedUser,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has finished and logged in user is not a staff', async () => {
@@ -316,6 +325,7 @@ describe('Reminders', () => {
         `publish-material-${event.id}`,
         appWithGranteeLoggedUser,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has not finished', async () => {
@@ -334,6 +344,7 @@ describe('Reminders', () => {
         `publish-material-${event.id}`,
         appWithStaffLoggedUser,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event is a future event', async () => {
@@ -352,6 +363,7 @@ describe('Reminders', () => {
         `publish-material-${event.id}`,
         appWithStaffLoggedUser,
       );
+      await fixtures.deleteEvents([event.id]);
     });
   });
 
@@ -386,6 +398,7 @@ describe('Reminders', () => {
         `upload-presentation-${event.id}`,
         appWithPMLoggedInUser,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has finished and logged in user is not a PM of one of the speaker teams', async () => {
@@ -421,6 +434,7 @@ describe('Reminders', () => {
         `upload-presentation-${event.id}`,
         appWithPMFromAnotherTeamLoggedInUser,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has not finished', async () => {
@@ -454,6 +468,7 @@ describe('Reminders', () => {
         `upload-presentation-${event.id}`,
         appWithPMLoggedUser,
       );
+      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event is a future event', async () => {
@@ -487,6 +502,7 @@ describe('Reminders', () => {
         `upload-presentation-${event.id}`,
         appWithPMLoggedUser,
       );
+      await fixtures.deleteEvents([event.id]);
     });
   });
 
@@ -519,6 +535,7 @@ describe('Reminders', () => {
           await expectReminderWithId(
             `${material.toLowerCase()}-event-updated-${event.id}`,
           );
+          await fixtures.deleteEvents([event.id]);
         });
 
         test(`Should not see the reminder when a ${material} was updated in an event more than 24 hours ago`, async () => {
@@ -532,6 +549,7 @@ describe('Reminders', () => {
           await expectNotToContainingReminderWithId(
             `${material.toLowerCase()}-event-updated-${event.id}`,
           );
+          await fixtures.deleteEvents([event.id]);
         });
         test(`Should not see the reminder when ${material} was erased in an event`, async () => {
           jest.useRealTimers();
@@ -569,6 +587,7 @@ describe('Reminders', () => {
               updatedEventWithoutMaterial.id
             }`,
           );
+          await fixtures.deleteEvents([event.id]);
         }, 600000);
       },
     );
@@ -600,16 +619,23 @@ describe('Reminders', () => {
           .get(`/reminders?timezone=Europe/London`)
           .expect(200);
 
-        const responseReminderIds = response.body.items.map((r) => r.id);
-        const expectedReminderIds = [
-          `event-happening-today-${eventHappeningToday.id}`,
-          `event-happening-now-${eventHappeningNow.id}`,
-          `share-presentation-${endedEventWithLoggedInUserSpeaker.id}`,
-        ];
-        expect(
-          isSubsetInOrder(responseReminderIds, expectedReminderIds),
-        ).toBeTruthy();
+        expect(response.body.items).toEqual([
+          expect.objectContaining({
+            id: `event-happening-today-${eventHappeningToday.id}`,
+          }),
+          expect.objectContaining({
+            id: `event-happening-now-${eventHappeningNow.id}`,
+          }),
+          expect.objectContaining({
+            id: `share-presentation-${endedEventWithLoggedInUserSpeaker.id}`,
+          }),
+        ]);
       });
+      await fixtures.deleteEvents([
+        eventHappeningToday.id,
+        eventHappeningNow.id,
+        endedEventWithLoggedInUserSpeaker.id,
+      ]);
     }, 300000);
   });
 
@@ -636,6 +662,12 @@ describe('Reminders', () => {
     return { loggedInUser, app };
   };
 
+  const retryOptions = {
+    retries: 10,
+    factor: 3,
+    minTimeout: 1 * 1000,
+    maxTimeout: 1 * 1000,
+  };
   const expectReminderWithId = async (
     id: string,
     expressApp: Express = app,
@@ -648,7 +680,7 @@ describe('Reminders', () => {
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
       expect(response.body.items.map((reminder) => reminder.id)).toContain(id);
-    });
+    }, retryOptions);
   };
 
   const expectNotToContainingReminderWithId = async (
@@ -665,22 +697,6 @@ describe('Reminders', () => {
       expect(response.body.items.map((reminder) => reminder.id)).not.toContain(
         id,
       );
-    });
+    }, retryOptions);
   };
 });
-
-function isSubsetInOrder<T>(arr1: T[], arr2: T[]): boolean {
-  let i = 0;
-  let j = 0;
-
-  while (i < arr1.length && j < arr2.length) {
-    if (arr1[i] === arr2[j]) {
-      i++;
-      j++;
-    } else {
-      i++;
-    }
-  }
-
-  return j === arr2.length;
-}

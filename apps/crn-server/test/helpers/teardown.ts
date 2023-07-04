@@ -23,9 +23,11 @@ export const teardownHelper = (
   }
 
   return async () => {
-    for (const record of toDelete) {
-      await record.client.delete(record.id);
-    }
+    try {
+      for (const record of toDelete) {
+        await record.client.delete(record.id);
+      }
+    } catch {}
     toDelete = [];
   };
 };

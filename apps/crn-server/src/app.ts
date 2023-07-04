@@ -46,7 +46,7 @@ import {
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
-import Guide, { GuideController } from './controllers/guides.controller';
+import GuideController from './controllers/guide.controller';
 import CalendarController from './controllers/calendar.controller';
 import DashboardController from './controllers/dashboard.controller';
 import DiscoverController from './controllers/discover.controller';
@@ -124,7 +124,7 @@ import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
-import { guideRouteFactory } from './routes/guides.route';
+import { guideRouteFactory } from './routes/guide.route';
 import { eventRouteFactory } from './routes/event.route';
 import { interestGroupRouteFactory } from './routes/interest-group.route';
 import { labRouteFactory } from './routes/lab.route';
@@ -555,7 +555,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.discoverController || new DiscoverController(discoverDataProvider);
   const eventController =
     libs.eventController || new EventController(eventDataProvider);
-  const guideController = libs.guideController || new Guide(guideDataProvider);
+  const guideController =
+    libs.guideController || new GuideController(guideDataProvider);
   const interestGroupController =
     libs.interestGroupController ||
     new InterestGroupController(interestGroupDataProvider, userDataProvider);

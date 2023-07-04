@@ -1,4 +1,4 @@
-import GuideController from '../../src/controllers/guides.controller';
+import GuideController from '../../src/controllers/guide.controller';
 
 export const guideControllerMock = {
   fetch: jest.fn(),

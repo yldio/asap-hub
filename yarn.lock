@@ -761,7 +761,7 @@ __metadata:
     jose: 2.0.6
     nock: 13.3.1
     path: "npm:path-browserify@1.0.1"
-    pirates: 4.0.5
+    pirates: 4.0.6
     qs: 6.11.2
     react: 17.0.2
     react-app-polyfill: 3.0.0
@@ -1231,7 +1231,7 @@ __metadata:
     jose: 2.0.6
     nock: 13.3.1
     path: "npm:path-browserify@1.0.1"
-    pirates: 4.0.5
+    pirates: 4.0.6
     react: 17.0.2
     react-app-polyfill: 3.0.0
     react-dom: 17.0.2
@@ -38041,10 +38041,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pirates@npm:4.0.5, pirates@npm:^4.0.4, pirates@npm:^4.0.5":
-  version: 4.0.5
-  resolution: "pirates@npm:4.0.5"
-  checksum: c9994e61b85260bec6c4fc0307016340d9b0c4f4b6550a957afaaff0c9b1ad58fbbea5cfcf083860a25cb27a375442e2b0edf52e2e1e40e69934e08dcc52d227
+"pirates@npm:4.0.6":
+  version: 4.0.6
+  resolution: "pirates@npm:4.0.6"
+  checksum: 46a65fefaf19c6f57460388a5af9ab81e3d7fd0e7bc44ca59d753cb5c4d0df97c6c6e583674869762101836d68675f027d60f841c105d72734df9dfca97cbcc6
   languageName: node
   linkType: hard
 
@@ -38054,6 +38054,13 @@ __metadata:
   dependencies:
     node-modules-regexp: "npm:^1.0.0"
   checksum: 091e232aac19f0049a681838fa9fcb4af824b5b1eb0e9325aa07b9d13245bfe3e4fa57a7766b9fdcd19cb89f2c15c688b46023be3047cb288023a0c079d3b2a3
+  languageName: node
+  linkType: hard
+
+"pirates@npm:^4.0.4, pirates@npm:^4.0.5":
+  version: 4.0.5
+  resolution: "pirates@npm:4.0.5"
+  checksum: c9994e61b85260bec6c4fc0307016340d9b0c4f4b6550a957afaaff0c9b1ad58fbbea5cfcf083860a25cb27a375442e2b0edf52e2e1e40e69934e08dcc52d227
   languageName: node
   linkType: hard
 

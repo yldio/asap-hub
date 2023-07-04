@@ -50,7 +50,7 @@ const columnContainer = css({
   gridTemplateColumns: '1fr',
 });
 
-const latestStatsCardsStyles = css({
+const contentCardsStyles = css({
   display: 'flex',
   gap: rem(24),
   width: '100%',
@@ -86,7 +86,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <Paragraph accent="lead" noMargin>
             Here are the latest announcements from admins.
           </Paragraph>
-          <RemindersCard reminders={announcements} canPublish />
+          <div css={contentCardsStyles}>
+            <RemindersCard reminders={announcements} canPublish />
+          </div>
         </div>
       ) : null}
       <div css={columnContainer}>
@@ -94,7 +96,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <Paragraph accent="lead" noMargin>
           Here are some key actions to take within the GP2 network:
         </Paragraph>
-        <div css={latestStatsCardsStyles}>
+        <div css={contentCardsStyles}>
           <InfoCard
             icon={<LabIcon color="#00202C" size={40} />}
             title="Samples Completed"

@@ -24,13 +24,14 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
     cohortCount: 0,
     articleCount: 0,
   };
-
+  const announcements = dashboard.items[0]?.announcements || [];
   return (
     <DashboardPageBody
       news={news}
       latestStats={stats}
       upcomingEvents={items.map(eventMapper)}
       totalOfUpcomingEvents={total}
+      announcements={announcements}
     />
   );
 };

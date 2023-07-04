@@ -19,6 +19,9 @@ export const FETCH_DASHBOARD = gql`
             description
             deadline
             link
+            sys {
+              id
+            }
           }
         }
       }

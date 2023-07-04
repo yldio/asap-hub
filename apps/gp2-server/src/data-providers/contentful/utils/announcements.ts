@@ -11,11 +11,9 @@ export const parseAnnouncements = (announcements: Announcements) =>
     .filter(
       (announcement): announcement is AnnouncementItem => announcement !== null,
     )
-    .map((announcement: AnnouncementItem) => {
-      const deadline = DateTime.fromISO(announcement.deadline);
-      return {
-        description: announcement.description ?? '',
-        deadline: deadline.toUTC().toString(),
-        link: announcement.link ?? undefined,
-      };
-    }) || [];
+    .map(({ description, deadline, link, sys: { id } }: AnnouncementItem) => ({
+      description: description ?? '',
+      deadline: DateTime.fromISO(deadline).toUTC().toString(),
+      link: link ?? undefined,
+      id,
+    })) || [];

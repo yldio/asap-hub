@@ -171,6 +171,9 @@ describe('Dashboard data provider', () => {
             {
               deadline,
               description: 'test',
+              sys: {
+                id: '1',
+              },
             },
           ],
         },

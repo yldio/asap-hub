@@ -413,7 +413,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change"
   dependencies:
-    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
@@ -441,7 +441,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-date-field-as-first-published-at@workspace:packages/contentful-app-extensions/date-field-as-first-published-at"
   dependencies:
-    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
@@ -468,7 +468,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields"
   dependencies:
-    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
@@ -496,7 +496,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-additional-materials@workspace:packages/contentful-app-extensions/event-additional-materials"
   dependencies:
-    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
@@ -523,7 +523,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-speakers-title@workspace:packages/contentful-app-extensions/event-speakers-title"
   dependencies:
-    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
@@ -552,7 +552,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-field-as-updated-at@workspace:packages/contentful-app-extensions/field-as-updated-at"
   dependencies:
-    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
@@ -580,7 +580,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-user-positions@workspace:packages/contentful-app-extensions/user-positions"
   dependencies:
-    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
@@ -607,7 +607,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-user-team-memberships@workspace:packages/contentful-app-extensions/user-team-memberships"
   dependencies:
-    "@contentful/app-scripts": 1.7.13
+    "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.19.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
@@ -9693,16 +9693,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/app-scripts@npm:1.7.13":
-  version: 1.7.13
-  resolution: "@contentful/app-scripts@npm:1.7.13"
+"@contentful/app-scripts@npm:1.10.2":
+  version: 1.10.2
+  resolution: "@contentful/app-scripts@npm:1.10.2"
   dependencies:
     adm-zip: 0.5.10
     analytics-node: ^6.2.0
     bottleneck: 2.19.5
     chalk: 4.1.2
-    commander: 10.0.0
-    contentful-management: 10.30.0
+    commander: 10.0.1
+    contentful-management: 10.35.4
     dotenv: 16.0.3
     ignore: 5.2.4
     inquirer: 8.2.5
@@ -9711,7 +9711,7 @@ __metadata:
     ora: 5.4.1
   bin:
     contentful-app-scripts: bin/app-scripts
-  checksum: 5dbed21e0865514d2f142353a6f6f4896a8cf823121fefedec129623a4ce02e9759662b7ac650c5bcd4f7a99757dba905a8ac9df5bd4f13ee44b8d7ad4b84caa
+  checksum: 5e1f39cb8cd46f3546ae70bc7108c98df0fb5af2cb798fea45e9b355e43794ec138bccd792f575457325554f8eb487f8a1d3c440a6793ed538ee3fd3faffc658
   languageName: node
   linkType: hard
 
@@ -22613,10 +22613,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:10.0.0":
-  version: 10.0.0
-  resolution: "commander@npm:10.0.0"
-  checksum: 9f6495651f878213005ac744dd87a85fa3d9f2b8b90d1c19d0866d666bda7f735adfd7c2f10dfff345782e2f80ea258f98bb4efcef58e4e502f25f883940acfd
+"commander@npm:10.0.1":
+  version: 10.0.1
+  resolution: "commander@npm:10.0.1"
+  checksum: 436901d64a818295803c1996cd856621a74f30b9f9e28a588e726b2b1670665bccd7c1a77007ebf328729f0139838a88a19265858a0fa7a8728c4656796db948
   languageName: node
   linkType: hard
 
@@ -23014,20 +23014,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-management@npm:10.30.0":
-  version: 10.30.0
-  resolution: "contentful-management@npm:10.30.0"
-  dependencies:
-    "@types/json-patch": 0.0.30
-    axios: ^0.27.1
-    contentful-sdk-core: ^7.0.1
-    fast-copy: ^3.0.0
-    lodash.isplainobject: ^4.0.6
-    type-fest: ^3.0.0
-  checksum: efac280b42717d03f14a0835b37ec25596e3ac14fce771497d13bf7895c27ed2f5b46c6b234b5587a1ee00392748f12de57eee70111847e00f78d7f5e8f8423a
-  languageName: node
-  linkType: hard
-
 "contentful-management@npm:10.32.0, contentful-management@npm:>=7.30.0":
   version: 10.32.0
   resolution: "contentful-management@npm:10.32.0"
@@ -23040,6 +23026,21 @@ __metadata:
     lodash.isplainobject: ^4.0.6
     type-fest: ^3.0.0
   checksum: 827d7fc32d46110354f08f772c7d6e110780b314f50e23e565a7dca832fdeaf46413977114790b650e090e73d82699c6b2a1fe31f42422f45e589d4a963370eb
+  languageName: node
+  linkType: hard
+
+"contentful-management@npm:10.35.4":
+  version: 10.35.4
+  resolution: "contentful-management@npm:10.35.4"
+  dependencies:
+    "@contentful/rich-text-types": ^16.0.3
+    "@types/json-patch": 0.0.30
+    axios: ^0.27.1
+    contentful-sdk-core: ^7.0.1
+    fast-copy: ^3.0.0
+    lodash.isplainobject: ^4.0.6
+    type-fest: ^3.0.0
+  checksum: a3018690392a1916a2af657f7f9640c2fe92525be4fb1a7cf0ddbe1fe4772619ea587f1cf33a121c36c5ad81557ecfdecf866d98d1a3b0b236b58d839f5e4dd1
   languageName: node
   linkType: hard
 

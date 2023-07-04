@@ -1,6 +1,7 @@
 import { ListResponse } from '../common';
 
 export type AnnouncementDataObject = {
+  id: string;
   description: string;
   deadline: string;
   link?: string;

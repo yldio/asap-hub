@@ -6024,7 +6024,11 @@ export type FetchDashboardQuery = {
           >;
           announcementsCollection?: Maybe<{
             items: Array<
-              Maybe<Pick<Announcements, 'description' | 'deadline' | 'link'>>
+              Maybe<
+                Pick<Announcements, 'description' | 'deadline' | 'link'> & {
+                  sys: Pick<Sys, 'id'>;
+                }
+              >
             >;
           }>;
         }>
@@ -12714,6 +12718,19 @@ export const FetchDashboardDocument = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'link' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
                                   },
                                 ],
                               },

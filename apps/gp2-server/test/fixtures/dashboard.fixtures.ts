@@ -17,10 +17,16 @@ export const getContentfulGraphqlDashboard = (): NonNullable<
         description: 'Test',
         deadline: '2029-10-24T16:30:54.000Z',
         link: 'https://google.com',
+        sys: {
+          id: '1',
+        },
       },
       {
         description: 'Test 2',
         deadline: '2028-10-24T16:30:54.000Z',
+        sys: {
+          id: '2',
+        },
       },
     ],
   },
@@ -38,11 +44,13 @@ export const getDashboardDataObject = (): gp2Model.DashboardDataObject => ({
   latestStats: { sampleCount: 3, articleCount: 11, cohortCount: 43 },
   announcements: [
     {
+      id: '1',
       description: 'Test',
       deadline: '2029-10-24T16:30:54.000Z',
       link: 'https://google.com',
     },
     {
+      id: '2',
       description: 'Test 2',
       deadline: '2028-10-24T16:30:54.000Z',
     },

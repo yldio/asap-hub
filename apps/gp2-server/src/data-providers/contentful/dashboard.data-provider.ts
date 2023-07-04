@@ -43,7 +43,6 @@ export class DashboardContentfulDataProvider implements DashboardDataProvider {
     >(gp2Contentful.FETCH_DASHBOARD, {
       orderAnnouncements: getOrderFilter(),
     });
-
     if (!dashboardCollection?.items) {
       return { total: 0, items: [] };
     }

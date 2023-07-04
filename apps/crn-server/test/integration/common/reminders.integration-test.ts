@@ -26,7 +26,7 @@ jest.mock('../../../src/config', () => ({
   logLevel: 'silent',
 }));
 
-jest.setTimeout(180000);
+jest.setTimeout(120000);
 
 const fixtures = FixtureFactory(process.env.INTEGRATION_TEST_CMS);
 
@@ -530,6 +530,43 @@ describe('Reminders', () => {
             `${material.toLowerCase()}-event-updated-${event.id}`,
           );
         });
+        test(`Should not see the reminder when ${material} was erased in an event`, async () => {
+          jest.useRealTimers();
+
+          const event = await createEvent({
+            title: 'Material Event',
+          });
+          await expectNotToContainingReminderWithId(
+            `${material.toLowerCase()}-event-updated-${event.id}`,
+          );
+
+          const updatedEventWithMaterial = await fixtures.updateEvent(
+            event.id,
+            {
+              [materialContentName]: 'I am a material',
+            },
+          );
+
+          await expectReminderWithId(
+            `${material.toLowerCase()}-event-updated-${
+              updatedEventWithMaterial.id
+            }`,
+          );
+
+          // user erases material
+          const updatedEventWithoutMaterial = await fixtures.updateEvent(
+            event.id,
+            {
+              [materialContentName]: '',
+            },
+          );
+
+          await expectNotToContainingReminderWithId(
+            `${material.toLowerCase()}-event-updated-${
+              updatedEventWithoutMaterial.id
+            }`,
+          );
+        }, 600000);
       },
     );
   });
@@ -570,7 +607,7 @@ describe('Reminders', () => {
           isSubsetInOrder(responseReminderIds, expectedReminderIds),
         ).toBeTruthy();
       });
-    });
+    }, 300000);
   });
 
   const createEvent = async (props: Partial<EventCreateDataObject> = {}) => {

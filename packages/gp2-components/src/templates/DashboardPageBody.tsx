@@ -117,7 +117,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       <Card>
         <Headline2>Tools and Tutorials</Headline2>
         <Paragraph accent="lead">
-          Here are some key actions to take within the GP2 network:
+          Here are some key actions to take within the GP2 Hub.
         </Paragraph>
         <Accordion
           items={[

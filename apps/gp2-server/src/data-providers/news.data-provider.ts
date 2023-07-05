@@ -41,7 +41,4 @@ const parseNews = (item: GraphqlNews): gp2Model.NewsDataObject => ({
   title: item.flatData.title || '',
   link: item.flatData.link || undefined,
   linkText: item.flatData.linkText || undefined,
-  sampleCount: item.flatData.sampleCount || 0,
-  articleCount: item.flatData.articleCount || 0,
-  cohortCount: item.flatData.cohortCount || 0,
 });

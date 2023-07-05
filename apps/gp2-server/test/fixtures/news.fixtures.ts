@@ -61,9 +61,6 @@ export const getNewsDataObject = (): gp2Model.NewsDataObject => ({
   title: 'a news item',
   shortText: 'the short text of the news',
   created: '2021-12-28T00:00:00.000Z',
-  sampleCount: 3,
-  articleCount: 11,
-  cohortCount: 43,
   link: 'http://example.com/a-link',
   linkText: 'some link text',
 });

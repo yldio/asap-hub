@@ -258,6 +258,25 @@ export class ContentfulFixture implements Fixture {
       await toDelete.delete();
     }
   }
+
+  async clearAllPreviousEvents() {
+    // when we create a new environment in Contentful
+    // we copy entries from a previous env
+    // so if there are events updated recently it can
+    // mess with our tests
+    const environment = await this.getEnvironment();
+
+    const { items: events } = await environment.getEntries({
+      content_type: 'events',
+    });
+
+    events.forEach(async (entry) => {
+      if (entry.isPublished()) {
+        await entry.unpublish();
+      }
+      await entry.delete();
+    });
+  }
 }
 
 const getRichTextDocument = (text: string) => ({

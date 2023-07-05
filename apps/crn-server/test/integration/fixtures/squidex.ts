@@ -185,4 +185,8 @@ export class SquidexFixture implements Fixture {
       await eventRestClient.delete(id);
     }
   }
+
+  async clearAllPreviousEvents() {
+    // not needed in squidex
+  }
 }

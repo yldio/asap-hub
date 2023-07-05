@@ -43,6 +43,7 @@ describe('Reminders', () => {
   let team: TeamFixture;
 
   beforeAll(async () => {
+    await fixtures.clearAllPreviousEvents();
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
       getUserFixture({

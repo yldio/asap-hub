@@ -19,6 +19,7 @@ import { UserDataProvider } from '../../../src/data-providers/types';
 import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/users.data-provider';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
+import { parseToWorkingGroups } from '../../../src/data-providers/contentful/users.data-provider';
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
@@ -51,7 +52,35 @@ describe('User data provider', () => {
           contentfulRestClientMock,
         );
       const result = await userDataProviderWithMockServer.fetchById('123');
-      const expectation = getUserDataObject();
+      const expectation = {
+        ...getUserDataObject(),
+        workingGroups: [
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Project Manager',
+          },
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Member',
+          },
+        ],
+        interestGroups: [
+          {
+            active: true,
+            id: 'ig-1',
+            name: 'interest-group-1',
+          },
+          {
+            active: false,
+            id: 'ig-2',
+            name: 'interest-group-2',
+          },
+        ],
+      };
       // TODO: team proposal
       expectation.teams[0]!.proposal = undefined;
       expect(result).toEqual(expectation);
@@ -100,6 +129,11 @@ describe('User data provider', () => {
                     id: '2',
                   },
                   displayName: 'Good team',
+                  linkedFrom: {
+                    interestGroupsCollection: {
+                      items: [],
+                    },
+                  },
                 },
               },
             ],
@@ -337,7 +371,35 @@ describe('User data provider', () => {
           contentfulRestClientMock,
         );
       const result = await userDataProviderWithMockServer.fetch({});
-      const expectation = getUserDataObject();
+      const expectation = {
+        ...getUserDataObject(),
+        workingGroups: [
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Project Manager',
+          },
+          {
+            active: false,
+            id: 'wg-1',
+            name: 'working-group-1',
+            role: 'Member',
+          },
+        ],
+        interestGroups: [
+          {
+            active: true,
+            id: 'ig-1',
+            name: 'interest-group-1',
+          },
+          {
+            active: false,
+            id: 'ig-2',
+            name: 'interest-group-2',
+          },
+        ],
+      };
       // TODO: team proposal
       expectation.teams[0]!.proposal = undefined;
       expect(result.total).toEqual(1);
@@ -671,6 +733,208 @@ describe('User data provider', () => {
       expect(async () =>
         userDataProvider.create(getUserCreateDataObject()),
       ).rejects.toThrow();
+    });
+  });
+
+  describe('parseToWorkingGroups', () => {
+    test('should discard working group roles that are not linked to a working group', async () => {
+      const workingGroupGQLResponse = [
+        {
+          inactiveSinceDate: '',
+          role: 'Project Manager',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'wg-1',
+                  },
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+          user: {
+            lastName: 'simpson',
+          },
+        },
+        {
+          inactiveSinceDate: '',
+          role: 'Chair',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [],
+            },
+          },
+          user: {
+            lastName: 'simpson',
+          },
+        },
+      ];
+      const isAlumni = false;
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups).toEqual([
+        {
+          id: 'wg-1',
+          active: true,
+          name: 'working-group-1',
+          role: 'Project Manager',
+        },
+      ]);
+    });
+    test('should set role to leadership role for leaders', () => {
+      const workingGroupGQLResponse = [
+        {
+          inactiveSinceDate: '',
+          role: 'Project Manager',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'wg-1',
+                  },
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+          user: {
+            lastName: 'simpson',
+          },
+        },
+      ];
+      const isAlumni = false;
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups[0]!.role).toBe('Project Manager');
+    });
+
+    test('should set role to `Member` for members', () => {
+      const workingGroupGQLResponse = [
+        {
+          inactiveSinceDate: '',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'wg-1',
+                  },
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+          user: {
+            lastName: 'simpson',
+          },
+        },
+      ];
+      const isAlumni = false;
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups[0]!.role).toBe('Member');
+    });
+
+    test('should set active to false if user is set to inactive', () => {
+      const workingGroupGQLResponse = [
+        {
+          inactiveSinceDate: '2020-09-23T20:45:22Z',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'wg-1',
+                  },
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+          user: {
+            lastName: 'simpson',
+          },
+        },
+      ];
+      const isAlumni = false;
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups[0]!.active).toBe(false);
+    });
+
+    test('should set active to false if user is set as alumni', () => {
+      const workingGroupGQLResponse = [
+        {
+          inactiveSinceDate: '',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'wg-1',
+                  },
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+          user: {
+            lastName: 'simpson',
+          },
+        },
+      ];
+      const isAlumni = true;
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups[0]!.active).toBe(false);
+    });
+
+    test('should set active to false if working group is complete', () => {
+      const workingGroupGQLResponse = [
+        {
+          inactiveSinceDate: '',
+          linkedFrom: {
+            workingGroupsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'wg-1',
+                  },
+                  title: 'working-group-1',
+                  complete: false,
+                },
+              ],
+            },
+          },
+          user: {
+            lastName: 'simpson',
+          },
+        },
+      ];
+      const isAlumni = true;
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups[0]!.active).toBe(false);
     });
   });
 });

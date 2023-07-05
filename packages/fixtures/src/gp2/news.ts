@@ -7,6 +7,7 @@ const mockedNews: gp2.NewsResponse = {
   linkText: 'Read More',
   shortText: 'this is another news item',
   title: 'Another news',
+  type: 'news',
 };
 
 export const createNewsResponse = (

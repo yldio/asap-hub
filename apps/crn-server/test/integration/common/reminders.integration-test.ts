@@ -16,6 +16,7 @@ import {
   getTeamFixture,
   TeamFixture,
   EventCreateDataObject,
+  EventFixture,
 } from '../fixtures';
 import { getCalendarFixture } from '../fixtures/calendar';
 
@@ -80,7 +81,7 @@ describe('Reminders', () => {
   });
 
   afterAll(async () => {
-    await fixtures.teardown();
+    // await fixtures.teardown();
     jest.useRealTimers();
   });
 
@@ -131,98 +132,98 @@ describe('Reminders', () => {
   });
 
   describe('Event Happening Today Reminder', () => {
-    test('Should see the reminder when the event starts today', async () => {
-      const now = new Date('2022-08-10T05:00:00.0Z');
-      const startDate = new Date('2022-08-10T15:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-11T15:00:00.0Z').toISOString();
+    let event: EventFixture;
 
-      jest.setSystemTime(now);
-      const event = await createEvent({ startDate, endDate });
-      await expectReminderWithId(`event-happening-today-${event.id}`);
+    beforeAll(async () => {
+      event = await createEvent({
+        startDate: new Date('2022-08-10T16:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-11T16:00:00.0Z').toISOString(),
+      });
+    });
+
+    afterAll(async () => {
       await fixtures.deleteEvents([event.id]);
+    });
+
+    test('Should see the reminder when the event starts today', async () => {
+      // setting system time to 5AM in UTC, event happening at 4PM in UTC
+      jest.setSystemTime(new Date('2022-08-10T05:00:00.0Z'));
+      await expectReminderWithId(`event-happening-today-${event.id}`);
     });
 
     test('Should not see the reminder if the event has already started', async () => {
-      const now = new Date('2022-08-10T05:00:00.0Z');
-      const startDate = new Date('2022-08-10T04:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-11T15:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
-      const event = await createEvent({ startDate, endDate });
+      // setting system time to 5PM in UTC, event happening at 4PM in UTC
+      jest.setSystemTime(new Date('2022-08-10T17:00:00.0Z'));
       await expectNotToContainingReminderWithId(
         `event-happening-today-${event.id}`,
       );
-      await fixtures.deleteEvents([event.id]);
     });
 
     test("Should not see the reminder if the event is happening on the next day of the user's timezone", async () => {
-      // setting system time to 5AM in UTC
-      const now = new Date('2022-08-10T05:00:00.0Z');
-      // the event happening at 4PM in UTC
-      const startDate = new Date('2022-08-10T16:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-11T16:00:00.0Z').toISOString();
+      // setting system time to 5AM in UTC, event happening at 4PM in UTC
+      jest.setSystemTime(new Date('2022-08-10T05:00:00.0Z'));
 
       // requesting reminders for the user based in LA where 5AM UTC is 10PM the previous day
       const timezone = 'America/Los_Angeles';
 
-      jest.setSystemTime(now);
-      const event = await createEvent({ startDate, endDate });
       await expectNotToContainingReminderWithId(
         `event-happening-today-${event.id}`,
         app,
         timezone,
       );
-      await fixtures.deleteEvents([event.id]);
     });
   });
 
   describe('Event Happening Now Reminder', () => {
-    test('Should see the reminder when the event has started but has not finished', async () => {
-      const now = new Date('2022-08-10T10:05:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+    let event: EventFixture;
 
-      jest.setSystemTime(now);
-      const event = await createEvent({ startDate, endDate });
-      await expectReminderWithId(`event-happening-now-${event.id}`);
+    beforeAll(async () => {
+      event = await createEvent({
+        startDate: new Date('2022-08-10T10:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T11:00:00.0Z').toISOString(),
+      });
+    });
+
+    afterAll(async () => {
       await fixtures.deleteEvents([event.id]);
     });
 
+    test('Should see the reminder when the event has started but has not finished', async () => {
+      // setting system time to 10:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
+      await expectReminderWithId(`event-happening-now-${event.id}`);
+    });
+
+    test('Should not see the reminder when the event has already ended', async () => {
+      // setting system time to 11:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+      await expectNotToContainingReminderWithId(
+        `event-happening-now-${event.id}`,
+      );
+    });
+
     test('Should not see the reminder when the event is happening but its status is Draft', async () => {
-      const now = new Date('2022-08-10T10:05:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-      jest.setSystemTime(now);
-      const event = await createEvent({ startDate, endDate });
+      // setting system time to 10:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
       await fixtures.publishEvent(event.id, 'Draft');
       await expectNotToContainingReminderWithId(
         `event-happening-now-${event.id}`,
       );
-      await fixtures.deleteEvents([event.id]);
-    });
-
-    test('Should not see the reminder when the event has already ended', async () => {
-      const now = new Date('2022-08-10T11:05:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
-      const event = await createEvent({ startDate, endDate });
-      await expectNotToContainingReminderWithId(
-        `event-happening-now-${event.id}`,
-      );
-      await fixtures.deleteEvents([event.id]);
     });
   });
 
   describe('Share Presentation Reminder', () => {
-    test('Should see the reminder when the event has finished and user is a speaker', async () => {
-      const now = new Date('2022-08-10T11:05:00.0Z');
+    let eventUserIsSpeaker: EventFixture;
+    let eventUserIsNotSpeaker: EventFixture;
+
+    beforeAll(async () => {
       const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
 
-      jest.setSystemTime(now);
-      const event = await createEvent({
+      eventUserIsSpeaker = await createEvent({
         startDate,
         endDate,
         speakers: [
@@ -232,17 +233,8 @@ describe('Reminders', () => {
           },
         ],
       });
-      await expectReminderWithId(`share-presentation-${event.id}`);
-      await fixtures.deleteEvents([event.id]);
-    });
 
-    test('Should not see the reminder when the event has finished and user is not a speaker', async () => {
-      const now = new Date('2022-08-10T11:05:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
-      const event = await createEvent({
+      eventUserIsNotSpeaker = await createEvent({
         startDate,
         endDate,
         speakers: [
@@ -252,14 +244,28 @@ describe('Reminders', () => {
           },
         ],
       });
+    });
 
+    afterAll(async () => {
+      await fixtures.deleteEvents([
+        eventUserIsSpeaker.id,
+        eventUserIsNotSpeaker.id,
+      ]);
+    });
+
+    test('Should see the reminder when the event has finished and user is a speaker', async () => {
+      // setting system time to 11:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+      await expectReminderWithId(`share-presentation-${eventUserIsSpeaker.id}`);
       await expectNotToContainingReminderWithId(
-        `share-presentation-${event.id}`,
+        `share-presentation-${eventUserIsNotSpeaker.id}`,
       );
-      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has finished, user is a speaker but it is also a PM', async () => {
+      // setting system time to 11:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
       const now = new Date('2022-08-10T11:05:00.0Z');
       const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
@@ -295,135 +301,89 @@ describe('Reminders', () => {
     });
 
     test('Should not see the reminder when the event has not finished', async () => {
-      const now = new Date('2022-08-10T10:59:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
-      const event = await createEvent({
-        startDate,
-        endDate,
-        speakers: [
-          {
-            user: [loggedInUser.id],
-            team: [team.id],
-          },
-        ],
-      });
+      // setting system time to 10:59AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
       await expectNotToContainingReminderWithId(
-        `share-presentation-${event.id}`,
+        `share-presentation-${eventUserIsSpeaker.id}`,
       );
-      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event is a future event', async () => {
-      const now = new Date('2022-08-10T07:00:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
-      const event = await createEvent({
-        startDate,
-        endDate,
-        speakers: [
-          {
-            user: [loggedInUser.id],
-            team: [team.id],
-          },
-        ],
-      });
+      // setting system time to 07:00AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T07:00:00.0Z'));
       await expectNotToContainingReminderWithId(
-        `share-presentation-${event.id}`,
+        `share-presentation-${eventUserIsSpeaker.id}`,
       );
-      await fixtures.deleteEvents([event.id]);
     });
   });
 
   describe('Publish Material Reminder', () => {
-    test('Should see the reminder when the event has finished and logged in user is staff', async () => {
-      const now = new Date('2022-08-10T11:05:00.0Z');
+    let appWithStaffLoggedUser: Express;
+    let event: EventFixture;
+
+    beforeAll(async () => {
+      const appAndLoggedInUser = await createLoggedInUserAndGetApp({
+        role: 'Staff',
+      });
+      appWithStaffLoggedUser = appAndLoggedInUser.app;
       const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
       const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+      event = await createEvent({ startDate, endDate });
+    });
 
-      jest.setSystemTime(now);
-      const { app: appWithStaffLoggedUser } = await createLoggedInUserAndGetApp(
-        {
-          role: 'Staff',
-        },
-      );
-      const event = await createEvent({ startDate, endDate });
+    test('Should see the reminder when the event has finished and logged in user is staff', async () => {
+      // setting system time to 11:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
       await expectReminderWithId(
         `publish-material-${event.id}`,
         appWithStaffLoggedUser,
       );
-      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has finished and logged in user is not a staff', async () => {
-      const now = new Date('2022-08-10T11:05:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
+      // setting system time to 11:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
       const { app: appWithGranteeLoggedUser } =
         await createLoggedInUserAndGetApp({
           role: 'Grantee',
         });
-      const event = await createEvent({ startDate, endDate });
       await expectNotToContainingReminderWithId(
         `publish-material-${event.id}`,
         appWithGranteeLoggedUser,
       );
-      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has not finished', async () => {
-      const now = new Date('2022-08-10T10:59:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
-      const { app: appWithStaffLoggedUser } = await createLoggedInUserAndGetApp(
-        {
-          role: 'Staff',
-        },
-      );
-      const event = await createEvent({ startDate, endDate });
+      // setting system time to 10:59AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
       await expectNotToContainingReminderWithId(
         `publish-material-${event.id}`,
         appWithStaffLoggedUser,
       );
-      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event is a future event', async () => {
-      const now = new Date('2022-08-10T07:00:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
-      const { app: appWithStaffLoggedUser } = await createLoggedInUserAndGetApp(
-        {
-          role: 'Staff',
-        },
-      );
-      const event = await createEvent({ startDate, endDate });
+      // setting system time to 07:00AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T07:00:00.0Z'));
       await expectNotToContainingReminderWithId(
         `publish-material-${event.id}`,
         appWithStaffLoggedUser,
       );
-      await fixtures.deleteEvents([event.id]);
     });
   });
 
   describe('Upload Presentation Reminder', () => {
-    test('Should see the reminder when the event has finished and logged in user is a PM of one of the speaker teams', async () => {
-      const now = new Date('2022-08-10T11:05:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+    let appWithPMFromSpeakersTeamLoggedInUser: Express;
+    let event: EventFixture;
 
-      jest.setSystemTime(now);
-      const { app: appWithPMLoggedInUser } = await createLoggedInUserAndGetApp({
+    beforeAll(async () => {
+      const appAndLoggedInUser = await createLoggedInUserAndGetApp({
         teams: [
           {
             id: team.id,
@@ -431,8 +391,10 @@ describe('Reminders', () => {
           },
         ],
       });
-
-      const event = await createEvent({
+      appWithPMFromSpeakersTeamLoggedInUser = appAndLoggedInUser.app;
+      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
+      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
+      event = await createEvent({
         startDate,
         endDate,
         speakers: [
@@ -442,20 +404,25 @@ describe('Reminders', () => {
           },
         ],
       });
+    });
 
+    afterAll(async () => {
+      await fixtures.deleteEvents([event.id]);
+    });
+    test('Should see the reminder when the event has finished and logged in user is a PM of one of the speaker teams', async () => {
+      // setting system time to 11:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
       await expectReminderWithId(
         `upload-presentation-${event.id}`,
-        appWithPMLoggedInUser,
+        appWithPMFromSpeakersTeamLoggedInUser,
       );
-      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event has finished and logged in user is not a PM of one of the speaker teams', async () => {
-      const now = new Date('2022-08-10T11:05:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
+      // setting system time to 11:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
       const notSpeakerTeam = await fixtures.createTeam(getTeamFixture());
 
       const { app: appWithPMFromAnotherTeamLoggedInUser } =
@@ -469,8 +436,8 @@ describe('Reminders', () => {
         });
 
       const event = await createEvent({
-        startDate,
-        endDate,
+        startDate: new Date('2022-08-10T10:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T11:00:00.0Z').toISOString(),
         speakers: [
           {
             user: [notLoggedInUser.id],
@@ -487,122 +454,75 @@ describe('Reminders', () => {
     });
 
     test('Should not see the reminder when the event has not finished', async () => {
-      const now = new Date('2022-08-10T10:59:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
-      const { app: appWithPMLoggedUser, loggedInUser: pmLoggedInUser } =
-        await createLoggedInUserAndGetApp({
-          teams: [
-            {
-              id: team.id,
-              role: 'Project Manager',
-            },
-          ],
-        });
-
-      const event = await createEvent({
-        startDate,
-        endDate,
-        speakers: [
-          {
-            user: [pmLoggedInUser.id],
-            team: [team.id],
-          },
-        ],
-      });
-
+      // setting system time to 10:59AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
       await expectNotToContainingReminderWithId(
         `upload-presentation-${event.id}`,
-        appWithPMLoggedUser,
+        appWithPMFromSpeakersTeamLoggedInUser,
       );
-      await fixtures.deleteEvents([event.id]);
     });
 
     test('Should not see the reminder when the event is a future event', async () => {
-      const now = new Date('2022-08-10T07:00:00.0Z');
-      const startDate = new Date('2022-08-10T10:00:00.0Z').toISOString();
-      const endDate = new Date('2022-08-10T11:00:00.0Z').toISOString();
-
-      jest.setSystemTime(now);
-      const { app: appWithPMLoggedUser, loggedInUser: pmLoggedInUser } =
-        await createLoggedInUserAndGetApp({
-          teams: [
-            {
-              id: team.id,
-              role: 'Project Manager',
-            },
-          ],
-        });
-
-      const event = await createEvent({
-        startDate,
-        endDate,
-        speakers: [
-          {
-            user: [pmLoggedInUser.id],
-            team: [team.id],
-          },
-        ],
-      });
-
+      // setting system time to 07:00AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      jest.setSystemTime(new Date('2022-08-10T07:00:00.0Z'));
       await expectNotToContainingReminderWithId(
         `upload-presentation-${event.id}`,
-        appWithPMLoggedUser,
+        appWithPMFromSpeakersTeamLoggedInUser,
       );
-      await fixtures.deleteEvents([event.id]);
     });
   });
 
-  describe('Materials Reminder', () => {
-    interface TestProps {
-      material: 'Video' | 'Presentation';
+  describe.each`
+    material          | materialUpdatedAtName
+    ${'Video'}        | ${'videoRecordingUpdatedAt'}
+    ${'Presentation'} | ${'presentationUpdatedAt'}
+    ${'Notes'}        | ${'notesUpdatedAt'}
+  `(
+    '$material Updated Reminder',
+    ({
+      material,
+      materialUpdatedAtName,
+    }: {
+      material: 'Video' | 'Presentation' | 'Notes';
       materialUpdatedAtName:
         | 'videoRecordingUpdatedAt'
         | 'presentationUpdatedAt'
         | 'notesUpdatedAt';
-      materialContentName: 'videoRecording' | 'presentation';
-    }
+    }) => {
+      let event: EventFixture;
 
-    describe.each`
-      material          | materialUpdatedAtName        | materialContentName
-      ${'Video'}        | ${'videoRecordingUpdatedAt'} | ${'videoRecording'}
-      ${'Presentation'} | ${'presentationUpdatedAt'}   | ${'presentation'}
-      ${'Notes'}        | ${'notesUpdatedAt'}          | ${'notes'}
-    `(
-      '$material Updated Reminder',
-      ({ material, materialUpdatedAtName, materialContentName }: TestProps) => {
-        test(`Should see the reminder when a ${material} was updated in the last 24 hours`, async () => {
-          const now = new Date('2022-08-10T23:59:00.0Z');
-          const updatedAt = new Date('2022-08-10T00:01:00.0Z').toISOString();
-
-          jest.setSystemTime(now);
-          const event = await createEvent({
-            [materialUpdatedAtName]: updatedAt,
-          });
-          await expectReminderWithId(
-            `${material.toLowerCase()}-event-updated-${event.id}`,
-          );
-          await fixtures.deleteEvents([event.id]);
+      beforeAll(async () => {
+        event = await createEvent({
+          title: `${material} Updated`,
+          [materialUpdatedAtName]: new Date(
+            '2022-08-10T10:00:00.0Z',
+          ).toISOString(),
         });
+      });
 
-        test(`Should not see the reminder when a ${material} was updated in an event more than 24 hours ago`, async () => {
-          const now = new Date('2022-08-10T23:59:00.0Z');
-          const updatedAt = new Date('2022-08-09T23:00:00.0Z').toISOString();
+      afterAll(async () => {
+        await fixtures.deleteEvents([event.id]);
+      });
 
-          jest.setSystemTime(now);
-          const event = await createEvent({
-            [materialUpdatedAtName]: updatedAt,
-          });
-          await expectNotToContainingReminderWithId(
-            `${material.toLowerCase()}-event-updated-${event.id}`,
-          );
-          await fixtures.deleteEvents([event.id]);
-        });
-      },
-    );
-  });
+      test(`Should see the reminder when a ${material} was updated in the last 24 hours`, async () => {
+        // setting system time to 09:50AM in UTC from the next day, material updated at 10AM in UTC
+        jest.setSystemTime(new Date('2022-08-11T09:50:00.0Z'));
+        await expectReminderWithId(
+          `${material.toLowerCase()}-event-updated-${event.id}`,
+        );
+      });
+
+      test(`Should not see the reminder when a ${material} was updated in an event more than 24 hours ago`, async () => {
+        // setting system time to 10:05AM in UTC from the next day, material updated at 10AM in UTC
+        jest.setSystemTime(new Date('2022-08-11T10:05:00.0Z'));
+        await expectNotToContainingReminderWithId(
+          `${material.toLowerCase()}-event-updated-${event.id}`,
+        );
+      });
+    },
+  );
 
   const createEvent = async (props: Partial<EventCreateDataObject> = {}) => {
     const calendar = await fixtures.createCalendar(getCalendarFixture());

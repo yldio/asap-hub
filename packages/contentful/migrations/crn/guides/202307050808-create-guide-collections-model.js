@@ -6,7 +6,7 @@ module.exports.up = (migration) => {
     .name('GuideCollections')
     .description('')
     .displayField('title');
-  guides
+  guideCollections
     .createField('title')
     .name('Title')
     .type('Symbol')
@@ -16,7 +16,7 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
-  guides
+  guideCollections
     .createField('guides')
     .name('Guides')
     .type('Array')

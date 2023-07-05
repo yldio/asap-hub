@@ -75,6 +75,21 @@ module.exports.up = (migration) => {
       },
     },
   ]);
+
+  users.changeFieldControl('orcid', 'builtin', 'urlEditor', {
+    helpText:
+      'ORCID url should follow the pattern: https://orcid.org/<ORCID>. ORCID must have the following format: 0000-0000-0000-0000',
+  });
+
+  users.changeFieldControl('researchGate', 'builtin', 'urlEditor', {
+    helpText:
+      'Research Gate should follow the pattern https://researchid.com/rid/<id>',
+  });
+
+  users.changeFieldControl('researcherId', 'builtin', 'urlEditor', {
+    helpText:
+      'Research ID should follow the pattern https://researcherid.com/rid/<ResearcherID> . ResearcherID must have the following format: R-0000-0000',
+  });
 };
 
 module.exports.down = (migration) => {
@@ -91,4 +106,8 @@ module.exports.down = (migration) => {
   ]);
   users.editField('researchGate').validations([]);
   users.editField('researcherId').validations([]);
+
+  users.changeFieldControl('orcid', 'builtin', 'singleLine', {});
+  users.changeFieldControl('researchGate', 'builtin', 'singleLine', {});
+  users.changeFieldControl('researcherId', 'builtin', 'singleLine', {});
 };

@@ -19,7 +19,6 @@ type ExternalProfilesModalProps = Pick<gp2.UserResponse, 'social'> &
 
 const baseUrls = {
   orcid: 'https://orcid.org/',
-
   researcherId: 'https://researcherid.com/rid/',
 };
 

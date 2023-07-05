@@ -81,7 +81,7 @@ describe('Reminders', () => {
   });
 
   afterAll(async () => {
-    // await fixtures.teardown();
+    await fixtures.teardown();
     jest.useRealTimers();
   });
 
@@ -209,6 +209,7 @@ describe('Reminders', () => {
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
       await fixtures.publishEvent(event.id, 'Draft');
+      await delay(30000);
       await expectNotToContainingReminderWithId(
         `event-happening-now-${event.id}`,
       );
@@ -257,6 +258,7 @@ describe('Reminders', () => {
       // setting system time to 11:05AM in UTC
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
+
       await expectReminderWithId(`share-presentation-${eventUserIsSpeaker.id}`);
       await expectNotToContainingReminderWithId(
         `share-presentation-${eventUserIsNotSpeaker.id}`,
@@ -507,8 +509,6 @@ describe('Reminders', () => {
       });
 
       test(`Should see the reminder when a ${material} was updated in the last 24 hours`, async () => {
-        console.log('***************', material);
-
         // setting system time to 09:50AM in UTC from the next day, material updated at 10AM in UTC
         jest.setSystemTime(new Date('2022-08-11T09:50:00.0Z'));
         await expectReminderWithId(
@@ -549,12 +549,6 @@ describe('Reminders', () => {
     return { loggedInUser, app };
   };
 
-  const retryOptions = {
-    retries: 10,
-    factor: 3,
-    minTimeout: 1 * 1000,
-    maxTimeout: 1 * 1000,
-  };
   const expectReminderWithId = async (
     id: string,
     expressApp: Express = app,
@@ -566,10 +560,9 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
-      console.log('** contain', response.body.items);
 
       expect(response.body.items.map((reminder) => reminder.id)).toContain(id);
-    }, retryOptions);
+    });
   };
 
   const expectNotToContainingReminderWithId = async (
@@ -583,10 +576,11 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
-      console.log('** not', response.body.items);
       expect(response.body.items.map((reminder) => reminder.id)).not.toContain(
         id,
       );
-    }, retryOptions);
+    });
   };
 });
+
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));

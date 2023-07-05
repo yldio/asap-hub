@@ -80,7 +80,7 @@ export default class ReminderController {
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `**${reminder.data.reviewRequestedBy}** on **${reminder.data.associationName}** requested PMs to review a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
+            description: `**${reminder.data.reviewRequestedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** requested PMs to review a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
           };
         }
 

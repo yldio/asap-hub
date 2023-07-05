@@ -44,6 +44,7 @@ describe('Reminders', () => {
 
   beforeAll(async () => {
     await fixtures.clearAllPreviousEvents();
+    jest.useFakeTimers({ doNotFake: ['setTimeout'] });
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
       getUserFixture({
@@ -75,10 +76,6 @@ describe('Reminders', () => {
         next();
       },
     });
-  });
-
-  beforeEach(async () => {
-    jest.useFakeTimers();
   });
 
   afterAll(async () => {
@@ -209,11 +206,11 @@ describe('Reminders', () => {
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
       await fixtures.publishEvent(event.id, 'Draft');
-      await delay(30000);
+      await delay(1000);
       await expectNotToContainingReminderWithId(
         `event-happening-now-${event.id}`,
       );
-    }, 300000);
+    });
   });
 
   describe('Share Presentation Reminder', () => {

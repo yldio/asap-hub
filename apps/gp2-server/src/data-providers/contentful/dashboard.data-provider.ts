@@ -3,7 +3,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Contentful, GraphQLClient } from '@asap-hub/contentful';
 
 import { DashboardDataProvider } from '../types';
-import { parseAnnouncements } from './utils';
+import { parseAnnouncements, parseGuides } from './utils';
 
 export type Dashboard = NonNullable<
   NonNullable<gp2Contentful.Query['dashboardCollection']>['items'][number]
@@ -73,4 +73,5 @@ export const parseContentfulGraphQlDashboard = (
     cohortCount: item.latestStats?.cohortCount ?? 0,
   },
   announcements: parseAnnouncements(item.announcementsCollection),
+  // guides: parseGuides(item.guidesCollection),
 });

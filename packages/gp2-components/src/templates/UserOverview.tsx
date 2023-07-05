@@ -118,7 +118,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
       />
     )}
     {(editExternalProfilesHref ||
-      (social && Object.values(social).filter((value) => !!value))) && (
+      (social && Object.values(social).filter((value) => !!value).length > 0)) && (
       <UserExternalProfiles
         social={social}
         editHref={editExternalProfilesHref}

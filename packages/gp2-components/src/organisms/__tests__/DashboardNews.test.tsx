@@ -12,24 +12,6 @@ describe('Dashboard News', () => {
       screen.getByRole('heading', { name: 'News and Updates' }),
     ).toBeVisible();
   });
-  it('renders the counts', () => {
-    const itemsWithCounts = defaultProps.items.map((item) => ({
-      ...item,
-      cohortCount: 1,
-      sampleCount: 1,
-      articleCount: 1,
-    }));
-    render(<DashboardNews items={itemsWithCounts} />);
-    expect(screen.getByText('Samples completed:').textContent).toEqual(
-      expect.stringContaining('Samples completed: 1'),
-    );
-    expect(screen.getByText('Article numbers:').textContent).toEqual(
-      expect.stringContaining('Article numbers: 1'),
-    );
-    expect(screen.getByText('Cohorts:').textContent).toEqual(
-      expect.stringContaining('Cohorts: 1'),
-    );
-  });
   it('renders the first news item', () => {
     const firstNewsItem: gp2.NewsResponse = {
       ...defaultProps.items[0]!,

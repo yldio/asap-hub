@@ -3,7 +3,6 @@ import {
   Card,
   Headline2,
   Paragraph,
-  LabIcon,
   Divider,
   newsPlaceholder,
   Subtitle,
@@ -17,20 +16,12 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { workingGroupIcon, locationIcon } from '../icons';
+
 import { mobileQuery } from '../layout';
-import { IconWithLabel } from '../molecules';
+
 import colors from '../templates/colors';
 
 const { rem } = pixels;
-
-const countsContainerStyles = css({
-  color: colors.neutral900.rgb,
-  margin: `${rem(32)} 0`,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: rem(16),
-});
 
 const imageStyles = css({
   gridArea: 'image',
@@ -90,17 +81,6 @@ const DashboardNews: React.FC<DashboardNewsProps> = ({ items }) => {
     new milestones reached thanks to the continued hard work of everyone on
     the GP2 programme. Here is just a snippet of what you can read about:`}
       </Paragraph>
-      <div css={countsContainerStyles}>
-        <IconWithLabel noMargin icon={<LabIcon />}>
-          Samples completed: <strong>{firstNews.sampleCount}</strong>
-        </IconWithLabel>
-        <IconWithLabel noMargin icon={locationIcon}>
-          Article numbers: <strong>{firstNews.articleCount}</strong>
-        </IconWithLabel>
-        <IconWithLabel noMargin icon={workingGroupIcon}>
-          Cohorts: <strong>{firstNews.cohortCount}</strong>
-        </IconWithLabel>
-      </div>
       <Divider />
       {news.map(({ title, link, linkText, shortText, created, id }) => (
         <div key={id}>

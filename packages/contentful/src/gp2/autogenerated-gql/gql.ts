@@ -37,7 +37,7 @@ const documents = {
     graphql.ExternalUsersContentDataFragmentDoc,
   '\n  query FetchExternalUsers(\n    $limit: Int\n    $skip: Int\n    $order: [ExternalUsersOrder]\n    $where: ExternalUsersFilter\n  ) {\n    externalUsersCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ExternalUsersContentData\n      }\n    }\n  }\n  \n':
     graphql.FetchExternalUsersDocument,
-  '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n  }\n':
+  '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n    type\n  }\n':
     graphql.NewsContentDataFragmentDoc,
   '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n':
     graphql.FetchNewsByIdDocument,
@@ -143,8 +143,8 @@ export function gql(
   source: '\n  query FetchExternalUsers(\n    $limit: Int\n    $skip: Int\n    $order: [ExternalUsersOrder]\n    $where: ExternalUsersFilter\n  ) {\n    externalUsersCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ExternalUsersContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchExternalUsers(\n    $limit: Int\n    $skip: Int\n    $order: [ExternalUsersOrder]\n    $where: ExternalUsersFilter\n  ) {\n    externalUsersCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ExternalUsersContentData\n      }\n    }\n  }\n  \n'];
 export function gql(
-  source: '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n  }\n',
-): (typeof documents)['\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n  }\n'];
+  source: '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n    type\n  }\n',
+): (typeof documents)['\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n    type\n  }\n'];
 export function gql(
   source: '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n'];

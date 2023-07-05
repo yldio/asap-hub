@@ -8143,7 +8143,7 @@ export type FetchExternalUsersQuery = {
 
 export type NewsContentDataFragment = Pick<
   News,
-  'title' | 'shortText' | 'link' | 'linkText' | 'publishDate'
+  'title' | 'shortText' | 'link' | 'linkText' | 'publishDate' | 'type'
 > & { sys: Pick<Sys, 'id' | 'firstPublishedAt'> };
 
 export type FetchNewsByIdQueryVariables = Exact<{
@@ -8152,9 +8152,10 @@ export type FetchNewsByIdQueryVariables = Exact<{
 
 export type FetchNewsByIdQuery = {
   news?: Maybe<
-    Pick<News, 'title' | 'shortText' | 'link' | 'linkText' | 'publishDate'> & {
-      sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
-    }
+    Pick<
+      News,
+      'title' | 'shortText' | 'link' | 'linkText' | 'publishDate' | 'type'
+    > & { sys: Pick<Sys, 'id' | 'firstPublishedAt'> }
   >;
 };
 
@@ -8172,7 +8173,7 @@ export type FetchNewsQuery = {
         Maybe<
           Pick<
             News,
-            'title' | 'shortText' | 'link' | 'linkText' | 'publishDate'
+            'title' | 'shortText' | 'link' | 'linkText' | 'publishDate' | 'type'
           > & { sys: Pick<Sys, 'id' | 'firstPublishedAt'> }
         >
       >;
@@ -11062,6 +11063,7 @@ export const NewsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'link' } },
           { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
           { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
         ],
       },
     },

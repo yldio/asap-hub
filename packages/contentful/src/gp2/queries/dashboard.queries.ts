@@ -24,6 +24,28 @@ export const FETCH_DASHBOARD = gql`
             }
           }
         }
+        guidesCollection {
+          items {
+            sys {
+              id
+            }
+            title
+            icon {
+              url
+            }
+            descriptionCollection {
+              items {
+                sys {
+                  id
+                }
+                title
+                bodyText
+                linkUrl
+                linkText
+              }
+            }
+          }
+        }
       }
     }
   }

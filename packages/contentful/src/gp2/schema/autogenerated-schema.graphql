@@ -1748,17 +1748,15 @@ enum MilestonesOrder {
 
 """Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
 type News implements Entry {
-  articleCount(locale: String): Int
-  cohortCount(locale: String): Int
   contentfulMetadata: ContentfulMetadata!
   link(locale: String): String
   linkText(locale: String): String
   linkedFrom(allowedLocales: [String]): NewsLinkingCollections
   publishDate(locale: String): DateTime
-  sampleCount(locale: String): Int
   shortText(locale: String): String
   sys: Sys!
   title(locale: String): String
+  type(locale: String): String
 }
 
 type NewsCollection {
@@ -1771,24 +1769,6 @@ type NewsCollection {
 input NewsFilter {
   AND: [NewsFilter]
   OR: [NewsFilter]
-  articleCount: Int
-  articleCount_exists: Boolean
-  articleCount_gt: Int
-  articleCount_gte: Int
-  articleCount_in: [Int]
-  articleCount_lt: Int
-  articleCount_lte: Int
-  articleCount_not: Int
-  articleCount_not_in: [Int]
-  cohortCount: Int
-  cohortCount_exists: Boolean
-  cohortCount_gt: Int
-  cohortCount_gte: Int
-  cohortCount_in: [Int]
-  cohortCount_lt: Int
-  cohortCount_lte: Int
-  cohortCount_not: Int
-  cohortCount_not_in: [Int]
   contentfulMetadata: ContentfulMetadataFilter
   link: String
   linkText: String
@@ -1813,15 +1793,6 @@ input NewsFilter {
   publishDate_lte: DateTime
   publishDate_not: DateTime
   publishDate_not_in: [DateTime]
-  sampleCount: Int
-  sampleCount_exists: Boolean
-  sampleCount_gt: Int
-  sampleCount_gte: Int
-  sampleCount_in: [Int]
-  sampleCount_lt: Int
-  sampleCount_lte: Int
-  sampleCount_not: Int
-  sampleCount_not_in: [Int]
   shortText: String
   shortText_contains: String
   shortText_exists: Boolean
@@ -1837,6 +1808,13 @@ input NewsFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
 }
 
 type NewsLinkingCollections {
@@ -1844,18 +1822,12 @@ type NewsLinkingCollections {
 }
 
 enum NewsOrder {
-  articleCount_ASC
-  articleCount_DESC
-  cohortCount_ASC
-  cohortCount_DESC
   linkText_ASC
   linkText_DESC
   link_ASC
   link_DESC
   publishDate_ASC
   publishDate_DESC
-  sampleCount_ASC
-  sampleCount_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -1864,6 +1836,8 @@ enum NewsOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs)"""

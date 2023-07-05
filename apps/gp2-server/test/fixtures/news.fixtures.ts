@@ -16,9 +16,6 @@ export const getContentfulGraphqlNews = (): NonNullable<
     id: '42',
     firstPublishedAt: '2020-09-08T16:35:28.000Z',
   },
-  sampleCount: 3,
-  articleCount: 11,
-  cohortCount: 43,
   publishDate: '2021-12-28T00:00:00.000Z',
 });
 

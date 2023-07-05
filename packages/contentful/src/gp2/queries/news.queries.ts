@@ -12,6 +12,7 @@ export const newsContentQueryFragment = gql`
     link
     linkText
     publishDate
+    type
   }
 `;
 

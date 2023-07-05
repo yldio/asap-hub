@@ -83,7 +83,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
-  ) {}
+  ) { }
 
   private fetchUserById(id: string) {
     return this.contentfulClient.request<
@@ -390,7 +390,7 @@ const parseOrcidWorksContentful = (
   }
 };
 
-const parseToWorkingGroups = (
+export const parseToWorkingGroups = (
   users: (GroupMemberItem | GroupLeaderItem)[],
   isAlumni: boolean,
 ): WorkingGroupMembership[] =>

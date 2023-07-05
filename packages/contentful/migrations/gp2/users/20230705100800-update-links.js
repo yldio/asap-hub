@@ -3,7 +3,7 @@ module.exports.description = 'update external links validation';
 module.exports.up = (migration) => {
   const users = migration.editContentType('users');
 
-  users.editField('linkedin').validations([
+  users.editField('linkedIn').validations([
     {
       regexp: {
         pattern:

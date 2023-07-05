@@ -7,9 +7,6 @@ export type NewsDataObject = {
   shortText: string;
   link?: string;
   linkText?: string;
-  sampleCount: number;
-  articleCount: number;
-  cohortCount: number;
 };
 export type ListNewsDataObject = ListResponse<NewsDataObject>;
 

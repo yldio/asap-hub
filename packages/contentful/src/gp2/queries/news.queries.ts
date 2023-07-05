@@ -9,12 +9,10 @@ export const newsContentQueryFragment = gql`
     }
     title
     shortText
-    sampleCount
-    articleCount
-    cohortCount
     link
     linkText
     publishDate
+    type
   }
 `;
 

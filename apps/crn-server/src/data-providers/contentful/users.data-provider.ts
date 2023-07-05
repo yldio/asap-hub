@@ -2,6 +2,7 @@ import {
   activeUserTag,
   FetchUsersOptions,
   inactiveUserTag,
+  InterestGroupMembership,
   isUserDegree,
   isUserRole,
   LabResponse,
@@ -11,6 +12,7 @@ import {
   UserSocialLinks,
   UserTeam,
   UserUpdateDataObject,
+  WorkingGroupMembership,
 } from '@asap-hub/model';
 
 import {
@@ -37,12 +39,35 @@ import {
 import { isTeamRole } from '../../entities';
 import { UserDataProvider } from '../types';
 import { parseOrcidWorkFromCMS } from '../../entities/users';
+import { cleanArray } from '../../utils/clean-array';
 
 export type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
 >;
 export type TeamMembership = NonNullable<
   NonNullable<UserItem['teamsCollection']>['items'][number]
+>;
+export type GroupMemberItem = NonNullable<
+  NonNullable<
+    NonNullable<UserItem['linkedFrom']>['workingGroupMembersCollection']
+  >['items'][number]
+>;
+export type GroupLeaderItem = NonNullable<
+  NonNullable<
+    NonNullable<UserItem['linkedFrom']>['workingGroupLeadersCollection']
+  >['items'][number]
+>;
+
+export type InterestGroupItem = NonNullable<
+  NonNullable<
+    NonNullable<TeamMembership['team']>['linkedFrom']
+  >['interestGroupsCollection']
+>['items'][number];
+
+export type InterestGroupLeaderItem = NonNullable<
+  NonNullable<
+    NonNullable<UserItem['linkedFrom']>['interestGroupLeadersCollection']
+  >['items'][number]
 >;
 
 type OrcidWorkContentful = {
@@ -261,13 +286,37 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     item.orcidWorks || [],
   );
 
+  const isAlumni = !!item.alumniSinceDate;
+
+  const workingGroupLeadersCollection = cleanArray(
+    item.linkedFrom?.workingGroupLeadersCollection?.items,
+  );
+  const workingGroupMembersCollection = cleanArray(
+    item.linkedFrom?.workingGroupMembersCollection?.items,
+  );
+  const interestGroupLeadersCollection = cleanArray(
+    item?.linkedFrom?.interestGroupLeadersCollection?.items,
+  );
+
+  const teamsCollection = cleanArray(item?.teamsCollection?.items);
+
+  const workingGroups = [
+    ...parseToWorkingGroups(workingGroupLeadersCollection, isAlumni),
+    ...parseToWorkingGroups(workingGroupMembersCollection, isAlumni),
+  ];
+
+  const interestGroups = removeDuplicates([
+    ...parseToInterestGroups(teamsCollection),
+    ...parseLeadersToInterestGroups(interestGroupLeadersCollection),
+  ]);
+
   return {
     id: item.sys.id,
     _tags: [item.alumniSinceDate ? inactiveUserTag : activeUserTag],
     createdDate: item.createdDate || item.sys.firstPublishedAt,
     lastModifiedDate: item.sys.publishedAt,
-    workingGroups: [],
-    interestGroups: [],
+    workingGroups,
+    interestGroups,
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : undefined,
     email: item.email ?? '',
     contactEmail: item.contactEmail ?? undefined,
@@ -339,4 +388,75 @@ const parseOrcidWorksContentful = (
   } catch (e) {
     throw new Error(`Invalid ORCID works content data: ${e}`);
   }
+};
+
+export const parseToWorkingGroups = (
+  users: (GroupMemberItem | GroupLeaderItem)[],
+  isAlumni: boolean,
+): WorkingGroupMembership[] =>
+  users.reduce(
+    (workingGroups: WorkingGroupMembership[], user: GroupLeaderItem) => {
+      const workingGroup = user.linkedFrom?.workingGroupsCollection?.items[0];
+      const isInActive = !!user.inactiveSinceDate;
+
+      if (!workingGroup) {
+        return workingGroups;
+      }
+
+      workingGroups.push({
+        id: workingGroup.sys.id,
+        name: workingGroup.title || '',
+        role: (user.role as WorkingGroupMembership['role']) || 'Member',
+        active: workingGroup?.complete ? false : !isAlumni && !isInActive,
+      });
+
+      return workingGroups;
+    },
+    [],
+  );
+
+const parseToInterestGroups = (
+  teams: TeamMembership[],
+): InterestGroupMembership[] =>
+  teams.flatMap(({ team }) => {
+    const items = cleanArray(team?.linkedFrom?.interestGroupsCollection?.items);
+    return items.map((group) => ({
+      id: group.sys.id,
+      name: group.name || '',
+      active: !!group.active,
+    }));
+  });
+
+const parseLeadersToInterestGroups = (
+  leaders: InterestGroupLeaderItem[],
+): InterestGroupMembership[] =>
+  leaders.reduce(
+    (
+      interestGroups: InterestGroupMembership[],
+      leader: InterestGroupLeaderItem,
+    ) => {
+      const group = leader.linkedFrom?.interestGroupsCollection?.items[0];
+
+      interestGroups.push({
+        id: group?.sys.id,
+        active: group?.active,
+        name: group?.name,
+      } as InterestGroupMembership);
+
+      return interestGroups;
+    },
+    [],
+  );
+
+const removeDuplicates = (
+  interestGroups: InterestGroupMembership[],
+): InterestGroupMembership[] => {
+  const duplicates = new Map();
+  return interestGroups.reduce((groups: InterestGroupMembership[], group) => {
+    if (!duplicates.has(group.id)) {
+      duplicates.set(group.id, group);
+      groups.push(group);
+    }
+    return groups;
+  }, []);
 };

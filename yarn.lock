@@ -850,7 +850,7 @@ __metadata:
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
     "@sentry/serverless": 6.19.7
-    "@serverless/typescript": 3.29.0
+    "@serverless/typescript": 3.30.1
     "@types/apr-intercept": "workspace:*"
     "@types/async-retry": ^1
     "@types/aws-lambda": 8.10.117
@@ -1312,7 +1312,7 @@ __metadata:
     "@graphql-typed-document-node/core": 3.2.0
     "@hapi/boom": 9.1.4
     "@sentry/serverless": 6.19.7
-    "@serverless/typescript": 3.29.0
+    "@serverless/typescript": 3.30.1
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.117
     "@types/cors": 2.8.13
@@ -14422,10 +14422,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@serverless/typescript@npm:3.29.0":
-  version: 3.29.0
-  resolution: "@serverless/typescript@npm:3.29.0"
-  checksum: 42ded7f8fd7cd000594564069e60a410c1b45d3e08bc5f342e6ce9564d10b27a0cb3c87ba758fb267d92d3ec779f015118f9129a531d7af00c576531a06741ba
+"@serverless/typescript@npm:3.30.1":
+  version: 3.30.1
+  resolution: "@serverless/typescript@npm:3.30.1"
+  checksum: 895d34e381da882e636afd6b71dad3c291900930fe9d2acbb8bba78a81ec072a831a8a487983a6ea2793cc20ba2d8764f273c7ddac54547337868a4bce2e6351
   languageName: node
   linkType: hard
 

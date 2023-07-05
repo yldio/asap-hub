@@ -49,7 +49,7 @@ export const usersContentQueryFragment = gql`
     avatar {
       url
     }
-    teamsCollection(limit: 30) {
+    teamsCollection(limit: 10) {
       items {
         team {
           sys {

@@ -82,7 +82,6 @@ describe('Reminders', () => {
   });
 
   afterAll(async () => {
-    await fixtures.teardown();
     jest.useRealTimers();
   });
 

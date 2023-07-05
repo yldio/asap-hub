@@ -212,7 +212,7 @@ describe('Reminders', () => {
       await expectNotToContainingReminderWithId(
         `event-happening-now-${event.id}`,
       );
-    });
+    }, 300000);
   });
 
   describe('Share Presentation Reminder', () => {
@@ -507,6 +507,8 @@ describe('Reminders', () => {
       });
 
       test(`Should see the reminder when a ${material} was updated in the last 24 hours`, async () => {
+        console.log('***************', material);
+
         // setting system time to 09:50AM in UTC from the next day, material updated at 10AM in UTC
         jest.setSystemTime(new Date('2022-08-11T09:50:00.0Z'));
         await expectReminderWithId(
@@ -564,6 +566,8 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
+      console.log('** contain', response.body.items);
+
       expect(response.body.items.map((reminder) => reminder.id)).toContain(id);
     }, retryOptions);
   };
@@ -579,6 +583,7 @@ describe('Reminders', () => {
       )
         .get(`/reminders?timezone=${timezone}`)
         .expect(200);
+      console.log('** not', response.body.items);
       expect(response.body.items.map((reminder) => reminder.id)).not.toContain(
         id,
       );

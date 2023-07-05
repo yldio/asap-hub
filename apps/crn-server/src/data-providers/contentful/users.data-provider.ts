@@ -83,7 +83,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
-  ) { }
+  ) {}
 
   private fetchUserById(id: string) {
     return this.contentfulClient.request<

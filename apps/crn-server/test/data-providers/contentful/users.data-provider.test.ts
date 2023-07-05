@@ -771,15 +771,20 @@ describe('User data provider', () => {
             lastName: 'simpson',
           },
         },
-      ]
+      ];
       const isAlumni = false;
-      const parsedWorkingGroups = parseToWorkingGroups(workingGroupGQLResponse, isAlumni);
-      expect(parsedWorkingGroups).toEqual([{
-        id: "wg-1",
-        active: true,
-        name: "working-group-1",
-        role: "Project Manager",
-      }]);
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
+      expect(parsedWorkingGroups).toEqual([
+        {
+          id: 'wg-1',
+          active: true,
+          name: 'working-group-1',
+          role: 'Project Manager',
+        },
+      ]);
     });
     test('should set role to leadership role for leaders', () => {
       const workingGroupGQLResponse = [
@@ -802,9 +807,13 @@ describe('User data provider', () => {
           user: {
             lastName: 'simpson',
           },
-        }]
+        },
+      ];
       const isAlumni = false;
-      const parsedWorkingGroups = parseToWorkingGroups(workingGroupGQLResponse, isAlumni);
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
       expect(parsedWorkingGroups[0]!.role).toBe('Project Manager');
     });
 
@@ -828,9 +837,13 @@ describe('User data provider', () => {
           user: {
             lastName: 'simpson',
           },
-        }]
+        },
+      ];
       const isAlumni = false;
-      const parsedWorkingGroups = parseToWorkingGroups(workingGroupGQLResponse, isAlumni);
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
       expect(parsedWorkingGroups[0]!.role).toBe('Member');
     });
 
@@ -854,9 +867,13 @@ describe('User data provider', () => {
           user: {
             lastName: 'simpson',
           },
-        }]
+        },
+      ];
       const isAlumni = false;
-      const parsedWorkingGroups = parseToWorkingGroups(workingGroupGQLResponse, isAlumni);
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
       expect(parsedWorkingGroups[0]!.active).toBe(false);
     });
 
@@ -880,9 +897,13 @@ describe('User data provider', () => {
           user: {
             lastName: 'simpson',
           },
-        }]
+        },
+      ];
       const isAlumni = true;
-      const parsedWorkingGroups = parseToWorkingGroups(workingGroupGQLResponse, isAlumni);
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
       expect(parsedWorkingGroups[0]!.active).toBe(false);
     });
 
@@ -906,11 +927,14 @@ describe('User data provider', () => {
           user: {
             lastName: 'simpson',
           },
-        }]
+        },
+      ];
       const isAlumni = true;
-      const parsedWorkingGroups = parseToWorkingGroups(workingGroupGQLResponse, isAlumni);
+      const parsedWorkingGroups = parseToWorkingGroups(
+        workingGroupGQLResponse,
+        isAlumni,
+      );
       expect(parsedWorkingGroups[0]!.active).toBe(false);
     });
   });
-
 });

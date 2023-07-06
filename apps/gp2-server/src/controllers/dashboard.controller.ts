@@ -25,6 +25,7 @@ export default class Dashboard implements DashboardController {
               articleCount: 0,
             },
             announcements: [],
+            guides: [],
           },
         ],
       };

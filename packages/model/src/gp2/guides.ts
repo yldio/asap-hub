@@ -1,14 +1,22 @@
 import { ListResponse } from '../common';
 
-export type GuideDescriptionDataObject = {
+export type GuideDataObject = {
   id: string;
   title: string;
-  //   description: GuideBlock;
+  icon?: string;
+  description: GuideBlockDataObject[];
 };
 
-export type ListAnnouncementsDataObject =
-  ListResponse<GuideDescriptionDataObject>;
+export type GuideBlockDataObject = {
+  bodyText: string;
+  title?: string;
+  linkUrl?: string;
+  linkText?: string;
+  id: string;
+};
 
-export type GuideDescriptionResponse = GuideDescriptionDataObject;
+export type ListGuideDataObject = ListResponse<GuideDataObject>;
 
-export type ListAnnouncementsResponse = ListResponse<GuideDescriptionResponse>;
+export type GuideResponse = GuideDataObject;
+
+export type ListGuideResponse = ListResponse<GuideResponse>;

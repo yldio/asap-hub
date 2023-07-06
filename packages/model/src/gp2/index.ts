@@ -7,7 +7,7 @@ export * from './dashboard';
 export * from './data-providers';
 export * from './event';
 export * from './external-user';
-// export * from './guides';
+export * from './guides';
 export * from './keywords';
 export * from './news';
 export * from './output';

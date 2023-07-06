@@ -30,6 +30,30 @@ export const getContentfulGraphqlDashboard = (): NonNullable<
       },
     ],
   },
+  guidesCollection: {
+    items: [
+      {
+        sys: {
+          id: '12',
+        },
+        icon: {
+          url: 'https://google.com',
+        },
+        title: 'Discover how to use the GP2 Hub',
+        descriptionCollection: {
+          items: [
+            {
+              sys: {
+                id: '1',
+              },
+              bodyText:
+                'Learn more about the GP2 Hub and how to use different aspects.',
+            },
+          ],
+        },
+      },
+    ],
+  },
 });
 
 export const getContentfulDashboardGraphqlResponse =
@@ -53,6 +77,20 @@ export const getDashboardDataObject = (): gp2Model.DashboardDataObject => ({
       id: '2',
       description: 'Test 2',
       deadline: '2028-10-24T16:30:54.000Z',
+    },
+  ],
+  guides: [
+    {
+      id: '12',
+      icon: 'https://google.com',
+      title: 'Discover how to use the GP2 Hub',
+      description: [
+        {
+          id: '1',
+          bodyText:
+            'Learn more about the GP2 Hub and how to use different aspects.',
+        },
+      ],
     },
   ],
 });

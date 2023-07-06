@@ -14,9 +14,9 @@ export const parseGuides = (guides: Guides) =>
   guides?.items
     .filter((guide): guide is GuideItem => guide !== null)
     .map(({ title, icon, descriptionCollection, sys: { id } }: GuideItem) => ({
-      title,
-      icon: icon?.url,
-      descriptionCollection: parseGuideDescription(descriptionCollection),
+      title: title ?? '',
+      icon: icon?.url ?? undefined,
+      description: parseGuideDescription(descriptionCollection),
       id,
     })) || [];
 
@@ -31,10 +31,10 @@ export const parseGuideDescription = (description: GuideDescription) =>
         linkText,
         sys: { id },
       }: GuideDescriptionBlock) => ({
-        title,
-        bodyText,
-        linkText,
-        linkUrl,
+        title: title ?? undefined,
+        bodyText: bodyText ?? '',
+        linkText: linkText ?? undefined,
+        linkUrl: linkUrl ?? undefined,
         id,
       }),
     ) || [];

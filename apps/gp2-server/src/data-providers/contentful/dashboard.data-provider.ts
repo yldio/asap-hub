@@ -73,5 +73,5 @@ export const parseContentfulGraphQlDashboard = (
     cohortCount: item.latestStats?.cohortCount ?? 0,
   },
   announcements: parseAnnouncements(item.announcementsCollection),
-  // guides: parseGuides(item.guidesCollection),
+  guides: parseGuides(item.guidesCollection),
 });

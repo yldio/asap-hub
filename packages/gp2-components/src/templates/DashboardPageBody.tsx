@@ -116,7 +116,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <Accordion
             items={guides.map((guide: gp2.GuideDataObject) => ({
               title: guide.title,
-              icon: guide.icon ? <img src={guide.icon} /> : learnIcon,
+              icon: guide.icon ? (
+                <img src={guide.icon} alt={guide.title} />
+              ) : (
+                learnIcon
+              ),
               description: <GuideDescription blocks={guide.description} />,
             }))}
           />

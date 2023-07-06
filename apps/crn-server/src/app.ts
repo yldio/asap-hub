@@ -89,10 +89,7 @@ import {
 import { InterestGroupSquidexDataProvider } from './data-providers/interest-group.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import { PageSquidexDataProvider } from './data-providers/page.data-provider';
-import {
-  ReminderDataProvider,
-  ReminderSquidexDataProvider,
-} from './data-providers/reminder.data-provider';
+import { ReminderSquidexDataProvider } from './data-providers/reminder.data-provider';
 import {
   ResearchOutputDataProvider,
   ResearchOutputSquidexDataProvider,
@@ -488,7 +485,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     'IS_CONTENTFUL_ENABLED_V2',
     true,
   );
-  const tutorialsDataProvider =
+  const tutorialDataProvider =
     libs.tutorialDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'tutorials',
@@ -577,7 +574,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const teamController =
     libs.teamController || new TeamController(teamDataProvider);
   const tutorialsController =
-    libs.tutorialsController || new TutorialController(tutorialsDataProvider);
+    libs.tutorialsController || new TutorialController(tutorialDataProvider);
   const userController =
     libs.userController ||
     new UserController(userDataProvider, assetDataProvider);

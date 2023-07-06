@@ -3,7 +3,7 @@ import { appFactory } from '../../src/app';
 import { getListResearchTagResponse } from '../fixtures/research-tag.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
-import { researchTagControllerMock } from '../mocks/research-tags.controller.mock';
+import { researchTagControllerMock } from '../mocks/research-tag.controller.mock';
 
 describe('/research-tags/ route', () => {
   const app = appFactory({

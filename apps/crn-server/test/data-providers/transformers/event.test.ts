@@ -10,7 +10,7 @@ import {
   parseGraphQLEvent,
   parseGraphQLSpeakers,
   getContentfulEventMaterial,
-} from '../../../src/data-providers/transformers/event';
+} from '../../../src/data-providers/transformers';
 import {
   getEventSpeakerUser,
   getSquidexGraphqlEvent,

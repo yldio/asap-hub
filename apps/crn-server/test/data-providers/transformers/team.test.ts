@@ -3,7 +3,7 @@ import { appName, baseUrl } from '../../../src/config';
 import {
   parseGraphQLTeam,
   parseGraphQLTeamMember,
-} from '../../../src/data-providers/transformers/team';
+} from '../../../src/data-providers/transformers';
 import { getSquidexTeamsGraphqlResponse } from '../../fixtures/teams.fixtures';
 import { getGraphQLUser } from '../../fixtures/users.fixtures';
 

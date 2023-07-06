@@ -23,7 +23,7 @@ import {
   getResearchOutputResponse,
 } from '../fixtures/research-output.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
-import { researchOutputControllerMock } from '../mocks/research-outputs.controller.mock';
+import { researchOutputControllerMock } from '../mocks/research-output.controller.mock';
 
 describe('/research-outputs/ route', () => {
   const userMockFactory = jest.fn<UserResponse, []>();

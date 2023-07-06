@@ -1,4 +1,4 @@
-import { parseGraphQLResearchOutput } from '../../../src/data-providers/transformers/research-output';
+import { parseGraphQLResearchOutput } from '../../../src/data-providers/transformers';
 import { getSquidexGraphqlResearchOutput } from '../../fixtures/research-output.fixtures';
 
 describe('parseGraphQLResearchOutput', () => {

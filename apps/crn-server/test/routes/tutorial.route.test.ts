@@ -3,24 +3,24 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getTutorialResponse } from '../fixtures/tutorials.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
-import { tutorialsControllerMock } from '../mocks/tutorials.controller.mock';
+import { tutorialControllerMock } from '../mocks/tutorial.controller.mock';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 
 describe('/tutorials/ route', () => {
   const app = appFactory({
-    tutorialsController: tutorialsControllerMock,
+    tutorialsController: tutorialControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });
 
   afterEach(() => {
-    tutorialsControllerMock.fetchById.mockReset();
+    tutorialControllerMock.fetchById.mockReset();
   });
 
   describe('GET /tutorials/{tutorial_id}', () => {
     const tutorialResponse = getTutorialResponse();
     test('Should return a 404 error when the tutorial is not found', async () => {
-      tutorialsControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
+      tutorialControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
 
       const response = await supertest(app).get('/tutorials/123');
 
@@ -28,7 +28,7 @@ describe('/tutorials/ route', () => {
     });
 
     test('Should return the result correctly', async () => {
-      tutorialsControllerMock.fetchById.mockResolvedValueOnce(tutorialResponse);
+      tutorialControllerMock.fetchById.mockResolvedValueOnce(tutorialResponse);
 
       const response = await supertest(app).get('/tutorials/123');
 
@@ -38,11 +38,11 @@ describe('/tutorials/ route', () => {
     test('Should call the controller with the right parameters', async () => {
       const tutorialId = 'abc123';
 
-      tutorialsControllerMock.fetchById.mockResolvedValueOnce(tutorialResponse);
+      tutorialControllerMock.fetchById.mockResolvedValueOnce(tutorialResponse);
 
       await supertest(app).get(`/tutorials/${tutorialId}`);
 
-      expect(tutorialsControllerMock.fetchById).toBeCalledWith(tutorialId);
+      expect(tutorialControllerMock.fetchById).toBeCalledWith(tutorialId);
     });
   });
 });

@@ -5,5 +5,7 @@ export * from './interest-group';
 export * from './news';
 export * from './tutorials';
 export * from './page';
+export * from './research-output';
 export * from './team';
 export * from './working-group';
+export * from './users';

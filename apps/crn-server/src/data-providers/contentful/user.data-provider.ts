@@ -36,10 +36,9 @@ import {
   UsersFilter,
   UsersOrder,
 } from '@asap-hub/contentful';
-import { isTeamRole } from '../transformers';
+import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
 import { cleanArray } from '../../utils/clean-array';
-import { parseOrcidWorkFromCMS } from '../transformers/users';
 
 export type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]

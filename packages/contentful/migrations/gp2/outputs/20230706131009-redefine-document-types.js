@@ -33,7 +33,9 @@ module.exports.up = (migration) => {
             return fieldValue;
         }
       };
-      return { documentType: transformType(fromFields.documentType[currentLocale]) }
+      return {
+        documentType: transformType(fromFields.documentType[currentLocale]),
+      };
     },
   });
 
@@ -84,7 +86,9 @@ module.exports.down = (migration) => {
             return fieldValue;
         }
       };
-      return { documentType: transformType(fromFields.documentType[currentLocale]) }
+      return {
+        documentType: transformType(fromFields.documentType[currentLocale]),
+      };
     },
   });
 

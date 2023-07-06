@@ -14,6 +14,7 @@ const {
   projects: projectsRoute,
   events: eventsRoute,
   outputs: outputsRoute,
+  newsList: newsRoute,
 } = gp2Route;
 const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
@@ -33,12 +34,15 @@ const loadEvents = () =>
 const loadOutputs = () =>
   import(/* webpackChunkName: "outputs" */ './outputs/Routes');
 
+const loadNews = () => import(/* webpackChunkName: "news" */ './news/Routes');
+
 const Dashboard = lazy(loadDashboard);
 const WorkingGroups = lazy(loadWorkingGroups);
 const Projects = lazy(loadProjects);
 const Users = lazy(loadUsers);
 const Events = lazy(loadEvents);
 const Outputs = lazy(loadOutputs);
+const News = lazy(loadNews);
 
 const OnboardedApp: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
@@ -52,13 +56,14 @@ const OnboardedApp: FC<Record<string, never>> = () => {
       .then(loadWorkingGroups)
       .then(loadProjects)
       .then(loadEvents)
-      .then(loadOutputs);
+      .then(loadOutputs)
+      .then(loadNews);
   });
 
   const { projects = [], workingGroups = [] } =
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     useUserById(user!.id) || {};
-
+  console.log(outputsRoute, newsRoute);
   return (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     <Layout userId={user!.id} projects={projects} workingGroups={workingGroups}>
@@ -91,6 +96,11 @@ const OnboardedApp: FC<Record<string, never>> = () => {
         <Route path={outputsRoute.template}>
           <Frame title="Outputs">
             <Outputs />
+          </Frame>
+        </Route>
+        <Route path={newsRoute.template}>
+          <Frame title="News">
+            <News />
           </Frame>
         </Route>
         <Route>

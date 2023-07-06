@@ -15,7 +15,6 @@ const ProjectsHeader: React.FC = () => (
     <Link
       href="https://docs.google.com/forms/d/e/1FAIpQLScYnKgzk-gxFW6a8CgEkwowjCnWGdWqLxwF9YWacYHMnSaPzg/viewform"
       label="Request New Project"
-      noMargin
       primary
       buttonStyle
     >

@@ -79,7 +79,7 @@ import { UserContentfulDataProvider } from './data-providers/contentful/users.da
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-groups.data-provider';
 import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
 import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tags.data-provider';
-import { ReminderContentfulDataProvider } from './data-providers/contentful/reminders.data-provider';
+import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
 
 import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';

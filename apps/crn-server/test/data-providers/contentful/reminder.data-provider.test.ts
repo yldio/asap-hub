@@ -7,7 +7,7 @@ import {
 } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
-import { ReminderContentfulDataProvider } from '../../../src/data-providers/contentful/reminders.data-provider';
+import { ReminderContentfulDataProvider } from '../../../src/data-providers/contentful/reminder.data-provider';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulGraphqlEvent } from '../../fixtures/events.fixtures';
 import {

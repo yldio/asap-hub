@@ -49,7 +49,12 @@ runs:
     - name: Remove CF Stack
       if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
       shell: bash
-      run: yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls remove --verbose
+      run: |
+        INFO=$(yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls info)
+        # Skip if the stack does not exist
+        if [[ $INFO != *"does not exist"* ]]; then
+          yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls remove --verbose
+        fi
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_REGION: ${{ steps.setup.outputs.aws-region }}

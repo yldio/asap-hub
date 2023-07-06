@@ -1,7 +1,7 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Button, Card, Headline2, Link, Paragraph } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
@@ -110,8 +110,8 @@ const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
             <span css={[titleStyles, gridTitleStyles]}>Date</span>
             {relatedEvents
               .slice(0, showMore ? undefined : truncateFrom)
-              .map(({ id, endDate, title }) => (
-                <Fragment key={id}>
+              .map(({ id, endDate, title }, index) => (
+                <React.Fragment key={`${index}-${id}`}>
                   <span css={[titleStyles, rowTitleStyles]}>Event Name</span>
                   <p css={paragraphStyle}>
                     <Link ellipsed href={events({}).event({ eventId: id }).$}>
@@ -125,7 +125,7 @@ const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
                       'EEE, dd MMM yyyy',
                     ).toUpperCase()}
                   </p>
-                </Fragment>
+                </React.Fragment>
               ))}
           </div>
         )}

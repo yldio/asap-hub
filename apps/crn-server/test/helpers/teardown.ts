@@ -1,3 +1,4 @@
+import { GenericError } from '@asap-hub/errors';
 import { SquidexRest } from '@asap-hub/squidex';
 
 type Response = { id: string; data: Record<string, unknown> };
@@ -24,7 +25,21 @@ export const teardownHelper = (
 
   return async () => {
     for (const record of toDelete) {
-      await record.client.delete(record.id);
+      try {
+        await record.client.delete(record.id);
+      } catch (err) {
+        if (
+          err instanceof GenericError &&
+          (err.httpResponseBody as { statusCode: number }).statusCode === 410
+        ) {
+          // This 410 (Gone) is an expected error as we delete some events
+          // while tests are still running (before the teardown)
+          // So when teardown happens, some records were already deleted
+        } else {
+          // eslint-disable-next-line no-console
+          console.log(`Fail to delete entry ${record.id}: ${err}`);
+        }
+      }
     }
     toDelete = [];
   };

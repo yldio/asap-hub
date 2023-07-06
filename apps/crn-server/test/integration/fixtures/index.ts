@@ -2,6 +2,7 @@ import { ContentfulFixture } from './contentful';
 import { SquidexFixture } from './squidex';
 import { Fixture } from './types';
 
+export * from './events';
 export * from './user';
 export * from './team';
 export * from './interest-group';

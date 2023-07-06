@@ -100,6 +100,57 @@ describe('DashboardPageBody', () => {
       ).toBeVisible();
       expect(screen.getByText('Learn Header')).toBeVisible();
     });
+    it('should render the title icon if icon is send', () => {
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          latestStats={mockStats}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+          guides={[
+            {
+              id: '123',
+              title: 'Learn Header',
+              icon: 'https://image.com',
+              description: [
+                {
+                  id: '2',
+                  title: 'Description title',
+                  bodyText: 'Learn how to use gp2.',
+                },
+              ],
+            },
+          ]}
+        />,
+      );
+
+      expect(screen.getByRole('img', { name: 'Learn Header' })).toBeVisible();
+    });
+    it('should render the default icon if no icon is send', () => {
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          latestStats={mockStats}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+          guides={[
+            {
+              id: '123',
+              title: 'Learn Header',
+              description: [
+                {
+                  id: '2',
+                  title: 'Description title',
+                  bodyText: 'Learn how to use gp2.',
+                },
+              ],
+            },
+          ]}
+        />,
+      );
+
+      expect(screen.getByTitle('Learn')).toBeInTheDocument();
+    });
   });
 
   describe('Upcoming Events', () => {

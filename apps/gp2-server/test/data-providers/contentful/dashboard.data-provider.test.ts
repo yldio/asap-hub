@@ -228,5 +228,29 @@ describe('Dashboard data provider', () => {
         getDashboardDataObject().guides[0]?.description,
       );
     });
+
+    test('if present it parses the description', async () => {
+      const dashboard = {
+        ...getContentfulGraphqlDashboard(),
+        guidesCollection: {
+          items: [
+            {
+              sys: { id: '1' },
+              title: 'Header',
+              descriptionCollection: undefined,
+            },
+          ],
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        dashboardCollection: {
+          total: 1,
+          items: [dashboard],
+        },
+      });
+      const dashboardDataObject = await dashboardDataProvider.fetch({});
+      expect(dashboardDataObject.items[0]?.guides[0]?.description).toEqual([]);
+    });
   });
 });

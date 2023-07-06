@@ -151,7 +151,7 @@ describe('Reminders', () => {
     test('Should not see the reminder if the event has already started', async () => {
       // setting system time to 5PM in UTC, event happening at 4PM in UTC
       jest.setSystemTime(new Date('2022-08-10T17:00:00.0Z'));
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `event-happening-today-${event.id}`,
       );
     });
@@ -163,7 +163,7 @@ describe('Reminders', () => {
       // requesting reminders for the user based in LA where 5AM UTC is 10PM the previous day
       const timezone = 'America/Los_Angeles';
 
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `event-happening-today-${event.id}`,
         app,
         timezone,
@@ -196,9 +196,7 @@ describe('Reminders', () => {
       // setting system time to 11:05AM in UTC
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
-      await expectNotToContainingReminderWithId(
-        `event-happening-now-${event.id}`,
-      );
+      await expectNotToContainReminderWithId(`event-happening-now-${event.id}`);
     });
 
     test('Should not see the reminder when the event is happening but its status is Draft', async () => {
@@ -207,9 +205,7 @@ describe('Reminders', () => {
       jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
       await fixtures.publishEvent(event.id, 'Draft');
       await delay(1000);
-      await expectNotToContainingReminderWithId(
-        `event-happening-now-${event.id}`,
-      );
+      await expectNotToContainReminderWithId(`event-happening-now-${event.id}`);
     });
   });
 
@@ -257,7 +253,7 @@ describe('Reminders', () => {
       jest.setSystemTime(new Date('2022-08-10T11:05:00.0Z'));
 
       await expectReminderWithId(`share-presentation-${eventUserIsSpeaker.id}`);
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `share-presentation-${eventUserIsNotSpeaker.id}`,
       );
     });
@@ -292,7 +288,7 @@ describe('Reminders', () => {
         ],
       });
 
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `share-presentation-${event.id}`,
         appWithPMLoggedUser,
       );
@@ -303,7 +299,7 @@ describe('Reminders', () => {
       // setting system time to 10:59AM in UTC
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `share-presentation-${eventUserIsSpeaker.id}`,
       );
     });
@@ -312,7 +308,7 @@ describe('Reminders', () => {
       // setting system time to 07:00AM in UTC
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T07:00:00.0Z'));
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `share-presentation-${eventUserIsSpeaker.id}`,
       );
     });
@@ -350,7 +346,7 @@ describe('Reminders', () => {
         await createLoggedInUserAndGetApp({
           role: 'Grantee',
         });
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `publish-material-${event.id}`,
         appWithGranteeLoggedUser,
       );
@@ -360,7 +356,7 @@ describe('Reminders', () => {
       // setting system time to 10:59AM in UTC
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `publish-material-${event.id}`,
         appWithStaffLoggedUser,
       );
@@ -370,7 +366,7 @@ describe('Reminders', () => {
       // setting system time to 07:00AM in UTC
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T07:00:00.0Z'));
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `publish-material-${event.id}`,
         appWithStaffLoggedUser,
       );
@@ -445,7 +441,7 @@ describe('Reminders', () => {
         ],
       });
 
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `upload-presentation-${event.id}`,
         appWithPMFromAnotherTeamLoggedInUser,
       );
@@ -456,7 +452,7 @@ describe('Reminders', () => {
       // setting system time to 10:59AM in UTC
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T10:59:00.0Z'));
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `upload-presentation-${event.id}`,
         appWithPMFromSpeakersTeamLoggedInUser,
       );
@@ -466,7 +462,7 @@ describe('Reminders', () => {
       // setting system time to 07:00AM in UTC
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T07:00:00.0Z'));
-      await expectNotToContainingReminderWithId(
+      await expectNotToContainReminderWithId(
         `upload-presentation-${event.id}`,
         appWithPMFromSpeakersTeamLoggedInUser,
       );
@@ -516,7 +512,7 @@ describe('Reminders', () => {
       test(`Should not see the reminder when a ${material} was updated in an event more than 24 hours ago`, async () => {
         // setting system time to 10:05AM in UTC from the next day, material updated at 10AM in UTC
         jest.setSystemTime(new Date('2022-08-11T10:05:00.0Z'));
-        await expectNotToContainingReminderWithId(
+        await expectNotToContainReminderWithId(
           `${material.toLowerCase()}-event-updated-${event.id}`,
         );
       });
@@ -562,7 +558,7 @@ describe('Reminders', () => {
     });
   };
 
-  const expectNotToContainingReminderWithId = async (
+  const expectNotToContainReminderWithId = async (
     id: string,
     expressApp: Express = app,
     timezone: string = 'Europe/London',

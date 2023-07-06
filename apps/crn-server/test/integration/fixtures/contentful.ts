@@ -242,9 +242,15 @@ export class ContentfulFixture implements Fixture {
             await toDelete.unpublish();
           }
           await toDelete.delete();
-        } catch {
-          // eslint-disable-next-line no-console
-          console.log(`Fail to delete entry ${id}`);
+        } catch (err) {
+          if (err instanceof Error && err.name === 'NotFound') {
+            // This 404 (Not Found) is an expected error as we delete some events
+            // while tests are still running (before the teardown)
+            // So when teardown happens, some records were already deleted
+          } else {
+            // eslint-disable-next-line no-console
+            console.log(`Fail to delete entry ${id}: ${err}`);
+          }
         }
       }
     }

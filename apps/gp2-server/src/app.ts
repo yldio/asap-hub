@@ -77,7 +77,6 @@ import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/
 import { ContributingCohortSquidexDataProvider } from './data-providers/contributing-cohort.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import { ExternalUserSquidexDataProvider } from './data-providers/external-user.data-provider';
-import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import { OutputSquidexDataProvider } from './data-providers/output.data-provider';
 import { PageSquidexDataProvider } from './data-providers/page.data-provider';
 import { ProjectSquidexDataProvider } from './data-providers/project.data-provider';
@@ -230,12 +229,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userSquidexDataProvider =
     libs.userSquidexDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
-  const newsSquidexDataProvider =
-    libs.newsSquidexDataProvider ||
-    new NewsSquidexDataProvider(squidexGraphqlClient);
-  const newsContentfulDataProvider =
-    libs.newsContentfulDataProvider ||
-    new NewsContentfulDataProvider(contentfulGraphQLClient);
+
   const dashboardContentfulDataProvider =
     libs.dashboardContentfulDataProvider ||
     new DashboardContentfulDataProvider(contentfulGraphQLClient);
@@ -322,9 +316,8 @@ export const appFactory = (libs: Libs = {}): Express => {
       : pageSquidexDataProvider;
 
   const newsDataProvider =
-    libs.newsDataProvider || isContentfulEnabled
-      ? newsContentfulDataProvider
-      : newsSquidexDataProvider;
+    libs.newsDataProvider ||
+    new NewsContentfulDataProvider(contentfulGraphQLClient);
   const userDataProvider =
     libs.userDataProvider || isContentfulEnabled
       ? userContentfulDataProvider
@@ -507,10 +500,8 @@ export type Libs = {
   externalUserDataProvider?: ExternalUserDataProvider;
   externalUserSquidexDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
-  newsContentfulDataProvider?: NewsDataProvider;
   newsController?: NewsController;
   newsDataProvider?: NewsDataProvider;
-  newsSquidexDataProvider?: NewsDataProvider;
   outputContentfulDataProvider?: OutputDataProvider;
   outputController?: OutputController;
   outputDataProvider?: OutputDataProvider;

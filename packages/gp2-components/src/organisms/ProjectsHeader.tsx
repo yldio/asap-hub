@@ -1,6 +1,6 @@
+import { Link, externalLinkIcon } from '@asap-hub/react-components';
 import { projectsImage } from '../images';
 import PageBanner from './PageBanner';
-import { Link, externalLinkIcon } from '@asap-hub/react-components';
 
 const props = {
   image: projectsImage,

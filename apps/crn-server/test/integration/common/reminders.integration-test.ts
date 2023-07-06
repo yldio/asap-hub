@@ -205,6 +205,7 @@ describe('Reminders', () => {
       // event happening at 10PM in UTC and ending at 11AM UTC
       jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
       await fixtures.publishEvent(event.id, 'Draft');
+      // waiting for the entry to become a draft
       await delay(1000);
       await expectNotToContainReminderWithId(`event-happening-now-${event.id}`);
     });

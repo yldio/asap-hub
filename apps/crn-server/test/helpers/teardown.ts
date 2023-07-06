@@ -23,11 +23,14 @@ export const teardownHelper = (
   }
 
   return async () => {
-    try {
-      for (const record of toDelete) {
+    for (const record of toDelete) {
+      try {
         await record.client.delete(record.id);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(`Fail to delete entry ${record.id}`);
       }
-    } catch {}
+    }
     toDelete = [];
   };
 };

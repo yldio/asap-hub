@@ -242,7 +242,10 @@ export class ContentfulFixture implements Fixture {
             await toDelete.unpublish();
           }
           await toDelete.delete();
-        } catch {}
+        } catch {
+          // eslint-disable-next-line no-console
+          console.log(`Fail to delete entry ${id}`);
+        }
       }
     }
   }

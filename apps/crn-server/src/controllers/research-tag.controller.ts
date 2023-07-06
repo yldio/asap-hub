@@ -10,14 +10,14 @@ import { fetchAll } from '../utils/fetch-all';
 type FetchAllOptions = Omit<FetchResearchTagsOptions, 'take' | 'skip'>;
 
 export default class ResearchTagController {
-  constructor(private researchTagsDataProvider: ResearchTagDataProvider) {}
+  constructor(private researchTagDataProvider: ResearchTagDataProvider) {}
 
   async fetch(
     options: FetchResearchTagsOptions,
   ): Promise<ListResearchTagResponse> {
     const { take = 8, skip = 0, filter } = options;
 
-    return this.researchTagsDataProvider.fetch({
+    return this.researchTagDataProvider.fetch({
       take,
       skip,
       filter,
@@ -27,7 +27,7 @@ export default class ResearchTagController {
   async fetchAll(options: FetchAllOptions): Promise<ListResearchTagResponse> {
     const { filter } = options;
     return fetchAll<ResearchTagDataObject, FetchResearchTagsFilter>(
-      this.researchTagsDataProvider,
+      this.researchTagDataProvider,
       filter,
     );
   }

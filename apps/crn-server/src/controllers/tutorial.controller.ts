@@ -3,14 +3,14 @@ import { TutorialsResponse } from '@asap-hub/model';
 import { TutorialDataProvider } from '../data-providers/types';
 
 export default class TutorialController {
-  tutorialsDataProvider: TutorialDataProvider;
+  tutorialDataProvider: TutorialDataProvider;
 
   constructor(tutorialsDataProvider: TutorialDataProvider) {
-    this.tutorialsDataProvider = tutorialsDataProvider;
+    this.tutorialDataProvider = tutorialsDataProvider;
   }
 
   async fetchById(id: string): Promise<TutorialsResponse> {
-    const tutorial = await this.tutorialsDataProvider.fetchById(id);
+    const tutorial = await this.tutorialDataProvider.fetchById(id);
 
     if (!tutorial) {
       throw new NotFoundError(undefined, `tutorial with id ${id} not found`);

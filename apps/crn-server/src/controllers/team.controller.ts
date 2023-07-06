@@ -14,8 +14,8 @@ type FetchTeamOptions = {
 export default class TeamController {
   teamDataProvider: TeamDataProvider;
 
-  constructor(teamsDataProvider: TeamDataProvider) {
-    this.teamDataProvider = teamsDataProvider;
+  constructor(teamDataProvider: TeamDataProvider) {
+    this.teamDataProvider = teamDataProvider;
   }
 
   async update(id: string, tools: TeamTool[]): Promise<TeamResponse> {

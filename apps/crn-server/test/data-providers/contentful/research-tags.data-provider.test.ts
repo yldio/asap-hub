@@ -1,5 +1,5 @@
 import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
-import { ResearchTagContentfulDataProvider } from '../../../src/data-providers/contentful/research-tags.data-provider';
+import { ResearchTagContentfulDataProvider } from '../../../src/data-providers/contentful/research-tag.data-provider';
 import {
   getFullListResearchTagDataObject,
   getContentfulGraphqlResearchTagResponse,

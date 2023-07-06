@@ -10,7 +10,7 @@ import {
   isContentfulEnabledV2,
 } from '../config';
 import { CalendarSquidexDataProvider } from '../data-providers/calendar.data-provider';
-import { CalendarContentfulDataProvider } from '../data-providers/contentful/calendars.data-provider';
+import { CalendarContentfulDataProvider } from '../data-providers/contentful/calendar.data-provider';
 import { getAuthToken } from '../utils/auth';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 

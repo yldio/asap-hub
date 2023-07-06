@@ -23,7 +23,7 @@ describe('Working Groups Dependencies', () => {
   it('Should resolve Working Group Contentful Data Provider when the Contentful feature flag is on', async () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
     const { WorkingGroupContentfulDataProvider } = await import(
-      '../../src/data-providers/contentful/working-groups.data-provider'
+      '../../src/data-providers/contentful/working-group.data-provider'
     );
     const getWorkingGroupDataProviderModule = await import(
       '../../src/dependencies/working-groups.dependencies'

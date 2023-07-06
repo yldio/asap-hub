@@ -1,5 +1,5 @@
-import { TutorialsDataProvider } from '../../../src/data-providers/types';
-import { TutorialsContentfulDataProvider } from '../../../src/data-providers/contentful/tutorials.data-provider';
+import { TutorialDataProvider } from '../../../src/data-providers/types';
+import { TutorialContentfulDataProvider } from '../../../src/data-providers/contentful/tutorial.data-provider';
 import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 import {
   getTutorialsDataObject,
@@ -9,8 +9,9 @@ import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-c
 
 describe('Tutorials data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
-  const dataProvider: TutorialsDataProvider =
-    new TutorialsContentfulDataProvider(contentfulGraphqlClientMock);
+  const dataProvider: TutorialDataProvider = new TutorialContentfulDataProvider(
+    contentfulGraphqlClientMock,
+  );
 
   describe('Fetch', () => {
     test('not implemented', async () => {
@@ -24,8 +25,8 @@ describe('Tutorials data provider', () => {
         getContentfulGraphqlClientMockServer({
           Tutorials: () => getContentfulGraphqlTutorial(),
         });
-      const dataProviderWithMockServer: TutorialsDataProvider =
-        new TutorialsContentfulDataProvider(contentfulGraphqlClientMockServer);
+      const dataProviderWithMockServer: TutorialDataProvider =
+        new TutorialContentfulDataProvider(contentfulGraphqlClientMockServer);
       const result = await dataProviderWithMockServer.fetchById('123');
 
       const expectation = getTutorialsDataObject();

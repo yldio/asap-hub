@@ -21,7 +21,7 @@ describe('Users Dependencies', () => {
     it('Should resolve User Contentful Data Provider when the Contentful feature flag is on', async () => {
       process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
       const { UserContentfulDataProvider } = await import(
-        '../../src/data-providers/contentful/users.data-provider'
+        '../../src/data-providers/contentful/user.data-provider'
       );
       const getDependenciesModule = await import(
         '../../src/dependencies/users.dependencies'
@@ -50,7 +50,7 @@ describe('Users Dependencies', () => {
     it('Should resolve Asset Contentful Data Provider when the Contentful feature flag is on', async () => {
       process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
       const { AssetContentfulDataProvider } = await import(
-        '../../src/data-providers/contentful/assets.data-provider'
+        '../../src/data-providers/contentful/asset.data-provider'
       );
       const getDependenciesModule = await import(
         '../../src/dependencies/users.dependencies'

@@ -9,7 +9,7 @@ describe('/labs/ route', () => {
     fetch: jest.fn(),
   } as unknown as jest.Mocked<LabController>;
   const app = appFactory({
-    labsController: labsControlerMock,
+    labController: labsControlerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });

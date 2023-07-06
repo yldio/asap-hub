@@ -14,8 +14,8 @@ import {
   contentfulSpaceId,
   isContentfulEnabledV2,
 } from '../config';
-import { UserContentfulDataProvider } from '../data-providers/contentful/users.data-provider';
-import { AssetContentfulDataProvider } from '../data-providers/contentful/assets.data-provider';
+import { UserContentfulDataProvider } from '../data-providers/contentful/user.data-provider';
+import { AssetContentfulDataProvider } from '../data-providers/contentful/asset.data-provider';
 import { UserDataProvider, AssetDataProvider } from '../data-providers/types';
 import { UserSquidexDataProvider } from '../data-providers/user.data-provider';
 import { AssetSquidexDataProvider } from '../data-providers/asset.data-provider';

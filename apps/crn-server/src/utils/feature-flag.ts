@@ -6,7 +6,7 @@ import {
   UserDataProvider,
   InterestGroupDataProvider,
   WorkingGroupDataProvider,
-  TutorialsDataProvider,
+  TutorialDataProvider,
   DiscoverDataProvider,
   ResearchTagDataProvider,
   ReminderDataProvider,
@@ -29,7 +29,7 @@ type DependencyList = {
   calendars: DependencySwitch<CalendarDataProvider>;
   events: DependencySwitch<EventDataProvider>;
   workingGroups: DependencySwitch<WorkingGroupDataProvider>;
-  tutorials: DependencySwitch<TutorialsDataProvider>;
+  tutorials: DependencySwitch<TutorialDataProvider>;
   discover: DependencySwitch<DiscoverDataProvider>;
   researchTags: DependencySwitch<ResearchTagDataProvider>;
   reminders: DependencySwitch<ReminderDataProvider>;

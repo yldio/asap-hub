@@ -23,7 +23,7 @@ describe('External Authors Dependencies', () => {
   it('Should resolve External-Author Contentful Data Provider when the Contentful feature flag is on', async () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
     const { ExternalAuthorContentfulDataProvider } = await import(
-      '../../src/data-providers/contentful/external-authors.data-provider'
+      '../../src/data-providers/contentful/external-author.data-provider'
     );
     const getExternalAuthorDataProviderModule = await import(
       '../../src/dependencies/external-authors.dependencies'

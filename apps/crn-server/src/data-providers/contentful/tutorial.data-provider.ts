@@ -7,11 +7,11 @@ import {
   parseRichText,
   RichTextFromQuery,
 } from '@asap-hub/contentful';
-import { TutorialsDataProvider } from '../types';
+import { TutorialDataProvider } from '../types';
 
 type TutorialItem = NonNullable<FetchTutorialByIdQuery['tutorials']>;
 
-export class TutorialsContentfulDataProvider implements TutorialsDataProvider {
+export class TutorialContentfulDataProvider implements TutorialDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
 
   async fetch(): Promise<ListResponse<TutorialsDataObject>> {

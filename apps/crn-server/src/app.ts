@@ -64,20 +64,20 @@ import UserController from './controllers/user.controller';
 import WorkingGroupController from './controllers/working-group.controller';
 import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
-import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';
-import { AssetContentfulDataProvider } from './data-providers/contentful/assets.data-provider';
+import { CalendarContentfulDataProvider } from './data-providers/contentful/calendar.data-provider';
+import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
-import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-authors.data-provider';
-import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-groups.data-provider';
+import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
+import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-group.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
-import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
-import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
-import { TutorialsContentfulDataProvider } from './data-providers/contentful/tutorials.data-provider';
-import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
-import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-groups.data-provider';
+import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
+import { TeamContentfulDataProvider } from './data-providers/contentful/team.data-provider';
+import { TutorialContentfulDataProvider } from './data-providers/contentful/tutorial.data-provider';
+import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
+import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
 import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
-import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tags.data-provider';
+import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
 import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
 
 import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
@@ -113,7 +113,7 @@ import {
   DiscoverDataProvider,
   GuideDataProvider,
   WorkingGroupDataProvider,
-  TutorialsDataProvider,
+  TutorialDataProvider,
   ResearchTagDataProvider,
   ReminderDataProvider,
 } from './data-providers/types';
@@ -146,7 +146,7 @@ import {
   LabSquidexDataProvider,
 } from './data-providers/lab.data-provider';
 import { DiscoverSquidexDataProvider } from './data-providers/discover.data-provider';
-import { GuideContentfulDataProvider } from './data-providers/contentful/guides.data-provider';
+import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -476,20 +476,20 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   featureFlagDependencySwitch.setDependency(
     'tutorials',
-    libs.tutorialsSquidexDataProvider ||
+    libs.tutorialSquidexDataProvider ||
       new TutorialsSquidexDataProvider(squidexGraphqlClient),
     'IS_CONTENTFUL_ENABLED_V2',
     false,
   );
   featureFlagDependencySwitch.setDependency(
     'tutorials',
-    libs.tutorialsContentfulDataProvider ||
-      new TutorialsContentfulDataProvider(contentfulGraphQLClient),
+    libs.tutorialContentfulDataProvider ||
+      new TutorialContentfulDataProvider(contentfulGraphQLClient),
     'IS_CONTENTFUL_ENABLED_V2',
     true,
   );
   const tutorialsDataProvider =
-    libs.tutorialsDataProvider ||
+    libs.tutorialDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'tutorials',
       'IS_CONTENTFUL_ENABLED_V2',
@@ -581,10 +581,10 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userController =
     libs.userController ||
     new UserController(userDataProvider, assetDataProvider);
-  const labsController =
-    libs.labsController || new LabController(labDataProvider);
+  const labController =
+    libs.labController || new LabController(labDataProvider);
   const workingGroupsController =
-    libs.workingGroupsController ||
+    libs.workingGroupController ||
     new WorkingGroupController(workingGroupDataProvider);
 
   // Handlers
@@ -610,16 +610,16 @@ export const appFactory = (libs: Libs = {}): Express => {
     interestGroupController,
     eventController,
   );
-  const labsRoutes = labRouteFactory(labsController);
+  const labRoutes = labRouteFactory(labController);
   const newsRoutes = newsRouteFactory(newsController);
   const pageRoutes = pageRouteFactory(pageController);
   const reminderRoutes = reminderRouteFactory(reminderController);
-  const researchOutputsRoutes = researchOutputRouteFactory(
+  const researchOutputRoutes = researchOutputRouteFactory(
     researchOutputController,
   );
-  const researchTagsRoutes = researchTagRouteFactory(researchTagController);
+  const researchTagRoutes = researchTagRouteFactory(researchTagController);
   const teamRoutes = teamRouteFactory(interestGroupController, teamController);
-  const tutorialsRoutes = tutorialRouteFactory(tutorialsController);
+  const tutorialRoutes = tutorialRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController, interestGroupController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);
@@ -672,13 +672,13 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(guideRoutes);
   app.use(eventRoutes);
   app.use(interestGroupRoutes);
-  app.use(labsRoutes);
+  app.use(labRoutes);
   app.use(newsRoutes);
   app.use(reminderRoutes);
-  app.use(researchOutputsRoutes);
-  app.use(researchTagsRoutes);
+  app.use(researchOutputRoutes);
+  app.use(researchTagRoutes);
   app.use(teamRoutes);
-  app.use(tutorialsRoutes);
+  app.use(tutorialRoutes);
   app.use(workingGroupRoutes);
 
   app.get('*', async (_req, res) => {
@@ -707,7 +707,7 @@ export type Libs = {
   guideController?: GuideController;
   eventController?: EventController;
   interestGroupController?: InterestGroupController;
-  labsController?: LabController;
+  labController?: LabController;
   newsController?: NewsController;
   pageController?: PageController;
   reminderController?: ReminderController;
@@ -716,7 +716,7 @@ export type Libs = {
   teamController?: TeamController;
   tutorialsController?: TutorialController;
   userController?: UserController;
-  workingGroupsController?: WorkingGroupController;
+  workingGroupController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
   assetSquidexDataProvider?: AssetDataProvider;
   assetContentfulDataProvider?: AssetDataProvider;
@@ -752,9 +752,9 @@ export type Libs = {
   teamSquidexDataProvider?: TeamDataProvider;
   teamContentfulDataProvider?: TeamDataProvider;
   teamDataProvider?: TeamDataProvider;
-  tutorialsDataProvider?: TutorialsDataProvider;
-  tutorialsSquidexDataProvider?: TutorialsDataProvider;
-  tutorialsContentfulDataProvider?: TutorialsDataProvider;
+  tutorialDataProvider?: TutorialDataProvider;
+  tutorialSquidexDataProvider?: TutorialDataProvider;
+  tutorialContentfulDataProvider?: TutorialDataProvider;
   userDataProvider?: UserDataProvider;
   userSquidexDataProvider?: UserDataProvider;
   userContentfulDataProvider?: UserDataProvider;

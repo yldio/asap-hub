@@ -27,8 +27,8 @@ import {
   parseContentfulGraphqlCalendarToResponse,
   parseInterestGroupLeader,
 } from '../transformers';
-import { parseContentfulGraphQlUsers } from './users.data-provider';
-import { parseContentfulGraphQlTeams } from './teams.data-provider';
+import { parseContentfulGraphQlUsers } from './user.data-provider';
+import { parseContentfulGraphQlTeams } from './team.data-provider';
 
 type InterestGroupItem = NonNullable<
   NonNullable<

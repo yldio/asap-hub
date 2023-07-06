@@ -1,11 +1,11 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { TutorialsResponse } from '@asap-hub/model';
-import { TutorialsDataProvider } from '../data-providers/types';
+import { TutorialDataProvider } from '../data-providers/types';
 
 export default class TutorialController {
-  tutorialsDataProvider: TutorialsDataProvider;
+  tutorialsDataProvider: TutorialDataProvider;
 
-  constructor(tutorialsDataProvider: TutorialsDataProvider) {
+  constructor(tutorialsDataProvider: TutorialDataProvider) {
     this.tutorialsDataProvider = tutorialsDataProvider;
   }
 

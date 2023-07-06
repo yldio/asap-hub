@@ -10,7 +10,7 @@ import { workingGroupControllerMock } from '../mocks/working-group.controller.mo
 
 describe('/working-groups/ route', () => {
   const app = appFactory({
-    workingGroupsController: workingGroupControllerMock,
+    workingGroupController: workingGroupControllerMock,
     authHandler: authHandlerMock,
     logger: loggerMock,
   });

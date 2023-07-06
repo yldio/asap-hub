@@ -70,7 +70,6 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   guides,
 }) => {
   const history = useHistory();
-  console.log(guides);
 
   return (
     <>
@@ -115,13 +114,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             Here are some key actions to take within the GP2 Hub.
           </Paragraph>
           <Accordion
-            items={guides.map((guide: gp2.GuideDataObject) => {
-              return {
-                title: guide.title,
-                icon: guide.icon ? <img src={guide.icon} /> : learnIcon,
-                description: <GuideDescription blocks={guide.description} />,
-              };
-            })}
+            items={guides.map((guide: gp2.GuideDataObject) => ({
+              title: guide.title,
+              icon: guide.icon ? <img src={guide.icon} /> : learnIcon,
+              description: <GuideDescription blocks={guide.description} />,
+            }))}
           />
         </Card>
       )}

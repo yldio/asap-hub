@@ -21,19 +21,6 @@ describe('DashboardPageBody', () => {
     );
     expect(screen.getByRole('heading', { name: 'Latest Stats' })).toBeVisible();
   });
-  it('should render tools and tutorials', () => {
-    render(
-      <DashboardPageBody
-        news={{ total: 0, items: [] }}
-        latestStats={mockStats}
-        upcomingEvents={[]}
-        totalOfUpcomingEvents={0}
-      />,
-    );
-    expect(
-      screen.getByRole('heading', { name: 'Tools and Tutorials' }),
-    ).toBeVisible();
-  });
 
   it('should render News and Updates if there is a news item', () => {
     render(
@@ -68,6 +55,36 @@ describe('DashboardPageBody', () => {
         screen.getByRole('heading', { name: 'Announcements' }),
       ).toBeVisible();
       expect(screen.getByText('This is an announcement')).toBeVisible();
+    });
+  });
+
+  describe('Tools and tutorials', () => {
+    it('should render tools and tutorials if there is a guide', () => {
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          latestStats={mockStats}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+          guides={[
+            {
+              id: '123',
+              title: 'Learn Header',
+              description: [
+                {
+                  id: '2',
+                  title: 'Description title',
+                  bodyText: 'Learn how to use gp2.',
+                },
+              ],
+            },
+          ]}
+        />,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Tools and tutorials' }),
+      ).toBeVisible();
+      expect(screen.getByText('Learn Header')).toBeVisible();
     });
   });
 

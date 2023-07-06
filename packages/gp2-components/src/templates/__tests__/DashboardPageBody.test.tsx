@@ -82,7 +82,7 @@ describe('DashboardPageBody', () => {
         />,
       );
       expect(
-        screen.getByRole('heading', { name: 'Tools and tutorials' }),
+        screen.getByRole('heading', { name: 'Tools and Tutorials' }),
       ).toBeVisible();
       expect(screen.getByText('Learn Header')).toBeVisible();
     });

@@ -8,6 +8,9 @@ import { DashboardContentfulDataProvider } from '../../../src/data-providers/con
 import {
   getListDashboardDataObject,
   getContentfulGraphqlDashboard,
+  getContentfulGraphqlGuideDescription,
+  getContentfulGraphqlGuides,
+  getContentfulGraphqlAnnouncements,
   getContentfulDashboardGraphqlResponse,
   getDashboardDataObject,
 } from '../../fixtures/dashboard.fixtures';
@@ -23,6 +26,9 @@ describe('Dashboard data provider', () => {
   const contentfulGraphqlClientMockServer =
     getGP2ContentfulGraphqlClientMockServer({
       Dashboard: () => getContentfulGraphqlDashboard(),
+      Announcement: () => getContentfulGraphqlAnnouncements(),
+      Guides: () => getContentfulGraphqlGuides(),
+      GuideDescriptionCollection: () => getContentfulGraphqlGuideDescription(),
     });
 
   const dashboardDataProviderMockGraphql = new DashboardContentfulDataProvider(

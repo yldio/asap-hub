@@ -1,13 +1,13 @@
 import { Dashboard } from '../dashboard.data-provider';
 
-type Guides = Dashboard['guidesCollection'];
+export type Guides = Dashboard['guidesCollection'];
 
 type GuideItem = NonNullable<NonNullable<Guides>['items'][number]>;
 
-type GuideDescription = GuideItem['descriptionCollection'];
+export type GuideDescriptionBlock = GuideItem['descriptionCollection'];
 
-type GuideDescriptionBlock = NonNullable<
-  NonNullable<GuideDescription>['items'][number]
+type GuideDescription = NonNullable<
+  NonNullable<GuideDescriptionBlock>['items'][number]
 >;
 
 export const parseGuides = (guides: Guides) =>
@@ -20,9 +20,9 @@ export const parseGuides = (guides: Guides) =>
       id,
     })) || [];
 
-export const parseGuideDescription = (description: GuideDescription) =>
+export const parseGuideDescription = (description: GuideDescriptionBlock) =>
   description?.items
-    .filter((block): block is GuideDescriptionBlock => block !== null)
+    .filter((block): block is GuideDescription => block !== null)
     .map(
       ({
         title,
@@ -30,7 +30,7 @@ export const parseGuideDescription = (description: GuideDescription) =>
         linkUrl,
         linkText,
         sys: { id },
-      }: GuideDescriptionBlock) => ({
+      }: GuideDescription) => ({
         title: title ?? undefined,
         bodyText: bodyText ?? '',
         linkText: linkText ?? undefined,

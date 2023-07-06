@@ -5,7 +5,7 @@ import {
   FetchRemindersOptions,
   ListReminderResponse,
 } from '@asap-hub/model';
-import { ReminderDataProvider } from '../data-providers/reminders.data-provider';
+import { ReminderDataProvider } from '../data-providers/types';
 import { crnMeetingMaterialsDrive } from '../config';
 
 export const formattedMaterialByEventType = (

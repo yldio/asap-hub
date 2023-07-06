@@ -19,28 +19,25 @@ type GuideDescriptionProps = {
   blocks: gp2.GuideBlockDataObject[];
 };
 
-const GuideDescription = ({ blocks }: GuideDescriptionProps) => {
-  return (
-    <div css={descriptionBlockStyles}>
-      {blocks.map(
-        ({
-          bodyText,
-          title,
-          linkText,
-          linkUrl,
-          id,
-        }: gp2.GuideBlockDataObject) => (
-          <article key={id}>
-            {title && <Subtitle>{title}</Subtitle>}
-            <Paragraph>{bodyText}</Paragraph>
-            {linkText && linkUrl && (
-              <ExternalLink href={linkUrl} label={linkText} />
-            )}
-          </article>
-        ),
-      )}
-    </div>
-  );
-};
-
+const GuideDescription = ({ blocks }: GuideDescriptionProps) => (
+  <div css={descriptionBlockStyles}>
+    {blocks.map(
+      ({
+        bodyText,
+        title,
+        linkText,
+        linkUrl,
+        id,
+      }: gp2.GuideBlockDataObject) => (
+        <article key={id}>
+          {title && <Subtitle>{title}</Subtitle>}
+          <Paragraph>{bodyText}</Paragraph>
+          {linkText && linkUrl && (
+            <ExternalLink href={linkUrl} label={linkText} />
+          )}
+        </article>
+      ),
+    )}
+  </div>
+);
 export default GuideDescription;

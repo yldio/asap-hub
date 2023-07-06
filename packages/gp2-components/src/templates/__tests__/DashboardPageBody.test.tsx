@@ -59,6 +59,20 @@ describe('DashboardPageBody', () => {
   });
 
   describe('Tools and tutorials', () => {
+    it('should not render tools and tutorials if there is no guide', () => {
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          latestStats={mockStats}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+        />,
+      );
+      expect(
+        screen.queryByRole('heading', { name: 'Tools and Tutorials' }),
+      ).not.toBeInTheDocument();
+    });
+
     it('should render tools and tutorials if there is a guide', () => {
       render(
         <DashboardPageBody

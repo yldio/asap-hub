@@ -9,7 +9,7 @@ const defaultProps: SharedResearchOutputBannersProps = {
   association: 'working group',
   documentType: 'Article',
   published: false,
-  reviewRequestedBy: undefined,
+  statusChangedBy: undefined,
   publishedNow: false,
   draftCreated: false,
   reviewToggled: false,
@@ -64,7 +64,7 @@ it('should render review requested banner', async () => {
     <SharedResearchOutputBanners
       {...defaultProps}
       reviewToggled={true}
-      reviewRequestedBy={{
+      statusChangedBy={{
         id: 'user-id',
         firstName: 'First',
         lastName: 'Last',
@@ -89,7 +89,7 @@ it('should render review dismissed banner', async () => {
     <SharedResearchOutputBanners
       {...defaultProps}
       reviewToggled={true}
-      reviewRequestedBy={undefined}
+      statusChangedBy={undefined}
     />,
   );
 
@@ -109,7 +109,7 @@ it('should render review requested banner with association name', async () => {
   const { getByText } = render(
     <SharedResearchOutputBanners
       {...defaultProps}
-      reviewRequestedBy={{
+      statusChangedBy={{
         id: 'user-id',
         firstName: 'First',
         lastName: 'Last',
@@ -144,7 +144,7 @@ it('should render only PMs can publish output', async () => {
   const { getByText } = render(
     <SharedResearchOutputBanners
       {...defaultProps}
-      reviewRequestedBy={undefined}
+      statusChangedBy={undefined}
     />,
   );
 

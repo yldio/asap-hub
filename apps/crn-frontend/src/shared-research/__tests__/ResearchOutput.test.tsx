@@ -344,7 +344,7 @@ it('switches a draft research output to in review', async () => {
   expect(mockUpdateTeamResearchOutput).toHaveBeenCalledWith(
     researchOutput.id,
     expect.objectContaining({
-      reviewRequestedById: defaultUser.id,
+      statusChangedById: defaultUser.id,
     }),
     expect.anything(),
   );
@@ -357,7 +357,7 @@ it('switches a in review research output back to draft', async () => {
     documentType: 'Article',
     published: false,
     workingGroups: undefined,
-    reviewRequestedBy: { ...defaultUser },
+    statusChangedBy: { ...defaultUser },
   });
 
   const { queryByText, getAllByText } = await renderComponent(
@@ -389,7 +389,7 @@ it('switches a in review research output back to draft', async () => {
   expect(mockUpdateTeamResearchOutput).toHaveBeenCalledWith(
     researchOutput.id,
     expect.objectContaining({
-      reviewRequestedById: undefined,
+      statusChangedById: undefined,
     }),
     expect.anything(),
   );
@@ -402,7 +402,7 @@ it('publishes a research output', async () => {
     documentType: 'Article',
     published: false,
     workingGroups: undefined,
-    reviewRequestedBy: { ...defaultUser },
+    statusChangedBy: { ...defaultUser },
   });
 
   const { queryByText, getByText } = await renderComponent(

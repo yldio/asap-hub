@@ -196,8 +196,7 @@ export default class ResearchOutputController {
       title: normalisedResearchOutputUpdateData.title,
       type: normalisedResearchOutputUpdateData.type,
       updatedBy: normalisedResearchOutputUpdateData.updatedBy,
-      reviewRequestedById:
-        normalisedResearchOutputUpdateData.reviewRequestedById,
+      statusChangedById: normalisedResearchOutputUpdateData.statusChangedById,
       usageNotes: normalisedResearchOutputUpdateData.usageNotes,
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
       workingGroups: normalisedResearchOutputUpdateData.workingGroups,

@@ -209,9 +209,9 @@ export type ResearchOutputCoreObject = {
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   authors: (
     | Pick<
-        UserResponse,
-        'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl' | 'orcid'
-      >
+      UserResponse,
+      'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl' | 'orcid'
+    >
     | ExternalAuthorResponse
   )[];
   usageNotesMD?: string;
@@ -235,7 +235,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
     > & { isOwnRelatedResearchLink?: boolean }
   >;
   relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;
-  reviewRequestedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
+  statusChangedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
 };
 
 export type ResearchOutputDraftDataObject = Omit<
@@ -289,9 +289,9 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   teamIds: string[];
   updatedBy: string;
   workingGroups: string[];
-  relatedResearchIds: string[];
-  relatedEventIds: string[];
-  reviewRequestedById?: string;
+  relatedResearchIds?: string[];
+  relatedEventIds?: string[];
+  statusChangedById?: string;
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -351,7 +351,7 @@ export type ResearchOutputPostRequest = {
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
-  reviewRequestedById?: string;
+  statusChangedById?: string;
 };
 
 type NonEmptyArray<T> = [T, ...T[]];

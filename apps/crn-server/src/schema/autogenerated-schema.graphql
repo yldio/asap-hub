@@ -4634,9 +4634,9 @@ type ResearchOutputsDataDto {
   publishDate: ResearchOutputsDataPublishDateDto
   relatedEvents: ResearchOutputsDataRelatedEventsDto
   relatedResearch: ResearchOutputsDataRelatedResearchDto
-  reviewRequestedBy: ResearchOutputsDataReviewRequestedByDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
+  statusChangedBy: ResearchOutputsDataStatusChangedByDto
   subtype: ResearchOutputsDataSubtypeDto
   tags: ResearchOutputsDataTagsDto
   teams: ResearchOutputsDataTeamsDto
@@ -4681,9 +4681,9 @@ input ResearchOutputsDataInputDto {
   publishDate: ResearchOutputsDataPublishDateInputDto
   relatedEvents: ResearchOutputsDataRelatedEventsInputDto
   relatedResearch: ResearchOutputsDataRelatedResearchInputDto
-  reviewRequestedBy: ResearchOutputsDataReviewRequestedByInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
+  statusChangedBy: ResearchOutputsDataStatusChangedByInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
   tags: ResearchOutputsDataTagsInputDto
   teams: ResearchOutputsDataTeamsInputDto
@@ -4805,16 +4805,6 @@ input ResearchOutputsDataRelatedResearchInputDto {
   iv: [String!]
 }
 
-"""The structure of the Review requested by field of the Research Outputs content type."""
-type ResearchOutputsDataReviewRequestedByDto {
-  iv: [Users!]
-}
-
-"""The structure of the Review requested by field of the Research Outputs content input type."""
-input ResearchOutputsDataReviewRequestedByInputDto {
-  iv: [String!]
-}
-
 """The structure of the Identifier (RRID) field of the Research Outputs content type."""
 type ResearchOutputsDataRridDto {
   """
@@ -4839,6 +4829,16 @@ type ResearchOutputsDataSharingStatusDto {
 """The structure of the Sharing Status field of the Research Outputs content input type."""
 input ResearchOutputsDataSharingStatusInputDto {
   iv: String
+}
+
+"""The structure of the Status Changed By field of the Research Outputs content type."""
+type ResearchOutputsDataStatusChangedByDto {
+  iv: [Users!]
+}
+
+"""The structure of the Status Changed By field of the Research Outputs content input type."""
+input ResearchOutputsDataStatusChangedByInputDto {
+  iv: [String!]
 }
 
 """The structure of the Subtype field of the Research Outputs content type."""
@@ -4969,12 +4969,12 @@ type ResearchOutputsFlatDataDto {
   publishDate: Instant
   relatedEvents: [Events!]
   relatedResearch: [ResearchOutputs!]
-  reviewRequestedBy: [Users!]
   """
   This must start with "RRID:"
   """
   rrid: String
   sharingStatus: String
+  statusChangedBy: [Users!]
   subtype: [ResearchTags!]
   tags: [String!]
   teams: [Teams!]

@@ -8,7 +8,7 @@ export interface SharedResearchOutputBannersProps {
   association: string;
   documentType: string;
   published: boolean;
-  reviewRequestedBy: ResearchOutputResponse['reviewRequestedBy'];
+  statusChangedBy: ResearchOutputResponse['statusChangedBy'];
   publishedNow: boolean;
   draftCreated?: boolean;
   reviewToggled: boolean;
@@ -28,7 +28,7 @@ const SharedResearchOutputBanners: React.FC<
   documentType,
   published,
   publishedNow,
-  reviewRequestedBy,
+  statusChangedBy,
   draftCreated,
   reviewToggled,
   associationName,
@@ -36,15 +36,15 @@ const SharedResearchOutputBanners: React.FC<
   const [publishedNowBanner, setPublishedNowBanner] = useState(publishedNow);
   const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
   const [reviewBannerState, setReviewBannerState] = useState(
-    reviewToggled ? (reviewRequestedBy ? 'requested' : 'dismissed') : null,
+    reviewToggled ? (statusChangedBy ? 'requested' : 'dismissed') : null,
   );
 
   useEffect(() => {
     setReviewBannerState(
-      reviewToggled ? (reviewRequestedBy ? 'requested' : 'dismissed') : null,
+      reviewToggled ? (statusChangedBy ? 'requested' : 'dismissed') : null,
     );
     setPublishedNowBanner(publishedNow);
-  }, [reviewToggled, reviewRequestedBy, publishedNow]);
+  }, [reviewToggled, statusChangedBy, publishedNow]);
 
   return (
     <div css={toastContainer}>
@@ -68,9 +68,9 @@ const SharedResearchOutputBanners: React.FC<
           {`In review ${association} ${documentType} switched to draft successfully.`}
         </Toast>
       )}
-      {!published && reviewRequestedBy && (
+      {!published && statusChangedBy && (
         <Toast accent="info">
-          {`${reviewRequestedBy.firstName} ${reviewRequestedBy.lastName} on ${associationName} requested PMs to review this output. This draft is only available to members in the ${association} listed below.`}
+          {`${statusChangedBy.firstName} ${statusChangedBy.lastName} on ${associationName} requested PMs to review this output. This draft is only available to members in the ${association} listed below.`}
         </Toast>
       )}
       {publishedNowBanner && (
@@ -83,7 +83,7 @@ const SharedResearchOutputBanners: React.FC<
           } ${documentType} published successfully.`}
         </Toast>
       )}
-      {!published && !reviewRequestedBy && (
+      {!published && !statusChangedBy && (
         <Toast accent="warning">{`This draft is available to members in the ${association}
                 listed below. Only PMs can publish this output.`}</Toast>
       )}

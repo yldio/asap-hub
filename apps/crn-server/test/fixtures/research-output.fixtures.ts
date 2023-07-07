@@ -109,7 +109,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     asapFunded: 'Yes',
     usedInAPublication: 'No',
     type: '3D Printing',
-    reviewRequestedBy: [],
+    statusChangedBy: [],
     relatedResearch: [
       {
         id: 'related-research-id-0',

@@ -10,7 +10,7 @@ const props: ComponentProps<typeof SharedResearchOutputButtons> = {
   setDisplayReviewModal: jest.fn(),
   displayPublishModal: false,
   setDisplayPublishModal: jest.fn(),
-  reviewRequestedBy: undefined,
+  statusChangedBy: undefined,
   duplicateLink: 'duplicateLink',
   published: false,
 };
@@ -67,7 +67,7 @@ it('does not display the edit button if someone requested a review and you are a
     >
       <SharedResearchOutputButtons
         {...props}
-        reviewRequestedBy={{ id: 'u1', firstName: 'John', lastName: 'Doe' }}
+        statusChangedBy={{ id: 'u1', firstName: 'John', lastName: 'Doe' }}
       />
       ,
     </ResearchOutputPermissionsContext.Provider>,
@@ -86,7 +86,7 @@ it('does display the edit button if someone requested a review and you are a pm 
     >
       <SharedResearchOutputButtons
         {...props}
-        reviewRequestedBy={{ id: 'u1', firstName: 'John', lastName: 'Doe' }}
+        statusChangedBy={{ id: 'u1', firstName: 'John', lastName: 'Doe' }}
       />
       ,
     </ResearchOutputPermissionsContext.Provider>,
@@ -152,7 +152,7 @@ describe('ready for review button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={false}
-          reviewRequestedBy={undefined}
+          statusChangedBy={undefined}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -172,7 +172,7 @@ describe('ready for review button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={true}
-          reviewRequestedBy={undefined}
+          statusChangedBy={undefined}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -192,7 +192,7 @@ describe('ready for review button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={false}
-          reviewRequestedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
+          statusChangedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -214,7 +214,7 @@ describe('ready for review button', () => {
           {...props}
           published={false}
           setDisplayReviewModal={mockDisplayReviewModal}
-          reviewRequestedBy={undefined}
+          statusChangedBy={undefined}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -241,7 +241,7 @@ describe('the switch to draft button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={false}
-          reviewRequestedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
+          statusChangedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -261,7 +261,7 @@ describe('the switch to draft button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={true}
-          reviewRequestedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
+          statusChangedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -281,7 +281,7 @@ describe('the switch to draft button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={false}
-          reviewRequestedBy={undefined}
+          statusChangedBy={undefined}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -303,7 +303,7 @@ describe('the switch to draft button', () => {
           {...props}
           published={false}
           setDisplayReviewModal={mockDisplayReviewModal}
-          reviewRequestedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
+          statusChangedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,

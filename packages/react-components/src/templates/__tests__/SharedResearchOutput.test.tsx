@@ -591,7 +591,7 @@ describe('the ready for pm review button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
+          statusChangedBy={{
             id: 'user-1',
             firstName: 'User',
             lastName: 'One',
@@ -796,7 +796,7 @@ describe('the switch to draft button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
+          statusChangedBy={{
             id: 'user-1',
             firstName: 'User',
             lastName: 'One',
@@ -821,7 +821,7 @@ describe('the switch to draft button', () => {
           {...props}
           documentType="Article"
           published={true}
-          reviewRequestedBy={{
+          statusChangedBy={{
             id: 'user-1',
             firstName: 'User',
             lastName: 'One',
@@ -846,7 +846,7 @@ describe('the switch to draft button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={undefined}
+          statusChangedBy={undefined}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -867,7 +867,7 @@ describe('the switch to draft button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
+          statusChangedBy={{
             id: 'user-1',
             firstName: 'User',
             lastName: 'One',
@@ -897,7 +897,7 @@ describe('the switch to draft button', () => {
               documentType="Article"
               published={false}
               workingGroups={undefined}
-              reviewRequestedBy={{
+              statusChangedBy={{
                 id: 'user-1',
                 firstName: 'User',
                 lastName: 'One',
@@ -940,7 +940,7 @@ describe('the switch to draft button', () => {
                   title: 'wg 1',
                 },
               ]}
-              reviewRequestedBy={{
+              statusChangedBy={{
                 id: 'user-1',
                 firstName: 'User',
                 lastName: 'One',
@@ -975,7 +975,7 @@ describe('the switch to draft button', () => {
                 {...props}
                 documentType="Article"
                 published={false}
-                reviewRequestedBy={{
+                statusChangedBy={{
                   id: 'user-1',
                   firstName: 'User',
                   lastName: 'One',
@@ -1010,7 +1010,7 @@ describe('the switch to draft button', () => {
                 documentType="Article"
                 published={false}
                 onRequestReview={switchToDraft}
-                reviewRequestedBy={{
+                statusChangedBy={{
                   id: 'user-1',
                   firstName: 'User',
                   lastName: 'One',
@@ -1047,7 +1047,7 @@ describe('the publish button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
+          statusChangedBy={{
             id: 'user-1',
             firstName: 'User',
             lastName: 'One',
@@ -1069,7 +1069,7 @@ describe('the publish button', () => {
           {...props}
           documentType="Article"
           published={true}
-          reviewRequestedBy={{
+          statusChangedBy={{
             id: 'user-1',
             firstName: 'User',
             lastName: 'One',
@@ -1091,7 +1091,7 @@ describe('the publish button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
+          statusChangedBy={{
             id: 'user-1',
             firstName: 'User',
             lastName: 'One',
@@ -1118,7 +1118,7 @@ describe('the publish button', () => {
               documentType="Article"
               published={false}
               workingGroups={undefined}
-              reviewRequestedBy={{
+              statusChangedBy={{
                 id: 'user-1',
                 firstName: 'User',
                 lastName: 'One',
@@ -1160,7 +1160,7 @@ describe('the publish button', () => {
                   title: 'wg 1',
                 },
               ]}
-              reviewRequestedBy={{
+              statusChangedBy={{
                 id: 'user-1',
                 firstName: 'User',
                 lastName: 'One',
@@ -1191,7 +1191,7 @@ describe('the publish button', () => {
                 {...props}
                 documentType="Article"
                 published={false}
-                reviewRequestedBy={{
+                statusChangedBy={{
                   id: 'user-1',
                   firstName: 'User',
                   lastName: 'One',
@@ -1225,7 +1225,7 @@ describe('the publish button', () => {
                 documentType="Article"
                 published={false}
                 onPublish={publishOutput}
-                reviewRequestedBy={{
+                statusChangedBy={{
                   id: 'user-1',
                   firstName: 'User',
                   lastName: 'One',

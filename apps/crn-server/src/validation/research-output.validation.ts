@@ -278,7 +278,7 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
         nullable: true,
       },
       teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
-      reviewRequestedById: { type: 'string', nullable: true },
+      statusChangedById: { type: 'string', nullable: true },
       workingGroups: { type: 'array', items: { type: 'string' }, minItems: 0 },
       usageNotes: { type: 'string', nullable: true },
       doi: {

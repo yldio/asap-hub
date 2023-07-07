@@ -47,8 +47,8 @@ type SharedResearchOutputProps = Pick<
   | 'id'
   | 'relatedResearch'
   | 'published'
-  | 'reviewRequestedBy'
   | 'relatedEvents'
+  | 'statusChangedBy'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -73,8 +73,8 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   published,
   publishedNow,
   draftCreated,
-  reviewRequestedBy,
   relatedEvents,
+  statusChangedBy,
   onRequestReview,
   onPublish,
   ...props
@@ -137,7 +137,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         draftCreated={draftCreated}
         association={association}
         documentType={props.documentType}
-        reviewRequestedBy={reviewRequestedBy}
+        statusChangedBy={statusChangedBy}
         publishedNow={publishedNow}
         reviewToggled={reviewToggled}
         associationName={associationName}
@@ -148,7 +148,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             id={id}
             displayReviewModal={displayReviewModal}
             setDisplayReviewModal={setDisplayReviewModal}
-            reviewRequestedBy={reviewRequestedBy}
+            statusChangedBy={statusChangedBy}
             duplicateLink={duplicateLink}
             published={published}
             displayPublishModal={displayPublishModal}
@@ -158,22 +158,22 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         {displayReviewModal && (
           <ConfirmModal
             title={`${
-              reviewRequestedBy
+              statusChangedBy
                 ? 'Switch output to draft?'
                 : 'Output ready for PM review?'
             }`}
             description={`All ${
               association === 'working group' ? 'working group' : 'team'
             } members listed on this output will be notified and ${
-              reviewRequestedBy
+              statusChangedBy
                 ? 'will be able to edit this output again.'
                 : 'PMs will be able to review and publish this output.'
             }`}
             cancelText="Cancel"
             confirmText={`${
-              reviewRequestedBy ? 'Switch to Draft' : 'Ready for PM Review'
+              statusChangedBy ? 'Switch to Draft' : 'Ready for PM Review'
             }`}
-            onSave={() => toggleReview(!reviewRequestedBy)}
+            onSave={() => toggleReview(!statusChangedBy)}
             onCancel={() => {
               setDisplayReviewModal(false);
             }}
@@ -209,7 +209,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           <SharedResearchOutputHeaderCard
             {...props}
             published={published}
-            reviewRequestedBy={reviewRequestedBy}
+            statusChangedBy={statusChangedBy}
           />
           {((hasDescription && !isGrantDocument) || !!tags.length) && (
             <Card>

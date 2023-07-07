@@ -4434,9 +4434,9 @@ export type ResearchOutputsDataDto = {
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
   relatedEvents: Maybe<ResearchOutputsDataRelatedEventsDto>;
   relatedResearch: Maybe<ResearchOutputsDataRelatedResearchDto>;
-  reviewRequestedBy: Maybe<ResearchOutputsDataReviewRequestedByDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
+  statusChangedBy: Maybe<ResearchOutputsDataStatusChangedByDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
   teams: Maybe<ResearchOutputsDataTeamsDto>;
@@ -4481,9 +4481,9 @@ export type ResearchOutputsDataInputDto = {
   publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
   relatedEvents: InputMaybe<ResearchOutputsDataRelatedEventsInputDto>;
   relatedResearch: InputMaybe<ResearchOutputsDataRelatedResearchInputDto>;
-  reviewRequestedBy: InputMaybe<ResearchOutputsDataReviewRequestedByInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
+  statusChangedBy: InputMaybe<ResearchOutputsDataStatusChangedByInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
   tags: InputMaybe<ResearchOutputsDataTagsInputDto>;
   teams: InputMaybe<ResearchOutputsDataTeamsInputDto>;
@@ -4601,16 +4601,6 @@ export type ResearchOutputsDataRelatedResearchInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Review requested by field of the Research Outputs content type. */
-export type ResearchOutputsDataReviewRequestedByDto = {
-  iv: Maybe<Array<Users>>;
-};
-
-/** The structure of the Review requested by field of the Research Outputs content input type. */
-export type ResearchOutputsDataReviewRequestedByInputDto = {
-  iv: InputMaybe<Array<Scalars['String']>>;
-};
-
 /** The structure of the Identifier (RRID) field of the Research Outputs content type. */
 export type ResearchOutputsDataRridDto = {
   /** This must start with "RRID:" */
@@ -4631,6 +4621,16 @@ export type ResearchOutputsDataSharingStatusDto = {
 /** The structure of the Sharing Status field of the Research Outputs content input type. */
 export type ResearchOutputsDataSharingStatusInputDto = {
   iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Status Changed By field of the Research Outputs content type. */
+export type ResearchOutputsDataStatusChangedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Status Changed By field of the Research Outputs content input type. */
+export type ResearchOutputsDataStatusChangedByInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Subtype field of the Research Outputs content type. */
@@ -4759,10 +4759,10 @@ export type ResearchOutputsFlatDataDto = {
   publishDate: Maybe<Scalars['Instant']>;
   relatedEvents: Maybe<Array<Events>>;
   relatedResearch: Maybe<Array<ResearchOutputs>>;
-  reviewRequestedBy: Maybe<Array<Users>>;
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
+  statusChangedBy: Maybe<Array<Users>>;
   subtype: Maybe<Array<ResearchTags>>;
   tags: Maybe<Array<Scalars['String']>>;
   teams: Maybe<Array<Teams>>;
@@ -8524,7 +8524,7 @@ export type FetchReminderDataQuery = {
               }
             >
           >;
-          reviewRequestedBy: Maybe<
+          statusChangedBy: Maybe<
             Array<
               Pick<Users, 'id'> & {
                 flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
@@ -8784,7 +8784,7 @@ export type ResearchOutputContentFragment = Pick<
     >;
     subtype: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
     keywords: Maybe<Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>>;
-    reviewRequestedBy: Maybe<
+    statusChangedBy: Maybe<
       Array<
         Pick<Users, 'id'> & {
           flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
@@ -9017,7 +9017,7 @@ export type FetchResearchOutputQuery = {
         keywords: Maybe<
           Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
         >;
-        reviewRequestedBy: Maybe<
+        statusChangedBy: Maybe<
           Array<
             Pick<Users, 'id'> & {
               flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
@@ -9265,7 +9265,7 @@ export type FetchResearchOutputsQuery = {
               keywords: Maybe<
                 Array<{ flatData: Pick<ResearchTagsFlatDataDto, 'name'> }>
               >;
-              reviewRequestedBy: Maybe<
+              statusChangedBy: Maybe<
                 Array<
                   Pick<Users, 'id'> & {
                     flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
@@ -12665,7 +12665,7 @@ export const ResearchOutputContentFragmentDoc = {
                 },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'reviewRequestedBy' },
+                  name: { kind: 'Name', value: 'statusChangedBy' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
@@ -14867,7 +14867,7 @@ export const FetchReminderDataDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'reviewRequestedBy' },
+                        name: { kind: 'Name', value: 'statusChangedBy' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [

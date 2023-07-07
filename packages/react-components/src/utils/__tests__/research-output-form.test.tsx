@@ -178,7 +178,7 @@ describe('transformResearchOutputResponseToRequest', () => {
       publishDate: new Date('2020-01-01').toISOString(),
       labCatalogNumber: '123',
       labs: [{ id: 'l99', name: 'l99' }],
-      reviewRequestedBy: { id: 'u99', firstName: 'u99', lastName: 'uu99' },
+      statusChangedBy: { id: 'u99', firstName: 'u99', lastName: 'uu99' },
       relatedResearch: [
         {
           id: 'r99',
@@ -235,8 +235,8 @@ describe('transformResearchOutputResponseToRequest', () => {
       relatedEvents: researchOutputResponse.relatedEvents.map(
         (event) => event.id,
       ),
-      reviewRequestedById: researchOutputResponse.reviewRequestedBy
-        ? researchOutputResponse.reviewRequestedBy.id
+      statusChangedById: researchOutputResponse.statusChangedBy
+        ? researchOutputResponse.statusChangedBy.id
         : undefined,
     });
   });

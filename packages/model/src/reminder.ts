@@ -80,7 +80,7 @@ export interface ResearchOutputInReviewReminder extends ResearchOutputReminder {
     createdDate: ResearchOutputDraftDataObject['created'];
     associationType: 'team' | 'working group';
     associationName: string;
-    reviewRequestedBy: string;
+    statusChangedBy: string;
   };
 }
 

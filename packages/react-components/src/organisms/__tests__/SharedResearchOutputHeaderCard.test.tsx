@@ -91,7 +91,7 @@ it('shows in review state tag', () => {
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
       published={false}
-      reviewRequestedBy={{ id: 'user', firstName: 'John', lastName: 'Doe' }}
+      statusChangedBy={{ id: 'user', firstName: 'John', lastName: 'Doe' }}
     />,
   );
   expect(getByText(/In Review/i)).toBeVisible();

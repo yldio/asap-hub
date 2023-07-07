@@ -56,7 +56,7 @@ type SharedResearchOutputButtonsProps = {
   id: string;
   displayReviewModal: boolean;
   setDisplayReviewModal: (state: boolean) => void;
-  reviewRequestedBy: ResearchOutputResponse['reviewRequestedBy'];
+  statusChangedBy: ResearchOutputResponse['statusChangedBy'];
   duplicateLink: string | undefined;
   published: boolean;
   displayPublishModal: boolean;
@@ -69,7 +69,7 @@ const SharedResearchOutputButtons: React.FC<
   id,
   displayReviewModal,
   setDisplayReviewModal,
-  reviewRequestedBy,
+  statusChangedBy,
   duplicateLink,
   published,
   displayPublishModal,
@@ -85,8 +85,7 @@ const SharedResearchOutputButtons: React.FC<
   return (
     <div css={buttonsContainer}>
       {canEditResearchOutput &&
-        (!reviewRequestedBy ||
-          (reviewRequestedBy && canPublishResearchOutput)) && (
+        (!statusChangedBy || (statusChangedBy && canPublishResearchOutput)) && (
           <div css={leftButtons}>
             <Link
               noMargin
@@ -110,7 +109,7 @@ const SharedResearchOutputButtons: React.FC<
           </Link>
         </div>
       )}
-      {!published && canRequestReview && !reviewRequestedBy && (
+      {!published && canRequestReview && !statusChangedBy && (
         <div css={reviewButton}>
           <Button
             noMargin
@@ -122,7 +121,7 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
-      {!published && reviewRequestedBy && canPublishResearchOutput && (
+      {!published && statusChangedBy && canPublishResearchOutput && (
         <div css={reviewButton}>
           <Button
             noMargin
@@ -134,7 +133,7 @@ const SharedResearchOutputButtons: React.FC<
         </div>
       )}
       {!published && canPublishResearchOutput && (
-        <div css={reviewRequestedBy ? leftButtons : reviewButton}>
+        <div css={statusChangedBy ? leftButtons : reviewButton}>
           <Button
             noMargin
             primary

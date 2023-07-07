@@ -17,6 +17,7 @@ const ProjectsHeader: React.FC = () => (
       label="Request New Project"
       primary
       buttonStyle
+      small
     >
       Request New Project
       <span>{externalLinkIcon}</span>

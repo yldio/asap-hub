@@ -62,6 +62,7 @@ jobs:
           - event-additional-materials
           - event-speakers-title
           - field-as-updated-at
+          - project-membership
           - user-positions
           - user-team-memberships
           - clear-on-change

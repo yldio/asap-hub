@@ -17,10 +17,10 @@ import {
   appName,
   baseUrl,
 } from '../../config';
-import ResearchOutputController from '../../controllers/research-outputs.controller';
-import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-authors.data-provider';
-import { ResearchOutputSquidexDataProvider } from '../../data-providers/research-outputs.data-provider';
-import { ResearchTagSquidexDataProvider } from '../../data-providers/research-tags.data-provider';
+import ResearchOutputController from '../../controllers/research-output.controller';
+import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-author.data-provider';
+import { ResearchOutputSquidexDataProvider } from '../../data-providers/research-output.data-provider';
+import { ResearchTagSquidexDataProvider } from '../../data-providers/research-tag.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';

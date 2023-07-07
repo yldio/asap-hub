@@ -12,11 +12,11 @@ import {
   contentfulSpaceId,
   isContentfulEnabledV2,
 } from '../config';
-import { ExternalAuthorContentfulDataProvider } from '../data-providers/contentful/external-authors.data-provider';
+import { ExternalAuthorContentfulDataProvider } from '../data-providers/contentful/external-author.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
-} from '../data-providers/external-authors.data-provider';
+} from '../data-providers/external-author.data-provider';
 import { getAuthToken } from '../utils/auth';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 

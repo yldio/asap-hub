@@ -7,7 +7,7 @@ import { getListEventResponse } from '../../fixtures/events.fixtures';
 import { getUserEvent } from '../../fixtures/users.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { eventControllerMock } from '../../mocks/event-controller.mock';
+import { eventControllerMock } from '../../mocks/event.controller.mock';
 
 const mapPayload = toPayload('event');
 

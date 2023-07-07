@@ -9,7 +9,7 @@ import {
   getWorkingGroupResponse,
 } from '../fixtures/working-group.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
-import { workingGroupControllerMock } from '../mocks/working-group-controller.mock';
+import { workingGroupControllerMock } from '../mocks/working-group.controller.mock';
 
 describe('/working-groups/ route', () => {
   afterEach(jest.resetAllMocks);

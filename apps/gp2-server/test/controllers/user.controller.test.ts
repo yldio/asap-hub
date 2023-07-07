@@ -2,8 +2,8 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import Users from '../../src/controllers/user.controller';
 import { getUserDataObject, getUserResponse } from '../fixtures/user.fixtures';
-import { assetDataProviderMock } from '../mocks/asset-data-provider.mock';
-import { userDataProviderMock } from '../mocks/user-data-provider.mock';
+import { assetDataProviderMock } from '../mocks/asset.data-provider.mock';
+import { userDataProviderMock } from '../mocks/user.data-provider.mock';
 
 describe('Users controller', () => {
   const userController = new Users(userDataProviderMock, assetDataProviderMock);

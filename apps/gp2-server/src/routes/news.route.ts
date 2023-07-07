@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { Router } from 'express';
-import { NewsController } from '../controllers/news.controller';
+import NewsController from '../controllers/news.controller';
 
 export const newsRouteFactory = (newsController: NewsController): Router => {
   const newsRoutes = Router();

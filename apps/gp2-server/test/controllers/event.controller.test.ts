@@ -7,7 +7,7 @@ import {
   getListEventResponse,
 } from '../fixtures/event.fixtures';
 import { identity } from '../helpers/squidex';
-import { eventDataProviderMock } from '../mocks/event-data-provider.mock';
+import { eventDataProviderMock } from '../mocks/event.data-provider.mock';
 
 describe('Event controller', () => {
   const eventController = new Events(eventDataProviderMock);

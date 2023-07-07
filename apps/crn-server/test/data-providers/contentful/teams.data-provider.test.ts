@@ -18,7 +18,7 @@ import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client
 import {
   TeamContentfulDataProvider,
   teamUnreadyResponse,
-} from '../../../src/data-providers/contentful/teams.data-provider';
+} from '../../../src/data-providers/contentful/team.data-provider';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 
 describe('Teams data provider', () => {

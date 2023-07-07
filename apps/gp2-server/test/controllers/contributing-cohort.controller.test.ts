@@ -3,7 +3,7 @@ import {
   getListContributingCohortDataObject,
   getListContributingCohortResponse,
 } from '../fixtures/contributing-cohort.fixtures';
-import { contributingCohortDataProviderMock } from '../mocks/contributing-cohort-data-provider.mock';
+import { contributingCohortDataProviderMock } from '../mocks/contributing-cohort.data-provider.mock';
 
 describe('ContributingCohort', () => {
   const cohortController = new ContributingCohort(

@@ -1,6 +1,6 @@
 import Got from 'got';
 import get from 'lodash.get';
-import { CMSOrcidWork } from '../data-providers/users.data-provider';
+import { CMSOrcidWork } from '../data-providers/user.data-provider';
 
 interface ORCIDExternalId {
   'external-id-type': string;

@@ -1,6 +1,6 @@
 import { syncOrcidUserHandler } from '../../../src/handlers/user/sync-orcid-handler';
 import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
-import { userControllerMock } from '../../mocks/user-controller.mock';
+import { userControllerMock } from '../../mocks/user.controller.mock';
 
 describe('POST /webhook/users/orcid', () => {
   const syncHandler = syncOrcidUserHandler(userControllerMock);

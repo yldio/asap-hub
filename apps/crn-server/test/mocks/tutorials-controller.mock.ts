@@ -1,5 +1,0 @@
-import TutorialController from '../../src/controllers/tutorials.controller';
-
-export const tutorialsControllerMock = {
-  fetchById: jest.fn(),
-} as unknown as jest.Mocked<TutorialController>;

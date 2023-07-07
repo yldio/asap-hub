@@ -10,7 +10,7 @@ import {
 } from '../fixtures/project.fixtures';
 import { getUserResponse } from '../fixtures/user.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
-import { projectControllerMock } from '../mocks/project-controller.mock';
+import { projectControllerMock } from '../mocks/project.controller.mock';
 
 describe('/projects/ route', () => {
   afterEach(jest.resetAllMocks);

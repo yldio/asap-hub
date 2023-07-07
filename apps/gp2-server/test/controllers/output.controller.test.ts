@@ -10,8 +10,8 @@ import {
   getOutputUpdateData,
   getOutputUpdateDataObject,
 } from '../fixtures/output.fixtures';
-import { externalUserDataProviderMock } from '../mocks/external-user-data-provider.mock';
-import { outputDataProviderMock } from '../mocks/output-data-provider.mock';
+import { externalUserDataProviderMock } from '../mocks/external-user.data-provider.mock';
+import { outputDataProviderMock } from '../mocks/output.data-provider.mock';
 
 describe('outputs controller', () => {
   const outputs = new Outputs(

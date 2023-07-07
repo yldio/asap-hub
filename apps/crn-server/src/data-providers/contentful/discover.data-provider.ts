@@ -7,10 +7,10 @@ import {
   RichTextFromQuery,
 } from '@asap-hub/contentful';
 import { DiscoverDataProvider } from '../types';
-import { parseContentfulGraphQlUsers } from './users.data-provider';
-import { parseUserToResponse } from '../users.data-provider';
-import { parseContentfulGraphQlPages } from './pages.data-provider';
-import { parseContentfulGraphQlTutorials } from './tutorials.data-provider';
+import { parseContentfulGraphQlUsers } from './user.data-provider';
+import { parseUserToResponse } from '../user.data-provider';
+import { parseContentfulGraphQlPages } from './page.data-provider';
+import { parseContentfulGraphQlTutorials } from './tutorial.data-provider';
 import reducer from '../../utils/reducer';
 
 type DiscoverItem = NonNullable<

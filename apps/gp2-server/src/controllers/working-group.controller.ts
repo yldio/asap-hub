@@ -3,20 +3,7 @@ import { gp2 } from '@asap-hub/model';
 import { WorkingGroupDataProvider } from '../data-providers/types/working-group.data-provider.type';
 import { removeNotAllowedResources } from '../utils/resources';
 
-export interface WorkingGroupController {
-  fetchById(
-    id: string,
-    loggedInUserId: string,
-  ): Promise<gp2.WorkingGroupResponse>;
-  fetch(loggedInUserId: string): Promise<gp2.ListWorkingGroupResponse>;
-  update(
-    id: string,
-    update: gp2.WorkingGroupUpdateRequest,
-    loggedInUserId: string,
-  ): Promise<gp2.WorkingGroupResponse>;
-}
-
-export default class WorkingGroups implements WorkingGroupController {
+export default class WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}
 
   async fetch(loggedInUserId: string): Promise<gp2.ListWorkingGroupResponse> {

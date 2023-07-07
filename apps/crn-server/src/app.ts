@@ -46,39 +46,38 @@ import {
   contentfulSpaceId,
   isContentfulEnabled,
 } from './config';
-
-import Guide, { GuideController } from './controllers/guides.controller';
-import CalendarController from './controllers/calendars.controller';
+import GuideController from './controllers/guide.controller';
+import CalendarController from './controllers/calendar.controller';
 import DashboardController from './controllers/dashboard.controller';
 import DiscoverController from './controllers/discover.controller';
-import EventController from './controllers/events.controller';
-import InterestGroupController from './controllers/interest-groups.controller';
-import LabController from './controllers/labs.controller';
+import EventController from './controllers/event.controller';
+import InterestGroupController from './controllers/interest-group.controller';
+import LabController from './controllers/lab.controller';
 import NewsController from './controllers/news.controller';
-import PageController from './controllers/pages.controller';
-import ReminderController from './controllers/reminders.controller';
-import ResearchOutputController from './controllers/research-outputs.controller';
-import ResearchTagController from './controllers/research-tags.controller';
-import TeamController from './controllers/teams.controller';
-import TutorialController from './controllers/tutorials.controller';
-import UserController from './controllers/users.controller';
-import WorkingGroupController from './controllers/working-groups.controller';
-import { AssetSquidexDataProvider } from './data-providers/assets.data-provider';
-import { CalendarSquidexDataProvider } from './data-providers/calendars.data-provider';
-import { CalendarContentfulDataProvider } from './data-providers/contentful/calendars.data-provider';
-import { AssetContentfulDataProvider } from './data-providers/contentful/assets.data-provider';
+import PageController from './controllers/page.controller';
+import ReminderController from './controllers/reminder.controller';
+import ResearchOutputController from './controllers/research-output.controller';
+import ResearchTagController from './controllers/research-tag.controller';
+import TeamController from './controllers/team.controller';
+import TutorialController from './controllers/tutorial.controller';
+import UserController from './controllers/user.controller';
+import WorkingGroupController from './controllers/working-group.controller';
+import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
+import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
+import { CalendarContentfulDataProvider } from './data-providers/contentful/calendar.data-provider';
+import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
-import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-authors.data-provider';
-import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-groups.data-provider';
+import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
+import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-group.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
-import { PageContentfulDataProvider } from './data-providers/contentful/pages.data-provider';
-import { TeamContentfulDataProvider } from './data-providers/contentful/teams.data-provider';
-import { TutorialsContentfulDataProvider } from './data-providers/contentful/tutorials.data-provider';
-import { UserContentfulDataProvider } from './data-providers/contentful/users.data-provider';
-import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-groups.data-provider';
+import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
+import { TeamContentfulDataProvider } from './data-providers/contentful/team.data-provider';
+import { TutorialContentfulDataProvider } from './data-providers/contentful/tutorial.data-provider';
+import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
+import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
 import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
-import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tags.data-provider';
+import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
 import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
 
 import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
@@ -86,21 +85,21 @@ import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
-} from './data-providers/external-authors.data-provider';
-import { InterestGroupSquidexDataProvider } from './data-providers/interest-groups.data-provider';
+} from './data-providers/external-author.data-provider';
+import { InterestGroupSquidexDataProvider } from './data-providers/interest-group.data-provider';
 import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import { PageSquidexDataProvider } from './data-providers/pages.data-provider';
-import { ReminderSquidexDataProvider } from './data-providers/reminders.data-provider';
+import { PageSquidexDataProvider } from './data-providers/page.data-provider';
+import { ReminderSquidexDataProvider } from './data-providers/reminder.data-provider';
 import {
   ResearchOutputDataProvider,
   ResearchOutputSquidexDataProvider,
-} from './data-providers/research-outputs.data-provider';
-import { ResearchTagSquidexDataProvider } from './data-providers/research-tags.data-provider';
+} from './data-providers/research-output.data-provider';
+import { ResearchTagSquidexDataProvider } from './data-providers/research-tag.data-provider';
 import {
   TeamDataProvider,
   TeamSquidexDataProvider,
-} from './data-providers/teams.data-provider';
-import { TutorialsSquidexDataProvider } from './data-providers/tutorials.data-provider';
+} from './data-providers/team.data-provider';
+import { TutorialsSquidexDataProvider } from './data-providers/tutorial.data-provider';
 import {
   AssetDataProvider,
   InterestGroupDataProvider,
@@ -111,30 +110,30 @@ import {
   DiscoverDataProvider,
   GuideDataProvider,
   WorkingGroupDataProvider,
-  TutorialsDataProvider,
+  TutorialDataProvider,
   ResearchTagDataProvider,
   ReminderDataProvider,
 } from './data-providers/types';
-import { UserSquidexDataProvider } from './data-providers/users.data-provider';
-import { WorkingGroupSquidexDataProvider } from './data-providers/working-groups.data-provider';
+import { UserSquidexDataProvider } from './data-providers/user.data-provider';
+import { WorkingGroupSquidexDataProvider } from './data-providers/working-group.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
-import { calendarRouteFactory } from './routes/calendars.route';
+import { calendarRouteFactory } from './routes/calendar.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
-import { guideRouteFactory } from './routes/guides.route';
-import { eventRouteFactory } from './routes/events.route';
-import { interestGroupRouteFactory } from './routes/interest-groups.route';
-import { labsRouteFactory } from './routes/labs.route';
+import { guideRouteFactory } from './routes/guide.route';
+import { eventRouteFactory } from './routes/event.route';
+import { interestGroupRouteFactory } from './routes/interest-group.route';
+import { labRouteFactory } from './routes/lab.route';
 import { newsRouteFactory } from './routes/news.route';
-import { pageRouteFactory } from './routes/pages.route';
-import { reminderRouteFactory } from './routes/reminders.route';
-import { researchOutputRouteFactory } from './routes/research-outputs.route';
-import { researchTagsRouteFactory } from './routes/research-tags.route';
-import { teamRouteFactory } from './routes/teams.route';
-import { tutorialsRouteFactory } from './routes/tutorials.route';
+import { pageRouteFactory } from './routes/page.route';
+import { reminderRouteFactory } from './routes/reminder.route';
+import { researchOutputRouteFactory } from './routes/research-output.route';
+import { researchTagRouteFactory } from './routes/research-tag.route';
+import { teamRouteFactory } from './routes/team.route';
+import { tutorialRouteFactory } from './routes/tutorial.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
-import { workingGroupRouteFactory } from './routes/working-groups.route';
+import { workingGroupRouteFactory } from './routes/working-group.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
@@ -142,9 +141,9 @@ import pinoLogger from './utils/logger';
 import {
   LabDataProvider,
   LabSquidexDataProvider,
-} from './data-providers/labs.data-provider';
+} from './data-providers/lab.data-provider';
 import { DiscoverSquidexDataProvider } from './data-providers/discover.data-provider';
-import { GuideContentfulDataProvider } from './data-providers/contentful/guides.data-provider';
+import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -474,20 +473,20 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   featureFlagDependencySwitch.setDependency(
     'tutorials',
-    libs.tutorialsSquidexDataProvider ||
+    libs.tutorialSquidexDataProvider ||
       new TutorialsSquidexDataProvider(squidexGraphqlClient),
     'IS_CONTENTFUL_ENABLED_V2',
     false,
   );
   featureFlagDependencySwitch.setDependency(
     'tutorials',
-    libs.tutorialsContentfulDataProvider ||
-      new TutorialsContentfulDataProvider(contentfulGraphQLClient),
+    libs.tutorialContentfulDataProvider ||
+      new TutorialContentfulDataProvider(contentfulGraphQLClient),
     'IS_CONTENTFUL_ENABLED_V2',
     true,
   );
-  const tutorialsDataProvider =
-    libs.tutorialsDataProvider ||
+  const tutorialDataProvider =
+    libs.tutorialDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'tutorials',
       'IS_CONTENTFUL_ENABLED_V2',
@@ -553,7 +552,8 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.discoverController || new DiscoverController(discoverDataProvider);
   const eventController =
     libs.eventController || new EventController(eventDataProvider);
-  const guideController = libs.guideController || new Guide(guideDataProvider);
+  const guideController =
+    libs.guideController || new GuideController(guideDataProvider);
   const interestGroupController =
     libs.interestGroupController ||
     new InterestGroupController(interestGroupDataProvider, userDataProvider);
@@ -574,14 +574,14 @@ export const appFactory = (libs: Libs = {}): Express => {
   const teamController =
     libs.teamController || new TeamController(teamDataProvider);
   const tutorialsController =
-    libs.tutorialsController || new TutorialController(tutorialsDataProvider);
+    libs.tutorialsController || new TutorialController(tutorialDataProvider);
   const userController =
     libs.userController ||
     new UserController(userDataProvider, assetDataProvider);
-  const labsController =
-    libs.labsController || new LabController(labDataProvider);
+  const labController =
+    libs.labController || new LabController(labDataProvider);
   const workingGroupsController =
-    libs.workingGroupsController ||
+    libs.workingGroupController ||
     new WorkingGroupController(workingGroupDataProvider);
 
   // Handlers
@@ -607,16 +607,16 @@ export const appFactory = (libs: Libs = {}): Express => {
     interestGroupController,
     eventController,
   );
-  const labsRoutes = labsRouteFactory(labsController);
+  const labRoutes = labRouteFactory(labController);
   const newsRoutes = newsRouteFactory(newsController);
   const pageRoutes = pageRouteFactory(pageController);
   const reminderRoutes = reminderRouteFactory(reminderController);
-  const researchOutputsRoutes = researchOutputRouteFactory(
+  const researchOutputRoutes = researchOutputRouteFactory(
     researchOutputController,
   );
-  const researchTagsRoutes = researchTagsRouteFactory(researchTagController);
+  const researchTagRoutes = researchTagRouteFactory(researchTagController);
   const teamRoutes = teamRouteFactory(interestGroupController, teamController);
-  const tutorialsRoutes = tutorialsRouteFactory(tutorialsController);
+  const tutorialRoutes = tutorialRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
   const userRoutes = userRouteFactory(userController, interestGroupController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);
@@ -669,13 +669,13 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(guideRoutes);
   app.use(eventRoutes);
   app.use(interestGroupRoutes);
-  app.use(labsRoutes);
+  app.use(labRoutes);
   app.use(newsRoutes);
   app.use(reminderRoutes);
-  app.use(researchOutputsRoutes);
-  app.use(researchTagsRoutes);
+  app.use(researchOutputRoutes);
+  app.use(researchTagRoutes);
   app.use(teamRoutes);
-  app.use(tutorialsRoutes);
+  app.use(tutorialRoutes);
   app.use(workingGroupRoutes);
 
   app.get('*', async (_req, res) => {
@@ -704,7 +704,7 @@ export type Libs = {
   guideController?: GuideController;
   eventController?: EventController;
   interestGroupController?: InterestGroupController;
-  labsController?: LabController;
+  labController?: LabController;
   newsController?: NewsController;
   pageController?: PageController;
   reminderController?: ReminderController;
@@ -713,7 +713,7 @@ export type Libs = {
   teamController?: TeamController;
   tutorialsController?: TutorialController;
   userController?: UserController;
-  workingGroupsController?: WorkingGroupController;
+  workingGroupController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
   assetSquidexDataProvider?: AssetDataProvider;
   assetContentfulDataProvider?: AssetDataProvider;
@@ -749,9 +749,9 @@ export type Libs = {
   teamSquidexDataProvider?: TeamDataProvider;
   teamContentfulDataProvider?: TeamDataProvider;
   teamDataProvider?: TeamDataProvider;
-  tutorialsDataProvider?: TutorialsDataProvider;
-  tutorialsSquidexDataProvider?: TutorialsDataProvider;
-  tutorialsContentfulDataProvider?: TutorialsDataProvider;
+  tutorialDataProvider?: TutorialDataProvider;
+  tutorialSquidexDataProvider?: TutorialDataProvider;
+  tutorialContentfulDataProvider?: TutorialDataProvider;
   userDataProvider?: UserDataProvider;
   userSquidexDataProvider?: UserDataProvider;
   userContentfulDataProvider?: UserDataProvider;

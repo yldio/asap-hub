@@ -2,7 +2,7 @@
 import type { gp2 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Router } from 'express';
-import { ProjectController } from '../controllers/project.controller';
+import ProjectController from '../controllers/project.controller';
 import {
   validateFetchProjectsParameters,
   validateProjectParameters,

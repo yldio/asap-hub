@@ -19,10 +19,10 @@ import {
 } from '@asap-hub/squidex';
 import { Chance } from 'chance';
 import { appName, baseUrl } from '../../../src/config';
-import { ReminderSquidexDataProvider } from '../../../src/data-providers/reminders.data-provider';
-import { ResearchOutputSquidexDataProvider } from '../../../src/data-providers/research-outputs.data-provider';
-import { TeamSquidexDataProvider } from '../../../src/data-providers/teams.data-provider';
-import { UserSquidexDataProvider } from '../../../src/data-providers/users.data-provider';
+import { ReminderSquidexDataProvider } from '../../../src/data-providers/reminder.data-provider';
+import { ResearchOutputSquidexDataProvider } from '../../../src/data-providers/research-output.data-provider';
+import { TeamSquidexDataProvider } from '../../../src/data-providers/team.data-provider';
+import { UserSquidexDataProvider } from '../../../src/data-providers/user.data-provider';
 import { getAuthToken } from '../../../src/utils/auth';
 import { getResearchOutputCreateDataObject } from '../../fixtures/research-output.fixtures';
 import { getTeamCreateDataObject } from '../../fixtures/teams.fixtures';

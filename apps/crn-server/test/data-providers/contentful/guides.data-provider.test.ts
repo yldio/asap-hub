@@ -2,7 +2,7 @@ import { GuideDataProvider } from '../../../src/data-providers/types';
 import {
   GuideContentfulDataProvider,
   parseGraphQLGuide,
-} from '../../../src/data-providers/contentful/guides.data-provider';
+} from '../../../src/data-providers/contentful/guide.data-provider';
 import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';

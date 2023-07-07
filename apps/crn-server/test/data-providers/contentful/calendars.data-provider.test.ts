@@ -12,7 +12,7 @@ import {
 } from '../../fixtures/calendars.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
-import { CalendarContentfulDataProvider } from '../../../src/data-providers/contentful/calendars.data-provider';
+import { CalendarContentfulDataProvider } from '../../../src/data-providers/contentful/calendar.data-provider';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import { getContentfulGraphqlWorkingGroup } from '../../fixtures/working-groups.fixtures';
 import { getContentfulGraphqlInterestGroup } from '../../fixtures/interest-groups.fixtures';

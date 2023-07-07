@@ -7,7 +7,7 @@ import {
   getListEventResponse,
 } from '../fixtures/event.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { eventControllerMock } from '../mocks/event-controller.mock';
+import { eventControllerMock } from '../mocks/event.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/events/ routes', () => {

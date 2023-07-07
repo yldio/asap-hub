@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { guideControllerMock } from '../mocks/guide-controller.mock';
+import { guideControllerMock } from '../mocks/guide.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/guides/ route', () => {

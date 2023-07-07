@@ -3,7 +3,7 @@ import { appFactory } from '../../src/app';
 import { getListDashboardResponse } from '../fixtures/dashboard.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
-import { dashboardControllerMock } from '../mocks/dashboard-controller.mock';
+import { dashboardControllerMock } from '../mocks/dashboard.controller.mock';
 
 describe('/dashboard/ route', () => {
   const app = appFactory({

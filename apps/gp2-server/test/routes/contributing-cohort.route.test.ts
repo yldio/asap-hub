@@ -3,7 +3,7 @@ import { appFactory } from '../../src/app';
 import { getListContributingCohortResponse } from '../fixtures/contributing-cohort.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
-import { contributingCohortControllerMock } from '../mocks/contributing-cohort-controller.mock';
+import { contributingCohortControllerMock } from '../mocks/contributing-cohort.controller.mock';
 
 describe('/contributingCohort/ route', () => {
   const app = appFactory({

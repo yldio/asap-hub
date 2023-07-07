@@ -16,10 +16,10 @@ import {
 } from '../../fixtures/users.fixtures';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import { UserDataProvider } from '../../../src/data-providers/types';
-import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/users.data-provider';
+import { UserContentfulDataProvider } from '../../../src/data-providers/contentful/user.data-provider';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
-import { parseToWorkingGroups } from '../../../src/data-providers/contentful/users.data-provider';
+import { parseToWorkingGroups } from '../../../src/data-providers/contentful/user.data-provider';
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),

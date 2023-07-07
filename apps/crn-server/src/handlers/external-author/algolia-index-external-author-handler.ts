@@ -6,7 +6,7 @@ import { ExternalAuthorEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import ExternalAuthorController from '../../controllers/external-authors.controller';
+import ExternalAuthorController from '../../controllers/external-author.controller';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalAuthorPayload } from '../event-bus';

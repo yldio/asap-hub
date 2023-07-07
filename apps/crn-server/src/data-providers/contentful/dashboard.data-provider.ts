@@ -7,7 +7,7 @@ import {
 import { DashboardDataObject } from '@asap-hub/model';
 import { DashboardDataProvider } from '../types';
 import { NewsItem, parseContentfulGraphQlNews } from './news.data-provider';
-import { PageItem, parseContentfulGraphQlPages } from './pages.data-provider';
+import { PageItem, parseContentfulGraphQlPages } from './page.data-provider';
 
 export class DashboardContentfulDataProvider implements DashboardDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}

@@ -1,5 +1,5 @@
 import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
-import { PageContentfulDataProvider } from '../../../src/data-providers/contentful/pages.data-provider';
+import { PageContentfulDataProvider } from '../../../src/data-providers/contentful/page.data-provider';
 import {
   getContentfulGraphqlPages,
   getContentfulPagesGraphqlResponse,

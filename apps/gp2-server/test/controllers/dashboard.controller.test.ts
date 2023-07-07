@@ -3,7 +3,7 @@ import {
   getListDashboardDataObject,
   getListDashboardResponse,
 } from '../fixtures/dashboard.fixtures';
-import { dashboardDataProviderMock } from '../mocks/dashboard-data-provider.mock';
+import { dashboardDataProviderMock } from '../mocks/dashboard.data-provider.mock';
 
 describe('Dashboard controller', () => {
   const dashboardController = new Dashboard(dashboardDataProviderMock);

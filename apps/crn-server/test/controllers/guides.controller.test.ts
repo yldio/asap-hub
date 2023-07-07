@@ -1,4 +1,4 @@
-import Guides from '../../src/controllers/guides.controller';
+import Guides from '../../src/controllers/guide.controller';
 import { getGuidesResponse } from '../fixtures/guides.fixture';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 

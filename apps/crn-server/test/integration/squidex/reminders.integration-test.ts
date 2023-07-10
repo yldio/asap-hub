@@ -126,9 +126,9 @@ describe('Reminders', () => {
           documentType: researchOutputInput.documentType,
           title: researchOutputInput.title,
           addedDate: researchOutputInput.addedDate,
-          createdBy: researchOutputInput.createdBy,
+          createdBy: 'Tom Hardy',
           associationType: 'team',
-          associationName: 'Team',
+          associationName: 'Team A',
         },
       };
       await retryable(async () => {

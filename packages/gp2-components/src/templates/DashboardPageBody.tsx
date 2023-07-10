@@ -8,7 +8,6 @@ import {
   Headline2,
   LabIcon,
   lead,
-  learnIcon,
   LibraryIcon,
   Paragraph,
   pixels,

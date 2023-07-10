@@ -79,7 +79,7 @@ describe('Field component', () => {
       });
     });
 
-    it('loads user name from related entity and renders user name, role and email', async () => {
+    it('loads user name and email from related entity and renders user name, role and email', async () => {
       const props = {
         entity: {
           fields: {
@@ -121,7 +121,7 @@ describe('Field component', () => {
             role: {
               'en-US': 'Project Manager',
             },
-            team: null,
+            user: null,
           },
           sys: {
             type: 'Entry',
@@ -145,7 +145,7 @@ describe('Field component', () => {
         entity: {
           fields: {
             role: null,
-            team: null,
+            user: null,
           },
           sys: {
             type: 'Entry',
@@ -173,7 +173,7 @@ describe('Field component', () => {
         entity: {
           fields: {
             role: null,
-            team: null,
+            user: null,
           },
           sys: {
             type: 'Entry',

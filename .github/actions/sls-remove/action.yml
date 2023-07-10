@@ -50,6 +50,7 @@ runs:
       if: ${{ env.SLS_STAGE != 'production' && env.SLS_STAGE != 'dev' }}
       shell: bash
       run: |
+        # Disable the 'exit immediately' flag which is set by default
         set +e
         INFO=$(yarn workspace @asap-hub/${{ inputs.app }} run pnpify sls info 2>&1)
         echo $INFO

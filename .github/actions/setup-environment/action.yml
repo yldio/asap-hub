@@ -48,7 +48,7 @@ outputs:
     description: 'Contentful App Extension Field As Updated At Id'
     value: ${{ steps.vars.outputs.contentful-app-field-as-updated-at }}
   contentful-app-project-membership:
-   description: 'Contentful App Extension Project Membership'
+    description: 'Contentful App Extension Project Membership'
     value: ${{ steps.vars.outputs.contentful-app-project-membership }}
   contentful-app-user-positions:
     description: 'Contentful App Extension User Positions Id'

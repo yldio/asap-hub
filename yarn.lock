@@ -595,7 +595,7 @@ __metadata:
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.6
-    contentful-management: 10.38.3
+    contentful-management: 10.32.0
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -23070,21 +23070,6 @@ __metadata:
     lodash.isplainobject: ^4.0.6
     type-fest: ^3.0.0
   checksum: a3018690392a1916a2af657f7f9640c2fe92525be4fb1a7cf0ddbe1fe4772619ea587f1cf33a121c36c5ad81557ecfdecf866d98d1a3b0b236b58d839f5e4dd1
-  languageName: node
-  linkType: hard
-
-"contentful-management@npm:10.38.3":
-  version: 10.38.3
-  resolution: "contentful-management@npm:10.38.3"
-  dependencies:
-    "@contentful/rich-text-types": ^16.0.3
-    "@types/json-patch": 0.0.30
-    axios: ^0.27.1
-    contentful-sdk-core: ^7.0.1
-    fast-copy: ^3.0.0
-    lodash.isplainobject: ^4.0.6
-    type-fest: ^3.0.0
-  checksum: fcda04518a0a0f1a8f62ece72fa0eb940332283c6160bfc28b9d2f6e8abea1ca48950e4645dfb0b813bfb09e0972408ac99a48cb45ab039ae9808bbe47771d56
   languageName: node
   linkType: hard
 

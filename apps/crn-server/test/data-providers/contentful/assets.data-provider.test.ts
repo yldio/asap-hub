@@ -1,6 +1,6 @@
 import { Environment, Asset } from '@asap-hub/contentful';
 import { AssetDataProvider } from '../../../src/data-providers/types';
-import { AssetContentfulDataProvider } from '../../../src/data-providers/contentful/assets.data-provider';
+import { AssetContentfulDataProvider } from '../../../src/data-providers/contentful/asset.data-provider';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
 describe('Assets data provider', () => {

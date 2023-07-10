@@ -7,7 +7,7 @@ describe('Calendars Dependencies', () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
 
     const { CalendarSquidexDataProvider } = await import(
-      '../../src/data-providers/calendars.data-provider'
+      '../../src/data-providers/calendar.data-provider'
     );
     const getCalendarDataProviderModule = await import(
       '../../src/dependencies/calendars.dependencies'
@@ -21,7 +21,7 @@ describe('Calendars Dependencies', () => {
   it('Should resolve Calendar Contentful Data Provider when the Contentful feature flag is on', async () => {
     process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
     const { CalendarContentfulDataProvider } = await import(
-      '../../src/data-providers/contentful/calendars.data-provider'
+      '../../src/data-providers/contentful/calendar.data-provider'
     );
     const getCalendarDataProviderModule = await import(
       '../../src/dependencies/calendars.dependencies'

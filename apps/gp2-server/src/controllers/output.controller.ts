@@ -8,7 +8,7 @@ import Boom from '@hapi/boom';
 import { OutputDataProvider } from '../data-providers/types';
 import { ExternalUserDataProvider } from '../data-providers/types/external-user.data-provider.type';
 
-export default class Outputs implements OutputController {
+export default class OutputController {
   constructor(
     private outputDataProvider: OutputDataProvider,
     private externalUserDataProvider: ExternalUserDataProvider,
@@ -208,16 +208,7 @@ export default class Outputs implements OutputController {
 type FetchOptions = Omit<gp2Model.FetchOutputOptions, 'filter'> & {
   filter?: OutputFilter;
 };
-export interface OutputController {
-  fetch: (options: FetchOptions) => Promise<gp2Model.ListOutputResponse>;
 
-  fetchById: (id: string) => Promise<gp2Model.OutputResponse>;
-  create: (output: OutputCreateData) => Promise<gp2Model.OutputResponse | null>;
-  update: (
-    id: string,
-    output: OutputUpdateData,
-  ) => Promise<gp2Model.OutputResponse | null>;
-}
 export type OutputCreateData = gp2Model.OutputPostRequest & {
   createdBy: string;
 };

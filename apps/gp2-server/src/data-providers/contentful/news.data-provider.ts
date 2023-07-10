@@ -57,4 +57,5 @@ export const parseContentfulGraphQlNews = (
   link: item.link ?? undefined,
   linkText: item.linkText ?? undefined,
   created: item.publishDate,
+  type: item.type as gp2Model.NewsType,
 });

@@ -1,7 +1,7 @@
 import type { gp2 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { Router } from 'express';
-import { WorkingGroupController } from '../controllers/working-group.controller';
+import WorkingGroupController from '../controllers/working-group.controller';
 import {
   validateWorkingGroupParameters,
   validateWorkingGroupPutRequest,

@@ -1,7 +1,7 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { CalendarUpdateRequest, gp2 } from '@asap-hub/model';
 
-export default class Calendars implements gp2.CalendarController {
+export default class CalendarsController {
   constructor(private dataProvider: gp2.CalendarDataProvider) {}
 
   async fetch(): Promise<gp2.ListCalendarResponse> {

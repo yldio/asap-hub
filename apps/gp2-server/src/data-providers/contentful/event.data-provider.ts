@@ -16,7 +16,7 @@ import {
   getContentfulEventMaterial,
   MeetingMaterial,
   parseContentfulGraphqlCalendarPartialToDataObject,
-} from '../../entities';
+} from '../transformers';
 import { parseCalendarDataObjectToResponse } from '../../controllers/calendar.controller';
 import { parseContentfulWorkingGroupsProjects } from './utils';
 

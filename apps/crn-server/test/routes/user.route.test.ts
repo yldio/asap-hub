@@ -13,9 +13,9 @@ import {
   updateAvatarBody,
   userPatchRequest,
 } from '../fixtures/users.fixtures';
-import { interestGroupControllerMock } from '../mocks/interest-group-controller.mock';
+import { interestGroupControllerMock } from '../mocks/interest-group.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
-import { userControllerMock } from '../mocks/user-controller.mock';
+import { userControllerMock } from '../mocks/user.controller.mock';
 
 describe('/users/ route', () => {
   const userMock = createUserResponse();

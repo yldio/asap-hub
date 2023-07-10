@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { getDashboardResponse } from '../fixtures/dashboard.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
-import { dashboardControllerMock } from '../mocks/dashboard-controller.mock';
+import { dashboardControllerMock } from '../mocks/dashboard.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
 describe('/dashboard/ route', () => {

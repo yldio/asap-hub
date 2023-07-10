@@ -5,7 +5,7 @@ import { appFactory } from '../../src/app';
 import { getListNewsResponse } from '../fixtures/news.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
-import { newsControllerMock } from '../mocks/news-controller.mock';
+import { newsControllerMock } from '../mocks/news.controller.mock';
 
 describe('/news/ route', () => {
   const app = appFactory({

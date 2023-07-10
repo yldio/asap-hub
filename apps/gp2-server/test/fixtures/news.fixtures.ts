@@ -17,6 +17,7 @@ export const getContentfulGraphqlNews = (): NonNullable<
     firstPublishedAt: '2020-09-08T16:35:28.000Z',
   },
   publishDate: '2021-12-28T00:00:00.000Z',
+  type: 'news',
 });
 
 export const getContentfulNewsGraphqlResponse =
@@ -60,6 +61,7 @@ export const getNewsDataObject = (): gp2Model.NewsDataObject => ({
   created: '2021-12-28T00:00:00.000Z',
   link: 'http://example.com/a-link',
   linkText: 'some link text',
+  type: 'news',
 });
 
 export const getListNewsDataObject = (): gp2Model.ListNewsDataObject => ({

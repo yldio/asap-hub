@@ -3,7 +3,7 @@ import {
   getListWorkingGroupNetworkDataObject,
   getListWorkingGroupNetworkResponse,
 } from '../fixtures/working-group-network.fixtures';
-import { workingGroupNetworkDataProviderMock } from '../mocks/working-group-network-data-provider.mock';
+import { workingGroupNetworkDataProviderMock } from '../mocks/working-group-network.data-provider.mock';
 
 describe('Working Group Network controller', () => {
   const workingGroupnetworkController = new WorkingGroupNetworkGroups(

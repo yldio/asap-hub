@@ -2,10 +2,10 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { validateFetchExternalUsersOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
 
-import { ExternalUsersController } from '../controllers/external-users.controller';
+import ExternalUserController from '../controllers/external-user.controller';
 
 export const externalUserRouteFactory = (
-  externalUsersController: ExternalUsersController,
+  externalUsersController: ExternalUserController,
 ): Router =>
   Router().get<
     gp2Model.FetchExternalUsersOptions,

@@ -587,10 +587,10 @@ __metadata:
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": 5.16.5
+    "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 14.0.0
     "@tsconfig/create-react-app": 2.0.0
-    "@types/jest": 29.5.2
+    "@types/jest": ^29.4.0
     "@types/node": 18.16.19
     "@types/react": 18.2.14
     "@types/react-dom": 18.2.6
@@ -16563,7 +16563,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:5.16.5, @testing-library/jest-dom@npm:^5.16.5":
+"@testing-library/jest-dom@npm:^5.16.5":
   version: 5.16.5
   resolution: "@testing-library/jest-dom@npm:5.16.5"
   dependencies:
@@ -17347,7 +17347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*, @types/jest@npm:29.5.2, @types/jest@npm:^29.4.0":
+"@types/jest@npm:*, @types/jest@npm:^29.4.0":
   version: 29.5.2
   resolution: "@types/jest@npm:29.5.2"
   dependencies:

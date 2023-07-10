@@ -21,7 +21,7 @@ module.exports.up = (migration) => {
     .name('Icon')
     .type('Link')
     .localized(false)
-    .required(false)
+    .required(true)
     .validations([
       {
         linkMimetypeGroup: ['image'],

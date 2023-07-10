@@ -32,8 +32,8 @@ const GuideDescription = ({ blocks }: GuideDescriptionProps) => (
         <article key={id}>
           {title && <Subtitle>{title}</Subtitle>}
           <Paragraph>{bodyText}</Paragraph>
-          {linkText && linkUrl && (
-            <ExternalLink href={linkUrl} label={linkText} />
+          {linkUrl && (
+            <ExternalLink href={linkUrl} label={linkText || 'External Link'} />
           )}
         </article>
       ),

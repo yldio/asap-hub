@@ -10,7 +10,7 @@ export type GuideBlockDataObject = {
 export type GuideDataObject = {
   id: string;
   title: string;
-  icon?: string;
+  icon: string;
   description: GuideBlockDataObject[];
 };
 

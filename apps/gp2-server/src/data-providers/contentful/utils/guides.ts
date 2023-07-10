@@ -15,7 +15,7 @@ export const parseGuides = (guides: Guides) =>
     .filter((guide): guide is GuideItem => guide !== null)
     .map(({ title, icon, descriptionCollection, sys: { id } }: GuideItem) => ({
       title: title ?? '',
-      icon: icon?.url ?? undefined,
+      icon: icon?.url ?? '',
       description: parseGuideDescription(descriptionCollection),
       id,
     })) || [];

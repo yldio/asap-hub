@@ -25,9 +25,15 @@ const textStyles = css({
   display: 'grid',
   columnGap: `${39 / perRem}em`,
   rowGap: `${9 / perRem}em`,
-  maxWidth: rem(610 + 39 + 158),
   [`@media (min-width: ${mobileScreen.max}px)`]: {
-    gridTemplateColumns: '1fr auto',
+    gridTemplateColumns: `minmax(auto, ${rem(610)}) auto`,
+  },
+});
+
+const buttonStyles = css({
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'block',
+    justifySelf: 'flex-end',
   },
 });
 
@@ -54,7 +60,7 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
           be mindful to respect intellectual boundaries and not share outside of
           the Network
         </Paragraph>
-        <div>
+        <div css={buttonStyles}>
           <SharedOutputDropdown />
         </div>
       </div>

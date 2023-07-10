@@ -26,17 +26,9 @@ type CardProps = {
 type TeamCardProps = {
   id: string;
   role: string;
-  email: string;
 } & CardProps;
 
-const MemberCard = ({
-  id,
-  actions,
-  email,
-  role,
-  onClick,
-  status,
-}: TeamCardProps) => {
+const MemberCard = ({ id, actions, role, onClick, status }: TeamCardProps) => {
   const { data: user } = useEntity<Entry>('Entry', id);
   if (!user) {
     return <EntryCard isLoading />;
@@ -51,7 +43,7 @@ const MemberCard = ({
       <Heading marginBottom="none">
         {user.fields.firstName?.['en-US']} {user.fields.lastName?.['en-US']}
       </Heading>
-      <Paragraph marginBottom="none">{email}</Paragraph>
+      <Paragraph marginBottom="none">{user.fields.email?.['en-US']}</Paragraph>
       <Paragraph marginBottom="none">{role}</Paragraph>
     </EntryCard>
   );
@@ -69,11 +61,11 @@ const MissingMemberCard = ({ actions, onClick, status }: CardProps) => (
 );
 
 const Card = ({ entity, onEdit, onRemove }: CustomEntryCardProps) => {
-  const sdk = useSDK<FieldExtensionSDK>();
+  const sdk = useSDK();
   const { fields, sys } = entity;
   const userId = fields.user?.['en-US'].sys.id;
   const role = fields.role?.['en-US'];
-  const email = fields.user?.['en-US'].fields.email;
+
   const removeMembership = async () => {
     if (sys.publishedVersion) {
       await sdk.space.unpublishEntry(entity);
@@ -98,7 +90,7 @@ const Card = ({ entity, onEdit, onRemove }: CustomEntryCardProps) => {
   };
 
   return userId ? (
-    <MemberCard {...defaultProps} id={userId} role={role} email={email} />
+    <MemberCard {...defaultProps} id={userId} role={role} />
   ) : (
     <MissingMemberCard {...defaultProps} />
   );

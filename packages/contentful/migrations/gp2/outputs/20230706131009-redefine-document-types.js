@@ -42,12 +42,12 @@ module.exports.up = (migration) => {
   outputs.editField('documentType').validations([
     {
       in: [
-        'Procedural Form',
-        'GP2 Reports',
-        'Training Materials',
-        'Dataset',
         'Article',
         'Code/Software',
+        'Dataset',
+        'GP2 Reports',
+        'Procedural Form',
+        'Training Materials',
       ],
     },
   ]);

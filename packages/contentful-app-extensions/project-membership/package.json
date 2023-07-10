@@ -24,9 +24,6 @@
     "upload": "contentful-app-scripts upload --bundle-dir ./build",
     "upload-ci": "contentful-app-scripts upload --ci --bundle-dir ./build --organization-id $CONTENTFUL_ORG_ID --definition-id $CONTENTFUL_APP_DEF_ID --token $CONTENTFUL_ACCESS_TOKEN"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -48,6 +45,7 @@
     "@types/node": "18.16.19",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
+    "@types/testing-library__jest-dom": "5.14.6",
     "cross-env": "7.0.3",
     "esbuild": "^0.18.11",
     "typescript": "4.9.5"

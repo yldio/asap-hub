@@ -97,12 +97,12 @@ const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
         <Headline2 noMargin>Related CRN Hub Events</Headline2>
         <div css={descriptionStyles}>
           <Paragraph noMargin accent="lead">
-            Find out all CRN Hub events that are related to this output.
+            Find all CRN Hub events that are related to this output.
           </Paragraph>
         </div>
         {relatedEvents.length === 0 ? (
           <Paragraph noMargin accent="lead">
-            <b>No related CRN hub event available.</b>
+            <b>No related CRN Hub events available.</b>
           </Paragraph>
         ) : (
           <div css={rowStyles}>

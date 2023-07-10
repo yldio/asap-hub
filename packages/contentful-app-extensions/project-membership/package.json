@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@contentful/app-sdk": "^4.22.0",
-    "@contentful/f36-components": "4.45.0",
+    "@contentful/app-sdk": "4.19.1",
+    "@contentful/f36-components": "4.34.1",
     "@contentful/f36-tokens": "4.0.2",
     "@contentful/field-editor-reference": "^5.9.0",
     "@contentful/field-editor-shared": "^1.2.0",

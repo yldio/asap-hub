@@ -10,7 +10,10 @@ export const dashboardRouteFactory = (
   dashboardRoutes.get<unknown, gp2.ListDashboardResponse>(
     '/dashboard',
     async (_req, res) => {
-      const dashboard = await dashboardController.fetch({});
+      const dashboard = await dashboardController.fetch({
+        sortBy: 'published',
+        sortOrder: 'desc',
+      });
 
       res.json(dashboard);
     },

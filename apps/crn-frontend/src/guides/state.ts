@@ -26,5 +26,7 @@ const guideCollectionState = atomFamily<ListGuideResponse | undefined, string>({
   default: fetchGuideCollectionState,
 });
 
-export const useGuidesByCollection = (collection: string) =>
+export const useGuidesByCollection = (
+  collection: string,
+): ListGuideResponse | undefined =>
   useRecoilValue(guideCollectionState(collection));

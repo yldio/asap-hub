@@ -56,7 +56,7 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
   return (
     <DashboardPageBody
       {...props}
-      guides={guides.items}
+      guides={guides ? guides.items : []}
       pastEvents={pastEvents}
       upcomingEvents={items.map(eventMapper)}
       recentSharedOutputs={recentSharedOutputs}

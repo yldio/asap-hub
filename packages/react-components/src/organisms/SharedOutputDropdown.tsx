@@ -129,6 +129,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
   return (
     <DropdownButton
       primary
+      trimmedList
       buttonChildren={() => (
         <>
           <div css={iconStyles}>{plusIcon}</div> Share an output

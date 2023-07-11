@@ -220,7 +220,6 @@ jobs:
         crn-sls-remove,
         gp2-sls-remove,
         crn-squidex-remove,
-        gp2-squidex-remove,
         crn-contentful-remove,
         gp2-contentful-remove,
         crn-algolia-index,

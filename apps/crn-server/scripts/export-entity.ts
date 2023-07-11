@@ -1,23 +1,14 @@
 import { EntityRecord, EntityResponses } from '@asap-hub/algolia';
 import { ListResponse } from '@asap-hub/model';
-import {
-  getAccessTokenFactory,
-  RestResearchOutput,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
 import { promises as fs } from 'fs';
-import { appName, baseUrl, clientId, clientSecret } from '../src/config';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
-import Labs from '../src/controllers/lab.controller';
 import ResearchOutputs from '../src/controllers/research-output.controller';
 import Users from '../src/controllers/user.controller';
-import { LabSquidexDataProvider } from '../src/data-providers/lab.data-provider';
-import { ResearchOutputSquidexDataProvider } from '../src/data-providers/research-output.data-provider';
-import { ResearchTagSquidexDataProvider } from '../src/data-providers/research-tag.data-provider';
 import { getEventDataProvider } from '../src/dependencies/events.dependencies';
 import { getExternalAuthorDataProvider } from '../src/dependencies/external-authors.dependencies';
+import { getResearchOutputDataProvider } from '../src/dependencies/research-outputs.dependencies';
+import { getResearchTagDataProvider } from '../src/dependencies/research-tags.dependencies';
 import {
   getAssetDataProvider,
   getUserDataProvider,
@@ -67,38 +58,16 @@ export const exportEntity = async (
 };
 
 const getController = (entity: keyof EntityResponses) => {
-  const getAuthToken = getAccessTokenFactory({
-    clientId,
-    clientSecret,
-    baseUrl,
-  });
-  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-    appName,
-    baseUrl,
-  });
-
-  const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
-    getAuthToken,
-    'research-outputs',
-    { appName, baseUrl },
-  );
-
   const userDataProvider = getUserDataProvider();
 
-  const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
-    squidexGraphqlClient,
-    researchOutputRestClient,
-  );
-  const researchTagDataProvider = new ResearchTagSquidexDataProvider(
-    squidexGraphqlClient,
-  );
+  const researchOutputDataProvider = getResearchOutputDataProvider();
+  const researchTagDataProvider = getResearchTagDataProvider();
   const externalAuthorDataProvider = getExternalAuthorDataProvider();
 
   const assetDataProvider = getAssetDataProvider();
 
   const eventDataProvider = getEventDataProvider();
 
-  const labDataProvider = new LabSquidexDataProvider(squidexGraphqlClient);
   const controllerMap = {
     user: new Users(userDataProvider, assetDataProvider),
     'research-output': new ResearchOutputs(
@@ -108,7 +77,6 @@ const getController = (entity: keyof EntityResponses) => {
     ),
     'external-author': new ExternalAuthors(externalAuthorDataProvider),
     event: new Events(eventDataProvider),
-    lab: new Labs(labDataProvider),
   };
 
   return controllerMap[entity];

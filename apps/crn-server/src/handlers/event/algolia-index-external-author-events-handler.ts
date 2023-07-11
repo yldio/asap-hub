@@ -8,32 +8,24 @@ import {
   ExternalAuthorEvent,
   ListResponse,
 } from '@asap-hub/model';
-import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  algoliaApiKey,
-  algoliaAppId,
-  algoliaIndex,
-  appName,
-  baseUrl,
-} from '../../config';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Events from '../../controllers/event.controller';
-import { EventSquidexDataProvider } from '../../data-providers/event.data-provider';
-import { getAuthToken } from '../../utils/auth';
+import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { ExternalAuthorSquidexPayload } from '../event-bus';
+import { ExternalAuthorPayload } from '../event-bus';
 
 export const indexExternalAuthorEventsHandler =
   (
     eventController: EventController,
     algoliaClient: AlgoliaSearchClient,
   ): ((
-    event: EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorSquidexPayload>,
+    event: EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorPayload>,
   ) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
@@ -47,7 +39,7 @@ export const indexExternalAuthorEventsHandler =
       eventController.fetch({
         skip,
         take,
-        filter: { externalAuthorId: event.detail.payload.id },
+        filter: { externalAuthorId: event.detail.resourceId },
       });
 
     const processingFunction = async (
@@ -69,20 +61,8 @@ export const indexExternalAuthorEventsHandler =
 
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
+const eventDataProvider = getEventDataProvider();
 
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
-  appName,
-  baseUrl,
-});
-
-const eventDataProvider = new EventSquidexDataProvider(
-  eventRestClient,
-  squidexGraphqlClient,
-);
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexExternalAuthorEventsHandler(

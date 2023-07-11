@@ -10,7 +10,7 @@ import {
   TeamEvent,
   TeamResponse,
 } from '@asap-hub/model';
-import { InputTeam, Team, SquidexWebhookPayload } from '@asap-hub/squidex';
+import { InputTeam } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   FetchTeamQuery,
@@ -216,6 +216,7 @@ export const getTeamsEvent = (
 ): TeamPayload => ({
   type: eventName,
   timestamp: '2021-10-05T12:49:49Z',
+  resourceId: 'teamId',
   payload: {
     $type: 'EnrichedContentEvent',
     type: eventType,
@@ -233,11 +234,7 @@ export const getTeamsUpdated = getTeamsEvent('Updated', 'TeamsUpdated');
 export const getTeamsDeleted = getTeamsEvent('Deleted', 'TeamsDeleted');
 export const getTeamsUnpublished = getTeamsEvent('Deleted', 'TeamsUnpublished');
 
-export const getPossibleTeamEvents: [
-  string,
-  string,
-  SquidexWebhookPayload<Team>,
-][] = [
+export const getPossibleTeamEvents: [string, string, TeamPayload][] = [
   ['teams-created', 'TeamsCreated', getTeamsCreated],
   ['teams-unpublished', 'TeamsDeleted', getTeamsUnpublished],
   ['teams-updated', 'TeamsUpdated', getTeamsUpdated],

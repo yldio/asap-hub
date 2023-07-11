@@ -485,7 +485,7 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexResearchOutput: {
+    algoliaIndexResearchOutputSquidex: {
       handler:
         './src/handlers/research-output/algolia-index-research-output-handler.handler',
       events: [
@@ -510,7 +510,33 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexUser: {
+    algoliaIndexResearchOutputContentful: {
+      handler:
+        './src/handlers/research-output/algolia-index-research-output-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'ResearchOutputsPublished',
+                'ResearchOutputsUpdated',
+                'ResearchOutputsUnpublished',
+                'ResearchOutputsDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED: 'true',
+      },
+    },
+    algoliaIndexUserSquidex: {
       handler: './src/handlers/user/algolia-index-user-handler.handler',
       events: [
         {
@@ -535,6 +561,32 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    algoliaIndexUserContentful: {
+      handler: './src/handlers/user/algolia-index-user-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'UsersPublished',
+                'UsersUpdated',
+                'UsersCreated',
+                'UsersUnpublished',
+                'UsersDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED: 'true',
+      },
+    },
     algoliaIndexExternalAuthorSquidex: {
       handler:
         './src/handlers/external-author/algolia-index-external-author-handler.handler',
@@ -556,7 +608,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'false',
       },
@@ -630,12 +682,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexUserEvents: {
+    algoliaIndexUserEventsSquidex: {
       handler: './src/handlers/event/algolia-index-user-events-handler.handler',
       events: [
         {
@@ -659,7 +711,32 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexExternalUserEvents: {
+    algoliaIndexUserEventsContentful: {
+      handler: './src/handlers/event/algolia-index-user-events-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'UsersPublished',
+                'UsersUpdated',
+                'UsersUnpublished',
+                'UsersDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED: 'true',
+      },
+    },
+    algoliaIndexExternalUserEventsSquidex: {
       handler:
         './src/handlers/event/algolia-index-external-author-events-handler.handler',
       events: [
@@ -684,7 +761,33 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexTeamEvents: {
+    algoliaIndexExternalUserEventsContentful: {
+      handler:
+        './src/handlers/event/algolia-index-external-author-events-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'ExternalAuthorsPublished',
+                'ExternalAuthorsUpdated',
+                'ExternalAuthorsUnpublished',
+                'ExternalAuthorsDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED: 'true',
+      },
+    },
+    algoliaIndexTeamEventsSquidex: {
       handler: './src/handlers/event/algolia-index-team-events-handler.handler',
       events: [
         {
@@ -706,6 +809,31 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexTeamEventsContentful: {
+      handler: './src/handlers/event/algolia-index-team-events-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'TeamsPublished',
+                'TeamsUpdated',
+                'TeamsUnpublished',
+                'TeamsDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexGroupEventsSquidex: {
@@ -754,12 +882,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexLabUsers: {
+    algoliaIndexLabUsersSquidex: {
       handler: './src/handlers/lab/algolia-index-lab-users-handler.handler',
       events: [
         {
@@ -781,6 +909,31 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexLabUsersContentful: {
+      handler: './src/handlers/lab/algolia-index-lab-users-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'LabsPublished',
+                'LabsUpdated',
+                'LabsUnpublished',
+                'LabsDeleted',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     gcalEventsUpdatedSquidex: {
@@ -859,9 +1012,9 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexTeamResearchOutputs: {
+    algoliaIndexTeamResearchOutputsSquidex: {
       handler:
-        './src/handlers/teams/algolia-index-team-reasearch-outputs-handler.handler',
+        './src/handlers/teams/algolia-index-team-research-outputs-handler.handler',
       events: [
         {
           eventBridge: {
@@ -879,7 +1032,28 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexTeamUsers: {
+    algoliaIndexTeamResearchOutputsContentful: {
+      handler:
+        './src/handlers/teams/algolia-index-team-research-outputs-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED: 'true',
+      },
+    },
+    algoliaIndexTeamUsersSquidex: {
       handler: './src/handlers/teams/algolia-index-team-users-handler.handler',
       events: [
         {
@@ -896,6 +1070,26 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexTeamUsersContentful: {
+      handler: './src/handlers/teams/algolia-index-team-users-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     updateSquidexWorkingGroupDeliverables: {

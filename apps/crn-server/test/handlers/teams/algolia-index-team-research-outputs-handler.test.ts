@@ -1,5 +1,5 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/algolia-index-team-reasearch-outputs-handler';
+import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/algolia-index-team-research-outputs-handler';
 import { TeamPayload } from '../../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../../helpers/events';
 import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
@@ -17,58 +17,51 @@ describe('Team Research Outputs Index', () => {
   afterEach(() => jest.clearAllMocks());
 
   test('Should fetch every research output and create a record on Algolia', async () => {
-    const outputs = [
+    const items = [
       { ...getResearchOutputResponse(), id: 'research-outputs-1' },
       { ...getResearchOutputResponse(), id: 'research-outputs-2' },
       { ...getResearchOutputResponse(), id: 'research-outputs-3' },
     ];
 
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[0]!);
-    researchOutputControllerMock.fetchById.mockRejectedValue(new Error());
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[2]!);
+    researchOutputControllerMock.fetch.mockResolvedValueOnce({
+      total: 3,
+      items,
+    });
 
     const updateEvent = getEvent();
 
-    updateEvent.detail.payload = {
-      ...updateEvent.detail.payload,
-      data: {
-        ...updateEvent.detail.payload.data,
-        outputs: { iv: outputs.slice(0, 2).map(({ id }) => id) },
-      },
-      dataOld: {
-        ...updateEvent.detail.payload.data,
-        outputs: { iv: [outputs[2]!.id] },
-      },
-    };
-
     await indexHandler(updateEvent);
 
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: outputs[0],
-      type: 'research-output',
-    });
-    expect(algoliaSearchClientMock.save).not.toHaveBeenCalledWith(outputs[1]);
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: outputs[2],
-      type: 'research-output',
-    });
+    expect(researchOutputControllerMock.fetch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filter: { teamId: updateEvent.detail.resourceId },
+      }),
+    );
+
+    expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
+      items.map((item) => ({
+        data: item,
+        type: 'research-output',
+      })),
+    );
   });
 
   test('Should not trigger algolia save when there are no research outputs associated with the team', async () => {
+    researchOutputControllerMock.fetch.mockResolvedValueOnce({
+      total: 0,
+      items: [],
+    });
+
     const updateEvent = getEvent();
-    updateEvent.detail.payload = {
-      ...updateEvent.detail.payload,
-      data: {
-        ...updateEvent.detail.payload.data,
-        outputs: { iv: [] },
-      },
-      dataOld: {
-        ...updateEvent.detail.payload.data,
-        outputs: { iv: [] },
-      },
-    };
 
     await indexHandler(updateEvent);
+
+    expect(researchOutputControllerMock.fetch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        filter: { teamId: updateEvent.detail.resourceId },
+      }),
+    );
+
     expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
   });
 });

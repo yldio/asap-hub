@@ -54,12 +54,24 @@ export type InterestGroupPayload =
   | InterestGroupSquidexPayload
   | InterestGroupContentfulPayload;
 
-export type LabPayload = SquidexWebhookPayload<Lab, LabEvent>;
-
-export type ResearchOutputPayload = SquidexWebhookPayload<
-  ResearchOutput,
-  ResearchOutputEvent
+export type LabSquidexPayload = WebhookDetail<
+  SquidexWebhookPayload<Lab, LabEvent>
 >;
+export type LabContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'labs'>
+>;
+export type LabPayload = LabSquidexPayload | LabContentfulPayload;
+
+export type ResearchOutputSquidexPayload = WebhookDetail<
+  SquidexWebhookPayload<ResearchOutput, ResearchOutputEvent>
+>;
+export type ResearchOutputContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'researchOutputs'>
+>;
+
+export type ResearchOutputPayload =
+  | ResearchOutputSquidexPayload
+  | ResearchOutputContentfulPayload;
 
 export type WorkingGroupSquidexPayload = WebhookDetail<
   SquidexWebhookPayload<WorkingGroup, WorkingGroupEvent>
@@ -72,7 +84,13 @@ export type WorkingGroupPayload =
   | WorkingGroupSquidexPayload
   | WorkingGroupContentfulPayload;
 
-export type TeamPayload = SquidexWebhookPayload<Team, TeamEvent>;
+export type TeamSquidexPayload = WebhookDetail<
+  SquidexWebhookPayload<Team, TeamEvent>
+>;
+export type TeamContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'teams'>
+>;
+export type TeamPayload = TeamSquidexPayload | TeamContentfulPayload;
 
 export type UserSquidexPayload = WebhookDetail<
   SquidexWebhookPayload<User, UserEvent>

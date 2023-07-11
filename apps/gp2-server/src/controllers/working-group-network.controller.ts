@@ -1,13 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { WorkingGroupNetworkDataProvider } from '../data-providers/types';
 
-export interface WorkingGroupNetworkController {
-  fetch(): Promise<gp2.ListWorkingGroupNetworkResponse>;
-}
-
-export default class WorkingGroupNetwork
-  implements WorkingGroupNetworkController
-{
+export default class WorkingGroupNetworkController {
   constructor(
     private workingGroupNetworkDataProvider: WorkingGroupNetworkDataProvider,
   ) {}

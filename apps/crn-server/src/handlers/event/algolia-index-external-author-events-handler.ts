@@ -17,7 +17,7 @@ import {
   appName,
   baseUrl,
 } from '../../config';
-import Events from '../../controllers/events.controller';
+import Events from '../../controllers/event.controller';
 import { EventSquidexDataProvider } from '../../data-providers/event.data-provider';
 import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';

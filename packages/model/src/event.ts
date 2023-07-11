@@ -72,12 +72,6 @@ export type EventCreateDataObject = Pick<
   googleId: string;
   calendar: string;
   hidden: boolean;
-
-  // this is used only for integration tests
-  speakers?: {
-    user: string[];
-    team: string[];
-  }[];
 };
 
 export type EventUpdateDataObject = Partial<

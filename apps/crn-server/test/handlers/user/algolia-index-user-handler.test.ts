@@ -2,7 +2,7 @@ import Boom from '@hapi/boom';
 import { indexUserHandler } from '../../../src/handlers/user/algolia-index-user-handler';
 import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { userControllerMock } from '../../mocks/user-controller.mock';
+import { userControllerMock } from '../../mocks/user.controller.mock';
 
 describe('User index handler', () => {
   const indexHandler = indexUserHandler(

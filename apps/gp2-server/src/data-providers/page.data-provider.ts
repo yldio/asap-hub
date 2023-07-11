@@ -1,6 +1,6 @@
 import { ListPageDataObject } from '@asap-hub/model';
 import { RestPage, SquidexRestClient } from '@asap-hub/squidex';
-import { parsePage } from '../entities';
+import { parsePage } from './transformers';
 import { FetchPagesProviderOptions, PageDataProvider } from './types';
 
 export class PageSquidexDataProvider implements PageDataProvider {

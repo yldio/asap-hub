@@ -6,7 +6,7 @@ import {
   getProjectDataObject,
   getProjectResponse,
 } from '../fixtures/project.fixtures';
-import { projectDataProviderMock } from '../mocks/project-data-provider.mock';
+import { projectDataProviderMock } from '../mocks/project.data-provider.mock';
 
 describe('Project controller', () => {
   const projectController = new Projects(projectDataProviderMock);

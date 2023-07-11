@@ -11,7 +11,7 @@ import {
 } from '../../fixtures/interest-groups.fixtures';
 
 import { InterestGroupDataProvider } from '../../../src/data-providers/types';
-import { InterestGroupContentfulDataProvider } from '../../../src/data-providers/contentful/interest-groups.data-provider';
+import { InterestGroupContentfulDataProvider } from '../../../src/data-providers/contentful/interest-group.data-provider';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 
 describe('User data provider', () => {

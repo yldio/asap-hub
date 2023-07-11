@@ -15,7 +15,7 @@ import {
 } from '../../fixtures/working-groups.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
-import { WorkingGroupContentfulDataProvider } from '../../../src/data-providers/contentful/working-groups.data-provider';
+import { WorkingGroupContentfulDataProvider } from '../../../src/data-providers/contentful/working-group.data-provider';
 import logger from '../../../src/utils/logger';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 

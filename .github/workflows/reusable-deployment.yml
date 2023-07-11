@@ -62,9 +62,6 @@ on:
       GP2_SQUIDEX_API_CLIENT_SECRET:
         description: 'GP2 API Squidex Client Secret'
         required: true
-      GP2_SQUIDEX_CI_CLIENT_SECRET:
-        description: 'GP2 CI Squidex Client Secret'
-        required: true
       GP2_SQUIDEX_SHARED_SECRET:
         description: 'GP2 Squidex Shared Secret'
         required: true

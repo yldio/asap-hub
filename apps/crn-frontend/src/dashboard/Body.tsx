@@ -5,7 +5,7 @@ import { activeUserTag } from '@asap-hub/model';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 
 import { useEvents } from '../events/state';
-import { useGuides } from '../guides/state';
+import { useGuidesByCollection } from '../guides/state';
 import { useResearchOutputs } from '../shared-research/state';
 import { useUsers } from '../network/users/state';
 import { eventMapper } from '../events/EventList';
@@ -51,7 +51,7 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
     pageSize: 3,
   }).items;
 
-  const guides = useGuides();
+  const guides = useGuidesByCollection('Home');
 
   return (
     <DashboardPageBody

@@ -4,8 +4,9 @@ import { API_BASE_URL } from '../config';
 
 export const getGuides = async (
   authorization: string,
+  collection: string,
 ): Promise<ListGuideResponse> => {
-  const resp = await fetch(`${API_BASE_URL}/guides/Home`, {
+  const resp = await fetch(`${API_BASE_URL}/guides/${collection}`, {
     headers: {
       authorization,
       ...createSentryHeaders(),

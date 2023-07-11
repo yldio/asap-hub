@@ -576,9 +576,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/contentful-app-project-membership@workspace:packages/contentful-app-extensions/project-membership":
+"@asap-hub/contentful-app-user-membership@workspace:packages/contentful-app-extensions/user-membership":
   version: 0.0.0-use.local
-  resolution: "@asap-hub/contentful-app-project-membership@workspace:packages/contentful-app-extensions/project-membership"
+  resolution: "@asap-hub/contentful-app-user-membership@workspace:packages/contentful-app-extensions/user-membership"
   dependencies:
     "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.19.1

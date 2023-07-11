@@ -23,12 +23,18 @@ type CardProps = {
   onClick: CustomEntityCardProps['onEdit'];
   status: EntityStatus;
 };
-type TeamCardProps = {
+type MemberCardProps = {
   id: string;
   role: string;
 } & CardProps;
 
-const MemberCard = ({ id, actions, role, onClick, status }: TeamCardProps) => {
+const MemberCard = ({
+  id,
+  actions,
+  role,
+  onClick,
+  status,
+}: MemberCardProps) => {
   const { data: user } = useEntity<Entry>('Entry', id);
   if (!user) {
     return <EntryCard isLoading />;

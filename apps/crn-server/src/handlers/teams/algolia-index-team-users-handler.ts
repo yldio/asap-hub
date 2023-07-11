@@ -5,7 +5,7 @@ import {
 import { ListResponse, TeamEvent, UserResponse } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import UserController from '../../controllers/users.controller';
+import UserController from '../../controllers/user.controller';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,

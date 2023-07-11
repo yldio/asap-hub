@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import Events from '../../src/controllers/events.controller';
+import Events from '../../src/controllers/event.controller';
 import {
   getEventDataObject,
   getEventResponse,

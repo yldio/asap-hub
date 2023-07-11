@@ -7,7 +7,7 @@ import { EventBridgeHandler, UserPayload } from '@asap-hub/server-common';
 import { isBoom, Boom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import UserController from '../../controllers/users.controller';
+import UserController from '../../controllers/user.controller';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {

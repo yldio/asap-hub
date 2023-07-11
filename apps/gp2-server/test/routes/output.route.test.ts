@@ -12,7 +12,7 @@ import {
 import { getUserResponse } from '../fixtures/user.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
-import { outputControllerMock } from '../mocks/output-controller.mock';
+import { outputControllerMock } from '../mocks/output.controller.mock';
 
 describe('/outputs/ route', () => {
   const app = appFactory({

@@ -1,6 +1,6 @@
 import type { gp2 } from '@asap-hub/model';
 import { Router } from 'express';
-import { WorkingGroupNetworkController } from '../controllers/working-group-network.controller';
+import WorkingGroupNetworkController from '../controllers/working-group-network.controller';
 
 export const workingGroupNetworkRouteFactory = (
   workingGroupNetworkController: WorkingGroupNetworkController,

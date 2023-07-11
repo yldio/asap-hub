@@ -3,7 +3,7 @@ import { connectByCodeHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { Handler } from 'aws-lambda';
 import { auth0SharedSecret } from '../../config';
-import Users from '../../controllers/users.controller';
+import Users from '../../controllers/user.controller';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {

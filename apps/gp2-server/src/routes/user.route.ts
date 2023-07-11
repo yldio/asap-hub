@@ -8,7 +8,7 @@ import { gp2 as gp2Validation } from '@asap-hub/validation';
 import Boom, { isBoom } from '@hapi/boom';
 import { Router } from 'express';
 import parseURI from 'parse-data-url';
-import { UserController } from '../controllers/user.controller';
+import UserController from '../controllers/user.controller';
 import {
   validateUserParameters,
   validateUserPatchRequest,

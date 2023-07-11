@@ -11,7 +11,7 @@ import {
   userPatchRequest,
 } from '../fixtures/user.fixtures';
 import { loggerMock } from '../mocks/logger.mock';
-import { userControllerMock } from '../mocks/user-controller.mock';
+import { userControllerMock } from '../mocks/user.controller.mock';
 
 const { userDegrees, userRegions, keywords, userContributingCohortRole } = gp2;
 

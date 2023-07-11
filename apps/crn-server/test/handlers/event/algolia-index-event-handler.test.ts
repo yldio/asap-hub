@@ -6,7 +6,7 @@ import {
   getEventContentfulEvent,
 } from '../../fixtures/events.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { eventControllerMock } from '../../mocks/event-controller.mock';
+import { eventControllerMock } from '../../mocks/event.controller.mock';
 
 describe('Event index handler', () => {
   const indexHandler = indexEventHandler(

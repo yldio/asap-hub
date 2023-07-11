@@ -1,11 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { NewsDataProvider } from '../data-providers/types';
 
-export interface NewsController {
-  fetch: () => Promise<gp2.ListNewsResponse>;
-}
-
-export default class News implements NewsController {
+export default class NewsController {
   constructor(private newsDataProvider: NewsDataProvider) {}
 
   async fetch(): Promise<gp2.ListNewsResponse> {

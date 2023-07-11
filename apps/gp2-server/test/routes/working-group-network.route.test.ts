@@ -3,7 +3,7 @@ import { appFactory } from '../../src/app';
 import { getListWorkingGroupNetworkResponse } from '../fixtures/working-group-network.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { loggerMock } from '../mocks/logger.mock';
-import { workingGroupNetworkControllerMock } from '../mocks/working-group-network-controller.mock';
+import { workingGroupNetworkControllerMock } from '../mocks/working-group-network.controller.mock';
 
 describe('/working-groups-network/ route', () => {
   const app = appFactory({

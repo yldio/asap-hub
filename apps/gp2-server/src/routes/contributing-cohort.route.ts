@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { Router } from 'express';
-import { ContributingCohortController } from '../controllers/contributing-cohort.controller';
+import ContributingCohortController from '../controllers/contributing-cohort.controller';
 
 export const contributingCohortRouteFactory = (
   contributingCohortController: ContributingCohortController,

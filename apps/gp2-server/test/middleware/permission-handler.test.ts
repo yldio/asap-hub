@@ -6,9 +6,9 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { pageResponse } from '../fixtures/page.fixtures';
 import { getUserResponse } from '../fixtures/user.fixtures';
-import { pageControllerMock } from '../mocks/page-controller.mock';
-import { projectControllerMock } from '../mocks/project-controller.mock';
-import { userControllerMock } from '../mocks/user-controller.mock';
+import { pageControllerMock } from '../mocks/page.controller.mock';
+import { projectControllerMock } from '../mocks/project.controller.mock';
+import { userControllerMock } from '../mocks/user.controller.mock';
 
 describe('Permission middleware', () => {
   const mockUser = getUserResponse();

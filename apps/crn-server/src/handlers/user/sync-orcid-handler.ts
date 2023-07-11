@@ -1,6 +1,6 @@
 import { UserEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
-import UserController from '../../controllers/users.controller';
+import UserController from '../../controllers/user.controller';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {

@@ -1,5 +1,4 @@
 import { addLocaleToFields, getLinkEntity } from '@asap-hub/contentful';
-
 import {
   createClient,
   RestAdapter,
@@ -10,6 +9,8 @@ import { RateLimiter } from 'limiter';
 
 import {
   Fixture,
+  CalendarCreateDataObject,
+  EventCreateDataObject,
   UserCreateDataObject,
   TeamCreateDataObject,
   InterestGroupCreateDataObject,
@@ -67,6 +68,41 @@ export class ContentfulFixture implements Fixture {
     return space.getEnvironment(contentfulEnvId);
   }
 
+  private async prepareCalendar(props: CalendarCreateDataObject) {
+    return props;
+  }
+
+  private async prepareEvent(props: EventCreateDataObject) {
+    const environment = await this.getEnvironment();
+    return {
+      ...props,
+      calendar: getLinkEntity(props.calendar),
+      speakers: await Promise.all(
+        (props.speakers || [])
+          .map(async (speaker) => {
+            if (speaker.team[0] && speaker.user[0]) {
+              const eventSpeaker = await environment.createEntry(
+                'eventSpeakers',
+                {
+                  fields: addLocaleToFields({
+                    team: getLinkEntity(speaker.team[0]),
+                    user: getLinkEntity(speaker.user[0]),
+                  }),
+                },
+              );
+              await eventSpeaker.publish();
+              return getLinkEntity(eventSpeaker.sys.id);
+            }
+            return null;
+          })
+          .filter(Boolean),
+      ),
+      notes: getMaterial(props.notes),
+      presentation: getMaterial(props.presentation),
+      videoRecording: getMaterial(props.videoRecording),
+    };
+  }
+
   private async prepareUser(props: UserCreateDataObject) {
     const environment = await this.getEnvironment();
     return {
@@ -117,6 +153,45 @@ export class ContentfulFixture implements Fixture {
     };
   }
 
+  async createCalendar(calendar: CalendarCreateDataObject) {
+    const environment = await this.getEnvironment();
+    const input = await this.prepareCalendar(calendar);
+    const result = await environment.createEntry('calendars', {
+      fields: addLocaleToFields(input),
+    });
+    await result.publish();
+    return {
+      id: result.sys.id,
+      ...calendar,
+    };
+  }
+
+  async createEvent(event: EventCreateDataObject) {
+    const environment = await this.getEnvironment();
+    const input = await this.prepareEvent(event);
+    const result = await environment.createEntry('events', {
+      fields: addLocaleToFields(input),
+    });
+    await result.publish();
+    return {
+      id: result.sys.id,
+      ...event,
+    };
+  }
+
+  async publishEvent(id: string, status?: 'Published' | 'Draft') {
+    const environment = await this.getEnvironment();
+    const entry = await environment.getEntry(id);
+
+    if (status === 'Draft' && entry.isPublished()) {
+      await entry.unpublish();
+    }
+
+    if (status === 'Published' && entry.isDraft()) {
+      await entry.publish();
+    }
+  }
+
   async createUser(user: UserCreateDataObject) {
     const environment = await this.getEnvironment();
     const input = await this.prepareUser(user);
@@ -161,12 +236,82 @@ export class ContentfulFixture implements Fixture {
     while (this.apiAdapter.created.length) {
       const id = this.apiAdapter.created.pop();
       if (id) {
-        const toDelete = await environment.getEntry(id);
-        if (toDelete.isPublished()) {
-          await toDelete.unpublish();
+        try {
+          const toDelete = await environment.getEntry(id);
+          if (toDelete.isPublished()) {
+            await toDelete.unpublish();
+          }
+          await toDelete.delete();
+        } catch (err) {
+          if (err instanceof Error && err.name === 'NotFound') {
+            // This 404 (Not Found) is an expected error as we delete some events
+            // while tests are still running (before the teardown)
+            // So when teardown happens, some records were already deleted
+          } else {
+            // eslint-disable-next-line no-console
+            console.log(`Fail to delete entry ${id}: ${err}`);
+          }
         }
-        await toDelete.delete();
       }
     }
   }
+
+  async deleteEvents(ids: string[]) {
+    const environment = await this.getEnvironment();
+
+    for (const id of ids) {
+      const toDelete = await environment.getEntry(id);
+      if (toDelete.isPublished()) {
+        await toDelete.unpublish();
+      }
+      await toDelete.delete();
+    }
+  }
+
+  async clearAllPreviousEvents() {
+    // when we create a new environment in Contentful
+    // we copy entries from a previous env
+    // so if there are events updated recently it can
+    // mess with our tests
+    const environment = await this.getEnvironment();
+
+    const { items: events } = await environment.getEntries({
+      content_type: 'events',
+    });
+
+    events.forEach(async (entry) => {
+      if (entry.isPublished()) {
+        await entry.unpublish();
+      }
+      await entry.delete();
+    });
+  }
 }
+
+const getRichTextDocument = (text: string) => ({
+  data: {
+    nodeType: 'document',
+    data: {},
+    content: [
+      {
+        nodeType: 'paragraph',
+        data: {},
+        content: [
+          {
+            nodeType: 'text',
+            value: text,
+            marks: [],
+            data: {},
+          },
+        ],
+      },
+    ],
+  },
+});
+
+const getMaterial = (material?: string | null) => {
+  if (!material) return undefined;
+
+  const document = getRichTextDocument(material);
+  return { 'en-US': document };
+};

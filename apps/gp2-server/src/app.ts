@@ -38,27 +38,17 @@ import {
   isContentfulEnabled,
 } from './config';
 import Calendars from './controllers/calendar.controller';
-import ContributingCohorts, {
-  ContributingCohortController,
-} from './controllers/contributing-cohort.controller';
-import Dashboard, {
-  DashboardController,
-} from './controllers/dashboard.controller';
+import ContributingCohortController from './controllers/contributing-cohort.controller';
+import DashboardController from './controllers/dashboard.controller';
 import Events from './controllers/event.controller';
-import ExternalUsers, {
-  ExternalUsersController,
-} from './controllers/external-users.controller';
-import News, { NewsController } from './controllers/news.controller';
-import Outputs, { OutputController } from './controllers/output.controller';
-import Pages, { PageController } from './controllers/page.controller';
-import Projects, { ProjectController } from './controllers/project.controller';
-import Users, { UserController } from './controllers/user.controller';
-import WorkingGroupNetwork, {
-  WorkingGroupNetworkController,
-} from './controllers/working-group-network.controller';
-import WorkingGroups, {
-  WorkingGroupController,
-} from './controllers/working-group.controller';
+import ExternalUserController from './controllers/external-user.controller';
+import NewsController from './controllers/news.controller';
+import OutputController from './controllers/output.controller';
+import PageController from './controllers/page.controller';
+import ProjectController from './controllers/project.controller';
+import UserController from './controllers/user.controller';
+import WorkingGroupNetworkController from './controllers/working-group-network.controller';
+import WorkingGroupController from './controllers/working-group.controller';
 import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
@@ -77,7 +67,6 @@ import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/
 import { ContributingCohortSquidexDataProvider } from './data-providers/contributing-cohort.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import { ExternalUserSquidexDataProvider } from './data-providers/external-user.data-provider';
-import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
 import { OutputSquidexDataProvider } from './data-providers/output.data-provider';
 import { PageSquidexDataProvider } from './data-providers/page.data-provider';
 import { ProjectSquidexDataProvider } from './data-providers/project.data-provider';
@@ -230,12 +219,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userSquidexDataProvider =
     libs.userSquidexDataProvider ||
     new UserSquidexDataProvider(squidexGraphqlClient, userRestClient);
-  const newsSquidexDataProvider =
-    libs.newsSquidexDataProvider ||
-    new NewsSquidexDataProvider(squidexGraphqlClient);
-  const newsContentfulDataProvider =
-    libs.newsContentfulDataProvider ||
-    new NewsContentfulDataProvider(contentfulGraphQLClient);
+
   const dashboardContentfulDataProvider =
     libs.dashboardContentfulDataProvider ||
     new DashboardContentfulDataProvider(contentfulGraphQLClient);
@@ -322,9 +306,8 @@ export const appFactory = (libs: Libs = {}): Express => {
       : pageSquidexDataProvider;
 
   const newsDataProvider =
-    libs.newsDataProvider || isContentfulEnabled
-      ? newsContentfulDataProvider
-      : newsSquidexDataProvider;
+    libs.newsDataProvider ||
+    new NewsContentfulDataProvider(contentfulGraphQLClient);
   const userDataProvider =
     libs.userDataProvider || isContentfulEnabled
       ? userContentfulDataProvider
@@ -365,33 +348,39 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Controllers
 
   const workingGroupController =
-    libs.workingGroupController || new WorkingGroups(workingGroupDataProvider);
+    libs.workingGroupController ||
+    new WorkingGroupController(workingGroupDataProvider);
   const workingGroupNetworkController =
     libs.workingGroupNetworkController ||
-    new WorkingGroupNetwork(workingGroupNetworkDataProvider);
+    new WorkingGroupNetworkController(workingGroupNetworkDataProvider);
   const projectController =
-    libs.projectController || new Projects(projectDataProvider);
+    libs.projectController || new ProjectController(projectDataProvider);
   const dashboardController =
-    libs.dashboardController || new Dashboard(dashboardContentfulDataProvider);
-  const newsController = libs.newsController || new News(newsDataProvider);
-  const pageController = libs.pageController || new Pages(pageDataProvider);
+    libs.dashboardController ||
+    new DashboardController(dashboardContentfulDataProvider);
+  const newsController =
+    libs.newsController || new NewsController(newsDataProvider);
+  const pageController =
+    libs.pageController || new PageController(pageDataProvider);
   const eventController = libs.eventController || new Events(eventDataProvider);
   const externalUserController =
-    libs.externalUserController || new ExternalUsers(externalUserDataProvider);
+    libs.externalUserController ||
+    new ExternalUserController(externalUserDataProvider);
   const calendarController =
     libs.calendarController || new Calendars(calendarDataProvider);
   const outputController =
     libs.outputController ||
-    new Outputs(outputDataProvider, externalUserDataProvider);
+    new OutputController(outputDataProvider, externalUserDataProvider);
   const contributingCohortController =
     libs.contributingCohortController ||
-    new ContributingCohorts(contributingCohortDataProvider);
+    new ContributingCohortController(contributingCohortDataProvider);
 
   /**
    * Public routes --->
    */
   const userController =
-    libs.userController || new Users(userDataProvider, assetDataProvider);
+    libs.userController ||
+    new UserController(userDataProvider, assetDataProvider);
 
   // Handlers
   const authHandler =
@@ -503,14 +492,12 @@ export type Libs = {
   eventDataProvider?: gp2.EventDataProvider;
   eventSquidexDataProvider?: gp2.EventDataProvider;
   externalUserContentfulDataProvider?: ExternalUserDataProvider;
-  externalUserController?: ExternalUsersController;
+  externalUserController?: ExternalUserController;
   externalUserDataProvider?: ExternalUserDataProvider;
   externalUserSquidexDataProvider?: ExternalUserDataProvider;
   logger?: Logger;
-  newsContentfulDataProvider?: NewsDataProvider;
   newsController?: NewsController;
   newsDataProvider?: NewsDataProvider;
-  newsSquidexDataProvider?: NewsDataProvider;
   outputContentfulDataProvider?: OutputDataProvider;
   outputController?: OutputController;
   outputDataProvider?: OutputDataProvider;

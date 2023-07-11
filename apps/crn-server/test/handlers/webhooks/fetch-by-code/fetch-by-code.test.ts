@@ -7,7 +7,7 @@ import {
   auth0SharedSecret as secret,
 } from '../../../../src/config';
 import { fetchUserByCodeHandlerFactory } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
-import { userControllerMock } from '../../../mocks/user-controller.mock';
+import { userControllerMock } from '../../../mocks/user.controller.mock';
 import { getUserResponse } from '../../../fixtures/users.fixtures';
 
 const successfulApiGatewayEvent = getApiGatewayEvent({

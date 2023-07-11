@@ -13,7 +13,7 @@ import {
   getUserResponse,
 } from '../../fixtures/users.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { userControllerMock } from '../../mocks/user-controller.mock';
+import { userControllerMock } from '../../mocks/user.controller.mock';
 
 const mapPayload = toPayload('user');
 

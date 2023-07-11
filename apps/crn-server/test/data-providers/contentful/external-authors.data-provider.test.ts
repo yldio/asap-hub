@@ -3,7 +3,7 @@ import {
   getContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
 import { GenericError } from '@asap-hub/errors';
-import { ExternalAuthorContentfulDataProvider } from '../../../src/data-providers/contentful/external-authors.data-provider';
+import { ExternalAuthorContentfulDataProvider } from '../../../src/data-providers/contentful/external-author.data-provider';
 import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlExternalAuthorsResponse,

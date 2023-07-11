@@ -8,7 +8,7 @@ import {
   getCalendarResponse,
   getListCalendarResponse,
 } from '../fixtures/calendar.fixtures';
-import { calendarDataProviderMock } from '../mocks/calendar-data-provider.mock';
+import { calendarDataProviderMock } from '../mocks/calendar.data-provider.mock';
 
 describe('Calendars Controller', () => {
   const calendarsController = new Calendars(calendarDataProviderMock);

@@ -1,5 +1,9 @@
 import { ListResponse } from '../common';
 
+const newsTypes = ['news', 'update'] as const;
+
+export type NewsType = (typeof newsTypes)[number];
+
 export type NewsDataObject = {
   id: string;
   created: string;
@@ -7,9 +11,7 @@ export type NewsDataObject = {
   shortText: string;
   link?: string;
   linkText?: string;
-  sampleCount: number;
-  articleCount: number;
-  cohortCount: number;
+  type: NewsType;
 };
 export type ListNewsDataObject = ListResponse<NewsDataObject>;
 

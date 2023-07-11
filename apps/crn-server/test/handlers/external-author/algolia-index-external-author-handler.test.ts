@@ -6,7 +6,7 @@ import {
   getExternalAuthorContentfulEvent,
 } from '../../fixtures/external-authors.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { externalAuthorControllerMock } from '../../mocks/external-author-controller.mock';
+import { externalAuthorControllerMock } from '../../mocks/external-author.controller.mock';
 
 describe('External Author index handler', () => {
   const indexHandler = indexExternalAuthorHandler(

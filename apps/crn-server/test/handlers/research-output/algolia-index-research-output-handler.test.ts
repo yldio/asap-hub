@@ -8,7 +8,7 @@ import {
   getResearchOutputResponse,
 } from '../../fixtures/research-output.fixtures';
 import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
+import { researchOutputControllerMock } from '../../mocks/research-output.controller.mock';
 
 describe('Research Output index handler', () => {
   const indexHandler = indexResearchOutputHandler(

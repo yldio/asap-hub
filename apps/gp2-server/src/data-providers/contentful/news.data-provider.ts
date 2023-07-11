@@ -54,10 +54,8 @@ export const parseContentfulGraphQlNews = (
   id: item.sys.id ?? '',
   title: item.title ?? '',
   shortText: item.shortText ?? '',
-  sampleCount: item.sampleCount ?? 0,
-  articleCount: item.articleCount ?? 0,
-  cohortCount: item.cohortCount ?? 0,
   link: item.link ?? undefined,
   linkText: item.linkText ?? undefined,
   created: item.publishDate,
+  type: item.type as gp2Model.NewsType,
 });

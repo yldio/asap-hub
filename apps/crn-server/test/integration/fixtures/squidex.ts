@@ -177,6 +177,10 @@ export class SquidexFixture implements Fixture {
   }
 
   async teardown() {
+    // no need to teardown in CI because we'll delete the environment anyway
+    if (process.env.CI) {
+      return;
+    }
     return this.teardownHelper();
   }
 

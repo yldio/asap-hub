@@ -139,6 +139,7 @@ jobs:
 
   integration-contentful:
     if: ${{ inputs.environment-name=='Branch' }}
+    concurrency: integration-contentful
     permissions:
       packages: read
     runs-on: ubuntu-latest

@@ -1,5 +1,5 @@
 import { ListGuideResponse } from '@asap-hub/model';
 
 export type GuideDataProvider = {
-  fetch: () => Promise<ListGuideResponse>;
+  fetchByCollectionTitle: (title: string) => Promise<ListGuideResponse>;
 };

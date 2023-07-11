@@ -2004,6 +2004,102 @@ export enum ExternalToolsOrder {
   UrlDesc = 'url_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guideCollections) */
+export type GuideCollections = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  guidesCollection?: Maybe<GuideCollectionsGuidesCollection>;
+  linkedFrom?: Maybe<GuideCollectionsLinkingCollections>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guideCollections) */
+export type GuideCollectionsGuidesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<GuideCollectionsGuidesCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<GuidesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guideCollections) */
+export type GuideCollectionsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guideCollections) */
+export type GuideCollectionsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type GuideCollectionsCollection = {
+  items: Array<Maybe<GuideCollections>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type GuideCollectionsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GuideCollectionsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GuideCollectionsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  guides?: InputMaybe<CfGuidesNestedFilter>;
+  guidesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type GuideCollectionsGuidesCollection = {
+  items: Array<Maybe<Guides>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum GuideCollectionsGuidesCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export type GuideCollectionsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type GuideCollectionsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum GuideCollectionsOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guideContent) */
 export type GuideContent = Entry & {
   contentfulMetadata: ContentfulMetadata;
@@ -2212,6 +2308,7 @@ export type GuidesFilter = {
 
 export type GuidesLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  guideCollectionsCollection?: Maybe<GuideCollectionsCollection>;
 };
 
 export type GuidesLinkingCollectionsEntryCollectionArgs = {
@@ -2220,6 +2317,29 @@ export type GuidesLinkingCollectionsEntryCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export type GuidesLinkingCollectionsGuideCollectionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<GuidesLinkingCollectionsGuideCollectionsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum GuidesLinkingCollectionsGuideCollectionsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export enum GuidesOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -3356,6 +3476,8 @@ export type Query = {
   externalAuthorsCollection?: Maybe<ExternalAuthorsCollection>;
   externalTools?: Maybe<ExternalTools>;
   externalToolsCollection?: Maybe<ExternalToolsCollection>;
+  guideCollections?: Maybe<GuideCollections>;
+  guideCollectionsCollection?: Maybe<GuideCollectionsCollection>;
   guideContent?: Maybe<GuideContent>;
   guideContentCollection?: Maybe<GuideContentCollection>;
   guides?: Maybe<Guides>;
@@ -3523,6 +3645,21 @@ export type QueryExternalToolsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ExternalToolsFilter>;
+};
+
+export type QueryGuideCollectionsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryGuideCollectionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<GuideCollectionsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<GuideCollectionsFilter>;
 };
 
 export type QueryGuideContentArgs = {
@@ -6068,6 +6205,21 @@ export type CfGuideContentNestedFilter = {
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type CfGuidesNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfGuidesNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfGuidesNestedFilter>>>;
+  contentCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type CfInterestGroupLeadersNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfInterestGroupLeadersNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfInterestGroupLeadersNestedFilter>>>;
@@ -6769,6 +6921,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'GuideCollections' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'GuideContent' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -6883,6 +7038,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'ExternalTools' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'GuideCollections' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'GuideContent' } & {
@@ -7023,6 +7181,9 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'GuideCollections' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'GuideContent' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -7137,6 +7298,9 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'GuideCollections' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'GuideContent' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -7235,6 +7399,9 @@ export type FetchDiscoverQuery = {
                         sys: Pick<Sys, 'id'>;
                       })
                     | ({ __typename: 'ExternalTools' } & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                    | ({ __typename: 'GuideCollections' } & {
                         sys: Pick<Sys, 'id'>;
                       })
                     | ({ __typename: 'GuideContent' } & {
@@ -7369,6 +7536,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'InterestGroupLeaders' } & {
@@ -7429,6 +7597,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'InterestGroupLeaders' } & {
@@ -7489,6 +7658,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'InterestGroupLeaders' } & {
@@ -7640,6 +7810,9 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideCollections' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'InterestGroupLeaders' } & {
@@ -7706,6 +7879,9 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideCollections' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'InterestGroupLeaders' } & {
@@ -7772,6 +7948,9 @@ export type FetchEventByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideCollections' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'InterestGroupLeaders' } & {
@@ -7947,6 +8126,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'GuideCollections' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'GuideContent' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -8037,6 +8219,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'GuideCollections' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'GuideContent' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -8125,6 +8310,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ExternalTools' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'GuideCollections' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'GuideContent' } & {
@@ -8331,6 +8519,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'GuideCollections' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'GuideContent' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8436,6 +8627,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'GuideCollections' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'GuideContent' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8539,6 +8733,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ExternalTools' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'GuideCollections' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'GuideContent' } & {
@@ -8772,6 +8969,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'GuideCollections' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'GuideContent' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8877,6 +9077,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'GuideCollections' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'GuideContent' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8980,6 +9183,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ExternalTools' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'GuideCollections' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'GuideContent' } & {
@@ -9213,6 +9419,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'GuideCollections' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'GuideContent' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -9318,6 +9527,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'GuideCollections' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'GuideContent' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -9421,6 +9633,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'ExternalTools' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'GuideCollections' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'GuideContent' } & {
@@ -9649,22 +9864,33 @@ export type FetchExternalAuthorsQuery = {
   >;
 };
 
-export type FetchGuideQueryVariables = Exact<{ [key: string]: never }>;
+export type FetchGuideByTitleQueryVariables = Exact<{
+  title: Scalars['String'];
+}>;
 
-export type FetchGuideQuery = {
-  guidesCollection?: Maybe<{
+export type FetchGuideByTitleQuery = {
+  guideCollectionsCollection?: Maybe<{
     items: Array<
-      Maybe<
-        Pick<Guides, 'title'> & {
-          contentCollection?: Maybe<{
-            items: Array<
-              Maybe<
-                Pick<GuideContent, 'title' | 'text' | 'linkUrl' | 'linkText'>
-              >
-            >;
-          }>;
-        }
-      >
+      Maybe<{
+        guidesCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<Guides, 'title'> & {
+                contentCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<
+                        GuideContent,
+                        'title' | 'text' | 'linkUrl' | 'linkText'
+                      >
+                    >
+                  >;
+                }>;
+              }
+            >
+          >;
+        }>;
+      }>
     >;
   }>;
 };
@@ -10007,6 +10233,7 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'InterestGroupLeaders' } & {
@@ -10083,6 +10310,9 @@ export type FetchNewsByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideCollections' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'InterestGroupLeaders' } & {
@@ -10186,6 +10416,9 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'GuideCollections' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'GuideContent' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -10276,6 +10509,7 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'InterestGroupLeaders' } & {
@@ -10359,6 +10593,9 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ExternalTools' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'GuideCollections' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'GuideContent' } & {
@@ -10662,6 +10899,7 @@ export type TutorialsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'InterestGroupLeaders' } & {
@@ -10735,6 +10973,9 @@ export type FetchTutorialByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideCollections' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'InterestGroupLeaders' } & {
@@ -11191,6 +11432,7 @@ export type WorkingGroupsContentFragment = Pick<
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'InterestGroupLeaders' } & {
@@ -11301,6 +11543,9 @@ export type FetchWorkingGroupByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideCollections' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'InterestGroupLeaders' } & {
@@ -11442,6 +11687,9 @@ export type FetchWorkingGroupsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ExternalTools' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'GuideCollections' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'GuideContent' } & {
@@ -15950,24 +16198,57 @@ export const FetchExternalAuthorsDocument = {
   FetchExternalAuthorsQuery,
   FetchExternalAuthorsQueryVariables
 >;
-export const FetchGuideDocument = {
+export const FetchGuideByTitleDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchGuide' },
+      name: { kind: 'Name', value: 'FetchGuideByTitle' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'title' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'guidesCollection' },
+            name: { kind: 'Name', value: 'guideCollectionsCollection' },
             arguments: [
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '1' },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'title' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'title' },
+                      },
+                    },
+                  ],
+                },
               },
             ],
             selectionSet: {
@@ -15979,10 +16260,9 @@ export const FetchGuideDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'contentCollection' },
+                        name: { kind: 'Name', value: 'guidesCollection' },
                         arguments: [
                           {
                             kind: 'Argument',
@@ -16005,15 +16285,65 @@ export const FetchGuideDocument = {
                                   },
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'text' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'linkUrl' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'linkText' },
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'contentCollection',
+                                    },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'limit' },
+                                        value: {
+                                          kind: 'IntValue',
+                                          value: '100',
+                                        },
+                                      },
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'title',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'text',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'linkUrl',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'linkText',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
                                   },
                                 ],
                               },
@@ -16031,7 +16361,10 @@ export const FetchGuideDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<FetchGuideQuery, FetchGuideQueryVariables>;
+} as unknown as DocumentNode<
+  FetchGuideByTitleQuery,
+  FetchGuideByTitleQueryVariables
+>;
 export const FetchInterestGroupByIdDocument = {
   kind: 'Document',
   definitions: [

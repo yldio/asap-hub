@@ -2,17 +2,21 @@
 
 import gql from 'graphql-tag';
 
-export const FETCH_GUIDE = gql`
-  query FetchGuide {
-    guidesCollection(limit: 20) {
+export const FETCH_GUIDE_BY_TITLE = gql`
+  query FetchGuideByTitle($title: String!) {
+    guideCollectionsCollection(limit: 1, where: { title: $title }) {
       items {
-        title
-        contentCollection(limit: 100) {
+        guidesCollection(limit: 100) {
           items {
             title
-            text
-            linkUrl
-            linkText
+            contentCollection(limit: 100) {
+              items {
+                title
+                text
+                linkUrl
+                linkText
+              }
+            }
           }
         }
       }

@@ -4,11 +4,11 @@ import { GuideDataProvider } from '../data-providers/types';
 export default class Guide implements GuideController {
   constructor(private guideDataProvider: GuideDataProvider) {}
 
-  async fetch(): Promise<ListGuideResponse> {
-    return this.guideDataProvider.fetch();
+  async fetchByCollectionTitle(title: string): Promise<ListGuideResponse> {
+    return this.guideDataProvider.fetchByCollectionTitle(title);
   }
 }
 
 export interface GuideController {
-  fetch: () => Promise<ListGuideResponse>;
+  fetchByCollectionTitle: (title: string) => Promise<ListGuideResponse>;
 }

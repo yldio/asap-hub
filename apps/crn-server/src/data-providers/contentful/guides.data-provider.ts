@@ -5,16 +5,24 @@ import {
 } from '@asap-hub/model';
 import {
   GraphQLClient,
-  FETCH_GUIDE,
-  FetchGuideQuery,
+  FETCH_GUIDE_BY_TITLE,
+  FetchGuideByTitleQuery,
   GuideContent,
+  Maybe,
+  Guides,
 } from '@asap-hub/contentful';
 import { GuideDataProvider } from '../types';
 import reducer from '../../utils/reducer';
 
-type GuideItem = NonNullable<
-  NonNullable<FetchGuideQuery['guidesCollection']>['items']
->[number];
+type GuideItem = Pick<Guides, 'title'> & {
+  contentCollection?:
+    | Maybe<{
+        items: Maybe<
+          Pick<GuideContent, 'title' | 'text' | 'linkUrl' | 'linkText'>
+        >[];
+      }>
+    | undefined;
+};
 
 type GuideContentItem = NonNullable<
   Pick<GuideContent, 'text' | 'title' | 'linkUrl' | 'linkText'>[]
@@ -23,12 +31,19 @@ type GuideContentItem = NonNullable<
 export class GuideContentfulDataProvider implements GuideDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
 
-  async fetch(): Promise<ListGuideResponse> {
-    const { guidesCollection } =
-      await this.contentfulClient.request<FetchGuideQuery>(FETCH_GUIDE);
+  async fetchByCollectionTitle(title: string): Promise<ListGuideResponse> {
+    const { guideCollectionsCollection } =
+      await this.contentfulClient.request<FetchGuideByTitleQuery>(
+        FETCH_GUIDE_BY_TITLE,
+        { title },
+      );
+
+    const guides =
+      guideCollectionsCollection?.items[0]?.guidesCollection?.items || [];
+
     return {
-      items: parseGraphQLGuides(guidesCollection?.items || []),
-      total: guidesCollection?.items.length || 0,
+      items: parseGraphQLGuides(guides),
+      total: guides.length,
     };
   }
 }
@@ -53,5 +68,10 @@ export const parseGraphQLGuide = (guide: GuideItem): GuideDataObject => ({
     : [],
 });
 
-const parseGraphQLGuides = (guides: GuideItem[]): GuideDataObject[] =>
-  guides.map((guide) => parseGraphQLGuide(guide));
+const reduceGuides = reducer<GuideItem | null, GuideDataObject>(
+  parseGraphQLGuide,
+);
+
+const parseGraphQLGuides = (
+  guides: Maybe<GuideItem | null>[],
+): GuideDataObject[] => guides.reduce(reduceGuides, []);

@@ -3,7 +3,7 @@ module.exports.description = 'Create guide collection model';
 module.exports.up = (migration) => {
   const guideCollections = migration
     .createContentType('guideCollections')
-    .name('GuideCollections')
+    .name('Guide Collections')
     .description('')
     .displayField('title');
   guideCollections

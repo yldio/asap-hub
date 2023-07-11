@@ -16,7 +16,6 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshDashboardState } from '../state';
 import { getDashboard, getReminders } from '../api';
 import { getUser, getUsers, patchUser } from '../../network/users/api';
-// import { getGuides } from '../../guides/api';
 import { refreshUserState } from '../../network/users/state';
 
 jest.mock('../api');

@@ -149,7 +149,6 @@ jobs:
       CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
       GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
-      GP2_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.GP2_SQUIDEX_CI_CLIENT_SECRET }}
 
   branch-pipeline-success:
     runs-on: ubuntu-latest

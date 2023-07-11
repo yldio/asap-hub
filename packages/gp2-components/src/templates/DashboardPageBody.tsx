@@ -79,7 +79,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             Here are the latest announcements from admins.
           </Paragraph>
           <div css={contentCardsStyles}>
-            <RemindersCard reminders={announcements} canPublish />
+            <RemindersCard limit={3} reminders={announcements} canPublish />
           </div>
         </div>
       ) : null}

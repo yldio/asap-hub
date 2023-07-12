@@ -23,10 +23,6 @@ import {
   neutral200,
 } from '../colors';
 
-const ITEM_HEIGHT = 48;
-const DROPDOWN_TOP_PADDING = 5;
-const NUM_ITEMS_TO_SHOW = 8.5;
-
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -99,12 +95,6 @@ const resetButtonStyles = css({
   },
 });
 
-
-const trimmedListStyles = css({
-  overflowY: 'auto',
-  maxHeight: `${(ITEM_HEIGHT * NUM_ITEMS_TO_SHOW - DROPDOWN_TOP_PADDING) / perRem}em`,
-});
-
 export type ItemType = 'title' | 'inner' | 'default';
 
 const itemStyles = ({
@@ -150,7 +140,7 @@ type DropdownButtonProps = {
   children?: ReadonlyArray<ItemData>;
   buttonChildren: (menuShown: boolean) => ReactNode;
   noMargin?: boolean;
-  trimmedList?: boolean;
+  dropdownHeight?: number;
 } & Partial<Pick<ComponentProps<typeof Button>, 'primary'>>;
 
 const DropdownButton: React.FC<DropdownButtonProps> = ({
@@ -158,11 +148,18 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   buttonChildren,
   noMargin = false,
   primary,
-  trimmedList = false,
+  dropdownHeight,
 }) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
   const [menuShown, setMenuShown] = useState(false);
+
+  const trimmedListStyles = dropdownHeight
+    ? css({
+        overflowY: 'auto',
+        maxHeight: `${dropdownHeight / perRem}em`,
+      })
+    : null;
 
   useEffect(() => {
     const handleClickOutside = (event: Event) => {
@@ -190,7 +187,7 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
           css={[
             menuContainerStyles,
             menuShown && showMenuStyles,
-            trimmedList && trimmedListStyles,
+            trimmedListStyles,
           ]}
         >
           <ul css={listStyles}>

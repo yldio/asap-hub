@@ -28,6 +28,10 @@ import DropdownButton, { ItemType } from '../molecules/DropdownButton';
 import { perRem } from '../pixels';
 import { Ellipsis } from '../atoms';
 
+const ITEM_HEIGHT = 48;
+const DROPDOWN_TOP_PADDING = 5;
+const NUM_ITEMS_TO_SHOW = 8.5;
+
 const iconStyles = css({
   display: 'flex',
   marginRight: `${8 / perRem}em`,
@@ -129,7 +133,7 @@ export const SharedOutputDropdownBase: React.FC<SharedOutputDropdownProps> = ({
   return (
     <DropdownButton
       primary
-      trimmedList
+      dropdownHeight={ITEM_HEIGHT * NUM_ITEMS_TO_SHOW - DROPDOWN_TOP_PADDING}
       buttonChildren={() => (
         <>
           <div css={iconStyles}>{plusIcon}</div> Share an output

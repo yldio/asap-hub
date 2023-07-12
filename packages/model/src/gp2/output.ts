@@ -31,7 +31,7 @@ export const outputDocumentTypeToType: Record<
   'Procedural Form': new Set<OutputType>(),
   'GP2 Reports': new Set<OutputType>(),
   'Training Materials': new Set<OutputType>(),
-  'Dataset': new Set<OutputType>(),
+  Dataset: new Set<OutputType>(),
   Article: new Set<OutputType>([
     'Research',
     'Review',

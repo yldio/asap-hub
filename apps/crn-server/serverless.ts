@@ -49,7 +49,6 @@ const {
   CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   CRN_CONTENTFUL_SPACE_ID,
   CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
-  IS_CONTENTFUL_ENABLED = 'false',
   IS_CONTENTFUL_ENABLED_V2 = 'false',
   LOG_LEVEL,
 } = process.env;
@@ -78,7 +77,6 @@ const contentfulManagementAccessToken = CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 const contentfulWebhookAuthenticationToken =
   CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
-const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
 const isContentfulEnabledV2 = IS_CONTENTFUL_ENABLED_V2;
 const sesRegion = CRN_SES_REGION!;
 
@@ -177,7 +175,6 @@ const serverlessConfig: AWS = {
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: CI_COMMIT_SHA || '${env:CURRENT_REVISION}',
-      IS_CONTENTFUL_ENABLED: isContentfulEnabled,
       IS_CONTENTFUL_ENABLED_V2: isContentfulEnabledV2,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,

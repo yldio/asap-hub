@@ -10,7 +10,6 @@ const {
   ENVIRONMENT,
   REGION,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
-  IS_CONTENTFUL_ENABLED,
   IS_CONTENTFUL_ENABLED_V2,
   CONTENTFUL_SPACE_ID,
   CONTENTFUL_ACCESS_TOKEN,
@@ -97,7 +96,6 @@ export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
 export const contentfulWebhookAuthenticationToken =
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN ||
   'contentful-webhook-authentication-token';
-export const isContentfulEnabled = IS_CONTENTFUL_ENABLED === 'true' || false;
 export const isContentfulEnabledV2 =
   IS_CONTENTFUL_ENABLED_V2 === 'true' || false;
 export const crnMeetingMaterialsDrive =

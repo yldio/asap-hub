@@ -15,7 +15,6 @@ gp2-auth0-domain=dev-gp2-hub.us.auth0.com
 gp2-ci-auth0-client-id=o6NEEPm9WVKt1aqRr25tbFDlAV8WQVnR
 gp2-contentful-enabled=true
 is-contentful-enabled-v2=false
-is-contentful-enabled=true
 react-app-environment=development
 react-app-gp2-sentry-dsn=https://a087618d35f54407bf1919bf82da2cc6@o850903.ingest.sentry.io/4504769246461952
 crn-ses-region=eu-west-1

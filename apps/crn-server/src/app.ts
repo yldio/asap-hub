@@ -45,7 +45,6 @@ import {
   contentfulPreviewAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
-  isContentfulEnabled,
 } from './config';
 import GuideController from './controllers/guide.controller';
 import CalendarController from './controllers/calendar.controller';
@@ -227,33 +226,20 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
-  const dashboardSquidexDataProvider =
-    libs.dashboardSquidexDataProvider ||
-    new DashboardSquidexDataProvider(squidexGraphqlClient);
   const dashboardContentfulDataProvider =
     libs.dashboardContentfulDataProvider ||
     new DashboardContentfulDataProvider(contentfulGraphQLClient);
   const dashboardDataProvider =
-    libs.dashboardDataProvider || isContentfulEnabled
-      ? dashboardContentfulDataProvider
-      : dashboardSquidexDataProvider;
-  const newsSquidexDataProvider =
-    libs.newsSquidexDataProvider || new NewsSquidexDataProvider(newsRestClient);
+    libs.dashboardDataProvider || dashboardContentfulDataProvider;
   const newsContentfulDataProvider =
     libs.newsContentfulDataProvider ||
     new NewsContentfulDataProvider(contentfulGraphQLClient);
   const newsDataProvider =
-    libs.newsDataProvider || isContentfulEnabled
-      ? newsContentfulDataProvider
-      : newsSquidexDataProvider;
-  const pageSquidexDataProvider =
-    libs.pageSquidexDataProvider || new PageSquidexDataProvider(pageRestClient);
+    libs.newsDataProvider || newsContentfulDataProvider;
   const pageContentfulDataProvider =
     libs.pageContentfulDataProvider ||
     new PageContentfulDataProvider(contentfulGraphQLClient);
-  const pageDataProvider = isContentfulEnabled
-    ? pageContentfulDataProvider
-    : pageSquidexDataProvider;
+  const pageDataProvider = pageContentfulDataProvider
 
   featureFlagDependencySwitch.setDependency(
     'teams',

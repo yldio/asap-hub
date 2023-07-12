@@ -74,6 +74,8 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [
           getSquidexReminderReseachOutputsContents(),
         ];
+        squidexGraphqlResponse.queryResearchOutputsContents[0]!.flatData.workingGroups =
+          [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -552,6 +554,8 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = null;
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.workingGroups =
+          [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -908,6 +912,8 @@ describe('Reminder Data Provider', () => {
 
       test('Should not return anything related to in review RO when inReviewResearchOutputs property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.workingGroups =
+          [];
         squidexGraphqlResponse.inReviewResearchOutputs = null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,

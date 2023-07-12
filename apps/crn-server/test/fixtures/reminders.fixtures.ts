@@ -43,6 +43,9 @@ export const getResearchOutputPublishedReminder =
         documentType: researchOutputDataObject.documentType,
         title: researchOutputDataObject.title,
         addedDate: researchOutputDataObject.addedDate,
+        createdBy: 'Tom Hardy',
+        associationType: 'team',
+        associationName: 'Team A',
       },
     };
   };
@@ -317,8 +320,31 @@ export const getSquidexReminderReseachOutputsContents = (): NonNullable<
       addedDate: researchOutput.flatData.addedDate,
       documentType: researchOutput.flatData.documentType,
       title: researchOutput.flatData.title,
-      teams: [{ id: researchOutput.flatData.teams![0]!.id }],
-      workingGroups: [{ id: 'wg-id-1' }],
+      createdBy: [
+        {
+          flatData: {
+            firstName: 'Tom',
+            lastName: 'Hardy',
+          },
+        },
+      ],
+      teams: [
+        {
+          id: researchOutput.flatData.teams![0]!.id,
+          flatData: {
+            displayName:
+              researchOutput.flatData.teams![0]!.flatData.displayName,
+          },
+        },
+      ],
+      workingGroups: [
+        {
+          id: 'wg-id-1',
+          flatData: {
+            title: 'Working Group 1',
+          },
+        },
+      ],
     },
   };
 };

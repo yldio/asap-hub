@@ -35,7 +35,7 @@ describe('DashboardPageBody', () => {
     ).toBeVisible();
   });
 
-  it('should render News and Updates if there is a news item', () => {
+  it('should render Latest Newsletter if there is a news item', () => {
     render(
       <DashboardPageBody
         news={gp2.createNewsResponse()}
@@ -45,7 +45,7 @@ describe('DashboardPageBody', () => {
       />,
     );
     expect(
-      screen.getByRole('heading', { name: 'News and Updates' }),
+      screen.getByRole('heading', { name: 'Latest Newsletter' }),
     ).toBeVisible();
   });
   describe('Announcements', () => {

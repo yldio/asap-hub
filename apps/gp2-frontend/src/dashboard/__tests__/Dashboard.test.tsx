@@ -64,7 +64,7 @@ it('renders the news when theres at least one news', async () => {
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   await renderDashboard({});
   expect(
-    screen.getByRole('heading', { name: 'News and Updates' }),
+    screen.getByRole('heading', { name: 'Latest Newsletter' }),
   ).toBeVisible();
 });
 

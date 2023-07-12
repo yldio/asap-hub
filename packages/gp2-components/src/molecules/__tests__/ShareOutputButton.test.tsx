@@ -21,8 +21,8 @@ describe('ShareOutputButton', () => {
       expect.stringContaining('code-software'),
       expect.stringContaining('dataset'),
       expect.stringContaining('procedural-form'),
-      expect.stringContaining('training-materials'),
       expect.stringContaining('gp2-reports'),
+      expect.stringContaining('training-materials'),
     ]);
   });
   it('renders links for working groups', () => {

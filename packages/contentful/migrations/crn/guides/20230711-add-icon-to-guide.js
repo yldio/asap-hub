@@ -18,7 +18,7 @@ module.exports.up = (migration) => {
     .omitted(false)
     .linkType('Asset');
 
-  guide.changeFieldControl('icon', 'builtin', 'assetLinkEditor', {
+  guides.changeFieldControl('icon', 'builtin', 'assetLinkEditor', {
     showLinkEntityAction: true,
     showCreateEntityAction: false,
   });

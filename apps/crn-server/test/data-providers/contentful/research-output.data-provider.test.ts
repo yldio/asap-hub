@@ -413,9 +413,56 @@ describe('Research Outputs Data Provider', () => {
     });
 
     test('Should combine inbound and outbound related research links', async () => {
-      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        researchOutputs,
+        researchOutputs: {
+          ...getContentfulResearchOutputGraphqlResponse(),
+          relatedResearchCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'related-research-id-0',
+                },
+                title: 'Related Research1',
+                type: 'Report',
+                documentType: 'Bioinformatics',
+                teamsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'team-id-1',
+                      },
+                      displayName: 'Team B',
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+          linkedFrom: {
+            researchOutputsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'related-referencing-research-id',
+                  },
+                  title: 'Related Research2',
+                  type: 'Report',
+                  documentType: 'Bioinformatics',
+                  teamsCollection: {
+                    items: [
+                      {
+                        sys: {
+                          id: 'team-id-1',
+                        },
+                        displayName: 'Team B',
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        },
       });
 
       const result = await researchOutputDataProvider.fetchById('1');

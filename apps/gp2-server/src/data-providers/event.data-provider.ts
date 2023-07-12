@@ -265,30 +265,36 @@ export const parseGraphQLSpeakers = (
   (speakers || []).reduce((speakerList: gp2Model.EventSpeaker[], speaker) => {
     const { title, user } = speaker;
     if (user?.__typename === 'ExternalUsers') {
-      speakerList.push({
-        speaker: parseEventSpeakerExternalUser(user),
-        topic: title || undefined,
-      });
-      return speakerList;
+      return [
+        ...speakerList,
+        {
+          speaker: parseEventSpeakerExternalUser(user),
+          topic: title || undefined,
+        },
+      ];
     }
 
     if (!user) {
-      speakerList.push({
-        speaker: undefined,
-        topic: title || undefined,
-      });
-      return speakerList;
+      return [
+        ...speakerList,
+        {
+          speaker: undefined,
+          topic: title || undefined,
+        },
+      ];
     }
 
     if (user.onboarded !== true) {
       return speakerList;
     }
 
-    speakerList.push({
-      speaker: parseEventSpeakerUser(user),
-      topic: title || undefined,
-    });
-    return speakerList;
+    return [
+      ...speakerList,
+      {
+        speaker: parseEventSpeakerUser(user),
+        topic: title || undefined,
+      },
+    ];
   }, []);
 
 export const parseGraphQLEvent = (

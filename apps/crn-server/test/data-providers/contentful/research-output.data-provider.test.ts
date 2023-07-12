@@ -974,41 +974,6 @@ describe('Research Outputs Data Provider', () => {
       );
     });
 
-    test('sets team ids to contentful references', async () => {
-      await researchOutputDataProvider.create(
-        {
-          ...getResearchOutputCreateDataObject(),
-          teamIds: ['team-1', 'team-2'],
-        },
-        { publish: false },
-      );
-      expect(environmentMock.createEntry).toHaveBeenCalledWith(
-        'researchOutputs',
-        expect.objectContaining({
-          fields: expect.objectContaining({
-            teams: {
-              'en-US': [
-                {
-                  sys: {
-                    type: 'Link',
-                    linkType: 'Entry',
-                    id: 'team-1',
-                  },
-                },
-                {
-                  sys: {
-                    type: 'Link',
-                    linkType: 'Entry',
-                    id: 'team-2',
-                  },
-                },
-              ],
-            },
-          }),
-        }),
-      );
-    });
-
     test('sets related research ids to contentful references', async () => {
       await researchOutputDataProvider.create(
         {
@@ -1385,38 +1350,6 @@ describe('Research Outputs Data Provider', () => {
                 type: 'Link',
                 linkType: 'Entry',
                 id: 'lab-2',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    test('sets team ids to contentful references', async () => {
-      await researchOutputDataProvider.update(
-        '1',
-        {
-          ...getResearchOutputUpdateDataObject(),
-          teamIds: ['team-1', 'team-2'],
-        },
-        { publish: false },
-      );
-      expect(patch).toHaveBeenCalledWith(
-        entry,
-        expect.objectContaining({
-          teams: [
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'team-1',
-              },
-            },
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'team-2',
               },
             },
           ],

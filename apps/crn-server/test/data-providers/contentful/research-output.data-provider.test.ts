@@ -254,16 +254,15 @@ describe('Research Outputs Data Provider', () => {
       await researchOutputDataProviderMockGraphql.fetchById('1');
     });
 
-    test('throws a not found error if query does not return a result', async () => {
+    test('returns null if query does not return a result', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValue({
         researchOutputs: null,
       });
       contentfulGraphqlPreviewClientMock.request.mockResolvedValue({
         researchOutputs: null,
       });
-      await expect(researchOutputDataProvider.fetchById('1')).rejects.toThrow(
-        'Not Found',
-      );
+      const result = await researchOutputDataProvider.fetchById('1');
+      expect(result).toBeNull();
     });
 
     test('looks for published version first, and then draft if there is no published version', async () => {

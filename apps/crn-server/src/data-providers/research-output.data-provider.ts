@@ -13,7 +13,6 @@ import {
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
-import Boom from '@hapi/boom';
 import { Filter } from 'odata-query';
 import {
   FetchResearchOutputQuery,
@@ -101,7 +100,7 @@ export class ResearchOutputSquidexDataProvider
       researchOutputGraphqlResponse;
 
     if (!researchOutputContent) {
-      throw Boom.notFound();
+      return null;
     }
 
     return parseGraphQLResearchOutput(researchOutputContent);

@@ -27,7 +27,6 @@ import {
   ResearchOutputsFilter,
   pollContentfulGql,
 } from '@asap-hub/contentful';
-import Boom from '@hapi/boom';
 import { isSharingStatus } from '../transformers/research-output';
 import {
   ResearchOutputDataProvider,
@@ -155,7 +154,7 @@ export class ResearchOutputContentfulDataProvider
           FetchResearchOutputByIdQueryVariables
         >(FETCH_RESEARCH_OUTPUT_BY_ID, { id, preview: true });
       if (!draftResearchoutput) {
-        throw Boom.notFound();
+        return null;
       }
       return parseGraphQLResearchOutput(draftResearchoutput);
     }

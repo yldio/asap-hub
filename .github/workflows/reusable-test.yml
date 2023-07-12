@@ -186,7 +186,7 @@ jobs:
           CONTENTFUL_ENV_ID: integration-${{ github.run_id }}
           CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
           CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
-          IS_CONTENTFUL_ENABLED_V2: true
+          IS_CONTENTFUL_ENABLED: true
       - name: move coverage
         shell: bash
         run: mv coverage/coverage-final.json coverage/integration-contentful.json

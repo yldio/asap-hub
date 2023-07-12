@@ -12,7 +12,7 @@ import {
   contentfulAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
-  isContentfulEnabledV2,
+  isContentfulEnabled,
 } from '../config';
 import { UserContentfulDataProvider } from '../data-providers/contentful/user.data-provider';
 import { AssetContentfulDataProvider } from '../data-providers/contentful/asset.data-provider';
@@ -36,7 +36,7 @@ const getRestClient = (): SquidexRestClient<RestUser, InputUser> => {
 };
 
 export const getUserDataProvider = (): UserDataProvider => {
-  if (isContentfulEnabledV2) {
+  if (isContentfulEnabled) {
     const contentfulGraphQLClient = getContentfulGraphQLClient({
       space: contentfulSpaceId,
       accessToken: contentfulAccessToken,
@@ -58,7 +58,7 @@ export const getUserDataProvider = (): UserDataProvider => {
 };
 
 export const getAssetDataProvider = (): AssetDataProvider => {
-  if (isContentfulEnabledV2) {
+  if (isContentfulEnabled) {
     return new AssetContentfulDataProvider(getContentfulRestClientFactory);
   }
 

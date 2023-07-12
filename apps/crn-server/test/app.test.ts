@@ -65,7 +65,7 @@ describe('Contentful feature flag', () => {
     });
 
     test('user controller uses contentful data provider when the environment var is true', async () => {
-      process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
+      process.env.IS_CONTENTFUL_ENABLED = 'true';
 
       const { appFactory } = require('../src/app');
 
@@ -82,7 +82,7 @@ describe('Contentful feature flag', () => {
     });
 
     test('user controller uses squidex data provider when the environment var is false', async () => {
-      process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
+      process.env.IS_CONTENTFUL_ENABLED = 'false';
 
       const { appFactory } = require('../src/app');
 
@@ -99,7 +99,7 @@ describe('Contentful feature flag', () => {
     });
 
     test('user controller uses contentful data provider when the environment var is false but the cookie is set to true', async () => {
-      process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
+      process.env.IS_CONTENTFUL_ENABLED = 'false';
 
       const { appFactory } = require('../src/app');
 

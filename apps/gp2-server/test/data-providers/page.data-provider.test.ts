@@ -1,52 +1,59 @@
-import nock from 'nock';
-import { RestPage, SquidexRest } from '@asap-hub/squidex';
-import { PageSquidexDataProvider } from '../../src/data-providers/page.data-provider';
-import { getAuthToken } from '../../src/utils/auth';
-import { appName, baseUrl } from '../../src/config';
-import { identity } from '../helpers/squidex';
+import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import { PageContentfulDataProvider } from '../../src/data-providers/page.data-provider';
+import {
+  getContentfulGraphqlPages,
+  getContentfulPagesGraphqlResponse,
+} from '../fixtures/page.fixtures';
+import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
 
-describe('Page data provider', () => {
-  const pageRestClient = new SquidexRest<RestPage>(getAuthToken, 'pages', {
-    appName,
-    baseUrl,
-  });
-  const pageDataProvider = new PageSquidexDataProvider(pageRestClient);
+describe('Pages Contentful Data Provider', () => {
+  const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 
-  beforeAll(() => {
-    identity();
-  });
+  const pageDataProvider = new PageContentfulDataProvider(
+    contentfulGraphqlClientMock,
+  );
 
-  beforeEach(jest.resetAllMocks);
-
-  describe('Fetch', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
+  const contentfulGraphqlClientMockServer =
+    getContentfulGraphqlClientMockServer({
+      Pages: () => getContentfulGraphqlPages(),
     });
 
-    afterEach(() => {
-      nock.cleanAll();
+  const pageDataProviderMockGraphql = new PageContentfulDataProvider(
+    contentfulGraphqlClientMockServer,
+  );
+
+  afterEach(jest.resetAllMocks);
+
+  describe('Fetch method', () => {
+    test('Should fetch the list of Pages from Contentful GraphQl', async () => {
+      const result = await pageDataProviderMockGraphql.fetch({});
+
+      expect(result).toMatchObject({
+        total: 1,
+        items: [
+          {
+            id: 'some-id',
+            path: '/privacy-policy',
+            shortText: 'short text',
+            text: '<h1>Privacy Policy</h1>',
+            title: 'Privacy Policy',
+            link: 'link',
+            linkText: 'linkText',
+          },
+        ],
+      });
     });
+
     test('Should return an empty result when no pages are found', async () => {
-      const path = '/not-found';
+      const contentfulPagesGraphqlResponse =
+        getContentfulPagesGraphqlResponse();
+      contentfulPagesGraphqlResponse.pagesCollection!.total = 0;
+      contentfulPagesGraphqlResponse.pagesCollection!.items = [];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulPagesGraphqlResponse,
+      );
 
-      nock(baseUrl)
-        .get(`/api/content/${appName}/pages`)
-        .query({
-          q: JSON.stringify({
-            take: 8,
-            filter: {
-              path: 'data.path.iv',
-              op: 'eq',
-              value: path,
-            },
-          }),
-        })
-        .reply(200, {
-          total: 0,
-          items: [],
-        });
-
-      const result = await pageDataProvider.fetch({ filter: { path } });
+      const result = await pageDataProvider.fetch();
 
       expect(result).toEqual({
         items: [],
@@ -54,120 +61,37 @@ describe('Page data provider', () => {
       });
     });
 
-    test('Should return the result when the page exists', async () => {
-      nock(baseUrl)
-        .get(`/api/content/${appName}/pages`)
-        .query({
-          q: JSON.stringify({
-            take: 8,
-          }),
-        })
-        .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'some-id',
-              data: {
-                path: { iv: '/privacy-policy' },
-                text: {
-                  iv: '<h1>Privacy Policy</h1>',
-                },
-                shortText: {
-                  iv: 'short text',
-                },
-                title: {
-                  iv: 'Privacy Policy',
-                },
-                link: {
-                  iv: 'link',
-                },
-                linkText: {
-                  iv: 'linkText',
-                },
-              },
-            },
-          ],
-        });
+    test('Should return an empty result when the client returns a response with query property set to null', async () => {
+      const contentfulPagesGraphqlResponse =
+        getContentfulPagesGraphqlResponse();
+      contentfulPagesGraphqlResponse.pagesCollection = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulPagesGraphqlResponse,
+      );
 
       const result = await pageDataProvider.fetch();
 
       expect(result).toEqual({
-        total: 1,
-        items: [
-          {
-            id: 'some-id',
-            path: '/privacy-policy',
-            shortText: 'short text',
-            text: '<h1>Privacy Policy</h1>',
-            title: 'Privacy Policy',
-            link: 'link',
-            linkText: 'linkText',
-          },
-        ],
+        items: [],
+        total: 0,
       });
     });
 
-    test('Should query pages by path', async () => {
-      const path = '/page';
+    test('Should filter pages by path', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulPagesGraphqlResponse(),
+      );
 
-      nock(baseUrl)
-        .get(`/api/content/${appName}/pages`)
-        .query({
-          q: JSON.stringify({
-            take: 8,
-            filter: {
-              path: 'data.path.iv',
-              op: 'eq',
-              value: path,
-            },
-          }),
-        })
-        .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'some-id',
-              data: {
-                path: { iv: '/privacy-policy' },
-                text: {
-                  iv: '<h1>Privacy Policy</h1>',
-                },
-                shortText: {
-                  iv: 'short text',
-                },
-                title: {
-                  iv: 'Privacy Policy',
-                },
-                link: {
-                  iv: 'link',
-                },
-                linkText: {
-                  iv: 'linkText',
-                },
-              },
-            },
-          ],
-        });
+      await pageDataProvider.fetch({ filter: { path: '/privacy-policy' } });
 
-      const result = await pageDataProvider.fetch({ filter: { path } });
-
-      expect(result).toEqual({
-        total: 1,
-        items: [
-          {
-            id: 'some-id',
-            path: '/privacy-policy',
-            shortText: 'short text',
-            text: '<h1>Privacy Policy</h1>',
-            title: 'Privacy Policy',
-            link: 'link',
-            linkText: 'linkText',
-          },
-        ],
-      });
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        {
+          where: { path: '/privacy-policy' },
+        },
+      );
     });
   });
-
   describe('Fetch-by-id method', () => {
     test('Should throw as not implemented', async () => {
       expect.assertions(1);

@@ -4,17 +4,17 @@ import {
 } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
 import { DateTime } from 'luxon';
-import { DashboardContentfulDataProvider } from '../../../src/data-providers/contentful/dashboard.data-provider';
+import { DashboardContentfulDataProvider } from '../../src/data-providers/dashboard.data-provider';
 import {
-  getListDashboardDataObject,
+  getContentfulDashboardGraphqlResponse,
+  getContentfulGraphqlAnnouncements,
   getContentfulGraphqlDashboard,
   getContentfulGraphqlGuideDescription,
   getContentfulGraphqlGuides,
-  getContentfulGraphqlAnnouncements,
-  getContentfulDashboardGraphqlResponse,
   getDashboardDataObject,
-} from '../../fixtures/dashboard.fixtures';
-import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+  getListDashboardDataObject,
+} from '../fixtures/dashboard.fixtures';
+import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
 
 describe('Dashboard data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();

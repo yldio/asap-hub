@@ -1,34 +1,54 @@
-import { ListPageDataObject } from '@asap-hub/model';
-import { RestPage, SquidexRestClient } from '@asap-hub/squidex';
-import { parsePage } from './transformers';
+import {
+  gp2,
+  GraphQLClient,
+  parseRichText,
+  RichTextFromQuery,
+} from '@asap-hub/contentful';
+import { PageDataObject } from '@asap-hub/model';
 import { FetchPagesProviderOptions, PageDataProvider } from './types';
 
-export class PageSquidexDataProvider implements PageDataProvider {
-  constructor(
-    private readonly pageSquidexRestClient: SquidexRestClient<RestPage>,
-  ) {}
+export class PageContentfulDataProvider implements PageDataProvider {
+  constructor(private graphQLClient: GraphQLClient) {}
 
-  async fetch(
-    options?: FetchPagesProviderOptions,
-  ): Promise<ListPageDataObject> {
-    const { total, items } = await this.pageSquidexRestClient.fetch({
-      ...(options?.filter?.path
-        ? {
-            filter: {
-              path: 'data.path.iv',
-              op: 'eq',
-              value: options?.filter?.path,
-            },
-          }
-        : undefined),
-    });
-
-    return {
-      total,
-      items: items.map(parsePage),
-    };
-  }
   async fetchById(): Promise<null> {
     throw new Error('Method not implemented.');
   }
+  async fetch(options?: FetchPagesProviderOptions) {
+    const { pagesCollection } = await this.graphQLClient.request<
+      gp2.FetchPagesQuery,
+      gp2.FetchPagesQueryVariables
+    >(gp2.FETCH_PAGES, {
+      where: { path: options?.filter?.path || null },
+    });
+
+    if (!pagesCollection) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    return {
+      total: pagesCollection?.total,
+      items: pagesCollection?.items
+        .filter((page): page is PageItem => page !== null)
+        .map(parseContentfulGraphQlPages),
+    };
+  }
 }
+
+export type PageItem = NonNullable<
+  NonNullable<gp2.FetchPagesQuery['pagesCollection']>['items'][number]
+>;
+
+export const parseContentfulGraphQlPages = (
+  item: PageItem,
+): PageDataObject => ({
+  id: item.sys.id,
+  title: item.title || '',
+  path: item.path || '',
+  shortText: item.shortText || '',
+  link: item.link ?? undefined,
+  linkText: item.linkText ?? undefined,
+  text: item.text ? parseRichText(item?.text as RichTextFromQuery) : '',
+});

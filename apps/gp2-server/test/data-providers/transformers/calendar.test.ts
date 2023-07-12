@@ -1,4 +1,4 @@
-import { parseContentfulWorkingGroupsProjects } from '../../../../src/data-providers/contentful/utils/calendar';
+import { parseContentfulWorkingGroupsProjects } from '../../../src/data-providers/transformers';
 
 describe('parseContentfulWorkingGroupsProjects', () => {
   test('should parse working groups and projects', () => {

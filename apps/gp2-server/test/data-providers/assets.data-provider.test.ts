@@ -1,7 +1,7 @@
-import { Environment, Asset } from '@asap-hub/contentful';
-import { AssetContentfulDataProvider } from '../../../src/data-providers/contentful/asset.data-provider';
-import { AssetDataProvider } from '../../../src/data-providers/types';
-import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
+import { Asset, Environment } from '@asap-hub/contentful';
+import { AssetContentfulDataProvider } from '../../src/data-providers/asset.data-provider';
+import { AssetDataProvider } from '../../src/data-providers/types';
+import { getContentfulEnvironmentMock } from '../mocks/contentful-rest-client.mock';
 
 describe('Assets data provider', () => {
   const environmentMock = getContentfulEnvironmentMock();

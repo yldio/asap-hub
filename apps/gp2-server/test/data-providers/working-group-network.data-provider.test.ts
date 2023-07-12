@@ -1,183 +1,88 @@
+import { getGP2ContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import { WorkingGroupNetworkContentfulDataProvider } from '../../src/data-providers/working-group-network.data-provider';
 import {
-  parseWorkingGroupNetworkToDataObject,
-  WorkingGroupNetworkSquidexDataProvider,
-} from '../../src/data-providers/working-group-network.data-provider';
-import {
-  getGraphQLWorkingGroupNetwork,
-  getSquidexWorkingGroupNetworkGraphqlResponse,
+  getContentfulGraphqlWorkingGroupNetwork,
+  getContentfulGraphqlWorkingGroupNetworkResponse,
+  getListWorkingGroupNetworkDataObject,
 } from '../fixtures/working-group-network.fixtures';
-import { getWorkingGroupDataObject } from '../fixtures/working-group.fixtures';
-import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
-import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import {
+  getContentfulGraphqlWorkingGroupMembers,
+  getContentfulGraphqlWorkingGroupMilestones,
+  getContentfulGraphqlWorkingGroupResources,
+} from '../fixtures/working-group.fixtures';
+import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
 
 describe('Working Group Network Data Provider', () => {
-  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const workingGroupDataProvider = new WorkingGroupNetworkSquidexDataProvider(
-    squidexGraphqlClientMock,
-  );
+  const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 
-  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const workingGroupDataProviderMockGraphqlServer =
-    new WorkingGroupNetworkSquidexDataProvider(squidexGraphqlClientMockServer);
+  const workingGroupDataProvider =
+    new WorkingGroupNetworkContentfulDataProvider(contentfulGraphqlClientMock);
+
+  const contentfulGraphqlClientMockServer =
+    getGP2ContentfulGraphqlClientMockServer({
+      WorkingGroupNetwork: () => getContentfulGraphqlWorkingGroupNetwork(),
+      WorkingGroupsMembersCollection: () =>
+        getContentfulGraphqlWorkingGroupMembers(),
+      WorkingGroupsMilestonesCollection: () =>
+        getContentfulGraphqlWorkingGroupMilestones(),
+      WorkingGroupsResourcesCollection: () =>
+        getContentfulGraphqlWorkingGroupResources(),
+    });
+
+  const workingGroupNetworkDataProviderWithMockServer =
+    new WorkingGroupNetworkContentfulDataProvider(
+      contentfulGraphqlClientMockServer,
+    );
 
   beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     test('Should fetch the working group network from squidex graphql', async () => {
-      const result = await workingGroupDataProviderMockGraphqlServer.fetch();
+      const result =
+        await workingGroupNetworkDataProviderWithMockServer.fetch();
 
-      const expected = getWorkingGroupDataObject();
-      expect(result).toMatchObject({
-        total: 4,
-        items: [
-          {
-            role: 'operational',
-            workingGroups: [
-              {
-                ...expected,
-                members: expected.members!.map(
-                  ({ id: _, ...member }) => member,
-                ),
-                resources: expected.resources!.map(
-                  ({ id: _, ...resource }) => resource,
-                ),
-              },
-            ],
-          },
-          {
-            role: 'monogenic',
-            workingGroups: [
-              {
-                ...expected,
-                members: expected.members!.map(
-                  ({ id: _, ...member }) => member,
-                ),
-                resources: expected.resources!.map(
-                  ({ id: _, ...resource }) => resource,
-                ),
-              },
-            ],
-          },
-          {
-            role: 'complexDisease',
-            workingGroups: [
-              {
-                ...expected,
-                members: expected.members!.map(
-                  ({ id: _, ...member }) => member,
-                ),
-                resources: expected.resources!.map(
-                  ({ id: _, ...resource }) => resource,
-                ),
-              },
-            ],
-          },
-          {
-            role: 'support',
-            workingGroups: [
-              {
-                ...expected,
-                members: expected.members!.map(
-                  ({ id: _, ...member }) => member,
-                ),
-                resources: expected.resources!.map(
-                  ({ id: _, ...resource }) => resource,
-                ),
-              },
-            ],
-          },
-        ],
-      });
+      expect(result).toMatchObject(getListWorkingGroupNetworkDataObject());
     });
 
     test('Should return an empty result', async () => {
-      const mockResponse = getSquidexWorkingGroupNetworkGraphqlResponse();
-      mockResponse.queryWorkingGroupNetworkContents = [];
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroupNetwork: { total: 0, items: [] },
+      });
       const result = await workingGroupDataProvider.fetch();
       expect(result).toEqual({ total: 0, items: [] });
     });
-
-    test('Should return an empty result if the client returns a response with a null items property', async () => {
-      const mockResponse = getSquidexWorkingGroupNetworkGraphqlResponse();
-      mockResponse.queryWorkingGroupNetworkContents = null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
+    test('the working group network is parsed', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulGraphqlWorkingGroupNetworkResponse(),
+      );
       const result = await workingGroupDataProvider.fetch();
-      expect(result).toEqual({ total: 0, items: [] });
+      const expected = getListWorkingGroupNetworkDataObject();
+      expect(result).toEqual(expected);
     });
-  });
-
-  describe('Parsing', () => {
-    test('the working group network is parsed', () => {
-      const workingGroupNetwork = getGraphQLWorkingGroupNetwork();
-      const workingGroupNetworkDataObject =
-        parseWorkingGroupNetworkToDataObject(workingGroupNetwork);
-      const expected = getWorkingGroupDataObject();
-      expect(workingGroupNetworkDataObject).toEqual([
-        {
-          role: 'operational',
-          workingGroups: [
+    test('the working group network is parsed2', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        workingGroupNetworkCollection: {
+          total: 1,
+          items: [
             {
-              ...expected,
-              members: expected.members!.map(({ id: _, ...member }) => member),
-              resources: expected.resources!.map(
-                ({ id: _, ...resource }) => resource,
-              ),
+              noCollection: {
+                total: 1,
+                items: [],
+              },
             },
           ],
         },
-        {
-          role: 'monogenic',
-          workingGroups: [
-            {
-              ...expected,
-              members: expected.members!.map(({ id: _, ...member }) => member),
-              resources: expected.resources!.map(
-                ({ id: _, ...resource }) => resource,
-              ),
-            },
-          ],
-        },
-        {
-          role: 'complexDisease',
-          workingGroups: [
-            {
-              ...expected,
-              members: expected.members!.map(({ id: _, ...member }) => member),
-              resources: expected.resources!.map(
-                ({ id: _, ...resource }) => resource,
-              ),
-            },
-          ],
-        },
-        {
-          role: 'support',
-          workingGroups: [
-            {
-              ...expected,
-              members: expected.members!.map(({ id: _, ...member }) => member),
-              resources: expected.resources!.map(
-                ({ id: _, ...resource }) => resource,
-              ),
-            },
-          ],
-        },
-      ]);
-    });
-
-    test('empty array returned when network role not found in response', () => {
-      const workingGroupNetwork = getGraphQLWorkingGroupNetwork();
-      workingGroupNetwork.flatData.complexDisease = null;
-      const workingGroupNetworkDataObject =
-        parseWorkingGroupNetworkToDataObject(workingGroupNetwork);
-
-      const complexDiseaseWorkingGroups = workingGroupNetworkDataObject
-        .filter(({ role }) => role === 'complexDisease')
-        .flatMap(({ workingGroups }) => workingGroups);
-
-      expect(complexDiseaseWorkingGroups).toEqual([]);
+      });
+      const result = await workingGroupDataProvider.fetch();
+      expect(result).toEqual({
+        items: [
+          { role: 'operational', workingGroups: [] },
+          { role: 'monogenic', workingGroups: [] },
+          { role: 'complexDisease', workingGroups: [] },
+          { role: 'support', workingGroups: [] },
+        ],
+        total: 4,
+      });
     });
   });
   describe('Fetch-by-id method', () => {

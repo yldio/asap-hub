@@ -48,7 +48,6 @@
     "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend",
     "schema:update": "yarn schema:update:crn && yarn schema:update:gp2",
     "schema:update:crn": "./apps/crn-server/scripts/schema-update.sh",
-    "schema:update:gp2": "./apps/gp2-server/scripts/schema-update.sh",
     "start": "yarn watch & yarn start:crn & yarn start:gp2 & yarn start:storybook",
     "start:backend:crn": "yarn workspace @asap-hub/crn-server start",
     "start:backend:crn:sls": "SLS_STAGE=local yarn workspace @asap-hub/crn-server serverless offline --httpPort 3333",

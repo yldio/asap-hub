@@ -2,8 +2,8 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 
 import { gp2 as gp2Contentful, GraphQLClient } from '@asap-hub/contentful';
 
-import { DashboardDataProvider } from '../types';
-import { parseAnnouncements, parseGuides } from './utils';
+import { parseAnnouncements, parseGuides } from './transformers';
+import { DashboardDataProvider } from './types';
 
 export type Dashboard = NonNullable<
   NonNullable<gp2Contentful.Query['dashboardCollection']>['items'][number]

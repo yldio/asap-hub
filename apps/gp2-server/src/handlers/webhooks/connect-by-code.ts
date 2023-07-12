@@ -1,8 +1,7 @@
 /* istanbul ignore file */
 import { connectByCodeHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
-import { gp2 as gp2Squidex, SquidexRest } from '@asap-hub/squidex';
-import { appName, auth0SharedSecret, baseUrl } from '../../config';
+import { auth0SharedSecret } from '../../config';
 import Users from '../../controllers/user.controller';
 import { AssetSquidexDataProvider } from '../../data-providers/asset.data-provider';
 import { getUserDataProvider } from '../../dependencies/user.dependency';

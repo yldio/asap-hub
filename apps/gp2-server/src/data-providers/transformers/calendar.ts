@@ -1,7 +1,28 @@
-import { gp2 as gp2Contentful } from '@asap-hub/contentful';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2, gp2 as gp2Contentful } from '@asap-hub/contentful';
+import { gp2 as gp2Model, isGoogleLegacyCalendarColor } from '@asap-hub/model';
 import { GraphQLProject } from '../project.data-provider';
 import { GraphQLWorkingGroup } from '../working-group.data-provider';
+
+export const parseContentfulGraphqlCalendarPartialToDataObject = (
+  graphqlCalendar: Pick<
+    NonNullable<
+      NonNullable<
+        gp2.FetchCalendarsQuery['calendarsCollection']
+      >['items'][number]
+    >,
+    'name' | 'googleCalendarId' | 'color'
+  >,
+): Pick<
+  gp2Model.CalendarDataObject,
+  'name' | 'googleCalendarId' | 'color'
+> => ({
+  color:
+    graphqlCalendar.color && isGoogleLegacyCalendarColor(graphqlCalendar.color)
+      ? graphqlCalendar.color
+      : ('#333333' as const),
+  googleCalendarId: graphqlCalendar.googleCalendarId ?? '',
+  name: graphqlCalendar.name ?? '',
+});
 
 export const parseCalendar = (
   calendar: GraphQLWorkingGroup['calendar'] | GraphQLProject['calendar'],

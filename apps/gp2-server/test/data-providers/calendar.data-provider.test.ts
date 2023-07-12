@@ -1,71 +1,387 @@
-import { GenericError } from '@asap-hub/errors';
-import { InputCalendar, RestCalendar, SquidexRest } from '@asap-hub/squidex';
-import nock from 'nock';
-import { appName, baseUrl } from '../../src/config';
-import { CalendarSquidexDataProvider } from '../../src/data-providers/calendar.data-provider';
-import { getAuthToken } from '../../src/utils/auth';
+import { GraphQLError } from 'graphql';
 import {
+  Environment,
+  gp2,
+  getGP2ContentfulGraphqlClientMockServer,
+} from '@asap-hub/contentful';
+
+import {
+  getContentfulGraphqlCalendar,
+  getContentfulCalendarsGraphqlResponse,
   getCalendarCreateDataObject,
   getCalendarDataObject,
-  getRestCalendar,
-  getSquidexCalendarGraphqlResponse,
-  getSquidexCalendarsGraphqlResponse,
+  getContentfulGraphql,
 } from '../fixtures/calendar.fixtures';
-import { identity } from '../helpers/squidex';
-import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
-import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../mocks/contentful-rest-client.mock';
+import { getEntry } from '../fixtures/contentful.fixtures';
+import { CalendarContentfulDataProvider } from '../../src/data-providers/calendar.data-provider';
 
 describe('Calendars data provider', () => {
-  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
-  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+  const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
 
-  const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
-    getAuthToken,
-    'calendars',
-    { appName, baseUrl },
+  const calendarDataProvider = new CalendarContentfulDataProvider(
+    contentfulGraphqlClientMock,
+    contentfulRestClientMock,
   );
 
-  const calendarDataProvider = new CalendarSquidexDataProvider(
-    calendarRestClient,
-    squidexGraphqlClientMock,
-  );
-  const calendarDataProviderMockGraphql = new CalendarSquidexDataProvider(
-    calendarRestClient,
-    squidexGraphqlClientMockServer,
-  );
+  const contentfulGraphqlClientMockServer =
+    getGP2ContentfulGraphqlClientMockServer(getContentfulGraphql());
 
-  beforeAll(() => {
-    identity();
-  });
+  const calendarDataProviderMock = new CalendarContentfulDataProvider(
+    contentfulGraphqlClientMockServer,
+    contentfulRestClientMock,
+  );
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
-  describe('Fetch by ID', () => {
-    test('Should fetch the calendar from squidex graphql', async () => {
-      const result = await calendarDataProviderMockGraphql.fetchById(
-        'calendar-id',
-      );
+  const getContentfulCalendarDataObject = () => ({
+    ...getCalendarDataObject(),
+  });
 
-      expect(result).toMatchObject(getCalendarDataObject());
+  describe('Fetch method', () => {
+    test('Should fetch the list of calendars from Contentful GraphQl', async () => {
+      const result = await calendarDataProviderMock.fetch({});
+
+      expect(result.items[0]).toMatchObject(getContentfulCalendarDataObject());
     });
 
-    test('Should return null when the user is not found', async () => {
-      const mockResponse = getSquidexCalendarGraphqlResponse();
-      mockResponse.findCalendarsContent = null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+    test('Should return an empty result when no calendars exist', async () => {
+      const contentfulGraphQLResponse = getContentfulCalendarsGraphqlResponse();
+      contentfulGraphQLResponse.calendarsCollection!.total = 0;
+      contentfulGraphQLResponse.calendarsCollection!.items = [];
 
-      expect(await calendarDataProvider.fetchById('not-found')).toBeNull();
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await calendarDataProvider.fetch({});
+
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
+    });
+
+    test('Should throw an error with a specific error message when the graphql client throws one', async () => {
+      contentfulGraphqlClientMock.request.mockRejectedValueOnce(
+        new GraphQLError('some error message'),
+      );
+
+      await expect(calendarDataProvider.fetch({})).rejects.toThrow(
+        'some error message',
+      );
+    });
+
+    test('Should return an empty result when the query is returned as null', async () => {
+      const contentfulGraphQLResponse = getContentfulCalendarsGraphqlResponse();
+      contentfulGraphQLResponse.calendarsCollection = null;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await calendarDataProvider.fetch({});
+
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
+    });
+
+    test('Should use default query params when request does not have any', async () => {
+      const contentfulGraphQLResponse = getContentfulCalendarsGraphqlResponse();
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await calendarDataProvider.fetch({});
+
+      expect(result).toEqual({
+        total: 1,
+        items: [getContentfulCalendarDataObject()],
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2.FETCH_CALENDARS,
+        expect.objectContaining({
+          limit: 50,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {},
+        }),
+      );
+    });
+
+    test('Should filter calendars by the resourceId', async () => {
+      const filterResourceId = 'resource-1';
+      const calendarWithMatchingResourceId = getCalendarResponse(
+        'calendar-1',
+        filterResourceId,
+      );
+
+      const calendarWithNonMatchingResourceId = getCalendarResponse(
+        'calendar-2',
+        'non-matching',
+      );
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        calendarsCollection: {
+          total: 2,
+          items: [
+            calendarWithMatchingResourceId,
+            calendarWithNonMatchingResourceId,
+          ],
+        },
+      });
+
+      const result = await calendarDataProvider.fetch({
+        resourceId: filterResourceId,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          limit: 50,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {
+            googleApiMetadata_exists: true,
+          },
+        },
+      );
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          {
+            ...getContentfulCalendarDataObject(),
+            id: calendarWithMatchingResourceId.sys.id,
+            resourceId: filterResourceId,
+          },
+        ],
+      });
+    });
+
+    test('Should filter calendars by maxExpiration', async () => {
+      const baseExpirationDate = 100;
+
+      const calendarOverExpirationDate = getCalendarResponse(
+        'calendar-1',
+        'resource-id',
+        baseExpirationDate + 1,
+      );
+
+      const calendarWithinExpirationLimit = getCalendarResponse(
+        'calendar-2',
+        'resource-id',
+        baseExpirationDate - 1,
+      );
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        calendarsCollection: {
+          total: 2,
+          items: [calendarOverExpirationDate, calendarWithinExpirationLimit],
+        },
+      });
+
+      const result = await calendarDataProvider.fetch({
+        maxExpiration: baseExpirationDate,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          limit: 50,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {
+            googleApiMetadata_exists: true,
+          },
+        },
+      );
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          {
+            ...getContentfulCalendarDataObject(),
+            id: calendarWithinExpirationLimit.sys.id,
+            expirationDate:
+              calendarWithinExpirationLimit.googleApiMetadata.expirationDate,
+          },
+        ],
+      });
+    });
+
+    test('Should filter calendars by resourceId and maxExpiration', async () => {
+      const filterResourceId = 'resource-filter';
+      const baseCalendar = getContentfulGraphqlCalendar();
+      const baseExpirationDate = baseCalendar.googleApiMetadata.expirationDate;
+
+      const calendarWithMatchingResourceIdButOverExpirationDate =
+        getCalendarResponse(
+          'calendar-1',
+          filterResourceId,
+          baseExpirationDate + 1,
+        );
+
+      const calendarWithinExpirationLimitButNonMatchingResourceId =
+        getCalendarResponse(
+          'calendar-2',
+          'non-matching',
+          baseExpirationDate - 1,
+        );
+
+      const calendarMatchingResourceIdWithinExpirationLimit =
+        getCalendarResponse(
+          'calendar-3',
+          filterResourceId,
+          baseExpirationDate - 1,
+        );
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        calendarsCollection: {
+          total: 3,
+          items: [
+            calendarWithMatchingResourceIdButOverExpirationDate,
+            calendarWithinExpirationLimitButNonMatchingResourceId,
+            calendarMatchingResourceIdWithinExpirationLimit,
+          ],
+        },
+      });
+
+      const result = await calendarDataProvider.fetch({
+        resourceId: filterResourceId,
+        maxExpiration: baseExpirationDate,
+      });
+
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        expect.anything(),
+        {
+          limit: 50,
+          order: ['name_ASC'],
+          skip: 0,
+          where: {
+            googleApiMetadata_exists: true,
+          },
+        },
+      );
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          {
+            ...getCalendarDataObject(),
+            id: calendarMatchingResourceIdWithinExpirationLimit.sys.id,
+            expirationDate:
+              calendarMatchingResourceIdWithinExpirationLimit.googleApiMetadata
+                .expirationDate,
+            resourceId:
+              calendarMatchingResourceIdWithinExpirationLimit.googleApiMetadata
+                .resourceId,
+          },
+        ],
+      });
     });
 
     test('Should default missing data to an empty string', async () => {
-      const squidexGraphqlResponse = getSquidexCalendarGraphqlResponse();
-      squidexGraphqlResponse.findCalendarsContent!.flatData!.name = null;
-      squidexGraphqlResponse.findCalendarsContent!.flatData!.googleCalendarId =
-        null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
+      const calendarResponse = getContentfulCalendarsGraphqlResponse();
+      calendarResponse.calendarsCollection!.items![0]!.name = null;
+      calendarResponse.calendarsCollection!.items![0]!.googleCalendarId = null;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        calendarResponse,
+      );
+
+      const response = await calendarDataProvider.fetch();
+
+      expect(response.items[0]).toMatchObject({
+        name: '',
+        googleCalendarId: '',
+      });
+    });
+
+    test('Should default the calendar color to #333333', async () => {
+      const calendarResponse = getContentfulCalendarsGraphqlResponse();
+      calendarResponse.calendarsCollection!.items![0]!.color = null;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        calendarResponse,
+      );
+
+      const response = await calendarDataProvider.fetch();
+
+      expect(response.items[0]!.color).toBe('#333333');
+    });
+  });
+
+  describe('Fetch-by-id method', () => {
+    test('Should fetch the calendar from Contentful GraphQl', async () => {
+      const calendarId = 'calendar-id-0';
+      const result = await calendarDataProviderMock.fetchById(calendarId);
+
+      expect(result).toMatchObject(getContentfulCalendarDataObject());
+    });
+
+    test('Should return null when the calendar is not found', async () => {
+      const calendarId = 'not-found';
+
+      const contentfulGraphQLResponse = getContentfulCalendarsGraphqlResponse();
+      contentfulGraphQLResponse.calendarsCollection = null;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      expect(await calendarDataProvider.fetchById(calendarId)).toBeNull();
+    });
+
+    test('Should throw an error with a specific error message when the graphql client throws one', async () => {
+      const id = 'some-id';
+      contentfulGraphqlClientMock.request.mockRejectedValueOnce(
+        new GraphQLError('some error message'),
+      );
+
+      await expect(calendarDataProvider.fetchById(id)).rejects.toThrow(
+        'some error message',
+      );
+    });
+
+    test('Should return the result when the calendar exists', async () => {
+      const id = 'some-id';
+      const contentfulGraphQLResponse = {
+        calendars: getContentfulGraphqlCalendar(),
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await calendarDataProvider.fetchById(id);
+
+      expect(result).toEqual(getContentfulCalendarDataObject());
+      expect(contentfulGraphqlClientMock.request).toBeCalledWith(
+        gp2.FETCH_CALENDAR_BY_ID,
+        expect.objectContaining({
+          id,
+        }),
+      );
+    });
+
+    test('Should default missing data to an empty string', async () => {
+      const contentfulGraphQLResponse = {
+        calendars: getContentfulGraphqlCalendar(),
+      };
+
+      contentfulGraphQLResponse.calendars.name = null;
+      contentfulGraphQLResponse.calendars.googleCalendarId = null;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
       );
 
       const result = await calendarDataProvider.fetchById('calendar-id');
@@ -77,10 +393,14 @@ describe('Calendars data provider', () => {
     });
 
     test('Should default an invalid colour to #333333', async () => {
-      const squidexGraphqlResponse = getSquidexCalendarGraphqlResponse();
-      squidexGraphqlResponse.findCalendarsContent!.flatData.color = 'invalid';
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
+      const contentfulGraphQLResponse = {
+        calendars: getContentfulGraphqlCalendar(),
+      };
+
+      contentfulGraphQLResponse.calendars.color = 'invalid';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
       );
 
       const result = await calendarDataProvider.fetchById('calendar-id');
@@ -89,233 +409,143 @@ describe('Calendars data provider', () => {
     });
   });
 
-  describe('Fetch', () => {
-    test('Should fetch the calendars from squidex graphql', async () => {
-      const result = await calendarDataProviderMockGraphql.fetch();
+  describe('Update method', () => {
+    test('Should update the calendar - without new google api metadata - without previous google api metadata', async () => {
+      const calendarId = 'calendar-id-1';
 
-      expect(result).toMatchObject({
-        total: 1,
-        items: [getCalendarDataObject()],
+      const calendarMock = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(calendarMock);
+      const calendarMockUpdated = getEntry({});
+      calendarMock.update = jest
+        .fn()
+        .mockResolvedValueOnce(calendarMockUpdated);
+
+      await calendarDataProviderMock.update(calendarId, { color: '#060D5E' });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(calendarId);
+
+      expect(calendarMock.fields).toEqual({ color: { 'en-US': '#060D5E' } });
+      expect(calendarMock.update).toHaveBeenCalled();
+      expect(calendarMockUpdated.publish).toHaveBeenCalled();
+    });
+
+    test('Should update syncToken in googleApiMetadata', async () => {
+      const calendarId = 'calendar-id-1';
+
+      const calendarMock = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(calendarMock);
+      const calendarMockUpdated = getEntry({});
+      calendarMock.update = jest
+        .fn()
+        .mockResolvedValueOnce(calendarMockUpdated);
+
+      await calendarDataProviderMock.update(calendarId, {
+        syncToken: 'token-1',
       });
-    });
 
-    test('Should return an empty result when the client returns an empty array of data', async () => {
-      const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
-      squidexGraphqlResponse.queryCalendarsContentsWithTotal!.total = 0;
-      squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = [];
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(calendarId);
 
-      const result = await calendarDataProvider.fetch();
-
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-
-    test('Should return an empty result when the client returns a response with query property set to null', async () => {
-      const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
-      squidexGraphqlResponse.queryCalendarsContentsWithTotal = null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
-
-      const result = await calendarDataProvider.fetch();
-
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-
-    test('Should return an empty result when the client returns a response with items property set to null', async () => {
-      const squidexGraphqlResponse = getSquidexCalendarsGraphqlResponse();
-      squidexGraphqlResponse.queryCalendarsContentsWithTotal!.items = null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        squidexGraphqlResponse,
-      );
-
-      const result = await calendarDataProvider.fetch();
-
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-
-    test('Should call the client with the default pagination parameters (pagination disabled)', async () => {
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexCalendarsGraphqlResponse(),
-      );
-
-      await calendarDataProvider.fetch();
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 50,
-          skip: 0,
-          filter: '',
-          order: 'data/name/iv asc',
+      expect(calendarMock.fields).toEqual({
+        googleApiMetadata: {
+          'en-US': {
+            syncToken: 'token-1',
+          },
         },
-      );
+      });
+      expect(calendarMock.update).toHaveBeenCalled();
+      expect(calendarMockUpdated.publish).toHaveBeenCalled();
     });
 
-    test('Should filter calendars by the resourceId', async () => {
-      const resourceId = 'some-resource-id';
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexCalendarsGraphqlResponse(),
-      );
+    test('Should update associatedGoogleCalendarId when passing resourceId', async () => {
+      const calendarId = 'calendar-id-1';
 
-      const result = await calendarDataProvider.fetch({ resourceId });
-
-      expect(squidexGraphqlClientMock.request).toBeCalledWith(
-        expect.anything(),
-        {
-          top: 50,
-          skip: 0,
-          filter: `data/resourceId/iv eq '${resourceId}'`,
-          order: 'data/name/iv asc',
+      const calendarMock = getEntry({
+        fields: {
+          googleCalendarId: {
+            'en-US': 'google-calendar-id-1',
+          },
+          googleApiMetadata: {
+            'en-US': {
+              syncToken: 'syncToken-1',
+            },
+          },
         },
-      );
-      expect(result).toEqual({
-        total: 1,
-        items: [getCalendarDataObject()],
       });
-    });
+      environmentMock.getEntry.mockResolvedValueOnce(calendarMock);
+      const calendarMockUpdated = getEntry({});
+      calendarMock.update = jest
+        .fn()
+        .mockResolvedValueOnce(calendarMockUpdated);
 
-    test('Should default missing data to an empty string', async () => {
-      const calendarResponse = getSquidexCalendarsGraphqlResponse();
-      calendarResponse.queryCalendarsContentsWithTotal!.items![0]!.flatData.name =
-        null;
-      calendarResponse.queryCalendarsContentsWithTotal!.items![0]!.flatData.googleCalendarId =
-        null;
-
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(calendarResponse);
-
-      const response = await calendarDataProvider.fetch();
-
-      expect(response.items[0]).toMatchObject({
-        name: '',
-        googleCalendarId: '',
-      });
-    });
-
-    test('Should default the calendar color to #333333', async () => {
-      const calendarResponse = getSquidexCalendarsGraphqlResponse();
-      calendarResponse.queryCalendarsContentsWithTotal!.items![0]!.flatData.color =
-        null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(calendarResponse);
-
-      const response = await calendarDataProvider.fetch();
-
-      expect(response.items[0]!.color).toBe('#333333');
-    });
-
-    test('Should query calendars by expiration date', async () => {
-      const maxExpiration = 1614697798681;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(
-        getSquidexCalendarsGraphqlResponse(),
-      );
-
-      await calendarDataProvider.fetch({
-        maxExpiration,
+      await calendarDataProviderMock.update(calendarId, {
+        resourceId: 'resourceId-1',
       });
 
-      expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
-        {
-          filter: `data/expirationDate/iv lt ${maxExpiration}`,
-          top: 50,
-          skip: 0,
-          order: 'data/name/iv asc',
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(calendarId);
+
+      expect(calendarMock.fields).toEqual({
+        googleCalendarId: {
+          'en-US': 'google-calendar-id-1',
         },
-      );
+        googleApiMetadata: {
+          'en-US': {
+            associatedGoogleCalendarId: 'google-calendar-id-1',
+            resourceId: 'resourceId-1',
+            syncToken: 'syncToken-1',
+          },
+        },
+      });
+      expect(calendarMock.update).toHaveBeenCalled();
+      expect(calendarMockUpdated.publish).toHaveBeenCalled();
     });
   });
 
-  describe('Create and Update', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
+  describe('Create method', () => {
+    test('Should create and publish a calendar', async () => {
+      const calendarMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(calendarMock);
+      calendarMock.publish = jest.fn().mockResolvedValueOnce(calendarMock);
 
-    afterEach(() => {
-      nock.cleanAll();
-    });
+      const calendarDataObject = getCalendarCreateDataObject();
+      await calendarDataProviderMock.create(calendarDataObject);
 
-    describe('Create', () => {
-      test('Should throw when the POST request to Squidex fails', async () => {
-        const calendarInput = getCalendarCreateDataObject();
-
-        nock(baseUrl)
-          .post(`/api/content/${appName}/calendars?publish=true`)
-          .reply(500);
-
-        await expect(
-          calendarDataProvider.create(calendarInput),
-        ).rejects.toThrow(GenericError);
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('calendars', {
+        fields: {
+          color: { 'en-US': '#2952A3' },
+          expirationDate: { 'en-US': 1617196357000 },
+          googleCalendarId: { 'en-US': '3@group.calendar.google.com' },
+          name: { 'en-US': 'Tech 4a - iPSCs - 3D & Co-cultures' },
+          resourceId: { 'en-US': 'resource-id' },
+          syncToken: { 'en-US': 'sync-token' },
+        },
       });
 
-      test('Should send the POST request to Squidex and return the calendar ID', async () => {
-        const restCalendar = getRestCalendar();
-        const calendarInput = getCalendarCreateDataObject();
-
-        nock(baseUrl)
-          .post(
-            `/api/content/${appName}/calendars?publish=true`,
-            restCalendar.data,
-          )
-          .reply(200, restCalendar);
-
-        const result = await calendarDataProvider.create(calendarInput);
-
-        expect(result).toEqual(restCalendar.id);
-      });
-    });
-
-    describe('Update', () => {
-      test('Should throw when the POST request to Squidex fails', async () => {
-        nock(baseUrl)
-          .patch(`/api/content/${appName}/calendars/not-found`)
-          .reply(500);
-
-        await expect(
-          calendarDataProvider.update(
-            'not-found',
-            getCalendarCreateDataObject(),
-          ),
-        ).rejects.toThrow(GenericError);
-      });
-
-      test('Should send the PATCH request to Squidex', async () => {
-        const restCalendar = getRestCalendar();
-        const calendarInput = getCalendarCreateDataObject();
-
-        nock(baseUrl)
-          .patch(
-            `/api/content/${appName}/calendars/${restCalendar.id}`,
-            restCalendar.data,
-          )
-          .reply(200, restCalendar);
-
-        await calendarDataProvider.update(restCalendar.id, calendarInput);
-      });
-
-      test('Should support partial updates', async () => {
-        const restCalendar = getRestCalendar();
-        const {
-          color: _color,
-          name: _name,
-          ...restCalendarData
-        } = restCalendar.data;
-        const {
-          color: __color,
-          name: __name,
-          ...calendarInput
-        } = getCalendarCreateDataObject();
-
-        nock(baseUrl)
-          .patch(
-            `/api/content/${appName}/calendars/${restCalendar.id}`,
-            restCalendarData as any,
-          )
-          .reply(200, restCalendar);
-
-        await calendarDataProvider.update(restCalendar.id, calendarInput);
-      });
+      expect(calendarMock.publish).toHaveBeenCalled();
     });
   });
 });
+
+const getCalendarResponse = (
+  id: string,
+  resourceId?: string,
+  expirationDate?: number,
+) => {
+  const baseCalendar = getContentfulGraphqlCalendar();
+
+  return {
+    ...baseCalendar,
+    sys: {
+      ...baseCalendar.sys,
+      id,
+    },
+    googleApiMetadata: {
+      ...baseCalendar.googleApiMetadata,
+      ...(resourceId
+        ? { resourceId }
+        : { resourceId: baseCalendar.googleApiMetadata.resourceId }),
+      ...(expirationDate
+        ? { expirationDate }
+        : { expirationDate: baseCalendar.googleApiMetadata.expirationDate }),
+    },
+  };
+};

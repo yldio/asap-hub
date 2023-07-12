@@ -2,7 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 
 import { gp2 as gp2Contentful, GraphQLClient } from '@asap-hub/contentful';
 
-import { FetchNewsProviderOptions, NewsDataProvider } from '../types';
+import { FetchNewsProviderOptions, NewsDataProvider } from './types';
 
 export type NewsItem = NonNullable<
   NonNullable<gp2Contentful.FetchNewsQuery['newsCollection']>['items'][number]

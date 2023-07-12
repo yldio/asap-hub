@@ -262,7 +262,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        GP2_CONTENTFUL_ENABLED: 'true',
         GP2_API_URL: apiUrl,
         REGION: '${env:AWS_REGION}',
       },
@@ -279,7 +278,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        GP2_CONTENTFUL_ENABLED: 'true',
         GP2_API_URL: apiUrl,
         REGION: '${env:AWS_REGION}',
       },
@@ -342,7 +340,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        GP2_CONTENTFUL_ENABLED: 'true',
       },
     },
     invalidateCache: {

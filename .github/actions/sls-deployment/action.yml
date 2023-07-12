@@ -130,7 +130,6 @@ runs:
         GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.gp2-contentful-management-access-token }}
         GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.gp2-contentful-webhook-authentication-token }}
         GP2_CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-        GP2_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.gp2-contentful-enabled }}
         GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
         GP2_SENTRY_DSN_API: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
         GP2_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}

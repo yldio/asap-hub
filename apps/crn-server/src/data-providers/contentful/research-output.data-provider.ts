@@ -148,15 +148,15 @@ export class ResearchOutputContentfulDataProvider
     const { researchOutputs } = await this.fetchOutputById(id);
 
     if (!researchOutputs) {
-      const { researchOutputs: draftResearchoutput } =
+      const { researchOutputs: draftResearchOutput } =
         await this.contentfulPreviewClient.request<
           FetchResearchOutputByIdQuery,
           FetchResearchOutputByIdQueryVariables
         >(FETCH_RESEARCH_OUTPUT_BY_ID, { id, preview: true });
-      if (!draftResearchoutput) {
+      if (!draftResearchOutput) {
         return null;
       }
-      return parseGraphQLResearchOutput(draftResearchoutput);
+      return parseGraphQLResearchOutput(draftResearchOutput);
     }
 
     return parseGraphQLResearchOutput(researchOutputs);

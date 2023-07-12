@@ -292,6 +292,7 @@ export type AssetFilter = {
 export type AssetLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  guideCollection?: Maybe<GuideCollection>;
   usersCollection?: Maybe<UsersCollection>;
 };
 
@@ -307,6 +308,16 @@ export type AssetLinkingCollectionsEventsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<AssetLinkingCollectionsEventsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type AssetLinkingCollectionsGuideCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AssetLinkingCollectionsGuideCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -367,6 +378,19 @@ export enum AssetLinkingCollectionsEventsCollectionOrder {
   VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
   VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
   VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export enum AssetLinkingCollectionsGuideCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
 }
 
 export enum AssetLinkingCollectionsUsersCollectionOrder {
@@ -947,6 +971,7 @@ export enum ContributingCohortsOrder {
 export type Dashboard = Entry & {
   announcementsCollection?: Maybe<DashboardAnnouncementsCollection>;
   contentfulMetadata: ContentfulMetadata;
+  guidesCollection?: Maybe<DashboardGuidesCollection>;
   latestStats?: Maybe<LatestStats>;
   linkedFrom?: Maybe<DashboardLinkingCollections>;
   sys: Sys;
@@ -960,6 +985,16 @@ export type DashboardAnnouncementsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<AnnouncementsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard) */
+export type DashboardGuidesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DashboardGuidesCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<GuideFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard) */
@@ -1011,10 +1046,32 @@ export type DashboardFilter = {
   announcements?: InputMaybe<CfAnnouncementsNestedFilter>;
   announcementsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  guides?: InputMaybe<CfGuideNestedFilter>;
+  guidesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   latestStats?: InputMaybe<CfLatestStatsNestedFilter>;
   latestStats_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
 };
+
+export type DashboardGuidesCollection = {
+  items: Array<Maybe<Guide>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum DashboardGuidesCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export type DashboardLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
@@ -1891,6 +1948,259 @@ export enum ExternalUsersOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+export type Guide = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  descriptionCollection?: Maybe<GuideDescriptionCollection>;
+  icon?: Maybe<Asset>;
+  linkedFrom?: Maybe<GuideLinkingCollections>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+export type GuideDescriptionCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<GuideDescriptionCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<GuideDescriptionFilter>;
+};
+
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+export type GuideIconArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+export type GuideLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+export type GuideTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type GuideCollection = {
+  items: Array<Maybe<Guide>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
+export type GuideDescription = Entry & {
+  bodyText?: Maybe<Scalars['String']>;
+  contentfulMetadata: ContentfulMetadata;
+  linkText?: Maybe<Scalars['String']>;
+  linkUrl?: Maybe<Scalars['String']>;
+  linkedFrom?: Maybe<GuideDescriptionLinkingCollections>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
+export type GuideDescriptionBodyTextArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
+export type GuideDescriptionLinkTextArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
+export type GuideDescriptionLinkUrlArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
+export type GuideDescriptionLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
+export type GuideDescriptionTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type GuideDescriptionCollection = {
+  items: Array<Maybe<GuideDescription>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum GuideDescriptionCollectionOrder {
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkUrlAsc = 'linkUrl_ASC',
+  LinkUrlDesc = 'linkUrl_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export type GuideDescriptionFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GuideDescriptionFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GuideDescriptionFilter>>>;
+  bodyText?: InputMaybe<Scalars['String']>;
+  bodyText_contains?: InputMaybe<Scalars['String']>;
+  bodyText_exists?: InputMaybe<Scalars['Boolean']>;
+  bodyText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  bodyText_not?: InputMaybe<Scalars['String']>;
+  bodyText_not_contains?: InputMaybe<Scalars['String']>;
+  bodyText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  linkText?: InputMaybe<Scalars['String']>;
+  linkText_contains?: InputMaybe<Scalars['String']>;
+  linkText_exists?: InputMaybe<Scalars['Boolean']>;
+  linkText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkText_not?: InputMaybe<Scalars['String']>;
+  linkText_not_contains?: InputMaybe<Scalars['String']>;
+  linkText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkUrl?: InputMaybe<Scalars['String']>;
+  linkUrl_contains?: InputMaybe<Scalars['String']>;
+  linkUrl_exists?: InputMaybe<Scalars['Boolean']>;
+  linkUrl_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkUrl_not?: InputMaybe<Scalars['String']>;
+  linkUrl_not_contains?: InputMaybe<Scalars['String']>;
+  linkUrl_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type GuideDescriptionLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  guideCollection?: Maybe<GuideCollection>;
+};
+
+export type GuideDescriptionLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type GuideDescriptionLinkingCollectionsGuideCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<GuideDescriptionLinkingCollectionsGuideCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum GuideDescriptionLinkingCollectionsGuideCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum GuideDescriptionOrder {
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkUrlAsc = 'linkUrl_ASC',
+  LinkUrlDesc = 'linkUrl_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export type GuideFilter = {
+  AND?: InputMaybe<Array<InputMaybe<GuideFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<GuideFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<CfGuideDescriptionNestedFilter>;
+  descriptionCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  icon_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type GuideLinkingCollections = {
+  dashboardCollection?: Maybe<DashboardCollection>;
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type GuideLinkingCollectionsDashboardCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<GuideLinkingCollectionsDashboardCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type GuideLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum GuideLinkingCollectionsDashboardCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum GuideOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
 }
 
 export enum ImageFormat {
@@ -3458,6 +3768,10 @@ export type Query = {
   externalUsersCollection?: Maybe<ExternalUsersCollection>;
   externalUsersOrUsers?: Maybe<ExternalUsersOrUsers>;
   externalUsersOrUsersCollection?: Maybe<ExternalUsersOrUsersCollection>;
+  guide?: Maybe<Guide>;
+  guideCollection?: Maybe<GuideCollection>;
+  guideDescription?: Maybe<GuideDescription>;
+  guideDescriptionCollection?: Maybe<GuideDescriptionCollection>;
   latestStats?: Maybe<LatestStats>;
   latestStatsCollection?: Maybe<LatestStatsCollection>;
   media?: Maybe<Media>;
@@ -3644,6 +3958,36 @@ export type QueryExternalUsersOrUsersCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ExternalUsersOrUsersFilter>;
+};
+
+export type QueryGuideArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryGuideCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<GuideOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<GuideFilter>;
+};
+
+export type QueryGuideDescriptionArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryGuideDescriptionCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<GuideDescriptionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<GuideDescriptionFilter>;
 };
 
 export type QueryLatestStatsArgs = {
@@ -5471,6 +5815,57 @@ export type CfExternalUsersOrUsersNestedFilter = {
   sys?: InputMaybe<SysFilter>;
 };
 
+export type CfGuideDescriptionNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfGuideDescriptionNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfGuideDescriptionNestedFilter>>>;
+  bodyText?: InputMaybe<Scalars['String']>;
+  bodyText_contains?: InputMaybe<Scalars['String']>;
+  bodyText_exists?: InputMaybe<Scalars['Boolean']>;
+  bodyText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  bodyText_not?: InputMaybe<Scalars['String']>;
+  bodyText_not_contains?: InputMaybe<Scalars['String']>;
+  bodyText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  linkText?: InputMaybe<Scalars['String']>;
+  linkText_contains?: InputMaybe<Scalars['String']>;
+  linkText_exists?: InputMaybe<Scalars['Boolean']>;
+  linkText_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkText_not?: InputMaybe<Scalars['String']>;
+  linkText_not_contains?: InputMaybe<Scalars['String']>;
+  linkText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkUrl?: InputMaybe<Scalars['String']>;
+  linkUrl_contains?: InputMaybe<Scalars['String']>;
+  linkUrl_exists?: InputMaybe<Scalars['Boolean']>;
+  linkUrl_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  linkUrl_not?: InputMaybe<Scalars['String']>;
+  linkUrl_not_contains?: InputMaybe<Scalars['String']>;
+  linkUrl_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CfGuideNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfGuideNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfGuideNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  descriptionCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  icon_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type CfLatestStatsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfLatestStatsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfLatestStatsNestedFilter>>>;
@@ -5996,6 +6391,26 @@ export type FetchDashboardQuery = {
               >
             >;
           }>;
+          guidesCollection?: Maybe<{
+            items: Array<
+              Maybe<
+                Pick<Guide, 'title'> & {
+                  sys: Pick<Sys, 'id'>;
+                  icon?: Maybe<Pick<Asset, 'url'>>;
+                  descriptionCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<
+                          GuideDescription,
+                          'title' | 'bodyText' | 'linkUrl' | 'linkText'
+                        > & { sys: Pick<Sys, 'id'> }
+                      >
+                    >;
+                  }>;
+                }
+              >
+            >;
+          }>;
         }>
       >;
     }
@@ -6047,6 +6462,8 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'ExternalUsersOrUsers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideDescription' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -6104,6 +6521,8 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'ExternalUsersOrUsers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideDescription' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -6161,6 +6580,8 @@ export type EventsContentDataFragment = Pick<
               | ({ __typename: 'ExternalUsersOrUsers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideDescription' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -6285,6 +6706,10 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ExternalUsersOrUsers' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideDescription' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -6344,6 +6769,10 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ExternalUsersOrUsers' } & {
                       sys: Pick<Sys, 'id'>;
                     })
+                  | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideDescription' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                         sys: Pick<Sys, 'id'>;
@@ -6401,6 +6830,10 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsers' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ExternalUsersOrUsers' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
+                  | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideDescription' } & {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
@@ -6550,6 +6983,10 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalUsersOrUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'GuideDescription' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'LatestStats' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -6635,6 +7072,10 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalUsersOrUsers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'GuideDescription' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'LatestStats' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -6718,6 +7159,10 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ExternalUsersOrUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'GuideDescription' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'LatestStats' } & {
@@ -6898,6 +7343,12 @@ export type FetchEventsByUserIdQuery = {
                                     | ({
                                         __typename: 'ExternalUsersOrUsers';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Guide' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'GuideDescription' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -6994,6 +7445,12 @@ export type FetchEventsByUserIdQuery = {
                                     | ({
                                         __typename: 'ExternalUsersOrUsers';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Guide' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'GuideDescription' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -7090,6 +7547,12 @@ export type FetchEventsByUserIdQuery = {
                                     | ({
                                         __typename: 'ExternalUsersOrUsers';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Guide' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'GuideDescription' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -7292,6 +7755,12 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({
                                         __typename: 'ExternalUsersOrUsers';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Guide' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'GuideDescription' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -7388,6 +7857,12 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({
                                         __typename: 'ExternalUsersOrUsers';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Guide' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'GuideDescription' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -7484,6 +7959,12 @@ export type FetchEventsByExternalUserIdQuery = {
                                     | ({
                                         __typename: 'ExternalUsersOrUsers';
                                       } & { sys: Pick<Sys, 'id'> })
+                                    | ({ __typename: 'Guide' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'GuideDescription' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'LatestStats' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -8082,6 +8563,8 @@ export type PageContentDataFragment = Pick<
               | ({ __typename: 'ExternalUsersOrUsers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
+              | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideDescription' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'LatestStats' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Media' } & Pick<Media, 'url'> & {
                     sys: Pick<Sys, 'id'>;
@@ -8160,6 +8643,10 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'ExternalUsersOrUsers' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'Guide' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'GuideDescription' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'LatestStats' } & {
@@ -12670,6 +13157,125 @@ export const FetchDashboardDocument = {
                                         {
                                           kind: 'Field',
                                           name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'guidesCollection' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'icon' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'descriptionCollection',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'items',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'title',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'bodyText',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'linkUrl',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'linkText',
+                                                },
+                                              },
+                                            ],
+                                          },
                                         },
                                       ],
                                     },

@@ -8,7 +8,11 @@ import { DashboardContentfulDataProvider } from '../../../src/data-providers/con
 import {
   getListDashboardDataObject,
   getContentfulGraphqlDashboard,
+  getContentfulGraphqlGuideDescription,
+  getContentfulGraphqlGuides,
+  getContentfulGraphqlAnnouncements,
   getContentfulDashboardGraphqlResponse,
+  getDashboardDataObject,
 } from '../../fixtures/dashboard.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 
@@ -22,6 +26,9 @@ describe('Dashboard data provider', () => {
   const contentfulGraphqlClientMockServer =
     getGP2ContentfulGraphqlClientMockServer({
       Dashboard: () => getContentfulGraphqlDashboard(),
+      Announcement: () => getContentfulGraphqlAnnouncements(),
+      Guides: () => getContentfulGraphqlGuides(),
+      GuideDescriptionCollection: () => getContentfulGraphqlGuideDescription(),
     });
 
   const dashboardDataProviderMockGraphql = new DashboardContentfulDataProvider(
@@ -188,6 +195,62 @@ describe('Dashboard data provider', () => {
       expect(dashboardDataObject.items[0]?.announcements[0]?.deadline).toEqual(
         deadline.toUTC().toString(),
       );
+    });
+  });
+
+  describe('guides', () => {
+    test('no guides returns empty array', async () => {
+      const dashboard = {
+        ...getContentfulGraphqlDashboard(),
+        guidesCollection: undefined,
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        dashboardCollection: {
+          total: 1,
+          items: [dashboard],
+        },
+      });
+      const dashboardDataObject = await dashboardDataProvider.fetch({});
+      expect(dashboardDataObject?.items[0]?.guides).toEqual([]);
+    });
+
+    test('if present it parses the description', async () => {
+      const dashboard = getContentfulGraphqlDashboard();
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        dashboardCollection: {
+          total: 1,
+          items: [dashboard],
+        },
+      });
+      const dashboardDataObject = await dashboardDataProvider.fetch({});
+      expect(dashboardDataObject.items[0]?.guides[0]?.description).toEqual(
+        getDashboardDataObject().guides[0]?.description,
+      );
+    });
+
+    test('if present it parses the description', async () => {
+      const dashboard = {
+        ...getContentfulGraphqlDashboard(),
+        guidesCollection: {
+          items: [
+            {
+              sys: { id: '1' },
+              title: 'Header',
+              descriptionCollection: undefined,
+            },
+          ],
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        dashboardCollection: {
+          total: 1,
+          items: [dashboard],
+        },
+      });
+      const dashboardDataObject = await dashboardDataProvider.fetch({});
+      expect(dashboardDataObject.items[0]?.guides[0]?.description).toEqual([]);
     });
   });
 });

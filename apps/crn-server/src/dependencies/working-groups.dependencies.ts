@@ -10,7 +10,7 @@ import {
   contentfulAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
-  isContentfulEnabledV2,
+  isContentfulEnabled,
 } from '../config';
 import { WorkingGroupContentfulDataProvider } from '../data-providers/contentful/working-group.data-provider';
 import { WorkingGroupSquidexDataProvider } from '../data-providers/working-group.data-provider';
@@ -20,7 +20,7 @@ import { getAuthToken } from '../utils/auth';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 
 export const getWorkingGroupDataProvider = (): WorkingGroupDataProvider => {
-  if (isContentfulEnabledV2) {
+  if (isContentfulEnabled) {
     const contentfulGraphQLClient = getContentfulGraphQLClient({
       space: contentfulSpaceId,
       accessToken: contentfulAccessToken,

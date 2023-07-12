@@ -10,7 +10,7 @@ import {
   googleApiToken,
   googleApiUrl,
   region,
-  isContentfulEnabledV2,
+  isContentfulEnabled,
 } from '../../config';
 import { getCalendarDataProvider } from '../../dependencies/calendars.dependencies';
 import logger from '../../utils/logger';
@@ -25,7 +25,7 @@ const getJWTCredentials = getJWTCredentialsFactory({
 
 /* istanbul ignore next */
 const getCalendarId = (id: string): string =>
-  isContentfulEnabledV2 ? getCalendarSubscriptionId(id) : id;
+  isContentfulEnabled ? getCalendarSubscriptionId(id) : id;
 
 export const handler = sentryWrapper(
   resubscribeCalendarsHandlerFactory(

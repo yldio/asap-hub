@@ -10,7 +10,7 @@ import {
   contentfulAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
-  isContentfulEnabledV2,
+  isContentfulEnabled,
 } from '../config';
 import { ExternalAuthorContentfulDataProvider } from '../data-providers/contentful/external-author.data-provider';
 import {
@@ -21,7 +21,7 @@ import { getAuthToken } from '../utils/auth';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 
 export const getExternalAuthorDataProvider = (): ExternalAuthorDataProvider => {
-  if (isContentfulEnabledV2) {
+  if (isContentfulEnabled) {
     const contentfulGraphQLClient = getContentfulGraphQLClient({
       space: contentfulSpaceId,
       accessToken: contentfulAccessToken,

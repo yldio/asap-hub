@@ -18,7 +18,7 @@ import { getCalendarFixture } from '../fixtures/calendar';
 
 jest.mock('../../../src/config', () => ({
   ...jest.requireActual('../../../src/config'),
-  isContentfulEnabledV2:
+  isContentfulEnabled:
     process.env.INTEGRATION_TEST_CMS === 'contentful' ? 'true' : undefined,
   logLevel: 'silent',
 }));

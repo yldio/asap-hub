@@ -200,9 +200,6 @@ outputs:
   is-contentful-enabled-v2:
     description: 'Is all remaining data fetched from Contentful'
     value: ${{ steps.vars.outputs.is-contentful-enabled-v2 }}
-  is-contentful-enabled:
-    description: 'Is news, pages and dashboard data fetched from Contentful'
-    value: ${{ steps.vars.outputs.is-contentful-enabled }}
   pr-number:
     description: 'PR Number'
     value: ${{ steps.vars.outputs.pr-number }}

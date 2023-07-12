@@ -134,7 +134,6 @@ runs:
         GP2_SENTRY_DSN_API: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
         GP2_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
         GP2_SES_REGION: ${{ steps.setup.outputs.gp2-ses-region }}
-        IS_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.is-contentful-enabled }}
         IS_CONTENTFUL_ENABLED_V2: ${{ steps.setup.outputs.is-contentful-enabled-v2 }}
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'

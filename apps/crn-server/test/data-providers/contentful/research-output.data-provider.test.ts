@@ -865,27 +865,32 @@ describe('Research Outputs Data Provider', () => {
         },
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        labs: {
-          'en-US': [
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'lab-1',
-              },
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            labs: {
+              'en-US': [
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'lab-1',
+                  },
+                },
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'lab-2',
+                  },
+                },
+              ],
             },
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'lab-2',
-              },
-            },
-          ],
-        },
-      });
+          }),
+        }),
+      );
     });
 
     test('sets team ids to contentful references', async () => {
@@ -896,27 +901,31 @@ describe('Research Outputs Data Provider', () => {
         },
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        teams: {
-          'en-US': [
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'team-1',
-              },
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            teams: {
+              'en-US': [
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'team-1',
+                  },
+                },
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'team-2',
+                  },
+                },
+              ],
             },
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'team-2',
-              },
-            },
-          ],
-        },
-      });
+          }),
+        }),
+      );
     });
 
     test('sets team ids to contentful references', async () => {
@@ -927,27 +936,31 @@ describe('Research Outputs Data Provider', () => {
         },
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        teams: {
-          'en-US': [
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'team-1',
-              },
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            teams: {
+              'en-US': [
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'team-1',
+                  },
+                },
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'team-2',
+                  },
+                },
+              ],
             },
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'team-2',
-              },
-            },
-          ],
-        },
-      });
+          }),
+        }),
+      );
     });
 
     test('sets related research ids to contentful references', async () => {
@@ -958,27 +971,31 @@ describe('Research Outputs Data Provider', () => {
         },
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        relatedResearch: {
-          'en-US': [
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'output-1',
-              },
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            relatedResearch: {
+              'en-US': [
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'output-1',
+                  },
+                },
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'output-2',
+                  },
+                },
+              ],
             },
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'output-2',
-              },
-            },
-          ],
-        },
-      });
+          }),
+        }),
+      );
     });
 
     test('sets related event ids to contentful references', async () => {
@@ -989,27 +1006,31 @@ describe('Research Outputs Data Provider', () => {
         },
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        relatedEvents: {
-          'en-US': [
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'event-1',
-              },
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            relatedEvents: {
+              'en-US': [
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'event-1',
+                  },
+                },
+                {
+                  sys: {
+                    type: 'Link',
+                    linkType: 'Entry',
+                    id: 'event-2',
+                  },
+                },
+              ],
             },
-            {
-              sys: {
-                type: 'Link',
-                linkType: 'Entry',
-                id: 'event-2',
-              },
-            },
-          ],
-        },
-      });
+          }),
+        }),
+      );
     });
 
     test('sets research tag fields to contentful references', async () => {
@@ -1024,38 +1045,46 @@ describe('Research Outputs Data Provider', () => {
         },
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        methods: {
-          'en-US': [
-            { sys: { type: 'Link', linkType: 'Entry', id: 'method-1' } },
-            { sys: { type: 'Link', linkType: 'Entry', id: 'method-2' } },
-          ],
-        },
-        keywords: {
-          'en-US': [
-            { sys: { type: 'Link', linkType: 'Entry', id: 'keyword-1' } },
-            { sys: { type: 'Link', linkType: 'Entry', id: 'keyword-2' } },
-          ],
-        },
-        environments: {
-          'en-US': [
-            { sys: { type: 'Link', linkType: 'Entry', id: 'environment-1' } },
-            { sys: { type: 'Link', linkType: 'Entry', id: 'environment-2' } },
-          ],
-        },
-        organisms: {
-          'en-US': [
-            { sys: { type: 'Link', linkType: 'Entry', id: 'organism-1' } },
-            { sys: { type: 'Link', linkType: 'Entry', id: 'organism-2' } },
-          ],
-        },
-        subtype: {
-          'en-US': {
-            sys: { type: 'Link', linkType: 'Entry', id: 'subtype-1' },
-          },
-        },
-      });
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            methods: {
+              'en-US': [
+                { sys: { type: 'Link', linkType: 'Entry', id: 'method-1' } },
+                { sys: { type: 'Link', linkType: 'Entry', id: 'method-2' } },
+              ],
+            },
+            keywords: {
+              'en-US': [
+                { sys: { type: 'Link', linkType: 'Entry', id: 'keyword-1' } },
+                { sys: { type: 'Link', linkType: 'Entry', id: 'keyword-2' } },
+              ],
+            },
+            environments: {
+              'en-US': [
+                {
+                  sys: { type: 'Link', linkType: 'Entry', id: 'environment-1' },
+                },
+                {
+                  sys: { type: 'Link', linkType: 'Entry', id: 'environment-2' },
+                },
+              ],
+            },
+            organisms: {
+              'en-US': [
+                { sys: { type: 'Link', linkType: 'Entry', id: 'organism-1' } },
+                { sys: { type: 'Link', linkType: 'Entry', id: 'organism-2' } },
+              ],
+            },
+            subtype: {
+              'en-US': {
+                sys: { type: 'Link', linkType: 'Entry', id: 'subtype-1' },
+              },
+            },
+          }),
+        }),
+      );
     });
 
     test('sets working group to contentful reference', async () => {
@@ -1066,18 +1095,22 @@ describe('Research Outputs Data Provider', () => {
         },
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        workingGroup: {
-          'en-US': {
-            sys: {
-              type: 'Link',
-              linkType: 'Entry',
-              id: 'wg-0',
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            workingGroup: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'wg-0',
+                },
+              },
             },
-          },
-        },
-      });
+          }),
+        }),
+      );
     });
 
     test('sets working group to null if undefined', async () => {
@@ -1088,12 +1121,16 @@ describe('Research Outputs Data Provider', () => {
         },
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        workingGroup: {
-          'en-US': null,
-        },
-      });
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            workingGroup: {
+              'en-US': null,
+            },
+          }),
+        }),
+      );
     });
 
     test('sets createdBy and updatedBy to contentful reference', async () => {
@@ -1104,27 +1141,31 @@ describe('Research Outputs Data Provider', () => {
         },
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        createdBy: {
-          'en-US': {
-            sys: {
-              type: 'Link',
-              linkType: 'Entry',
-              id: 'user-0',
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            createdBy: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'user-0',
+                },
+              },
             },
-          },
-        },
-        updatedBy: {
-          'en-US': {
-            sys: {
-              type: 'Link',
-              linkType: 'Entry',
-              id: 'user-0',
+            updatedBy: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'user-0',
+                },
+              },
             },
-          },
-        },
-      });
+          }),
+        }),
+      );
     });
 
     test('sets createdDate and lastUpdatedPartial to the current timestamp', async () => {
@@ -1132,15 +1173,19 @@ describe('Research Outputs Data Provider', () => {
         getResearchOutputCreateDataObject(),
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        createdDate: {
-          'en-US': new Date().toISOString(),
-        },
-        lastUpdatedPartial: {
-          'en-US': new Date().toISOString(),
-        },
-      });
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            createdDate: {
+              'en-US': new Date().toISOString(),
+            },
+            lastUpdatedPartial: {
+              'en-US': new Date().toISOString(),
+            },
+          }),
+        }),
+      );
     });
 
     test('sets addedDate to the current timestamp if publishing the output', async () => {
@@ -1148,12 +1193,16 @@ describe('Research Outputs Data Provider', () => {
         getResearchOutputCreateDataObject(),
         { publish: true },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        addedDate: {
-          'en-US': new Date().toISOString(),
-        },
-      });
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            addedDate: {
+              'en-US': new Date().toISOString(),
+            },
+          }),
+        }),
+      );
     });
 
     test('sets addedDate to null if not publishing the output', async () => {
@@ -1161,10 +1210,14 @@ describe('Research Outputs Data Provider', () => {
         getResearchOutputCreateDataObject(),
         { publish: false },
       );
-      const args = environmentMock.createEntry.mock.lastCall?.[1];
-      expect(args!.fields).toMatchObject({
-        addedDate: { 'en-US': null },
-      });
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputs',
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            addedDate: { 'en-US': null },
+          }),
+        }),
+      );
     });
   });
   describe('update', () => {

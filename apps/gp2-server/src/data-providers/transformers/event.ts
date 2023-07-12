@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { parseRichText, RichTextFromQuery } from '@asap-hub/contentful';
 
 export const getMeetingMaterial = <T>(

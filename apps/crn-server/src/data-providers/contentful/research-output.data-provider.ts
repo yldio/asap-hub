@@ -64,6 +64,7 @@ export class ResearchOutputContentfulDataProvider
 {
   constructor(
     private contentfulClient: GraphQLClient,
+    private contentfulPreviewClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
   ) {}
 
@@ -108,8 +109,10 @@ export class ResearchOutputContentfulDataProvider
         };
       }
     }
-
-    const { researchOutputsCollection } = await this.contentfulClient.request<
+    const client = includeDrafts
+      ? this.contentfulPreviewClient
+      : this.contentfulClient;
+    const { researchOutputsCollection } = await client.request<
       FetchResearchOutputsQuery,
       FetchResearchOutputsQueryVariables
     >(FETCH_RESEARCH_OUTPUTS, {
@@ -147,7 +150,7 @@ export class ResearchOutputContentfulDataProvider
 
     if (!researchOutputs) {
       const { researchOutputs: draftResearchoutput } =
-        await this.contentfulClient.request<
+        await this.contentfulPreviewClient.request<
           FetchResearchOutputByIdQuery,
           FetchResearchOutputByIdQueryVariables
         >(FETCH_RESEARCH_OUTPUT_BY_ID, { id, preview: true });

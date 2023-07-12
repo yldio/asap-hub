@@ -551,6 +551,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     'researchOutputs',
     libs.researchOutputContentfulDataProvider ||
       new ResearchOutputContentfulDataProvider(
+        contentfulGraphQLClient,
         contentfulPreviewGraphQLClient,
         getContentfulRestClientFactory,
       ),

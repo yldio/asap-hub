@@ -23,12 +23,14 @@ jest.mock('@asap-hub/contentful', () => ({
 
 describe('Research Outputs Data Provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
+  const contentfulGraphqlPreviewClientMock = getContentfulGraphqlClientMock();
   const environmentMock = getContentfulEnvironmentMock();
   const contentfulRestClientMock: () => Promise<Environment> = () =>
     Promise.resolve(environmentMock);
 
   const researchOutputDataProvider = new ResearchOutputContentfulDataProvider(
     contentfulGraphqlClientMock,
+    contentfulGraphqlPreviewClientMock,
     contentfulRestClientMock,
   );
 
@@ -47,6 +49,7 @@ describe('Research Outputs Data Provider', () => {
 
   const researchOutputDataProviderMockGraphql =
     new ResearchOutputContentfulDataProvider(
+      contentfulGraphqlClientMockServer,
       contentfulGraphqlClientMockServer,
       contentfulRestClientMock,
     );
@@ -103,6 +106,9 @@ describe('Research Outputs Data Provider', () => {
           contentfulGraphqlClientMock.request.mockResolvedValueOnce({
             researchOutputsCollection: null,
           });
+          contentfulGraphqlPreviewClientMock.request.mockResolvedValueOnce({
+            researchOutputsCollection: null,
+          });
         });
 
         test('Should pass default pagination parameters if not defined', async () => {
@@ -137,7 +143,9 @@ describe('Research Outputs Data Provider', () => {
             includeDrafts: true,
           });
 
-          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect(
+            contentfulGraphqlPreviewClientMock.request,
+          ).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({
               where: {
@@ -158,7 +166,9 @@ describe('Research Outputs Data Provider', () => {
             includeDrafts: true,
           });
 
-          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect(
+            contentfulGraphqlPreviewClientMock.request,
+          ).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({
               where: {
@@ -179,9 +189,12 @@ describe('Research Outputs Data Provider', () => {
             filter: {
               workingGroupId: 'wg-0',
             },
+            includeDrafts: true,
           });
 
-          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect(
+            contentfulGraphqlPreviewClientMock.request,
+          ).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({
               where: {
@@ -245,6 +258,9 @@ describe('Research Outputs Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValue({
         researchOutputs: null,
       });
+      contentfulGraphqlPreviewClientMock.request.mockResolvedValue({
+        researchOutputs: null,
+      });
       await expect(researchOutputDataProvider.fetchById('1')).rejects.toThrow(
         'Not Found',
       );
@@ -255,19 +271,20 @@ describe('Research Outputs Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchOutputs: null,
       });
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+      contentfulGraphqlPreviewClientMock.request.mockResolvedValueOnce({
         researchOutputs,
       });
       await researchOutputDataProvider.fetchById('1');
 
-      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(2);
-      expect(contentfulGraphqlClientMock.request).nthCalledWith(
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(1);
+      expect(contentfulGraphqlPreviewClientMock.request).toHaveBeenCalledTimes(
         1,
+      );
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({ id: '1', preview: false }),
       );
-      expect(contentfulGraphqlClientMock.request).nthCalledWith(
-        2,
+      expect(contentfulGraphqlPreviewClientMock.request).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({ id: '1', preview: true }),
       );

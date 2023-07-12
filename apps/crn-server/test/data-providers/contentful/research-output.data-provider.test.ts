@@ -1254,7 +1254,7 @@ describe('Research Outputs Data Provider', () => {
         getResearchOutputUpdateDataObject(),
         { publish: false },
       );
-
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('a');
       expect(patch).toHaveBeenCalled();
     });
 

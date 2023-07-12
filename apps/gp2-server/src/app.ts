@@ -60,7 +60,6 @@ import { WorkingGroupDataProvider } from './data-providers/types/working-group.d
 import { UserContentfulDataProvider } from './data-providers/user.data-provider';
 import { WorkingGroupNetworkContentfulDataProvider } from './data-providers/working-group-network.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/working-group.data-provider';
-import { getCalendarDataProvider } from './dependencies/calendar.dependency';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependency';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
@@ -133,7 +132,11 @@ export const appFactory = (libs: Libs = {}): Express => {
       getContentfulRestClientFactory,
     );
   const calendarContentfulDataProvider =
-    libs.calendarContentfulDataProvider || getCalendarDataProvider();
+    libs.calendarContentfulDataProvider ||
+    new CalendarContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
   const eventContentfulDataProvider =
     libs.eventContentfulDataProvider ||
     new EventContentfulDataProvider(

@@ -1,4 +1,4 @@
-import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
+import { getGraphQLClient } from '@asap-hub/contentful';
 import {
   contentfulAccessToken,
   contentfulEnvId,
@@ -10,7 +10,7 @@ import { UserContentfulDataProvider } from '../data-providers/user.data-provider
 import { getContentfulRestClientFactory } from './clients.dependency';
 
 export const getUserDataProvider = (): UserDataProvider => {
-  const contentfulGraphQLClient = getContentfulGraphQLClient({
+  const contentfulGraphQLClient = getGraphQLClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,

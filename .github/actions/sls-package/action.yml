@@ -35,12 +35,6 @@ inputs:
   environment-name:
     description: 'The environment name'
     required: true
-  gp2-squidex-api-client-secret:
-    description: 'Squidex Client Secret'
-    required: false
-  gp2-squidex-shared-secret:
-    description: 'Squidex Shared Secret'
-    required: false
   gp2-contentful-env:
     description: 'GP2 Contentful Environment'
     required: false
@@ -125,10 +119,6 @@ runs:
         GP2_SENTRY_DSN_API: ${{ steps.setup.outputs.gp2-sentry-dsn-api }}
         GP2_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.gp2-sentry-dsn-handlers }}
         GP2_SES_REGION: ${{ steps.setup.outputs.gp2-ses-region }}
-        GP2_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-api-client-id }}
-        GP2_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.gp2-squidex-api-client-secret }}
-        GP2_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
-        GP2_SQUIDEX_SHARED_SECRET: ${{ inputs.gp2-squidex-shared-secret }}
         IS_CONTENTFUL_ENABLED: ${{ steps.setup.outputs.is-contentful-enabled }}
         IS_CONTENTFUL_ENABLED_V2: ${{ steps.setup.outputs.is-contentful-enabled-v2 }}
         NODE_ENV: 'production'

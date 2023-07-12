@@ -1,4 +1,4 @@
-import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
+import { getGraphQLClient } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   contentfulAccessToken,
@@ -9,7 +9,7 @@ import { CalendarContentfulDataProvider } from '../data-providers/calendar.data-
 import { getContentfulRestClientFactory } from './clients.dependency';
 
 export const getCalendarDataProvider = (): gp2Model.CalendarDataProvider => {
-  const contentfulGraphQLClient = getContentfulGraphQLClient({
+  const contentfulGraphQLClient = getGraphQLClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,

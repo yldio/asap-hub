@@ -1,4 +1,4 @@
-import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
+import { getGraphQLClient } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   contentfulAccessToken,
@@ -9,7 +9,7 @@ import { EventContentfulDataProvider } from '../data-providers/event.data-provid
 import { getContentfulRestClientFactory } from './clients.dependency';
 
 export const getEventDataProvider = (): gp2Model.EventDataProvider => {
-  const contentfulGraphQLClient = getContentfulGraphQLClient({
+  const contentfulGraphQLClient = getGraphQLClient({
     space: contentfulSpaceId,
     accessToken: contentfulAccessToken,
     environment: contentfulEnvId,

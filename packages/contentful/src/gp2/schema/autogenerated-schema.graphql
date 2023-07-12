@@ -815,7 +815,7 @@ type EventSpeakers implements Entry {
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
   sys: Sys!
   title(locale: String): String
-  user(locale: String, preview: Boolean): EventSpeakersUser
+  user(locale: String, preview: Boolean, where: ExternalUsersOrUsersFilter): EventSpeakersUser
 }
 
 type EventSpeakersCollection {

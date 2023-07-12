@@ -1,4 +1,5 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Routes } from '@asap-hub/routing';
 import {
   Accordion,
   Button,
@@ -9,19 +10,19 @@ import {
   LabIcon,
   lead,
   LibraryIcon,
+  Link,
   Paragraph,
   pixels,
   RemindersCard,
 } from '@asap-hub/react-components';
-import { events } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import GuideDescription from '../molecules/GuideDescription';
+import { NewsItem } from '../molecules';
 import InfoCard from '../molecules/InfoCard';
-import DashboardNews from '../organisms/DashboardNews';
 
 const { rem } = pixels;
 const infoStyles = css({
@@ -45,6 +46,7 @@ const contentCardsStyles = css({
   gap: rem(24),
   width: '100%',
   justifyContent: 'center',
+  justifyItems: 'center',
   marginTop: rem(32),
   [mobileQuery]: {
     flexDirection: 'column',
@@ -52,12 +54,12 @@ const contentCardsStyles = css({
 });
 
 type DashboardPageBodyProps = {
-  news: gp2.ListNewsResponse;
-  latestStats: gp2.StatsDataObject;
+  news: gp2Model.ListNewsResponse;
+  latestStats: gp2Model.StatsDataObject;
   totalOfUpcomingEvents: number;
   announcements?: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
-  guides?: gp2.GuideDataObject[];
+  guides?: gp2Model.GuideDataObject[];
 };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
@@ -69,7 +71,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   guides,
 }) => {
   const history = useHistory();
-
+  const lastestNews = news.items[0];
   return (
     <>
       {announcements ? (
@@ -113,7 +115,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             Here are some key actions to take within the GP2 Hub.
           </Paragraph>
           <Accordion
-            items={guides.map((guide: gp2.GuideDataObject) => ({
+            items={guides.map((guide: gp2Model.GuideDataObject) => ({
               title: guide.title,
               icon: <img src={guide.icon} alt={guide.title} />,
               description: <GuideDescription blocks={guide.description} />,
@@ -121,7 +123,6 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </Card>
       )}
-      {!!news.total && <DashboardNews items={news.items} />}
 
       <div>
         <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
@@ -133,7 +134,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <p css={viewAllStyles} data-testid="view-upcoming-events">
             <Button
               onClick={() =>
-                history.push({ pathname: events({}).upcoming({}).$ })
+                history.push({ pathname: gp2Routes.events({}).upcoming({}).$ })
               }
             >
               View All
@@ -141,6 +142,20 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </p>
         )}
       </div>
+      {lastestNews ? (
+        <div css={columnContainer}>
+          <Headline2>Latest Newsletter</Headline2>
+          <Paragraph accent="lead" noMargin>
+            Here is the latest GP2 newsletter.
+          </Paragraph>
+          <div css={[contentCardsStyles, columnContainer, { gap: rem(32) }]}>
+            <NewsItem {...lastestNews} />
+            <Link buttonStyle noMargin href={gp2Routes.newsList({}).$}>
+              View All
+            </Link>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 };

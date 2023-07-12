@@ -1148,6 +1148,7 @@ export type EventSpeakersTitleArgs = {
 export type EventSpeakersUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ExternalUsersOrUsersFilter>;
 };
 
 export type EventSpeakersCollection = {

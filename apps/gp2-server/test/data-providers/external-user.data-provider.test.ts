@@ -38,9 +38,7 @@ describe('External User Contentful Data Provider', () => {
       contentfulRestClientMock,
     );
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch method', () => {
     test('Should fetch the list of external users from Contentful Graphql', async () => {

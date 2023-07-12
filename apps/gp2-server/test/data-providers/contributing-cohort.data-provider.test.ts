@@ -39,7 +39,7 @@ describe('Contributing Cohorts data provider', () => {
       contentfulRestClientMock,
     );
 
-  afterEach(jest.resetAllMocks);
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch method', () => {
     test('Should fetch the list of contributing cohorts from Contentful GraphQl', async () => {

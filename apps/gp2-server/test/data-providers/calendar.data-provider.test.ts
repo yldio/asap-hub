@@ -1,21 +1,21 @@
-import { GraphQLError } from 'graphql';
 import {
   Environment,
-  gp2,
   getGP2ContentfulGraphqlClientMockServer,
+  gp2,
 } from '@asap-hub/contentful';
+import { GraphQLError } from 'graphql';
 
+import { CalendarContentfulDataProvider } from '../../src/data-providers/calendar.data-provider';
 import {
-  getContentfulGraphqlCalendar,
-  getContentfulCalendarsGraphqlResponse,
   getCalendarCreateDataObject,
   getCalendarDataObject,
+  getContentfulCalendarsGraphqlResponse,
   getContentfulGraphql,
+  getContentfulGraphqlCalendar,
 } from '../fixtures/calendar.fixtures';
+import { getEntry } from '../fixtures/contentful.fixtures';
 import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../mocks/contentful-rest-client.mock';
-import { getEntry } from '../fixtures/contentful.fixtures';
-import { CalendarContentfulDataProvider } from '../../src/data-providers/calendar.data-provider';
 
 describe('Calendars data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -36,9 +36,7 @@ describe('Calendars data provider', () => {
     contentfulRestClientMock,
   );
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   const getContentfulCalendarDataObject = () => ({
     ...getCalendarDataObject(),

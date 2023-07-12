@@ -16,6 +16,7 @@ describe('Assets data provider', () => {
   const publishMock = jest.fn();
 
   beforeEach(() => {
+    jest.resetAllMocks();
     environmentMock.createAssetFromFiles.mockResolvedValueOnce({
       processForAllLocales: processMock,
     } as unknown as Asset);
@@ -27,10 +28,6 @@ describe('Assets data provider', () => {
         id: '123',
       },
     });
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
   });
 
   describe('Fetch', () => {

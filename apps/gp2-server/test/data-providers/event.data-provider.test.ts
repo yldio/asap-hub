@@ -47,9 +47,7 @@ describe('Events Contentful Data Provider', () => {
     contentfulRestClientMock,
   );
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     test('Should fetch the events from Contentful graphql', async () => {

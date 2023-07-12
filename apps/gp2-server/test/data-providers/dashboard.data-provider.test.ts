@@ -35,7 +35,7 @@ describe('Dashboard data provider', () => {
     contentfulGraphqlClientMockServer,
   );
 
-  afterEach(jest.resetAllMocks);
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch method', () => {
     test('Should fetch the list of dashboards from Contentful GraphQl', async () => {

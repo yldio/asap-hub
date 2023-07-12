@@ -2,9 +2,9 @@ import { getGP2ContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
 import { NewsContentfulDataProvider } from '../../src/data-providers/news.data-provider';
 import {
-  getListNewsDataObject,
   getContentfulGraphqlNews,
   getContentfulNewsGraphqlResponse,
+  getListNewsDataObject,
 } from '../fixtures/news.fixtures';
 import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
 
@@ -24,7 +24,7 @@ describe('News data provider', () => {
     contentfulGraphqlClientMockServer,
   );
 
-  afterEach(jest.resetAllMocks);
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch method', () => {
     test('Should fetch the list of news from Contentful GraphQl', async () => {

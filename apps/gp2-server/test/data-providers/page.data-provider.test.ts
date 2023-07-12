@@ -22,7 +22,7 @@ describe('Pages Contentful Data Provider', () => {
     contentfulGraphqlClientMockServer,
   );
 
-  afterEach(jest.resetAllMocks);
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch method', () => {
     test('Should fetch the list of Pages from Contentful GraphQl', async () => {

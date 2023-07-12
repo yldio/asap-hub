@@ -62,15 +62,15 @@ const ShareOutputButton: React.FC<ShareOutputButtonProps> = ({
         }).$,
       }}
       {{
-        item: <>{outputTrainingMarerialsIcon} Training Materials</>,
-        href: route.createOutput({
-          outputDocumentType: 'training-materials',
-        }).$,
-      }}
-      {{
         item: <>{outputGP2ReportsIcon} GP2 Reports</>,
         href: route.createOutput({
           outputDocumentType: 'gp2-reports',
+        }).$,
+      }}
+      {{
+        item: <>{outputTrainingMarerialsIcon} Training Materials</>,
+        href: route.createOutput({
+          outputDocumentType: 'training-materials',
         }).$,
       }}
     </DropdownButton>

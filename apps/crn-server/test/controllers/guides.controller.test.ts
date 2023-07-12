@@ -8,12 +8,12 @@ describe('Guide controller', () => {
 
   describe('Fetch method', () => {
     test('Should return an empty result when the data provider returns an empty list', async () => {
-      guidesDataProviderMock.fetch.mockResolvedValue({
+      guidesDataProviderMock.fetchByCollectionTitle.mockResolvedValue({
         items: [],
         total: 0,
       });
 
-      const result = await guides.fetch();
+      const result = await guides.fetchByCollectionTitle('Home');
 
       expect(result).toEqual({
         items: [],
@@ -22,9 +22,11 @@ describe('Guide controller', () => {
     });
 
     test('Should return the guides data', async () => {
-      guidesDataProviderMock.fetch.mockResolvedValue(getGuidesResponse());
+      guidesDataProviderMock.fetchByCollectionTitle.mockResolvedValue(
+        getGuidesResponse(),
+      );
 
-      const result = await guides.fetch();
+      const result = await guides.fetchByCollectionTitle('Home');
 
       expect(result).toEqual(getGuidesResponse());
     });

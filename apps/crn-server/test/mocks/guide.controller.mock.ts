@@ -1,5 +1,5 @@
 import GuideController from '../../src/controllers/guide.controller';
 
 export const guideControllerMock = {
-  fetch: jest.fn(),
+  fetchByCollectionTitle: jest.fn(),
 } as unknown as jest.Mocked<GuideController>;

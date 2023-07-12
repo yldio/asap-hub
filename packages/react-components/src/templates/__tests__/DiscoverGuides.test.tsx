@@ -3,20 +3,21 @@ import { render, screen } from '@testing-library/react';
 import DiscoverGuides from '../DiscoverGuides';
 
 it('renders all the sections', () => {
-  render(<DiscoverGuides />);
+  const guides = [
+    {
+      title: 'Post-Award Guidelines',
+      content: [
+        {
+          title: '',
+          text: 'All you need to know about the Network, the Hub, budgeting, sharing meetings, communications, publishing and more.',
+          linkText: 'Open Folder',
+          linkUrl:
+            'https://drive.google.com/drive/folders/100b28nnuKwto7rmN_sYg8iTYnKRo7ZQo',
+        },
+      ],
+    },
+  ];
+  render(<DiscoverGuides guides={guides} />);
 
   expect(screen.getByText('Post-Award Guidelines')).toBeVisible();
-  expect(screen.getByText('Grants Management Portal')).toBeVisible();
-  expect(screen.getByText('Budget Reallocation Request Form')).toBeVisible();
-  expect(
-    screen.getByText('Template Annual Progress and Expense Team Reports'),
-  ).toBeVisible();
-  expect(screen.getByText('Open Access Policy')).toBeVisible();
-  expect(
-    screen.getByText(
-      'Sharing your ASAP supported articles on ASAP social media channels',
-    ),
-  ).toBeVisible();
-  expect(screen.getByText('Coverage of Article Processing Fees')).toBeVisible();
-  expect(screen.getByText('ASAP Tools Program')).toBeVisible();
 });

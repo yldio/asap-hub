@@ -10,6 +10,7 @@ import { refreshDiscoverState } from '../state';
 import { getDiscover } from '../api';
 
 jest.mock('../api');
+jest.mock('../../guides/api');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -50,5 +51,5 @@ it('renders guides with pages and support', async () => {
 
   await renderDiscover({});
   expect(screen.getByText(/Guides/i, { selector: 'h2' })).toBeVisible();
-  expect(screen.queryAllByRole('heading').length).toBe(9);
+  expect(screen.queryAllByRole('heading').length).toBe(6);
 });

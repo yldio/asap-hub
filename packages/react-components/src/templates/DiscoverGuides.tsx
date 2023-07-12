@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
+import { GuideDataObject } from '@asap-hub/model';
 
 import { HelpSection } from '../organisms';
 import { perRem } from '../pixels';
 import { Card, Headline2, Link, Paragraph } from '../atoms';
 import { Accordion } from '../molecules';
 import { externalLinkIcon } from '../icons';
-import { GuideDataObject } from '@asap-hub/model';
 import { isInternalLink } from '../utils';
 
 const styles = css({

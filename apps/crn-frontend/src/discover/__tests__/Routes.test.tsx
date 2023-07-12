@@ -20,6 +20,7 @@ import { getDiscover } from '../api';
 import { getTutorialById } from '../tutorials/api';
 
 jest.mock('../api');
+jest.mock('../../guides/api');
 jest.mock('../tutorials/api');
 
 const mockGetDiscover = getDiscover as jest.MockedFunction<typeof getDiscover>;

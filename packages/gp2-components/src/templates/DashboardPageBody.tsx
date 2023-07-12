@@ -129,7 +129,6 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </Card>
       )}
-
       <div>
         <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
         <div css={infoStyles}>

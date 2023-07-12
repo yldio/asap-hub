@@ -1,8 +1,6 @@
 # Import data scripts
 
-## Contentful
-
-### Environment setup
+## Environment setup
 
 The import scripts need to target the correct environment. Make sure to set the following environment variables:
 

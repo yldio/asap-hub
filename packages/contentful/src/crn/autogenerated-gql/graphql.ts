@@ -369,8 +369,6 @@ export enum AssetLinkingCollectionsUsersCollectionOrder {
   GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
-  JobTitleAsc = 'jobTitle_ASC',
-  JobTitleDesc = 'jobTitle_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LinkedInAsc = 'linkedIn_ASC',
@@ -962,8 +960,6 @@ export enum DiscoverMembersCollectionOrder {
   GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
-  JobTitleAsc = 'jobTitle_ASC',
-  JobTitleDesc = 'jobTitle_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LinkedInAsc = 'linkedIn_ASC',
@@ -1067,8 +1063,6 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
-  JobTitleAsc = 'jobTitle_ASC',
-  JobTitleDesc = 'jobTitle_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LinkedInAsc = 'linkedIn_ASC',
@@ -2757,8 +2751,6 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
-  JobTitleAsc = 'jobTitle_ASC',
-  JobTitleDesc = 'jobTitle_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LinkedInAsc = 'linkedIn_ASC',
@@ -4076,8 +4068,6 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
-  JobTitleAsc = 'jobTitle_ASC',
-  JobTitleDesc = 'jobTitle_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LinkedInAsc = 'linkedIn_ASC',
@@ -4606,7 +4596,7 @@ export type Users = Entry & {
   orcidLastModifiedDate?: Maybe<Scalars['DateTime']>;
   orcidLastSyncDate?: Maybe<Scalars['DateTime']>;
   orcidWorks?: Maybe<Scalars['JSON']>;
-  questions?: Maybe<Array<Maybe<Scalars['String']>>>;
+  questions?: Maybe<Scalars['JSON']>;
   reachOut?: Maybe<Scalars['String']>;
   researchGate?: Maybe<Scalars['String']>;
   researchInterests?: Maybe<Scalars['String']>;
@@ -5027,9 +5017,6 @@ export type UsersFilter = {
   orcid_not?: InputMaybe<Scalars['String']>;
   orcid_not_contains?: InputMaybe<Scalars['String']>;
   orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  questions_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  questions_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  questions_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_exists?: InputMaybe<Scalars['Boolean']>;
   reachOut?: InputMaybe<Scalars['String']>;
   reachOut_contains?: InputMaybe<Scalars['String']>;
@@ -5290,8 +5277,6 @@ export enum UsersOrder {
   GoogleScholarDesc = 'googleScholar_DESC',
   InstitutionAsc = 'institution_ASC',
   InstitutionDesc = 'institution_DESC',
-  JobTitleAsc = 'jobTitle_ASC',
-  JobTitleDesc = 'jobTitle_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
   LinkedInAsc = 'linkedIn_ASC',
@@ -6512,9 +6497,6 @@ export type CfUsersNestedFilter = {
   orcid_not?: InputMaybe<Scalars['String']>;
   orcid_not_contains?: InputMaybe<Scalars['String']>;
   orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  questions_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  questions_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  questions_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   questions_exists?: InputMaybe<Scalars['Boolean']>;
   reachOut?: InputMaybe<Scalars['String']>;
   reachOut_contains?: InputMaybe<Scalars['String']>;

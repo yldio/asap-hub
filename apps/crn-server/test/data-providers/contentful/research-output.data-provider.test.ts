@@ -246,6 +246,33 @@ describe('Research Outputs Data Provider', () => {
           );
         });
       });
+
+      describe('with a search term', () => {
+        beforeEach(() => {
+          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+            researchOutputsCollection: null,
+          });
+        });
+        test('adds keyword and title search parameters for each word in the query', async () => {
+          await researchOutputDataProvider.fetch({
+            search: 'test search',
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              where: {
+                OR: [
+                  { title_contains: 'test' },
+                  { title_contains: 'search' },
+                  { keywords: { name: 'test' } },
+                  { keywords: { name: 'search' } },
+                ],
+              },
+            }),
+          );
+        });
+      });
     });
   });
 
@@ -552,6 +579,18 @@ describe('Research Outputs Data Provider', () => {
       const result = await researchOutputDataProvider.fetchById('1');
 
       expect(result!.environments).toEqual([]);
+    });
+
+    test('Should default labs to an empty array when missing', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.labsCollection = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.labs).toEqual([]);
     });
 
     test('Should skip the lab when the name is empty', async () => {

@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { ReminderResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
-import { calendarIcon, EventIcon, infoCircleIcon } from '../icons';
+import { EventIcon, infoCircleIcon, LibraryIcon } from '../icons';
 import { Anchor, Markdown } from '../atoms';
 import { neutral200 } from '../colors';
 
@@ -36,7 +36,7 @@ const descriptionStyles = css({
 });
 
 const iconMap: Record<ReminderResponse['entity'], React.ReactElement> = {
-  'Research Output': calendarIcon,
+  'Research Output': <LibraryIcon />,
   Event: <EventIcon />,
 };
 

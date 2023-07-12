@@ -8503,8 +8503,25 @@ export type FetchReminderDataQuery = {
           ResearchOutputsFlatDataDto,
           'addedDate' | 'documentType' | 'title'
         > & {
-          teams: Maybe<Array<Pick<Teams, 'id'>>>;
-          workingGroups: Maybe<Array<Pick<WorkingGroups, 'id'>>>;
+          createdBy: Maybe<
+            Array<{
+              flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+            }>
+          >;
+          teams: Maybe<
+            Array<
+              Pick<Teams, 'id'> & {
+                flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+              }
+            >
+          >;
+          workingGroups: Maybe<
+            Array<
+              Pick<WorkingGroups, 'id'> & {
+                flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+              }
+            >
+          >;
         };
       }
     >
@@ -14756,6 +14773,32 @@ export const FetchReminderDataDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'createdBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'teams' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -14763,6 +14806,22 @@ export const FetchReminderDataDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'displayName',
+                                    },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
@@ -14776,6 +14835,19 @@ export const FetchReminderDataDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },

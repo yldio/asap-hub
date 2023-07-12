@@ -243,8 +243,8 @@ describe('/users/ route', () => {
 
     test('Should return 500 when it fails to update the user', async () => {
       userControllerMock.update.mockRejectedValueOnce(
-        Boom.badImplementation('squidex', {
-          data: 'Squidex Error Message',
+        Boom.badImplementation('contentful', {
+          data: 'Error Message',
         }),
       );
 
@@ -805,8 +805,8 @@ describe('/users/ route', () => {
 
     test('Should return 500 when it fails to update the avatar', async () => {
       userControllerMock.updateAvatar.mockRejectedValueOnce(
-        Boom.badImplementation('squidex', {
-          data: 'Squidex Error Message',
+        Boom.badImplementation('contentful', {
+          data: 'Error Message',
         }),
       );
 

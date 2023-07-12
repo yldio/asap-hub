@@ -5,7 +5,10 @@ import {
   gp2 as gp2Contentful,
   patchAndPublish,
 } from '@asap-hub/contentful';
-import { EventContentfulDataProvider, parseGraphQLEvent } from '../../src/data-providers/event.data-provider';
+import {
+  EventContentfulDataProvider,
+  parseGraphQLEvent,
+} from '../../src/data-providers/event.data-provider';
 import { getEntry } from '../fixtures/contentful.fixtures';
 import {
   getContentfulEventDataObject,
@@ -657,7 +660,7 @@ describe('Events Contentful Data Provider', () => {
           calendar: {
             'en-US': {
               sys: {
-                id: 'squidex-calendar-id',
+                id: 'calendar-id',
                 linkType: 'Entry',
                 type: 'Link',
               },

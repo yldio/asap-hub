@@ -45,7 +45,7 @@ describe('Working Group Data Provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('FetchById', () => {
-    test('Should fetch the working group from squidex graphql', async () => {
+    test('Should fetch the working group from graphql', async () => {
       const result = await workinGroupDataProviderWithMockServer.fetchById(
         'id',
       );
@@ -428,7 +428,7 @@ describe('Working Group Data Provider', () => {
     });
   });
   describe('Fetch method', () => {
-    test('Should fetch the working group from squidex graphql', async () => {
+    test('Should fetch the working group from graphql', async () => {
       const result = await workinGroupDataProviderWithMockServer.fetch();
 
       expect(result).toMatchObject(getListWorkingGroupDataObject());

@@ -391,22 +391,6 @@ export const getEventResponse = (): gp2Model.EventResponse =>
 export const getListEventResponse = (): gp2Model.ListEventResponse =>
   getListEventDataObject();
 
-export const getEventInput = () => ({
-  googleId: { iv: 'google-event-id' },
-  title: { iv: 'Event Tittle' },
-  description: { iv: 'This event will be good' },
-  startDate: { iv: '2021-02-23T19:32:00Z' },
-  startDateTimeZone: { iv: 'Europe/Lisbon' },
-  endDate: { iv: '2021-02-23T19:32:00Z' },
-  endDateTimeZone: { iv: 'Europe/Lisbon' },
-  calendar: { iv: ['squidex-calendar-id'] },
-  status: { iv: 'Confirmed' as EventStatus },
-  tags: { iv: [] },
-  hidden: { iv: false },
-  meetingLink: { iv: 'https://zweem.com' },
-  hideMeetingLink: { iv: false },
-});
-
 export const getEventCreateDataObject = (): gp2Model.EventCreateDataObject => ({
   googleId: 'google-event-id',
   title: 'Event Tittle',
@@ -415,7 +399,7 @@ export const getEventCreateDataObject = (): gp2Model.EventCreateDataObject => ({
   startDateTimeZone: 'Europe/Lisbon',
   endDate: '2021-02-23T19:32:00Z',
   endDateTimeZone: 'Europe/Lisbon',
-  calendar: 'squidex-calendar-id',
+  calendar: 'calendar-id',
   status: 'Confirmed' as EventStatus,
   tags: [],
   hidden: false,

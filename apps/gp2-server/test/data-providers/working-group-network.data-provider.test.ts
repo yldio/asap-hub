@@ -37,7 +37,7 @@ describe('Working Group Network Data Provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
-    test('Should fetch the working group network from squidex graphql', async () => {
+    test('Should fetch the working group network from graphql', async () => {
       const result =
         await workingGroupNetworkDataProviderWithMockServer.fetch();
 

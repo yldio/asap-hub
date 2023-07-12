@@ -345,20 +345,6 @@ const serverlessConfig: AWS = {
         GP2_CONTENTFUL_ENABLED: 'true',
       },
     },
-    runMigrations: {
-      handler: './src/handlers/webhooks/run-migrations.run',
-      timeout: 900,
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
-    rollbackMigrations: {
-      handler: './src/handlers/webhooks/run-migrations.rollback',
-      timeout: 900,
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
     invalidateCache: {
       handler: './src/handlers/invalidate-cache/invalidate-handler.handler',
       events: [

@@ -17,47 +17,20 @@ describe('Contentful feature flag', () => {
   });
 
   describe('Page Data Provider', () => {
-    const pageSquidexDataProviderMock = {
-      fetch: jest.fn(),
-    } as unknown as jest.Mocked<PageDataProvider>;
-
     const pageContentfulDataProviderMock = {
       fetch: jest.fn(),
     } as unknown as jest.Mocked<PageDataProvider>;
 
-    test.each(['false', undefined])(
-      'page controller uses squidex data provider when GP2_CONTENTFUL_ENABLED is %s',
-      async (enabled) => {
-        process.env.GP2_CONTENTFUL_ENABLED = enabled;
-
-        const { appFactory } = require('../src/app');
-
-        const app = appFactory({
-          pageSquidexDataProvider: pageSquidexDataProviderMock,
-          pageContentfulDataProvider: pageContentfulDataProviderMock,
-          authHandler: authHandlerMock,
-        });
-        await supertest(app).get('/pages/privacy-policy');
-
-        expect(pageSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
-        expect(pageContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
-      },
-    );
-
-    test('page controller uses contentful data provider when GP2_CONTENTFUL_ENABLED is true', async () => {
-      process.env.GP2_CONTENTFUL_ENABLED = 'true';
-
+    test('page controller uses data provider', async () => {
       const { appFactory } = require('../src/app');
 
       const app = appFactory({
-        authHandler: authHandlerMock,
-        pageSquidexDataProvider: pageSquidexDataProviderMock,
         pageContentfulDataProvider: pageContentfulDataProviderMock,
+        authHandler: authHandlerMock,
       });
       await supertest(app).get('/pages/privacy-policy');
 
-      expect(pageSquidexDataProviderMock.fetch).not.toHaveBeenCalled();
-      expect(pageContentfulDataProviderMock.fetch).toHaveBeenCalledTimes(1);
+      expect(pageContentfulDataProviderMock.fetch).toHaveBeenCalled();
     });
   });
 });

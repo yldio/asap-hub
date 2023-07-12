@@ -1,6 +1,6 @@
-import { CalendarEvent, UserEvent, WebhookDetail } from '@asap-hub/model';
-import { SquidexWebhookPayload, User, gp2, Calendar } from '@asap-hub/squidex';
 import { ContentfulWebhookPayload } from '@asap-hub/contentful';
+import { CalendarEvent, UserEvent, WebhookDetail } from '@asap-hub/model';
+import { Calendar, SquidexWebhookPayload, User } from '@asap-hub/squidex';
 
 export type SquidexEntityEvent =
   | 'Created'
@@ -10,8 +10,7 @@ export type SquidexEntityEvent =
   | 'Deleted';
 
 export type UserPayload = WebhookDetail<
-  | SquidexWebhookPayload<User | gp2.User, UserEvent>
-  | ContentfulWebhookPayload<'users'>
+  SquidexWebhookPayload<User, UserEvent> | ContentfulWebhookPayload<'users'>
 >;
 
 export type CalendarSquidexPayload = SquidexWebhookPayload<

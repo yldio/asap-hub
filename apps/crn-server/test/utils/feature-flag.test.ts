@@ -45,10 +45,7 @@ describe('Feature Flag Dependency Switch', () => {
       true,
     );
 
-    featureFlagDependencySwitch.setFeatureFlag(
-      'IS_CONTENTFUL_ENABLED',
-      true,
-    );
+    featureFlagDependencySwitch.setFeatureFlag('IS_CONTENTFUL_ENABLED', true);
     expect(() => dependency.fetch({})).toThrowError();
   });
 
@@ -78,10 +75,7 @@ describe('Feature Flag Dependency Switch', () => {
     );
 
     // Set the current feature flag to false
-    featureFlagDependencySwitch.setFeatureFlag(
-      'IS_CONTENTFUL_ENABLED',
-      false,
-    );
+    featureFlagDependencySwitch.setFeatureFlag('IS_CONTENTFUL_ENABLED', false);
 
     // Get the dependency
     const userDataProvider = featureFlagDependencySwitch.getDependency(
@@ -95,10 +89,7 @@ describe('Feature Flag Dependency Switch', () => {
     expect(userDataProviderMockFalse.fetch).toHaveBeenCalled();
 
     // Switch the feature flag to true
-    featureFlagDependencySwitch.setFeatureFlag(
-      'IS_CONTENTFUL_ENABLED',
-      true,
-    );
+    featureFlagDependencySwitch.setFeatureFlag('IS_CONTENTFUL_ENABLED', true);
 
     // Assert that the method was called on the other dependency after the switch
     expect(userDataProviderMockTrue.fetch).not.toHaveBeenCalled();

@@ -1,8 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import {
   Button,
-  chevronCircleDownIcon,
-  chevronCircleUpIcon,
   Headline3,
   Paragraph,
   pixels,

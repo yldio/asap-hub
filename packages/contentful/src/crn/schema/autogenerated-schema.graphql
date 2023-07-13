@@ -233,8 +233,6 @@ enum AssetLinkingCollectionsUsersCollectionOrder {
   googleScholar_DESC
   institution_ASC
   institution_DESC
-  jobTitle_ASC
-  jobTitle_DESC
   lastName_ASC
   lastName_DESC
   linkedIn_ASC
@@ -677,8 +675,6 @@ enum DiscoverMembersCollectionOrder {
   googleScholar_DESC
   institution_ASC
   institution_DESC
-  jobTitle_ASC
-  jobTitle_DESC
   lastName_ASC
   lastName_DESC
   linkedIn_ASC
@@ -782,8 +778,6 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   googleScholar_DESC
   institution_ASC
   institution_DESC
-  jobTitle_ASC
-  jobTitle_DESC
   lastName_ASC
   lastName_DESC
   linkedIn_ASC
@@ -2156,8 +2150,6 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   googleScholar_DESC
   institution_ASC
   institution_DESC
-  jobTitle_ASC
-  jobTitle_DESC
   lastName_ASC
   lastName_DESC
   linkedIn_ASC
@@ -3478,8 +3470,6 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   googleScholar_DESC
   institution_ASC
   institution_DESC
-  jobTitle_ASC
-  jobTitle_DESC
   lastName_ASC
   lastName_DESC
   linkedIn_ASC
@@ -3899,7 +3889,7 @@ type Users implements Entry {
   orcidLastModifiedDate(locale: String): DateTime
   orcidLastSyncDate(locale: String): DateTime
   orcidWorks(locale: String): JSON
-  questions(locale: String): [String]
+  questions(locale: String): JSON
   reachOut(locale: String): String
   researchGate(locale: String): String
   researchInterests(locale: String): String
@@ -4097,9 +4087,6 @@ input UsersFilter {
   orcid_not: String
   orcid_not_contains: String
   orcid_not_in: [String]
-  questions_contains_all: [String]
-  questions_contains_none: [String]
-  questions_contains_some: [String]
   questions_exists: Boolean
   reachOut: String
   reachOut_contains: String
@@ -4335,8 +4322,6 @@ enum UsersOrder {
   googleScholar_DESC
   institution_ASC
   institution_DESC
-  jobTitle_ASC
-  jobTitle_DESC
   lastName_ASC
   lastName_DESC
   linkedIn_ASC
@@ -5712,9 +5697,6 @@ input cfUsersNestedFilter {
   orcid_not: String
   orcid_not_contains: String
   orcid_not_in: [String]
-  questions_contains_all: [String]
-  questions_contains_none: [String]
-  questions_contains_some: [String]
   questions_exists: Boolean
   reachOut: String
   reachOut_contains: String

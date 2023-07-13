@@ -44,7 +44,7 @@ describe('Reminders', () => {
 
   beforeAll(async () => {
     await fixtures.clearAllPreviousEvents();
-    jest.useFakeTimers({ doNotFake: ['setTimeout'] });
+    jest.useFakeTimers({ doNotFake: ['setTimeout', 'clearTimeout'] });
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
       getUserFixture({
@@ -126,7 +126,7 @@ describe('Reminders', () => {
         eventHappeningNow.id,
         endedEventWithLoggedInUserSpeaker.id,
       ]);
-    }, 300000);
+    });
   });
 
   describe('Event Happening Today Reminder', () => {

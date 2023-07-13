@@ -15,6 +15,20 @@ const mockedDashboardStats: gp2.DashboardResponse = {
       id: '231',
     },
   ],
+  guides: [
+    {
+      id: '12',
+      icon: 'https://google.com',
+      title: 'Discover how to use the GP2 Hub',
+      description: [
+        {
+          id: '1',
+          bodyText:
+            'Learn more about the GP2 Hub and how to use different aspects.',
+        },
+      ],
+    },
+  ],
 };
 
 export const createDashboardStatsResponse = (

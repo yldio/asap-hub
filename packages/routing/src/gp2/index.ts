@@ -1,4 +1,5 @@
 export { events } from './events';
+export { default as newsList } from './news';
 export { default as onboarding } from './onboarding';
 export { default as outputs } from './outputs';
 export { default as projects } from './projects';

@@ -38,11 +38,23 @@ export const FETCH_REMINDER_DATA = gql`
         addedDate
         documentType
         title
+        createdBy {
+          flatData {
+            firstName
+            lastName
+          }
+        }
         teams {
           id
+          flatData {
+            displayName
+          }
         }
         workingGroups {
           id
+          flatData {
+            title
+          }
         }
       }
     }

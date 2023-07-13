@@ -21,6 +21,7 @@ describe('Dashboard controller', () => {
           {
             latestStats: { sampleCount: 0, cohortCount: 0, articleCount: 0 },
             announcements: [],
+            guides: [],
           },
         ],
         total: 1,

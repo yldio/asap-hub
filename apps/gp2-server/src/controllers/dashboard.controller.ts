@@ -21,6 +21,7 @@ export default class DashboardController {
               articleCount: 0,
             },
             announcements: [],
+            guides: [],
           },
         ],
       };

@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.306.0",
-    "@babel/core": "7.22.6",
+    "@babel/core": "7.22.9",
     "@babel/preset-react": "7.22.5",
     "@babel/runtime-corejs3": "7.22.6",
     "@emotion/cache": "11.10.7",

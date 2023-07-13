@@ -62,7 +62,7 @@
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
     "@auth0/auth0-spa-js": "1.22.6",
-    "@babel/core": "7.22.6",
+    "@babel/core": "7.22.9",
     "@babel/preset-react": "7.22.5",
     "@emotion/babel-plugin": "11.10.6",
     "@emotion/jest": "^11.10.5",

@@ -50,8 +50,8 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
-    "@babel/core": "7.22.6",
-    "@babel/parser": "7.22.6",
+    "@babel/core": "7.22.9",
+    "@babel/parser": "7.22.7",
     "@types/apr-intercept": "workspace:*",
     "@types/aws-lambda": "8.10.117",
     "@types/express": "4.17.17",

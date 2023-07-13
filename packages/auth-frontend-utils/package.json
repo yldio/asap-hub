@@ -23,7 +23,7 @@
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/model": "workspace:*",
-    "@babel/core": "7.22.6",
+    "@babel/core": "7.22.9",
     "@babel/preset-react": "7.22.5",
     "@types/auth0-js": "9.14.7",
     "@types/jest": "^29.4.0",

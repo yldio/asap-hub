@@ -65,6 +65,7 @@ jobs:
           - user-positions
           - user-team-memberships
           - clear-on-change
+          - contributing-cohort-memberships
     steps:
       - name: Checkout
         uses: actions/checkout@v3

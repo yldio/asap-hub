@@ -2,32 +2,23 @@ import supertest from 'supertest';
 import { authHandlerMock } from './mocks/auth-handler.mock';
 
 import { PageDataProvider } from '../src/data-providers/types';
+import { appFactory } from '../src/app';
+import { loggerMock } from './mocks/logger.mock';
 
 describe('Contentful feature flag', () => {
-  const OLD_ENV = process.env;
-
   jest.setTimeout(30000);
-  beforeEach(() => {
-    jest.resetModules();
-    jest.resetAllMocks();
-    process.env = { ...OLD_ENV };
-  });
-
-  afterAll(() => {
-    process.env = OLD_ENV;
-  });
+  beforeEach(jest.resetAllMocks);
 
   describe('Page Data Provider', () => {
-    const pageContentfulDataProviderMock = {
-      fetch: jest.fn(),
-    } as unknown as jest.Mocked<PageDataProvider>;
-
     test('page controller uses data provider', async () => {
-      const { appFactory } = require('../src/app');
+      const pageContentfulDataProviderMock = {
+        fetch: jest.fn().mockResolvedValue({ items: [{}], total: 0 }),
+      } as unknown as jest.Mocked<PageDataProvider>;
 
       const app = appFactory({
         pageContentfulDataProvider: pageContentfulDataProviderMock,
         authHandler: authHandlerMock,
+        logger: loggerMock,
       });
       await supertest(app).get('/pages/privacy-policy');
 

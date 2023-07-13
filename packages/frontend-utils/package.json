@@ -36,7 +36,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
-    "@babel/core": "7.22.6",
+    "@babel/core": "7.22.9",
     "@babel/preset-react": "7.22.5",
     "@sentry/react": "6.19.7",
     "@testing-library/dom": "8.20.1",

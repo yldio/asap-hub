@@ -23,8 +23,6 @@ import {
   RestCalendar,
   RestEvent,
   RestExternalAuthor,
-  RestNews,
-  RestPage,
   RestResearchOutput,
   RestTeam,
   RestUser,
@@ -81,15 +79,12 @@ import { ResearchTagContentfulDataProvider } from './data-providers/contentful/r
 import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
 import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
 
-import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
 } from './data-providers/external-author.data-provider';
 import { InterestGroupSquidexDataProvider } from './data-providers/interest-group.data-provider';
-import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import { PageSquidexDataProvider } from './data-providers/page.data-provider';
 import { ReminderSquidexDataProvider } from './data-providers/reminder.data-provider';
 import { ResearchOutputSquidexDataProvider } from './data-providers/research-output.data-provider';
 import { ResearchTagSquidexDataProvider } from './data-providers/research-tag.data-provider';
@@ -200,15 +195,7 @@ export const appFactory = (libs: Libs = {}): Express => {
       baseUrl,
     },
   );
-  const newsRestClient = new SquidexRest<RestNews>(
-    getAuthToken,
-    'news-and-events',
-    { appName, baseUrl },
-  );
-  const pageRestClient = new SquidexRest<RestPage>(getAuthToken, 'pages', {
-    appName,
-    baseUrl,
-  });
+
   const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
     getAuthToken,
     'research-outputs',
@@ -234,12 +221,11 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsContentfulDataProvider =
     libs.newsContentfulDataProvider ||
     new NewsContentfulDataProvider(contentfulGraphQLClient);
-  const newsDataProvider =
-    libs.newsDataProvider || newsContentfulDataProvider;
+  const newsDataProvider = libs.newsDataProvider || newsContentfulDataProvider;
   const pageContentfulDataProvider =
     libs.pageContentfulDataProvider ||
     new PageContentfulDataProvider(contentfulGraphQLClient);
-  const pageDataProvider = pageContentfulDataProvider
+  const pageDataProvider = pageContentfulDataProvider;
 
   featureFlagDependencySwitch.setDependency(
     'teams',
@@ -261,10 +247,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const teamDataProvider =
     libs.teamDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'teams',
-      'IS_CONTENTFUL_ENABLED',
-    );
+    featureFlagDependencySwitch.getDependency('teams', 'IS_CONTENTFUL_ENABLED');
 
   featureFlagDependencySwitch.setDependency(
     'assets',
@@ -299,10 +282,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const userDataProvider =
     libs.userDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'users',
-      'IS_CONTENTFUL_ENABLED',
-    );
+    featureFlagDependencySwitch.getDependency('users', 'IS_CONTENTFUL_ENABLED');
   const assetDataProvider =
     libs.assetDataProvider ||
     featureFlagDependencySwitch.getDependency(

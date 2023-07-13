@@ -18,7 +18,7 @@ export const getUserResponse = (): gp2.UserResponse => ({
       department: 'Research',
     },
   ],
-  avatarUrl: `https://test.com/api/assets/asap-dev/squidex-asset-id`,
+  avatarUrl: `https://test.com/api/assets/asap-dev/asset-id`,
   role: 'Network Investigator',
   keywords: ['Data Science'],
   biography:

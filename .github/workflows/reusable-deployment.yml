@@ -59,12 +59,6 @@ on:
       GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
         description: 'GP2 Contentful Webhook Authentication Token'
         required: true
-      GP2_SQUIDEX_API_CLIENT_SECRET:
-        description: 'GP2 API Squidex Client Secret'
-        required: true
-      GP2_SQUIDEX_SHARED_SECRET:
-        description: 'GP2 Squidex Shared Secret'
-        required: true
       GP2_AUTH0_SHARED_SECRET:
         description: 'GP2 Auth0 Shared Secret'
         required: false
@@ -133,8 +127,6 @@ jobs:
           gp2-contentful-env: ${{ inputs.gp2-contentful-env }}
           gp2-contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           gp2-contentful-webhook-authentication-token: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
-          gp2-squidex-api-client-secret: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
-          gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
 
   crn-algolia-settings:
     needs: [crn-sls-deploy]

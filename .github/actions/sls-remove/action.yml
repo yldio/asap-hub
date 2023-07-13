@@ -20,15 +20,6 @@ inputs:
   crn-squidex-shared-secret:
     description: 'Squidex Shared Secret'
     required: true
-  gp2-squidex-api-client-secret:
-    description: 'Squidex Client Secret'
-    required: true
-  gp2-squidex-shared-secret:
-    description: 'Squidex Shared Secret'
-    required: true
-  gp2-auth0-shared-secret:
-    description: 'GP2 Auth0 Shared Secret'
-    required: false
 
 runs:
   using: 'composite'
@@ -90,10 +81,6 @@ runs:
         GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: 'n-a'
         GP2_CONTENTFUL_SPACE_ID: 'n-a'
         GP2_HOSTNAME: ${{ steps.setup.outputs.gp2-hostname }}
-        GP2_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.gp2-squidex-app-name }}
-        GP2_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.gp2-squidex-api-client-id }}
-        GP2_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.gp2-squidex-api-client-secret }}
-        GP2_SQUIDEX_SHARED_SECRET: ${{ inputs.gp2-squidex-shared-secret }}
         NODE_ENV: 'production'
         CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
         CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}

@@ -97,7 +97,7 @@ export const userToCSV = ({
   activatedDate: activatedDate && formatDate(new Date(activatedDate)),
 });
 
-export const squidexUsersResponseToStream = async (
+export const usersResponseToStream = async (
   csvStream: Stringifier,
   getResults: ({
     take,

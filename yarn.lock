@@ -1322,7 +1322,6 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/server-common": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
-    "@asap-hub/squidex": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@aws-sdk/client-eventbridge": ^3.306.0
     "@aws-sdk/client-ses": ^3.306.0
@@ -1364,7 +1363,6 @@ __metadata:
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
     babel-loader: 8.3.0
-    copy-webpack-plugin: 9.1.0
     cors: 2.8.5
     express: 4.18.2
     express-async-errors: 3.1.1

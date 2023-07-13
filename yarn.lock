@@ -689,7 +689,7 @@ __metadata:
     contentful: ^10.1.8
     contentful-cli: 1.19.1
     contentful-management: 10.32.0
-    contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
+    contentful-migrate: "deluan/contentful-migrate#db706467b31b264cd6ee1e48e3d61923d3ae85c0"
     graphql: 15.8.0
     graphql-request: 6.1.0
     graphql-tag: 2.12.6
@@ -23190,13 +23190,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-migrate@deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212":
+"contentful-migrate@deluan/contentful-migrate#db706467b31b264cd6ee1e48e3d61923d3ae85c0":
   version: 0.17.0
-  resolution: "contentful-migrate@https://github.com/deluan/contentful-migrate.git#commit=37b9b898599b9ba48644534d3f340b4c169df212"
+  resolution: "contentful-migrate@https://github.com/deluan/contentful-migrate.git#commit=db706467b31b264cd6ee1e48e3d61923d3ae85c0"
   dependencies:
     chalk: ^3.0.0
     contentful-management: ^7.11.0
-    contentful-migration: ^4.12.6
+    contentful-migration: ^4.5.0
     dateformat: ^3.0.3
     eslint: ^6.8.0
     eslint-config-standard: ^14.1.0
@@ -23214,7 +23214,7 @@ __metadata:
     yargs: ^15.3.0
   bin:
     ctf-migrate: ./bin/ctf-migrate
-  checksum: 56bd928113b77c49218c4bc11770fd72a367419d25ea4d47ab786edb1aa16ea2591f1a8974971693e980453cc5456647dd411d81ab628e0b893bfb3523d87c6f
+  checksum: b7f985c0f2db7835945762703930360493e86f4acfe9fd8cfa1ec0d6739c0bfb43b5dcabda0537cb43d47866ed0c95accd485be39514c618146270082e616976
   languageName: node
   linkType: hard
 
@@ -23244,9 +23244,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-migration@npm:^4.12.6":
-  version: 4.12.9
-  resolution: "contentful-migration@npm:4.12.9"
+"contentful-migration@npm:^4.5.0":
+  version: 4.14.1
+  resolution: "contentful-migration@npm:4.14.1"
   dependencies:
     "@hapi/hoek": ^10.0.1
     axios: ^0.21.0
@@ -23262,11 +23262,11 @@ __metadata:
     kind-of: ^6.0.3
     listr2: ^3.13.5
     lodash: ^4.17.15
-    uuid: ^8.3.2
+    uuid: ^9.0.0
     yargs: ^15.3.1
   bin:
     contentful-migration: bin/contentful-migration
-  checksum: 60f333c342b147a53d3c239a9e8222c54ffca47db1fe629f7e49fd0be0af5dfd877a58cb989a10168b895d56a8cc5317fc1389523b14b46af7c732183105ee6f
+  checksum: 7a837bfa87af46928a0667017b00b130c4539cf0aaeb1d364910e3781adef6aeeb02ecf437dac1d5ab86fa756d8b2223f352ffcf32cfc1449ca09c39db9ef4da
   languageName: node
   linkType: hard
 

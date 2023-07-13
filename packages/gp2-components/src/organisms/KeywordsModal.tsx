@@ -62,7 +62,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
               );
             }}
             placeholder="Start typing..."
-            maxMenuHeight={125}
+            maxMenuHeight={160}
             getValidationMessage={() => 'Please add your keywords'}
           />
         </>

@@ -91,7 +91,6 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
     )}
     {workingGroups && (
       <UserWorkingGroups
-        id={headerProps.id}
         firstName={headerProps.firstName}
         noLinks
         workingGroups={workingGroups}

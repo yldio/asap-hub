@@ -5,7 +5,7 @@ import {
   Subtitle,
   pixels,
 } from '@asap-hub/react-components';
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import { ReactNode, useState } from 'react';
 import { mobileQuery, nonMobileQuery } from '../layout';
 import colors from '../templates/colors';
@@ -67,23 +67,25 @@ type CollapsibleTableRow = {
 type CollapsibleTableProps = {
   headings: string[];
   children: CollapsibleTableRow[];
+  tableStyles?: SerializedStyles;
 };
 const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
   headings,
   children,
+  tableStyles,
 }) => {
   const minimumToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
 
   const getListStyles = () =>
     children.length <= minimumToDisplay || expanded
-      ? rowStyles
-      : [rowStyles, hideStyles];
+      ? [rowStyles, tableStyles]
+      : [rowStyles, hideStyles, tableStyles];
 
   const getTextStyles = (idx: number) => (idx === 0 ? [] : secondaryTextStyles);
   return (
     <>
-      <div css={[rowStyles, gridTitleStyles]}>
+      <div css={[rowStyles, gridTitleStyles, tableStyles]}>
         {headings.map((heading, idx) => (
           <Subtitle key={`heading-${idx}`} noMargin>
             {heading}

@@ -33,6 +33,7 @@ export { default as outputMaterial } from './output-training-materials';
 export { default as outputsIcon } from './outputs-icon';
 export { default as rightArrowIcon } from './right-arrow-icon';
 export { default as roleIcon } from './role-icon';
+export { default as userCircleIcon } from './user-circle-icon';
 export { default as userIcon } from './user-icon';
 export { default as usersIcon } from './users-icon';
 export { default as speakerIcon } from './speaker-icon';

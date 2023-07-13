@@ -4,80 +4,77 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Link, Subtitle, utils } from '@asap-hub/react-components';
 
 import { CollapsibleTable, EditableCard, IconWithLabel } from '../molecules';
-import { userIcon, usersIcon } from '../icons';
+import { usersIcon } from '../icons';
+import { css } from '@emotion/react';
+import { nonMobileQuery } from '../layout';
 
 const { getCounterString } = utils;
 
 type UserWorkingGroupsProps = Pick<
   gp2Model.UserResponse,
-  'id' | 'firstName' | 'workingGroups'
+  'firstName' | 'workingGroups'
 > &
   Pick<ComponentProps<typeof EditableCard>, 'subtitle'> & {
     noLinks?: boolean;
   };
 
+const tableStyles = css({
+  [nonMobileQuery]: {
+    gridTemplateColumns: '3fr 1fr',
+  },
+});
+
 const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
   workingGroups,
   firstName,
   subtitle,
-  id,
   noLinks = false,
-}) => {
-  const getUserWorkingGroupRole = (
-    userId: gp2Model.UserResponse['id'],
-    members: gp2Model.UserWorkingGroupMember[],
-  ): gp2Model.WorkingGroupMemberRole | null =>
-    members.find((member) => member.userId === userId)?.role || null;
+}) => (
+  <EditableCard
+    title="Working Groups"
+    subtitle={
+      subtitle ||
+      `${firstName} is involved in the following GP2 working groups:`
+    }
+  >
+    {workingGroups.length ? (
+      <CollapsibleTable
+        headings={['Name', 'Members']}
+        tableStyles={tableStyles}
+      >
+        {workingGroups.map(({ title, members, id: workingGroupId }) => {
+          const name = noLinks ? (
+            title
+          ) : (
+            <Link
+              underlined
+              href={
+                gp2Routing.workingGroups({}).workingGroup({
+                  workingGroupId,
+                }).$
+              }
+            >
+              {title}
+            </Link>
+          );
+          const numberOfMembers = (
+            <IconWithLabel noMargin icon={usersIcon}>
+              {getCounterString(members.length, 'Member')}
+            </IconWithLabel>
+          );
 
-  return (
-    <EditableCard
-      title="Working Groups"
-      subtitle={
-        subtitle ||
-        `${firstName} is involved in the following GP2 working groups:`
-      }
-    >
-      {workingGroups.length ? (
-        <CollapsibleTable headings={['Name', 'Role', 'Nº of Members']}>
-          {workingGroups.map(({ title, members, id: workingGroupId }) => {
-            const name = noLinks ? (
-              title
-            ) : (
-              <Link
-                underlined
-                href={
-                  gp2Routing.workingGroups({}).workingGroup({
-                    workingGroupId,
-                  }).$
-                }
-              >
-                {title}
-              </Link>
-            );
-            const role = (
-              <IconWithLabel noMargin icon={userIcon}>
-                {getUserWorkingGroupRole(id, members) || ''}
-              </IconWithLabel>
-            );
-            const numberOfMembers = (
-              <IconWithLabel noMargin icon={usersIcon}>
-                {getCounterString(members.length, 'Member')}
-              </IconWithLabel>
-            );
-
-            return {
-              id: workingGroupId,
-              values: [name, role, numberOfMembers],
-            };
-          })}
-        </CollapsibleTable>
-      ) : (
-        <Subtitle accent={'lead'}>
-          You are not associated to any working groups.
-        </Subtitle>
-      )}
-    </EditableCard>
-  );
-};
+          return {
+            id: workingGroupId,
+            values: [name, numberOfMembers],
+          };
+        })}
+      </CollapsibleTable>
+    ) : (
+      <Subtitle accent={'lead'}>
+        You are not associated to any working groups.
+      </Subtitle>
+    )}
+  </EditableCard>
+);
 
 export default UserWorkingGroups;

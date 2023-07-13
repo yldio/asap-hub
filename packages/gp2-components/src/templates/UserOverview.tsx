@@ -90,11 +90,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
       <UserProjects projects={projects} firstName={firstName} id={id} />
     )}
     {workingGroups.length > 0 && (
-      <UserWorkingGroups
-        workingGroups={workingGroups}
-        firstName={firstName}
-        id={id}
-      />
+      <UserWorkingGroups workingGroups={workingGroups} firstName={firstName} />
     )}
     {(editQuestionsHref || questions.length > 0) && (
       <UserQuestions

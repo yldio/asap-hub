@@ -55,6 +55,7 @@ type EventInfoProps = ComponentProps<typeof EventTime> &
     titleLimit?: number | null;
     eventSpeakers?: React.ReactNode;
     eventTeams?: React.ReactNode;
+    hideTags?: boolean;
   };
 
 const EventInfo: React.FC<EventInfoProps> = ({
@@ -67,6 +68,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   eventSpeakers,
   eventTeams,
   tags,
+  hideTags = false,
   ...props
 }) => {
   const imageComponent = thumbnail ? (
@@ -97,7 +99,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
           {eventOwner}
           {eventTeams}
           {eventSpeakers}
-          {tags.length > 0 && (
+          {tags.length > 0 && !hideTags && (
             <div css={listItemStyles}>
               <TagList tags={tags} max={3} />
             </div>

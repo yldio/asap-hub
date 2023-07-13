@@ -13,7 +13,6 @@ describe('UserProjects', () => {
       status: 'Active',
     }));
   const firstName: gp2.UserResponse['firstName'] = 'John';
-  const id = 'user-id';
   const renderUserProjects = (projects: Project[]) =>
     render(<UserProjects projects={projects} firstName={firstName} />);
   it('renders the short text when there are no projects', () => {

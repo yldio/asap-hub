@@ -2,10 +2,10 @@ import { ComponentProps } from 'react';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Link, Subtitle, utils } from '@asap-hub/react-components';
+import { css } from '@emotion/react';
 
 import { CollapsibleTable, EditableCard, IconWithLabel } from '../molecules';
 import { usersIcon } from '../icons';
-import { css } from '@emotion/react';
 import { nonMobileQuery } from '../layout';
 
 const { getCounterString } = utils;

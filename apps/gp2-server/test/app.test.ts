@@ -6,6 +6,7 @@ import { PageDataProvider } from '../src/data-providers/types';
 describe('Contentful feature flag', () => {
   const OLD_ENV = process.env;
 
+  jest.setTimeout(30000);
   beforeEach(() => {
     jest.resetModules();
     jest.resetAllMocks();

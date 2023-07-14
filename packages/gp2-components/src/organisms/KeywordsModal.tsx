@@ -1,8 +1,10 @@
 import { gp2 } from '@asap-hub/model';
-import { LabeledMultiSelect } from '@asap-hub/react-components';
+import { LabeledMultiSelect, pixels } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
 import { ContactSupport } from '../molecules';
 import EditUserModal from './EditUserModal';
+
+const { perRem } = pixels;
 
 type KeywordsModalProps = Pick<gp2.UserResponse, 'keywords'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
@@ -29,7 +31,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
       dirty={checkDirty()}
     >
       {({ isSaving }) => (
-        <>
+        <div css={{ paddingBottom: `${162 / perRem}em` }}>
           <LabeledMultiSelect
             title="Keywords"
             subtitle="(required)"
@@ -65,7 +67,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
             maxMenuHeight={160}
             getValidationMessage={() => 'Please add your keywords'}
           />
-        </>
+        </div>
       )}
     </EditUserModal>
   );

@@ -445,7 +445,7 @@ describe('Project Data Provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
-    test('Should default null title, startDate to an empty string', async () => {
+    test('Should default null title, startDate to undefined', async () => {
       const mockResponse = getContentfulGraphqlProjectsResponse();
       const project = getContentfulGraphqlProject();
       project.title = null;
@@ -456,7 +456,7 @@ describe('Project Data Provider', () => {
       const { items } = await projectDataProvider.fetch(options);
       expect(items[0]).toMatchObject({
         title: '',
-        startDate: '',
+        startDate: undefined,
       });
     });
 

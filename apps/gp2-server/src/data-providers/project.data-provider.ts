@@ -124,7 +124,7 @@ export function parseProjectToDataObject(
   return {
     id: project.sys.id,
     title: project.title ?? '',
-    startDate: project.startDate ?? '',
+    startDate: project.startDate ?? undefined,
     endDate: project.endDate ?? undefined,
     status: project.status as gp2Model.ProjectStatus,
     projectProposalUrl: project.projectProposal ?? undefined,

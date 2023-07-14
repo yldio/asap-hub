@@ -25,7 +25,7 @@ export type ProjectDataObject = {
   milestones: Milestone[];
   pmEmail?: string;
   projectProposalUrl?: string;
-  startDate: string;
+  startDate?: string;
   status: ProjectStatus;
   title: string;
   resources?: Resource[];

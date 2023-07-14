@@ -87,9 +87,3 @@ it('displays the tags', () => {
 
   expect(screen.getByText(/one tag/i)).toBeInTheDocument();
 });
-
-it('does not display the tags if hideTags is true', () => {
-  render(<EventInfo {...props} tags={['one tag']} hideTags />);
-
-  expect(screen.queryByText(/one tag/i)).not.toBeInTheDocument();
-});

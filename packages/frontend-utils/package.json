@@ -43,7 +43,7 @@
     "@testing-library/react": "11.2.7",
     "@types/history": "4.7.11",
     "@types/jest": "^29.4.0",
-    "@types/node": "18.15.11",
+    "@types/node": "18.16.19",
     "@types/react": "17.0.62",
     "@types/react-router-dom": "5.3.3",
     "@types/streamsaver": "2.0.1",

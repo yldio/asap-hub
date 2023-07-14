@@ -3,6 +3,7 @@ import { connectByCodeHandlerFactory } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { auth0SharedSecret } from '../../config';
 import Users from '../../controllers/user.controller';
+import { getContentfulGraphQLClientFactory } from '../../dependencies/clients.dependency';
 import {
   getAssetDataProvider,
   getUserDataProvider,
@@ -10,7 +11,8 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
-const userDataProvider = getUserDataProvider();
+const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
+const userDataProvider = getUserDataProvider(contentfulGraphQLClient);
 const assetDataProvider = getAssetDataProvider();
 
 const users = new Users(userDataProvider, assetDataProvider);

@@ -6,6 +6,7 @@ import {
 import { SES } from '@aws-sdk/client-ses';
 import { origin, sesRegion } from '../../config';
 import { UserDataProvider } from '../../data-providers/types';
+import { getContentfulGraphQLClientFactory } from '../../dependencies/clients.dependency';
 import { getUserDataProvider } from '../../dependencies/user.dependency';
 import logger from '../../utils/logger';
 import { sendEmailFactory } from '../../utils/send-email';
@@ -16,7 +17,8 @@ const ses = new SES({
   region: sesRegion,
 });
 
-const userDataProvider = getUserDataProvider();
+const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
+const userDataProvider = getUserDataProvider(contentfulGraphQLClient);
 
 export const handler = sentryWrapper(
   inviteHandlerFactory<UserDataProvider>(

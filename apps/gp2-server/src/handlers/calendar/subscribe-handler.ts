@@ -19,6 +19,7 @@ import {
   region,
 } from '../../config';
 import { getCalendarDataProvider } from '../../dependencies/calendar.dependency';
+import { getContentfulGraphQLClientFactory } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
@@ -27,6 +28,7 @@ const getJWTCredentialsAWS = getJWTCredentialsFactory({
   region,
 });
 
+const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 /* istanbul ignore next */
 const webhookHandler = calendarCreatedContentfulHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
@@ -38,7 +40,7 @@ const webhookHandler = calendarCreatedContentfulHandlerFactory(
   unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
     googleApiUrl,
   }),
-  getCalendarDataProvider(),
+  getCalendarDataProvider(contentfulGraphQLClient),
   new AlertsSentry(Sentry.captureException.bind(Sentry)),
   logger,
   {

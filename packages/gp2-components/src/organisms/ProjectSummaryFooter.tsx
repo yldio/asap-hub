@@ -24,10 +24,12 @@ const ProjectSummaryFooter: React.FC<ProjectSummaryFooterProps> = ({
     </IconWithLabel>
     <IconWithLabel icon={dateIcon}>
       <span>
-        {`${format(new Date(startDate), 'MMM yyyy')}${
-          endDate ? ` - ${format(new Date(endDate), 'MMM yyyy')} · ` : ''
-        }`}
-        {endDate && (
+        {startDate
+          ? `${format(new Date(startDate), 'MMM yyyy')}${
+              endDate ? ` - ${format(new Date(endDate), 'MMM yyyy')} · ` : ''
+            }`
+          : 'TBD'}
+        {startDate && endDate && (
           <span css={{ color: colors.neutral800.rgba }}>
             {`(${formatDistance(new Date(startDate), new Date(endDate), {
               unit: 'month',

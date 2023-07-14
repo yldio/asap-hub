@@ -5,6 +5,7 @@ import { validateAuth0Request } from '@asap-hub/server-common';
 import { framework as lambda } from '@asap-hub/services-common';
 import { auth0SharedSecret } from '../../config';
 import UserController from '../../controllers/user.controller';
+import { getContentfulGraphQLClientFactory } from '../../dependencies/clients.dependency';
 import {
   getAssetDataProvider,
   getUserDataProvider,
@@ -33,7 +34,8 @@ export type GetValidUntilTimestampInSecondsArgs = {
   ttl: number;
 };
 
-const userDataProvider = getUserDataProvider();
+const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
+const userDataProvider = getUserDataProvider(contentfulGraphQLClient);
 const assetDataProvider = getAssetDataProvider();
 
 /* istanbul ignore next */

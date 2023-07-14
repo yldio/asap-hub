@@ -1,4 +1,3 @@
-import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { gp2 } from '@asap-hub/model';
 import {
   AuthHandler,
@@ -16,12 +15,7 @@ import * as Sentry from '@sentry/serverless';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
-import {
-  auth0Audience,
-  contentfulAccessToken,
-  contentfulEnvId,
-  contentfulSpaceId,
-} from './config';
+import { auth0Audience } from './config';
 import Calendars from './controllers/calendar.controller';
 import ContributingCohortController from './controllers/contributing-cohort.controller';
 import DashboardController from './controllers/dashboard.controller';
@@ -58,7 +52,10 @@ import { WorkingGroupDataProvider } from './data-providers/types/working-group.d
 import { WorkingGroupNetworkContentfulDataProvider } from './data-providers/working-group-network.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/working-group.data-provider';
 import { getCalendarDataProvider } from './dependencies/calendar.dependency';
-import { getContentfulRestClientFactory } from './dependencies/clients.dependency';
+import {
+  getContentfulGraphQLClientFactory,
+  getContentfulRestClientFactory,
+} from './dependencies/clients.dependency';
 import { getEventDataProvider } from './dependencies/event.dependency';
 import { getUserDataProvider } from './dependencies/user.dependency';
 import { calendarRouteFactory } from './routes/calendar.route';
@@ -79,11 +76,7 @@ import pinoLogger from './utils/logger';
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
-  const contentfulGraphQLClient = getContentfulGraphQLClient({
-    space: contentfulSpaceId,
-    accessToken: contentfulAccessToken,
-    environment: contentfulEnvId,
-  });
+  const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 
   // Libs
   const logger = libs.logger || pinoLogger;

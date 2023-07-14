@@ -2,13 +2,10 @@ import { GraphQLClient } from '@asap-hub/contentful';
 import { AssetContentfulDataProvider } from '../data-providers/asset.data-provider';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
 import { UserContentfulDataProvider } from '../data-providers/user.data-provider';
-import {
-  getContentfulGraphQLClientFactory,
-  getContentfulRestClientFactory,
-} from './clients.dependency';
+import { getContentfulRestClientFactory } from './clients.dependency';
 
 export const getUserDataProvider = (
-  contentfulGraphQLClient: GraphQLClient = getContentfulGraphQLClientFactory(),
+  contentfulGraphQLClient: GraphQLClient,
 ): UserDataProvider =>
   new UserContentfulDataProvider(
     contentfulGraphQLClient,

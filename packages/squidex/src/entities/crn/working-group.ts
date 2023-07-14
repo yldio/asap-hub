@@ -12,7 +12,9 @@ export interface WorkingGroup {
     role: string;
     workstreamRole: string;
   }[];
-  members: string[];
+  members: {
+    user: string[];
+  }[];
   deliverables: {
     description: string;
     status: DeliverableStatus;
@@ -21,4 +23,6 @@ export interface WorkingGroup {
 }
 
 export interface RestWorkingGroup extends Entity, Rest<WorkingGroup> {}
-export interface InputWorkingGroup extends Entity, RestPayload<WorkingGroup> {}
+export interface InputWorkingGroup
+  extends Entity,
+    RestPayload<Omit<WorkingGroup, 'lastModifiedDate'>> {}

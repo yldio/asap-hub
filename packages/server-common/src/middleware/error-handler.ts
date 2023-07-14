@@ -10,7 +10,6 @@ export const errorHandlerFactory =
     if (res.headersSent) {
       return next(err);
     }
-
     req.log.error(err);
 
     // add error to the trace

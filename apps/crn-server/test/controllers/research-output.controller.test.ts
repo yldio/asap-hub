@@ -1,7 +1,7 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { when } from 'jest-when';
 import ResearchOutputs from '../../src/controllers/research-output.controller';
-import { FetchResearchOutputOptions } from '../../src/data-providers/research-output.data-provider';
+import { FetchResearchOutputOptions } from '../../src/data-providers/types/research-output.data-provider.types';
 import {
   getResearchOutputCreateData,
   getResearchOutputCreateDataObject,

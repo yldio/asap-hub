@@ -874,7 +874,7 @@ type EventSpeakers implements Entry {
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
   sys: Sys!
   team(locale: String, preview: Boolean, where: TeamsFilter): Teams
-  user(locale: String, preview: Boolean): EventSpeakersUser
+  user(locale: String, preview: Boolean, where: ExternalAuthorsOrUsersFilter): EventSpeakersUser
 }
 
 type EventSpeakersCollection {
@@ -891,6 +891,7 @@ input EventSpeakersFilter {
   sys: SysFilter
   team: cfTeamsNestedFilter
   team_exists: Boolean
+  user: cfExternalAuthorsOrUsersNestedFilter
   user_exists: Boolean
 }
 
@@ -1147,6 +1148,48 @@ input EventsFilter {
 
 type EventsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [EventsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+}
+
+enum EventsLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 type EventsNotes {
@@ -1332,6 +1375,7 @@ input ExternalAuthorsFilter {
 type ExternalAuthorsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
 }
 
 enum ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder {
@@ -1343,6 +1387,80 @@ enum ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthorsOrUsers)"""
+type ExternalAuthorsOrUsers implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): ExternalAuthorsOrUsersLinkingCollections
+  orcid(locale: String): String
+  sys: Sys!
+}
+
+type ExternalAuthorsOrUsersCollection {
+  items: [ExternalAuthorsOrUsers]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ExternalAuthorsOrUsersFilter {
+  AND: [ExternalAuthorsOrUsersFilter]
+  OR: [ExternalAuthorsOrUsersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+type ExternalAuthorsOrUsersLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum ExternalAuthorsOrder {
@@ -1960,7 +2078,49 @@ input LabsFilter {
 
 type LabsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [LabsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   usersCollection(limit: Int = 100, locale: String, order: [LabsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
+}
+
+enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 enum LabsLinkingCollectionsUsersCollectionOrder {
@@ -2424,6 +2584,8 @@ type Query {
   eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): EventsCollection
   externalAuthors(id: String!, locale: String, preview: Boolean): ExternalAuthors
   externalAuthorsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsOrder], preview: Boolean, skip: Int = 0, where: ExternalAuthorsFilter): ExternalAuthorsCollection
+  externalAuthorsOrUsers(id: String!, locale: String, preview: Boolean): ExternalAuthorsOrUsers
+  externalAuthorsOrUsersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalAuthorsOrUsersFilter): ExternalAuthorsOrUsersCollection
   externalTools(id: String!, locale: String, preview: Boolean): ExternalTools
   externalToolsCollection(limit: Int = 100, locale: String, order: [ExternalToolsOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): ExternalToolsCollection
   guideContent(id: String!, locale: String, preview: Boolean): GuideContent
@@ -2444,6 +2606,8 @@ type Query {
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
+  researchOutputs(id: String!, locale: String, preview: Boolean): ResearchOutputs
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsCollection
   researchTags(id: String!, locale: String, preview: Boolean): ResearchTags
   researchTagsCollection(limit: Int = 100, locale: String, order: [ResearchTagsOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchTagsCollection
   teamMembership(id: String!, locale: String, preview: Boolean): TeamMembership
@@ -2464,6 +2628,608 @@ type Query {
   workingGroupMembersCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembersFilter): WorkingGroupMembersCollection
   workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
   workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupsCollection
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs)"""
+type ResearchOutputs implements Entry {
+  accession(locale: String): String
+  addedDate(locale: String): DateTime
+  adminNotes(locale: String): String
+  asapFunded(locale: String): String
+  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalAuthorsOrUsersFilter): ResearchOutputsAuthorsCollection
+  contentfulMetadata: ContentfulMetadata!
+  createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
+  createdDate(locale: String): DateTime
+  description(locale: String): ResearchOutputsDescription
+  descriptionMd(locale: String): String
+  documentType(locale: String): String
+  doi(locale: String): String
+  environmentsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsEnvironmentsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchOutputsEnvironmentsCollection
+  keywordsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsKeywordsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchOutputsKeywordsCollection
+  labCatalogNumber(locale: String): String
+  labsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): ResearchOutputsLabsCollection
+  lastUpdatedPartial(locale: String): DateTime
+  link(locale: String): String
+  linkedFrom(allowedLocales: [String]): ResearchOutputsLinkingCollections
+  methodsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsMethodsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchOutputsMethodsCollection
+  organismsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsOrganismsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchOutputsOrganismsCollection
+  publishDate(locale: String): DateTime
+  relatedEventsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): ResearchOutputsRelatedEventsCollection
+  relatedResearchCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedResearchCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsRelatedResearchCollection
+  reviewRequestedBy(locale: String, preview: Boolean, where: UsersFilter): Users
+  rrid(locale: String): String
+  sharingStatus(locale: String): String
+  subtype(locale: String, preview: Boolean, where: ResearchTagsFilter): ResearchTags
+  sys: Sys!
+  tags(locale: String): [String]
+  teamsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): ResearchOutputsTeamsCollection
+  title(locale: String): String
+  type(locale: String): String
+  updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
+  usageNotes(locale: String): ResearchOutputsUsageNotes
+  usedInAPublication(locale: String): String
+  workingGroup(locale: String, preview: Boolean, where: WorkingGroupsFilter): WorkingGroups
+}
+
+type ResearchOutputsAuthorsCollection {
+  items: [ResearchOutputsAuthorsItem]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+union ResearchOutputsAuthorsItem = ExternalAuthors | Users
+
+type ResearchOutputsCollection {
+  items: [ResearchOutputs]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+type ResearchOutputsDescription {
+  json: JSON!
+  links: ResearchOutputsDescriptionLinks!
+}
+
+type ResearchOutputsDescriptionAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type ResearchOutputsDescriptionEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type ResearchOutputsDescriptionLinks {
+  assets: ResearchOutputsDescriptionAssets!
+  entries: ResearchOutputsDescriptionEntries!
+  resources: ResearchOutputsDescriptionResources!
+}
+
+type ResearchOutputsDescriptionResources {
+  block: [ResourceLink!]!
+}
+
+type ResearchOutputsEnvironmentsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsEnvironmentsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+input ResearchOutputsFilter {
+  AND: [ResearchOutputsFilter]
+  OR: [ResearchOutputsFilter]
+  accession: String
+  accession_contains: String
+  accession_exists: Boolean
+  accession_in: [String]
+  accession_not: String
+  accession_not_contains: String
+  accession_not_in: [String]
+  addedDate: DateTime
+  addedDate_exists: Boolean
+  addedDate_gt: DateTime
+  addedDate_gte: DateTime
+  addedDate_in: [DateTime]
+  addedDate_lt: DateTime
+  addedDate_lte: DateTime
+  addedDate_not: DateTime
+  addedDate_not_in: [DateTime]
+  adminNotes: String
+  adminNotes_contains: String
+  adminNotes_exists: Boolean
+  adminNotes_in: [String]
+  adminNotes_not: String
+  adminNotes_not_contains: String
+  adminNotes_not_in: [String]
+  asapFunded: String
+  asapFunded_contains: String
+  asapFunded_exists: Boolean
+  asapFunded_in: [String]
+  asapFunded_not: String
+  asapFunded_not_contains: String
+  asapFunded_not_in: [String]
+  authors: cfExternalAuthorsOrUsersNestedFilter
+  authorsCollection_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  createdBy: cfUsersNestedFilter
+  createdBy_exists: Boolean
+  createdDate: DateTime
+  createdDate_exists: Boolean
+  createdDate_gt: DateTime
+  createdDate_gte: DateTime
+  createdDate_in: [DateTime]
+  createdDate_lt: DateTime
+  createdDate_lte: DateTime
+  createdDate_not: DateTime
+  createdDate_not_in: [DateTime]
+  descriptionMD: String
+  descriptionMD_contains: String
+  descriptionMD_exists: Boolean
+  descriptionMD_in: [String]
+  descriptionMD_not: String
+  descriptionMD_not_contains: String
+  descriptionMD_not_in: [String]
+  description_contains: String
+  description_exists: Boolean
+  description_not_contains: String
+  documentType: String
+  documentType_contains: String
+  documentType_exists: Boolean
+  documentType_in: [String]
+  documentType_not: String
+  documentType_not_contains: String
+  documentType_not_in: [String]
+  doi: String
+  doi_contains: String
+  doi_exists: Boolean
+  doi_in: [String]
+  doi_not: String
+  doi_not_contains: String
+  doi_not_in: [String]
+  environments: cfResearchTagsNestedFilter
+  environmentsCollection_exists: Boolean
+  keywords: cfResearchTagsNestedFilter
+  keywordsCollection_exists: Boolean
+  labCatalogNumber: String
+  labCatalogNumber_contains: String
+  labCatalogNumber_exists: Boolean
+  labCatalogNumber_in: [String]
+  labCatalogNumber_not: String
+  labCatalogNumber_not_contains: String
+  labCatalogNumber_not_in: [String]
+  labs: cfLabsNestedFilter
+  labsCollection_exists: Boolean
+  lastUpdatedPartial: DateTime
+  lastUpdatedPartial_exists: Boolean
+  lastUpdatedPartial_gt: DateTime
+  lastUpdatedPartial_gte: DateTime
+  lastUpdatedPartial_in: [DateTime]
+  lastUpdatedPartial_lt: DateTime
+  lastUpdatedPartial_lte: DateTime
+  lastUpdatedPartial_not: DateTime
+  lastUpdatedPartial_not_in: [DateTime]
+  link: String
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  methods: cfResearchTagsNestedFilter
+  methodsCollection_exists: Boolean
+  organisms: cfResearchTagsNestedFilter
+  organismsCollection_exists: Boolean
+  publishDate: DateTime
+  publishDate_exists: Boolean
+  publishDate_gt: DateTime
+  publishDate_gte: DateTime
+  publishDate_in: [DateTime]
+  publishDate_lt: DateTime
+  publishDate_lte: DateTime
+  publishDate_not: DateTime
+  publishDate_not_in: [DateTime]
+  relatedEvents: cfEventsNestedFilter
+  relatedEventsCollection_exists: Boolean
+  relatedResearch: cfResearchOutputsNestedFilter
+  relatedResearchCollection_exists: Boolean
+  reviewRequestedBy: cfUsersNestedFilter
+  reviewRequestedBy_exists: Boolean
+  rrid: String
+  rrid_contains: String
+  rrid_exists: Boolean
+  rrid_in: [String]
+  rrid_not: String
+  rrid_not_contains: String
+  rrid_not_in: [String]
+  sharingStatus: String
+  sharingStatus_contains: String
+  sharingStatus_exists: Boolean
+  sharingStatus_in: [String]
+  sharingStatus_not: String
+  sharingStatus_not_contains: String
+  sharingStatus_not_in: [String]
+  subtype: cfResearchTagsNestedFilter
+  subtype_exists: Boolean
+  sys: SysFilter
+  tags_contains_all: [String]
+  tags_contains_none: [String]
+  tags_contains_some: [String]
+  tags_exists: Boolean
+  teams: cfTeamsNestedFilter
+  teamsCollection_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+  updatedBy: cfUsersNestedFilter
+  updatedBy_exists: Boolean
+  usageNotes_contains: String
+  usageNotes_exists: Boolean
+  usageNotes_not_contains: String
+  usedInAPublication: String
+  usedInAPublication_contains: String
+  usedInAPublication_exists: Boolean
+  usedInAPublication_in: [String]
+  usedInAPublication_not: String
+  usedInAPublication_not_contains: String
+  usedInAPublication_not_in: [String]
+  workingGroup: cfWorkingGroupsNestedFilter
+  workingGroup_exists: Boolean
+}
+
+type ResearchOutputsKeywordsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsKeywordsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type ResearchOutputsLabsCollection {
+  items: [Labs]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsLabsCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type ResearchOutputsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+}
+
+enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+type ResearchOutputsMethodsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsMethodsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum ResearchOutputsOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+type ResearchOutputsOrganismsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsOrganismsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type ResearchOutputsRelatedEventsCollection {
+  items: [Events]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsRelatedEventsCollectionOrder {
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+type ResearchOutputsRelatedResearchCollection {
+  items: [ResearchOutputs]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsRelatedResearchCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+type ResearchOutputsTeamsCollection {
+  items: [Teams]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsTeamsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type ResearchOutputsUsageNotes {
+  json: JSON!
+  links: ResearchOutputsUsageNotesLinks!
+}
+
+type ResearchOutputsUsageNotesAssets {
+  block: [Asset]!
+  hyperlink: [Asset]!
+}
+
+type ResearchOutputsUsageNotesEntries {
+  block: [Entry]!
+  hyperlink: [Entry]!
+  inline: [Entry]!
+}
+
+type ResearchOutputsUsageNotesLinks {
+  assets: ResearchOutputsUsageNotesAssets!
+  entries: ResearchOutputsUsageNotesEntries!
+  resources: ResearchOutputsUsageNotesResources!
+}
+
+type ResearchOutputsUsageNotesResources {
+  block: [ResourceLink!]!
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags)"""
@@ -2515,6 +3281,48 @@ input ResearchTagsFilter {
 
 type ResearchTagsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+}
+
+enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 enum ResearchTagsOrder {
@@ -2787,6 +3595,7 @@ type TeamsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   teamMembershipCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTeamMembershipCollectionOrder], preview: Boolean, skip: Int = 0): TeamMembershipCollection
 }
 
@@ -2829,6 +3638,47 @@ enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 enum TeamsLinkingCollectionsTeamMembershipCollectionOrder {
@@ -3331,6 +4181,7 @@ type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupLeadersCollection
   workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupLeadersOrWorkingGroupMembersCollection
   workingGroupMembersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupMembersCollection
@@ -3371,6 +4222,47 @@ enum UsersLinkingCollectionsInterestGroupLeadersCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 enum UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder {
@@ -3864,6 +4756,48 @@ input WorkingGroupsFilter {
 
 type WorkingGroupsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+}
+
+enum WorkingGroupsLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 type WorkingGroupsMembersCollection {
@@ -3928,6 +4862,163 @@ input cfEventSpeakersNestedFilter {
   sys: SysFilter
   team_exists: Boolean
   user_exists: Boolean
+}
+
+input cfEventsNestedFilter {
+  AND: [cfEventsNestedFilter]
+  OR: [cfEventsNestedFilter]
+  calendar_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  endDate: DateTime
+  endDateTimeZone: String
+  endDateTimeZone_contains: String
+  endDateTimeZone_exists: Boolean
+  endDateTimeZone_in: [String]
+  endDateTimeZone_not: String
+  endDateTimeZone_not_contains: String
+  endDateTimeZone_not_in: [String]
+  endDate_exists: Boolean
+  endDate_gt: DateTime
+  endDate_gte: DateTime
+  endDate_in: [DateTime]
+  endDate_lt: DateTime
+  endDate_lte: DateTime
+  endDate_not: DateTime
+  endDate_not_in: [DateTime]
+  eventLink: String
+  eventLink_contains: String
+  eventLink_exists: Boolean
+  eventLink_in: [String]
+  eventLink_not: String
+  eventLink_not_contains: String
+  eventLink_not_in: [String]
+  googleId: String
+  googleId_contains: String
+  googleId_exists: Boolean
+  googleId_in: [String]
+  googleId_not: String
+  googleId_not_contains: String
+  googleId_not_in: [String]
+  hidden: Boolean
+  hidden_exists: Boolean
+  hidden_not: Boolean
+  hideMeetingLink: Boolean
+  hideMeetingLink_exists: Boolean
+  hideMeetingLink_not: Boolean
+  meetingLink: String
+  meetingLink_contains: String
+  meetingLink_exists: Boolean
+  meetingLink_in: [String]
+  meetingLink_not: String
+  meetingLink_not_contains: String
+  meetingLink_not_in: [String]
+  meetingMaterialsPermanentlyUnavailable: Boolean
+  meetingMaterialsPermanentlyUnavailable_exists: Boolean
+  meetingMaterialsPermanentlyUnavailable_not: Boolean
+  meetingMaterials_exists: Boolean
+  notesPermanentlyUnavailable: Boolean
+  notesPermanentlyUnavailable_exists: Boolean
+  notesPermanentlyUnavailable_not: Boolean
+  notesUpdatedAt: DateTime
+  notesUpdatedAt_exists: Boolean
+  notesUpdatedAt_gt: DateTime
+  notesUpdatedAt_gte: DateTime
+  notesUpdatedAt_in: [DateTime]
+  notesUpdatedAt_lt: DateTime
+  notesUpdatedAt_lte: DateTime
+  notesUpdatedAt_not: DateTime
+  notesUpdatedAt_not_in: [DateTime]
+  notes_contains: String
+  notes_exists: Boolean
+  notes_not_contains: String
+  presentationPermanentlyUnavailable: Boolean
+  presentationPermanentlyUnavailable_exists: Boolean
+  presentationPermanentlyUnavailable_not: Boolean
+  presentationUpdatedAt: DateTime
+  presentationUpdatedAt_exists: Boolean
+  presentationUpdatedAt_gt: DateTime
+  presentationUpdatedAt_gte: DateTime
+  presentationUpdatedAt_in: [DateTime]
+  presentationUpdatedAt_lt: DateTime
+  presentationUpdatedAt_lte: DateTime
+  presentationUpdatedAt_not: DateTime
+  presentationUpdatedAt_not_in: [DateTime]
+  presentation_contains: String
+  presentation_exists: Boolean
+  presentation_not_contains: String
+  speakersCollection_exists: Boolean
+  startDate: DateTime
+  startDateTimeZone: String
+  startDateTimeZone_contains: String
+  startDateTimeZone_exists: Boolean
+  startDateTimeZone_in: [String]
+  startDateTimeZone_not: String
+  startDateTimeZone_not_contains: String
+  startDateTimeZone_not_in: [String]
+  startDate_exists: Boolean
+  startDate_gt: DateTime
+  startDate_gte: DateTime
+  startDate_in: [DateTime]
+  startDate_lt: DateTime
+  startDate_lte: DateTime
+  startDate_not: DateTime
+  startDate_not_in: [DateTime]
+  status: String
+  status_contains: String
+  status_exists: Boolean
+  status_in: [String]
+  status_not: String
+  status_not_contains: String
+  status_not_in: [String]
+  sys: SysFilter
+  tags_contains_all: [String]
+  tags_contains_none: [String]
+  tags_contains_some: [String]
+  tags_exists: Boolean
+  thumbnail_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  videoRecordingPermanentlyUnavailable: Boolean
+  videoRecordingPermanentlyUnavailable_exists: Boolean
+  videoRecordingPermanentlyUnavailable_not: Boolean
+  videoRecordingUpdatedAt: DateTime
+  videoRecordingUpdatedAt_exists: Boolean
+  videoRecordingUpdatedAt_gt: DateTime
+  videoRecordingUpdatedAt_gte: DateTime
+  videoRecordingUpdatedAt_in: [DateTime]
+  videoRecordingUpdatedAt_lt: DateTime
+  videoRecordingUpdatedAt_lte: DateTime
+  videoRecordingUpdatedAt_not: DateTime
+  videoRecordingUpdatedAt_not_in: [DateTime]
+  videoRecording_contains: String
+  videoRecording_exists: Boolean
+  videoRecording_not_contains: String
+}
+
+input cfExternalAuthorsOrUsersNestedFilter {
+  AND: [cfExternalAuthorsOrUsersNestedFilter]
+  OR: [cfExternalAuthorsOrUsersNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
 }
 
 input cfExternalToolsNestedFilter {
@@ -4129,6 +5220,193 @@ input cfPagesNestedFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+}
+
+input cfResearchOutputsNestedFilter {
+  AND: [cfResearchOutputsNestedFilter]
+  OR: [cfResearchOutputsNestedFilter]
+  accession: String
+  accession_contains: String
+  accession_exists: Boolean
+  accession_in: [String]
+  accession_not: String
+  accession_not_contains: String
+  accession_not_in: [String]
+  addedDate: DateTime
+  addedDate_exists: Boolean
+  addedDate_gt: DateTime
+  addedDate_gte: DateTime
+  addedDate_in: [DateTime]
+  addedDate_lt: DateTime
+  addedDate_lte: DateTime
+  addedDate_not: DateTime
+  addedDate_not_in: [DateTime]
+  adminNotes: String
+  adminNotes_contains: String
+  adminNotes_exists: Boolean
+  adminNotes_in: [String]
+  adminNotes_not: String
+  adminNotes_not_contains: String
+  adminNotes_not_in: [String]
+  asapFunded: String
+  asapFunded_contains: String
+  asapFunded_exists: Boolean
+  asapFunded_in: [String]
+  asapFunded_not: String
+  asapFunded_not_contains: String
+  asapFunded_not_in: [String]
+  authorsCollection_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  createdBy_exists: Boolean
+  createdDate: DateTime
+  createdDate_exists: Boolean
+  createdDate_gt: DateTime
+  createdDate_gte: DateTime
+  createdDate_in: [DateTime]
+  createdDate_lt: DateTime
+  createdDate_lte: DateTime
+  createdDate_not: DateTime
+  createdDate_not_in: [DateTime]
+  descriptionMD: String
+  descriptionMD_contains: String
+  descriptionMD_exists: Boolean
+  descriptionMD_in: [String]
+  descriptionMD_not: String
+  descriptionMD_not_contains: String
+  descriptionMD_not_in: [String]
+  description_contains: String
+  description_exists: Boolean
+  description_not_contains: String
+  documentType: String
+  documentType_contains: String
+  documentType_exists: Boolean
+  documentType_in: [String]
+  documentType_not: String
+  documentType_not_contains: String
+  documentType_not_in: [String]
+  doi: String
+  doi_contains: String
+  doi_exists: Boolean
+  doi_in: [String]
+  doi_not: String
+  doi_not_contains: String
+  doi_not_in: [String]
+  environmentsCollection_exists: Boolean
+  keywordsCollection_exists: Boolean
+  labCatalogNumber: String
+  labCatalogNumber_contains: String
+  labCatalogNumber_exists: Boolean
+  labCatalogNumber_in: [String]
+  labCatalogNumber_not: String
+  labCatalogNumber_not_contains: String
+  labCatalogNumber_not_in: [String]
+  labsCollection_exists: Boolean
+  lastUpdatedPartial: DateTime
+  lastUpdatedPartial_exists: Boolean
+  lastUpdatedPartial_gt: DateTime
+  lastUpdatedPartial_gte: DateTime
+  lastUpdatedPartial_in: [DateTime]
+  lastUpdatedPartial_lt: DateTime
+  lastUpdatedPartial_lte: DateTime
+  lastUpdatedPartial_not: DateTime
+  lastUpdatedPartial_not_in: [DateTime]
+  link: String
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  methodsCollection_exists: Boolean
+  organismsCollection_exists: Boolean
+  publishDate: DateTime
+  publishDate_exists: Boolean
+  publishDate_gt: DateTime
+  publishDate_gte: DateTime
+  publishDate_in: [DateTime]
+  publishDate_lt: DateTime
+  publishDate_lte: DateTime
+  publishDate_not: DateTime
+  publishDate_not_in: [DateTime]
+  relatedEventsCollection_exists: Boolean
+  relatedResearchCollection_exists: Boolean
+  reviewRequestedBy_exists: Boolean
+  rrid: String
+  rrid_contains: String
+  rrid_exists: Boolean
+  rrid_in: [String]
+  rrid_not: String
+  rrid_not_contains: String
+  rrid_not_in: [String]
+  sharingStatus: String
+  sharingStatus_contains: String
+  sharingStatus_exists: Boolean
+  sharingStatus_in: [String]
+  sharingStatus_not: String
+  sharingStatus_not_contains: String
+  sharingStatus_not_in: [String]
+  subtype_exists: Boolean
+  sys: SysFilter
+  tags_contains_all: [String]
+  tags_contains_none: [String]
+  tags_contains_some: [String]
+  tags_exists: Boolean
+  teamsCollection_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+  updatedBy_exists: Boolean
+  usageNotes_contains: String
+  usageNotes_exists: Boolean
+  usageNotes_not_contains: String
+  usedInAPublication: String
+  usedInAPublication_contains: String
+  usedInAPublication_exists: Boolean
+  usedInAPublication_in: [String]
+  usedInAPublication_not: String
+  usedInAPublication_not_contains: String
+  usedInAPublication_not_in: [String]
+  workingGroup_exists: Boolean
+}
+
+input cfResearchTagsNestedFilter {
+  AND: [cfResearchTagsNestedFilter]
+  OR: [cfResearchTagsNestedFilter]
+  category: String
+  category_contains: String
+  category_exists: Boolean
+  category_in: [String]
+  category_not: String
+  category_not_contains: String
+  category_not_in: [String]
+  contentfulMetadata: ContentfulMetadataFilter
+  entities_contains_all: [String]
+  entities_contains_none: [String]
+  entities_contains_some: [String]
+  entities_exists: Boolean
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+  types_contains_all: [String]
+  types_contains_none: [String]
+  types_contains_some: [String]
+  types_exists: Boolean
 }
 
 input cfTeamMembershipNestedFilter {
@@ -4523,4 +5801,41 @@ input cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter {
   inactiveSinceDate_not_in: [DateTime]
   sys: SysFilter
   user_exists: Boolean
+}
+
+input cfWorkingGroupsNestedFilter {
+  AND: [cfWorkingGroupsNestedFilter]
+  OR: [cfWorkingGroupsNestedFilter]
+  calendars_exists: Boolean
+  complete: Boolean
+  complete_exists: Boolean
+  complete_not: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  deliverablesCollection_exists: Boolean
+  description_contains: String
+  description_exists: Boolean
+  description_not_contains: String
+  externalLink: String
+  externalLink_contains: String
+  externalLink_exists: Boolean
+  externalLink_in: [String]
+  externalLink_not: String
+  externalLink_not_contains: String
+  externalLink_not_in: [String]
+  membersCollection_exists: Boolean
+  shortText: String
+  shortText_contains: String
+  shortText_exists: Boolean
+  shortText_in: [String]
+  shortText_not: String
+  shortText_not_contains: String
+  shortText_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
 }

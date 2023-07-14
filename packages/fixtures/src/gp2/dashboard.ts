@@ -11,7 +11,7 @@ const mockedDashboardStats: gp2.DashboardResponse = {
     {
       deadline: new Date().getTime().toString(),
       description: 'Test 2',
-      link: 'https://google.com',
+      href: 'https://google.com',
       id: '231',
     },
   ],

@@ -787,6 +787,22 @@ describe('User data provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
+    test('Should query with correct order param', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+
+      const users = await userDataProvider.fetch({});
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          order: [gp2Contentful.UsersOrder.SysFirstPublishedAtDesc],
+        }),
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
     test('Should query with onboarded filter', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         getContentfulUsersGraphqlResponse(),

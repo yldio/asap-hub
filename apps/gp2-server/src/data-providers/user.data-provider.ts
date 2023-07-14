@@ -108,7 +108,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
       limit: take,
       skip,
       where,
-      order: [gp2Contentful.UsersOrder.LastNameAsc],
+      order: [gp2Contentful.UsersOrder.SysFirstPublishedAtDesc],
     });
     return usersCollection || { total: 0, items: [] };
   }

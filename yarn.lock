@@ -414,7 +414,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -442,7 +442,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-date-field-as-first-published-at@workspace:packages/contentful-app-extensions/date-field-as-first-published-at"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -469,7 +469,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -497,7 +497,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-additional-materials@workspace:packages/contentful-app-extensions/event-additional-materials"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -524,7 +524,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-speakers-title@workspace:packages/contentful-app-extensions/event-speakers-title"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
@@ -553,7 +553,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-field-as-updated-at@workspace:packages/contentful-app-extensions/field-as-updated-at"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -581,7 +581,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-user-membership@workspace:packages/contentful-app-extensions/user-membership"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
@@ -610,7 +610,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-user-positions@workspace:packages/contentful-app-extensions/user-positions"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -637,7 +637,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-user-team-memberships@workspace:packages/contentful-app-extensions/user-team-memberships"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
@@ -9466,12 +9466,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/app-sdk@npm:4.19.1":
-  version: 4.19.1
-  resolution: "@contentful/app-sdk@npm:4.19.1"
-  peerDependencies:
+"@contentful/app-sdk@npm:4.22.1":
+  version: 4.22.1
+  resolution: "@contentful/app-sdk@npm:4.22.1"
+  dependencies:
     contentful-management: ">=7.30.0"
-  checksum: 6f981a3c7711b73388cfd6ecf0bdd2f72aac49fe66ac5a2023a6701c214fab4d0aa455ccc804cb6dc083db87d508826dc3a950e8f83b518d8be43466db21b0db
+  checksum: 3c3188c1efdb73511a0922a0f7389235f923b2403b29b2977fc9f3bc96957e3c7177b2b0b1bea127ecc6bf50643ef30727b1c583ee36601cbf9fccb3e01e0885
   languageName: node
   linkType: hard
 

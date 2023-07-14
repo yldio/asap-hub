@@ -11,6 +11,7 @@ import {
   FetchCalendarProviderOptions,
   gp2 as gp2Model,
 } from '@asap-hub/model';
+import logger from '../utils/logger';
 import {
   parseContentfulGraphqlCalendarPartialToDataObject,
   parseContentfulWorkingGroupsProjects,
@@ -113,10 +114,15 @@ export class CalendarContentfulDataProvider
     const calendar = await environment.getEntry(id);
     const previousGoogleApiMetadata = calendar.fields.googleApiMetadata;
 
+    logger.debug(
+      `update calendar previousGoogleApiMetadata ${previousGoogleApiMetadata}`,
+    );
     const { resourceId, expirationDate, syncToken, ...otherFields } = update;
 
+    logger.debug({ otherFields });
     const calendarWithUpdatedFields = updateEntryFields(calendar, otherFields);
 
+    logger.debug({ resourceId, expirationDate, syncToken });
     if (resourceId || expirationDate || syncToken) {
       calendarWithUpdatedFields.fields.googleApiMetadata = {
         'en-US': {
@@ -138,8 +144,11 @@ export class CalendarContentfulDataProvider
       };
     }
 
+    logger.debug('updating calendar');
     const calendarUpdated = await calendarWithUpdatedFields.update();
+    logger.debug('updated calendar');
     await calendarUpdated.publish();
+    logger.debug('published calendar');
   }
 }
 

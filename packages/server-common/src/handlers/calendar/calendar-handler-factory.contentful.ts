@@ -55,6 +55,8 @@ export const calendarCreatedContentfulHandlerFactory =
       resourceId: calendarId,
     } = validateBody(event.detail as never);
 
+    logger.debug('validated');
+    logger.debug({ fields, sys, calendarId });
     const webhookEventVersion = sys.revision;
     const webhookEventGoogleCalendarId = fields.googleCalendarId['en-US'];
     const getCalendarSubscriptionId =
@@ -66,12 +68,18 @@ export const calendarCreatedContentfulHandlerFactory =
 
     logger.debug(`Event payload: ${JSON.stringify(fields)}`);
 
-    if (eventType !== 'CalendarsPublished') return 'OK';
+    if (eventType !== 'CalendarsPublished') {
+      logger.debug(`eventType was ${eventType}. Finished processing`);
+      return 'OK';
+    }
 
     const cdaClient = getCDAClient(contentfulDeliveryApiConfig);
 
+    logger.debug('getting calendar entry');
     const fetchCalendarById = () =>
       cdaClient.getEntry<CalendarSkeleton>(calendarId);
+
+    logger.debug('got calendar entry');
 
     let cmsCalendar;
     try {
@@ -85,21 +93,35 @@ export const calendarCreatedContentfulHandlerFactory =
     }
 
     const googleApiMetadata = cmsCalendar?.fields?.googleApiMetadata;
+    logger.debug(
+      `got cmsCalendar with googleApiMetadata: ${JSON.stringify(
+        googleApiMetadata,
+        null,
+        2,
+      )}`,
+    );
 
     if (
       googleApiMetadata?.associatedGoogleCalendarId !==
         webhookEventGoogleCalendarId &&
       googleApiMetadata?.resourceId
     ) {
+      logger.debug(
+        `invalid calendar unsubscribe. webhookEventGoogleCalendarId: ${webhookEventGoogleCalendarId}`,
+      );
+
       try {
+        logger.debug('tries to unsubscribe');
         await unsubscribe(
           googleApiMetadata.resourceId as string,
           getCalendarSubscriptionId(calendarId),
         );
+        logger.debug(`unsubscribed from calendar: ${calendarId}`);
 
         await calendarDataProvider.update(calendarId, {
           resourceId: null,
         });
+        logger.debug('updated resourceId with null');
       } catch (error) {
         logger.error(error, 'Error during unsubscribing from the calendar');
         alerts.error(error);
@@ -107,6 +129,7 @@ export const calendarCreatedContentfulHandlerFactory =
     }
 
     if (webhookEventGoogleCalendarId === '') {
+      logger.debug('webhookEventGoogleCalendarId is empty string. Finishing.');
       return 'OK';
     }
 
@@ -118,21 +141,38 @@ export const calendarCreatedContentfulHandlerFactory =
         webhookEventGoogleCalendarId
     ) {
       try {
+        const subscriptionId = getCalendarSubscriptionId(calendarId);
+        logger.debug(
+          `about to subscribe to webhookEventGoogleCalendarId: ${webhookEventGoogleCalendarId} subscriptionId: ${subscriptionId}`,
+        );
         const { resourceId, expiration } = await subscribe(
           webhookEventGoogleCalendarId,
-          getCalendarSubscriptionId(calendarId),
+          subscriptionId,
         );
 
+        logger.debug(
+          `updating calendar: resourceId: ${resourceId} expirationDate: ${expiration}`,
+        );
         await calendarDataProvider.update(calendarId, {
           resourceId,
           expirationDate: expiration,
         });
+        logger.debug('updated calendar');
       } catch (error) {
         logger.error(error, 'Error subscribing to the calendar');
         alerts.error(error);
 
         throw error;
       }
+    } else {
+      logger.debug('catch all from final check.');
+      logger.debug(
+        `webhookEventGoogleCalendarId: ${webhookEventGoogleCalendarId}`,
+        `googleApiMetadata: ${googleApiMetadata}`,
+        `webhookEventVersion: ${webhookEventVersion}`,
+        `webhookEventGoogleCalendarId: ${webhookEventGoogleCalendarId}`,
+        `associatedGoogleCalendarId: ${googleApiMetadata?.associatedGoogleCalendarId}`,
+      );
     }
 
     return 'OK';

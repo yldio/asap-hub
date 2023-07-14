@@ -35,10 +35,8 @@ import UserController from './controllers/user.controller';
 import WorkingGroupNetworkController from './controllers/working-group-network.controller';
 import WorkingGroupController from './controllers/working-group.controller';
 import { AssetContentfulDataProvider } from './data-providers/asset.data-provider';
-import { CalendarContentfulDataProvider } from './data-providers/calendar.data-provider';
 import { ContributingCohortContentfulDataProvider } from './data-providers/contributing-cohort.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/dashboard.data-provider';
-import { EventContentfulDataProvider } from './data-providers/event.data-provider';
 import { ExternalUserContentfulDataProvider } from './data-providers/external-user.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/news.data-provider';
 import { OutputContentfulDataProvider } from './data-providers/output.data-provider';
@@ -57,10 +55,12 @@ import {
 import { ExternalUserDataProvider } from './data-providers/types/external-user.data-provider.type';
 import { ProjectDataProvider } from './data-providers/types/project.data-provider.type';
 import { WorkingGroupDataProvider } from './data-providers/types/working-group.data-provider.type';
-import { UserContentfulDataProvider } from './data-providers/user.data-provider';
 import { WorkingGroupNetworkContentfulDataProvider } from './data-providers/working-group-network.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/working-group.data-provider';
+import { getCalendarDataProvider } from './dependencies/calendar.dependency';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependency';
+import { getEventDataProvider } from './dependencies/event.dependency';
+import { getUserDataProvider } from './dependencies/user.dependency';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { contributingCohortRouteFactory } from './routes/contributing-cohort.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
@@ -108,10 +108,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     );
   const userContentfulDataProvider =
     libs.userContentfulDataProvider ||
-    new UserContentfulDataProvider(
-      contentfulGraphQLClient,
-      getContentfulRestClientFactory,
-    );
+    getUserDataProvider(contentfulGraphQLClient);
 
   const dashboardContentfulDataProvider =
     libs.dashboardContentfulDataProvider ||
@@ -133,16 +130,12 @@ export const appFactory = (libs: Libs = {}): Express => {
     );
   const calendarContentfulDataProvider =
     libs.calendarContentfulDataProvider ||
-    new CalendarContentfulDataProvider(
-      contentfulGraphQLClient,
-      getContentfulRestClientFactory,
-    );
+    getCalendarDataProvider(contentfulGraphQLClient);
+
   const eventContentfulDataProvider =
     libs.eventContentfulDataProvider ||
-    new EventContentfulDataProvider(
-      contentfulGraphQLClient,
-      getContentfulRestClientFactory,
-    );
+    getEventDataProvider(contentfulGraphQLClient);
+
   const outputContentfulDataProvider =
     libs.outputContentfulDataProvider ||
     new OutputContentfulDataProvider(

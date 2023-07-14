@@ -17,28 +17,35 @@ const ProjectSummaryFooter: React.FC<ProjectSummaryFooterProps> = ({
   members,
   startDate,
   endDate,
-}) => (
-  <>
-    <IconWithLabel icon={usersIcon}>
-      {getCounterString(members.length, 'Member')}
-    </IconWithLabel>
-    <IconWithLabel icon={dateIcon}>
-      <span>
-        {startDate
-          ? `${format(new Date(startDate), 'MMM yyyy')}${
-              endDate ? ` - ${format(new Date(endDate), 'MMM yyyy')} · ` : ''
-            }`
-          : 'TBD'}
-        {startDate && endDate && (
-          <span css={{ color: colors.neutral800.rgba }}>
-            {`(${formatDistance(new Date(startDate), new Date(endDate), {
-              unit: 'month',
-            })})`}
-          </span>
-        )}
-      </span>
-    </IconWithLabel>
-  </>
-);
+}) => {
+  console.log(startDate);
+  console.log(endDate);
+  return (
+    <>
+      <IconWithLabel icon={usersIcon}>
+        {getCounterString(members.length, 'Member')}
+      </IconWithLabel>
+      <IconWithLabel icon={dateIcon}>
+        <span>
+          {!startDate && 'TBD'}
+          {startDate &&
+            !endDate &&
+            `${format(new Date(startDate), 'MMM yyyy')}`}
+          {startDate && endDate && (
+            <>
+              {format(new Date(startDate), 'MMM yyyy')} -{' '}
+              {format(new Date(endDate), 'MMM yyyy')} ·{' '}
+              <span css={{ color: colors.neutral800.rgba }}>
+                {`(${formatDistance(new Date(startDate), new Date(endDate), {
+                  unit: 'month',
+                })})`}
+              </span>
+            </>
+          )}
+        </span>
+      </IconWithLabel>
+    </>
+  );
+};
 
 export default ProjectSummaryFooter;

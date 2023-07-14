@@ -12,10 +12,10 @@ export const documentTypeMapper: Record<
 > = {
   article: 'Article',
   'code-software': 'Code/Software',
-  'data-release': 'Data Release',
+  dataset: 'Dataset',
   'procedural-form': 'Procedural Form',
   'training-materials': 'Training Materials',
-  update: 'Update',
+  'gp2-reports': 'GP2 Reports',
 };
 
 const CreateProjectOutput: FC<Record<string, never>> = () => {

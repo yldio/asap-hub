@@ -3,9 +3,9 @@ import { ExternalUserResponse } from './external-user';
 
 export const outputDocumentTypes = [
   'Procedural Form',
-  'Update',
+  'GP2 Reports',
   'Training Materials',
-  'Data Release',
+  'Dataset',
   'Article',
   'Code/Software',
 ] as const;
@@ -29,9 +29,9 @@ export const outputDocumentTypeToType: Record<
   Set<OutputType>
 > = {
   'Procedural Form': new Set<OutputType>(),
-  Update: new Set<OutputType>(),
+  'GP2 Reports': new Set<OutputType>(),
   'Training Materials': new Set<OutputType>(),
-  'Data Release': new Set<OutputType>(),
+  Dataset: new Set<OutputType>(),
   Article: new Set<OutputType>([
     'Research',
     'Review',

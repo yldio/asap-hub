@@ -19,10 +19,10 @@ describe('ShareOutputButton', () => {
     ).toEqual([
       expect.stringContaining('article'),
       expect.stringContaining('code-software'),
-      expect.stringContaining('data-release'),
+      expect.stringContaining('dataset'),
       expect.stringContaining('procedural-form'),
+      expect.stringContaining('gp2-reports'),
       expect.stringContaining('training-materials'),
-      expect.stringContaining('update'),
     ]);
   });
   it('renders links for working groups', () => {

@@ -34,7 +34,7 @@ describe('Fetch All', () => {
 
   test('Should pass the pagination parameters as expected', async () => {
     const tags = {
-      items: Array.from({ length: 200 }),
+      items: Array.from({ length: 100 }),
       total: 400,
     };
 
@@ -46,14 +46,14 @@ describe('Fetch All', () => {
     });
 
     expect(dataProvider.fetch).toHaveBeenCalledWith({
-      take: 200,
+      take: 100,
       skip: 0,
       filter: { key1: 'val1', key2: 'val2' },
     });
 
     expect(dataProvider.fetch).toHaveBeenCalledWith({
-      take: 200,
-      skip: 200,
+      take: 100,
+      skip: 100,
       filter: { key1: 'val1', key2: 'val2' },
     });
   });
@@ -71,7 +71,7 @@ describe('Fetch All', () => {
     });
 
     expect(dataProvider.fetch).toHaveBeenCalledWith({
-      take: 200,
+      take: 100,
       skip: 0,
       filter: {
         key: 'val',

@@ -29,6 +29,9 @@ import { useValidation, validationMessageStyles } from '../form';
 import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
 import { crossIcon } from '../icons';
+import { pixels } from '..';
+
+const { rem } = pixels;
 
 export function arrayMove<T>(
   array: readonly T[],
@@ -102,6 +105,7 @@ export const MultiValueRemove = (
 
 const containerStyles = css({
   flexBasis: '100%',
+  marginTop: rem(15),
 });
 
 type RefType<T extends MultiSelectOptionsType> =

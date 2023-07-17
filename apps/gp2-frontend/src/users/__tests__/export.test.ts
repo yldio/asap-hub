@@ -3,11 +3,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 
 import { Stringifier } from 'csv-stringify';
 
-import {
-  MAX_RESULTS,
-  squidexUsersResponseToStream,
-  userToCSV,
-} from '../export';
+import { MAX_RESULTS, usersResponseToStream, userToCSV } from '../export';
 
 beforeEach(jest.resetAllMocks);
 
@@ -253,7 +249,7 @@ describe('userToCSV', () => {
   });
 });
 
-describe('squidexUsersResponseToStream', () => {
+describe('usersResponseToStream', () => {
   const mockCsvStream = {
     write: jest.fn(),
     end: jest.fn(),
@@ -261,7 +257,7 @@ describe('squidexUsersResponseToStream', () => {
 
   it('streams one page of results', async () => {
     const usersResponse = gp2Fixtures.createUsersResponse();
-    await squidexUsersResponseToStream(
+    await usersResponseToStream(
       mockCsvStream as unknown as Stringifier,
       jest.fn().mockResolvedValue(usersResponse),
       jest.fn((x) => x),
@@ -274,7 +270,7 @@ describe('squidexUsersResponseToStream', () => {
   });
 
   it('streams multiple pages of results', async () => {
-    await squidexUsersResponseToStream(
+    await usersResponseToStream(
       mockCsvStream as unknown as Stringifier,
       jest.fn().mockResolvedValue({
         ...gp2Fixtures.createUsersResponse(),
@@ -293,7 +289,7 @@ describe('squidexUsersResponseToStream', () => {
   });
 
   it('streams transformed results', async () => {
-    await squidexUsersResponseToStream(
+    await usersResponseToStream(
       mockCsvStream as unknown as Stringifier,
       jest.fn().mockResolvedValue(gp2Fixtures.createUsersResponse()),
       jest.fn(({ firstName }: gp2Model.UserResponse) => ({ name: firstName })),

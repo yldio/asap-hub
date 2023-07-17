@@ -17,10 +17,10 @@ describe('CreateOutputPage', () => {
   it.each([
     'Article' as const,
     'Code/Software' as const,
-    'Data Release' as const,
+    'Dataset' as const,
     'Procedural Form' as const,
     'Training Materials' as const,
-    'Update' as const,
+    'GP2 Reports' as const,
   ])('renders the right title for document type %s', (documentType) => {
     render(
       <CreateOutputPage

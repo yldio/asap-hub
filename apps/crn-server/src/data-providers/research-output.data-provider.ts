@@ -1,8 +1,6 @@
 import {
   AuthorUpsertDataObject,
   convertBooleanToDecision,
-  DataProvider,
-  FetchOptions,
   ListResearchOutputDataObject,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
@@ -15,7 +13,6 @@ import {
   SquidexGraphqlClient,
   SquidexRestClient,
 } from '@asap-hub/squidex';
-import Boom from '@hapi/boom';
 import { Filter } from 'odata-query';
 import {
   FetchResearchOutputQuery,
@@ -33,6 +30,11 @@ import { parseGraphQLResearchOutput } from './transformers';
 import logger from '../utils/logger';
 import { buildODataFilter, ResearchOutputFilter } from '../utils/odata';
 import { FETCH_RESEARCH_TAGS } from '../queries/research-tags.queries';
+import {
+  ResearchOutputDataProvider,
+  FetchResearchOutputOptions,
+  FetchResearchOutputFilter,
+} from './types';
 
 export const makeODataFilter = (
   filter?: ResearchOutputFilter,
@@ -73,15 +75,6 @@ export const makeDraftFilter = ({
   return query.join(' and ');
 };
 
-export type ResearchOutputDataProvider = DataProvider<
-  ResearchOutputDataObject,
-  FetchResearchOutputOptions,
-  ResearchOutputCreateDataObject,
-  { publish: boolean },
-  ResearchOutputUpdateDataObject,
-  { publish: boolean }
->;
-
 export class ResearchOutputSquidexDataProvider
   implements ResearchOutputDataProvider
 {
@@ -107,7 +100,7 @@ export class ResearchOutputSquidexDataProvider
       researchOutputGraphqlResponse;
 
     if (!researchOutputContent) {
-      throw Boom.notFound();
+      return null;
     }
 
     return parseGraphQLResearchOutput(researchOutputContent);
@@ -312,17 +305,6 @@ export class ResearchOutputSquidexDataProvider
     }
   }
 }
-
-type FetchResearchOutputFilter = ResearchOutputFilter & {
-  status?: string;
-  teamId?: string;
-  workingGroupId?: string;
-};
-
-export type FetchResearchOutputOptions =
-  FetchOptions<FetchResearchOutputFilter> & {
-    includeDrafts?: boolean;
-  };
 
 const getAuthorIdList = (authorDataObject: AuthorUpsertDataObject) => {
   if ('userId' in authorDataObject) {

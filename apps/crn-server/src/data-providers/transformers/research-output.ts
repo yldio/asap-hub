@@ -183,7 +183,7 @@ const parseGraphqlResearchOutputLite = ({
   isOwnRelatedResearchLink,
 });
 
-const isSharingStatus = (
+export const isSharingStatus = (
   status: string,
 ): status is ResearchOutputSharingStatus =>
   (sharingStatuses as ReadonlyArray<string>).includes(status);

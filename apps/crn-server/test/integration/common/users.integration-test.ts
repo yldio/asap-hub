@@ -1,24 +1,18 @@
 import supertest from 'supertest';
 import { Express } from 'express';
 import { v4 as uuid } from 'uuid';
-import { UserResponse } from '@asap-hub/model';
+import { omit } from 'lodash';
 
-import { appFactory } from '../../../src/app';
-import { retryable } from '../../helpers/retryable';
+import { AppHelper } from '../helpers/app';
+import { retryable } from '../helpers/retryable';
 import {
   FixtureFactory,
   getUserFixture,
   getTeamFixture,
   getInterestGroupFixture,
+  getWorkingGroupFixture,
   UserFixture,
 } from '../fixtures';
-
-jest.mock('../../../src/config', () => ({
-  ...jest.requireActual('../../../src/config'),
-  isContentfulEnabledV2:
-    process.env.INTEGRATION_TEST_CMS === 'contentful' ? 'true' : undefined,
-  logLevel: 'silent',
-}));
 
 jest.setTimeout(120000);
 
@@ -30,12 +24,7 @@ describe('users', () => {
 
   beforeAll(async () => {
     loggedInUser = await fixtures.createUser(getUserFixture());
-    app = appFactory({
-      authHandler: (req, _res, next) => {
-        req.loggedInUser = loggedInUser as UserResponse;
-        next();
-      },
-    });
+    app = AppHelper(() => loggedInUser);
   });
 
   afterAll(async () => {
@@ -66,7 +55,30 @@ describe('users', () => {
       const response = await supertest(app)
         .get(`/users/${user.id}`)
         .expect(200);
-      expect(response.body).toMatchObject(user);
+      expect(response.body).toMatchObject(omit(user, 'connections'));
+    });
+  });
+
+  test('can fetch a user with a working group', async () => {
+    const user = await fixtures.createUser(getUserFixture({}));
+    const workingGroup = await fixtures.createWorkingGroup(
+      getWorkingGroupFixture({
+        leaders: [
+          {
+            user: user.id,
+            role: 'Project Manager',
+            workstreamRole: 'Test',
+          },
+        ],
+      }),
+    );
+    await retryable(async () => {
+      const response = await supertest(app)
+        .get(`/users/${user.id}`)
+        .expect(200);
+
+      expect(response.body.workingGroups.length).toEqual(1);
+      expect(response.body.workingGroups[0].name).toEqual(workingGroup.title);
     });
   });
 

@@ -1,8 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import {
   Button,
-  chevronCircleDownIcon,
-  chevronCircleUpIcon,
   Headline3,
   Paragraph,
   pixels,
@@ -74,15 +72,6 @@ const Milestones: React.FC<MilestonesProps> = ({
       {milestones.length > minimumMilestonesToDisplay && (
         <div css={buttonWrapperStyles}>
           <Button linkStyle onClick={() => setExpanded(!expanded)}>
-            <span
-              css={{
-                display: 'inline-grid',
-                verticalAlign: 'middle',
-                paddingRight: rem(12),
-              }}
-            >
-              {expanded ? chevronCircleUpIcon : chevronCircleDownIcon}
-            </span>
             Show {expanded ? 'less' : 'more'}
           </Button>
         </div>

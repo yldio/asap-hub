@@ -1,6 +1,5 @@
 const serverlessWebpack = require('serverless-webpack');
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: serverlessWebpack.lib.entries,
@@ -30,9 +29,4 @@ module.exports = {
     filename: '[name].js',
   },
   devtool: 'source-map',
-  plugins: [
-    new CopyPlugin({
-      patterns: [{ from: './src/migrations', to: './migrations' }],
-    }),
-  ],
 };

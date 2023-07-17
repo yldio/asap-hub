@@ -170,11 +170,11 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const user = await environment.getEntry(id);
     const result = await patchAndPublish(user, fields);
 
-    const fetchEventById = () => this.fetchUserById(id);
+    const fetchUserById = () => this.fetchUserById(id);
 
     await pollContentfulGql<FetchUserByIdQuery>(
       result.sys.publishedVersion || Infinity,
-      fetchEventById,
+      fetchUserById,
       'users',
     );
   }

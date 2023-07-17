@@ -207,7 +207,13 @@ export type ResearchOutputCoreObject = {
 };
 
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {
-  authors: (UserResponse | ExternalAuthorResponse)[];
+  authors: (
+    | Pick<
+        UserResponse,
+        'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl' | 'orcid'
+      >
+    | ExternalAuthorResponse
+  )[];
   contactEmails: string[];
   created: string;
   environments: string[];
@@ -257,8 +263,8 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   keywordIds: string[];
   teamIds: string[];
   workingGroups?: string[];
-  relatedResearchIds?: string[];
-  relatedEventIds?: string[];
+  relatedResearchIds: string[];
+  relatedEventIds: string[];
 };
 
 export type PublishedResearchOutputCreateDataObject =
@@ -282,8 +288,8 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   teamIds: string[];
   updatedBy: string;
   workingGroups: string[];
-  relatedResearchIds?: string[];
-  relatedEventIds?: string[];
+  relatedResearchIds: string[];
+  relatedEventIds: string[];
   reviewRequestedById?: string;
 };
 

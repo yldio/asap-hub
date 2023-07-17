@@ -8,9 +8,9 @@ import {
   contentfulEnvId,
   contentfulSpaceId,
 } from '../src/config';
-import { ProjectContentfulDataProvider } from '../src/data-providers/contentful/project.data-provider';
-import { UserContentfulDataProvider } from '../src/data-providers/contentful/user.data-provider';
-import { WorkingGroupContentfulDataProvider } from '../src/data-providers/contentful/working-group.data-provider';
+import { ProjectContentfulDataProvider } from '../src/data-providers/project.data-provider';
+import { UserContentfulDataProvider } from '../src/data-providers/user.data-provider';
+import { WorkingGroupContentfulDataProvider } from '../src/data-providers/working-group.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependency';
 
 console.log('Importing users...');

@@ -6,6 +6,7 @@ import {
   Link,
   noop,
   Paragraph,
+  pixels,
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
@@ -18,11 +19,21 @@ import {
   padding24Styles,
 } from '../layout';
 
+const { rem } = pixels;
+
 const buttonStyles = css({
   width: 'fit-content',
   [mobileQuery]: {
     width: '100%',
   },
+});
+
+const headerStyles = css({
+  padding: `${rem(24)} ${rem(24)} ${rem(48)}`,
+});
+
+const contentStyles = css({
+  padding: `0 ${rem(24)}`,
 });
 
 type EditUserModalProps = Partial<gp2.UserResponse> & {
@@ -56,12 +67,14 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
   >
     {({ isSaving }, asyncWrapper) => (
       <div css={modalStyles}>
-        <header css={padding24Styles}>
+        <header css={headerStyles}>
           <Headline3>{title}</Headline3>
-          <Paragraph accent="lead">{description}</Paragraph>
+          <Paragraph noMargin accent="lead">
+            {description}
+          </Paragraph>
         </header>
         {children ? (
-          <div css={[formContainer, padding24Styles]}>
+          <div css={[formContainer, contentStyles]}>
             {children({ isSaving }, asyncWrapper)}
           </div>
         ) : null}

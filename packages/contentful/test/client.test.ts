@@ -26,6 +26,7 @@ describe('graphQL and Rest clients', () => {
       mockContentfulManagement.createClient.mockReturnValue({
         getSpace: getSpaceFn,
       } as any as jest.Mocked<contentfulManagement.PlainClientAPI>);
+      getEnvironment.mockImplementation(async () => ({}));
     });
 
     it('should create a client', async () => {
@@ -44,6 +45,51 @@ describe('graphQL and Rest clients', () => {
       });
       expect(getSpaceFn).toHaveBeenCalledWith(spaceId);
       expect(getEnvironment).toHaveBeenCalledWith(environmentId);
+    });
+
+    it('returns the same client instance if called with the same credentials', async () => {
+      const accessToken = 'token';
+      const spaceId = 'space-id';
+      const environmentId = 'env-id-0';
+
+      const client1 = await getRestClient({
+        space: spaceId,
+        accessToken,
+        environment: environmentId,
+      });
+
+      const client2 = await getRestClient({
+        space: spaceId,
+        accessToken,
+        environment: environmentId,
+      });
+
+      expect(contentfulManagement.createClient).toBeCalledTimes(1);
+      expect(getSpaceFn).toHaveBeenCalledTimes(1);
+      expect(getEnvironment).toHaveBeenCalledTimes(1);
+      expect(client1).toBe(client2);
+    });
+
+    it('returns different client instances if called with different credentials', async () => {
+      const accessToken = 'token';
+      const spaceId = 'space-id';
+
+      const client1 = await getRestClient({
+        space: spaceId,
+        accessToken,
+        environment: 'env-id-1',
+      });
+
+      const client2 = await getRestClient({
+        space: spaceId,
+        accessToken,
+        environment: 'env-id-2',
+      });
+
+      expect(contentfulManagement.createClient).toBeCalledTimes(2);
+      expect(getSpaceFn).toHaveBeenCalledTimes(2);
+      expect(getEnvironment).toHaveBeenCalledTimes(2);
+      expect(client1).not.toBe(client2);
     });
   });
 

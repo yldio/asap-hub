@@ -6,7 +6,15 @@ export const newsRouteFactory = (newsController: NewsController): Router => {
   const newsRoutes = Router();
 
   newsRoutes.get<unknown, gp2.ListNewsResponse>('/news', async (_req, res) => {
-    const news = await newsController.fetch();
+    const { query } = req;
+
+    const options = validateNewsFetchParameters(query);
+    const news = await newsController.fetch({
+      ...options,
+      filter: options.filter && {
+        frequency: options.filter,
+      },
+    });
 
     res.json(news);
   });

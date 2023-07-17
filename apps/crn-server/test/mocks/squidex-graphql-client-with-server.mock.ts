@@ -10,7 +10,6 @@ import {
   print,
 } from 'graphql';
 import { getSquidexGraphqlCalendar } from '../fixtures/calendars.fixtures';
-import { getSquidexGraphqlDashboard } from '../fixtures/dashboard.fixtures';
 import { getSquidexGraphqlDiscover } from '../fixtures/discover.fixtures';
 import { getSquidexGraphqlEvent } from '../fixtures/events.fixtures';
 import { getGraphQLExternalAuthor } from '../fixtures/external-authors.fixtures';
@@ -55,8 +54,6 @@ export const getSquidexGraphqlClientMockServer = (): SquidexGraphqlClient => {
     TutorialsResultDto: resultDto,
     Discover: () => getSquidexGraphqlDiscover(),
     DiscoveryResultDto: resultDto,
-    Dashboard: () => getSquidexGraphqlDashboard(),
-    DashboardResultDto: resultDto,
     Calendars: () => getSquidexGraphqlCalendar(),
     CalendarsResultDto: resultDto,
     Events: () => getSquidexGraphqlEvent(),

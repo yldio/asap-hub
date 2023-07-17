@@ -442,7 +442,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-contributing-cohort-memberships@workspace:packages/contentful-app-extensions/contributing-cohort-memberships"
   dependencies:
     "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.19.1
+    "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.34.1
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
@@ -9492,15 +9492,6 @@ __metadata:
   bin:
     contentful-app-scripts: bin/app-scripts
   checksum: 5e1f39cb8cd46f3546ae70bc7108c98df0fb5af2cb798fea45e9b355e43794ec138bccd792f575457325554f8eb487f8a1d3c440a6793ed538ee3fd3faffc658
-  languageName: node
-  linkType: hard
-
-"@contentful/app-sdk@npm:4.19.1":
-  version: 4.19.1
-  resolution: "@contentful/app-sdk@npm:4.19.1"
-  peerDependencies:
-    contentful-management: ">=7.30.0"
-  checksum: 6f981a3c7711b73388cfd6ecf0bdd2f72aac49fe66ac5a2023a6701c214fab4d0aa455ccc804cb6dc083db87d508826dc3a950e8f83b518d8be43466db21b0db
   languageName: node
   linkType: hard
 

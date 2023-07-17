@@ -1029,7 +1029,7 @@ __metadata:
     eslint-plugin-prettier: 4.2.1
     eslint-plugin-react: 7.32.2
     eslint-plugin-react-hooks: 4.6.0
-    jest-config: 27.5.1
+    jest-config: 29.6.1
     prettier: 2.8.8
   languageName: unknown
   linkType: soft
@@ -32179,44 +32179,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-config@npm:27.5.1, jest-config@npm:^27.5.1":
-  version: 27.5.1
-  resolution: "jest-config@npm:27.5.1"
-  dependencies:
-    "@babel/core": ^7.8.0
-    "@jest/test-sequencer": ^27.5.1
-    "@jest/types": ^27.5.1
-    babel-jest: ^27.5.1
-    chalk: ^4.0.0
-    ci-info: ^3.2.0
-    deepmerge: ^4.2.2
-    glob: ^7.1.1
-    graceful-fs: ^4.2.9
-    jest-circus: ^27.5.1
-    jest-environment-jsdom: ^27.5.1
-    jest-environment-node: ^27.5.1
-    jest-get-type: ^27.5.1
-    jest-jasmine2: ^27.5.1
-    jest-regex-util: ^27.5.1
-    jest-resolve: ^27.5.1
-    jest-runner: ^27.5.1
-    jest-util: ^27.5.1
-    jest-validate: ^27.5.1
-    micromatch: ^4.0.4
-    parse-json: ^5.2.0
-    pretty-format: ^27.5.1
-    slash: ^3.0.0
-    strip-json-comments: ^3.1.1
-  peerDependencies:
-    ts-node: ">=9.0.0"
-  peerDependenciesMeta:
-    ts-node:
-      optional: true
-  checksum: 1188fd46c0ed78cbe3175eb9ad6712ccf74a74be33d9f0d748e147c107f0889f8b701fbff1567f31836ae18597dacdc43d6a8fc30dd34ade6c9229cc6c7cb82d
-  languageName: node
-  linkType: hard
-
-"jest-config@npm:^29.6.1":
+"jest-config@npm:29.6.1, jest-config@npm:^29.6.1":
   version: 29.6.1
   resolution: "jest-config@npm:29.6.1"
   dependencies:
@@ -32251,6 +32214,43 @@ __metadata:
     ts-node:
       optional: true
   checksum: 3a30afeb28cc5658ef9cd95f2551ab8a29641bb6d377eb239cba8e7522eb4611c9a98cdcf173d87f5ad7b5e1ad242c3cd5434a260107bd3c7e8305d05023e05c
+  languageName: node
+  linkType: hard
+
+"jest-config@npm:^27.5.1":
+  version: 27.5.1
+  resolution: "jest-config@npm:27.5.1"
+  dependencies:
+    "@babel/core": ^7.8.0
+    "@jest/test-sequencer": ^27.5.1
+    "@jest/types": ^27.5.1
+    babel-jest: ^27.5.1
+    chalk: ^4.0.0
+    ci-info: ^3.2.0
+    deepmerge: ^4.2.2
+    glob: ^7.1.1
+    graceful-fs: ^4.2.9
+    jest-circus: ^27.5.1
+    jest-environment-jsdom: ^27.5.1
+    jest-environment-node: ^27.5.1
+    jest-get-type: ^27.5.1
+    jest-jasmine2: ^27.5.1
+    jest-regex-util: ^27.5.1
+    jest-resolve: ^27.5.1
+    jest-runner: ^27.5.1
+    jest-util: ^27.5.1
+    jest-validate: ^27.5.1
+    micromatch: ^4.0.4
+    parse-json: ^5.2.0
+    pretty-format: ^27.5.1
+    slash: ^3.0.0
+    strip-json-comments: ^3.1.1
+  peerDependencies:
+    ts-node: ">=9.0.0"
+  peerDependenciesMeta:
+    ts-node:
+      optional: true
+  checksum: 1188fd46c0ed78cbe3175eb9ad6712ccf74a74be33d9f0d748e147c107f0889f8b701fbff1567f31836ae18597dacdc43d6a8fc30dd34ade6c9229cc6c7cb82d
   languageName: node
   linkType: hard
 

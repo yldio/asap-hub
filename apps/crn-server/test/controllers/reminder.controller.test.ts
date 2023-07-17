@@ -77,11 +77,14 @@ describe('Reminder Controller', () => {
 
     describe('Description and href', () => {
       test('Should return the correct description and href for the research-output-published reminder', async () => {
+        const researchOutputPublishedReminder =
+          getResearchOutputPublishedReminder();
         const reminderDataObject: ResearchOutputPublishedReminder = {
-          ...getResearchOutputPublishedReminder(),
+          ...researchOutputPublishedReminder,
           entity: 'Research Output',
           type: 'Published',
           data: {
+            ...researchOutputPublishedReminder.data,
             documentType: 'Presentation',
             title: 'Some Test title',
             researchOutputId: 'some-research-output-id',
@@ -125,7 +128,7 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
 
         expect(items[0]).toMatchObject({
-          description: `**${reminder.data.createdBy}** on **${reminder.data.associationName}** created a draft output: ${reminder.data.title}.`,
+          description: `**${reminder.data.createdBy}** on team **${reminder.data.associationName}** created a draft team output: ${reminder.data.title}.`,
           href: `/shared-research/some-research-output-id`,
         });
       });
@@ -153,7 +156,7 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
 
         expect(items[0]).toMatchObject({
-          description: `**${reminder.data.createdBy}** created a draft output for **${reminder.data.associationName}**: ${reminder.data.title}.`,
+          description: `**${reminder.data.createdBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** created a draft ${reminder.data.associationType} output: ${reminder.data.title}.`,
           href: `/shared-research/some-research-output-id`,
         });
       });
@@ -182,7 +185,7 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
 
         expect(items[0]).toMatchObject({
-          description: `**${reminder.data.reviewRequestedBy}** on **${reminder.data.associationName}** requested PMs to review a team ${reminder.data.documentType} output: ${reminder.data.title}.`,
+          description: `**${reminder.data.reviewRequestedBy}** on team **${reminder.data.associationName}** requested PMs to review a team ${reminder.data.documentType} output: ${reminder.data.title}.`,
           href: `/shared-research/some-research-output-id`,
         });
       });
@@ -211,7 +214,7 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
 
         expect(items[0]).toMatchObject({
-          description: `**${reminder.data.reviewRequestedBy}** on **${reminder.data.associationName}** requested PMs to review a working group ${reminder.data.documentType} output: ${reminder.data.title}.`,
+          description: `**${reminder.data.reviewRequestedBy}** on working group **${reminder.data.associationName}** requested PMs to review a working group ${reminder.data.documentType} output: ${reminder.data.title}.`,
           href: `/shared-research/some-research-output-id`,
         });
       });

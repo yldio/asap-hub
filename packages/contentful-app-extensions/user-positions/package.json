@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@contentful/app-sdk": "4.19.1",
+    "@contentful/app-sdk": "4.22.1",
     "@contentful/f36-components": "4.34.1",
     "@contentful/f36-tokens": "4.0.2",
     "@contentful/react-apps-toolkit": "1.2.16",
@@ -44,7 +44,7 @@
     "@types/node": "18.15.11",
     "@types/react": "17.0.62",
     "@types/react-dom": "17.0.20",
-    "@types/testing-library__jest-dom": "5.14.6",
+    "@types/testing-library__jest-dom": "5.14.8",
     "cross-env": "7.0.3",
     "typescript": "4.9.5"
   },

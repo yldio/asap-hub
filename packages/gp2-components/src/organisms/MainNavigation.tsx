@@ -9,9 +9,10 @@ import {
   usersIcon,
   workingGroupIcon,
 } from '../icons';
+import newsIcon from '../icons/news-icon';
 import NavigationLink from '../molecules/NavigationLink';
 
-const { workingGroups, users, projects, outputs, events } = gp2;
+const { workingGroups, users, projects, outputs, events, newsList } = gp2;
 const {
   largeDesktopScreen,
   mobileScreen,
@@ -90,6 +91,11 @@ const MainNavigation: React.FC = () => (
       <li>
         <NavigationLink href={events({}).$} icon={eventsIcon}>
           Events
+        </NavigationLink>
+      </li>
+      <li>
+        <NavigationLink href={newsList({}).$} icon={newsIcon}>
+          News
         </NavigationLink>
       </li>
     </ul>

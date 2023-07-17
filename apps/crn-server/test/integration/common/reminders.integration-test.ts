@@ -1,13 +1,9 @@
 import supertest from 'supertest';
 import { Express } from 'express';
-import {
-  ListReminderResponse,
-  UserCreateDataObject,
-  UserResponse,
-} from '@asap-hub/model';
+import { ListReminderResponse, UserCreateDataObject } from '@asap-hub/model';
 
-import { appFactory } from '../../../src/app';
-import { retryable } from '../../helpers/retryable';
+import { AppHelper } from '../helpers/app';
+import { retryable } from '../helpers/retryable';
 import {
   FixtureFactory,
   getUserFixture,
@@ -44,7 +40,7 @@ describe('Reminders', () => {
 
   beforeAll(async () => {
     await fixtures.clearAllPreviousEvents();
-    jest.useFakeTimers({ doNotFake: ['setTimeout'] });
+    jest.useFakeTimers({ doNotFake: ['setTimeout', 'clearTimeout'] });
     team = await fixtures.createTeam(getTeamFixture());
     loggedInUser = await fixtures.createUser(
       getUserFixture({
@@ -70,12 +66,7 @@ describe('Reminders', () => {
         ],
       }),
     );
-    app = appFactory({
-      authHandler: (req, _res, next) => {
-        req.loggedInUser = loggedInUser as UserResponse;
-        next();
-      },
-    });
+    app = AppHelper(() => loggedInUser);
   });
 
   afterAll(async () => {
@@ -126,7 +117,7 @@ describe('Reminders', () => {
         eventHappeningNow.id,
         endedEventWithLoggedInUserSpeaker.id,
       ]);
-    }, 300000);
+    });
   });
 
   describe('Event Happening Today Reminder', () => {
@@ -535,12 +526,7 @@ describe('Reminders', () => {
     props: Partial<UserCreateDataObject> = {},
   ) => {
     const loggedInUser = await fixtures.createUser(getUserFixture(props));
-    app = appFactory({
-      authHandler: (req, _res, next) => {
-        req.loggedInUser = loggedInUser as UserResponse;
-        next();
-      },
-    });
+    app = AppHelper(() => loggedInUser);
     return { loggedInUser, app };
   };
 

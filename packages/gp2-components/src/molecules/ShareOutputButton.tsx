@@ -50,9 +50,9 @@ const ShareOutputButton: React.FC<ShareOutputButtonProps> = ({
         }).$,
       }}
       {{
-        item: <>{outputDatasetIcon} Data Release</>,
+        item: <>{outputDatasetIcon} Dataset</>,
         href: route.createOutput({
-          outputDocumentType: 'data-release',
+          outputDocumentType: 'dataset',
         }).$,
       }}
       {{
@@ -62,15 +62,15 @@ const ShareOutputButton: React.FC<ShareOutputButtonProps> = ({
         }).$,
       }}
       {{
-        item: <>{outputTrainingMarerialsIcon} Training Materials</>,
+        item: <>{outputGP2ReportsIcon} GP2 Reports</>,
         href: route.createOutput({
-          outputDocumentType: 'training-materials',
+          outputDocumentType: 'gp2-reports',
         }).$,
       }}
       {{
-        item: <>{outputGP2ReportsIcon} Update</>,
+        item: <>{outputTrainingMarerialsIcon} Training Materials</>,
         href: route.createOutput({
-          outputDocumentType: 'update',
+          outputDocumentType: 'training-materials',
         }).$,
       }}
     </DropdownButton>

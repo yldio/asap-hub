@@ -29,7 +29,7 @@ import { getTeamCreateDataObject } from '../../fixtures/teams.fixtures';
 import { getUserCreateDataObject } from '../../fixtures/users.fixtures';
 import { createRandomOrcid } from '../../helpers/users';
 import { teardownHelper } from '../../helpers/teardown';
-import { retryable } from '../../helpers/retryable';
+import { retryable } from '../helpers/retryable';
 
 jest.setTimeout(120000);
 
@@ -126,6 +126,9 @@ describe('Reminders', () => {
           documentType: researchOutputInput.documentType,
           title: researchOutputInput.title,
           addedDate: researchOutputInput.addedDate,
+          createdBy: 'Tom Hardy',
+          associationType: 'team',
+          associationName: 'Team A',
         },
       };
       await retryable(async () => {
@@ -535,6 +538,8 @@ describe('Reminders', () => {
         organismIds: researchOutputInput.organismIds,
         keywordIds: researchOutputInput.keywordIds,
         teamIds: researchOutputInput.teamIds,
+        relatedResearchIds: researchOutputInput.relatedResearchIds,
+        relatedEventIds: researchOutputInput.relatedEventIds,
         updatedBy: creatorId,
         workingGroups: researchOutputInput.workingGroups || [],
       });
@@ -599,6 +604,8 @@ describe('Reminders', () => {
         organismIds: researchOutputInput.organismIds,
         keywordIds: researchOutputInput.keywordIds,
         teamIds: researchOutputInput.teamIds,
+        relatedResearchIds: researchOutputInput.relatedResearchIds,
+        relatedEventIds: researchOutputInput.relatedEventIds,
         updatedBy: creatorId,
         workingGroups: researchOutputInput.workingGroups || [],
       });
@@ -667,6 +674,8 @@ describe('Reminders', () => {
         organismIds: researchOutputInput.organismIds,
         keywordIds: researchOutputInput.keywordIds,
         teamIds: researchOutputInput.teamIds,
+        relatedResearchIds: researchOutputInput.relatedResearchIds,
+        relatedEventIds: researchOutputInput.relatedEventIds,
         updatedBy: creatorId,
         workingGroups: researchOutputInput.workingGroups || [],
       });
@@ -713,6 +722,8 @@ describe('Reminders', () => {
         organismIds: researchOutputInput.organismIds,
         keywordIds: researchOutputInput.keywordIds,
         teamIds: researchOutputInput.teamIds,
+        relatedResearchIds: researchOutputInput.relatedResearchIds,
+        relatedEventIds: researchOutputInput.relatedEventIds,
         updatedBy: creatorId,
         workingGroups: researchOutputInput.workingGroups || [],
       });
@@ -760,6 +771,8 @@ describe('Reminders', () => {
         organismIds: researchOutputInput.organismIds,
         keywordIds: researchOutputInput.keywordIds,
         teamIds: researchOutputInput.teamIds,
+        relatedResearchIds: researchOutputInput.relatedResearchIds,
+        relatedEventIds: researchOutputInput.relatedEventIds,
         updatedBy: creatorId,
         workingGroups: researchOutputInput.workingGroups || [],
       });

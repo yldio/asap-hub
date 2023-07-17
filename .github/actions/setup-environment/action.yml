@@ -197,18 +197,6 @@ outputs:
   gp2-ses-region:
     description: 'GP2 SES Region'
     value: ${{ steps.vars.outputs.gp2-ses-region }}
-  gp2-squidex-api-client-id:
-    description: 'GP2 API Squidex Client ID'
-    value: ${{ steps.vars.outputs.gp2-squidex-api-client-id }}
-  gp2-squidex-app-name:
-    description: 'GP2 Squidex App Name'
-    value: ${{ steps.vars.outputs.gp2-squidex-app-name }}
-  gp2-squidex-backup-bucket-name:
-    description: 'GP2 Squidex Backup Bucket Name'
-    value: ${{ steps.vars.outputs.gp2-squidex-backup-bucket-name }}
-  gp2-squidex-ci-client-id:
-    description: 'GP2 CI Squidex Client ID'
-    value: ${{ steps.vars.outputs.gp2-squidex-ci-client-id }}
   is-contentful-enabled-v2:
     description: 'Is all remaining data fetched from Contentful'
     value: ${{ steps.vars.outputs.is-contentful-enabled-v2 }}
@@ -272,7 +260,6 @@ runs:
           echo "crn-squidex-app-name-legacy=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "gp2-contentful-env-id=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
-          echo "gp2-squidex-app-name=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "is-contentful-enabled-v2=$HAS_CONTENTFUL_LABEL" >> $GITHUB_OUTPUT
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT

@@ -13,6 +13,7 @@ import {
 } from '../../config';
 import Events from '../../controllers/event.controller';
 import { getCalendarDataProvider } from '../../dependencies/calendar.dependency';
+import { getContentfulGraphQLClientFactory } from '../../dependencies/clients.dependency';
 import { getEventDataProvider } from '../../dependencies/event.dependency';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -22,7 +23,10 @@ const getJWTCredentials = getJWTCredentialsFactory({
   region,
 });
 
-const eventController = new Events(getEventDataProvider());
+const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
+const eventController = new Events(
+  getEventDataProvider(contentfulGraphQLClient),
+);
 const syncCalendar = syncCalendarFactory(
   syncEventFactory(eventController, logger),
   getJWTCredentials,
@@ -31,7 +35,7 @@ const syncCalendar = syncCalendarFactory(
 
 export const handler: Handler = sentryWrapper(
   webhookEventUpdatedHandlerFactory(
-    getCalendarDataProvider(),
+    getCalendarDataProvider(contentfulGraphQLClient),
     syncCalendar,
     logger,
     { googleApiToken },

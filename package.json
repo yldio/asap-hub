@@ -46,9 +46,8 @@
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "release:frontend": "yarn workspace @asap-hub/crn-frontend release:frontend",
-    "schema:update": "yarn schema:update:crn && yarn schema:update:gp2",
+    "schema:update": "yarn schema:update:crn",
     "schema:update:crn": "./apps/crn-server/scripts/schema-update.sh",
-    "schema:update:gp2": "./apps/gp2-server/scripts/schema-update.sh",
     "start": "yarn watch & yarn start:crn & yarn start:gp2 & yarn start:storybook",
     "start:backend:crn": "yarn workspace @asap-hub/crn-server start",
     "start:backend:crn:sls": "SLS_STAGE=local yarn workspace @asap-hub/crn-server serverless offline --httpPort 3333",
@@ -128,15 +127,15 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/flags": "workspace:*",
-    "@babel/cli": "7.22.6",
-    "@babel/core": "7.22.6",
-    "@babel/eslint-parser": "7.22.6",
+    "@babel/cli": "7.22.9",
+    "@babel/core": "7.22.9",
+    "@babel/eslint-parser": "7.22.9",
     "@babel/node": "7.22.6",
     "@babel/plugin-proposal-nullish-coalescing-operator": "7.18.6",
     "@babel/plugin-proposal-optional-chaining": "7.21.0",
     "@babel/plugin-transform-modules-commonjs": "7.22.5",
-    "@babel/plugin-transform-runtime": "7.22.6",
-    "@babel/preset-env": "7.22.6",
+    "@babel/plugin-transform-runtime": "7.22.9",
+    "@babel/preset-env": "7.22.9",
     "@babel/preset-react": "7.22.5",
     "@babel/preset-typescript": "7.22.5",
     "@babel/runtime-corejs3": "7.22.6",
@@ -165,7 +164,7 @@
     "jest-watch-select-projects": "2.0.0",
     "jest-watch-suspend": "1.1.2",
     "jest-watch-typeahead": "0.6.5",
-    "nock": "13.3.1",
+    "nock": "13.3.2",
     "node-fetch": "3.0.0-beta.9",
     "prettier": "2.8.8",
     "react-test-renderer": "17.0.2",
@@ -176,5 +175,5 @@
     "ts-node": "10.9.1",
     "uuid": "8.3.2"
   },
-  "packageManager": "yarn@3.5.0"
+  "packageManager": "yarn@3.6.1"
 }

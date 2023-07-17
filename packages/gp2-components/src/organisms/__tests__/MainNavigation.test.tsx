@@ -12,6 +12,7 @@ describe('MainNavigation', () => {
       expect.stringMatching(/projects/i),
       expect.stringMatching(/outputs/i),
       expect.stringMatching(/events/i),
+      expect.stringMatching(/news/i),
     ]);
   });
 });

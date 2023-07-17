@@ -9,11 +9,6 @@ import assert from 'assert';
   'GP2_AWS_ACM_CERTIFICATE_ARN',
   'GP2_HOSTNAME',
   'SLS_STAGE',
-  'GP2_SQUIDEX_APP_NAME',
-  'SQUIDEX_BASE_URL',
-  'GP2_SQUIDEX_API_CLIENT_ID',
-  'GP2_SQUIDEX_API_CLIENT_SECRET',
-  'GP2_SQUIDEX_SHARED_SECRET',
   'GP2_SENTRY_DSN_API',
   'GP2_SENTRY_DSN_HANDLERS',
   'GP2_SES_REGION',
@@ -40,11 +35,6 @@ const auth0SharedSecret = process.env.GP2_AUTH0_SHARED_SECRET!;
 const gp2AwsAcmCertificateArn = process.env.GP2_AWS_ACM_CERTIFICATE_ARN!;
 const hostname = process.env.GP2_HOSTNAME!;
 const region = process.env.AWS_REGION as AWS['provider']['region'];
-const squidexAppName = process.env.GP2_SQUIDEX_APP_NAME!;
-const squidexBaseUrl = process.env.SQUIDEX_BASE_URL!;
-const squidexClientId = process.env.GP2_SQUIDEX_API_CLIENT_ID!;
-const squidexClientSecret = process.env.GP2_SQUIDEX_API_CLIENT_SECRET!;
-const squidexSharedSecret = process.env.GP2_SQUIDEX_SHARED_SECRET!;
 const contentfulEnvironment = process.env.GP2_CONTENTFUL_ENV!;
 const contentfulAccessToken = process.env.GP2_CONTENTFUL_ACCESS_TOKEN!;
 const contentfulPreviewAccessToken =
@@ -52,7 +42,6 @@ const contentfulPreviewAccessToken =
 const contentfulManagementAccessToken =
   process.env.GP2_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 const contentfulSpaceId = process.env.GP2_CONTENTFUL_SPACE_ID!;
-const isContentfulEnabled = process.env.GP2_CONTENTFUL_ENABLED || 'false';
 const contentfulWebhookAuthenticationToken =
   process.env.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const stage = process.env.SLS_STAGE!;
@@ -61,8 +50,7 @@ const sentryDsnHandlers = process.env.GP2_SENTRY_DSN_HANDLERS!;
 
 const envAlias = process.env.SLS_STAGE === 'production' ? 'prod' : 'dev';
 const eventBus = `gp2-events-${stage}`;
-const eventBusSourceSquidex = 'gp2.squidex';
-const eventBusSourceContentful = 'gp2.contentful';
+const eventBusSource = 'gp2.contentful';
 
 const service = 'gp2-hub';
 const appHostname = stage === 'production' ? hostname : `${stage}.${hostname}`;
@@ -114,18 +102,12 @@ const serverlessConfig: AWS = {
     },
     environment: {
       NODE_ENV: nodeEnv,
-      SQUIDEX_APP_NAME: squidexAppName,
-      SQUIDEX_BASE_URL: squidexBaseUrl,
-      SQUIDEX_CLIENT_ID: squidexClientId,
-      SQUIDEX_CLIENT_SECRET: squidexClientSecret,
-      SQUIDEX_SHARED_SECRET: squidexSharedSecret,
       LOG_LEVEL: stage === 'production' ? 'error' : 'info',
       APP_ORIGIN: appUrl,
       ENVIRONMENT: '${env:SLS_STAGE}',
       CURRENT_REVISION: currentRevision
         ? '${env:CI_COMMIT_SHA}'
         : '${env:CURRENT_REVISION}',
-      GP2_CONTENTFUL_ENABLED: isContentfulEnabled,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: contentfulManagementAccessToken,
@@ -263,36 +245,14 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    subscribeCalendarSquidex: {
-      handler: './src/handlers/calendar/subscribe-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus,
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': ['CalendarsCreated', 'CalendarsUpdated'],
-            },
-          },
-        },
-      ],
-      environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-        SENTRY_DSN: sentryDsnHandlers,
-        GP2_CONTENTFUL_ENABLED: 'false',
-        GP2_API_URL: apiUrl,
-        REGION: '${env:AWS_REGION}',
-      },
-    },
-    subscribeCalendarContentful: {
+    subscribeCalendar: {
       handler: './src/handlers/calendar/subscribe-handler.handler',
       events: [
         {
           eventBridge: {
             eventBus: 'gp2-events-${self:provider.stage}',
             pattern: {
-              source: [eventBusSourceContentful],
+              source: [eventBusSource],
               'detail-type': ['CalendarsPublished'],
             },
           },
@@ -302,12 +262,11 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        GP2_CONTENTFUL_ENABLED: 'true',
         GP2_API_URL: apiUrl,
         REGION: '${env:AWS_REGION}',
       },
     },
-    resubscribeCalendarsSquidex: {
+    resubscribeCalendars: {
       handler: './src/handlers/calendar/resubscribe-handler.handler',
       timeout: 120,
       events: [
@@ -319,24 +278,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        GP2_CONTENTFUL_ENABLED: 'false',
-        GP2_API_URL: apiUrl,
-        REGION: '${env:AWS_REGION}',
-      },
-    },
-    resubscribeCalendarsContentful: {
-      handler: './src/handlers/calendar/resubscribe-handler.handler',
-      timeout: 120,
-      events: [
-        {
-          schedule: 'cron(0 1 * * ? *)',
-        },
-      ],
-      environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-        SENTRY_DSN: sentryDsnHandlers,
-        GP2_CONTENTFUL_ENABLED: 'true',
         GP2_API_URL: apiUrl,
         REGION: '${env:AWS_REGION}',
       },
@@ -348,11 +289,7 @@ const serverlessConfig: AWS = {
           eventBridge: {
             eventBus,
             pattern: {
-              source: [
-                isContentfulEnabled === 'true'
-                  ? eventBusSourceContentful
-                  : eventBusSourceSquidex,
-              ],
+              source: [eventBusSource],
               'detail-type': ['UsersPublished'],
             },
             retryPolicy: {
@@ -369,22 +306,6 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    squidexWebhook: {
-      handler: './src/handlers/webhooks/squidex.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/squidex',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: eventBus,
-        EVENT_SOURCE: eventBusSourceSquidex,
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
     contentfulWebhook: {
       handler: './src/handlers/webhooks/contentful.handler',
       events: [
@@ -397,32 +318,14 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         EVENT_BUS: eventBus,
-        EVENT_SOURCE: eventBusSourceContentful,
+        EVENT_SOURCE: eventBusSource,
         SENTRY_DSN: sentryDsnHandlers,
         CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
         CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
           contentfulWebhookAuthenticationToken,
       },
     },
-    eventsUpdatedSquidex: {
-      timeout: 300,
-      handler: './src/handlers/webhooks/events-updated.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/events',
-          },
-        },
-      ],
-      environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-        SENTRY_DSN: sentryDsnHandlers,
-        GP2_CONTENTFUL_ENABLED: 'false',
-      },
-    },
-    eventsUpdatedContentful: {
+    eventsUpdated: {
       timeout: 300,
       handler: './src/handlers/webhooks/events-updated.handler',
       events: [
@@ -436,21 +339,6 @@ const serverlessConfig: AWS = {
       environment: {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-        SENTRY_DSN: sentryDsnHandlers,
-        GP2_CONTENTFUL_ENABLED: 'true',
-      },
-    },
-    runMigrations: {
-      handler: './src/handlers/webhooks/run-migrations.run',
-      timeout: 900,
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
-    rollbackMigrations: {
-      handler: './src/handlers/webhooks/run-migrations.rollback',
-      timeout: 900,
-      environment: {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
@@ -937,19 +825,19 @@ const serverlessConfig: AWS = {
           ],
         },
       },
-      SubscribeCalendarSquidexDLQ: {
+      SubscribeCalendarDLQ: {
         Type: 'AWS::SQS::Queue',
         Properties: {
           MessageRetentionPeriod: 1_209_600, // 14 days
           QueueName:
-            '${self:service}-${self:provider.stage}-subscribe-calendar-squidex-dlq',
+            '${self:service}-${self:provider.stage}-subscribe-calendar-dlq',
         },
       },
-      SubscribeCalendarSquiexDLQPolicy: {
+      SubscribeCalendarDLQPolicy: {
         Type: 'AWS::SQS::QueuePolicy',
         Properties: {
           PolicyDocument: {
-            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-squidex-dlq-policy',
+            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-dlq-policy',
             Version: '2012-10-17',
             Statement: [
               {
@@ -960,69 +848,25 @@ const serverlessConfig: AWS = {
                 },
                 Action: 'sqs:SendMessage',
                 Resource: {
-                  'Fn::GetAtt': [`SubscribeCalendarSquidexDLQ`, 'Arn'],
+                  'Fn::GetAtt': [`SubscribeCalendarDLQ`, 'Arn'],
                 },
               },
             ],
           },
           Queues: [
             {
-              Ref: `SubscribeCalendarSquidexDLQ`,
-            },
-          ],
-        },
-      },
-      SubscribeCalendarContentfulDLQ: {
-        Type: 'AWS::SQS::Queue',
-        Properties: {
-          MessageRetentionPeriod: 1_209_600, // 14 days
-          QueueName:
-            '${self:service}-${self:provider.stage}-subscribe-calendar-contentful-dlq',
-        },
-      },
-      SubscribeCalendarContentfulDLQPolicy: {
-        Type: 'AWS::SQS::QueuePolicy',
-        Properties: {
-          PolicyDocument: {
-            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-contentful-dlq-policy',
-            Version: '2012-10-17',
-            Statement: [
-              {
-                Sid: 'Publisher-statement-id',
-                Effect: 'Allow',
-                Principal: {
-                  AWS: '*',
-                },
-                Action: 'sqs:SendMessage',
-                Resource: {
-                  'Fn::GetAtt': [`SubscribeCalendarContentfulDLQ`, 'Arn'],
-                },
-              },
-            ],
-          },
-          Queues: [
-            {
-              Ref: `SubscribeCalendarContentfulDLQ`,
+              Ref: `SubscribeCalendarDLQ`,
             },
           ],
         },
       },
     },
     extensions: {
-      SubscribeCalendarSquidexLambdaFunction: {
+      SubscribeCalendarLambdaFunction: {
         Properties: {
           DeadLetterConfig: {
             TargetArn: {
-              'Fn::GetAtt': ['SubscribeCalendarSquidexDLQ', 'Arn'],
-            },
-          },
-        },
-      },
-      SubscribeCalendarContentfulLambdaFunction: {
-        Properties: {
-          DeadLetterConfig: {
-            TargetArn: {
-              'Fn::GetAtt': ['SubscribeCalendarContentfulDLQ', 'Arn'],
+              'Fn::GetAtt': ['SubscribeCalendarDLQ', 'Arn'],
             },
           },
         },

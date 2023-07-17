@@ -11,6 +11,7 @@ import {
   ResearchOutputResponse,
   ResearchOutputUpdateDataObject,
 } from '@asap-hub/model';
+import { ResearchOutputsContentFragment } from '@asap-hub/contentful';
 import {
   InputResearchOutput,
   ResearchOutput,
@@ -91,7 +92,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
   flatData: {
     title: 'Test Proposal 1234',
     documentType: 'Bioinformatics',
-    description: 'Text',
+    description: '<p>Text</p>',
     descriptionMD: 'Text MD',
     link: null,
     addedDate: '2021-05-21T13:18:31Z',
@@ -194,7 +195,7 @@ export const getResearchOutputDataObject =
     type: '3D Printing',
     addedDate: '2021-05-21T13:18:31Z',
     title: 'Test Proposal 1234',
-    description: 'Text',
+    description: '<p>Text</p>',
     descriptionMD: 'Text MD',
     authors: fetchExpectation.items,
     teams: [{ id: 'team-id-0', displayName: 'Team A' }],
@@ -335,7 +336,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
   } = getResearchOutputResponse();
   return {
     ...researchOutputResponse,
-    description: 'Text',
+    description: '<p>Text</p>',
     descriptionMD: 'Text MD',
     link: 'http://a.link',
     type: 'Software',
@@ -422,7 +423,7 @@ export const getRestResearchOutputCreateData =
     sharingStatus: { iv: 'Network Only' },
     addedDate: { iv: '2021-05-21T13:18:31Z' },
     publishDate: { iv: '2021-05-21T13:18:31Z' },
-    description: { iv: 'Text' },
+    description: { iv: '<p>Text</p>' },
     descriptionMD: { iv: 'Text MD' },
     methods: {
       iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
@@ -487,3 +488,165 @@ export const getRestResearchOutputUpdateData =
       ...restResearchOutputData,
     };
   };
+
+export const getContentfulResearchOutputGraphqlResponse =
+  (): ResearchOutputsContentFragment => ({
+    sys: {
+      id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      publishedVersion: 1,
+    },
+    title: 'Test Proposal 1234',
+    documentType: 'Bioinformatics',
+    description: {
+      json: {
+        nodeType: 'document',
+        data: {},
+        content: [
+          {
+            nodeType: 'paragraph',
+            data: {},
+            content: [{ nodeType: 'text', value: 'Text', marks: [], data: {} }],
+          },
+        ],
+      },
+      links: {
+        entries: {
+          inline: [],
+        },
+        assets: {
+          block: [],
+        },
+      },
+    },
+    descriptionMd: 'Text MD',
+    link: null,
+    addedDate: '2021-05-21T13:18:31Z',
+    publishDate: '2021-05-21T13:18:31Z',
+    createdDate: '2020-09-23T16:34:26.842Z',
+    labCatalogNumber: 'http://example.com',
+    doi: null,
+    accession: null,
+    rrid: 'RRID:AB_90755',
+    lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
+    authorsCollection: { items: [] },
+    sharingStatus: 'Network Only',
+    asapFunded: 'Yes',
+    usedInAPublication: 'No',
+    type: '3D Printing',
+    reviewRequestedBy: null,
+    relatedResearchCollection: {
+      items: [
+        {
+          sys: {
+            id: 'related-research-id-0',
+          },
+          title: 'Related Research1',
+          type: 'Report',
+          documentType: 'Bioinformatics',
+          teamsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'team-id-1',
+                },
+                displayName: 'Team B',
+              },
+            ],
+          },
+        },
+      ],
+    },
+    linkedFrom: {
+      researchOutputsCollection: {
+        items: [
+          {
+            sys: {
+              id: 'related-referencing-research-id',
+            },
+            title: 'Related Research2',
+            type: 'Report',
+            documentType: 'Bioinformatics',
+            teamsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'team-id-1',
+                  },
+                  displayName: 'Team B',
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    relatedEventsCollection: {
+      items: [
+        {
+          sys: {
+            id: 'related-event-id-0',
+          },
+          title: 'Related Event 1',
+          endDate: '2021-05-21T13:18:31.000Z',
+        },
+      ],
+    },
+    labsCollection: {
+      items: [
+        {
+          sys: {
+            id: '99c78dd7-627e-4fbd-aaec-d1977895189e',
+          },
+          name: 'Test',
+        },
+        {
+          sys: {
+            id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9',
+          },
+          name: 'mike',
+        },
+      ],
+    },
+    teamsCollection: {
+      items: [
+        {
+          sys: {
+            id: 'team-id-0',
+          },
+          displayName: 'Team A',
+        },
+      ],
+    },
+    methodsCollection: {
+      items: [
+        {
+          name: 'Activity Assay',
+        },
+      ],
+    },
+    organismsCollection: {
+      items: [
+        {
+          name: 'Rat',
+        },
+      ],
+    },
+    environmentsCollection: {
+      items: [
+        {
+          name: 'In Vitro',
+        },
+      ],
+    },
+    subtype: {
+      name: 'Metabolite',
+    },
+    keywordsCollection: {
+      items: [
+        {
+          name: 'Keyword1',
+        },
+      ],
+    },
+    workingGroup: null,
+  });

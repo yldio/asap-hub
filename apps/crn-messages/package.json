@@ -16,7 +16,7 @@
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/messages-common": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
-    "@babel/core": "7.22.6",
+    "@babel/core": "7.22.9",
     "@babel/preset-react": "7.22.5",
     "@babel/runtime-corejs3": "7.22.6",
     "@emotion/cache": "11.10.7",

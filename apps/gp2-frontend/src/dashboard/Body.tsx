@@ -25,6 +25,7 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
     articleCount: 0,
   };
   const announcements = dashboard.items[0]?.announcements || [];
+  const guides = dashboard.items[0]?.guides || [];
   return (
     <DashboardPageBody
       news={news}
@@ -32,6 +33,7 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
       upcomingEvents={items.map(eventMapper)}
       totalOfUpcomingEvents={total}
       announcements={announcements}
+      guides={guides}
     />
   );
 };

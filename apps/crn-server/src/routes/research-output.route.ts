@@ -29,7 +29,7 @@ export const researchOutputRouteFactory = (
     '/research-outputs',
     async (req, res: Response<ListResearchOutputResponse>) => {
       const { query, loggedInUser } = req;
-      const { teamId, status, workingGroupId, ...options } =
+      const { teamId, status, workingGroupId, filter, ...options } =
         validateResearchOutputFetchOptions(query);
       const isRequestingDrafts = status === 'draft';
 
@@ -52,14 +52,17 @@ export const researchOutputRouteFactory = (
 
       const result = await researchOutputController.fetch({
         ...options,
-        ...(isRequestingDrafts && {
-          includeDrafts: true,
-          filter: {
-            status,
-            workingGroupId,
-            teamId,
-          },
-        }),
+        ...(isRequestingDrafts
+          ? {
+              includeDrafts: true,
+              filter: {
+                documentType: filter,
+                status,
+                workingGroupId,
+                teamId,
+              },
+            }
+          : { filter }),
       });
 
       res.json(result);

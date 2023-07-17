@@ -178,14 +178,7 @@ const logo = (
         <stop offset=".484" stopColor="#0C8DC3" />
         <stop offset="1" stopColor="#34A270" />
       </linearGradient>
-      <linearGradient
-        id="m"
-        x1="-nan"
-        x2="-nan"
-        y1="-nan"
-        y2="-nan"
-        gradientUnits="userSpaceOnUse"
-      >
+      <linearGradient id="m" gradientUnits="userSpaceOnUse">
         <stop offset=".01" stopColor="#8C4F9E" />
         <stop offset=".51" stopColor="#008DC2" />
         <stop offset="1" stopColor="#41A03F" />

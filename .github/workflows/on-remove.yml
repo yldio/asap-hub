@@ -54,8 +54,6 @@ jobs:
           app: gp2-server
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          gp2-squidex-api-client-secret: ${{ secrets.GP2_SQUIDEX_API_CLIENT_SECRET }}
-          gp2-squidex-shared-secret: ${{ secrets.GP2_SQUIDEX_SHARED_SECRET }}
           gp2-auth0-shared-secret: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
 
   crn-squidex-remove:
@@ -220,7 +218,6 @@ jobs:
         crn-sls-remove,
         gp2-sls-remove,
         crn-squidex-remove,
-        gp2-squidex-remove,
         crn-contentful-remove,
         gp2-contentful-remove,
         crn-algolia-index,

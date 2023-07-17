@@ -104,14 +104,14 @@ describe('ResearchOutputs data provider', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    test('Should throw a Not Found error when the research output is not found', async () => {
+    test('Should return null when the research output is not found', async () => {
       squidexGraphqlClientMock.request.mockResolvedValueOnce({
         findResearchOutputsContent: null,
       });
-
-      await expect(
-        researchOutputDataProvider.fetchById(researchOutputId),
-      ).rejects.toThrow('Not Found');
+      const result = await researchOutputDataProvider.fetchById(
+        researchOutputId,
+      );
+      expect(result).toBeNull();
     });
 
     test('Should throw an error with a specific error message when the graphql client throws one', async () => {

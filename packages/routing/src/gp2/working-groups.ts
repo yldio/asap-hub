@@ -4,10 +4,10 @@ import resource from './resource';
 export type OutputDocumentTypeParameter =
   | 'article'
   | 'code-software'
-  | 'data-release'
+  | 'dataset'
   | 'procedural-form'
   | 'training-materials'
-  | 'update';
+  | 'gp2-reports';
 
 export const outputDocumentTypeParser = {
   parse: (data: string): OutputDocumentTypeParameter =>

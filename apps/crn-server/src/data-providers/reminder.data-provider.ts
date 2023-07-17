@@ -30,6 +30,10 @@ import {
 import { FETCH_REMINDER_DATA } from '../queries/reminders.queries';
 import { ReminderDataProvider } from './types';
 
+type PublishedResearchOutputQueried = NonNullable<
+  FetchReminderDataQuery['queryResearchOutputsContents']
+>[number];
+
 type DraftResearchOutputQueried = NonNullable<
   FetchReminderDataQuery['draftResearchOutputs']
 >[number];
@@ -245,6 +249,10 @@ const getResearchOutputRemindersFromQuery = (
         return researchOutputReminders;
       }
 
+      const { associationName, associationType } =
+        getAssociationNameAndType(researchOutput);
+      const userName = getUserName(researchOutput);
+
       const researchOutputTeams = researchOutput.flatData.teams.map(
         (team) => team.id,
       );
@@ -256,7 +264,10 @@ const getResearchOutputRemindersFromQuery = (
       if (
         !researchOutput.flatData.documentType ||
         !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
-        !researchOutput.flatData.title
+        !researchOutput.flatData.title ||
+        !associationType ||
+        !associationName ||
+        !userName
       ) {
         return researchOutputReminders;
       }
@@ -271,6 +282,10 @@ const getResearchOutputRemindersFromQuery = (
             documentType: researchOutput.flatData.documentType,
             title: researchOutput.flatData.title,
             addedDate: researchOutput.flatData.addedDate,
+            // TODO: `createdBy` should be replaced with `publishedBy` after https://asaphub.atlassian.net/browse/CRN-1428 is implemented
+            createdBy: userName,
+            associationName,
+            associationType,
           },
         });
       }
@@ -770,7 +785,10 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
 };
 
 const getAssociationNameAndType = (
-  researchOutput: DraftResearchOutputQueried | InReviewResearchOutputQueried,
+  researchOutput:
+    | PublishedResearchOutputQueried
+    | DraftResearchOutputQueried
+    | InReviewResearchOutputQueried,
 ): {
   associationType: 'team' | 'working group' | null;
   associationName: string | null;
@@ -798,7 +816,9 @@ const getAssociationNameAndType = (
   };
 };
 
-const getUserName = (researchOutput: DraftResearchOutputQueried) => {
+const getUserName = (
+  researchOutput: PublishedResearchOutputQueried | DraftResearchOutputQueried,
+) => {
   if (
     researchOutput.flatData &&
     researchOutput.flatData.createdBy &&

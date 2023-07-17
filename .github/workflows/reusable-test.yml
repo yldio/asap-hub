@@ -20,6 +20,9 @@ on:
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: Contentful Access Token
         required: true
+      CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN:
+        description: Contentful Preview Access Token
+        required: true
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -72,7 +75,7 @@ jobs:
           total: ${{ strategy.job-total }}
   report-coverage:
     runs-on: ubuntu-latest
-    needs: [unit]
+    needs: [unit, integration-squidex, integration-contentful]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
@@ -120,13 +123,20 @@ jobs:
           SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
       - name: Run integration tests
-        run: yarn test:integration:squidex
+        run: yarn test:integration:squidex --coverage
         env:
           APP: crn
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}-${{ github.run_id }}
           SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+      - name: move coverage
+        shell: bash
+        run: mv coverage/coverage-final.json coverage/integration-squidex.json
+      - uses: actions/upload-artifact@v3
+        with:
+          name: coverage-artifacts
+          path: coverage/
       - name: Delete app
         shell: bash
         if: always()
@@ -139,6 +149,7 @@ jobs:
 
   integration-contentful:
     if: ${{ inputs.environment-name=='Branch' }}
+    concurrency: integration-contentful
     permissions:
       packages: read
     runs-on: ubuntu-latest
@@ -160,6 +171,7 @@ jobs:
         shell: bash
         run: |
           yarn workspace @asap-hub/contentful space:create-environment --timeout 600000
+          yarn contentful:migration:run:crn
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
@@ -167,17 +179,26 @@ jobs:
           CONTENTFUL_SOURCE_ENV: ${{ steps.setup.outputs.contentful-environment }}
           CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       - name: Run integration tests
-        run: yarn test:integration:contentful
+        run: yarn test:integration:contentful --coverage
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_ENV_ID: integration-${{ github.run_id }}
           CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
           IS_CONTENTFUL_ENABLED_V2: true
+      - name: move coverage
+        shell: bash
+        run: mv coverage/coverage-final.json coverage/integration-contentful.json
+      - uses: actions/upload-artifact@v3
+        with:
+          name: coverage-artifacts
+          path: coverage/
       - name: Delete app
         shell: bash
         if: always()
-        run: yarn workspace @asap-hub/contentful space:remove-environment
+        run: |
+          yarn workspace @asap-hub/contentful space:remove-environment
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

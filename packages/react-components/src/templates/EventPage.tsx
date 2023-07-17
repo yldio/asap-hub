@@ -59,7 +59,7 @@ const EventPage: React.FC<EventPageProps> = ({
     {backHref && <BackLink href={backHref} />}
     <div css={cardsStyles}>
       <Card>
-        <EventInfo {...props} titleLimit={null} />
+        <EventInfo {...props} titleLimit={null} tags={[]} />
         <Paragraph accent="lead">
           <small>
             Last updated:{' '}

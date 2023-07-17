@@ -111,8 +111,8 @@ describe('Dashboard data provider', () => {
       sortBy         | sortOrder | order
       ${'deadline'}  | ${'asc'}  | ${'deadline_ASC'}
       ${'deadline'}  | ${'desc'} | ${'deadline_DESC'}
-      ${'published'} | ${'asc'}  | ${'sys_publishedAt_ASC'}
-      ${'published'} | ${'desc'} | ${'sys_publishedAt_DESC'}
+      ${'published'} | ${'asc'}  | ${'sys_firstPublishedAt_ASC'}
+      ${'published'} | ${'desc'} | ${'sys_firstPublishedAt_ASC'}
     `(
       'Should apply the "orderBy" option using the $sortBy field and $sortOrder order',
       async ({ sortBy, sortOrder, order }) => {

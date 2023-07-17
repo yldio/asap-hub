@@ -22,6 +22,7 @@ const OnboardingGroups: React.FC<OnboardingGroupsProps> = ({
         noLinks
         projects={projects}
         subtitle={<ContactSupport />}
+        isOnboarding
       />
     )}
     {workingGroups && (
@@ -30,6 +31,7 @@ const OnboardingGroups: React.FC<OnboardingGroupsProps> = ({
         noLinks
         workingGroups={workingGroups}
         subtitle={<ContactSupport />}
+        isOnboarding
       />
     )}
   </>

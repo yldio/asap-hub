@@ -13,8 +13,9 @@ describe('UserProjects', () => {
       status: 'Active',
     }));
   const firstName: gp2.UserResponse['firstName'] = 'John';
+  const id = 'user-id';
   const renderUserProjects = (projects: Project[]) =>
-    render(<UserProjects projects={projects} firstName={firstName} />);
+    render(<UserProjects projects={projects} firstName={firstName} id={id} />);
   it('renders the short text when there are no projects', () => {
     renderUserProjects([]);
     expect(
@@ -35,8 +36,33 @@ describe('UserProjects', () => {
 
   it.each(gp2.projectStatus)('renders the status - %s', (status) => {
     const project = { ...getProjects(1)[0]!, status };
-    render(<UserProjects projects={[project]} firstName={firstName} />);
+    render(<UserProjects projects={[project]} firstName={firstName} id={id} />);
     expect(screen.getByText(status)).toBeVisible();
+  });
+
+  it.each(gp2.projectMemberRole)('renders the role - %s', (role) => {
+    const project: Project = {
+      ...getProjects(1)[0]!,
+      members: [{ userId: id, role }],
+    };
+    render(<UserProjects projects={[project]} firstName={firstName} id={id} />);
+    expect(screen.getByText(role)).toBeVisible();
+  });
+
+  it('should not render role column if onboarding', () => {
+    const project = {
+      ...getProjects(1)[0]!,
+      members: [{ userId: id, role: gp2.projectMemberRole[0] }],
+    };
+    render(
+      <UserProjects
+        projects={[project]}
+        firstName={firstName}
+        id={id}
+        isOnboarding
+      />,
+    );
+    expect(screen.queryByText('Role')).not.toBeInTheDocument();
   });
 
   it('renders show more button for more than 3 projects', async () => {

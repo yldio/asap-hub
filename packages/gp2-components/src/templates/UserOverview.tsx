@@ -87,10 +87,14 @@ const UserOverview: React.FC<UserOverviewProps> = ({
     </div>
     <UserBiography biography={biography} editHref={editBiographyHref} />
     {projects.length > 0 && (
-      <UserProjects projects={projects} firstName={firstName} />
+      <UserProjects projects={projects} firstName={firstName} id={id} />
     )}
     {workingGroups.length > 0 && (
-      <UserWorkingGroups workingGroups={workingGroups} firstName={firstName} />
+      <UserWorkingGroups
+        workingGroups={workingGroups}
+        firstName={firstName}
+        id={id}
+      />
     )}
     {(editQuestionsHref || questions.length > 0) && (
       <UserQuestions

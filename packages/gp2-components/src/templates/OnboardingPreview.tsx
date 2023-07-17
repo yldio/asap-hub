@@ -82,18 +82,22 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
     <UserBiography biography={biography} editHref={editBiographyHref} />
     {projects && (
       <UserProjects
+        id={headerProps.id}
         firstName={headerProps.firstName}
         noLinks
         projects={projects}
         subtitle={<ContactSupport />}
+        isOnboarding
       />
     )}
     {workingGroups && (
       <UserWorkingGroups
+        id={headerProps.id}
         firstName={headerProps.firstName}
         noLinks
         workingGroups={workingGroups}
         subtitle={<ContactSupport />}
+        isOnboarding
       />
     )}
     <UserQuestions

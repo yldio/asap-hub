@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 const userCircleIcon = (
   <svg width={24} height={24} fill="#4D646B" xmlns="http://www.w3.org/2000/svg">
+    <title>User Circle</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

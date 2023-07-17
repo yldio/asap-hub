@@ -6,9 +6,13 @@ import { ComponentProps } from 'react';
 import { nonMobileQuery } from '../layout';
 import { CollapsibleTable, EditableCard, StatusPill } from '../molecules';
 
-type UserProjectsProps = Pick<gp2.UserResponse, 'firstName' | 'projects'> &
+type UserProjectsProps = Pick<
+  gp2.UserResponse,
+  'id' | 'firstName' | 'projects'
+> &
   Pick<ComponentProps<typeof EditableCard>, 'subtitle'> & {
     noLinks?: boolean;
+    isOnboarding?: boolean;
   };
 
 const tableStyles = css({
@@ -17,11 +21,19 @@ const tableStyles = css({
   },
 });
 
+const getUserProjectRole = (
+  userId: gp2.UserResponse['id'],
+  project: gp2.UserResponse['projects'][number],
+): gp2.ProjectMemberRole | null =>
+  project.members.find((member) => member.userId === userId)?.role || null;
+
 const UserProjects: React.FC<UserProjectsProps> = ({
   projects,
   firstName,
+  id,
   subtitle,
   noLinks = false,
+  isOnboarding = false,
 }) => (
   <EditableCard
     title="Projects"
@@ -31,7 +43,12 @@ const UserProjects: React.FC<UserProjectsProps> = ({
     }
   >
     {projects.length ? (
-      <CollapsibleTable headings={['Name', 'Status']} tableStyles={tableStyles}>
+      <CollapsibleTable
+        headings={
+          isOnboarding ? ['Name', 'Status'] : ['Name', 'Role', 'Status']
+        }
+        tableStyles={isOnboarding ? tableStyles : undefined}
+      >
         {projects.map((project) => {
           const name = noLinks ? (
             project.title
@@ -47,12 +64,12 @@ const UserProjects: React.FC<UserProjectsProps> = ({
               {project.title}
             </Link>
           );
-
+          const role = getUserProjectRole(id, project) || '';
           const status = <StatusPill status={project.status} />;
 
           return {
             id: project.id,
-            values: [name, status],
+            values: isOnboarding ? [name, status] : [name, role, status],
           };
         })}
       </CollapsibleTable>

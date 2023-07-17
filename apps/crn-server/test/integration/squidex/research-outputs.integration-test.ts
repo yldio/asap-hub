@@ -3,7 +3,7 @@ import { Express } from 'express';
 import { UserResponse } from '@asap-hub/model';
 
 import { appFactory } from '../../../src/app';
-import { retryable } from '../../helpers/retryable';
+import { retryable } from '../helpers/retryable';
 import {
   FixtureFactory,
   getUserFixture,

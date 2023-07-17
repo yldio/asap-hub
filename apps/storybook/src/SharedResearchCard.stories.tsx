@@ -36,5 +36,6 @@ export const Normal = () => (
         : undefined
     }
     published={boolean('published', true)}
+    isInReview={boolean('Is in review', false)}
   />
 );

@@ -36,7 +36,7 @@ type SharedResearchCardProps = Pick<
   | 'title'
   | 'type'
   | 'workingGroups'
-  | 'statusChangedBy'
+  | 'isInReview'
 >;
 
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
@@ -52,7 +52,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   documentType,
   link,
   published,
-  statusChangedBy,
+  isInReview,
 }) => (
   <Card accent={published ? 'default' : 'neutral200'}>
     <SharedResearchMetadata
@@ -74,8 +74,8 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
       {!published && (
         <div css={{ margin: `auto 0 ${rem(12)} 0` }}>
           <StateTag
-            label={statusChangedBy ? 'In Review' : 'Draft'}
-            accent={statusChangedBy ? 'blue' : undefined}
+            label={isInReview ? 'In Review' : 'Draft'}
+            accent={isInReview ? 'blue' : undefined}
           />
         </div>
       )}

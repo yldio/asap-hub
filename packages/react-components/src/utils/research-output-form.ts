@@ -221,6 +221,7 @@ export function transformResearchOutputResponseToRequest({
   published,
   statusChangedBy,
   relatedEvents,
+  isInReview,
 }: ResearchOutputResponse): ResearchOutputPutRequest {
   return {
     documentType,
@@ -254,5 +255,6 @@ export function transformResearchOutputResponseToRequest({
     relatedResearch: relatedResearch.map((research) => research.id),
     relatedEvents: relatedEvents.map((event) => event.id),
     statusChangedById: statusChangedBy ? statusChangedBy.id : undefined,
+    isInReview,
   };
 }

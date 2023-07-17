@@ -180,6 +180,7 @@ export default class ResearchOutputController {
       documentType: normalisedResearchOutputUpdateData.documentType,
       doi: normalisedResearchOutputUpdateData.doi,
       environmentIds: environments,
+      isInReview: normalisedResearchOutputUpdateData.isInReview,
       labCatalogNumber: normalisedResearchOutputUpdateData.labCatalogNumber,
       labIds: normalisedResearchOutputUpdateData.labs || [],
       link: normalisedResearchOutputUpdateData.link,

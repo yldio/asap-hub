@@ -154,12 +154,12 @@ const getResearchOutputDraftFilter = (): string => {
   date.setDate(date.getDate() - 1);
   const date24hAgo = date.toISOString();
 
-  const filter = `created ge ${date24hAgo} and status eq 'Draft' and data/addedDate/iv eq null and empty(data/statusChangedBy/iv)`;
+  const filter = `created ge ${date24hAgo} and status eq 'Draft' and data/addedDate/iv eq null and data/isInReview/iv eq false`;
   return filter;
 };
 
 const getResearchOutputInReviewFilter = (): string =>
-  `status eq 'Draft' and data/addedDate/iv eq null and exists(data/statusChangedBy/iv)`;
+  `status eq 'Draft' and data/addedDate/iv eq null and data/isInReview/iv eq true`;
 
 export const getEventFilter = (zone: string): string => {
   const lastMidnightISO = DateTime.fromObject({

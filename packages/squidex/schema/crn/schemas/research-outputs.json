@@ -263,6 +263,23 @@
         }
       },
       {
+        "name": "isInReview",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": false,
+          "defaultValue": false,
+          "label": "Is In Review"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
         "name": "link",
         "isHidden": false,
         "isLocked": false,

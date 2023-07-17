@@ -301,6 +301,9 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
       published: {
         type: 'boolean',
       },
+      isInReview: {
+        type: 'boolean',
+      },
     },
     required: [
       'documentType',

@@ -53,6 +53,7 @@ const researchOutputResponse: Omit<
   subtype: 'Metabolite',
   keywords: ['Etag', 'Exercise'],
   published: true,
+  isInReview: false,
 };
 
 export const createResearchOutputResponse = (

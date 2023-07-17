@@ -56,7 +56,7 @@ type SharedResearchOutputHeaderCardProps = Pick<
   | 'type'
   | 'workingGroups'
   | 'published'
-  | 'statusChangedBy'
+  | 'isInReview'
 >;
 
 const SharedResearchOutputHeaderCard: React.FC<
@@ -74,7 +74,7 @@ const SharedResearchOutputHeaderCard: React.FC<
   type,
   link,
   published,
-  statusChangedBy,
+  isInReview,
 }) => (
   <Card>
     <SharedResearchMetadata
@@ -89,8 +89,8 @@ const SharedResearchOutputHeaderCard: React.FC<
       <Display styleAsHeading={3}>{title}</Display>
       {!published && (
         <StateTag
-          label={statusChangedBy ? 'In Review' : 'Draft'}
-          accent={statusChangedBy ? 'blue' : undefined}
+          label={isInReview ? 'In Review' : 'Draft'}
+          accent={isInReview ? 'blue' : undefined}
         />
       )}
     </span>

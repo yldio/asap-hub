@@ -470,6 +470,7 @@ it.each([
           firstName: 'User',
           lastName: 'One',
         },
+        isInReview: false,
       },
       history,
     });
@@ -495,6 +496,7 @@ it.each([
         workingGroups: [workingGroupId],
         published: shouldPublish,
         statusChangedById: 'user-id-1',
+        isInReview: false,
       }),
       expect.anything(),
     );

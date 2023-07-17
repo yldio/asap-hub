@@ -14,6 +14,7 @@ const defaultProps: SharedResearchOutputBannersProps = {
   draftCreated: false,
   reviewToggled: false,
   associationName: 'Association Name',
+  isInReview: false,
 };
 
 it('should render draft created banner', async () => {
@@ -69,6 +70,7 @@ it('should render review requested banner', async () => {
         firstName: 'First',
         lastName: 'Last',
       }}
+      isInReview={true}
     />,
   );
 
@@ -114,6 +116,7 @@ it('should render review requested banner with association name', async () => {
         firstName: 'First',
         lastName: 'Last',
       }}
+      isInReview={true}
     />,
   );
 

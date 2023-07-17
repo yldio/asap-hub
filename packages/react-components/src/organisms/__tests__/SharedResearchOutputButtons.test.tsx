@@ -10,7 +10,7 @@ const props: ComponentProps<typeof SharedResearchOutputButtons> = {
   setDisplayReviewModal: jest.fn(),
   displayPublishModal: false,
   setDisplayPublishModal: jest.fn(),
-  statusChangedBy: undefined,
+  isInReview: false,
   duplicateLink: 'duplicateLink',
   published: false,
 };
@@ -65,11 +65,7 @@ it('does not display the edit button if someone requested a review and you are a
         canShareResearchOutput: false,
       }}
     >
-      <SharedResearchOutputButtons
-        {...props}
-        statusChangedBy={{ id: 'u1', firstName: 'John', lastName: 'Doe' }}
-      />
-      ,
+      <SharedResearchOutputButtons {...props} isInReview={true} />,
     </ResearchOutputPermissionsContext.Provider>,
   );
   expect(queryByTitle('Edit')).toBeNull();
@@ -84,11 +80,7 @@ it('does display the edit button if someone requested a review and you are a pm 
         canShareResearchOutput: false,
       }}
     >
-      <SharedResearchOutputButtons
-        {...props}
-        statusChangedBy={{ id: 'u1', firstName: 'John', lastName: 'Doe' }}
-      />
-      ,
+      <SharedResearchOutputButtons {...props} isInReview={true} />,
     </ResearchOutputPermissionsContext.Provider>,
   );
   expect(queryByTitle('Edit')).toBeInTheDocument();
@@ -149,12 +141,7 @@ describe('ready for review button', () => {
           canRequestReview: false,
         }}
       >
-        <SharedResearchOutputButtons
-          {...props}
-          published={false}
-          statusChangedBy={undefined}
-        />
-        ,
+        <SharedResearchOutputButtons {...props} published={false} />,
       </ResearchOutputPermissionsContext.Provider>,
     );
     expect(queryByText('Ready for PM Review')).toBeNull();
@@ -169,12 +156,7 @@ describe('ready for review button', () => {
           canRequestReview: true,
         }}
       >
-        <SharedResearchOutputButtons
-          {...props}
-          published={true}
-          statusChangedBy={undefined}
-        />
-        ,
+        <SharedResearchOutputButtons {...props} published={true} />,
       </ResearchOutputPermissionsContext.Provider>,
     );
     expect(queryByText('Ready for PM Review')).toBeNull();
@@ -192,7 +174,7 @@ describe('ready for review button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={false}
-          statusChangedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -214,7 +196,6 @@ describe('ready for review button', () => {
           {...props}
           published={false}
           setDisplayReviewModal={mockDisplayReviewModal}
-          statusChangedBy={undefined}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -241,7 +222,7 @@ describe('the switch to draft button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={false}
-          statusChangedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -261,7 +242,7 @@ describe('the switch to draft button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={true}
-          statusChangedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -281,7 +262,7 @@ describe('the switch to draft button', () => {
         <SharedResearchOutputButtons
           {...props}
           published={false}
-          statusChangedBy={undefined}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -303,7 +284,7 @@ describe('the switch to draft button', () => {
           {...props}
           published={false}
           setDisplayReviewModal={mockDisplayReviewModal}
-          statusChangedBy={{ id: '1', firstName: 'test', lastName: 'user' }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,

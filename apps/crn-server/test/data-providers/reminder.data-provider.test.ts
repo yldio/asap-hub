@@ -1475,22 +1475,22 @@ describe('Reminder Data Provider', () => {
               { id: 'team-id-3', referencingUsersContents: [] };
 
             squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
-            {
-              id: 'user-id',
-              flatData: {
-                role: asapRole,
-                teams: [
-                  {
-                    id: [
-                      {
-                        id: 'team-id-3',
-                      },
-                    ],
-                    role: teamRole,
-                  },
-                ],
-              },
-            };
+              {
+                id: 'user-id',
+                flatData: {
+                  role: asapRole,
+                  teams: [
+                    {
+                      id: [
+                        {
+                          id: 'team-id-3',
+                        },
+                      ],
+                      role: teamRole,
+                    },
+                  ],
+                },
+              };
 
             squidexGraphqlResponse.queryResearchOutputsContents = [];
             squidexGraphqlResponse.draftResearchOutputs = [];
@@ -1543,22 +1543,22 @@ describe('Reminder Data Provider', () => {
               { id: 'team-id-3', referencingUsersContents: [] };
 
             squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
-            {
-              id: 'user-id',
-              flatData: {
-                role: asapRole,
-                teams: [
-                  {
-                    id: [
-                      {
-                        id: 'team-id-3',
-                      },
-                    ],
-                    role: teamRole,
-                  },
-                ],
-              },
-            };
+              {
+                id: 'user-id',
+                flatData: {
+                  role: asapRole,
+                  teams: [
+                    {
+                      id: [
+                        {
+                          id: 'team-id-3',
+                        },
+                      ],
+                      role: teamRole,
+                    },
+                  ],
+                },
+              };
 
             squidexGraphqlResponse.queryResearchOutputsContents = [];
             squidexGraphqlResponse.draftResearchOutputs = [];
@@ -1592,22 +1592,22 @@ describe('Reminder Data Provider', () => {
           { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
-        {
-          id: 'non-speaker',
-          flatData: {
-            role: 'Grantee',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-3',
-                  },
-                ],
-                role: 'Lead PI (Core Leadership)',
-              },
-            ],
-          },
-        };
+          {
+            id: 'non-speaker',
+            flatData: {
+              role: 'Grantee',
+              teams: [
+                {
+                  id: [
+                    {
+                      id: 'team-id-3',
+                    },
+                  ],
+                  role: 'Lead PI (Core Leadership)',
+                },
+              ],
+            },
+          };
 
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
@@ -1692,22 +1692,22 @@ describe('Reminder Data Provider', () => {
           { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
-        {
-          id: 'user-id',
-          flatData: {
-            role: 'Grantee',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-3',
-                  },
-                ],
-                role: 'Lead PI (Core Leadership)',
-              },
-            ],
-          },
-        };
+          {
+            id: 'user-id',
+            flatData: {
+              role: 'Grantee',
+              teams: [
+                {
+                  id: [
+                    {
+                      id: 'team-id-3',
+                    },
+                  ],
+                  role: 'Lead PI (Core Leadership)',
+                },
+              ],
+            },
+          };
 
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
@@ -1741,22 +1741,22 @@ describe('Reminder Data Provider', () => {
           { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
-        {
-          id: 'user-id',
-          flatData: {
-            role: 'Grantee',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-3',
-                  },
-                ],
-                role: 'Lead PI (Core Leadership)',
-              },
-            ],
-          },
-        };
+          {
+            id: 'user-id',
+            flatData: {
+              role: 'Grantee',
+              teams: [
+                {
+                  id: [
+                    {
+                      id: 'team-id-3',
+                    },
+                  ],
+                  role: 'Lead PI (Core Leadership)',
+                },
+              ],
+            },
+          };
 
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
@@ -1785,22 +1785,22 @@ describe('Reminder Data Provider', () => {
           { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
-        {
-          id: 'user-id',
-          flatData: {
-            role: 'Grantee',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-3',
-                  },
-                ],
-                role: 'Lead PI (Core Leadership)',
-              },
-            ],
-          },
-        };
+          {
+            id: 'user-id',
+            flatData: {
+              role: 'Grantee',
+              teams: [
+                {
+                  id: [
+                    {
+                      id: 'team-id-3',
+                    },
+                  ],
+                  role: 'Lead PI (Core Leadership)',
+                },
+              ],
+            },
+          };
 
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
@@ -1829,22 +1829,22 @@ describe('Reminder Data Provider', () => {
           { id: 'team-id-3', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
-        {
-          id: 'user-id',
-          flatData: {
-            role: 'Grantee',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-3',
-                  },
-                ],
-                role: 'Lead PI (Core Leadership)',
-              },
-            ],
-          },
-        };
+          {
+            id: 'user-id',
+            flatData: {
+              role: 'Grantee',
+              teams: [
+                {
+                  id: [
+                    {
+                      id: 'team-id-3',
+                    },
+                  ],
+                  role: 'Lead PI (Core Leadership)',
+                },
+              ],
+            },
+          };
 
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
@@ -1873,22 +1873,22 @@ describe('Reminder Data Provider', () => {
           { id: 'random-team', referencingUsersContents: [] };
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
-        {
-          id: 'user-id',
-          flatData: {
-            role: 'Grantee',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-3',
-                  },
-                ],
-                role: 'Lead PI (Core Leadership)',
-              },
-            ],
-          },
-        };
+          {
+            id: 'user-id',
+            flatData: {
+              role: 'Grantee',
+              teams: [
+                {
+                  id: [
+                    {
+                      id: 'team-id-3',
+                    },
+                  ],
+                  role: 'Lead PI (Core Leadership)',
+                },
+              ],
+            },
+          };
 
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
@@ -1919,37 +1919,37 @@ describe('Reminder Data Provider', () => {
           '2022-01-01T10:00:00Z';
 
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-        {
-          id: 'team-id-3',
-          referencingUsersContents: [
-            {
-              id: 'user-pm',
-              flatData: {
-                teams: [
-                  { id: [{ id: 'team-id-3' }], role: 'Project Manager' },
-                ],
-              },
-            },
-          ],
-        };
-
-        squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
-        {
-          id: 'user-id',
-          flatData: {
-            role: 'Grantee',
-            teams: [
+          {
+            id: 'team-id-3',
+            referencingUsersContents: [
               {
-                id: [
-                  {
-                    id: 'team-id-3',
-                  },
-                ],
-                role: 'Key Personnel',
+                id: 'user-pm',
+                flatData: {
+                  teams: [
+                    { id: [{ id: 'team-id-3' }], role: 'Project Manager' },
+                  ],
+                },
               },
             ],
-          },
-        };
+          };
+
+        squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
+          {
+            id: 'user-id',
+            flatData: {
+              role: 'Grantee',
+              teams: [
+                {
+                  id: [
+                    {
+                      id: 'team-id-3',
+                    },
+                  ],
+                  role: 'Key Personnel',
+                },
+              ],
+            },
+          };
 
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
@@ -2028,10 +2028,10 @@ describe('Reminder Data Provider', () => {
               '2022-01-01T10:00:00Z';
 
             squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.team![0]! =
-            {
-              id: 'team-id-3',
-              referencingUsersContents: [referencingUsersContents],
-            };
+              {
+                id: 'team-id-3',
+                referencingUsersContents: [referencingUsersContents],
+              };
 
             squidexGraphqlResponse.queryEventsContents![0]!.flatData.speakers![0]!.user![0]! =
               speakerUser;
@@ -2556,13 +2556,13 @@ describe('Reminder Data Provider', () => {
     interface TestProps {
       material: 'Video' | 'Presentation' | 'Notes';
       materialUpdatedAtName:
-      | 'videoRecordingUpdatedAt'
-      | 'presentationUpdatedAt'
-      | 'notesUpdatedAt';
+        | 'videoRecordingUpdatedAt'
+        | 'presentationUpdatedAt'
+        | 'notesUpdatedAt';
       expectedMaterialReminder:
-      | PresentationUpdatedReminder
-      | VideoEventReminder
-      | EventNotesReminder;
+        | PresentationUpdatedReminder
+        | VideoEventReminder
+        | EventNotesReminder;
     }
 
     describe.each`

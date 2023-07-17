@@ -117,9 +117,7 @@ describe('parseGraphQLResearchOutput', () => {
   });
 
   test('should not return statusChangedBy', () => {
-    expect(
-      parseGraphQLResearchOutput(output).statusChangedBy,
-    ).toBeUndefined();
+    expect(parseGraphQLResearchOutput(output).statusChangedBy).toBeUndefined();
   });
 
   test('should return statusChangedBy', () => {

@@ -358,6 +358,7 @@ it('switches a in review research output back to draft', async () => {
     published: false,
     workingGroups: undefined,
     statusChangedBy: { ...defaultUser },
+    isInReview: true,
   });
 
   const { queryByText, getAllByText } = await renderComponent(
@@ -389,7 +390,8 @@ it('switches a in review research output back to draft', async () => {
   expect(mockUpdateTeamResearchOutput).toHaveBeenCalledWith(
     researchOutput.id,
     expect.objectContaining({
-      statusChangedById: undefined,
+      statusChangedById: defaultUser.id,
+      isInReview: false,
     }),
     expect.anything(),
   );

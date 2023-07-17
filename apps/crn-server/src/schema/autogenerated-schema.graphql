@@ -4624,6 +4624,7 @@ type ResearchOutputsDataDto {
   documentType: ResearchOutputsDataDocumentTypeDto
   doi: ResearchOutputsDataDoiDto
   environments: ResearchOutputsDataEnvironmentsDto
+  isInReview: ResearchOutputsDataIsInReviewDto
   keywords: ResearchOutputsDataKeywordsDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberDto
   labs: ResearchOutputsDataLabsDto
@@ -4671,6 +4672,7 @@ input ResearchOutputsDataInputDto {
   documentType: ResearchOutputsDataDocumentTypeInputDto
   doi: ResearchOutputsDataDoiInputDto
   environments: ResearchOutputsDataEnvironmentsInputDto
+  isInReview: ResearchOutputsDataIsInReviewInputDto
   keywords: ResearchOutputsDataKeywordsInputDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberInputDto
   labs: ResearchOutputsDataLabsInputDto
@@ -4693,6 +4695,16 @@ input ResearchOutputsDataInputDto {
   usageNotes: ResearchOutputsDataUsageNotesInputDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationInputDto
   workingGroups: ResearchOutputsDataWorkingGroupsInputDto
+}
+
+"""The structure of the Is In Review field of the Research Outputs content type."""
+type ResearchOutputsDataIsInReviewDto {
+  iv: Boolean
+}
+
+"""The structure of the Is In Review field of the Research Outputs content input type."""
+input ResearchOutputsDataIsInReviewInputDto {
+  iv: Boolean
 }
 
 """The structure of the Keywords field of the Research Outputs content type."""
@@ -4954,6 +4966,7 @@ type ResearchOutputsFlatDataDto {
   """DOIs must start with a number and cannot be a URL"""
   doi: String
   environments: [ResearchTags!]
+  isInReview: Boolean
   keywords: [ResearchTags!]
   """
   If this is a hyperlink, please start with "http://" or "https://"

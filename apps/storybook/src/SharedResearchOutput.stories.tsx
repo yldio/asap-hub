@@ -94,6 +94,7 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     firstName: 'firstName',
     lastName: 'lastName',
   },
+  isInReview: false,
 });
 
 export const Normal = () => (

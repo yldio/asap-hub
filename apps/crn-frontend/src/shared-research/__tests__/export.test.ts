@@ -48,6 +48,7 @@ describe('researchOutputToCSV', () => {
       methods: ['Activity Assay', 'RNA Single Cell'],
       keywords: ['Keyword1', 'Keyword2'],
       statusChangedBy: { id: 'user-id', firstName: 'John', lastName: 'Doe' },
+      isInReview: true,
     };
     expect(researchOutputToCSV(output)).toEqual({
       created: 'created',
@@ -83,6 +84,7 @@ describe('researchOutputToCSV', () => {
       subtype: 'Metabolite',
       published: true,
       statusChangedBy: 'John Doe',
+      isInReview: true,
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {

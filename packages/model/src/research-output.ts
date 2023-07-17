@@ -219,6 +219,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   created: string;
   environments: string[];
   id: string;
+  isInReview: boolean;
   labs: LabResponse[];
   lastUpdatedPartial: string;
   methods: string[];
@@ -292,6 +293,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   relatedResearchIds?: string[];
   relatedEventIds?: string[];
   statusChangedById?: string;
+  isInReview: boolean;
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -352,6 +354,7 @@ export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
   statusChangedById?: string;
+  isInReview: boolean;
 };
 
 type NonEmptyArray<T> = [T, ...T[]];

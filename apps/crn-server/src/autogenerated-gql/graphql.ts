@@ -4424,6 +4424,7 @@ export type ResearchOutputsDataDto = {
   documentType: Maybe<ResearchOutputsDataDocumentTypeDto>;
   doi: Maybe<ResearchOutputsDataDoiDto>;
   environments: Maybe<ResearchOutputsDataEnvironmentsDto>;
+  isInReview: Maybe<ResearchOutputsDataIsInReviewDto>;
   keywords: Maybe<ResearchOutputsDataKeywordsDto>;
   labCatalogNumber: Maybe<ResearchOutputsDataLabCatalogNumberDto>;
   labs: Maybe<ResearchOutputsDataLabsDto>;
@@ -4471,6 +4472,7 @@ export type ResearchOutputsDataInputDto = {
   documentType: InputMaybe<ResearchOutputsDataDocumentTypeInputDto>;
   doi: InputMaybe<ResearchOutputsDataDoiInputDto>;
   environments: InputMaybe<ResearchOutputsDataEnvironmentsInputDto>;
+  isInReview: InputMaybe<ResearchOutputsDataIsInReviewInputDto>;
   keywords: InputMaybe<ResearchOutputsDataKeywordsInputDto>;
   labCatalogNumber: InputMaybe<ResearchOutputsDataLabCatalogNumberInputDto>;
   labs: InputMaybe<ResearchOutputsDataLabsInputDto>;
@@ -4493,6 +4495,16 @@ export type ResearchOutputsDataInputDto = {
   usageNotes: InputMaybe<ResearchOutputsDataUsageNotesInputDto>;
   usedInAPublication: InputMaybe<ResearchOutputsDataUsedInAPublicationInputDto>;
   workingGroups: InputMaybe<ResearchOutputsDataWorkingGroupsInputDto>;
+};
+
+/** The structure of the Is In Review field of the Research Outputs content type. */
+export type ResearchOutputsDataIsInReviewDto = {
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Is In Review field of the Research Outputs content input type. */
+export type ResearchOutputsDataIsInReviewInputDto = {
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Keywords field of the Research Outputs content type. */
@@ -4746,6 +4758,7 @@ export type ResearchOutputsFlatDataDto = {
   /** DOIs must start with a number and cannot be a URL */
   doi: Maybe<Scalars['String']>;
   environments: Maybe<Array<ResearchTags>>;
+  isInReview: Maybe<Scalars['Boolean']>;
   keywords: Maybe<Array<ResearchTags>>;
   /** If this is a hyperlink, please start with "http://" or "https://" */
   labCatalogNumber: Maybe<Scalars['String']>;
@@ -8617,6 +8630,7 @@ export type ResearchOutputContentFragment = Pick<
     | 'sharingStatus'
     | 'asapFunded'
     | 'usedInAPublication'
+    | 'isInReview'
   > & {
     authors: Maybe<
       Array<
@@ -8842,6 +8856,7 @@ export type FetchResearchOutputQuery = {
         | 'sharingStatus'
         | 'asapFunded'
         | 'usedInAPublication'
+        | 'isInReview'
       > & {
         authors: Maybe<
           Array<
@@ -9082,6 +9097,7 @@ export type FetchResearchOutputsQuery = {
               | 'sharingStatus'
               | 'asapFunded'
               | 'usedInAPublication'
+              | 'isInReview'
             > & {
               authors: Maybe<
                 Array<
@@ -12744,6 +12760,7 @@ export const ResearchOutputContentFragmentDoc = {
                     ],
                   },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'isInReview' } },
               ],
             },
           },

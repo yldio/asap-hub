@@ -199,6 +199,7 @@ export const researchOutputContentQueryFragment = gql`
           lastName
         }
       }
+      isInReview
     }
     referencingResearchOutputsContents {
       id

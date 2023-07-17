@@ -393,6 +393,7 @@ it('can edit and publish a draft research output', async () => {
         lastName: 'Doe',
         id: 'user-2-id',
       },
+      isInReview: false,
     },
   });
 
@@ -418,6 +419,7 @@ it('can edit and publish a draft research output', async () => {
       published: true,
       teams: [teamId],
       statusChangedById: 'user-2-id',
+      isInReview: false,
     }),
     expect.anything(),
   );

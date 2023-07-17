@@ -13,6 +13,7 @@ export interface SharedResearchOutputBannersProps {
   draftCreated?: boolean;
   reviewToggled: boolean;
   associationName: string;
+  isInReview: boolean;
 }
 
 const toastContainer = css({
@@ -32,19 +33,20 @@ const SharedResearchOutputBanners: React.FC<
   draftCreated,
   reviewToggled,
   associationName,
+  isInReview,
 }) => {
   const [publishedNowBanner, setPublishedNowBanner] = useState(publishedNow);
   const [draftCreatedBanner, setDraftCreatedBanner] = useState(draftCreated);
   const [reviewBannerState, setReviewBannerState] = useState(
-    reviewToggled ? (statusChangedBy ? 'requested' : 'dismissed') : null,
+    reviewToggled ? (isInReview ? 'requested' : 'dismissed') : null,
   );
 
   useEffect(() => {
     setReviewBannerState(
-      reviewToggled ? (statusChangedBy ? 'requested' : 'dismissed') : null,
+      reviewToggled ? (isInReview ? 'requested' : 'dismissed') : null,
     );
     setPublishedNowBanner(publishedNow);
-  }, [reviewToggled, statusChangedBy, publishedNow]);
+  }, [reviewToggled, isInReview, publishedNow]);
 
   return (
     <div css={toastContainer}>
@@ -68,7 +70,7 @@ const SharedResearchOutputBanners: React.FC<
           {`In review ${association} ${documentType} switched to draft successfully.`}
         </Toast>
       )}
-      {!published && statusChangedBy && (
+      {!published && isInReview && statusChangedBy && (
         <Toast accent="info">
           {`${statusChangedBy.firstName} ${statusChangedBy.lastName} on ${associationName} requested PMs to review this output. This draft is only available to members in the ${association} listed below.`}
         </Toast>
@@ -83,7 +85,7 @@ const SharedResearchOutputBanners: React.FC<
           } ${documentType} published successfully.`}
         </Toast>
       )}
-      {!published && !statusChangedBy && (
+      {!published && !isInReview && (
         <Toast accent="warning">{`This draft is available to members in the ${association}
                 listed below. Only PMs can publish this output.`}</Toast>
       )}

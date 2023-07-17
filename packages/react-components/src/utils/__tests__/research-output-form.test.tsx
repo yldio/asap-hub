@@ -195,6 +195,7 @@ describe('transformResearchOutputResponseToRequest', () => {
           title: 'title e999',
         },
       ],
+      isInReview: true,
     };
     expect(
       transformResearchOutputResponseToRequest(researchOutputResponse),
@@ -238,6 +239,7 @@ describe('transformResearchOutputResponseToRequest', () => {
       statusChangedById: researchOutputResponse.statusChangedBy
         ? researchOutputResponse.statusChangedBy.id
         : undefined,
+      isInReview: true,
     });
   });
 });

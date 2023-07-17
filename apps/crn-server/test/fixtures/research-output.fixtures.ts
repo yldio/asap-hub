@@ -185,6 +185,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       },
     ],
     workingGroups: [],
+    isInReview: false,
   },
 });
 
@@ -245,6 +246,7 @@ export const getResearchOutputDataObject =
     subtype: 'Metabolite',
     keywords: ['Keyword1'],
     published: true,
+    isInReview: false,
   });
 export const getDraftResearchOutputDataObject =
   (): ResearchOutputDraftDataObject => ({
@@ -334,6 +336,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     relatedResearch,
     published: _published,
     relatedEvents,
+    isInReview,
     ...researchOutputResponse
   } = getResearchOutputResponse();
   return {
@@ -352,8 +355,10 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
   };
 };
 
-export const getResearchOutputPutRequest = (): ResearchOutputPutRequest =>
-  getResearchOutputPostRequest();
+export const getResearchOutputPutRequest = (): ResearchOutputPutRequest => ({
+  ...getResearchOutputPostRequest(),
+  isInReview: false,
+});
 
 export const getResearchOutputCreateData = (): ResearchOutputCreateData => ({
   ...getResearchOutputPostRequest(),
@@ -413,6 +418,7 @@ export const getResearchOutputUpdateDataObject =
       ...researchOutputCreateDataObject,
       workingGroups: workingGroups || [],
       updatedBy: 'userId',
+      isInReview: false,
     };
   };
 
@@ -472,6 +478,7 @@ export const getRestResearchOutputCreateData =
       iv: 'some access instructions',
     },
     workingGroups: { iv: [] },
+    isInReview: { iv: false },
   });
 
 export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({

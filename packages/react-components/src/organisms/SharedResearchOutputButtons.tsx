@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { css } from '@emotion/react';
-import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { mobileScreen, rem } from '../pixels';
@@ -56,11 +55,11 @@ type SharedResearchOutputButtonsProps = {
   id: string;
   displayReviewModal: boolean;
   setDisplayReviewModal: (state: boolean) => void;
-  statusChangedBy: ResearchOutputResponse['statusChangedBy'];
   duplicateLink: string | undefined;
   published: boolean;
   displayPublishModal: boolean;
   setDisplayPublishModal: (state: boolean) => void;
+  isInReview: boolean;
 };
 
 const SharedResearchOutputButtons: React.FC<
@@ -69,11 +68,11 @@ const SharedResearchOutputButtons: React.FC<
   id,
   displayReviewModal,
   setDisplayReviewModal,
-  statusChangedBy,
   duplicateLink,
   published,
   displayPublishModal,
   setDisplayPublishModal,
+  isInReview,
 }) => {
   const {
     canEditResearchOutput,
@@ -85,7 +84,7 @@ const SharedResearchOutputButtons: React.FC<
   return (
     <div css={buttonsContainer}>
       {canEditResearchOutput &&
-        (!statusChangedBy || (statusChangedBy && canPublishResearchOutput)) && (
+        (!isInReview || (isInReview && canPublishResearchOutput)) && (
           <div css={leftButtons}>
             <Link
               noMargin
@@ -109,7 +108,7 @@ const SharedResearchOutputButtons: React.FC<
           </Link>
         </div>
       )}
-      {!published && canRequestReview && !statusChangedBy && (
+      {!published && canRequestReview && !isInReview && (
         <div css={reviewButton}>
           <Button
             noMargin
@@ -121,7 +120,7 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
-      {!published && statusChangedBy && canPublishResearchOutput && (
+      {!published && isInReview && canPublishResearchOutput && (
         <div css={reviewButton}>
           <Button
             noMargin
@@ -133,7 +132,7 @@ const SharedResearchOutputButtons: React.FC<
         </div>
       )}
       {!published && canPublishResearchOutput && (
-        <div css={statusChangedBy ? leftButtons : reviewButton}>
+        <div css={isInReview ? leftButtons : reviewButton}>
           <Button
             noMargin
             primary

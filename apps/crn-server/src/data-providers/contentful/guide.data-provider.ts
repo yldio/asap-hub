@@ -15,6 +15,11 @@ import { GuideDataProvider } from '../types';
 import reducer from '../../utils/reducer';
 
 type GuideItem = Pick<Guides, 'title'> & {
+  icon?:
+    | Maybe<{
+        asset?: Maybe<{ url?: Maybe<string> | undefined }>;
+      }>
+    | undefined;
   contentCollection?:
     | Maybe<{
         items: Maybe<
@@ -63,6 +68,7 @@ const reduceContent = reducer<GuideContentItem | null, GuideContentDataObject>(
 
 export const parseGraphQLGuide = (guide: GuideItem): GuideDataObject => ({
   title: guide?.title ? guide.title : '',
+  icon: guide.icon?.asset?.url ? guide.icon?.asset?.url : undefined,
   content: guide?.contentCollection
     ? guide.contentCollection.items.reduce(reduceContent, [])
     : [],

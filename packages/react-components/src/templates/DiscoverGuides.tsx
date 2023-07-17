@@ -3,7 +3,7 @@ import { GuideDataObject } from '@asap-hub/model';
 
 import { HelpSection } from '../organisms';
 import { perRem } from '../pixels';
-import { Card, Headline2, Link, Paragraph } from '../atoms';
+import { Card, Headline2, Icon, Link, Paragraph } from '../atoms';
 import { Accordion } from '../molecules';
 import { externalLinkIcon } from '../icons';
 import { isInternalLink } from '../utils';
@@ -23,7 +23,7 @@ const DiscoverGuides: React.FC<DiscoverGuidesProps> = ({
   guides,
 }: DiscoverGuidesProps) => {
   const accordionItems = guides.map((guide) => ({
-    icon: <></>,
+    icon: guide.icon ? <Icon url={guide.icon} /> : <></>,
     title: guide.title,
     description: guide.content.map((content) => (
       <div key={content.text}>

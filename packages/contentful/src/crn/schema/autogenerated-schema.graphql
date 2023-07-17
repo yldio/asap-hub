@@ -96,6 +96,7 @@ input AssetFilter {
 type AssetLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+  iconCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsIconCollectionOrder], preview: Boolean, skip: Int = 0): IconCollection
   interestGroupsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
   newsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0): NewsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [AssetLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
@@ -147,6 +148,19 @@ enum AssetLinkingCollectionsEventsCollectionOrder {
   videoRecordingPermanentlyUnavailable_DESC
   videoRecordingUpdatedAt_ASC
   videoRecordingUpdatedAt_DESC
+}
+
+enum AssetLinkingCollectionsIconCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
 }
 
 enum AssetLinkingCollectionsInterestGroupsCollectionOrder {
@@ -1611,6 +1625,7 @@ enum GuideContentOrder {
 type Guides implements Entry {
   contentCollection(limit: Int = 100, locale: String, order: [GuidesContentCollectionOrder], preview: Boolean, skip: Int = 0, where: GuideContentFilter): GuidesContentCollection
   contentfulMetadata: ContentfulMetadata!
+  icon(locale: String, preview: Boolean, where: IconFilter): Icon
   linkedFrom(allowedLocales: [String]): GuidesLinkingCollections
   sys: Sys!
   title(locale: String): String
@@ -1653,6 +1668,8 @@ input GuidesFilter {
   content: cfGuideContentNestedFilter
   contentCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
+  icon: cfIconNestedFilter
+  icon_exists: Boolean
   sys: SysFilter
   title: String
   title_contains: String
@@ -1696,6 +1713,68 @@ enum GuidesOrder {
 
 """The 'HexColor' type represents color in `rgb:ffffff` string format."""
 scalar HexColor
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/icon)"""
+type Icon implements Entry {
+  asset(locale: String, preview: Boolean): Asset
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): IconLinkingCollections
+  sys: Sys!
+  title(locale: String): String
+}
+
+type IconCollection {
+  items: [Icon]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input IconFilter {
+  AND: [IconFilter]
+  OR: [IconFilter]
+  asset_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+type IconLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  guidesCollection(limit: Int = 100, locale: String, order: [IconLinkingCollectionsGuidesCollectionOrder], preview: Boolean, skip: Int = 0): GuidesCollection
+}
+
+enum IconLinkingCollectionsGuidesCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum IconOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
 
 enum ImageFormat {
   AVIF
@@ -2523,6 +2602,8 @@ type Query {
   guideContentCollection(limit: Int = 100, locale: String, order: [GuideContentOrder], preview: Boolean, skip: Int = 0, where: GuideContentFilter): GuideContentCollection
   guides(id: String!, locale: String, preview: Boolean): Guides
   guidesCollection(limit: Int = 100, locale: String, order: [GuidesOrder], preview: Boolean, skip: Int = 0, where: GuidesFilter): GuidesCollection
+  icon(id: String!, locale: String, preview: Boolean): Icon
+  iconCollection(limit: Int = 100, locale: String, order: [IconOrder], preview: Boolean, skip: Int = 0, where: IconFilter): IconCollection
   interestGroupLeaders(id: String!, locale: String, preview: Boolean): InterestGroupLeaders
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [InterestGroupLeadersOrder], preview: Boolean, skip: Int = 0, where: InterestGroupLeadersFilter): InterestGroupLeadersCollection
   interestGroups(id: String!, locale: String, preview: Boolean): InterestGroups
@@ -4097,6 +4178,22 @@ input cfGuidesNestedFilter {
   AND: [cfGuidesNestedFilter]
   OR: [cfGuidesNestedFilter]
   contentCollection_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  icon_exists: Boolean
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+input cfIconNestedFilter {
+  AND: [cfIconNestedFilter]
+  OR: [cfIconNestedFilter]
+  asset_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   sys: SysFilter
   title: String

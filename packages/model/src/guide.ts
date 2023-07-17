@@ -11,6 +11,7 @@ export type GuideContentResponse = GuideContentDataObject;
 
 export type GuideDataObject = {
   title: string;
+  icon?: string;
   content: GuideContentResponse[];
 };
 

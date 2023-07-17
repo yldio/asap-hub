@@ -9,6 +9,11 @@ export const FETCH_GUIDE_BY_TITLE = gql`
         guidesCollection(limit: 100) {
           items {
             title
+            icon {
+              asset {
+                url
+              }
+            }
             contentCollection(limit: 100) {
               items {
                 title

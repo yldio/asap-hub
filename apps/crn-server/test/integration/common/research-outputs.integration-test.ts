@@ -89,7 +89,7 @@ describe('research outputs', () => {
           },
           { researchTags },
         );
-
+        const now = new Date().toISOString();
         const response = await supertest(app)
           .post('/research-outputs')
           .send(input)
@@ -100,9 +100,7 @@ describe('research outputs', () => {
           teams: input.teams.map((id) => ({ id })),
         });
         expect(response.body.published).toEqual(false);
-        expect(response.body.created).toBeCloseInTimeTo(
-          new Date().toISOString(),
-        );
+        expect(response.body.created).toBeCloseInTimeTo(now);
         expect(response.body.addedDate).toEqual(null);
       });
 
@@ -112,7 +110,7 @@ describe('research outputs', () => {
           workingGroups: [],
           published: true,
         });
-
+        const now = new Date().toISOString();
         const response = await supertest(app)
           .post('/research-outputs')
           .send(input)
@@ -123,12 +121,8 @@ describe('research outputs', () => {
           teams: input.teams.map((id) => ({ id })),
         });
         expect(response.body.published).toEqual(true);
-        expect(response.body.created).toBeCloseInTimeTo(
-          new Date().toISOString(),
-        );
-        expect(response.body.addedDate).toBeCloseInTimeTo(
-          new Date().toISOString(),
-        );
+        expect(response.body.created).toBeCloseInTimeTo(now);
+        expect(response.body.addedDate).toBeCloseInTimeTo(now);
       });
 
       test('cannot create a published team research output as a team non-PM', async () => {
@@ -188,7 +182,7 @@ describe('research outputs', () => {
             title: `${researchOutput.title} - updated`,
           })
           .expect(200);
-
+        const now = new Date().toISOString();
         await retryable(async () => {
           const response = await supertest(app)
             .get(`/research-outputs/${researchOutputId}`)
@@ -197,13 +191,12 @@ describe('research outputs', () => {
           expect(response.body.title).toEqual(
             `${researchOutput.title} - updated`,
           );
-          expect(response.body.lastUpdatedPartial).toBeCloseInTimeTo(
-            new Date().toISOString(),
-          );
+          expect(response.body.lastUpdatedPartial).toBeCloseInTimeTo(now);
         });
       });
 
       test('can update a draft research output to request a review', async () => {
+        const now = new Date().toISOString();
         const response = await supertest(app)
           .put(`/research-outputs/${researchOutputId}`)
           .send({ ...researchOutput, reviewRequestedById: loggedInUser.id })
@@ -216,9 +209,7 @@ describe('research outputs', () => {
         expect(response.body.reviewRequestedBy.lastName).toEqual(
           loggedInUser.lastName,
         );
-        expect(response.body.lastUpdatedPartial).toBeCloseInTimeTo(
-          new Date().toISOString(),
-        );
+        expect(response.body.lastUpdatedPartial).toBeCloseInTimeTo(now);
       });
 
       // regression test for cache behaviour when updating published content  in contentful
@@ -271,6 +262,7 @@ describe('research outputs', () => {
         });
 
         test('can publish a draft output by updating with `published: true`', async () => {
+          const now = new Date().toISOString();
           await supertest(app)
             .put(`/research-outputs/${publishOutputId}`)
             .send({
@@ -285,9 +277,7 @@ describe('research outputs', () => {
               .expect(200);
 
             expect(response.body.published).toEqual(true);
-            expect(response.body.addedDate).toBeCloseInTimeTo(
-              new Date().toISOString(),
-            );
+            expect(response.body.addedDate).toBeCloseInTimeTo(now);
           });
         });
 
@@ -399,7 +389,7 @@ describe('research outputs', () => {
           },
           { researchTags },
         );
-
+        const now = new Date().toISOString();
         const response = await supertest(app)
           .post('/research-outputs')
           .send(input)
@@ -409,9 +399,7 @@ describe('research outputs', () => {
           teams: input.teams.map((id) => ({ id })),
         });
         expect(response.body.published).toEqual(false);
-        expect(response.body.created).toBeCloseInTimeTo(
-          new Date().toISOString(),
-        );
+        expect(response.body.created).toBeCloseInTimeTo(now);
         expect(response.body.addedDate).toEqual(null);
       });
 
@@ -450,7 +438,7 @@ describe('research outputs', () => {
           },
           { researchTags },
         );
-
+        const now = new Date().toISOString();
         const response = await supertest(app)
           .post('/research-outputs')
           .send(input)
@@ -460,12 +448,8 @@ describe('research outputs', () => {
           teams: input.teams.map((id) => ({ id })),
         });
         expect(response.body.published).toEqual(true);
-        expect(response.body.created).toBeCloseInTimeTo(
-          new Date().toISOString(),
-        );
-        expect(response.body.addedDate).toBeCloseInTimeTo(
-          new Date().toISOString(),
-        );
+        expect(response.body.created).toBeCloseInTimeTo(now);
+        expect(response.body.addedDate).toBeCloseInTimeTo(now);
       });
     });
 

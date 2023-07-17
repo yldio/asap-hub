@@ -192,13 +192,14 @@ export class ResearchOutputContentfulDataProvider
   ): Promise<void> {
     const environment = await this.getRestClient();
     const entry = await environment.getEntry(id);
-
-    const result = await patch(entry, prepareInputForUpdate(input));
+    const update = prepareInputForUpdate(input);
+    const result = await patch(entry, update);
 
     if (updateOptions.publish) {
       const toPublish = await patch(result, {
-        addedDate: new Date().toISOString(),
+        addedDate: update.lastUpdatedPartial,
       });
+
       const published = await toPublish.publish();
 
       const fetchOutputById = () => this.fetchOutputById(id);

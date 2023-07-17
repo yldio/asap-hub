@@ -25,7 +25,7 @@ const ProjectSummaryFooter: React.FC<ProjectSummaryFooterProps> = ({
     <IconWithLabel icon={dateIcon}>
       <span>
         {startDate ? `${format(new Date(startDate), 'MMM yyyy')}` : 'TBD'}
-        {startDate && endDate && (
+        {startDate && endDate ? (
           <>
             {' - '}
             {format(new Date(endDate), 'MMM yyyy')} ·{' '}
@@ -35,7 +35,7 @@ const ProjectSummaryFooter: React.FC<ProjectSummaryFooterProps> = ({
               })})`}
             </span>
           </>
-        )}
+        ) : null}
       </span>
     </IconWithLabel>
   </>

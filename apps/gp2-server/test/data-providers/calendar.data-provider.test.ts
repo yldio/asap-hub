@@ -496,6 +496,48 @@ describe('Calendars data provider', () => {
       expect(calendarMock.update).toHaveBeenCalled();
       expect(calendarMockUpdated.publish).toHaveBeenCalled();
     });
+    test('Should update associatedGoogleCalendarId when passing null resourceId', async () => {
+      const calendarId = 'calendar-id-1';
+
+      const calendarMock = getEntry({
+        fields: {
+          googleCalendarId: {
+            'en-US': 'google-calendar-id-1',
+          },
+          googleApiMetadata: {
+            'en-US': {
+              syncToken: 'syncToken-1',
+            },
+          },
+        },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(calendarMock);
+      const calendarMockUpdated = getEntry({});
+      calendarMock.update = jest
+        .fn()
+        .mockResolvedValueOnce(calendarMockUpdated);
+
+      await calendarDataProviderMock.update(calendarId, {
+        resourceId: null,
+      });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(calendarId);
+
+      expect(calendarMock.fields).toEqual({
+        googleCalendarId: {
+          'en-US': 'google-calendar-id-1',
+        },
+        googleApiMetadata: {
+          'en-US': {
+            associatedGoogleCalendarId: 'google-calendar-id-1',
+            resourceId: null,
+            syncToken: 'syncToken-1',
+          },
+        },
+      });
+      expect(calendarMock.update).toHaveBeenCalled();
+      expect(calendarMockUpdated.publish).toHaveBeenCalled();
+    });
   });
 
   describe('Create method', () => {

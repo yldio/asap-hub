@@ -196,10 +196,12 @@ export class ResearchOutputContentfulDataProvider
     const result = await patch(entry, update);
 
     if (updateOptions.publish) {
-      const toPublish = await patch(result, {
-        addedDate: update.lastUpdatedPartial,
-      });
-
+      let toPublish = result;
+      if (!entry.fields?.addedDate?.['en-US']) {
+        toPublish = await patch(result, {
+          addedDate: update.lastUpdatedPartial,
+        });
+      }
       const published = await toPublish.publish();
 
       const fetchOutputById = () => this.fetchOutputById(id);
@@ -439,8 +441,11 @@ const prepareInputForCreate = (input: ResearchOutputCreateDataObject) => ({
 });
 
 const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
-  const { reviewRequestedById: _reviewRequestedById, ...researchOutput } =
-    input;
+  const {
+    reviewRequestedById: _reviewRequestedById,
+    addedDate: _addedDate,
+    ...researchOutput
+  } = input;
   return {
     ...prepareInput(researchOutput),
     updatedBy: getLinkEntity(input.updatedBy),

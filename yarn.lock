@@ -10626,13 +10626,13 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-reference@npm:^5.9.0":
-  version: 5.9.0
-  resolution: "@contentful/field-editor-reference@npm:5.9.0"
+  version: 5.13.1
+  resolution: "@contentful/field-editor-reference@npm:5.13.1"
   dependencies:
     "@contentful/f36-components": ^4.0.27
     "@contentful/f36-icons": ^4.1.0
     "@contentful/f36-tokens": ^4.0.0
-    "@contentful/field-editor-shared": ^1.2.0
+    "@contentful/field-editor-shared": ^1.3.0
     "@contentful/mimetype": ^1.4.0
     "@tanstack/react-query": ^4.3.9
     "@types/deep-equal": ^1.0.1
@@ -10651,7 +10651,7 @@ __metadata:
   peerDependencies:
     "@contentful/app-sdk": ^4.2.0
     react: ">=16.8.0"
-  checksum: 34db4a4b71afb6f1f3bae544992eb1886eff148f6f89471295a8a091dc655f93245dd218529fe386c3b2d6eb38392b4c1f87029af517512374cbe5c430a2c677
+  checksum: 9216b65335201e730660bce104acf4de2d17abe07ab947c26600cbbac1a66e3b928087bb1dca3d1bef44571fdb7bd1fbdc0ed2293616e006f629e49a625beea2
   languageName: node
   linkType: hard
 
@@ -10668,6 +10668,22 @@ __metadata:
     "@contentful/app-sdk": ^4.2.0
     react: ">=16.8.0"
   checksum: 94b6f8bbab76320b65f64e44f5fb52d585a77286c94203bd1bd913369adba0007d09143a49a98d0e276f21038beb9e6a7bb3cc6cff76c5461c9a9ce6e75053be
+  languageName: node
+  linkType: hard
+
+"@contentful/field-editor-shared@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@contentful/field-editor-shared@npm:1.3.0"
+  dependencies:
+    "@contentful/f36-note": ^4.2.8
+    "@contentful/f36-tokens": ^4.0.0
+    emotion: ^10.0.17
+    lodash: ^4.17.15
+    lodash-es: ^4.17.21
+  peerDependencies:
+    "@contentful/app-sdk": ^4.2.0
+    react: ">=16.8.0"
+  checksum: cfc46b66588709a73f3fd3c3e52bf10f84150719d152cf71b927953b7cf7097ef7c4e1887c3d9f04848fb7d45678896fce2ac495bd6a4a8650b290de60514085
   languageName: node
   linkType: hard
 
@@ -34677,7 +34693,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash-es@npm:^4.17.15":
+"lodash-es@npm:^4.17.15, lodash-es@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash-es@npm:4.17.21"
   checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2

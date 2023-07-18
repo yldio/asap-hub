@@ -59,13 +59,12 @@ type RelatedEventItem = NonNullable<
 >;
 
 export class ResearchOutputContentfulDataProvider
-  implements ResearchOutputDataProvider
-{
+  implements ResearchOutputDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
     private contentfulPreviewClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
-  ) {}
+  ) { }
 
   async fetch(
     options: FetchResearchOutputOptions,
@@ -287,21 +286,21 @@ const parseGraphQLResearchOutput = (
     created: researchOutputs.createdDate,
     documentType:
       researchOutputs.documentType &&
-      isResearchOutputDocumentType(researchOutputs.documentType)
+        isResearchOutputDocumentType(researchOutputs.documentType)
         ? researchOutputs.documentType
         : 'Grant Document',
     sharingStatus:
       researchOutputs.sharingStatus &&
-      isSharingStatus(researchOutputs.sharingStatus)
+        isSharingStatus(researchOutputs.sharingStatus)
         ? researchOutputs.sharingStatus
         : 'Network Only',
     workingGroups: researchOutputs.workingGroup
       ? [
-          {
-            id: researchOutputs.workingGroup.sys.id,
-            title: researchOutputs.workingGroup.title || '',
-          },
-        ]
+        {
+          id: researchOutputs.workingGroup.sys.id,
+          title: researchOutputs.workingGroup.title || '',
+        },
+      ]
       : [],
     authors:
       researchOutputs.authorsCollection?.items
@@ -370,13 +369,14 @@ const parseGraphQLResearchOutput = (
           title: event?.title || '',
           endDate: event.endDate || '',
         })) || [],
-    reviewRequestedBy: researchOutputs.reviewRequestedBy
+    statusChangedBy: researchOutputs.statusChangedBy
       ? {
-          id: researchOutputs.reviewRequestedBy.sys.id,
-          firstName: researchOutputs.reviewRequestedBy.firstName || '',
-          lastName: researchOutputs.reviewRequestedBy.lastName || '',
-        }
+        id: researchOutputs.statusChangedBy.sys.id,
+        firstName: researchOutputs.statusChangedBy.firstName || '',
+        lastName: researchOutputs.statusChangedBy.lastName || '',
+      }
       : undefined,
+    isInReview: !!researchOutputs.isInReview,
   };
 };
 
@@ -416,8 +416,8 @@ const prepareInput = (
     ),
     labs: getLinkEntities(labIds),
     teams: getLinkEntities(teamIds),
-    relatedResearch: getLinkEntities(relatedResearchIds),
-    relatedEvents: getLinkEntities(relatedEventIds),
+    relatedResearch: relatedResearchIds && getLinkEntities(relatedResearchIds),
+    relatedEvents: relatedEventIds && getLinkEntities(relatedEventIds),
     methods: getLinkEntities(methodIds),
     keywords: getLinkEntities(keywordIds),
     environments: getLinkEntities(environmentIds),
@@ -442,15 +442,16 @@ const prepareInputForCreate = (input: ResearchOutputCreateDataObject) => ({
 
 const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
   const {
-    reviewRequestedById: _reviewRequestedById,
+    statusChangedById: _statusChangedById,
     addedDate: _addedDate,
     ...researchOutput
   } = input;
+
   return {
     ...prepareInput(researchOutput),
     updatedBy: getLinkEntity(input.updatedBy),
-    reviewRequestedBy: input.reviewRequestedById
-      ? getLinkEntity(input.reviewRequestedById)
+    statusChangedBy: input.statusChangedById
+      ? getLinkEntity(input.statusChangedById)
       : null,
     lastUpdatedPartial: new Date().toISOString(),
   };

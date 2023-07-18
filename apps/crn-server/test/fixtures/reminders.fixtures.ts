@@ -587,7 +587,7 @@ export const getContentfulReminderResearchOutputCollectionItem =
         },
         title: 'Working Group 1',
       },
-      reviewRequestedBy: {
+      statusChangedBy: {
         sys: {
           id: 'user-1',
         },

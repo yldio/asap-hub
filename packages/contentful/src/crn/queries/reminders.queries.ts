@@ -39,7 +39,7 @@ export const FETCH_REMINDERS = gql`
           firstName
           lastName
         }
-        reviewRequestedBy {
+        statusChangedBy {
           sys {
             id
           }

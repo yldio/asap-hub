@@ -1178,6 +1178,8 @@ enum EventsLinkingCollectionsResearchOutputsCollectionOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -1416,6 +1418,8 @@ enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -2257,6 +2261,8 @@ enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -2811,6 +2817,7 @@ type ResearchOutputs implements Entry {
   documentType(locale: String): String
   doi(locale: String): String
   environmentsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsEnvironmentsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchOutputsEnvironmentsCollection
+  isInReview(locale: String): Boolean
   keywordsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsKeywordsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): ResearchOutputsKeywordsCollection
   labCatalogNumber(locale: String): String
   labsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): ResearchOutputsLabsCollection
@@ -2822,9 +2829,9 @@ type ResearchOutputs implements Entry {
   publishDate(locale: String): DateTime
   relatedEventsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): ResearchOutputsRelatedEventsCollection
   relatedResearchCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedResearchCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsRelatedResearchCollection
-  reviewRequestedBy(locale: String, preview: Boolean, where: UsersFilter): Users
   rrid(locale: String): String
   sharingStatus(locale: String): String
+  statusChangedBy(locale: String, preview: Boolean, where: UsersFilter): Users
   subtype(locale: String, preview: Boolean, where: ResearchTagsFilter): ResearchTags
   sys: Sys!
   tags(locale: String): [String]
@@ -2974,6 +2981,9 @@ input ResearchOutputsFilter {
   doi_not_in: [String]
   environments: cfResearchTagsNestedFilter
   environmentsCollection_exists: Boolean
+  isInReview: Boolean
+  isInReview_exists: Boolean
+  isInReview_not: Boolean
   keywords: cfResearchTagsNestedFilter
   keywordsCollection_exists: Boolean
   labCatalogNumber: String
@@ -3018,8 +3028,6 @@ input ResearchOutputsFilter {
   relatedEventsCollection_exists: Boolean
   relatedResearch: cfResearchOutputsNestedFilter
   relatedResearchCollection_exists: Boolean
-  reviewRequestedBy: cfUsersNestedFilter
-  reviewRequestedBy_exists: Boolean
   rrid: String
   rrid_contains: String
   rrid_exists: Boolean
@@ -3034,6 +3042,8 @@ input ResearchOutputsFilter {
   sharingStatus_not: String
   sharingStatus_not_contains: String
   sharingStatus_not_in: [String]
+  statusChangedBy: cfUsersNestedFilter
+  statusChangedBy_exists: Boolean
   subtype: cfResearchTagsNestedFilter
   subtype_exists: Boolean
   sys: SysFilter
@@ -3138,6 +3148,8 @@ enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -3218,6 +3230,8 @@ enum ResearchOutputsOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -3342,6 +3356,8 @@ enum ResearchOutputsRelatedResearchCollectionOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -3459,6 +3475,8 @@ enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -3818,6 +3836,8 @@ enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -4402,6 +4422,8 @@ enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -4937,6 +4959,8 @@ enum WorkingGroupsLinkingCollectionsResearchOutputsCollectionOrder {
   documentType_DESC
   doi_ASC
   doi_DESC
+  isInReview_ASC
+  isInReview_DESC
   labCatalogNumber_ASC
   labCatalogNumber_DESC
   lastUpdatedPartial_ASC
@@ -5488,6 +5512,9 @@ input cfResearchOutputsNestedFilter {
   doi_not_contains: String
   doi_not_in: [String]
   environmentsCollection_exists: Boolean
+  isInReview: Boolean
+  isInReview_exists: Boolean
+  isInReview_not: Boolean
   keywordsCollection_exists: Boolean
   labCatalogNumber: String
   labCatalogNumber_contains: String
@@ -5526,7 +5553,6 @@ input cfResearchOutputsNestedFilter {
   publishDate_not_in: [DateTime]
   relatedEventsCollection_exists: Boolean
   relatedResearchCollection_exists: Boolean
-  reviewRequestedBy_exists: Boolean
   rrid: String
   rrid_contains: String
   rrid_exists: Boolean
@@ -5541,6 +5567,7 @@ input cfResearchOutputsNestedFilter {
   sharingStatus_not: String
   sharingStatus_not_contains: String
   sharingStatus_not_in: [String]
+  statusChangedBy_exists: Boolean
   subtype_exists: Boolean
   sys: SysFilter
   tags_contains_all: [String]

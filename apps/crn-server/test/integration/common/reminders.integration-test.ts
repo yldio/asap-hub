@@ -491,7 +491,7 @@ describe('Reminders', () => {
           .put(`/research-outputs/${draftOutputId}`)
           .send({
             ...draftOutput,
-            reviewRequestedById: loggedInUser.id,
+            statusChangedById: loggedInUser.id,
           })
           .expect(200);
 
@@ -517,7 +517,7 @@ describe('Reminders', () => {
           .put(`/research-outputs/${draftOutputId}`)
           .send({
             ...draftOutput,
-            reviewRequestedById: loggedInUser.id,
+            statusChangedById: loggedInUser.id,
           })
           .expect(200);
 
@@ -544,7 +544,7 @@ describe('Reminders', () => {
           .put(`/research-outputs/${draftOutputId}`)
           .send({
             ...draftOutput,
-            reviewRequestedById: loggedInUser.id,
+            statusChangedById: loggedInUser.id,
           })
           .expect(200);
 
@@ -574,7 +574,7 @@ describe('Reminders', () => {
           .put(`/research-outputs/${draftOutputId}`)
           .send({
             ...draftOutput,
-            reviewRequestedById: loggedInUser.id,
+            statusChangedById: loggedInUser.id,
           })
           .expect(200);
 
@@ -600,7 +600,7 @@ describe('Reminders', () => {
           .put(`/research-outputs/${draftOutputId}`)
           .send({
             ...draftOutput,
-            reviewRequestedById: loggedInUser.id,
+            statusChangedById: loggedInUser.id,
           })
           .expect(200);
 

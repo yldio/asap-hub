@@ -543,7 +543,7 @@ export const getContentfulResearchOutputGraphqlResponse =
     asapFunded: 'Yes',
     usedInAPublication: 'No',
     type: '3D Printing',
-    reviewRequestedBy: null,
+    statusChangedBy: null,
     relatedResearchCollection: {
       items: [
         {

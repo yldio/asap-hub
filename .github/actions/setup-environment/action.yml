@@ -44,7 +44,7 @@ outputs:
   contentful-app-event-speakers-title:
     description: 'Contentful App Extension Event Speakers Title Id'
     value: ${{ steps.vars.outputs.contentful-app-event-speakers-title }}
-  contentful-app-event-speakers-title:
+  contentful-app-event-speakers-gp2:
     description: 'Contentful App Extension Event Speakers Topic and User'
     value: ${{ steps.vars.outputs.contentful-app-event-speakers-gp2 }}
   contentful-app-field-as-updated-at:

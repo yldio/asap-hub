@@ -10,9 +10,9 @@ import {
   ListInterestGroupResponse,
   InterestGroupResponse,
 } from '@asap-hub/model';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { authorizationState } from '../../auth/state';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import { getInterestGroups, getInterestGroup } from './api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 
@@ -20,7 +20,7 @@ const interestGroupIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
   GetListOptions
 >({
-  key: 'groupIndex',
+  key: 'interestGroupIndex',
   default: undefined,
 });
 export const interestGroupsState = selectorFamily<

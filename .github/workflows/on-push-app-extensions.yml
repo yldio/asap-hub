@@ -61,6 +61,7 @@ jobs:
           - disabled-fields
           - event-additional-materials
           - event-speakers-title
+          - event-speakers-gp2
           - field-as-updated-at
           - user-membership
           - user-positions

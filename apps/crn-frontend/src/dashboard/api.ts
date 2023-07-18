@@ -1,4 +1,7 @@
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  createSentryHeaders,
+  createFeatureFlagHeaders,
+} from '@asap-hub/frontend-utils';
 import { DashboardResponse, ListReminderResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../config';
@@ -25,7 +28,11 @@ export const getReminders = async (
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     })}`,
     {
-      headers: { authorization, ...createSentryHeaders() },
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+        ...createFeatureFlagHeaders(),
+      },
     },
   );
   if (!resp.ok) {

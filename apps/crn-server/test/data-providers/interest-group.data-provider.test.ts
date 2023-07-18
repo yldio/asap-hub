@@ -1,4 +1,4 @@
-import { FetchGroupOptions } from '@asap-hub/model';
+import { FetchInterestGroupOptions } from '@asap-hub/model';
 import { InterestGroupSquidexDataProvider } from '../../src/data-providers/interest-group.data-provider';
 import {
   getInterestGroupDataObject,
@@ -72,7 +72,7 @@ describe('Group Data Provider', () => {
         getSquidexInterestGroupsGraphqlResponse(),
       );
 
-      const fetchOptions: FetchGroupOptions = {
+      const fetchOptions: FetchInterestGroupOptions = {
         take: 12,
         skip: 2,
         search: 'first last',
@@ -107,7 +107,7 @@ describe('Group Data Provider', () => {
         getSquidexInterestGroupsGraphqlResponse(),
       );
 
-      const fetchOptions: FetchGroupOptions = {
+      const fetchOptions: FetchInterestGroupOptions = {
         take: 12,
         skip: 2,
         search: "'",
@@ -134,7 +134,7 @@ describe('Group Data Provider', () => {
         getSquidexInterestGroupsGraphqlResponse(),
       );
 
-      const fetchOptions: FetchGroupOptions = {
+      const fetchOptions: FetchInterestGroupOptions = {
         take: 12,
         skip: 2,
         search: '"',

@@ -1,12 +1,12 @@
 import {
   CalendarResponse,
-  GroupDataObject,
-  GroupLeader,
-  GroupRole,
-  GroupTeam,
-  GroupTools,
+  InterestGroupDataObject,
+  InterestGroupLeader,
+  InterestGroupRole,
+  InterestGroupTeam,
+  InterestGroupTools,
   UserDataObject,
-  isGroupRole,
+  isInterestGroupRole,
 } from '@asap-hub/model';
 import { parseDate } from '@asap-hub/squidex';
 import { URL } from 'url';
@@ -18,7 +18,7 @@ import { parseGraphQLTeam } from './team';
 
 export const parseInterestGroupLeader = (
   user: UserDataObject,
-): GroupLeader['user'] => ({
+): InterestGroupLeader['user'] => ({
   id: user.id,
   firstName: user.firstName,
   lastName: user.lastName,
@@ -31,9 +31,9 @@ export const parseInterestGroupLeader = (
 
 export const parseGraphQLInterestGroup = (
   item: NonNullable<FetchGroupQuery['findGroupsContent']>,
-): GroupDataObject => {
+): InterestGroupDataObject => {
   const createdDate = parseDate(item.created).toISOString();
-  const teams: GroupTeam[] = (item.flatData.teams || []).map((t) => {
+  const teams: InterestGroupTeam[] = (item.flatData.teams || []).map((t) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { members, labCount, ...team } = parseGraphQLTeam(t);
     return team;
@@ -43,11 +43,11 @@ export const parseGraphQLInterestGroup = (
   );
 
   const leaders = (item.flatData.leaders || []).reduce(
-    (leaderList: GroupLeader[], leader) => {
+    (leaderList: InterestGroupLeader[], leader) => {
       if (leader.user === null || !leader.user[0]) {
         return leaderList;
       }
-      if (!isGroupRole(leader.role)) {
+      if (!isInterestGroupRole(leader.role)) {
         throw new Error(`Invalid group role on leaders : ${leader.role}`);
       }
 
@@ -57,7 +57,7 @@ export const parseGraphQLInterestGroup = (
           user: parseInterestGroupLeader(
             parseGraphQLUserToDataObject(leader.user[0]),
           ),
-          role: leader.role as GroupRole,
+          role: leader.role as InterestGroupRole,
           inactiveSinceDate: leader.inactiveSinceDate ?? undefined,
         },
       ];
@@ -65,7 +65,7 @@ export const parseGraphQLInterestGroup = (
     [],
   );
 
-  let tools: GroupTools = {};
+  let tools: InterestGroupTools = {};
   if (item.flatData.tools?.length) {
     const [groupTools] = item.flatData.tools;
     if (groupTools?.slack) {

@@ -7,7 +7,7 @@ export * from './research-output';
 export * from './team';
 export * from './user';
 export * from './external-author';
-export * from './group';
+export * from './interest-group';
 export * from './working-group';
 export * from './event';
 export * from './webhook';

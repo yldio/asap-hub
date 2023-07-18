@@ -1,6 +1,9 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
+import {
+  createEventResponse,
+  createInterestGroupResponse,
+} from '@asap-hub/fixtures';
 
 import EventConversation from '../EventConversation';
 
@@ -12,7 +15,7 @@ it('renders the card only when group with slack tool is provided', () => {
   const { queryByRole, getByRole, rerender } = render(
     <EventConversation
       {...props}
-      group={{ ...createGroupResponse(), tools: {} }}
+      group={{ ...createInterestGroupResponse(), tools: {} }}
     />,
   );
   expect(queryByRole('heading')).toBeNull();
@@ -20,7 +23,7 @@ it('renders the card only when group with slack tool is provided', () => {
     <EventConversation
       {...props}
       group={{
-        ...createGroupResponse(),
+        ...createInterestGroupResponse(),
         tools: { slack: 'http://example.com' },
       }}
     />,
@@ -35,7 +38,7 @@ it('renders slack tool button', () => {
     <EventConversation
       {...props}
       group={{
-        ...createGroupResponse(),
+        ...createInterestGroupResponse(),
         tools: { slack: 'http://example.com' },
       }}
     />,

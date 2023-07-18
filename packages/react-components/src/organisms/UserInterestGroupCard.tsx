@@ -1,4 +1,4 @@
-import { GroupResponse, UserResponse } from '@asap-hub/model';
+import { InterestGroupResponse, UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
@@ -51,7 +51,7 @@ const listItemStyle = css({
   },
 });
 
-type UserInterestGroupItemProps = GroupResponse & {
+type UserInterestGroupItemProps = InterestGroupResponse & {
   index: number;
   userId: string;
 };
@@ -88,7 +88,7 @@ type UserInterestGroupCardProps = Pick<
   UserResponse,
   'alumniSinceDate' | 'displayName' | 'id'
 > & {
-  groups: GroupResponse[];
+  groups: InterestGroupResponse[];
 };
 
 const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({

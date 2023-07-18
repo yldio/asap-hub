@@ -5,7 +5,7 @@ import {
 import {
   EventController,
   EventResponse,
-  GroupEvent,
+  InterestGroupEvent,
   ListResponse,
 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
@@ -25,7 +25,7 @@ export const indexGroupEventsHandler =
     eventController: EventController,
     algoliaClient: AlgoliaSearchClient,
   ): ((
-    event: EventBridgeEvent<GroupEvent, InterestGroupPayload>,
+    event: EventBridgeEvent<InterestGroupEvent, InterestGroupPayload>,
   ) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

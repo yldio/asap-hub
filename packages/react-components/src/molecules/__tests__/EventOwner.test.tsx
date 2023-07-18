@@ -1,5 +1,5 @@
 import {
-  createGroupResponse,
+  createInterestGroupResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
@@ -10,7 +10,7 @@ it('renders the interest group name linking to the group and icon', () => {
   render(
     <EventOwner
       group={{
-        ...createGroupResponse(),
+        ...createInterestGroupResponse(),
         id: 'grp',
         name: 'My Group',
       }}
@@ -46,7 +46,9 @@ it('shows that the event is run by ASAP when there is no group', () => {
 });
 
 it('displays inactive badge when a group is inactive', () => {
-  render(<EventOwner group={{ ...createGroupResponse(), active: false }} />);
+  render(
+    <EventOwner group={{ ...createInterestGroupResponse(), active: false }} />,
+  );
 
   expect(screen.getByTitle('Inactive')).toBeInTheDocument();
 });

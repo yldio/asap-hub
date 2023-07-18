@@ -1,10 +1,10 @@
 import {
-  FetchGroupOptions,
-  GroupDataObject,
-  GroupTools,
-  GroupRole,
-  GroupLeader,
-  ListGroupDataObject,
+  FetchInterestGroupOptions,
+  InterestGroupDataObject,
+  InterestGroupTools,
+  InterestGroupRole,
+  InterestGroupLeader as GroupLeader,
+  ListInterestGroupDataObject,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
@@ -50,7 +50,7 @@ export class InterestGroupContentfulDataProvider
 {
   constructor(private contentfulClient: GraphQLClient) {}
 
-  async fetchById(id: string): Promise<GroupDataObject | null> {
+  async fetchById(id: string): Promise<InterestGroupDataObject | null> {
     const { interestGroups } = await this.contentfulClient.request<
       FetchInterestGroupByIdQuery,
       FetchInterestGroupByIdQueryVariables
@@ -65,8 +65,8 @@ export class InterestGroupContentfulDataProvider
 
   private async fetchByUserId(
     userId: string,
-    options: FetchGroupOptions,
-  ): Promise<ListGroupDataObject> {
+    options: FetchInterestGroupOptions,
+  ): Promise<ListInterestGroupDataObject> {
     const { take = 20, skip = 0 } = options;
     const { interestGroupLeadersCollection } =
       await this.contentfulClient.request<
@@ -92,7 +92,7 @@ export class InterestGroupContentfulDataProvider
 
   private parseCollection(
     collection: InterestGroupsQueryResult,
-  ): ListGroupDataObject {
+  ): ListInterestGroupDataObject {
     if (!collection || !collection.total) {
       return {
         total: 0,
@@ -108,7 +108,9 @@ export class InterestGroupContentfulDataProvider
     };
   }
 
-  async fetch(options: FetchGroupOptions): Promise<ListGroupDataObject> {
+  async fetch(
+    options: FetchInterestGroupOptions,
+  ): Promise<ListInterestGroupDataObject> {
     const { filter, search, take = 20, skip = 0 } = options;
 
     if (filter && filter.userId) {
@@ -162,7 +164,7 @@ export class InterestGroupContentfulDataProvider
 
 const parseGraphQLInterestGroup = (
   group: InterestGroupItem,
-): GroupDataObject => {
+): InterestGroupDataObject => {
   const isString = (x: unknown): x is string => typeof x === 'string';
 
   const teams = (group.teamsCollection?.items || [])
@@ -177,7 +179,7 @@ const parseGraphQLInterestGroup = (
     ? [parseContentfulGraphqlCalendarToResponse(group.calendar)]
     : [];
 
-  let tools: GroupTools = {
+  let tools: InterestGroupTools = {
     slack: group.slack ?? undefined,
     googleDrive: group.googleDrive ?? undefined,
   };
@@ -199,7 +201,7 @@ const parseGraphQLInterestGroup = (
           user: parseInterestGroupLeader(
             parseContentfulGraphQlUsers(leader.user),
           ),
-          role: leader.role as GroupRole,
+          role: leader.role as InterestGroupRole,
           inactiveSinceDate: leader.inactiveSinceDate ?? undefined,
         },
       ];

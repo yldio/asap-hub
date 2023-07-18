@@ -2,8 +2,8 @@ import { NotFoundError } from '@asap-hub/errors';
 import {
   FetchOptions,
   FetchPaginationOptions,
-  GroupResponse,
-  ListGroupResponse,
+  InterestGroupResponse,
+  ListInterestGroupResponse,
 } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
 import {
@@ -23,7 +23,7 @@ export default class InterestGroupController {
     this.userDataProvider = userDataProvider;
   }
 
-  async fetch(options: FetchOptions): Promise<ListGroupResponse> {
+  async fetch(options: FetchOptions): Promise<ListInterestGroupResponse> {
     const { filter, ...fetchOptions } = options;
 
     const groupFilter =
@@ -43,7 +43,7 @@ export default class InterestGroupController {
     return { total, items };
   }
 
-  async fetchById(groupId: string): Promise<GroupResponse> {
+  async fetchById(groupId: string): Promise<InterestGroupResponse> {
     const group = await this.interestGroupDataProvider.fetchById(groupId);
     if (!group) {
       throw new NotFoundError(undefined, `group with id ${groupId} not found`);
@@ -55,7 +55,7 @@ export default class InterestGroupController {
   async fetchByTeamId(
     teamId: string | string[],
     options: FetchPaginationOptions,
-  ): Promise<ListGroupResponse> {
+  ): Promise<ListInterestGroupResponse> {
     const teamIds = Array.isArray(teamId) ? teamId : [teamId];
     const { total, items } = await this.interestGroupDataProvider.fetch({
       filter: {
@@ -67,7 +67,7 @@ export default class InterestGroupController {
     return { total, items };
   }
 
-  async fetchByUserId(userId: string): Promise<ListGroupResponse> {
+  async fetchByUserId(userId: string): Promise<ListInterestGroupResponse> {
     const user = await this.userDataProvider.fetchById(userId);
 
     if (!user) {

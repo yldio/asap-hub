@@ -4,7 +4,7 @@ import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useSearch } from '../hooks';
-import GroupProfile from './groups/GroupProfile';
+import InterestGroupProfile from './interest-groups/InterestGroupProfile';
 import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
 
 const loadUserList = () =>
@@ -16,10 +16,12 @@ const loadTeamList = () =>
 const loadTeamProfile = () =>
   import(/* webpackChunkName: "network-team-profile" */ './teams/TeamProfile');
 const loadGroupList = () =>
-  import(/* webpackChunkName: "network-group-list" */ './groups/GroupList');
+  import(
+    /* webpackChunkName: "network-group-list" */ './interest-groups/InterestGroupList'
+  );
 const loadGroupProfile = () =>
   import(
-    /* webpackChunkName: "network-group-profile" */ './groups/GroupProfile'
+    /* webpackChunkName: "network-group-profile" */ './interest-groups/InterestGroupProfile'
   );
 const loadWorkingGroupList = () =>
   import(
@@ -134,7 +136,7 @@ const Network: FC<Record<string, never>> = () => {
         }
       >
         <Frame title="Group Profile">
-          <GroupProfile currentTime={currentTime} />
+          <InterestGroupProfile currentTime={currentTime} />
         </Frame>
       </Route>
       <Route exact path={path + network({}).workingGroups.template}>

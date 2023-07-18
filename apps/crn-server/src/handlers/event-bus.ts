@@ -2,7 +2,7 @@ import { ContentfulWebhookPayload } from '@asap-hub/contentful';
 import {
   EventEvent,
   ExternalAuthorEvent,
-  GroupEvent,
+  InterestGroupEvent,
   LabEvent,
   ResearchOutputEvent,
   TeamEvent,
@@ -13,7 +13,7 @@ import {
 import {
   Event,
   ExternalAuthor,
-  Group,
+  InterestGroup,
   Lab,
   ResearchOutput,
   SquidexWebhookPayload,
@@ -43,7 +43,7 @@ export type ExternalAuthorPayload =
   | ExternalAuthorContentfulPayload;
 
 export type InterestGroupSquidexPayload = WebhookDetail<
-  SquidexWebhookPayload<Group, GroupEvent>
+  SquidexWebhookPayload<InterestGroup, InterestGroupEvent>
 >;
 
 export type InterestGroupContentfulPayload = WebhookDetail<

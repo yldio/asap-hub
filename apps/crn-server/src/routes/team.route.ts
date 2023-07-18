@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
-  ListGroupResponse,
+  ListInterestGroupResponse,
   ListTeamResponse,
   TeamResponse,
 } from '@asap-hub/model';
@@ -69,7 +69,7 @@ export const teamRouteFactory = (
 
   teamRoutes.get<{ teamId: string }>(
     '/teams/:teamId/groups',
-    async (req, res: Response<ListGroupResponse>) => {
+    async (req, res: Response<ListInterestGroupResponse>) => {
       const { query, params } = req;
       const { teamId } = validateTeamParameters(params);
       const options = validateFetchOptions(query);

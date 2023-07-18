@@ -4,7 +4,7 @@ export * from './dashboard';
 export * from './discover';
 export * from './events';
 export * as gp2 from './gp2';
-export * from './groups';
+export * from './interest-groups';
 export * from './guides';
 export * from './labs';
 export * from './news';

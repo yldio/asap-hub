@@ -1,12 +1,12 @@
 import { FetchInterestGroupByIdQuery } from '@asap-hub/contentful';
 import {
-  GroupDataObject,
-  GroupEvent,
-  GroupResponse,
-  GroupLeader,
-  ListGroupResponse,
+  InterestGroupDataObject,
+  InterestGroupEvent,
+  InterestGroupResponse,
+  InterestGroupLeader,
+  ListInterestGroupResponse,
 } from '@asap-hub/model';
-import { RestGroup } from '@asap-hub/squidex';
+import { RestInterestGroup } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   FetchGroupQuery,
@@ -193,7 +193,7 @@ export const queryInterestGroupsResponse = {
   },
 };
 
-export const listInterestGroupsResponse: ListGroupResponse = {
+export const listInterestGroupsResponse: ListInterestGroupResponse = {
   total: 2,
   items: [
     {
@@ -297,7 +297,7 @@ export const listInterestGroupsResponse: ListGroupResponse = {
   ],
 };
 
-const getLeaderResponse = (): GroupLeader['user'] => ({
+const getLeaderResponse = (): InterestGroupLeader['user'] => ({
   id: 'user-id-1',
   alumniSinceDate: undefined,
   email: 'H@rdy.io',
@@ -409,17 +409,17 @@ export const getSquidexInterestGroupGraphqlResponse = (): FetchGroupQuery => ({
   findGroupsContent: getSquidexGraphqlInterestGroup(),
 });
 
-export const getInterestGroupResponse = (): GroupResponse =>
+export const getInterestGroupResponse = (): InterestGroupResponse =>
   getInterestGroupDataObject();
 
-export const getListInterestGroupResponse = (): ListGroupResponse => ({
+export const getListInterestGroupResponse = (): ListInterestGroupResponse => ({
   total: 1,
   items: [getInterestGroupResponse()],
 });
 
 export const getInterestGroupPayload = (
   id: string,
-  type: GroupEvent,
+  type: InterestGroupEvent,
 ): InterestGroupPayload => ({
   type,
   timestamp: '2020-12-11T15:06:26Z',
@@ -431,21 +431,21 @@ export const getInterestGroupPayload = (
     created: '2020-12-11T14:33:50Z',
     lastModified: '2020-12-11T15:06:26Z',
     version: 42,
-    data: {} as RestGroup['data'],
+    data: {} as RestInterestGroup['data'],
   },
 });
 
 export const getInterestGroupEvent = (
   id: string,
-  eventType: GroupEvent,
-): EventBridgeEvent<GroupEvent, InterestGroupPayload> =>
+  eventType: InterestGroupEvent,
+): EventBridgeEvent<InterestGroupEvent, InterestGroupPayload> =>
   createEventBridgeEventMock(
     getInterestGroupPayload(id, eventType),
     eventType,
     id,
   );
 
-export const getInterestGroupDataObject = (): GroupDataObject => ({
+export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
   id: 'group-id-1',
   active: true,
   createdDate: '2020-12-11T14:33:50.000Z',

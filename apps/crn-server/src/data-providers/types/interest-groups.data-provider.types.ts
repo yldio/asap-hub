@@ -1,10 +1,10 @@
 import {
-  FetchGroupOptions,
-  GroupDataObject,
+  FetchInterestGroupOptions,
+  InterestGroupDataObject,
   DataProvider,
 } from '@asap-hub/model';
 
 export type InterestGroupDataProvider = DataProvider<
-  GroupDataObject,
-  FetchGroupOptions
+  InterestGroupDataObject,
+  FetchInterestGroupOptions
 >;

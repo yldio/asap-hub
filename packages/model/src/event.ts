@@ -1,7 +1,7 @@
 import { CalendarResponse } from './calendar';
 import { FetchOptions, ListResponse } from './common';
 import { BasicEvent, SortOptions } from './event-common';
-import { GroupResponse } from './group';
+import { InterestGroupResponse } from './interest-group';
 import { TeamResponse } from './team';
 import { WorkingGroupResponse } from './working-group';
 
@@ -40,7 +40,7 @@ export type EventSpeaker =
 
 export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
-  group?: Pick<GroupResponse, 'id' | 'name' | 'active' | 'tools'>;
+  group?: Pick<InterestGroupResponse, 'id' | 'name' | 'active' | 'tools'>;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
 }

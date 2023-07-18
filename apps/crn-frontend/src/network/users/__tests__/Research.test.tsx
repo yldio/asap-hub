@@ -11,7 +11,7 @@ import Research from '../Research';
 import { patchUser } from '../api';
 
 jest.mock('../api');
-jest.mock('../groups/api');
+jest.mock('../interest-groups/api');
 
 const suggestedExpertiseAndResources = ['1', '2', '3', '4', '5'];
 jest.mock('../expertise-and-resource-suggestions', () => ({

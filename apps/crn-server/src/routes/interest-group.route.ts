@@ -3,7 +3,7 @@ import { validateFetchOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
 import InterestGroupController from '../controllers/interest-group.controller';
 import { validateEventFetchParameters } from '../validation/event.validation';
-import { validateGroupParameters } from '../validation/group.validation';
+import { validateGroupParameters } from '../validation/interest-group.validation';
 
 export const interestGroupRouteFactory = (
   groupController: InterestGroupController,

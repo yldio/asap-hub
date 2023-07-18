@@ -15,7 +15,7 @@ import { Route, useRouteMatch } from 'react-router-dom';
 import { usePatchUserById } from './state';
 
 import expertiseAndResourceSuggestions from './expertise-and-resource-suggestions';
-import GroupsCard from './groups/GroupsCard';
+import GroupsCard from './interest-groups/InterestGroupsCard';
 
 type ResearchProps = {
   user: UserResponse;

@@ -2,7 +2,7 @@ import { NetworkWorkingGroups } from '@asap-hub/react-components';
 import { useWorkingGroups } from './state';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { usePrefetchTeams } from '../teams/state';
-import { usePrefetchGroups } from '../groups/state';
+import { usePrefetchInterestGroups } from '../interest-groups/state';
 
 interface NetworkWorkingGroupListProps {
   filters: Set<string>;
@@ -29,7 +29,7 @@ const NetworkWorkingGroupList: React.FC<NetworkWorkingGroupListProps> = ({
     filters: new Set(),
   });
 
-  usePrefetchGroups({
+  usePrefetchInterestGroups({
     currentPage: 0,
     pageSize,
     searchQuery,

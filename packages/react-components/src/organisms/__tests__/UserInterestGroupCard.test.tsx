@@ -1,16 +1,19 @@
-import { GroupRole } from '@asap-hub/model';
-import { createGroupResponse, createUserResponse } from '@asap-hub/fixtures';
+import { InterestGroupRole } from '@asap-hub/model';
+import {
+  createInterestGroupResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import { fireEvent, render } from '@testing-library/react';
 import UserInterestGroupCard from '../UserInterestGroupCard';
 
 const groups = [
-  { ...createGroupResponse(), name: 'Group 1', id: 'g1' },
-  { ...createGroupResponse(), name: 'Group 2', id: 'g2' },
-  { ...createGroupResponse(), name: 'Group 3', id: 'g3' },
-  { ...createGroupResponse(), name: 'Group 4', id: 'g4' },
-  { ...createGroupResponse(), name: 'Group 5', id: 'g5' },
-  { ...createGroupResponse(), name: 'Group 6', id: 'g6' },
-  { ...createGroupResponse(), name: 'Group 7', id: 'g7' },
+  { ...createInterestGroupResponse(), name: 'Group 1', id: 'g1' },
+  { ...createInterestGroupResponse(), name: 'Group 2', id: 'g2' },
+  { ...createInterestGroupResponse(), name: 'Group 3', id: 'g3' },
+  { ...createInterestGroupResponse(), name: 'Group 4', id: 'g4' },
+  { ...createInterestGroupResponse(), name: 'Group 5', id: 'g5' },
+  { ...createInterestGroupResponse(), name: 'Group 6', id: 'g6' },
+  { ...createInterestGroupResponse(), name: 'Group 7', id: 'g7' },
 ];
 
 const displayName = 'Octavian';
@@ -106,14 +109,14 @@ it('can click the show more/ less button', () => {
 it('displays the proper role for a group leader', () => {
   const interestGroups = [
     {
-      ...createGroupResponse(),
+      ...createInterestGroupResponse(),
       leaders: [
         {
           user: {
             ...createUserResponse(),
             id: userId,
           },
-          role: 'Chair' as GroupRole,
+          role: 'Chair' as InterestGroupRole,
           inactiveSinceDate: undefined,
         },
       ],
@@ -132,14 +135,14 @@ it('displays the proper role for a group leader', () => {
 it('renders correctly when user is inactive leader', () => {
   const interestGroups = [
     {
-      ...createGroupResponse(),
+      ...createInterestGroupResponse(),
       leaders: [
         {
           user: {
             ...createUserResponse(),
             id: userId,
           },
-          role: 'Chair' as GroupRole,
+          role: 'Chair' as InterestGroupRole,
           inactiveSinceDate: new Date().toISOString(),
         },
       ],
@@ -159,7 +162,7 @@ it('renders correctly when user is inactive leader', () => {
 it('renders correcly for inactive groups', () => {
   const interestGroups = [
     {
-      ...createGroupResponse(),
+      ...createInterestGroupResponse(),
       active: false,
     },
   ];

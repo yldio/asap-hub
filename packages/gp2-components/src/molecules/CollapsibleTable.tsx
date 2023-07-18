@@ -30,7 +30,6 @@ const rowStyles = css({
 });
 
 const rowStyles2Columns = css({
-  ...rowStyles,
   [nonMobileQuery]: {
     gridTemplateColumns: '3fr 1fr',
   },
@@ -83,7 +82,8 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
 }) => {
   const minimumToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
-  const tableStyles = numberOfColumns === '3' ? rowStyles : rowStyles2Columns;
+  const tableStyles =
+    numberOfColumns === '3' ? rowStyles : [rowStyles, rowStyles2Columns];
 
   const getListStyles = () =>
     children.length <= minimumToDisplay || expanded

@@ -83,7 +83,7 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
 }) => {
   const minimumToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
-  const tableStyles = numberOfColumns == '3' ? rowStyles : rowStyles2Columns;
+  const tableStyles = numberOfColumns === '3' ? rowStyles : rowStyles2Columns;
 
   const getListStyles = () =>
     children.length <= minimumToDisplay || expanded

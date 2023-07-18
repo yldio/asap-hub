@@ -99,7 +99,7 @@ export const getDashboardDataObject = (): gp2Model.DashboardDataObject => ({
       id: '1',
       description: 'Test',
       deadline: '2029-10-24T16:30:54.000Z',
-      link: 'https://google.com',
+      href: 'https://google.com',
     },
     {
       id: '2',

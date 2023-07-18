@@ -1,6 +1,10 @@
 import qs from 'qs';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  createSentryHeaders,
+  createFeatureFlagHeaders,
+  GetListOptions,
+} from '@asap-hub/frontend-utils';
 import {
   ResearchOutputDocumentType,
   ResearchOutputResponse,
@@ -33,7 +37,11 @@ export const getResearchOutput = async (
   authorization: string,
 ): Promise<ResearchOutputResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/research-outputs/${id}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     if (resp.status === 404) {
@@ -149,7 +157,11 @@ export const getResearchTags = async (
   const query = qs.stringify(options);
 
   const resp = await fetch(`${API_BASE_URL}/research-tags?${query}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
 
   if (!resp.ok) {

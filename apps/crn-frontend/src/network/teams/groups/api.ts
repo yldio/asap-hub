@@ -1,5 +1,8 @@
 import { ListGroupResponse } from '@asap-hub/model';
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  createSentryHeaders,
+  createFeatureFlagHeaders,
+} from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
 
@@ -8,7 +11,11 @@ export const getTeamGroups = async (
   authorization: string,
 ): Promise<ListGroupResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/teams/${id}/groups`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

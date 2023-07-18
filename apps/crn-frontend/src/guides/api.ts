@@ -1,5 +1,8 @@
 import { ListGuideResponse } from '@asap-hub/model';
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  createSentryHeaders,
+  createFeatureFlagHeaders,
+} from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../config';
 
 export const getGuides = async (
@@ -10,6 +13,7 @@ export const getGuides = async (
     headers: {
       authorization,
       ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {

@@ -54,7 +54,13 @@ describe('ProjectSummaryFooter', () => {
     render(<ProjectSummaryFooter {...defaultProps} endDate={undefined} />);
     expect(screen.getByText('Jul 2020')).toBeVisible();
   });
-  it('renders the month duration if it has an end date', () => {
+
+  it('renders TBD when no start date', () => {
+    render(<ProjectSummaryFooter {...defaultProps} startDate={undefined} />);
+    expect(screen.getByText('TBD')).toBeVisible();
+  });
+
+  it('renders the month duration if it has a start date and an end date', () => {
     render(<ProjectSummaryFooter {...defaultProps} endDate={'2021-12-28'} />);
     expect(screen.getByText('Jul 2020 - Dec 2021 ·')).toBeVisible();
     expect(screen.getByText('(18 months)')).toBeVisible();

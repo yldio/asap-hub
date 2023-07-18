@@ -8,7 +8,7 @@ export async function fetchAll<DataObject, Filter>(
   let recordCount = 0;
   let total;
   const items = [];
-  const take = 200;
+  const take = 100;
 
   do {
     const query = {

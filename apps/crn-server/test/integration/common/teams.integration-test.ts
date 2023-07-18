@@ -1,9 +1,8 @@
 import supertest from 'supertest';
 import { Express } from 'express';
-import { UserResponse } from '@asap-hub/model';
 
-import { appFactory } from '../../../src/app';
-import { retryable } from '../../helpers/retryable';
+import { AppHelper } from '../helpers/app';
+import { retryable } from '../helpers/retryable';
 import {
   FixtureFactory,
   getUserFixture,
@@ -11,13 +10,6 @@ import {
   getInterestGroupFixture,
   UserFixture,
 } from '../fixtures';
-
-jest.mock('../../../src/config', () => ({
-  ...jest.requireActual('../../../src/config'),
-  isContentfulEnabledV2:
-    process.env.INTEGRATION_TEST_CMS === 'contentful' ? 'true' : undefined,
-  logLevel: 'silent',
-}));
 
 jest.setTimeout(120000);
 
@@ -29,12 +21,7 @@ describe('team', () => {
 
   beforeAll(async () => {
     loggedInUser = await fixtures.createUser(getUserFixture());
-    app = appFactory({
-      authHandler: (req, _res, next) => {
-        req.loggedInUser = loggedInUser as unknown as UserResponse;
-        next();
-      },
-    });
+    app = AppHelper(() => loggedInUser);
   });
 
   afterAll(async () => {

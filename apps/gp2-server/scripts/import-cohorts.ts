@@ -8,7 +8,7 @@ import {
   contentfulEnvId,
   contentfulSpaceId,
 } from '../src/config';
-import { ContributingCohortContentfulDataProvider } from '../src/data-providers/contentful/contributing-cohort.data-provider';
+import { ContributingCohortContentfulDataProvider } from '../src/data-providers/contributing-cohort.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependency';
 
 console.log('Importing contributing cohorts...');

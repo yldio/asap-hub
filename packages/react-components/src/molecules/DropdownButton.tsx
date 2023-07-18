@@ -140,6 +140,7 @@ type DropdownButtonProps = {
   children?: ReadonlyArray<ItemData>;
   buttonChildren: (menuShown: boolean) => ReactNode;
   noMargin?: boolean;
+  dropdownHeight?: number;
 } & Partial<Pick<ComponentProps<typeof Button>, 'primary'>>;
 
 const DropdownButton: React.FC<DropdownButtonProps> = ({
@@ -147,10 +148,18 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
   buttonChildren,
   noMargin = false,
   primary,
+  dropdownHeight,
 }) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
   const [menuShown, setMenuShown] = useState(false);
+
+  const trimmedListStyles = dropdownHeight
+    ? css({
+        overflowY: 'auto',
+        maxHeight: `${dropdownHeight / perRem}em`,
+      })
+    : null;
 
   useEffect(() => {
     const handleClickOutside = (event: Event) => {
@@ -174,7 +183,13 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
         {buttonChildren(menuShown)}
       </Button>
       <div css={menuWrapperStyles}>
-        <div css={[menuContainerStyles, menuShown && showMenuStyles]}>
+        <div
+          css={[
+            menuContainerStyles,
+            menuShown && showMenuStyles,
+            trimmedListStyles,
+          ]}
+        >
           <ul css={listStyles}>
             {children.map(
               ({ item, type, href, onClick, closeOnClick = true }, index) => (

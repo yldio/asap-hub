@@ -61,7 +61,7 @@ const app = async () => {
 
   console.log(`Environment ${contentfulEnvId} created`);
 
-  retry(
+  await retry(
     async () => {
       const environment = await space.getEnvironment(contentfulEnvId);
       if (environment.sys.status.sys.id !== 'ready') {

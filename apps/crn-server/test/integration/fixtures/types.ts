@@ -7,6 +7,8 @@ import {
   ResearchOutputCreateDataObject as CommonResearchOutputCreateDataObject,
   GroupDataObject,
   GroupRole,
+  WorkingGroupDataObject,
+  WorkingGroupRole,
 } from '@asap-hub/model';
 
 export type CalendarCreateDataObject = CommonCalendarCreateDataObject;
@@ -33,6 +35,8 @@ export type ResearchOutputCreateDataObject = Omit<
   | 'environmentIds'
   | 'keywordIds'
   | 'labIds'
+  | 'relatedResearchIds'
+  | 'relatedEventIds'
   | 'createdBy'
 > & {
   teams: string[];
@@ -42,6 +46,8 @@ export type ResearchOutputCreateDataObject = Omit<
   environments: string[];
   keywords: string[];
   labs: string[];
+  relatedResearch: string[];
+  relatedEvents: string[];
   authors: { userId: string }[];
 };
 export type InterestGroupCreateDataObject = Omit<
@@ -59,6 +65,23 @@ export type InterestGroupCreateDataObject = Omit<
   teams: { id: string }[];
   calendar: { id: string } | null;
 };
+export type WorkingGroupCreateDataObject = Omit<
+  WorkingGroupDataObject,
+  | 'id'
+  | 'lastModifiedDate'
+  | 'createdDate'
+  | 'calendars'
+  | 'leaders'
+  | 'members'
+> & {
+  leaders: {
+    user: string;
+    role: WorkingGroupRole;
+    workstreamRole: string;
+    inactiveSinceDate?: string;
+  }[];
+  members: string[];
+};
 
 type EntryFixture<T> = T & { id: string };
 
@@ -67,6 +90,9 @@ export type EventFixture = EntryFixture<EventCreateDataObject>;
 export type UserFixture = EntryFixture<UserCreateDataObject>;
 export type TeamFixture = EntryFixture<TeamCreateDataObject>;
 export type InterestGroupFixture = EntryFixture<InterestGroupCreateDataObject>;
+export type WorkingGroupFixture = EntryFixture<WorkingGroupCreateDataObject>;
+export type ResearchOutputFixture =
+  EntryFixture<ResearchOutputCreateDataObject>;
 
 export interface Fixture {
   createCalendar: (
@@ -79,7 +105,10 @@ export interface Fixture {
   createUser: (user: UserCreateDataObject) => Promise<UserFixture>;
   createTeam: (team: TeamCreateDataObject) => Promise<TeamFixture>;
   createInterestGroup: (
-    InterestGroup: InterestGroupCreateDataObject,
+    interestGroup: InterestGroupCreateDataObject,
   ) => Promise<InterestGroupFixture>;
+  createWorkingGroup: (
+    workingGroup: WorkingGroupCreateDataObject,
+  ) => Promise<WorkingGroupFixture>;
   teardown: () => Promise<void>;
 }

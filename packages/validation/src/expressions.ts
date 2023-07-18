@@ -3,7 +3,7 @@
 // remember to update link patterns in the squidex schema
 
 export const urlExpression =
-  "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$";
+  "^(?:http(s)?:\\/\\/)[\\w.\\-]+(?:\\.[\\w\\.\\-]+)+[\\w\\-\\._~:\\/?#%\\[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$";
 
 export const emailExpression =
   "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$";

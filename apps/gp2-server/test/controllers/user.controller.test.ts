@@ -13,9 +13,7 @@ describe('Users controller', () => {
   });
 
   describe('Fetch', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
 
     test('Should return the users', async () => {
       userDataProviderMock.fetch.mockResolvedValue({
@@ -202,7 +200,7 @@ describe('Users controller', () => {
       expect(userDataProviderMock.fetchById).toHaveBeenCalledWith(userId);
     });
 
-    test('should throw when fails to update asset - squidex error', async () => {
+    test('should throw when fails to update asset - contentful error', async () => {
       assetDataProviderMock.create.mockResolvedValue('42');
       userDataProviderMock.update.mockRejectedValue(new Error());
 
@@ -215,7 +213,7 @@ describe('Users controller', () => {
       ).rejects.toThrow();
     });
 
-    test('should throw when fails to update user - squidex error', async () => {
+    test('should throw when fails to update user - contentful error', async () => {
       assetDataProviderMock.create.mockRejectedValue(new Error());
 
       await expect(

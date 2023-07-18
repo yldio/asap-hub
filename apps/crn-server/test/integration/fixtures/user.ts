@@ -13,6 +13,7 @@ export const getUserFixture = (
     role: 'Guest',
     onboarded: true,
     teams: [],
+    connections: [{ code: chance.guid() }],
     ...props,
   };
 };

@@ -1,9 +1,0 @@
-#!/bin/bash -e
-
-SQUIDEX_CLIENT_ID=${SQUIDEX_CLIENT_ID:-$GP2_SQUIDEX_CLIENT_ID}
-SQUIDEX_CLIENT_SECRET=${SQUIDEX_CLIENT_SECRET:-$GP2_SQUIDEX_CLIENT_SECRET}
-export SQUIDEX_APP_NAME=${SQUIDEX_APP_NAME:-$GP2_SQUIDEX_APP_NAME}
-
-source ./packages/server-common/scripts/schema-update.sh
-
-schema_update gp2-server

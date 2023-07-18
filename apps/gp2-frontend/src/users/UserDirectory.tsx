@@ -10,7 +10,7 @@ import { useSearch } from '../hooks/search';
 import { useProjectsState } from '../projects/state';
 import { useWorkingGroupsState } from '../working-groups/state';
 import { getUsers } from './api';
-import { squidexUsersResponseToStream, userFields, userToCSV } from './export';
+import { userFields, usersResponseToStream, userToCSV } from './export';
 import UserList from './UserList';
 
 type UserDirectoryProps = Pick<
@@ -35,7 +35,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
   const onFiltersClick = () => changeLocation(filtersHref);
   const autorization = useRecoilValue(authorizationState);
   const exportUsers = () =>
-    squidexUsersResponseToStream(
+    usersResponseToStream(
       createCsvFileStream('user_export.csv', {
         columns: userFields,
         header: true,

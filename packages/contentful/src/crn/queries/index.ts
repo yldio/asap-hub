@@ -9,6 +9,7 @@ export * from './news.queries';
 export * from './pages.queries';
 export * from './reminders.queries';
 export * from './research-tags.queries';
+export * from './research-outputs.queries';
 export * from './teams.queries';
 export * from './tutorials.queries';
 export * from './users.queries';

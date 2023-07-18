@@ -1,13 +1,9 @@
 import supertest from 'supertest';
 import { Express } from 'express';
-import {
-  ListReminderResponse,
-  UserCreateDataObject,
-  UserResponse,
-} from '@asap-hub/model';
+import { ListReminderResponse, UserCreateDataObject } from '@asap-hub/model';
 
-import { appFactory } from '../../../src/app';
-import { retryable } from '../../helpers/retryable';
+import { AppHelper } from '../helpers/app';
+import { retryable } from '../helpers/retryable';
 import {
   FixtureFactory,
   getUserFixture,
@@ -70,12 +66,7 @@ describe('Reminders', () => {
         ],
       }),
     );
-    app = appFactory({
-      authHandler: (req, _res, next) => {
-        req.loggedInUser = loggedInUser as UserResponse;
-        next();
-      },
-    });
+    app = AppHelper(() => loggedInUser);
   });
 
   afterAll(async () => {
@@ -535,12 +526,7 @@ describe('Reminders', () => {
     props: Partial<UserCreateDataObject> = {},
   ) => {
     const loggedInUser = await fixtures.createUser(getUserFixture(props));
-    app = appFactory({
-      authHandler: (req, _res, next) => {
-        req.loggedInUser = loggedInUser as UserResponse;
-        next();
-      },
-    });
+    app = AppHelper(() => loggedInUser);
     return { loggedInUser, app };
   };
 

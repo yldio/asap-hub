@@ -1,128 +1,136 @@
-import { GenericError } from '@asap-hub/errors';
-import { SquidexRest, gp2 as gp2Squidex } from '@asap-hub/squidex';
-import nock from 'nock';
-import { appName, baseUrl } from '../../src/config';
-import { ContributingCohortSquidexDataProvider } from '../../src/data-providers/contributing-cohort.data-provider';
-import { getAuthToken } from '../../src/utils/auth';
 import {
-  fetchContributingCohortResponse,
+  Environment,
+  getGP2ContentfulGraphqlClientMockServer,
+} from '@asap-hub/contentful';
+import { GraphQLError } from 'graphql';
+import { ContributingCohortContentfulDataProvider } from '../../src/data-providers/contributing-cohort.data-provider';
+import {
+  getContentfulContributingCohortsGraphqlResponse,
+  getContentfulGraphqlContributingCohorts,
+  getContributingCohortContentfulEntry,
   getContributingCohortCreateDataObject,
-  getContributingCohortInput,
   getListContributingCohortDataObject,
-  getSquidexContributingCohortGraphqlResponse,
 } from '../fixtures/contributing-cohort.fixtures';
-import { identity } from '../helpers/squidex';
-import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
-import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../mocks/contentful-rest-client.mock';
 
-describe('ContributingCohort data provider', () => {
-  const contributingCohortRestClient = new SquidexRest<
-    gp2Squidex.RestContributingCohort,
-    gp2Squidex.InputContributingCohort
-  >(getAuthToken, 'contributing-cohorts', {
-    appName,
-    baseUrl,
-  });
-  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+describe('Contributing Cohorts data provider', () => {
+  const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
 
-  const contributingCohortDataProvider =
-    new ContributingCohortSquidexDataProvider(
-      squidexGraphqlClientMock,
-      contributingCohortRestClient,
-    );
-  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
-  const contributingCohortDataProviderMockGraphqlServer =
-    new ContributingCohortSquidexDataProvider(
-      squidexGraphqlClientMockServer,
-      contributingCohortRestClient,
+  const environmentMock = getContentfulEnvironmentMock();
+
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
+
+  const contributingCohortsDataProvider =
+    new ContributingCohortContentfulDataProvider(
+      contentfulGraphqlClientMock,
+      contentfulRestClientMock,
     );
 
-  beforeAll(identity);
+  const contentfulGraphqlClientMockServer =
+    getGP2ContentfulGraphqlClientMockServer({
+      ContributingCohorts: () => getContentfulGraphqlContributingCohorts(),
+    });
+
+  const contributingCohortsDataProviderMockGraphql =
+    new ContributingCohortContentfulDataProvider(
+      contentfulGraphqlClientMockServer,
+      contentfulRestClientMock,
+    );
+
   beforeEach(jest.resetAllMocks);
 
-  describe('Fetch', () => {
-    test('Should fetch the project from squidex graphql', async () => {
-      const result =
-        await contributingCohortDataProviderMockGraphqlServer.fetch();
+  describe('Fetch method', () => {
+    test('Should fetch the list of contributing cohorts from Contentful GraphQl', async () => {
+      const result = await contributingCohortsDataProviderMockGraphql.fetch();
 
       expect(result).toMatchObject(getListContributingCohortDataObject());
     });
 
-    test('Should return an empty result', async () => {
-      const mockResponse = getSquidexContributingCohortGraphqlResponse();
-      mockResponse.queryContributingCohortsContentsWithTotal!.items = [];
-      mockResponse.queryContributingCohortsContentsWithTotal!.total = 0;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+    test('Should return an empty result when no contributing cohorts exist', async () => {
+      const contentfulGraphQLResponse =
+        getContentfulContributingCohortsGraphqlResponse();
+      contentfulGraphQLResponse.contributingCohortsCollection!.total = 0;
+      contentfulGraphQLResponse.contributingCohortsCollection!.items = [];
 
-      const result = await contributingCohortDataProvider.fetch();
-      expect(result).toEqual({ total: 0, items: [] });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await contributingCohortsDataProvider.fetch();
+
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
     });
 
-    test('Should return an empty result if the client returns a response with a null items property', async () => {
-      const mockResponse = getSquidexContributingCohortGraphqlResponse();
-      mockResponse.queryContributingCohortsContentsWithTotal = null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+    test('Should throw an error with a specific error message when the graphql client throws one', async () => {
+      contentfulGraphqlClientMock.request.mockRejectedValueOnce(
+        new GraphQLError('some error message'),
+      );
 
-      const result = await contributingCohortDataProvider.fetch();
-      expect(result).toEqual({ total: 0, items: [] });
+      await expect(contributingCohortsDataProvider.fetch()).rejects.toThrow(
+        'some error message',
+      );
     });
 
-    test('Should return an empty result if the client returns a response with a null query property', async () => {
-      const mockResponse = getSquidexContributingCohortGraphqlResponse();
-      mockResponse.queryContributingCohortsContentsWithTotal!.items = null;
-      squidexGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+    test('Should return an empty result when the query is returned as null', async () => {
+      const contentfulGraphQLResponse =
+        getContentfulContributingCohortsGraphqlResponse();
+      contentfulGraphQLResponse.contributingCohortsCollection = null;
 
-      const result = await contributingCohortDataProvider.fetch();
-      expect(result).toEqual({ total: 0, items: [] });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await contributingCohortsDataProvider.fetch();
+
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
+    });
+
+    test('Should return contributing cohorts', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulContributingCohortsGraphqlResponse(),
+      );
+      const result = await contributingCohortsDataProvider.fetch();
+
+      expect(result).toEqual(getListContributingCohortDataObject());
     });
   });
 
   describe('Fetch-by-id method', () => {
     test('Should throw as not implemented', async () => {
       expect.assertions(1);
-      await expect(contributingCohortDataProvider.fetchById()).rejects.toThrow(
+      await expect(contributingCohortsDataProvider.fetchById()).rejects.toThrow(
         /Method not implemented/i,
       );
     });
   });
 
-  describe('Create', () => {
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    test('Should throw when the POST request to squidex fails', async () => {
-      nock(baseUrl)
-        .post(`/api/content/${appName}/contributing-cohorts?publish=true`)
-        .reply(500);
-
-      await expect(
-        contributingCohortDataProvider.create(
-          getContributingCohortCreateDataObject(),
-        ),
-      ).rejects.toThrow(GenericError);
-    });
-
-    test('Should create the contributing cohort', async () => {
-      const cohortResponse = fetchContributingCohortResponse();
+  describe('Create method', () => {
+    test('Should create and publish the contributing cohort', async () => {
+      const cohortMock = getContributingCohortContentfulEntry();
       const cohortCreateDataObject = getContributingCohortCreateDataObject();
 
-      nock(baseUrl)
-        .post(
-          `/api/content/${appName}/contributing-cohorts?publish=true`,
-          getContributingCohortInput(),
-        )
-        .reply(200, cohortResponse);
+      environmentMock.createEntry.mockResolvedValue(cohortMock);
+      cohortMock.publish = jest.fn().mockResolvedValueOnce(cohortMock);
 
-      const response = await contributingCohortDataProvider.create(
+      const response = await contributingCohortsDataProvider.create(
         cohortCreateDataObject,
       );
 
-      expect(response).toEqual(cohortResponse.id);
+      expect(environmentMock.createEntry).toHaveBeenCalledTimes(1);
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'contributingCohorts',
+        { fields: { name: { 'en-US': 'some name' } } },
+      );
+      expect(cohortMock.publish).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(cohortMock.sys.id);
     });
   });
 });

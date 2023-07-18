@@ -9,6 +9,7 @@ import {
   TutorialDataProvider,
   DiscoverDataProvider,
   ResearchTagDataProvider,
+  ResearchOutputDataProvider,
   ReminderDataProvider,
 } from '../data-providers/types';
 
@@ -32,6 +33,7 @@ type DependencyList = {
   tutorials: DependencySwitch<TutorialDataProvider>;
   discover: DependencySwitch<DiscoverDataProvider>;
   researchTags: DependencySwitch<ResearchTagDataProvider>;
+  researchOutputs: DependencySwitch<ResearchOutputDataProvider>;
   reminders: DependencySwitch<ReminderDataProvider>;
 };
 
@@ -85,6 +87,10 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       reminders: {
+        true: undefined,
+        false: undefined,
+      },
+      researchOutputs: {
         true: undefined,
         false: undefined,
       },

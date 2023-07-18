@@ -268,7 +268,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/babel__core": 7.20.1
     "@types/hapi__boom": 9.0.1
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": 1.27.1
@@ -281,7 +281,7 @@ __metadata:
     algoliasearch: 4.18.0
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1360.0
+    aws-sdk: 2.1416.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -304,7 +304,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/core": 7.22.9
     "@babel/runtime-corejs3": 7.22.6
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jsdom": 16.2.15
     "@types/node": 18.15.11
     core-js: 3.30.1
@@ -322,11 +322,11 @@ __metadata:
     "@babel/core": 7.22.9
     "@babel/preset-react": 7.22.5
     "@babel/runtime-corejs3": 7.22.6
-    "@types/auth0-js": 9.14.7
-    "@types/jest": ^29.4.0
+    "@types/auth0-js": 9.21.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/pify": 3.0.2
-    auth0-js: 9.20.2
+    auth0-js: 9.22.0
     camelcase: 6.3.0
     pify: 5.0.0
     util: 0.12.5
@@ -344,7 +344,7 @@ __metadata:
     "@babel/preset-env": 7.22.9
     "@babel/preset-typescript": 7.22.5
     "@babel/runtime-corejs3": 7.22.6
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/js-yaml": ^4
     "@types/node": 18.15.11
     "@vedicium/auth0-actions-sdk": ^0.1.3
@@ -364,7 +364,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@auth0/auth0-spa-js": 1.22.6
     "@babel/runtime-corejs3": 7.22.6
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
   languageName: unknown
   linkType: soft
@@ -392,7 +392,7 @@ __metadata:
     "@graphql-tools/schema": 9.0.19
     "@graphql-typed-document-node/core": 3.2.0
     "@types/contentful-html-rich-text-converter": "workspace:^"
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jest-when": 3.5.2
     "@types/node": 18.15.11
     "@types/prettier": 2.7.3
@@ -422,7 +422,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -449,7 +449,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -477,7 +477,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -504,7 +504,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -533,7 +533,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -561,7 +561,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -590,7 +590,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -617,7 +617,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -646,7 +646,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -682,7 +682,7 @@ __metadata:
     "@graphql-tools/schema": 9.0.19
     "@graphql-typed-document-node/core": 3.2.0
     "@types/async-retry": ^1
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/minimist": ^1
     "@types/node": 18.15.11
     async-retry: 1.3.3
@@ -716,7 +716,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jsdom": 16.2.15
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -766,7 +766,7 @@ __metadata:
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/nock": 11.1.0
     "@types/node": 18.15.11
     "@types/qs": 6.9.7
@@ -828,7 +828,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1360.0
+    aws-sdk: 2.1416.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.30.1
@@ -893,7 +893,7 @@ __metadata:
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.9
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jest-when": 3.5.2
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-decode": 2.2.1
@@ -985,7 +985,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": 7.22.6
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
   languageName: unknown
   linkType: soft
 
@@ -1029,7 +1029,7 @@ __metadata:
     eslint-plugin-prettier: 4.2.1
     eslint-plugin-react: 7.32.2
     eslint-plugin-react-hooks: 4.6.0
-    jest-config: 27.5.1
+    jest-config: 29.6.1
     prettier: 2.8.8
   languageName: unknown
   linkType: soft
@@ -1057,7 +1057,7 @@ __metadata:
   dependencies:
     "@babel/runtime-corejs3": 7.22.6
     "@types/asap-hub__inline-environment": "workspace:*"
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     core-js: 3.30.1
   languageName: unknown
   linkType: soft
@@ -1078,7 +1078,7 @@ __metadata:
     "@testing-library/dom": 8.20.1
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-router-dom": 5.3.3
@@ -1126,7 +1126,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jsdom": 16.2.15
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -1176,7 +1176,7 @@ __metadata:
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
@@ -1239,7 +1239,7 @@ __metadata:
     "@testing-library/react-hooks": 8.0.1
     "@testing-library/user-event": 12.8.3
     "@types/history": 4.7.11
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/nock": 11.1.0
     "@types/node": 18.15.11
     "@types/react": 17.0.62
@@ -1298,7 +1298,7 @@ __metadata:
     "@types/node": 18.15.11
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1360.0
+    aws-sdk: 2.1416.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.30.1
@@ -1346,7 +1346,7 @@ __metadata:
     "@types/aws-lambda": 8.10.119
     "@types/cors": 2.8.13
     "@types/express": 4.17.17
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jest-when": 3.5.2
     "@types/jsonwebtoken": 8.5.9
     "@types/jwt-encode": "workspace:*"
@@ -1448,7 +1448,7 @@ __metadata:
     "@babel/preset-env": 7.22.9
     "@babel/preset-typescript": 7.22.5
     "@babel/runtime-corejs3": 7.22.6
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jsonwebtoken": 8.5.9
     jsonwebtoken: 9.0.0
   languageName: unknown
@@ -1483,7 +1483,7 @@ __metadata:
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/ramda": 0.27.20
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
@@ -1558,7 +1558,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.22.6
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/react": 17.0.62
     "@types/testing-library__jest-dom": 5.14.8
     "@types/testing-library__react": 10.0.1
@@ -1613,7 +1613,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.119
     "@types/express": 4.17.17
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jsonwebtoken": 8.5.9
     "@types/luxon": 1.27.1
     "@types/pump": 1.1.1
@@ -1664,7 +1664,7 @@ __metadata:
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.9
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     apr-intercept: 3.0.4
@@ -1698,7 +1698,7 @@ __metadata:
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.9
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": 1.27.1
@@ -1778,7 +1778,7 @@ __metadata:
     "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.22.6
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
   languageName: unknown
   linkType: soft
 
@@ -10626,13 +10626,13 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-reference@npm:^5.9.0":
-  version: 5.9.0
-  resolution: "@contentful/field-editor-reference@npm:5.9.0"
+  version: 5.13.1
+  resolution: "@contentful/field-editor-reference@npm:5.13.1"
   dependencies:
     "@contentful/f36-components": ^4.0.27
     "@contentful/f36-icons": ^4.1.0
     "@contentful/f36-tokens": ^4.0.0
-    "@contentful/field-editor-shared": ^1.2.0
+    "@contentful/field-editor-shared": ^1.3.0
     "@contentful/mimetype": ^1.4.0
     "@tanstack/react-query": ^4.3.9
     "@types/deep-equal": ^1.0.1
@@ -10651,7 +10651,7 @@ __metadata:
   peerDependencies:
     "@contentful/app-sdk": ^4.2.0
     react: ">=16.8.0"
-  checksum: 34db4a4b71afb6f1f3bae544992eb1886eff148f6f89471295a8a091dc655f93245dd218529fe386c3b2d6eb38392b4c1f87029af517512374cbe5c430a2c677
+  checksum: 9216b65335201e730660bce104acf4de2d17abe07ab947c26600cbbac1a66e3b928087bb1dca3d1bef44571fdb7bd1fbdc0ed2293616e006f629e49a625beea2
   languageName: node
   linkType: hard
 
@@ -10668,6 +10668,22 @@ __metadata:
     "@contentful/app-sdk": ^4.2.0
     react: ">=16.8.0"
   checksum: 94b6f8bbab76320b65f64e44f5fb52d585a77286c94203bd1bd913369adba0007d09143a49a98d0e276f21038beb9e6a7bb3cc6cff76c5461c9a9ce6e75053be
+  languageName: node
+  linkType: hard
+
+"@contentful/field-editor-shared@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@contentful/field-editor-shared@npm:1.3.0"
+  dependencies:
+    "@contentful/f36-note": ^4.2.8
+    "@contentful/f36-tokens": ^4.0.0
+    emotion: ^10.0.17
+    lodash: ^4.17.15
+    lodash-es: ^4.17.21
+  peerDependencies:
+    "@contentful/app-sdk": ^4.2.0
+    react: ">=16.8.0"
+  checksum: cfc46b66588709a73f3fd3c3e52bf10f84150719d152cf71b927953b7cf7097ef7c4e1887c3d9f04848fb7d45678896fce2ac495bd6a4a8650b290de60514085
   languageName: node
   linkType: hard
 
@@ -16148,10 +16164,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/auth0-js@npm:9.14.7":
-  version: 9.14.7
-  resolution: "@types/auth0-js@npm:9.14.7"
-  checksum: dda4c3355aaeca38a8a330e09392f74acca368ca6ba2f2e91e3ac42cbbbb7a52dddd775942afe168987cca62e909b3541c65f7f36881bd22a769f29715e02ea8
+"@types/auth0-js@npm:9.21.0":
+  version: 9.21.0
+  resolution: "@types/auth0-js@npm:9.21.0"
+  checksum: 4af3f5b124153b4e7fcbefa9a6becbf41807236f1feae61c38a97385010ad32efeb1a379fa99d1d3c89abe1ce61a6dc90754720b28ad0674a2d09d5cfa89a2c9
   languageName: node
   linkType: hard
 
@@ -16737,7 +16753,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*, @types/jest@npm:^29.4.0":
+"@types/jest@npm:*, @types/jest@npm:29.5.3":
   version: 29.5.3
   resolution: "@types/jest@npm:29.5.3"
   dependencies:
@@ -19814,12 +19830,12 @@ __metadata:
     "@jeysal/babel-plugin-ramda": 2.0.1
     "@peculiar/webcrypto": 1.4.3
     "@testing-library/jest-dom": ^5.16.5
-    "@types/jest": ^29.4.0
+    "@types/jest": 29.5.3
     "@types/react-test-renderer": 17.0.2
     "@types/uuid": 8.3.4
     "@types/webpack": 4.41.33
     "@yarnpkg/pnpify": 3.1.6
-    babel-jest: ^29.4.0
+    babel-jest: 29.6.1
     babel-plugin-lodash: 3.3.4
     babel-plugin-transform-inline-environment-variables: 0.5.0-alpha.42
     babel-preset-react-app: 10.0.1
@@ -19828,8 +19844,8 @@ __metadata:
     escape-string-regexp: 4.0.0
     eslint: 8.23.1
     hyperform: 0.12.1
-    jest: ^29.4.0
-    jest-environment-jsdom: ^29.4.1
+    jest: 29.6.1
+    jest-environment-jsdom: 29.6.1
     jest-fail-on-console: ^3.1.1
     jest-runner-eslint: ^1.1.0
     jest-watch-select-projects: 2.0.0
@@ -20086,9 +20102,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"auth0-js@npm:9.20.2":
-  version: 9.20.2
-  resolution: "auth0-js@npm:9.20.2"
+"auth0-js@npm:9.22.0":
+  version: 9.22.0
+  resolution: "auth0-js@npm:9.22.0"
   dependencies:
     base64-js: ^1.5.1
     idtoken-verifier: ^2.2.2
@@ -20098,7 +20114,7 @@ __metadata:
     superagent: ^7.1.5
     url-join: ^4.0.1
     winchan: ^0.2.2
-  checksum: 901833ff3ddf722cfa4fc3bef173a8347bf4444aaee1cb67c7ff8e54bce8c15b6a78573bc2f1a69a23278e7140412d3ce95548b15940c8ec66aae3cc72fad7b0
+  checksum: 20c2158dfbaef632c31452fea43367c53e6e3900173eb97ef79b6b70b4a711df1de8c42ffdc0cab7fa1349d8843bc2fa3caf1b54dcc67cb93e0135a86540a1c8
   languageName: node
   linkType: hard
 
@@ -20205,9 +20221,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1360.0":
-  version: 2.1360.0
-  resolution: "aws-sdk@npm:2.1360.0"
+"aws-sdk@npm:2.1416.0":
+  version: 2.1416.0
+  resolution: "aws-sdk@npm:2.1416.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -20219,7 +20235,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.5.0
-  checksum: b180b10469486003ab388ce869789b8daf9510b83d71f4313ae11d2c5fe80ffed89d87e7ec7c57d847bf617a58d33fa5607b699cb43a0c7221e95f6bf8bc375c
+  checksum: 22fc4de797b0a9cefaba14cb26134f577c7c4ee41f85cd47399997553662a3895a13fbbf0a362ad0cfa11a79b46d946f13e771f88a7778a0416c60d4bc816f61
   languageName: node
   linkType: hard
 
@@ -20393,6 +20409,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-jest@npm:29.6.1, babel-jest@npm:^29.6.1":
+  version: 29.6.1
+  resolution: "babel-jest@npm:29.6.1"
+  dependencies:
+    "@jest/transform": ^29.6.1
+    "@types/babel__core": ^7.1.14
+    babel-plugin-istanbul: ^6.1.1
+    babel-preset-jest: ^29.5.0
+    chalk: ^4.0.0
+    graceful-fs: ^4.2.9
+    slash: ^3.0.0
+  peerDependencies:
+    "@babel/core": ^7.8.0
+  checksum: bc46cfba468edde91f34a8292501d4448a39fab72d80d7d95f4349feb114fa21becb01def007d6166de7933ab9633bf5b5e1b72ba6ffeaa991f7abf014a2f61d
+  languageName: node
+  linkType: hard
+
 "babel-jest@npm:^27.4.2, babel-jest@npm:^27.5.1":
   version: 27.5.1
   resolution: "babel-jest@npm:27.5.1"
@@ -20408,23 +20441,6 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.8.0
   checksum: 4e93e6e9fb996cc5f1505e924eb8e8cc7b25c294ba9629762a2715390f48af6a4c14dbb84cd9730013ac0e03267a5a9aa2fb6318c544489cda7f50f4e506def4
-  languageName: node
-  linkType: hard
-
-"babel-jest@npm:^29.4.0, babel-jest@npm:^29.6.1":
-  version: 29.6.1
-  resolution: "babel-jest@npm:29.6.1"
-  dependencies:
-    "@jest/transform": ^29.6.1
-    "@types/babel__core": ^7.1.14
-    babel-plugin-istanbul: ^6.1.1
-    babel-preset-jest: ^29.5.0
-    chalk: ^4.0.0
-    graceful-fs: ^4.2.9
-    slash: ^3.0.0
-  peerDependencies:
-    "@babel/core": ^7.8.0
-  checksum: bc46cfba468edde91f34a8292501d4448a39fab72d80d7d95f4349feb114fa21becb01def007d6166de7933ab9633bf5b5e1b72ba6ffeaa991f7abf014a2f61d
   languageName: node
   linkType: hard
 
@@ -32163,44 +32179,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-config@npm:27.5.1, jest-config@npm:^27.5.1":
-  version: 27.5.1
-  resolution: "jest-config@npm:27.5.1"
-  dependencies:
-    "@babel/core": ^7.8.0
-    "@jest/test-sequencer": ^27.5.1
-    "@jest/types": ^27.5.1
-    babel-jest: ^27.5.1
-    chalk: ^4.0.0
-    ci-info: ^3.2.0
-    deepmerge: ^4.2.2
-    glob: ^7.1.1
-    graceful-fs: ^4.2.9
-    jest-circus: ^27.5.1
-    jest-environment-jsdom: ^27.5.1
-    jest-environment-node: ^27.5.1
-    jest-get-type: ^27.5.1
-    jest-jasmine2: ^27.5.1
-    jest-regex-util: ^27.5.1
-    jest-resolve: ^27.5.1
-    jest-runner: ^27.5.1
-    jest-util: ^27.5.1
-    jest-validate: ^27.5.1
-    micromatch: ^4.0.4
-    parse-json: ^5.2.0
-    pretty-format: ^27.5.1
-    slash: ^3.0.0
-    strip-json-comments: ^3.1.1
-  peerDependencies:
-    ts-node: ">=9.0.0"
-  peerDependenciesMeta:
-    ts-node:
-      optional: true
-  checksum: 1188fd46c0ed78cbe3175eb9ad6712ccf74a74be33d9f0d748e147c107f0889f8b701fbff1567f31836ae18597dacdc43d6a8fc30dd34ade6c9229cc6c7cb82d
-  languageName: node
-  linkType: hard
-
-"jest-config@npm:^29.6.1":
+"jest-config@npm:29.6.1, jest-config@npm:^29.6.1":
   version: 29.6.1
   resolution: "jest-config@npm:29.6.1"
   dependencies:
@@ -32235,6 +32214,43 @@ __metadata:
     ts-node:
       optional: true
   checksum: 3a30afeb28cc5658ef9cd95f2551ab8a29641bb6d377eb239cba8e7522eb4611c9a98cdcf173d87f5ad7b5e1ad242c3cd5434a260107bd3c7e8305d05023e05c
+  languageName: node
+  linkType: hard
+
+"jest-config@npm:^27.5.1":
+  version: 27.5.1
+  resolution: "jest-config@npm:27.5.1"
+  dependencies:
+    "@babel/core": ^7.8.0
+    "@jest/test-sequencer": ^27.5.1
+    "@jest/types": ^27.5.1
+    babel-jest: ^27.5.1
+    chalk: ^4.0.0
+    ci-info: ^3.2.0
+    deepmerge: ^4.2.2
+    glob: ^7.1.1
+    graceful-fs: ^4.2.9
+    jest-circus: ^27.5.1
+    jest-environment-jsdom: ^27.5.1
+    jest-environment-node: ^27.5.1
+    jest-get-type: ^27.5.1
+    jest-jasmine2: ^27.5.1
+    jest-regex-util: ^27.5.1
+    jest-resolve: ^27.5.1
+    jest-runner: ^27.5.1
+    jest-util: ^27.5.1
+    jest-validate: ^27.5.1
+    micromatch: ^4.0.4
+    parse-json: ^5.2.0
+    pretty-format: ^27.5.1
+    slash: ^3.0.0
+    strip-json-comments: ^3.1.1
+  peerDependencies:
+    ts-node: ">=9.0.0"
+  peerDependenciesMeta:
+    ts-node:
+      optional: true
+  checksum: 1188fd46c0ed78cbe3175eb9ad6712ccf74a74be33d9f0d748e147c107f0889f8b701fbff1567f31836ae18597dacdc43d6a8fc30dd34ade6c9229cc6c7cb82d
   languageName: node
   linkType: hard
 
@@ -32330,22 +32346,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-environment-jsdom@npm:^27.5.1":
-  version: 27.5.1
-  resolution: "jest-environment-jsdom@npm:27.5.1"
-  dependencies:
-    "@jest/environment": ^27.5.1
-    "@jest/fake-timers": ^27.5.1
-    "@jest/types": ^27.5.1
-    "@types/node": "*"
-    jest-mock: ^27.5.1
-    jest-util: ^27.5.1
-    jsdom: ^16.6.0
-  checksum: bc104aef7d7530d0740402aa84ac812138b6d1e51fe58adecce679f82b99340ddab73e5ec68fa079f33f50c9ddec9728fc9f0ddcca2ad6f0b351eed2762cc555
-  languageName: node
-  linkType: hard
-
-"jest-environment-jsdom@npm:^29.4.1":
+"jest-environment-jsdom@npm:29.6.1":
   version: 29.6.1
   resolution: "jest-environment-jsdom@npm:29.6.1"
   dependencies:
@@ -32363,6 +32364,21 @@ __metadata:
     canvas:
       optional: true
   checksum: e8a9bff00a011235b004699f34bc85b18fdac82049513410cbf2dc1c2dd332bc1b4f108976412df1d29f2fa8bf0360aaf84eb0f5b4db1db2fb7fc7155dc14be7
+  languageName: node
+  linkType: hard
+
+"jest-environment-jsdom@npm:^27.5.1":
+  version: 27.5.1
+  resolution: "jest-environment-jsdom@npm:27.5.1"
+  dependencies:
+    "@jest/environment": ^27.5.1
+    "@jest/fake-timers": ^27.5.1
+    "@jest/types": ^27.5.1
+    "@types/node": "*"
+    jest-mock: ^27.5.1
+    jest-util: ^27.5.1
+    jsdom: ^16.6.0
+  checksum: bc104aef7d7530d0740402aa84ac812138b6d1e51fe58adecce679f82b99340ddab73e5ec68fa079f33f50c9ddec9728fc9f0ddcca2ad6f0b351eed2762cc555
   languageName: node
   linkType: hard
 
@@ -33447,25 +33463,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^27.4.3":
-  version: 27.5.1
-  resolution: "jest@npm:27.5.1"
-  dependencies:
-    "@jest/core": ^27.5.1
-    import-local: ^3.0.2
-    jest-cli: ^27.5.1
-  peerDependencies:
-    node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-  peerDependenciesMeta:
-    node-notifier:
-      optional: true
-  bin:
-    jest: bin/jest.js
-  checksum: 96f1d69042b3c6dfc695f2a4e4b0db38af6fb78582ad1a02beaa57cfcd77cbd31567d7d865c1c85709b7c3e176eefa3b2035ffecd646005f15d8ef528eccf205
-  languageName: node
-  linkType: hard
-
-"jest@npm:^29.4.0":
+"jest@npm:29.6.1":
   version: 29.6.1
   resolution: "jest@npm:29.6.1"
   dependencies:
@@ -33481,6 +33479,24 @@ __metadata:
   bin:
     jest: bin/jest.js
   checksum: 7b8c0ca72f483e00ec19dcf9549f9a9af8ae468ab62925b148d714b58eb52d5fea9a082625193bc833d2d9b64cf65a11f3d37857636c5551af05c10aec4ce71b
+  languageName: node
+  linkType: hard
+
+"jest@npm:^27.4.3":
+  version: 27.5.1
+  resolution: "jest@npm:27.5.1"
+  dependencies:
+    "@jest/core": ^27.5.1
+    import-local: ^3.0.2
+    jest-cli: ^27.5.1
+  peerDependencies:
+    node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+  peerDependenciesMeta:
+    node-notifier:
+      optional: true
+  bin:
+    jest: bin/jest.js
+  checksum: 96f1d69042b3c6dfc695f2a4e4b0db38af6fb78582ad1a02beaa57cfcd77cbd31567d7d865c1c85709b7c3e176eefa3b2035ffecd646005f15d8ef528eccf205
   languageName: node
   linkType: hard
 
@@ -34677,7 +34693,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash-es@npm:^4.17.15":
+"lodash-es@npm:^4.17.15, lodash-es@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash-es@npm:4.17.21"
   checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2

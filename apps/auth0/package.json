@@ -26,7 +26,7 @@
     "@babel/preset-env": "7.22.9",
     "@babel/preset-typescript": "7.22.5",
     "@babel/runtime-corejs3": "7.22.6",
-    "@types/jest": "^29.4.0",
+    "@types/jest": "29.5.3",
     "@types/js-yaml": "^4",
     "@types/node": "18.15.11",
     "auth0-deploy-cli": "^7.15.1",

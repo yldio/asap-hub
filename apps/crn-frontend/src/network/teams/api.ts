@@ -91,6 +91,7 @@ export const createResearchOutput = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
     },
     body: JSON.stringify(researchOutput),
   });
@@ -122,6 +123,7 @@ export const updateTeamResearchOutput = async (
         authorization,
         'content-type': 'application/json',
         ...createSentryHeaders(),
+        ...createFeatureFlagHeaders(),
       },
       body: JSON.stringify(researchOutput),
     },
@@ -149,6 +151,7 @@ export const getLabs = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
     },
   });
   if (!resp.ok) {

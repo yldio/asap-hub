@@ -10,7 +10,11 @@ export const getDashboard = async (
   authorization: string,
 ): Promise<DashboardResponse> => {
   const resp = await fetch(`${API_BASE_URL}/dashboard`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     throw new Error(

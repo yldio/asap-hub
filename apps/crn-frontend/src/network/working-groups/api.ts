@@ -17,7 +17,11 @@ export const getWorkingGroups = async (
   const resp = await fetch(
     createListApiUrl('working-groups', options).toString(),
     {
-      headers: { authorization, ...createSentryHeaders() },
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+        ...createFeatureFlagHeaders(),
+      },
     },
   );
 

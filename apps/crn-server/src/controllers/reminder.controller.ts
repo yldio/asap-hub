@@ -24,7 +24,7 @@ export const formattedMaterialByEventType = (
 };
 
 export default class ReminderController {
-  constructor(private reminderDataProvider: ReminderDataProvider) { }
+  constructor(private reminderDataProvider: ReminderDataProvider) {}
 
   async fetch(options: FetchRemindersOptions): Promise<ListReminderResponse> {
     const reminders = await this.reminderDataProvider.fetch(options);
@@ -99,8 +99,8 @@ export default class ReminderController {
           const href = reminder.data.pmId
             ? network({}).users({}).user({ userId: reminder.data.pmId }).$
             : events({}).event({
-              eventId: reminder.data.eventId,
-            }).$;
+                eventId: reminder.data.eventId,
+              }).$;
           return {
             id: reminder.id,
             entity: reminder.entity,

@@ -209,9 +209,9 @@ export type ResearchOutputCoreObject = {
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   authors: (
     | Pick<
-      UserResponse,
-      'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl' | 'orcid'
-    >
+        UserResponse,
+        'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl' | 'orcid'
+      >
     | ExternalAuthorResponse
   )[];
   usageNotesMD?: string;

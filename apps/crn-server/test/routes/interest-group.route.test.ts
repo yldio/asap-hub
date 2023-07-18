@@ -172,6 +172,7 @@ describe('/interest-groups/ route', () => {
             lastModifiedDate: '2020-12-11T14:33:50Z',
             meetingMaterials: [],
             speakers: [],
+            relatedResearch: [],
           },
         ],
       };

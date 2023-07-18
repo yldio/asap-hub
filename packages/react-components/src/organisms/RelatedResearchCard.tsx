@@ -102,15 +102,17 @@ const showMoreStyles = css({
 
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
-type RecentSharedOutputProp = {
+type RelatedResearchCardProp = {
+  description: string;
   relatedResearch: Pick<
     ResearchOutputResponse,
     'documentType' | 'type' | 'title' | 'teams' | 'id'
   >[];
 };
 
-const RelatedResearch: React.FC<RecentSharedOutputProp> = ({
+const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
   relatedResearch,
+  description,
 }) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
@@ -126,8 +128,8 @@ const RelatedResearch: React.FC<RecentSharedOutputProp> = ({
       >
         <Headline2 noMargin>Related Research</Headline2>
         <div css={descriptionStyles}>
-          <Paragraph noMargin>
-            Find out all shared research outputs that contributed to this one.
+          <Paragraph accent="lead" noMargin>
+            {description}
           </Paragraph>
         </div>
         <div css={[rowStyles, gridTitleStyles]}>
@@ -193,4 +195,4 @@ const RelatedResearch: React.FC<RecentSharedOutputProp> = ({
   );
 };
 
-export default RelatedResearch;
+export default RelatedResearchCard;

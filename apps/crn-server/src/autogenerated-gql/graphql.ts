@@ -7032,6 +7032,23 @@ export type EventContentFragment = Pick<
       }>
     >;
   };
+  referencingResearchOutputsContents: Maybe<
+    Array<
+      Pick<ResearchOutputs, 'id'> & {
+        flatData: Pick<
+          ResearchOutputsFlatDataDto,
+          'documentType' | 'type' | 'title'
+        >;
+        referencingTeamsContents: Maybe<
+          Array<
+            Pick<Teams, 'id'> & {
+              flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+            }
+          >
+        >;
+      }
+    >
+  >;
 };
 
 export type FetchEventsQueryVariables = Exact<{
@@ -7451,6 +7468,23 @@ export type FetchEventsQuery = {
                 }>
               >;
             };
+            referencingResearchOutputsContents: Maybe<
+              Array<
+                Pick<ResearchOutputs, 'id'> & {
+                  flatData: Pick<
+                    ResearchOutputsFlatDataDto,
+                    'documentType' | 'type' | 'title'
+                  >;
+                  referencingTeamsContents: Maybe<
+                    Array<
+                      Pick<Teams, 'id'> & {
+                        flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                      }
+                    >
+                  >;
+                }
+              >
+            >;
           }
         >
       >;
@@ -7840,6 +7874,23 @@ export type FetchEventQuery = {
           }>
         >;
       };
+      referencingResearchOutputsContents: Maybe<
+        Array<
+          Pick<ResearchOutputs, 'id'> & {
+            flatData: Pick<
+              ResearchOutputsFlatDataDto,
+              'documentType' | 'type' | 'title'
+            >;
+            referencingTeamsContents: Maybe<
+              Array<
+                Pick<Teams, 'id'> & {
+                  flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                }
+              >
+            >;
+          }
+        >
+      >;
     }
   >;
 };
@@ -11854,6 +11905,54 @@ export const EventContentFragmentDoc = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'referencingResearchOutputsContents' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'documentType' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'referencingTeamsContents' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'displayName' },
                             },
                           ],
                         },

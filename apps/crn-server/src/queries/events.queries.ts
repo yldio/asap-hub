@@ -91,7 +91,22 @@ export const eventContentFragment = gql`
         }
       }
     }
+    referencingResearchOutputsContents {
+      id
+      flatData {
+        documentType
+        type
+        title
+      }
+      referencingTeamsContents {
+          id
+          flatData {
+            displayName
+          }
+        }
+    }
   }
+
   ${groupContentQueryFragment},
   ${workingGroupContentQueryFragment}
 `;

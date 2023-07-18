@@ -140,7 +140,7 @@ export {
   QuestionsSection,
   RecentSharedOutputs,
   RelatedEventsCard,
-  RelatedResearch,
+  RelatedResearchCard,
   RemindersCard,
   ResearchOutputExtraInformationCard,
   ResearchOutputHeader,

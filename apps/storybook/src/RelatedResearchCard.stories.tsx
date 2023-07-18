@@ -1,16 +1,16 @@
-import { RelatedResearch } from '@asap-hub/react-components';
+import { RelatedResearchCard } from '@asap-hub/react-components';
 import {
   createListResearchOutputResponse,
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
-import { number } from '@storybook/addon-knobs';
+import { number, text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / Related Research',
+  title: 'Organisms / Related Research Card',
 };
 
 export const Normal = () => (
-  <RelatedResearch
+  <RelatedResearchCard
     relatedResearch={[
       {
         ...createResearchOutputResponse(),
@@ -32,5 +32,6 @@ export const Normal = () => (
         number('Additional related research', 0),
       ).items,
     ]}
+    description={text('Description', 'Find out all shared research outputs.')}
   />
 );

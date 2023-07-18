@@ -424,6 +424,7 @@ export const getEventDataObject = (): EventDataObject => ({
   interestGroup: getInterestGroupResponse(),
   workingGroup: getWorkingGroupResponse(),
   speakers: [getEventSpeakerUser()],
+  relatedResearch: [],
 });
 
 export const getEventResponse = (): EventResponse => getEventDataObject();
@@ -479,6 +480,7 @@ export const getSquidexGraphqlEvent = () => ({
   lastModified: '2021-05-14T14:48:46Z',
   version: 43,
   flatData: squidexGraphqlEventsFlatData(),
+  referencingResearchOutputsContents: [],
 });
 
 export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
@@ -605,6 +607,7 @@ export const squidexGraphqlEventResponse = () => ({
     name: 'Tech 1 - Sequencing/omics',
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
   },
+  relatedResearch: [],
 });
 
 export const getSquidexEventsGraphqlResponse = (): FetchEventsQuery => ({

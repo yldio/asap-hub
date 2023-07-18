@@ -2,6 +2,7 @@ import { CalendarResponse } from './calendar';
 import { FetchOptions, ListResponse } from './common';
 import { BasicEvent, SortOptions } from './event-common';
 import { InterestGroupResponse } from './interest-group';
+import { ResearchOutputResponse } from './research-output';
 import { TeamResponse } from './team';
 import { WorkingGroupResponse } from './working-group';
 
@@ -46,6 +47,15 @@ export interface EventDataObject extends BasicEvent {
   >;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
+  relatedResearch: (Pick<
+    ResearchOutputResponse,
+    'documentType' | 'type' | 'id' | 'title'
+  > & {
+    teams: Pick<
+      ResearchOutputResponse['teams'][number],
+      'displayName' | 'id'
+    >[];
+  })[];
 }
 
 export type ListEventDataObject = ListResponse<EventDataObject>;

@@ -125,6 +125,7 @@ export const createEventResponse = (
     numberOfExternalSpeakers,
     numberOfUnknownSpeakers,
   ),
+  relatedResearch: [],
 });
 
 export const createListEventResponse = (

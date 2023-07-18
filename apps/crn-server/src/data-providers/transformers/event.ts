@@ -257,5 +257,17 @@ export const parseGraphQLEvent = (
     interestGroup: group,
     workingGroup,
     speakers,
+    relatedResearch: (item.referencingResearchOutputsContents ?? []).map(
+      (research) => ({
+        id: research.id,
+        documentType: research.flatData.documentType,
+        type: research.flatData.type,
+        title: research.flatData.title,
+        teams: (research.referencingTeamsContents ?? []).map((team) => ({
+          id: team.id,
+          displayName: team.flatData.displayName,
+        })),
+      }),
+    ),
   };
 };

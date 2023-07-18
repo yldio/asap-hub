@@ -475,6 +475,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     status,
     hidden: hidden || false,
     tags: tags ?? [],
+    relatedResearch: [],
 
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),

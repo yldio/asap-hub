@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
 import React, { useState } from 'react';
 import Field, { CustomCard } from '../../locations/Field';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { FieldExtensionSDK, Entry } from '@contentful/app-sdk';
 import {
   MultipleEntryReferenceEditor,
@@ -100,14 +101,11 @@ describe('Field component', () => {
 
       render(<CustomCard {...props} />);
 
-      await waitFor(() => {
-        expect(useEntity).toHaveBeenCalledWith(
-          'Entry',
-          'contributing-cohort-1',
-        );
-        expect(screen.getByText('My Contributing Cohort')).toBeInTheDocument();
-        expect(screen.getByText('Lead')).toBeInTheDocument();
-      });
+      expect(useEntity).toHaveBeenCalledWith('Entry', 'contributing-cohort-1');
+      expect(
+        await screen.findByText('My Contributing Cohort'),
+      ).toBeInTheDocument();
+      expect(await screen.findByText('Lead')).toBeInTheDocument();
     });
 
     it('displays an error message if no contributing cohort is selected', async () => {
@@ -131,11 +129,9 @@ describe('Field component', () => {
 
       render(<CustomCard {...props} />);
 
-      await waitFor(() => {
-        expect(
-          screen.getByText('No contributing cohort selected'),
-        ).toBeInTheDocument();
-      });
+      expect(
+        await screen.findByText('No contributing cohort selected'),
+      ).toBeInTheDocument();
     });
 
     it('calls the `onEdit` handler in contentful to open the related entity when clicked', async () => {
@@ -157,12 +153,11 @@ describe('Field component', () => {
 
       render(<CustomCard {...props} />);
 
-      await waitFor(() => {
-        expect(
-          screen.getByText('No contributing cohort selected'),
-        ).toBeInTheDocument();
-      });
-      fireEvent.click(screen.getByText('No contributing cohort selected'));
+      expect(
+        await screen.findByText('No contributing cohort selected'),
+      ).toBeInTheDocument();
+
+      userEvent.click(screen.getByText('No contributing cohort selected'));
       await waitFor(() => {
         expect(props.onEdit).toHaveBeenCalled();
       });
@@ -187,15 +182,13 @@ describe('Field component', () => {
 
       render(<CustomCard {...props} />);
 
-      await waitFor(() => {
-        expect(
-          screen.getByText('No contributing cohort selected'),
-        ).toBeInTheDocument();
-      });
-      fireEvent.click(screen.getByLabelText('Actions'));
-      await waitFor(() => {
-        expect(screen.getByText('Remove')).toBeVisible();
-      });
+      expect(
+        await screen.findByText('No contributing cohort selected'),
+      ).toBeInTheDocument();
+      userEvent.click(screen.getByLabelText('Actions'));
+      expect(
+        await screen.findByRole('menuitem', { name: /remove/i }),
+      ).toBeVisible();
     });
 
     it('unpublishes and deletes the entry when the remove button is clicked', async () => {
@@ -217,16 +210,18 @@ describe('Field component', () => {
 
       render(<CustomCard {...props} />);
 
-      await waitFor(() => {
-        expect(
-          screen.getByText('No contributing cohort selected'),
-        ).toBeInTheDocument();
-      });
-      fireEvent.click(screen.getByLabelText('Actions'));
-      fireEvent.click(screen.getByText('Remove'));
+      expect(
+        await screen.findByText('No contributing cohort selected'),
+      ).toBeInTheDocument();
+      userEvent.click(screen.getByLabelText('Actions'));
+      userEvent.click(screen.getByText('Remove'));
       await waitFor(() => {
         expect(sdk.space.unpublishEntry).toHaveBeenCalledWith(props.entity);
+      });
+      await waitFor(() => {
         expect(sdk.space.deleteEntry).toHaveBeenCalledWith(props.entity);
+      });
+      await waitFor(() => {
         expect(props.onRemove).toHaveBeenCalled();
       });
     });
@@ -249,16 +244,21 @@ describe('Field component', () => {
 
       render(<CustomCard {...props} />);
 
-      await waitFor(() => {
-        expect(
-          screen.getByText('No contributing cohort selected'),
-        ).toBeInTheDocument();
-      });
-      fireEvent.click(screen.getByLabelText('Actions'));
-      fireEvent.click(screen.getByText('Remove'));
+      expect(
+        await screen.findByText('No contributing cohort selected'),
+      ).toBeInTheDocument();
+
+      userEvent.click(screen.getByLabelText('Actions'));
+      userEvent.click(screen.getByText('Remove'));
+
       await waitFor(() => {
         expect(sdk.space.deleteEntry).toHaveBeenCalledWith(props.entity);
+      });
+      await waitFor(() => {
         expect(props.onRemove).toHaveBeenCalled();
+      });
+
+      await waitFor(() => {
         expect(sdk.space.unpublishEntry).not.toHaveBeenCalled();
       });
     });

@@ -172,7 +172,7 @@ describe('Field component', () => {
       const props = {
         entity: {
           fields: {
-            team: null,
+            title: null,
             user: {
               'en-US': {
                 sys: {
@@ -205,7 +205,7 @@ describe('Field component', () => {
       const props = {
         entity: {
           fields: {
-            team: null,
+            title: null,
             user: null,
           },
           sys: {
@@ -233,7 +233,7 @@ describe('Field component', () => {
       const props = {
         entity: {
           fields: {
-            team: null,
+            title: null,
             user: null,
           },
           sys: {
@@ -261,7 +261,7 @@ describe('Field component', () => {
       const props = {
         entity: {
           fields: {
-            team: null,
+            title: null,
             user: null,
           },
           sys: {
@@ -292,7 +292,7 @@ describe('Field component', () => {
       const props = {
         entity: {
           fields: {
-            team: null,
+            title: null,
             user: null,
           },
           sys: {

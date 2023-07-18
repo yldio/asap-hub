@@ -21,6 +21,6 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@types/jest": "^29.4.0"
+    "@types/jest": "29.5.3"
   }
 }

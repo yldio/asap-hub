@@ -60,7 +60,7 @@ export const getResearchOutputDraftTeamReminder =
       data: {
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
-        addedDate: researchOutputDataObject.created,
+        createdDate: researchOutputDataObject.created,
         associationName: researchOutputDataObject.teams[0]?.displayName || '',
         associationType: 'team',
         createdBy: 'Tom Hardy',
@@ -78,7 +78,7 @@ export const getResearchOutputDraftWorkingGroupReminder =
       data: {
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
-        addedDate: researchOutputDataObject.created,
+        createdDate: researchOutputDataObject.created,
         associationName: 'Working Group 1',
         associationType: 'working group',
         createdBy: 'Tom Hardy',
@@ -96,7 +96,7 @@ export const getResearchOutputInReviewTeamReminder =
       data: {
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
-        addedDate: researchOutputDataObject.created,
+        createdDate: researchOutputDataObject.created,
         associationName: researchOutputDataObject.teams[0]?.displayName || '',
         associationType: 'team',
         documentType: researchOutputDataObject.documentType,
@@ -115,7 +115,7 @@ export const getResearchOutputInReviewWorkingGroupReminder =
       data: {
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
-        addedDate: researchOutputDataObject.created,
+        createdDate: researchOutputDataObject.created,
         associationName: 'Working Group 1',
         associationType: 'working group',
         documentType: researchOutputDataObject.documentType,

@@ -187,7 +187,11 @@ describe('Reminders data provider', () => {
           setNowToLast24Hours(addedDate);
         });
 
-        test('Should fetch all types of Research Output reminders when conditions are met', async () => {
+        test('Should fetch and sort appropriately all types of Research Output reminders when conditions are met', async () => {
+          publishedResearchOutputItem!.addedDate = '2023-01-01T08:00:00Z';
+          draftResearchOutputsItem!.createdDate = '2023-01-01T08:01:00Z';
+          inReviewResearchOutputItem!.createdDate = '2023-01-01T08:02:00Z';
+
           const researchOutputsCollection = {
             items: [
               publishedResearchOutputItem,
@@ -206,7 +210,7 @@ describe('Reminders data provider', () => {
             items: [
               expect.objectContaining({
                 entity: 'Research Output',
-                type: 'Published',
+                type: 'In Review',
               }),
               expect.objectContaining({
                 entity: 'Research Output',
@@ -214,7 +218,7 @@ describe('Reminders data provider', () => {
               }),
               expect.objectContaining({
                 entity: 'Research Output',
-                type: 'In Review',
+                type: 'Published',
               }),
             ],
             total: 3,
@@ -547,7 +551,7 @@ describe('Reminders data provider', () => {
           );
 
           const expectedReminder = getResearchOutputDraftTeamReminder();
-          expectedReminder.data.addedDate = createdDate;
+          expectedReminder.data.createdDate = createdDate;
 
           expect(result.items.map((r) => r.type)).toContain('Draft');
           expect(result).toEqual({
@@ -567,7 +571,7 @@ describe('Reminders data provider', () => {
           );
 
           const expectedReminder = getResearchOutputDraftTeamReminder();
-          expectedReminder.data.addedDate = createdDate;
+          expectedReminder.data.createdDate = createdDate;
           expectedReminder.data.associationName = 'Working Group 1';
           expectedReminder.data.associationType = 'working group';
 

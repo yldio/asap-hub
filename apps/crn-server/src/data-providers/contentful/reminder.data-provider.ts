@@ -165,7 +165,11 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
 
 const getSortDate = (reminder: ReminderDataObject): DateTime => {
   if (reminder.entity === 'Research Output') {
-    return DateTime.fromISO(reminder.data.addedDate);
+    if (reminder.type === 'Published') {
+      return DateTime.fromISO(reminder.data.addedDate);
+    }
+
+    return DateTime.fromISO(reminder.data.createdDate);
   }
 
   if (reminder.type === 'Happening Today') {
@@ -675,7 +679,7 @@ const getDraftResearchOutputRemindersFromQuery = (
           data: {
             researchOutputId: researchOutput.sys.id,
             title: researchOutput.title,
-            addedDate: researchOutput.createdDate,
+            createdDate: researchOutput.createdDate,
             createdBy: userName,
             associationType,
             associationName,
@@ -751,7 +755,7 @@ const getInReviewResearchOutputRemindersFromQuery = (
         data: {
           researchOutputId: researchOutput.sys.id,
           title: researchOutput.title,
-          addedDate: researchOutput.createdDate,
+          createdDate: researchOutput.createdDate,
           documentType: researchOutput.documentType,
           reviewRequestedBy: `${researchOutput.reviewRequestedBy.firstName} ${researchOutput.reviewRequestedBy.lastName}`,
           associationType,

@@ -28,10 +28,10 @@ export class DashboardContentfulDataProvider implements DashboardDataProvider {
       if (sortBy === 'published') {
         if (sortOrder === 'asc')
           return gp2Contentful.DashboardAnnouncementsCollectionOrder
-            .SysPublishedAtAsc;
+            .SysFirstPublishedAtAsc;
         if (sortOrder === 'desc')
           return gp2Contentful.DashboardAnnouncementsCollectionOrder
-            .SysPublishedAtDesc;
+            .SysFirstPublishedAtDesc;
       }
 
       return undefined;

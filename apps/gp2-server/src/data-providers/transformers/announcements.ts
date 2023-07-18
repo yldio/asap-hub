@@ -17,6 +17,6 @@ export const parseAnnouncements = (announcements: Announcements) =>
     .map(({ description, deadline, link, sys: { id } }: AnnouncementItem) => ({
       description: description ?? '',
       deadline: DateTime.fromISO(deadline).toUTC().toString(),
-      link: link ?? undefined,
+      href: link ?? undefined,
       id,
     })) || [];

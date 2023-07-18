@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { perRem } from '../pixels';
 
-const imageStyle = (imageUrl: string) =>
+export const imageStyle = (imageUrl: string) =>
   css({
     backgroundImage: `url(${JSON.stringify(imageUrl)})`,
     backgroundSize: 'cover',

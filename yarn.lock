@@ -23546,16 +23546,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-resolve-response@npm:^1.3.0":
-  version: 1.3.8
-  resolution: "contentful-resolve-response@npm:1.3.8"
-  dependencies:
-    fast-copy: ^2.1.3
-  checksum: e75942e9d0c88e6c25fd214c2c5264456356887dfecbf936510b5462354062e4cac62b4307f0c2226db53b77bf987c0970df6cb92abaa4949dbf1f88dd3e4785
-  languageName: node
-  linkType: hard
-
-"contentful-resolve-response@npm:^1.3.6":
+"contentful-resolve-response@npm:^1.3.12, contentful-resolve-response@npm:^1.3.6":
   version: 1.7.0
   resolution: "contentful-resolve-response@npm:1.7.0"
   dependencies:
@@ -23590,7 +23581,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-sdk-core@npm:^7.0.2":
+"contentful-sdk-core@npm:^7.0.2, contentful-sdk-core@npm:^7.0.5":
   version: 7.1.0
   resolution: "contentful-sdk-core@npm:7.1.0"
   dependencies:
@@ -23604,29 +23595,30 @@ __metadata:
   linkType: hard
 
 "contentful@npm:^10.1.8":
-  version: 10.1.8
-  resolution: "contentful@npm:10.1.8"
+  version: 10.3.5
+  resolution: "contentful@npm:10.3.5"
   dependencies:
     "@contentful/rich-text-types": ^16.0.2
     axios: ^0.26.1
     contentful-resolve-response: ^1.3.6
     contentful-sdk-core: ^7.0.2
     json-stringify-safe: ^5.0.1
-    type-fest: ^3.1.0
-  checksum: 47c7f9e61cfa69bf7e3e827dadb58695dcc335809157d0b8c76b8776d9fc227c370709973731ab4ed7194884b7facc998d026ea5cd161af8f9528f7bc4eabb40
+    type-fest: ^4.0.0
+  checksum: e76783063c70bbefd68580b940841aece591061eb0be00bc80b51c2c4f0dfd08b04172dc0af75e749b6ea6e548e1b63eb5a8c6b1363e2b046a580edb221bf305
   languageName: node
   linkType: hard
 
 "contentful@npm:^9.0.0":
-  version: 9.2.4
-  resolution: "contentful@npm:9.2.4"
+  version: 9.3.5
+  resolution: "contentful@npm:9.3.5"
   dependencies:
+    "@contentful/rich-text-types": ^16.0.2
     axios: ^0.27.0
-    contentful-resolve-response: ^1.3.0
-    contentful-sdk-core: ^7.0.1
-    fast-copy: ^2.1.0
+    contentful-resolve-response: ^1.3.12
+    contentful-sdk-core: ^7.0.5
+    fast-copy: ^2.1.7
     json-stringify-safe: ^5.0.1
-  checksum: 65abfe5e6f9ef5c0a725a7ede340cb424629dd7e2a5f90608b44e1cff6365a432508d622a50800b954651bfdcd64713515b673580072fa0b095e52d26fcfdd21
+  checksum: 85783f497e1091190aea4a631523a08e884f43ce6e88af42e895762ee77d6b7193206a9da023b2a2d4ed18ae57c142d7c2da837897a02f0bc1b4b9c374535504
   languageName: node
   linkType: hard
 
@@ -45720,12 +45712,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^3.1.0":
-  version: 3.10.0
-  resolution: "type-fest@npm:3.10.0"
-  peerDependencies:
-    typescript: ">=4.7.0"
-  checksum: df3bd25809ea79ac7712da7c11648251118c23f65b226eba263797e42be60ba34085874ec492202b8ecf2e5a2273b27ddcbfe3be2c275dfcef3f0e2ee90ea179
+"type-fest@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "type-fest@npm:4.0.0"
+  checksum: 716f32ac341b1cf35bf08cc5cc6a11822436333966d3f4d94758112f45829efa3efb643ebc74a53e514e68a1bddab144d0153d654e072b41ba9bd98bcf841d75
   languageName: node
   linkType: hard
 

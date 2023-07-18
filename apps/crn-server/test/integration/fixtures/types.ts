@@ -49,6 +49,7 @@ export type ResearchOutputCreateDataObject = Omit<
   relatedResearch: string[];
   relatedEvents: string[];
   authors: { userId: string }[];
+  createdDate?: string;
 };
 export type InterestGroupCreateDataObject = Omit<
   GroupDataObject,
@@ -110,5 +111,8 @@ export interface Fixture {
   createWorkingGroup: (
     workingGroup: WorkingGroupCreateDataObject,
   ) => Promise<WorkingGroupFixture>;
+  createResearchOutput: (
+    researchOutput: ResearchOutputCreateDataObject,
+  ) => Promise<ResearchOutputFixture>;
   teardown: () => Promise<void>;
 }

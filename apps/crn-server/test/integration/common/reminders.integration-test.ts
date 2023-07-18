@@ -1,18 +1,22 @@
 import supertest from 'supertest';
 import { Express } from 'express';
 import { ListReminderResponse, UserCreateDataObject } from '@asap-hub/model';
+import { DateTime } from 'luxon';
 
 import { AppHelper } from '../helpers/app';
 import { retryable } from '../helpers/retryable';
 import {
-  FixtureFactory,
-  getUserFixture,
-  UserFixture,
-  getEventFixture,
-  getTeamFixture,
-  TeamFixture,
   EventCreateDataObject,
   EventFixture,
+  FixtureFactory,
+  getEventFixture,
+  getResearchOutputFixture,
+  getTeamFixture,
+  getUserFixture,
+  getWorkingGroupFixture,
+  TeamFixture,
+  UserFixture,
+  WorkingGroupFixture,
 } from '../fixtures';
 import { getCalendarFixture } from '../fixtures/calendar';
 
@@ -117,6 +121,493 @@ describe('Reminders', () => {
         eventHappeningNow.id,
         endedEventWithLoggedInUserSpeaker.id,
       ]);
+    });
+  });
+
+  describe('Research Output', () => {
+    let pmTeam: TeamFixture;
+    let nonPmTeam: TeamFixture;
+    let leaderWorkingGroup: WorkingGroupFixture;
+    let memberWorkingGroup: WorkingGroupFixture;
+    let nonMemberTeam: TeamFixture;
+    let nonMemberLoggedInUser: UserFixture;
+    let nonMemberStaffLoggedInUser: UserFixture;
+
+    beforeAll(async () => {
+      pmTeam = await fixtures.createTeam(getTeamFixture());
+      nonPmTeam = await fixtures.createTeam(getTeamFixture());
+      nonMemberTeam = await fixtures.createTeam(getTeamFixture());
+      loggedInUser = await fixtures.createUser(
+        getUserFixture({
+          role: 'Grantee',
+          teams: [
+            {
+              id: nonPmTeam.id,
+              role: 'Key Personnel',
+            },
+            {
+              id: pmTeam.id,
+              role: 'Project Manager',
+            },
+          ],
+        }),
+      );
+      nonMemberLoggedInUser = await fixtures.createUser(
+        getUserFixture({
+          role: 'Grantee',
+          teams: [
+            {
+              id: nonMemberTeam.id,
+              role: 'Key Personnel',
+            },
+            {
+              id: nonMemberTeam.id,
+              role: 'Project Manager',
+            },
+          ],
+        }),
+      );
+      nonMemberStaffLoggedInUser = await fixtures.createUser(
+        getUserFixture({
+          role: 'Staff',
+          teams: [
+            {
+              id: nonMemberTeam.id,
+              role: 'Key Personnel',
+            },
+            {
+              id: nonMemberTeam.id,
+              role: 'Project Manager',
+            },
+          ],
+        }),
+      );
+      leaderWorkingGroup = await fixtures.createWorkingGroup(
+        getWorkingGroupFixture({
+          leaders: [
+            {
+              user: loggedInUser.id,
+              role: 'Project Manager',
+              workstreamRole: 'Test',
+            },
+          ],
+        }),
+      );
+      memberWorkingGroup = await fixtures.createWorkingGroup(
+        getWorkingGroupFixture({
+          members: [loggedInUser.id],
+        }),
+      );
+
+      app = AppHelper(() => loggedInUser);
+    });
+
+    describe('Published Reminder', () => {
+      test('Should see the published reminder when the research output was created recently and the user is associated with the team that owns it', async () => {
+        const publishOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: true,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(publishOutput)
+          .expect(201);
+        const publishOutputId = response.body.id;
+
+        await expectReminderWithId(
+          `research-output-published-${publishOutputId}`,
+        );
+      });
+
+      test('Should see the published reminder when the research output was created recently and the user is associated with the working group that owns it', async () => {
+        const publishOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: true,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(publishOutput)
+          .expect(201);
+        const publishOutputId = response.body.id;
+
+        await expectReminderWithId(
+          `research-output-published-${publishOutputId}`,
+        );
+      });
+
+      test('Should not see the published reminder when the research output was created recently and the user is not associated with the team that owns it', async () => {
+        const publishOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: true,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(publishOutput)
+          .expect(201);
+        const publishOutputId = response.body.id;
+
+        const appWithNonMemberLoggedIn = AppHelper(() => nonMemberLoggedInUser);
+        await expectNotToContainReminderWithId(
+          `research-output-published-${publishOutputId}`,
+          appWithNonMemberLoggedIn,
+        );
+      });
+
+      test('Should not see the published reminder when the research output was created recently and the user is not associated with the working group that owns it', async () => {
+        const publishOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: true,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(publishOutput)
+          .expect(201);
+        const publishOutputId = response.body.id;
+
+        const appWithNonMemberLoggedIn = AppHelper(() => nonMemberLoggedInUser);
+        await expectNotToContainReminderWithId(
+          `research-output-published-${publishOutputId}`,
+          appWithNonMemberLoggedIn,
+        );
+      });
+
+      test('Should not see the published reminder when the research output was created more than 24 hours ago even if the user is associated with the team that owns it', async () => {
+        const publishDate = '2023-01-01T08:00:00Z';
+        const publishOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: true,
+          addedDate: publishDate,
+        });
+
+        jest.setSystemTime(
+          DateTime.fromISO(publishDate).plus({ hours: 25 }).toJSDate(),
+        );
+
+        const researchOutput = await fixtures.createResearchOutput(
+          publishOutput,
+        );
+
+        await expectNotToContainReminderWithId(
+          `research-output-published-${researchOutput.id}`,
+        );
+      });
+
+      test('Should not see the published reminder when the research output was created more than 24 hours ago even if the user is associated with the working group that owns it', async () => {
+        const publishDate = '2023-01-01T08:00:00Z';
+        const publishOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: true,
+          addedDate: publishDate,
+        });
+
+        jest.setSystemTime(
+          DateTime.fromISO(publishDate).plus({ hours: 25 }).toJSDate(),
+        );
+
+        const researchOutput = await fixtures.createResearchOutput(
+          publishOutput,
+        );
+
+        await expectNotToContainReminderWithId(
+          `research-output-published-${researchOutput.id}`,
+        );
+      });
+    });
+
+    describe('Published & Draft Reminders', () => {
+      test('Should see draft reminder but not see the published reminder when a draft research output was created recently and the user is associated with the team that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+
+        await expectReminderWithId(`research-output-draft-${draftOutputId}`);
+        await expectNotToContainReminderWithId(
+          `research-output-published-${draftOutputId}`,
+        );
+      });
+
+      test('Should see draft reminder but not see the published reminder when a draft research output was created recently and the user is associated with the working group that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+
+        await expectReminderWithId(`research-output-draft-${draftOutputId}`);
+        await expectNotToContainReminderWithId(
+          `research-output-published-${draftOutputId}`,
+        );
+      });
+    });
+
+    describe('Draft Reminder', () => {
+      test('Should see the draft reminder when the research output was created recently and the user is not associated with the team/working group that owns it but it is a Staff', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+
+        const appWithNonMemberStaffLoggedIn = AppHelper(
+          () => nonMemberStaffLoggedInUser,
+        );
+        await expectReminderWithId(
+          `research-output-draft-${draftOutputId}`,
+          appWithNonMemberStaffLoggedIn,
+        );
+      });
+
+      test('Should not see the draft reminder when the research output was created recently and the user is not associated with the team that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+
+        const appWithNonMemberLoggedIn = AppHelper(() => nonMemberLoggedInUser);
+        await expectNotToContainReminderWithId(
+          `research-output-draft-${draftOutputId}`,
+          appWithNonMemberLoggedIn,
+        );
+      });
+
+      test('Should not see the draft reminder when the research output was created recently and the user is not associated with the team that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+
+        const appWithNonMemberLoggedIn = AppHelper(() => nonMemberLoggedInUser);
+        await expectNotToContainReminderWithId(
+          `research-output-draft-${draftOutputId}`,
+          appWithNonMemberLoggedIn,
+        );
+      });
+
+      test('Should not see the draft reminder when the research output was created more than 24 hours ago even if the user is associated with the team that owns it', async () => {
+        const createdDate = '2023-01-01T08:00:00Z';
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+          createdDate,
+        });
+
+        jest.setSystemTime(
+          DateTime.fromISO(createdDate).plus({ hours: 25 }).toJSDate(),
+        );
+
+        const researchOutput = await fixtures.createResearchOutput(draftOutput);
+
+        await expectNotToContainReminderWithId(
+          `research-output-draft-${researchOutput.id}`,
+        );
+      });
+
+      test('Should not see the draft reminder when the research output was created more than 24 hours ago even if the user is associated with the working group that owns it', async () => {
+        const createdDate = '2023-01-01T08:00:00Z';
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+          createdDate,
+        });
+
+        jest.setSystemTime(
+          DateTime.fromISO(createdDate).plus({ hours: 25 }).toJSDate(),
+        );
+
+        const researchOutput = await fixtures.createResearchOutput(draftOutput);
+
+        await expectNotToContainReminderWithId(
+          `research-output-draft-${researchOutput.id}`,
+        );
+      });
+    });
+
+    describe('In Review Reminder', () => {
+      test('Should see the in review reminder when the user is PM of the team that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            reviewRequestedById: loggedInUser.id,
+          })
+          .expect(200);
+
+        await expectReminderWithId(
+          `research-output-in-review-${draftOutputId}`,
+        );
+      });
+
+      test('Should see the in review reminder when the user is PM of the working group that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            reviewRequestedById: loggedInUser.id,
+          })
+          .expect(200);
+
+        await expectReminderWithId(
+          `research-output-in-review-${draftOutputId}`,
+        );
+      });
+
+      test('Should see the in review  reminder when the user is not associated with the team/working group that owns it but it is a Staff', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            reviewRequestedById: loggedInUser.id,
+          })
+          .expect(200);
+
+        const appWithNonMemberStaffLoggedIn = AppHelper(
+          () => nonMemberStaffLoggedInUser,
+        );
+        await expectReminderWithId(
+          `research-output-in-review-${draftOutputId}`,
+          appWithNonMemberStaffLoggedIn,
+        );
+      });
+
+      test('Should not see the in review reminder when the user is not PM of the team that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [nonPmTeam.id],
+          workingGroups: [],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            reviewRequestedById: loggedInUser.id,
+          })
+          .expect(200);
+
+        await expectNotToContainReminderWithId(
+          `research-output-in-review-${draftOutputId}`,
+        );
+      });
+
+      test('Should not see the in review reminder when the user is not PM of the working group that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [nonPmTeam.id],
+          workingGroups: [memberWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            reviewRequestedById: loggedInUser.id,
+          })
+          .expect(200);
+
+        await expectNotToContainReminderWithId(
+          `research-output-in-review-${draftOutputId}`,
+        );
+      });
     });
   });
 

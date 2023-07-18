@@ -7,12 +7,14 @@ import {
   FetchTeamProjectManagerQuery,
   FetchTeamProjectManagerQueryVariables,
   GraphQLClient,
+  ResearchOutputsFilter,
 } from '@asap-hub/contentful';
 import {
   EventHappeningNowReminder,
   EventHappeningTodayReminder,
   EventNotesReminder,
   FetchRemindersOptions,
+  isResearchOutputDocumentType,
   ListReminderDataObject,
   PresentationUpdatedReminder,
   PublishMaterialReminder,
@@ -32,6 +34,11 @@ import { ReminderDataProvider } from '../types';
 
 type EventCollection = FetchRemindersQuery['eventsCollection'];
 type EventItem = NonNullable<NonNullable<EventCollection>['items'][number]>;
+type ResearchOutputCollection =
+  FetchRemindersQuery['researchOutputsCollection'];
+type ResearchOutputItem = NonNullable<
+  NonNullable<ResearchOutputCollection>['items'][number]
+>;
 
 type User = FetchRemindersQuery['users'];
 
@@ -45,13 +52,19 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
   async fetch(options: FetchRemindersOptions): Promise<ListReminderDataObject> {
     const { timezone, userId } = options;
     const eventFilter = getEventFilter(timezone);
+    const researchOutputFilter = getResearchOutputFilter(timezone);
 
-    const { eventsCollection, users } = await this.contentfulClient.request<
+    const {
+      eventsCollection,
+      researchOutputsCollection,
+      users: user,
+    } = await this.contentfulClient.request<
       FetchRemindersQuery,
       FetchRemindersQueryVariables
     >(FETCH_REMINDERS, {
       userId,
       eventFilter,
+      researchOutputFilter,
     });
 
     const fetchTeamProjectManager = async (
@@ -69,6 +82,30 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       (x): x is EventItem => x !== null,
     );
 
+    const researchOutputsCollectionItems = (
+      researchOutputsCollection?.items || []
+    ).filter((x): x is ResearchOutputItem => x !== null);
+
+    const publishedResearchOutputReminders =
+      getPublishedResearchOutputRemindersFromQuery(
+        researchOutputsCollectionItems,
+        user,
+        timezone,
+      );
+
+    const draftResearchOutputReminders =
+      getDraftResearchOutputRemindersFromQuery(
+        researchOutputsCollectionItems,
+        user,
+        timezone,
+      );
+
+    const inReviewResearchOutputReminders =
+      getInReviewResearchOutputRemindersFromQuery(
+        researchOutputsCollectionItems,
+        user,
+      );
+
     const eventHappeningNowOrTodayReminders =
       getEventHappeningNowOrTodayRemindersFromQuery(
         eventsCollectionItems,
@@ -82,18 +119,18 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
     const sharePresentationReminders =
       await getSharePresentationRemindersFromQuery(
         eventsEndedInLast72Hours,
-        users,
+        user,
         fetchTeamProjectManager,
       );
 
     const publishPresentationReminders = getPublishMaterialRemindersFromQuery(
       eventsEndedInLast72Hours,
-      users,
+      user,
     );
 
     const uploadPresentationReminders = getUploadPresentationRemindersFromQuery(
       eventsEndedInLast72Hours,
-      users,
+      user,
     );
 
     const eventMaterialsReminders = getEventMaterialsRemindersFromQuery(
@@ -102,6 +139,9 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
     );
 
     const reminders = [
+      ...publishedResearchOutputReminders,
+      ...draftResearchOutputReminders,
+      ...inReviewResearchOutputReminders,
       ...eventHappeningNowOrTodayReminders,
       ...sharePresentationReminders,
       ...publishPresentationReminders,
@@ -123,15 +163,11 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
   }
 }
 
-const getSortDate = (
-  reminder: Exclude<
-    ReminderDataObject,
-    // TODO: add these types back when implementing RO reminders
-    | ResearchOutputPublishedReminder
-    | ResearchOutputDraftReminder
-    | ResearchOutputInReviewReminder
-  >,
-): DateTime => {
+const getSortDate = (reminder: ReminderDataObject): DateTime => {
+  if (reminder.entity === 'Research Output') {
+    return DateTime.fromISO(reminder.data.addedDate);
+  }
+
   if (reminder.type === 'Happening Today') {
     return DateTime.fromISO(reminder.data.startDate);
   }
@@ -187,6 +223,37 @@ export const getReferenceDates = (zone: string) => {
     last24HoursISO,
     last72HoursISO,
     now,
+  };
+};
+
+export const getResearchOutputFilter = (
+  zone: string,
+): ResearchOutputsFilter => {
+  const { last24HoursISO } = getReferenceDates(zone);
+  return {
+    OR: [
+      {
+        AND: [
+          { addedDate_gte: last24HoursISO },
+          { sys: { publishedVersion_exists: true } },
+        ],
+      },
+      {
+        AND: [
+          { createdDate_gte: last24HoursISO },
+          { sys: { publishedVersion_exists: false } },
+          { addedDate_exists: false },
+          { reviewRequestedBy_exists: false },
+        ],
+      },
+      {
+        AND: [
+          { sys: { publishedVersion_exists: false } },
+          { addedDate_exists: false },
+          { reviewRequestedBy_exists: true },
+        ],
+      },
+    ],
   };
 };
 
@@ -464,4 +531,344 @@ const getEventMaterialsRemindersFromQuery = (
   }, []);
 
   return eventReminders;
+};
+
+const getPublishedResearchOutputRemindersFromQuery = (
+  researchOutputsCollectionItems: ResearchOutputItem[],
+  user: User,
+  zone: string,
+): ResearchOutputPublishedReminder[] => {
+  if (
+    !user ||
+    !user.teamsCollection?.items ||
+    !researchOutputsCollectionItems.length
+  ) {
+    return [];
+  }
+
+  const userTeamIds = getUserTeamIds(user);
+  const userWorkingGroupIds = getWorkingGroupIds(user);
+
+  return researchOutputsCollectionItems.reduce<
+    ResearchOutputPublishedReminder[]
+  >((researchOutputReminders, researchOutput) => {
+    const isPublished = !!researchOutput.sys.publishedAt;
+
+    if (
+      !researchOutput.title ||
+      !researchOutput.documentType ||
+      !isResearchOutputDocumentType(researchOutput.documentType) ||
+      !isPublished ||
+      !inLast24Hours(researchOutput.addedDate, zone)
+    )
+      return researchOutputReminders;
+
+    const { associationName, associationType } =
+      getAssociationNameAndType(researchOutput);
+    const userName = getUserName(researchOutput);
+
+    const researchOutputTeamIds = (researchOutput?.teamsCollection?.items || [])
+      .filter((teamItem) => teamItem?.sys.id !== undefined)
+      .map((teamItem) => teamItem?.sys.id as string);
+
+    const researchOutputWorkingGroupId = researchOutput?.workingGroup?.sys.id;
+
+    const isInTeam = researchOutputTeamIds.some((teamId) =>
+      userTeamIds.includes(teamId),
+    );
+
+    const isInWorkingGroup = researchOutputWorkingGroupId
+      ? userWorkingGroupIds.includes(researchOutputWorkingGroupId)
+      : false;
+
+    if (
+      associationName &&
+      associationType &&
+      userName &&
+      ((associationType === 'team' && isInTeam) ||
+        (associationType === 'working group' && isInWorkingGroup))
+    ) {
+      researchOutputReminders.push({
+        id: `research-output-published-${researchOutput.sys.id}`,
+        entity: 'Research Output',
+        type: 'Published',
+        data: {
+          researchOutputId: researchOutput.sys.id,
+          documentType: researchOutput.documentType,
+          title: researchOutput.title,
+          addedDate: researchOutput.addedDate,
+          // TODO: `createdBy` should be replaced with `publishedBy` after https://asaphub.atlassian.net/browse/CRN-1428 is implemented
+          createdBy: userName,
+          associationType,
+          associationName,
+        },
+      });
+    }
+
+    return researchOutputReminders;
+  }, []);
+};
+
+const getDraftResearchOutputRemindersFromQuery = (
+  researchOutputsCollectionItems: ResearchOutputItem[],
+  user: User,
+  zone: string,
+): ResearchOutputDraftReminder[] => {
+  if (
+    !user ||
+    !user.teamsCollection?.items ||
+    !researchOutputsCollectionItems.length
+  ) {
+    return [];
+  }
+
+  const userTeamIds = getUserTeamIds(user);
+  const userWorkingGroupIds = getWorkingGroupIds(user);
+  const isAsapStaff = user.role === 'Staff';
+
+  return researchOutputsCollectionItems.reduce<ResearchOutputDraftReminder[]>(
+    (researchOutputReminders, researchOutput) => {
+      const userName = getUserName(researchOutput);
+      const isPublished = !!researchOutput.sys.publishedAt;
+      const isInReview = !!researchOutput.reviewRequestedBy;
+      if (
+        !researchOutput.title ||
+        !researchOutput.documentType ||
+        !isResearchOutputDocumentType(researchOutput.documentType) ||
+        isPublished ||
+        isInReview ||
+        !inLast24Hours(researchOutput.createdDate, zone)
+      )
+        return researchOutputReminders;
+
+      const { associationName, associationType } =
+        getAssociationNameAndType(researchOutput);
+
+      const researchOutputTeamIds = (
+        researchOutput?.teamsCollection?.items || []
+      )
+        .filter((teamItem) => teamItem?.sys.id !== undefined)
+        .map((teamItem) => teamItem?.sys.id as string);
+
+      const researchOutputWorkingGroupId = researchOutput?.workingGroup?.sys.id;
+
+      const isInTeam = researchOutputTeamIds.some((teamId) =>
+        userTeamIds.includes(teamId),
+      );
+
+      const isInWorkingGroup = researchOutputWorkingGroupId
+        ? userWorkingGroupIds.includes(researchOutputWorkingGroupId)
+        : false;
+
+      if (
+        associationName &&
+        associationType &&
+        userName &&
+        ((associationType === 'team' && isInTeam) ||
+          (associationType === 'working group' && isInWorkingGroup) ||
+          isAsapStaff)
+      ) {
+        researchOutputReminders.push({
+          id: `research-output-draft-${researchOutput.sys.id}`,
+          entity: 'Research Output',
+          type: 'Draft',
+          data: {
+            researchOutputId: researchOutput.sys.id,
+            title: researchOutput.title,
+            addedDate: researchOutput.createdDate,
+            createdBy: userName,
+            associationType,
+            associationName,
+          },
+        });
+      }
+
+      return researchOutputReminders;
+    },
+    [],
+  );
+};
+
+const getInReviewResearchOutputRemindersFromQuery = (
+  researchOutputsCollectionItems: ResearchOutputItem[],
+  user: User,
+): ResearchOutputInReviewReminder[] => {
+  if (
+    !user ||
+    !user.teamsCollection?.items ||
+    !researchOutputsCollectionItems.length
+  ) {
+    return [];
+  }
+
+  const userProjectManagerTeamIds = getUserProjectManagerTeamIds(user);
+  const userProjectManagerWorkingGroupIds =
+    getUserProjectManagerWorkingGroupIds(user);
+  const isAsapStaff = user.role === 'Staff';
+
+  return researchOutputsCollectionItems.reduce<
+    ResearchOutputInReviewReminder[]
+  >((researchOutputReminders, researchOutput) => {
+    const isPublished = !!researchOutput.sys.publishedAt;
+    if (
+      !researchOutput.title ||
+      !researchOutput.documentType ||
+      !isResearchOutputDocumentType(researchOutput.documentType) ||
+      isPublished ||
+      !researchOutput.reviewRequestedBy
+    )
+      return researchOutputReminders;
+
+    const { associationName, associationType } =
+      getAssociationNameAndType(researchOutput);
+
+    const researchOutputTeamIds = (researchOutput?.teamsCollection?.items || [])
+      .filter((teamItem) => teamItem?.sys.id !== undefined)
+      .map((teamItem) => teamItem?.sys.id as string);
+
+    const researchOutputWorkingGroupId = researchOutput?.workingGroup?.sys.id;
+
+    const isProjectManagerInTeam = researchOutputTeamIds.some((teamId) =>
+      userProjectManagerTeamIds.includes(teamId),
+    );
+
+    const isProjectManagerInWorkingGroup = researchOutputWorkingGroupId
+      ? userProjectManagerWorkingGroupIds.includes(researchOutputWorkingGroupId)
+      : false;
+
+    if (
+      associationName &&
+      associationType &&
+      ((associationType === 'team' && isProjectManagerInTeam) ||
+        (associationType === 'working group' &&
+          isProjectManagerInWorkingGroup) ||
+        isAsapStaff)
+    ) {
+      researchOutputReminders.push({
+        id: `research-output-in-review-${researchOutput.sys.id}`,
+        entity: 'Research Output',
+        type: 'In Review',
+        data: {
+          researchOutputId: researchOutput.sys.id,
+          title: researchOutput.title,
+          addedDate: researchOutput.createdDate,
+          documentType: researchOutput.documentType,
+          reviewRequestedBy: `${researchOutput.reviewRequestedBy.firstName} ${researchOutput.reviewRequestedBy.lastName}`,
+          associationType,
+          associationName,
+        },
+      });
+    }
+
+    return researchOutputReminders;
+  }, []);
+};
+
+const getUserTeamIds = (user: NonNullable<User>): string[] => {
+  if (!user.teamsCollection) return [];
+
+  return user.teamsCollection.items
+    .filter((teamItem) => teamItem?.team?.sys.id !== undefined)
+    .map((teamItem) => teamItem?.team?.sys.id as string);
+};
+
+const getUserProjectManagerTeamIds = (user: NonNullable<User>): string[] => {
+  if (!user.teamsCollection) return [];
+
+  return user.teamsCollection.items
+    .filter((teamItem) => teamItem?.role === 'Project Manager')
+    .map((teamItem) => teamItem?.team?.sys.id as string);
+};
+
+type UserLinkedFrom = NonNullable<NonNullable<User>['linkedFrom']>;
+type WorkingGroupMembersCollection =
+  UserLinkedFrom['workingGroupMembersCollection'];
+type WorkingGroupLeadersCollection =
+  UserLinkedFrom['workingGroupLeadersCollection'];
+
+const getIdsFromWorkingGroupCollection = (
+  collection: WorkingGroupMembersCollection | WorkingGroupLeadersCollection,
+): string[] =>
+  collection?.items
+    ? collection.items
+        .filter(
+          (item) =>
+            item?.linkedFrom?.workingGroupsCollection?.items[0]?.sys.id !==
+            undefined,
+        )
+        .map(
+          (item) =>
+            item?.linkedFrom?.workingGroupsCollection?.items[0]?.sys
+              .id as string,
+        )
+    : [];
+
+const getWorkingGroupIds = (user: User): string[] => {
+  if (!user || !user.linkedFrom) return [];
+
+  const workingGroupMembers = getIdsFromWorkingGroupCollection(
+    user.linkedFrom?.workingGroupMembersCollection,
+  );
+
+  const workingGroupLeaders = getIdsFromWorkingGroupCollection(
+    user.linkedFrom.workingGroupLeadersCollection,
+  );
+
+  return workingGroupMembers?.concat(workingGroupLeaders);
+};
+
+const getUserProjectManagerWorkingGroupIds = (user: User): string[] => {
+  if (!user || !user.linkedFrom) return [];
+
+  return user.linkedFrom.workingGroupLeadersCollection?.items
+    ? user.linkedFrom.workingGroupLeadersCollection?.items
+        .filter((item) => item?.role === 'Project Manager')
+        .map(
+          (item) =>
+            item?.linkedFrom?.workingGroupsCollection?.items[0]?.sys
+              .id as string,
+        )
+    : [];
+};
+
+const getAssociationNameAndType = (
+  researchOutput: ResearchOutputItem,
+): {
+  associationType: 'team' | 'working group' | null;
+  associationName: string | null;
+} => {
+  if (researchOutput.workingGroup && researchOutput.workingGroup.title) {
+    return {
+      associationType: 'working group',
+      associationName: researchOutput.workingGroup.title,
+    };
+  }
+
+  if (
+    researchOutput.teamsCollection &&
+    researchOutput.teamsCollection.items[0]?.displayName
+  ) {
+    return {
+      associationType: 'team',
+      associationName: researchOutput.teamsCollection.items[0].displayName,
+    };
+  }
+
+  return {
+    associationType: null,
+    associationName: null,
+  };
+};
+
+const getUserName = (researchOutput: ResearchOutputItem) => {
+  if (
+    researchOutput &&
+    researchOutput.createdBy &&
+    researchOutput.createdBy.firstName &&
+    researchOutput.createdBy.lastName
+  ) {
+    const { firstName, lastName } = researchOutput.createdBy;
+    return `${firstName} ${lastName}`;
+  }
+  return null;
 };

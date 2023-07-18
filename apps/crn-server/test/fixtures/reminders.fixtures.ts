@@ -549,6 +549,54 @@ export const getContentfulReminderEventsCollectionItem = (): NonNullable<
   };
 };
 
+export const getContentfulReminderResearchOutputCollectionItem =
+  (): NonNullable<
+    FetchRemindersQuery['researchOutputsCollection']
+  >['items'][number] => {
+    const researchOutput = getSquidexGraphqlResearchOutput();
+
+    return {
+      sys: {
+        id: researchOutput.id,
+        publishedAt: researchOutput.created,
+      },
+      addedDate: researchOutput.flatData.addedDate,
+      createdDate: researchOutput.created,
+      documentType: researchOutput.flatData.documentType,
+      title: researchOutput.flatData.title,
+      createdBy: {
+        sys: {
+          id: 'user-1',
+        },
+        firstName: 'Tom',
+        lastName: 'Hardy',
+      },
+      teamsCollection: {
+        items: [
+          {
+            sys: {
+              id: 'team-1',
+            },
+            displayName: 'Team A',
+          },
+        ],
+      },
+      workingGroup: {
+        sys: {
+          id: 'wg-id-1',
+        },
+        title: 'Working Group 1',
+      },
+      reviewRequestedBy: {
+        sys: {
+          id: 'user-1',
+        },
+        firstName: 'Tom',
+        lastName: 'Hardy',
+      },
+    };
+  };
+
 export const getContentfulReminderUsersContent =
   (): FetchRemindersQuery['users'] => {
     const eventResponse = getEventResponse();
@@ -568,6 +616,43 @@ export const getContentfulReminderUsersContent =
         ],
       },
       linkedFrom: {
+        workingGroupMembersCollection: {
+          items: [
+            {
+              linkedFrom: {
+                workingGroupsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'wg-id-1',
+                      },
+                      title: 'Working Group 1',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+        workingGroupLeadersCollection: {
+          items: [
+            {
+              role: 'Project Manager',
+              linkedFrom: {
+                workingGroupsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'wg-id-2',
+                      },
+                      title: 'Working Group 2',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
         eventSpeakersCollection: {
           items: [
             {

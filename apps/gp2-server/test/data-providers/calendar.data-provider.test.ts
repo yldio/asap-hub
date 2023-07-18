@@ -529,7 +529,7 @@ describe('Calendars data provider', () => {
         },
         googleApiMetadata: {
           'en-US': {
-            associatedGoogleCalendarId: 'google-calendar-id-1',
+            associatedGoogleCalendarId: null,
             resourceId: null,
             syncToken: 'syncToken-1',
           },

@@ -135,7 +135,9 @@ export class CalendarContentfulDataProvider
             ? {
                 resourceId,
                 associatedGoogleCalendarId:
-                  calendar.fields.googleCalendarId['en-US'],
+                  resourceId === null
+                    ? null
+                    : calendar.fields.googleCalendarId['en-US'],
               }
             : {}),
           ...(syncToken ? { syncToken } : {}),

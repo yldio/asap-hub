@@ -5,7 +5,7 @@ import {
   Subtitle,
   pixels,
 } from '@asap-hub/react-components';
-import { css, SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import { ReactNode, useState } from 'react';
 import { mobileQuery, nonMobileQuery } from '../layout';
 import colors from '../templates/colors';
@@ -26,6 +26,13 @@ const rowStyles = css({
     borderBottom: 'none',
     marginBottom: 0,
     paddingBottom: 0,
+  },
+});
+
+const rowStyles2Columns = css({
+  ...rowStyles,
+  [nonMobileQuery]: {
+    gridTemplateColumns: '3fr 1fr',
   },
 });
 
@@ -67,25 +74,26 @@ type CollapsibleTableRow = {
 type CollapsibleTableProps = {
   headings: string[];
   children: CollapsibleTableRow[];
-  tableStyles?: SerializedStyles;
+  numberOfColumns?: '2' | '3';
 };
 const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
   headings,
   children,
-  tableStyles,
+  numberOfColumns = '3',
 }) => {
   const minimumToDisplay = 3;
   const [expanded, setExpanded] = useState(false);
+  const tableStyles = numberOfColumns == '3' ? rowStyles : rowStyles2Columns;
 
   const getListStyles = () =>
     children.length <= minimumToDisplay || expanded
-      ? [rowStyles, tableStyles]
-      : [rowStyles, hideStyles, tableStyles];
+      ? [tableStyles]
+      : [tableStyles, hideStyles];
 
   const getTextStyles = (idx: number) => (idx === 0 ? [] : secondaryTextStyles);
   return (
     <>
-      <div css={[rowStyles, gridTitleStyles, tableStyles]}>
+      <div css={[tableStyles, gridTitleStyles]}>
         {headings.map((heading, idx) => (
           <Subtitle key={`heading-${idx}`} noMargin>
             {heading}

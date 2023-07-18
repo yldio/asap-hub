@@ -2,11 +2,9 @@ import { ComponentProps } from 'react';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Link, Subtitle, utils } from '@asap-hub/react-components';
-import { css } from '@emotion/react';
 
 import { CollapsibleTable, EditableCard, IconWithLabel } from '../molecules';
 import { usersIcon } from '../icons';
-import { nonMobileQuery } from '../layout';
 
 const { getCounterString } = utils;
 
@@ -18,12 +16,6 @@ type UserWorkingGroupsProps = Pick<
     noLinks?: boolean;
     isOnboarding?: boolean;
   };
-
-const tableStyles = css({
-  [nonMobileQuery]: {
-    gridTemplateColumns: '3fr 1fr',
-  },
-});
 
 const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
   workingGroups,
@@ -52,7 +44,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
           headings={
             isOnboarding ? ['Name', 'Members'] : ['Name', 'Role', 'Members']
           }
-          tableStyles={isOnboarding ? tableStyles : undefined}
+          numberOfColumns={isOnboarding ? '2' : '3'}
         >
           {workingGroups.map(({ title, members, id: workingGroupId }) => {
             const name = noLinks ? (

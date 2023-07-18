@@ -1,9 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { Link, Subtitle } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { nonMobileQuery } from '../layout';
 import { CollapsibleTable, EditableCard, StatusPill } from '../molecules';
 
 type UserProjectsProps = Pick<
@@ -14,12 +12,6 @@ type UserProjectsProps = Pick<
     noLinks?: boolean;
     isOnboarding?: boolean;
   };
-
-const tableStyles = css({
-  [nonMobileQuery]: {
-    gridTemplateColumns: '3fr 1fr',
-  },
-});
 
 const getUserProjectRole = (
   userId: gp2.UserResponse['id'],
@@ -47,7 +39,7 @@ const UserProjects: React.FC<UserProjectsProps> = ({
         headings={
           isOnboarding ? ['Name', 'Status'] : ['Name', 'Role', 'Status']
         }
-        tableStyles={isOnboarding ? tableStyles : undefined}
+        numberOfColumns={isOnboarding ? '2' : '3'}
       >
         {projects.map((project) => {
           const name = noLinks ? (

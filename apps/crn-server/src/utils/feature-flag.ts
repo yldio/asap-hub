@@ -13,7 +13,7 @@ import {
   ReminderDataProvider,
 } from '../data-providers/types';
 
-const featureFlags = ['IS_CONTENTFUL_ENABLED_V2'] as const;
+const featureFlags = ['IS_CONTENTFUL_ENABLED'] as const;
 type FeatureFlag = (typeof featureFlags)[number];
 
 type DependencySwitch<T> = {
@@ -41,7 +41,7 @@ export class FeatureFlagDependencySwitch {
   private dependencies: {
     [key in FeatureFlag]: DependencyList;
   } = {
-    IS_CONTENTFUL_ENABLED_V2: {
+    IS_CONTENTFUL_ENABLED: {
       assets: {
         true: undefined,
         false: undefined,
@@ -100,7 +100,7 @@ export class FeatureFlagDependencySwitch {
   private featureFlags: {
     [key in FeatureFlag]: boolean;
   } = {
-    IS_CONTENTFUL_ENABLED_V2: false,
+    IS_CONTENTFUL_ENABLED: false,
   };
 
   setDependency<T extends keyof DependencyList>(

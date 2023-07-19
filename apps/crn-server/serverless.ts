@@ -50,7 +50,6 @@ const {
   CRN_CONTENTFUL_SPACE_ID,
   CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
   IS_CONTENTFUL_ENABLED = 'false',
-  IS_CONTENTFUL_ENABLED_V2 = 'false',
   LOG_LEVEL,
 } = process.env;
 
@@ -79,7 +78,6 @@ const contentfulWebhookAuthenticationToken =
   CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
 const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
-const isContentfulEnabledV2 = IS_CONTENTFUL_ENABLED_V2;
 const sesRegion = CRN_SES_REGION!;
 
 const algoliaIndex = ALGOLIA_INDEX
@@ -178,7 +176,6 @@ const serverlessConfig: AWS = {
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: CI_COMMIT_SHA || '${env:CURRENT_REVISION}',
       IS_CONTENTFUL_ENABLED: isContentfulEnabled,
-      IS_CONTENTFUL_ENABLED_V2: isContentfulEnabledV2,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
@@ -343,7 +340,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'false',
+        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     gcalSubscribeCalendarContentful: {
@@ -363,7 +360,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     gcalResubscribeCalendarsSquidex: {
@@ -378,7 +375,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'false',
+        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     gcalResubscribeCalendarsContentful: {
@@ -393,7 +390,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     syncUserOrcidSquidex: {
@@ -414,7 +411,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'false',
+        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     syncUserOrcidContentful: {
@@ -435,7 +432,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     inviteUserSquidex: {
@@ -460,7 +457,7 @@ const serverlessConfig: AWS = {
         EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'false',
+        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     inviteUserContentful: {
@@ -485,7 +482,7 @@ const serverlessConfig: AWS = {
         EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexResearchOutput: {
@@ -561,7 +558,7 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'false',
+        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     algoliaIndexExternalAuthorContentful: {
@@ -587,7 +584,7 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexEventsSquidex: {
@@ -612,7 +609,7 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'false',
+        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     algoliaIndexEventsContentful: {
@@ -635,7 +632,7 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexUserEvents: {
@@ -759,7 +756,7 @@ const serverlessConfig: AWS = {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     algoliaIndexLabUsers: {
@@ -801,7 +798,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'false',
+        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     gcalEventsUpdatedContentful: {
@@ -819,7 +816,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     runMigrations: {
@@ -917,7 +914,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'false',
+        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     updateContentfulWorkingGroupDeliverables: {
@@ -936,7 +933,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
     squidexWebhook: {
@@ -982,7 +979,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'false',
+        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     cronjobSyncOrcidContentful: {
@@ -994,7 +991,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED_V2: 'true',
+        IS_CONTENTFUL_ENABLED: 'true',
       },
     },
   },

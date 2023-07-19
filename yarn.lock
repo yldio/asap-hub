@@ -379,7 +379,7 @@ __metadata:
     "@asap-hub/server-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@babel/runtime-corejs3": 7.22.6
-    "@contentful/rich-text-types": 16.0.3
+    "@contentful/rich-text-types": 16.2.0
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
     "@graphql-codegen/introspection": 2.2.1
@@ -418,7 +418,7 @@ __metadata:
     "@contentful/f36-components": 4.47.3
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
-    "@contentful/rich-text-html-renderer": 16.0.3
+    "@contentful/rich-text-html-renderer": 16.1.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -587,7 +587,7 @@ __metadata:
     "@contentful/f36-components": 4.47.3
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
-    "@contentful/rich-text-html-renderer": 16.0.3
+    "@contentful/rich-text-html-renderer": 16.1.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 1.0.3
@@ -698,8 +698,8 @@ __metadata:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.22.6
-    "@contentful/rich-text-html-renderer": 16.0.3
-    "@contentful/rich-text-types": 16.0.3
+    "@contentful/rich-text-html-renderer": 16.1.0
+    "@contentful/rich-text-types": 16.2.0
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
     "@graphql-codegen/introspection": 2.2.1
@@ -10821,13 +10821,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-html-renderer@npm:16.0.3":
-  version: 16.0.3
-  resolution: "@contentful/rich-text-html-renderer@npm:16.0.3"
+"@contentful/rich-text-html-renderer@npm:16.1.0":
+  version: 16.1.0
+  resolution: "@contentful/rich-text-html-renderer@npm:16.1.0"
   dependencies:
-    "@contentful/rich-text-types": ^16.0.3
+    "@contentful/rich-text-types": ^16.2.0
     escape-html: ^1.0.3
-  checksum: df25fa1f246c56e7edf4628b5aa84ab029594d27908d150a3696515c28b4d2d9f44f075c898b7398302c72584d5e51ca9467c990f7e74c2844c0e57d083cb65d
+  checksum: 06234d94ce5077a7d9f5c5a41911017431d4bc24a4783f5d0133ba010ac3aa43a456c765707d3b803044331c6b309029f3f1eb7f76a1603c7dfe58e91638a3e1
   languageName: node
   linkType: hard
 
@@ -10843,10 +10843,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-types@npm:16.0.3, @contentful/rich-text-types@npm:^16.0.3":
-  version: 16.0.3
-  resolution: "@contentful/rich-text-types@npm:16.0.3"
-  checksum: 830c384ec6c5ea9d14ef867291065cbf9935a078b9ac4326db549175ddcd2efbd0f1adf980d9d9f9e9386dfed48745eeb920742230ef2e72bb2773f2c8901824
+"@contentful/rich-text-types@npm:16.2.0, @contentful/rich-text-types@npm:^16.2.0":
+  version: 16.2.0
+  resolution: "@contentful/rich-text-types@npm:16.2.0"
+  checksum: ec9390201e7e7c1419b61efee12845169665b336fe866132515f61ed7ab6753a997d1336b13cb2962eb48db01deef4a5a035e929344eec41f1b58227d78ecff9
   languageName: node
   linkType: hard
 
@@ -10857,10 +10857,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-types@npm:^16.2.0":
-  version: 16.2.0
-  resolution: "@contentful/rich-text-types@npm:16.2.0"
-  checksum: ec9390201e7e7c1419b61efee12845169665b336fe866132515f61ed7ab6753a997d1336b13cb2962eb48db01deef4a5a035e929344eec41f1b58227d78ecff9
+"@contentful/rich-text-types@npm:^16.0.3":
+  version: 16.0.3
+  resolution: "@contentful/rich-text-types@npm:16.0.3"
+  checksum: 830c384ec6c5ea9d14ef867291065cbf9935a078b9ac4326db549175ddcd2efbd0f1adf980d9d9f9e9386dfed48745eeb920742230ef2e72bb2773f2c8901824
   languageName: node
   linkType: hard
 

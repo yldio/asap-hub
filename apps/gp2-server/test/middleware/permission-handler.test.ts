@@ -98,8 +98,10 @@ describe('Permission middleware', () => {
         userMockFactory.mockReturnValueOnce(nonOnboardedUserMock);
       });
 
-      test('Should deny access to /groups endpoint', async () => {
-        const response = await supertest(appWithMockedAuth).get('/groups');
+      test('Should deny access to /interest-groups endpoint', async () => {
+        const response = await supertest(appWithMockedAuth).get(
+          '/interest-groups',
+        );
 
         expect(response.status).toBe(403);
       });

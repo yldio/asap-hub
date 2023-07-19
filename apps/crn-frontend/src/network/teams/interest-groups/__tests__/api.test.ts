@@ -13,7 +13,7 @@ afterEach(() => {
 describe('getTeamGroups', () => {
   it('makes an authorized GET request for the team id', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/teams/42/groups')
+      .get('/teams/42/interest-groups')
       .reply(200, {});
     await getTeamInterestGroups('42', 'Bearer x');
     expect(nock.isDone()).toBe(true);
@@ -21,16 +21,16 @@ describe('getTeamGroups', () => {
 
   it('returns successfully fetched team groups', async () => {
     const groups = createListInterestGroupResponse(0);
-    nock(API_BASE_URL).get('/teams/42/groups').reply(200, groups);
+    nock(API_BASE_URL).get('/teams/42/interest-groups').reply(200, groups);
     expect(await getTeamInterestGroups('42', '')).toEqual(groups);
   });
 
   it('returns undefined for a 404', async () => {
-    nock(API_BASE_URL).get('/teams/42/groups').reply(404);
+    nock(API_BASE_URL).get('/teams/42/interest-groups').reply(404);
     expect(await getTeamInterestGroups('42', '')).toBe(undefined);
   });
   it('errors for an error status', async () => {
-    nock(API_BASE_URL).get('/teams/42/groups').reply(500);
+    nock(API_BASE_URL).get('/teams/42/interest-groups').reply(500);
     await expect(
       getTeamInterestGroups('42', ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(

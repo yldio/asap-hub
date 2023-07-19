@@ -11,7 +11,7 @@ export const interestGroupRouteFactory = (
 ): Router => {
   const interestGroupRoutes = Router();
 
-  interestGroupRoutes.get('/groups', async (req, res) => {
+  interestGroupRoutes.get('/interest-groups', async (req, res) => {
     const parameters = req.query;
 
     const query = validateFetchOptions(parameters);
@@ -22,7 +22,7 @@ export const interestGroupRouteFactory = (
   });
 
   interestGroupRoutes.get<{ groupId: string }>(
-    '/groups/:groupId',
+    '/interest-groups/:groupId',
     async (req, res) => {
       const { params } = req;
       const { groupId } = validateGroupParameters(params);
@@ -32,18 +32,21 @@ export const interestGroupRouteFactory = (
     },
   );
 
-  interestGroupRoutes.get('/groups/:groupId/events', async (req, res) => {
-    const query = validateEventFetchParameters(req.query);
-    const { params } = req;
-    const { groupId } = validateGroupParameters(params);
+  interestGroupRoutes.get(
+    '/interest-groups/:groupId/events',
+    async (req, res) => {
+      const query = validateEventFetchParameters(req.query);
+      const { params } = req;
+      const { groupId } = validateGroupParameters(params);
 
-    const result = await eventController.fetch({
-      filter: { groupId },
-      ...query,
-    });
+      const result = await eventController.fetch({
+        filter: { groupId },
+        ...query,
+      });
 
-    res.json(result);
-  });
+      res.json(result);
+    },
+  );
 
   return interestGroupRoutes;
 };

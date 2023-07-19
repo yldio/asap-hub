@@ -14,13 +14,16 @@ export const getInterestGroups = async (
   options: GetListOptions,
   authorization: string,
 ): Promise<ListInterestGroupResponse> => {
-  const resp = await fetch(createListApiUrl('groups', options).toString(), {
-    headers: {
-      authorization,
-      ...createSentryHeaders(),
-      ...createFeatureFlagHeaders(),
+  const resp = await fetch(
+    createListApiUrl('interest-groups', options).toString(),
+    {
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+        ...createFeatureFlagHeaders(),
+      },
     },
-  });
+  );
 
   if (!resp.ok) {
     throw new Error(
@@ -33,7 +36,7 @@ export const getInterestGroup = async (
   id: string,
   authorization: string,
 ): Promise<InterestGroupResponse | undefined> => {
-  const resp = await fetch(`${API_BASE_URL}/groups/${id}`, {
+  const resp = await fetch(`${API_BASE_URL}/interest-groups/${id}`, {
     headers: {
       authorization,
       ...createSentryHeaders(),

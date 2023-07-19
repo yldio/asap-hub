@@ -16,7 +16,7 @@ import { eventControllerMock } from '../mocks/event.controller.mock';
 import { interestGroupControllerMock } from '../mocks/interest-group.controller.mock';
 import { loggerMock } from '../mocks/logger.mock';
 
-describe('/groups/ route', () => {
+describe('/interest-groups/ route', () => {
   const app = appFactory({
     eventController: eventControllerMock,
     interestGroupController: interestGroupControllerMock,
@@ -28,14 +28,14 @@ describe('/groups/ route', () => {
     jest.resetAllMocks();
   });
 
-  describe('GET /groups', () => {
+  describe('GET /interest-groups', () => {
     test('Should return 200 when no grups exist', async () => {
       interestGroupControllerMock.fetch.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
 
-      const response = await supertest(app).get('/groups/');
+      const response = await supertest(app).get('/interest-groups/');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -49,7 +49,7 @@ describe('/groups/ route', () => {
         getListInterestGroupResponse(),
       );
 
-      const response = await supertest(app).get('/groups/');
+      const response = await supertest(app).get('/interest-groups/');
 
       expect(response.body).toEqual(getListInterestGroupResponse());
     });
@@ -60,7 +60,7 @@ describe('/groups/ route', () => {
         total: 0,
       });
 
-      await supertest(app).get('/groups/').query({
+      await supertest(app).get('/interest-groups/').query({
         take: 15,
         skip: 5,
         search: 'something',
@@ -77,14 +77,14 @@ describe('/groups/ route', () => {
 
     describe('Parameter validation', () => {
       test('Should return a validation error when additional arguments exist', async () => {
-        const response = await supertest(app).get('/groups/').query({
+        const response = await supertest(app).get('/interest-groups/').query({
           additionalField: 'some-data',
         });
 
         expect(response.status).toBe(400);
       });
       test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(app).get('/groups/').query({
+        const response = await supertest(app).get('/interest-groups/').query({
           take: 'invalid param',
         });
 
@@ -93,13 +93,13 @@ describe('/groups/ route', () => {
     });
   });
 
-  describe('GET /groups/{groupId}', () => {
+  describe('GET /interest-groups/{groupId}', () => {
     test('Should return 404 when no group exist', async () => {
       interestGroupControllerMock.fetchById.mockRejectedValueOnce(
         Boom.notFound(),
       );
 
-      const response = await supertest(app).get('/groups/123');
+      const response = await supertest(app).get('/interest-groups/123');
 
       expect(response.status).toBe(404);
     });
@@ -109,13 +109,13 @@ describe('/groups/ route', () => {
         getInterestGroupResponse(),
       );
 
-      const response = await supertest(app).get('/groups/123');
+      const response = await supertest(app).get('/interest-groups/123');
 
       expect(response.body).toEqual(getInterestGroupResponse());
     });
   });
 
-  describe('GET /groups/{groupId}/events', () => {
+  describe('GET /interest-groups/{groupId}/events', () => {
     const groupId = 'some-group-id';
     const query = { after: '2021-02-08T14:13:37.138Z' };
 
@@ -123,7 +123,7 @@ describe('/groups/ route', () => {
       eventControllerMock.fetch.mockRejectedValueOnce(Boom.notFound());
 
       const response = await supertest(app)
-        .get(`/groups/${groupId}/events`)
+        .get(`/interest-groups/${groupId}/events`)
         .query(query);
 
       expect(response.status).toBe(404);
@@ -135,7 +135,7 @@ describe('/groups/ route', () => {
         items: [],
       });
       const response = await supertest(app)
-        .get(`/groups/${groupId}/events`)
+        .get(`/interest-groups/${groupId}/events`)
         .query(query);
 
       expect(response.status).toBe(200);
@@ -178,7 +178,7 @@ describe('/groups/ route', () => {
 
       eventControllerMock.fetch.mockResolvedValueOnce(listEventResponse);
       const response = await supertest(app)
-        .get(`/groups/${groupId}/events`)
+        .get(`/interest-groups/${groupId}/events`)
         .query(query);
 
       expect(response.status).toBe(200);
@@ -191,7 +191,7 @@ describe('/groups/ route', () => {
         total: 0,
       });
 
-      await supertest(app).get(`/groups/${groupId}/events`).query({
+      await supertest(app).get(`/interest-groups/${groupId}/events`).query({
         take: 15,
         skip: 5,
         before: '2021-02-08T14:29:59.895Z',
@@ -216,7 +216,7 @@ describe('/groups/ route', () => {
     describe('Parameter validation', () => {
       test('Should return a validation error when additional fields exist', async () => {
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             additionalField: 'some-data',
           });
@@ -225,7 +225,7 @@ describe('/groups/ route', () => {
 
       test('Should return a validation error when before parameter is present but empty', async () => {
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '',
           });
@@ -234,7 +234,7 @@ describe('/groups/ route', () => {
 
       test('Should return a validation error when before parameter is invalid', async () => {
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: 'not-a-date',
           });
@@ -243,7 +243,7 @@ describe('/groups/ route', () => {
 
       test('Should return a validation error when after parameter is present but empty', async () => {
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             after: '',
           });
@@ -252,7 +252,7 @@ describe('/groups/ route', () => {
 
       test('Should return a validation error when after parameter is invalid', async () => {
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             after: 'not-a-date',
           });
@@ -261,7 +261,7 @@ describe('/groups/ route', () => {
 
       test('Should return a validation error when skip parameter is invalid', async () => {
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '2021-02-08T14:13:37.138Z',
             skip: 'invalid-parameter',
@@ -271,7 +271,7 @@ describe('/groups/ route', () => {
 
       test('Should return a validation error when take parameter is invalid', async () => {
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '2021-02-08T14:13:37.138Z',
             take: 'invalid-parameter',
@@ -281,7 +281,7 @@ describe('/groups/ route', () => {
 
       test('Should return a validation error when the sort column is not supported', async () => {
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '2021-02-08T14:13:37.138Z',
             sortBy: 'lastModifiedDate',
@@ -291,7 +291,7 @@ describe('/groups/ route', () => {
 
       test('Should return a validation error when the sort order is not supported', async () => {
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '2021-02-08T14:13:37.138Z',
             sortOrder: 'up',
@@ -306,7 +306,7 @@ describe('/groups/ route', () => {
         });
 
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '2021-02-08T14:13:37.138Z',
           });
@@ -327,7 +327,7 @@ describe('/groups/ route', () => {
         });
 
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '2021-02-08T14:13:37.138Z',
             sortBy: 'endDate',
@@ -349,7 +349,7 @@ describe('/groups/ route', () => {
         });
 
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '2021-02-08T14:13:37.138Z',
             sortOrder: 'desc',
@@ -371,7 +371,7 @@ describe('/groups/ route', () => {
         });
 
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '2021-02-08T14:13:37.138Z',
             sortBy: 'endDate',
@@ -388,7 +388,7 @@ describe('/groups/ route', () => {
         });
 
         const response = await supertest(app)
-          .get(`/groups/${groupId}/events`)
+          .get(`/interest-groups/${groupId}/events`)
           .query({
             before: '2021-02-08T14:13:37.138Z',
             sortBy: 'startDate',

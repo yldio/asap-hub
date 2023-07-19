@@ -2,7 +2,6 @@ export * from './calendar';
 export * from './event';
 export * from './external-authors';
 export * from './interest-group';
-export * from './news';
 export * from './tutorials';
 export * from './page';
 export * from './research-output';

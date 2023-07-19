@@ -139,6 +139,7 @@ describe('Calendar handler', () => {
 
     const calendarResponse = getCalendarFromDeliveryApi({
       associatedGoogleCalendarId: 'calendar-1',
+      resourceId: '42',
     });
 
     (getCDAClient as jest.Mock).mockReturnValue({
@@ -194,6 +195,7 @@ describe('Calendar handler', () => {
 
     const calendarResponse = getCalendarFromDeliveryApi({
       associatedGoogleCalendarId: 'calendar-1',
+      resourceId: '42',
       revision: 2,
     });
 

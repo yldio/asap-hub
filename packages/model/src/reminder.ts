@@ -63,7 +63,7 @@ export interface ResearchOutputDraftReminder extends ResearchOutputReminder {
   data: {
     researchOutputId: ResearchOutputDraftDataObject['id'];
     title: ResearchOutputDraftDataObject['title'];
-    addedDate: ResearchOutputDraftDataObject['created'];
+    createdDate: ResearchOutputDraftDataObject['created'];
     createdBy: string;
     associationType: 'team' | 'working group';
     associationName: string;
@@ -77,7 +77,7 @@ export interface ResearchOutputInReviewReminder extends ResearchOutputReminder {
     researchOutputId: ResearchOutputDraftDataObject['id'];
     title: ResearchOutputDraftDataObject['title'];
     documentType: ResearchOutputPublishedDataObject['documentType'];
-    addedDate: ResearchOutputDraftDataObject['created'];
+    createdDate: ResearchOutputDraftDataObject['created'];
     associationType: 'team' | 'working group';
     associationName: string;
     reviewRequestedBy: string;

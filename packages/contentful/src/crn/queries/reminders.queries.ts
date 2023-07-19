@@ -3,7 +3,51 @@
 import { gql } from 'graphql-tag';
 
 export const FETCH_REMINDERS = gql`
-  query FetchReminders($eventFilter: EventsFilter, $userId: String!) {
+  query FetchReminders(
+    $researchOutputFilter: ResearchOutputsFilter
+    $eventFilter: EventsFilter
+    $userId: String!
+  ) {
+    researchOutputsCollection(where: $researchOutputFilter, preview: true) {
+      items {
+        sys {
+          id
+          publishedAt
+        }
+        addedDate
+        createdDate
+        documentType
+        title
+        teamsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            displayName
+          }
+        }
+        workingGroup {
+          sys {
+            id
+          }
+          title
+        }
+        createdBy {
+          sys {
+            id
+          }
+          firstName
+          lastName
+        }
+        reviewRequestedBy {
+          sys {
+            id
+          }
+          firstName
+          lastName
+        }
+      }
+    }
     eventsCollection(where: $eventFilter) {
       items {
         sys {
@@ -40,6 +84,35 @@ export const FETCH_REMINDERS = gql`
         }
       }
       linkedFrom {
+        workingGroupMembersCollection(limit: 10) {
+          items {
+            linkedFrom {
+              workingGroupsCollection(limit: 1) {
+                items {
+                  sys {
+                    id
+                  }
+                  title
+                }
+              }
+            }
+          }
+        }
+        workingGroupLeadersCollection(limit: 10) {
+          items {
+            role
+            linkedFrom {
+              workingGroupsCollection(limit: 1) {
+                items {
+                  sys {
+                    id
+                  }
+                  title
+                }
+              }
+            }
+          }
+        }
         eventSpeakersCollection(limit: 100) {
           items {
             team {

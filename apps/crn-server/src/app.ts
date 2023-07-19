@@ -354,7 +354,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   featureFlagDependencySwitch.setDependency(
     'reminders',
     libs.reminderContentfulDataProvider ||
-      new ReminderContentfulDataProvider(contentfulGraphQLClient),
+      new ReminderContentfulDataProvider(contentfulPreviewGraphQLClient),
     'IS_CONTENTFUL_ENABLED_V2',
     true,
   );

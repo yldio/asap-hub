@@ -17,6 +17,7 @@ import {
   TeamCreateDataObject,
   InterestGroupCreateDataObject,
   WorkingGroupCreateDataObject,
+  ResearchOutputCreateDataObject,
 } from './types';
 
 import {
@@ -208,6 +209,25 @@ export class ContentfulFixture implements Fixture {
     };
   }
 
+  private async prepareResearchOutput(props: ResearchOutputCreateDataObject) {
+    const {
+      teams,
+      workingGroups,
+      published: _published,
+      ...researchOutputData
+    } = props;
+    return {
+      ...researchOutputData,
+      teams: teams.map((id) => getLinkEntity(id)),
+      workingGroup:
+        workingGroups && workingGroups[0]
+          ? getLinkEntity(workingGroups[0])
+          : null,
+      usedInAPublication: 'No' as NonNullable<'Yes' | 'No' | 'Not Sure'>,
+      asapFunded: 'No' as NonNullable<'Yes' | 'No' | 'Not Sure'>,
+    };
+  }
+
   async createCalendar(calendar: CalendarCreateDataObject) {
     const environment = await this.getEnvironment();
     const input = await this.prepareCalendar(calendar);
@@ -296,6 +316,24 @@ export class ContentfulFixture implements Fixture {
     return {
       id: result.sys.id,
       ...workingGroup,
+    };
+  }
+
+  async createResearchOutput(researchOutput: ResearchOutputCreateDataObject) {
+    // Ideally we should use the post /research-outputs route to create
+    // the research output. Use this method only if you need to change
+    // fields that the API does not support like addedDate
+    const environment = await this.getEnvironment();
+    const input = await this.prepareResearchOutput(researchOutput);
+    const result = await environment.createEntry('researchOutputs', {
+      fields: addLocaleToFields(input),
+    });
+    if (researchOutput.published) {
+      await result.publish();
+    }
+    return {
+      id: result.sys.id,
+      ...researchOutput,
     };
   }
 

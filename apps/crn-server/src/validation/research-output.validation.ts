@@ -175,6 +175,11 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       published: {
         type: 'boolean',
       },
+      isInReview: {
+        type: 'boolean',
+        nullable: true,
+        default: false,
+      },
     },
     required: [
       'documentType',

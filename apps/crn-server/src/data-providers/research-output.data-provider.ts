@@ -234,7 +234,6 @@ export class ResearchOutputSquidexDataProvider
       organisms: organismIds,
       workingGroups,
       subtype: (subtypeId && [subtypeId]) || [],
-      isInReview: false,
     });
 
     const { id: researchOutputId } =

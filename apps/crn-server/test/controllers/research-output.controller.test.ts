@@ -156,7 +156,6 @@ describe('ResearchOutputs controller', () => {
         {
           ...getResearchOutputCreateDataObject(),
           addedDate: mockDate.toISOString(),
-          isInReview: undefined,
         },
         { publish: true },
       );
@@ -185,7 +184,6 @@ describe('ResearchOutputs controller', () => {
         {
           ...getResearchOutputCreateDataObject(),
           addedDate: mockDate.toISOString(),
-          isInReview: undefined,
         },
         { publish: true },
       );
@@ -209,7 +207,6 @@ describe('ResearchOutputs controller', () => {
         {
           ...getResearchOutputCreateDataObject(),
           addedDate: undefined,
-          isInReview: undefined,
         },
         { publish: false },
       );

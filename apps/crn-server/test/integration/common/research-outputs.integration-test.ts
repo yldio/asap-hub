@@ -199,7 +199,11 @@ describe('research outputs', () => {
         const now = new Date().toISOString();
         const response = await supertest(app)
           .put(`/research-outputs/${researchOutputId}`)
-          .send({ ...researchOutput, statusChangedById: loggedInUser.id })
+          .send({
+            ...researchOutput,
+            statusChangedById: loggedInUser.id,
+            isInReview: true,
+          })
           .expect(200);
 
         expect(response.body.statusChangedBy.id).toEqual(loggedInUser.id);
@@ -210,6 +214,7 @@ describe('research outputs', () => {
           loggedInUser.lastName,
         );
         expect(response.body.lastUpdatedPartial).toBeCloseInTimeTo(now);
+        expect(response.body.isInReview).toBe(true);
       });
 
       // regression test for cache behaviour when updating published content  in contentful

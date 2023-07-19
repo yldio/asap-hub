@@ -194,6 +194,7 @@ export type ResearchOutputCoreObject = {
   descriptionMD?: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
+  isInReview: boolean;
   labCatalogNumber?: string;
   lastModifiedDate?: string;
   link?: string;
@@ -219,7 +220,6 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   created: string;
   environments: string[];
   id: string;
-  isInReview: boolean;
   labs: LabResponse[];
   lastUpdatedPartial: string;
   methods: string[];
@@ -293,7 +293,6 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   relatedResearchIds?: string[];
   relatedEventIds?: string[];
   statusChangedById?: string;
-  isInReview: boolean;
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -329,6 +328,7 @@ export type ResearchOutputPostRequest = {
   documentType: ResearchOutputDocumentType;
   doi?: string;
   environments: string[];
+  isInReview?: boolean;
   labCatalogNumber?: string;
   labs?: string[];
   link?: string;

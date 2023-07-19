@@ -492,6 +492,7 @@ describe('Reminders', () => {
           .send({
             ...draftOutput,
             statusChangedById: loggedInUser.id,
+            isInReview: true,
           })
           .expect(200);
 
@@ -518,6 +519,7 @@ describe('Reminders', () => {
           .send({
             ...draftOutput,
             statusChangedById: loggedInUser.id,
+            isInReview: true,
           })
           .expect(200);
 
@@ -545,6 +547,7 @@ describe('Reminders', () => {
           .send({
             ...draftOutput,
             statusChangedById: loggedInUser.id,
+            isInReview: true,
           })
           .expect(200);
 
@@ -575,6 +578,7 @@ describe('Reminders', () => {
           .send({
             ...draftOutput,
             statusChangedById: loggedInUser.id,
+            isInReview: true,
           })
           .expect(200);
 
@@ -601,6 +605,7 @@ describe('Reminders', () => {
           .send({
             ...draftOutput,
             statusChangedById: loggedInUser.id,
+            isInReview: true,
           })
           .expect(200);
 

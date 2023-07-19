@@ -336,7 +336,6 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     relatedResearch,
     published: _published,
     relatedEvents,
-    isInReview,
     ...researchOutputResponse
   } = getResearchOutputResponse();
   return {

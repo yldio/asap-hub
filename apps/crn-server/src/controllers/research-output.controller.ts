@@ -102,6 +102,7 @@ export default class ResearchOutputController {
       documentType: normalisedResearchOutputCreateData.documentType,
       doi: normalisedResearchOutputCreateData.doi,
       environmentIds: environments,
+      isInReview: normalisedResearchOutputCreateData.isInReview || false,
       labCatalogNumber: normalisedResearchOutputCreateData.labCatalogNumber,
       labIds: normalisedResearchOutputCreateData.labs || [],
       link: normalisedResearchOutputCreateData.link,

@@ -3,8 +3,9 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Link, Subtitle, utils } from '@asap-hub/react-components';
 
-import { CollapsibleTable, EditableCard, IconWithLabel } from '../molecules';
+import { EditableCard, IconWithLabel } from '../molecules';
 import { usersIcon } from '../icons';
+import { CardTable } from '.';
 
 const { getCounterString } = utils;
 
@@ -40,11 +41,11 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
       }
     >
       {workingGroups.length ? (
-        <CollapsibleTable
+        <CardTable
+          isOnboarding={isOnboarding}
           headings={
             isOnboarding ? ['Name', 'Members'] : ['Name', 'Role', 'Members']
           }
-          numberOfColumns={isOnboarding ? '2' : '3'}
         >
           {workingGroups.map(({ title, members, id: workingGroupId }) => {
             const name = noLinks ? (
@@ -75,7 +76,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
                 : [name, role, numberOfMembers],
             };
           })}
-        </CollapsibleTable>
+        </CardTable>
       ) : (
         <Subtitle accent={'lead'}>
           You are not associated to any working groups.

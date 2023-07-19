@@ -2,7 +2,8 @@ import { gp2 } from '@asap-hub/model';
 import { Link, Subtitle } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
-import { CollapsibleTable, EditableCard, StatusPill } from '../molecules';
+import { EditableCard, StatusPill } from '../molecules';
+import { CardTable } from '.';
 
 type UserProjectsProps = Pick<
   gp2.UserResponse,
@@ -13,12 +14,6 @@ type UserProjectsProps = Pick<
     isOnboarding?: boolean;
   };
 
-const getUserProjectRole = (
-  userId: gp2.UserResponse['id'],
-  project: gp2.UserResponse['projects'][number],
-): gp2.ProjectMemberRole | null =>
-  project.members.find((member) => member.userId === userId)?.role || null;
-
 const UserProjects: React.FC<UserProjectsProps> = ({
   projects,
   firstName,
@@ -26,51 +21,59 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   subtitle,
   noLinks = false,
   isOnboarding = false,
-}) => (
-  <EditableCard
-    title="Projects"
-    subtitle={
-      subtitle ||
-      `${firstName} has been involved in the following GP2 projects:`
-    }
-  >
-    {projects.length ? (
-      <CollapsibleTable
-        headings={
-          isOnboarding ? ['Name', 'Status'] : ['Name', 'Role', 'Status']
-        }
-        numberOfColumns={isOnboarding ? '2' : '3'}
-      >
-        {projects.map((project) => {
-          const name = noLinks ? (
-            project.title
-          ) : (
-            <Link
-              underlined
-              href={
-                gp2Routing.projects({}).project({
-                  projectId: project.id,
-                }).$
-              }
-            >
-              {project.title}
-            </Link>
-          );
-          const role = getUserProjectRole(id, project) || '';
-          const status = <StatusPill status={project.status} />;
+}) => {
+  const getUserProjectRole = (
+    userId: gp2.UserResponse['id'],
+    project: gp2.UserResponse['projects'][number],
+  ): gp2.ProjectMemberRole | null =>
+    project.members.find((member) => member.userId === userId)?.role || null;
 
-          return {
-            id: project.id,
-            values: isOnboarding ? [name, status] : [name, role, status],
-          };
-        })}
-      </CollapsibleTable>
-    ) : (
-      <Subtitle accent={'lead'}>
-        You are not associated to any projects.
-      </Subtitle>
-    )}
-  </EditableCard>
-);
+  return (
+    <EditableCard
+      title="Projects"
+      subtitle={
+        subtitle ||
+        `${firstName} has been involved in the following GP2 projects:`
+      }
+    >
+      {projects.length ? (
+        <CardTable
+          isOnboarding={isOnboarding}
+          headings={
+            isOnboarding ? ['Name', 'Status'] : ['Name', 'Role', 'Status']
+          }
+        >
+          {projects.map((project) => {
+            const name = noLinks ? (
+              project.title
+            ) : (
+              <Link
+                underlined
+                href={
+                  gp2Routing.projects({}).project({
+                    projectId: project.id,
+                  }).$
+                }
+              >
+                {project.title}
+              </Link>
+            );
+            const role = getUserProjectRole(id, project) || '';
+            const status = <StatusPill status={project.status} />;
+
+            return {
+              id: project.id,
+              values: isOnboarding ? [name, status] : [name, role, status],
+            };
+          })}
+        </CardTable>
+      ) : (
+        <Subtitle accent={'lead'}>
+          You are not associated to any projects.
+        </Subtitle>
+      )}
+    </EditableCard>
+  );
+};
 
 export default UserProjects;

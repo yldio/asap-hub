@@ -326,7 +326,7 @@ __metadata:
     "@types/jest": 29.5.3
     "@types/node": 18.15.11
     "@types/pify": 3.0.2
-    auth0-js: 9.22.0
+    auth0-js: 9.22.1
     camelcase: 6.3.0
     pify: 5.0.0
     util: 0.12.5
@@ -20185,9 +20185,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"auth0-js@npm:9.22.0":
-  version: 9.22.0
-  resolution: "auth0-js@npm:9.22.0"
+"auth0-js@npm:9.22.1":
+  version: 9.22.1
+  resolution: "auth0-js@npm:9.22.1"
   dependencies:
     base64-js: ^1.5.1
     idtoken-verifier: ^2.2.2
@@ -20197,7 +20197,7 @@ __metadata:
     superagent: ^7.1.5
     url-join: ^4.0.1
     winchan: ^0.2.2
-  checksum: 20c2158dfbaef632c31452fea43367c53e6e3900173eb97ef79b6b70b4a711df1de8c42ffdc0cab7fa1349d8843bc2fa3caf1b54dcc67cb93e0135a86540a1c8
+  checksum: 5dd6655df6ffa78982356e8acb059c24b43569921706595d3f5a1ae4f16ce2fa17a7ef3716f16c59ced9260bc25de07815ab7ae5db751e4da721babf93af2fd6
   languageName: node
   linkType: hard
 

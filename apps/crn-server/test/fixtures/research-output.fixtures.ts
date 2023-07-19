@@ -10,6 +10,7 @@ import {
   ResearchOutputPutRequest,
   ResearchOutputResponse,
   ResearchOutputUpdateDataObject,
+  WebhookDetail,
 } from '@asap-hub/model';
 import { ResearchOutputsContentFragment } from '@asap-hub/contentful';
 import {
@@ -277,9 +278,10 @@ export const getListResearchOutputResponse = ({
 export const getResearchOutputWebhookPayload = (
   id: string,
   type: ResearchOutputEvent,
-): SquidexWebhookPayload<ResearchOutput> => ({
+): WebhookDetail<SquidexWebhookPayload<ResearchOutput>> => ({
   type,
   timestamp: '2021-02-15T13:11:25Z',
+  resourceId: id,
   payload: {
     $type: 'EnrichedContentEvent',
     type: '',

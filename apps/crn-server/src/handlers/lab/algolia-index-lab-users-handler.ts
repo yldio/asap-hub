@@ -34,7 +34,7 @@ export const indexLabUsersHandler =
     > =>
       userController.fetch({
         filter: {
-          labId: event.detail.payload.id,
+          labId: event.detail.resourceId,
         },
         skip,
         take,

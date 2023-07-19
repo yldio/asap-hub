@@ -34,7 +34,7 @@ export const indexTeamUsersHandler =
     > =>
       userController.fetch({
         filter: {
-          teamId: event.detail.payload.id,
+          teamId: event.detail.resourceId,
         },
         skip,
         take,

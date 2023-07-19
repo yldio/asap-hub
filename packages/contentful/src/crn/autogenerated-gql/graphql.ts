@@ -12852,8 +12852,10 @@ export type ResearchOutputsContentFragment = Pick<
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'Icon' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'InterestGroupLeaders' } & {
                   sys: Pick<Sys, 'id'>;
                 })
@@ -13041,8 +13043,12 @@ export type FetchResearchOutputByIdQuery = {
                       sys: Pick<Sys, 'id'>;
                     })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'GuideCollections' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'Icon' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'InterestGroupLeaders' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -13260,10 +13266,14 @@ export type FetchResearchOutputsQuery = {
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'GuideCollections' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'GuideContent' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Guides' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Icon' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'InterestGroupLeaders' } & {
                             sys: Pick<Sys, 'id'>;
                           })

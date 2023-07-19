@@ -1,7 +1,7 @@
 import { Subtitle, pixels } from '@asap-hub/react-components';
+import { css } from '@emotion/react';
 import { CollapsibleTable } from '../molecules';
 
-import { css } from '@emotion/react';
 import { mobileQuery, nonMobileQuery } from '../layout';
 import colors from '../templates/colors';
 
@@ -97,7 +97,7 @@ const CardTable = ({
                     </Subtitle>
                   </div>
                   <span
-                    css={idx != 0 ? { color: colors.greyscale1000.rgb } : null}
+                    css={idx !== 0 ? { color: colors.greyscale1000.rgb } : null}
                   >
                     {value}
                   </span>

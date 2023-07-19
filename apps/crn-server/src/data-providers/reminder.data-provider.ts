@@ -362,7 +362,7 @@ const getResearchOutputDraftRemindersFromQuery = (
         data: {
           researchOutputId: researchOutput.id,
           title: researchOutput.flatData.title,
-          addedDate: researchOutput.created,
+          createdDate: researchOutput.created,
           createdBy: userName,
           associationType,
           associationName,
@@ -456,7 +456,7 @@ const getResearchOutputInReviewRemindersFromQuery = (
         data: {
           researchOutputId: researchOutput.id,
           title: researchOutput.flatData.title,
-          addedDate: researchOutput.created,
+          createdDate: researchOutput.created,
           documentType: researchOutput.flatData.documentType,
           reviewRequestedBy: `${firstName} ${lastName}`,
           associationType,
@@ -762,7 +762,10 @@ const getEventMaterialsRemindersFromQuery = (
 
 const getSortDate = (reminder: ReminderDataObject): DateTime => {
   if (reminder.entity === 'Research Output') {
-    return DateTime.fromISO(reminder.data.addedDate);
+    if (reminder.type === 'Published') {
+      return DateTime.fromISO(reminder.data.addedDate);
+    }
+    return DateTime.fromISO(reminder.data.createdDate);
   }
 
   if (reminder.type === 'Happening Today') {

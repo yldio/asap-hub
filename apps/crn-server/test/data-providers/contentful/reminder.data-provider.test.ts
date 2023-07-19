@@ -1,4 +1,7 @@
-import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import {
+  FetchRemindersQuery,
+  getContentfulGraphqlClientMockServer,
+} from '@asap-hub/contentful';
 import {
   EventNotesReminder,
   FetchRemindersOptions,
@@ -12,12 +15,16 @@ import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-c
 import { getContentfulGraphqlEvent } from '../../fixtures/events.fixtures';
 import {
   getContentfulReminderEventsCollectionItem,
+  getContentfulReminderResearchOutputCollectionItem,
   getContentfulReminderUsersContent,
   getEventHappeningNowReminder,
   getEventHappeningTodayReminder,
   getNotesUpdatedReminder,
   getPresentationUpdatedReminder,
   getPublishMaterialReminder,
+  getResearchOutputDraftTeamReminder,
+  getResearchOutputInReviewTeamReminder,
+  getResearchOutputPublishedReminder,
   getSharePresentationReminder,
   getTeamProjectManagerResponse,
   getUploadPresentationReminder,
@@ -121,6 +128,771 @@ describe('Reminders data provider', () => {
 
       expect(result.items.map((r) => r.type)).not.toContain('Happening Now');
       expect(result.items.map((r) => r.type)).toContain('Happening Today');
+    });
+
+    describe('Research Output', () => {
+      type ResearchOutputItem = NonNullable<
+        FetchRemindersQuery['researchOutputsCollection']
+      >['items'][number];
+      let publishedResearchOutputItem: ResearchOutputItem;
+      let draftResearchOutputsItem: ResearchOutputItem;
+      let inReviewResearchOutputItem: ResearchOutputItem;
+
+      const addedDate = '2023-01-01T08:00:00Z';
+      const createdDate = '2023-01-01T08:00:00Z';
+
+      const setNowToLast24Hours = (date: string) => {
+        jest.setSystemTime(
+          DateTime.fromISO(date).plus({ hours: 2 }).toJSDate(),
+        );
+      };
+
+      const setContentfulMock = (
+        researchOutputsCollection: FetchRemindersQuery['researchOutputsCollection'],
+        users?: FetchRemindersQuery['users'],
+      ) => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          researchOutputsCollection,
+          users:
+            users === undefined ? getContentfulReminderUsersContent() : users,
+        });
+      };
+
+      beforeEach(() => {
+        publishedResearchOutputItem =
+          getContentfulReminderResearchOutputCollectionItem();
+        publishedResearchOutputItem!.sys.publishedAt = addedDate;
+        publishedResearchOutputItem!.addedDate = addedDate;
+        publishedResearchOutputItem!.reviewRequestedBy = null;
+
+        draftResearchOutputsItem =
+          getContentfulReminderResearchOutputCollectionItem();
+        draftResearchOutputsItem!.createdDate = createdDate;
+        draftResearchOutputsItem!.sys.publishedAt = null;
+        draftResearchOutputsItem!.addedDate = null;
+        draftResearchOutputsItem!.reviewRequestedBy = null;
+
+        inReviewResearchOutputItem =
+          getContentfulReminderResearchOutputCollectionItem();
+        inReviewResearchOutputItem!.sys.publishedAt = null;
+        inReviewResearchOutputItem!.addedDate = null;
+      });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      describe('Shared tests', () => {
+        beforeEach(() => {
+          setNowToLast24Hours(addedDate);
+        });
+
+        test('Should fetch and sort appropriately all types of Research Output reminders when conditions are met', async () => {
+          publishedResearchOutputItem!.addedDate = '2023-01-01T08:00:00Z';
+          draftResearchOutputsItem!.createdDate = '2023-01-01T08:01:00Z';
+          inReviewResearchOutputItem!.createdDate = '2023-01-01T08:02:00Z';
+
+          const researchOutputsCollection = {
+            items: [
+              publishedResearchOutputItem,
+              draftResearchOutputsItem,
+              inReviewResearchOutputItem,
+            ],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({
+            items: [
+              expect.objectContaining({
+                entity: 'Research Output',
+                type: 'In Review',
+              }),
+              expect.objectContaining({
+                entity: 'Research Output',
+                type: 'Draft',
+              }),
+              expect.objectContaining({
+                entity: 'Research Output',
+                type: 'Published',
+              }),
+            ],
+            total: 3,
+          });
+        });
+
+        test('Should not fetch the reminders if user data is null', async () => {
+          const researchOutputsCollection = {
+            items: [
+              publishedResearchOutputItem,
+              draftResearchOutputsItem,
+              inReviewResearchOutputItem,
+            ],
+          };
+          const usersResponse = null;
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({ items: [], total: 0 });
+        });
+
+        test('Should not fetch the reminders if user does not belong to a team', async () => {
+          const researchOutputsCollection = {
+            items: [
+              publishedResearchOutputItem,
+              draftResearchOutputsItem,
+              inReviewResearchOutputItem,
+            ],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          usersResponse!.teamsCollection = null;
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({ items: [], total: 0 });
+        });
+
+        test("Should not fetch the published reminder if there isn't any research outputs", async () => {
+          const researchOutputsCollection = { items: [] };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({ items: [], total: 0 });
+        });
+
+        test("Should not fetch the reminders if the research output doesn't have a title", async () => {
+          publishedResearchOutputItem!.title = null;
+          draftResearchOutputsItem!.title = null;
+          inReviewResearchOutputItem!.title = null;
+          const researchOutputsCollection = {
+            items: [
+              publishedResearchOutputItem,
+              draftResearchOutputsItem,
+              inReviewResearchOutputItem,
+            ],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({ items: [], total: 0 });
+        });
+
+        test("Should not fetch the reminders if the research output doesn't have a documentType", async () => {
+          publishedResearchOutputItem!.documentType = null;
+          draftResearchOutputsItem!.documentType = null;
+          inReviewResearchOutputItem!.documentType = null;
+          const researchOutputsCollection = {
+            items: [
+              publishedResearchOutputItem,
+              draftResearchOutputsItem,
+              inReviewResearchOutputItem,
+            ],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({ items: [], total: 0 });
+        });
+
+        test('Should not fetch the reminder if the research output documentType property is not a valid documentType', async () => {
+          publishedResearchOutputItem!.documentType = 'invalid-document-type';
+          draftResearchOutputsItem!.documentType = 'invalid-document-type';
+          inReviewResearchOutputItem!.documentType = 'invalid-document-type';
+          const researchOutputsCollection = {
+            items: [
+              publishedResearchOutputItem,
+              draftResearchOutputsItem,
+              inReviewResearchOutputItem,
+            ],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({ items: [], total: 0 });
+        });
+
+        test('Should not fetch the reminder if associated team name is null', async () => {
+          publishedResearchOutputItem!.teamsCollection!.items[0]!.displayName =
+            null;
+          draftResearchOutputsItem!.teamsCollection!.items[0]!.displayName =
+            null;
+          inReviewResearchOutputItem!.teamsCollection!.items[0]!.displayName =
+            null;
+          publishedResearchOutputItem!.workingGroup = null;
+          draftResearchOutputsItem!.workingGroup = null;
+          inReviewResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [
+              publishedResearchOutputItem,
+              draftResearchOutputsItem,
+              inReviewResearchOutputItem,
+            ],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({ items: [], total: 0 });
+        });
+
+        test('Should not fetch the reminder if associated working group name is null', async () => {
+          publishedResearchOutputItem!.teamsCollection!.items = [];
+          draftResearchOutputsItem!.teamsCollection!.items = [];
+          inReviewResearchOutputItem!.teamsCollection!.items = [];
+
+          publishedResearchOutputItem!.workingGroup!.title = null;
+          draftResearchOutputsItem!.workingGroup!.title = null;
+          inReviewResearchOutputItem!.workingGroup!.title = null;
+          const researchOutputsCollection = {
+            items: [
+              publishedResearchOutputItem,
+              draftResearchOutputsItem,
+              inReviewResearchOutputItem,
+            ],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({ items: [], total: 0 });
+        });
+
+        test('Should not fetch the reminder if user who (published | created a draft | requested review) is null', async () => {
+          publishedResearchOutputItem!.createdBy = null;
+          draftResearchOutputsItem!.createdBy = null;
+          inReviewResearchOutputItem!.reviewRequestedBy = null;
+
+          const researchOutputsCollection = {
+            items: [
+              publishedResearchOutputItem,
+              draftResearchOutputsItem,
+              inReviewResearchOutputItem,
+            ],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result).toEqual({ items: [], total: 0 });
+        });
+      });
+
+      describe('Published Reminder', () => {
+        beforeEach(() => {
+          setNowToLast24Hours(addedDate);
+        });
+
+        test('Should fetch the published reminder if user is part of a team associated with the research output', async () => {
+          publishedResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputPublishedReminder();
+          expectedReminder.data.addedDate = addedDate;
+
+          expect(result.items.map((r) => r.type)).toContain('Published');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should fetch the published reminder if user is part of the working group associated with the research output', async () => {
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputPublishedReminder();
+          expectedReminder.data.addedDate = addedDate;
+          expectedReminder.data.associationName = 'Working Group 1';
+          expectedReminder.data.associationType = 'working group';
+
+          expect(result.items.map((r) => r.type)).toContain('Published');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should not fetch the published reminder of research output associated with working group if user is not part of any working group', async () => {
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.linkedFrom!.workingGroupMembersCollection = null;
+          usersResponse!.linkedFrom!.workingGroupLeadersCollection = null;
+
+          setContentfulMock(researchOutputsCollection, usersResponse);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).not.toContain('Published');
+        });
+
+        test('Should not fetch the published reminder if the user is not associated with any team or working group from the research output', async () => {
+          publishedResearchOutputItem!.teamsCollection!.items = [
+            {
+              sys: {
+                id: 'team-user-is-not-part-of',
+              },
+              displayName: 'Team that user is not part of',
+            },
+          ];
+          publishedResearchOutputItem!.workingGroup = {
+            sys: {
+              id: 'wg-user-is-not-part-of',
+            },
+            title: 'Working Group that user is not part of',
+          };
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+          setContentfulMock(researchOutputsCollection);
+
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items.map((r) => r.type)).not.toContain('Published');
+        });
+
+        test('Should not fetch the published reminder if it has passed more than 24 hours from the addedDate', async () => {
+          jest.setSystemTime(
+            DateTime.fromISO(addedDate).plus({ hours: 25 }).toJSDate(),
+          );
+
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items.map((r) => r.type)).not.toContain('Published');
+        });
+
+        test('Should not fetch the published reminder if research output is a draft', async () => {
+          publishedResearchOutputItem!.sys.publishedAt = null; // draft output
+          const researchOutputsCollection = {
+            items: [publishedResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items.map((r) => r.type)).not.toContain('Published');
+        });
+      });
+
+      describe('Draft Reminder', () => {
+        beforeEach(() => {
+          setNowToLast24Hours(createdDate);
+        });
+
+        test('Should fetch the draft reminder if user is not a Staff but is part of a team associated with the research output', async () => {
+          draftResearchOutputsItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [draftResearchOutputsItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputDraftTeamReminder();
+          expectedReminder.data.createdDate = createdDate;
+
+          expect(result.items.map((r) => r.type)).toContain('Draft');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should fetch the draft reminder if user is not a Staff but is part of the working group associated with the research output', async () => {
+          const researchOutputsCollection = {
+            items: [draftResearchOutputsItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputDraftTeamReminder();
+          expectedReminder.data.createdDate = createdDate;
+          expectedReminder.data.associationName = 'Working Group 1';
+          expectedReminder.data.associationType = 'working group';
+
+          expect(result.items.map((r) => r.type)).toContain('Draft');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should not fetch the draft reminder if the user is not a Staff and is not associated with any team or working group from the research output', async () => {
+          draftResearchOutputsItem!.teamsCollection!.items = [
+            {
+              sys: {
+                id: 'team-user-is-not-part-of',
+              },
+              displayName: 'Team that user is not part of',
+            },
+          ];
+          draftResearchOutputsItem!.workingGroup = {
+            sys: {
+              id: 'wg-user-is-not-part-of',
+            },
+            title: 'Working Group that user is not part of',
+          };
+          const researchOutputsCollection = {
+            items: [draftResearchOutputsItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).not.toContain('Draft');
+        });
+
+        test('Should fetch the draft reminder if the user is a Staff even if is not associated with any team or working group from the research output', async () => {
+          draftResearchOutputsItem!.teamsCollection!.items = [
+            {
+              sys: {
+                id: 'team-user-is-not-part-of',
+              },
+              displayName: 'Team that user is not part of',
+            },
+          ];
+          draftResearchOutputsItem!.workingGroup = {
+            sys: {
+              id: 'wg-user-is-not-part-of',
+            },
+            title: 'Working Group that user is not part of',
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+
+          const researchOutputsCollection = {
+            items: [draftResearchOutputsItem],
+          };
+
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).toContain('Draft');
+        });
+
+        test('Should not fetch the draft reminder if it has passed more than 24 hours from the createdDate', async () => {
+          jest.setSystemTime(
+            DateTime.fromISO(createdDate).plus({ hours: 25 }).toJSDate(),
+          );
+          const researchOutputsCollection = {
+            items: [draftResearchOutputsItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items.map((r) => r.type)).not.toContain('Draft');
+        });
+
+        test('Should not fetch the draft reminder if research output is published', async () => {
+          draftResearchOutputsItem!.sys.publishedAt = createdDate;
+          const researchOutputsCollection = {
+            items: [draftResearchOutputsItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items.map((r) => r.type)).not.toContain('Draft');
+        });
+      });
+
+      describe('In Review Reminder', () => {
+        test('Should fetch the reminder if user is not a Staff but is a PM of a team associated with the research output', async () => {
+          inReviewResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [inReviewResearchOutputItem],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.teamsCollection!.items = [
+            {
+              role: 'Project Manager',
+              team: {
+                sys: {
+                  id: 'team-1',
+                },
+              },
+            },
+          ];
+
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputInReviewTeamReminder();
+
+          expect(result.items.map((r) => r.type)).toContain('In Review');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should fetch the reminder if user is a Staff even if is not a PM of a team associated with the research output', async () => {
+          inReviewResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [inReviewResearchOutputItem],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          usersResponse!.teamsCollection!.items = [
+            {
+              role: 'Collaborating PI',
+              team: {
+                sys: {
+                  id: 'team-1',
+                },
+              },
+            },
+          ];
+
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputInReviewTeamReminder();
+
+          expect(result.items.map((r) => r.type)).toContain('In Review');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should fetch the reminder if user is not a Staff but is a PM of the working group associated with the research output', async () => {
+          const researchOutputsCollection = {
+            items: [inReviewResearchOutputItem],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.linkedFrom!.workingGroupLeadersCollection!.items = [
+            {
+              role: 'Project Manager',
+              linkedFrom: {
+                workingGroupsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'wg-id-1',
+                      },
+                      title: 'Working Group 1',
+                    },
+                  ],
+                },
+              },
+            },
+          ];
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputInReviewTeamReminder();
+          expectedReminder.data.associationName = 'Working Group 1';
+          expectedReminder.data.associationType = 'working group';
+
+          expect(result.items.map((r) => r.type)).toContain('In Review');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should fetch the reminder if user is a Staff even if is not a PM of the working group associated with the research output', async () => {
+          inReviewResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [inReviewResearchOutputItem],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+          usersResponse!.linkedFrom!.workingGroupLeadersCollection!.items = [
+            {
+              role: 'Chair',
+              linkedFrom: {
+                workingGroupsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'wg-id-1',
+                      },
+                      title: 'Working Group 1',
+                    },
+                  ],
+                },
+              },
+            },
+          ];
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputInReviewTeamReminder();
+
+          expect(result.items.map((r) => r.type)).toContain('In Review');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should not fetch the reminder if user is not a Staff and is not a PM of a team associated with the research output', async () => {
+          inReviewResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [inReviewResearchOutputItem],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.teamsCollection!.items = [
+            {
+              role: 'Collaborating PI',
+              team: {
+                sys: {
+                  id: 'team-1',
+                },
+              },
+            },
+          ];
+
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).not.toContain('In Review');
+        });
+
+        test('Should not fetch the reminder of research output associated to working group if user is not a Staff and is not a leader of any working group', async () => {
+          const researchOutputsCollection = {
+            items: [inReviewResearchOutputItem],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.linkedFrom!.workingGroupLeadersCollection = null;
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).not.toContain('In Review');
+        });
+
+        test('Should not fetch the reminder if user is not a Staff but and is not a PM of the working group associated with the research output', async () => {
+          const researchOutputsCollection = {
+            items: [inReviewResearchOutputItem],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.linkedFrom!.workingGroupLeadersCollection!.items = [
+            {
+              role: 'Chair',
+              linkedFrom: {
+                workingGroupsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'wg-id-1',
+                      },
+                      title: 'Working Group 1',
+                    },
+                  ],
+                },
+              },
+            },
+          ];
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).not.toContain('In Review');
+        });
+
+        test('Should not fetch the reminder if research output is published', async () => {
+          inReviewResearchOutputItem!.sys.publishedAt = new Date();
+          const researchOutputsCollection = {
+            items: [inReviewResearchOutputItem],
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).not.toContain('In Review');
+        });
+      });
     });
 
     describe('Event Happening Now Reminder', () => {

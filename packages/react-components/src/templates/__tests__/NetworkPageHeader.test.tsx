@@ -131,7 +131,7 @@ it('renders tab links preserving the search query', async () => {
       getByText('Interest Groups', { selector: 'nav a *' }).closest('a')!.href,
     ),
   ).toMatchObject({
-    pathname: expect.stringMatching(/groups$/),
+    pathname: expect.stringMatching(/interest-groups$/),
     searchParams: new URLSearchParams({ searchQuery: 'searchterm' }),
   });
 });

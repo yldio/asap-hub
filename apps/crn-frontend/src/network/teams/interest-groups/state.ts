@@ -39,13 +39,13 @@ export const teamInterestGroupsState = selectorFamily<
         index instanceof Error
       )
         return index;
-      const groups: InterestGroupResponse[] = [];
+      const interestGroups: InterestGroupResponse[] = [];
       for (const id of index.ids) {
-        const group = get(interestGroupState(id));
-        if (group === undefined) return undefined;
-        groups.push(group);
+        const interestGroup = get(interestGroupState(id));
+        if (interestGroup === undefined) return undefined;
+        interestGroups.push(interestGroup);
       }
-      return { total: index.total, items: groups };
+      return { total: index.total, items: interestGroups };
     },
   set:
     (teamId) =>

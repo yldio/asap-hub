@@ -10,7 +10,7 @@ export const getTeamInterestGroups = async (
   id: string,
   authorization: string,
 ): Promise<ListInterestGroupResponse | undefined> => {
-  const resp = await fetch(`${API_BASE_URL}/teams/${id}/groups`, {
+  const resp = await fetch(`${API_BASE_URL}/teams/${id}/interest-groups`, {
     headers: {
       authorization,
       ...createSentryHeaders(),

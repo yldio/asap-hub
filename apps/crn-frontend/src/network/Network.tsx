@@ -15,7 +15,7 @@ const loadTeamList = () =>
   import(/* webpackChunkName: "network-team-list" */ './teams/TeamList');
 const loadTeamProfile = () =>
   import(/* webpackChunkName: "network-team-profile" */ './teams/TeamProfile');
-const loadGroupList = () =>
+const loadInterestGroupList = () =>
   import(
     /* webpackChunkName: "network-group-list" */ './interest-groups/InterestGroupList'
   );
@@ -36,7 +36,7 @@ const UserList = lazy(loadUserList);
 const UserProfile = lazy(loadUserProfile);
 const TeamList = lazy(loadTeamList);
 const TeamProfile = lazy(loadTeamProfile);
-const GroupList = lazy(loadGroupList);
+const InterestGroupList = lazy(loadInterestGroupList);
 const WorkingGroupList = lazy(loadWorkingGroupList);
 
 const Network: FC<Record<string, never>> = () => {
@@ -44,7 +44,7 @@ const Network: FC<Record<string, never>> = () => {
     loadTeamList()
       // Tab can be changed very quickly
       .then(loadUserList)
-      .then(loadGroupList)
+      .then(loadInterestGroupList)
       .then(loadWorkingGroupList)
       // Can be clicked only after the list has been fetched
       .then(loadTeamProfile)
@@ -123,8 +123,11 @@ const Network: FC<Record<string, never>> = () => {
           filters={filters}
           onChangeFilter={toggleFilter}
         >
-          <SearchFrame title="Groups">
-            <GroupList filters={filters} searchQuery={debouncedSearchQuery} />
+          <SearchFrame title="Interest Groups">
+            <InterestGroupList
+              filters={filters}
+              searchQuery={debouncedSearchQuery}
+            />
           </SearchFrame>
         </NetworkPage>
       </Route>
@@ -135,7 +138,7 @@ const Network: FC<Record<string, never>> = () => {
           network({}).groups({}).group.template
         }
       >
-        <Frame title="Group Profile">
+        <Frame title="Interest Group Profile">
           <InterestGroupProfile currentTime={currentTime} />
         </Frame>
       </Route>

@@ -41,8 +41,8 @@ const renderGroupList = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/groups/']}>
-              <Route path="/groups" component={GroupList} />
+            <MemoryRouter initialEntries={['/interest-groups/']}>
+              <Route path="/interest-groups" component={GroupList} />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

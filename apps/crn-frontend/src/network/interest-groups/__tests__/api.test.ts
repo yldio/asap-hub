@@ -25,7 +25,7 @@ const options: GetListOptions = {
 describe('getGroups', () => {
   it('makes an authorized GET request for groups', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/groups')
+      .get('/interest-groups')
       .query({ take: '10', skip: '0' })
       .reply(200, {});
     await getInterestGroups(options, 'Bearer x');
@@ -35,7 +35,7 @@ describe('getGroups', () => {
   it('returns successfully fetched groups', async () => {
     const groups = createListInterestGroupResponse(1);
     nock(API_BASE_URL)
-      .get('/groups')
+      .get('/interest-groups')
       .query({ take: '10', skip: '0' })
       .reply(200, groups);
     expect(await getInterestGroups(options, '')).toEqual(groups);
@@ -43,7 +43,7 @@ describe('getGroups', () => {
 
   it('errors for error status', async () => {
     nock(API_BASE_URL)
-      .get('/groups')
+      .get('/interest-groups')
       .query({ take: '10', skip: '0' })
       .reply(500);
     await expect(
@@ -57,7 +57,7 @@ describe('getGroups', () => {
 describe('getGroup', () => {
   it('makes an authorized GET request for the group id', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/groups/42')
+      .get('/interest-groups/42')
       .reply(200, {});
     await getInterestGroup('42', 'Bearer x');
     expect(nock.isDone()).toBe(true);
@@ -65,17 +65,17 @@ describe('getGroup', () => {
 
   it('returns a successfully fetched group', async () => {
     const group = createInterestGroupResponse();
-    nock(API_BASE_URL).get('/groups/42').reply(200, group);
+    nock(API_BASE_URL).get('/interest-groups/42').reply(200, group);
     expect(await getInterestGroup('42', '')).toEqual(group);
   });
 
   it('returns undefined for a 404', async () => {
-    nock(API_BASE_URL).get('/groups/42').reply(404);
+    nock(API_BASE_URL).get('/interest-groups/42').reply(404);
     expect(await getInterestGroup('42', '')).toBe(undefined);
   });
 
   it('errors for another status', async () => {
-    nock(API_BASE_URL).get('/groups/42').reply(500);
+    nock(API_BASE_URL).get('/interest-groups/42').reply(500);
     await expect(
       getInterestGroup('42', ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(

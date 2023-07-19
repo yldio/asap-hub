@@ -13,7 +13,7 @@ afterEach(() => {
 describe('getUserInterestGroups', () => {
   it('makes an authorized GET request for the user id', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/users/42/groups')
+      .get('/users/42/interest-groups')
       .reply(200, {});
     await getUserInterestGroups('42', 'Bearer x');
     expect(nock.isDone()).toBe(true);
@@ -21,16 +21,16 @@ describe('getUserInterestGroups', () => {
 
   it('returns a successfully fetched user', async () => {
     const groups = createListInterestGroupResponse();
-    nock(API_BASE_URL).get('/users/42/groups').reply(200, groups);
+    nock(API_BASE_URL).get('/users/42/interest-groups').reply(200, groups);
     expect(await getUserInterestGroups('42', '')).toEqual(groups);
   });
 
   it('returns undefined for a 404', async () => {
-    nock(API_BASE_URL).get('/users/42/groups').reply(404);
+    nock(API_BASE_URL).get('/users/42/interest-groups').reply(404);
     expect(await getUserInterestGroups('42', '')).toBe(undefined);
   });
   it('errors for error status', async () => {
-    nock(API_BASE_URL).get('/users/42/groups').reply(500);
+    nock(API_BASE_URL).get('/users/42/interest-groups').reply(500);
     await expect(
       getUserInterestGroups('42', ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(

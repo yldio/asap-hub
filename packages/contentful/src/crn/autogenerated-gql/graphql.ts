@@ -4363,7 +4363,7 @@ export type ResearchOutputs = Entry & {
   title?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   updatedBy?: Maybe<Users>;
-  usageNotes?: Maybe<ResearchOutputsUsageNotes>;
+  usageNotes?: Maybe<Scalars['String']>;
   usedInAPublication?: Maybe<Scalars['String']>;
   workingGroup?: Maybe<WorkingGroups>;
 };
@@ -4829,9 +4829,13 @@ export type ResearchOutputsFilter = {
   type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   updatedBy?: InputMaybe<CfUsersNestedFilter>;
   updatedBy_exists?: InputMaybe<Scalars['Boolean']>;
+  usageNotes?: InputMaybe<Scalars['String']>;
   usageNotes_contains?: InputMaybe<Scalars['String']>;
   usageNotes_exists?: InputMaybe<Scalars['Boolean']>;
+  usageNotes_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  usageNotes_not?: InputMaybe<Scalars['String']>;
   usageNotes_not_contains?: InputMaybe<Scalars['String']>;
+  usageNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   usedInAPublication?: InputMaybe<Scalars['String']>;
   usedInAPublication_contains?: InputMaybe<Scalars['String']>;
   usedInAPublication_exists?: InputMaybe<Scalars['Boolean']>;
@@ -5160,32 +5164,6 @@ export enum ResearchOutputsTeamsCollectionOrder {
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
-
-export type ResearchOutputsUsageNotes = {
-  json: Scalars['JSON'];
-  links: ResearchOutputsUsageNotesLinks;
-};
-
-export type ResearchOutputsUsageNotesAssets = {
-  block: Array<Maybe<Asset>>;
-  hyperlink: Array<Maybe<Asset>>;
-};
-
-export type ResearchOutputsUsageNotesEntries = {
-  block: Array<Maybe<Entry>>;
-  hyperlink: Array<Maybe<Entry>>;
-  inline: Array<Maybe<Entry>>;
-};
-
-export type ResearchOutputsUsageNotesLinks = {
-  assets: ResearchOutputsUsageNotesAssets;
-  entries: ResearchOutputsUsageNotesEntries;
-  resources: ResearchOutputsUsageNotesResources;
-};
-
-export type ResearchOutputsUsageNotesResources = {
-  block: Array<ResourceLink>;
-};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags) */
 export type ResearchTags = Entry & {
@@ -8132,9 +8110,13 @@ export type CfResearchOutputsNestedFilter = {
   type_not_contains?: InputMaybe<Scalars['String']>;
   type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   updatedBy_exists?: InputMaybe<Scalars['Boolean']>;
+  usageNotes?: InputMaybe<Scalars['String']>;
   usageNotes_contains?: InputMaybe<Scalars['String']>;
   usageNotes_exists?: InputMaybe<Scalars['Boolean']>;
+  usageNotes_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  usageNotes_not?: InputMaybe<Scalars['String']>;
   usageNotes_not_contains?: InputMaybe<Scalars['String']>;
+  usageNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   usedInAPublication?: InputMaybe<Scalars['String']>;
   usedInAPublication_contains?: InputMaybe<Scalars['String']>;
   usedInAPublication_exists?: InputMaybe<Scalars['Boolean']>;
@@ -12893,6 +12875,7 @@ export type ResearchOutputsContentFragment = Pick<
   | 'usedInAPublication'
   | 'type'
   | 'publishDate'
+  | 'usageNotes'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
   description?: Maybe<
@@ -13082,6 +13065,7 @@ export type FetchResearchOutputByIdQuery = {
       | 'usedInAPublication'
       | 'type'
       | 'publishDate'
+      | 'usageNotes'
     > & {
       sys: Pick<Sys, 'id' | 'publishedVersion'>;
       description?: Maybe<
@@ -13295,6 +13279,7 @@ export type FetchResearchOutputsQuery = {
             | 'usedInAPublication'
             | 'type'
             | 'publishDate'
+            | 'usageNotes'
           > & {
             sys: Pick<Sys, 'id' | 'publishedVersion'>;
             description?: Maybe<
@@ -16925,6 +16910,7 @@ export const ResearchOutputsContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'usageNotes' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'reviewRequestedBy' },

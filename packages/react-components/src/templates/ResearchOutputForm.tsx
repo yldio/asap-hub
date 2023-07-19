@@ -255,7 +255,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   );
   const [usageNotes, setUsageNotes] = useState<
     ResearchOutputPostRequest['usageNotes']
-  >(researchOutputData?.usageNotes || '');
+  >(researchOutputData?.usageNotesMD || researchOutputData?.usageNotes || '');
   const [asapFunded, setAsapFunded] = useState<DecisionOption>(
     getDecision(researchOutputData?.asapFunded),
   );

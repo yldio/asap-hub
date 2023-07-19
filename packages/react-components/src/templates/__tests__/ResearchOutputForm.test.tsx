@@ -156,6 +156,27 @@ it('pre populates the form with provided backend response', async () => {
   expect(screen.getByRole('button', { name: /Save/i })).toBeVisible();
 });
 
+it('pre populates the form with markdown value of usageNotes if it is defined', async () => {
+  const researchOutputData = {
+    ...createResearchOutputResponse(),
+    usageNotes: 'rich text',
+    usageNotesMD: 'markdown',
+  };
+  await render(
+    <StaticRouter>
+      <ResearchOutputForm
+        {...props}
+        documentType={'Dataset'}
+        typeOptions={Array.from(researchOutputDocumentTypeToType.Dataset)}
+        researchOutputData={researchOutputData}
+      />
+    </StaticRouter>,
+  );
+
+  expect(screen.queryByText('rich text')).not.toBeInTheDocument();
+  expect(screen.getByText('markdown')).toBeVisible();
+});
+
 it('displays keywords suggestions', async () => {
   await render(
     <StaticRouter>

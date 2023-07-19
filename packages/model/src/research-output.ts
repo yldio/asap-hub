@@ -214,6 +214,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
       >
     | ExternalAuthorResponse
   )[];
+  usageNotesMD?: string;
   contactEmails: string[];
   created: string;
   environments: string[];

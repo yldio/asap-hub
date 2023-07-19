@@ -52,6 +52,7 @@ export const researchOutputContentQueryFragment = gql`
         }
       }
     }
+    usageNotes
     reviewRequestedBy {
       sys {
         id

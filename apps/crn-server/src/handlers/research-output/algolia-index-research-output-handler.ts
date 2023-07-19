@@ -4,28 +4,15 @@ import {
 } from '@asap-hub/algolia';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { ResearchOutputEvent } from '@asap-hub/model';
-import {
-  RestExternalAuthor,
-  RestResearchOutput,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
-import {
-  algoliaApiKey,
-  algoliaAppId,
-  algoliaIndex,
-  appName,
-  baseUrl,
-} from '../../config';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ResearchOutputController from '../../controllers/research-output.controller';
-import { ExternalAuthorSquidexDataProvider } from '../../data-providers/external-author.data-provider';
-import { ResearchOutputSquidexDataProvider } from '../../data-providers/research-output.data-provider';
-import { ResearchTagSquidexDataProvider } from '../../data-providers/research-tag.data-provider';
-import { getAuthToken } from '../../utils/auth';
 import logger from '../../utils/logger';
 import { ResearchOutputPayload } from '../event-bus';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import { getResearchOutputDataProvider } from '../../dependencies/research-outputs.dependencies';
+import { getExternalAuthorDataProvider } from '../../dependencies/external-authors.dependencies';
+import { getResearchTagDataProvider } from '../../dependencies/research-tags.dependencies';
 
 export const indexResearchOutputHandler =
   (
@@ -60,7 +47,7 @@ export const indexResearchOutputHandler =
 
     try {
       const researchOutput = await reindexResearchOutput(
-        event.detail.payload.id,
+        event.detail.resourceId,
       );
 
       for (const relatedResearchOutput of researchOutput.relatedResearch) {
@@ -69,7 +56,7 @@ export const indexResearchOutputHandler =
     } catch (e) {
       logger.error(
         e,
-        `Error while reindexing research output ${event.detail.payload.id} and its related research outputs`,
+        `Error while reindexing research output ${event.detail.resourceId} and its related research outputs`,
       );
       if (isBoom(e) && e.output.statusCode === 404) {
         return;
@@ -77,31 +64,10 @@ export const indexResearchOutputHandler =
       throw e;
     }
   };
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
-  getAuthToken,
-  'research-outputs',
-  { appName, baseUrl },
-);
-const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
-  getAuthToken,
-  'external-authors',
-  { appName, baseUrl },
-);
-const researchOutputDataProvider = new ResearchOutputSquidexDataProvider(
-  squidexGraphqlClient,
-  researchOutputRestClient,
-);
-const researchTagDataProvider = new ResearchTagSquidexDataProvider(
-  squidexGraphqlClient,
-);
-const externalAuthorDataProvider = new ExternalAuthorSquidexDataProvider(
-  externalAuthorRestClient,
-  squidexGraphqlClient,
-);
+
+const researchOutputDataProvider = getResearchOutputDataProvider();
+const researchTagDataProvider = getResearchTagDataProvider();
+const externalAuthorDataProvider = getExternalAuthorDataProvider();
 
 export const handler = sentryWrapper(
   indexResearchOutputHandler(

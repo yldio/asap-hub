@@ -1,14 +1,8 @@
 import '@testing-library/jest-dom';
-import React, { useState } from 'react';
+import React from 'react';
 import Field, { CustomCard } from '../../locations/Field';
-import {
-  render,
-  screen,
-  waitFor,
-  fireEvent,
-  queryByTestId,
-} from '@testing-library/react';
-import { FieldExtensionSDK, Entry } from '@contentful/app-sdk';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { FieldExtensionSDK } from '@contentful/app-sdk';
 import {
   MultipleEntryReferenceEditor,
   CustomEntityCardProps,

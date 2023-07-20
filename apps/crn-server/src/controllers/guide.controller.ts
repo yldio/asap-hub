@@ -4,7 +4,7 @@ import { GuideDataProvider } from '../data-providers/types';
 export default class GuideController {
   constructor(private guideDataProvider: GuideDataProvider) {}
 
-  async fetch(): Promise<ListGuideResponse> {
-    return this.guideDataProvider.fetch();
+  async fetchByCollectionTitle(title: string): Promise<ListGuideResponse> {
+    return this.guideDataProvider.fetchByCollectionTitle(title);
   }
 }

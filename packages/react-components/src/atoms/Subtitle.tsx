@@ -21,6 +21,7 @@ const Subtitle: React.FC<SubtitleProps> = ({
   id,
   accent,
   noMargin = false,
+  ...props
 }) => (
   <h5
     css={[
@@ -30,6 +31,7 @@ const Subtitle: React.FC<SubtitleProps> = ({
       accent ? { color: colors[accent].rgb } : null,
     ]}
     id={id}
+    {...props}
   >
     {children}
   </h5>

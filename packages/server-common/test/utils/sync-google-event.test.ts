@@ -475,17 +475,6 @@ describe('Sync calendar util hook', () => {
       ).rejects.toThrow();
     });
 
-    test('Should reject when validation fails - missing fields: summary', async () => {
-      await expect(
-        syncEvent(
-          { ...getGoogleEvent(), summary: undefined },
-          googleCalendarId,
-          squidexCalendarId,
-          defaultCalendarTimezone,
-        ),
-      ).rejects.toThrow();
-    });
-
     test('Should reject when validation fails - missing dates', async () => {
       await expect(
         syncEvent(

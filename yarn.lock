@@ -9551,7 +9551,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-accordion@npm:^4.48.0":
+"@contentful/f36-accordion@npm:^4.47.3, @contentful/f36-accordion@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-accordion@npm:4.48.0"
   dependencies:
@@ -9585,7 +9585,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-asset@npm:^4.48.0":
+"@contentful/f36-asset@npm:^4.47.3, @contentful/f36-asset@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-asset@npm:4.48.0"
   dependencies:
@@ -9624,7 +9624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-autocomplete@npm:^4.48.0":
+"@contentful/f36-autocomplete@npm:^4.47.3, @contentful/f36-autocomplete@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-autocomplete@npm:4.48.0"
   dependencies:
@@ -9660,7 +9660,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-badge@npm:^4.48.0":
+"@contentful/f36-badge@npm:^4.47.3, @contentful/f36-badge@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-badge@npm:4.48.0"
   dependencies:
@@ -9690,7 +9690,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-button@npm:^4.48.0":
+"@contentful/f36-button@npm:^4.47.3, @contentful/f36-button@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-button@npm:4.48.0"
   dependencies:
@@ -9731,7 +9731,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-card@npm:^4.48.0":
+"@contentful/f36-card@npm:^4.47.3, @contentful/f36-card@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-card@npm:4.48.0"
   dependencies:
@@ -9770,7 +9770,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-collapse@npm:^4.48.0":
+"@contentful/f36-collapse@npm:^4.47.3, @contentful/f36-collapse@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-collapse@npm:4.48.0"
   dependencies:
@@ -9781,6 +9781,54 @@ __metadata:
     react: ">=16.8"
     react-dom: ">=16.8"
   checksum: 3e41932cff65840a5abea7495cbadc06a9329a1ef69cb566a7c7e1af9de9ca29d695d27553edfa686a9e25498baa0622ebe42ca0650f7a6c49316c98cd2449b3
+  languageName: node
+  linkType: hard
+
+"@contentful/f36-components@npm:4.47.3":
+  version: 4.47.3
+  resolution: "@contentful/f36-components@npm:4.47.3"
+  dependencies:
+    "@contentful/f36-accordion": ^4.47.3
+    "@contentful/f36-asset": ^4.47.3
+    "@contentful/f36-autocomplete": ^4.47.3
+    "@contentful/f36-badge": ^4.47.3
+    "@contentful/f36-button": ^4.47.3
+    "@contentful/f36-card": ^4.47.3
+    "@contentful/f36-collapse": ^4.47.3
+    "@contentful/f36-copybutton": ^4.47.3
+    "@contentful/f36-core": ^4.47.3
+    "@contentful/f36-datepicker": ^4.47.3
+    "@contentful/f36-datetime": ^4.47.3
+    "@contentful/f36-drag-handle": ^4.47.3
+    "@contentful/f36-empty-state": ^4.47.3
+    "@contentful/f36-entity-list": ^4.47.3
+    "@contentful/f36-forms": ^4.47.3
+    "@contentful/f36-icon": ^4.47.3
+    "@contentful/f36-icons": ^4.26.0
+    "@contentful/f36-list": ^4.47.3
+    "@contentful/f36-menu": ^4.47.3
+    "@contentful/f36-modal": ^4.47.3
+    "@contentful/f36-navbar": ^4.1.0
+    "@contentful/f36-note": ^4.47.3
+    "@contentful/f36-notification": ^4.47.3
+    "@contentful/f36-pagination": ^4.47.3
+    "@contentful/f36-pill": ^4.47.3
+    "@contentful/f36-popover": ^4.47.3
+    "@contentful/f36-skeleton": ^4.47.3
+    "@contentful/f36-spinner": ^4.47.3
+    "@contentful/f36-table": ^4.47.3
+    "@contentful/f36-tabs": ^4.47.3
+    "@contentful/f36-text-link": ^4.47.3
+    "@contentful/f36-tokens": ^4.0.2
+    "@contentful/f36-tooltip": ^4.47.3
+    "@contentful/f36-typography": ^4.47.3
+    "@contentful/f36-utils": ^4.23.2
+    "@types/react": 16.14.22
+    "@types/react-dom": 16.9.14
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: 075fe081cd288c91e0c7162fa3bd619fbaae5f0d5a824c20a9575a65637b2c250fbe818e573024a6d112d7b8479356c7d0b7c38694315d5e9a87e10fdfdf7dbd
   languageName: node
   linkType: hard
 
@@ -9896,7 +9944,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-copybutton@npm:^4.48.0":
+"@contentful/f36-copybutton@npm:^4.47.3, @contentful/f36-copybutton@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-copybutton@npm:4.48.0"
   dependencies:
@@ -9999,7 +10047,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-datepicker@npm:^4.48.0":
+"@contentful/f36-datepicker@npm:^4.47.3, @contentful/f36-datepicker@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-datepicker@npm:4.48.0"
   dependencies:
@@ -10036,7 +10084,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-datetime@npm:^4.48.0":
+"@contentful/f36-datetime@npm:^4.47.3, @contentful/f36-datetime@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-datetime@npm:4.48.0"
   dependencies:
@@ -10066,7 +10114,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-drag-handle@npm:^4.48.0":
+"@contentful/f36-drag-handle@npm:^4.47.3, @contentful/f36-drag-handle@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-drag-handle@npm:4.48.0"
   dependencies:
@@ -10096,7 +10144,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-empty-state@npm:^4.48.0":
+"@contentful/f36-empty-state@npm:^4.47.3, @contentful/f36-empty-state@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-empty-state@npm:4.48.0"
   dependencies:
@@ -10132,7 +10180,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-entity-list@npm:^4.48.0":
+"@contentful/f36-entity-list@npm:^4.47.3, @contentful/f36-entity-list@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-entity-list@npm:4.48.0"
   dependencies:
@@ -10170,7 +10218,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-forms@npm:^4.48.0":
+"@contentful/f36-forms@npm:^4.47.3, @contentful/f36-forms@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-forms@npm:4.48.0"
   dependencies:
@@ -10225,7 +10273,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-icon@npm:^4.48.0":
+"@contentful/f36-icon@npm:^4.47.3, @contentful/f36-icon@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-icon@npm:4.48.0"
   dependencies:
@@ -10296,7 +10344,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-list@npm:^4.48.0":
+"@contentful/f36-list@npm:^4.47.3, @contentful/f36-list@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-list@npm:4.48.0"
   dependencies:
@@ -10345,7 +10393,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-menu@npm:^4.48.0":
+"@contentful/f36-menu@npm:^4.47.3, @contentful/f36-menu@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-menu@npm:4.48.0"
   dependencies:
@@ -10382,7 +10430,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-modal@npm:^4.48.0":
+"@contentful/f36-modal@npm:^4.47.3, @contentful/f36-modal@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-modal@npm:4.48.0"
   dependencies:
@@ -10438,7 +10486,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-note@npm:^4.48.0":
+"@contentful/f36-note@npm:^4.47.3, @contentful/f36-note@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-note@npm:4.48.0"
   dependencies:
@@ -10476,7 +10524,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-notification@npm:^4.48.0":
+"@contentful/f36-notification@npm:^4.47.3, @contentful/f36-notification@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-notification@npm:4.48.0"
   dependencies:
@@ -10513,7 +10561,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-pagination@npm:^4.48.0":
+"@contentful/f36-pagination@npm:^4.47.3, @contentful/f36-pagination@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-pagination@npm:4.48.0"
   dependencies:
@@ -10547,7 +10595,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-pill@npm:^4.48.0":
+"@contentful/f36-pill@npm:^4.47.3, @contentful/f36-pill@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-pill@npm:4.48.0"
   dependencies:
@@ -10643,7 +10691,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-skeleton@npm:^4.48.0":
+"@contentful/f36-skeleton@npm:^4.47.3, @contentful/f36-skeleton@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-skeleton@npm:4.48.0"
   dependencies:
@@ -10671,7 +10719,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-spinner@npm:^4.48.0":
+"@contentful/f36-spinner@npm:^4.47.3, @contentful/f36-spinner@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-spinner@npm:4.48.0"
   dependencies:
@@ -10747,7 +10795,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-tabs@npm:^4.48.0":
+"@contentful/f36-tabs@npm:^4.47.3, @contentful/f36-tabs@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-tabs@npm:4.48.0"
   dependencies:
@@ -10775,7 +10823,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-text-link@npm:^4.48.0":
+"@contentful/f36-text-link@npm:^4.47.3, @contentful/f36-text-link@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-text-link@npm:4.48.0"
   dependencies:
@@ -10820,7 +10868,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/f36-tooltip@npm:^4.48.0":
+"@contentful/f36-tooltip@npm:^4.47.3, @contentful/f36-tooltip@npm:^4.48.0":
   version: 4.48.0
   resolution: "@contentful/f36-tooltip@npm:4.48.0"
   dependencies:
@@ -23494,6 +23542,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"contentful-management@npm:10.32.0, contentful-management@npm:>=7.30.0":
+  version: 10.32.0
+  resolution: "contentful-management@npm:10.32.0"
+  dependencies:
+    "@contentful/rich-text-types": ^16.0.3
+    "@types/json-patch": 0.0.30
+    axios: ^0.27.1
+    contentful-sdk-core: ^7.0.1
+    fast-copy: ^3.0.0
+    lodash.isplainobject: ^4.0.6
+    type-fest: ^3.0.0
+  checksum: 827d7fc32d46110354f08f772c7d6e110780b314f50e23e565a7dca832fdeaf46413977114790b650e090e73d82699c6b2a1fe31f42422f45e589d4a963370eb
+  languageName: node
+  linkType: hard
+
 "contentful-management@npm:10.35.4":
   version: 10.35.4
   resolution: "contentful-management@npm:10.35.4"
@@ -23521,21 +23584,6 @@ __metadata:
     lodash.isplainobject: ^4.0.6
     type-fest: ^3.0.0
   checksum: 21e6a1cbef2e5c980817946a763de31a55a9ef6cf13c7f75512c45ebbc01f7a7ffe806b9cd57ce44ad62c0bc64a39a6aedf709a9c153cf27722afc1ff0f81329
-  languageName: node
-  linkType: hard
-
-"contentful-management@npm:>=7.30.0":
-  version: 10.32.0
-  resolution: "contentful-management@npm:10.32.0"
-  dependencies:
-    "@contentful/rich-text-types": ^16.0.3
-    "@types/json-patch": 0.0.30
-    axios: ^0.27.1
-    contentful-sdk-core: ^7.0.1
-    fast-copy: ^3.0.0
-    lodash.isplainobject: ^4.0.6
-    type-fest: ^3.0.0
-  checksum: 827d7fc32d46110354f08f772c7d6e110780b314f50e23e565a7dca832fdeaf46413977114790b650e090e73d82699c6b2a1fe31f42422f45e589d4a963370eb
   languageName: node
   linkType: hard
 

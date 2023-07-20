@@ -4,7 +4,7 @@ describe('Calendars Dependencies', () => {
   });
 
   it('Should resolve Calendar Squidex Data Provider when the Contentful feature flag is off', async () => {
-    process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
+    process.env.IS_CONTENTFUL_ENABLED = 'false';
 
     const { CalendarSquidexDataProvider } = await import(
       '../../src/data-providers/calendar.data-provider'
@@ -19,7 +19,7 @@ describe('Calendars Dependencies', () => {
   });
 
   it('Should resolve Calendar Contentful Data Provider when the Contentful feature flag is on', async () => {
-    process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
+    process.env.IS_CONTENTFUL_ENABLED = 'true';
     const { CalendarContentfulDataProvider } = await import(
       '../../src/data-providers/contentful/calendar.data-provider'
     );

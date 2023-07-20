@@ -3,8 +3,9 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Link, Subtitle, utils } from '@asap-hub/react-components';
 
-import { CollapsibleTable, EditableCard, IconWithLabel } from '../molecules';
-import { userIcon, usersIcon } from '../icons';
+import { EditableCard, IconWithLabel } from '../molecules';
+import { usersIcon } from '../icons';
+import { CardTable } from '.';
 
 const { getCounterString } = utils;
 
@@ -14,6 +15,7 @@ type UserWorkingGroupsProps = Pick<
 > &
   Pick<ComponentProps<typeof EditableCard>, 'subtitle'> & {
     noLinks?: boolean;
+    isOnboarding?: boolean;
   };
 
 const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
@@ -22,6 +24,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
   subtitle,
   id,
   noLinks = false,
+  isOnboarding = false,
 }) => {
   const getUserWorkingGroupRole = (
     userId: gp2Model.UserResponse['id'],
@@ -38,7 +41,12 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
       }
     >
       {workingGroups.length ? (
-        <CollapsibleTable headings={['Name', 'Role', 'Nº of Members']}>
+        <CardTable
+          isOnboarding={isOnboarding}
+          headings={
+            isOnboarding ? ['Name', 'Members'] : ['Name', 'Role', 'Members']
+          }
+        >
           {workingGroups.map(({ title, members, id: workingGroupId }) => {
             const name = noLinks ? (
               title
@@ -54,11 +62,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
                 {title}
               </Link>
             );
-            const role = (
-              <IconWithLabel noMargin icon={userIcon}>
-                {getUserWorkingGroupRole(id, members) || ''}
-              </IconWithLabel>
-            );
+            const role = getUserWorkingGroupRole(id, members) || '';
             const numberOfMembers = (
               <IconWithLabel noMargin icon={usersIcon}>
                 {getCounterString(members.length, 'Member')}
@@ -67,10 +71,12 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
 
             return {
               id: workingGroupId,
-              values: [name, role, numberOfMembers],
+              values: isOnboarding
+                ? [name, numberOfMembers]
+                : [name, role, numberOfMembers],
             };
           })}
-        </CollapsibleTable>
+        </CardTable>
       ) : (
         <Subtitle accent={'lead'}>
           You are not associated to any working groups.

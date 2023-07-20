@@ -23,7 +23,7 @@ import {
   RecentSharedOutputs,
 } from '../organisms';
 import { rem } from '../pixels';
-import { Link, Headline2, Card, Paragraph } from '../atoms';
+import { Link, Headline2, Card, Paragraph, Icon } from '../atoms';
 import { DashboardRecommendedUsers, lead } from '..';
 import { Accordion } from '../molecules';
 import { externalLinkIcon } from '../icons';
@@ -80,7 +80,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
   const guideAccordion = guides.map((guide) => ({
-    icon: <></>,
+    icon: guide.icon ? <Icon url={guide.icon} /> : <></>,
     title: guide.title,
     description: guide.content.map((content) => (
       <div key={content.text}>

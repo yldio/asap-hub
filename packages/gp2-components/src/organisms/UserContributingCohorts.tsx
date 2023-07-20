@@ -4,7 +4,8 @@ import {
   UserProfilePlaceholderCard,
 } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { CollapsibleTable, EditableCard } from '../molecules';
+import { EditableCard } from '../molecules';
+import CardTable from './CardTable';
 
 type UserContributingCohortsProps = Pick<
   gp2.UserResponse,
@@ -28,7 +29,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
         to ten).
       </UserProfilePlaceholderCard>
     ) : (
-      <CollapsibleTable headings={['Name', 'Role', 'Link']}>
+      <CardTable headings={['Name', 'Role', 'Link']}>
         {contributingCohorts.map(
           ({ contributingCohortId, name, studyUrl, role }) => {
             const study = studyUrl && (
@@ -40,7 +41,7 @@ const UserContributingCohorts: React.FC<UserContributingCohortsProps> = ({
             };
           },
         )}
-      </CollapsibleTable>
+      </CardTable>
     )}
   </EditableCard>
 );

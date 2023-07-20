@@ -49,6 +49,22 @@ describe('UserProjects', () => {
     expect(screen.getByText(role)).toBeVisible();
   });
 
+  it('should not render role column if onboarding', () => {
+    const project = {
+      ...getProjects(1)[0]!,
+      members: [{ userId: id, role: gp2.projectMemberRole[0] }],
+    };
+    render(
+      <UserProjects
+        projects={[project]}
+        firstName={firstName}
+        id={id}
+        isOnboarding
+      />,
+    );
+    expect(screen.queryByText('Role')).not.toBeInTheDocument();
+  });
+
   it('renders show more button for more than 3 projects', async () => {
     const projects = getProjects(4);
 

@@ -247,6 +247,7 @@ const serverlessConfig: AWS = {
     },
     subscribeCalendar: {
       handler: './src/handlers/calendar/subscribe-handler.handler',
+      reservedConcurrency: 1,
       events: [
         {
           eventBridge: {

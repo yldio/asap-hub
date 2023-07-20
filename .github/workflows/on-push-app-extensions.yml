@@ -61,11 +61,13 @@ jobs:
           - disabled-fields
           - event-additional-materials
           - event-speakers-title
+          - event-speakers-gp2
           - field-as-updated-at
           - user-membership
           - user-positions
           - user-team-memberships
           - clear-on-change
+          - contributing-cohort-memberships
     steps:
       - name: Checkout
         uses: actions/checkout@v3

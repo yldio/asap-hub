@@ -23,8 +23,6 @@ import {
   RestCalendar,
   RestEvent,
   RestExternalAuthor,
-  RestNews,
-  RestPage,
   RestResearchOutput,
   RestTeam,
   RestUser,
@@ -45,7 +43,6 @@ import {
   contentfulPreviewAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
-  isContentfulEnabled,
 } from './config';
 import GuideController from './controllers/guide.controller';
 import CalendarController from './controllers/calendar.controller';
@@ -82,15 +79,12 @@ import { ResearchTagContentfulDataProvider } from './data-providers/contentful/r
 import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
 import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
 
-import DashboardSquidexDataProvider from './data-providers/dashboard.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
 } from './data-providers/external-author.data-provider';
 import { InterestGroupSquidexDataProvider } from './data-providers/interest-group.data-provider';
-import { NewsSquidexDataProvider } from './data-providers/news.data-provider';
-import { PageSquidexDataProvider } from './data-providers/page.data-provider';
 import { ReminderSquidexDataProvider } from './data-providers/reminder.data-provider';
 import { ResearchOutputSquidexDataProvider } from './data-providers/research-output.data-provider';
 import { ResearchTagSquidexDataProvider } from './data-providers/research-tag.data-provider';
@@ -201,15 +195,7 @@ export const appFactory = (libs: Libs = {}): Express => {
       baseUrl,
     },
   );
-  const newsRestClient = new SquidexRest<RestNews>(
-    getAuthToken,
-    'news-and-events',
-    { appName, baseUrl },
-  );
-  const pageRestClient = new SquidexRest<RestPage>(getAuthToken, 'pages', {
-    appName,
-    baseUrl,
-  });
+
   const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
     getAuthToken,
     'research-outputs',
@@ -227,39 +213,25 @@ export const appFactory = (libs: Libs = {}): Express => {
   const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
-  const dashboardSquidexDataProvider =
-    libs.dashboardSquidexDataProvider ||
-    new DashboardSquidexDataProvider(squidexGraphqlClient);
   const dashboardContentfulDataProvider =
     libs.dashboardContentfulDataProvider ||
     new DashboardContentfulDataProvider(contentfulGraphQLClient);
   const dashboardDataProvider =
-    libs.dashboardDataProvider || isContentfulEnabled
-      ? dashboardContentfulDataProvider
-      : dashboardSquidexDataProvider;
-  const newsSquidexDataProvider =
-    libs.newsSquidexDataProvider || new NewsSquidexDataProvider(newsRestClient);
+    libs.dashboardDataProvider || dashboardContentfulDataProvider;
   const newsContentfulDataProvider =
     libs.newsContentfulDataProvider ||
     new NewsContentfulDataProvider(contentfulGraphQLClient);
-  const newsDataProvider =
-    libs.newsDataProvider || isContentfulEnabled
-      ? newsContentfulDataProvider
-      : newsSquidexDataProvider;
-  const pageSquidexDataProvider =
-    libs.pageSquidexDataProvider || new PageSquidexDataProvider(pageRestClient);
+  const newsDataProvider = libs.newsDataProvider || newsContentfulDataProvider;
   const pageContentfulDataProvider =
     libs.pageContentfulDataProvider ||
     new PageContentfulDataProvider(contentfulGraphQLClient);
-  const pageDataProvider = isContentfulEnabled
-    ? pageContentfulDataProvider
-    : pageSquidexDataProvider;
+  const pageDataProvider = pageContentfulDataProvider;
 
   featureFlagDependencySwitch.setDependency(
     'teams',
     libs.teamSquidexDataProvider ||
       new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
 
@@ -270,35 +242,32 @@ export const appFactory = (libs: Libs = {}): Express => {
         contentfulGraphQLClient,
         getContentfulRestClientFactory,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   const teamDataProvider =
     libs.teamDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'teams',
-      'IS_CONTENTFUL_ENABLED_V2',
-    );
+    featureFlagDependencySwitch.getDependency('teams', 'IS_CONTENTFUL_ENABLED');
 
   featureFlagDependencySwitch.setDependency(
     'assets',
     libs.assetSquidexDataProvider ||
       new AssetSquidexDataProvider(userRestClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
     'assets',
     libs.assetContentfulDataProvider ||
       new AssetContentfulDataProvider(getContentfulRestClientFactory),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   featureFlagDependencySwitch.setDependency(
     'users',
     libs.userSquidexDataProvider ||
       new UserSquidexDataProvider(squidexGraphqlClient, userRestClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
@@ -308,61 +277,58 @@ export const appFactory = (libs: Libs = {}): Express => {
         contentfulGraphQLClient,
         getContentfulRestClientFactory,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   const userDataProvider =
     libs.userDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'users',
-      'IS_CONTENTFUL_ENABLED_V2',
-    );
+    featureFlagDependencySwitch.getDependency('users', 'IS_CONTENTFUL_ENABLED');
   const assetDataProvider =
     libs.assetDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'assets',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
   featureFlagDependencySwitch.setDependency(
     'interestGroups',
     libs.interestGroupSquidexDataProvider ||
       new InterestGroupSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
     'interestGroups',
     libs.interestGroupContentfulDataProvider ||
       new InterestGroupContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   const interestGroupDataProvider =
     libs.interestGroupDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'interestGroups',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   featureFlagDependencySwitch.setDependency(
     'reminders',
     libs.reminderSquidexDataProvider ||
       new ReminderSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
     'reminders',
     libs.reminderContentfulDataProvider ||
-      new ReminderContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+      new ReminderContentfulDataProvider(contentfulPreviewGraphQLClient),
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   const reminderDataProvider =
     libs.reminderDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'reminders',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   featureFlagDependencySwitch.setDependency(
@@ -372,7 +338,7 @@ export const appFactory = (libs: Libs = {}): Express => {
         externalAuthorRestClient,
         squidexGraphqlClient,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
@@ -382,7 +348,7 @@ export const appFactory = (libs: Libs = {}): Express => {
         contentfulGraphQLClient,
         getContentfulRestClientFactory,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
 
@@ -390,14 +356,14 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.externalAuthorDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'externalAuthors',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   featureFlagDependencySwitch.setDependency(
     'calendars',
     libs.calendarSquidexDataProvider ||
       new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
@@ -407,7 +373,7 @@ export const appFactory = (libs: Libs = {}): Express => {
         contentfulGraphQLClient,
         getContentfulRestClientFactory,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
 
@@ -415,7 +381,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.calendarDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'calendars',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   featureFlagDependencySwitch.setDependency(
@@ -425,7 +391,7 @@ export const appFactory = (libs: Libs = {}): Express => {
         squidexGraphqlClient,
         workingGroupRestClient,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
@@ -435,7 +401,7 @@ export const appFactory = (libs: Libs = {}): Express => {
         contentfulGraphQLClient,
         getContentfulRestClientFactory,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
 
@@ -443,14 +409,14 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.workingGroupDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'workingGroups',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   featureFlagDependencySwitch.setDependency(
     'events',
     libs.eventSquidexDataProvider ||
       new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
@@ -460,56 +426,56 @@ export const appFactory = (libs: Libs = {}): Express => {
         contentfulGraphQLClient,
         getContentfulRestClientFactory,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   const eventDataProvider =
     libs.eventDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'events',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   featureFlagDependencySwitch.setDependency(
     'tutorials',
     libs.tutorialSquidexDataProvider ||
       new TutorialsSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
     'tutorials',
     libs.tutorialContentfulDataProvider ||
       new TutorialContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   const tutorialDataProvider =
     libs.tutorialDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'tutorials',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   featureFlagDependencySwitch.setDependency(
     'discover',
     libs.discoverSquidexDataProvider ||
       new DiscoverSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
     'discover',
     libs.discoverContentfulDataProvider ||
       new DiscoverContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   const discoverDataProvider =
     libs.discoverDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'discover',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   const guideDataProvider =
@@ -520,21 +486,21 @@ export const appFactory = (libs: Libs = {}): Express => {
     'researchTags',
     libs.researchTagSquidexDataProvider ||
       new ResearchTagSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
     'researchTags',
     libs.researchTagContentfulDataProvider ||
       new ResearchTagContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   const researchTagDataProvider =
     libs.researchTagDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'researchTags',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   featureFlagDependencySwitch.setDependency(
@@ -544,7 +510,7 @@ export const appFactory = (libs: Libs = {}): Express => {
         squidexGraphqlClient,
         researchOutputRestClient,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     false,
   );
   featureFlagDependencySwitch.setDependency(
@@ -555,14 +521,14 @@ export const appFactory = (libs: Libs = {}): Express => {
         contentfulPreviewGraphQLClient,
         getContentfulRestClientFactory,
       ),
-    'IS_CONTENTFUL_ENABLED_V2',
+    'IS_CONTENTFUL_ENABLED',
     true,
   );
   const researchOutputDataProvider =
     libs.researchOutputDataProvider ||
     featureFlagDependencySwitch.getDependency(
       'researchOutputs',
-      'IS_CONTENTFUL_ENABLED_V2',
+      'IS_CONTENTFUL_ENABLED',
     );
 
   const labDataProvider =

@@ -69,6 +69,21 @@ describe('UserWorkingGroups', () => {
     );
     expect(screen.getByText(role)).toBeVisible();
   });
+  it('should not render role column if onboarding', () => {
+    const workingGroup = {
+      ...getWorkingGroups(1)[0]!,
+      members: [{ userId: id, role: gp2.workingGroupMemberRole[0] }],
+    };
+    render(
+      <UserWorkingGroups
+        workingGroups={[workingGroup]}
+        firstName={firstName}
+        id={id}
+        isOnboarding
+      />,
+    );
+    expect(screen.queryByText('Role')).not.toBeInTheDocument();
+  });
 
   it('does not render more than 4 working-groups', async () => {
     const workingGroups = getWorkingGroups(4);

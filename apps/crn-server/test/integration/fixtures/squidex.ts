@@ -11,6 +11,8 @@ import {
   RestEvent,
   RestCalendar,
   InputCalendar,
+  RestResearchOutput,
+  InputResearchOutput,
 } from '@asap-hub/squidex';
 import {
   CalendarCreateDataObject,
@@ -19,6 +21,7 @@ import {
   TeamCreateDataObject,
   InterestGroupCreateDataObject,
   WorkingGroupCreateDataObject,
+  ResearchOutputCreateDataObject,
 } from './types';
 import { appName, baseUrl } from '../../../src/config';
 
@@ -49,6 +52,11 @@ const workingGroupRestClient = getSquidexClient<
   RestWorkingGroup,
   InputWorkingGroup
 >('working-groups');
+
+const researchOutputRestClient = getSquidexClient<
+  RestResearchOutput,
+  InputResearchOutput
+>('research-outputs');
 
 export class SquidexFixture implements Fixture {
   private teardownHelper = teardownHelper([
@@ -131,6 +139,29 @@ export class SquidexFixture implements Fixture {
     };
   }
 
+  private async prepareResearchOutput(props: ResearchOutputCreateDataObject) {
+    const {
+      published: _published,
+      description,
+      descriptionMD,
+      usedInPublication,
+      subtypeId,
+      workingGroups,
+      authors,
+      createdDate,
+      ...data
+    } = props;
+    return {
+      ...data,
+      description: description || '',
+      descriptionMD: descriptionMD || '',
+      subtype: subtypeId ? [subtypeId] : [],
+      usedInAPublication: 'No' as NonNullable<'Yes' | 'No' | 'Not Sure'>,
+      asapFunded: 'No' as NonNullable<'Yes' | 'No' | 'Not Sure'>,
+      workingGroups: workingGroups ? workingGroups : undefined,
+    };
+  }
+
   async createCalendar(calendar: CalendarCreateDataObject) {
     const input = await this.prepareCalendar(calendar);
     const result = await calendarRestClient.create(parseToSquidex(input));
@@ -208,6 +239,26 @@ export class SquidexFixture implements Fixture {
     return {
       id: result.id,
       ...group,
+    };
+  }
+
+  async createResearchOutput(researchOutput: ResearchOutputCreateDataObject) {
+    // Ideally we should use the post /research-outputs route to create
+    // the research output. Use this method only if you need to change
+    // fields that the API does not support like addedDate
+    const input = await this.prepareResearchOutput(researchOutput);
+
+    const result = await researchOutputRestClient.create(
+      parseToSquidex(input),
+      !!researchOutput.published,
+    );
+
+    if (!result) {
+      throw new Error('Could not create research output');
+    }
+    return {
+      id: result.id,
+      ...researchOutput,
     };
   }
 

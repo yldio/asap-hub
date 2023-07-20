@@ -22,10 +22,10 @@
     "@asap-hub/server-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
     "@babel/runtime-corejs3": "7.22.6",
-    "@contentful/rich-text-types": "16.0.3",
+    "@contentful/rich-text-types": "16.2.0",
     "cheerio": "^1.0.0-rc.12",
     "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#v1.0.19",
-    "contentful-management": "10.32.0",
+    "contentful-management": "10.39.1",
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6",
     "limiter": "^2.1.0"

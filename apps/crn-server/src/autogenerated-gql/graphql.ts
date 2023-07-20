@@ -6503,45 +6503,6 @@ export type FetchCalendarsQuery = {
   >;
 };
 
-export type FetchDashboardQueryVariables = Exact<{ [key: string]: never }>;
-
-export type FetchDashboardQuery = {
-  queryDashboardContents: Maybe<
-    Array<{
-      flatData: {
-        news: Maybe<
-          Array<
-            Pick<
-              NewsAndEvents,
-              'id' | 'created' | 'lastModified' | 'version'
-            > & {
-              flatData: Pick<
-                NewsAndEventsFlatDataDto,
-                | 'title'
-                | 'shortText'
-                | 'text'
-                | 'frequency'
-                | 'link'
-                | 'linkText'
-              > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
-            }
-          >
-        >;
-        pages: Maybe<
-          Array<
-            Pick<Pages, 'id' | 'created' | 'lastModified' | 'version'> & {
-              flatData: Pick<
-                PagesFlatDataDto,
-                'path' | 'title' | 'shortText' | 'text' | 'link' | 'linkText'
-              >;
-            }
-          >
-        >;
-      };
-    }>
-  >;
-};
-
 export type FetchDiscoverQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchDiscoverQuery = {
@@ -8449,16 +8410,6 @@ export type FetchLabsQuery = {
       >;
     }
   >;
-};
-
-export type NewsFragment = Pick<
-  NewsAndEvents,
-  'id' | 'created' | 'lastModified' | 'version'
-> & {
-  flatData: Pick<
-    NewsAndEventsFlatDataDto,
-    'title' | 'shortText' | 'text' | 'frequency' | 'link' | 'linkText'
-  > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
 };
 
 export type FetchReminderDataQueryVariables = Exact<{
@@ -11832,53 +11783,6 @@ export const LabsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<LabsContentFragment, unknown>;
-export const NewsFragmentDoc = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'News' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'NewsAndEvents' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'created' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'version' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'flatData' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'thumbnail' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'frequency' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'link' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<NewsFragment, unknown>;
 export const ResearchOutputContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -13496,111 +13400,6 @@ export const FetchCalendarsDocument = {
     ...CalendarsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchCalendarsQuery, FetchCalendarsQueryVariables>;
-export const FetchDashboardDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'FetchDashboard' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'queryDashboardContents' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'flatData' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'news' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'News' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'pages' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'created' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'lastModified' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'version' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'flatData' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'path' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'title' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'shortText' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'text' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'link' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'linkText' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...NewsFragmentDoc.definitions,
-  ],
-} as unknown as DocumentNode<FetchDashboardQuery, FetchDashboardQueryVariables>;
 export const FetchDiscoverDocument = {
   kind: 'Document',
   definitions: [

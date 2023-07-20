@@ -1,4 +1,5 @@
 export { default as BiographyModal } from './BiographyModal';
+export { default as CardTable } from './CardTable';
 export { default as ContactInformationModal } from './ContactInformationModal';
 export { default as ContributingCohortsModal } from './ContributingCohortsModal';
 export { default as DashboardHeader } from './DashboardHeader';

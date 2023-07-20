@@ -9,18 +9,10 @@ import {
   UserEvent,
 } from '@asap-hub/model';
 import { UserPayload } from '@asap-hub/server-common';
-import { RestEvent, SquidexGraphql, SquidexRest } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
-import {
-  algoliaApiKey,
-  algoliaAppId,
-  algoliaIndex,
-  appName,
-  baseUrl,
-} from '../../config';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Events from '../../controllers/event.controller';
-import { EventSquidexDataProvider } from '../../data-providers/event.data-provider';
-import { getAuthToken } from '../../utils/auth';
+import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
@@ -68,19 +60,7 @@ export const indexUserEventsHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
-const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-  appName,
-  baseUrl,
-});
-const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
-  appName,
-  baseUrl,
-});
-
-const eventDataProvider = new EventSquidexDataProvider(
-  eventRestClient,
-  squidexGraphqlClient,
-);
+const eventDataProvider = getEventDataProvider();
 /* istanbul ignore next */
 export const handler = sentryWrapper(
   indexUserEventsHandler(

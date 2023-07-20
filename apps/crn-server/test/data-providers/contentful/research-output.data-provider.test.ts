@@ -1601,6 +1601,23 @@ describe('Research Outputs Data Provider', () => {
       );
     });
 
+    test('does not set addedDate to the current timestamp if editing a previously published output', async () => {
+      entry.fields.addedDate = {
+        'en-US': new Date().toISOString(),
+      };
+      await researchOutputDataProvider.update(
+        '1',
+        getResearchOutputUpdateDataObject(),
+        { publish: true },
+      );
+      expect(patch).not.toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          addedDate: expect.anything(),
+        }),
+      );
+    });
+
     test('sets `updatedBy` property to a contentful reference', async () => {
       await researchOutputDataProvider.update(
         '1',

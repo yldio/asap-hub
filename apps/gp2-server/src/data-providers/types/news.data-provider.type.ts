@@ -1,12 +1,7 @@
-import {
-  DataProvider,
-  FetchNewsFilter,
-  FetchPaginationOptions,
-  gp2,
-} from '@asap-hub/model';
+import { DataProvider, FetchPaginationOptions, gp2 } from '@asap-hub/model';
 
 export type FetchNewsProviderOptions = FetchPaginationOptions & {
-  filter?: FetchNewsFilter & {
+  filter?: gp2.FetchNewsFilter & {
     title?: string;
   };
 };

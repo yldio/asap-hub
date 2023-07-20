@@ -20,6 +20,7 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
       skip: options?.skip || null,
       order: [gp2Contentful.NewsOrder.PublishDateDesc],
       where: {
+        type_in: options?.filter?.type as string[],
         title_contains: options?.filter?.title || null,
       },
     });

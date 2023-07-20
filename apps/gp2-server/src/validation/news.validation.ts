@@ -1,16 +1,12 @@
 import { JSONSchemaType } from 'ajv';
-import {
-  NewsFrequency,
-  FetchNewsOptions,
-  newsFrequency,
-} from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
   validateInput,
 } from '@asap-hub/server-common';
 
 const newsFetchValidationSchema: JSONSchemaType<
-  Omit<FetchNewsOptions, 'filter'> & { filter?: NewsFrequency[] }
+  Omit<gp2.FetchNewsOptions, 'filter'> & { filter?: gp2.NewsType[] }
 > = {
   type: 'object',
   properties: {
@@ -18,7 +14,7 @@ const newsFetchValidationSchema: JSONSchemaType<
     filter: {
       type: 'array',
       nullable: true,
-      items: { enum: newsFrequency },
+      items: { enum: gp2.newsTypes },
     },
   },
   additionalProperties: false,

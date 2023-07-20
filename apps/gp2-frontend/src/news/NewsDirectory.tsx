@@ -3,7 +3,6 @@ import Frame from '../Frame';
 import { useSearch } from '../hooks/general-search';
 import NewsList from './NewsList';
 
-
 const NewsDirectory = () => {
   const {
     searchQuery,
@@ -12,7 +11,6 @@ const NewsDirectory = () => {
     filters,
     toggleFilter,
   } = useSearch();
-
 
   return (
     <NewsPageList

@@ -23,20 +23,18 @@ const NewsPageList: React.FC<NewsPageListProps> = ({
   onChangeFilter,
   onChangeSearch,
   searchQuery,
-}) => {
-  return (
-    <>
-      <SearchAndFilter
-        onChangeSearch={onChangeSearch}
-        searchPlaceholder="Enter name..."
-        searchQuery={searchQuery}
-        onChangeFilter={onChangeFilter}
-        filterOptions={newsFilters}
-        filters={filters}
-      />
-      <main>{children}</main>
-    </>
-  );
-};
+}) => (
+  <>
+    <SearchAndFilter
+      onChangeSearch={onChangeSearch}
+      searchPlaceholder="Enter name..."
+      searchQuery={searchQuery}
+      onChangeFilter={onChangeFilter}
+      filterOptions={newsFilters}
+      filters={filters}
+    />
+    <main>{children}</main>
+  </>
+);
 
 export default NewsPageList;

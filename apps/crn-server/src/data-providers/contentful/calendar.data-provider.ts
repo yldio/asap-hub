@@ -159,7 +159,8 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
 
     updateEntryFields(calendar, otherFields);
 
-    if (resourceId || expirationDate || syncToken) {
+    const hasResourceId = 'resourceId' in update;
+    if (hasResourceId || expirationDate || syncToken) {
       calendar.fields.googleApiMetadata = {
         'en-US': {
           ...(previousGoogleApiMetadata
@@ -167,7 +168,7 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
             : {}),
           // if the resourceId is updated, we change associatedGoogleCalendarId
           // this field is used by webhooks
-          ...(resourceId
+          ...(hasResourceId
             ? {
                 resourceId,
                 associatedGoogleCalendarId:

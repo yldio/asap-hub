@@ -176,11 +176,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
   }
 }
 
-export const teamUnreadyResponse = {
-  pointOfContact: undefined,
-  proposalURL: undefined,
-};
-
 export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
   const expertiseAndResourceTags = (item.expertiseAndResourceTags || []).reduce(
     (tags: string[], tag) => {
@@ -292,10 +287,11 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
     projectSummary: item.projectSummary ?? undefined,
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
     labCount,
-
-    // TODO implement below when users (CRN-1164),
-    // labs (CRN-1263) and RO (CRN-1253) are ready
-    ...teamUnreadyResponse,
+    pointOfContact: members.find(
+      ({ role, alumniSinceDate, inactiveSinceDate }) =>
+        role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
+    ),
+    proposalURL: item.proposal ? item.proposal.sys.id : undefined,
   };
 };
 

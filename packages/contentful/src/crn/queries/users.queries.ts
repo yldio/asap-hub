@@ -57,6 +57,11 @@ export const usersContentQueryFragment = gql`
           }
           displayName
           inactiveSince
+          proposal {
+            sys {
+              id
+            }
+          }
           linkedFrom {
             interestGroupsCollection(limit: 10) {
               items {

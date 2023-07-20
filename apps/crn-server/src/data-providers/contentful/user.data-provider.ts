@@ -259,6 +259,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
           displayName: team.team?.displayName || '',
           id: team.team?.sys.id || '',
           teamInactiveSince: team.team?.inactiveSince || '',
+          proposal: team.team?.proposal ? team.team.proposal.sys.id : undefined,
         },
       ];
     },

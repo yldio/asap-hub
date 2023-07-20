@@ -876,6 +876,11 @@ export const getContentfulGraphqlUser = (
           linkedFrom: {
             interestGroupsCollection: getInterestGroupsCollection(),
           },
+          proposal: {
+            sys: {
+              id: 'proposalId1',
+            },
+          },
         },
       },
     ],

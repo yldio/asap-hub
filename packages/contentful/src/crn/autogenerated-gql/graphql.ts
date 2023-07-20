@@ -4888,6 +4888,7 @@ export enum ResearchOutputsLabsCollectionOrder {
 export type ResearchOutputsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  teamsCollection?: Maybe<TeamsCollection>;
 };
 
 export type ResearchOutputsLinkingCollectionsEntryCollectionArgs = {
@@ -4904,6 +4905,16 @@ export type ResearchOutputsLinkingCollectionsResearchOutputsCollectionArgs = {
     Array<
       InputMaybe<ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder>
     >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResearchOutputsLinkingCollectionsTeamsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsLinkingCollectionsTeamsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -4948,6 +4959,23 @@ export enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   TypeDesc = 'type_DESC',
   UsedInAPublicationAsc = 'usedInAPublication_ASC',
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
 export type ResearchOutputsMethodsCollection = {
@@ -5567,6 +5595,7 @@ export type Teams = Entry & {
   linkedFrom?: Maybe<TeamsLinkingCollections>;
   projectSummary?: Maybe<Scalars['String']>;
   projectTitle?: Maybe<Scalars['String']>;
+  proposal?: Maybe<ResearchOutputs>;
   sys: Sys;
   toolsCollection?: Maybe<TeamsToolsCollection>;
 };
@@ -5604,6 +5633,13 @@ export type TeamsProjectSummaryArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
 export type TeamsProjectTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsProposalArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
@@ -5674,6 +5710,8 @@ export type TeamsFilter = {
   projectTitle_not?: InputMaybe<Scalars['String']>;
   projectTitle_not_contains?: InputMaybe<Scalars['String']>;
   projectTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  proposal?: InputMaybe<CfResearchOutputsNestedFilter>;
+  proposal_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   tools?: InputMaybe<CfExternalToolsNestedFilter>;
   toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -8249,6 +8287,7 @@ export type CfTeamsNestedFilter = {
   projectTitle_not?: InputMaybe<Scalars['String']>;
   projectTitle_not_contains?: InputMaybe<Scalars['String']>;
   projectTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  proposal_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -13558,6 +13597,7 @@ export type TeamsContentFragment = Pick<
     Sys,
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
   >;
+  proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
   toolsCollection?: Maybe<{
     items: Array<Maybe<Pick<ExternalTools, 'name' | 'description' | 'url'>>>;
   }>;
@@ -13612,6 +13652,7 @@ export type FetchTeamByIdQuery = {
         Sys,
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
       >;
+      proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
       toolsCollection?: Maybe<{
         items: Array<
           Maybe<Pick<ExternalTools, 'name' | 'description' | 'url'>>
@@ -13678,6 +13719,7 @@ export type FetchTeamsQuery = {
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
+            proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
             toolsCollection?: Maybe<{
               items: Array<
                 Maybe<Pick<ExternalTools, 'name' | 'description' | 'url'>>
@@ -13940,6 +13982,7 @@ export type UsersContentFragment = Pick<
           team?: Maybe<
             Pick<Teams, 'displayName' | 'inactiveSince'> & {
               sys: Pick<Sys, 'id'>;
+              proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
               linkedFrom?: Maybe<{
                 interestGroupsCollection?: Maybe<{
                   items: Array<
@@ -14077,6 +14120,7 @@ export type FetchUserByIdQuery = {
               team?: Maybe<
                 Pick<Teams, 'displayName' | 'inactiveSince'> & {
                   sys: Pick<Sys, 'id'>;
+                  proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                   linkedFrom?: Maybe<{
                     interestGroupsCollection?: Maybe<{
                       items: Array<
@@ -14222,6 +14266,7 @@ export type FetchUsersQuery = {
                     team?: Maybe<
                       Pick<Teams, 'displayName' | 'inactiveSince'> & {
                         sys: Pick<Sys, 'id'>;
+                        proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                         linkedFrom?: Maybe<{
                           interestGroupsCollection?: Maybe<{
                             items: Array<
@@ -14378,6 +14423,7 @@ export type FetchUsersByTeamIdQuery = {
                             team?: Maybe<
                               Pick<Teams, 'displayName' | 'inactiveSince'> & {
                                 sys: Pick<Sys, 'id'>;
+                                proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                                 linkedFrom?: Maybe<{
                                   interestGroupsCollection?: Maybe<{
                                     items: Array<
@@ -14539,6 +14585,7 @@ export type FetchUsersByLabIdQuery = {
                         team?: Maybe<
                           Pick<Teams, 'displayName' | 'inactiveSince'> & {
                             sys: Pick<Sys, 'id'>;
+                            proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                             linkedFrom?: Maybe<{
                               interestGroupsCollection?: Maybe<{
                                 items: Array<
@@ -17713,6 +17760,25 @@ export const TeamsContentFragmentDoc = {
           },
           {
             kind: 'Field',
+            name: { kind: 'Name', value: 'proposal' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'toolsCollection' },
             selectionSet: {
               kind: 'SelectionSet',
@@ -18261,6 +18327,28 @@ export const UsersContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'inactiveSince' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'proposal' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
                             },
                             {
                               kind: 'Field',

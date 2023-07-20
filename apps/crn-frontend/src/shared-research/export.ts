@@ -90,6 +90,7 @@ export const researchOutputToCSV = (
   lastModifiedDate: output.lastModifiedDate,
   published: output.published,
   statusChangedBy: `${output.statusChangedBy?.firstName} ${output.statusChangedBy?.lastName}`,
+  statusChangedAt: output.statusChangedAt,
   isInReview: true,
 });
 

@@ -4637,6 +4637,7 @@ type ResearchOutputsDataDto {
   relatedResearch: ResearchOutputsDataRelatedResearchDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
+  statusChangedAt: ResearchOutputsDataStatusChangedAtDto
   statusChangedBy: ResearchOutputsDataStatusChangedByDto
   subtype: ResearchOutputsDataSubtypeDto
   tags: ResearchOutputsDataTagsDto
@@ -4685,6 +4686,7 @@ input ResearchOutputsDataInputDto {
   relatedResearch: ResearchOutputsDataRelatedResearchInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
+  statusChangedAt: ResearchOutputsDataStatusChangedAtInputDto
   statusChangedBy: ResearchOutputsDataStatusChangedByInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
   tags: ResearchOutputsDataTagsInputDto
@@ -4843,6 +4845,16 @@ input ResearchOutputsDataSharingStatusInputDto {
   iv: String
 }
 
+"""The structure of the Status Changed At field of the Research Outputs content type."""
+type ResearchOutputsDataStatusChangedAtDto {
+  iv: Instant
+}
+
+"""The structure of the Status Changed At field of the Research Outputs content input type."""
+input ResearchOutputsDataStatusChangedAtInputDto {
+  iv: Instant
+}
+
 """The structure of the Status Changed By field of the Research Outputs content type."""
 type ResearchOutputsDataStatusChangedByDto {
   iv: [Users!]
@@ -4987,6 +4999,7 @@ type ResearchOutputsFlatDataDto {
   """
   rrid: String
   sharingStatus: String
+  statusChangedAt: Instant
   statusChangedBy: [Users!]
   subtype: [ResearchTags!]
   tags: [String!]

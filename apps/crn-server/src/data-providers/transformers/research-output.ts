@@ -149,6 +149,7 @@ export const parseGraphQLResearchOutput = (
           lastName: data.statusChangedBy[0].flatData?.lastName || '',
         }
       : undefined,
+    statusChangedAt: data.statusChangedAt || undefined,
     isInReview: !!data.isInReview,
   };
 };

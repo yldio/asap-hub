@@ -4437,6 +4437,7 @@ export type ResearchOutputsDataDto = {
   relatedResearch: Maybe<ResearchOutputsDataRelatedResearchDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
+  statusChangedAt: Maybe<ResearchOutputsDataStatusChangedAtDto>;
   statusChangedBy: Maybe<ResearchOutputsDataStatusChangedByDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
@@ -4485,6 +4486,7 @@ export type ResearchOutputsDataInputDto = {
   relatedResearch: InputMaybe<ResearchOutputsDataRelatedResearchInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
+  statusChangedAt: InputMaybe<ResearchOutputsDataStatusChangedAtInputDto>;
   statusChangedBy: InputMaybe<ResearchOutputsDataStatusChangedByInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
   tags: InputMaybe<ResearchOutputsDataTagsInputDto>;
@@ -4635,6 +4637,16 @@ export type ResearchOutputsDataSharingStatusInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Status Changed At field of the Research Outputs content type. */
+export type ResearchOutputsDataStatusChangedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Status Changed At field of the Research Outputs content input type. */
+export type ResearchOutputsDataStatusChangedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
 /** The structure of the Status Changed By field of the Research Outputs content type. */
 export type ResearchOutputsDataStatusChangedByDto = {
   iv: Maybe<Array<Users>>;
@@ -4775,6 +4787,7 @@ export type ResearchOutputsFlatDataDto = {
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
+  statusChangedAt: Maybe<Scalars['Instant']>;
   statusChangedBy: Maybe<Array<Users>>;
   subtype: Maybe<Array<ResearchTags>>;
   tags: Maybe<Array<Scalars['String']>>;
@@ -8630,6 +8643,7 @@ export type ResearchOutputContentFragment = Pick<
     | 'sharingStatus'
     | 'asapFunded'
     | 'usedInAPublication'
+    | 'statusChangedAt'
     | 'isInReview'
   > & {
     authors: Maybe<
@@ -8856,6 +8870,7 @@ export type FetchResearchOutputQuery = {
         | 'sharingStatus'
         | 'asapFunded'
         | 'usedInAPublication'
+        | 'statusChangedAt'
         | 'isInReview'
       > & {
         authors: Maybe<
@@ -9097,6 +9112,7 @@ export type FetchResearchOutputsQuery = {
               | 'sharingStatus'
               | 'asapFunded'
               | 'usedInAPublication'
+              | 'statusChangedAt'
               | 'isInReview'
             > & {
               authors: Maybe<
@@ -12705,6 +12721,10 @@ export const ResearchOutputContentFragmentDoc = {
                       },
                     ],
                   },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'statusChangedAt' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'isInReview' } },
               ],

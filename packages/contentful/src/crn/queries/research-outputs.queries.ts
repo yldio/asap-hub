@@ -61,6 +61,7 @@ export const researchOutputContentQueryFragment = gql`
       lastName
       email
     }
+    statusChangedAt
     isInReview
     authorsCollection(limit: 10) {
       items {

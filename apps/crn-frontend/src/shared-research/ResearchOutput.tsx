@@ -70,6 +70,7 @@ const ResearchOutput: React.FC = () => {
                       researchOutputData,
                     ),
                     statusChangedById: currentUser?.id,
+                    hasStatusChanged: true,
                     isInReview: shouldReview,
                   })
                 }

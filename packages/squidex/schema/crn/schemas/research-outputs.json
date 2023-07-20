@@ -263,6 +263,21 @@
         }
       },
       {
+        "name": "statusChangedAt",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "Status Changed At"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
         "name": "isInReview",
         "properties": {
           "isRequired": false,

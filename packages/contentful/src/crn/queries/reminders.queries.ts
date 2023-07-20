@@ -46,6 +46,7 @@ export const FETCH_REMINDERS = gql`
           firstName
           lastName
         }
+        isInReview
       }
     }
     eventsCollection(where: $eventFilter) {

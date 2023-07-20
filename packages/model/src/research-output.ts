@@ -237,6 +237,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   >;
   relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;
   statusChangedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
+  statusChangedAt?: string;
 };
 
 export type ResearchOutputDraftDataObject = Omit<
@@ -293,6 +294,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   relatedResearchIds?: string[];
   relatedEventIds?: string[];
   statusChangedById?: string;
+  statusChangedAt?: string;
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -354,6 +356,7 @@ export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
   statusChangedById?: string;
+  hasStatusChanged?: boolean;
   isInReview: boolean;
 };
 

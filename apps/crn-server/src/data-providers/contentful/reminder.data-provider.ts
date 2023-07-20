@@ -247,14 +247,14 @@ export const getResearchOutputFilter = (
           { createdDate_gte: last24HoursISO },
           { sys: { publishedVersion_exists: false } },
           { addedDate_exists: false },
-          { statusChangedBy_exists: false },
+          { isInReview: false },
         ],
       },
       {
         AND: [
           { sys: { publishedVersion_exists: false } },
           { addedDate_exists: false },
-          { statusChangedBy_exists: true },
+          { isInReview: true },
         ],
       },
     ],
@@ -634,7 +634,7 @@ const getDraftResearchOutputRemindersFromQuery = (
     (researchOutputReminders, researchOutput) => {
       const userName = getUserName(researchOutput);
       const isPublished = !!researchOutput.sys.publishedAt;
-      const isInReview = !!researchOutput.statusChangedBy;
+      const isInReview = !!researchOutput.isInReview;
       if (
         !researchOutput.title ||
         !researchOutput.documentType ||

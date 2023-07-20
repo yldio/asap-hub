@@ -59,12 +59,13 @@ type RelatedEventItem = NonNullable<
 >;
 
 export class ResearchOutputContentfulDataProvider
-  implements ResearchOutputDataProvider {
+  implements ResearchOutputDataProvider
+{
   constructor(
     private contentfulClient: GraphQLClient,
     private contentfulPreviewClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
-  ) { }
+  ) {}
 
   async fetch(
     options: FetchResearchOutputOptions,
@@ -286,21 +287,21 @@ const parseGraphQLResearchOutput = (
     created: researchOutputs.createdDate,
     documentType:
       researchOutputs.documentType &&
-        isResearchOutputDocumentType(researchOutputs.documentType)
+      isResearchOutputDocumentType(researchOutputs.documentType)
         ? researchOutputs.documentType
         : 'Grant Document',
     sharingStatus:
       researchOutputs.sharingStatus &&
-        isSharingStatus(researchOutputs.sharingStatus)
+      isSharingStatus(researchOutputs.sharingStatus)
         ? researchOutputs.sharingStatus
         : 'Network Only',
     workingGroups: researchOutputs.workingGroup
       ? [
-        {
-          id: researchOutputs.workingGroup.sys.id,
-          title: researchOutputs.workingGroup.title || '',
-        },
-      ]
+          {
+            id: researchOutputs.workingGroup.sys.id,
+            title: researchOutputs.workingGroup.title || '',
+          },
+        ]
       : [],
     authors:
       researchOutputs.authorsCollection?.items
@@ -371,11 +372,12 @@ const parseGraphQLResearchOutput = (
         })) || [],
     statusChangedBy: researchOutputs.statusChangedBy
       ? {
-        id: researchOutputs.statusChangedBy.sys.id,
-        firstName: researchOutputs.statusChangedBy.firstName || '',
-        lastName: researchOutputs.statusChangedBy.lastName || '',
-      }
+          id: researchOutputs.statusChangedBy.sys.id,
+          firstName: researchOutputs.statusChangedBy.firstName || '',
+          lastName: researchOutputs.statusChangedBy.lastName || '',
+        }
       : undefined,
+    statusChangedAt: researchOutputs.statusChangedAt,
     isInReview: !!researchOutputs.isInReview,
   };
 };

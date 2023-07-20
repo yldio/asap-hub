@@ -203,6 +203,7 @@ describe('research outputs', () => {
             ...researchOutput,
             statusChangedById: loggedInUser.id,
             isInReview: true,
+            hasStatusChanged: true,
           })
           .expect(200);
 
@@ -215,6 +216,7 @@ describe('research outputs', () => {
         );
         expect(response.body.lastUpdatedPartial).toBeCloseInTimeTo(now);
         expect(response.body.isInReview).toBe(true);
+        expect(response.body.statusChangedAt).toBeCloseInTimeTo(now);
       });
 
       // regression test for cache behaviour when updating published content  in contentful

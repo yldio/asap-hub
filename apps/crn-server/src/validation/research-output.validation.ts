@@ -309,6 +309,10 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
       isInReview: {
         type: 'boolean',
       },
+      hasStatusChanged: {
+        type: 'boolean',
+        nullable: true,
+      },
     },
     required: [
       'documentType',

@@ -888,7 +888,7 @@ type EventSpeakers implements Entry {
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
   sys: Sys!
   team(locale: String, preview: Boolean, where: TeamsFilter): Teams
-  user(locale: String, preview: Boolean, where: ExternalAuthorsOrUsersFilter): EventSpeakersUser
+  user(locale: String, preview: Boolean, where: EventSpeakersUserFilter): EventSpeakersUser
 }
 
 type EventSpeakersCollection {
@@ -905,7 +905,7 @@ input EventSpeakersFilter {
   sys: SysFilter
   team: cfTeamsNestedFilter
   team_exists: Boolean
-  user: cfExternalAuthorsOrUsersNestedFilter
+  user: cfuserMultiTypeNestedFilter
   user_exists: Boolean
 }
 
@@ -973,6 +973,20 @@ enum EventSpeakersOrder {
 }
 
 union EventSpeakersUser = ExternalAuthors | Users
+
+input EventSpeakersUserFilter {
+  AND: [EventSpeakersUserFilter]
+  OR: [EventSpeakersUserFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events)"""
 type Events implements Entry {
@@ -1192,6 +1206,8 @@ enum EventsLinkingCollectionsResearchOutputsCollectionOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -1432,6 +1448,8 @@ enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -1446,39 +1464,6 @@ enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
   type_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
-}
-
-"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthorsOrUsers)"""
-type ExternalAuthorsOrUsers implements Entry {
-  contentfulMetadata: ContentfulMetadata!
-  linkedFrom(allowedLocales: [String]): ExternalAuthorsOrUsersLinkingCollections
-  orcid(locale: String): String
-  sys: Sys!
-}
-
-type ExternalAuthorsOrUsersCollection {
-  items: [ExternalAuthorsOrUsers]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-input ExternalAuthorsOrUsersFilter {
-  AND: [ExternalAuthorsOrUsersFilter]
-  OR: [ExternalAuthorsOrUsersFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  orcid: String
-  orcid_contains: String
-  orcid_exists: Boolean
-  orcid_in: [String]
-  orcid_not: String
-  orcid_not_contains: String
-  orcid_not_in: [String]
-  sys: SysFilter
-}
-
-type ExternalAuthorsOrUsersLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
 }
 
 enum ExternalAuthorsOrder {
@@ -2275,6 +2260,8 @@ enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -2752,8 +2739,6 @@ type Query {
   eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): EventsCollection
   externalAuthors(id: String!, locale: String, preview: Boolean): ExternalAuthors
   externalAuthorsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsOrder], preview: Boolean, skip: Int = 0, where: ExternalAuthorsFilter): ExternalAuthorsCollection
-  externalAuthorsOrUsers(id: String!, locale: String, preview: Boolean): ExternalAuthorsOrUsers
-  externalAuthorsOrUsersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalAuthorsOrUsersFilter): ExternalAuthorsOrUsersCollection
   externalTools(id: String!, locale: String, preview: Boolean): ExternalTools
   externalToolsCollection(limit: Int = 100, locale: String, order: [ExternalToolsOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): ExternalToolsCollection
   guideCollections(id: String!, locale: String, preview: Boolean): GuideCollections
@@ -2794,8 +2779,6 @@ type Query {
   workingGroupDeliverablesCollection(limit: Int = 100, locale: String, order: [WorkingGroupDeliverablesOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupDeliverablesFilter): WorkingGroupDeliverablesCollection
   workingGroupLeaders(id: String!, locale: String, preview: Boolean): WorkingGroupLeaders
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [WorkingGroupLeadersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersFilter): WorkingGroupLeadersCollection
-  workingGroupLeadersOrWorkingGroupMembers(id: String!, locale: String, preview: Boolean): WorkingGroupLeadersOrWorkingGroupMembers
-  workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersOrWorkingGroupMembersFilter): WorkingGroupLeadersOrWorkingGroupMembersCollection
   workingGroupMembers(id: String!, locale: String, preview: Boolean): WorkingGroupMembers
   workingGroupMembersCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembersFilter): WorkingGroupMembersCollection
   workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
@@ -2808,7 +2791,7 @@ type ResearchOutputs implements Entry {
   addedDate(locale: String): DateTime
   adminNotes(locale: String): String
   asapFunded(locale: String): String
-  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ExternalAuthorsOrUsersFilter): ResearchOutputsAuthorsCollection
+  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: ResearchOutputsAuthorsFilter): ResearchOutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   createdDate(locale: String): DateTime
@@ -2831,6 +2814,7 @@ type ResearchOutputs implements Entry {
   relatedResearchCollection(limit: Int = 100, locale: String, order: [ResearchOutputsRelatedResearchCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsRelatedResearchCollection
   rrid(locale: String): String
   sharingStatus(locale: String): String
+  statusChangedAt(locale: String): DateTime
   statusChangedBy(locale: String, preview: Boolean, where: UsersFilter): Users
   subtype(locale: String, preview: Boolean, where: ResearchTagsFilter): ResearchTags
   sys: Sys!
@@ -2849,6 +2833,20 @@ type ResearchOutputsAuthorsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+input ResearchOutputsAuthorsFilter {
+  AND: [ResearchOutputsAuthorsFilter]
+  OR: [ResearchOutputsAuthorsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
 }
 
 union ResearchOutputsAuthorsItem = ExternalAuthors | Users
@@ -2941,7 +2939,7 @@ input ResearchOutputsFilter {
   asapFunded_not: String
   asapFunded_not_contains: String
   asapFunded_not_in: [String]
-  authors: cfExternalAuthorsOrUsersNestedFilter
+  authors: cfauthorsMultiTypeNestedFilter
   authorsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   createdBy: cfUsersNestedFilter
@@ -3042,6 +3040,15 @@ input ResearchOutputsFilter {
   sharingStatus_not: String
   sharingStatus_not_contains: String
   sharingStatus_not_in: [String]
+  statusChangedAt: DateTime
+  statusChangedAt_exists: Boolean
+  statusChangedAt_gt: DateTime
+  statusChangedAt_gte: DateTime
+  statusChangedAt_in: [DateTime]
+  statusChangedAt_lt: DateTime
+  statusChangedAt_lte: DateTime
+  statusChangedAt_not: DateTime
+  statusChangedAt_not_in: [DateTime]
   statusChangedBy: cfUsersNestedFilter
   statusChangedBy_exists: Boolean
   subtype: cfResearchTagsNestedFilter
@@ -3162,6 +3169,8 @@ enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3244,6 +3253,8 @@ enum ResearchOutputsOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3370,6 +3381,8 @@ enum ResearchOutputsRelatedResearchCollectionOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3489,6 +3502,8 @@ enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -3850,6 +3865,8 @@ enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4368,7 +4385,6 @@ type UsersLinkingCollections {
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupLeadersCollection
-  workingGroupLeadersOrWorkingGroupMembersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): WorkingGroupLeadersOrWorkingGroupMembersCollection
   workingGroupMembersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupMembersCollection
 }
 
@@ -4436,6 +4452,8 @@ enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4709,44 +4727,6 @@ enum WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionOrder {
   title_DESC
 }
 
-"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers)"""
-type WorkingGroupLeadersOrWorkingGroupMembers implements Entry {
-  contentfulMetadata: ContentfulMetadata!
-  inactiveSinceDate(locale: String): DateTime
-  linkedFrom(allowedLocales: [String]): WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections
-  sys: Sys!
-  user(locale: String, preview: Boolean, where: UsersFilter): Users
-}
-
-type WorkingGroupLeadersOrWorkingGroupMembersCollection {
-  items: [WorkingGroupLeadersOrWorkingGroupMembers]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-input WorkingGroupLeadersOrWorkingGroupMembersFilter {
-  AND: [WorkingGroupLeadersOrWorkingGroupMembersFilter]
-  OR: [WorkingGroupLeadersOrWorkingGroupMembersFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  inactiveSinceDate: DateTime
-  inactiveSinceDate_exists: Boolean
-  inactiveSinceDate_gt: DateTime
-  inactiveSinceDate_gte: DateTime
-  inactiveSinceDate_in: [DateTime]
-  inactiveSinceDate_lt: DateTime
-  inactiveSinceDate_lte: DateTime
-  inactiveSinceDate_not: DateTime
-  inactiveSinceDate_not_in: [DateTime]
-  sys: SysFilter
-  user: cfUsersNestedFilter
-  user_exists: Boolean
-}
-
-type WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-}
-
 enum WorkingGroupLeadersOrder {
   inactiveSinceDate_ASC
   inactiveSinceDate_DESC
@@ -4842,7 +4822,7 @@ type WorkingGroups implements Entry {
   description(locale: String): WorkingGroupsDescription
   externalLink(locale: String): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
-  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupLeadersOrWorkingGroupMembersFilter): WorkingGroupsMembersCollection
+  membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupsMembersFilter): WorkingGroupsMembersCollection
   shortText(locale: String): String
   sys: Sys!
   title(locale: String): String
@@ -4922,7 +4902,7 @@ input WorkingGroupsFilter {
   externalLink_not: String
   externalLink_not_contains: String
   externalLink_not_in: [String]
-  members: cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter
+  members: cfmembersMultiTypeNestedFilter
   membersCollection_exists: Boolean
   shortText: String
   shortText_contains: String
@@ -4973,6 +4953,8 @@ enum WorkingGroupsLinkingCollectionsResearchOutputsCollectionOrder {
   rrid_DESC
   sharingStatus_ASC
   sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4994,6 +4976,23 @@ type WorkingGroupsMembersCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+input WorkingGroupsMembersFilter {
+  AND: [WorkingGroupsMembersFilter]
+  OR: [WorkingGroupsMembersFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  sys: SysFilter
+  user_exists: Boolean
 }
 
 union WorkingGroupsMembersItem = WorkingGroupLeaders | WorkingGroupMembers
@@ -5194,20 +5193,6 @@ input cfEventsNestedFilter {
   videoRecording_contains: String
   videoRecording_exists: Boolean
   videoRecording_not_contains: String
-}
-
-input cfExternalAuthorsOrUsersNestedFilter {
-  AND: [cfExternalAuthorsOrUsersNestedFilter]
-  OR: [cfExternalAuthorsOrUsersNestedFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  orcid: String
-  orcid_contains: String
-  orcid_exists: Boolean
-  orcid_in: [String]
-  orcid_not: String
-  orcid_not_contains: String
-  orcid_not_in: [String]
-  sys: SysFilter
 }
 
 input cfExternalToolsNestedFilter {
@@ -5567,6 +5552,15 @@ input cfResearchOutputsNestedFilter {
   sharingStatus_not: String
   sharingStatus_not_contains: String
   sharingStatus_not_in: [String]
+  statusChangedAt: DateTime
+  statusChangedAt_exists: Boolean
+  statusChangedAt_gt: DateTime
+  statusChangedAt_gte: DateTime
+  statusChangedAt_in: [DateTime]
+  statusChangedAt_lt: DateTime
+  statusChangedAt_lte: DateTime
+  statusChangedAt_not: DateTime
+  statusChangedAt_not_in: [DateTime]
   statusChangedBy_exists: Boolean
   subtype_exists: Boolean
   sys: SysFilter
@@ -6014,23 +6008,6 @@ input cfWorkingGroupDeliverablesNestedFilter {
   sys: SysFilter
 }
 
-input cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter {
-  AND: [cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter]
-  OR: [cfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  inactiveSinceDate: DateTime
-  inactiveSinceDate_exists: Boolean
-  inactiveSinceDate_gt: DateTime
-  inactiveSinceDate_gte: DateTime
-  inactiveSinceDate_in: [DateTime]
-  inactiveSinceDate_lt: DateTime
-  inactiveSinceDate_lte: DateTime
-  inactiveSinceDate_not: DateTime
-  inactiveSinceDate_not_in: [DateTime]
-  sys: SysFilter
-  user_exists: Boolean
-}
-
 input cfWorkingGroupsNestedFilter {
   AND: [cfWorkingGroupsNestedFilter]
   OR: [cfWorkingGroupsNestedFilter]
@@ -6066,4 +6043,49 @@ input cfWorkingGroupsNestedFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+}
+
+input cfauthorsMultiTypeNestedFilter {
+  AND: [cfauthorsMultiTypeNestedFilter]
+  OR: [cfauthorsMultiTypeNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+input cfmembersMultiTypeNestedFilter {
+  AND: [cfmembersMultiTypeNestedFilter]
+  OR: [cfmembersMultiTypeNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
+  sys: SysFilter
+  user_exists: Boolean
+}
+
+input cfuserMultiTypeNestedFilter {
+  AND: [cfuserMultiTypeNestedFilter]
+  OR: [cfuserMultiTypeNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
 }

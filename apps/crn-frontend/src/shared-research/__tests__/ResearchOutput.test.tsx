@@ -391,6 +391,7 @@ it('switches a in review research output back to draft', async () => {
     researchOutput.id,
     expect.objectContaining({
       statusChangedById: defaultUser.id,
+      hasStatusChanged: true,
       isInReview: false,
     }),
     expect.anything(),

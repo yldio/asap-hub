@@ -61,10 +61,12 @@ export const subscribeToEventChangesFactory =
         expiration: parseInt(response.data.expiration, 10),
       };
     } catch (err: unknown) {
-      type ErrorCode = { code: string };
-      const hasCode = (e: unknown): e is ErrorCode =>
-        typeof e === 'object' && e !== null && 'code' in e;
-      if (hasCode(err) && err.code === '404') {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        err.code === '404'
+      ) {
         logger.warn(
           `Calendar not found when subscribing to calendarId: ${calendarId}`,
         );

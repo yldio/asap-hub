@@ -94,7 +94,7 @@ describe('Subscription', () => {
       subscribeToEventChanges(calendarId, getCalendarCreateEvent().payload.id),
     ).rejects.toThrow();
 
-    // expect(nock.isDone()).toBe(true);
+    expect(nock.isDone()).toBe(true);
   });
   test.each`
     cms             | address
@@ -180,10 +180,6 @@ describe('Unsubscribing', () => {
       .reply(200, {});
 
     await unsubscribeFromEventChanges(resourceId, channelId);
-
-    if (!nock.isDone()) {
-      console.error('pending mocks: %j', nock.pendingMocks());
-    }
 
     expect(nock.isDone()).toBe(true);
   });

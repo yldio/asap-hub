@@ -20,6 +20,7 @@ export {
 } from './molecules';
 export {
   BiographyModal,
+  CardTable,
   ContactInformationModal,
   ContributingCohortsModal,
   DashboardHeader,

@@ -87,6 +87,7 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
         noLinks
         projects={projects}
         subtitle={<ContactSupport />}
+        isOnboarding
       />
     )}
     {workingGroups && (
@@ -96,6 +97,7 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
         noLinks
         workingGroups={workingGroups}
         subtitle={<ContactSupport />}
+        isOnboarding
       />
     )}
     <UserQuestions

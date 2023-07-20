@@ -20,7 +20,9 @@ describe('Guide data provider', () => {
         getContentfulGraphqlClientMockServer(getContentfulGraphql());
       const dataProviderWithMockServer: GuideDataProvider =
         new GuideContentfulDataProvider(contentfulGraphqlClientMockServer);
-      const result = await dataProviderWithMockServer.fetch();
+      const result = await dataProviderWithMockServer.fetchByCollectionTitle(
+        'Home',
+      );
       const expectation = {
         items: [
           {
@@ -34,8 +36,19 @@ describe('Guide data provider', () => {
               },
             ],
           },
+          {
+            title: 'Item 1',
+            content: [
+              {
+                title: '',
+                text: 'guide content text',
+                linkUrl: 'https://example.com',
+                linkText: 'link text',
+              },
+            ],
+          },
         ],
-        total: 1,
+        total: 2,
       };
 
       expect(result).toMatchObject(expectation);
@@ -46,7 +59,7 @@ describe('Guide data provider', () => {
         guidesCollection: null,
       });
 
-      const result = await dataProvider.fetch();
+      const result = await dataProvider.fetchByCollectionTitle('Home');
 
       expect(result).toEqual({
         items: [],
@@ -61,7 +74,7 @@ describe('Guide data provider', () => {
         },
       });
 
-      const result = await dataProvider.fetch();
+      const result = await dataProvider.fetchByCollectionTitle('Home');
 
       expect(result).toEqual({
         items: [],

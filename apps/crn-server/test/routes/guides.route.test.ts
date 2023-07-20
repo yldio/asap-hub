@@ -13,12 +13,12 @@ describe('/guides/ route', () => {
 
   describe('GET /guides', () => {
     test('Should return 200 when no information exists', async () => {
-      guideControllerMock.fetch.mockResolvedValueOnce({
+      guideControllerMock.fetchByCollectionTitle.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
 
-      const response = await supertest(app).get('/guides');
+      const response = await supertest(app).get('/guides/Home');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -29,9 +29,11 @@ describe('/guides/ route', () => {
 
     test('Should return the results correctly', async () => {
       const guideResponse = { items: [], total: 0 };
-      guideControllerMock.fetch.mockResolvedValueOnce(guideResponse);
+      guideControllerMock.fetchByCollectionTitle.mockResolvedValueOnce(
+        guideResponse,
+      );
 
-      const response = await supertest(app).get('/guides');
+      const response = await supertest(app).get('/guides/Home');
 
       expect(response.body).toEqual(guideResponse);
     });

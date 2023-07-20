@@ -20,7 +20,7 @@ const Routes: React.FC<Record<string, never>> = () => {
     <Switch>
       <Route exact path={path}>
         <NewsPage>
-          <Frame title="News List">
+          <Frame title="News">
             <NewsDirectory />
           </Frame>
         </NewsPage>

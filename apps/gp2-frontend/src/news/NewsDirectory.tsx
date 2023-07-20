@@ -3,10 +3,6 @@ import Frame from '../Frame';
 import { useSearch } from '../hooks/general-search';
 import NewsList from './NewsList';
 
-// type UserDirectoryProps = Pick<
-//   ComponentProps<typeof UsersPageList>,
-//   'displayFilters'
-// >;
 
 const NewsDirectory = () => {
   const {
@@ -17,8 +13,6 @@ const NewsDirectory = () => {
     toggleFilter,
   } = useSearch();
 
-  //   const filtersHref = users({}).filters({}).$;
-  //   const onFiltersClick = () => changeLocation(filtersHref);
 
   return (
     <NewsPageList

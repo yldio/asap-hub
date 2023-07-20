@@ -12,8 +12,8 @@ const loadCoreDetail = () =>
 const loadBackGround = () =>
   import(/* webpackChunkName: "onboarding-background" */ './Background');
 
-const loadInterestGroups = () =>
-  import(/* webpackChunkName: "onboarding-groups" */ './InterestGroups');
+const loadGroups = () =>
+  import(/* webpackChunkName: "onboarding-groups" */ './Groups');
 const loadAdditionalDetails = () =>
   import(
     /* webpackChunkName: "onboarding-additional-details" */ './AdditionalDetails'
@@ -23,7 +23,7 @@ const loadPreview = () =>
 const Welcome = lazy(loadWelcome);
 const CoreDetails = lazy(loadCoreDetail);
 const Background = lazy(loadBackGround);
-const InterestGroups = lazy(loadInterestGroups);
+const Groups = lazy(loadGroups);
 const AdditionalDetails = lazy(loadAdditionalDetails);
 const Preview = lazy(loadPreview);
 
@@ -34,7 +34,7 @@ const Routes: React.FC<Record<string, never>> = () => {
     loadWelcome()
       .then(loadCoreDetail)
       .then(loadBackGround)
-      .then(loadInterestGroups)
+      .then(loadGroups)
       .then(loadAdditionalDetails)
       .then(loadPreview);
   }, []);
@@ -55,7 +55,7 @@ const Routes: React.FC<Record<string, never>> = () => {
               <Background />
             </Route>
             <Route path={onboarding({}).groups({}).$}>
-              <InterestGroups />
+              <Groups />
             </Route>
             <Route path={onboarding({}).additionalDetails({}).$}>
               <AdditionalDetails />

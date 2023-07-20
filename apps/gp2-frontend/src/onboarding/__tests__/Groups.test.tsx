@@ -12,7 +12,7 @@ import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser } from '../../users/api';
-import InterestGroups from '../InterestGroups';
+import Groups from '../Groups';
 
 jest.mock('../../users/api');
 
@@ -28,7 +28,7 @@ const renderGroups = async (id: string) => {
               initialEntries={[gp2Routing.onboarding({}).groups({}).$]}
             >
               <Route path={gp2Routing.onboarding({}).groups.template}>
-                <InterestGroups />
+                <Groups />
               </Route>
             </MemoryRouter>
           </WhenReady>

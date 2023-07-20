@@ -19,7 +19,7 @@ describe('Subscription', () => {
     cms             | address
     ${'squidex'}    | ${'webhook/events'}
     ${'contentful'} | ${'webhook/events/contentful'}
-  `('404', async ({ address, cms }) => {
+  `('404 - should return empty resourceId', async ({ address, cms }) => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
     nock(googleApiUrl)
@@ -62,7 +62,7 @@ describe('Subscription', () => {
     cms             | address
     ${'squidex'}    | ${'webhook/events'}
     ${'contentful'} | ${'webhook/events/contentful'}
-  `('500', async ({ address, cms }) => {
+  `('500 - should throw', async ({ address, cms }) => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
     nock(googleApiUrl)

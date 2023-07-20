@@ -176,6 +176,14 @@ describe('Reminders data provider', () => {
           getContentfulReminderResearchOutputCollectionItem();
         inReviewResearchOutputItem!.sys.publishedAt = null;
         inReviewResearchOutputItem!.addedDate = null;
+        inReviewResearchOutputItem!.isInReview = true;
+        inReviewResearchOutputItem!.statusChangedBy = {
+          sys: {
+            id: 'user-1',
+          },
+          firstName: 'Tom',
+          lastName: 'Hardy',
+        };
       });
 
       afterEach(() => {

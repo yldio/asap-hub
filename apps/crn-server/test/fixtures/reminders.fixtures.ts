@@ -587,13 +587,8 @@ export const getContentfulReminderResearchOutputCollectionItem =
         },
         title: 'Working Group 1',
       },
-      statusChangedBy: {
-        sys: {
-          id: 'user-1',
-        },
-        firstName: 'Tom',
-        lastName: 'Hardy',
-      },
+      statusChangedBy: null,
+      isInReview: false,
     };
   };
 

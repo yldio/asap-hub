@@ -5,7 +5,7 @@ describe('Users Dependencies', () => {
 
   describe('getUserDataProvider', () => {
     it('Should resolve User Squidex Data Provider when the Contentful feature flag is off', async () => {
-      process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
+      process.env.IS_CONTENTFUL_ENABLED = 'false';
 
       const { UserSquidexDataProvider } = await import(
         '../../src/data-providers/user.data-provider'
@@ -19,7 +19,7 @@ describe('Users Dependencies', () => {
     });
 
     it('Should resolve User Contentful Data Provider when the Contentful feature flag is on', async () => {
-      process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
+      process.env.IS_CONTENTFUL_ENABLED = 'true';
       const { UserContentfulDataProvider } = await import(
         '../../src/data-providers/contentful/user.data-provider'
       );
@@ -34,7 +34,7 @@ describe('Users Dependencies', () => {
 
   describe('getAssetDataProvider', () => {
     it('Should resolve Asset Squidex Data Provider when the Contentful feature flag is off', async () => {
-      process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
+      process.env.IS_CONTENTFUL_ENABLED = 'false';
 
       const { AssetSquidexDataProvider } = await import(
         '../../src/data-providers/asset.data-provider'
@@ -48,7 +48,7 @@ describe('Users Dependencies', () => {
     });
 
     it('Should resolve Asset Contentful Data Provider when the Contentful feature flag is on', async () => {
-      process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
+      process.env.IS_CONTENTFUL_ENABLED = 'true';
       const { AssetContentfulDataProvider } = await import(
         '../../src/data-providers/contentful/asset.data-provider'
       );

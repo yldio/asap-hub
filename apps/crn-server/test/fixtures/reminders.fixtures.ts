@@ -60,7 +60,7 @@ export const getResearchOutputDraftTeamReminder =
       data: {
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
-        addedDate: researchOutputDataObject.created,
+        createdDate: researchOutputDataObject.created,
         associationName: researchOutputDataObject.teams[0]?.displayName || '',
         associationType: 'team',
         createdBy: 'Tom Hardy',
@@ -78,7 +78,7 @@ export const getResearchOutputDraftWorkingGroupReminder =
       data: {
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
-        addedDate: researchOutputDataObject.created,
+        createdDate: researchOutputDataObject.created,
         associationName: 'Working Group 1',
         associationType: 'working group',
         createdBy: 'Tom Hardy',
@@ -96,7 +96,7 @@ export const getResearchOutputInReviewTeamReminder =
       data: {
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
-        addedDate: researchOutputDataObject.created,
+        createdDate: researchOutputDataObject.created,
         associationName: researchOutputDataObject.teams[0]?.displayName || '',
         associationType: 'team',
         documentType: researchOutputDataObject.documentType,
@@ -115,7 +115,7 @@ export const getResearchOutputInReviewWorkingGroupReminder =
       data: {
         researchOutputId: researchOutputDataObject.id,
         title: researchOutputDataObject.title,
-        addedDate: researchOutputDataObject.created,
+        createdDate: researchOutputDataObject.created,
         associationName: 'Working Group 1',
         associationType: 'working group',
         documentType: researchOutputDataObject.documentType,
@@ -549,6 +549,54 @@ export const getContentfulReminderEventsCollectionItem = (): NonNullable<
   };
 };
 
+export const getContentfulReminderResearchOutputCollectionItem =
+  (): NonNullable<
+    FetchRemindersQuery['researchOutputsCollection']
+  >['items'][number] => {
+    const researchOutput = getSquidexGraphqlResearchOutput();
+
+    return {
+      sys: {
+        id: researchOutput.id,
+        publishedAt: researchOutput.created,
+      },
+      addedDate: researchOutput.flatData.addedDate,
+      createdDate: researchOutput.created,
+      documentType: researchOutput.flatData.documentType,
+      title: researchOutput.flatData.title,
+      createdBy: {
+        sys: {
+          id: 'user-1',
+        },
+        firstName: 'Tom',
+        lastName: 'Hardy',
+      },
+      teamsCollection: {
+        items: [
+          {
+            sys: {
+              id: 'team-1',
+            },
+            displayName: 'Team A',
+          },
+        ],
+      },
+      workingGroup: {
+        sys: {
+          id: 'wg-id-1',
+        },
+        title: 'Working Group 1',
+      },
+      reviewRequestedBy: {
+        sys: {
+          id: 'user-1',
+        },
+        firstName: 'Tom',
+        lastName: 'Hardy',
+      },
+    };
+  };
+
 export const getContentfulReminderUsersContent =
   (): FetchRemindersQuery['users'] => {
     const eventResponse = getEventResponse();
@@ -568,6 +616,43 @@ export const getContentfulReminderUsersContent =
         ],
       },
       linkedFrom: {
+        workingGroupMembersCollection: {
+          items: [
+            {
+              linkedFrom: {
+                workingGroupsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'wg-id-1',
+                      },
+                      title: 'Working Group 1',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+        workingGroupLeadersCollection: {
+          items: [
+            {
+              role: 'Project Manager',
+              linkedFrom: {
+                workingGroupsCollection: {
+                  items: [
+                    {
+                      sys: {
+                        id: 'wg-id-2',
+                      },
+                      title: 'Working Group 2',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
         eventSpeakersCollection: {
           items: [
             {

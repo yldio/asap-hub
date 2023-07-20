@@ -7,7 +7,7 @@ import {
   contentfulAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
-  isContentfulEnabledV2,
+  isContentfulEnabled,
 } from '../config';
 import { CalendarSquidexDataProvider } from '../data-providers/calendar.data-provider';
 import { CalendarContentfulDataProvider } from '../data-providers/contentful/calendar.data-provider';
@@ -15,7 +15,7 @@ import { getAuthToken } from '../utils/auth';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 
 export const getCalendarDataProvider = (): CalendarDataProvider => {
-  if (isContentfulEnabledV2) {
+  if (isContentfulEnabled) {
     const contentfulGraphQLClient = getContentfulGraphQLClient({
       space: contentfulSpaceId,
       accessToken: contentfulAccessToken,

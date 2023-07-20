@@ -113,7 +113,7 @@ describe('Reminder Controller', () => {
           data: {
             title: 'Some Test title',
             researchOutputId: 'some-research-output-id',
-            addedDate: '2021-01-01',
+            createdDate: '2021-01-01',
             createdBy: 'some-user-id',
             associationType: 'team',
             associationName: 'Team 1',
@@ -141,7 +141,7 @@ describe('Reminder Controller', () => {
           data: {
             title: 'Some Test title',
             researchOutputId: 'some-research-output-id',
-            addedDate: '2021-01-01',
+            createdDate: '2021-01-01',
             createdBy: 'some-user-id',
             associationType: 'working group',
             associationName: 'Working Group 1',
@@ -169,7 +169,7 @@ describe('Reminder Controller', () => {
           data: {
             title: 'Some Test title',
             researchOutputId: 'some-research-output-id',
-            addedDate: '2021-01-01',
+            createdDate: '2021-01-01',
             associationType: 'team',
             associationName: 'Team 1',
             reviewRequestedBy: 'Some User',
@@ -198,7 +198,7 @@ describe('Reminder Controller', () => {
           data: {
             title: 'Some Test title',
             researchOutputId: 'some-research-output-id',
-            addedDate: '2021-01-01',
+            createdDate: '2021-01-01',
             associationType: 'working group',
             associationName: 'Working Group 1',
             reviewRequestedBy: 'Some User',

@@ -40,7 +40,6 @@ export type EntityResponses = {
   [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
   [USER_ENTITY_TYPE]: UserResponse;
   [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
-  [LAB_ENTITY_TYPE]: LabResponse;
   [EVENT_ENTITY_TYPE]: EventResponse;
 };
 

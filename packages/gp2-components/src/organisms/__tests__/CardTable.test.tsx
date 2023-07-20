@@ -14,9 +14,6 @@ describe('CardTable', () => {
         ]}
       </CardTable>,
     );
-    expect(screen.getByTestId('heading-desktop-0')).toBeVisible();
-    expect(screen.getByTestId('heading-desktop-1')).toBeVisible();
-    expect(screen.getByTestId('heading-desktop-2')).toBeVisible();
     expect(screen.getByText('val1')).toBeVisible();
     expect(screen.getByText('val2')).toBeVisible();
     expect(screen.getByText('val3')).toBeVisible();

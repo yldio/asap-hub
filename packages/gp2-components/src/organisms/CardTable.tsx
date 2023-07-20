@@ -67,11 +67,7 @@ const CardTable = ({
       headings={
         <div css={[tableStyles, gridTitleStyles]}>
           {headings.map((heading, idx) => (
-            <Subtitle
-              key={`heading-${idx}`}
-              noMargin
-              data-testid={`heading-desktop-${idx}`}
-            >
+            <Subtitle key={`heading-${idx}`} noMargin>
               {heading}
             </Subtitle>
           ))}
@@ -92,9 +88,7 @@ const CardTable = ({
               {value && (
                 <>
                   <div css={headingListStyles}>
-                    <Subtitle noMargin data-testid={`heading-mobile-${idx}`}>
-                      {headings[idx]}
-                    </Subtitle>
+                    <Subtitle noMargin>{headings[idx]}</Subtitle>
                   </div>
                   <span
                     css={idx !== 0 ? { color: colors.greyscale1000.rgb } : null}

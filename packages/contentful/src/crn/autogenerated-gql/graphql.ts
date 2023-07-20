@@ -11984,7 +11984,10 @@ export type InterestGroupsContentFragment = Pick<
           | 'inactiveSince'
           | 'expertiseAndResourceTags'
           | 'projectTitle'
-        > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+        > & {
+          sys: Pick<Sys, 'id' | 'publishedAt'>;
+          proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+        }
       >
     >;
   }>;
@@ -12050,7 +12053,10 @@ export type FetchInterestGroupByIdQuery = {
               | 'inactiveSince'
               | 'expertiseAndResourceTags'
               | 'projectTitle'
-            > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+            > & {
+              sys: Pick<Sys, 'id' | 'publishedAt'>;
+              proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+            }
           >
         >;
       }>;
@@ -12126,7 +12132,10 @@ export type FetchInterestGroupsQuery = {
                     | 'inactiveSince'
                     | 'expertiseAndResourceTags'
                     | 'projectTitle'
-                  > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+                  > & {
+                    sys: Pick<Sys, 'id' | 'publishedAt'>;
+                    proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                  }
                 >
               >;
             }>;
@@ -12221,7 +12230,10 @@ export type FetchInterestGroupsByUserIdQuery = {
                             | 'inactiveSince'
                             | 'expertiseAndResourceTags'
                             | 'projectTitle'
-                          > & { sys: Pick<Sys, 'id' | 'publishedAt'> }
+                          > & {
+                            sys: Pick<Sys, 'id' | 'publishedAt'>;
+                            proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                          }
                         >
                       >;
                     }>;
@@ -16234,6 +16246,28 @@ export const InterestGroupsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'projectTitle' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'proposal' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

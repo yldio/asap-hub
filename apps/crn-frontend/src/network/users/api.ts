@@ -111,6 +111,7 @@ export const patchUser = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
     },
     body: JSON.stringify(patch),
   });
@@ -133,6 +134,7 @@ export const postUserAvatar = async (
       authorization,
       'content-type': 'application/json',
       ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
     },
     body: JSON.stringify(post),
   });

@@ -1,4 +1,7 @@
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import {
+  createSentryHeaders,
+  createFeatureFlagHeaders,
+} from '@asap-hub/frontend-utils';
 import { DashboardResponse, ListReminderResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../config';
@@ -7,7 +10,11 @@ export const getDashboard = async (
   authorization: string,
 ): Promise<DashboardResponse> => {
   const resp = await fetch(`${API_BASE_URL}/dashboard`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: {
+      authorization,
+      ...createSentryHeaders(),
+      ...createFeatureFlagHeaders(),
+    },
   });
   if (!resp.ok) {
     throw new Error(
@@ -25,7 +32,11 @@ export const getReminders = async (
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     })}`,
     {
-      headers: { authorization, ...createSentryHeaders() },
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+        ...createFeatureFlagHeaders(),
+      },
     },
   );
   if (!resp.ok) {

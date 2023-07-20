@@ -4,7 +4,7 @@ describe('Working Groups Dependencies', () => {
   });
 
   it('Should resolve Working Group Squidex Data Provider when the Contentful feature flag is off', async () => {
-    process.env.IS_CONTENTFUL_ENABLED_V2 = 'false';
+    process.env.IS_CONTENTFUL_ENABLED = 'false';
 
     const { WorkingGroupSquidexDataProvider } = await import(
       '../../src/data-providers/working-group.data-provider'
@@ -21,7 +21,7 @@ describe('Working Groups Dependencies', () => {
   });
 
   it('Should resolve Working Group Contentful Data Provider when the Contentful feature flag is on', async () => {
-    process.env.IS_CONTENTFUL_ENABLED_V2 = 'true';
+    process.env.IS_CONTENTFUL_ENABLED = 'true';
     const { WorkingGroupContentfulDataProvider } = await import(
       '../../src/data-providers/contentful/working-group.data-provider'
     );

@@ -16,7 +16,7 @@ import {
   googleApiCredentialsSecretId,
   googleApiToken,
   googleApiUrl,
-  isContentfulEnabledV2,
+  isContentfulEnabled,
   region,
 } from '../../config';
 import { getCalendarDataProvider } from '../../dependencies/calendars.dependencies';
@@ -31,7 +31,7 @@ const getJWTCredentialsAWS = getJWTCredentialsFactory({
 });
 
 /* istanbul ignore next */
-export const webhookHandler = isContentfulEnabledV2
+export const webhookHandler = isContentfulEnabled
   ? calendarCreatedContentfulHandlerFactory(
       subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
         asapApiUrl,

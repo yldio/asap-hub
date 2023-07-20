@@ -4,7 +4,7 @@ export type AnnouncementDataObject = {
   id: string;
   description: string;
   deadline: string;
-  link?: string;
+  href?: string;
 };
 
 export type ListAnnouncementsDataObject = ListResponse<AnnouncementDataObject>;

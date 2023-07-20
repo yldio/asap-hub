@@ -9,6 +9,7 @@ export const labsQuery = gql`
         created
         lastModified
         version
+        status
         flatData {
           name
         }

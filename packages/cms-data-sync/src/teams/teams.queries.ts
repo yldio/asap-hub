@@ -7,6 +7,7 @@ export const teamsQuery = gql`
       created
       lastModified
       version
+      status
       flatData {
         applicationNumber
         displayName

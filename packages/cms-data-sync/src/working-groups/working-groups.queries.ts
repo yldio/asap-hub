@@ -8,6 +8,7 @@ export const workingGroupsQuery = gql`
       total
       items {
         id
+        status
         flatData {
           title
           description

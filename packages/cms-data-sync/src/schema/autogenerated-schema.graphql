@@ -5054,6 +5054,56 @@ type Events implements Content {
     top: Int
   ): UsersResultDto
   """
+  Query Research Outputs content items.
+  """
+  referencingResearchOutputsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [ResearchOutputs!]
+  """
+  Query Research Outputs content items with total count.
+  """
+  referencingResearchOutputsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): ResearchOutputsResultDto
+  """
   The status of the content.
   """
   status: String!
@@ -7416,6 +7466,56 @@ type ResearchOutputs implements Content {
   """
   newStatusColor: String
   """
+  Query Events content items.
+  """
+  referencesEventsContents(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): [Events!]
+  """
+  Query Events content items with total count.
+  """
+  referencesEventsContentsWithTotal(
+    """
+    Optional OData filter.
+    """
+    filter: String
+    """
+    Optional OData order definition.
+    """
+    orderby: String
+    """
+    Optional OData full text search.
+    """
+    search: String
+    """
+    Optional number of items to skip.
+    """
+    skip: Int = 0
+    """
+    Optional number of items to take.
+    """
+    top: Int
+  ): EventsResultDto
+  """
   Query External authors content items.
   """
   referencesExternalAuthorsContents(
@@ -8084,7 +8184,9 @@ type ResearchOutputsDataDto {
   methods: ResearchOutputsDataMethodsDto
   organisms: ResearchOutputsDataOrganismsDto
   publishDate: ResearchOutputsDataPublishDateDto
+  relatedEvents: ResearchOutputsDataRelatedEventsDto
   relatedResearch: ResearchOutputsDataRelatedResearchDto
+  reviewRequestedBy: ResearchOutputsDataReviewRequestedByDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
   subtype: ResearchOutputsDataSubtypeDto
@@ -8135,7 +8237,9 @@ input ResearchOutputsDataInputDto {
   methods: ResearchOutputsDataMethodsInputDto
   organisms: ResearchOutputsDataOrganismsInputDto
   publishDate: ResearchOutputsDataPublishDateInputDto
+  relatedEvents: ResearchOutputsDataRelatedEventsInputDto
   relatedResearch: ResearchOutputsDataRelatedResearchInputDto
+  reviewRequestedBy: ResearchOutputsDataReviewRequestedByInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
@@ -8280,6 +8384,20 @@ input ResearchOutputsDataPublishDateInputDto {
 }
 
 """
+The structure of the Related Events field of the Research Outputs content type.
+"""
+type ResearchOutputsDataRelatedEventsDto {
+  iv: [Events!]
+}
+
+"""
+The structure of the Related Events field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataRelatedEventsInputDto {
+  iv: [String!]
+}
+
+"""
 The structure of the Related Research field of the Research Outputs content type.
 """
 type ResearchOutputsDataRelatedResearchDto {
@@ -8290,6 +8408,20 @@ type ResearchOutputsDataRelatedResearchDto {
 The structure of the Related Research field of the Research Outputs content input type.
 """
 input ResearchOutputsDataRelatedResearchInputDto {
+  iv: [String!]
+}
+
+"""
+The structure of the Review requested by field of the Research Outputs content type.
+"""
+type ResearchOutputsDataReviewRequestedByDto {
+  iv: [Users!]
+}
+
+"""
+The structure of the Review requested by field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataReviewRequestedByInputDto {
   iv: [String!]
 }
 
@@ -8515,7 +8647,9 @@ type ResearchOutputsFlatDataDto {
   Date of publishing (outside the Hub). Only applies to outputs that have been published.
   """
   publishDate: Instant
+  relatedEvents: [Events!]
   relatedResearch: [ResearchOutputs!]
+  reviewRequestedBy: [Users!]
   """
   This must start with "RRID:"
   """

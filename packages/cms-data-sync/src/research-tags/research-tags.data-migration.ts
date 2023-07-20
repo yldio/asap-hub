@@ -45,8 +45,8 @@ export const migrateResearchTags = async () => {
     return entries;
   };
 
-  const parseTagItem = async (lab: TagItem): Promise<ContentfulTag> => {
-    const { flatData: squidexTagItem, id } = lab;
+  const parseTagItem = async (tag: TagItem): Promise<ContentfulTag> => {
+    const { flatData: squidexTagItem, id } = tag;
 
     const { name, category, types, entities } = squidexTagItem;
 

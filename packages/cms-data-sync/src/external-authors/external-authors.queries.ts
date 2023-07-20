@@ -6,6 +6,7 @@ export const externalAuthorsQuery = gql`
       total
       items {
         id
+        status
         flatData {
           name
           orcid

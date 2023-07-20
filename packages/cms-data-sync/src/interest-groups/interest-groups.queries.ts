@@ -9,6 +9,7 @@ export const interestGroupsQuery = gql`
         created
         lastModified
         version
+        status
         flatData {
           name
           active

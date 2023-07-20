@@ -356,9 +356,7 @@ describe('Calendar handler', () => {
   });
 
   describe('Error handling', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
 
     test('Should to throw and alert when the subscription was unsuccessful', async () => {
       const errorMessage =

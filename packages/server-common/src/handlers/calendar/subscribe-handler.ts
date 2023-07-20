@@ -19,8 +19,8 @@ export const subscribeToEventChangesFactory =
     calendarId: string,
     subscriptionId: string,
   ): Promise<{
-    resourceId: string;
-    expiration: number;
+    resourceId: string | null;
+    expiration: number | null;
   }> => {
     const creds = await getJWTCredentials();
     const client = Auth.auth.fromJSON(creds) as Auth.JWT;
@@ -44,22 +44,44 @@ export const subscribeToEventChangesFactory =
         ttl,
       },
     };
+    try {
+      const response = await client.request<{
+        resourceId: string;
+        expiration: string;
+      }>({
+        url,
+        method: 'POST',
+        data,
+      });
 
-    const response = await client.request<{
-      resourceId: string;
-      expiration: string;
-    }>({
-      url,
-      method: 'POST',
-      data,
-    });
+      logger.debug({ response }, 'Google API subscription response');
 
-    logger.debug({ response }, 'Google API subscription response');
+      return {
+        resourceId: response.data.resourceId,
+        expiration: parseInt(response.data.expiration, 10),
+      };
+    } catch (err: unknown) {
+      type ErrorCode = { code: string };
+      const hasCode = (e: unknown): e is ErrorCode =>
+        typeof e === 'object' && e !== null && 'code' in e;
+      if (hasCode(err) && err.code === '404') {
+        logger.warn(
+          `Calendar not found when subscribing to calendarId: ${calendarId}`,
+        );
+        return {
+          resourceId: null,
+          expiration: null,
+        };
+      }
 
-    return {
-      resourceId: response.data.resourceId,
-      expiration: parseInt(response.data.expiration, 10),
-    };
+      logger.error(
+        `An error occurred subscribing to calendarId: ${calendarId}`,
+      );
+      if (err instanceof Error) {
+        logger.error(`Error message: ${err.message}`);
+      }
+      throw err;
+    }
   };
 
 export const unsubscribeFromEventChangesFactory =

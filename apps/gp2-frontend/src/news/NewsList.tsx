@@ -1,28 +1,37 @@
-import { Frame } from '@asap-hub/frontend-utils';
-import { NewsItem, NewsListPage } from '@asap-hub/gp2-components';
+import { NewsItem } from '@asap-hub/gp2-components';
 import { ResultList } from '@asap-hub/react-components';
-import { useNews } from '../dashboard/state';
+import { useNews } from './state';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 
-const NewsList = () => {
+type NewsListProps = {
+  searchQuery: string;
+  filters: Set<string>;
+};
+
+const NewsList: React.FC<NewsListProps> = ({ searchQuery, filters }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const { items, total } = useNews();
-  const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
+  const result = useNews({
+    searchQuery,
+    filters,
+    currentPage,
+    pageSize,
+  });
+  // const { items, total } = useNews();
+  const { numberOfPages, renderPageHref } = usePagination(
+    result.total || 0,
+    pageSize,
+  );
   return (
-    <NewsListPage>
-      <Frame title="News List">
-        <ResultList
-          numberOfItems={total}
-          numberOfPages={numberOfPages}
-          currentPageIndex={currentPage}
-          renderPageHref={renderPageHref}
-        >
-          {items.map((news) => (
-            <NewsItem key={news.id} {...news} />
-          ))}
-        </ResultList>
-      </Frame>
-    </NewsListPage>
+    <ResultList
+      numberOfItems={result.total}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage}
+      renderPageHref={renderPageHref}
+    >
+      {result.items.map((news) => (
+        <NewsItem key={news.id} {...news} />
+      ))}
+    </ResultList>
   );
 };
 

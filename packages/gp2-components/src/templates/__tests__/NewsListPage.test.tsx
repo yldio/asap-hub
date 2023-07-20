@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import NewsListPage from '../NewsListPage';
+import NewsPage from '../NewsPage';
 
-describe('NewsListPage', () => {
+describe('NewsPage', () => {
   it('renders news title', () => {
-    render(<NewsListPage />);
+    render(<NewsPage />);
     expect(screen.getByRole('heading', { name: 'News' })).toBeInTheDocument();
   });
 });

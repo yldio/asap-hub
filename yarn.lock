@@ -23536,7 +23536,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-sdk-core@npm:^7.0.2, contentful-sdk-core@npm:^7.0.5":
+"contentful-sdk-core@npm:^7.0.5":
   version: 7.1.0
   resolution: "contentful-sdk-core@npm:7.1.0"
   dependencies:
@@ -23549,17 +23549,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"contentful-sdk-core@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "contentful-sdk-core@npm:8.1.0"
+  dependencies:
+    fast-copy: ^2.1.7
+    lodash.isplainobject: ^4.0.6
+    lodash.isstring: ^4.0.1
+    p-throttle: ^4.1.1
+  checksum: a66e65649d6bc9eb1c1b7ccd7bff3ead7f63535250a4d6bc5262fdd4b43f055fe53c0e2824f0ee4f6200adfc3911edd87b0c0b1b9bb3e993430955a4431175c3
+  languageName: node
+  linkType: hard
+
 "contentful@npm:^10.1.8":
-  version: 10.3.5
-  resolution: "contentful@npm:10.3.5"
+  version: 10.3.6
+  resolution: "contentful@npm:10.3.6"
   dependencies:
     "@contentful/rich-text-types": ^16.0.2
     axios: ^0.26.1
     contentful-resolve-response: ^1.3.6
-    contentful-sdk-core: ^7.0.2
+    contentful-sdk-core: ^8.1.0
     json-stringify-safe: ^5.0.1
     type-fest: ^4.0.0
-  checksum: e76783063c70bbefd68580b940841aece591061eb0be00bc80b51c2c4f0dfd08b04172dc0af75e749b6ea6e548e1b63eb5a8c6b1363e2b046a580edb221bf305
+  checksum: 1c82c38c93fcb18c3db629a30ba5a5d564105478500af3bdef988a006dab1e3cfe482e7aa20a1a94e42e0166b4d3d98091c154882629e7f09364b5836746d447
   languageName: node
   linkType: hard
 

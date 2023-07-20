@@ -41,7 +41,7 @@ const googleEventValidationSchema: JSONSchemaType<GoogleEvent> = {
     end: dateSchema,
     status: { type: 'string' },
   },
-  required: ['id', 'summary', 'status'],
+  required: ['id', 'status'],
 };
 export const validateGoogleEvent = validateInput(googleEventValidationSchema, {
   skipNull: false,

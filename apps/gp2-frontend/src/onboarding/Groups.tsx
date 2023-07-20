@@ -4,7 +4,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 
 import { useUserById } from '../users/state';
 
-const InterestGroups: React.FC<Record<string, never>> = () => {
+const Groups: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const userData = useUserById(currentUser!.id);
@@ -15,4 +15,4 @@ const InterestGroups: React.FC<Record<string, never>> = () => {
   return <NotFoundPage />;
 };
 
-export default InterestGroups;
+export default Groups;

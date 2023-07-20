@@ -18,7 +18,7 @@ const coreDetails = route(
 
 const background = route('/background', {}, { editBiography, editKeywords });
 
-const groups = route('/interest-groups', {}, {});
+const groups = route('/groups', {}, {});
 
 const additionalDetails = route(
   '/additional-details',

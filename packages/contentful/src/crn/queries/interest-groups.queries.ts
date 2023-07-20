@@ -29,6 +29,11 @@ export const interestGroupContentQueryFragment = gql`
         inactiveSince
         expertiseAndResourceTags
         projectTitle
+        proposal {
+          sys {
+            id
+          }
+        }
       }
     }
     leadersCollection(limit: 20) {

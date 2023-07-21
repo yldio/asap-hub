@@ -1,5 +1,5 @@
-import { OutputsPageList } from '@asap-hub/gp2-components';
-import Frame from '../Frame';
+// import { OutputsPageList } from '@asap-hub/gp2-components';
+// import Frame from '../Frame';
 // import { useSearch } from '../hooks/search';
 // import OutputList from './OutputList';
 
@@ -12,17 +12,17 @@ const OutputDirectory = () => (
   //   debouncedSearchQuery,
   //   updateFilters,
   // } = useSearch();
-
-  <OutputsPageList
-  // searchQuery={searchQuery}
-  // onSearchQueryChange={setSearchQuery}
-  // updateFilters={updateFilters}
-  // filters={filters}
-  >
-    <Frame title="Output List">
-      {/* <OutputList searchQuery={debouncedSearchQuery} filters={filters} /> */}
-    </Frame>
-  </OutputsPageList>
+  <div />
+  // <OutputsPageList
+  // // searchQuery={searchQuery}
+  // // onSearchQueryChange={setSearchQuery}
+  // // updateFilters={updateFilters}
+  // // filters={filters}
+  // >
+  //   <Frame title="Output List">
+  //     {/* <OutputList searchQuery={debouncedSearchQuery} filters={filters} /> */}
+  //   </Frame>
+  // </OutputsPageList>
 );
 
 export default OutputDirectory;

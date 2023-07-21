@@ -1,6 +1,6 @@
+import { OutputsPageList } from '@asap-hub/gp2-components';
 import Frame from '../Frame';
 import { useSearch } from '../hooks/search';
-import { OutputsPageList } from '@asap-hub/gp2-components';
 // import OutputList from './OutputList';
 
 const OutputDirectory = () => {

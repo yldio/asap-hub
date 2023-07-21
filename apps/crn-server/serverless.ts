@@ -846,10 +846,10 @@ const serverlessConfig: AWS = {
             pattern: {
               source: [eventBusSourceSquidex],
               'detail-type': [
-                'InterestGroupsPublished',
-                'InterestGroupsUpdated',
-                'InterestGroupsUnpublished',
-                'InterestGroupsDeleted',
+                'GroupsPublished',
+                'GroupsUpdated',
+                'GroupsUnpublished',
+                'GroupsDeleted',
               ] satisfies WebhookDetailType[],
             },
           },
@@ -871,10 +871,10 @@ const serverlessConfig: AWS = {
             pattern: {
               source: [eventBusSourceContentful],
               'detail-type': [
-                'InterestGroupsPublished',
-                'InterestGroupsUpdated',
-                'InterestGroupsUnpublished',
-                'InterestGroupsDeleted',
+                'GroupsPublished',
+                'GroupsUpdated',
+                'GroupsUnpublished',
+                'GroupsDeleted',
               ] satisfies WebhookDetailType[],
             },
           },

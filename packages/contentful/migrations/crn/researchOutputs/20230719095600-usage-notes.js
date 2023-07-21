@@ -1,4 +1,4 @@
-module.exports.description = 'Create research outputs content model';
+module.exports.description = 'Change usageNotes type';
 
 module.exports.up = function (migration) {
   const researchOutputs = migration.editContentType('researchOutputs');

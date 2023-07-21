@@ -89,9 +89,11 @@ export const researchOutputToCSV = (
   created: output.created,
   lastModifiedDate: output.lastModifiedDate,
   published: output.published,
-  statusChangedBy: `${output.statusChangedBy?.firstName} ${output.statusChangedBy?.lastName}`,
+  statusChangedBy: output.statusChangedBy
+    ? `${output.statusChangedBy.firstName} ${output.statusChangedBy.lastName}`
+    : undefined,
   statusChangedAt: output.statusChangedAt,
-  isInReview: true,
+  isInReview: output.isInReview,
 });
 
 export const algoliaResultsToStream = async <T extends keyof EntityResponses>(

@@ -842,7 +842,7 @@ __metadata:
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
     csv-stringify: 6.4.0
-    date-fns: 2.29.3
+    date-fns: 2.30.0
     fs: "npm:browserify-fs@1.0.0"
     history: 4.10.1
     identity-obj-proxy: 3.0.0
@@ -1103,7 +1103,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.22.6
     "@types/jsonwebtoken": 8.5.9
     core-js: 3.31.1
-    date-fns: 2.29.3
+    date-fns: 2.30.0
     jsonwebtoken: 9.0.0
     ramda: 0.27.1
     uuid: 8.3.2
@@ -1145,7 +1145,7 @@ __metadata:
     "@types/testing-library__jest-dom": 5.14.8
     "@types/testing-library__react": 10.0.1
     csv-stringify: 6.4.0
-    date-fns: 2.29.3
+    date-fns: 2.30.0
     history: 4.10.1
     react: 17.0.2
     react-dom: 17.0.2
@@ -1246,7 +1246,7 @@ __metadata:
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
     core-js: 3.31.1
-    date-fns: 2.29.3
+    date-fns: 2.30.0
     dom-to-playwright: ^0.1.3
     emotion-normalize: 11.0.1
     expect-playwright: ^0.8.0
@@ -1314,7 +1314,7 @@ __metadata:
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
     csv-stringify: 6.4.0
-    date-fns: 2.29.3
+    date-fns: 2.30.0
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jose: 2.0.6
@@ -1556,7 +1556,7 @@ __metadata:
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
     core-js: 3.31.1
-    date-fns: 2.29.3
+    date-fns: 2.30.0
     date-fns-tz: 1.3.8
     dom-to-playwright: ^0.1.3
     emotion-normalize: 11.0.1
@@ -1799,7 +1799,7 @@ __metadata:
     "@types/react-router-dom": 5.3.3
     babel-preset-react-app: 10.0.1
     core-js: 3.31.1
-    date-fns: 2.29.3
+    date-fns: 2.30.0
     emotion: 10.0.27
     history: 4.10.1
     react: 17.0.2
@@ -8972,6 +8972,15 @@ __metadata:
   dependencies:
     regenerator-runtime: ^0.13.11
   checksum: 09b7a97a05c80540db6c9e4ddf8c5d2ebb06cae5caf3a87e33c33f27f8c4d49d9c67a2d72f1570e796045288fad569f98a26ceba0c4f5fad2af84b6ad855c4fb
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.21.0":
+  version: 7.22.6
+  resolution: "@babel/runtime@npm:7.22.6"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: e585338287c4514a713babf4fdb8fc2a67adcebab3e7723a739fc62c79cfda875b314c90fd25f827afb150d781af97bc16c85bfdbfa2889f06053879a1ddb597
   languageName: node
   linkType: hard
 
@@ -24773,10 +24782,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:2.29.3, date-fns@npm:^2.0.1, date-fns@npm:^2.28.0":
-  version: 2.29.3
-  resolution: "date-fns@npm:2.29.3"
-  checksum: e01cf5b62af04e05dfff921bb9c9933310ed0e1ae9a81eb8653452e64dc841acf7f6e01e1a5ae5644d0337e9a7f936175fd2cb6819dc122fdd9c5e86c56be484
+"date-fns@npm:2.30.0":
+  version: 2.30.0
+  resolution: "date-fns@npm:2.30.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
   languageName: node
   linkType: hard
 
@@ -24784,6 +24795,13 @@ __metadata:
   version: 1.30.1
   resolution: "date-fns@npm:1.30.1"
   checksum: 86b1f3269cbb1f3ee5ac9959775ea6600436f4ee2b78430cd427b41a0c9fabf740b1a5d401c085f3003539a6f4755c7c56c19fbd70ce11f6f673f6bc8075b710
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.0.1, date-fns@npm:^2.28.0":
+  version: 2.29.3
+  resolution: "date-fns@npm:2.29.3"
+  checksum: e01cf5b62af04e05dfff921bb9c9933310ed0e1ae9a81eb8653452e64dc841acf7f6e01e1a5ae5644d0337e9a7f936175fd2cb6819dc122fdd9c5e86c56be484
   languageName: node
   linkType: hard
 

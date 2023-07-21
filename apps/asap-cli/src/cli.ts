@@ -230,7 +230,7 @@ yargs(hideBin(process.argv))
           demandOption: true,
         })
         .option('appName', {
-          alias: 'an',
+          alias: 'p',
           description: 'Name of App - crn or gp2',
           type: 'string',
           choices: ['crn', 'gp2'],
@@ -278,7 +278,7 @@ yargs(hideBin(process.argv))
           demandOption: true,
         })
         .option('appName', {
-          alias: 'an',
+          alias: 'p',
           description: 'Name of App - crn or gp2',
           type: 'string',
           choices: ['crn', 'gp2'],

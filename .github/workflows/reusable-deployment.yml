@@ -161,7 +161,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Synchronize Schema
         run: |
-          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -an crn
+          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -p crn
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
@@ -169,7 +169,7 @@ jobs:
       # TODO: CRN-1329 Remove this step once the migration is complete
       - name: Synchronize Schema for Contentful
         run: |
-          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX-contentful -an crn
+          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX-contentful -p crn
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
@@ -209,7 +209,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Synchronize Schema
         run: |
-          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -an gp2
+          yarn algolia:set-settings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -p gp2
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}

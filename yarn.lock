@@ -841,7 +841,7 @@ __metadata:
     browser-image-compression: 1.0.17
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
-    csv-stringify: 6.3.2
+    csv-stringify: 6.4.0
     date-fns: 2.29.3
     fs: "npm:browserify-fs@1.0.0"
     history: 4.10.1
@@ -1144,7 +1144,7 @@ __metadata:
     "@types/streamsaver": 2.0.1
     "@types/testing-library__jest-dom": 5.14.8
     "@types/testing-library__react": 10.0.1
-    csv-stringify: 6.3.2
+    csv-stringify: 6.4.0
     date-fns: 2.29.3
     history: 4.10.1
     react: 17.0.2
@@ -1313,7 +1313,7 @@ __metadata:
     browser-image-compression: 1.0.17
     browserslist-useragent-regexp: 3.0.2
     cross-env: 7.0.3
-    csv-stringify: 6.3.2
+    csv-stringify: 6.4.0
     date-fns: 2.29.3
     history: 4.10.1
     identity-obj-proxy: 3.0.0
@@ -24662,10 +24662,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csv-stringify@npm:6.3.2":
-  version: 6.3.2
-  resolution: "csv-stringify@npm:6.3.2"
-  checksum: 504e7501be659eadc6c3bdcbab2389ee6eb3865aa46d2910596469ecf3645367769f6076d1e1e296349f1809692295fa5da8d131e9b9dbc24a8625f88b52d640
+"csv-stringify@npm:6.4.0":
+  version: 6.4.0
+  resolution: "csv-stringify@npm:6.4.0"
+  checksum: 4d68c34a8f9ec52ec7b2da8a67c2c4b658431f4ba8f816a5e9b4664dc09ec37e5cf65a41dae13500488d38bd8b416b1dc179aad8275ba54e7b1735e21bbf2830
   languageName: node
   linkType: hard
 

@@ -1,4 +1,4 @@
-import { NewsItem } from '@asap-hub/gp2-components';
+import { NewsItem, EmptyState, noNewsIcon } from '@asap-hub/gp2-components';
 import { ResultList } from '@asap-hub/react-components';
 import { useNews } from './state';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
@@ -16,13 +16,13 @@ const NewsList: React.FC<NewsListProps> = ({ searchQuery, filters }) => {
     currentPage,
     pageSize,
   });
-  // const { items, total } = useNews();
   const { numberOfPages, renderPageHref } = usePagination(
     result.total || 0,
     pageSize,
   );
-  return (
+  return result.total || searchQuery ? (
     <ResultList
+      icon={noNewsIcon}
       numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
@@ -32,6 +32,14 @@ const NewsList: React.FC<NewsListProps> = ({ searchQuery, filters }) => {
         <NewsItem key={news.id} {...news} />
       ))}
     </ResultList>
+  ) : (
+    <EmptyState
+      icon={noNewsIcon}
+      title={'No news available.'}
+      description={
+        'When a GP2 admin shares a newsletter or an update, it will be listed here.'
+      }
+    />
   );
 };
 

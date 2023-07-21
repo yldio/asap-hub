@@ -1,20 +1,25 @@
-import { SearchAndFilter, OptionType } from '@asap-hub/react-components';
+import { SearchAndFilter } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { gp2 } from '@asap-hub/model';
 
 type NewsPageListProps = Pick<
   ComponentProps<typeof SearchAndFilter>,
   'filters' | 'onChangeFilter' | 'onChangeSearch' | 'searchQuery'
 >;
 
-const newsFilters = [
+type Option<V extends string> = {
+  value: V;
+  label: string;
+  enabled?: boolean;
+};
+type Title = {
+  title: string;
+  label?: undefined;
+};
+
+const newsFilters: ReadonlyArray<Option<'news' | 'update'> | Title> = [
   { title: 'TYPE OF NEWS' },
-  ...gp2.newsTypes.map(
-    (type): OptionType<gp2.NewsType> => ({
-      label: type,
-      value: type,
-    }),
-  ),
+  { label: 'Newsletters', value: 'news' },
+  { label: 'Updates', value: 'update' },
 ];
 
 const NewsPageList: React.FC<NewsPageListProps> = ({

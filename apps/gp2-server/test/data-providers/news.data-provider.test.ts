@@ -154,6 +154,71 @@ describe('News data provider', () => {
         );
       });
     });
+
+    describe('Type Filter', () => {
+      test('Should query data properly when only News Type is selected', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulNewsGraphqlResponse(),
+        );
+
+        const result = await newsDataProvider.fetch({
+          filter: { type: ['news'] },
+        });
+
+        expect(result).toEqual(getListNewsDataObject());
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: null,
+            order: ['publishDate_DESC'],
+            skip: null,
+            where: { type_in: ['news'], title_contains: null },
+          }),
+        );
+      });
+
+      test('Should query data properly when News and Update Types are selected', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulNewsGraphqlResponse(),
+        );
+
+        const result = await newsDataProvider.fetch({
+          filter: { type: ['news', 'update'] },
+        });
+
+        expect(result).toEqual(getListNewsDataObject());
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: null,
+            order: ['publishDate_DESC'],
+            skip: null,
+            where: { type_in: ['news', 'update'], title_contains: null },
+          }),
+        );
+      });
+
+      test('Should query data properly when passing search param and type is selected', async () => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulNewsGraphqlResponse(),
+        );
+
+        const result = await newsDataProvider.fetch({
+          filter: { type: ['news'], title: 'new-search' },
+        });
+
+        expect(result).toEqual(getListNewsDataObject());
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            limit: null,
+            order: ['publishDate_DESC'],
+            skip: null,
+            where: { type_in: ['news'], title_contains: 'new-search' },
+          }),
+        );
+      });
+    });
   });
 
   describe('Fetch-by-id method', () => {

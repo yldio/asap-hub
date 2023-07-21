@@ -719,6 +719,7 @@ const getInReviewResearchOutputRemindersFromQuery = (
       !researchOutput.documentType ||
       !isResearchOutputDocumentType(researchOutput.documentType) ||
       isPublished ||
+      !researchOutput.isInReview ||
       !researchOutput.statusChangedBy
     )
       return researchOutputReminders;

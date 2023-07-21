@@ -211,6 +211,46 @@ jobs:
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
 
+  gp2-algolia-index:
+    if: ${{ github.event.inputs.pr-number || github.event.pull_request.head.repo.full_name == 'yldio/asap-hub' }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check PR Number
+        if: ${{ github.event.inputs.pr-number }}
+        uses: ./.github/actions/is-number
+        with:
+          number: ${{ github.event.inputs.pr-number }}
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+      - name: Rebuild dependencies
+        run: yarn build:babel
+      - name: Get Algolia Keys
+        id: algolia-keys
+        uses: ./.github/actions/algolia-keys
+        with:
+          algolia-app-id-name: ${{ steps.setup.outputs.gp2-algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.gp2-algolia-api-key-name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+      - name: Delete the index
+        run: |
+          yarn algolia:delete-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
+
   notify_failure:
     runs-on: ubuntu-latest
     needs:

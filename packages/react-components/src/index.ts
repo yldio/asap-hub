@@ -245,3 +245,4 @@ export { noop } from './utils';
 export { pixels, text, authTestUtils, utils, mail };
 export type { AccentVariant } from './atoms';
 export type { ResearchOutputOption } from './utils';
+export type { OptionType } from './organisms';

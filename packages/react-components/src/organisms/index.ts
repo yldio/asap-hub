@@ -3,6 +3,7 @@ export { default as AdditionalMaterials } from './AdditionalMaterials';
 export { default as AuthorSelect } from './AuthorSelect';
 export { default as CalendarList } from './CalendarList';
 export { default as CheckboxGroup } from './CheckboxGroup';
+export type { Option as OptionType } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
 export { default as ConfirmModal } from './ConfirmModal';
 export { default as DashboardRecommendedUsers } from './DashboardRecommendedUsers';

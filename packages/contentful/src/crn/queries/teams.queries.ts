@@ -16,6 +16,11 @@ export const teamsContentQueryFragment = gql`
     projectSummary
     projectTitle
     expertiseAndResourceTags
+    proposal {
+      sys {
+        id
+      }
+    }
     toolsCollection {
       items {
         name

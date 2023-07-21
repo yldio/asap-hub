@@ -3118,6 +3118,7 @@ enum ResearchOutputsLabsCollectionOrder {
 type ResearchOutputsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+  teamsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0): TeamsCollection
 }
 
 enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -3159,6 +3160,23 @@ enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   type_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
+}
+
+enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 type ResearchOutputsMethodsCollection {
@@ -3695,6 +3713,7 @@ type Teams implements Entry {
   linkedFrom(allowedLocales: [String]): TeamsLinkingCollections
   projectSummary(locale: String): String
   projectTitle(locale: String): String
+  proposal(locale: String, preview: Boolean, where: ResearchOutputsFilter): ResearchOutputs
   sys: Sys!
   toolsCollection(limit: Int = 100, locale: String, order: [TeamsToolsCollectionOrder], preview: Boolean, skip: Int = 0, where: ExternalToolsFilter): TeamsToolsCollection
 }
@@ -3751,6 +3770,8 @@ input TeamsFilter {
   projectTitle_not: String
   projectTitle_not_contains: String
   projectTitle_not_in: [String]
+  proposal: cfResearchOutputsNestedFilter
+  proposal_exists: Boolean
   sys: SysFilter
   tools: cfExternalToolsNestedFilter
   toolsCollection_exists: Boolean
@@ -5675,6 +5696,7 @@ input cfTeamsNestedFilter {
   projectTitle_not: String
   projectTitle_not_contains: String
   projectTitle_not_in: [String]
+  proposal_exists: Boolean
   sys: SysFilter
   toolsCollection_exists: Boolean
 }

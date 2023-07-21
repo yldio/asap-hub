@@ -34,11 +34,6 @@ describe('User data provider', () => {
 
       const expectation = getInterestGroupDataObject();
 
-      // TODO: team proposal
-      expectation.teams.forEach((team) => {
-        delete team.proposalURL;
-      });
-
       expect(result).toEqual(expectation);
     });
 
@@ -89,11 +84,6 @@ describe('User data provider', () => {
       const result = await dataProviderWithMockServer.fetch({});
 
       const expectation = getInterestGroupDataObject();
-
-      // TODO: team proposal
-      expectation.teams.forEach((team) => {
-        delete team.proposalURL;
-      });
 
       expect(result).toMatchObject({
         total: 1,

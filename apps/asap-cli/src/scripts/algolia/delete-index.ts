@@ -18,14 +18,16 @@ export const deleteAlgoliaIndex = async ({
     return index.setSettings({ replicas: [] }).wait();
   };
   const indices = await client.listIndices();
-  indices.items
-    .filter(({ name }) => name.startsWith(indexName))
-    .forEach(async ({ name }) => {
-      const indexToDelete = client.initIndex(name);
-      const { primary, replicas } = await indexToDelete.getSettings();
-      if (primary || replicas) {
-        await unlinkIndex(primary || name);
-      }
-      await indexToDelete.delete().wait();
-    });
+  await Promise.all(
+    indices.items
+      .filter(({ name }) => name.startsWith(indexName))
+      .map(async ({ name }) => {
+        const indexToDelete = client.initIndex(name);
+        const { primary, replicas } = await indexToDelete.getSettings();
+        if (primary || replicas) {
+          await unlinkIndex(primary || name);
+        }
+        await indexToDelete.delete().wait();
+      }),
+  );
 };

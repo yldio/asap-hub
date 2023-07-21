@@ -81,8 +81,6 @@ describe('User data provider', () => {
           },
         ],
       };
-      // TODO: team proposal
-      expectation.teams[0]!.proposal = undefined;
       expect(result).toEqual(expectation);
     });
 
@@ -400,8 +398,7 @@ describe('User data provider', () => {
           },
         ],
       };
-      // TODO: team proposal
-      expectation.teams[0]!.proposal = undefined;
+
       expect(result.total).toEqual(1);
       expect(result.items).toEqual([expectation]);
     });

@@ -142,12 +142,21 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Get Algolia Keys
-        id: algolia-keys
+      - name: Get CRN Algolia Keys
+        id: crn-algolia-keys
         uses: ./.github/actions/algolia-keys
         with:
           algolia-app-id-name: ${{ steps.setup.outputs.crn-algolia-app-id-name }}
           algolia-api-key-name: ${{ steps.setup.outputs.crn-algolia-api-key-name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+      - name: Get GP2 Algolia Keys
+        id: gp2-algolia-keys
+        uses: ./.github/actions/algolia-keys
+        with:
+          algolia-app-id-name: ${{ steps.setup.outputs.gp2-algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.gp2-algolia-api-key-name }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
@@ -167,8 +176,10 @@ jobs:
         env:
           CRN_AUTH_FRONTEND_BASE_URL: '${{ steps.setup.outputs.crn-auth-url}}'
           GP2_AUTH_FRONTEND_BASE_URL: '${{ steps.setup.outputs.gp2-auth-url}}'
-          REACT_APP_ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          REACT_APP_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+          REACT_APP_CRN_ALGOLIA_APP_ID: ${{ steps.crn-algolia-keys.outputs.algolia-app-id }}
+          REACT_APP_CRN_ALGOLIA_INDEX: ${{ steps.setup.outputs.crn-algolia-index }}
+          REACT_APP_GP2_ALGOLIA_APP_ID: ${{ steps.gp2-algolia-keys.outputs.algolia-app-id }}
+          REACT_APP_GP2_ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
           REACT_APP_API_BASE_URL: ${{ steps.setup.outputs.crn-api-url }}
           REACT_APP_CRN_AUTH0_AUDIENCE: ${{ steps.setup.outputs.crn-auth0-audience }}
           REACT_APP_CRN_AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-auth0-client-id }}

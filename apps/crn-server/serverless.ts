@@ -32,7 +32,7 @@ const {
   CRN_AWS_ACM_CERTIFICATE_ARN,
   SLS_STAGE = 'development',
   CI_COMMIT_SHA,
-  ALGOLIA_INDEX,
+  CRN_ALGOLIA_INDEX,
   CRN_SENTRY_DSN_API,
   CRN_SENTRY_DSN_HANDLERS,
   CRN_SES_REGION,
@@ -80,8 +80,8 @@ const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
 const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
 const sesRegion = CRN_SES_REGION!;
 
-const algoliaIndex = ALGOLIA_INDEX
-  ? '${env:ALGOLIA_INDEX}'
+const algoliaIndex = CRN_ALGOLIA_INDEX
+  ? '${env:CRN_ALGOLIA_INDEX}'
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
 
@@ -173,7 +173,7 @@ const serverlessConfig: AWS = {
       CRN_API_URL: '${env:CRN_API_URL}',
       LOG_LEVEL: LOG_LEVEL || (SLS_STAGE === 'production' ? 'error' : 'info'),
       NODE_OPTIONS: '--enable-source-maps',
-      ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
+      ALGOLIA_APP_ID: `\${ssm:crn-algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: CI_COMMIT_SHA || '${env:CURRENT_REVISION}',
       IS_CONTENTFUL_ENABLED: isContentfulEnabled,
       CONTENTFUL_ENV_ID: contentfulEnvironment,
@@ -303,7 +303,7 @@ const serverlessConfig: AWS = {
       environment: {
         AUTH0_CLIENT_ID: auth0ClientId,
         AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
-        ALGOLIA_API_KEY: `\${ssm:algolia-search-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-search-api-key-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
@@ -505,7 +505,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -530,7 +530,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
@@ -556,7 +556,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
@@ -581,7 +581,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
@@ -607,7 +607,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'false',
@@ -633,7 +633,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',

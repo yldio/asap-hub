@@ -3,7 +3,7 @@ import Frame from '../Frame';
 // import { useSearch } from '../hooks/search';
 // import OutputList from './OutputList';
 
-const OutputDirectory = () => {
+const OutputDirectory = () => (
   // use general search that is being built for news filter
   // const {
   //   filters,
@@ -13,18 +13,16 @@ const OutputDirectory = () => {
   //   updateFilters,
   // } = useSearch();
 
-  return (
-    <OutputsPageList
-    // searchQuery={searchQuery}
-    // onSearchQueryChange={setSearchQuery}
-    // updateFilters={updateFilters}
-    // filters={filters}
-    >
-      <Frame title="Output List">
-        {/* <OutputList searchQuery={debouncedSearchQuery} filters={filters} /> */}
-      </Frame>
-    </OutputsPageList>
-  );
-};
+  <OutputsPageList
+  // searchQuery={searchQuery}
+  // onSearchQueryChange={setSearchQuery}
+  // updateFilters={updateFilters}
+  // filters={filters}
+  >
+    <Frame title="Output List">
+      {/* <OutputList searchQuery={debouncedSearchQuery} filters={filters} /> */}
+    </Frame>
+  </OutputsPageList>
+);
 
 export default OutputDirectory;

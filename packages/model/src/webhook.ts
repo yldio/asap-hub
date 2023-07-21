@@ -7,7 +7,7 @@ export type EntityEventAction =
 
 export type EventEvent = `Events${EntityEventAction}`;
 export type ExternalAuthorEvent = `ExternalAuthors${EntityEventAction}`;
-export type InterestGroupEvent = `InterestGroups${EntityEventAction}`;
+export type GroupEvent = `Groups${EntityEventAction}`;
 export type TeamEvent = `Teams${EntityEventAction}`;
 export type ResearchOutputEvent = `ResearchOutputs${EntityEventAction}`;
 export type WorkingGroupEvent = `WorkingGroups${EntityEventAction}`;
@@ -20,7 +20,7 @@ export type WebhookDetailType =
   | CalendarEvent
   | EventEvent
   | ExternalAuthorEvent
-  | InterestGroupEvent
+  | GroupEvent
   | LabEvent
   | NewsEvent
   | TeamEvent

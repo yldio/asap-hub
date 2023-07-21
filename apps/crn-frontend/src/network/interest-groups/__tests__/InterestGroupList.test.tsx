@@ -6,7 +6,7 @@ import { createListInterestGroupResponse } from '@asap-hub/fixtures';
 import { ListInterestGroupResponse } from '@asap-hub/model';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 
-import GroupList from '../InterestGroupList';
+import InterestGroupList from '../InterestGroupList';
 import { getInterestGroups } from '../api';
 import { interestGroupsState } from '../state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
@@ -42,7 +42,7 @@ const renderGroupList = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/interest-groups/']}>
-              <Route path="/interest-groups" component={GroupList} />
+              <Route path="/interest-groups" component={InterestGroupList} />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

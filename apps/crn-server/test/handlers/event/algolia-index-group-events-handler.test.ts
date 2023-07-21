@@ -1,4 +1,4 @@
-import { InterestGroupEvent } from '@asap-hub/model';
+import { GroupEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { InterestGroupPayload } from '../../../src/handlers/event-bus';
@@ -13,15 +13,12 @@ const mapPayload = toPayload('event');
 
 const possibleEvents: [
   string,
-  EventBridgeEvent<InterestGroupEvent, InterestGroupPayload>,
+  EventBridgeEvent<GroupEvent, InterestGroupPayload>,
 ][] = [
-  ['created', getInterestGroupEvent('group-id', 'InterestGroupsCreated')],
-  ['updated', getInterestGroupEvent('group-id', 'InterestGroupsUpdated')],
-  [
-    'unpublished',
-    getInterestGroupEvent('group-id', 'InterestGroupsUnpublished'),
-  ],
-  ['deleted', getInterestGroupEvent('group-id', 'InterestGroupsDeleted')],
+  ['created', getInterestGroupEvent('group-id', 'GroupsCreated')],
+  ['updated', getInterestGroupEvent('group-id', 'GroupsUpdated')],
+  ['unpublished', getInterestGroupEvent('group-id', 'GroupsUnpublished')],
+  ['deleted', getInterestGroupEvent('group-id', 'GroupsDeleted')],
 ];
 
 describe('Index Events on Group event handler', () => {
@@ -35,7 +32,7 @@ describe('Index Events on Group event handler', () => {
     eventControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getInterestGroupEvent('group-id', 'InterestGroupsCreated')),
+      indexHandler(getInterestGroupEvent('group-id', 'GroupsCreated')),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
@@ -48,7 +45,7 @@ describe('Index Events on Group event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getInterestGroupEvent('group-id', 'InterestGroupsUpdated')),
+      indexHandler(getInterestGroupEvent('group-id', 'GroupsUpdated')),
     ).rejects.toThrow(algoliaError);
   });
 

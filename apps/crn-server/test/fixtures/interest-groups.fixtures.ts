@@ -1,7 +1,7 @@
 import { FetchInterestGroupByIdQuery } from '@asap-hub/contentful';
 import {
   InterestGroupDataObject,
-  InterestGroupEvent,
+  GroupEvent,
   InterestGroupResponse,
   InterestGroupLeader,
   ListInterestGroupResponse,
@@ -419,7 +419,7 @@ export const getListInterestGroupResponse = (): ListInterestGroupResponse => ({
 
 export const getInterestGroupPayload = (
   id: string,
-  type: InterestGroupEvent,
+  type: GroupEvent,
 ): InterestGroupPayload => ({
   type,
   timestamp: '2020-12-11T15:06:26Z',
@@ -437,8 +437,8 @@ export const getInterestGroupPayload = (
 
 export const getInterestGroupEvent = (
   id: string,
-  eventType: InterestGroupEvent,
-): EventBridgeEvent<InterestGroupEvent, InterestGroupPayload> =>
+  eventType: GroupEvent,
+): EventBridgeEvent<GroupEvent, InterestGroupPayload> =>
   createEventBridgeEventMock(
     getInterestGroupPayload(id, eventType),
     eventType,

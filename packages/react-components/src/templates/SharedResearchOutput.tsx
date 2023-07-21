@@ -38,6 +38,7 @@ type SharedResearchOutputProps = Pick<
   | 'descriptionMD'
   | 'keywords'
   | 'usageNotes'
+  | 'usageNotesMD'
   | 'contactEmails'
   | 'methods'
   | 'organisms'
@@ -64,7 +65,8 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description = '',
   descriptionMD = '',
   backHref,
-  usageNotes,
+  usageNotes = '',
+  usageNotesMD = '',
   contactEmails,
   id,
   relatedResearch,
@@ -89,6 +91,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   ];
 
   const hasDescription = description || descriptionMD;
+  const hasUsageNotes = usageNotes || usageNotesMD;
   const association = getResearchOutputAssociation(props);
   const associationName = getResearchOutputAssociationName(props);
   const [reviewToggled, setReviewToggled] = useState(false);
@@ -230,11 +233,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               )}
             </Card>
           )}
-          {!isGrantDocument && usageNotes && (
+          {!isGrantDocument && hasUsageNotes && (
             <Card>
               <div css={{ paddingBottom: `${12 / perRem}em` }}>
                 <Headline2 styleAsHeading={4}>Usage Notes</Headline2>
-                <RichText poorText text={usageNotes} />
+                <Markdown value={usageNotesMD}></Markdown>
+                {!usageNotesMD && <RichText poorText text={usageNotes} />}
               </div>
             </Card>
           )}

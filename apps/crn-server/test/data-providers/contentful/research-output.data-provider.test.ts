@@ -633,6 +633,7 @@ describe('Research Outputs Data Provider', () => {
       const result = await researchOutputDataProvider.fetchById('1');
 
       const expectedResult = getResearchOutputDataObject();
+      expectedResult.usageNotesMD = researchOutputs.usageNotes as string;
       expectedResult.usageNotes = undefined;
       expectedResult.authors = [];
       expectedResult.teams = [];

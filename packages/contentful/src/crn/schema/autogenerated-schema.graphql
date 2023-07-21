@@ -2832,7 +2832,7 @@ type ResearchOutputs implements Entry {
   title(locale: String): String
   type(locale: String): String
   updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
-  usageNotes(locale: String): ResearchOutputsUsageNotes
+  usageNotes(locale: String): String
   usedInAPublication(locale: String): String
   workingGroup(locale: String, preview: Boolean, where: WorkingGroupsFilter): WorkingGroups
 }
@@ -3059,9 +3059,13 @@ input ResearchOutputsFilter {
   type_not_in: [String]
   updatedBy: cfUsersNestedFilter
   updatedBy_exists: Boolean
+  usageNotes: String
   usageNotes_contains: String
   usageNotes_exists: Boolean
+  usageNotes_in: [String]
+  usageNotes_not: String
   usageNotes_not_contains: String
+  usageNotes_not_in: [String]
   usedInAPublication: String
   usedInAPublication_contains: String
   usedInAPublication_exists: Boolean
@@ -3388,32 +3392,6 @@ enum ResearchOutputsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-}
-
-type ResearchOutputsUsageNotes {
-  json: JSON!
-  links: ResearchOutputsUsageNotesLinks!
-}
-
-type ResearchOutputsUsageNotesAssets {
-  block: [Asset]!
-  hyperlink: [Asset]!
-}
-
-type ResearchOutputsUsageNotesEntries {
-  block: [Entry]!
-  hyperlink: [Entry]!
-  inline: [Entry]!
-}
-
-type ResearchOutputsUsageNotesLinks {
-  assets: ResearchOutputsUsageNotesAssets!
-  entries: ResearchOutputsUsageNotesEntries!
-  resources: ResearchOutputsUsageNotesResources!
-}
-
-type ResearchOutputsUsageNotesResources {
-  block: [ResourceLink!]!
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags)"""
@@ -5585,9 +5563,13 @@ input cfResearchOutputsNestedFilter {
   type_not_contains: String
   type_not_in: [String]
   updatedBy_exists: Boolean
+  usageNotes: String
   usageNotes_contains: String
   usageNotes_exists: Boolean
+  usageNotes_in: [String]
+  usageNotes_not: String
   usageNotes_not_contains: String
+  usageNotes_not_in: [String]
   usedInAPublication: String
   usedInAPublication_contains: String
   usedInAPublication_exists: Boolean

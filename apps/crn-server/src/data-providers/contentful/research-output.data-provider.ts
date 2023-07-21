@@ -270,6 +270,7 @@ const parseGraphQLResearchOutput = (
       ? parseRichText(researchOutputs.description as RichTextFromQuery)
       : undefined,
     descriptionMD: researchOutputs.descriptionMd || '',
+    usageNotesMD: researchOutputs.usageNotes || '',
     link: researchOutputs.link || undefined,
     asapFunded: convertDecisionToBoolean(researchOutputs.asapFunded || null),
     usedInPublication: convertDecisionToBoolean(
@@ -400,7 +401,6 @@ const prepareInput = (
   const {
     usedInPublication: _usedInPublication,
     description: _description,
-    usageNotes: _usageNotes,
     ...researchOutput
   } = {
     ...researchOutputData,

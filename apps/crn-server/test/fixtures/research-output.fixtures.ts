@@ -521,6 +521,7 @@ export const getContentfulResearchOutputGraphqlResponse =
       },
     },
     descriptionMd: 'Text MD',
+    usageNotes: 'Usage Notes',
     link: null,
     addedDate: '2021-05-21T13:18:31Z',
     publishDate: '2021-05-21T13:18:31Z',

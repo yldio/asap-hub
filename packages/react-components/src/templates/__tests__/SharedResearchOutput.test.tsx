@@ -168,6 +168,16 @@ describe('Not Grant Documents', () => {
     expect(getByText(/usage notes/i)).toBeVisible();
     expect(getByText(/some data/i)).toBeVisible();
   });
+  it('displays access instructions when data provided as markdown', () => {
+    const { getByText } = render(
+      <SharedResearchOutput
+        {...props}
+        documentType="Article"
+        usageNotesMD="Markdown Content"
+      />,
+    );
+    expect(getByText(/markdown content/i)).toBeVisible();
+  });
   describe('tags and description', () => {
     it('handles tags and description omitted', () => {
       const { queryByText, queryByRole } = render(

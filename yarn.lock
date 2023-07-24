@@ -281,7 +281,7 @@ __metadata:
     algoliasearch: 4.19.1
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1419.0
+    aws-sdk: 2.1420.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -887,7 +887,7 @@ __metadata:
     "@types/node": 18.16.19
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1419.0
+    aws-sdk: 2.1420.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.31.1
@@ -1357,7 +1357,7 @@ __metadata:
     "@types/node": 18.16.19
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1419.0
+    aws-sdk: 2.1420.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.31.1
@@ -20488,9 +20488,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1419.0":
-  version: 2.1419.0
-  resolution: "aws-sdk@npm:2.1419.0"
+"aws-sdk@npm:2.1420.0":
+  version: 2.1420.0
+  resolution: "aws-sdk@npm:2.1420.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -20502,7 +20502,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.5.0
-  checksum: 45b954be76acef99a88b21511634af0c9bba228e8bb9e0d4571983f7b5ba826a648b3cf2b09b17e541ff45e15323cf99db58b50d8b2f0caa3d74b20213afd8f8
+  checksum: 3fc6e5d9f665503bb26ee7d726ac0ae71dff720bdecae62dd15396733311972b16d74e7f7c382ffd5aaa9e50e0b2fe50c99941d21d5b4d1382d07f481f620914
   languageName: node
   linkType: hard
 

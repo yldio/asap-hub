@@ -1202,7 +1202,7 @@ export type EventSpeakersTeamArgs = {
 export type EventSpeakersUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<ExternalAuthorsOrUsersFilter>;
+  where?: InputMaybe<EventSpeakersUserFilter>;
 };
 
 export type EventSpeakersCollection = {
@@ -1219,7 +1219,7 @@ export type EventSpeakersFilter = {
   sys?: InputMaybe<SysFilter>;
   team?: InputMaybe<CfTeamsNestedFilter>;
   team_exists?: InputMaybe<Scalars['Boolean']>;
-  user?: InputMaybe<CfExternalAuthorsOrUsersNestedFilter>;
+  user?: InputMaybe<CfuserMultiTypeNestedFilter>;
   user_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1304,6 +1304,20 @@ export enum EventSpeakersOrder {
 }
 
 export type EventSpeakersUser = ExternalAuthors | Users;
+
+export type EventSpeakersUserFilter = {
+  AND?: InputMaybe<Array<InputMaybe<EventSpeakersUserFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<EventSpeakersUserFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
 export type Events = Entry & {
@@ -1993,56 +2007,6 @@ export enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
   UsedInAPublicationAsc = 'usedInAPublication_ASC',
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthorsOrUsers) */
-export type ExternalAuthorsOrUsers = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  linkedFrom?: Maybe<ExternalAuthorsOrUsersLinkingCollections>;
-  orcid?: Maybe<Scalars['String']>;
-  sys: Sys;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthorsOrUsers) */
-export type ExternalAuthorsOrUsersLinkedFromArgs = {
-  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/externalAuthorsOrUsers) */
-export type ExternalAuthorsOrUsersOrcidArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-export type ExternalAuthorsOrUsersCollection = {
-  items: Array<Maybe<ExternalAuthorsOrUsers>>;
-  limit: Scalars['Int'];
-  skip: Scalars['Int'];
-  total: Scalars['Int'];
-};
-
-export type ExternalAuthorsOrUsersFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ExternalAuthorsOrUsersFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ExternalAuthorsOrUsersFilter>>>;
-  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  orcid?: InputMaybe<Scalars['String']>;
-  orcid_contains?: InputMaybe<Scalars['String']>;
-  orcid_exists?: InputMaybe<Scalars['Boolean']>;
-  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  orcid_not?: InputMaybe<Scalars['String']>;
-  orcid_not_contains?: InputMaybe<Scalars['String']>;
-  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  sys?: InputMaybe<SysFilter>;
-};
-
-export type ExternalAuthorsOrUsersLinkingCollections = {
-  entryCollection?: Maybe<EntryCollection>;
-};
-
-export type ExternalAuthorsOrUsersLinkingCollectionsEntryCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-};
 
 export enum ExternalAuthorsOrder {
   NameAsc = 'name_ASC',
@@ -3805,8 +3769,6 @@ export type Query = {
   eventsCollection?: Maybe<EventsCollection>;
   externalAuthors?: Maybe<ExternalAuthors>;
   externalAuthorsCollection?: Maybe<ExternalAuthorsCollection>;
-  externalAuthorsOrUsers?: Maybe<ExternalAuthorsOrUsers>;
-  externalAuthorsOrUsersCollection?: Maybe<ExternalAuthorsOrUsersCollection>;
   externalTools?: Maybe<ExternalTools>;
   externalToolsCollection?: Maybe<ExternalToolsCollection>;
   guideCollections?: Maybe<GuideCollections>;
@@ -3847,8 +3809,6 @@ export type Query = {
   workingGroupDeliverablesCollection?: Maybe<WorkingGroupDeliverablesCollection>;
   workingGroupLeaders?: Maybe<WorkingGroupLeaders>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
-  workingGroupLeadersOrWorkingGroupMembers?: Maybe<WorkingGroupLeadersOrWorkingGroupMembers>;
-  workingGroupLeadersOrWorkingGroupMembersCollection?: Maybe<WorkingGroupLeadersOrWorkingGroupMembersCollection>;
   workingGroupMembers?: Maybe<WorkingGroupMembers>;
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
   workingGroups?: Maybe<WorkingGroups>;
@@ -3967,20 +3927,6 @@ export type QueryExternalAuthorsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ExternalAuthorsFilter>;
-};
-
-export type QueryExternalAuthorsOrUsersArgs = {
-  id: Scalars['String'];
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type QueryExternalAuthorsOrUsersCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ExternalAuthorsOrUsersFilter>;
 };
 
 export type QueryExternalToolsArgs = {
@@ -4283,20 +4229,6 @@ export type QueryWorkingGroupLeadersCollectionArgs = {
   where?: InputMaybe<WorkingGroupLeadersFilter>;
 };
 
-export type QueryWorkingGroupLeadersOrWorkingGroupMembersArgs = {
-  id: Scalars['String'];
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type QueryWorkingGroupLeadersOrWorkingGroupMembersCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<WorkingGroupLeadersOrWorkingGroupMembersFilter>;
-};
-
 export type QueryWorkingGroupMembersArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -4394,7 +4326,7 @@ export type ResearchOutputsAuthorsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ExternalAuthorsOrUsersFilter>;
+  where?: InputMaybe<ResearchOutputsAuthorsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
@@ -4612,6 +4544,20 @@ export type ResearchOutputsAuthorsCollection = {
   total: Scalars['Int'];
 };
 
+export type ResearchOutputsAuthorsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ResearchOutputsAuthorsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ResearchOutputsAuthorsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
 export type ResearchOutputsAuthorsItem = ExternalAuthors | Users;
 
 export type ResearchOutputsCollection = {
@@ -4702,7 +4648,7 @@ export type ResearchOutputsFilter = {
   asapFunded_not?: InputMaybe<Scalars['String']>;
   asapFunded_not_contains?: InputMaybe<Scalars['String']>;
   asapFunded_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  authors?: InputMaybe<CfExternalAuthorsOrUsersNestedFilter>;
+  authors?: InputMaybe<CfauthorsMultiTypeNestedFilter>;
   authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   createdBy?: InputMaybe<CfUsersNestedFilter>;
@@ -6621,7 +6567,6 @@ export type UsersLinkingCollections = {
   interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
-  workingGroupLeadersOrWorkingGroupMembersCollection?: Maybe<WorkingGroupLeadersOrWorkingGroupMembersCollection>;
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
 };
 
@@ -6683,14 +6628,6 @@ export type UsersLinkingCollectionsWorkingGroupLeadersCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
-
-export type UsersLinkingCollectionsWorkingGroupLeadersOrWorkingGroupMembersCollectionArgs =
-  {
-    limit?: InputMaybe<Scalars['Int']>;
-    locale?: InputMaybe<Scalars['String']>;
-    preview?: InputMaybe<Scalars['Boolean']>;
-    skip?: InputMaybe<Scalars['Int']>;
-  };
 
 export type UsersLinkingCollectionsWorkingGroupMembersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -7118,73 +7055,6 @@ export enum WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionOrder {
   TitleDesc = 'title_DESC',
 }
 
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers) */
-export type WorkingGroupLeadersOrWorkingGroupMembers = Entry & {
-  contentfulMetadata: ContentfulMetadata;
-  inactiveSinceDate?: Maybe<Scalars['DateTime']>;
-  linkedFrom?: Maybe<WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections>;
-  sys: Sys;
-  user?: Maybe<Users>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers) */
-export type WorkingGroupLeadersOrWorkingGroupMembersInactiveSinceDateArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers) */
-export type WorkingGroupLeadersOrWorkingGroupMembersLinkedFromArgs = {
-  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroupLeadersOrWorkingGroupMembers) */
-export type WorkingGroupLeadersOrWorkingGroupMembersUserArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<UsersFilter>;
-};
-
-export type WorkingGroupLeadersOrWorkingGroupMembersCollection = {
-  items: Array<Maybe<WorkingGroupLeadersOrWorkingGroupMembers>>;
-  limit: Scalars['Int'];
-  skip: Scalars['Int'];
-  total: Scalars['Int'];
-};
-
-export type WorkingGroupLeadersOrWorkingGroupMembersFilter = {
-  AND?: InputMaybe<
-    Array<InputMaybe<WorkingGroupLeadersOrWorkingGroupMembersFilter>>
-  >;
-  OR?: InputMaybe<
-    Array<InputMaybe<WorkingGroupLeadersOrWorkingGroupMembersFilter>>
-  >;
-  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
-  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  sys?: InputMaybe<SysFilter>;
-  user?: InputMaybe<CfUsersNestedFilter>;
-  user_exists?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type WorkingGroupLeadersOrWorkingGroupMembersLinkingCollections = {
-  entryCollection?: Maybe<EntryCollection>;
-};
-
-export type WorkingGroupLeadersOrWorkingGroupMembersLinkingCollectionsEntryCollectionArgs =
-  {
-    limit?: InputMaybe<Scalars['Int']>;
-    locale?: InputMaybe<Scalars['String']>;
-    preview?: InputMaybe<Scalars['Boolean']>;
-    skip?: InputMaybe<Scalars['Int']>;
-  };
-
 export enum WorkingGroupLeadersOrder {
   InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
   InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
@@ -7367,7 +7237,7 @@ export type WorkingGroupsMembersCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<WorkingGroupLeadersOrWorkingGroupMembersFilter>;
+  where?: InputMaybe<WorkingGroupsMembersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
@@ -7454,7 +7324,7 @@ export type WorkingGroupsFilter = {
   externalLink_not?: InputMaybe<Scalars['String']>;
   externalLink_not_contains?: InputMaybe<Scalars['String']>;
   externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  members?: InputMaybe<CfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter>;
+  members?: InputMaybe<CfmembersMultiTypeNestedFilter>;
   membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   shortText?: InputMaybe<Scalars['String']>;
   shortText_contains?: InputMaybe<Scalars['String']>;
@@ -7543,6 +7413,23 @@ export type WorkingGroupsMembersCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type WorkingGroupsMembersFilter = {
+  AND?: InputMaybe<Array<InputMaybe<WorkingGroupsMembersFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<WorkingGroupsMembersFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type WorkingGroupsMembersItem =
@@ -7753,20 +7640,6 @@ export type CfEventsNestedFilter = {
   videoRecording_contains?: InputMaybe<Scalars['String']>;
   videoRecording_exists?: InputMaybe<Scalars['Boolean']>;
   videoRecording_not_contains?: InputMaybe<Scalars['String']>;
-};
-
-export type CfExternalAuthorsOrUsersNestedFilter = {
-  AND?: InputMaybe<Array<InputMaybe<CfExternalAuthorsOrUsersNestedFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<CfExternalAuthorsOrUsersNestedFilter>>>;
-  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  orcid?: InputMaybe<Scalars['String']>;
-  orcid_contains?: InputMaybe<Scalars['String']>;
-  orcid_exists?: InputMaybe<Scalars['Boolean']>;
-  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  orcid_not?: InputMaybe<Scalars['String']>;
-  orcid_not_contains?: InputMaybe<Scalars['String']>;
-  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  sys?: InputMaybe<SysFilter>;
 };
 
 export type CfExternalToolsNestedFilter = {
@@ -8590,27 +8463,6 @@ export type CfWorkingGroupDeliverablesNestedFilter = {
   sys?: InputMaybe<SysFilter>;
 };
 
-export type CfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter = {
-  AND?: InputMaybe<
-    Array<InputMaybe<CfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter>>
-  >;
-  OR?: InputMaybe<
-    Array<InputMaybe<CfWorkingGroupLeadersOrWorkingGroupMembersNestedFilter>>
-  >;
-  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
-  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
-  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  sys?: InputMaybe<SysFilter>;
-  user_exists?: InputMaybe<Scalars['Boolean']>;
-};
-
 export type CfWorkingGroupsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfWorkingGroupsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfWorkingGroupsNestedFilter>>>;
@@ -8646,6 +8498,51 @@ export type CfWorkingGroupsNestedFilter = {
   title_not?: InputMaybe<Scalars['String']>;
   title_not_contains?: InputMaybe<Scalars['String']>;
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CfauthorsMultiTypeNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfauthorsMultiTypeNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfauthorsMultiTypeNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type CfmembersMultiTypeNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfmembersMultiTypeNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfmembersMultiTypeNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  sys?: InputMaybe<SysFilter>;
+  user_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CfuserMultiTypeNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfuserMultiTypeNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfuserMultiTypeNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
 };
 
 export type CalendarsContentFragment = Pick<
@@ -8789,9 +8686,6 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'ExternalAuthors' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
-                            | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -8852,9 +8746,6 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'WorkingGroupLeaders' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
-                            | ({
-                                __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                              } & { sys: Pick<Sys, 'id'> })
                             | ({ __typename: 'WorkingGroupMembers' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -8917,9 +8808,6 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'ExternalAuthors' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
-                            | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -8980,9 +8868,6 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'WorkingGroupLeaders' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
-                            | ({
-                                __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                              } & { sys: Pick<Sys, 'id'> })
                             | ({ __typename: 'WorkingGroupMembers' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -9067,9 +8952,6 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'ExternalAuthors' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
-                            | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -9130,9 +9012,6 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'WorkingGroupLeaders' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
-                            | ({
-                                __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                              } & { sys: Pick<Sys, 'id'> })
                             | ({ __typename: 'WorkingGroupMembers' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -9193,9 +9072,6 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'ExternalAuthors' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
-                            | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                                sys: Pick<Sys, 'id'>;
-                              })
                             | ({ __typename: 'ExternalTools' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -9256,9 +9132,6 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'WorkingGroupLeaders' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
-                            | ({
-                                __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                              } & { sys: Pick<Sys, 'id'> })
                             | ({ __typename: 'WorkingGroupMembers' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -9305,9 +9178,6 @@ export type FetchDiscoverQuery = {
                     | ({ __typename: 'ExternalAuthors' } & {
                         sys: Pick<Sys, 'id'>;
                       })
-                    | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                        sys: Pick<Sys, 'id'>;
-                      })
                     | ({ __typename: 'ExternalTools' } & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -9350,9 +9220,6 @@ export type FetchDiscoverQuery = {
                     | ({ __typename: 'WorkingGroupLeaders' } & {
                         sys: Pick<Sys, 'id'>;
                       })
-                    | ({
-                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                      } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'WorkingGroupMembers' } & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -9449,9 +9316,6 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
-              | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
@@ -9478,9 +9342,6 @@ export type EventsContentFragment = Pick<
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupLeaders' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
-              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupMembers' } & {
@@ -9515,9 +9376,6 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
-              | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
@@ -9544,9 +9402,6 @@ export type EventsContentFragment = Pick<
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupLeaders' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
-              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupMembers' } & {
@@ -9581,9 +9436,6 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
-              | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
@@ -9610,9 +9462,6 @@ export type EventsContentFragment = Pick<
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupLeaders' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
-              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupMembers' } & {
@@ -9738,9 +9587,6 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ExternalAuthors' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                      sys: Pick<Sys, 'id'>;
-                    })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'GuideCollections' } & {
                       sys: Pick<Sys, 'id'>;
@@ -9777,9 +9623,6 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'WorkingGroupLeaders' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({
-                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                    } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupMembers' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -9814,9 +9657,6 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ExternalAuthors' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                      sys: Pick<Sys, 'id'>;
-                    })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'GuideCollections' } & {
                       sys: Pick<Sys, 'id'>;
@@ -9853,9 +9693,6 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'WorkingGroupLeaders' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({
-                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                    } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupMembers' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -9890,9 +9727,6 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'ExternalAuthors' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                      sys: Pick<Sys, 'id'>;
-                    })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'GuideCollections' } & {
                       sys: Pick<Sys, 'id'>;
@@ -9929,9 +9763,6 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'WorkingGroupLeaders' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({
-                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                    } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupMembers' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -10073,9 +9904,6 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalAuthors' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                            sys: Pick<Sys, 'id'>;
-                          })
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -10122,9 +9950,6 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'WorkingGroupLeaders' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({
-                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                          } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupMembers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -10173,9 +9998,6 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalAuthors' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                            sys: Pick<Sys, 'id'>;
-                          })
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -10222,9 +10044,6 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'WorkingGroupLeaders' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({
-                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                          } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupMembers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -10273,9 +10092,6 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'ExternalAuthors' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                            sys: Pick<Sys, 'id'>;
-                          })
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -10322,9 +10138,6 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'WorkingGroupLeaders' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({
-                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                          } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupMembers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -10487,9 +10300,6 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalAuthors' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'ExternalAuthorsOrUsers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -10551,9 +10361,6 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'WorkingGroupLeaders' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'WorkingGroupMembers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -10604,9 +10411,6 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalAuthors' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'ExternalAuthorsOrUsers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -10668,9 +10472,6 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'WorkingGroupLeaders' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'WorkingGroupMembers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -10721,9 +10522,6 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'ExternalAuthors' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'ExternalAuthorsOrUsers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -10785,9 +10583,6 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'WorkingGroupLeaders' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'WorkingGroupMembers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -10964,9 +10759,6 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'ExternalAuthors' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'ExternalAuthorsOrUsers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11028,9 +10820,6 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'WorkingGroupLeaders' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'WorkingGroupMembers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11081,9 +10870,6 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'ExternalAuthors' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'ExternalAuthorsOrUsers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11145,9 +10931,6 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'WorkingGroupLeaders' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'WorkingGroupMembers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11198,9 +10981,6 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'ExternalAuthors' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'ExternalAuthorsOrUsers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11262,9 +11042,6 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'WorkingGroupLeaders' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'WorkingGroupMembers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11441,9 +11218,6 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'ExternalAuthors' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'ExternalAuthorsOrUsers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11505,9 +11279,6 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'WorkingGroupLeaders' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'WorkingGroupMembers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11558,9 +11329,6 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'ExternalAuthors' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'ExternalAuthorsOrUsers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11622,9 +11390,6 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'WorkingGroupLeaders' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'WorkingGroupMembers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11675,9 +11440,6 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'ExternalAuthors' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'ExternalAuthorsOrUsers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'ExternalTools' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11739,9 +11501,6 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'WorkingGroupLeaders' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
-                                    | ({
-                                        __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                                      } & { sys: Pick<Sys, 'id'> })
                                     | ({ __typename: 'WorkingGroupMembers' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -12297,9 +12056,6 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
-              | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
@@ -12326,9 +12082,6 @@ export type NewsContentFragment = Pick<
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupLeaders' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
-              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupMembers' } & {
@@ -12379,9 +12132,6 @@ export type FetchNewsByIdQuery = {
                   | ({ __typename: 'ExternalAuthors' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                      sys: Pick<Sys, 'id'>;
-                    })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'GuideCollections' } & {
                       sys: Pick<Sys, 'id'>;
@@ -12418,9 +12168,6 @@ export type FetchNewsByIdQuery = {
                   | ({ __typename: 'WorkingGroupLeaders' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({
-                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                    } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupMembers' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -12490,9 +12237,6 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'ExternalAuthors' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                            sys: Pick<Sys, 'id'>;
-                          })
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -12539,9 +12283,6 @@ export type FetchNewsQuery = {
                         | ({ __typename: 'WorkingGroupLeaders' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({
-                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                          } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupMembers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -12592,9 +12333,6 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
-              | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
@@ -12621,9 +12359,6 @@ export type PageContentFragment = Pick<
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupLeaders' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
-              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupMembers' } & {
@@ -12681,9 +12416,6 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'ExternalAuthors' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                            sys: Pick<Sys, 'id'>;
-                          })
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -12730,9 +12462,6 @@ export type FetchPagesQuery = {
                         | ({ __typename: 'WorkingGroupLeaders' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({
-                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                          } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupMembers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -12941,9 +12670,6 @@ export type ResearchOutputsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
-              | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
@@ -12970,9 +12696,6 @@ export type ResearchOutputsContentFragment = Pick<
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupLeaders' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
-              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupMembers' } & {
@@ -13133,9 +12856,6 @@ export type FetchResearchOutputByIdQuery = {
                   | ({ __typename: 'ExternalAuthors' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                      sys: Pick<Sys, 'id'>;
-                    })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'GuideCollections' } & {
                       sys: Pick<Sys, 'id'>;
@@ -13172,9 +12892,6 @@ export type FetchResearchOutputByIdQuery = {
                   | ({ __typename: 'WorkingGroupLeaders' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({
-                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                    } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupMembers' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -13355,9 +13072,6 @@ export type FetchResearchOutputsQuery = {
                         | ({ __typename: 'ExternalAuthors' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                            sys: Pick<Sys, 'id'>;
-                          })
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -13404,9 +13118,6 @@ export type FetchResearchOutputsQuery = {
                         | ({ __typename: 'WorkingGroupLeaders' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({
-                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                          } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupMembers' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -13784,9 +13495,6 @@ export type TutorialsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
-              | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
@@ -13813,9 +13521,6 @@ export type TutorialsContentFragment = Pick<
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupLeaders' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
-              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupMembers' } & {
@@ -13863,9 +13568,6 @@ export type FetchTutorialByIdQuery = {
                   | ({ __typename: 'ExternalAuthors' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                      sys: Pick<Sys, 'id'>;
-                    })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'GuideCollections' } & {
                       sys: Pick<Sys, 'id'>;
@@ -13902,9 +13604,6 @@ export type FetchTutorialByIdQuery = {
                   | ({ __typename: 'WorkingGroupLeaders' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({
-                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                    } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupMembers' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -14693,9 +14392,6 @@ export type WorkingGroupsContentFragment = Pick<
               | ({ __typename: 'EventSpeakers' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Events' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ExternalAuthors' } & { sys: Pick<Sys, 'id'> })
-              | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
               | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideCollections' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'GuideContent' } & { sys: Pick<Sys, 'id'> })
@@ -14722,9 +14418,6 @@ export type WorkingGroupsContentFragment = Pick<
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupLeaders' } & {
-                  sys: Pick<Sys, 'id'>;
-                })
-              | ({ __typename: 'WorkingGroupLeadersOrWorkingGroupMembers' } & {
                   sys: Pick<Sys, 'id'>;
                 })
               | ({ __typename: 'WorkingGroupMembers' } & {
@@ -14809,9 +14502,6 @@ export type FetchWorkingGroupByIdQuery = {
                   | ({ __typename: 'ExternalAuthors' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                      sys: Pick<Sys, 'id'>;
-                    })
                   | ({ __typename: 'ExternalTools' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'GuideCollections' } & {
                       sys: Pick<Sys, 'id'>;
@@ -14848,9 +14538,6 @@ export type FetchWorkingGroupByIdQuery = {
                   | ({ __typename: 'WorkingGroupLeaders' } & {
                       sys: Pick<Sys, 'id'>;
                     })
-                  | ({
-                      __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                    } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'WorkingGroupMembers' } & {
                       sys: Pick<Sys, 'id'>;
                     })
@@ -14960,9 +14647,6 @@ export type FetchWorkingGroupsQuery = {
                         | ({ __typename: 'ExternalAuthors' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({ __typename: 'ExternalAuthorsOrUsers' } & {
-                            sys: Pick<Sys, 'id'>;
-                          })
                         | ({ __typename: 'ExternalTools' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -15009,9 +14693,6 @@ export type FetchWorkingGroupsQuery = {
                         | ({ __typename: 'WorkingGroupLeaders' } & {
                             sys: Pick<Sys, 'id'>;
                           })
-                        | ({
-                            __typename: 'WorkingGroupLeadersOrWorkingGroupMembers';
-                          } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'WorkingGroupMembers' } & {
                             sys: Pick<Sys, 'id'>;
                           })

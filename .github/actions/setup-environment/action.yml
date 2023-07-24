@@ -74,9 +74,6 @@ outputs:
   crn-algolia-app-id-name:
     description: 'CRN Algolia App id SSM name'
     value: ${{ steps.vars.outputs.crn-algolia-app-id-name }}
-  crn-algolia-backup-bucket-name:
-    description: 'CRN Algolia Backup Bucket Name'
-    value: ${{ steps.vars.outputs.crn-algolia-backup-bucket-name }}
   crn-algolia-index:
     description: 'CRN Algolia Index'
     value: ${{ steps.vars.outputs.crn-algolia-index }}
@@ -152,6 +149,9 @@ outputs:
   gp2-algolia-app-id-name:
     description: 'GP2 Algolia App id SSM name'
     value: ${{ steps.vars.outputs.gp2-algolia-app-id-name }}
+  gp2-algolia-index:
+    description: 'GP2 Algolia Index'
+    value: ${{ steps.vars.outputs.gp2-algolia-index }}
   gp2-api-url:
     description: 'GP2 API Url'
     value: ${{ steps.vars.outputs.gp2-api-url }}
@@ -258,6 +258,7 @@ runs:
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
           HAS_CONTENTFUL_LABEL=${{ contains(github.event.pull_request.labels.*.name, 'contentful') }}
           echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "gp2-algolia-index=gp2-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT
           echo "crn-api-url=https://api-$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT
           echo "crn-app-url=https://$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT

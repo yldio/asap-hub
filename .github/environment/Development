@@ -1,7 +1,6 @@
 contentful-environment=Development
 crn-algolia-api-key-name=crn-algolia-api-key-ci-dev
 crn-algolia-app-id-name=crn-algolia-app-id-dev
-crn-algolia-backup-bucket-name=asap-hub-dev-algolia-backup
 crn-algolia-index=asap-hub_dev
 crn-api-url=https://api-dev.hub.asap.science
 crn-app-url=https://dev.hub.asap.science
@@ -19,7 +18,6 @@ crn-squidex-backup-bucket-name=asap-hub-dev-data-backup
 crn-squidex-ci-client-id=asap-hub-dev:default
 gp2-algolia-api-key-name=gp2-algolia-api-key-ci-dev
 gp2-algolia-app-id-name=gp2-algolia-app-id-dev
-gp2-algolia-backup-bucket-name=gp2-hub-dev-algolia-backup
 gp2-algolia-index=gp2-hub_dev
 gp2-api-url=https://api-dev.gp2.asap.science
 gp2-app-url=https://dev.gp2.asap.science

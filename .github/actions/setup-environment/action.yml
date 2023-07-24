@@ -146,6 +146,12 @@ outputs:
   crn-squidex-ci-client-id:
     description: 'CRN CI Squidex Client ID'
     value: ${{ steps.vars.outputs.crn-squidex-ci-client-id }}
+  gp2-algolia-api-key-name:
+    description: 'GP2 Algolia Api key SSM Name'
+    value: ${{ steps.vars.outputs.gp2-algolia-api-key-name }}
+  gp2-algolia-app-id-name:
+    description: 'GP2 Algolia App id SSM name'
+    value: ${{ steps.vars.outputs.gp2-algolia-app-id-name }}
   gp2-api-url:
     description: 'GP2 API Url'
     value: ${{ steps.vars.outputs.gp2-api-url }}

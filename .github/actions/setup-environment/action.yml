@@ -74,9 +74,6 @@ outputs:
   crn-algolia-app-id-name:
     description: 'CRN Algolia App id SSM name'
     value: ${{ steps.vars.outputs.crn-algolia-app-id-name }}
-  crn-algolia-backup-bucket-name:
-    description: 'CRN Algolia Backup Bucket Name'
-    value: ${{ steps.vars.outputs.crn-algolia-backup-bucket-name }}
   crn-algolia-index:
     description: 'CRN Algolia Index'
     value: ${{ steps.vars.outputs.crn-algolia-index }}

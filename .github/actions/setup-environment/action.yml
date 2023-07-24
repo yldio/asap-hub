@@ -152,6 +152,9 @@ outputs:
   gp2-algolia-app-id-name:
     description: 'GP2 Algolia App id SSM name'
     value: ${{ steps.vars.outputs.gp2-algolia-app-id-name }}
+  gp2-algolia-index:
+    description: 'GP2 Algolia Index'
+    value: ${{ steps.vars.outputs.gp2-algolia-index }}
   gp2-api-url:
     description: 'GP2 API Url'
     value: ${{ steps.vars.outputs.gp2-api-url }}

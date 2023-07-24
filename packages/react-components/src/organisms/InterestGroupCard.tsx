@@ -42,7 +42,10 @@ const InterestGroupCard: React.FC<InterestGroupCardProps> = ({
   <Card accent={active ? 'default' : 'neutral200'}>
     <div css={titleStyle}>
       <LinkHeadline
-        href={network({}).groups({}).group({ groupId: id }).$}
+        href={
+          network({}).interestGroups({}).interestGroup({ interestGroupId: id })
+            .$
+        }
         level={2}
         styleAsHeading={4}
       >
@@ -50,7 +53,11 @@ const InterestGroupCard: React.FC<InterestGroupCardProps> = ({
       </LinkHeadline>
       {!active && <StateTag icon={inactiveBadgeIcon} label="Inactive" />}
     </div>
-    <Anchor href={network({}).groups({}).group({ groupId: id }).$}>
+    <Anchor
+      href={
+        network({}).interestGroups({}).interestGroup({ interestGroupId: id }).$
+      }
+    >
       <Paragraph accent="lead">{description}</Paragraph>
     </Anchor>
     <TagList min={2} max={3} tags={tags} />

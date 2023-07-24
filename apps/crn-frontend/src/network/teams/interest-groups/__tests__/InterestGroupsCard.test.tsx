@@ -13,7 +13,7 @@ import InterestGroupsCard from '../InterestGroupsCard';
 import { teamInterestGroupsState } from '../state';
 
 jest.mock('../api');
-const mockGetTeamGroups = getTeamInterestGroups as jest.MockedFunction<
+const mockGetTeamInterestGroups = getTeamInterestGroups as jest.MockedFunction<
   typeof getTeamInterestGroups
 >;
 
@@ -36,18 +36,21 @@ const wrapper: FC<Record<string, never>> = ({ children }) => (
 );
 
 afterEach(() => {
-  mockGetTeamGroups.mockClear();
+  mockGetTeamInterestGroups.mockClear();
 });
 
 it('requests groups for the given team id', async () => {
   render(<InterestGroupsCard id={id} />, { wrapper });
   await waitFor(() =>
-    expect(mockGetTeamGroups).toHaveBeenCalledWith(id, expect.anything()),
+    expect(mockGetTeamInterestGroups).toHaveBeenCalledWith(
+      id,
+      expect.anything(),
+    ),
   );
 });
 
 it('render nothing when there are no groups and the group is active', async () => {
-  mockGetTeamGroups.mockResolvedValue({ total: 0, items: [] });
+  mockGetTeamInterestGroups.mockResolvedValue({ total: 0, items: [] });
   const { container, queryByText } = render(<InterestGroupsCard id={id} />, {
     wrapper,
   });
@@ -56,7 +59,7 @@ it('render nothing when there are no groups and the group is active', async () =
 });
 
 it('render the team groups tabbed component when isInactive has a value', async () => {
-  mockGetTeamGroups.mockResolvedValue({
+  mockGetTeamInterestGroups.mockResolvedValue({
     total: 0,
     items: [],
   });
@@ -68,7 +71,7 @@ it('render the team groups tabbed component when isInactive has a value', async 
 });
 
 it('renders the card when there are groups', async () => {
-  mockGetTeamGroups.mockResolvedValue({
+  mockGetTeamInterestGroups.mockResolvedValue({
     total: 1,
     items: [{ ...createInterestGroupResponse() }],
   });
@@ -77,7 +80,7 @@ it('renders the card when there are groups', async () => {
 });
 
 it('links to the group', async () => {
-  mockGetTeamGroups.mockResolvedValue({
+  mockGetTeamInterestGroups.mockResolvedValue({
     total: 1,
     items: [{ ...createInterestGroupResponse(), id: 'g1', name: 'Group 1' }],
   });
@@ -92,7 +95,7 @@ it('links to the group', async () => {
 });
 
 it('throws if the team does not exist', async () => {
-  mockGetTeamGroups.mockResolvedValue(undefined);
+  mockGetTeamInterestGroups.mockResolvedValue(undefined);
   const errorWrapper: FC = ({ children }) =>
     createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
   const { findByText } = render(<InterestGroupsCard id={id} />, {

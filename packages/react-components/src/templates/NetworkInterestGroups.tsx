@@ -4,7 +4,7 @@ import { ResultList, InterestGroupCard } from '../organisms';
 import { InterestGroupsIcon } from '../icons';
 import { charcoal } from '../colors';
 
-type NetworkGroupsProps = Omit<
+type NetworkInterestGroupsProps = Omit<
   ComponentProps<typeof ResultList>,
   'children'
 > & {
@@ -13,7 +13,7 @@ type NetworkGroupsProps = Omit<
   >;
 };
 
-const NetworkGroups: FC<NetworkGroupsProps> = ({
+const NetworkInterestGroups: FC<NetworkInterestGroupsProps> = ({
   interestGroups,
   ...cardListProps
 }) => (
@@ -28,4 +28,4 @@ const NetworkGroups: FC<NetworkGroupsProps> = ({
     ))}
   </ResultList>
 );
-export default NetworkGroups;
+export default NetworkInterestGroups;

@@ -11,7 +11,7 @@ export const Normal = () => (
     id="userId"
     alumniSinceDate={boolean('is alumni', false) ? '2020-01-01' : undefined}
     displayName={text('Display Name', 'John Doe')}
-    groups={
+    interestGroups={
       createListInterestGroupResponse(number('Number of groups', 10)).items
     }
   />

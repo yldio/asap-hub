@@ -115,7 +115,7 @@ const Network: FC<Record<string, never>> = () => {
           <TeamProfile currentTime={currentTime} />
         </Frame>
       </Route>
-      <Route exact path={path + network({}).groups.template}>
+      <Route exact path={path + network({}).interestGroups.template}>
         <NetworkPage
           page="interest-groups"
           searchQuery={searchQuery}
@@ -134,8 +134,8 @@ const Network: FC<Record<string, never>> = () => {
       <Route
         path={
           path +
-          network({}).groups.template +
-          network({}).groups({}).group.template
+          network({}).interestGroups.template +
+          network({}).interestGroups({}).interestGroup.template
         }
       >
         <Frame title="Interest Group Profile">

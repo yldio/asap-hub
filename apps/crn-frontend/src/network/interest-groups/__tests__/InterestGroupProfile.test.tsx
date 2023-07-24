@@ -18,40 +18,44 @@ import { getEvents } from '../../../events/api';
 jest.mock('../api');
 jest.mock('../../../events/api');
 
-const mockGetGroup = getInterestGroup as jest.MockedFunction<
+const mockGetInterestGroup = getInterestGroup as jest.MockedFunction<
   typeof getInterestGroup
 >;
-const mockGetGroupEventsFromAlgolia = getEvents as jest.MockedFunction<
+const mockGetInterestGroupEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;
 
 beforeEach(jest.clearAllMocks);
 
 const renderGroupProfile = async (
-  groupResponse = createInterestGroupResponse(),
-  { groupId = groupResponse.id } = {},
+  interestGroupResponse = createInterestGroupResponse(),
+  { interestGroupId = interestGroupResponse.id } = {},
 ) => {
-  mockGetGroup.mockImplementation(async (id) =>
-    id === groupResponse.id ? groupResponse : undefined,
+  mockGetInterestGroup.mockImplementation(async (id) =>
+    id === interestGroupResponse.id ? interestGroupResponse : undefined,
   );
 
   const result = render(
     <RecoilRoot
       initializeState={({ set }) =>
-        set(refreshInterestGroupState(groupResponse.id), Math.random())
+        set(refreshInterestGroupState(interestGroupResponse.id), Math.random())
       }
     >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter
-              initialEntries={[network({}).groups({}).group({ groupId }).$]}
+              initialEntries={[
+                network({})
+                  .interestGroups({})
+                  .interestGroup({ interestGroupId }).$,
+              ]}
             >
               <Route
                 path={
                   network.template +
-                  network({}).groups.template +
-                  network({}).groups({}).group.template
+                  network({}).interestGroups.template +
+                  network({}).interestGroups({}).interestGroup.template
                 }
               >
                 <InterestGroupProfile currentTime={new Date()} />
@@ -173,7 +177,7 @@ describe('the past events tab', () => {
 describe('the event tabs', () => {
   it('renders number of upcoming events from algolia', async () => {
     const response = createListEventResponse(7);
-    mockGetGroupEventsFromAlgolia.mockResolvedValue(response);
+    mockGetInterestGroupEventsFromAlgolia.mockResolvedValue(response);
     await renderGroupProfile();
 
     expect(await screen.findByText(/Upcoming Events \(7\)/i)).toBeVisible();
@@ -181,7 +185,7 @@ describe('the event tabs', () => {
 
   it('renders number of past events from algolia', async () => {
     const response = createListEventResponse(7, { isEventInThePast: true });
-    mockGetGroupEventsFromAlgolia.mockResolvedValue(response);
+    mockGetInterestGroupEventsFromAlgolia.mockResolvedValue(response);
     await renderGroupProfile();
 
     expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();

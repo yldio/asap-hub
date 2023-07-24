@@ -15,14 +15,14 @@ it('renders the card only when group with slack tool is provided', () => {
   const { queryByRole, getByRole, rerender } = render(
     <EventConversation
       {...props}
-      group={{ ...createInterestGroupResponse(), tools: {} }}
+      interestGroup={{ ...createInterestGroupResponse(), tools: {} }}
     />,
   );
   expect(queryByRole('heading')).toBeNull();
   rerender(
     <EventConversation
       {...props}
-      group={{
+      interestGroup={{
         ...createInterestGroupResponse(),
         tools: { slack: 'http://example.com' },
       }}
@@ -37,7 +37,7 @@ it('renders slack tool button', () => {
   const { getByTitle } = render(
     <EventConversation
       {...props}
-      group={{
+      interestGroup={{
         ...createInterestGroupResponse(),
         tools: { slack: 'http://example.com' },
       }}

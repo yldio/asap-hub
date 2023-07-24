@@ -26,10 +26,10 @@ const button = css({
   },
 });
 
-type EventConversationProps = Pick<EventResponse, 'group'>;
+type EventConversationProps = Pick<EventResponse, 'interestGroup'>;
 
 const EventConversation: React.FC<EventConversationProps> = ({
-  group: { id, tools: { slack } } = { tools: {} },
+  interestGroup: { id, tools: { slack } } = { tools: {} },
 }) =>
   id && slack ? (
     <Card>
@@ -46,7 +46,11 @@ const EventConversation: React.FC<EventConversationProps> = ({
         </li>
         <li css={button}>
           <Link
-            href={network({}).groups({}).group({ groupId: id }).$}
+            href={
+              network({})
+                .interestGroups({})
+                .interestGroup({ interestGroupId: id }).$
+            }
             buttonStyle
             small
           >

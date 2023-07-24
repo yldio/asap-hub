@@ -32,23 +32,23 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
   currentTime,
 }) => {
   const { path } = useRouteMatch();
-  const route = network({}).groups({}).group;
+  const route = network({}).interestGroups({}).interestGroup;
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
 
-  const { groupId } = useRouteParams(route);
-  const interestGroup = useInterestGroupById(groupId);
+  const { interestGroupId } = useRouteParams(route);
+  const interestGroup = useInterestGroupById(interestGroupId);
 
   useEffect(() => {
     loadAbout().then(loadCalendar).then(loadEventsList);
   }, []);
 
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
-    groupId,
+    groupId: interestGroupId,
   });
 
   if (interestGroup) {
     const { about, past, upcoming, calendar } = route({
-      groupId,
+      interestGroupId,
     });
     const paths = {
       about: path + about.template,
@@ -60,7 +60,7 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
     return (
       <InterestGroupProfilePage
         groupTeamsHref={`${
-          route({ groupId }).about({}).$
+          route({ interestGroupId }).about({}).$
         }#${groupTeamsElementId}`}
         upcomingEventsCount={upcomingEvents?.total || 0}
         pastEventsCount={pastEvents?.total || 0}
@@ -85,7 +85,7 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
           )}
           currentTime={currentTime}
           displayName={interestGroup.name}
-          eventConstraint={{ groupId }}
+          eventConstraint={{ groupId: interestGroupId }}
           isActive={interestGroup.active}
           paths={paths}
           type="interest group"

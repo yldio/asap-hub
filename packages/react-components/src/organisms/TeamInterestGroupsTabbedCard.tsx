@@ -110,7 +110,11 @@ const TeamInterestGroupsTabbedCard: React.FC<TeamGroupsTabbedCardProps> = ({
             {data.map(({ id, teams, description, name }, index) => (
               <li css={listElementStyles} key={`team-group-${index}`}>
                 <LinkHeadline
-                  href={network({}).groups({}).group({ groupId: id }).$}
+                  href={
+                    network({})
+                      .interestGroups({})
+                      .interestGroup({ interestGroupId: id }).$
+                  }
                   level={4}
                   noMargin={true}
                 >

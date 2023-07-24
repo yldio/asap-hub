@@ -871,10 +871,10 @@ const serverlessConfig: AWS = {
             pattern: {
               source: [eventBusSourceContentful],
               'detail-type': [
-                'GroupsPublished',
-                'GroupsUpdated',
-                'GroupsUnpublished',
-                'GroupsDeleted',
+                'InterestGroupsPublished',
+                'InterestGroupsUpdated',
+                'InterestGroupsUnpublished',
+                'InterestGroupsDeleted',
               ] satisfies WebhookDetailType[],
             },
           },

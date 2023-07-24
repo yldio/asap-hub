@@ -254,7 +254,7 @@ export const parseGraphQLEvent = (
     hidden: item.flatData.hidden || false,
     tags: item.flatData.tags ?? [],
     calendar,
-    group,
+    interestGroup: group,
     workingGroup,
     speakers,
   };

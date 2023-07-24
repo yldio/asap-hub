@@ -33,7 +33,7 @@ type InterestGroupToolsProps = Pick<
   readonly calendarId?: InterestGroupResponse['calendars'][0]['id'];
 };
 
-const GroupTools: React.FC<InterestGroupToolsProps> = ({
+const InterestGroupTools: React.FC<InterestGroupToolsProps> = ({
   active,
   calendarId,
   tools: { slack, googleDrive },
@@ -67,4 +67,4 @@ const GroupTools: React.FC<InterestGroupToolsProps> = ({
   </Card>
 );
 
-export default GroupTools;
+export default InterestGroupTools;

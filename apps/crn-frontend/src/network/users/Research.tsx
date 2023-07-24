@@ -15,7 +15,7 @@ import { Route, useRouteMatch } from 'react-router-dom';
 import { usePatchUserById } from './state';
 
 import expertiseAndResourceSuggestions from './expertise-and-resource-suggestions';
-import GroupsCard from './interest-groups/InterestGroupsCard';
+import InterestGroupsCard from './interest-groups/InterestGroupsCard';
 
 type ResearchProps = {
   user: UserResponse;
@@ -33,7 +33,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         {...user}
         userProfileGroupsCard={
           <Frame title={null} fallback={null}>
-            <GroupsCard user={user} />
+            <InterestGroupsCard user={user} />
           </Frame>
         }
         userProfileWorkingGroupsCard={

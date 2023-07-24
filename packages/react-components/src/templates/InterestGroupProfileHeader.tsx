@@ -65,7 +65,9 @@ const InterestGroupProfileHeader: React.FC<InterestGroupProfileHeaderProps> = ({
   upcomingEventsCount,
   pastEventsCount,
 }) => {
-  const route = network({}).groups({}).group({ groupId: id });
+  const route = network({})
+    .interestGroups({})
+    .interestGroup({ interestGroupId: id });
 
   return (
     <header>

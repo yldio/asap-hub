@@ -248,9 +248,9 @@ describe('Event data provider', () => {
     });
     describe('Filters', () => {
       describe.each`
-        typeOfGroup   | filterField         | groupGraphqlSquidexResponse               | graphqlField
-        ${'Interest'} | ${'groupId'}        | ${getSquidexInterestGroupGraphqlResponse} | ${'findGroupsContent'}
-        ${'Working'}  | ${'workingGroupId'} | ${getSquidexWorkingGroupGraphqlResponse}  | ${'findWorkingGroupsContent'}
+        typeOfGroup   | filterField          | groupGraphqlSquidexResponse               | graphqlField
+        ${'Interest'} | ${'interestGroupId'} | ${getSquidexInterestGroupGraphqlResponse} | ${'findGroupsContent'}
+        ${'Working'}  | ${'workingGroupId'}  | ${getSquidexWorkingGroupGraphqlResponse}  | ${'findWorkingGroupsContent'}
       `(
         '$typeOfGroup Group filter',
         ({ filterField, groupGraphqlSquidexResponse, graphqlField }) => {
@@ -777,7 +777,7 @@ describe('Event data provider', () => {
         const result = await eventDataProvider.fetchById(eventId);
         expect(result).toMatchObject({
           ...getEventResponse(),
-          group: undefined,
+          interestGroup: undefined,
         });
       });
     });

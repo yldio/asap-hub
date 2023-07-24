@@ -115,7 +115,7 @@ it.skip('silently refreshes the event to fetch the meeting link', async () => {
 it('renders calendar list for active groups', async () => {
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
-    group: { ...createInterestGroupResponse(), active: true },
+    interestGroup: { ...createInterestGroupResponse(), active: true },
     calendar: { ...createCalendarResponse(), name: 'Event Calendar' },
   });
   const { findByText } = render(<Event />, { wrapper });
@@ -126,7 +126,7 @@ it('renders calendar list for active groups', async () => {
 it('renders calendar list for events with missing group', async () => {
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
-    group: undefined,
+    interestGroup: undefined,
     calendar: { ...createCalendarResponse(), name: 'Event Calendar' },
   });
   const { findByText } = render(<Event />, { wrapper });
@@ -136,7 +136,7 @@ it('renders calendar list for events with missing group', async () => {
 it('renders continue the event conversation when group with slack provided', async () => {
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
-    group: {
+    interestGroup: {
       ...createInterestGroupResponse(),
       tools: { slack: 'http://slack.com' },
     },

@@ -16,14 +16,14 @@ jest.mock('../../users/api');
 jest.mock('../../teams/api');
 jest.mock('../../working-groups/api');
 
-const mockGetGroups = getInterestGroups as jest.MockedFunction<
+const mockGetInterestGroups = getInterestGroups as jest.MockedFunction<
   typeof getInterestGroups
 >;
 
-const renderGroupList = async (
+const renderInterestGroupList = async (
   listGroupResponse: ListInterestGroupResponse = createListInterestGroupResponse(),
 ) => {
-  mockGetGroups.mockResolvedValue(listGroupResponse);
+  mockGetInterestGroups.mockResolvedValue(listGroupResponse);
 
   const result = render(
     <RecoilRoot
@@ -56,10 +56,10 @@ const renderGroupList = async (
 };
 
 it('fetches the group information', async () => {
-  await renderGroupList();
+  await renderInterestGroupList();
 
   await waitFor(() =>
-    expect(mockGetGroups).toHaveBeenCalledWith(
+    expect(mockGetInterestGroups).toHaveBeenCalledWith(
       expect.objectContaining({
         currentPage: 0,
       }),
@@ -69,7 +69,7 @@ it('fetches the group information', async () => {
 });
 
 it('renders a list of fetched groups', async () => {
-  const { container } = await renderGroupList({
+  const { container } = await renderInterestGroupList({
     ...createListInterestGroupResponse(2),
     items: createListInterestGroupResponse(2).items.map((group, i) => ({
       ...group,
@@ -81,7 +81,7 @@ it('renders a list of fetched groups', async () => {
 });
 
 it('filters inactive group teams from team count', async () => {
-  await renderGroupList({
+  await renderInterestGroupList({
     ...createListInterestGroupResponse(1),
     items: createListInterestGroupResponse(1).items.map((group) => ({
       ...group,
@@ -94,7 +94,7 @@ it('filters inactive group teams from team count', async () => {
     })),
   });
   expect(screen.getByText(/4 Teams/i)).toBeVisible();
-  await renderGroupList({
+  await renderInterestGroupList({
     ...createListInterestGroupResponse(1),
     items: createListInterestGroupResponse(1).items.map((group) => ({
       ...group,

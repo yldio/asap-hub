@@ -78,7 +78,12 @@ it('renders the navigation for active and inactive groups', () => {
 it('preserves the search query when navigating', () => {
   render(
     <StaticRouter
-      location={network({}).groups({}).group({ groupId: '42' }).upcoming({}).$}
+      location={
+        network({})
+          .interestGroups({})
+          .interestGroup({ interestGroupId: '42' })
+          .upcoming({}).$
+      }
     >
       <InterestGroupProfileHeader {...props} searchQuery="searchterm" />
     </StaticRouter>,
@@ -93,7 +98,12 @@ it('preserves the search query when navigating', () => {
 it('displays number of upcoming events', () => {
   render(
     <StaticRouter
-      location={network({}).groups({}).group({ groupId: '42' }).upcoming({}).$}
+      location={
+        network({})
+          .interestGroups({})
+          .interestGroup({ interestGroupId: '42' })
+          .upcoming({}).$
+      }
     >
       <InterestGroupProfileHeader {...props} upcomingEventsCount={10} />
     </StaticRouter>,
@@ -104,7 +114,12 @@ it('displays number of upcoming events', () => {
 it('displays number of past events', () => {
   render(
     <StaticRouter
-      location={network({}).groups({}).group({ groupId: '42' }).upcoming({}).$}
+      location={
+        network({})
+          .interestGroups({})
+          .interestGroup({ interestGroupId: '42' })
+          .upcoming({}).$
+      }
     >
       <InterestGroupProfileHeader {...props} pastEventsCount={12} />
     </StaticRouter>,

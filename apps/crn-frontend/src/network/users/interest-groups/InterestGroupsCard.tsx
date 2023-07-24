@@ -3,18 +3,18 @@ import { UserResponse } from '@asap-hub/model';
 
 import { useUserInterestGroupsById } from './state';
 
-const GroupsCard: React.FC<{ user: UserResponse }> = ({ user }) => {
-  const groups = useUserInterestGroupsById(user.id);
+const InterestGroupsCard: React.FC<{ user: UserResponse }> = ({ user }) => {
+  const interestGroups = useUserInterestGroupsById(user.id);
 
-  if (groups === 'noSuchUser') {
+  if (interestGroups === 'noSuchUser') {
     throw new Error(
       `Failed to fetch groups for user with id ${user.id}. User does not exist.`,
     );
   }
 
-  return groups.total ? (
-    <UserInterestGroupCard {...user} groups={groups.items} />
+  return interestGroups.total ? (
+    <UserInterestGroupCard {...user} interestGroups={interestGroups.items} />
   ) : null;
 };
 
-export default GroupsCard;
+export default InterestGroupsCard;

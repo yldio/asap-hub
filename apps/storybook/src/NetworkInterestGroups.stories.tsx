@@ -7,7 +7,9 @@ export default {
   component: NetworkInterestGroups,
 };
 
-const groupsProps = (): ComponentProps<typeof NetworkInterestGroups> => {
+const interestGroupsProps = (): ComponentProps<
+  typeof NetworkInterestGroups
+> => {
   const numberOfItems = number('Number of Groups', 2, { min: 0 });
   const currentPageIndex = number('Current Page', 1, { min: 1 }) - 1;
   return {
@@ -26,4 +28,6 @@ const groupsProps = (): ComponentProps<typeof NetworkInterestGroups> => {
   };
 };
 
-export const Normal = () => <NetworkInterestGroups {...groupsProps()} />;
+export const Normal = () => (
+  <NetworkInterestGroups {...interestGroupsProps()} />
+);

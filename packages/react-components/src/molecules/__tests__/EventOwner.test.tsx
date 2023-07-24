@@ -9,7 +9,7 @@ import EventOwner from '../EventOwner';
 it('renders the interest group name linking to the group and icon', () => {
   render(
     <EventOwner
-      group={{
+      interestGroup={{
         ...createInterestGroupResponse(),
         id: 'grp',
         name: 'My Group',
@@ -47,7 +47,9 @@ it('shows that the event is run by ASAP when there is no group', () => {
 
 it('displays inactive badge when a group is inactive', () => {
   render(
-    <EventOwner group={{ ...createInterestGroupResponse(), active: false }} />,
+    <EventOwner
+      interestGroup={{ ...createInterestGroupResponse(), active: false }}
+    />,
   );
 
   expect(screen.getByTitle('Inactive')).toBeInTheDocument();

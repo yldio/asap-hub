@@ -16,7 +16,7 @@ import { getUserInterestGroups } from '../api';
 import { userInterestGroupsState } from '../state';
 
 jest.mock('../api');
-const mockGetUserGroups = getUserInterestGroups as jest.MockedFunction<
+const mockGetUserInterestGroups = getUserInterestGroups as jest.MockedFunction<
   typeof getUserInterestGroups
 >;
 
@@ -39,7 +39,9 @@ const wrapper: FC<Record<string, never>> = ({ children }) => (
 );
 
 it('is not rendered when there are no groups', async () => {
-  mockGetUserGroups.mockResolvedValue(createListInterestGroupResponse(0));
+  mockGetUserInterestGroups.mockResolvedValue(
+    createListInterestGroupResponse(0),
+  );
   const { queryByText } = render(
     <InterestGroupsCard
       user={{ ...createUserResponse({}, 0), id: userId, firstName: 'test' }}
@@ -56,7 +58,9 @@ it('is not rendered when there are no groups', async () => {
 });
 
 it('is rendered when there are groups', async () => {
-  mockGetUserGroups.mockResolvedValue(createListInterestGroupResponse(1));
+  mockGetUserInterestGroups.mockResolvedValue(
+    createListInterestGroupResponse(1),
+  );
   const { queryByText } = render(
     <InterestGroupsCard
       user={{ ...createUserResponse({}, 1), id: userId, firstName: 'test' }}
@@ -70,7 +74,7 @@ it('is rendered when there are groups', async () => {
 });
 
 it('throws if the user does not exist', async () => {
-  mockGetUserGroups.mockResolvedValue(undefined);
+  mockGetUserInterestGroups.mockResolvedValue(undefined);
   const errorWrapper: FC = ({ children }) =>
     createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
   const { findByText } = render(

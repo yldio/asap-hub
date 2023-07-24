@@ -194,7 +194,7 @@ it('allows selection of user filters', async () => {
 });
 
 it('allows selection of group filters', async () => {
-  await renderNetworkPage(network({}).groups({}).$);
+  await renderNetworkPage(network({}).interestGroups({}).$);
 
   userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Active');

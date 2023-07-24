@@ -7,14 +7,14 @@ import {
 import { WorkingGroupDataObject, WorkingGroupResponse } from './working-group';
 
 export interface CalendarDataObject extends BasicCalendar {
-  groups?: Pick<InterestGroupDataObject, 'id' | 'active'>[];
+  interestGroups?: Pick<InterestGroupDataObject, 'id' | 'active'>[];
   workingGroups?: Pick<WorkingGroupDataObject, 'id' | 'complete'>[];
 }
 
 export type ListCalendarDataObject = ListResponse<CalendarDataObject>;
 
 export interface CalendarResponse extends BasicCalendarResponse {
-  groups: Pick<InterestGroupResponse, 'id' | 'active'>[];
+  interestGroups: Pick<InterestGroupResponse, 'id' | 'active'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'complete'>[];
 }
 

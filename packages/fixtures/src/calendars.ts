@@ -20,7 +20,7 @@ export const createCalendarResponse = (
   color:
     googleLegacyCalendarColor[itemIndex % googleLegacyCalendarColor.length],
   name: `Calendar ${itemIndex}`,
-  groups: [{ id: 'group-1', active: activeGroups }],
+  interestGroups: [{ id: 'group-1', active: activeGroups }],
   workingGroups: [
     { id: 'working-group-1', complete: !incompleteWorkingGroups },
   ],

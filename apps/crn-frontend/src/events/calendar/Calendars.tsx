@@ -18,8 +18,8 @@ const Calendars: React.FC<CalendarsProps> = ({ currentTime }) => {
       <CalendarList
         calendars={items.filter(
           (calendar) =>
-            calendar.groups.some(({ active }) => active) ||
-            (calendar.groups.every(({ active }) => !active) &&
+            calendar.interestGroups.some(({ active }) => active) ||
+            (calendar.interestGroups.every(({ active }) => !active) &&
               calendar.workingGroups.every(({ complete }) => complete)),
         )}
         title="Subscribe to Interest Groups on Calendar"

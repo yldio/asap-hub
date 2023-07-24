@@ -354,7 +354,7 @@ describe('Working Groups data provider', () => {
             id: 'hub@asap.science',
             name: 'ASAP Hub',
             color: '#B1365F',
-            groups: [],
+            interestGroups: [],
             workingGroups: [],
           },
         ]);

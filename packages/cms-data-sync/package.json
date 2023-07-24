@@ -25,7 +25,7 @@
     "@contentful/rich-text-types": "16.2.0",
     "cheerio": "^1.0.0-rc.12",
     "contentful-html-rich-text-converter": "yldio/contentful-html-rich-text-converter#v1.0.19",
-    "contentful-management": "10.39.1",
+    "contentful-management": "10.39.2",
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6",
     "limiter": "^2.1.0"

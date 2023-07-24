@@ -4635,6 +4635,7 @@ type ResearchOutputsDataDto {
   publishDate: ResearchOutputsDataPublishDateDto
   relatedEvents: ResearchOutputsDataRelatedEventsDto
   relatedResearch: ResearchOutputsDataRelatedResearchDto
+  reviewRequestedBy: ResearchOutputsDataReviewRequestedByDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
   statusChangedAt: ResearchOutputsDataStatusChangedAtDto
@@ -4684,6 +4685,7 @@ input ResearchOutputsDataInputDto {
   publishDate: ResearchOutputsDataPublishDateInputDto
   relatedEvents: ResearchOutputsDataRelatedEventsInputDto
   relatedResearch: ResearchOutputsDataRelatedResearchInputDto
+  reviewRequestedBy: ResearchOutputsDataReviewRequestedByInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
   statusChangedAt: ResearchOutputsDataStatusChangedAtInputDto
@@ -4816,6 +4818,16 @@ type ResearchOutputsDataRelatedResearchDto {
 
 """The structure of the Related Research field of the Research Outputs content input type."""
 input ResearchOutputsDataRelatedResearchInputDto {
+  iv: [String!]
+}
+
+"""The structure of the Review requested by field of the Research Outputs content type."""
+type ResearchOutputsDataReviewRequestedByDto {
+  iv: [Users!]
+}
+
+"""The structure of the Review requested by field of the Research Outputs content input type."""
+input ResearchOutputsDataReviewRequestedByInputDto {
   iv: [String!]
 }
 
@@ -4994,6 +5006,7 @@ type ResearchOutputsFlatDataDto {
   publishDate: Instant
   relatedEvents: [Events!]
   relatedResearch: [ResearchOutputs!]
+  reviewRequestedBy: [Users!]
   """
   This must start with "RRID:"
   """

@@ -291,8 +291,8 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   teamIds: string[];
   updatedBy: string;
   workingGroups: string[];
-  relatedResearchIds?: string[];
-  relatedEventIds?: string[];
+  relatedResearchIds: string[];
+  relatedEventIds: string[];
   statusChangedById?: string;
   statusChangedAt?: string;
 };

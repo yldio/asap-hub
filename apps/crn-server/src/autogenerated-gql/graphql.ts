@@ -4435,6 +4435,7 @@ export type ResearchOutputsDataDto = {
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
   relatedEvents: Maybe<ResearchOutputsDataRelatedEventsDto>;
   relatedResearch: Maybe<ResearchOutputsDataRelatedResearchDto>;
+  reviewRequestedBy: Maybe<ResearchOutputsDataReviewRequestedByDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
   statusChangedAt: Maybe<ResearchOutputsDataStatusChangedAtDto>;
@@ -4484,6 +4485,7 @@ export type ResearchOutputsDataInputDto = {
   publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
   relatedEvents: InputMaybe<ResearchOutputsDataRelatedEventsInputDto>;
   relatedResearch: InputMaybe<ResearchOutputsDataRelatedResearchInputDto>;
+  reviewRequestedBy: InputMaybe<ResearchOutputsDataReviewRequestedByInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
   statusChangedAt: InputMaybe<ResearchOutputsDataStatusChangedAtInputDto>;
@@ -4612,6 +4614,16 @@ export type ResearchOutputsDataRelatedResearchDto = {
 
 /** The structure of the Related Research field of the Research Outputs content input type. */
 export type ResearchOutputsDataRelatedResearchInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Review requested by field of the Research Outputs content type. */
+export type ResearchOutputsDataReviewRequestedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Review requested by field of the Research Outputs content input type. */
+export type ResearchOutputsDataReviewRequestedByInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -4784,6 +4796,7 @@ export type ResearchOutputsFlatDataDto = {
   publishDate: Maybe<Scalars['Instant']>;
   relatedEvents: Maybe<Array<Events>>;
   relatedResearch: Maybe<Array<ResearchOutputs>>;
+  reviewRequestedBy: Maybe<Array<Users>>;
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;

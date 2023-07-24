@@ -24,7 +24,7 @@ it('renders correctly for a normal user', () => {
   const { getByText } = render(
     <UserInterestGroupCard
       displayName={displayName}
-      groups={groups}
+      interestGroups={groups}
       id={userId}
     />,
   );
@@ -45,7 +45,7 @@ it('cannot switch to the disabled tab', () => {
   const { getByRole, rerender } = render(
     <UserInterestGroupCard
       displayName={displayName}
-      groups={groups}
+      interestGroups={groups}
       id={userId}
     />,
   );
@@ -60,7 +60,7 @@ it('cannot switch to the disabled tab', () => {
   rerender(
     <UserInterestGroupCard
       displayName={displayName}
-      groups={groups}
+      interestGroups={groups}
       alumniSinceDate="2020-01-02"
       id={userId}
     />,
@@ -77,7 +77,7 @@ it('renders correctly for an alumni user', () => {
   const { getByText, getByRole } = render(
     <UserInterestGroupCard
       displayName={displayName}
-      groups={groups}
+      interestGroups={groups}
       alumniSinceDate="2020-01-02"
       id={userId}
     />,
@@ -94,7 +94,7 @@ it('can click the show more/ less button', () => {
   const { getAllByText, getByText } = render(
     <UserInterestGroupCard
       displayName={displayName}
-      groups={groups}
+      interestGroups={groups}
       id={userId}
     />,
   );
@@ -125,7 +125,7 @@ it('displays the proper role for a group leader', () => {
   const { getByText } = render(
     <UserInterestGroupCard
       displayName={displayName}
-      groups={interestGroups}
+      interestGroups={interestGroups}
       id={userId}
     />,
   );
@@ -151,7 +151,7 @@ it('renders correctly when user is inactive leader', () => {
   const { getByText } = render(
     <UserInterestGroupCard
       displayName={displayName}
-      groups={interestGroups}
+      interestGroups={interestGroups}
       id={userId}
     />,
   );
@@ -169,7 +169,7 @@ it('renders correcly for inactive groups', () => {
   const { getByText } = render(
     <UserInterestGroupCard
       displayName={displayName}
-      groups={interestGroups}
+      interestGroups={interestGroups}
       id={userId}
     />,
   );

@@ -1,15 +1,15 @@
 import { render, fireEvent } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
-import GroupTools from '../InterestGroupTools';
+import InterestGroupTools from '../InterestGroupTools';
 
-const props: ComponentProps<typeof GroupTools> = {
+const props: ComponentProps<typeof InterestGroupTools> = {
   tools: {},
   active: true,
 };
 
 it('renders group tools header', () => {
-  const { getByRole } = render(<GroupTools {...props} />);
+  const { getByRole } = render(<InterestGroupTools {...props} />);
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Group Tools"`,
   );
@@ -17,7 +17,10 @@ it('renders group tools header', () => {
 
 it('renders a slack tool', () => {
   const { getByRole, getByTitle, getByText } = render(
-    <GroupTools {...props} tools={{ slack: 'http://asap.slack.com' }} />,
+    <InterestGroupTools
+      {...props}
+      tools={{ slack: 'http://asap.slack.com' }}
+    />,
   );
   expect(getByText(/join slack/i)).toBeVisible();
   expect(getByTitle('Slack')).toBeInTheDocument();
@@ -26,7 +29,7 @@ it('renders a slack tool', () => {
 
 it('renders a google drive tool', () => {
   const { getByRole, getByTitle, getByText } = render(
-    <GroupTools
+    <InterestGroupTools
       {...props}
       tools={{ googleDrive: 'http://drive.google.com/123' }}
     />,
@@ -41,7 +44,7 @@ it('renders a google drive tool', () => {
 
 it('renders only the google drive tool for inactive group', () => {
   const { queryByText } = render(
-    <GroupTools
+    <InterestGroupTools
       {...props}
       tools={{
         googleDrive: 'http://drive.google.com/123',
@@ -56,7 +59,7 @@ it('renders only the google drive tool for inactive group', () => {
 
 it('renders the subscribe button', () => {
   const { getByText, queryAllByRole } = render(
-    <GroupTools {...props} calendarId="12w3" />,
+    <InterestGroupTools {...props} calendarId="12w3" />,
   );
 
   const subscribe = getByText(/subscribe/i);
@@ -74,9 +77,9 @@ it('renders the subscribe button', () => {
 
 it('hides the subscribe button for inactive groups', () => {
   const { getByText, queryByText, rerender } = render(
-    <GroupTools {...props} calendarId="12w3" active={true} />,
+    <InterestGroupTools {...props} calendarId="12w3" active={true} />,
   );
   expect(getByText(/subscribe/i)).toBeVisible();
-  rerender(<GroupTools {...props} calendarId="12w3" active={false} />);
+  rerender(<InterestGroupTools {...props} calendarId="12w3" active={false} />);
   expect(queryByText(/subscribe/i)).not.toBeInTheDocument();
 });

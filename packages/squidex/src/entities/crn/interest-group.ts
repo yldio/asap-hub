@@ -6,7 +6,7 @@ interface InterestGroupUserConnection<T = string> {
   user: Array<T | undefined>;
 }
 
-export interface InterestGroup<
+export interface Group<
   TUserConnection = string,
   TTeamConnection = string,
   TCalendar = string,
@@ -25,4 +25,4 @@ export interface InterestGroup<
   thumbnail: TThumbnail[];
 }
 
-export interface RestInterestGroup extends Entity, Rest<InterestGroup> {}
+export interface RestInterestGroup extends Entity, Rest<Group> {}

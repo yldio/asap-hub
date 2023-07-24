@@ -1,10 +1,10 @@
 import { FetchInterestGroupByIdQuery } from '@asap-hub/contentful';
 import {
   InterestGroupDataObject,
-  GroupEvent,
   InterestGroupResponse,
   InterestGroupLeader,
   ListInterestGroupResponse,
+  GroupEvent,
 } from '@asap-hub/model';
 import { RestInterestGroup } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';

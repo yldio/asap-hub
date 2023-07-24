@@ -26,7 +26,7 @@ export default class InterestGroupController {
   async fetch(options: FetchOptions): Promise<ListInterestGroupResponse> {
     const { filter, ...fetchOptions } = options;
 
-    const groupFilter =
+    const interestGroupFilter =
       filter?.length === 1
         ? {
             filter: {
@@ -37,19 +37,24 @@ export default class InterestGroupController {
 
     const { total, items } = await this.interestGroupDataProvider.fetch({
       ...fetchOptions,
-      ...groupFilter,
+      ...interestGroupFilter,
     });
 
     return { total, items };
   }
 
-  async fetchById(groupId: string): Promise<InterestGroupResponse> {
-    const group = await this.interestGroupDataProvider.fetchById(groupId);
-    if (!group) {
-      throw new NotFoundError(undefined, `group with id ${groupId} not found`);
+  async fetchById(interestGroupId: string): Promise<InterestGroupResponse> {
+    const interestGroup = await this.interestGroupDataProvider.fetchById(
+      interestGroupId,
+    );
+    if (!interestGroup) {
+      throw new NotFoundError(
+        undefined,
+        `group with id ${interestGroupId} not found`,
+      );
     }
 
-    return group;
+    return interestGroup;
   }
 
   async fetchByTeamId(
@@ -75,20 +80,20 @@ export default class InterestGroupController {
     }
 
     const teamIds = user.teams.map((team) => team.id);
-    const { items: groupsByTeams } = await this.interestGroupDataProvider.fetch(
-      {
+    const { items: interestGroupsByTeams } =
+      await this.interestGroupDataProvider.fetch({
         filter: {
           teamId: teamIds,
         },
-      },
-    );
-    const { items: groupsByUser } = await this.interestGroupDataProvider.fetch({
-      filter: {
-        userId,
-      },
-    });
-    const groups = [...groupsByTeams, ...groupsByUser];
-    const items = uniqBy(groups, 'id');
+      });
+    const { items: interestGroupsByUser } =
+      await this.interestGroupDataProvider.fetch({
+        filter: {
+          userId,
+        },
+      });
+    const interestGroups = [...interestGroupsByTeams, ...interestGroupsByUser];
+    const items = uniqBy(interestGroups, 'id');
 
     return { total: items.length, items };
   }

@@ -13,7 +13,7 @@ import {
 import {
   Event,
   ExternalAuthor,
-  InterestGroup,
+  Group,
   Lab,
   ResearchOutput,
   SquidexWebhookPayload,
@@ -43,7 +43,7 @@ export type ExternalAuthorPayload =
   | ExternalAuthorContentfulPayload;
 
 export type InterestGroupSquidexPayload = WebhookDetail<
-  SquidexWebhookPayload<InterestGroup, GroupEvent>
+  SquidexWebhookPayload<Group, GroupEvent>
 >;
 
 export type InterestGroupContentfulPayload = WebhookDetail<

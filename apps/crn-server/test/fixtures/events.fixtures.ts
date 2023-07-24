@@ -364,7 +364,7 @@ export const getEventSpeakerUser = (): EventSpeakerUser => ({
 
 export const getContentfulEventDataObject = (): EventDataObject => ({
   ...getEventDataObject(),
-  group: undefined,
+  interestGroup: undefined,
   workingGroup: undefined,
   notes: '<p>These are the notes from the meeting</p>',
   presentation: '<p><iframe src="https://example.com"/></p>',
@@ -419,7 +419,7 @@ export const getEventDataObject = (): EventDataObject => ({
     groups: [],
     workingGroups: [],
   },
-  group: getInterestGroupResponse(),
+  interestGroup: getInterestGroupResponse(),
   workingGroup: getWorkingGroupResponse(),
   speakers: [getEventSpeakerUser()],
 });

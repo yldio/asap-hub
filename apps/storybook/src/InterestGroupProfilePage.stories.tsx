@@ -12,7 +12,9 @@ export default {
 };
 
 export const Normal = () => {
-  const route = network({}).groups({}).group({ groupId: '42' });
+  const route = network({})
+    .interestGroups({})
+    .interestGroup({ interestGroupId: '42' });
   const activeTab = select(
     'Active Tab',
     {

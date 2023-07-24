@@ -5,17 +5,18 @@ type GroupParameters = {
   groupId: string;
 };
 
-const groupParametersValidationSchema: JSONSchemaType<GroupParameters> = {
-  type: 'object',
-  properties: {
-    groupId: { type: 'string' },
-  },
-  required: ['groupId'],
-  additionalProperties: false,
-};
+const interestGroupParametersValidationSchema: JSONSchemaType<GroupParameters> =
+  {
+    type: 'object',
+    properties: {
+      groupId: { type: 'string' },
+    },
+    required: ['groupId'],
+    additionalProperties: false,
+  };
 
-export const validateGroupParameters = validateInput(
-  groupParametersValidationSchema,
+export const validateInterestGroupParameters = validateInput(
+  interestGroupParametersValidationSchema,
   {
     skipNull: false,
     coerce: true,

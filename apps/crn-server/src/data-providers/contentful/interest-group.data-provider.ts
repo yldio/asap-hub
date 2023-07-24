@@ -163,11 +163,11 @@ export class InterestGroupContentfulDataProvider
 }
 
 const parseGraphQLInterestGroup = (
-  group: InterestGroupItem,
+  interestGroup: InterestGroupItem,
 ): InterestGroupDataObject => {
   const isString = (x: unknown): x is string => typeof x === 'string';
 
-  const teams = (group.teamsCollection?.items || [])
+  const teams = (interestGroup.teamsCollection?.items || [])
     .filter((x): x is Teams => x !== null)
     .map((t) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -175,39 +175,38 @@ const parseGraphQLInterestGroup = (
       return team;
     });
 
-  const calendars = group.calendar
-    ? [parseContentfulGraphqlCalendarToResponse(group.calendar)]
+  const calendars = interestGroup.calendar
+    ? [parseContentfulGraphqlCalendarToResponse(interestGroup.calendar)]
     : [];
 
   let tools: InterestGroupTools = {
-    slack: group.slack ?? undefined,
-    googleDrive: group.googleDrive ?? undefined,
+    slack: interestGroup.slack ?? undefined,
+    googleDrive: interestGroup.googleDrive ?? undefined,
   };
 
-  if (group.calendar) {
+  if (interestGroup.calendar) {
     const url = new URL('https://calendar.google.com/calendar/r');
-    url.searchParams.set('cid', group.calendar.sys.id || '');
+    url.searchParams.set('cid', interestGroup.calendar.sys.id || '');
     tools = { ...tools, googleCalendar: url.toString() };
   }
 
-  const leaders: GroupLeader[] = (group.leadersCollection?.items || []).reduce(
-    (acc: GroupLeader[], leader) => {
-      if (!leader || !leader.user) {
-        return acc;
-      }
-      return [
-        ...acc,
-        {
-          user: parseInterestGroupLeader(
-            parseContentfulGraphQlUsers(leader.user),
-          ),
-          role: leader.role as InterestGroupRole,
-          inactiveSinceDate: leader.inactiveSinceDate ?? undefined,
-        },
-      ];
-    },
-    [],
-  );
+  const leaders: GroupLeader[] = (
+    interestGroup.leadersCollection?.items || []
+  ).reduce((acc: GroupLeader[], leader) => {
+    if (!leader || !leader.user) {
+      return acc;
+    }
+    return [
+      ...acc,
+      {
+        user: parseInterestGroupLeader(
+          parseContentfulGraphQlUsers(leader.user),
+        ),
+        role: leader.role as InterestGroupRole,
+        inactiveSinceDate: leader.inactiveSinceDate ?? undefined,
+      },
+    ];
+  }, []);
 
   const contactEmails = leaders
     .filter(
@@ -217,15 +216,15 @@ const parseGraphQLInterestGroup = (
     .map(({ user }) => user.email);
 
   return {
-    id: group.sys.id,
-    active: !!group.active,
-    createdDate: group.sys.firstPublishedAt,
-    lastModifiedDate: group.sys.publishedAt,
-    name: group.name || '',
-    description: group.description || '',
-    tags: (group.tags || []).filter(isString),
+    id: interestGroup.sys.id,
+    active: !!interestGroup.active,
+    createdDate: interestGroup.sys.firstPublishedAt,
+    lastModifiedDate: interestGroup.sys.publishedAt,
+    name: interestGroup.name || '',
+    description: interestGroup.description || '',
+    tags: (interestGroup.tags || []).filter(isString),
     tools,
-    thumbnail: group.thumbnail?.url ?? undefined,
+    thumbnail: interestGroup.thumbnail?.url ?? undefined,
     contactEmails,
     leaders,
     teams,

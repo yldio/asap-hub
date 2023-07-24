@@ -65,7 +65,9 @@ const InterestGroupList: React.FC<InterestGroupListProps> = ({
             <Link
               ellipsed
               href={
-                network({}).groups({}).group({ groupId: interestGroup.id }).$
+                network({})
+                  .interestGroups({})
+                  .interestGroup({ interestGroupId: interestGroup.id }).$
               }
             >
               {interestGroup.name}

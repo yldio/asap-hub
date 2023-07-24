@@ -1,9 +1,9 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import NetworkGroups from '../NetworkInterestGroups';
+import NetworkInterestGroups from '../NetworkInterestGroups';
 
-const props: ComponentProps<typeof NetworkGroups> = {
+const props: ComponentProps<typeof NetworkInterestGroups> = {
   interestGroups: [
     {
       id: '0',
@@ -30,7 +30,7 @@ const props: ComponentProps<typeof NetworkGroups> = {
 
 it('renders one group card per group', async () => {
   const { getAllByRole } = render(
-    <NetworkGroups
+    <NetworkInterestGroups
       {...props}
       interestGroups={[
         { ...props.interestGroups[0]!, name: 'Group 0' },

@@ -13,7 +13,7 @@ export default {
 
 const props = (): ComponentProps<typeof EventConversation> => ({
   ...createEventResponse(),
-  group: {
+  interestGroup: {
     ...createInterestGroupResponse(),
     tools: {
       slack: text('Slack', 'http://example.com'),

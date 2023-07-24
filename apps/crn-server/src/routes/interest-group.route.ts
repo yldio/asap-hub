@@ -3,10 +3,10 @@ import { validateFetchOptions } from '@asap-hub/server-common';
 import { Router } from 'express';
 import InterestGroupController from '../controllers/interest-group.controller';
 import { validateEventFetchParameters } from '../validation/event.validation';
-import { validateGroupParameters } from '../validation/interest-group.validation';
+import { validateInterestGroupParameters } from '../validation/interest-group.validation';
 
 export const interestGroupRouteFactory = (
-  groupController: InterestGroupController,
+  interestGroupController: InterestGroupController,
   eventController: EventController,
 ): Router => {
   const interestGroupRoutes = Router();
@@ -16,7 +16,7 @@ export const interestGroupRouteFactory = (
 
     const query = validateFetchOptions(parameters);
 
-    const result = await groupController.fetch(query);
+    const result = await interestGroupController.fetch(query);
 
     res.json(result);
   });
@@ -25,8 +25,8 @@ export const interestGroupRouteFactory = (
     '/interest-groups/:groupId',
     async (req, res) => {
       const { params } = req;
-      const { groupId } = validateGroupParameters(params);
-      const result = await groupController.fetchById(groupId);
+      const { groupId } = validateInterestGroupParameters(params);
+      const result = await interestGroupController.fetchById(groupId);
 
       res.json(result);
     },
@@ -37,10 +37,10 @@ export const interestGroupRouteFactory = (
     async (req, res) => {
       const query = validateEventFetchParameters(req.query);
       const { params } = req;
-      const { groupId } = validateGroupParameters(params);
+      const { groupId } = validateInterestGroupParameters(params);
 
       const result = await eventController.fetch({
-        filter: { groupId },
+        filter: { interestGroupId: groupId },
         ...query,
       });
 

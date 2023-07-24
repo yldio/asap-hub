@@ -102,7 +102,7 @@ export const createEventResponse = (
   endDateTimestamp: isEventInThePast
     ? subHours(new Date(), 2).getTime()
     : addHours(new Date(), 1).getTime(),
-  group: createInterestGroupResponse(),
+  interestGroup: createInterestGroupResponse(),
   description: `Event ${itemIndex} description`,
   status: 'Confirmed',
   tags: [],

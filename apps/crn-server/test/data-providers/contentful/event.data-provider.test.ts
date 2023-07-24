@@ -91,7 +91,7 @@ describe('Events Contentful Data Provider', () => {
 
       const expectedResult = getContentfulListEventDataObject();
       expectedResult.items[0]!.workingGroup! = eventWorkingGroup;
-      expectedResult.items[0]!.group! = eventInterestGroup;
+      expectedResult.items[0]!.interestGroup! = eventInterestGroup;
       expect(result).toMatchObject(expectedResult);
     });
 
@@ -385,7 +385,7 @@ describe('Events Contentful Data Provider', () => {
         );
 
         const result = await eventDataProvider.fetch({
-          filter: { groupId: interestGroupId },
+          filter: { interestGroupId: interestGroupId },
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -416,7 +416,7 @@ describe('Events Contentful Data Provider', () => {
 
       const expectedResult = getContentfulEventDataObject();
       expectedResult.workingGroup = eventWorkingGroup;
-      expectedResult.group = eventInterestGroup;
+      expectedResult.interestGroup = eventInterestGroup;
       expect(result).toMatchObject(expectedResult);
     });
 
@@ -778,7 +778,7 @@ describe('Events Contentful Data Provider', () => {
 
         const result = await eventDataProvider.fetchById(eventId);
 
-        expect(result!.group).toBeUndefined();
+        expect(result!.interestGroup).toBeUndefined();
       });
 
       it('should return interest group as undefined when workingGroupsCollection is null', async () => {
@@ -792,7 +792,7 @@ describe('Events Contentful Data Provider', () => {
 
         const result = await eventDataProvider.fetchById(eventId);
 
-        expect(result!.group).toBeUndefined();
+        expect(result!.interestGroup).toBeUndefined();
       });
 
       it('should return interest group as undefined when workingGroupsCollection items are empty', async () => {
@@ -808,7 +808,7 @@ describe('Events Contentful Data Provider', () => {
 
         const result = await eventDataProvider.fetchById(eventId);
 
-        expect(result!.group).toBeUndefined();
+        expect(result!.interestGroup).toBeUndefined();
       });
 
       it('should return interest group as undefined when workingGroupsCollection items are null', async () => {
@@ -824,7 +824,7 @@ describe('Events Contentful Data Provider', () => {
 
         const result = await eventDataProvider.fetchById(eventId);
 
-        expect(result!.group).toBeUndefined();
+        expect(result!.interestGroup).toBeUndefined();
       });
 
       it('should return interest group when it is linked from calendar', async () => {
@@ -850,7 +850,7 @@ describe('Events Contentful Data Provider', () => {
 
         const result = await eventDataProvider.fetchById(eventId);
 
-        expect(result!.group).toEqual({
+        expect(result!.interestGroup).toEqual({
           id: 'ig-linked-from-calendar',
           name: 'IG-1',
           active: true,

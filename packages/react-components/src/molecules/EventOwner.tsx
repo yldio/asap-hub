@@ -35,18 +35,23 @@ const inactiveBadgeStyles = {
   marginLeft: rem(8),
 };
 
-const EventOwner: React.FC<Pick<EventResponse, 'group' | 'workingGroup'>> = ({
-  group,
-  workingGroup,
-}) => (
+const EventOwner: React.FC<
+  Pick<EventResponse, 'interestGroup' | 'workingGroup'>
+> = ({ interestGroup, workingGroup }) => (
   <div css={listItemStyles}>
-    {group ? (
-      <Link href={network({}).groups({}).group({ groupId: group.id }).$}>
+    {interestGroup ? (
+      <Link
+        href={
+          network({})
+            .interestGroups({})
+            .interestGroup({ interestGroupId: interestGroup.id }).$
+        }
+      >
         <span css={iconStyles}>
           <InterestGroupsIcon />
         </span>
-        {group.name}
-        {!group.active && (
+        {interestGroup.name}
+        {!interestGroup.active && (
           <span css={inactiveBadgeStyles}>{inactiveBadgeIcon}</span>
         )}
       </Link>

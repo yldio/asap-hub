@@ -163,7 +163,7 @@ describe('/interest-groups/ route', () => {
               id: 'calendar-id-1',
               name: 'Example calendar',
               color: '#333333',
-              groups: [],
+              interestGroups: [],
               workingGroups: [],
             },
             tags: [],

@@ -416,7 +416,7 @@ export const getEventDataObject = (): EventDataObject => ({
     color: '#125A12',
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     name: 'Tech 1 - Sequencing/omics',
-    groups: [],
+    interestGroups: [],
     workingGroups: [],
   },
   interestGroup: getInterestGroupResponse(),

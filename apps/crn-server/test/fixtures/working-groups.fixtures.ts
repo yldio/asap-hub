@@ -58,7 +58,7 @@ export const getWorkingGroupDataObject = (
       id: 'hub@asap.science',
       color: '#B1365F',
       name: 'ASAP Hub',
-      groups: [],
+      interestGroups: [],
       workingGroups: [],
     },
   ],

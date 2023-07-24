@@ -369,7 +369,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
 
   const calendar = parseCalendarDataObjectToResponse({
     ...parseContentfulGraphqlCalendarPartialToDataObject(item.calendar),
-    groups: [],
+    interestGroups: [],
     workingGroups: [],
   });
 

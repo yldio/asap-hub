@@ -25,6 +25,24 @@ export type Scalars = {
   Long: any;
 };
 
+export type AllContents =
+  | Calendars
+  | Dashboard
+  | Discover
+  | Events
+  | ExternalAuthors
+  | Groups
+  | Labs
+  | Migrations
+  | NewsAndEvents
+  | Pages
+  | ResearchOutputs
+  | ResearchTags
+  | Teams
+  | Tutorials
+  | Users
+  | WorkingGroups;
+
 /** The app mutations. */
 export type ApplicationMutations = {
   /** Change a Calendars content. */
@@ -1209,6 +1227,8 @@ export type ApplicationQueries = {
   queryCalendarsContents: Maybe<Array<Calendars>>;
   /** Query Calendars content items with total count. */
   queryCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
+  /** Query content items by IDs across schemeas. */
+  queryContentsByIds: Array<AllContents>;
   /** Query Dashboard content items. */
   queryDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
@@ -1404,6 +1424,11 @@ export type ApplicationQueriesQueryCalendarsContentsWithTotalArgs = {
   search: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
+};
+
+/** The app queries. */
+export type ApplicationQueriesQueryContentsByIdsArgs = {
+  ids: Array<Scalars['String']>;
 };
 
 /** The app queries. */
@@ -1789,6 +1814,8 @@ export type Calendars = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: CalendarsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -1984,33 +2011,39 @@ export type CalendarsResultDto = {
 
 /** The structure of all content types. */
 export type Component = {
-  /** The ID of the schema. */
+  /** schemaId */
   schemaId: Scalars['String'];
+  /** schemaName */
+  schemaName: Maybe<Scalars['String']>;
 };
 
 /** The structure of all content types. */
 export type Content = {
-  /** The timestamp when the object was created. */
+  /** created */
   created: Scalars['Instant'];
-  /** The user who created the object. */
+  /** createdBy */
   createdBy: Scalars['String'];
-  /** The ID of the object (usually GUID). */
+  /** data__dynamic */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
+  /** editToken */
+  editToken: Maybe<Scalars['String']>;
+  /** id */
   id: Scalars['String'];
-  /** The timestamp when the object was updated the last time. */
+  /** lastModified */
   lastModified: Scalars['Instant'];
-  /** The user who updated the object the last time. */
+  /** lastModifiedBy */
   lastModifiedBy: Scalars['String'];
-  /** The new status of the content. */
+  /** newStatus */
   newStatus: Maybe<Scalars['String']>;
-  /** The status color of the content. */
+  /** newStatusColor */
   newStatusColor: Maybe<Scalars['String']>;
-  /** The status of the content. */
+  /** status */
   status: Scalars['String'];
-  /** The status color of the content. */
+  /** statusColor */
   statusColor: Scalars['String'];
-  /** The URL to the content. */
+  /** url */
   url: Scalars['String'];
-  /** The version of the objec. */
+  /** version */
   version: Scalars['Int'];
 };
 
@@ -2024,6 +2057,8 @@ export type Dashboard = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: DashboardDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -2150,6 +2185,8 @@ export type Discover = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: DiscoverDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -2506,6 +2543,7 @@ export enum EnrichedContentEventType {
   Created = 'CREATED',
   Deleted = 'DELETED',
   Published = 'PUBLISHED',
+  ReferenceUpdated = 'REFERENCE_UPDATED',
   StatusChanged = 'STATUS_CHANGED',
   Unpublished = 'UNPUBLISHED',
   Updated = 'UPDATED',
@@ -2527,6 +2565,8 @@ export type Events = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: EventsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3097,6 +3137,8 @@ export type ExternalAuthors = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: ExternalAuthorsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3226,6 +3268,8 @@ export type Groups = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: GroupsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3494,6 +3538,8 @@ export type Labs = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: LabsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3607,6 +3653,8 @@ export type Migrations = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: MigrationsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3676,6 +3724,8 @@ export type NewsAndEvents = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: NewsAndEventsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3873,6 +3923,8 @@ export type Pages = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: PagesDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -4051,6 +4103,8 @@ export type ResearchOutputs = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: ResearchOutputsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -4833,6 +4887,8 @@ export type ResearchTags = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: ResearchTagsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -4966,6 +5022,8 @@ export type Teams = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: TeamsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -5272,6 +5330,8 @@ export type Tutorials = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: TutorialsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -5441,6 +5501,8 @@ export type Users = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: UsersDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -6173,6 +6235,8 @@ export type WorkingGroups = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: WorkingGroupsDataDto;
+  /** The data of the content. */
+  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -8456,6 +8520,7 @@ export type FetchReminderDataQueryVariables = Exact<{
   researchOutputFilter: Scalars['String'];
   researchOutputDraftFilter: Scalars['String'];
   researchOutputInReviewFilter: Scalars['String'];
+  researchOutputSwitchToDraftFilter: Scalars['String'];
   eventFilter: Scalars['String'];
 }>;
 
@@ -8541,6 +8606,7 @@ export type FetchReminderDataQuery = {
               }
             >
           >;
+          statusChangedBy: Maybe<Array<Pick<Users, 'id'>>>;
         };
       }
     >
@@ -8549,6 +8615,38 @@ export type FetchReminderDataQuery = {
     Array<
       Pick<ResearchOutputs, 'id' | 'created' | 'status'> & {
         flatData: Pick<ResearchOutputsFlatDataDto, 'documentType' | 'title'> & {
+          teams: Maybe<
+            Array<
+              Pick<Teams, 'id'> & {
+                flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+              }
+            >
+          >;
+          workingGroups: Maybe<
+            Array<
+              Pick<WorkingGroups, 'id'> & {
+                flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+              }
+            >
+          >;
+          statusChangedBy: Maybe<
+            Array<
+              Pick<Users, 'id'> & {
+                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+              }
+            >
+          >;
+        };
+      }
+    >
+  >;
+  switchToDraftResearchOutputs: Maybe<
+    Array<
+      Pick<ResearchOutputs, 'id' | 'created' | 'status'> & {
+        flatData: Pick<
+          ResearchOutputsFlatDataDto,
+          'documentType' | 'title' | 'statusChangedAt'
+        > & {
           teams: Maybe<
             Array<
               Pick<Teams, 'id'> & {
@@ -14469,6 +14567,20 @@ export const FetchReminderDataDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
+            name: { kind: 'Name', value: 'researchOutputSwitchToDraftFilter' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
             name: { kind: 'Name', value: 'eventFilter' },
           },
           type: {
@@ -14823,6 +14935,19 @@ export const FetchReminderDataDocument = {
                           ],
                         },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusChangedBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -14914,6 +15039,135 @@ export const FetchReminderDataDocument = {
                             },
                           ],
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusChangedBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'switchToDraftResearchOutputs' },
+            name: { kind: 'Name', value: 'queryResearchOutputsContents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'filter' },
+                value: {
+                  kind: 'Variable',
+                  name: {
+                    kind: 'Name',
+                    value: 'researchOutputSwitchToDraftFilter',
+                  },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'documentType' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teams' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'displayName',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'workingGroups' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusChangedAt' },
                       },
                       {
                         kind: 'Field',

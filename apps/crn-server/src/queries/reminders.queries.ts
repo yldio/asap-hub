@@ -6,6 +6,7 @@ export const FETCH_REMINDER_DATA = gql`
     $researchOutputFilter: String!
     $researchOutputDraftFilter: String!
     $researchOutputInReviewFilter: String!
+    $researchOutputSwitchToDraftFilter: String!
     $eventFilter: String!
   ) {
     findUsersContent(id: $userId) {
@@ -86,6 +87,9 @@ export const FETCH_REMINDER_DATA = gql`
             title
           }
         }
+        statusChangedBy {
+          id
+        }
       }
     }
     inReviewResearchOutputs: queryResearchOutputsContents(
@@ -109,6 +113,37 @@ export const FETCH_REMINDER_DATA = gql`
             title
           }
         }
+        statusChangedBy {
+          id
+          flatData {
+            firstName
+            lastName
+          }
+        }
+      }
+    }
+    switchToDraftResearchOutputs: queryResearchOutputsContents(
+      filter: $researchOutputSwitchToDraftFilter
+    ) {
+      id
+      created
+      status
+      flatData {
+        documentType
+        title
+        teams {
+          id
+          flatData {
+            displayName
+          }
+        }
+        workingGroups {
+          id
+          flatData {
+            title
+          }
+        }
+        statusChangedAt
         statusChangedBy {
           id
           flatData {

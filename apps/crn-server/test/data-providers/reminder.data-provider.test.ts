@@ -20,6 +20,8 @@ import {
   getResearchOutputInReviewTeamReminder,
   getResearchOutputInReviewWorkingGroupReminder,
   getResearchOutputPublishedReminder,
+  getResearchOutputSwitchToDraftTeamReminder,
+  getResearchOutputSwitchToDraftWorkingGroupReminder,
   getSharePresentationReminder,
   getSquidexReminderEventsContents,
   getSquidexReminderReseachOutputsContents,
@@ -27,6 +29,8 @@ import {
   getSquidexReminderReseachOutputsDraftWorkingGroupContents,
   getSquidexReminderReseachOutputsInReviewTeamContents,
   getSquidexReminderReseachOutputsInReviewWorkingGroupContents,
+  getSquidexReminderReseachOutputsSwitchToDraftTeamContents,
+  getSquidexReminderReseachOutputsSwitchToDraftWorkingGroupContents,
   getSquidexRemindersGraphqlResponse,
   getUploadPresentationReminder,
   getVideoEventUpdatedReminder,
@@ -78,6 +82,7 @@ describe('Reminder Data Provider', () => {
           [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -94,6 +99,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -172,6 +178,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents = null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
@@ -186,6 +193,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.teams =
           null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -201,6 +209,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.documentType =
           null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -216,6 +225,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.title =
           null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -231,6 +241,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.documentType =
           'invalid-document-type';
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -246,6 +257,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
 
         const researchOutput1 = getSquidexReminderReseachOutputsContents();
         researchOutput1.id = 'research-output-1';
@@ -281,6 +293,7 @@ describe('Reminder Data Provider', () => {
       test('Should fetch the team draft reminders from squidex graphql', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.draftResearchOutputs = [
           getSquidexReminderReseachOutputsDraftTeamContents(),
         ];
@@ -299,6 +312,7 @@ describe('Reminder Data Provider', () => {
       test('Should fetch the working group draft reminders from squidex graphql', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.draftResearchOutputs = [
           getSquidexReminderReseachOutputsDraftWorkingGroupContents(),
         ];
@@ -317,6 +331,7 @@ describe('Reminder Data Provider', () => {
       test('Should return an empty result when no research outputs are found', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -389,6 +404,7 @@ describe('Reminder Data Provider', () => {
       test('Should return a team reminder result when no working groups are found but there are teams', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [
           getSquidexReminderReseachOutputsDraftTeamContents(),
@@ -411,6 +427,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.inReviewResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         const draft = getSquidexReminderReseachOutputsDraftTeamContents();
         draft.flatData.teams![0]!.flatData.displayName = null;
         squidexGraphqlResponse.draftResearchOutputs = [draft];
@@ -430,6 +447,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         const draft =
           getSquidexReminderReseachOutputsDraftWorkingGroupContents();
         draft.flatData.workingGroups![0]!.flatData.title = null;
@@ -450,6 +468,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         const draft =
           getSquidexReminderReseachOutputsDraftWorkingGroupContents();
         draft.flatData.workingGroups = null;
@@ -471,6 +490,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         const draft = getSquidexReminderReseachOutputsDraftTeamContents();
         draft.flatData.createdBy = null;
         squidexGraphqlResponse.draftResearchOutputs = [draft];
@@ -489,6 +509,7 @@ describe('Reminder Data Provider', () => {
       test('Should return an empty result when no teams and no working groups are found', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.draftResearchOutputs = [
           getSquidexReminderReseachOutputsDraftWorkingGroupContents(),
         ];
@@ -508,6 +529,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.draftResearchOutputs = [
           getSquidexReminderReseachOutputsDraftWorkingGroupContents(),
         ];
@@ -531,6 +553,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.draftResearchOutputs = [
           getSquidexReminderReseachOutputsDraftTeamContents(),
         ];
@@ -554,6 +577,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = null;
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.workingGroups =
           [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -585,6 +609,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.draftResearchOutputs = [
           getSquidexReminderReseachOutputsDraftWorkingGroupContents(),
         ];
@@ -603,6 +628,7 @@ describe('Reminder Data Provider', () => {
       test('Should return an empty result when draft research-output team property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents = null;
         squidexGraphqlResponse.draftResearchOutputs![0]!.flatData.teams = null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -617,6 +643,7 @@ describe('Reminder Data Provider', () => {
       test('Should return an empty result when research-output title property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents = null;
         squidexGraphqlResponse.draftResearchOutputs![0]!.flatData.title = null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -650,6 +677,7 @@ describe('Reminder Data Provider', () => {
           researchOutput3,
         ];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
 
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
@@ -664,12 +692,33 @@ describe('Reminder Data Provider', () => {
           `research-output-draft-${researchOutput1.id}`,
         ]);
       });
+
+      test('Should return no reminder when the statusChangedBy attribute is populated', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
+        const draft = getSquidexReminderReseachOutputsDraftTeamContents();
+        draft.flatData.statusChangedBy = [{ id: 'user-id' }];
+        squidexGraphqlResponse.draftResearchOutputs = [draft];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [],
+          total: 0,
+        });
+      });
     });
 
     describe('Research Output In Review Reminder', () => {
       test('Should fetch the team in review reminders from squidex graphql', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
@@ -685,6 +734,7 @@ describe('Reminder Data Provider', () => {
       test('Should fetch the working group in review reminders from squidex graphql', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [
           getSquidexReminderReseachOutputsInReviewWorkingGroupContents(),
         ];
@@ -703,6 +753,7 @@ describe('Reminder Data Provider', () => {
       test('Should return an empty result when no research outputs are found', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -717,6 +768,7 @@ describe('Reminder Data Provider', () => {
       test('Should return an empty result when findUsersContent property is null', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.findUsersContent = null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
@@ -776,6 +828,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
           '';
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -794,6 +847,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         const inReview =
           getSquidexReminderReseachOutputsInReviewWorkingGroupContents();
         inReview.flatData.workingGroups![0]!.flatData.title = null;
@@ -814,6 +868,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         const inReview =
           getSquidexReminderReseachOutputsInReviewWorkingGroupContents();
         inReview.flatData.workingGroups = null;
@@ -835,6 +890,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         const inReview = getSquidexReminderReseachOutputsInReviewTeamContents();
         inReview.flatData.statusChangedBy = null;
         squidexGraphqlResponse.inReviewResearchOutputs = [inReview];
@@ -868,6 +924,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [
           getSquidexReminderReseachOutputsInReviewTeamContents(),
         ];
@@ -891,6 +948,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [
           getSquidexReminderReseachOutputsInReviewWorkingGroupContents(),
         ];
@@ -924,9 +982,10 @@ describe('Reminder Data Provider', () => {
         expect(result).toEqual({
           items: [
             getResearchOutputPublishedReminder(),
+            getResearchOutputSwitchToDraftTeamReminder(),
             getResearchOutputDraftTeamReminder(),
           ],
-          total: 2,
+          total: 3,
         });
       });
 
@@ -947,6 +1006,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
 
         squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
           '';
@@ -966,6 +1026,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = null;
         squidexGraphqlResponse.draftResearchOutputs = null;
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs![0]!.flatData.teams =
           null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -981,6 +1042,7 @@ describe('Reminder Data Provider', () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = null;
         squidexGraphqlResponse.draftResearchOutputs = null;
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs![0]!.flatData.title =
           null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -1009,6 +1071,7 @@ describe('Reminder Data Provider', () => {
         researchOutput3.created = '2022-01-01T12:00:00Z';
 
         squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [
           researchOutput1,
           researchOutput2,
@@ -1026,6 +1089,383 @@ describe('Reminder Data Provider', () => {
           `research-output-in-review-${researchOutput2.id}`,
           `research-output-in-review-${researchOutput3.id}`,
           `research-output-in-review-${researchOutput1.id}`,
+        ]);
+      });
+    });
+
+    describe('Research Output Switch To Draft Reminder', () => {
+      test('Should fetch the team switch to draft reminders from squidex graphql', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({
+          total: 1,
+          items: [getResearchOutputSwitchToDraftTeamReminder()],
+        });
+      });
+
+      test('Should fetch the working group switch to draft reminders from squidex graphql', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [
+          getSquidexReminderReseachOutputsSwitchToDraftWorkingGroupContents(),
+        ];
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({
+          total: 1,
+          items: [getResearchOutputSwitchToDraftWorkingGroupReminder()],
+        });
+      });
+
+      test('Should return an empty result when no research outputs are found', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return an empty result when findUsersContent property is null', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.findUsersContent = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return an empty result when user teams property is null', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return an empty result when no teams are found', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return a working group reminder result when no teams are found but there are working groups', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [
+          getSquidexReminderReseachOutputsSwitchToDraftWorkingGroupContents(),
+        ];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [getResearchOutputSwitchToDraftWorkingGroupReminder()],
+          total: 1,
+        });
+      });
+
+      test('Should return a team reminder result when no working groups are found but there are teams', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [getResearchOutputSwitchToDraftTeamReminder()],
+          total: 1,
+        });
+      });
+
+      test('Should return no working group reminder when the working group title is missing', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        const researchOutput =
+          getSquidexReminderReseachOutputsSwitchToDraftWorkingGroupContents();
+        researchOutput.flatData.workingGroups![0]!.flatData.title = null;
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [researchOutput];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [],
+          total: 0,
+        });
+      });
+
+      test('Should return no reminder when the teams and working groups are missing', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        const researchOutput =
+          getSquidexReminderReseachOutputsSwitchToDraftWorkingGroupContents();
+        researchOutput.flatData.workingGroups = null;
+        researchOutput.flatData.teams = null;
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [researchOutput];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [],
+          total: 0,
+        });
+      });
+
+      test('Should return no reminder when statusChangedBy attribute is missing', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        const researchOutput =
+          getSquidexReminderReseachOutputsSwitchToDraftTeamContents();
+        researchOutput.flatData.statusChangedBy = null;
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [researchOutput];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [],
+          total: 0,
+        });
+      });
+
+      test('Should return an empty result when no teams and no working groups are found', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return a team switch to draft research output reminder if the user is Staff', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlResponse.findUsersContent!.flatData.role = 'Staff';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [getResearchOutputSwitchToDraftTeamReminder()],
+          total: 1,
+        });
+      });
+
+      test('Should return a working group switch to draft research output reminder if the user is Staff', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [
+          getSquidexReminderReseachOutputsSwitchToDraftWorkingGroupContents(),
+        ];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams = [];
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlResponse.findUsersContent!.flatData.role = 'Staff';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [getResearchOutputSwitchToDraftWorkingGroupReminder()],
+          total: 1,
+        });
+      });
+
+      test('Should not return anything related to switch to draft RO when switchToDraftResearchOutputs property is null', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents![0]!.flatData.workingGroups =
+          [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [
+            getResearchOutputPublishedReminder(),
+            getResearchOutputDraftTeamReminder(),
+            getResearchOutputInReviewTeamReminder(),
+          ],
+          total: 3,
+        });
+      });
+
+      test('Should return an empty result when user team id property is an empty array', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.findUsersContent!.flatData.teams![0]!.id = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return a team reminder result when user working id property is an empty array', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = [];
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+
+        squidexGraphqlResponse.findUsersContent!.referencingWorkingGroupsContents![0]!.id =
+          '';
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [getResearchOutputSwitchToDraftTeamReminder()],
+          total: 1,
+        });
+      });
+
+      test('Should return an empty result when switch to draft research-output team property is null', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = null;
+        squidexGraphqlResponse.draftResearchOutputs = null;
+        squidexGraphqlResponse.inReviewResearchOutputs = null;
+        squidexGraphqlResponse.switchToDraftResearchOutputs![0]!.flatData.teams =
+          null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should return an empty result when research-output title property is null', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = null;
+        squidexGraphqlResponse.draftResearchOutputs = null;
+        squidexGraphqlResponse.inReviewResearchOutputs = null;
+        squidexGraphqlResponse.switchToDraftResearchOutputs![0]!.flatData.title =
+          null;
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should sort the reminders by the statusChangedAt date', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        squidexGraphqlResponse.queryResearchOutputsContents = null;
+        const researchOutput1 =
+          getSquidexReminderReseachOutputsSwitchToDraftTeamContents();
+        researchOutput1.id = 'research-output-1';
+        researchOutput1.flatData.statusChangedAt = '2022-01-01T10:00:00Z';
+        const researchOutput2 =
+          getSquidexReminderReseachOutputsSwitchToDraftTeamContents();
+        researchOutput2.id = 'research-output-2';
+        researchOutput2.flatData.statusChangedAt = '2022-01-01T14:00:00Z';
+        const researchOutput3 =
+          getSquidexReminderReseachOutputsSwitchToDraftTeamContents();
+        researchOutput3.id = 'research-output-3';
+        researchOutput3.flatData.statusChangedAt = '2022-01-01T12:00:00Z';
+
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [
+          researchOutput1,
+          researchOutput2,
+          researchOutput3,
+        ];
+
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+
+        const reminderIds = result.items.map((reminder) => reminder.id);
+        expect(reminderIds).toEqual([
+          `research-output-switch-to-draft-${researchOutput2.id}`,
+          `research-output-switch-to-draft-${researchOutput3.id}`,
+          `research-output-switch-to-draft-${researchOutput1.id}`,
         ]);
       });
     });
@@ -1055,6 +1495,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1074,6 +1515,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         // started an hour before the current time
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
           '2022-01-01T08:00:00Z';
@@ -1096,6 +1538,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.startDate =
           '2022-01-01T08:00:00Z';
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
@@ -1115,6 +1558,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryEventsContents = null;
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
@@ -1205,6 +1649,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = null;
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1223,6 +1668,7 @@ describe('Reminder Data Provider', () => {
           null;
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1241,6 +1687,7 @@ describe('Reminder Data Provider', () => {
           null;
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1259,6 +1706,7 @@ describe('Reminder Data Provider', () => {
           null;
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1277,6 +1725,7 @@ describe('Reminder Data Provider', () => {
           'invalid-document-type';
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1296,6 +1745,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         const event1 = getSquidexReminderEventsContents();
         event1.id = 'event-1';
         event1.flatData.startDate = '2022-01-01T10:00:00Z';
@@ -1378,6 +1828,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1406,6 +1857,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1428,6 +1880,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1495,6 +1948,7 @@ describe('Reminder Data Provider', () => {
             squidexGraphqlResponse.queryResearchOutputsContents = [];
             squidexGraphqlResponse.draftResearchOutputs = [];
             squidexGraphqlResponse.inReviewResearchOutputs = [];
+            squidexGraphqlResponse.switchToDraftResearchOutputs = [];
             squidexGraphqlClientMock.request.mockResolvedValueOnce(
               squidexGraphqlResponse,
             );
@@ -1563,6 +2017,7 @@ describe('Reminder Data Provider', () => {
             squidexGraphqlResponse.queryResearchOutputsContents = [];
             squidexGraphqlResponse.draftResearchOutputs = [];
             squidexGraphqlResponse.inReviewResearchOutputs = [];
+            squidexGraphqlResponse.switchToDraftResearchOutputs = [];
             squidexGraphqlClientMock.request.mockResolvedValueOnce(
               squidexGraphqlResponse,
             );
@@ -1612,6 +2067,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1638,6 +2094,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1667,6 +2124,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1712,6 +2170,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1761,6 +2220,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1805,6 +2265,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1849,6 +2310,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1893,6 +2355,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -1954,6 +2417,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -2039,6 +2503,7 @@ describe('Reminder Data Provider', () => {
             squidexGraphqlResponse.queryResearchOutputsContents = [];
             squidexGraphqlResponse.draftResearchOutputs = [];
             squidexGraphqlResponse.inReviewResearchOutputs = [];
+            squidexGraphqlResponse.switchToDraftResearchOutputs = [];
             squidexGraphqlClientMock.request.mockResolvedValueOnce(
               squidexGraphqlResponse,
             );
@@ -2088,6 +2553,7 @@ describe('Reminder Data Provider', () => {
           squidexGraphqlResponse.queryResearchOutputsContents = [];
           squidexGraphqlResponse.draftResearchOutputs = [];
           squidexGraphqlResponse.inReviewResearchOutputs = [];
+          squidexGraphqlResponse.switchToDraftResearchOutputs = [];
           squidexGraphqlClientMock.request.mockResolvedValueOnce(
             squidexGraphqlResponse,
           );
@@ -2129,6 +2595,7 @@ describe('Reminder Data Provider', () => {
             squidexGraphqlResponse.queryResearchOutputsContents = [];
             squidexGraphqlResponse.draftResearchOutputs = [];
             squidexGraphqlResponse.inReviewResearchOutputs = [];
+            squidexGraphqlResponse.switchToDraftResearchOutputs = [];
             squidexGraphqlClientMock.request.mockResolvedValueOnce(
               squidexGraphqlResponse,
             );
@@ -2159,6 +2626,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -2184,6 +2652,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -2209,6 +2678,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -2378,6 +2848,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -2407,6 +2878,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -2597,6 +3069,7 @@ describe('Reminder Data Provider', () => {
           squidexGraphqlResponse.queryResearchOutputsContents = [];
           squidexGraphqlResponse.draftResearchOutputs = [];
           squidexGraphqlResponse.inReviewResearchOutputs = [];
+          squidexGraphqlResponse.switchToDraftResearchOutputs = [];
           squidexGraphqlResponse.queryEventsContents![0]!.flatData[
             materialUpdatedAtName
           ] = materialUpdatedAt;
@@ -2633,6 +3106,7 @@ describe('Reminder Data Provider', () => {
           squidexGraphqlResponse.queryResearchOutputsContents = [];
           squidexGraphqlResponse.draftResearchOutputs = [];
           squidexGraphqlResponse.inReviewResearchOutputs = [];
+          squidexGraphqlResponse.switchToDraftResearchOutputs = [];
           squidexGraphqlResponse.queryEventsContents![0]!.flatData[
             materialUpdatedAtName
           ] = materialUpdatedAt;
@@ -2663,6 +3137,7 @@ describe('Reminder Data Provider', () => {
           squidexGraphqlResponse.queryResearchOutputsContents = [];
           squidexGraphqlResponse.draftResearchOutputs = [];
           squidexGraphqlResponse.inReviewResearchOutputs = [];
+          squidexGraphqlResponse.switchToDraftResearchOutputs = [];
           squidexGraphqlResponse.queryEventsContents![0]!.flatData[
             materialUpdatedAtName
           ] = materialUpdatedAt;
@@ -2702,6 +3177,7 @@ describe('Reminder Data Provider', () => {
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.presentationUpdatedAt =
           materialsUpdatedAt;
         squidexGraphqlResponse.queryEventsContents![0]!.flatData.videoRecordingUpdatedAt =
@@ -2772,6 +3248,16 @@ describe('Reminder Data Provider', () => {
           getSquidexReminderReseachOutputsInReviewTeamContents();
         researchOutputInReview2.id = 'research-output-in-review-2';
         researchOutputInReview2.created = '2022-01-01T15:00:00Z';
+        const researchOutputSwitchToDraft1 =
+          getSquidexReminderReseachOutputsSwitchToDraftTeamContents();
+        researchOutputSwitchToDraft1.id = 'research-output-in-review-1';
+        researchOutputSwitchToDraft1.flatData.statusChangedAt =
+          '2022-01-01T10:00:00Z';
+        const researchOutputSwitchToDraft2 =
+          getSquidexReminderReseachOutputsSwitchToDraftTeamContents();
+        researchOutputSwitchToDraft2.id = 'research-output-in-review-2';
+        researchOutputSwitchToDraft2.flatData.statusChangedAt =
+          '2022-01-01T15:00:00Z';
 
         const event1 = getSquidexReminderEventsContents();
         event1.id = 'event-1';
@@ -2821,6 +3307,10 @@ describe('Reminder Data Provider', () => {
           researchOutputInReview1,
           researchOutputInReview2,
         ];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [
+          researchOutputSwitchToDraft1,
+          researchOutputSwitchToDraft2,
+        ];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,
         );
@@ -2831,11 +3321,13 @@ describe('Reminder Data Provider', () => {
         expect(reminderIds).toEqual([
           `research-output-draft-${researchOutputDraft2.id}`,
           `research-output-in-review-${researchOutputInReview2.id}`,
+          `research-output-switch-to-draft-${researchOutputSwitchToDraft2.id}`,
           `research-output-published-${researchOutput2.id}`,
           `event-happening-today-${event1.id}`,
           `event-happening-now-${event2.id}`,
           `research-output-draft-${researchOutputDraft1.id}`,
           `research-output-in-review-${researchOutputInReview1.id}`,
+          `research-output-switch-to-draft-${researchOutputSwitchToDraft1.id}`,
           `research-output-published-${researchOutput1.id}`,
           `presentation-event-updated-${event1.id}`,
           `share-presentation-${event3.id}`,

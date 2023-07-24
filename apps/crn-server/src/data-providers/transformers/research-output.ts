@@ -142,13 +142,15 @@ export const parseGraphQLResearchOutput = (
         title: group.flatData.title || '',
       })) || [],
     published: output.status === EnrichedContentEventType.Published,
-    reviewRequestedBy: data.reviewRequestedBy?.[0]
+    statusChangedBy: data.statusChangedBy?.[0]
       ? {
-          id: data.reviewRequestedBy[0].id,
-          firstName: data.reviewRequestedBy[0].flatData?.firstName || '',
-          lastName: data.reviewRequestedBy[0].flatData?.lastName || '',
+          id: data.statusChangedBy[0].id,
+          firstName: data.statusChangedBy[0].flatData?.firstName || '',
+          lastName: data.statusChangedBy[0].flatData?.lastName || '',
         }
       : undefined,
+    statusChangedAt: data.statusChangedAt || undefined,
+    isInReview: !!data.isInReview,
   };
 };
 

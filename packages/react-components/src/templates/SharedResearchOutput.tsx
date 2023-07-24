@@ -47,8 +47,9 @@ type SharedResearchOutputProps = Pick<
   | 'id'
   | 'relatedResearch'
   | 'published'
-  | 'reviewRequestedBy'
   | 'relatedEvents'
+  | 'statusChangedBy'
+  | 'isInReview'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -73,8 +74,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   published,
   publishedNow,
   draftCreated,
-  reviewRequestedBy,
   relatedEvents,
+  statusChangedBy,
+  isInReview,
   onRequestReview,
   onPublish,
   ...props
@@ -137,10 +139,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         draftCreated={draftCreated}
         association={association}
         documentType={props.documentType}
-        reviewRequestedBy={reviewRequestedBy}
+        statusChangedBy={statusChangedBy}
         publishedNow={publishedNow}
         reviewToggled={reviewToggled}
         associationName={associationName}
+        isInReview={isInReview}
       />
       <div css={containerStyles}>
         {!isGrantDocument && (
@@ -148,7 +151,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             id={id}
             displayReviewModal={displayReviewModal}
             setDisplayReviewModal={setDisplayReviewModal}
-            reviewRequestedBy={reviewRequestedBy}
+            isInReview={isInReview}
             duplicateLink={duplicateLink}
             published={published}
             displayPublishModal={displayPublishModal}
@@ -158,22 +161,22 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         {displayReviewModal && (
           <ConfirmModal
             title={`${
-              reviewRequestedBy
+              isInReview
                 ? 'Switch output to draft?'
                 : 'Output ready for PM review?'
             }`}
             description={`All ${
               association === 'working group' ? 'working group' : 'team'
             } members listed on this output will be notified and ${
-              reviewRequestedBy
+              isInReview
                 ? 'will be able to edit this output again.'
                 : 'PMs will be able to review and publish this output.'
             }`}
             cancelText="Cancel"
             confirmText={`${
-              reviewRequestedBy ? 'Switch to Draft' : 'Ready for PM Review'
+              isInReview ? 'Switch to Draft' : 'Ready for PM Review'
             }`}
-            onSave={() => toggleReview(!reviewRequestedBy)}
+            onSave={() => toggleReview(!isInReview)}
             onCancel={() => {
               setDisplayReviewModal(false);
             }}
@@ -209,7 +212,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           <SharedResearchOutputHeaderCard
             {...props}
             published={published}
-            reviewRequestedBy={reviewRequestedBy}
+            isInReview={isInReview}
           />
           {((hasDescription && !isGrantDocument) || !!tags.length) && (
             <Card>

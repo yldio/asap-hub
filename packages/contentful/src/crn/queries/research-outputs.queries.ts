@@ -53,7 +53,7 @@ export const researchOutputContentQueryFragment = gql`
       }
     }
     usageNotes
-    reviewRequestedBy {
+    statusChangedBy {
       sys {
         id
       }
@@ -61,6 +61,8 @@ export const researchOutputContentQueryFragment = gql`
       lastName
       email
     }
+    statusChangedAt
+    isInReview
     authorsCollection(limit: 10) {
       items {
         __typename

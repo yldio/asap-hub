@@ -831,12 +831,12 @@ describe('Reminder Data Provider', () => {
         });
       });
 
-      test('Should return no reminder when reviewRequestedBy attribute is missing', async () => {
+      test('Should return no reminder when statusChangedBy attribute is missing', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];
         squidexGraphqlResponse.draftResearchOutputs = [];
         const inReview = getSquidexReminderReseachOutputsInReviewTeamContents();
-        inReview.flatData.reviewRequestedBy = null;
+        inReview.flatData.statusChangedBy = null;
         squidexGraphqlResponse.inReviewResearchOutputs = [inReview];
         squidexGraphqlClientMock.request.mockResolvedValueOnce(
           squidexGraphqlResponse,

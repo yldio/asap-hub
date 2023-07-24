@@ -175,6 +175,11 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       published: {
         type: 'boolean',
       },
+      isInReview: {
+        type: 'boolean',
+        nullable: true,
+        default: false,
+      },
     },
     required: [
       'documentType',
@@ -278,7 +283,7 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
         nullable: true,
       },
       teams: { type: 'array', items: { type: 'string' }, minItems: 1 },
-      reviewRequestedById: { type: 'string', nullable: true },
+      statusChangedById: { type: 'string', nullable: true },
       workingGroups: { type: 'array', items: { type: 'string' }, minItems: 0 },
       usageNotes: { type: 'string', nullable: true },
       doi: {
@@ -300,6 +305,13 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
       },
       published: {
         type: 'boolean',
+      },
+      isInReview: {
+        type: 'boolean',
+      },
+      hasStatusChanged: {
+        type: 'boolean',
+        nullable: true,
       },
     },
     required: [

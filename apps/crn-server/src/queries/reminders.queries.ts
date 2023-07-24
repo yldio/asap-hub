@@ -109,7 +109,7 @@ export const FETCH_REMINDER_DATA = gql`
             title
           }
         }
-        reviewRequestedBy {
+        statusChangedBy {
           id
           flatData {
             firstName

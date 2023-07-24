@@ -192,13 +192,15 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
       }
-      reviewRequestedBy {
+      statusChangedBy {
         id
         flatData {
           firstName
           lastName
         }
       }
+      statusChangedAt
+      isInReview
     }
     referencingResearchOutputsContents {
       id

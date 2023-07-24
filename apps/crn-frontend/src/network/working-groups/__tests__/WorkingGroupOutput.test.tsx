@@ -465,11 +465,12 @@ it.each([
         title,
         descriptionMD,
         published,
-        reviewRequestedBy: {
+        statusChangedBy: {
           id: 'user-id-1',
           firstName: 'User',
           lastName: 'One',
         },
+        isInReview: false,
       },
       history,
     });
@@ -494,7 +495,8 @@ it.each([
         descriptionMD,
         workingGroups: [workingGroupId],
         published: shouldPublish,
-        reviewRequestedById: 'user-id-1',
+        statusChangedById: 'user-id-1',
+        isInReview: false,
       }),
       expect.anything(),
     );

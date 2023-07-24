@@ -6,15 +6,15 @@ type NewsPageListProps = Pick<
   'filters' | 'onChangeFilter' | 'onChangeSearch' | 'searchQuery'
 >;
 
-type Option<V extends string> = {
+interface Option<V extends string> {
   value: V;
   label: string;
   enabled?: boolean;
-};
-type Title = {
+}
+interface Title {
   title: string;
   label?: undefined;
-};
+}
 
 const newsFilters: ReadonlyArray<Option<'news' | 'update'> | Title> = [
   { title: 'TYPE OF NEWS' },

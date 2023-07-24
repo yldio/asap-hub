@@ -7,14 +7,19 @@ export type SetAlgoliaSettings = {
   algoliaAppId: string;
   algoliaCiApiKey: string;
   indexName: string;
+  appName: string;
 };
 
 export const setAlgoliaSettings = async ({
   algoliaAppId,
   algoliaCiApiKey,
   indexName,
+  appName,
 }: SetAlgoliaSettings): Promise<void> => {
-  const path = resolve(__dirname, '../../../../../schema');
+  const path = resolve(
+    __dirname,
+    `../../../../../packages/algolia/schema/${appName}`,
+  );
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
 
   const index = client.initIndex(indexName);

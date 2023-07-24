@@ -99,11 +99,17 @@ export const eventContentFragment = gql`
         title
       }
       referencingTeamsContents {
-          id
-          flatData {
-            displayName
-          }
+        id
+        flatData {
+          displayName
         }
+      }
+      referencesWorkingGroupsContents {
+        id
+        flatData {
+          title
+        }
+      }
     }
   }
 

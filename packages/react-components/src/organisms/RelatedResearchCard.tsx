@@ -1,7 +1,4 @@
-import {
-  ResearchOutputDocumentType,
-  ResearchOutputResponse,
-} from '@asap-hub/model';
+import { EventResponse, ResearchOutputDocumentType } from '@asap-hub/model';
 import { sharedResearch, network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -104,10 +101,7 @@ const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
 type RelatedResearchCardProp = {
   description: string;
-  relatedResearch: Pick<
-    ResearchOutputResponse,
-    'documentType' | 'type' | 'title' | 'teams' | 'id'
-  >[];
+  relatedResearch: EventResponse['relatedResearch'];
 };
 
 const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
@@ -135,11 +129,11 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
         <div css={[rowStyles, gridTitleStyles]}>
           <span css={titleStyles}>Document Type</span>
           <span css={titleStyles}>Shared Output Name</span>
-          <span css={titleStyles}>Team</span>
+          <span css={titleStyles}>Team or Working Group</span>
         </div>
         {relatedResearch
           .slice(0, showMore ? undefined : truncateFrom)
-          .map(({ id, documentType, teams, title, type }) => (
+          .map(({ id, documentType, teams, title, type, workingGroups }) => (
             <div key={id} css={[rowStyles]}>
               <span css={[titleStyles, rowTitleStyles]}>Document Type</span>
               <p css={paragraphStyle}>
@@ -161,13 +155,25 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
                   {title}
                 </Link>
               </p>
-              <span css={[titleStyles, rowTitleStyles]}>Team</span>
-
-              {teams.length > 1 ? (
-                <p css={paragraphStyle}>Multiple teams</p>
-              ) : (
-                teams[0] && (
-                  <p css={paragraphStyle}>
+              <span css={[titleStyles, rowTitleStyles]}>
+                Team or Working Group
+              </span>
+              <p css={paragraphStyle}>
+                {workingGroups?.length ? (
+                  <Link
+                    ellipsed
+                    href={
+                      network({}).workingGroups({}).workingGroup({
+                        workingGroupId: workingGroups[0].id,
+                      }).$
+                    }
+                  >
+                    {workingGroups[0].title}
+                  </Link>
+                ) : teams.length > 1 ? (
+                  'Multiple teams'
+                ) : (
+                  teams[0] && (
                     <Link
                       ellipsed
                       href={
@@ -178,9 +184,9 @@ const RelatedResearchCard: React.FC<RelatedResearchCardProp> = ({
                     >
                       {teams[0].displayName}
                     </Link>
-                  </p>
-                )
-              )}
+                  )
+                )}
+              </p>
             </div>
           ))}
       </div>

@@ -169,7 +169,6 @@ export class EventSquidexDataProvider implements EventDataProvider {
         skip,
         order: orderby,
       });
-
     if (
       !queryEventsContentsWithTotal?.total ||
       !queryEventsContentsWithTotal?.items

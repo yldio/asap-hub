@@ -168,7 +168,7 @@ const parseGraphqlResearchOutputLite = ({
   isOwnRelatedResearchLink,
 }: FetchResearchOutputRelatedResearch): Pick<
   ResearchOutputDataObject,
-  'id' | 'title' | 'type' | 'documentType' | 'teams'
+  'id' | 'title' | 'type' | 'documentType' | 'teams' | 'workingGroups'
 > & { isOwnRelatedResearchLink?: boolean } => ({
   id: researchOutputId,
   title: flatData.title || '',
@@ -181,6 +181,11 @@ const parseGraphqlResearchOutputLite = ({
     flatData.teams?.map(({ id, flatData: { displayName } }) => ({
       id,
       displayName: displayName || '',
+    })) || [],
+  workingGroups:
+    flatData.workingGroups?.map(({ id, flatData: { title } }) => ({
+      id,
+      title: title || '',
     })) || [],
   isOwnRelatedResearchLink,
 });

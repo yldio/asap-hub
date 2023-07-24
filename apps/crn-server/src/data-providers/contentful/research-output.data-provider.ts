@@ -241,6 +241,7 @@ const mapRelatedResearch = (
           ? ro.documentType
           : 'Grant Document',
       teams: mapTeams(ro.teamsCollection?.items || []),
+      workingGroups: ro.workingGroupsCollection?.items,
       isOwnRelatedResearchLink,
     }));
 

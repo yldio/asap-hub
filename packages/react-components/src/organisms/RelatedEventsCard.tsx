@@ -38,19 +38,12 @@ const rowTitleStyles = css({
 
 const rowStyles = css({
   display: 'grid',
-  paddingTop: `${20 / perRem}em`,
-  paddingBottom: `${20 / perRem}em`,
+
   borderBottom: `1px solid ${steel.rgb}`,
-  ':last-child': {
-    borderBottom: 'none',
-    marginBottom: 0,
-    paddingBottom: 0,
-  },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: 'auto max-content',
     columnGap: `${15 / perRem}em`,
-    paddingTop: 0,
-    paddingBottom: `${16 / perRem}em`,
+    rowGap: `${16 / perRem}em`,
     borderBottom: 'none',
   },
 });

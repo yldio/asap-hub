@@ -21,6 +21,7 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Report',
         teams: [{ id: 'team-id-1', flatData: { displayName: 'Team B' } }],
+        workingGroups: [],
       },
     };
 

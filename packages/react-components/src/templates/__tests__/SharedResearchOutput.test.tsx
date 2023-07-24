@@ -294,6 +294,7 @@ describe('Not Grant Documents', () => {
               id: 'id1',
               title: 'Related research article',
               teams: [{ id: 'team1', displayName: 'team 1' }],
+              workingGroups: [],
               type: 'Published',
               documentType: 'Article',
             },

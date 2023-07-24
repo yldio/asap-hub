@@ -165,6 +165,14 @@ export const researchOutputContentQueryFragment = gql`
             displayName
           }
         }
+        workingGroupsCollection(limit: 10) {
+          items {
+            sys {
+              id
+            }
+            title
+          }
+        }
       }
     }
     linkedFrom @include(if: $fetchRelatedResearch) {
@@ -182,6 +190,14 @@ export const researchOutputContentQueryFragment = gql`
                 id
               }
               displayName
+            }
+          }
+          workingGroupsCollection(limit: 10) {
+            items {
+              sys {
+                id
+              }
+              title
             }
           }
         }

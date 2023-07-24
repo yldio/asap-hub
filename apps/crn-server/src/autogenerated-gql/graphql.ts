@@ -7046,6 +7046,13 @@ export type EventContentFragment = Pick<
             }
           >
         >;
+        referencesWorkingGroupsContents: Maybe<
+          Array<
+            Pick<WorkingGroups, 'id'> & {
+              flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+            }
+          >
+        >;
       }
     >
   >;
@@ -7482,6 +7489,13 @@ export type FetchEventsQuery = {
                       }
                     >
                   >;
+                  referencesWorkingGroupsContents: Maybe<
+                    Array<
+                      Pick<WorkingGroups, 'id'> & {
+                        flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+                      }
+                    >
+                  >;
                 }
               >
             >;
@@ -7885,6 +7899,13 @@ export type FetchEventQuery = {
               Array<
                 Pick<Teams, 'id'> & {
                   flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                }
+              >
+            >;
+            referencesWorkingGroupsContents: Maybe<
+              Array<
+                Pick<WorkingGroups, 'id'> & {
+                  flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
                 }
               >
             >;
@@ -8931,6 +8952,13 @@ export type ResearchOutputContentFragment = Pick<
                 }
               >
             >;
+            workingGroups: Maybe<
+              Array<
+                Pick<WorkingGroups, 'id'> & {
+                  flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+                }
+              >
+            >;
           };
         }
       >
@@ -9000,6 +9028,13 @@ export type ResearchOutputContentFragment = Pick<
             Array<
               Pick<Teams, 'id'> & {
                 flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+              }
+            >
+          >;
+          workingGroups: Maybe<
+            Array<
+              Pick<WorkingGroups, 'id'> & {
+                flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
               }
             >
           >;
@@ -9160,6 +9195,13 @@ export type FetchResearchOutputQuery = {
                     }
                   >
                 >;
+                workingGroups: Maybe<
+                  Array<
+                    Pick<WorkingGroups, 'id'> & {
+                      flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+                    }
+                  >
+                >;
               };
             }
           >
@@ -9235,6 +9277,13 @@ export type FetchResearchOutputQuery = {
                 Array<
                   Pick<Teams, 'id'> & {
                     flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                  }
+                >
+              >;
+              workingGroups: Maybe<
+                Array<
+                  Pick<WorkingGroups, 'id'> & {
+                    flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
                   }
                 >
               >;
@@ -9405,6 +9454,13 @@ export type FetchResearchOutputsQuery = {
                           }
                         >
                       >;
+                      workingGroups: Maybe<
+                        Array<
+                          Pick<WorkingGroups, 'id'> & {
+                            flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
+                          }
+                        >
+                      >;
                     };
                   }
                 >
@@ -9485,6 +9541,13 @@ export type FetchResearchOutputsQuery = {
                       Array<
                         Pick<Teams, 'id'> & {
                           flatData: Pick<TeamsFlatDataDto, 'displayName'>;
+                        }
+                      >
+                    >;
+                    workingGroups: Maybe<
+                      Array<
+                        Pick<WorkingGroups, 'id'> & {
+                          flatData: Pick<WorkingGroupsFlatDataDto, 'title'>;
                         }
                       >
                     >;
@@ -11960,6 +12023,32 @@ export const EventContentFragmentDoc = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'referencesWorkingGroupsContents',
+                  },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -12614,6 +12703,35 @@ export const ResearchOutputContentFragmentDoc = {
                                 ],
                               },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'workingGroups' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'flatData' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'title',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
                           ],
                         },
                       },
@@ -12988,6 +13106,32 @@ export const ResearchOutputContentFragmentDoc = {
                                       kind: 'Name',
                                       value: 'displayName',
                                     },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'workingGroups' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
                                   },
                                 ],
                               },

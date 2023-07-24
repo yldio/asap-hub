@@ -2,7 +2,10 @@ import { CalendarResponse } from './calendar';
 import { FetchOptions, ListResponse } from './common';
 import { BasicEvent, SortOptions } from './event-common';
 import { InterestGroupResponse } from './interest-group';
-import { ResearchOutputResponse } from './research-output';
+import {
+  ResearchOutputResponse,
+  ResearchOutputWorkingGroupResponse,
+} from './research-output';
 import { TeamResponse } from './team';
 import { WorkingGroupResponse } from './working-group';
 
@@ -55,6 +58,12 @@ export interface EventDataObject extends BasicEvent {
       ResearchOutputResponse['teams'][number],
       'displayName' | 'id'
     >[];
+    workingGroups?:
+      | Pick<
+          ResearchOutputWorkingGroupResponse['workingGroups'][0],
+          'id' | 'title'
+        >[]
+      | ResearchOutputResponse['workingGroups'];
   })[];
 }
 

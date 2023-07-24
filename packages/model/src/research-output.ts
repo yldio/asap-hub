@@ -239,7 +239,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   relatedResearch: Array<
     Pick<
       ResearchOutputDataObject,
-      'id' | 'title' | 'type' | 'documentType' | 'teams'
+      'id' | 'title' | 'type' | 'documentType' | 'teams' | 'workingGroups'
     > & { isOwnRelatedResearchLink?: boolean }
   >;
   relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;

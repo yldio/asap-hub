@@ -199,7 +199,6 @@ export const parseGraphQLEvent = (
       `Invalid event (${item.id}) status "${item.flatData.status}"`,
     );
   }
-
   return {
     id: item.id,
     description: item.flatData.description || '',
@@ -263,10 +262,18 @@ export const parseGraphQLEvent = (
         documentType: research.flatData.documentType,
         type: research.flatData.type,
         title: research.flatData.title,
-        teams: (research.referencingTeamsContents ?? []).map((team) => ({
-          id: team.id,
-          displayName: team.flatData.displayName,
-        })),
+        teams: (research.referencingTeamsContents ?? []).map(
+          ({ id, flatData: { displayName } }) => ({
+            id,
+            displayName,
+          }),
+        ),
+        workingGroups: (research.referencesWorkingGroupsContents ?? []).map(
+          ({ id, flatData: { title } }) => ({
+            id,
+            title,
+          }),
+        ),
       }),
     ),
   };

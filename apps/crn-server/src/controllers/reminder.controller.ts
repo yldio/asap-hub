@@ -42,7 +42,7 @@ export default class ReminderController {
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `${reminder.data.title} ${reminder.data.documentType} from your ASAP Team is now published on the Hub. If there are errors, please let your PM know.`,
+            description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** published a ${reminder.data.associationType} output: ${reminder.data.title}.`,
           };
         }
 

@@ -8512,6 +8512,13 @@ export type FetchReminderDataQuery = {
               }
             >
           >;
+          statusChangedBy: Maybe<
+            Array<
+              Pick<Users, 'id'> & {
+                flatData: Pick<UsersFlatDataDto, 'firstName' | 'lastName'>;
+              }
+            >
+          >;
         };
       }
     >
@@ -14694,6 +14701,36 @@ export const FetchReminderDataDocument = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusChangedBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'flatData' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
                                   },
                                 ],
                               },

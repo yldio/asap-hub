@@ -51,7 +51,7 @@ export interface ResearchOutputPublishedReminder
     documentType: ResearchOutputPublishedDataObject['documentType'];
     title: ResearchOutputPublishedDataObject['title'];
     addedDate: ResearchOutputPublishedDataObject['addedDate'];
-    createdBy: string;
+    statusChangedBy: string;
     associationType: 'team' | 'working group';
     associationName: string;
   };

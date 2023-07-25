@@ -56,6 +56,13 @@ export const FETCH_REMINDER_DATA = gql`
             title
           }
         }
+        statusChangedBy {
+          id
+          flatData {
+            firstName
+            lastName
+          }
+        }
       }
     }
     draftResearchOutputs: queryResearchOutputsContents(

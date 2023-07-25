@@ -62,6 +62,10 @@ export const migrateResearchOutputs = async () => {
       environments,
       subtype,
       keywords,
+      link,
+      rrid,
+      doi,
+      accession,
       ...fields
     } = squidexOutputItem;
 
@@ -71,6 +75,10 @@ export const migrateResearchOutputs = async () => {
         contentfulEnvironment,
         description,
       ),
+      link: link?.trim() ? link.trim() : null,
+      rrid: rrid?.trim() ? rrid.trim() : null,
+      doi: doi?.trim() ? doi.trim() : null,
+      accession: accession?.trim() ? accession.trim() : null,
       relatedResearch: getLinkEntities(getPublishedIds(relatedResearch || [])),
       relatedEvents: getLinkEntities(getPublishedIds(relatedEvents || [])),
       labs: getLinkEntities(getPublishedIds(labs || [])),

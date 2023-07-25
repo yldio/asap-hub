@@ -9,6 +9,7 @@ import {
   getSquidexAndContentfulClients,
   logger,
   paginatedFetch,
+  richTextToMarkdown,
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
 
@@ -66,6 +67,7 @@ export const migrateResearchOutputs = async () => {
       rrid,
       doi,
       accession,
+      usageNotes,
       ...fields
     } = squidexOutputItem;
 
@@ -96,6 +98,7 @@ export const migrateResearchOutputs = async () => {
           : undefined,
       keywords: getLinkEntities(getPublishedIds(keywords || [])),
       authors: getLinkEntities(getPublishedIds(authors || [])),
+      usageNotes: richTextToMarkdown(usageNotes || ''),
       ...fields,
     };
 

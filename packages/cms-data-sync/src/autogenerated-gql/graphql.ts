@@ -6699,6 +6699,7 @@ export type FetchResearchOutputsQuery = {
               | 'doi'
               | 'labCatalogNumber'
               | 'adminNotes'
+              | 'usageNotes'
             > & {
               authors: Maybe<
                 Array<
@@ -8133,6 +8134,10 @@ export const FetchResearchOutputsDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'adminNotes' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'usageNotes' },
                             },
                             {
                               kind: 'Field',

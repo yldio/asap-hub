@@ -27,6 +27,7 @@ export const researchOutputsQuery = gql`
           doi
           labCatalogNumber
           adminNotes
+          usageNotes
           authors {
             ... on Users {
               id

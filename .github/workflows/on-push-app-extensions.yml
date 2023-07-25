@@ -63,11 +63,9 @@ jobs:
           - event-speakers-title
           - event-speakers-gp2
           - field-as-updated-at
-          - user-membership
           - user-positions
-          - user-team-memberships
+          - membership-reference
           - clear-on-change
-          - contributing-cohort-memberships
           - working-group-deliverables
     steps:
       - name: Checkout

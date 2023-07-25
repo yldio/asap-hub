@@ -165,13 +165,11 @@ export const researchOutputContentQueryFragment = gql`
             displayName
           }
         }
-        workingGroupsCollection(limit: 10) {
-          items {
-            sys {
-              id
-            }
-            title
+        workingGroup {
+          sys {
+            id
           }
+          title
         }
       }
     }
@@ -192,13 +190,11 @@ export const researchOutputContentQueryFragment = gql`
               displayName
             }
           }
-          workingGroupsCollection(limit: 10) {
-            items {
-              sys {
-                id
-              }
-              title
+          workingGroup {
+            sys {
+              id
             }
+            title
           }
         }
       }

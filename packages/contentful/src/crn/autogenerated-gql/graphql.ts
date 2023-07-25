@@ -12882,6 +12882,9 @@ export type ResearchOutputsContentFragment = Pick<
               Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
             >;
           }>;
+          workingGroup?: Maybe<
+            Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+          >;
         }
       >
     >;
@@ -12897,6 +12900,9 @@ export type ResearchOutputsContentFragment = Pick<
                 Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
               >;
             }>;
+            workingGroup?: Maybe<
+              Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+            >;
           }
         >
       >;
@@ -13088,6 +13094,9 @@ export type FetchResearchOutputByIdQuery = {
                   Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
                 >;
               }>;
+              workingGroup?: Maybe<
+                Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+              >;
             }
           >
         >;
@@ -13103,6 +13112,9 @@ export type FetchResearchOutputByIdQuery = {
                     Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
                   >;
                 }>;
+                workingGroup?: Maybe<
+                  Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                >;
               }
             >
           >;
@@ -13338,6 +13350,9 @@ export type FetchResearchOutputsQuery = {
                         >
                       >;
                     }>;
+                    workingGroup?: Maybe<
+                      Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                    >;
                   }
                 >
               >;
@@ -13357,6 +13372,9 @@ export type FetchResearchOutputsQuery = {
                           >
                         >;
                       }>;
+                      workingGroup?: Maybe<
+                        Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                      >;
                     }
                   >
                 >;
@@ -17375,6 +17393,32 @@ export const ResearchOutputsContentFragmentDoc = {
                           ],
                         },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'workingGroup' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -17491,6 +17535,32 @@ export const ResearchOutputsContentFragmentDoc = {
                                         },
                                       ],
                                     },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'workingGroup' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
                                   },
                                 ],
                               },

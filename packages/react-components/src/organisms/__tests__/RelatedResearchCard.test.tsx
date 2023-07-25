@@ -44,6 +44,7 @@ it('displays the related research links and icons', () => {
           title: 'Genetics',
           type: 'Preprint',
           teams: [{ id: '1', displayName: 'Team 1' }],
+          workingGroups: [],
         },
       ]}
     />,
@@ -60,7 +61,7 @@ it('displays the related research links and icons', () => {
   );
 });
 
-it('does not display the team link if there is no team', () => {
+it('does not display the team link if there is no team or working group', () => {
   const { getAllByRole } = render(
     <RelatedResearchCard
       {...props}
@@ -72,6 +73,7 @@ it('does not display the team link if there is no team', () => {
           title: 'Genetics',
           type: 'Preprint',
           teams: [],
+          workingGroups: [],
         },
       ]}
     />,
@@ -87,6 +89,7 @@ it('displays the multiple teams label', () => {
       relatedResearch={[
         {
           ...createResearchOutputResponse(),
+          workingGroups: [],
           teams: [
             { id: '1', displayName: 'Team 1' },
             { id: '2', displayName: 'Team 2' },

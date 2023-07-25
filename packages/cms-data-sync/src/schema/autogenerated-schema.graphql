@@ -8176,6 +8176,7 @@ type ResearchOutputsDataDto {
   documentType: ResearchOutputsDataDocumentTypeDto
   doi: ResearchOutputsDataDoiDto
   environments: ResearchOutputsDataEnvironmentsDto
+  isInReview: ResearchOutputsDataIsInReviewDto
   keywords: ResearchOutputsDataKeywordsDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberDto
   labs: ResearchOutputsDataLabsDto
@@ -8189,6 +8190,8 @@ type ResearchOutputsDataDto {
   reviewRequestedBy: ResearchOutputsDataReviewRequestedByDto
   rrid: ResearchOutputsDataRridDto
   sharingStatus: ResearchOutputsDataSharingStatusDto
+  statusChangedAt: ResearchOutputsDataStatusChangedAtDto
+  statusChangedBy: ResearchOutputsDataStatusChangedByDto
   subtype: ResearchOutputsDataSubtypeDto
   tags: ResearchOutputsDataTagsDto
   teams: ResearchOutputsDataTeamsDto
@@ -8229,6 +8232,7 @@ input ResearchOutputsDataInputDto {
   documentType: ResearchOutputsDataDocumentTypeInputDto
   doi: ResearchOutputsDataDoiInputDto
   environments: ResearchOutputsDataEnvironmentsInputDto
+  isInReview: ResearchOutputsDataIsInReviewInputDto
   keywords: ResearchOutputsDataKeywordsInputDto
   labCatalogNumber: ResearchOutputsDataLabCatalogNumberInputDto
   labs: ResearchOutputsDataLabsInputDto
@@ -8242,6 +8246,8 @@ input ResearchOutputsDataInputDto {
   reviewRequestedBy: ResearchOutputsDataReviewRequestedByInputDto
   rrid: ResearchOutputsDataRridInputDto
   sharingStatus: ResearchOutputsDataSharingStatusInputDto
+  statusChangedAt: ResearchOutputsDataStatusChangedAtInputDto
+  statusChangedBy: ResearchOutputsDataStatusChangedByInputDto
   subtype: ResearchOutputsDataSubtypeInputDto
   tags: ResearchOutputsDataTagsInputDto
   teams: ResearchOutputsDataTeamsInputDto
@@ -8251,6 +8257,20 @@ input ResearchOutputsDataInputDto {
   usageNotes: ResearchOutputsDataUsageNotesInputDto
   usedInAPublication: ResearchOutputsDataUsedInAPublicationInputDto
   workingGroups: ResearchOutputsDataWorkingGroupsInputDto
+}
+
+"""
+The structure of the Is In Review field of the Research Outputs content type.
+"""
+type ResearchOutputsDataIsInReviewDto {
+  iv: Boolean
+}
+
+"""
+The structure of the Is In Review field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataIsInReviewInputDto {
+  iv: Boolean
 }
 
 """
@@ -8460,6 +8480,34 @@ input ResearchOutputsDataSharingStatusInputDto {
 }
 
 """
+The structure of the Status Changed At field of the Research Outputs content type.
+"""
+type ResearchOutputsDataStatusChangedAtDto {
+  iv: Instant
+}
+
+"""
+The structure of the Status Changed At field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataStatusChangedAtInputDto {
+  iv: Instant
+}
+
+"""
+The structure of the Status Changed By field of the Research Outputs content type.
+"""
+type ResearchOutputsDataStatusChangedByDto {
+  iv: [Users!]
+}
+
+"""
+The structure of the Status Changed By field of the Research Outputs content input type.
+"""
+input ResearchOutputsDataStatusChangedByInputDto {
+  iv: [String!]
+}
+
+"""
 The structure of the Subtype field of the Research Outputs content type.
 """
 type ResearchOutputsDataSubtypeDto {
@@ -8630,6 +8678,7 @@ type ResearchOutputsFlatDataDto {
   """
   doi: String
   environments: [ResearchTags!]
+  isInReview: Boolean
   keywords: [ResearchTags!]
   """
   If this is a hyperlink, please start with "http://" or "https://"
@@ -8655,6 +8704,8 @@ type ResearchOutputsFlatDataDto {
   """
   rrid: String
   sharingStatus: String
+  statusChangedAt: Instant
+  statusChangedBy: [Users!]
   subtype: [ResearchTags!]
   tags: [String!]
   teams: [Teams!]

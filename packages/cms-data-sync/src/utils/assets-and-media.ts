@@ -86,7 +86,9 @@ export const createAndPublishIfNonExistent = async (
             await handleErrorFn(contentfulEnvironment, id);
             return;
           }
-        } catch (e) {}
+        } catch (e) {
+          throw error;
+        }
       }
 
       throw error;

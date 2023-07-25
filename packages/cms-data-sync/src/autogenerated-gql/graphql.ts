@@ -4424,6 +4424,7 @@ export type ResearchOutputsDataDto = {
   documentType: Maybe<ResearchOutputsDataDocumentTypeDto>;
   doi: Maybe<ResearchOutputsDataDoiDto>;
   environments: Maybe<ResearchOutputsDataEnvironmentsDto>;
+  isInReview: Maybe<ResearchOutputsDataIsInReviewDto>;
   keywords: Maybe<ResearchOutputsDataKeywordsDto>;
   labCatalogNumber: Maybe<ResearchOutputsDataLabCatalogNumberDto>;
   labs: Maybe<ResearchOutputsDataLabsDto>;
@@ -4437,6 +4438,8 @@ export type ResearchOutputsDataDto = {
   reviewRequestedBy: Maybe<ResearchOutputsDataReviewRequestedByDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
+  statusChangedAt: Maybe<ResearchOutputsDataStatusChangedAtDto>;
+  statusChangedBy: Maybe<ResearchOutputsDataStatusChangedByDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
   teams: Maybe<ResearchOutputsDataTeamsDto>;
@@ -4471,6 +4474,7 @@ export type ResearchOutputsDataInputDto = {
   documentType: InputMaybe<ResearchOutputsDataDocumentTypeInputDto>;
   doi: InputMaybe<ResearchOutputsDataDoiInputDto>;
   environments: InputMaybe<ResearchOutputsDataEnvironmentsInputDto>;
+  isInReview: InputMaybe<ResearchOutputsDataIsInReviewInputDto>;
   keywords: InputMaybe<ResearchOutputsDataKeywordsInputDto>;
   labCatalogNumber: InputMaybe<ResearchOutputsDataLabCatalogNumberInputDto>;
   labs: InputMaybe<ResearchOutputsDataLabsInputDto>;
@@ -4484,6 +4488,8 @@ export type ResearchOutputsDataInputDto = {
   reviewRequestedBy: InputMaybe<ResearchOutputsDataReviewRequestedByInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
+  statusChangedAt: InputMaybe<ResearchOutputsDataStatusChangedAtInputDto>;
+  statusChangedBy: InputMaybe<ResearchOutputsDataStatusChangedByInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
   tags: InputMaybe<ResearchOutputsDataTagsInputDto>;
   teams: InputMaybe<ResearchOutputsDataTeamsInputDto>;
@@ -4493,6 +4499,16 @@ export type ResearchOutputsDataInputDto = {
   usageNotes: InputMaybe<ResearchOutputsDataUsageNotesInputDto>;
   usedInAPublication: InputMaybe<ResearchOutputsDataUsedInAPublicationInputDto>;
   workingGroups: InputMaybe<ResearchOutputsDataWorkingGroupsInputDto>;
+};
+
+/** The structure of the Is In Review field of the Research Outputs content type. */
+export type ResearchOutputsDataIsInReviewDto = {
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Is In Review field of the Research Outputs content input type. */
+export type ResearchOutputsDataIsInReviewInputDto = {
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Keywords field of the Research Outputs content type. */
@@ -4633,6 +4649,26 @@ export type ResearchOutputsDataSharingStatusInputDto = {
   iv: InputMaybe<Scalars['String']>;
 };
 
+/** The structure of the Status Changed At field of the Research Outputs content type. */
+export type ResearchOutputsDataStatusChangedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Status Changed At field of the Research Outputs content input type. */
+export type ResearchOutputsDataStatusChangedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Status Changed By field of the Research Outputs content type. */
+export type ResearchOutputsDataStatusChangedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Status Changed By field of the Research Outputs content input type. */
+export type ResearchOutputsDataStatusChangedByInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Subtype field of the Research Outputs content type. */
 export type ResearchOutputsDataSubtypeDto = {
   iv: Maybe<Array<ResearchTags>>;
@@ -4746,6 +4782,7 @@ export type ResearchOutputsFlatDataDto = {
   /** DOIs must start with a number and cannot be a URL */
   doi: Maybe<Scalars['String']>;
   environments: Maybe<Array<ResearchTags>>;
+  isInReview: Maybe<Scalars['Boolean']>;
   keywords: Maybe<Array<ResearchTags>>;
   /** If this is a hyperlink, please start with "http://" or "https://" */
   labCatalogNumber: Maybe<Scalars['String']>;
@@ -4763,6 +4800,8 @@ export type ResearchOutputsFlatDataDto = {
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
+  statusChangedAt: Maybe<Scalars['Instant']>;
+  statusChangedBy: Maybe<Array<Users>>;
   subtype: Maybe<Array<ResearchTags>>;
   tags: Maybe<Array<Scalars['String']>>;
   teams: Maybe<Array<Teams>>;
@@ -6593,7 +6632,7 @@ export type FetchNewsQueryVariables = Exact<{ [key: string]: never }>;
 export type FetchNewsQuery = {
   queryNewsAndEventsContents: Maybe<
     Array<
-      Pick<NewsAndEvents, 'id' | 'created'> & {
+      Pick<NewsAndEvents, 'id' | 'created' | 'status'> & {
         flatData: Pick<
           NewsAndEventsFlatDataDto,
           'title' | 'shortText' | 'text' | 'frequency' | 'link' | 'linkText'
@@ -6617,7 +6656,7 @@ export type FetchPagesQueryVariables = Exact<{ [key: string]: never }>;
 export type FetchPagesQuery = {
   queryPagesContents: Maybe<
     Array<
-      Pick<Pages, 'id'> & {
+      Pick<Pages, 'id' | 'status'> & {
         flatData: Pick<
           PagesFlatDataDto,
           'title' | 'path' | 'shortText' | 'text' | 'link' | 'linkText'
@@ -7830,6 +7869,7 @@ export const FetchNewsDocument = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -7915,6 +7955,7 @@ export const FetchPagesDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },

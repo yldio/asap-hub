@@ -43,11 +43,11 @@ export const migrateResearchOutputs = async () => {
     return entries;
   };
 
+  const getPublishedIds = (arr: { status: string; id: string }[]): string[] =>
+    arr.filter(({ status }) => status === 'PUBLISHED').map(({ id }) => id);
+
   const parseOutputItem = async (output: OutputItem) => {
     const { flatData: squidexOutputItem, id, created } = output;
-
-    const getPublishedIds = (arr: { status: string; id: string }[]): string[] =>
-      arr.filter(({ status }) => status === 'PUBLISHED').map(({ id }) => id);
 
     const {
       authors,
@@ -95,6 +95,7 @@ export const migrateResearchOutputs = async () => {
           ? getLinkEntity(subtype?.[0]?.id)
           : undefined,
       keywords: getLinkEntities(getPublishedIds(keywords || [])),
+      authors: getLinkEntities(getPublishedIds(authors || [])),
       ...fields,
     };
 

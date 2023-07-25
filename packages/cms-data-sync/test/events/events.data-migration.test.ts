@@ -19,6 +19,7 @@ jest.mock('../../src/utils/entries');
 
 const getEventSquidex = (): EventItem => ({
   id: 'event-1',
+  status: 'PUBLISHED',
   flatData: {
     googleId: '1jhm4181bs6ck0esegje4nf6ur',
     description: null,

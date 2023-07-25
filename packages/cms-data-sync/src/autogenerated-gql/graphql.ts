@@ -6700,6 +6700,8 @@ export type FetchResearchOutputsQuery = {
               | 'labCatalogNumber'
               | 'adminNotes'
               | 'usageNotes'
+              | 'isInReview'
+              | 'statusChangedAt'
             > & {
               authors: Maybe<
                 Array<
@@ -6719,6 +6721,7 @@ export type FetchResearchOutputsQuery = {
               environments: Maybe<Array<Pick<ResearchTags, 'id' | 'status'>>>;
               subtype: Maybe<Array<Pick<ResearchTags, 'id' | 'status'>>>;
               keywords: Maybe<Array<Pick<ResearchTags, 'id' | 'status'>>>;
+              statusChangedBy: Maybe<Array<Pick<Users, 'id'>>>;
             };
           }
         >
@@ -8366,6 +8369,27 @@ export const FetchResearchOutputsDocument = {
                                   },
                                 ],
                               },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'statusChangedBy' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'isInReview' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'statusChangedAt' },
                             },
                           ],
                         },

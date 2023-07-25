@@ -68,6 +68,7 @@ export const migrateResearchOutputs = async () => {
       doi,
       accession,
       usageNotes,
+      statusChangedBy,
       ...fields
     } = squidexOutputItem;
 
@@ -99,6 +100,9 @@ export const migrateResearchOutputs = async () => {
       keywords: getLinkEntities(getPublishedIds(keywords || [])),
       authors: getLinkEntities(getPublishedIds(authors || [])),
       usageNotes: richTextToMarkdown(usageNotes || ''),
+      statusChangedBy: statusChangedBy?.[0]?.id
+        ? getLinkEntity(statusChangedBy[0].id)
+        : null,
       ...fields,
     };
 

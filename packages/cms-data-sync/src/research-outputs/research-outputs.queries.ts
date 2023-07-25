@@ -78,6 +78,11 @@ export const researchOutputsQuery = gql`
             id
             status
           }
+          statusChangedBy {
+            id
+          }
+          isInReview
+          statusChangedAt
         }
       }
     }

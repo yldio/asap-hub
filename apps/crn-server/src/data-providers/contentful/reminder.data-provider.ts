@@ -582,7 +582,8 @@ const getPublishedResearchOutputRemindersFromQuery = (
       !researchOutput.documentType ||
       !isResearchOutputDocumentType(researchOutput.documentType) ||
       !isPublished ||
-      !inLast24Hours(researchOutput.addedDate, zone)
+      !inLast24Hours(researchOutput.addedDate, zone) ||
+      !researchOutput.statusChangedBy
     )
       return researchOutputReminders;
 
@@ -620,8 +621,7 @@ const getPublishedResearchOutputRemindersFromQuery = (
           documentType: researchOutput.documentType,
           title: researchOutput.title,
           addedDate: researchOutput.addedDate,
-          // TODO: `createdBy` should be replaced with `publishedBy` after https://asaphub.atlassian.net/browse/CRN-1428 is implemented
-          createdBy: userName,
+          statusChangedBy: `${researchOutput.statusChangedBy.firstName} ${researchOutput.statusChangedBy.lastName}`,
           associationType,
           associationName,
         },

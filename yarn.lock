@@ -13941,18 +13941,18 @@ __metadata:
   linkType: hard
 
 "@playwright/test@npm:^1.30.0":
-  version: 1.36.0
-  resolution: "@playwright/test@npm:1.36.0"
+  version: 1.36.2
+  resolution: "@playwright/test@npm:1.36.2"
   dependencies:
     "@types/node": "*"
     fsevents: 2.3.2
-    playwright-core: 1.36.0
+    playwright-core: 1.36.2
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     playwright: cli.js
-  checksum: 6748fd7777617fc14aaf472c85a2d29bdcca7c63e88d06bd8c4f37af3bc35ae7af9c317ed966bc005e37038a27193be486fb5361634a0e9a79f527b6cbdd2f52
+  checksum: 659304e0bbbafb2fa36395fbd8bd2c5db2b7791bbb55fa62409946ec7ec726cf8fff89f2b8a1a74fe831bf50a8780a37a5322a1251a6f7db2a9220a57ac408f0
   languageName: node
   linkType: hard
 
@@ -38643,23 +38643,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.36.0, playwright-core@npm:>=1.2.0, playwright-core@npm:^1.30.0":
-  version: 1.36.0
-  resolution: "playwright-core@npm:1.36.0"
+"playwright-core@npm:1.36.2, playwright-core@npm:>=1.2.0, playwright-core@npm:^1.30.0":
+  version: 1.36.2
+  resolution: "playwright-core@npm:1.36.2"
   bin:
     playwright-core: cli.js
-  checksum: d6b5fed5ae95238dc36a1be3e2cfd250221810e6a2d20592c29d7044a2d1f96e8e6cfff83d937605b6e26d7c3058231d16784e17979fbb11208880829e406e85
+  checksum: 2193ce802ef93c28b9b5e11a0b1d7b60778c686015659978d1cbf0eb9cda2cdc85ec5575b887c1346e9d161cc2805bf27638d76a2f7f857dffeae968e6ceffcd
   languageName: node
   linkType: hard
 
 "playwright@npm:^1.30.0":
-  version: 1.36.0
-  resolution: "playwright@npm:1.36.0"
+  version: 1.36.2
+  resolution: "playwright@npm:1.36.2"
   dependencies:
-    playwright-core: 1.36.0
+    playwright-core: 1.36.2
   bin:
     playwright: cli.js
-  checksum: c49ed1666b28f8b9177f4682b51e0bc77a83d32265725bc29a8210c0fe83a92e1f1b7051e315a7299fa39c6e952eebe0fe80a22c174569636a27a5a737b3aef4
+  checksum: 5876b65a0f1303e45f99c7d120706af0ab808efd5d89c514741584ff1060408b62148ae2790c2e6527642f2b8f49db682710b87d3df7b3ba510e8e847e6041ef
   languageName: node
   linkType: hard
 

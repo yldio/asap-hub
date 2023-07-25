@@ -54,6 +54,18 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
           }
         : node,
     )
+    .map((node) =>
+      // if an image is wrapped in an inline tag then if creates an
+      // empty text node in the `content` of the `embedded-asset-block`
+      // which contentful rejects because embedded assets cannot have
+      // child contents
+      node.nodeType === 'embedded-asset-block'
+        ? {
+            ...node,
+            content: [],
+          }
+        : node,
+    )
     /* 
       When we have \n in html, parseHtml function from 
       contentful-html-rich-text-converter converts it 

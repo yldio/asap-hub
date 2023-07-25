@@ -100,7 +100,8 @@ describe('Reminder Controller', () => {
         const { items } = await reminderController.fetch(options);
 
         expect(items[0]).toMatchObject({
-          description: `Some Test title Presentation from your ASAP Team is now published on the Hub. If there are errors, please let your PM know.`,
+          description:
+            '**Tom Hardy** on team **Team A** published a team output: Some Test title.',
           href: `/shared-research/some-research-output-id`,
         });
       });

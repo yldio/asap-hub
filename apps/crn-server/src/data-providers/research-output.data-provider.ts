@@ -31,9 +31,9 @@ import logger from '../utils/logger';
 import { buildODataFilter, ResearchOutputFilter } from '../utils/odata';
 import { FETCH_RESEARCH_TAGS } from '../queries/research-tags.queries';
 import {
-  ResearchOutputDataProvider,
-  FetchResearchOutputOptions,
   FetchResearchOutputFilter,
+  FetchResearchOutputOptions,
+  ResearchOutputDataProvider,
 } from './types';
 
 export const makeODataFilter = (

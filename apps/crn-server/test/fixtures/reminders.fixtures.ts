@@ -43,7 +43,7 @@ export const getResearchOutputPublishedReminder =
         documentType: researchOutputDataObject.documentType,
         title: researchOutputDataObject.title,
         addedDate: researchOutputDataObject.addedDate,
-        createdBy: 'Tom Hardy',
+        statusChangedBy: 'Tom Hardy',
         associationType: 'team',
         associationName: 'Team A',
       },
@@ -322,6 +322,15 @@ export const getSquidexReminderReseachOutputsContents = (): NonNullable<
       title: researchOutput.flatData.title,
       createdBy: [
         {
+          flatData: {
+            firstName: 'Tom',
+            lastName: 'Hardy',
+          },
+        },
+      ],
+      statusChangedBy: [
+        {
+          id: 'user-id',
           flatData: {
             firstName: 'Tom',
             lastName: 'Hardy',

@@ -1,5 +1,10 @@
 import { User } from '@asap-hub/auth';
-import { UserRole, UserResponse } from '@asap-hub/model';
+import {
+  UserRole,
+  UserResponse,
+  UserTeam,
+  WorkingGroupMembership,
+} from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
 export const getUserRole = (
@@ -15,21 +20,59 @@ export const getUserRole = (
     return 'Staff';
   }
 
-  const isUserProjectManager = user[association].some(
-    (teamOrWorkingGroup) =>
-      associationIds?.includes(teamOrWorkingGroup.id) &&
-      teamOrWorkingGroup.role === 'Project Manager',
+  const isUserActiveProjectManager = user[association].some(
+    (teamOrWorkingGroup: UserTeam | WorkingGroupMembership) => {
+      if (
+        association === 'teams' &&
+        'inactiveSinceDate' in teamOrWorkingGroup
+      ) {
+        return (
+          associationIds?.includes(teamOrWorkingGroup.id) &&
+          teamOrWorkingGroup.role === 'Project Manager' &&
+          teamOrWorkingGroup.inactiveSinceDate === undefined
+        );
+      } else if (
+        association === 'workingGroups' &&
+        'active' in teamOrWorkingGroup
+      ) {
+        return (
+          associationIds?.includes(teamOrWorkingGroup.id) &&
+          teamOrWorkingGroup.role === 'Project Manager' &&
+          teamOrWorkingGroup.active
+        );
+      }
+      return false;
+    },
   );
 
-  if (isUserProjectManager) {
+  if (isUserActiveProjectManager) {
     return 'Staff';
   }
 
-  const isUserMember = user[association].some((teamOrWorkingGroup) =>
-    associationIds.includes(teamOrWorkingGroup.id),
+  const isUserActiveMember = user[association].some(
+    (teamOrWorkingGroup: UserTeam | WorkingGroupMembership) => {
+      if (
+        association === 'teams' &&
+        'inactiveSinceDate' in teamOrWorkingGroup
+      ) {
+        return (
+          associationIds.includes(teamOrWorkingGroup.id) &&
+          teamOrWorkingGroup.inactiveSinceDate === undefined
+        );
+      } else if (
+        association === 'workingGroups' &&
+        'active' in teamOrWorkingGroup
+      ) {
+        return (
+          associationIds.includes(teamOrWorkingGroup.id) &&
+          teamOrWorkingGroup.active
+        );
+      }
+      return false;
+    },
   );
 
-  if (isUserMember) {
+  if (isUserActiveMember) {
     return 'Member';
   }
 

@@ -123,7 +123,8 @@ jobs:
           SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
       - name: Run integration tests
-        run: yarn test:integration:squidex --coverage
+        timeout-minutes: 20
+        run: yarn test:integration:squidex --coverage --forceExit
         env:
           APP: crn
           SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}-${{ github.run_id }}
@@ -179,7 +180,8 @@ jobs:
           CONTENTFUL_SOURCE_ENV: ${{ steps.setup.outputs.contentful-environment }}
           CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       - name: Run integration tests
-        run: yarn test:integration:contentful --coverage
+        timeout-minutes: 20
+        run: yarn test:integration:contentful --coverage --forceExit
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

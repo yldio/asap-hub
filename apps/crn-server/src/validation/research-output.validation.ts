@@ -180,6 +180,14 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
         nullable: true,
         default: false,
       },
+      statusChangedById: {
+        type: 'string',
+        nullable: true,
+      },
+      hasStatusChanged: {
+        type: 'boolean',
+        nullable: true,
+      },
     },
     required: [
       'documentType',

@@ -275,6 +275,8 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   relatedResearchIds: string[];
   relatedEventIds: string[];
   statusChangedById?: string;
+  statusChangedAt?: string;
+  hasStatusChanged?: boolean;
 };
 
 export type PublishedResearchOutputCreateDataObject =
@@ -338,6 +340,8 @@ export type ResearchOutputPostRequest = {
   doi?: string;
   environments: string[];
   isInReview?: boolean;
+  statusChangedById?: string;
+  hasStatusChanged?: boolean;
   labCatalogNumber?: string;
   labs?: string[];
   link?: string;

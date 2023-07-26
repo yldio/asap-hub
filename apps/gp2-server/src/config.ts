@@ -1,6 +1,9 @@
 /* istanbul ignore file */
 
 const {
+  ALGOLIA_API_KEY,
+  ALGOLIA_APP_ID,
+  ALGOLIA_INDEX,
   APP_ORIGIN,
   AUTH0_AUDIENCE,
   AUTH0_CLIENT_ID,
@@ -8,9 +11,9 @@ const {
   CLOUDFRONT_DISTRIBUTION_ID,
   CONTENTFUL_ACCESS_TOKEN,
   CONTENTFUL_ENV_ID,
-  CONTENTFUL_PREVIEW_ACCESS_TOKEN,
   CONTENTFUL_HOST,
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
+  CONTENTFUL_PREVIEW_ACCESS_TOKEN,
   CONTENTFUL_SPACE_ID,
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
   CURRENT_REVISION,
@@ -31,6 +34,10 @@ const {
   SES_REGION,
 } = process.env;
 
+export const algoliaApiKey = ALGOLIA_API_KEY || '';
+export const algoliaApiKeyTtl = 36060; // in [seconds] = 10 hours + 1 min - 1 minute is to account for network delays and off-sync clocks between servers
+export const algoliaAppId = ALGOLIA_APP_ID || 'R44097HEU2';
+export const algoliaIndex = ALGOLIA_INDEX || 'gp2-hub_dev';
 export const asapApiUrl = GP2_API_URL || 'http://localhost:3333';
 export const auth0Audience =
   process.env.GP2_AUTH0_AUDIENCE || AUTH0_AUDIENCE || '';
@@ -39,12 +46,12 @@ export const auth0SharedSecret = AUTH0_SHARED_SECRET || '';
 export const cloudfrontDistributionId = CLOUDFRONT_DISTRIBUTION_ID || '';
 export const contentfulAccessToken =
   CONTENTFUL_ACCESS_TOKEN || 'contentful-access-token';
-export const contentfulPreviewAccessToken =
-  CONTENTFUL_PREVIEW_ACCESS_TOKEN || 'contentful-access-token-preview';
 export const contentfulEnvId = CONTENTFUL_ENV_ID || 'Development';
 export const contentfulHost = CONTENTFUL_HOST || 'https://cdn.contentful.com';
 export const contentfulManagementAccessToken =
   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN || 'contentful-management-access-token';
+export const contentfulPreviewAccessToken =
+  CONTENTFUL_PREVIEW_ACCESS_TOKEN || 'contentful-access-token-preview';
 export const contentfulSpaceId = CONTENTFUL_SPACE_ID || 'contentful-space-id';
 export const contentfulWebhookAuthenticationToken =
   CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN ||

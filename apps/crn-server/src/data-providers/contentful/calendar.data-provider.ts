@@ -196,7 +196,9 @@ export const parseGraphQlCalendarToDataObject = (
       complete: !!wg.complete,
     }));
 
-  const groups = (item.linkedFrom?.interestGroupsCollection?.items || [])
+  const interestGroups = (
+    item.linkedFrom?.interestGroupsCollection?.items || []
+  )
     .filter((ig): ig is InterestGroupItem => ig !== null)
     .map((ig) => ({
       id: ig.sys.id,
@@ -210,7 +212,7 @@ export const parseGraphQlCalendarToDataObject = (
     expirationDate: item.googleApiMetadata?.expirationDate ?? undefined,
     syncToken: item.googleApiMetadata?.syncToken ?? undefined,
     workingGroups,
-    groups,
+    interestGroups,
     ...parseContentfulGraphqlCalendarPartialToDataObject(item),
   };
 };

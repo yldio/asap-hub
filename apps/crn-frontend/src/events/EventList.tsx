@@ -20,7 +20,7 @@ type EventListProps = {
 
 export const eventMapper = ({
   speakers,
-  group,
+  interestGroup,
   workingGroup,
   ...event
 }: EventResponse) => ({
@@ -31,7 +31,9 @@ export const eventMapper = ({
   ),
   eventTeams: <EventTeams speakers={speakers} />,
   eventSpeakers: <EventNumberOfSpeakers speakers={speakers} />,
-  eventOwner: <EventOwner group={group} workingGroup={workingGroup} />,
+  eventOwner: (
+    <EventOwner interestGroup={interestGroup} workingGroup={workingGroup} />
+  ),
 });
 
 const EventList: React.FC<EventListProps> = ({

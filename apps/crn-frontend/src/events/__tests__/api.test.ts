@@ -269,7 +269,7 @@ describe('getSquidexUrl', () => {
   it('returns the group url if the constraint contains group id', () => {
     options.constraint = { groupId: 'group-1' };
     expect(getSquidexUrl(options).toString()).toEqual(
-      'http://api/groups/group-1/events?take=10&skip=10',
+      'http://api/interest-groups/group-1/events?take=10&skip=10',
     );
   });
 });

@@ -5,8 +5,8 @@ import {
   UserCreateDataObject as CommonUserCreateDataObject,
   TeamCreateDataObject as CommonTeamCreateDataObject,
   ResearchOutputCreateDataObject as CommonResearchOutputCreateDataObject,
-  GroupDataObject,
-  GroupRole,
+  InterestGroupDataObject,
+  InterestGroupRole,
   WorkingGroupDataObject,
   WorkingGroupRole,
 } from '@asap-hub/model';
@@ -52,7 +52,7 @@ export type ResearchOutputCreateDataObject = Omit<
   createdDate?: string;
 };
 export type InterestGroupCreateDataObject = Omit<
-  GroupDataObject,
+  InterestGroupDataObject,
   | 'id'
   | 'lastModifiedDate'
   | 'createdDate'
@@ -62,7 +62,11 @@ export type InterestGroupCreateDataObject = Omit<
   | 'calendars'
   | 'tools'
 > & {
-  leaders: { user: string; role: GroupRole; inactiveSinceDate?: string }[];
+  leaders: {
+    user: string;
+    role: InterestGroupRole;
+    inactiveSinceDate?: string;
+  }[];
   teams: { id: string }[];
   calendar: { id: string } | null;
 };

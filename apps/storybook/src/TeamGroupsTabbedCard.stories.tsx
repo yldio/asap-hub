@@ -1,15 +1,15 @@
-import { TeamGroupsTabbedCard } from '@asap-hub/react-components';
-import { createListGroupResponse } from '@asap-hub/fixtures';
+import { TeamInterestGroupsTabbedCard } from '@asap-hub/react-components';
+import { createListInterestGroupResponse } from '@asap-hub/fixtures';
 import { number, text, boolean } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / Team Groups Tabbed Card',
-  component: TeamGroupsTabbedCard,
+  title: 'Organisms / Team Interest Groups Tabbed Card',
+  component: TeamInterestGroupsTabbedCard,
 };
 
 export const Normal = () => (
-  <TeamGroupsTabbedCard
-    groups={createListGroupResponse(number('Groups', 3)).items}
+  <TeamInterestGroupsTabbedCard
+    interestGroups={createListInterestGroupResponse(number('Groups', 3)).items}
     title={text('Title', 'Team Groups')}
     isTeamInactive={boolean('Inactive date', false)}
   />

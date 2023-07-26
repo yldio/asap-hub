@@ -28,7 +28,7 @@ import { refreshUserState } from '../state';
 import UserProfile from '../UserProfile';
 
 jest.mock('../api');
-jest.mock('../groups/api');
+jest.mock('../interest-groups/api');
 jest.mock('browser-image-compression');
 
 jest.mock('../../../shared-research/api');

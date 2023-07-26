@@ -24,7 +24,7 @@ export const Normal = () => {
   const routes = {
     users: network({}).users({}).$,
     teams: network({}).teams({}).$,
-    'interest-groups': network({}).groups({}).$,
+    'interest-groups': network({}).interestGroups({}).$,
     'working-groups': network({}).workingGroups({}).$,
   };
   return (

@@ -1,5 +1,5 @@
 import { FetchOptions, ListResponse } from './common';
-import { InterestGroupMembership } from './group';
+import { InterestGroupMembership } from './interest-group';
 import { LabResponse } from './lab';
 import { TeamRole } from './team';
 import { WorkingGroupMembership } from './working-group';

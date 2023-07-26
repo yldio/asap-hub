@@ -23,10 +23,15 @@ const Event: React.FC = () => {
           {...event}
           backHref={backHref}
           onRefresh={refreshEvent}
-          displayCalendar={event.group === undefined || event.group.active}
+          displayCalendar={
+            event.interestGroup === undefined || event.interestGroup.active
+          }
           eventConversation={<EventConversation {...event} />}
           eventOwner={
-            <EventOwner group={event.group} workingGroup={event.workingGroup} />
+            <EventOwner
+              interestGroup={event.interestGroup}
+              workingGroup={event.workingGroup}
+            />
           }
         >
           {!!event.speakers.length && <SpeakerList {...event} />}

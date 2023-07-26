@@ -364,7 +364,7 @@ export const getEventSpeakerUser = (): EventSpeakerUser => ({
 
 export const getContentfulEventDataObject = (): EventDataObject => ({
   ...getEventDataObject(),
-  group: undefined,
+  interestGroup: undefined,
   workingGroup: undefined,
   notes: '<p>These are the notes from the meeting</p>',
   presentation: '<p><iframe src="https://example.com"/></p>',
@@ -416,10 +416,10 @@ export const getEventDataObject = (): EventDataObject => ({
     color: '#125A12',
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     name: 'Tech 1 - Sequencing/omics',
-    groups: [],
+    interestGroups: [],
     workingGroups: [],
   },
-  group: getInterestGroupResponse(),
+  interestGroup: getInterestGroupResponse(),
   workingGroup: getWorkingGroupResponse(),
   speakers: [getEventSpeakerUser()],
 });

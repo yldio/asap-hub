@@ -5,7 +5,10 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { createTeamResponse, createGroupResponse } from '@asap-hub/fixtures';
+import {
+  createTeamResponse,
+  createInterestGroupResponse,
+} from '@asap-hub/fixtures';
 import {
   Auth0Provider,
   WhenReady,
@@ -16,12 +19,12 @@ import { network } from '@asap-hub/routing';
 
 import About from '../About';
 import { refreshTeamState } from '../state';
-import { getTeamGroups } from '../groups/api';
+import { getTeamInterestGroups } from '../interest-groups/api';
 
 jest.mock('../api');
-jest.mock('../groups/api');
-const mockedGetTeamGroups = getTeamGroups as jest.MockedFunction<
-  typeof getTeamGroups
+jest.mock('../interest-groups/api');
+const mockedGetTeamGroups = getTeamInterestGroups as jest.MockedFunction<
+  typeof getTeamInterestGroups
 >;
 
 const teamId = '42';
@@ -104,7 +107,7 @@ it('renders the team groups card when a group is present', async () => {
   mockedGetTeamGroups.mockResolvedValue({
     items: [
       {
-        ...createGroupResponse(),
+        ...createInterestGroupResponse(),
         name: 'Example Group 123',
       },
     ],

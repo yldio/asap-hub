@@ -21,7 +21,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import Network from '../Network';
 import { getTeams } from '../teams/api';
-import { getGroups } from '../groups/api';
+import { getInterestGroups } from '../interest-groups/api';
 import { useUsers } from '../users/state';
 import { getWorkingGroup, getWorkingGroups } from '../working-groups/api';
 import { getResearchOutputs } from '../../shared-research/api';
@@ -41,13 +41,15 @@ mockGetResearchOutputs.mockResolvedValue({
 });
 
 jest.mock('../teams/api');
-jest.mock('../groups/api');
+jest.mock('../interest-groups/api');
 jest.mock('../working-groups/api');
 jest.mock('../../events/api');
 
 const mockUseUsers = useUsers as jest.MockedFunction<typeof useUsers>;
 const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
-const mockGetGroups = getGroups as jest.MockedFunction<typeof getGroups>;
+const mockGetGroups = getInterestGroups as jest.MockedFunction<
+  typeof getInterestGroups
+>;
 const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
   typeof getWorkingGroup
 >;
@@ -192,7 +194,7 @@ it('allows selection of user filters', async () => {
 });
 
 it('allows selection of group filters', async () => {
-  await renderNetworkPage(network({}).groups({}).$);
+  await renderNetworkPage(network({}).interestGroups({}).$);
 
   userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Active');

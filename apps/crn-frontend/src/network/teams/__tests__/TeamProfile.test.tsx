@@ -35,7 +35,7 @@ import { refreshTeamState } from '../state';
 import TeamProfile from '../TeamProfile';
 
 jest.mock('../api');
-jest.mock('../groups/api');
+jest.mock('../interest-groups/api');
 jest.mock('../../../shared-research/api');
 jest.mock('../../../events/api');
 const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<

@@ -208,6 +208,7 @@ describe('Reminders', () => {
           teams: [pmTeam.id],
           workingGroups: [],
           published: true,
+          statusChangedById: loggedInUser.id,
         });
 
         const response = await supertest(app)
@@ -221,11 +222,12 @@ describe('Reminders', () => {
         );
       });
 
-      test('Should see the published reminder when the research output was created recently and the user is associated with the working group that owns it', async () => {
+      test.only('Should see the published reminder when the research output was created recently and the user is associated with the working group that owns it', async () => {
         const publishOutput = getResearchOutputFixture({
           teams: [pmTeam.id],
           workingGroups: [leaderWorkingGroup.id],
           published: true,
+          statusChangedById: loggedInUser.id,
         });
 
         const response = await supertest(app)

@@ -268,6 +268,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   workingGroups?: string[];
   relatedResearchIds: string[];
   relatedEventIds: string[];
+  statusChangedById?: string;
 };
 
 export type PublishedResearchOutputCreateDataObject =

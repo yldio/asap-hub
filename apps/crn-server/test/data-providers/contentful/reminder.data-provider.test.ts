@@ -163,7 +163,6 @@ describe('Reminders data provider', () => {
           getContentfulReminderResearchOutputCollectionItem();
         publishedResearchOutputItem!.sys.publishedAt = addedDate;
         publishedResearchOutputItem!.addedDate = addedDate;
-        publishedResearchOutputItem!.statusChangedBy = null;
 
         draftResearchOutputsItem =
           getContentfulReminderResearchOutputCollectionItem();

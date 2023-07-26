@@ -176,3 +176,7 @@ export const discoverEntry = getEntry({
 export const researchTagEntry = getEntry({
   name: 'Research tag',
 });
+
+export const researchOutputEntry = getEntry({
+  title: 'Research output',
+});

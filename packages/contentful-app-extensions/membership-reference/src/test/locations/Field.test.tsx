@@ -66,6 +66,7 @@ describe('Field component', () => {
       entityName
       ${'team'}
       ${'user'}
+      ${'contributingCohort'}
     `('common - $entityName', ({ entityName }) => {
       beforeEach(() => {
         sdk = {
@@ -238,7 +239,7 @@ describe('Field component', () => {
       });
     });
 
-    describe('with parameter equals team', () => {
+    describe('with entityName parameter equals team', () => {
       beforeEach(() => {
         (useEntity as jest.Mock).mockImplementation((type, id) => {
           if (id === 'team-1') {
@@ -329,7 +330,7 @@ describe('Field component', () => {
       });
     });
 
-    describe('with parameter equals user', () => {
+    describe('with entityName parameter equals user', () => {
       beforeEach(() => {
         sdk = {
           ...mockBaseSdk(),
@@ -485,6 +486,71 @@ describe('Field component', () => {
           expect(screen.getByText(/^Inactive since/)).toBeInTheDocument();
           expect(screen.getByText('Project Manager')).toBeInTheDocument();
         });
+      });
+    });
+
+    describe('with entityName parameter equals contributingCohort', () => {
+      beforeEach(() => {
+        sdk = {
+          ...mockBaseSdk(),
+          parameters: {
+            instance: {
+              entityName: 'contributingCohort',
+            },
+          },
+        } as unknown as jest.Mocked<FieldExtensionSDK>;
+        (useSDK as jest.Mock).mockReturnValue(sdk);
+
+        (useEntity as jest.Mock).mockImplementation((type, id) => {
+          if (id === 'contributing-cohort-1') {
+            return {
+              data: {
+                fields: {
+                  name: {
+                    'en-US': 'My Contributing Cohort',
+                  },
+                },
+              },
+            };
+          }
+        });
+      });
+
+      it('loads contributing cohort name from related entity and renders contributing cohort name and role', async () => {
+        const props = {
+          entity: {
+            fields: {
+              role: {
+                'en-US': 'Lead',
+              },
+              contributingCohort: {
+                'en-US': {
+                  sys: {
+                    id: 'contributing-cohort-1',
+                  },
+                },
+              },
+            },
+            sys: {
+              type: 'Entry',
+              publishedVersion: 1,
+              version: 1,
+            },
+          },
+          onEdit: jest.fn(),
+          onRemove: jest.fn(),
+        } as unknown as CustomEntityCardProps;
+
+        render(<CustomCard {...props} />);
+
+        expect(useEntity).toHaveBeenCalledWith(
+          'Entry',
+          'contributing-cohort-1',
+        );
+        expect(
+          await screen.findByText('My Contributing Cohort'),
+        ).toBeInTheDocument();
+        expect(await screen.findByText('Lead')).toBeInTheDocument();
       });
     });
   });

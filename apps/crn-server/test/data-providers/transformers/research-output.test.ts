@@ -71,6 +71,23 @@ describe('parseGraphQLResearchOutput', () => {
         ...baseRelatedResearch,
         flatData: {
           ...baseRelatedResearch.flatData,
+          workingGroups: [
+            { id: 'wg-123', flatData: { title: 'Example Working Group' } },
+          ],
+        },
+      },
+    ];
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toMatchObject([
+      {
+        workingGroups: [{ id: 'wg-123', title: 'Example Working Group' }],
+      },
+    ]);
+
+    output.flatData.relatedResearch = [
+      {
+        ...baseRelatedResearch,
+        flatData: {
+          ...baseRelatedResearch.flatData,
           documentType: 'UnknowType',
           teams: null,
         },

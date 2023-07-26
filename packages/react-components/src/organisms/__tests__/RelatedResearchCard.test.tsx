@@ -101,6 +101,25 @@ it('displays the multiple teams label', () => {
   expect(getByText('Multiple teams')).toBeVisible();
 });
 
+it('displays a working group over teams for working group outputs', () => {
+  const { getByText } = render(
+    <RelatedResearchCard
+      {...props}
+      relatedResearch={[
+        {
+          ...createResearchOutputResponse(),
+          workingGroups: [{ id: '1', title: 'Working Group 1' }],
+          teams: [
+            { id: '1', displayName: 'Team 1' },
+            { id: '2', displayName: 'Team 2' },
+          ],
+        },
+      ]}
+    />,
+  );
+  expect(getByText('Working Group 1')).toBeVisible();
+});
+
 it('displays the view more outputs button', () => {
   const relatedResearchList = createListResearchOutputResponse(10).items;
   relatedResearchList.push({

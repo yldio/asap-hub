@@ -17,6 +17,7 @@ import {
   getContentfulGraphqlEvent,
   getContentfulGraphqlEventsResponse,
   getContentfulListEventDataObject,
+  getContentfulRelatedResearch,
   getContentfulUserSpeakerTeams,
   getEventCreateDataObject,
   getEventsByExternalAuthorIdGraphqlResponse,
@@ -58,6 +59,7 @@ describe('Events Contentful Data Provider', () => {
       Events: () => getContentfulGraphqlEvent(),
       WorkingGroups: () => getContentfulGraphqlWorkingGroup({}),
       InterestGroups: () => getContentfulGraphqlInterestGroup(),
+      ResearchOutputs: () => getContentfulRelatedResearch(),
     });
 
   const eventDataProviderMockGraphql = new EventContentfulDataProvider(
@@ -415,6 +417,7 @@ describe('Events Contentful Data Provider', () => {
       const result = await eventDataProviderMockGraphql.fetchById(eventId);
 
       const expectedResult = getContentfulEventDataObject();
+      // expectedResult.relatedResearch = result!.relatedResearch;
       expectedResult.workingGroup = eventWorkingGroup;
       expectedResult.interestGroup = eventInterestGroup;
       expect(result).toMatchObject(expectedResult);

@@ -31,8 +31,8 @@ type CardProps = {
 };
 type MembershipCardProps = {
   entityName: string;
+  showUserEmail: boolean;
   id: string;
-  email?: string;
   role?: string;
   workstreamRole?: string;
   inactiveSince?: string;
@@ -40,10 +40,10 @@ type MembershipCardProps = {
 
 const MembershipCard = ({
   entityName,
+  showUserEmail,
   id,
   actions,
   inactiveSince,
-  email,
   role,
   workstreamRole,
   onClick,
@@ -75,7 +75,13 @@ const MembershipCard = ({
       status={status}
     >
       <Heading marginBottom="none">{getEntityDisplayName()}</Heading>
-      {email && <Paragraph marginBottom="none">{email}</Paragraph>}
+      {entityName === 'user' &&
+        showUserEmail &&
+        data.fields.email?.['en-US'] && (
+          <Paragraph marginBottom="none">
+            {data.fields.email?.['en-US']}
+          </Paragraph>
+        )}
       {role && <Paragraph marginBottom="none">{role}</Paragraph>}
       {workstreamRole && (
         <Paragraph marginBottom="none">{workstreamRole}</Paragraph>
@@ -109,15 +115,16 @@ const MissingMembershipCard = ({
 
 type ParameterInstance = {
   entityName: string;
+  showUserEmail: boolean;
 };
 
 const Card = ({ entity, onEdit, onRemove }: CustomEntryCardProps) => {
   const sdk = useSDK<FieldExtensionSDK>();
   const { fields, sys } = entity;
-  const { entityName } = sdk.parameters.instance as ParameterInstance;
+  const { entityName, showUserEmail } = sdk.parameters
+    .instance as ParameterInstance;
   const entityId = fields[entityName]?.['en-US'].sys.id;
   const role = fields.role?.['en-US'];
-  const email = fields.email?.['en-US'];
   const workstreamRole = fields.workstreamRole?.['en-US'];
   const inactiveSince = fields.inactiveSinceDate?.['en-US'];
   const removeMembership = async () => {
@@ -147,8 +154,8 @@ const Card = ({ entity, onEdit, onRemove }: CustomEntryCardProps) => {
     <MembershipCard
       {...defaultProps}
       entityName={entityName}
+      showUserEmail={showUserEmail}
       id={entityId}
-      email={email}
       role={role}
       workstreamRole={workstreamRole}
       inactiveSince={inactiveSince}

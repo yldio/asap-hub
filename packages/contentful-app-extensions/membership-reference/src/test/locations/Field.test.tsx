@@ -352,6 +352,9 @@ describe('Field component', () => {
                   lastName: {
                     'en-US': 'Doe',
                   },
+                  email: {
+                    'en-US': 'jane@doe.com',
+                  },
                 },
               },
             };
@@ -359,7 +362,7 @@ describe('Field component', () => {
         });
       });
 
-      it('loads user name from related entity and renders user name, role and workstream role', async () => {
+      it('loads user name from related entity and renders user name, role and workstream role and does not render email if showUserEmail is not passed', async () => {
         const props = {
           entity: {
             fields: {
@@ -395,9 +398,57 @@ describe('Field component', () => {
           expect(screen.getByText('Jane Doe')).toBeInTheDocument();
           expect(screen.getByText('Project Manager')).toBeInTheDocument();
           expect(screen.getByText('PM')).toBeInTheDocument();
+
+          expect(screen.queryByText('jane@doe.com')).toBeNull();
         });
       });
 
+      it('loads user email if parameter showUserEmail is true', async () => {
+        sdk = {
+          ...mockBaseSdk(),
+          parameters: {
+            instance: {
+              entityName: 'user',
+              showUserEmail: true,
+            },
+          },
+        } as unknown as jest.Mocked<FieldExtensionSDK>;
+        (useSDK as jest.Mock).mockReturnValue(sdk);
+
+        const props = {
+          entity: {
+            fields: {
+              role: {
+                'en-US': 'Project Manager',
+              },
+              user: {
+                'en-US': {
+                  sys: {
+                    id: 'user-1',
+                  },
+                },
+              },
+              inactiveSinceDate: null,
+            },
+            sys: {
+              type: 'Entry',
+              publishedVersion: 1,
+              version: 1,
+            },
+          },
+          onEdit: jest.fn(),
+          onRemove: jest.fn(),
+        } as unknown as CustomEntityCardProps;
+
+        render(<CustomCard {...props} />);
+
+        await waitFor(() => {
+          expect(useEntity).toHaveBeenCalledWith('Entry', 'user-1');
+          expect(screen.getByText('Jane Doe')).toBeInTheDocument();
+          expect(screen.getByText('jane@doe.com')).toBeInTheDocument();
+          expect(screen.getByText('Project Manager')).toBeInTheDocument();
+        });
+      });
       it('adds an "inactive" badge if user is inactive', async () => {
         const props = {
           entity: {

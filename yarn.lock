@@ -10899,13 +10899,13 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-reference@npm:^5.9.0":
-  version: 5.13.1
-  resolution: "@contentful/field-editor-reference@npm:5.13.1"
+  version: 5.13.2
+  resolution: "@contentful/field-editor-reference@npm:5.13.2"
   dependencies:
     "@contentful/f36-components": ^4.0.27
     "@contentful/f36-icons": ^4.1.0
     "@contentful/f36-tokens": ^4.0.0
-    "@contentful/field-editor-shared": ^1.3.0
+    "@contentful/field-editor-shared": ^1.3.1
     "@contentful/mimetype": ^1.4.0
     "@tanstack/react-query": ^4.3.9
     "@types/deep-equal": ^1.0.1
@@ -10915,7 +10915,6 @@ __metadata:
     deep-equal: 2.0.5
     emotion: ^10.0.17
     lodash: ^4.17.15
-    lodash-es: ^4.17.15
     moment: ^2.20.0
     p-queue: ^4.0.0
     react-intersection-observer: 9.4.0
@@ -10924,7 +10923,7 @@ __metadata:
   peerDependencies:
     "@contentful/app-sdk": ^4.2.0
     react: ">=16.8.0"
-  checksum: 9216b65335201e730660bce104acf4de2d17abe07ab947c26600cbbac1a66e3b928087bb1dca3d1bef44571fdb7bd1fbdc0ed2293616e006f629e49a625beea2
+  checksum: 84f92a90e13d52ef34b88f4452671b3930bd800a7c493bd2566c246403dbe195d9425f0eda0cfa6ebda4108e0b4b291ec610dde042dff6e139d375729e6163ff
   languageName: node
   linkType: hard
 
@@ -10944,19 +10943,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/field-editor-shared@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "@contentful/field-editor-shared@npm:1.3.0"
+"@contentful/field-editor-shared@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "@contentful/field-editor-shared@npm:1.3.1"
   dependencies:
     "@contentful/f36-note": ^4.2.8
     "@contentful/f36-tokens": ^4.0.0
     emotion: ^10.0.17
     lodash: ^4.17.15
-    lodash-es: ^4.17.21
   peerDependencies:
     "@contentful/app-sdk": ^4.2.0
     react: ">=16.8.0"
-  checksum: cfc46b66588709a73f3fd3c3e52bf10f84150719d152cf71b927953b7cf7097ef7c4e1887c3d9f04848fb7d45678896fce2ac495bd6a4a8650b290de60514085
+  checksum: 605211e561bbf8cfa610d89578239918ca9a6b029b1ceab807b8fb9d35e0b0731d798101e3fc5bbb6ffa8f910c949cf50477866cfbb757c2294e838ad2da1f3d
   languageName: node
   linkType: hard
 
@@ -34999,7 +34997,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash-es@npm:^4.17.15, lodash-es@npm:^4.17.21":
+"lodash-es@npm:^4.17.15":
   version: 4.17.21
   resolution: "lodash-es@npm:4.17.21"
   checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2

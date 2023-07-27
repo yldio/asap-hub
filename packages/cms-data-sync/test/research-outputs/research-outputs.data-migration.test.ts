@@ -113,7 +113,7 @@ describe('Migrate research outputs', () => {
     console.log = consoleLogRef;
   });
 
-  it('clears contentful discover entries', async () => {
+  it('clears contentful research output entries', async () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       getResearchOutputsSquidexResponse({}),
     );
@@ -343,7 +343,7 @@ describe('Migrate research outputs', () => {
     );
   });
 
-  it('converts ruch text in usageNotes field to markdown', async () => {
+  it('converts rich text in usageNotes field to markdown', async () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       getResearchOutputsSquidexResponse({
         usageNotes:

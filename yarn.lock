@@ -17346,6 +17346,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:18.17.0":
+  version: 18.17.0
+  resolution: "@types/node@npm:18.17.0"
+  checksum: 3a43c5c5541342751b514485144818a515fac5427f663066068eaacbe8a108cbe1207aae75ec89d34c3b32414c334aad84e9083cf7fcf3ebfd970adc871314a4
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:18.17.1":
   version: 18.17.1
   resolution: "@types/node@npm:18.17.1"
@@ -17895,6 +17902,15 @@ __metadata:
   dependencies:
     pretty-format: "npm:^25.1.0"
   checksum: c8b107ff93ed851cd0808f100895a6219b6dea395f61baf43543c16b354a7d642192906a07d4339de3dc23d097e355389467047265f05b84d339fa8ce10d57c6
+  languageName: node
+  linkType: hard
+
+"@types/testing-library__jest-dom@npm:5.14.8":
+  version: 5.14.8
+  resolution: "@types/testing-library__jest-dom@npm:5.14.8"
+  dependencies:
+    "@types/jest": "*"
+  checksum: 18f5ba7d0db8ebd91667b544537762ce63f11c4fd02b3d57afa92f9457a384d3ecf9bc7b50b6b445af1b3ea38b69862b4f95130720d4dd23621d598ac074d93a
   languageName: node
   linkType: hard
 

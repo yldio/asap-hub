@@ -316,6 +316,7 @@ const parseGraphQLResearchOutput = (
               id: author.sys.id,
               firstName: author.firstName || '',
               lastName: author.lastName || '',
+              email: author.email || '',
               displayName: `${author.firstName} ${author.lastName}`,
               avatarUrl: author.avatar?.url || undefined,
             };

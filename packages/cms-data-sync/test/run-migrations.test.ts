@@ -10,6 +10,7 @@ import { runMigrations } from '../src/run-migrations';
 import { BLUE_COLOR, RED_COLOR } from '../src/utils';
 
 import { migrateTeams } from '../src/teams/teams.data-migration';
+import { migrateTeamProposals } from '../src/teams/teams-proposals.data-migration';
 import { migrateExternalAuthors } from '../src/external-authors/external-authors.data-migration';
 import { migrateEvents } from '../src/events/events.data-migration';
 import { migrateCalendars } from '../src/calendars/calendars.data-migration';
@@ -31,6 +32,16 @@ jest.mock('../src/teams/teams.data-migration', () => {
   return {
     ...jest.requireActual('../src/teams/teams.data-migration'),
     migrateTeams: mockMigrateTeams,
+  };
+});
+
+var mockMigrateTeamProposals: jest.MockedFunction<typeof migrateTeamProposals>;
+
+jest.mock('../src/teams/teams-proposals.data-migration', () => {
+  mockMigrateTeamProposals = jest.fn().mockReturnValue({});
+  return {
+    ...jest.requireActual('../src/teams/teams-proposals.data-migration'),
+    migrateTeamProposals: mockMigrateTeamProposals,
   };
 });
 
@@ -216,6 +227,8 @@ describe('Migrations', () => {
     expect(migrateTutorials).not.toHaveBeenCalled();
     expect(migrateDiscover).not.toHaveBeenCalled();
     expect(migrateResearchTags).not.toHaveBeenCalled();
+    expect(migrateResearchOutputs).not.toHaveBeenCalled();
+    expect(migrateTeamProposals).not.toHaveBeenCalled();
   });
 
   it('deactivates webhook and activates it again after running the migrations', async () => {
@@ -262,6 +275,8 @@ describe('Migrations', () => {
     expect(migrateTutorials).toHaveBeenCalled();
     expect(migrateDiscover).toHaveBeenCalled();
     expect(migrateResearchTags).toHaveBeenCalled();
+    expect(migrateResearchOutputs).toHaveBeenCalled();
+    expect(migrateTeamProposals).toHaveBeenCalled();
 
     expect(console.log).toHaveBeenNthCalledWith(
       2,
@@ -325,6 +340,8 @@ describe('Migrations', () => {
     expect(migrateTutorials).toHaveBeenCalled();
     expect(migrateDiscover).toHaveBeenCalled();
     expect(migrateResearchTags).toHaveBeenCalled();
+    expect(migrateResearchOutputs).toHaveBeenCalled();
+    expect(migrateTeamProposals).toHaveBeenCalled();
 
     expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
     expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
@@ -395,6 +412,8 @@ describe('Migrations', () => {
     expect(migrateTutorials).toHaveBeenCalled();
     expect(migrateDiscover).toHaveBeenCalled();
     expect(migrateResearchTags).toHaveBeenCalled();
+    expect(migrateResearchOutputs).toHaveBeenCalled();
+    expect(migrateTeamProposals).toHaveBeenCalled();
 
     expect(mockedTestEnvSetter).toHaveBeenNthCalledWith(2, true);
     expect(testEnvWebhook.update).toHaveBeenCalledTimes(2);
@@ -472,6 +491,8 @@ describe('Migrations', () => {
     expect(migrateTutorials).not.toHaveBeenCalled();
     expect(migrateDiscover).not.toHaveBeenCalled();
     expect(migrateResearchTags).not.toHaveBeenCalled();
+    expect(migrateResearchOutputs).not.toHaveBeenCalled();
+    expect(migrateTeamProposals).not.toHaveBeenCalled();
   });
 
   it('rejects if disabling webhook fails with a non-Error', async () => {
@@ -489,5 +510,7 @@ describe('Migrations', () => {
     expect(migrateTutorials).not.toHaveBeenCalled();
     expect(migrateDiscover).not.toHaveBeenCalled();
     expect(migrateResearchTags).not.toHaveBeenCalled();
+    expect(migrateResearchOutputs).not.toHaveBeenCalled();
+    expect(migrateTeamProposals).not.toHaveBeenCalled();
   });
 });

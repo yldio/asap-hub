@@ -6770,6 +6770,7 @@ export type FetchTeamsQuery = {
           tools: Maybe<
             Array<Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>>
           >;
+          proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
         };
       }
     >
@@ -8594,6 +8595,19 @@ export const FetchTeamsDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'proposal' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
                             },
                           ],
                         },

@@ -39,7 +39,7 @@ const InterestGroupTools: React.FC<InterestGroupToolsProps> = ({
   tools: { slack, googleDrive },
 }) => (
   <Card>
-    <Headline3>Group Tools</Headline3>
+    <Headline3>Interest Group Tools</Headline3>
     <Paragraph accent="lead">
       Use these tools to connect with your group.
     </Paragraph>

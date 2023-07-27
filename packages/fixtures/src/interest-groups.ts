@@ -38,7 +38,7 @@ export const createInterestGroupResponse = (
     lastModifiedDate: '2021-01-12T11:10:04.000Z',
     name: `Group ${itemIndex + 1}`,
     tags: ['Tag'],
-    description: `Group description ${itemIndex + 1}`,
+    description: `Interest Group description ${itemIndex + 1}`,
     tools: {
       slack: 'http://slack.slack.com',
       googleDrive: 'http://drive.google.com/123',

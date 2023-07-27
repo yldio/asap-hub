@@ -7,7 +7,7 @@ const props: ComponentProps<typeof InterestGroupCard> = {
   id: '42',
   name: 'My Group',
   tags: ['Tag 1', 'Tag 2'],
-  description: 'My Group Description',
+  description: 'My Interest Group Description',
   numberOfTeams: 2,
   active: true,
 };

@@ -12,12 +12,12 @@ const InterestGroupInformation: React.FC<InterestGroupInformationProps> = ({
   tags,
 }) => (
   <Card>
-    <Headline3>Group Description</Headline3>
+    <Headline3>Interest Group Description</Headline3>
     <Paragraph accent="lead">
       <span css={{ whiteSpace: 'pre-line' }}>{description}</span>
     </Paragraph>
     <Divider />
-    <Headline3>Group Expertise</Headline3>
+    <Headline3>Interest Group Expertise</Headline3>
     <TagList tags={tags} />
   </Card>
 );

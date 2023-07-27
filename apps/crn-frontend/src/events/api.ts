@@ -21,7 +21,7 @@ export const getEvents = async (
 ): Promise<ListEventResponse> => {
   const filters = getEventFilters({ before, after }, constraint);
 
-  const result = await algoliaClient.search(
+  const result = await algoliaClient.search<'event'>(
     ['event'],
     searchQuery,
     {

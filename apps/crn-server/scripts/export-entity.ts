@@ -82,10 +82,10 @@ const getController = (entity: keyof EntityResponses) => {
   return controllerMap[entity];
 };
 
-const transformRecords = <T extends keyof EntityResponses>(
-  record: EntityResponses[T],
-  type: T,
-): EntityRecord<T> => ({
+const transformRecords = <T extends EntityResponses, K extends keyof T>(
+  record: T[K] & { id: string },
+  type: K,
+): EntityRecord<T, K> => ({
   ...record,
   objectID: record.id,
   __meta: {

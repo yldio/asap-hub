@@ -1,19 +1,19 @@
-import {
-  userTags,
-  ExternalAuthorResponse,
-  ListResponse,
-  ListUserResponse,
-  UserResponse,
-  UserPatchRequest,
-  UserAvatarPostRequest,
-  InstitutionsResponse,
-} from '@asap-hub/model';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
-  GetListOptions,
-  createSentryHeaders,
   createFeatureFlagHeaders,
+  createSentryHeaders,
+  GetListOptions,
 } from '@asap-hub/frontend-utils';
+import {
+  ExternalAuthorResponse,
+  InstitutionsResponse,
+  ListResponse,
+  ListUserResponse,
+  UserAvatarPostRequest,
+  UserPatchRequest,
+  UserResponse,
+  userTags,
+} from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';
 
@@ -63,7 +63,7 @@ export const getUsers = async (
       ? `(${tagFilters}) AND (${roleFilters})`
       : tagFilters || roleFilters;
 
-  const result = await algoliaClient.search(['user'], searchQuery, {
+  const result = await algoliaClient.search<'user'>(['user'], searchQuery, {
     filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
@@ -81,7 +81,7 @@ export const getUsersAndExternalAuthors = async (
   algoliaClient: AlgoliaSearchClient,
   { searchQuery, currentPage, pageSize }: GetListOptions,
 ): Promise<ListResponse<UserResponse | ExternalAuthorResponse>> => {
-  const result = await algoliaClient.search(
+  const result = await algoliaClient.search<'user' | 'external-author'>(
     ['user', 'external-author'],
     searchQuery,
     {

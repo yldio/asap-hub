@@ -2,13 +2,13 @@ import { EntityResponses, SearchEntityResponse } from '@asap-hub/algolia';
 import { ListResponse, ResearchOutputResponse } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 /* eslint-disable-next-line import/no-unresolved */
-import { Stringifier } from 'csv-stringify/browser/esm';
 import {
   caseInsensitive,
   CSVValue,
   GetListOptions,
   htmlToCsvText,
 } from '@asap-hub/frontend-utils';
+import { Stringifier } from 'csv-stringify/browser/esm';
 
 export const MAX_ALGOLIA_RESULTS = 10000;
 // https://github.com/Squidex/squidex/blob/master/backend/src/Squidex/appsettings.json#L266
@@ -102,7 +102,7 @@ export const algoliaResultsToStream = async <T extends keyof EntityResponses>(
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<SearchEntityResponse<T>>
+    Promise<SearchEntityResponse<EntityResponses, T>>
   >,
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   transform: (result: EntityResponses[T]) => Record<string, any>,

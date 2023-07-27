@@ -1,23 +1,23 @@
 /* eslint-disable no-use-before-define */
 import { SearchResponse } from '@algolia/client-search';
 import {
+  createEventResponse,
+  createResearchOutputResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
+import {
   ExternalAuthorResponse,
   LabResponse,
   ResearchOutputResponse,
   UserResponse,
 } from '@asap-hub/model';
 import {
-  createEventResponse,
-  createResearchOutputResponse,
-  createUserResponse,
-} from '@asap-hub/fixtures';
-import {
-  AlgoliaSearchClient,
-  EntityRecord,
+  EntityResponses,
+  EVENT_ENTITY_TYPE,
   RESEARCH_OUTPUT_ENTITY_TYPE,
   USER_ENTITY_TYPE,
-  EVENT_ENTITY_TYPE,
-} from '../src/client';
+} from '../src';
+import { AlgoliaSearchClient, EntityRecord } from '../src/client';
 import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
 
 describe('Algolia Search Client', () => {
@@ -131,15 +131,14 @@ describe('Algolia Search Client', () => {
       searchResearchOutputResponse,
     );
 
-    const response = await algoliaSearchClient.search(
-      ['research-output'],
-      'query',
-      {
-        hitsPerPage: 10,
-        page: 0,
-        filters: 'some-filters',
-      },
-    );
+    const response = await algoliaSearchClient.search<
+      EntityResponses,
+      keyof EntityResponses
+    >(['research-output'], 'query', {
+      hitsPerPage: 10,
+      page: 0,
+      filters: 'some-filters',
+    });
 
     expect(response).toEqual(searchResearchOutputResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
@@ -152,7 +151,10 @@ describe('Algolia Search Client', () => {
   test('Should search user entity', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
-    const response = await algoliaSearchClient.search(['user'], 'query');
+    const response = await algoliaSearchClient.search<EntityResponses, 'user'>(
+      ['user'],
+      'query',
+    );
 
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
@@ -163,7 +165,7 @@ describe('Algolia Search Client', () => {
   test('Should search event entity in the past', async () => {
     reverseAlgoliaSearchIndex.search.mockResolvedValueOnce(searchEventResponse);
 
-    const response = await algoliaSearchClient.search(
+    const response = await algoliaSearchClient.search<EntityResponses, 'event'>(
       ['event'],
       'query',
       {},
@@ -179,13 +181,12 @@ describe('Algolia Search Client', () => {
   test('Should search multiple entities', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
-    const response = await algoliaSearchClient.search(
-      ['user', 'external-author', 'lab'],
-      'query',
-      {
-        filters: 'some-filters',
-      },
-    );
+    const response = await algoliaSearchClient.search<
+      EntityResponses,
+      'user' | 'external-author' | 'lab'
+    >(['user', 'external-author', 'lab'], 'query', {
+      filters: 'some-filters',
+    });
 
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
@@ -196,7 +197,7 @@ describe('Algolia Search Client', () => {
 });
 
 const searchResearchOutputResponse: SearchResponse<
-  EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>
+  EntityRecord<EntityResponses, typeof RESEARCH_OUTPUT_ENTITY_TYPE>
 > = {
   hits: [
     {
@@ -216,7 +217,7 @@ const searchResearchOutputResponse: SearchResponse<
 };
 
 const searchUserResponse: SearchResponse<
-  EntityRecord<typeof USER_ENTITY_TYPE>
+  EntityRecord<EntityResponses, typeof USER_ENTITY_TYPE>
 > = {
   hits: [
     {
@@ -236,7 +237,7 @@ const searchUserResponse: SearchResponse<
 };
 
 const searchEventResponse: SearchResponse<
-  EntityRecord<typeof EVENT_ENTITY_TYPE>
+  EntityRecord<EntityResponses, typeof EVENT_ENTITY_TYPE>
 > = {
   hits: [
     {

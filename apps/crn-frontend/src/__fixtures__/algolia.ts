@@ -8,9 +8,9 @@ import {
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
-  hits: EntityHit<EntityType>[],
-  overrides: Partial<SearchEntityResponse<EntityType>> = {},
-): SearchEntityResponse<EntityType> => ({
+  hits: EntityHit<EntityResponses, EntityType>[],
+  overrides: Partial<SearchEntityResponse<EntityResponses, EntityType>> = {},
+): SearchEntityResponse<EntityResponses, EntityType> => ({
   nbHits: hits.length,
   page: 0,
   nbPages: 1,
@@ -26,7 +26,7 @@ export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
 
 export const createResearchOutputAlgoliaRecord = (
   itemIndex = 0,
-): EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE> => {
+): EntityRecord<EntityResponses, typeof RESEARCH_OUTPUT_ENTITY_TYPE> => {
   const response = createResearchOutputResponse(itemIndex);
 
   return {
@@ -39,9 +39,9 @@ export const createResearchOutputAlgoliaRecord = (
 export const createResearchOutputListAlgoliaResponse = (
   items: number,
   responseOverride?: Partial<
-    SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>
+    SearchEntityResponse<EntityResponses, typeof RESEARCH_OUTPUT_ENTITY_TYPE>
   >,
-): SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE> =>
+): SearchEntityResponse<EntityResponses, typeof RESEARCH_OUTPUT_ENTITY_TYPE> =>
   createAlgoliaResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
     Array.from({ length: items }, (_, itemIndex) =>
       createResearchOutputAlgoliaRecord(itemIndex),

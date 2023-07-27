@@ -1,16 +1,19 @@
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
-  EntityRecord,
   EntityHit,
-  RESEARCH_OUTPUT_ENTITY_TYPE,
-  EntityResponses,
+  EntityRecord,
+  gp2 as gp2Algolia,
   SearchEntityResponse,
 } from '@asap-hub/algolia';
 
-export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
-  hits: EntityHit<EntityType>[],
-  overrides: Partial<SearchEntityResponse<EntityType>> = {},
-): SearchEntityResponse<EntityType> => ({
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+
+export const createAlgoliaResponse = <
+  T extends gp2Algolia.EntityResponses,
+  K extends keyof T,
+>(
+  hits: EntityHit<T, K>[],
+  overrides: Partial<SearchEntityResponse<T, K>> = {},
+): SearchEntityResponse<T, K> => ({
   nbHits: hits.length,
   page: 0,
   nbPages: 1,
@@ -24,27 +27,39 @@ export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   ...overrides,
 });
 
-export const createResearchOutputAlgoliaRecord = (
+export const createOutputAlgoliaRecord = (
   itemIndex = 0,
-): EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE> => {
-  const response = createResearchOutputResponse(itemIndex);
+): EntityRecord<
+  gp2Algolia.EntityResponses,
+  typeof gp2Algolia.OUTPUT_ENTITY_TYPE
+> => {
+  const response = gp2Fixtures.createOutputResponse(itemIndex);
 
   return {
     ...response,
     objectID: response.id,
-    __meta: { type: 'research-output' },
+    __meta: { type: 'output' },
   };
 };
 
-export const createResearchOutputListAlgoliaResponse = (
+export const createOutputListAlgoliaResponse = (
   items: number,
   responseOverride?: Partial<
-    SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>
+    SearchEntityResponse<
+      gp2Algolia.EntityResponses,
+      typeof gp2Algolia.OUTPUT_ENTITY_TYPE
+    >
   >,
-): SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE> =>
-  createAlgoliaResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+): SearchEntityResponse<
+  gp2Algolia.EntityResponses,
+  typeof gp2Algolia.OUTPUT_ENTITY_TYPE
+> =>
+  createAlgoliaResponse<
+    gp2Algolia.EntityResponses,
+    typeof gp2Algolia.OUTPUT_ENTITY_TYPE
+  >(
     Array.from({ length: items }, (_, itemIndex) =>
-      createResearchOutputAlgoliaRecord(itemIndex),
+      createOutputAlgoliaRecord(itemIndex),
     ),
     responseOverride,
   );

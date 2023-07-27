@@ -47,7 +47,9 @@ describe('getEvent', () => {
 });
 
 describe('getEvents', () => {
-  const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
+  // <EntityResponses, 'event'>
+  type Search = AlgoliaSearchClient['search'];
+  const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {
     search,
@@ -58,7 +60,8 @@ describe('getEvents', () => {
   });
 
   it('makes request for events before a date', async () => {
-    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+    const res = createAlgoliaResponse<'event'>([]);
+    search.mockResolvedValueOnce(res);
 
     await getEvents(
       algoliaSearchClient,

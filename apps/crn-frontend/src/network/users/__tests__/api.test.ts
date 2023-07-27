@@ -1,16 +1,18 @@
-import nock from 'nock';
+import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
 import {
+  inactiveUserTag,
+  InstitutionsResponse,
   UserAvatarPostRequest,
   UserPatchRequest,
   UserResponse,
-  inactiveUserTag,
-  InstitutionsResponse,
 } from '@asap-hub/model';
-import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
+import nock from 'nock';
 
-import type { AlgoliaSearchClient } from '@asap-hub/algolia';
+import type { AlgoliaSearchClient, EntityResponses } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
+import { API_BASE_URL } from '../../../config';
+import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 import {
   getInstitutions,
   getUser,
@@ -19,8 +21,6 @@ import {
   patchUser,
   postUserAvatar,
 } from '../api';
-import { API_BASE_URL } from '../../../config';
-import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../config');
 
@@ -29,10 +29,11 @@ afterEach(() => {
 });
 
 describe('getUsers', () => {
-  const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
+  type Search = AlgoliaSearchClient<EntityResponses>['search'];
+  const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {
-    search,
+    search: search,
   } as unknown as AlgoliaSearchClient;
 
   const defaultOptions: GetListOptions = {
@@ -47,7 +48,7 @@ describe('getUsers', () => {
 
     const userResponse = createUserResponse();
     search.mockResolvedValue(
-      createAlgoliaResponse([
+      createAlgoliaResponse<'user'>([
         {
           ...userResponse,
           objectID: userResponse.id,

@@ -1,8 +1,9 @@
 import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
+  gp2 as gp2Algolia,
 } from '@asap-hub/algolia';
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -20,9 +21,12 @@ import { OutputPayload } from '../event-bus';
 export const indexOutputHandler =
   (
     outputController: OutputController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<
+      gp2Algolia.EntityResponses,
+      gp2Algolia.Payload
+    >,
     log: Logger,
-  ): EventBridgeHandler<gp2.OutputEvent, OutputPayload> =>
+  ): EventBridgeHandler<gp2Model.OutputEvent, OutputPayload> =>
   async (event) => {
     log.debug(`Event ${event['detail-type']}`);
 

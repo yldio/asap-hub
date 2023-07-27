@@ -5,11 +5,11 @@ import {
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   getUserRole,
-  hasShareResearchOutputPermission,
+  hasDuplicateResearchOutputPermission,
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
-  hasDuplicateResearchOutputPermission,
   hasRequestForReviewPermission,
+  hasShareResearchOutputPermission,
 } from '@asap-hub/validation';
 import { useCallback } from 'react';
 import {
@@ -17,9 +17,9 @@ import {
   atomFamily,
   DefaultValue,
   selectorFamily,
+  useRecoilCallback,
   useRecoilState,
   useRecoilValue,
-  useRecoilCallback,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';

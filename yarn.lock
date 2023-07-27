@@ -405,7 +405,12 @@ __metadata:
     jest-when: 3.5.2
     limiter: ^2.1.0
     prettier: 2.8.8
+    rehype-parse: 7.0.1
+    rehype-remark: 8.1.1
+    rehype-sanitize: 4.0.0
+    remark-stringify: 9.0.1
     ts-node: 10.9.1
+    unified: 9.2.2
   languageName: unknown
   linkType: soft
 

@@ -22,6 +22,7 @@ const getResearchTagsSquidex: (
   created: '2023-03-15T00:00:00.0000Z',
   lastModified: '2023-03-15T00:00:00.0000Z',
   version: 10,
+  status: 'PUBLISHED',
   flatData: {
     name: 'Test tag',
     types: ['Report', 'Proposal'],

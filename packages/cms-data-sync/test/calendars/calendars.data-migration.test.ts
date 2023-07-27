@@ -17,6 +17,7 @@ const getCalendarSquidexResponse: () => NonNullable<
   FetchCalendarsQuery['queryCalendarsContents']
 >[number] = () => ({
   id: 'calendar-1',
+  status: 'PUBLISHED',
   flatData: {
     googleCalendarId: '3@group.calendar.google.com',
     color: '#2952A3',

@@ -11,6 +11,7 @@ import { migrateWorkingGroups } from './working-groups/working-groups.data-migra
 import { migrateTutorials } from './tutorials/tutorials.data-migration';
 import { migrateDiscover } from './discover/discover.data-migration';
 import { migrateResearchTags } from './research-tags/research-tags.data-migration';
+import { migrateResearchOutputs } from './research-outputs/research-outputs.data-migration';
 import { logger } from './utils';
 import { contentfulRateLimiter } from './contentful-rate-limiter';
 
@@ -26,6 +27,7 @@ export const models = [
   'tutorials',
   'discover',
   'researchTags',
+  'researchOutputs',
 ];
 
 type ModelName = (typeof models)[number];
@@ -104,6 +106,9 @@ export const runMigrations = async (flags: Flag[] = []) => {
     if (hasFlag('discover')) await migrateDiscover();
 
     if (hasFlag('researchTags')) await migrateResearchTags();
+
+    // needs: teams, users, external authors, labs, research tags, working groups
+    if (hasFlag('researchOutputs')) await migrateResearchOutputs();
   } catch (err) {
     error = err;
     logger('Error migrating data', 'ERROR');

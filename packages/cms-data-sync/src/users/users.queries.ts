@@ -9,6 +9,7 @@ export const usersQuery = gql`
         created
         lastModified
         version
+        status
         flatData {
           alumniSinceDate
           alumniLocation

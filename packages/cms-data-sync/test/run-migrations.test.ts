@@ -20,6 +20,7 @@ import { migrateWorkingGroups } from '../src/working-groups/working-groups.data-
 import { migrateTutorials } from '../src/tutorials/tutorials.data-migration';
 import { migrateDiscover } from '../src/discover/discover.data-migration';
 import { migrateResearchTags } from '../src/research-tags/research-tags.data-migration';
+import { migrateResearchOutputs } from '../src/research-outputs/research-outputs.data-migration';
 
 jest.mock('contentful-management');
 
@@ -140,6 +141,20 @@ jest.mock('../src/research-tags/research-tags.data-migration', () => {
   return {
     ...jest.requireActual('../src/research-tags/research-tags.data-migration'),
     migrateResearchTags: mockMigrateResearchTags,
+  };
+});
+
+var mockMigrateResearchOutputs: jest.MockedFunction<
+  typeof migrateResearchOutputs
+>;
+
+jest.mock('../src/research-outputs/research-outputs.data-migration', () => {
+  mockMigrateResearchOutputs = jest.fn().mockReturnValue({});
+  return {
+    ...jest.requireActual(
+      '../src/research-outputs/research-outputs.data-migration',
+    ),
+    migrateResearchOutputs: mockMigrateResearchOutputs,
   };
 });
 

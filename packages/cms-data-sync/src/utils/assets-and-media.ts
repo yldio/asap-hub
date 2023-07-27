@@ -80,10 +80,14 @@ export const createAndPublishIfNonExistent = async (
       await processAndPublishEntry(entry);
     } catch (error) {
       if (error instanceof Error) {
-        const errorParsed = JSON.parse(error?.message);
-        if (errorParsed.status === 409) {
-          await handleErrorFn(contentfulEnvironment, id);
-          return;
+        try {
+          const errorParsed = JSON.parse(error?.message);
+          if (errorParsed.status === 409) {
+            await handleErrorFn(contentfulEnvironment, id);
+            return;
+          }
+        } catch (e) {
+          throw error;
         }
       }
 

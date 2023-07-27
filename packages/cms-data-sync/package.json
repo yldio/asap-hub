@@ -28,7 +28,12 @@
     "contentful-management": "10.39.2",
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6",
-    "limiter": "^2.1.0"
+    "limiter": "^2.1.0",
+    "rehype-parse": "7.0.1",
+    "rehype-remark": "8.1.1",
+    "rehype-sanitize": "4.0.0",
+    "remark-stringify": "9.0.1",
+    "unified": "9.2.2"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.12.1",

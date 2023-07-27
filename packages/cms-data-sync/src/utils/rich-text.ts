@@ -6,6 +6,13 @@ import {
   parseAssets,
   parseIFrames,
 } from 'contentful-html-rich-text-converter';
+
+import unified from 'unified';
+import rehypeHtml from 'rehype-parse';
+import rehypeSanitize from 'rehype-sanitize';
+import rehypeRemark from 'rehype-remark';
+import remarkStringify from 'remark-stringify';
+
 import { createInlineAssets, createMediaEntries } from '.';
 import { logger } from './logs';
 
@@ -51,6 +58,18 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
               (childNode: { nodeType: string }) =>
                 childNode.nodeType === 'list-item',
             ),
+          }
+        : node,
+    )
+    .map((node) =>
+      // if an image is wrapped in an inline tag then if creates an
+      // empty text node in the `content` of the `embedded-asset-block`
+      // which contentful rejects because embedded assets cannot have
+      // child contents
+      node.nodeType === 'embedded-asset-block'
+        ? {
+            ...node,
+            content: [],
           }
         : node,
     )
@@ -132,3 +151,20 @@ export const createDocumentIfNeeded = async (
   }
   return null;
 };
+
+export function richTextToMarkdown(text = ''): string {
+  let processor = unified().use(rehypeHtml, { fragment: true });
+  processor = processor.use(rehypeSanitize, {
+    tagNames: ['a', 'p', 'br'],
+  });
+
+  processor = processor.use(rehypeRemark).use(remarkStringify, {
+    bullet: '*',
+    fence: '~',
+    fences: true,
+    incrementListMarker: false,
+  });
+
+  const { contents } = processor.processSync(text);
+  return contents as string;
+}

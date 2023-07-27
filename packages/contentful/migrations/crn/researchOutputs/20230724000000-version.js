@@ -37,8 +37,27 @@ module.exports.up = function (migration) {
 
       linkType: 'Entry',
     });
+
+  const researchOutputs = migration.editContentType('researchOutputs');
+
+  researchOutputs
+    .createField('versions')
+    .name('Versions')
+    .type('Link')
+    .localized(false)
+    .required(false)
+    .disabled(false)
+    .omitted(false)
+    .validations([
+      {
+        linkContentType: ['outputVersions'],
+      },
+    ])
+    .linkType('Entry');
 };
 
 module.exports.down = (migration) => {
+  const researchOutputs = migration.editContentType('researchOutputs');
+  researchOutputs.deleteField('versions');
   migration.deleteContentType('outputVersions');
 };

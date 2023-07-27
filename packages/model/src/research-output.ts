@@ -211,7 +211,13 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   authors: (
     | Pick<
         UserResponse,
-        'id' | 'firstName' | 'lastName' | 'displayName' | 'avatarUrl' | 'orcid'
+        | 'id'
+        | 'firstName'
+        | 'lastName'
+        | 'displayName'
+        | 'avatarUrl'
+        | 'orcid'
+        | 'email'
       >
     | ExternalAuthorResponse
   )[];

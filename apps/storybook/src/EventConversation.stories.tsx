@@ -1,7 +1,10 @@
 import { ComponentProps } from 'react';
 import { text } from '@storybook/addon-knobs';
 import { EventConversation } from '@asap-hub/react-components';
-import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
+import {
+  createEventResponse,
+  createInterestGroupResponse,
+} from '@asap-hub/fixtures';
 
 export default {
   title: 'Organisms / Events / Conversation',
@@ -10,8 +13,8 @@ export default {
 
 const props = (): ComponentProps<typeof EventConversation> => ({
   ...createEventResponse(),
-  group: {
-    ...createGroupResponse(),
+  interestGroup: {
+    ...createInterestGroupResponse(),
     tools: {
       slack: text('Slack', 'http://example.com'),
     },

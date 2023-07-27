@@ -60,7 +60,7 @@ describe('Index Events on Group event handler', () => {
 
       expect(eventControllerMock.fetch).toHaveBeenCalledWith({
         filter: {
-          groupId: 'group-id',
+          interestGroupId: 'group-id',
         },
         skip: 0,
         take: 8,

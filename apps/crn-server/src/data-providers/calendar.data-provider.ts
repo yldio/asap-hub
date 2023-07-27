@@ -148,7 +148,7 @@ export const parseGraphQlCalendarToDataObject = (
   version: item.version,
   expirationDate: item.flatData.expirationDate,
   syncToken: item.flatData.syncToken,
-  groups: item.referencingGroupsContents?.map(
+  interestGroups: item.referencingGroupsContents?.map(
     ({ id, flatData: { active } }) => ({ id, active: !!active }),
   ),
   workingGroups: item.referencingWorkingGroupsContents?.map(

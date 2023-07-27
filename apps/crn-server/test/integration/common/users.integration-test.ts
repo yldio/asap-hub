@@ -129,7 +129,7 @@ describe('users', () => {
     );
     await retryable(async () => {
       const response = await supertest(app)
-        .get(`/users/${user.id}/groups`)
+        .get(`/users/${user.id}/interest-groups`)
         .expect(200);
 
       expect(response.body.total).toEqual(1);
@@ -163,7 +163,7 @@ describe('users', () => {
     );
     await retryable(async () => {
       const response = await supertest(app)
-        .get(`/users/${user.id}/groups`)
+        .get(`/users/${user.id}/interest-groups`)
         .expect(200);
       expect(response.body.total).toEqual(1);
       expect(response.body.items).toEqual([
@@ -202,7 +202,7 @@ describe('users', () => {
     );
     await retryable(async () => {
       const response = await supertest(app)
-        .get(`/users/${user.id}/groups`)
+        .get(`/users/${user.id}/interest-groups`)
         .expect(200);
       expect(response.body.total).toEqual(1);
       expect(response.body.items).toEqual([

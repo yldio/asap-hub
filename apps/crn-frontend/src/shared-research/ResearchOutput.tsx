@@ -69,9 +69,9 @@ const ResearchOutput: React.FC = () => {
                     ...utils.transformResearchOutputResponseToRequest(
                       researchOutputData,
                     ),
-                    reviewRequestedById: shouldReview
-                      ? currentUser?.id
-                      : undefined,
+                    statusChangedById: currentUser?.id,
+                    hasStatusChanged: true,
+                    isInReview: shouldReview,
                   })
                 }
                 onPublish={() =>

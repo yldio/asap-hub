@@ -194,6 +194,7 @@ export type ResearchOutputCoreObject = {
   descriptionMD?: string;
   documentType: ResearchOutputDocumentType;
   doi?: string;
+  isInReview: boolean;
   labCatalogNumber?: string;
   lastModifiedDate?: string;
   link?: string;
@@ -235,7 +236,8 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
     > & { isOwnRelatedResearchLink?: boolean }
   >;
   relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;
-  reviewRequestedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
+  statusChangedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
+  statusChangedAt?: string;
 };
 
 export type ResearchOutputDraftDataObject = Omit<
@@ -291,7 +293,8 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   workingGroups: string[];
   relatedResearchIds: string[];
   relatedEventIds: string[];
-  reviewRequestedById?: string;
+  statusChangedById?: string;
+  statusChangedAt?: string;
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -327,6 +330,7 @@ export type ResearchOutputPostRequest = {
   documentType: ResearchOutputDocumentType;
   doi?: string;
   environments: string[];
+  isInReview?: boolean;
   labCatalogNumber?: string;
   labs?: string[];
   link?: string;
@@ -351,7 +355,9 @@ export type ResearchOutputPostRequest = {
 export type ResearchOutputAssociations = 'team' | 'teams' | 'working group';
 
 export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
-  reviewRequestedById?: string;
+  statusChangedById?: string;
+  hasStatusChanged?: boolean;
+  isInReview: boolean;
 };
 
 type NonEmptyArray<T> = [T, ...T[]];

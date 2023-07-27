@@ -104,12 +104,12 @@ export class EventSquidexDataProvider implements EventDataProvider {
       orderby = `data/${sortBy}/iv ${sortOrder}`;
     }
 
-    if (filter?.groupId) {
+    if (filter?.interestGroupId) {
       const { findGroupsContent } = await this.squidexGraphqlClient.request<
         FetchGroupCalendarQuery,
         FetchGroupCalendarQueryVariables
       >(FETCH_GROUP_CALENDAR, {
-        id: filter.groupId,
+        id: filter.interestGroupId,
       });
 
       if (!findGroupsContent) {

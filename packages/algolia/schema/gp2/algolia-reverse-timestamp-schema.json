@@ -1,0 +1,9 @@
+{
+  "customRanking": [
+    "desc(endDateTimestamp)",
+    "asc(addedDate)",
+    "asc(createdDate)"
+  ],
+  "attributesForFaceting": ["status"],
+  "attributesToIndex": ["title"]
+}

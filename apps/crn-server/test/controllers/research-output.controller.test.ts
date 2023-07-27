@@ -779,7 +779,7 @@ describe('ResearchOutputs controller', () => {
         ...getResearchOutputDataObject(),
         published: false,
         addedDate: undefined,
-        reviewRequestedBy: {
+        statusChangedBy: {
           id: 'review-requested-by-id',
           firstName: 'First',
           lastName: 'Last',
@@ -792,14 +792,14 @@ describe('ResearchOutputs controller', () => {
       const result = await researchOutputs.update(researchOutputId, {
         ...getResearchOutputUpdateData(),
         published: false,
-        reviewRequestedById: 'review-requested-by-id',
+        statusChangedById: 'review-requested-by-id',
       });
 
       expect(result).toEqual({
         ...getResearchOutputResponse(),
         published: false,
         addedDate: undefined,
-        reviewRequestedBy: {
+        statusChangedBy: {
           id: 'review-requested-by-id',
           firstName: 'First',
           lastName: 'Last',
@@ -811,7 +811,7 @@ describe('ResearchOutputs controller', () => {
         {
           ...getResearchOutputUpdateDataObject(),
           addedDate: undefined,
-          reviewRequestedById: 'review-requested-by-id',
+          statusChangedById: 'review-requested-by-id',
         },
         { publish: false },
       );

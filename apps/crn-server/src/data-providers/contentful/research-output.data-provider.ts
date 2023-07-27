@@ -370,13 +370,15 @@ const parseGraphQLResearchOutput = (
           title: event?.title || '',
           endDate: event.endDate || '',
         })) || [],
-    reviewRequestedBy: researchOutputs.reviewRequestedBy
+    statusChangedBy: researchOutputs.statusChangedBy
       ? {
-          id: researchOutputs.reviewRequestedBy.sys.id,
-          firstName: researchOutputs.reviewRequestedBy.firstName || '',
-          lastName: researchOutputs.reviewRequestedBy.lastName || '',
+          id: researchOutputs.statusChangedBy.sys.id,
+          firstName: researchOutputs.statusChangedBy.firstName || '',
+          lastName: researchOutputs.statusChangedBy.lastName || '',
         }
       : undefined,
+    statusChangedAt: researchOutputs.statusChangedAt,
+    isInReview: !!researchOutputs.isInReview,
   };
 };
 
@@ -442,15 +444,16 @@ const prepareInputForCreate = (input: ResearchOutputCreateDataObject) => ({
 
 const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
   const {
-    reviewRequestedById: _reviewRequestedById,
+    statusChangedById: _statusChangedById,
     addedDate: _addedDate,
     ...researchOutput
   } = input;
+
   return {
     ...prepareInput(researchOutput),
     updatedBy: getLinkEntity(input.updatedBy),
-    reviewRequestedBy: input.reviewRequestedById
-      ? getLinkEntity(input.reviewRequestedById)
+    statusChangedBy: input.statusChangedById
+      ? getLinkEntity(input.statusChangedById)
       : null,
     lastUpdatedPartial: new Date().toISOString(),
   };

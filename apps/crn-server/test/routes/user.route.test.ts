@@ -233,14 +233,14 @@ describe('/users/ route', () => {
     });
   });
 
-  describe('GET /users/{user_id}/groups', () => {
+  describe('GET /users/{user_id}/interest-groups', () => {
     test('Should return 404 when user doesnt exist', async () => {
       interestGroupControllerMock.fetchByUserId.mockRejectedValueOnce(
         new NotFoundError(undefined, 'user not found'),
       );
 
       const response = await supertest(appWithMockedAuth).get(
-        '/users/not-found/groups',
+        '/users/not-found/interest-groups',
       );
 
       expect(response.status).toBe(404);
@@ -253,7 +253,7 @@ describe('/users/ route', () => {
       });
 
       const response = await supertest(appWithMockedAuth).get(
-        '/users/123/groups',
+        '/users/123/interest-groups',
       );
 
       expect(response.status).toBe(200);
@@ -269,7 +269,7 @@ describe('/users/ route', () => {
       );
 
       const response = await supertest(appWithMockedAuth).get(
-        '/users/123/groups',
+        '/users/123/interest-groups',
       );
 
       expect(response.status).toBe(200);
@@ -283,11 +283,13 @@ describe('/users/ route', () => {
         total: 0,
       });
 
-      await supertest(appWithMockedAuth).get(`/users/${userId}/groups`).query({
-        take: 15,
-        skip: 5,
-        search: 'something',
-      });
+      await supertest(appWithMockedAuth)
+        .get(`/users/${userId}/interest-groups`)
+        .query({
+          take: 15,
+          skip: 5,
+          search: 'something',
+        });
 
       expect(interestGroupControllerMock.fetchByUserId).toBeCalledWith(userId);
     });

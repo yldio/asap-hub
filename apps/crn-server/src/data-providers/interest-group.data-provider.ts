@@ -1,7 +1,7 @@
 import {
-  FetchGroupOptions,
-  GroupDataObject,
-  ListGroupDataObject,
+  FetchInterestGroupOptions,
+  InterestGroupDataObject,
+  ListInterestGroupDataObject,
 } from '@asap-hub/model';
 import { SquidexGraphqlClient } from '@asap-hub/squidex';
 import { Filter } from 'odata-query';
@@ -28,7 +28,7 @@ export class InterestGroupSquidexDataProvider
     this.squidexGraphqlClient = squidexGraphqlClient;
   }
 
-  async fetchById(id: string): Promise<GroupDataObject | null> {
+  async fetchById(id: string): Promise<InterestGroupDataObject | null> {
     const { findGroupsContent: group } =
       await this.squidexGraphqlClient.request<
         FetchGroupQuery,
@@ -41,7 +41,9 @@ export class InterestGroupSquidexDataProvider
     return parseGraphQLInterestGroup(group);
   }
 
-  async fetch(options: FetchGroupOptions): Promise<ListGroupDataObject> {
+  async fetch(
+    options: FetchInterestGroupOptions,
+  ): Promise<ListInterestGroupDataObject> {
     const { search, take = 50, skip = 0 } = options;
     const filterList = (search || '')
       .split(' ')

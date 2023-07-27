@@ -89,11 +89,12 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ).items,
   published: boolean('Published', true),
   publishedNow: boolean('Is Published Now', false),
-  reviewRequestedBy: {
+  statusChangedBy: {
     id: 'userId',
     firstName: 'firstName',
     lastName: 'lastName',
   },
+  isInReview: false,
 });
 
 export const Normal = () => (

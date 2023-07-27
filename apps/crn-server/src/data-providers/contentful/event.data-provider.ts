@@ -202,12 +202,12 @@ export class EventContentfulDataProvider implements EventDataProvider {
       }
     }
 
-    if (filter?.groupId) {
+    if (filter?.interestGroupId) {
       const { interestGroups } = await this.contentfulClient.request<
         FetchInterestGroupCalendarQuery,
         FetchInterestGroupCalendarQueryVariables
       >(FETCH_INTEREST_GROUP_CALENDAR, {
-        id: filter.groupId,
+        id: filter.interestGroupId,
       });
 
       if (interestGroups?.calendar) {
@@ -369,7 +369,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
 
   const calendar = parseCalendarDataObjectToResponse({
     ...parseContentfulGraphqlCalendarPartialToDataObject(item.calendar),
-    groups: [],
+    interestGroups: [],
     workingGroups: [],
   });
 
@@ -479,7 +479,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
     workingGroup,
-    group,
+    interestGroup: group,
   };
 };
 

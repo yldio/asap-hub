@@ -228,20 +228,30 @@ yargs(hideBin(process.argv))
           type: 'string',
           description: 'Name of the index',
           demandOption: true,
+        })
+        .option('appName', {
+          alias: 'p',
+          description: 'Name of App - crn or gp2',
+          type: 'string',
+          choices: ['crn', 'gp2'],
+          demandOption: true,
         }),
     handler: async ({
       index,
       appid,
       apikey,
+      appName,
     }: {
       index: string;
       appid: string;
       apikey: string;
+      appName: string;
     }) =>
       getAlgoliaSettings({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
         indexName: index,
+        appName,
       }),
   })
   .command({
@@ -266,20 +276,30 @@ yargs(hideBin(process.argv))
           type: 'string',
           description: 'Name of the index',
           demandOption: true,
+        })
+        .option('appName', {
+          alias: 'p',
+          description: 'Name of App - crn or gp2',
+          type: 'string',
+          choices: ['crn', 'gp2'],
+          demandOption: true,
         }),
     handler: async ({
       index,
       appid,
       apikey,
+      appName,
     }: {
       index: string;
       appid: string;
       apikey: string;
+      appName: string;
     }) =>
       setAlgoliaSettings({
         algoliaAppId: appid,
         algoliaCiApiKey: apikey,
         indexName: index,
+        appName,
       }),
   })
   .demandCommand(1)

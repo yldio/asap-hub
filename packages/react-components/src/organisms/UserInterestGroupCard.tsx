@@ -1,4 +1,4 @@
-import { GroupResponse, UserResponse } from '@asap-hub/model';
+import { InterestGroupResponse, UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React from 'react';
@@ -51,7 +51,7 @@ const listItemStyle = css({
   },
 });
 
-type UserInterestGroupItemProps = GroupResponse & {
+type UserInterestGroupItemProps = InterestGroupResponse & {
   index: number;
   userId: string;
 };
@@ -72,7 +72,14 @@ const UserInterestGroupItem: React.FC<UserInterestGroupItemProps> = ({
     <li css={listItemStyle}>
       <div css={[titleStyle]}>Group</div>
       <div>
-        <Link ellipsed href={network({}).groups({}).group({ groupId: id }).$}>
+        <Link
+          ellipsed
+          href={
+            network({})
+              .interestGroups({})
+              .interestGroup({ interestGroupId: id }).$
+          }
+        >
           {name}
         </Link>
       </div>
@@ -88,20 +95,20 @@ type UserInterestGroupCardProps = Pick<
   UserResponse,
   'alumniSinceDate' | 'displayName' | 'id'
 > & {
-  groups: GroupResponse[];
+  interestGroups: InterestGroupResponse[];
 };
 
 const UserInterestGroupCard: React.FC<UserInterestGroupCardProps> = ({
   id,
   displayName,
   alumniSinceDate,
-  groups,
+  interestGroups,
 }) => {
   const [activeMemberships, inactiveMemberships] = splitListBy(
-    groups,
-    (group) => {
-      if (group.active) {
-        const leader = group.leaders.find(
+    interestGroups,
+    (interestGroup) => {
+      if (interestGroup.active) {
+        const leader = interestGroup.leaders.find(
           (leaderData) => leaderData.user.id === id,
         );
         if (leader?.inactiveSinceDate) {

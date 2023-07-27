@@ -1,10 +1,10 @@
-import pino, { type Logger as PinoLogger } from 'pino';
-import pinoHttp, { HttpLogger } from 'pino-http';
 import { IncomingMessage } from 'http';
+import pino, { type Logger as PinoLogger } from 'pino';
+import pinoHttp from 'pino-http';
 
+import { UserResponse } from '@asap-hub/model';
 import { lambdaRequestTracker, pinoLambdaDestination } from 'pino-lambda';
 import noir from 'pino-noir';
-import { UserResponse } from '@asap-hub/model';
 
 export type Logger = PinoLogger;
 
@@ -51,7 +51,7 @@ export const getPrettyLogger = ({ logEnabled, logLevel }: Options) =>
 
 export const withRequest = lambdaRequestTracker();
 
-export const getHttpLogger = ({ logger }: { logger: Logger }): HttpLogger =>
+export const getHttpLogger = ({ logger }: { logger: Logger }) =>
   pinoHttp({
     logger,
     serializers: redaction,

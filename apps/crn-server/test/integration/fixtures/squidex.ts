@@ -3,7 +3,7 @@ import {
   RestUser,
   InputUser,
   RestTeam,
-  RestGroup,
+  RestInterestGroup,
   RestWorkingGroup,
   InputWorkingGroup,
   SquidexRest,
@@ -47,7 +47,7 @@ const calendarRestClient = getSquidexClient<RestCalendar, InputCalendar>(
 const eventRestClient = getSquidexClient<RestEvent>('events');
 const userRestClient = getSquidexClient<RestUser, InputUser>('users');
 const teamRestClient = getSquidexClient<RestTeam>('teams');
-const interestGroupRestClient = getSquidexClient<RestGroup>('groups');
+const interestGroupRestClient = getSquidexClient<RestInterestGroup>('groups');
 const workingGroupRestClient = getSquidexClient<
   RestWorkingGroup,
   InputWorkingGroup

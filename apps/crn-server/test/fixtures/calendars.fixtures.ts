@@ -77,14 +77,14 @@ export const getCalendarDataObject = (): CalendarDataObject => ({
   expirationDate: 1617196357000,
   googleCalendarId: '3@group.calendar.google.com',
   version: 42,
-  groups: [{ id: 'group-id-1', active: true }],
+  interestGroups: [{ id: 'group-id-1', active: true }],
   workingGroups: [{ id: '123', complete: false }],
 });
 export const getCalendarCreateDataObject = (): CalendarCreateDataObject => {
   const {
     id: _id,
     version: _version,
-    groups: _groups,
+    interestGroups: _interestGroups,
     workingGroups: _workingGroups,
     ...data
   } = getCalendarDataObject();
@@ -100,7 +100,7 @@ export const getCalendarResponse = (): CalendarResponse => ({
   id: '3@group.calendar.google.com',
   color: '#2952A3',
   name: 'Tech 4a - iPSCs - 3D & Co-cultures',
-  groups: [{ id: 'group-id-1', active: true }],
+  interestGroups: [{ id: 'group-id-1', active: true }],
   workingGroups: [{ id: '123', complete: false }],
 });
 

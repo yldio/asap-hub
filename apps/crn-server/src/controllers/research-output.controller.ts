@@ -102,6 +102,7 @@ export default class ResearchOutputController {
       documentType: normalisedResearchOutputCreateData.documentType,
       doi: normalisedResearchOutputCreateData.doi,
       environmentIds: environments,
+      isInReview: normalisedResearchOutputCreateData.isInReview || false,
       labCatalogNumber: normalisedResearchOutputCreateData.labCatalogNumber,
       labIds: normalisedResearchOutputCreateData.labs || [],
       link: normalisedResearchOutputCreateData.link,
@@ -180,6 +181,7 @@ export default class ResearchOutputController {
       documentType: normalisedResearchOutputUpdateData.documentType,
       doi: normalisedResearchOutputUpdateData.doi,
       environmentIds: environments,
+      isInReview: normalisedResearchOutputUpdateData.isInReview,
       labCatalogNumber: normalisedResearchOutputUpdateData.labCatalogNumber,
       labIds: normalisedResearchOutputUpdateData.labs || [],
       link: normalisedResearchOutputUpdateData.link,
@@ -196,8 +198,10 @@ export default class ResearchOutputController {
       title: normalisedResearchOutputUpdateData.title,
       type: normalisedResearchOutputUpdateData.type,
       updatedBy: normalisedResearchOutputUpdateData.updatedBy,
-      reviewRequestedById:
-        normalisedResearchOutputUpdateData.reviewRequestedById,
+      statusChangedById: normalisedResearchOutputUpdateData.statusChangedById,
+      statusChangedAt: normalisedResearchOutputUpdateData.hasStatusChanged
+        ? new Date(Date.now()).toISOString()
+        : currentResearchOutput.statusChangedAt,
       usageNotes: normalisedResearchOutputUpdateData.usageNotes,
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
       workingGroups: normalisedResearchOutputUpdateData.workingGroups,

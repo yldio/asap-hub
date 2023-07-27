@@ -4,7 +4,7 @@ import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { useSearch } from '../hooks';
-import GroupProfile from './groups/GroupProfile';
+import InterestGroupProfile from './interest-groups/InterestGroupProfile';
 import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
 
 const loadUserList = () =>
@@ -15,11 +15,13 @@ const loadTeamList = () =>
   import(/* webpackChunkName: "network-team-list" */ './teams/TeamList');
 const loadTeamProfile = () =>
   import(/* webpackChunkName: "network-team-profile" */ './teams/TeamProfile');
-const loadGroupList = () =>
-  import(/* webpackChunkName: "network-group-list" */ './groups/GroupList');
+const loadInterestGroupList = () =>
+  import(
+    /* webpackChunkName: "network-group-list" */ './interest-groups/InterestGroupList'
+  );
 const loadGroupProfile = () =>
   import(
-    /* webpackChunkName: "network-group-profile" */ './groups/GroupProfile'
+    /* webpackChunkName: "network-group-profile" */ './interest-groups/InterestGroupProfile'
   );
 const loadWorkingGroupList = () =>
   import(
@@ -34,7 +36,7 @@ const UserList = lazy(loadUserList);
 const UserProfile = lazy(loadUserProfile);
 const TeamList = lazy(loadTeamList);
 const TeamProfile = lazy(loadTeamProfile);
-const GroupList = lazy(loadGroupList);
+const InterestGroupList = lazy(loadInterestGroupList);
 const WorkingGroupList = lazy(loadWorkingGroupList);
 
 const Network: FC<Record<string, never>> = () => {
@@ -42,7 +44,7 @@ const Network: FC<Record<string, never>> = () => {
     loadTeamList()
       // Tab can be changed very quickly
       .then(loadUserList)
-      .then(loadGroupList)
+      .then(loadInterestGroupList)
       .then(loadWorkingGroupList)
       // Can be clicked only after the list has been fetched
       .then(loadTeamProfile)
@@ -113,7 +115,7 @@ const Network: FC<Record<string, never>> = () => {
           <TeamProfile currentTime={currentTime} />
         </Frame>
       </Route>
-      <Route exact path={path + network({}).groups.template}>
+      <Route exact path={path + network({}).interestGroups.template}>
         <NetworkPage
           page="interest-groups"
           searchQuery={searchQuery}
@@ -121,20 +123,23 @@ const Network: FC<Record<string, never>> = () => {
           filters={filters}
           onChangeFilter={toggleFilter}
         >
-          <SearchFrame title="Groups">
-            <GroupList filters={filters} searchQuery={debouncedSearchQuery} />
+          <SearchFrame title="Interest Groups">
+            <InterestGroupList
+              filters={filters}
+              searchQuery={debouncedSearchQuery}
+            />
           </SearchFrame>
         </NetworkPage>
       </Route>
       <Route
         path={
           path +
-          network({}).groups.template +
-          network({}).groups({}).group.template
+          network({}).interestGroups.template +
+          network({}).interestGroups({}).interestGroup.template
         }
       >
-        <Frame title="Group Profile">
-          <GroupProfile currentTime={currentTime} />
+        <Frame title="Interest Group Profile">
+          <InterestGroupProfile currentTime={currentTime} />
         </Frame>
       </Route>
       <Route exact path={path + network({}).workingGroups.template}>

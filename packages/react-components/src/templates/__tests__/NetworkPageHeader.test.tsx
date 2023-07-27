@@ -36,7 +36,7 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).groups({}).$]}>
+    <MemoryRouter initialEntries={[network({}).interestGroups({}).$]}>
       <NetworkPageHeader {...props} page="interest-groups" />
     </MemoryRouter>,
   );
@@ -63,7 +63,7 @@ it('shows the filter in all the tabs (teams, groups, working-groups and users)',
   expect(queryByText(/filters/i)).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter initialEntries={[network({}).groups({}).$]}>
+    <MemoryRouter initialEntries={[network({}).interestGroups({}).$]}>
       <NetworkPageHeader {...props} page="interest-groups" />
     </MemoryRouter>,
   );
@@ -131,7 +131,7 @@ it('renders tab links preserving the search query', async () => {
       getByText('Interest Groups', { selector: 'nav a *' }).closest('a')!.href,
     ),
   ).toMatchObject({
-    pathname: expect.stringMatching(/groups$/),
+    pathname: expect.stringMatching(/interest-groups$/),
     searchParams: new URLSearchParams({ searchQuery: 'searchterm' }),
   });
 });

@@ -119,19 +119,19 @@ const team = (() => {
 })();
 const teams = route('/teams', {}, { team });
 
-const group = (() => {
+const interestGroup = (() => {
   const about = route('/about', {}, {});
   const calendar = route('/calendar', {}, {});
   const upcoming = route('/upcoming', {}, {});
   const past = route('/past', {}, {});
 
   return route(
-    '/:groupId',
-    { groupId: stringParser },
+    '/:interestGroupId',
+    { interestGroupId: stringParser },
     { about, calendar, upcoming, past },
   );
 })();
-const groups = route('/interest-groups', {}, { group });
+const interestGroups = route('/interest-groups', {}, { interestGroup });
 
 const workingGroup = (() => {
   const draftOutputs = route('/draft-outputs', {}, {});
@@ -165,4 +165,8 @@ const workingGroup = (() => {
 
 const workingGroups = route('/working-groups', {}, { workingGroup });
 
-export default route('/network', {}, { users, teams, groups, workingGroups });
+export default route(
+  '/network',
+  {},
+  { users, teams, interestGroups, workingGroups },
+);

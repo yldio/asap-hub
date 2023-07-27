@@ -1,7 +1,7 @@
 import { CalendarResponse } from './calendar';
 import { FetchOptions, ListResponse } from './common';
 import { BasicEvent, SortOptions } from './event-common';
-import { GroupResponse } from './group';
+import { InterestGroupResponse } from './interest-group';
 import { TeamResponse } from './team';
 import { WorkingGroupResponse } from './working-group';
 
@@ -40,7 +40,10 @@ export type EventSpeaker =
 
 export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
-  group?: Pick<GroupResponse, 'id' | 'name' | 'active' | 'tools'>;
+  interestGroup?: Pick<
+    InterestGroupResponse,
+    'id' | 'name' | 'active' | 'tools'
+  >;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
 }
@@ -85,7 +88,7 @@ export type EventUpdateRequest = EventUpdateDataObject;
 
 type BaseFilterOptions = {
   workingGroupId?: never;
-  groupId?: never;
+  interestGroupId?: never;
   userId?: never;
   externalAuthorId?: never;
   teamId?: never;
@@ -97,7 +100,7 @@ type ExclusiveFilterOption<T> = Omit<BaseFilterOptions, keyof T> & T;
 
 type FilterOptions =
   | ExclusiveFilterOption<{ workingGroupId?: string }>
-  | ExclusiveFilterOption<{ groupId?: string }>
+  | ExclusiveFilterOption<{ interestGroupId?: string }>
   | ExclusiveFilterOption<{ userId?: string }>
   | ExclusiveFilterOption<{ externalAuthorId?: string }>
   | ExclusiveFilterOption<{ teamId?: string }>

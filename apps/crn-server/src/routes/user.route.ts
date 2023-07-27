@@ -87,7 +87,7 @@ export const userRouteFactory = (
   });
 
   userRoutes.get<{ userId: string }>(
-    '/users/:userId/groups',
+    '/users/:userId/interest-groups',
     async (req, res) => {
       const { params } = req;
 

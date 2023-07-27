@@ -1696,6 +1696,8 @@ export enum EventsLinkingCollectionsResearchOutputsCollectionOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -1708,6 +1710,8 @@ export enum EventsLinkingCollectionsResearchOutputsCollectionOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1980,6 +1984,8 @@ export enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -1992,6 +1998,8 @@ export enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3119,6 +3127,8 @@ export enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -3131,6 +3141,8 @@ export enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4274,6 +4286,7 @@ export type ResearchOutputs = Entry & {
   documentType?: Maybe<Scalars['String']>;
   doi?: Maybe<Scalars['String']>;
   environmentsCollection?: Maybe<ResearchOutputsEnvironmentsCollection>;
+  isInReview?: Maybe<Scalars['Boolean']>;
   keywordsCollection?: Maybe<ResearchOutputsKeywordsCollection>;
   labCatalogNumber?: Maybe<Scalars['String']>;
   labsCollection?: Maybe<ResearchOutputsLabsCollection>;
@@ -4285,9 +4298,10 @@ export type ResearchOutputs = Entry & {
   publishDate?: Maybe<Scalars['DateTime']>;
   relatedEventsCollection?: Maybe<ResearchOutputsRelatedEventsCollection>;
   relatedResearchCollection?: Maybe<ResearchOutputsRelatedResearchCollection>;
-  reviewRequestedBy?: Maybe<Users>;
   rrid?: Maybe<Scalars['String']>;
   sharingStatus?: Maybe<Scalars['String']>;
+  statusChangedAt?: Maybe<Scalars['DateTime']>;
+  statusChangedBy?: Maybe<Users>;
   subtype?: Maybe<ResearchTags>;
   sys: Sys;
   tags?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -4371,6 +4385,11 @@ export type ResearchOutputsEnvironmentsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsIsInReviewArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
@@ -4465,13 +4484,6 @@ export type ResearchOutputsRelatedResearchCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
-export type ResearchOutputsReviewRequestedByArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<UsersFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsRridArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -4479,6 +4491,18 @@ export type ResearchOutputsRridArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsSharingStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsStatusChangedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsStatusChangedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
@@ -4688,6 +4712,9 @@ export type ResearchOutputsFilter = {
   doi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   environments?: InputMaybe<CfResearchTagsNestedFilter>;
   environmentsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  isInReview?: InputMaybe<Scalars['Boolean']>;
+  isInReview_exists?: InputMaybe<Scalars['Boolean']>;
+  isInReview_not?: InputMaybe<Scalars['Boolean']>;
   keywords?: InputMaybe<CfResearchTagsNestedFilter>;
   keywordsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   labCatalogNumber?: InputMaybe<Scalars['String']>;
@@ -4734,8 +4761,6 @@ export type ResearchOutputsFilter = {
   relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   relatedResearch?: InputMaybe<CfResearchOutputsNestedFilter>;
   relatedResearchCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  reviewRequestedBy?: InputMaybe<CfUsersNestedFilter>;
-  reviewRequestedBy_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
   rrid_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4750,6 +4775,17 @@ export type ResearchOutputsFilter = {
   sharingStatus_not?: InputMaybe<Scalars['String']>;
   sharingStatus_not_contains?: InputMaybe<Scalars['String']>;
   sharingStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  statusChangedAt?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  statusChangedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusChangedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_not?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusChangedBy?: InputMaybe<CfUsersNestedFilter>;
+  statusChangedBy_exists?: InputMaybe<Scalars['Boolean']>;
   subtype?: InputMaybe<CfResearchTagsNestedFilter>;
   subtype_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
@@ -4883,6 +4919,8 @@ export enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -4895,6 +4933,8 @@ export enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4963,6 +5003,8 @@ export enum ResearchOutputsOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -4975,6 +5017,8 @@ export enum ResearchOutputsOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5087,6 +5131,8 @@ export enum ResearchOutputsRelatedResearchCollectionOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -5099,6 +5145,8 @@ export enum ResearchOutputsRelatedResearchCollectionOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5248,6 +5296,8 @@ export enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -5260,6 +5310,8 @@ export enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -5761,6 +5813,8 @@ export enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -5773,6 +5827,8 @@ export enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -6689,6 +6745,8 @@ export enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -6701,6 +6759,8 @@ export enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7380,6 +7440,8 @@ export enum WorkingGroupsLinkingCollectionsResearchOutputsCollectionOrder {
   DocumentTypeDesc = 'documentType_DESC',
   DoiAsc = 'doi_ASC',
   DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
   LabCatalogNumberAsc = 'labCatalogNumber_ASC',
   LabCatalogNumberDesc = 'labCatalogNumber_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -7392,6 +7454,8 @@ export enum WorkingGroupsLinkingCollectionsResearchOutputsCollectionOrder {
   RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7944,6 +8008,9 @@ export type CfResearchOutputsNestedFilter = {
   doi_not_contains?: InputMaybe<Scalars['String']>;
   doi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   environmentsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  isInReview?: InputMaybe<Scalars['Boolean']>;
+  isInReview_exists?: InputMaybe<Scalars['Boolean']>;
+  isInReview_not?: InputMaybe<Scalars['Boolean']>;
   keywordsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   labCatalogNumber?: InputMaybe<Scalars['String']>;
   labCatalogNumber_contains?: InputMaybe<Scalars['String']>;
@@ -7984,7 +8051,6 @@ export type CfResearchOutputsNestedFilter = {
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   relatedResearchCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  reviewRequestedBy_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
   rrid_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7999,6 +8065,16 @@ export type CfResearchOutputsNestedFilter = {
   sharingStatus_not?: InputMaybe<Scalars['String']>;
   sharingStatus_not_contains?: InputMaybe<Scalars['String']>;
   sharingStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  statusChangedAt?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  statusChangedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusChangedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_not?: InputMaybe<Scalars['DateTime']>;
+  statusChangedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusChangedBy_exists?: InputMaybe<Scalars['Boolean']>;
   subtype_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   tags_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -12507,7 +12583,7 @@ export type FetchRemindersQuery = {
       Maybe<
         Pick<
           ResearchOutputs,
-          'addedDate' | 'createdDate' | 'documentType' | 'title'
+          'addedDate' | 'createdDate' | 'documentType' | 'title' | 'isInReview'
         > & {
           sys: Pick<Sys, 'id' | 'publishedAt'>;
           teamsCollection?: Maybe<{
@@ -12521,7 +12597,7 @@ export type FetchRemindersQuery = {
           createdBy?: Maybe<
             Pick<Users, 'firstName' | 'lastName'> & { sys: Pick<Sys, 'id'> }
           >;
-          reviewRequestedBy?: Maybe<
+          statusChangedBy?: Maybe<
             Pick<Users, 'firstName' | 'lastName'> & { sys: Pick<Sys, 'id'> }
           >;
         }
@@ -12656,6 +12732,8 @@ export type ResearchOutputsContentFragment = Pick<
   | 'type'
   | 'publishDate'
   | 'usageNotes'
+  | 'statusChangedAt'
+  | 'isInReview'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
   description?: Maybe<
@@ -12718,7 +12796,7 @@ export type ResearchOutputsContentFragment = Pick<
       };
     }
   >;
-  reviewRequestedBy?: Maybe<
+  statusChangedBy?: Maybe<
     Pick<Users, 'firstName' | 'lastName' | 'email'> & { sys: Pick<Sys, 'id'> }
   >;
   authorsCollection?: Maybe<{
@@ -12840,6 +12918,8 @@ export type FetchResearchOutputByIdQuery = {
       | 'type'
       | 'publishDate'
       | 'usageNotes'
+      | 'statusChangedAt'
+      | 'isInReview'
     > & {
       sys: Pick<Sys, 'id' | 'publishedVersion'>;
       description?: Maybe<
@@ -12912,7 +12992,7 @@ export type FetchResearchOutputByIdQuery = {
           };
         }
       >;
-      reviewRequestedBy?: Maybe<
+      statusChangedBy?: Maybe<
         Pick<Users, 'firstName' | 'lastName' | 'email'> & {
           sys: Pick<Sys, 'id'>;
         }
@@ -13048,6 +13128,8 @@ export type FetchResearchOutputsQuery = {
             | 'type'
             | 'publishDate'
             | 'usageNotes'
+            | 'statusChangedAt'
+            | 'isInReview'
           > & {
             sys: Pick<Sys, 'id' | 'publishedVersion'>;
             description?: Maybe<
@@ -13144,7 +13226,7 @@ export type FetchResearchOutputsQuery = {
                 };
               }
             >;
-            reviewRequestedBy?: Maybe<
+            statusChangedBy?: Maybe<
               Pick<Users, 'firstName' | 'lastName' | 'email'> & {
                 sys: Pick<Sys, 'id'>;
               }
@@ -16675,7 +16757,7 @@ export const ResearchOutputsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'usageNotes' } },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'reviewRequestedBy' },
+            name: { kind: 'Name', value: 'statusChangedBy' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -16695,6 +16777,8 @@ export const ResearchOutputsContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'statusChangedAt' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isInReview' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'authorsCollection' },
@@ -21512,7 +21596,7 @@ export const FetchRemindersDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'reviewRequestedBy' },
+                        name: { kind: 'Name', value: 'statusChangedBy' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
@@ -21539,6 +21623,10 @@ export const FetchRemindersDocument = {
                             },
                           ],
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'isInReview' },
                       },
                     ],
                   },

@@ -152,7 +152,9 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           Teams
         </TabLink>
         <TabLink
-          href={network({}).groups({}).$ + queryParamString(searchQuery)}
+          href={
+            network({}).interestGroups({}).$ + queryParamString(searchQuery)
+          }
         >
           <span css={iconStyles}>
             <InterestGroupsIcon

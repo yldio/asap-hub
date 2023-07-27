@@ -56,7 +56,7 @@ describe('a navigation item', () => {
     ).toBeFalsy();
 
     rerender(
-      <StaticRouter key={2} location={network({}).groups({}).$}>
+      <StaticRouter key={2} location={network({}).interestGroups({}).$}>
         <MainNavigation userOnboarded={true} />
       </StaticRouter>,
     );

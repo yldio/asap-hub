@@ -53,6 +53,7 @@ export interface ResearchOutput<
   workingGroups: string[];
   relatedResearch?: string[];
   relatedEvents?: string[];
+  isInReview: boolean;
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

@@ -163,19 +163,27 @@ describe('Reminders data provider', () => {
           getContentfulReminderResearchOutputCollectionItem();
         publishedResearchOutputItem!.sys.publishedAt = addedDate;
         publishedResearchOutputItem!.addedDate = addedDate;
-        publishedResearchOutputItem!.reviewRequestedBy = null;
+        publishedResearchOutputItem!.statusChangedBy = null;
 
         draftResearchOutputsItem =
           getContentfulReminderResearchOutputCollectionItem();
         draftResearchOutputsItem!.createdDate = createdDate;
         draftResearchOutputsItem!.sys.publishedAt = null;
         draftResearchOutputsItem!.addedDate = null;
-        draftResearchOutputsItem!.reviewRequestedBy = null;
+        draftResearchOutputsItem!.statusChangedBy = null;
 
         inReviewResearchOutputItem =
           getContentfulReminderResearchOutputCollectionItem();
         inReviewResearchOutputItem!.sys.publishedAt = null;
         inReviewResearchOutputItem!.addedDate = null;
+        inReviewResearchOutputItem!.isInReview = true;
+        inReviewResearchOutputItem!.statusChangedBy = {
+          sys: {
+            id: 'user-1',
+          },
+          firstName: 'Tom',
+          lastName: 'Hardy',
+        };
       });
 
       afterEach(() => {
@@ -391,7 +399,7 @@ describe('Reminders data provider', () => {
         test('Should not fetch the reminder if user who (published | created a draft | requested review) is null', async () => {
           publishedResearchOutputItem!.createdBy = null;
           draftResearchOutputsItem!.createdBy = null;
-          inReviewResearchOutputItem!.reviewRequestedBy = null;
+          inReviewResearchOutputItem!.statusChangedBy = null;
 
           const researchOutputsCollection = {
             items: [

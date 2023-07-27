@@ -15,8 +15,8 @@ const interestGroupsProps = (): ComponentProps<
   return {
     interestGroups: Array.from({ length: numberOfItems }, (_, i) => ({
       id: `p${i}`,
-      name: `My Group ${i + 1}`,
-      description: 'Group Description',
+      name: `My Interest Group ${i + 1}`,
+      description: 'Interest Group Description',
       tags: ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5', 'Tag 6'],
       numberOfTeams: 3,
       active: true,

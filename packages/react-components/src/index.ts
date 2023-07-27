@@ -160,7 +160,6 @@ export {
   SpeakerList,
   SsoButtons,
   TeamCard,
-  TeamInterestGroupsCard,
   TeamInterestGroupsTabbedCard,
   TeamMembersSection,
   TeamMembersTabbedCard,

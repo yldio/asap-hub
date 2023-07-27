@@ -64,7 +64,6 @@ export { default as SharedResearchOutputButtons } from './SharedResearchOutputBu
 export { default as SharedResearchOutputHeaderCard } from './SharedResearchOutputHeaderCard';
 export { default as SpeakerList } from './SpeakerList';
 export { default as TeamCard } from './TeamCard';
-export { default as TeamInterestGroupsCard } from './TeamInterestGroupsCard';
 export { default as TeamInterestGroupsTabbedCard } from './TeamInterestGroupsTabbedCard';
 export { default as TeamMembersSection } from './TeamMembersSection';
 export { default as TeamMembersTabbedCard } from './TeamMembersTabbedCard';

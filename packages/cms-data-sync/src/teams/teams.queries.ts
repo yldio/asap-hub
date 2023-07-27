@@ -20,6 +20,9 @@ export const teamsQuery = gql`
           name
           url
         }
+        proposal {
+          id
+        }
       }
     }
   }

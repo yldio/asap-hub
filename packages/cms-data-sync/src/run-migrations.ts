@@ -3,6 +3,7 @@ import { createClient, WebHooks } from 'contentful-management';
 import { migrateEvents } from './events/events.data-migration';
 import { migrateExternalAuthors } from './external-authors/external-authors.data-migration';
 import { migrateTeams } from './teams/teams.data-migration';
+import { migrateTeamProposals } from './teams/teams-proposals.data-migration';
 import { migrateCalendars } from './calendars/calendars.data-migration';
 import { migrateLabs } from './labs/labs.data-migration';
 import { migrateUsers } from './users/users.data-migration';
@@ -17,6 +18,7 @@ import { contentfulRateLimiter } from './contentful-rate-limiter';
 
 export const models = [
   'teams',
+  'teamProposals',
   'externalAuthors',
   'calendars',
   'labs',
@@ -109,6 +111,9 @@ export const runMigrations = async (flags: Flag[] = []) => {
 
     // needs: teams, users, external authors, labs, research tags, working groups
     if (hasFlag('researchOutputs')) await migrateResearchOutputs();
+
+    // needs: teams, research outputs
+    if (hasFlag('teamProposals')) await migrateTeamProposals();
   } catch (err) {
     error = err;
     logger('Error migrating data', 'ERROR');

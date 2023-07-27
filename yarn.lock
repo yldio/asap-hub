@@ -804,7 +804,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": 7.22.6
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
@@ -853,7 +853,7 @@ __metadata:
     "@sentry/cli": 1.75.0
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -1168,7 +1168,7 @@ __metadata:
     "@babel/preset-react": 7.22.5
     "@babel/runtime-corejs3": 7.22.6
     "@sentry/react": 6.19.7
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
     "@types/jest": 29.5.3
@@ -1214,7 +1214,7 @@ __metadata:
     "@asap-hub/gp2-components": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": 7.22.6
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
@@ -1261,7 +1261,7 @@ __metadata:
     "@emotion/babel-plugin": 11.11.0
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -1326,7 +1326,7 @@ __metadata:
     "@sentry/cli": 1.75.0
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -1568,7 +1568,7 @@ __metadata:
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
     "@emotion/serialize": 1.1.2
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -16259,9 +16259,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:8.20.1":
-  version: 8.20.1
-  resolution: "@testing-library/dom@npm:8.20.1"
+"@testing-library/dom@npm:9.3.1":
+  version: 9.3.1
+  resolution: "@testing-library/dom@npm:9.3.1"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.12.5
@@ -16271,7 +16271,7 @@ __metadata:
     dom-accessibility-api: ^0.5.9
     lz-string: ^1.5.0
     pretty-format: ^27.0.2
-  checksum: 06fc8dc67849aadb726cbbad0e7546afdf8923bd39acb64c576d706249bd7d0d05f08e08a31913fb621162e3b9c2bd0dce15964437f030f9fa4476326fdd3007
+  checksum: 8ee3136451644e39990edea93709c38cf1e8ce5306f3c66273ca00935963faa51ca74e8d92b02eb442ccb842cfa28ca62833e393e075eb269cf9bef6f5600663
   languageName: node
   linkType: hard
 

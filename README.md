@@ -201,7 +201,7 @@ The down function is triggered by `asap-hub-{env}-rollbackMigrations`
 
 There is a GitHub Actions workflow to backup and restore Contentful data.
 
-Backups are done twice a day for production and once a day for dev. You can trigger a data restoration from the action menu. This can be done using production or development data and target custom environments.
+Backups are done twice a day for production and once a day for dev. You can trigger a data restoration from the action menu ([click here](https://github.com/yldio/asap-hub/actions/workflows/on-demand-contentful-restore.yml)). This can be done using production or development data and target custom environments.
 
 - [on-schedule-backup-prod.yml](./.github/workflows/on-schedule-backup-prod.yml) to backup from prod
 - [on-schedule-backup-dev.yml](./.github/workflows/on-schedule-backup-dev.yml) to backup from dev

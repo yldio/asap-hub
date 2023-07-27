@@ -195,11 +195,23 @@ The down function is triggered by `asap-hub-{env}-rollbackMigrations`
 
 - Run `yarn test:integration` to see the tests running locally.
 
-## Contentful Migrations
+## Contentful
+
+### Backup
+
+There is a GitHub Actions workflow to backup and restore Contentful data.
+
+Backups are done twice a day for production and once a day for dev. You can trigger a data restoration from the action menu ([click here](https://github.com/yldio/asap-hub/actions/workflows/on-demand-contentful-restore.yml)). This can be done using production or development data and target custom environments.
+
+- [on-schedule-backup-prod.yml](./.github/workflows/on-schedule-backup-prod.yml) to backup from prod
+- [on-schedule-backup-dev.yml](./.github/workflows/on-schedule-backup-dev.yml) to backup from dev
+- [on-demand-contentful-restore.yml](./.github/workflows/on-demand-contentful-restore.yml) to restore backup data.
+
+### Migrations
 
 In order to support the migration from Squidex to Contentful, we've set up a migration system which allows us to track our changes on a per-content type basis, and preserve the history. This is done using [contentful-migrate](https://github.com/deluan/contentful-migrate), a thin third-party wrapper around the official [contentful-migration](https://github.com/contentful/contentful-migration) tool.
 
-### Environment Setup
+#### Environment Setup
 
 There are four variables which you will need to set in `.env`:
 
@@ -209,7 +221,7 @@ There are four variables which you will need to set in `.env`:
 
 If you don't understand these concepts, you will need to familiarise yourself with the [Contentful documentation](https://contentful.com/developers/docs) before writing migrations.
 
-### Creating a New Migration
+#### Creating a New Migration
 
 Once you've completed the steps above, you can create a new migration file with:
 
@@ -225,7 +237,7 @@ So if you wanted to add a `foo` field to the `bar` content type:
 
 Note: the `content_type` is the slug, not the display name, so `externalAuthors` not `External Authors`.
 
-### Generating the migration with a script
+#### Generating the migration with a script
 
 The same way we can make changes in Squidex UI and sync them with our local schemas, it's possible to create a new content type or modify an existing one and generate the migration, so you don't need to type all fields you want to include or remove from the content type.
 
@@ -249,7 +261,7 @@ So, if you want to create or modify a content type using the approach above, you
 
 5. Remember to delete this environment after you finish your PR.
 
-### Initiating an Environment
+#### Initiating an Environment
 
 _Note: This is not something you will need to do regularly, I have documented it for the rare case where you are creating a new environment from scratch and not cloning one which is already using migrations._
 
@@ -259,7 +271,7 @@ The following command will create the migration content schema:
 yarn workspace @asap-hub/contentful ctf-migrate init
 ```
 
-### Counting Migrations to be Run
+#### Counting Migrations to be Run
 
 If you want to know the number of migrations which have not yet been applied to the target environment:
 
@@ -268,7 +280,7 @@ yarn contentful:migration:count:crn
 yarn contentful:migration:count:gp2
 ```
 
-### Running Migrations
+#### Running Migrations
 
 To run outstanding migrations, first do a dry run:
 
@@ -289,7 +301,7 @@ There are also convenience methods for this:
 - `yarn workspace @asap-hub/contentful space:migrate:crn:dryrun`
 - `yarn workspace @asap-hub/contentful space:migrate:crn`
 
-### Rolling back a Migration
+#### Rolling back a Migration
 
 Rollbacks are per-content type, and can be used like this:
 

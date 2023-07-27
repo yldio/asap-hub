@@ -3567,6 +3567,192 @@ export type NewsTextResources = {
   block: Array<ResourceLink>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/outputVersions) */
+export type OutputVersions = Entry & {
+  contentfulMetadata: ContentfulMetadata;
+  linkedFrom?: Maybe<OutputVersionsLinkingCollections>;
+  sys: Sys;
+  title?: Maybe<Scalars['String']>;
+  versionsCollection?: Maybe<OutputVersionsVersionsCollection>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/outputVersions) */
+export type OutputVersionsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/outputVersions) */
+export type OutputVersionsTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/outputVersions) */
+export type OutputVersionsVersionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<OutputVersionsVersionsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResearchOutputsFilter>;
+};
+
+export type OutputVersionsCollection = {
+  items: Array<Maybe<OutputVersions>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type OutputVersionsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<OutputVersionsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<OutputVersionsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  versions?: InputMaybe<CfResearchOutputsNestedFilter>;
+  versionsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type OutputVersionsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+  researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+};
+
+export type OutputVersionsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type OutputVersionsLinkingCollectionsResearchOutputsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<OutputVersionsLinkingCollectionsResearchOutputsCollectionOrder>
+    >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export enum OutputVersionsLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum OutputVersionsOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export type OutputVersionsVersionsCollection = {
+  items: Array<Maybe<ResearchOutputs>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum OutputVersionsVersionsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/pages) */
 export type Pages = Entry & {
   contentfulMetadata: ContentfulMetadata;
@@ -3803,6 +3989,8 @@ export type Query = {
   migrationCollection?: Maybe<MigrationCollection>;
   news?: Maybe<News>;
   newsCollection?: Maybe<NewsCollection>;
+  outputVersions?: Maybe<OutputVersions>;
+  outputVersionsCollection?: Maybe<OutputVersionsCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
   researchOutputs?: Maybe<ResearchOutputs>;
@@ -4106,6 +4294,21 @@ export type QueryNewsCollectionArgs = {
   where?: InputMaybe<NewsFilter>;
 };
 
+export type QueryOutputVersionsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryOutputVersionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<OutputVersionsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<OutputVersionsFilter>;
+};
+
 export type QueryPagesArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -4311,6 +4514,7 @@ export type ResearchOutputs = Entry & {
   updatedBy?: Maybe<Users>;
   usageNotes?: Maybe<Scalars['String']>;
   usedInAPublication?: Maybe<Scalars['String']>;
+  versions?: Maybe<OutputVersions>;
   workingGroup?: Maybe<WorkingGroups>;
 };
 
@@ -4552,6 +4756,13 @@ export type ResearchOutputsUsageNotesArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsUsedInAPublicationArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsVersionsArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<OutputVersionsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
@@ -4825,6 +5036,8 @@ export type ResearchOutputsFilter = {
   usedInAPublication_not?: InputMaybe<Scalars['String']>;
   usedInAPublication_not_contains?: InputMaybe<Scalars['String']>;
   usedInAPublication_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  versions?: InputMaybe<CfOutputVersionsNestedFilter>;
+  versions_exists?: InputMaybe<Scalars['Boolean']>;
   workingGroup?: InputMaybe<CfWorkingGroupsNestedFilter>;
   workingGroup_exists?: InputMaybe<Scalars['Boolean']>;
 };
@@ -4873,6 +5086,7 @@ export enum ResearchOutputsLabsCollectionOrder {
 
 export type ResearchOutputsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  outputVersionsCollection?: Maybe<OutputVersionsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   teamsCollection?: Maybe<TeamsCollection>;
 };
@@ -4880,6 +5094,18 @@ export type ResearchOutputsLinkingCollections = {
 export type ResearchOutputsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResearchOutputsLinkingCollectionsOutputVersionsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchOutputsLinkingCollectionsOutputVersionsCollectionOrder>
+    >
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
@@ -4905,6 +5131,19 @@ export type ResearchOutputsLinkingCollectionsTeamsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
 };
+
+export enum ResearchOutputsLinkingCollectionsOutputVersionsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
 
 export enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   AccessionAsc = 'accession_ASC',
@@ -7893,6 +8132,21 @@ export type CfNewsNestedFilter = {
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type CfOutputVersionsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfOutputVersionsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfOutputVersionsNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  versionsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type CfPagesNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfPagesNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfPagesNestedFilter>>>;
@@ -8111,6 +8365,7 @@ export type CfResearchOutputsNestedFilter = {
   usedInAPublication_not?: InputMaybe<Scalars['String']>;
   usedInAPublication_not_contains?: InputMaybe<Scalars['String']>;
   usedInAPublication_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  versions_exists?: InputMaybe<Scalars['Boolean']>;
   workingGroup_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -8795,6 +9050,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'News' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'OutputVersions' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Pages' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -8915,6 +9173,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'News' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'OutputVersions' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Pages' } & {
@@ -9061,6 +9322,9 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'News' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'OutputVersions' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Pages' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -9181,6 +9445,9 @@ export type FetchDiscoverQuery = {
                             | ({ __typename: 'News' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'OutputVersions' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Pages' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -9277,6 +9544,9 @@ export type FetchDiscoverQuery = {
                         })
                     | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'OutputVersions' } & {
+                        sys: Pick<Sys, 'id'>;
+                      })
                     | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'ResearchOutputs' } & {
                         sys: Pick<Sys, 'id'>;
@@ -9407,6 +9677,7 @@ export type EventsContentFragment = Pick<
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
@@ -9467,6 +9738,7 @@ export type EventsContentFragment = Pick<
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
@@ -9527,6 +9799,7 @@ export type EventsContentFragment = Pick<
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
@@ -9682,6 +9955,9 @@ export type FetchEventByIdQuery = {
                       })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersions' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputs' } & {
                       sys: Pick<Sys, 'id'>;
@@ -9752,6 +10028,9 @@ export type FetchEventByIdQuery = {
                       })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersions' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputs' } & {
                       sys: Pick<Sys, 'id'>;
@@ -9822,6 +10101,9 @@ export type FetchEventByIdQuery = {
                       })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersions' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputs' } & {
                       sys: Pick<Sys, 'id'>;
@@ -10005,6 +10287,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ResearchOutputs' } & {
                             sys: Pick<Sys, 'id'>;
@@ -10099,6 +10384,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ResearchOutputs' } & {
                             sys: Pick<Sys, 'id'>;
@@ -10193,6 +10481,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ResearchOutputs' } & {
                             sys: Pick<Sys, 'id'>;
@@ -10410,6 +10701,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -10521,6 +10815,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -10630,6 +10927,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'OutputVersions' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Pages' } & {
@@ -10869,6 +11169,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -10980,6 +11283,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11089,6 +11395,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'OutputVersions' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Pages' } & {
@@ -11328,6 +11637,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11439,6 +11751,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'News' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'OutputVersions' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Pages' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -11548,6 +11863,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'News' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'OutputVersions' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Pages' } & {
@@ -12147,6 +12465,7 @@ export type NewsContentFragment = Pick<
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
@@ -12227,6 +12546,9 @@ export type FetchNewsByIdQuery = {
                       })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersions' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputs' } & {
                       sys: Pick<Sys, 'id'>;
@@ -12338,6 +12660,9 @@ export type FetchNewsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ResearchOutputs' } & {
                             sys: Pick<Sys, 'id'>;
@@ -12424,6 +12749,7 @@ export type PageContentFragment = Pick<
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
@@ -12517,6 +12843,9 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ResearchOutputs' } & {
                             sys: Pick<Sys, 'id'>;
@@ -12763,6 +13092,7 @@ export type ResearchOutputsContentFragment = Pick<
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
@@ -12889,6 +13219,18 @@ export type ResearchOutputsContentFragment = Pick<
       Maybe<Pick<Events, 'title' | 'endDate'> & { sys: Pick<Sys, 'id'> }>
     >;
   }>;
+  versions?: Maybe<{
+    versionsCollection?: Maybe<{
+      items: Array<
+        Maybe<
+          Pick<
+            ResearchOutputs,
+            'title' | 'documentType' | 'type' | 'publishDate'
+          > & { sys: Pick<Sys, 'id'> }
+        >
+      >;
+    }>;
+  }>;
 };
 
 export type FetchResearchOutputByIdQueryVariables = Exact<{
@@ -12955,6 +13297,9 @@ export type FetchResearchOutputByIdQuery = {
                       })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersions' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputs' } & {
                       sys: Pick<Sys, 'id'>;
@@ -13089,6 +13434,18 @@ export type FetchResearchOutputByIdQuery = {
           Maybe<Pick<Events, 'title' | 'endDate'> & { sys: Pick<Sys, 'id'> }>
         >;
       }>;
+      versions?: Maybe<{
+        versionsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<
+                ResearchOutputs,
+                'title' | 'documentType' | 'type' | 'publishDate'
+              > & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        }>;
+      }>;
     }
   >;
 };
@@ -13179,6 +13536,9 @@ export type FetchResearchOutputsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ResearchOutputs' } & {
                             sys: Pick<Sys, 'id'>;
@@ -13338,6 +13698,18 @@ export type FetchResearchOutputsQuery = {
                   Pick<Events, 'title' | 'endDate'> & { sys: Pick<Sys, 'id'> }
                 >
               >;
+            }>;
+            versions?: Maybe<{
+              versionsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<
+                      ResearchOutputs,
+                      'title' | 'documentType' | 'type' | 'publishDate'
+                    > & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }>;
             }>;
           }
         >
@@ -13592,6 +13964,7 @@ export type TutorialsContentFragment = Pick<
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
@@ -13669,6 +14042,9 @@ export type FetchTutorialByIdQuery = {
                       })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersions' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputs' } & {
                       sys: Pick<Sys, 'id'>;
@@ -14489,6 +14865,7 @@ export type WorkingGroupsContentFragment = Pick<
                   })
               | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'OutputVersions' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchOutputs' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'ResearchTags' } & { sys: Pick<Sys, 'id'> })
@@ -14603,6 +14980,9 @@ export type FetchWorkingGroupByIdQuery = {
                       })
                   | ({ __typename: 'Migration' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'OutputVersions' } & {
+                      sys: Pick<Sys, 'id'>;
+                    })
                   | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'ResearchOutputs' } & {
                       sys: Pick<Sys, 'id'>;
@@ -14754,6 +15134,9 @@ export type FetchWorkingGroupsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'News' } & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'OutputVersions' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Pages' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'ResearchOutputs' } & {
                             sys: Pick<Sys, 'id'>;
@@ -17458,6 +17841,62 @@ export const ResearchOutputsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'endDate' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'versions' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'versionsCollection' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'documentType' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'type' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'publishDate' },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },

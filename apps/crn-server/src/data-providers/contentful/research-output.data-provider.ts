@@ -58,6 +58,10 @@ type RelatedEventItem = NonNullable<
   NonNullable<ResearchOutputItem['relatedEventsCollection']>['items'][number]
 >;
 
+type OutputVersionItem = NonNullable<
+  NonNullable<ResearchOutputItem['versions']>['versionsCollection']
+>['items'][number];
+
 export class ResearchOutputContentfulDataProvider
   implements ResearchOutputDataProvider
 {
@@ -223,6 +227,24 @@ const mapTeams = (items: (TeamItem | null)[]) =>
       displayName: team.displayName || '',
     }));
 
+const mapOutputVersions = (items: (OutputVersionItem | null)[]) =>
+  items
+    .filter(
+      (output: OutputVersionItem | null): output is OutputVersionItem =>
+        output !== null,
+    )
+    .map((output: OutputVersionItem) => ({
+      id: output?.sys.id || '',
+      title: output?.title || '',
+      type: researchOutputMapType(output?.type) || undefined,
+      documentType:
+        output?.documentType &&
+        isResearchOutputDocumentType(output.documentType)
+          ? output.documentType
+          : 'Grant Document',
+      publishDate: output?.publishDate || '',
+    }));
+
 const mapRelatedResearch = (
   items: (RelatedResearchItem | null)[],
   isOwnRelatedResearchLink: boolean,
@@ -370,6 +392,9 @@ const parseGraphQLResearchOutput = (
           title: event?.title || '',
           endDate: event.endDate || '',
         })) || [],
+    versions: mapOutputVersions(
+      researchOutputs.versions?.versionsCollection?.items || [],
+    ),
     statusChangedBy: researchOutputs.statusChangedBy
       ? {
           id: researchOutputs.statusChangedBy.sys.id,

@@ -235,6 +235,12 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
       'id' | 'title' | 'type' | 'documentType' | 'teams'
     > & { isOwnRelatedResearchLink?: boolean }
   >;
+  versions: Array<
+    Pick<
+      ResearchOutputDataObject,
+      'documentType' | 'type' | 'title' | 'id' | 'publishDate'
+    >
+  >;
   relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;
   statusChangedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
   statusChangedAt?: string;

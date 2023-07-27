@@ -194,6 +194,19 @@ export const researchOutputContentQueryFragment = gql`
         endDate
       }
     }
+    versions {
+      versionsCollection {
+        items {
+          sys {
+            id
+          }
+          title
+          documentType
+          type
+          publishDate
+        }
+      }
+    }
   }
 `;
 

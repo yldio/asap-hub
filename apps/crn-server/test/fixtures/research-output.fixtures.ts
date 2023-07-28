@@ -248,6 +248,7 @@ export const getResearchOutputDataObject =
     keywords: ['Keyword1'],
     published: true,
     isInReview: false,
+    versions: [],
   });
 export const getDraftResearchOutputDataObject =
   (): ResearchOutputDraftDataObject => ({
@@ -337,6 +338,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     relatedResearch,
     published: _published,
     relatedEvents,
+    versions: _versions,
     ...researchOutputResponse
   } = getResearchOutputResponse();
   return {
@@ -384,6 +386,7 @@ export const getResearchOutputCreateDataObject =
       contactEmails: _contactEmails,
       workingGroups: _workingGroups, // @TODO send this data to squidex once the schema has changed (1/2)
       published: _published,
+      versions: _versions,
       ...researchOutputPostRequest
     } = getResearchOutputResponse();
 

@@ -20,6 +20,7 @@ import {
   getListResearchOutputDataObject,
   getResearchOutputCreateDataObject,
   getResearchOutputDataObject,
+  getResearchOutputResponse,
   getResearchOutputUpdateDataObject,
   getRestResearchOutputCreateData,
   getRestResearchOutputUpdateData,
@@ -372,6 +373,8 @@ describe('ResearchOutputs data provider', () => {
     test('Should return the research output without the team', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.teams = [];
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.workingGroups =
+        [{ flatData: { title: 'wg' }, id: '1' }];
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         squidexGraphqlResponse,
       );
@@ -380,9 +383,10 @@ describe('ResearchOutputs data provider', () => {
         researchOutputId,
       );
 
-      const expectedResult = getResearchOutputDataObject();
+      const expectedResult = getResearchOutputResponse();
       expectedResult.teams = [];
       expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
+      expectedResult.workingGroups = [{ title: 'wg', id: '1' }];
 
       expect(result).toEqual(expectedResult);
     });

@@ -14,6 +14,7 @@ import {
   getResearchOutputCreateDataObject,
   getResearchOutputUpdateDataObject,
   getContentfulResearchOutputGraphqlResponse,
+  getResearchOutputResponse,
 } from '../../fixtures/research-output.fixtures';
 
 jest.mock('@asap-hub/contentful', () => ({
@@ -626,18 +627,20 @@ describe('Research Outputs Data Provider', () => {
     test('Should return the research output without the team', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
       researchOutputs.teamsCollection!.items = [];
+      researchOutputs.workingGroup = { sys: { id: '1' }, title: 'wg' };
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchOutputs,
       });
 
       const result = await researchOutputDataProvider.fetchById('1');
 
-      const expectedResult = getResearchOutputDataObject();
+      const expectedResult = getResearchOutputResponse();
       expectedResult.usageNotesMD = researchOutputs.usageNotes as string;
       expectedResult.usageNotes = undefined;
       expectedResult.authors = [];
       expectedResult.teams = [];
       expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
+      expectedResult.workingGroups = [{ title: 'wg', id: '1' }];
 
       expect(result).toEqual(expectedResult);
     });

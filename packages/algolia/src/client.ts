@@ -4,12 +4,12 @@ import { gp2 } from '.';
 import { EntityResponses, Payload } from './crn/types';
 
 type DistributeToEntityRecords<
-  T extends EntityResponses | gp2.EntityResponses,
-  K extends keyof T,
-> = T[K] & {
+  Responses extends EntityResponses | gp2.EntityResponses,
+  ResponsesKey extends keyof Responses,
+> = Responses[ResponsesKey] & {
   objectID: string;
   __meta: {
-    type: K;
+    type: ResponsesKey;
   };
 };
 
@@ -25,6 +25,13 @@ export interface SearchClient {
   ) => Promise<
     SearchResponse<DistributeToEntityRecords<Responses, ResponsesKey>>
   >;
+  save: <SavePayload extends Payload | gp2.Payload>(
+    payload: SavePayload,
+  ) => Promise<void>;
+  saveMany: <SavePayload extends Payload | gp2.Payload>(
+    payload: SavePayload[],
+  ) => Promise<void>;
+  remove: (id: string) => Promise<void>;
 }
 
 // helper to get the type of the function
@@ -39,27 +46,22 @@ export class AlgoliaSearchClient implements SearchClient {
     private clickAnalytics?: SearchOptions['clickAnalytics'],
   ) {} // eslint-disable-line no-empty-function
 
-  async save<SavePayload extends Payload | gp2.Payload>({
-    data,
-    type,
-  }: SavePayload): Promise<void> {
-    await this.index.saveObject(
-      AlgoliaSearchClient.getAlgoliaObject<SavePayload>(data, type),
-    );
+  async save<SavePayload extends Payload | gp2.Payload>(payload: SavePayload) {
+    await this.saveMany([payload]);
   }
 
   async saveMany<SavePayload extends Payload | gp2.Payload>(
-    payloads: SavePayload[],
-  ): Promise<void> {
+    payload: SavePayload[],
+  ) {
     await this.index.saveObjects(
-      payloads.map(({ data, type }) =>
+      payload.map(({ data, type }) =>
         AlgoliaSearchClient.getAlgoliaObject<SavePayload>(data, type),
       ),
     );
   }
 
-  async remove(objectID: string): Promise<void> {
-    await this.index.deleteObject(objectID);
+  async remove(id: string) {
+    await this.index.deleteObject(id);
   }
 
   async search<

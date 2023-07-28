@@ -89,7 +89,7 @@ describe('team', () => {
     );
     await retryable(async () => {
       const response = await supertest(app)
-        .get(`/teams/${team.id}/groups`)
+        .get(`/teams/${team.id}/interest-groups`)
         .expect(200);
       expect(response.body.items).toHaveLength(1);
       expect(response.body.items).toMatchObject([

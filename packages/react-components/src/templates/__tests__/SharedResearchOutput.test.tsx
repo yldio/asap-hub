@@ -591,11 +591,7 @@ describe('the ready for pm review button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
-            id: 'user-1',
-            firstName: 'User',
-            lastName: 'One',
-          }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -796,11 +792,7 @@ describe('the switch to draft button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
-            id: 'user-1',
-            firstName: 'User',
-            lastName: 'One',
-          }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -821,11 +813,7 @@ describe('the switch to draft button', () => {
           {...props}
           documentType="Article"
           published={true}
-          reviewRequestedBy={{
-            id: 'user-1',
-            firstName: 'User',
-            lastName: 'One',
-          }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -846,7 +834,7 @@ describe('the switch to draft button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={undefined}
+          isInReview={false}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -867,11 +855,7 @@ describe('the switch to draft button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
-            id: 'user-1',
-            firstName: 'User',
-            lastName: 'One',
-          }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -897,11 +881,7 @@ describe('the switch to draft button', () => {
               documentType="Article"
               published={false}
               workingGroups={undefined}
-              reviewRequestedBy={{
-                id: 'user-1',
-                firstName: 'User',
-                lastName: 'One',
-              }}
+              isInReview={true}
             />
             ,
           </ResearchOutputPermissionsContext.Provider>
@@ -940,11 +920,7 @@ describe('the switch to draft button', () => {
                   title: 'wg 1',
                 },
               ]}
-              reviewRequestedBy={{
-                id: 'user-1',
-                firstName: 'User',
-                lastName: 'One',
-              }}
+              isInReview={true}
             />
             ,
           </ResearchOutputPermissionsContext.Provider>
@@ -975,11 +951,7 @@ describe('the switch to draft button', () => {
                 {...props}
                 documentType="Article"
                 published={false}
-                reviewRequestedBy={{
-                  id: 'user-1',
-                  firstName: 'User',
-                  lastName: 'One',
-                }}
+                isInReview={true}
               />
               ,
             </ResearchOutputPermissionsContext.Provider>
@@ -1010,11 +982,7 @@ describe('the switch to draft button', () => {
                 documentType="Article"
                 published={false}
                 onRequestReview={switchToDraft}
-                reviewRequestedBy={{
-                  id: 'user-1',
-                  firstName: 'User',
-                  lastName: 'One',
-                }}
+                isInReview={true}
               />
               ,
             </ResearchOutputPermissionsContext.Provider>
@@ -1047,11 +1015,7 @@ describe('the publish button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
-            id: 'user-1',
-            firstName: 'User',
-            lastName: 'One',
-          }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -1069,11 +1033,7 @@ describe('the publish button', () => {
           {...props}
           documentType="Article"
           published={true}
-          reviewRequestedBy={{
-            id: 'user-1',
-            firstName: 'User',
-            lastName: 'One',
-          }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -1091,11 +1051,7 @@ describe('the publish button', () => {
           {...props}
           documentType="Article"
           published={false}
-          reviewRequestedBy={{
-            id: 'user-1',
-            firstName: 'User',
-            lastName: 'One',
-          }}
+          isInReview={true}
         />
         ,
       </ResearchOutputPermissionsContext.Provider>,
@@ -1118,11 +1074,7 @@ describe('the publish button', () => {
               documentType="Article"
               published={false}
               workingGroups={undefined}
-              reviewRequestedBy={{
-                id: 'user-1',
-                firstName: 'User',
-                lastName: 'One',
-              }}
+              isInReview={true}
             />
             ,
           </ResearchOutputPermissionsContext.Provider>
@@ -1160,11 +1112,7 @@ describe('the publish button', () => {
                   title: 'wg 1',
                 },
               ]}
-              reviewRequestedBy={{
-                id: 'user-1',
-                firstName: 'User',
-                lastName: 'One',
-              }}
+              isInReview={true}
             />
             ,
           </ResearchOutputPermissionsContext.Provider>
@@ -1191,11 +1139,7 @@ describe('the publish button', () => {
                 {...props}
                 documentType="Article"
                 published={false}
-                reviewRequestedBy={{
-                  id: 'user-1',
-                  firstName: 'User',
-                  lastName: 'One',
-                }}
+                isInReview={true}
               />
               ,
             </ResearchOutputPermissionsContext.Provider>
@@ -1225,11 +1169,7 @@ describe('the publish button', () => {
                 documentType="Article"
                 published={false}
                 onPublish={publishOutput}
-                reviewRequestedBy={{
-                  id: 'user-1',
-                  firstName: 'User',
-                  lastName: 'One',
-                }}
+                isInReview={true}
               />
               ,
             </ResearchOutputPermissionsContext.Provider>

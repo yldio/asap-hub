@@ -109,7 +109,8 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     asapFunded: 'Yes',
     usedInAPublication: 'No',
     type: '3D Printing',
-    reviewRequestedBy: [],
+    statusChangedAt: null,
+    statusChangedBy: [],
     relatedResearch: [
       {
         id: 'related-research-id-0',
@@ -185,6 +186,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       },
     ],
     workingGroups: [],
+    isInReview: false,
   },
 });
 
@@ -245,6 +247,7 @@ export const getResearchOutputDataObject =
     subtype: 'Metabolite',
     keywords: ['Keyword1'],
     published: true,
+    isInReview: false,
   });
 export const getDraftResearchOutputDataObject =
   (): ResearchOutputDraftDataObject => ({
@@ -352,8 +355,10 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
   };
 };
 
-export const getResearchOutputPutRequest = (): ResearchOutputPutRequest =>
-  getResearchOutputPostRequest();
+export const getResearchOutputPutRequest = (): ResearchOutputPutRequest => ({
+  ...getResearchOutputPostRequest(),
+  isInReview: false,
+});
 
 export const getResearchOutputCreateData = (): ResearchOutputCreateData => ({
   ...getResearchOutputPostRequest(),
@@ -413,6 +418,7 @@ export const getResearchOutputUpdateDataObject =
       ...researchOutputCreateDataObject,
       workingGroups: workingGroups || [],
       updatedBy: 'userId',
+      isInReview: false,
     };
   };
 
@@ -472,6 +478,7 @@ export const getRestResearchOutputCreateData =
       iv: 'some access instructions',
     },
     workingGroups: { iv: [] },
+    isInReview: { iv: false },
   });
 
 export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({
@@ -536,7 +543,7 @@ export const getContentfulResearchOutputGraphqlResponse =
     asapFunded: 'Yes',
     usedInAPublication: 'No',
     type: '3D Printing',
-    reviewRequestedBy: null,
+    statusChangedBy: null,
     relatedResearchCollection: {
       items: [
         {

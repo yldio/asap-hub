@@ -3,7 +3,7 @@ import { TeamResponse } from '@asap-hub/model';
 
 import { Frame } from '@asap-hub/frontend-utils';
 
-import GroupsCard from './groups/GroupsCard';
+import InterestGroupsCard from './interest-groups/InterestGroupsCard';
 
 interface AboutProps {
   readonly team: TeamResponse;
@@ -15,7 +15,7 @@ const About: React.FC<AboutProps> = ({ team, teamListElementId }) => (
     teamListElementId={teamListElementId}
     teamGroupsCard={
       <Frame title={null} fallback={null}>
-        <GroupsCard id={team.id} isInactive={team.inactiveSince} />
+        <InterestGroupsCard id={team.id} isInactive={team.inactiveSince} />
       </Frame>
     }
   />

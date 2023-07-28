@@ -2,8 +2,8 @@ import { NotFoundError } from '@asap-hub/errors';
 import {
   FetchOptions,
   FetchPaginationOptions,
-  GroupResponse,
-  ListGroupResponse,
+  InterestGroupResponse,
+  ListInterestGroupResponse,
 } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
 import {
@@ -23,10 +23,10 @@ export default class InterestGroupController {
     this.userDataProvider = userDataProvider;
   }
 
-  async fetch(options: FetchOptions): Promise<ListGroupResponse> {
+  async fetch(options: FetchOptions): Promise<ListInterestGroupResponse> {
     const { filter, ...fetchOptions } = options;
 
-    const groupFilter =
+    const interestGroupFilter =
       filter?.length === 1
         ? {
             filter: {
@@ -37,25 +37,30 @@ export default class InterestGroupController {
 
     const { total, items } = await this.interestGroupDataProvider.fetch({
       ...fetchOptions,
-      ...groupFilter,
+      ...interestGroupFilter,
     });
 
     return { total, items };
   }
 
-  async fetchById(groupId: string): Promise<GroupResponse> {
-    const group = await this.interestGroupDataProvider.fetchById(groupId);
-    if (!group) {
-      throw new NotFoundError(undefined, `group with id ${groupId} not found`);
+  async fetchById(interestGroupId: string): Promise<InterestGroupResponse> {
+    const interestGroup = await this.interestGroupDataProvider.fetchById(
+      interestGroupId,
+    );
+    if (!interestGroup) {
+      throw new NotFoundError(
+        undefined,
+        `group with id ${interestGroupId} not found`,
+      );
     }
 
-    return group;
+    return interestGroup;
   }
 
   async fetchByTeamId(
     teamId: string | string[],
     options: FetchPaginationOptions,
-  ): Promise<ListGroupResponse> {
+  ): Promise<ListInterestGroupResponse> {
     const teamIds = Array.isArray(teamId) ? teamId : [teamId];
     const { total, items } = await this.interestGroupDataProvider.fetch({
       filter: {
@@ -67,7 +72,7 @@ export default class InterestGroupController {
     return { total, items };
   }
 
-  async fetchByUserId(userId: string): Promise<ListGroupResponse> {
+  async fetchByUserId(userId: string): Promise<ListInterestGroupResponse> {
     const user = await this.userDataProvider.fetchById(userId);
 
     if (!user) {
@@ -75,20 +80,20 @@ export default class InterestGroupController {
     }
 
     const teamIds = user.teams.map((team) => team.id);
-    const { items: groupsByTeams } = await this.interestGroupDataProvider.fetch(
-      {
+    const { items: interestGroupsByTeams } =
+      await this.interestGroupDataProvider.fetch({
         filter: {
           teamId: teamIds,
         },
-      },
-    );
-    const { items: groupsByUser } = await this.interestGroupDataProvider.fetch({
-      filter: {
-        userId,
-      },
-    });
-    const groups = [...groupsByTeams, ...groupsByUser];
-    const items = uniqBy(groups, 'id');
+      });
+    const { items: interestGroupsByUser } =
+      await this.interestGroupDataProvider.fetch({
+        filter: {
+          userId,
+        },
+      });
+    const interestGroups = [...interestGroupsByTeams, ...interestGroupsByUser];
+    const items = uniqBy(interestGroups, 'id');
 
     return { total: items.length, items };
   }

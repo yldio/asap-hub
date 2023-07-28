@@ -1,12 +1,12 @@
 import { FetchInterestGroupByIdQuery } from '@asap-hub/contentful';
 import {
-  GroupDataObject,
+  InterestGroupDataObject,
+  InterestGroupResponse,
+  InterestGroupLeader,
+  ListInterestGroupResponse,
   GroupEvent,
-  GroupResponse,
-  GroupLeader,
-  ListGroupResponse,
 } from '@asap-hub/model';
-import { RestGroup } from '@asap-hub/squidex';
+import { RestInterestGroup } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import {
   FetchGroupQuery,
@@ -193,7 +193,7 @@ export const queryInterestGroupsResponse = {
   },
 };
 
-export const listInterestGroupsResponse: ListGroupResponse = {
+export const listInterestGroupsResponse: ListInterestGroupResponse = {
   total: 2,
   items: [
     {
@@ -263,7 +263,7 @@ export const listInterestGroupsResponse: ListGroupResponse = {
           id: 'hub@asap.science',
           color: '#B1365F',
           name: 'ASAP Hub',
-          groups: [],
+          interestGroups: [],
           workingGroups: [],
         },
       ],
@@ -289,7 +289,7 @@ export const listInterestGroupsResponse: ListGroupResponse = {
           id: 'hub@asap.science',
           color: '#B1365F',
           name: 'ASAP Hub',
-          groups: [],
+          interestGroups: [],
           workingGroups: [],
         },
       ],
@@ -297,7 +297,7 @@ export const listInterestGroupsResponse: ListGroupResponse = {
   ],
 };
 
-const getLeaderResponse = (): GroupLeader['user'] => ({
+const getLeaderResponse = (): InterestGroupLeader['user'] => ({
   id: 'user-id-1',
   alumniSinceDate: undefined,
   email: 'H@rdy.io',
@@ -409,10 +409,10 @@ export const getSquidexInterestGroupGraphqlResponse = (): FetchGroupQuery => ({
   findGroupsContent: getSquidexGraphqlInterestGroup(),
 });
 
-export const getInterestGroupResponse = (): GroupResponse =>
+export const getInterestGroupResponse = (): InterestGroupResponse =>
   getInterestGroupDataObject();
 
-export const getListInterestGroupResponse = (): ListGroupResponse => ({
+export const getListInterestGroupResponse = (): ListInterestGroupResponse => ({
   total: 1,
   items: [getInterestGroupResponse()],
 });
@@ -431,7 +431,7 @@ export const getInterestGroupPayload = (
     created: '2020-12-11T14:33:50Z',
     lastModified: '2020-12-11T15:06:26Z',
     version: 42,
-    data: {} as RestGroup['data'],
+    data: {} as RestInterestGroup['data'],
   },
 });
 
@@ -445,7 +445,7 @@ export const getInterestGroupEvent = (
     id,
   );
 
-export const getInterestGroupDataObject = (): GroupDataObject => ({
+export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
   id: 'group-id-1',
   active: true,
   createdDate: '2020-12-11T14:33:50.000Z',
@@ -487,7 +487,7 @@ export const getInterestGroupDataObject = (): GroupDataObject => ({
       id: 'hub@asap.science',
       color: '#B1365F',
       name: 'ASAP Hub',
-      groups: [],
+      interestGroups: [],
       workingGroups: [],
     },
   ],

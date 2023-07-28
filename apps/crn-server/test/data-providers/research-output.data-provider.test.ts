@@ -77,7 +77,7 @@ describe('ResearchOutputs data provider', () => {
 
     test('should return the research output', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlResponse.findResearchOutputsContent!.flatData.reviewRequestedBy =
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.statusChangedBy =
         [
           {
             id: 'review-requested-by-id',
@@ -95,7 +95,7 @@ describe('ResearchOutputs data provider', () => {
         researchOutputId,
       );
       const expectedResult = getResearchOutputDataObject();
-      expectedResult.reviewRequestedBy = {
+      expectedResult.statusChangedBy = {
         id: 'review-requested-by-id',
         firstName: 'First',
         lastName: 'Last',
@@ -1090,7 +1090,7 @@ describe('ResearchOutputs data provider', () => {
             {
               ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
-              reviewRequestedBy: { iv: [] },
+              statusChangedBy: { iv: [] },
             },
           )
           .reply(201);
@@ -1106,7 +1106,7 @@ describe('ResearchOutputs data provider', () => {
 
       test('Should request a PM review for the existing research-output', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateDataObject();
-        researchOutputUpdateData.reviewRequestedById = 'some-user-id';
+        researchOutputUpdateData.statusChangedById = 'some-user-id';
 
         const restResearchOutputUpdateData = getRestResearchOutputUpdateData();
         nock(baseUrl)
@@ -1115,8 +1115,8 @@ describe('ResearchOutputs data provider', () => {
             {
               ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
-              reviewRequestedBy: {
-                iv: [researchOutputUpdateData.reviewRequestedById],
+              statusChangedBy: {
+                iv: [researchOutputUpdateData.statusChangedById],
               },
             },
           )
@@ -1141,7 +1141,7 @@ describe('ResearchOutputs data provider', () => {
             {
               ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
-              reviewRequestedBy: { iv: [] },
+              statusChangedBy: { iv: [] },
             },
           )
           .reply(201, { id: researchOutputId });
@@ -1174,7 +1174,7 @@ describe('ResearchOutputs data provider', () => {
             {
               ...restResearchOutputUpdateData,
               updatedBy: { iv: [researchOutputUpdateData.updatedBy] },
-              reviewRequestedBy: { iv: [] },
+              statusChangedBy: { iv: [] },
             },
           )
           .reply(201);

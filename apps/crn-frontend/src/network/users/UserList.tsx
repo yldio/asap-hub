@@ -3,7 +3,7 @@ import { NetworkPeople } from '@asap-hub/react-components';
 import { useUsers } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
 import { usePrefetchTeams } from '../teams/state';
-import { usePrefetchGroups } from '../groups/state';
+import { usePrefetchInterestGroups } from '../interest-groups/state';
 import { usePrefetchWorkingGroups } from '../working-groups/state';
 
 interface UserListProps {
@@ -29,7 +29,7 @@ const UserList: React.FC<UserListProps> = ({
     searchQuery,
     filters: new Set(),
   });
-  usePrefetchGroups({
+  usePrefetchInterestGroups({
     currentPage: 0,
     pageSize,
     searchQuery,

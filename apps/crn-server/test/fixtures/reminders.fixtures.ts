@@ -100,7 +100,7 @@ export const getResearchOutputInReviewTeamReminder =
         associationName: researchOutputDataObject.teams[0]?.displayName || '',
         associationType: 'team',
         documentType: researchOutputDataObject.documentType,
-        reviewRequestedBy: 'Tom Hardy',
+        statusChangedBy: 'Tom Hardy',
       },
     };
   };
@@ -119,7 +119,7 @@ export const getResearchOutputInReviewWorkingGroupReminder =
         associationName: 'Working Group 1',
         associationType: 'working group',
         documentType: researchOutputDataObject.documentType,
-        reviewRequestedBy: 'Tom Hardy',
+        statusChangedBy: 'Tom Hardy',
       },
     };
   };
@@ -389,7 +389,7 @@ export const getSquidexReminderReseachOutputsInReviewTeamContents =
       created: researchOutput.created,
       status: 'Draft',
       flatData: {
-        reviewRequestedBy: [
+        statusChangedBy: [
           {
             id: 'user-id-1',
             flatData: { firstName: 'Tom', lastName: 'Hardy' },
@@ -478,7 +478,7 @@ export const getSquidexReminderReseachOutputsInReviewWorkingGroupContents =
             },
           },
         ],
-        reviewRequestedBy: [
+        statusChangedBy: [
           {
             id: 'user-id-1',
             flatData: { firstName: 'Tom', lastName: 'Hardy' },
@@ -587,13 +587,8 @@ export const getContentfulReminderResearchOutputCollectionItem =
         },
         title: 'Working Group 1',
       },
-      reviewRequestedBy: {
-        sys: {
-          id: 'user-1',
-        },
-        firstName: 'Tom',
-        lastName: 'Hardy',
-      },
+      statusChangedBy: null,
+      isInReview: false,
     };
   };
 

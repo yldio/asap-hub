@@ -4,6 +4,7 @@ export const discoverQuery = gql`
   query FetchDiscover {
     queryDiscoverContents {
       id
+      status
       flatData {
         aboutUs
         training {

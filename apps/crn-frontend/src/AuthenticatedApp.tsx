@@ -92,7 +92,9 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
             ({ id, name = '', active }) => ({
               name,
               active,
-              href: network({}).groups({}).group({ groupId: id }).$,
+              href: network({})
+                .interestGroups({})
+                .interestGroup({ interestGroupId: id }).$,
             }),
           )}
           aboutHref="https://www.parkinsonsroadmap.org/"

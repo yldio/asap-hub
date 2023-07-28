@@ -40,14 +40,14 @@ describe('/teams/ route', () => {
     jest.clearAllMocks();
   });
 
-  describe('GET /teams/{team_id}/groups', () => {
+  describe('GET /teams/{team_id}/interest-groups', () => {
     test('Should return 200 when no grups exist', async () => {
       interestGroupControllerMock.fetchByTeamId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
 
-      const response = await supertest(app).get('/teams/123/groups');
+      const response = await supertest(app).get('/teams/123/interest-groups');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -61,7 +61,7 @@ describe('/teams/ route', () => {
         fixtures.listInterestGroupsResponse,
       );
 
-      const response = await supertest(app).get('/teams/123/groups');
+      const response = await supertest(app).get('/teams/123/interest-groups');
 
       expect(response.body).toEqual(fixtures.listInterestGroupsResponse);
     });
@@ -73,7 +73,7 @@ describe('/teams/ route', () => {
       });
       const teamId = '123abcd';
 
-      await supertest(app).get(`/teams/${teamId}/groups`).query({
+      await supertest(app).get(`/teams/${teamId}/interest-groups`).query({
         take: 15,
         skip: 5,
         search: 'something',
@@ -93,17 +93,21 @@ describe('/teams/ route', () => {
 
     describe('Parameter validation', () => {
       test('Should return a 400 error when additional properties exist', async () => {
-        const response = await supertest(app).get('/teams/123/groups').query({
-          additionalField: 'some-data',
-        });
+        const response = await supertest(app)
+          .get('/teams/123/interest-groups')
+          .query({
+            additionalField: 'some-data',
+          });
 
         expect(response.status).toBe(400);
       });
 
       test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(app).get(`/teams/123/groups`).query({
-          take: 'invalid param',
-        });
+        const response = await supertest(app)
+          .get(`/teams/123/interest-groups`)
+          .query({
+            take: 'invalid param',
+          });
 
         expect(response.status).toBe(400);
       });

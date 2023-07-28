@@ -116,14 +116,12 @@ describe('parseGraphQLResearchOutput', () => {
     expect(parseGraphQLResearchOutput(output).keywords).toStrictEqual([]);
   });
 
-  test('should not return reviewRequestedBy', () => {
-    expect(
-      parseGraphQLResearchOutput(output).reviewRequestedBy,
-    ).toBeUndefined();
+  test('should not return statusChangedBy', () => {
+    expect(parseGraphQLResearchOutput(output).statusChangedBy).toBeUndefined();
   });
 
-  test('should return reviewRequestedBy', () => {
-    output.flatData.reviewRequestedBy = [
+  test('should return statusChangedBy', () => {
+    output.flatData.statusChangedBy = [
       {
         id: 'review-requested-by-id',
         flatData: {
@@ -132,7 +130,7 @@ describe('parseGraphQLResearchOutput', () => {
         },
       },
     ];
-    expect(parseGraphQLResearchOutput(output).reviewRequestedBy).toStrictEqual({
+    expect(parseGraphQLResearchOutput(output).statusChangedBy).toStrictEqual({
       id: 'review-requested-by-id',
       firstName: 'First',
       lastName: 'Last',

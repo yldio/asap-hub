@@ -10,7 +10,7 @@ import {
 import { addHours, subHours } from 'date-fns';
 
 import { createCalendarResponse } from './calendars';
-import { createGroupResponse } from './groups';
+import { createInterestGroupResponse } from './interest-groups';
 
 export const createSpeakerUserResponse = (
   itemIndex = 0,
@@ -102,7 +102,7 @@ export const createEventResponse = (
   endDateTimestamp: isEventInThePast
     ? subHours(new Date(), 2).getTime()
     : addHours(new Date(), 1).getTime(),
-  group: createGroupResponse(),
+  interestGroup: createInterestGroupResponse(),
   description: `Event ${itemIndex} description`,
   status: 'Confirmed',
   tags: [],

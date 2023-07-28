@@ -22,10 +22,9 @@ import assert from 'assert';
   assert.ok(process.env[env], `${env} not defined`);
 });
 
+const stage = process.env.SLS_STAGE!;
 assert.ok(
-  process.env.SLS_STAGE === 'dev' ||
-    process.env.SLS_STAGE === 'production' ||
-    !isNaN(Number.parseInt(process.env.SLS_STAGE!)),
+  stage === 'dev' || stage === 'production' || !isNaN(Number.parseInt(stage)),
   'SLS_STAGE must be either "dev" or "production" or a PR number',
 );
 
@@ -44,7 +43,6 @@ const contentfulManagementAccessToken =
 const contentfulSpaceId = process.env.GP2_CONTENTFUL_SPACE_ID!;
 const contentfulWebhookAuthenticationToken =
   process.env.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
-const stage = process.env.SLS_STAGE!;
 const sentryDsnApi = process.env.GP2_SENTRY_DSN_API!;
 const sentryDsnHandlers = process.env.GP2_SENTRY_DSN_HANDLERS!;
 
@@ -105,6 +103,7 @@ const serverlessConfig: AWS = {
       LOG_LEVEL: stage === 'production' ? 'error' : 'info',
       APP_ORIGIN: appUrl,
       ENVIRONMENT: '${env:SLS_STAGE}',
+      ALGOLIA_APP_ID: `\${ssm:gp2-algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: currentRevision
         ? '${env:CI_COMMIT_SHA}'
         : '${env:CURRENT_REVISION}',

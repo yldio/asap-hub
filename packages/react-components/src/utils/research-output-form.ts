@@ -219,8 +219,9 @@ export function transformResearchOutputResponseToRequest({
   subtype,
   keywords,
   published,
-  reviewRequestedBy,
+  statusChangedBy,
   relatedEvents,
+  isInReview,
 }: ResearchOutputResponse): ResearchOutputPutRequest {
   return {
     documentType,
@@ -253,6 +254,7 @@ export function transformResearchOutputResponseToRequest({
     workingGroups: workingGroups ? workingGroups.map((wg) => wg.id) : [],
     relatedResearch: relatedResearch.map((research) => research.id),
     relatedEvents: relatedEvents.map((event) => event.id),
-    reviewRequestedById: reviewRequestedBy ? reviewRequestedBy.id : undefined,
+    statusChangedById: statusChangedBy ? statusChangedBy.id : undefined,
+    isInReview,
   };
 }

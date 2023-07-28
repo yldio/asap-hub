@@ -247,14 +247,14 @@ export const getResearchOutputFilter = (
           { createdDate_gte: last24HoursISO },
           { sys: { publishedVersion_exists: false } },
           { addedDate_exists: false },
-          { reviewRequestedBy_exists: false },
+          { isInReview: false },
         ],
       },
       {
         AND: [
           { sys: { publishedVersion_exists: false } },
           { addedDate_exists: false },
-          { reviewRequestedBy_exists: true },
+          { isInReview: true },
         ],
       },
     ],
@@ -634,7 +634,7 @@ const getDraftResearchOutputRemindersFromQuery = (
     (researchOutputReminders, researchOutput) => {
       const userName = getUserName(researchOutput);
       const isPublished = !!researchOutput.sys.publishedAt;
-      const isInReview = !!researchOutput.reviewRequestedBy;
+      const isInReview = !!researchOutput.isInReview;
       if (
         !researchOutput.title ||
         !researchOutput.documentType ||
@@ -719,7 +719,8 @@ const getInReviewResearchOutputRemindersFromQuery = (
       !researchOutput.documentType ||
       !isResearchOutputDocumentType(researchOutput.documentType) ||
       isPublished ||
-      !researchOutput.reviewRequestedBy
+      !researchOutput.isInReview ||
+      !researchOutput.statusChangedBy
     )
       return researchOutputReminders;
 
@@ -757,7 +758,7 @@ const getInReviewResearchOutputRemindersFromQuery = (
           title: researchOutput.title,
           createdDate: researchOutput.createdDate,
           documentType: researchOutput.documentType,
-          reviewRequestedBy: `${researchOutput.reviewRequestedBy.firstName} ${researchOutput.reviewRequestedBy.lastName}`,
+          statusChangedBy: `${researchOutput.statusChangedBy.firstName} ${researchOutput.statusChangedBy.lastName}`,
           associationType,
           associationName,
         },

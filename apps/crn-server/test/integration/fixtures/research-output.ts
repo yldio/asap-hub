@@ -37,6 +37,7 @@ export const getResearchOutputFixture = (
     relatedResearch: [],
     published: true,
     link: `https://example.com/${chance.guid()}`,
+    isInReview: false,
     ...props,
   };
 };

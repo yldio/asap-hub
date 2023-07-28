@@ -19,12 +19,12 @@ export { default as ExpertiseAndResourcesModal } from './ExpertiseAndResourcesMo
 export { default as ForgotPasswordPage } from './ForgotPasswordPage';
 export { default as GlobalStyles } from './GlobalStyles';
 export { default as GoogleTagManager } from './GoogleTagManager';
-export { default as GroupProfileAbout } from './GroupProfileAbout';
+export { default as InterestGroupProfileAbout } from './InterestGroupProfileAbout';
 export { default as GroupProfileCalendar } from './GroupProfileCalendar';
-export { default as GroupProfileHeader } from './GroupProfileHeader';
-export { default as GroupProfilePage } from './GroupProfilePage';
+export { default as InterestGroupProfileHeader } from './InterestGroupProfileHeader';
+export { default as InterestGroupProfilePage } from './InterestGroupProfilePage';
 export { default as Layout } from './Layout';
-export { default as NetworkGroups } from './NetworkGroups';
+export { default as NetworkInterestGroups } from './NetworkInterestGroups';
 export { default as NetworkPage } from './NetworkPage';
 export { default as NetworkPageHeader } from './NetworkPageHeader';
 export { default as NetworkPeople } from './NetworkPeople';

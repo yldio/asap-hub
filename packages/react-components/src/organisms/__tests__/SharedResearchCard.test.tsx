@@ -147,7 +147,7 @@ it('displays in review tag when research output not published and someone reques
     <SharedResearchCard
       {...sharedResearchCardProps}
       published={false}
-      reviewRequestedBy={{ id: 'user', firstName: 'John', lastName: 'Doe' }}
+      isInReview={true}
     />,
   );
   expect(getByText('In Review')).toBeVisible();

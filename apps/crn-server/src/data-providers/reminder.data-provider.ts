@@ -154,12 +154,12 @@ const getResearchOutputDraftFilter = (): string => {
   date.setDate(date.getDate() - 1);
   const date24hAgo = date.toISOString();
 
-  const filter = `created ge ${date24hAgo} and status eq 'Draft' and data/addedDate/iv eq null and empty(data/reviewRequestedBy/iv)`;
+  const filter = `created ge ${date24hAgo} and status eq 'Draft' and data/addedDate/iv eq null and data/isInReview/iv eq false`;
   return filter;
 };
 
 const getResearchOutputInReviewFilter = (): string =>
-  `status eq 'Draft' and data/addedDate/iv eq null and exists(data/reviewRequestedBy/iv)`;
+  `status eq 'Draft' and data/addedDate/iv eq null and data/isInReview/iv eq true`;
 
 export const getEventFilter = (zone: string): string => {
   const lastMidnightISO = DateTime.fromObject({
@@ -418,7 +418,7 @@ const getResearchOutputInReviewRemindersFromQuery = (
         associationType === null ||
         !researchOutput.flatData.documentType ||
         !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
-        !researchOutput.flatData.reviewRequestedBy?.[0]
+        !researchOutput.flatData.statusChangedBy?.[0]
       ) {
         return researchOutputReminders;
       }
@@ -447,7 +447,7 @@ const getResearchOutputInReviewRemindersFromQuery = (
       }
 
       const { firstName, lastName } =
-        researchOutput.flatData.reviewRequestedBy[0].flatData;
+        researchOutput.flatData.statusChangedBy[0].flatData;
 
       researchOutputReminders.push({
         id: `research-output-in-review-${researchOutput.id}`,
@@ -458,7 +458,7 @@ const getResearchOutputInReviewRemindersFromQuery = (
           title: researchOutput.flatData.title,
           createdDate: researchOutput.created,
           documentType: researchOutput.flatData.documentType,
-          reviewRequestedBy: `${firstName} ${lastName}`,
+          statusChangedBy: `${firstName} ${lastName}`,
           associationType,
           associationName,
         },

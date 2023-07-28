@@ -18,6 +18,7 @@ jest.mock('../../src/utils/entries');
 
 const getWorkingGroupSquidex = (): WorkingGroupItem => ({
   id: 'wg-1',
+  status: 'PUBLISHED',
   flatData: {
     title: 'Working Group 1',
     description: '<p><strong>Description</strong></p>',

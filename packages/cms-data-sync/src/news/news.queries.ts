@@ -5,6 +5,7 @@ export const newsQuery = gql`
     queryNewsAndEventsContents(top: 100) {
       id
       created
+      status
       flatData {
         title
         shortText

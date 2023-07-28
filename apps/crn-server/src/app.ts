@@ -40,15 +40,15 @@ import {
   auth0Audience,
   baseUrl,
   contentfulAccessToken,
-  contentfulPreviewAccessToken,
   contentfulEnvId,
+  contentfulPreviewAccessToken,
   contentfulSpaceId,
 } from './config';
-import GuideController from './controllers/guide.controller';
 import CalendarController from './controllers/calendar.controller';
 import DashboardController from './controllers/dashboard.controller';
 import DiscoverController from './controllers/discover.controller';
 import EventController from './controllers/event.controller';
+import GuideController from './controllers/guide.controller';
 import InterestGroupController from './controllers/interest-group.controller';
 import LabController from './controllers/lab.controller';
 import NewsController from './controllers/news.controller';
@@ -62,29 +62,35 @@ import UserController from './controllers/user.controller';
 import WorkingGroupController from './controllers/working-group.controller';
 import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
 import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
-import { CalendarContentfulDataProvider } from './data-providers/contentful/calendar.data-provider';
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
+import { CalendarContentfulDataProvider } from './data-providers/contentful/calendar.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
+import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
 import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-group.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
+import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
+import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
+import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
 import { TeamContentfulDataProvider } from './data-providers/contentful/team.data-provider';
 import { TutorialContentfulDataProvider } from './data-providers/contentful/tutorial.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
-import { DiscoverContentfulDataProvider } from './data-providers/contentful/discover.data-provider';
-import { ResearchTagContentfulDataProvider } from './data-providers/contentful/research-tag.data-provider';
-import { ResearchOutputContentfulDataProvider } from './data-providers/contentful/research-output.data-provider';
-import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
 
+import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
+import { DiscoverSquidexDataProvider } from './data-providers/discover.data-provider';
 import { EventSquidexDataProvider } from './data-providers/event.data-provider';
 import {
   ExternalAuthorDataProvider,
   ExternalAuthorSquidexDataProvider,
 } from './data-providers/external-author.data-provider';
 import { InterestGroupSquidexDataProvider } from './data-providers/interest-group.data-provider';
+import {
+  LabDataProvider,
+  LabSquidexDataProvider,
+} from './data-providers/lab.data-provider';
 import { ReminderSquidexDataProvider } from './data-providers/reminder.data-provider';
 import { ResearchOutputSquidexDataProvider } from './data-providers/research-output.data-provider';
 import { ResearchTagSquidexDataProvider } from './data-providers/research-tag.data-provider';
@@ -95,18 +101,18 @@ import {
 import { TutorialsSquidexDataProvider } from './data-providers/tutorial.data-provider';
 import {
   AssetDataProvider,
-  InterestGroupDataProvider,
-  NewsDataProvider,
-  PageDataProvider,
-  UserDataProvider,
   DashboardDataProvider,
   DiscoverDataProvider,
   GuideDataProvider,
-  WorkingGroupDataProvider,
-  TutorialDataProvider,
-  ResearchTagDataProvider,
-  ResearchOutputDataProvider,
+  InterestGroupDataProvider,
+  NewsDataProvider,
+  PageDataProvider,
   ReminderDataProvider,
+  ResearchOutputDataProvider,
+  ResearchTagDataProvider,
+  TutorialDataProvider,
+  UserDataProvider,
+  WorkingGroupDataProvider,
 } from './data-providers/types';
 import { UserSquidexDataProvider } from './data-providers/user.data-provider';
 import { WorkingGroupSquidexDataProvider } from './data-providers/working-group.data-provider';
@@ -115,8 +121,8 @@ import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { discoverRouteFactory } from './routes/discover.route';
-import { guideRouteFactory } from './routes/guide.route';
 import { eventRouteFactory } from './routes/event.route';
+import { guideRouteFactory } from './routes/guide.route';
 import { interestGroupRouteFactory } from './routes/interest-group.route';
 import { labRouteFactory } from './routes/lab.route';
 import { newsRouteFactory } from './routes/news.route';
@@ -132,12 +138,6 @@ import assignUserToContext from './utils/assign-user-to-context';
 import { getAuthToken } from './utils/auth';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
-import {
-  LabDataProvider,
-  LabSquidexDataProvider,
-} from './data-providers/lab.data-provider';
-import { DiscoverSquidexDataProvider } from './data-providers/discover.data-provider';
-import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();

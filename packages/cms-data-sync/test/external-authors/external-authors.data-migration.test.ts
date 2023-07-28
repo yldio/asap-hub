@@ -18,6 +18,7 @@ const getExternalAuthorSquidexResponse: () => NonNullable<
   FetchExternalAuthorsQuery['queryExternalAuthorsContents']
 >[number] = () => ({
   id: 'external-author-1',
+  status: 'PUBLISHED',
   flatData: {
     name: 'External Person',
     orcid: '0000-0000-0000-0000',

@@ -3,6 +3,7 @@ import { createClient, WebHooks } from 'contentful-management';
 import { migrateEvents } from './events/events.data-migration';
 import { migrateExternalAuthors } from './external-authors/external-authors.data-migration';
 import { migrateTeams } from './teams/teams.data-migration';
+import { migrateTeamProposals } from './teams/teams-proposals.data-migration';
 import { migrateCalendars } from './calendars/calendars.data-migration';
 import { migrateLabs } from './labs/labs.data-migration';
 import { migrateUsers } from './users/users.data-migration';
@@ -11,11 +12,13 @@ import { migrateWorkingGroups } from './working-groups/working-groups.data-migra
 import { migrateTutorials } from './tutorials/tutorials.data-migration';
 import { migrateDiscover } from './discover/discover.data-migration';
 import { migrateResearchTags } from './research-tags/research-tags.data-migration';
+import { migrateResearchOutputs } from './research-outputs/research-outputs.data-migration';
 import { logger } from './utils';
 import { contentfulRateLimiter } from './contentful-rate-limiter';
 
 export const models = [
   'teams',
+  'teamProposals',
   'externalAuthors',
   'calendars',
   'labs',
@@ -26,6 +29,7 @@ export const models = [
   'tutorials',
   'discover',
   'researchTags',
+  'researchOutputs',
 ];
 
 type ModelName = (typeof models)[number];
@@ -104,6 +108,12 @@ export const runMigrations = async (flags: Flag[] = []) => {
     if (hasFlag('discover')) await migrateDiscover();
 
     if (hasFlag('researchTags')) await migrateResearchTags();
+
+    // needs: teams, users, external authors, labs, research tags, working groups
+    if (hasFlag('researchOutputs')) await migrateResearchOutputs();
+
+    // needs: teams, research outputs
+    if (hasFlag('teamProposals')) await migrateTeamProposals();
   } catch (err) {
     error = err;
     logger('Error migrating data', 'ERROR');

@@ -1,17 +1,20 @@
 import { BasicCalendar, BasicCalendarResponse } from './calendar-common';
 import { FetchPaginationOptions, ListResponse } from './common';
-import { GroupDataObject, GroupResponse } from './group';
+import {
+  InterestGroupDataObject,
+  InterestGroupResponse,
+} from './interest-group';
 import { WorkingGroupDataObject, WorkingGroupResponse } from './working-group';
 
 export interface CalendarDataObject extends BasicCalendar {
-  groups?: Pick<GroupDataObject, 'id' | 'active'>[];
+  interestGroups?: Pick<InterestGroupDataObject, 'id' | 'active'>[];
   workingGroups?: Pick<WorkingGroupDataObject, 'id' | 'complete'>[];
 }
 
 export type ListCalendarDataObject = ListResponse<CalendarDataObject>;
 
 export interface CalendarResponse extends BasicCalendarResponse {
-  groups: Pick<GroupResponse, 'id' | 'active'>[];
+  interestGroups: Pick<InterestGroupResponse, 'id' | 'active'>[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'complete'>[];
 }
 

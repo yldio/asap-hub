@@ -2559,6 +2559,10 @@ export type Events = Content & {
   referencesUsersContents: Maybe<Array<Users>>;
   /** Query Users content items with total count. */
   referencesUsersContentsWithTotal: Maybe<UsersResultDto>;
+  /** Query Research Outputs content items. */
+  referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
+  /** Query Research Outputs content items with total count. */
+  referencingResearchOutputsContentsWithTotal: Maybe<ResearchOutputsResultDto>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
@@ -2634,6 +2638,24 @@ export type EventsReferencesUsersContentsArgs = {
 
 /** The structure of a Events content type. */
 export type EventsReferencesUsersContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencingResearchOutputsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Events content type. */
+export type EventsReferencingResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
   orderby: InputMaybe<Scalars['String']>;
   search: InputMaybe<Scalars['String']>;
@@ -4045,6 +4067,10 @@ export type ResearchOutputs = Content & {
   newStatus: Maybe<Scalars['String']>;
   /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
+  /** Query Events content items. */
+  referencesEventsContents: Maybe<Array<Events>>;
+  /** Query Events content items with total count. */
+  referencesEventsContentsWithTotal: Maybe<EventsResultDto>;
   /** Query External authors content items. */
   referencesExternalAuthorsContents: Maybe<Array<ExternalAuthors>>;
   /** Query External authors content items with total count. */
@@ -4089,6 +4115,24 @@ export type ResearchOutputs = Content & {
   url: Scalars['String'];
   /** The version of the objec. */
   version: Scalars['Int'];
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesEventsContentsArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
+};
+
+/** The structure of a Research Outputs content type. */
+export type ResearchOutputsReferencesEventsContentsWithTotalArgs = {
+  filter: InputMaybe<Scalars['String']>;
+  orderby: InputMaybe<Scalars['String']>;
+  search: InputMaybe<Scalars['String']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  top: InputMaybe<Scalars['Int']>;
 };
 
 /** The structure of a Research Outputs content type. */
@@ -4380,6 +4424,7 @@ export type ResearchOutputsDataDto = {
   documentType: Maybe<ResearchOutputsDataDocumentTypeDto>;
   doi: Maybe<ResearchOutputsDataDoiDto>;
   environments: Maybe<ResearchOutputsDataEnvironmentsDto>;
+  isInReview: Maybe<ResearchOutputsDataIsInReviewDto>;
   keywords: Maybe<ResearchOutputsDataKeywordsDto>;
   labCatalogNumber: Maybe<ResearchOutputsDataLabCatalogNumberDto>;
   labs: Maybe<ResearchOutputsDataLabsDto>;
@@ -4388,9 +4433,13 @@ export type ResearchOutputsDataDto = {
   methods: Maybe<ResearchOutputsDataMethodsDto>;
   organisms: Maybe<ResearchOutputsDataOrganismsDto>;
   publishDate: Maybe<ResearchOutputsDataPublishDateDto>;
+  relatedEvents: Maybe<ResearchOutputsDataRelatedEventsDto>;
   relatedResearch: Maybe<ResearchOutputsDataRelatedResearchDto>;
+  reviewRequestedBy: Maybe<ResearchOutputsDataReviewRequestedByDto>;
   rrid: Maybe<ResearchOutputsDataRridDto>;
   sharingStatus: Maybe<ResearchOutputsDataSharingStatusDto>;
+  statusChangedAt: Maybe<ResearchOutputsDataStatusChangedAtDto>;
+  statusChangedBy: Maybe<ResearchOutputsDataStatusChangedByDto>;
   subtype: Maybe<ResearchOutputsDataSubtypeDto>;
   tags: Maybe<ResearchOutputsDataTagsDto>;
   teams: Maybe<ResearchOutputsDataTeamsDto>;
@@ -4425,6 +4474,7 @@ export type ResearchOutputsDataInputDto = {
   documentType: InputMaybe<ResearchOutputsDataDocumentTypeInputDto>;
   doi: InputMaybe<ResearchOutputsDataDoiInputDto>;
   environments: InputMaybe<ResearchOutputsDataEnvironmentsInputDto>;
+  isInReview: InputMaybe<ResearchOutputsDataIsInReviewInputDto>;
   keywords: InputMaybe<ResearchOutputsDataKeywordsInputDto>;
   labCatalogNumber: InputMaybe<ResearchOutputsDataLabCatalogNumberInputDto>;
   labs: InputMaybe<ResearchOutputsDataLabsInputDto>;
@@ -4433,9 +4483,13 @@ export type ResearchOutputsDataInputDto = {
   methods: InputMaybe<ResearchOutputsDataMethodsInputDto>;
   organisms: InputMaybe<ResearchOutputsDataOrganismsInputDto>;
   publishDate: InputMaybe<ResearchOutputsDataPublishDateInputDto>;
+  relatedEvents: InputMaybe<ResearchOutputsDataRelatedEventsInputDto>;
   relatedResearch: InputMaybe<ResearchOutputsDataRelatedResearchInputDto>;
+  reviewRequestedBy: InputMaybe<ResearchOutputsDataReviewRequestedByInputDto>;
   rrid: InputMaybe<ResearchOutputsDataRridInputDto>;
   sharingStatus: InputMaybe<ResearchOutputsDataSharingStatusInputDto>;
+  statusChangedAt: InputMaybe<ResearchOutputsDataStatusChangedAtInputDto>;
+  statusChangedBy: InputMaybe<ResearchOutputsDataStatusChangedByInputDto>;
   subtype: InputMaybe<ResearchOutputsDataSubtypeInputDto>;
   tags: InputMaybe<ResearchOutputsDataTagsInputDto>;
   teams: InputMaybe<ResearchOutputsDataTeamsInputDto>;
@@ -4445,6 +4499,16 @@ export type ResearchOutputsDataInputDto = {
   usageNotes: InputMaybe<ResearchOutputsDataUsageNotesInputDto>;
   usedInAPublication: InputMaybe<ResearchOutputsDataUsedInAPublicationInputDto>;
   workingGroups: InputMaybe<ResearchOutputsDataWorkingGroupsInputDto>;
+};
+
+/** The structure of the Is In Review field of the Research Outputs content type. */
+export type ResearchOutputsDataIsInReviewDto = {
+  iv: Maybe<Scalars['Boolean']>;
+};
+
+/** The structure of the Is In Review field of the Research Outputs content input type. */
+export type ResearchOutputsDataIsInReviewInputDto = {
+  iv: InputMaybe<Scalars['Boolean']>;
 };
 
 /** The structure of the Keywords field of the Research Outputs content type. */
@@ -4533,6 +4597,16 @@ export type ResearchOutputsDataPublishDateInputDto = {
   iv: InputMaybe<Scalars['Instant']>;
 };
 
+/** The structure of the Related Events field of the Research Outputs content type. */
+export type ResearchOutputsDataRelatedEventsDto = {
+  iv: Maybe<Array<Events>>;
+};
+
+/** The structure of the Related Events field of the Research Outputs content input type. */
+export type ResearchOutputsDataRelatedEventsInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Related Research field of the Research Outputs content type. */
 export type ResearchOutputsDataRelatedResearchDto = {
   iv: Maybe<Array<ResearchOutputs>>;
@@ -4540,6 +4614,16 @@ export type ResearchOutputsDataRelatedResearchDto = {
 
 /** The structure of the Related Research field of the Research Outputs content input type. */
 export type ResearchOutputsDataRelatedResearchInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Review requested by field of the Research Outputs content type. */
+export type ResearchOutputsDataReviewRequestedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Review requested by field of the Research Outputs content input type. */
+export type ResearchOutputsDataReviewRequestedByInputDto = {
   iv: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -4563,6 +4647,26 @@ export type ResearchOutputsDataSharingStatusDto = {
 /** The structure of the Sharing Status field of the Research Outputs content input type. */
 export type ResearchOutputsDataSharingStatusInputDto = {
   iv: InputMaybe<Scalars['String']>;
+};
+
+/** The structure of the Status Changed At field of the Research Outputs content type. */
+export type ResearchOutputsDataStatusChangedAtDto = {
+  iv: Maybe<Scalars['Instant']>;
+};
+
+/** The structure of the Status Changed At field of the Research Outputs content input type. */
+export type ResearchOutputsDataStatusChangedAtInputDto = {
+  iv: InputMaybe<Scalars['Instant']>;
+};
+
+/** The structure of the Status Changed By field of the Research Outputs content type. */
+export type ResearchOutputsDataStatusChangedByDto = {
+  iv: Maybe<Array<Users>>;
+};
+
+/** The structure of the Status Changed By field of the Research Outputs content input type. */
+export type ResearchOutputsDataStatusChangedByInputDto = {
+  iv: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** The structure of the Subtype field of the Research Outputs content type. */
@@ -4678,6 +4782,7 @@ export type ResearchOutputsFlatDataDto = {
   /** DOIs must start with a number and cannot be a URL */
   doi: Maybe<Scalars['String']>;
   environments: Maybe<Array<ResearchTags>>;
+  isInReview: Maybe<Scalars['Boolean']>;
   keywords: Maybe<Array<ResearchTags>>;
   /** If this is a hyperlink, please start with "http://" or "https://" */
   labCatalogNumber: Maybe<Scalars['String']>;
@@ -4689,10 +4794,14 @@ export type ResearchOutputsFlatDataDto = {
   organisms: Maybe<Array<ResearchTags>>;
   /** Date of publishing (outside the Hub). Only applies to outputs that have been published. */
   publishDate: Maybe<Scalars['Instant']>;
+  relatedEvents: Maybe<Array<Events>>;
   relatedResearch: Maybe<Array<ResearchOutputs>>;
+  reviewRequestedBy: Maybe<Array<Users>>;
   /** This must start with "RRID:" */
   rrid: Maybe<Scalars['String']>;
   sharingStatus: Maybe<Scalars['String']>;
+  statusChangedAt: Maybe<Scalars['Instant']>;
+  statusChangedBy: Maybe<Array<Users>>;
   subtype: Maybe<Array<ResearchTags>>;
   tags: Maybe<Array<Scalars['String']>>;
   teams: Maybe<Array<Teams>>;
@@ -6338,7 +6447,7 @@ export type FetchCalendarsQueryVariables = Exact<{ [key: string]: never }>;
 export type FetchCalendarsQuery = {
   queryCalendarsContents: Maybe<
     Array<
-      Pick<Calendars, 'id'> & {
+      Pick<Calendars, 'id' | 'status'> & {
         flatData: Pick<
           CalendarsFlatDataDto,
           'googleCalendarId' | 'name' | 'color'
@@ -6353,7 +6462,7 @@ export type FetchDiscoverQueryVariables = Exact<{ [key: string]: never }>;
 export type FetchDiscoverQuery = {
   queryDiscoverContents: Maybe<
     Array<
-      Pick<Discover, 'id'> & {
+      Pick<Discover, 'id' | 'status'> & {
         flatData: Pick<DiscoverFlatDataDto, 'aboutUs'> & {
           training: Maybe<Array<Pick<Tutorials, 'id'>>>;
           pages: Maybe<Array<Pick<Pages, 'id'>>>;
@@ -6376,7 +6485,7 @@ export type FetchEventsQuery = {
     Pick<EventsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Events, 'id'> & {
+          Pick<Events, 'id' | 'status'> & {
             flatData: Pick<
               EventsFlatDataDto,
               | 'googleId'
@@ -6447,7 +6556,7 @@ export type FetchExternalAuthorsQuery = {
     Pick<ExternalAuthorsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<ExternalAuthors, 'id'> & {
+          Pick<ExternalAuthors, 'id' | 'status'> & {
             flatData: Pick<ExternalAuthorsFlatDataDto, 'name' | 'orcid'>;
           }
         >
@@ -6466,7 +6575,10 @@ export type FetchGroupsQuery = {
     Pick<GroupsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Groups, 'id' | 'created' | 'lastModified' | 'version'> & {
+          Pick<
+            Groups,
+            'id' | 'created' | 'lastModified' | 'version' | 'status'
+          > & {
             flatData: Pick<
               GroupsFlatDataDto,
               'name' | 'active' | 'tags' | 'description'
@@ -6505,9 +6617,10 @@ export type FetchLabsQuery = {
     Pick<LabsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Labs, 'id' | 'created' | 'lastModified' | 'version'> & {
-            flatData: Pick<LabsFlatDataDto, 'name'>;
-          }
+          Pick<
+            Labs,
+            'id' | 'created' | 'lastModified' | 'version' | 'status'
+          > & { flatData: Pick<LabsFlatDataDto, 'name'> }
         >
       >;
     }
@@ -6519,7 +6632,7 @@ export type FetchNewsQueryVariables = Exact<{ [key: string]: never }>;
 export type FetchNewsQuery = {
   queryNewsAndEventsContents: Maybe<
     Array<
-      Pick<NewsAndEvents, 'id' | 'created'> & {
+      Pick<NewsAndEvents, 'id' | 'created' | 'status'> & {
         flatData: Pick<
           NewsAndEventsFlatDataDto,
           'title' | 'shortText' | 'text' | 'frequency' | 'link' | 'linkText'
@@ -6543,13 +6656,77 @@ export type FetchPagesQueryVariables = Exact<{ [key: string]: never }>;
 export type FetchPagesQuery = {
   queryPagesContents: Maybe<
     Array<
-      Pick<Pages, 'id'> & {
+      Pick<Pages, 'id' | 'status'> & {
         flatData: Pick<
           PagesFlatDataDto,
           'title' | 'path' | 'shortText' | 'text' | 'link' | 'linkText'
         >;
       }
     >
+  >;
+};
+
+export type FetchResearchOutputsQueryVariables = Exact<{
+  take: InputMaybe<Scalars['Int']>;
+  skip: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchResearchOutputsQuery = {
+  queryResearchOutputsContentsWithTotal: Maybe<
+    Pick<ResearchOutputsResultDto, 'total'> & {
+      items: Maybe<
+        Array<
+          Pick<
+            ResearchOutputs,
+            'id' | 'created' | 'lastModified' | 'status'
+          > & {
+            flatData: Pick<
+              ResearchOutputsFlatDataDto,
+              | 'title'
+              | 'documentType'
+              | 'type'
+              | 'description'
+              | 'descriptionMD'
+              | 'addedDate'
+              | 'lastUpdatedPartial'
+              | 'link'
+              | 'asapFunded'
+              | 'sharingStatus'
+              | 'usedInAPublication'
+              | 'publishDate'
+              | 'rrid'
+              | 'accession'
+              | 'doi'
+              | 'labCatalogNumber'
+              | 'adminNotes'
+              | 'usageNotes'
+              | 'isInReview'
+              | 'statusChangedAt'
+            > & {
+              authors: Maybe<
+                Array<
+                  | Pick<ExternalAuthors, 'id' | 'status'>
+                  | Pick<Users, 'id' | 'status'>
+                >
+              >;
+              relatedResearch: Maybe<
+                Array<Pick<ResearchOutputs, 'id' | 'status'>>
+              >;
+              relatedEvents: Maybe<Array<Pick<Events, 'id' | 'status'>>>;
+              labs: Maybe<Array<Pick<Labs, 'id' | 'status'>>>;
+              workingGroups: Maybe<Array<Pick<WorkingGroups, 'id' | 'status'>>>;
+              teams: Maybe<Array<Pick<Teams, 'id' | 'status'>>>;
+              methods: Maybe<Array<Pick<ResearchTags, 'id' | 'status'>>>;
+              organisms: Maybe<Array<Pick<ResearchTags, 'id' | 'status'>>>;
+              environments: Maybe<Array<Pick<ResearchTags, 'id' | 'status'>>>;
+              subtype: Maybe<Array<Pick<ResearchTags, 'id' | 'status'>>>;
+              keywords: Maybe<Array<Pick<ResearchTags, 'id' | 'status'>>>;
+              statusChangedBy: Maybe<Array<Pick<Users, 'id'>>>;
+            };
+          }
+        >
+      >;
+    }
   >;
 };
 
@@ -6563,7 +6740,7 @@ export type FetchResearchTagsQuery = {
     Pick<ResearchTagsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<ResearchTags, 'id' | 'created' | 'lastModified'> & {
+          Pick<ResearchTags, 'id' | 'created' | 'lastModified' | 'status'> & {
             flatData: Pick<
               ResearchTagsFlatDataDto,
               'name' | 'category' | 'types' | 'entities'
@@ -6580,7 +6757,7 @@ export type FetchTeamsQueryVariables = Exact<{ [key: string]: never }>;
 export type FetchTeamsQuery = {
   queryTeamsContents: Maybe<
     Array<
-      Pick<Teams, 'id' | 'created' | 'lastModified' | 'version'> & {
+      Pick<Teams, 'id' | 'created' | 'lastModified' | 'version' | 'status'> & {
         flatData: Pick<
           TeamsFlatDataDto,
           | 'applicationNumber'
@@ -6593,6 +6770,7 @@ export type FetchTeamsQuery = {
           tools: Maybe<
             Array<Pick<TeamsDataToolsChildDto, 'description' | 'name' | 'url'>>
           >;
+          proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
         };
       }
     >
@@ -6609,7 +6787,7 @@ export type FetchTutorialsQuery = {
     Pick<TutorialsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Tutorials, 'id'> & {
+          Pick<Tutorials, 'id' | 'status'> & {
             flatData: Pick<
               TutorialsFlatDataDto,
               'title' | 'shortText' | 'text' | 'link' | 'linkText'
@@ -6635,7 +6813,10 @@ export type FetchUsersQuery = {
     Pick<UsersResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Users, 'id' | 'created' | 'lastModified' | 'version'> & {
+          Pick<
+            Users,
+            'id' | 'created' | 'lastModified' | 'version' | 'status'
+          > & {
             flatData: Pick<
               UsersFlatDataDto,
               | 'alumniSinceDate'
@@ -6740,7 +6921,7 @@ export type FetchWorkingGroupsQuery = {
     Pick<WorkingGroupsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<WorkingGroups, 'id'> & {
+          Pick<WorkingGroups, 'id' | 'status'> & {
             flatData: Pick<
               WorkingGroupsFlatDataDto,
               | 'title'
@@ -6806,6 +6987,7 @@ export const FetchCalendarsDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -6846,6 +7028,7 @@ export const FetchDiscoverDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -6989,6 +7172,10 @@ export const FetchEventsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'flatData' },
@@ -7325,6 +7512,10 @@ export const FetchExternalAuthorsDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'flatData' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -7419,6 +7610,10 @@ export const FetchGroupsDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'version' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
                       },
                       {
                         kind: 'Field',
@@ -7628,6 +7823,10 @@ export const FetchLabsDocument = {
                       },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'flatData' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -7675,6 +7874,7 @@ export const FetchNewsDocument = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -7760,6 +7960,7 @@ export const FetchPagesDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -7789,6 +7990,425 @@ export const FetchPagesDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchPagesQuery, FetchPagesQueryVariables>;
+export const FetchResearchOutputsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchResearchOutputs' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'take' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryResearchOutputsContentsWithTotal',
+            },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'top' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'take' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'created' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastModified' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'documentType' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'type' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'descriptionMD' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'addedDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'lastUpdatedPartial',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'link' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'asapFunded' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sharingStatus' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'usedInAPublication',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'publishDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'rrid' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'accession' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'doi' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'labCatalogNumber' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'adminNotes' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'usageNotes' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'authors' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: { kind: 'Name', value: 'Users' },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'status',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: {
+                                      kind: 'NamedType',
+                                      name: {
+                                        kind: 'Name',
+                                        value: 'ExternalAuthors',
+                                      },
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'status',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'relatedResearch' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'relatedEvents' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'labs' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'workingGroups' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teams' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'methods' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'organisms' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'environments' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'subtype' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'keywords' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'status' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'statusChangedBy' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'isInReview' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'statusChangedAt' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchResearchOutputsQuery,
+  FetchResearchOutputsQueryVariables
+>;
 export const FetchResearchTagsDocument = {
   kind: 'Document',
   definitions: [
@@ -7850,6 +8470,10 @@ export const FetchResearchTagsDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'lastModified' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
                       },
                       {
                         kind: 'Field',
@@ -7920,6 +8544,7 @@ export const FetchTeamsDocument = {
                   name: { kind: 'Name', value: 'lastModified' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'version' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'flatData' },
@@ -7970,6 +8595,19 @@ export const FetchTeamsDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'proposal' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
                             },
                           ],
                         },
@@ -8039,6 +8677,10 @@ export const FetchTutorialsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'flatData' },
@@ -8169,6 +8811,10 @@ export const FetchUsersDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'version' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
                       },
                       {
                         kind: 'Field',
@@ -8601,6 +9247,10 @@ export const FetchWorkingGroupsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'flatData' },

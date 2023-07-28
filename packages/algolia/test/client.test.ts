@@ -11,11 +11,11 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { EntityResponses } from '../src';
-import { AlgoliaSearchClient } from '../src/client';
+import { AlgoliaSearchClient, getSearchReturnType } from '../src/client';
 import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
 
-type SearchEntityResponse = Awaited<ReturnType<AlgoliaSearchClient['search']>>;
 describe('Algolia Search Client', () => {
+  beforeEach(jest.resetAllMocks);
   const algoliaSearchIndex = getAlgoliaSearchIndexMock();
   const reverseAlgoliaSearchIndex = getAlgoliaSearchIndexMock();
   const algoliaSearchClient = new AlgoliaSearchClient(
@@ -126,15 +126,14 @@ describe('Algolia Search Client', () => {
       searchResearchOutputResponse,
     );
 
-    const response = await algoliaSearchClient.search<keyof EntityResponses>(
-      ['research-output'],
-      'query',
-      {
-        hitsPerPage: 10,
-        page: 0,
-        filters: 'some-filters',
-      },
-    );
+    const response = await algoliaSearchClient.search<
+      EntityResponses,
+      keyof EntityResponses
+    >(['research-output'], 'query', {
+      hitsPerPage: 10,
+      page: 0,
+      filters: 'some-filters',
+    });
 
     expect(response).toEqual(searchResearchOutputResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
@@ -147,7 +146,7 @@ describe('Algolia Search Client', () => {
   test('Should search user entity', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
-    const response = await algoliaSearchClient.search<'user'>(
+    const response = await algoliaSearchClient.search<EntityResponses, 'user'>(
       ['user'],
       'query',
     );
@@ -161,7 +160,7 @@ describe('Algolia Search Client', () => {
   test('Should search event entity in the past', async () => {
     reverseAlgoliaSearchIndex.search.mockResolvedValueOnce(searchEventResponse);
 
-    const response = await algoliaSearchClient.search<'event'>(
+    const response = await algoliaSearchClient.search<EntityResponses, 'event'>(
       ['event'],
       'query',
       {},
@@ -178,6 +177,7 @@ describe('Algolia Search Client', () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
     const response = await algoliaSearchClient.search<
+      EntityResponses,
       'user' | 'external-author'
     >(['user', 'external-author'], 'query', {
       filters: 'some-filters',
@@ -191,7 +191,16 @@ describe('Algolia Search Client', () => {
   });
 });
 
-const searchResearchOutputResponse: SearchEntityResponse = {
+type SearchResponseResearchOutput = Awaited<
+  ReturnType<typeof getSearchReturnType<EntityResponses, 'research-output'>>
+>;
+type SearchResponseUser = Awaited<
+  ReturnType<typeof getSearchReturnType<EntityResponses, 'user'>>
+>;
+type SearchResponseEvent = Awaited<
+  ReturnType<typeof getSearchReturnType<EntityResponses, 'event'>>
+>;
+const searchResearchOutputResponse: SearchResponseResearchOutput = {
   hits: [
     {
       ...createResearchOutputResponse(),
@@ -209,7 +218,7 @@ const searchResearchOutputResponse: SearchEntityResponse = {
   params: '',
 };
 
-const searchUserResponse: SearchEntityResponse = {
+const searchUserResponse: SearchResponseUser = {
   hits: [
     {
       ...createUserResponse(),
@@ -227,7 +236,7 @@ const searchUserResponse: SearchEntityResponse = {
   params: '',
 };
 
-const searchEventResponse: SearchEntityResponse = {
+const searchEventResponse: SearchResponseEvent = {
   hits: [
     {
       ...createEventResponse(),

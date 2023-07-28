@@ -46,8 +46,13 @@ export class AlgoliaSearchClient implements SearchClient {
     private clickAnalytics?: SearchOptions['clickAnalytics'],
   ) {} // eslint-disable-line no-empty-function
 
-  async save<SavePayload extends Payload | gp2.Payload>(payload: SavePayload) {
-    await this.saveMany([payload]);
+  async save<SavePayload extends Payload | gp2.Payload>({
+    data,
+    type,
+  }: SavePayload) {
+    await this.index.saveObject(
+      AlgoliaSearchClient.getAlgoliaObject<SavePayload>(data, type),
+    );
   }
 
   async saveMany<SavePayload extends Payload | gp2.Payload>(

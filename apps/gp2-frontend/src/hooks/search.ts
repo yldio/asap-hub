@@ -54,11 +54,6 @@ export const useSearch = <TFilter>(filterNames: string[] = ['filter']) => {
 
     const currentFilters = filterObj as { [x: string]: string[] };
 
-    // const { newUrlParams } = filterNames.reduce((prev, curr) => {
-    //   const val = prev.updateParams(curr, filt[curr]);
-    //   return val;
-    // }, updateParams(history.location.search));
-
     const { newUrlParams } = filterNames.reduce((prevUrlParams, filterName) => {
       const currentParams = prevUrlParams.updateParams(
         filterName,

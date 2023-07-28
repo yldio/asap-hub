@@ -60,6 +60,7 @@ jobs:
           - date-field-as-first-published-at
           - disabled-fields
           - event-additional-materials
+          - event-custom-validation
           - event-speakers-title
           - event-speakers-gp2
           - field-as-updated-at

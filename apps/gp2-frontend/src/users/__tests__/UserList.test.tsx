@@ -37,6 +37,7 @@ const renderUserList = async ({
 } = {}) => {
   mockGetUsers.mockResolvedValue(listUserResponse);
   const mockUpdateFilter = jest.fn();
+  const mockToggleFilter = jest.fn();
   mockUseSearch.mockImplementation(() => ({
     changeLocation: jest.fn(),
     filters: {
@@ -47,6 +48,7 @@ const renderUserList = async ({
       ...filters,
     },
     updateFilters: mockUpdateFilter,
+    toggleFilter: mockToggleFilter,
     searchQuery: '',
     debouncedSearchQuery: '',
     setSearchQuery: jest.fn(),

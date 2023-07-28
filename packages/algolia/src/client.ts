@@ -77,7 +77,9 @@ export class AlgoliaSearchClient implements SearchClient {
     query: string,
     requestOptions?: SearchOptions,
     descendingEvents?: boolean,
-  ) {
+  ): Promise<
+    SearchResponse<DistributeToEntityRecords<Responses, ResponsesKey>>
+  > {
     const entityTypesFilter = entityTypes
       .map((entityType) => `__meta.type:"${String(entityType)}"`)
       .join(' OR ');

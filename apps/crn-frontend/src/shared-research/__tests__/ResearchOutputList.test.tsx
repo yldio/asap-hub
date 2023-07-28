@@ -1,17 +1,17 @@
-import { Suspense } from 'react';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import userEvent from '@testing-library/user-event';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
 
-import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
-import ResearchOutputList from '../ResearchOutputList';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getResearchOutputs } from '../api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
-import { researchOutputsState } from '../state';
+import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getResearchOutputs } from '../api';
 import { MAX_ALGOLIA_RESULTS } from '../export';
+import ResearchOutputList from '../ResearchOutputList';
+import { researchOutputsState } from '../state';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');

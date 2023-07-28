@@ -15,7 +15,7 @@
     "import:cohorts": "ts-node ./scripts/import-cohorts.ts"
   },
   "dependencies": {
-    "@asap-hub/algolia": "workspace:^",
+    "@asap-hub/algolia": "workspace:*",
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/contentful": "workspace:*",
     "@asap-hub/errors": "workspace:*",

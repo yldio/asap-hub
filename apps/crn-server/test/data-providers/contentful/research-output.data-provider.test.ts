@@ -10,7 +10,6 @@ import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-c
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 import { ResearchOutputContentfulDataProvider } from '../../../src/data-providers/contentful/research-output.data-provider';
 import {
-  getResearchOutputDataObject,
   getResearchOutputCreateDataObject,
   getResearchOutputUpdateDataObject,
   getContentfulResearchOutputGraphqlResponse,

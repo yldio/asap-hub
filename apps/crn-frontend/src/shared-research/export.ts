@@ -1,13 +1,13 @@
-import { EntityResponses, SearchEntityResponse } from '@asap-hub/algolia';
-import { ListResponse, ResearchOutputResponse } from '@asap-hub/model';
-import { isInternalUser } from '@asap-hub/validation';
-/* eslint-disable-next-line import/no-unresolved */
+import { EntityResponses, getSearchReturnType } from '@asap-hub/algolia';
 import {
   caseInsensitive,
   CSVValue,
   GetListOptions,
   htmlToCsvText,
 } from '@asap-hub/frontend-utils';
+import { ListResponse, ResearchOutputResponse } from '@asap-hub/model';
+import { isInternalUser } from '@asap-hub/validation';
+/* eslint-disable-next-line import/no-unresolved */
 import { Stringifier } from 'csv-stringify/browser/esm';
 
 export const MAX_ALGOLIA_RESULTS = 10000;
@@ -96,16 +96,21 @@ export const researchOutputToCSV = (
   isInReview: output.isInReview,
 });
 
-export const algoliaResultsToStream = async <T extends keyof EntityResponses>(
+export const algoliaResultsToStream = async <
+  EntityType extends keyof EntityResponses,
+>(
   csvStream: Stringifier,
   getResults: ({
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<SearchEntityResponse<EntityResponses, T>>
+    ReturnType<typeof getSearchReturnType<EntityResponses, EntityType>>
   >,
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  transform: (result: EntityResponses[T]) => Record<string, any>,
+  transform: (
+    result: Awaited<
+      ReturnType<typeof getSearchReturnType<EntityResponses, EntityType>>
+    >['hits'][number],
+  ) => Record<string, unknown>,
 ) => {
   let morePages = true;
   let currentPage = 0;

@@ -8,7 +8,11 @@ import {
 } from '@asap-hub/model';
 import nock from 'nock';
 
-import type { AlgoliaSearchClient, EntityResponses } from '@asap-hub/algolia';
+import type {
+  AlgoliaSearchClient,
+  EntityResponses,
+  getSearchReturnType,
+} from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
@@ -27,13 +31,16 @@ jest.mock('../../../config');
 afterEach(() => {
   nock.cleanAll();
 });
+type Search = typeof getSearchReturnType<
+  EntityResponses,
+  'user' | 'external-author'
+>;
 
 describe('getUsers', () => {
-  type Search = AlgoliaSearchClient<EntityResponses>['search'];
   const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {
-    search: search,
+    search,
   } as unknown as AlgoliaSearchClient;
 
   const defaultOptions: GetListOptions = {
@@ -167,7 +174,7 @@ describe('getUsers', () => {
 });
 
 describe('getUsersAndExternalAuthors', () => {
-  const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
+  const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {
     search,

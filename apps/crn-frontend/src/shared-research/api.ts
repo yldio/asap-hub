@@ -1,4 +1,4 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { AlgoliaSearchClient, EntityResponses } from '@asap-hub/algolia';
 import {
   createFeatureFlagHeaders,
   createSentryHeaders,
@@ -101,16 +101,20 @@ export const getResearchOutputs = (
   options: ResearchOutputPublishedListOptions,
 ) =>
   client
-    .search<'research-output'>(['research-output'], options.searchQuery, {
-      page: options.currentPage ?? 0,
-      hitsPerPage: options.pageSize ?? 10,
-      filters: getAllFilters(
-        options.filters,
-        options.teamId,
-        options.userId,
-        options.workingGroupId,
-      ),
-    })
+    .search<EntityResponses, 'research-output'>(
+      ['research-output'],
+      options.searchQuery,
+      {
+        page: options.currentPage ?? 0,
+        hitsPerPage: options.pageSize ?? 10,
+        filters: getAllFilters(
+          options.filters,
+          options.teamId,
+          options.userId,
+          options.workingGroupId,
+        ),
+      },
+    )
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);
     });

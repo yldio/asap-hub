@@ -2,17 +2,17 @@ import {
   AlgoliaSearchClient,
   algoliaSearchClientFactory,
 } from '@asap-hub/algolia';
-import { EventBridgeHandler } from '@asap-hub/server-common';
 import { ResearchOutputEvent } from '@asap-hub/model';
+import { EventBridgeHandler } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ResearchOutputController from '../../controllers/research-output.controller';
-import logger from '../../utils/logger';
-import { ResearchOutputPayload } from '../event-bus';
-import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { getResearchOutputDataProvider } from '../../dependencies/research-outputs.dependencies';
 import { getExternalAuthorDataProvider } from '../../dependencies/external-authors.dependencies';
+import { getResearchOutputDataProvider } from '../../dependencies/research-outputs.dependencies';
 import { getResearchTagDataProvider } from '../../dependencies/research-tags.dependencies';
+import logger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
+import { ResearchOutputPayload } from '../event-bus';
 
 export const indexResearchOutputHandler =
   (

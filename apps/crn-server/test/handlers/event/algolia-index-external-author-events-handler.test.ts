@@ -6,8 +6,9 @@ import { indexExternalAuthorEventsHandler } from '../../../src/handlers/event/al
 import { getListEventResponse } from '../../fixtures/events.fixtures';
 import { getExternalAuthorSquidexEvent } from '../../fixtures/external-authors.fixtures';
 import { toPayload } from '../../helpers/algolia';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
 const mapPayload = toPayload('event');
 

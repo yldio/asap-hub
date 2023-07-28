@@ -1,4 +1,8 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  EntityResponses,
+  getSearchReturnType,
+} from '@asap-hub/algolia';
 import {
   createEventResponse,
   createListEventResponse,
@@ -47,8 +51,7 @@ describe('getEvent', () => {
 });
 
 describe('getEvents', () => {
-  // <EntityResponses, 'event'>
-  type Search = AlgoliaSearchClient['search'];
+  type Search = typeof getSearchReturnType<EntityResponses, 'event'>;
   const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {

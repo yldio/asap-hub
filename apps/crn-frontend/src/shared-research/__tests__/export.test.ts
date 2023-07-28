@@ -373,7 +373,7 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve(
-          createAlgoliaResponse(
+          createAlgoliaResponse<'research-output'>(
             [
               {
                 ...createResearchOutputResponse(),

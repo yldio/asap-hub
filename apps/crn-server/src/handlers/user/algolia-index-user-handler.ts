@@ -4,16 +4,16 @@ import {
 } from '@asap-hub/algolia';
 import { UserEvent } from '@asap-hub/model';
 import { EventBridgeHandler, UserPayload } from '@asap-hub/server-common';
-import { isBoom, Boom } from '@hapi/boom';
+import { Boom, isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import UserController from '../../controllers/user.controller';
+import {
+  getAssetDataProvider,
+  getUserDataProvider,
+} from '../../dependencies/users.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import {
-  getUserDataProvider,
-  getAssetDataProvider,
-} from '../../dependencies/users.dependencies';
 
 /* istanbul ignore next */
 export const indexUserHandler =

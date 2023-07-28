@@ -1,4 +1,4 @@
-import type { AlgoliaSearchClient } from '@asap-hub/algolia';
+import type { AlgoliaSearchClient, EntityResponses } from '@asap-hub/algolia';
 import {
   createFeatureFlagHeaders,
   createSentryHeaders,
@@ -63,11 +63,15 @@ export const getUsers = async (
       ? `(${tagFilters}) AND (${roleFilters})`
       : tagFilters || roleFilters;
 
-  const result = await algoliaClient.search<'user'>(['user'], searchQuery, {
-    filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
+  const result = await algoliaClient.search<EntityResponses, 'user'>(
+    ['user'],
+    searchQuery,
+    {
+      filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+    },
+  );
 
   return {
     items: result.hits,
@@ -81,16 +85,15 @@ export const getUsersAndExternalAuthors = async (
   algoliaClient: AlgoliaSearchClient,
   { searchQuery, currentPage, pageSize }: GetListOptions,
 ): Promise<ListResponse<UserResponse | ExternalAuthorResponse>> => {
-  const result = await algoliaClient.search<'user' | 'external-author'>(
-    ['user', 'external-author'],
-    searchQuery,
-    {
-      filters: undefined,
-      page: currentPage ?? undefined,
-      hitsPerPage: pageSize ?? undefined,
-      restrictSearchableAttributes: ['displayName'],
-    },
-  );
+  const result = await algoliaClient.search<
+    EntityResponses,
+    'user' | 'external-author'
+  >(['user', 'external-author'], searchQuery, {
+    filters: undefined,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+    restrictSearchableAttributes: ['displayName'],
+  });
 
   return {
     items: result.hits,

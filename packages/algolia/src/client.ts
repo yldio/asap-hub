@@ -1,9 +1,9 @@
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { SearchIndex } from 'algoliasearch';
-import { gp2 } from './';
+import { gp2 } from '.';
 import { EntityResponses, Payload } from './crn/types';
 
-export type EntityRecord<
+type DistributeToEntityRecords<
   T extends EntityResponses | gp2.EntityResponses,
   K extends keyof T,
 > = T[K] & {
@@ -13,39 +13,44 @@ export type EntityRecord<
   };
 };
 
-export type DistributeToEntityRecords<
-  T extends EntityResponses | gp2.EntityResponses,
-  K extends keyof T,
-> = K extends keyof T ? EntityRecord<T, K> : never;
+export interface SearchClient {
+  search: <
+    Responses extends EntityResponses | gp2.EntityResponses,
+    ResponsesKey extends keyof Responses,
+  >(
+    entityTypes: ResponsesKey[],
+    query: string,
+    requestOptions?: SearchOptions,
+    descendingEvents?: boolean,
+  ) => Promise<
+    SearchResponse<DistributeToEntityRecords<Responses, ResponsesKey>>
+  >;
+}
 
-export type EntityHit<
-  T extends EntityResponses | gp2.EntityResponses,
-  K extends keyof T,
-> = DistributeToEntityRecords<T, K>;
+// helper to get the type of the function
+export const getSearchReturnType: SearchClient['search'] = () =>
+  null as unknown as ReturnType<SearchClient['search']>;
 
-export type SearchEntityResponse<
-  T extends EntityResponses | gp2.EntityResponses,
-  K extends keyof T,
-> = SearchResponse<DistributeToEntityRecords<T, K>>;
-
-export class AlgoliaSearchClient<
-  Responses extends EntityResponses | gp2.EntityResponses = EntityResponses,
-  SavePayload extends Payload | gp2.Payload = Payload,
-> {
+export class AlgoliaSearchClient implements SearchClient {
   constructor(
     private index: SearchIndex,
     private reverseEventsIndex: SearchIndex,
     private userToken?: SearchOptions['userToken'],
     private clickAnalytics?: SearchOptions['clickAnalytics'],
-  ) {}
+  ) {} // eslint-disable-line no-empty-function
 
-  async save({ data, type }: SavePayload): Promise<void> {
+  async save<SavePayload extends Payload | gp2.Payload>({
+    data,
+    type,
+  }: SavePayload): Promise<void> {
     await this.index.saveObject(
       AlgoliaSearchClient.getAlgoliaObject<SavePayload>(data, type),
     );
   }
 
-  async saveMany(payloads: SavePayload[]): Promise<void> {
+  async saveMany<SavePayload extends Payload | gp2.Payload>(
+    payloads: SavePayload[],
+  ): Promise<void> {
     await this.index.saveObjects(
       payloads.map(({ data, type }) =>
         AlgoliaSearchClient.getAlgoliaObject<SavePayload>(data, type),
@@ -57,17 +62,20 @@ export class AlgoliaSearchClient<
     await this.index.deleteObject(objectID);
   }
 
-  async search<ResponsesKey extends keyof Responses>(
+  async search<
+    Responses extends EntityResponses | gp2.EntityResponses,
+    ResponsesKey extends keyof Responses,
+  >(
     entityTypes: ResponsesKey[],
     query: string,
     requestOptions?: SearchOptions,
     descendingEvents?: boolean,
-  ): Promise<SearchEntityResponse<Responses, ResponsesKey>> {
+  ) {
     const entityTypesFilter = entityTypes
       .map((entityType) => `__meta.type:"${String(entityType)}"`)
       .join(' OR ');
 
-    const options: SearchOptions = {
+    const options = {
       ...requestOptions,
       clickAnalytics: this.clickAnalytics,
       userToken: this.userToken,

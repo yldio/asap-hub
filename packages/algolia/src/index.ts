@@ -1,6 +1,5 @@
 import algoliasearch, { SearchClient } from 'algoliasearch';
 import { AlgoliaSearchClient } from './client';
-import { EntityResponses, Payload } from './crn/types';
 import * as gp2 from './gp2';
 
 export type { SearchResponse } from '@algolia/client-search';
@@ -27,19 +26,13 @@ type AlgoliaSearchClientFactoryParams =
     clickAnalytics?: ConstructorParameters<typeof AlgoliaSearchClient>['3'];
   };
 
-export const algoliaSearchClientFactory = <
-  Responses extends EntityResponses | gp2.EntityResponses = EntityResponses,
-  SavePayload extends Payload | gp2.Payload = Payload,
->({
+export const algoliaSearchClientFactory = ({
   algoliaIndex,
   algoliaApiKey,
   algoliaAppId,
   userToken,
   clickAnalytics,
-}: AlgoliaSearchClientFactoryParams): AlgoliaSearchClient<
-  Responses,
-  SavePayload
-> => {
+}: AlgoliaSearchClientFactoryParams): AlgoliaSearchClient => {
   const algoliaSearchClient = algoliasearch(algoliaAppId, algoliaApiKey);
 
   const index = algoliaSearchClient.initIndex(algoliaIndex);

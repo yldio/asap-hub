@@ -1,4 +1,4 @@
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { OutputPayload } from '../../../src/handlers/event-bus';
@@ -7,10 +7,11 @@ import {
   getOutputEvent,
   getOutputResponse,
 } from '../../fixtures/output.fixtures';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { loggerMock } from '../../mocks/logger.mock';
 import { outputControllerMock } from '../../mocks/output.controller.mock';
 
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 describe('Output index handler', () => {
   const indexHandler = indexOutputHandler(
     outputControllerMock,
@@ -305,24 +306,24 @@ describe('Output index handler', () => {
 
 const unpublishedEvent = (id: string) =>
   getOutputEvent(id, 'OutputUnpublished') as EventBridgeEvent<
-    gp2.OutputEvent,
+    gp2Model.OutputEvent,
     OutputPayload
   >;
 
 const deleteEvent = (id: string) =>
   getOutputEvent(id, 'OutputDeleted') as EventBridgeEvent<
-    gp2.OutputEvent,
+    gp2Model.OutputEvent,
     OutputPayload
   >;
 
 const createEvent = (id: string) =>
   getOutputEvent(id, 'OutputPublished') as EventBridgeEvent<
-    gp2.OutputEvent,
+    gp2Model.OutputEvent,
     OutputPayload
   >;
 
 const updateEvent = (id: string) =>
   getOutputEvent(id, 'OutputUpdated') as EventBridgeEvent<
-    gp2.OutputEvent,
+    gp2Model.OutputEvent,
     OutputPayload
   >;

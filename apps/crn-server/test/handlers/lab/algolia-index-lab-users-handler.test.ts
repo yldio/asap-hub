@@ -1,19 +1,20 @@
 import Boom from '@hapi/boom';
-import { toPayload } from '../../helpers/algolia';
 import { indexLabUsersHandler } from '../../../src/handlers/lab/algolia-index-lab-users-handler';
 import {
   createEvent,
   deleteEvent,
-  updateEvent,
-  unpublishedEvent,
   LabEventGenerator,
+  unpublishedEvent,
+  updateEvent,
 } from '../../fixtures/labs.fixtures';
 import {
   getListUserResponse,
   getUserResponse,
 } from '../../fixtures/users.fixtures';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { toPayload } from '../../helpers/algolia';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
 const mapPayload = toPayload('user');
 

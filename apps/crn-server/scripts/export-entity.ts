@@ -1,4 +1,4 @@
-import { EntityRecord, EntityResponses } from '@asap-hub/algolia';
+import { EntityResponses } from '@asap-hub/algolia';
 import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
@@ -85,7 +85,7 @@ const getController = (entity: keyof EntityResponses) => {
 const transformRecords = <T extends EntityResponses, K extends keyof T>(
   record: T[K] & { id: string },
   type: K,
-): EntityRecord<T, K> => ({
+) => ({
   ...record,
   objectID: record.id,
   __meta: {

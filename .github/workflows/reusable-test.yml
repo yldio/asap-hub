@@ -93,7 +93,6 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   integration-squidex:
-    if: ${{ inputs.environment-name=='Branch' }}
     permissions:
       packages: read
     runs-on: ubuntu-latest
@@ -149,7 +148,6 @@ jobs:
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
 
   integration-contentful:
-    if: ${{ inputs.environment-name=='Branch' }}
     concurrency: integration-contentful
     permissions:
       packages: read

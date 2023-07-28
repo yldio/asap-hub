@@ -204,7 +204,7 @@ export const researchOutputContentQueryFragment = gql`
           title
           documentType
           type
-          publishDate
+          addedDate
         }
       }
     }

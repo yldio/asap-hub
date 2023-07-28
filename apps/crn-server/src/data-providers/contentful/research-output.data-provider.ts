@@ -242,7 +242,7 @@ const mapOutputVersions = (items: (OutputVersionItem | null)[]) =>
         isResearchOutputDocumentType(output.documentType)
           ? output.documentType
           : 'Grant Document',
-      publishDate: output?.publishDate || '',
+      addedDate: output?.addedDate || '',
     }));
 
 const mapRelatedResearch = (

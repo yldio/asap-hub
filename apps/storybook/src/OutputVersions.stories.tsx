@@ -9,21 +9,21 @@ export default {
 };
 const versions: Pick<
   ResearchOutputResponse,
-  'documentType' | 'type' | 'title' | 'id' | 'publishDate'
+  'documentType' | 'type' | 'title' | 'id' | 'addedDate'
 >[] = [
   {
     documentType: 'Article',
     type: 'Preprint',
     title: 'A title',
     id: '1',
-    publishDate: '2023-06-25T16:58:41.000Z',
+    addedDate: '2023-06-25T16:58:41.000Z',
   },
   {
     documentType: 'Article',
     type: 'Preprint',
     title: 'A title',
     id: '2',
-    publishDate: '2023-07-25T16:58:41.000Z',
+    addedDate: '2023-07-25T16:58:41.000Z',
   },
 ];
 export const Normal = () => <OutputVersions versions={versions} />;

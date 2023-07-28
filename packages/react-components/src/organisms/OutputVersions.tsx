@@ -90,7 +90,7 @@ const iconsStyles = css({
 type OutputVersionsProp = {
   versions: Pick<
     ResearchOutputResponse,
-    'documentType' | 'type' | 'title' | 'id' | 'publishDate'
+    'documentType' | 'type' | 'title' | 'id' | 'addedDate'
   >[];
 };
 
@@ -122,7 +122,7 @@ const OutputVersions: React.FC<OutputVersionsProp> = ({ versions }) => {
         </div>
         {versions
           .slice(0, showMore ? undefined : truncateFrom)
-          .map(({ id, documentType, title, type, publishDate }, index) => (
+          .map(({ id, documentType, title, type, addedDate }, index) => (
             <div key={id} css={[rowStyles]}>
               <span css={[titleStyles, rowTitleStyles]}>Ver.</span>
               <p css={paragraphStyle}>#{index + 1}</p>
@@ -149,9 +149,9 @@ const OutputVersions: React.FC<OutputVersionsProp> = ({ versions }) => {
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Date Posted</span>
               <p css={paragraphStyle}>
-                {publishDate &&
+                {addedDate &&
                   formatDateToTimezone(
-                    publishDate,
+                    addedDate,
                     'EEE, dd MMM yyyy',
                   ).toUpperCase()}
               </p>

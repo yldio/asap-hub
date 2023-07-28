@@ -13225,7 +13225,7 @@ export type ResearchOutputsContentFragment = Pick<
         Maybe<
           Pick<
             ResearchOutputs,
-            'title' | 'documentType' | 'type' | 'publishDate'
+            'title' | 'documentType' | 'type' | 'addedDate'
           > & { sys: Pick<Sys, 'id'> }
         >
       >;
@@ -13440,7 +13440,7 @@ export type FetchResearchOutputByIdQuery = {
             Maybe<
               Pick<
                 ResearchOutputs,
-                'title' | 'documentType' | 'type' | 'publishDate'
+                'title' | 'documentType' | 'type' | 'addedDate'
               > & { sys: Pick<Sys, 'id'> }
             >
           >;
@@ -13705,7 +13705,7 @@ export type FetchResearchOutputsQuery = {
                   Maybe<
                     Pick<
                       ResearchOutputs,
-                      'title' | 'documentType' | 'type' | 'publishDate'
+                      'title' | 'documentType' | 'type' | 'addedDate'
                     > & { sys: Pick<Sys, 'id'> }
                   >
                 >;
@@ -17897,7 +17897,7 @@ export const ResearchOutputsContentFragmentDoc = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'publishDate' },
+                              name: { kind: 'Name', value: 'addedDate' },
                             },
                           ],
                         },

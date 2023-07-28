@@ -25,6 +25,7 @@ const squidexResponseWithTitleOnly = {
   queryNewsAndEventsContents: [
     {
       id: 'news-1',
+      status: 'PUBLISHED',
       flatData: {
         title: 'news',
       },
@@ -36,6 +37,7 @@ const squidexResponseWithThumb = {
   queryNewsAndEventsContents: [
     {
       id: 'news-1',
+      status: 'PUBLISHED',
       flatData: {
         title: 'news',
         thumbnail: [squidexAsset],
@@ -48,6 +50,7 @@ const squidexResponseWithText = {
   queryNewsAndEventsContents: [
     {
       id: 'news-1',
+      status: 'PUBLISHED',
       flatData: {
         title: 'news',
         text: '<p>Hello world</p>',

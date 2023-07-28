@@ -8,6 +8,7 @@ export const researchTagsQuery = gql`
         id
         created
         lastModified
+        status
         flatData {
           name
           category

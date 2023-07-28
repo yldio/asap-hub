@@ -7,6 +7,7 @@ export const teamsQuery = gql`
       created
       lastModified
       version
+      status
       flatData {
         applicationNumber
         displayName
@@ -18,6 +19,9 @@ export const teamsQuery = gql`
           description
           name
           url
+        }
+        proposal {
+          id
         }
       }
     }

@@ -11,7 +11,7 @@ const props: ComponentProps<typeof InterestGroupTools> = {
 it('renders group tools header', () => {
   const { getByRole } = render(<InterestGroupTools {...props} />);
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
-    `"Group Tools"`,
+    `"Interest Group Tools"`,
   );
 });
 

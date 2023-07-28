@@ -6,6 +6,7 @@ export const eventsQuery = gql`
       total
       items {
         id
+        status
         flatData {
           googleId
           description

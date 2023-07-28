@@ -13138,7 +13138,7 @@ export type ResearchOutputsContentFragment = Pick<
           > & { sys: Pick<Sys, 'id'> })
         | ({ __typename: 'Users' } & Pick<
             Users,
-            'firstName' | 'lastName' | 'onboarded' | 'orcid'
+            'firstName' | 'lastName' | 'email' | 'onboarded' | 'orcid'
           > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
       >
     >;
@@ -13351,7 +13351,7 @@ export type FetchResearchOutputByIdQuery = {
               > & { sys: Pick<Sys, 'id'> })
             | ({ __typename: 'Users' } & Pick<
                 Users,
-                'firstName' | 'lastName' | 'onboarded' | 'orcid'
+                'firstName' | 'lastName' | 'email' | 'onboarded' | 'orcid'
               > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
           >
         >;
@@ -13600,7 +13600,7 @@ export type FetchResearchOutputsQuery = {
                     > & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & Pick<
                       Users,
-                      'firstName' | 'lastName' | 'onboarded' | 'orcid'
+                      'firstName' | 'lastName' | 'email' | 'onboarded' | 'orcid'
                     > & {
                         sys: Pick<Sys, 'id'>;
                         avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -17247,6 +17247,10 @@ export const ResearchOutputsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
                             },
                             {
                               kind: 'Field',

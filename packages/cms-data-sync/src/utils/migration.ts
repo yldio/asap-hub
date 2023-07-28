@@ -6,7 +6,7 @@ import { contentfulRateLimiter } from '../contentful-rate-limiter';
 
 export const migrateFromSquidexToContentfulFactory =
   (contentfulEnvironment: Environment, logger: typeof loggerFunc) =>
-  async <DataItem>(
+  async <DataItem extends { status?: string }>(
     contentTypeId: string,
     fetchData: () => Promise<DataItem[]>,
     parseData: (
@@ -56,7 +56,9 @@ export const migrateFromSquidexToContentfulFactory =
 
           n += 1;
           logger(`Created entry with id ${id}. (${n}/${data.length})`, 'INFO');
-          return entry;
+          if (item.status === 'PUBLISHED') {
+            return entry;
+          }
         } catch (err) {
           logger(`Error details of entry ${id}:\n${err}`, 'ERROR');
 

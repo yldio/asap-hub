@@ -1,39 +1,66 @@
 import { User } from '@asap-hub/auth';
-import { UserRole, UserResponse } from '@asap-hub/model';
+import {
+  UserRole,
+  UserResponse,
+  UserTeam,
+  WorkingGroupMembership,
+} from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
+type AssociationType = 'teams' | 'workingGroups';
+type UserInput = Omit<User, 'algoliaApiKey'> | UserResponse | null;
+
+export const isActiveAndBelongsToAssociation = (
+  user: UserTeam | WorkingGroupMembership,
+  association: AssociationType,
+  associationIds: string[],
+): boolean => {
+  const belongsToAssociation = associationIds.includes(user.id);
+  const isActive =
+    association === 'teams'
+      ? !('inactiveSinceDate' in user) || user.inactiveSinceDate === undefined
+      : 'active' in user && user.active;
+
+  return belongsToAssociation && isActive;
+};
+
+export const isProjectManagerAndActive = (
+  user: UserTeam | WorkingGroupMembership,
+  association: AssociationType,
+  associationIds: string[],
+): boolean =>
+  user.role === 'Project Manager' &&
+  isActiveAndBelongsToAssociation(user, association, associationIds);
+
 export const getUserRole = (
-  user: Omit<User, 'algoliaApiKey'> | UserResponse | null,
-  association: 'teams' | 'workingGroups',
+  user: UserInput,
+  association: AssociationType,
   associationIds: string[],
 ): UserRole => {
-  if (user === null) {
-    return 'None';
-  }
+  if (!user) return 'None';
 
-  if (user.role === 'Staff') {
-    return 'Staff';
-  }
+  if (user.role === 'Staff') return 'Staff';
 
-  const isUserProjectManager = user[association].some(
+  const isUserActiveProjectManager = user[association].some(
     (teamOrWorkingGroup) =>
-      associationIds?.includes(teamOrWorkingGroup.id) &&
-      teamOrWorkingGroup.role === 'Project Manager',
+      isProjectManagerAndActive(
+        teamOrWorkingGroup,
+        association,
+        associationIds,
+      ),
   );
 
-  if (isUserProjectManager) {
-    return 'Staff';
-  }
+  if (isUserActiveProjectManager) return 'Staff';
 
-  const isUserMember = user[association].some((teamOrWorkingGroup) =>
-    associationIds.includes(teamOrWorkingGroup.id),
+  const isUserActiveMember = user[association].some((teamOrWorkingGroup) =>
+    isActiveAndBelongsToAssociation(
+      teamOrWorkingGroup,
+      association,
+      associationIds,
+    ),
   );
 
-  if (isUserMember) {
-    return 'Member';
-  }
-
-  return 'None';
+  return isUserActiveMember ? 'Member' : 'None';
 };
 
 export const hasRequestForReviewPermission = (userRole: UserRole): boolean =>

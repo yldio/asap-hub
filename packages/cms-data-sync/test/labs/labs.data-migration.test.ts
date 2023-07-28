@@ -22,12 +22,14 @@ const getLabsSquidexResponse: () => NonNullable<
     items: [
       {
         id: 'lab-1',
+        status: 'PUBLISHED',
         flatData: {
           name: 'Lab 1',
         },
       },
       {
         id: 'lab-2',
+        status: 'PUBLISHED',
         flatData: {
           name: 'Lab 2',
         },

@@ -128,7 +128,12 @@ const renderPage = async ({
   user = {
     ...baseUser,
     workingGroups: [
-      { ...baseUser.workingGroups[0]!, id: 'wg1', role: 'Project Manager' },
+      {
+        ...baseUser.workingGroups[0]!,
+        id: 'wg1',
+        role: 'Project Manager',
+        active: true,
+      },
     ],
   },
   workingGroupId = 'wg1',

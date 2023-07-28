@@ -651,6 +651,7 @@ describe('Research Outputs Data Provider', () => {
         sys: { id: 'user-id-0' },
         firstName: 'Test',
         lastName: 'User',
+        email: 'user0@example.com',
         onboarded: true,
         orcid: '1111-2222-3333-4444',
         avatar: {
@@ -662,6 +663,7 @@ describe('Research Outputs Data Provider', () => {
         sys: { id: 'user-id-1' },
         firstName: 'Test',
         lastName: 'User',
+        email: 'user1@example.com',
         onboarded: true,
         orcid: '1111-2222-3333-4444',
         avatar: {
@@ -690,6 +692,7 @@ describe('Research Outputs Data Provider', () => {
           displayName: 'Test User',
           firstName: 'Test',
           lastName: 'User',
+          email: 'user0@example.com',
           avatarUrl: 'https://example.com/user-id-0',
         },
         {
@@ -702,6 +705,7 @@ describe('Research Outputs Data Provider', () => {
           displayName: 'Test User',
           firstName: 'Test',
           lastName: 'User',
+          email: 'user1@example.com',
           avatarUrl: 'https://example.com/user-id-1',
         },
       ];
@@ -717,6 +721,7 @@ describe('Research Outputs Data Provider', () => {
         lastName: 'User',
         onboarded: false,
         orcid: '1111-2222-3333-4444',
+        email: 'user0@example.com',
         avatar: {
           url: 'https://example.com/user-id-0',
         },
@@ -728,6 +733,7 @@ describe('Research Outputs Data Provider', () => {
         lastName: 'User',
         onboarded: true,
         orcid: '1111-2222-3333-4444',
+        email: 'user1@example.com',
         avatar: {
           url: 'https://example.com/user-id-1',
         },
@@ -759,6 +765,7 @@ describe('Research Outputs Data Provider', () => {
           displayName: 'Test User',
           firstName: 'Test',
           lastName: 'User',
+          email: 'user1@example.com',
           avatarUrl: 'https://example.com/user-id-1',
         },
       ];

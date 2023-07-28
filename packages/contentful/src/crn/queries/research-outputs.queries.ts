@@ -79,6 +79,7 @@ export const researchOutputContentQueryFragment = gql`
           }
           firstName
           lastName
+          email
           onboarded
           orcid
           avatar {

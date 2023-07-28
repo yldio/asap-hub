@@ -281,7 +281,7 @@ __metadata:
     algoliasearch: 4.19.1
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1422.0
+    aws-sdk: 2.1423.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -405,7 +405,12 @@ __metadata:
     jest-when: 3.5.2
     limiter: ^2.1.0
     prettier: 2.8.8
+    rehype-parse: 7.0.1
+    rehype-remark: 8.1.1
+    rehype-sanitize: 4.0.0
+    remark-stringify: 9.0.1
     ts-node: 10.9.1
+    unified: 9.2.2
   languageName: unknown
   linkType: soft
 
@@ -421,36 +426,6 @@ __metadata:
     "@contentful/rich-text-html-renderer": 16.1.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
-    "@tsconfig/create-react-app": 1.0.3
-    "@types/jest": 29.5.3
-    "@types/node": 18.17.1
-    "@types/react": 17.0.62
-    "@types/react-dom": 17.0.20
-    "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
-    cross-env: 7.0.3
-    emotion: 10.0.27
-    react: 17.0.2
-    react-dom: 17.0.2
-    react-scripts: 5.0.1
-    typescript: 4.9.5
-  languageName: unknown
-  linkType: soft
-
-"@asap-hub/contentful-app-contributing-cohort-memberships@workspace:packages/contentful-app-extensions/contributing-cohort-memberships":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/contentful-app-contributing-cohort-memberships@workspace:packages/contentful-app-extensions/contributing-cohort-memberships"
-  dependencies:
-    "@contentful/app-scripts": 1.10.2
-    "@contentful/app-sdk": 4.22.1
-    "@contentful/f36-components": 4.48.0
-    "@contentful/f36-tokens": 4.0.2
-    "@contentful/field-editor-reference": ^5.9.0
-    "@contentful/field-editor-shared": ^1.2.0
-    "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/jest-dom": ^5.16.5
-    "@testing-library/react": 11.2.7
-    "@testing-library/user-event": 12.8.3
     "@tsconfig/create-react-app": 1.0.3
     "@types/jest": 29.5.3
     "@types/node": 18.17.1
@@ -635,9 +610,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/contentful-app-user-membership@workspace:packages/contentful-app-extensions/user-membership":
+"@asap-hub/contentful-app-membership-reference@workspace:packages/contentful-app-extensions/membership-reference":
   version: 0.0.0-use.local
-  resolution: "@asap-hub/contentful-app-user-membership@workspace:packages/contentful-app-extensions/user-membership"
+  resolution: "@asap-hub/contentful-app-membership-reference@workspace:packages/contentful-app-extensions/membership-reference"
   dependencies:
     "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.22.1
@@ -691,9 +666,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/contentful-app-user-team-memberships@workspace:packages/contentful-app-extensions/user-team-memberships":
+"@asap-hub/contentful-app-working-group-deliverables@workspace:packages/contentful-app-extensions/working-group-deliverables":
   version: 0.0.0-use.local
-  resolution: "@asap-hub/contentful-app-user-team-memberships@workspace:packages/contentful-app-extensions/user-team-memberships"
+  resolution: "@asap-hub/contentful-app-working-group-deliverables@workspace:packages/contentful-app-extensions/working-group-deliverables"
   dependencies:
     "@contentful/app-scripts": 1.10.2
     "@contentful/app-sdk": 4.22.1
@@ -770,7 +745,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": 7.22.6
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
@@ -819,7 +794,7 @@ __metadata:
     "@sentry/cli": 1.75.0
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -887,7 +862,7 @@ __metadata:
     "@types/node": 18.17.1
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1422.0
+    aws-sdk: 2.1423.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.31.1
@@ -1078,7 +1053,7 @@ __metadata:
     "@typescript-eslint/parser": 5.62.0
     eslint: 8.23.1
     eslint-config-airbnb-base: 14.2.1
-    eslint-config-prettier: 8.8.0
+    eslint-config-prettier: 8.9.0
     eslint-config-react-app: 7.0.1
     eslint-import-resolver-typescript: 2.7.1
     eslint-plugin-flowtype: 8.0.3
@@ -1134,7 +1109,7 @@ __metadata:
     "@babel/preset-react": 7.22.5
     "@babel/runtime-corejs3": 7.22.6
     "@sentry/react": 6.19.7
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/react": 11.2.7
     "@types/history": 4.7.11
     "@types/jest": 29.5.3
@@ -1180,7 +1155,7 @@ __metadata:
     "@asap-hub/gp2-components": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": 7.22.6
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/user-event": 12.8.3
@@ -1227,7 +1202,7 @@ __metadata:
     "@emotion/babel-plugin": 11.11.0
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -1292,7 +1267,7 @@ __metadata:
     "@sentry/cli": 1.75.0
     "@sentry/react": 6.19.7
     "@sentry/tracing": 6.19.7
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -1357,7 +1332,7 @@ __metadata:
     "@types/node": 18.17.1
     "@types/react": 17.0.62
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1422.0
+    aws-sdk: 2.1423.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.31.1
@@ -1534,7 +1509,7 @@ __metadata:
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
     "@emotion/serialize": 1.1.2
-    "@testing-library/dom": 8.20.1
+    "@testing-library/dom": 9.3.1
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
@@ -10927,23 +10902,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/field-editor-shared@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@contentful/field-editor-shared@npm:1.2.0"
-  dependencies:
-    "@contentful/f36-note": ^4.2.8
-    "@contentful/f36-tokens": ^4.0.0
-    emotion: ^10.0.17
-    lodash: ^4.17.15
-    lodash-es: ^4.17.15
-  peerDependencies:
-    "@contentful/app-sdk": ^4.2.0
-    react: ">=16.8.0"
-  checksum: 94b6f8bbab76320b65f64e44f5fb52d585a77286c94203bd1bd913369adba0007d09143a49a98d0e276f21038beb9e6a7bb3cc6cff76c5461c9a9ce6e75053be
-  languageName: node
-  linkType: hard
-
-"@contentful/field-editor-shared@npm:^1.3.1":
+"@contentful/field-editor-shared@npm:^1.2.0, @contentful/field-editor-shared@npm:^1.3.1":
   version: 1.3.1
   resolution: "@contentful/field-editor-shared@npm:1.3.1"
   dependencies:
@@ -16241,9 +16200,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:8.20.1":
-  version: 8.20.1
-  resolution: "@testing-library/dom@npm:8.20.1"
+"@testing-library/dom@npm:9.3.1":
+  version: 9.3.1
+  resolution: "@testing-library/dom@npm:9.3.1"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.12.5
@@ -16253,7 +16212,7 @@ __metadata:
     dom-accessibility-api: ^0.5.9
     lz-string: ^1.5.0
     pretty-format: ^27.0.2
-  checksum: 06fc8dc67849aadb726cbbad0e7546afdf8923bd39acb64c576d706249bd7d0d05f08e08a31913fb621162e3b9c2bd0dce15964437f030f9fa4476326fdd3007
+  checksum: 8ee3136451644e39990edea93709c38cf1e8ce5306f3c66273ca00935963faa51ca74e8d92b02eb442ccb842cfa28ca62833e393e075eb269cf9bef6f5600663
   languageName: node
   linkType: hard
 
@@ -20490,9 +20449,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1422.0":
-  version: 2.1422.0
-  resolution: "aws-sdk@npm:2.1422.0"
+"aws-sdk@npm:2.1423.0":
+  version: 2.1423.0
+  resolution: "aws-sdk@npm:2.1423.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -20504,7 +20463,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.5.0
-  checksum: 213427ad1741ed592290f907c8010eee855c6d562d050017866c4bc714895925eb64b185094ae0642f6f00725a2efa8f75cdd97b1e574e689e98a8c6287cb213
+  checksum: 5779ec967b3328ddd8032ced037cda6e102ee52bd8181ac2aff43b25c245e3591dd212d6e3a27d9664391f36940133525dc962c14375252237178b0825d1258e
   languageName: node
   linkType: hard
 
@@ -26620,14 +26579,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:8.8.0":
-  version: 8.8.0
-  resolution: "eslint-config-prettier@npm:8.8.0"
+"eslint-config-prettier@npm:8.9.0":
+  version: 8.9.0
+  resolution: "eslint-config-prettier@npm:8.9.0"
   peerDependencies:
     eslint: ">=7.0.0"
   bin:
     eslint-config-prettier: bin/cli.js
-  checksum: 1e94c3882c4d5e41e1dcfa2c368dbccbfe3134f6ac7d40101644d3bfbe3eb2f2ffac757f3145910b5eacf20c0e85e02b91293d3126d770cbf3dc390b3564681c
+  checksum: a675d0dabd76b700ef2d062b5ec6a634e105a8e8c070f95281fd2ccb614527fac60b4c758132058c50f0521fd19313f1f5be45ce9ebf081f2e5f77ae6eb7d8db
   languageName: node
   linkType: hard
 
@@ -34994,13 +34953,6 @@ __metadata:
   dependencies:
     p-locate: "npm:^5.0.0"
   checksum: 72eb661788a0368c099a184c59d2fee760b3831c9c1c33955e8a19ae4a21b4116e53fa736dc086cdeb9fce9f7cc508f2f92d2d3aae516f133e16a2bb59a39f5a
-  languageName: node
-  linkType: hard
-
-"lodash-es@npm:^4.17.15":
-  version: 4.17.21
-  resolution: "lodash-es@npm:4.17.21"
-  checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
   languageName: node
   linkType: hard
 

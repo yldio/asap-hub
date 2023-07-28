@@ -205,6 +205,7 @@ export const researchOutputContentQueryFragment = gql`
           documentType
           type
           addedDate
+          link
         }
       }
     }

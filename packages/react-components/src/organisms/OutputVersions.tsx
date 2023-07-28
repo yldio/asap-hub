@@ -90,7 +90,7 @@ const iconsStyles = css({
 type OutputVersionsProp = {
   versions: Pick<
     ResearchOutputResponse,
-    'documentType' | 'type' | 'title' | 'id' | 'addedDate'
+    'documentType' | 'type' | 'title' | 'id' | 'addedDate' | 'link'
   >[];
 };
 
@@ -122,7 +122,7 @@ const OutputVersions: React.FC<OutputVersionsProp> = ({ versions }) => {
         </div>
         {versions
           .slice(0, showMore ? undefined : truncateFrom)
-          .map(({ id, documentType, title, type, addedDate }, index) => (
+          .map(({ id, documentType, title, type, addedDate, link }, index) => (
             <div key={id} css={[rowStyles]}>
               <span css={[titleStyles, rowTitleStyles]}>Ver.</span>
               <p css={paragraphStyle}>#{index + 1}</p>
@@ -157,14 +157,7 @@ const OutputVersions: React.FC<OutputVersionsProp> = ({ versions }) => {
               </p>
               <span css={[titleStyles, rowTitleStyles]}>Link</span>
               <p css={paragraphStyle}>
-                <Link
-                  ellipsed
-                  href={
-                    sharedResearch({}).researchOutput({
-                      researchOutputId: id,
-                    }).$
-                  }
-                >
+                <Link ellipsed href={link}>
                   Output <span css={iconsStyles}>{externalLinkIcon}</span>
                 </Link>
               </p>

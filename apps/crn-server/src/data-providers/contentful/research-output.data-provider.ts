@@ -236,6 +236,7 @@ const mapOutputVersions = (items: (OutputVersionItem | null)[]) =>
     .map((output: OutputVersionItem) => ({
       id: output?.sys.id || '',
       title: output?.title || '',
+      link: output?.link || '',
       type: researchOutputMapType(output?.type) || undefined,
       documentType:
         output?.documentType &&

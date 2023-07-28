@@ -9,7 +9,7 @@ export default {
 };
 const versions: Pick<
   ResearchOutputResponse,
-  'documentType' | 'type' | 'title' | 'id' | 'addedDate'
+  'documentType' | 'type' | 'title' | 'id' | 'addedDate' | 'link'
 >[] = [
   {
     documentType: 'Article',
@@ -17,6 +17,7 @@ const versions: Pick<
     title: 'A title',
     id: '1',
     addedDate: '2023-06-25T16:58:41.000Z',
+    link: 'https://foo.com',
   },
   {
     documentType: 'Article',
@@ -24,6 +25,7 @@ const versions: Pick<
     title: 'A title',
     id: '2',
     addedDate: '2023-07-25T16:58:41.000Z',
+    link: 'https://foo.com',
   },
 ];
 export const Normal = () => <OutputVersions versions={versions} />;

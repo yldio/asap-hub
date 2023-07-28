@@ -5,6 +5,7 @@ import {
   ResearchOutputResponse,
   UserResponse,
 } from '@asap-hub/model';
+
 export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
 export const USER_ENTITY_TYPE = 'user';
 export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';

@@ -15,7 +15,10 @@ export const MAX_ALGOLIA_RESULTS = 10000;
 export const MAX_SQUIDEX_RESULTS = 200;
 
 type ResearchOutputCSV = Record<
-  keyof Omit<ResearchOutputResponse, 'team' | 'descriptionMD' | 'usageNotesMD'>,
+  keyof Omit<
+    ResearchOutputResponse,
+    'team' | 'descriptionMD' | 'usageNotesMD' | 'versions'
+  >,
   CSVValue
 >;
 

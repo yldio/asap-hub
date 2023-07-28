@@ -60,10 +60,7 @@ const apiUrl = `https://${apiHostname}`;
 const currentRevision = process.env.CI_COMMIT_SHA;
 const nodeEnv = 'production';
 const sesRegion = process.env.GP2_SES_REGION!;
-const envRef =
-  ['production', 'dev'].includes(stage)
-    ? envAlias
-    : `CI-${stage}`;
+const envRef = ['production', 'dev'].includes(stage) ? envAlias : `CI-${stage}`;
 
 const algoliaIndex = process.env.GP2_ALGOLIA_INDEX
   ? '${env:GP2_ALGOLIA_INDEX}'
@@ -315,8 +312,7 @@ const serverlessConfig: AWS = {
       },
     },
     algoliaIndexOutput: {
-      handler:
-        './src/handlers/output/algolia-index-output-handler.handler',
+      handler: './src/handlers/output/algolia-index-output-handler.handler',
       events: [
         {
           eventBridge: {
@@ -909,4 +905,3 @@ const serverlessConfig: AWS = {
 };
 
 module.exports = serverlessConfig;
-

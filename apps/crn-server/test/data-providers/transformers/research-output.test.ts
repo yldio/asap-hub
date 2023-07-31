@@ -21,7 +21,14 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Report',
         teams: [{ id: 'team-id-1', flatData: { displayName: 'Team B' } }],
-        workingGroups: [],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            flatData: {
+              title: 'Working Group B',
+            },
+          },
+        ],
       },
     };
 
@@ -34,7 +41,12 @@ describe('parseGraphQLResearchOutput', () => {
         documentType: 'Report',
         teams: [{ id: 'team-id-1', displayName: 'Team B' }],
         isOwnRelatedResearchLink: true,
-        workingGroups: [],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
       },
       {
         id: 'related-referencing-research-id',
@@ -43,7 +55,12 @@ describe('parseGraphQLResearchOutput', () => {
         documentType: 'Bioinformatics',
         teams: [{ displayName: 'Team B', id: 'team-id-1' }],
         isOwnRelatedResearchLink: false,
-        workingGroups: [],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
       },
     ]);
 
@@ -55,7 +72,12 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ displayName: 'Team B', id: 'team-id-1' }],
-        workingGroups: [],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
         isOwnRelatedResearchLink: false,
       },
     ]);
@@ -100,7 +122,12 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Grant Document',
         teams: [],
-        workingGroups: [],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
         isOwnRelatedResearchLink: true,
       },
     ]);

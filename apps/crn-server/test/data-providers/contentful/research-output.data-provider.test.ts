@@ -356,14 +356,16 @@ describe('Research Outputs Data Provider', () => {
 
     test('Should default missing working group reference to an empty array of teams', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
-      researchOutputs.workingGroup = null;
+      researchOutputs.teamsCollection = {
+        items: [],
+      };
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchOutputs,
       });
 
       const result = await researchOutputDataProvider.fetchById('1');
 
-      expect(result!.workingGroups).toEqual([]);
+      expect(result!.teams).toEqual([]);
     });
 
     test('Should default missing working group reference to an empty array', async () => {

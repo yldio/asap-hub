@@ -11,6 +11,7 @@ import {
   ResearchOutputDraftReminder,
   ResearchOutputInReviewReminder,
   ResearchOutputPublishedReminder,
+  ResearchOutputSwitchToDraftReminder,
   SharePresentationReminder,
   UploadPresentationReminder,
   VideoEventReminder,
@@ -305,6 +306,9 @@ export const getSquidexRemindersGraphqlResponse =
     inReviewResearchOutputs: [
       getSquidexReminderReseachOutputsInReviewTeamContents(),
     ],
+    switchToDraftResearchOutputs: [
+      getSquidexReminderReseachOutputsSwitchToDraftTeamContents(),
+    ],
   });
 
 export const getSquidexReminderReseachOutputsContents = (): NonNullable<
@@ -375,6 +379,7 @@ export const getSquidexReminderReseachOutputsDraftTeamContents =
           },
         ],
         workingGroups: [],
+        statusChangedBy: [],
       },
     };
   };
@@ -444,6 +449,7 @@ export const getSquidexReminderReseachOutputsDraftWorkingGroupContents =
             },
           },
         ],
+        statusChangedBy: [],
       },
     };
   };
@@ -484,6 +490,40 @@ export const getSquidexReminderReseachOutputsInReviewWorkingGroupContents =
             flatData: { firstName: 'Tom', lastName: 'Hardy' },
           },
         ],
+      },
+    };
+  };
+
+export const getSquidexReminderReseachOutputsSwitchToDraftTeamContents =
+  (): NonNullable<
+    FetchReminderDataQuery['switchToDraftResearchOutputs']
+  >[number] => {
+    const researchOutput = getSquidexGraphqlResearchOutput();
+
+    return {
+      id: researchOutput.id,
+      created: researchOutput.created,
+      status: 'Draft',
+      flatData: {
+        statusChangedAt: '2021-05-21T13:18:31Z',
+        statusChangedBy: [
+          {
+            id: 'user-id-1',
+            flatData: { firstName: 'Tom', lastName: 'Hardy' },
+          },
+        ],
+        documentType: researchOutput.flatData.documentType,
+        title: researchOutput.flatData.title,
+        teams: [
+          {
+            id: researchOutput.flatData.teams![0]!.id,
+            flatData: {
+              displayName:
+                researchOutput.flatData.teams![0]!.flatData.displayName,
+            },
+          },
+        ],
+        workingGroups: [],
       },
     };
   };
@@ -697,3 +737,81 @@ export const getTeamProjectManagerResponse =
       ],
     },
   });
+
+export const getResearchOutputSwitchToDraftTeamReminder =
+  (): ResearchOutputSwitchToDraftReminder => {
+    const researchOutputDataObject = getResearchOutputDataObject();
+    return {
+      id: 'research-output-switch-to-draft-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      entity: 'Research Output',
+      type: 'Switch To Draft',
+      data: {
+        researchOutputId: researchOutputDataObject.id,
+        title: researchOutputDataObject.title,
+        statusChangedAt: '2021-05-21T13:18:31Z',
+        associationName: researchOutputDataObject.teams[0]?.displayName || '',
+        associationType: 'team',
+        documentType: researchOutputDataObject.documentType,
+        statusChangedBy: 'Tom Hardy',
+      },
+    };
+  };
+export const getResearchOutputSwitchToDraftWorkingGroupReminder =
+  (): ResearchOutputSwitchToDraftReminder => {
+    const researchOutputDataObject = getResearchOutputDataObject();
+    return {
+      id: 'research-output-switch-to-draft-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      entity: 'Research Output',
+      type: 'Switch To Draft',
+      data: {
+        researchOutputId: researchOutputDataObject.id,
+        title: researchOutputDataObject.title,
+        statusChangedAt: '2021-05-21T13:18:31Z',
+        associationName: 'Working Group 1',
+        associationType: 'working group',
+        documentType: researchOutputDataObject.documentType,
+        statusChangedBy: 'Tom Hardy',
+      },
+    };
+  };
+
+export const getSquidexReminderReseachOutputsSwitchToDraftWorkingGroupContents =
+  (): NonNullable<
+    FetchReminderDataQuery['switchToDraftResearchOutputs']
+  >[number] => {
+    const researchOutput = getSquidexGraphqlResearchOutput();
+
+    return {
+      id: researchOutput.id,
+      created: researchOutput.created,
+      status: 'Draft',
+      flatData: {
+        documentType: researchOutput.flatData.documentType,
+        title: researchOutput.flatData.title,
+        teams: [
+          {
+            id: researchOutput.flatData.teams![0]!.id,
+            flatData: {
+              displayName:
+                researchOutput.flatData.teams![0]!.flatData.displayName,
+            },
+          },
+        ],
+        workingGroups: [
+          {
+            id: 'wg-id-1',
+            flatData: {
+              title: 'Working Group 1',
+            },
+          },
+        ],
+        statusChangedAt: '2021-05-21T13:18:31Z',
+        statusChangedBy: [
+          {
+            id: 'user-id-1',
+            flatData: { firstName: 'Tom', lastName: 'Hardy' },
+          },
+        ],
+      },
+    };
+  };

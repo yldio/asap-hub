@@ -11,7 +11,6 @@ import nock from 'nock';
 import type {
   AlgoliaSearchClient,
   ClientSearchResponse,
-  EntityResponses,
 } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
@@ -32,7 +31,7 @@ afterEach(() => {
   nock.cleanAll();
 });
 type Search = () => Promise<
-  ClientSearchResponse<EntityResponses, 'user' | 'external-author'>
+  ClientSearchResponse<'crn', 'user' | 'external-author'>
 >;
 
 describe('getUsers', () => {
@@ -40,7 +39,7 @@ describe('getUsers', () => {
 
   const algoliaSearchClient = {
     search,
-  } as unknown as AlgoliaSearchClient;
+  } as unknown as AlgoliaSearchClient<'crn'>;
 
   const defaultOptions: GetListOptions = {
     searchQuery: '',
@@ -177,7 +176,7 @@ describe('getUsersAndExternalAuthors', () => {
 
   const algoliaSearchClient = {
     search,
-  } as unknown as AlgoliaSearchClient;
+  } as unknown as AlgoliaSearchClient<'crn'>;
 
   const defaultOptions: GetListOptions = {
     searchQuery: '',

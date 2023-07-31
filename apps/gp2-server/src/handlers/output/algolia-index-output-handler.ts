@@ -20,7 +20,7 @@ import { OutputPayload } from '../event-bus';
 export const indexOutputHandler =
   (
     outputController: OutputController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'gp2'>,
     log: Logger,
   ): EventBridgeHandler<gp2Model.OutputEvent, OutputPayload> =>
   async (event) => {

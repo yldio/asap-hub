@@ -1,8 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  ClientSearchResponse,
-  EntityResponses,
-} from '@asap-hub/algolia';
+import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
 import {
   createEventResponse,
   createListEventResponse,
@@ -51,12 +47,12 @@ describe('getEvent', () => {
 });
 
 describe('getEvents', () => {
-  type Search = () => Promise<ClientSearchResponse<EntityResponses, 'event'>>;
+  type Search = () => Promise<ClientSearchResponse<'crn', 'event'>>;
   const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {
     search,
-  } as unknown as AlgoliaSearchClient;
+  } as unknown as AlgoliaSearchClient<'crn'>;
 
   beforeEach(() => {
     search.mockReset();

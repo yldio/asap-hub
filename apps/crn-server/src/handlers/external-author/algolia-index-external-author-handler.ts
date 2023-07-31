@@ -15,7 +15,7 @@ import { ExternalAuthorPayload } from '../event-bus';
 export const indexExternalAuthorHandler =
   (
     externalAuthorController: ExternalAuthorController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): EventBridgeHandler<ExternalAuthorEvent, ExternalAuthorPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

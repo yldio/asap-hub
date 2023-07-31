@@ -16,7 +16,7 @@ import { EventPayload } from '../event-bus';
 export const indexEventHandler =
   (
     eventController: EventController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): EventBridgeHandler<EventEvent, EventPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

@@ -1,8 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  EntityResponses,
-  getEventFilters,
-} from '@asap-hub/algolia';
+import { AlgoliaSearchClient, getEventFilters } from '@asap-hub/algolia';
 import {
   createFeatureFlagHeaders,
   createSentryHeaders,
@@ -13,7 +9,7 @@ import { API_BASE_URL } from '../config';
 import createListApiUrl from '../CreateListApiUrl';
 
 export const getEvents = async (
-  algoliaClient: AlgoliaSearchClient,
+  algoliaClient: AlgoliaSearchClient<'crn'>,
   {
     searchQuery,
     currentPage,
@@ -25,7 +21,7 @@ export const getEvents = async (
 ): Promise<ListEventResponse> => {
   const filters = getEventFilters({ before, after }, constraint);
 
-  const result = await algoliaClient.search<EntityResponses, 'event'>(
+  const result = await algoliaClient.search(
     ['event'],
     searchQuery,
     {

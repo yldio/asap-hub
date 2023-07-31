@@ -26,7 +26,7 @@ import { TeamPayload } from '../event-bus';
 export const indexResearchOutputByTeamHandler =
   (
     researchOutputController: ResearchOutputController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): EventBridgeHandler<TeamEvent, TeamPayload> =>
   async (event) => {
     const fetchFunction = ({

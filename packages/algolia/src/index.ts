@@ -26,13 +26,14 @@ type AlgoliaSearchClientFactoryParams =
     clickAnalytics?: ConstructorParameters<typeof AlgoliaSearchClient>['3'];
   };
 
-export const algoliaSearchClientFactory = ({
+type Apps = 'crn' | 'gp2';
+export const algoliaSearchClientFactory = <App extends Apps>({
   algoliaIndex,
   algoliaApiKey,
   algoliaAppId,
   userToken,
   clickAnalytics,
-}: AlgoliaSearchClientFactoryParams): AlgoliaSearchClient => {
+}: AlgoliaSearchClientFactoryParams): AlgoliaSearchClient<App> => {
   const algoliaSearchClient = algoliasearch(algoliaAppId, algoliaApiKey);
 
   const index = algoliaSearchClient.initIndex(algoliaIndex);

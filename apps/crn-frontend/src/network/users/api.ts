@@ -1,4 +1,4 @@
-import type { AlgoliaSearchClient, EntityResponses } from '@asap-hub/algolia';
+import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   createFeatureFlagHeaders,
   createSentryHeaders,
@@ -41,7 +41,7 @@ export const getUser = async (
 };
 
 export const getUsers = async (
-  algoliaClient: AlgoliaSearchClient,
+  algoliaClient: AlgoliaSearchClient<'crn'>,
   { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): Promise<ListUserResponse> => {
   const isTagFilter = (filter: string) =>
@@ -63,15 +63,11 @@ export const getUsers = async (
       ? `(${tagFilters}) AND (${roleFilters})`
       : tagFilters || roleFilters;
 
-  const result = await algoliaClient.search<EntityResponses, 'user'>(
-    ['user'],
-    searchQuery,
-    {
-      filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
-      page: currentPage ?? undefined,
-      hitsPerPage: pageSize ?? undefined,
-    },
-  );
+  const result = await algoliaClient.search(['user'], searchQuery, {
+    filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
+    page: currentPage ?? undefined,
+    hitsPerPage: pageSize ?? undefined,
+  });
 
   return {
     items: result.hits,
@@ -82,18 +78,19 @@ export const getUsers = async (
 };
 
 export const getUsersAndExternalAuthors = async (
-  algoliaClient: AlgoliaSearchClient,
+  algoliaClient: AlgoliaSearchClient<'crn'>,
   { searchQuery, currentPage, pageSize }: GetListOptions,
 ): Promise<ListResponse<UserResponse | ExternalAuthorResponse>> => {
-  const result = await algoliaClient.search<
-    EntityResponses,
-    'user' | 'external-author'
-  >(['user', 'external-author'], searchQuery, {
-    filters: undefined,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-    restrictSearchableAttributes: ['displayName'],
-  });
+  const result = await algoliaClient.search(
+    ['user', 'external-author'],
+    searchQuery,
+    {
+      filters: undefined,
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+      restrictSearchableAttributes: ['displayName'],
+    },
+  );
 
   return {
     items: result.hits,

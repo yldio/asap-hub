@@ -12,7 +12,7 @@ import { toPayload } from '../../helpers/algolia';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
 
-const mapPayload = toPayload('event');
+const mapPayload = toPayload<'crn'>('event');
 
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 const possibleEvents: [string, TeamEventGenerator][] = [

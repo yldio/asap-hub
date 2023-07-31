@@ -3,37 +3,36 @@ import { SearchIndex } from 'algoliasearch';
 import { gp2 } from '.';
 import { EntityResponses, Payload } from './crn/types';
 
+type Apps = 'crn' | 'gp2';
+type SavePayload = Payload | gp2.Payload;
 type DistributeToEntityRecords<
-  Responses extends EntityResponses | gp2.EntityResponses,
-  Key extends keyof Responses,
-> = Responses[Key] & {
+  Responses extends EntityResponses[Apps],
+  ResponsesKey extends keyof Responses,
+> = Responses[ResponsesKey] & {
   objectID: string;
   __meta: {
-    type: Key;
+    type: ResponsesKey;
   };
 };
 export type ClientSearchResponse<
-  Responses extends EntityResponses | gp2.EntityResponses,
-  Key extends keyof Responses,
-> = SearchResponse<DistributeToEntityRecords<Responses, Key>>;
-
-type SavePayload = Payload | gp2.Payload;
+  App extends Apps,
+  ResponsesKey extends keyof EntityResponses[App],
+> = SearchResponse<
+  DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
+>;
 export interface SearchClient {
-  search: <
-    Responses extends EntityResponses | gp2.EntityResponses,
-    Key extends keyof Responses,
-  >(
-    entityTypes: Key[],
+  search: <ResponsesKey extends keyof EntityResponses[Apps]>(
+    entityTypes: ResponsesKey[],
     query: string,
     requestOptions?: SearchOptions,
     descendingEvents?: boolean,
-  ) => Promise<ClientSearchResponse<Responses, Key>>;
+  ) => Promise<ClientSearchResponse<Apps, keyof EntityResponses[Apps]>>;
   save: (payload: SavePayload) => Promise<void>;
   saveMany: (payload: SavePayload[]) => Promise<void>;
   remove: (id: string) => Promise<void>;
 }
 
-export class AlgoliaSearchClient implements SearchClient {
+export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
   constructor(
     private index: SearchIndex,
     private reverseEventsIndex: SearchIndex,
@@ -59,15 +58,12 @@ export class AlgoliaSearchClient implements SearchClient {
     await this.index.deleteObject(id);
   }
 
-  async search<
-    Responses extends EntityResponses | gp2.EntityResponses,
-    Key extends keyof Responses,
-  >(
-    entityTypes: Key[],
+  async search<ResponsesKey extends keyof EntityResponses[App]>(
+    entityTypes: ResponsesKey[],
     query: string,
     requestOptions?: SearchOptions,
     descendingEvents?: boolean,
-  ): Promise<ClientSearchResponse<Responses, Key>> {
+  ): Promise<ClientSearchResponse<App, ResponsesKey>> {
     const entityTypesFilter = entityTypes
       .map((entityType) => `__meta.type:"${String(entityType)}"`)
       .join(' OR ');
@@ -82,7 +78,7 @@ export class AlgoliaSearchClient implements SearchClient {
     };
     if (descendingEvents) {
       const result = await this.reverseEventsIndex.search<
-        DistributeToEntityRecords<Responses, Key>
+        DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
       >(query, options);
       return {
         ...result,
@@ -90,7 +86,7 @@ export class AlgoliaSearchClient implements SearchClient {
       };
     }
     const result = await this.index.search<
-      DistributeToEntityRecords<Responses, Key>
+      DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
     >(query, options);
     return {
       ...result,

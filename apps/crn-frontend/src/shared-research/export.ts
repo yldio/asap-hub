@@ -97,19 +97,17 @@ export const researchOutputToCSV = (
 });
 
 export const algoliaResultsToStream = async <
-  EntityType extends keyof EntityResponses,
+  EntityType extends keyof EntityResponses['crn'],
 >(
   csvStream: Stringifier,
   getResults: ({
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<ClientSearchResponse<EntityResponses, EntityType>>
+    Promise<ClientSearchResponse<'crn', EntityType>>
   >,
   transform: (
-    result: Awaited<
-      ClientSearchResponse<EntityResponses, EntityType>
-    >['hits'][number],
+    result: ClientSearchResponse<'crn', EntityType>['hits'][number],
   ) => Record<string, unknown>,
 ) => {
   let morePages = true;

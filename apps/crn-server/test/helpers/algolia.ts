@@ -1,6 +1,9 @@
 import { EntityResponses, Payload } from '@asap-hub/algolia';
 
+type Apps = 'crn' | 'gp2';
 export const toPayload =
-  (type: keyof EntityResponses): ((data: Payload['data']) => Payload) =>
+  <App extends Apps>(
+    type: keyof EntityResponses[App],
+  ): ((data: Payload['data']) => Payload) =>
   (data: Payload['data']): Payload =>
     ({ data, type } as Payload);

@@ -21,7 +21,7 @@ import { TeamPayload } from '../event-bus';
 export const indexTeamUsersHandler =
   (
     userController: UserController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

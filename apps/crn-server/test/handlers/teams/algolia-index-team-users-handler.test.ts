@@ -17,7 +17,7 @@ import {
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 
-const mapPayload = toPayload('user');
+const mapPayload = toPayload<'crn'>('user');
 
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 

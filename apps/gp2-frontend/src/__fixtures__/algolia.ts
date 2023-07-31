@@ -1,19 +1,14 @@
-import { ClientSearchResponse, gp2 as gp2Algolia } from '@asap-hub/algolia';
+import { ClientSearchResponse, EntityResponses } from '@asap-hub/algolia';
 
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 
-type SearchResponse = ClientSearchResponse<
-  gp2Algolia.EntityResponses,
-  'output'
->;
+type SearchResponse = ClientSearchResponse<'gp2', 'output'>;
 export const createAlgoliaResponse = <
-  EntityType extends keyof gp2Algolia.EntityResponses,
+  EntityType extends keyof EntityResponses['gp2'],
 >(
-  hits: ClientSearchResponse<gp2Algolia.EntityResponses, EntityType>['hits'],
-  overrides: Partial<
-    ClientSearchResponse<gp2Algolia.EntityResponses, EntityType>
-  > = {},
-): ClientSearchResponse<gp2Algolia.EntityResponses, EntityType> => ({
+  hits: ClientSearchResponse<'gp2', EntityType>['hits'],
+  overrides: Partial<ClientSearchResponse<'gp2', EntityType>> = {},
+): ClientSearchResponse<'gp2', EntityType> => ({
   nbHits: hits.length,
   page: 0,
   nbPages: 1,
@@ -43,7 +38,7 @@ export const createOutputListAlgoliaResponse = (
   items: number,
   responseOverride?: Partial<SearchResponse>,
 ): SearchResponse =>
-  createAlgoliaResponse(
+  createAlgoliaResponse<'output'>(
     Array.from({ length: items }, (_, itemIndex) =>
       createOutputAlgoliaRecord(itemIndex),
     ),

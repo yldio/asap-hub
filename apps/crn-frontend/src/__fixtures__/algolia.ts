@@ -5,10 +5,12 @@ import {
 } from '@asap-hub/algolia';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
-export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
-  hits: ClientSearchResponse<EntityResponses, EntityType>['hits'],
-  overrides: Partial<ClientSearchResponse<EntityResponses, EntityType>> = {},
-): ClientSearchResponse<EntityResponses, EntityType> => ({
+export const createAlgoliaResponse = <
+  EntityType extends keyof EntityResponses['crn'],
+>(
+  hits: ClientSearchResponse<'crn', EntityType>['hits'],
+  overrides: Partial<ClientSearchResponse<'crn', EntityType>> = {},
+): ClientSearchResponse<'crn', EntityType> => ({
   nbHits: hits.length,
   page: 0,
   nbPages: 1,
@@ -22,7 +24,7 @@ export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   ...overrides,
 });
 
-type SearchResponse = ClientSearchResponse<EntityResponses, 'research-output'>;
+type SearchResponse = ClientSearchResponse<'crn', 'research-output'>;
 export const createResearchOutputAlgoliaRecord = (
   itemIndex = 0,
 ): SearchResponse['hits'][number] => {

@@ -23,7 +23,7 @@ import { InterestGroupPayload } from '../event-bus';
 export const indexGroupEventsHandler =
   (
     eventController: EventController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): ((
     event: EventBridgeEvent<GroupEvent, InterestGroupPayload>,
   ) => Promise<void>) =>

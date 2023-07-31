@@ -17,7 +17,7 @@ import { ResearchOutputPayload } from '../event-bus';
 export const indexResearchOutputHandler =
   (
     researchOutputController: ResearchOutputController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): EventBridgeHandler<ResearchOutputEvent, ResearchOutputPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

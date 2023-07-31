@@ -1,4 +1,4 @@
-import { ClientSearchResponse, EntityResponses } from '@asap-hub/algolia';
+import { ClientSearchResponse } from '@asap-hub/algolia';
 import {
   createListResearchOutputResponse,
   createResearchOutputResponse,
@@ -11,7 +11,7 @@ import {
 
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 
-type SearchResponse = ClientSearchResponse<EntityResponses, 'research-output'>;
+type SearchResponse = ClientSearchResponse<'crn', 'research-output'>;
 
 export const getResearchOutput = jest.fn(
   async (id: string): Promise<ResearchOutputResponse> => ({

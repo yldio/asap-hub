@@ -21,7 +21,7 @@ import { LabPayload } from '../event-bus';
 export const indexLabUsersHandler =
   (
     userController: UserController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): ((event: EventBridgeEvent<LabEvent, LabPayload>) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

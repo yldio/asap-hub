@@ -13,6 +13,7 @@ type DistributeToEntityRecords<
   };
 };
 
+type SavePayload = Payload | gp2.Payload;
 export interface SearchClient {
   search: <
     Responses extends EntityResponses | gp2.EntityResponses,
@@ -46,21 +47,16 @@ export class AlgoliaSearchClient implements SearchClient {
     private clickAnalytics?: SearchOptions['clickAnalytics'],
   ) {} // eslint-disable-line no-empty-function
 
-  async save<SavePayload extends Payload | gp2.Payload>({
-    data,
-    type,
-  }: SavePayload) {
+  async save({ data, type }: SavePayload) {
     await this.index.saveObject(
-      AlgoliaSearchClient.getAlgoliaObject<SavePayload>(data, type),
+      AlgoliaSearchClient.getAlgoliaObject(data, type),
     );
   }
 
-  async saveMany<SavePayload extends Payload | gp2.Payload>(
-    payload: SavePayload[],
-  ) {
+  async saveMany(payload: SavePayload[]) {
     await this.index.saveObjects(
       payload.map(({ data, type }) =>
-        AlgoliaSearchClient.getAlgoliaObject<SavePayload>(data, type),
+        AlgoliaSearchClient.getAlgoliaObject(data, type),
       ),
     );
   }
@@ -110,11 +106,9 @@ export class AlgoliaSearchClient implements SearchClient {
     };
   }
 
-  private static getAlgoliaObject<
-    GetPayload extends Payload | gp2.Payload = Payload,
-  >(
-    body: GetPayload['data'],
-    type: GetPayload['type'],
+  private static getAlgoliaObject(
+    body: SavePayload['data'],
+    type: SavePayload['type'],
   ): Record<string, unknown> {
     return {
       ...body,

@@ -200,7 +200,7 @@ export default class ResearchOutputController {
       updatedBy: normalisedResearchOutputUpdateData.updatedBy,
       statusChangedById: normalisedResearchOutputUpdateData.statusChangedById,
       statusChangedAt: normalisedResearchOutputUpdateData.hasStatusChanged
-        ? new Date(Date.now()).toISOString()
+        ? new Date().toISOString()
         : currentResearchOutput.statusChangedAt,
       usageNotes: normalisedResearchOutputUpdateData.usageNotes,
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,

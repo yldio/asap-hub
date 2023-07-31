@@ -12954,7 +12954,12 @@ export type FetchRemindersQuery = {
       Maybe<
         Pick<
           ResearchOutputs,
-          'addedDate' | 'createdDate' | 'documentType' | 'title' | 'isInReview'
+          | 'addedDate'
+          | 'createdDate'
+          | 'documentType'
+          | 'title'
+          | 'statusChangedAt'
+          | 'isInReview'
         > & {
           sys: Pick<Sys, 'id' | 'publishedAt'>;
           teamsCollection?: Maybe<{
@@ -22064,6 +22069,10 @@ export const FetchRemindersDocument = {
                             },
                           ],
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusChangedAt' },
                       },
                       {
                         kind: 'Field',

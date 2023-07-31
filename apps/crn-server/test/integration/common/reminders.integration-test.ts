@@ -614,6 +614,219 @@ describe('Reminders', () => {
         );
       });
     });
+
+    describe('Switch to Draft Reminder', () => {
+      test('Should see the switch to draft reminder when the user is associated with the team that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            statusChangedById: loggedInUser.id,
+            hasStatusChanged: true,
+            isInReview: false,
+          })
+          .expect(200);
+
+        await expectReminderWithId(
+          `research-output-switch-to-draft-${draftOutputId}`,
+        );
+      });
+
+      test('Should see the switch to draft reminder when the user is associated with the working group that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            statusChangedById: loggedInUser.id,
+            hasStatusChanged: true,
+            isInReview: false,
+          })
+          .expect(200);
+
+        await expectReminderWithId(
+          `research-output-switch-to-draft-${draftOutputId}`,
+        );
+      });
+
+      test('Should see the switch to draft reminder when the user is not associated with the team/working group that owns it but it is a Staff', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            statusChangedById: loggedInUser.id,
+            hasStatusChanged: true,
+            isInReview: false,
+          })
+          .expect(200);
+
+        const appWithNonMemberStaffLoggedIn = AppHelper(
+          () => nonMemberStaffLoggedInUser,
+        );
+        await expectReminderWithId(
+          `research-output-switch-to-draft-${draftOutputId}`,
+          appWithNonMemberStaffLoggedIn,
+        );
+      });
+
+      test('Should not see the switch to draft reminder when the user is not associated with the team that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            statusChangedById: loggedInUser.id,
+            hasStatusChanged: true,
+            isInReview: false,
+          })
+          .expect(200);
+
+        const appWithNonMemberLoggedIn = AppHelper(() => nonMemberLoggedInUser);
+        await expectNotToContainReminderWithId(
+          `research-output-switch-to-draft-${draftOutputId}`,
+          appWithNonMemberLoggedIn,
+        );
+      });
+
+      test('Should not see the switch to draft reminder when the user is not associated with the working group that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            statusChangedById: loggedInUser.id,
+            hasStatusChanged: true,
+            isInReview: false,
+          })
+          .expect(200);
+
+        const appWithNonMemberLoggedIn = AppHelper(() => nonMemberLoggedInUser);
+        await expectNotToContainReminderWithId(
+          `research-output-switch-to-draft-${draftOutputId}`,
+          appWithNonMemberLoggedIn,
+        );
+      });
+
+      test('Should not see the switch to draft reminder when it was switched to draft more than 24 hours ago even if the user is associated with the team that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            statusChangedById: loggedInUser.id,
+            hasStatusChanged: true,
+            isInReview: false,
+          })
+          .expect(200);
+
+        jest.setSystemTime(DateTime.now().plus({ hours: 25 }).toJSDate());
+
+        await expectNotToContainReminderWithId(
+          `research-output-switch-to-draft-${draftOutputId}`,
+        );
+      });
+
+      test('Should not see the switch to draft reminder when it was switched to draft more than 24 hours ago even if the user is associated with the working group that owns it', async () => {
+        const draftOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [leaderWorkingGroup.id],
+          published: false,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(draftOutput)
+          .expect(201);
+
+        const draftOutputId = response.body.id;
+        await supertest(app)
+          .put(`/research-outputs/${draftOutputId}`)
+          .send({
+            ...draftOutput,
+            statusChangedById: loggedInUser.id,
+            hasStatusChanged: true,
+            isInReview: false,
+          })
+          .expect(200);
+
+        jest.setSystemTime(DateTime.now().plus({ hours: 25 }).toJSDate());
+
+        await expectNotToContainReminderWithId(
+          `research-output-switch-to-draft-${draftOutputId}`,
+        );
+      });
+    });
   });
 
   describe('Event Happening Today Reminder', () => {

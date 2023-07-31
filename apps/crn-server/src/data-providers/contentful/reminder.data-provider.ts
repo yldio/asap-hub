@@ -22,6 +22,7 @@ import {
   ResearchOutputDraftReminder,
   ResearchOutputInReviewReminder,
   ResearchOutputPublishedReminder,
+  ResearchOutputSwitchToDraftReminder,
   Role,
   SharePresentationReminder,
   TeamRole,
@@ -53,7 +54,6 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
     const { timezone, userId } = options;
     const eventFilter = getEventFilter(timezone);
     const researchOutputFilter = getResearchOutputFilter(timezone);
-
     const {
       eventsCollection,
       researchOutputsCollection,
@@ -106,6 +106,13 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
         user,
       );
 
+    const switchToDraftResearchOutputReminders =
+      getSwitchToDraftResearchOutputRemindersFromQuery(
+        researchOutputsCollectionItems,
+        user,
+        timezone,
+      );
+
     const eventHappeningNowOrTodayReminders =
       getEventHappeningNowOrTodayRemindersFromQuery(
         eventsCollectionItems,
@@ -142,6 +149,7 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       ...publishedResearchOutputReminders,
       ...draftResearchOutputReminders,
       ...inReviewResearchOutputReminders,
+      ...switchToDraftResearchOutputReminders,
       ...eventHappeningNowOrTodayReminders,
       ...sharePresentationReminders,
       ...publishPresentationReminders,
@@ -167,6 +175,9 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
   if (reminder.entity === 'Research Output') {
     if (reminder.type === 'Published') {
       return DateTime.fromISO(reminder.data.addedDate);
+    }
+    if (reminder.type === 'Switch To Draft') {
+      return DateTime.fromISO(reminder.data.statusChangedAt);
     }
 
     return DateTime.fromISO(reminder.data.createdDate);
@@ -255,6 +266,14 @@ export const getResearchOutputFilter = (
           { sys: { publishedVersion_exists: false } },
           { addedDate_exists: false },
           { isInReview: true },
+        ],
+      },
+      {
+        AND: [
+          { sys: { publishedVersion_exists: false } },
+          { addedDate_exists: false },
+          { statusChangedAt_gte: last24HoursISO },
+          { isInReview: false },
         ],
       },
     ],
@@ -635,12 +654,14 @@ const getDraftResearchOutputRemindersFromQuery = (
       const userName = getUserName(researchOutput);
       const isPublished = !!researchOutput.sys.publishedAt;
       const isInReview = !!researchOutput.isInReview;
+      const switchedToDraft = !!researchOutput.statusChangedBy;
       if (
         !researchOutput.title ||
         !researchOutput.documentType ||
         !isResearchOutputDocumentType(researchOutput.documentType) ||
         isPublished ||
         isInReview ||
+        switchedToDraft ||
         !inLast24Hours(researchOutput.createdDate, zone)
       )
         return researchOutputReminders;
@@ -765,6 +786,85 @@ const getInReviewResearchOutputRemindersFromQuery = (
       });
     }
 
+    return researchOutputReminders;
+  }, []);
+};
+
+const getSwitchToDraftResearchOutputRemindersFromQuery = (
+  researchOutputsCollectionItems: ResearchOutputItem[],
+  user: User,
+  zone: string,
+): ResearchOutputSwitchToDraftReminder[] => {
+  if (
+    !user ||
+    !user.teamsCollection?.items ||
+    !researchOutputsCollectionItems.length
+  ) {
+    return [];
+  }
+
+  const userTeamIds = getUserTeamIds(user);
+  const userWorkingGroupIds = getWorkingGroupIds(user);
+  const isAsapStaff = user.role === 'Staff';
+
+  return researchOutputsCollectionItems.reduce<
+    ResearchOutputSwitchToDraftReminder[]
+  >((researchOutputReminders, researchOutput) => {
+    const isPublished = !!researchOutput.sys.publishedAt;
+
+    if (
+      !researchOutput.title ||
+      !researchOutput.documentType ||
+      !isResearchOutputDocumentType(researchOutput.documentType) ||
+      isPublished ||
+      !inLast24Hours(researchOutput.statusChangedAt, zone) ||
+      researchOutput.isInReview ||
+      !researchOutput.statusChangedBy
+    ) {
+      return researchOutputReminders;
+    }
+
+    const researchOutputTeamIds = (researchOutput?.teamsCollection?.items || [])
+      .filter((teamItem) => teamItem?.sys.id !== undefined)
+      .map((teamItem) => teamItem?.sys.id as string);
+
+    const researchOutputWorkingGroupId = researchOutput?.workingGroup?.sys.id;
+
+    const isInTeam = researchOutputTeamIds.some((teamId) =>
+      userTeamIds.includes(teamId),
+    );
+
+    const isInWorkingGroup = researchOutputWorkingGroupId
+      ? userWorkingGroupIds.includes(researchOutputWorkingGroupId)
+      : false;
+
+    const { associationName, associationType } =
+      getAssociationNameAndType(researchOutput);
+
+    if (
+      associationName &&
+      associationType &&
+      ((associationType === 'team' && isInTeam) ||
+        (associationType === 'working group' && isInWorkingGroup) ||
+        isAsapStaff)
+    ) {
+      const { firstName, lastName } = researchOutput.statusChangedBy;
+
+      researchOutputReminders.push({
+        id: `research-output-switch-to-draft-${researchOutput.sys.id}`,
+        entity: 'Research Output',
+        type: 'Switch To Draft',
+        data: {
+          researchOutputId: researchOutput.sys.id,
+          title: researchOutput.title,
+          statusChangedAt: researchOutput.statusChangedAt,
+          documentType: researchOutput.documentType,
+          statusChangedBy: `${firstName} ${lastName}`,
+          associationType,
+          associationName,
+        },
+      });
+    }
     return researchOutputReminders;
   }, []);
 };

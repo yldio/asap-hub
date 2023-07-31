@@ -11,6 +11,7 @@ import {
   ResearchOutputDraftReminder,
   ResearchOutputInReviewReminder,
   ResearchOutputPublishedReminder,
+  ResearchOutputSwitchToDraftReminder,
   Role,
   SharePresentationReminder,
   TeamRole,
@@ -55,12 +56,15 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
     const researchOutputFilter = getResearchOutputFilter();
     const researchOutputDraftFilter = getResearchOutputDraftFilter();
     const researchOutputInReviewFilter = getResearchOutputInReviewFilter();
+    const researchOutputSwitchToDraftFilter =
+      getResearchOutputSwitchToDraftFilter();
 
     const {
       findUsersContent,
       queryResearchOutputsContents,
       draftResearchOutputs,
       inReviewResearchOutputs,
+      switchToDraftResearchOutputs,
       queryEventsContents,
     } = await this.squidexGraphqlClient.request<
       FetchReminderDataQuery,
@@ -71,6 +75,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
         researchOutputFilter,
         researchOutputDraftFilter,
         researchOutputInReviewFilter,
+        researchOutputSwitchToDraftFilter,
         eventFilter: getEventFilter(options.timezone),
         userId: options.userId,
       },
@@ -93,6 +98,12 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
         inReviewResearchOutputs,
         findUsersContent,
         options.userId,
+      );
+
+    const switchToDraftResearchOutputReminders =
+      getResearchOutputSwitchToDraftFromQuery(
+        switchToDraftResearchOutputs,
+        findUsersContent,
       );
 
     const eventReminders = getEventRemindersFromQuery(queryEventsContents);
@@ -124,6 +135,7 @@ export class ReminderSquidexDataProvider implements ReminderDataProvider {
       ...uploadPresentationReminders,
       ...researchOutputDraftReminders,
       ...inReviewResearchOutputReminders,
+      ...switchToDraftResearchOutputReminders,
     ];
 
     const sortedReminders = reminders.sort((reminderA, reminderB) => {
@@ -160,6 +172,14 @@ const getResearchOutputDraftFilter = (): string => {
 
 const getResearchOutputInReviewFilter = (): string =>
   `status eq 'Draft' and data/addedDate/iv eq null and data/isInReview/iv eq true`;
+
+const getResearchOutputSwitchToDraftFilter = (): string => {
+  const date = new Date();
+  date.setDate(date.getDate() - 1);
+  const date24hAgo = date.toISOString();
+
+  return `data/statusChangedAt/iv ge ${date24hAgo} and status eq 'Draft' and data/isInReview/iv eq false and exists(data/statusChangedBy/iv)`;
+};
 
 export const getEventFilter = (zone: string): string => {
   const lastMidnightISO = DateTime.fromObject({
@@ -326,7 +346,8 @@ const getResearchOutputDraftRemindersFromQuery = (
         !researchOutput.flatData.title ||
         userName === null ||
         associationName === null ||
-        associationType === null
+        associationType === null ||
+        researchOutput.flatData.statusChangedBy?.length
       ) {
         return researchOutputReminders;
       }
@@ -468,6 +489,86 @@ const getResearchOutputInReviewRemindersFromQuery = (
     },
     [],
   );
+};
+
+const getResearchOutputSwitchToDraftFromQuery = (
+  queryResearchOutputsContents: FetchReminderDataQuery['switchToDraftResearchOutputs'],
+  findUsersContent: FetchReminderDataQuery['findUsersContent'],
+): ResearchOutputSwitchToDraftReminder[] => {
+  if (!findUsersContent || !findUsersContent.flatData.teams) {
+    return [];
+  }
+
+  const userTeamIds = getUserTeamIds(findUsersContent.flatData.teams);
+  const userWorkingGroupIds = getUserWorkingGroupIds(
+    findUsersContent.referencingWorkingGroupsContents,
+  );
+
+  const isAsapStaff = findUsersContent.flatData.role === 'Staff';
+
+  if (!queryResearchOutputsContents) {
+    return [];
+  }
+
+  return queryResearchOutputsContents.reduce<
+    ResearchOutputSwitchToDraftReminder[]
+  >((researchOutputReminders, researchOutput) => {
+    const { associationName, associationType } =
+      getAssociationNameAndType(researchOutput);
+    if (
+      !researchOutput.flatData.teams ||
+      !researchOutput.flatData.title ||
+      associationName === null ||
+      associationType === null ||
+      !researchOutput.flatData.documentType ||
+      !isResearchOutputDocumentType(researchOutput.flatData.documentType) ||
+      !researchOutput.flatData.statusChangedBy?.[0]
+    ) {
+      return researchOutputReminders;
+    }
+
+    const researchOutputTeams = researchOutput.flatData.teams.map(
+      (team) => team.id,
+    );
+    const researchOutputWorkingGroups = (
+      researchOutput.flatData.workingGroups || []
+    ).map((workingGroup) => workingGroup.id);
+
+    const isInTeam = researchOutputTeams.some((team) =>
+      userTeamIds.includes(team),
+    );
+
+    const isInWorkingGroup = researchOutputWorkingGroups.some((workingGroup) =>
+      userWorkingGroupIds.includes(workingGroup),
+    );
+
+    if (
+      (associationType === 'team' && !isInTeam && !isAsapStaff) ||
+      (associationType === 'working group' && !isInWorkingGroup && !isAsapStaff)
+    ) {
+      return researchOutputReminders;
+    }
+
+    const { firstName, lastName } =
+      researchOutput.flatData.statusChangedBy[0].flatData;
+
+    researchOutputReminders.push({
+      id: `research-output-switch-to-draft-${researchOutput.id}`,
+      entity: 'Research Output',
+      type: 'Switch To Draft',
+      data: {
+        researchOutputId: researchOutput.id,
+        title: researchOutput.flatData.title,
+        statusChangedAt: researchOutput.flatData.statusChangedAt,
+        documentType: researchOutput.flatData.documentType,
+        statusChangedBy: `${firstName} ${lastName}`,
+        associationType,
+        associationName,
+      },
+    });
+
+    return researchOutputReminders;
+  }, []);
 };
 
 const getEventRemindersFromQuery = (
@@ -764,6 +865,9 @@ const getSortDate = (reminder: ReminderDataObject): DateTime => {
   if (reminder.entity === 'Research Output') {
     if (reminder.type === 'Published') {
       return DateTime.fromISO(reminder.data.addedDate);
+    }
+    if (reminder.type === 'Switch To Draft') {
+      return DateTime.fromISO(reminder.data.statusChangedAt);
     }
     return DateTime.fromISO(reminder.data.createdDate);
   }

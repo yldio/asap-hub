@@ -75,6 +75,20 @@ export default class ReminderController {
         }
 
         if (
+          reminder.entity === 'Research Output' &&
+          reminder.type === 'Switch To Draft'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: sharedResearch({}).researchOutput({
+              researchOutputId: reminder.data.researchOutputId,
+            }).$,
+            description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** switched to draft a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
+          };
+        }
+
+        if (
           reminder.entity === 'Event' &&
           reminder.type === 'Happening Today'
         ) {

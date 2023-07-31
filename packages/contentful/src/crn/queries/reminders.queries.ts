@@ -39,6 +39,7 @@ export const FETCH_REMINDERS = gql`
           firstName
           lastName
         }
+        statusChangedAt
         statusChangedBy {
           sys {
             id

@@ -1,20 +1,14 @@
 import {
+  ClientSearchResponse,
   EntityResponses,
-  getSearchReturnType,
   RESEARCH_OUTPUT_ENTITY_TYPE,
 } from '@asap-hub/algolia';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
-  hits: Awaited<
-    ReturnType<typeof getSearchReturnType<EntityResponses, EntityType>>
-  >['hits'],
-  overrides: Partial<
-    Awaited<ReturnType<typeof getSearchReturnType<EntityResponses, EntityType>>>
-  > = {},
-): Awaited<
-  ReturnType<typeof getSearchReturnType<EntityResponses, EntityType>>
-> => ({
+  hits: ClientSearchResponse<EntityResponses, EntityType>['hits'],
+  overrides: Partial<ClientSearchResponse<EntityResponses, EntityType>> = {},
+): ClientSearchResponse<EntityResponses, EntityType> => ({
   nbHits: hits.length,
   page: 0,
   nbPages: 1,
@@ -28,9 +22,7 @@ export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   ...overrides,
 });
 
-type SearchResponse = Awaited<
-  ReturnType<typeof getSearchReturnType<EntityResponses, 'research-output'>>
->;
+type SearchResponse = ClientSearchResponse<EntityResponses, 'research-output'>;
 export const createResearchOutputAlgoliaRecord = (
   itemIndex = 0,
 ): SearchResponse['hits'][number] => {

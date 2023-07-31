@@ -5,39 +5,33 @@ import { EntityResponses, Payload } from './crn/types';
 
 type DistributeToEntityRecords<
   Responses extends EntityResponses | gp2.EntityResponses,
-  ResponsesKey extends keyof Responses,
-> = Responses[ResponsesKey] & {
+  Key extends keyof Responses,
+> = Responses[Key] & {
   objectID: string;
   __meta: {
-    type: ResponsesKey;
+    type: Key;
   };
 };
+export type ClientSearchResponse<
+  Responses extends EntityResponses | gp2.EntityResponses,
+  Key extends keyof Responses,
+> = SearchResponse<DistributeToEntityRecords<Responses, Key>>;
 
 type SavePayload = Payload | gp2.Payload;
 export interface SearchClient {
   search: <
     Responses extends EntityResponses | gp2.EntityResponses,
-    ResponsesKey extends keyof Responses,
+    Key extends keyof Responses,
   >(
-    entityTypes: ResponsesKey[],
+    entityTypes: Key[],
     query: string,
     requestOptions?: SearchOptions,
     descendingEvents?: boolean,
-  ) => Promise<
-    SearchResponse<DistributeToEntityRecords<Responses, ResponsesKey>>
-  >;
-  save: <SavePayload extends Payload | gp2.Payload>(
-    payload: SavePayload,
-  ) => Promise<void>;
-  saveMany: <SavePayload extends Payload | gp2.Payload>(
-    payload: SavePayload[],
-  ) => Promise<void>;
+  ) => Promise<ClientSearchResponse<Responses, Key>>;
+  save: (payload: SavePayload) => Promise<void>;
+  saveMany: (payload: SavePayload[]) => Promise<void>;
   remove: (id: string) => Promise<void>;
 }
-
-// helper to get the type of the function
-export const getSearchReturnType: SearchClient['search'] = () =>
-  null as unknown as ReturnType<SearchClient['search']>;
 
 export class AlgoliaSearchClient implements SearchClient {
   constructor(
@@ -67,15 +61,13 @@ export class AlgoliaSearchClient implements SearchClient {
 
   async search<
     Responses extends EntityResponses | gp2.EntityResponses,
-    ResponsesKey extends keyof Responses,
+    Key extends keyof Responses,
   >(
-    entityTypes: ResponsesKey[],
+    entityTypes: Key[],
     query: string,
     requestOptions?: SearchOptions,
     descendingEvents?: boolean,
-  ): Promise<
-    SearchResponse<DistributeToEntityRecords<Responses, ResponsesKey>>
-  > {
+  ): Promise<ClientSearchResponse<Responses, Key>> {
     const entityTypesFilter = entityTypes
       .map((entityType) => `__meta.type:"${String(entityType)}"`)
       .join(' OR ');
@@ -90,7 +82,7 @@ export class AlgoliaSearchClient implements SearchClient {
     };
     if (descendingEvents) {
       const result = await this.reverseEventsIndex.search<
-        DistributeToEntityRecords<Responses, ResponsesKey>
+        DistributeToEntityRecords<Responses, Key>
       >(query, options);
       return {
         ...result,
@@ -98,7 +90,7 @@ export class AlgoliaSearchClient implements SearchClient {
       };
     }
     const result = await this.index.search<
-      DistributeToEntityRecords<Responses, ResponsesKey>
+      DistributeToEntityRecords<Responses, Key>
     >(query, options);
     return {
       ...result,

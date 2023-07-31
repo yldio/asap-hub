@@ -105,8 +105,7 @@ export const usersResponseToStream = async (
   }: Pick<gp2.FetchUsersOptions, 'take' | 'skip'>) => Readonly<
     Promise<gp2.ListUserResponse>
   >,
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  transform: (result: gp2.UserResponse) => Record<string, any>,
+  transform: (result: gp2.UserResponse) => Record<string, unknown>,
 ) => {
   let morePages = true;
   let currentPage = 0;

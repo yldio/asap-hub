@@ -1,4 +1,4 @@
-import { EntityResponses, getSearchReturnType } from '@asap-hub/algolia';
+import { ClientSearchResponse, EntityResponses } from '@asap-hub/algolia';
 import {
   caseInsensitive,
   CSVValue,
@@ -104,11 +104,11 @@ export const algoliaResultsToStream = async <
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    ReturnType<typeof getSearchReturnType<EntityResponses, EntityType>>
+    Promise<ClientSearchResponse<EntityResponses, EntityType>>
   >,
   transform: (
     result: Awaited<
-      ReturnType<typeof getSearchReturnType<EntityResponses, EntityType>>
+      ClientSearchResponse<EntityResponses, EntityType>
     >['hits'][number],
   ) => Record<string, unknown>,
 ) => {
@@ -136,8 +136,7 @@ export const squidexResultsToStream = async <T>(
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
     Promise<ListResponse<T>>
   >,
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  transform: (result: T) => Record<string, any>,
+  transform: (result: T) => Record<string, unknown>,
 ) => {
   let morePages = true;
   let currentPage = 0;

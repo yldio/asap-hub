@@ -11,7 +11,7 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { EntityResponses } from '../src';
-import { AlgoliaSearchClient, getSearchReturnType } from '../src/client';
+import { AlgoliaSearchClient, ClientSearchResponse } from '../src/client';
 import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
 
 describe('Algolia Search Client', () => {
@@ -128,7 +128,7 @@ describe('Algolia Search Client', () => {
 
     const response = await algoliaSearchClient.search<
       EntityResponses,
-      keyof EntityResponses
+      'research-output'
     >(['research-output'], 'query', {
       hitsPerPage: 10,
       page: 0,
@@ -191,15 +191,12 @@ describe('Algolia Search Client', () => {
   });
 });
 
-type SearchResponseResearchOutput = Awaited<
-  ReturnType<typeof getSearchReturnType<EntityResponses, 'research-output'>>
+type SearchResponseResearchOutput = ClientSearchResponse<
+  EntityResponses,
+  'research-output'
 >;
-type SearchResponseUser = Awaited<
-  ReturnType<typeof getSearchReturnType<EntityResponses, 'user'>>
->;
-type SearchResponseEvent = Awaited<
-  ReturnType<typeof getSearchReturnType<EntityResponses, 'event'>>
->;
+type SearchResponseUser = ClientSearchResponse<EntityResponses, 'user'>;
+type SearchResponseEvent = ClientSearchResponse<EntityResponses, 'event'>;
 const searchResearchOutputResponse: SearchResponseResearchOutput = {
   hits: [
     {

@@ -10,8 +10,8 @@ import nock from 'nock';
 
 import type {
   AlgoliaSearchClient,
+  ClientSearchResponse,
   EntityResponses,
-  getSearchReturnType,
 } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
@@ -31,9 +31,8 @@ jest.mock('../../../config');
 afterEach(() => {
   nock.cleanAll();
 });
-type Search = typeof getSearchReturnType<
-  EntityResponses,
-  'user' | 'external-author'
+type Search = () => Promise<
+  ClientSearchResponse<EntityResponses, 'user' | 'external-author'>
 >;
 
 describe('getUsers', () => {

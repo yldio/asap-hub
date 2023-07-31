@@ -59,8 +59,8 @@ type RelatedEventItem = NonNullable<
 >;
 
 type OutputVersionItem = NonNullable<
-  NonNullable<ResearchOutputItem['versions']>['versionsCollection']
->['items'][number];
+  NonNullable<ResearchOutputItem['versionsCollection']>['items'][number]
+  >;
 
 export class ResearchOutputContentfulDataProvider
   implements ResearchOutputDataProvider
@@ -395,7 +395,7 @@ const parseGraphQLResearchOutput = (
           endDate: event.endDate || '',
         })) || [],
     versions: mapOutputVersions(
-      researchOutputs.versions?.versionsCollection?.items || [],
+      researchOutputs.versionsCollection?.items || [],
     ),
     statusChangedBy: researchOutputs.statusChangedBy
       ? {

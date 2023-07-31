@@ -60,7 +60,7 @@ type RelatedEventItem = NonNullable<
 
 type OutputVersionItem = NonNullable<
   NonNullable<ResearchOutputItem['versionsCollection']>['items'][number]
-  >;
+>;
 
 export class ResearchOutputContentfulDataProvider
   implements ResearchOutputDataProvider

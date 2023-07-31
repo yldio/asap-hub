@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Deleting stack for PR $PR"
+echo "Deleting stack for PR $PR, using profile $AWS_VAULT_PROFILE"
 
 re='^[0-9]+$'
 if ! [[ $PR =~ $re ]] ; then

@@ -195,18 +195,16 @@ export const researchOutputContentQueryFragment = gql`
         endDate
       }
     }
-    versions {
-      versionsCollection {
-        items {
-          sys {
-            id
-          }
-          title
-          documentType
-          type
-          addedDate
-          link
+    versionsCollection {
+      items {
+        sys {
+          id
         }
+        title
+        documentType
+        type
+        addedDate
+        link
       }
     }
   }

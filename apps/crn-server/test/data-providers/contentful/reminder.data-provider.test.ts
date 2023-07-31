@@ -25,6 +25,8 @@ import {
   getResearchOutputDraftTeamReminder,
   getResearchOutputInReviewTeamReminder,
   getResearchOutputPublishedReminder,
+  getResearchOutputSwitchToDraftTeamReminder,
+  getResearchOutputSwitchToDraftWorkingGroupReminder,
   getSharePresentationReminder,
   getTeamProjectManagerResponse,
   getUploadPresentationReminder,
@@ -137,9 +139,11 @@ describe('Reminders data provider', () => {
       let publishedResearchOutputItem: ResearchOutputItem;
       let draftResearchOutputsItem: ResearchOutputItem;
       let inReviewResearchOutputItem: ResearchOutputItem;
+      let switchToDraftResearchOutputItem: ResearchOutputItem;
 
       const addedDate = '2023-01-01T08:00:00Z';
       const createdDate = '2023-01-01T08:00:00Z';
+      const statusChangedAt = '2021-05-21T13:18:31Z';
 
       const setNowToLast24Hours = (date: string) => {
         jest.setSystemTime(
@@ -184,6 +188,20 @@ describe('Reminders data provider', () => {
           firstName: 'Tom',
           lastName: 'Hardy',
         };
+
+        switchToDraftResearchOutputItem =
+          getContentfulReminderResearchOutputCollectionItem();
+        switchToDraftResearchOutputItem!.sys.publishedAt = null;
+        switchToDraftResearchOutputItem!.addedDate = null;
+        switchToDraftResearchOutputItem!.isInReview = false;
+        switchToDraftResearchOutputItem!.statusChangedBy = {
+          sys: {
+            id: 'user-1',
+          },
+          firstName: 'Tom',
+          lastName: 'Hardy',
+        };
+        switchToDraftResearchOutputItem!.statusChangedAt = statusChangedAt;
       });
 
       afterEach(() => {
@@ -673,6 +691,165 @@ describe('Reminders data provider', () => {
             fetchRemindersOptions,
           );
           expect(result.items.map((r) => r.type)).not.toContain('Draft');
+        });
+
+        test('Should return no reminder when the statusChangedBy attribute is populated', async () => {
+          draftResearchOutputsItem!.statusChangedBy = {
+            sys: {
+              id: 'user-1',
+            },
+            firstName: 'Tom',
+            lastName: 'Hardy',
+          };
+
+          const researchOutputsCollection = {
+            items: [draftResearchOutputsItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).not.toContain('Draft');
+        });
+      });
+
+      describe('Switch to Draft Reminder', () => {
+        beforeEach(() => {
+          setNowToLast24Hours(statusChangedAt);
+        });
+
+        test('Should fetch the switch to draft reminder if user is not Staff but is part of a team associated with the research output', async () => {
+          switchToDraftResearchOutputItem!.workingGroup = null;
+          const researchOutputsCollection = {
+            items: [switchToDraftResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder = getResearchOutputSwitchToDraftTeamReminder();
+
+          expect(result.items.map((r) => r.type)).toContain('Switch To Draft');
+
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should fetch the switch to draft reminder if user is not Staff but is part of the working group associated with the research output', async () => {
+          const researchOutputsCollection = {
+            items: [switchToDraftResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          const expectedReminder =
+            getResearchOutputSwitchToDraftWorkingGroupReminder();
+
+          expect(result.items.map((r) => r.type)).toContain('Switch To Draft');
+          expect(result).toEqual({
+            total: 1,
+            items: [expectedReminder],
+          });
+        });
+
+        test('Should not fetch the switch to draft reminder if the user is not a Staff and is not associated with any team or working group from the research output', async () => {
+          switchToDraftResearchOutputItem!.teamsCollection!.items = [
+            {
+              sys: {
+                id: 'team-user-is-not-part-of',
+              },
+              displayName: 'Team that user is not part of',
+            },
+          ];
+          switchToDraftResearchOutputItem!.workingGroup = {
+            sys: {
+              id: 'wg-user-is-not-part-of',
+            },
+            title: 'Working Group that user is not part of',
+          };
+          const researchOutputsCollection = {
+            items: [switchToDraftResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).not.toContain(
+            'Switch To Draft',
+          );
+        });
+
+        test('Should fetch the switch to draft reminder if the user is a Staff even if is not associated with any team or working group from the research output', async () => {
+          switchToDraftResearchOutputItem!.teamsCollection!.items = [
+            {
+              sys: {
+                id: 'team-user-is-not-part-of',
+              },
+              displayName: 'Team that user is not part of',
+            },
+          ];
+          switchToDraftResearchOutputItem!.workingGroup = {
+            sys: {
+              id: 'wg-user-is-not-part-of',
+            },
+            title: 'Working Group that user is not part of',
+          };
+          const usersResponse = getContentfulReminderUsersContent();
+          usersResponse!.role = 'Staff';
+
+          const researchOutputsCollection = {
+            items: [switchToDraftResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection, usersResponse);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+
+          expect(result.items.map((r) => r.type)).toContain('Switch To Draft');
+        });
+
+        test('Should not fetch the switch to draft reminder if it has passed more than 24 hours from the statusChangedAt', async () => {
+          jest.setSystemTime(
+            DateTime.fromISO(statusChangedAt).plus({ hours: 25 }).toJSDate(),
+          );
+          const researchOutputsCollection = {
+            items: [switchToDraftResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items.map((r) => r.type)).not.toContain(
+            'Switch To Draft',
+          );
+        });
+
+        test('Should not fetch the draft reminder if research output is published', async () => {
+          switchToDraftResearchOutputItem!.sys.publishedAt = createdDate;
+          const researchOutputsCollection = {
+            items: [switchToDraftResearchOutputItem],
+          };
+
+          setContentfulMock(researchOutputsCollection);
+          const result = await remindersDataProvider.fetch(
+            fetchRemindersOptions,
+          );
+          expect(result.items.map((r) => r.type)).not.toContain(
+            'Switch To Draft',
+          );
         });
       });
 

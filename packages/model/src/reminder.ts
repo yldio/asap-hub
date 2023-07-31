@@ -7,7 +7,11 @@ import {
 
 type ReminderEntity = 'Research Output' | 'Event';
 
-type ResearchOutputReminderType = 'Published' | 'Draft' | 'In Review';
+type ResearchOutputReminderType =
+  | 'Published'
+  | 'Draft'
+  | 'In Review'
+  | 'Switch To Draft';
 
 export type EventReminderType =
   | 'Happening Today'
@@ -78,6 +82,21 @@ export interface ResearchOutputInReviewReminder extends ResearchOutputReminder {
     title: ResearchOutputDraftDataObject['title'];
     documentType: ResearchOutputPublishedDataObject['documentType'];
     createdDate: ResearchOutputDraftDataObject['created'];
+    associationType: 'team' | 'working group';
+    associationName: string;
+    statusChangedBy: string;
+  };
+}
+
+export interface ResearchOutputSwitchToDraftReminder
+  extends ResearchOutputReminder {
+  entity: 'Research Output';
+  type: 'Switch To Draft';
+  data: {
+    researchOutputId: ResearchOutputDraftDataObject['id'];
+    title: ResearchOutputDraftDataObject['title'];
+    documentType: ResearchOutputPublishedDataObject['documentType'];
+    statusChangedAt: string;
     associationType: 'team' | 'working group';
     associationName: string;
     statusChangedBy: string;
@@ -170,6 +189,7 @@ export type ReminderDataObject =
   | ResearchOutputPublishedReminder
   | ResearchOutputDraftReminder
   | ResearchOutputInReviewReminder
+  | ResearchOutputSwitchToDraftReminder
   | EventHappeningTodayReminder
   | EventHappeningNowReminder
   | VideoEventReminder

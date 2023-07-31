@@ -80,7 +80,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   statusChangedBy,
   isInReview,
   onRequestReview,
-  versions = [],
+  versions,
   onPublish,
   ...props
 }) => {

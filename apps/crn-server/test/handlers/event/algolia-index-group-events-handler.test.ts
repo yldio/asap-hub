@@ -10,7 +10,7 @@ import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
-const mapPayload = toPayload<'crn'>('event');
+const mapPayload = toPayload('event');
 
 const possibleEvents: [
   string,

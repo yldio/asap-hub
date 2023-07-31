@@ -1,5 +1,5 @@
 import algoliasearch, { SearchClient } from 'algoliasearch';
-import { AlgoliaSearchClient } from './client';
+import { AlgoliaSearchClient, Apps } from './client';
 import * as gp2 from './gp2';
 
 export type { SearchResponse } from '@algolia/client-search';
@@ -26,7 +26,6 @@ type AlgoliaSearchClientFactoryParams =
     clickAnalytics?: ConstructorParameters<typeof AlgoliaSearchClient>['3'];
   };
 
-type Apps = 'crn' | 'gp2';
 export const algoliaSearchClientFactory = <App extends Apps>({
   algoliaIndex,
   algoliaApiKey,

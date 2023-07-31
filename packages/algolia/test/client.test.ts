@@ -189,8 +189,6 @@ describe('Algolia Search Client', () => {
   });
 });
 
-type RO = ClientSearchResponse<'crn', 'research-output'>;
-
 const searchResearchOutputResponse: ClientSearchResponse<
   'crn',
   'research-output'

@@ -1,7 +1,6 @@
 import {
   EventResponse,
   ExternalAuthorResponse,
-  gp2 as gp2Model,
   LabResponse,
   ResearchOutputResponse,
   UserResponse,
@@ -12,37 +11,24 @@ export const USER_ENTITY_TYPE = 'user';
 export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
 export const LAB_ENTITY_TYPE = 'lab';
 export const EVENT_ENTITY_TYPE = 'event';
-export const OUTPUT_ENTITY_TYPE = 'output';
 export type Payload =
   | {
       data: EventResponse;
-      type: 'event';
+      type: typeof EVENT_ENTITY_TYPE;
     }
   | {
       data: ExternalAuthorResponse;
-      type: 'external-author';
+      type: typeof EXTERNAL_AUTHOR_ENTITY_TYPE;
     }
   | {
       data: LabResponse;
-      type: 'lab';
+      type: typeof LAB_ENTITY_TYPE;
     }
   | {
       data: ResearchOutputResponse;
-      type: 'research-output';
+      type: typeof RESEARCH_OUTPUT_ENTITY_TYPE;
     }
   | {
       data: UserResponse;
-      type: 'user';
+      type: typeof USER_ENTITY_TYPE;
     };
-
-export type EntityResponses = {
-  crn: {
-    [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
-    [USER_ENTITY_TYPE]: UserResponse;
-    [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
-    [EVENT_ENTITY_TYPE]: EventResponse;
-  };
-  gp2: {
-    [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
-  };
-};

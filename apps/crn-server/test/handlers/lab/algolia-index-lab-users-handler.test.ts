@@ -16,7 +16,7 @@ import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
-const mapPayload = toPayload<'crn'>('user');
+const mapPayload = toPayload('user');
 
 const possibleEvents: [string, LabEventGenerator][] = [
   ['created', createEvent],

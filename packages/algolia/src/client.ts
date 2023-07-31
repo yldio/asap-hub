@@ -1,10 +1,36 @@
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import {
+  EventResponse,
+  ExternalAuthorResponse,
+  gp2 as gp2Model,
+  ResearchOutputResponse,
+  UserResponse,
+} from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
-import { gp2 } from '.';
-import { EntityResponses, Payload } from './crn/types';
+import {
+  EVENT_ENTITY_TYPE,
+  EXTERNAL_AUTHOR_ENTITY_TYPE,
+  Payload,
+  RESEARCH_OUTPUT_ENTITY_TYPE,
+  USER_ENTITY_TYPE,
+} from './crn';
+import { OUTPUT_ENTITY_TYPE, Payload as GP2Payload } from './gp2';
 
-type Apps = 'crn' | 'gp2';
-type SavePayload = Payload | gp2.Payload;
+const CRN = 'crn';
+const GP2 = 'gp2';
+export type Apps = typeof CRN | typeof GP2;
+export type EntityResponses = {
+  [CRN]: {
+    [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
+    [USER_ENTITY_TYPE]: UserResponse;
+    [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
+    [EVENT_ENTITY_TYPE]: EventResponse;
+  };
+  [GP2]: {
+    [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
+  };
+};
+type SavePayload = Payload | GP2Payload;
 type DistributeToEntityRecords<
   Responses extends EntityResponses[Apps],
   ResponsesKey extends keyof Responses,
@@ -20,13 +46,17 @@ export type ClientSearchResponse<
 > = SearchResponse<
   DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
 >;
-export interface SearchClient {
-  search: <ResponsesKey extends keyof EntityResponses[Apps]>(
-    entityTypes: ResponsesKey[],
-    query: string,
-    requestOptions?: SearchOptions,
-    descendingEvents?: boolean,
-  ) => Promise<ClientSearchResponse<Apps, keyof EntityResponses[Apps]>>;
+export type ClientSearch<
+  App extends Apps,
+  ResponsesKey extends keyof EntityResponses[App],
+> = (
+  entityTypes: ResponsesKey[],
+  query: string,
+  requestOptions?: SearchOptions,
+  descendingEvents?: boolean,
+) => Promise<ClientSearchResponse<App, keyof EntityResponses[App]>>;
+interface SearchClient {
+  search: ClientSearch<Apps, keyof EntityResponses[Apps]>;
   save: (payload: SavePayload) => Promise<void>;
   saveMany: (payload: SavePayload[]) => Promise<void>;
   remove: (id: string) => Promise<void>;

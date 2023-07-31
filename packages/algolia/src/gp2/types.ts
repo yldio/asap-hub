@@ -4,9 +4,5 @@ export const OUTPUT_ENTITY_TYPE = 'output';
 
 export type Payload = {
   data: gp2Model.OutputResponse;
-  type: 'output';
-};
-
-export type EntityResponses = {
-  [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
+  type: typeof OUTPUT_ENTITY_TYPE;
 };

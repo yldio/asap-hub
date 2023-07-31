@@ -67,7 +67,7 @@ describe('Reminder Data Provider', () => {
         total: 2,
         items: [
           getResearchOutputPublishedReminder(),
-          getResearchOutputDraftTeamReminder(),
+          getResearchOutputSwitchToDraftTeamReminder(),
         ],
       });
     });

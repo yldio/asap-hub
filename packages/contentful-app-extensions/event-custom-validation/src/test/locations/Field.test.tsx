@@ -122,6 +122,7 @@ describe('Field component', () => {
     render(<Field />);
     await waitFor(() => {
       expect(screen.getByText(VALID_ENTRY_MESSAGE)).toBeInTheDocument();
+      expect(sdk.field.setValue).not.toHaveBeenCalledWith();
       expect(screen.queryByText(DUPLICATE_SPEAKERS_MESSAGE)).toBeNull();
       expect(screen.queryByText(EXTERNAL_AUTHOR_WITH_TEAM_MESSAGE)).toBeNull();
       expect(screen.queryByText(EMPTY_SPEAKER_MESSAGE)).toBeNull();
@@ -153,6 +154,7 @@ describe('Field component', () => {
     render(<Field />);
     await waitFor(() => {
       expect(screen.getByText(EMPTY_SPEAKER_MESSAGE)).toBeInTheDocument();
+      expect(testSdk.field.setValue).toHaveBeenCalledWith('false');
       expect(screen.queryByText(VALID_ENTRY_MESSAGE)).toBeNull();
     });
   });
@@ -184,6 +186,7 @@ describe('Field component', () => {
     render(<Field />);
     await waitFor(() => {
       expect(screen.getByText(DUPLICATE_SPEAKERS_MESSAGE)).toBeInTheDocument();
+      expect(testSdk.field.setValue).toHaveBeenCalledWith('false');
       expect(screen.queryByText(VALID_ENTRY_MESSAGE)).toBeNull();
     });
   });
@@ -224,6 +227,7 @@ describe('Field component', () => {
       expect(
         screen.getByText(EXTERNAL_AUTHOR_WITH_TEAM_MESSAGE),
       ).toBeInTheDocument();
+      expect(testSdk.field.setValue).toHaveBeenCalledWith('false');
       expect(screen.queryByText(VALID_ENTRY_MESSAGE)).toBeNull();
     });
   });
@@ -270,6 +274,7 @@ describe('Field component', () => {
       expect(
         screen.getByText(EXTERNAL_AUTHOR_WITH_TEAM_MESSAGE),
       ).toBeInTheDocument();
+      expect(testSdk.field.setValue).toHaveBeenCalledWith('false');
       expect(screen.getByText(EMPTY_SPEAKER_MESSAGE)).toBeInTheDocument();
       expect(screen.queryByText(VALID_ENTRY_MESSAGE)).toBeNull();
     });
@@ -360,6 +365,7 @@ describe('Field component', () => {
     render(<Field />);
     await waitFor(() => {
       expect(screen.getByText(VALID_ENTRY_MESSAGE)).toBeInTheDocument();
+      expect(testSdk.field.setValue).toHaveBeenCalledWith('true');
       expect(
         screen.getByText('User John Doe does not belong to team Team One.'),
       ).toBeInTheDocument();

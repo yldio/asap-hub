@@ -168,8 +168,10 @@ export const eventsContentQueryFragment = gql`
             onboarded
             teamsCollection(limit: 5) {
               items {
-                sys {
-                  id
+                team {
+                  sys {
+                    id
+                  }
                 }
                 role
               }

@@ -509,7 +509,7 @@ describe('Events Contentful Data Provider', () => {
       test('Should return only the team when speaker of type user does not belong to this team', async () => {
         const contentfulGraphQLResponse = getContentfulGraphqlEvent();
         const team = getContentfulUserSpeakerTeams();
-        team.sys.id = 'team-id-1';
+        team.team.sys.id = 'team-id-1';
 
         (contentfulGraphQLResponse.speakersCollection!.items = [
           {
@@ -557,7 +557,7 @@ describe('Events Contentful Data Provider', () => {
       test('Should return only the team when speaker of type user belongs to the team but is not onboarded', async () => {
         const contentfulGraphQLResponse = getContentfulGraphqlEvent();
         const team = getContentfulUserSpeakerTeams();
-        team.sys.id = 'team-id-1';
+        team.team.sys.id = 'team-id-1';
 
         (contentfulGraphQLResponse.speakersCollection!.items = [
           {

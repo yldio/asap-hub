@@ -331,7 +331,7 @@ export const parseGraphQLSpeakers = (speakers: SpeakerItem[]): EventSpeaker[] =>
     if (user.__typename === 'Users') {
       const role =
         user?.teamsCollection?.items
-          ?.filter((t) => t?.sys.id === team.sys.id)
+          ?.filter((t) => t?.team?.sys.id === team.sys.id)
           .filter((s) => s?.role)[0]?.role || undefined;
 
       if (!role || user.onboarded !== true) {

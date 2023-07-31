@@ -188,4 +188,32 @@ describe('useSearch', () => {
       );
     });
   });
+
+  describe('property changeLocation', () => {
+    it('does not reset filters', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test/oldLocation?filter=test123'],
+        },
+      });
+      result.current.changeLocation('/test');
+      expect(result.current.filters).toEqual({ filter: ['test123'] });
+    });
+  });
+
+  describe('property updateFilters', () => {
+    it('does not reset filters', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test/oldLocation?filter=test123'],
+        },
+      });
+      result.current.updateFilters('/test', { filter: ['test123', 'test345'] });
+      expect(result.current.filters).toEqual({
+        filter: ['test123', 'test345'],
+      });
+    });
+  });
 });

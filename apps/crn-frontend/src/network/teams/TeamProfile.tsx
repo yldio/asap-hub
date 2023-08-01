@@ -78,7 +78,8 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       .then(loadEventsList);
   }, [team]);
 
-  const canShareResearchOutput = useCanShareResearchOutput('teams', [teamId]);
+  const canShareResearchOutput =
+    useCanShareResearchOutput('teams', [teamId]) && !team?.inactiveSince;
   const canDuplicateResearchOutput = useCanDuplicateResearchOutput('teams', [
     teamId,
   ]);

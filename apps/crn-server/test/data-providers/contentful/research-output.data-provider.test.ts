@@ -8,7 +8,10 @@ import {
 import { ResearchOutputDataObject } from '@asap-hub/model';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
-import { ResearchOutputContentfulDataProvider } from '../../../src/data-providers/contentful/research-output.data-provider';
+import {
+  ResearchOutputContentfulDataProvider,
+  mapOutputVersions,
+} from '../../../src/data-providers/contentful/research-output.data-provider';
 import {
   getResearchOutputCreateDataObject,
   getResearchOutputUpdateDataObject,
@@ -1642,6 +1645,20 @@ describe('Research Outputs Data Provider', () => {
         }),
       );
     });
+  });
+});
+
+describe('mapOutputVersions ', () => {
+  it('filters null items', () => {
+    const versions = mapOutputVersions([null, { sys: { id: '1' } }]);
+    expect(versions.length).toBe(1);
+  });
+
+  it('handles documentType', () => {
+    const versions = mapOutputVersions([
+      { sys: { id: '1' }, documentType: 'Article' },
+    ]);
+    expect(versions[0]?.documentType).toBe('Article');
   });
 });
 

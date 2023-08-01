@@ -227,7 +227,7 @@ const mapTeams = (items: (TeamItem | null)[]) =>
       displayName: team.displayName || '',
     }));
 
-const mapOutputVersions = (items: (OutputVersionItem | null)[]) =>
+export const mapOutputVersions = (items: (OutputVersionItem | null)[]) =>
   items
     .filter(
       (output: OutputVersionItem | null): output is OutputVersionItem =>

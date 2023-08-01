@@ -398,7 +398,6 @@ const prepareInput = (
     subtypeId,
     keywordIds,
     workingGroups,
-    statusChangedById,
     ...researchOutputData
   } = input;
 

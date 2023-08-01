@@ -487,7 +487,6 @@ export const getRestResearchOutputCreateData =
     },
     workingGroups: { iv: [] },
     isInReview: { iv: false },
-    statusChangedBy: { iv: [] },
   });
 
 export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({

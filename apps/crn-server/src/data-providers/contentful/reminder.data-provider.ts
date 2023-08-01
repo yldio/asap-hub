@@ -582,8 +582,7 @@ const getPublishedResearchOutputRemindersFromQuery = (
       !researchOutput.documentType ||
       !isResearchOutputDocumentType(researchOutput.documentType) ||
       !isPublished ||
-      !inLast24Hours(researchOutput.addedDate, zone) ||
-      !researchOutput.statusChangedBy
+      !inLast24Hours(researchOutput.addedDate, zone)
     )
       return researchOutputReminders;
 
@@ -612,6 +611,9 @@ const getPublishedResearchOutputRemindersFromQuery = (
       ((associationType === 'team' && isInTeam) ||
         (associationType === 'working group' && isInWorkingGroup))
     ) {
+      const firstLastName = researchOutput.statusChangedBy
+        ? `${researchOutput.statusChangedBy.firstName} ${researchOutput.statusChangedBy.lastName}`
+        : userName;
       researchOutputReminders.push({
         id: `research-output-published-${researchOutput.sys.id}`,
         entity: 'Research Output',
@@ -621,7 +623,7 @@ const getPublishedResearchOutputRemindersFromQuery = (
           documentType: researchOutput.documentType,
           title: researchOutput.title,
           addedDate: researchOutput.addedDate,
-          statusChangedBy: `${researchOutput.statusChangedBy.firstName} ${researchOutput.statusChangedBy.lastName}`,
+          statusChangedBy: firstLastName,
           associationType,
           associationName,
         },

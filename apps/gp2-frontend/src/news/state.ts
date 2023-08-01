@@ -42,7 +42,7 @@ const newsItemState = atomFamily<gp2.NewsResponse | undefined, string>({
   default: fetchNewsItemState,
 });
 
-const newsListState = selectorFamily<
+export const newsListState = selectorFamily<
   gp2.ListNewsResponse | Error | undefined,
   GetListOptions
 >({

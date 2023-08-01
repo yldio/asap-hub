@@ -87,14 +87,14 @@ const iconsStyles = css({
   },
 });
 
-type OutputVersionsProp = {
+export type OutputVersionsProps = {
   versions: Pick<
     ResearchOutputResponse,
     'documentType' | 'type' | 'title' | 'id' | 'addedDate' | 'link'
   >[];
 };
 
-const OutputVersions: React.FC<OutputVersionsProp> = ({ versions }) => {
+const OutputVersions: React.FC<OutputVersionsProps> = ({ versions }) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = versions.length > 5;
@@ -167,7 +167,7 @@ const OutputVersions: React.FC<OutputVersionsProp> = ({ versions }) => {
       {displayShowMoreButton && (
         <div css={showMoreStyles}>
           <Button linkStyle onClick={() => setShowMore(!showMore)}>
-            View {showMore ? 'Less' : 'More'} Outputs
+            View {showMore ? 'Less' : 'More'} Versions
           </Button>
         </div>
       )}

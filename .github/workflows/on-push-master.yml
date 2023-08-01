@@ -104,7 +104,7 @@ jobs:
 
   algolia-sync-development:
     needs: [deployment-development]
-    uses: ./.github/workflows/reusable-algolia-sync.yml
+    uses: ./.github/workflows/reusable-crn-algolia-sync.yml
     with:
       environment-name: Development
       contentful-environment-id: Development
@@ -152,7 +152,7 @@ jobs:
 
   algolia-sync-production:
     needs: [deployment-production]
-    uses: ./.github/workflows/reusable-algolia-sync.yml
+    uses: ./.github/workflows/reusable-crn-algolia-sync.yml
     with:
       environment-name: Production
       entity: all

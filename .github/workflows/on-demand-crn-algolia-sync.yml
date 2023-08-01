@@ -1,4 +1,4 @@
-name: Sync Algolia with Squidex
+name: Sync CRN Algolia with Squidex
 on:
   workflow_dispatch:
     inputs:
@@ -54,7 +54,7 @@ jobs:
           contentful-environment-id: ${{ steps.setup.outputs.crn-contentful-env-id }}
           app: crn
   algolia:
-    uses: ./.github/workflows/reusable-algolia-sync.yml
+    uses: ./.github/workflows/reusable-crn-algolia-sync.yml
     with:
       environment-name: ${{ github.event.inputs.environment-name }}
       entity: ${{ github.event.inputs.entity }}

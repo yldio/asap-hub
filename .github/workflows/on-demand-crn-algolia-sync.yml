@@ -29,30 +29,6 @@ on:
         description: The PR number to run for
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    environment: Branch
-    outputs:
-      crn-contentful-env: ${{ steps.get-contentful-state.outputs.contentful-env }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Branch
-          pr-number: ${{ github.event.inputs.pr-number }}
-      - name: Get Contentful Environment state
-        id: get-contentful-state
-        uses: ./.github/actions/contentful-checks
-        with:
-          contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
-          contentful-master-env: ${{ steps.setup.outputs.contentful-environment }}
-          contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
-          contentful-environment-id: ${{ steps.setup.outputs.crn-contentful-env-id }}
-          app: crn
   algolia:
     uses: ./.github/workflows/reusable-crn-algolia-sync.yml
     with:

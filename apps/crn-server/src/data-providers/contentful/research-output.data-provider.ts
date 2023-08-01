@@ -398,6 +398,7 @@ const prepareInput = (
     subtypeId,
     keywordIds,
     workingGroups,
+    statusChangedById,
     ...researchOutputData
   } = input;
 
@@ -430,6 +431,9 @@ const prepareInput = (
         ? getLinkEntity(workingGroups[0])
         : null,
     subtype: subtypeId ? getLinkEntity(subtypeId) : null,
+    statusChangedBy: statusChangedById
+      ? getLinkEntity(statusChangedById)
+      : null,
   };
 
   return researchOutput;
@@ -441,9 +445,6 @@ const prepareInputForCreate = (input: ResearchOutputCreateDataObject) => ({
   updatedBy: getLinkEntity(input.createdBy),
   createdDate: new Date().toISOString(),
   lastUpdatedPartial: new Date().toISOString(),
-  statusChangedBy: input.statusChangedById
-    ? getLinkEntity(input.statusChangedById)
-    : null,
 });
 
 const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
@@ -456,9 +457,6 @@ const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
   return {
     ...prepareInput(researchOutput),
     updatedBy: getLinkEntity(input.updatedBy),
-    statusChangedBy: input.statusChangedById
-      ? getLinkEntity(input.statusChangedById)
-      : null,
     lastUpdatedPartial: new Date().toISOString(),
   };
 };

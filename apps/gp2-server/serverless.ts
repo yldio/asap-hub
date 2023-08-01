@@ -320,10 +320,10 @@ const serverlessConfig: AWS = {
             pattern: {
               source: [eventBusSource],
               'detail-type': [
-                'OutputPublished',
-                'OutputUpdated',
-                'OutputUnpublished',
-                'OutputDeleted',
+                'OutputsPublished',
+                'OutputsUpdated',
+                'OutputsUnpublished',
+                'OutputsDeleted',
               ] satisfies gp2.WebhookDetailType[],
             },
           },

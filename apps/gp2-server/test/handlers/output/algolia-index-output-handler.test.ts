@@ -305,25 +305,25 @@ describe('Output index handler', () => {
 });
 
 const unpublishedEvent = (id: string) =>
-  getOutputEvent(id, 'OutputUnpublished') as EventBridgeEvent<
+  getOutputEvent(id, 'OutputsUnpublished') as EventBridgeEvent<
     gp2Model.OutputEvent,
     OutputPayload
   >;
 
 const deleteEvent = (id: string) =>
-  getOutputEvent(id, 'OutputDeleted') as EventBridgeEvent<
+  getOutputEvent(id, 'OutputsDeleted') as EventBridgeEvent<
     gp2Model.OutputEvent,
     OutputPayload
   >;
 
 const createEvent = (id: string) =>
-  getOutputEvent(id, 'OutputPublished') as EventBridgeEvent<
+  getOutputEvent(id, 'OutputsPublished') as EventBridgeEvent<
     gp2Model.OutputEvent,
     OutputPayload
   >;
 
 const updateEvent = (id: string) =>
-  getOutputEvent(id, 'OutputUpdated') as EventBridgeEvent<
+  getOutputEvent(id, 'OutputsUpdated') as EventBridgeEvent<
     gp2Model.OutputEvent,
     OutputPayload
   >;

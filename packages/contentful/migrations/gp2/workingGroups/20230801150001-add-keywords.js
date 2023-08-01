@@ -23,8 +23,6 @@ module.exports.up = (migration) => {
 
       linkType: 'Entry',
     });
-
-  workingGroups.moveField('tags').afterField('keywords');
 };
 
 module.exports.down = (migration) => {

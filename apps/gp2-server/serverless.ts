@@ -62,7 +62,7 @@ const nodeEnv = 'production';
 const sesRegion = process.env.GP2_SES_REGION!;
 const envRef = ['production', 'dev'].includes(stage) ? envAlias : `CI-${stage}`;
 
-const algoliaIndex = process.env.GP2_ALGOLIA_INDEX
+const algoliaIndex = process.env.GP2_ALGOLIA_INDEX ?? `gp2-hub_${envRef}`;
   ? '${env:GP2_ALGOLIA_INDEX}'
   : `gp2-hub_${envRef}`;
 

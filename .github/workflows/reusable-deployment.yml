@@ -177,7 +177,6 @@ jobs:
 
   gp2-algolia-settings:
     needs: [gp2-sls-deploy]
-    if: ${{ inputs.environment-name != 'Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:

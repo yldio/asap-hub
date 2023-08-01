@@ -20,7 +20,6 @@ import {
   getListResearchOutputDataObject,
   getResearchOutputCreateDataObject,
   getResearchOutputDataObject,
-  getResearchOutputResponse,
   getResearchOutputUpdateDataObject,
   getRestResearchOutputCreateData,
   getRestResearchOutputUpdateData,

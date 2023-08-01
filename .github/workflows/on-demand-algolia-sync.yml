@@ -1,4 +1,4 @@
-name: Sync GP2 Algolia with Squidex
+name: Sync GP2 Algolia
 on:
   workflow_dispatch:
     inputs:

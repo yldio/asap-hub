@@ -58,7 +58,7 @@ export const exportEntity = async (
   console.log(`Finished exporting ${recordCount} records`);
 };
 
-const getController = (entity: keyof EntityResponses['crn']) => {
+const getController = (entity: keyof EntityResponsesCRN) => {
   const userDataProvider = getUserDataProvider();
 
   const researchOutputDataProvider = getResearchOutputDataProvider();
@@ -83,7 +83,7 @@ const getController = (entity: keyof EntityResponses['crn']) => {
   return controllerMap[entity];
 };
 
-const transformRecords = <T extends EntityResponses['crn'], K extends keyof T>(
+const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
   record: T[K] & { id: string },
   type: K,
 ) => ({

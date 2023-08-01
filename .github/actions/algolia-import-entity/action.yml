@@ -10,6 +10,9 @@ inputs:
   algolia-index:
     description: 'Algolia index name'
     required: true
+  app:
+    description: 'crn or gp2'
+    required: true
   entity-type:
     description: 'Entity type (ie. "user")'
     required: true
@@ -54,7 +57,7 @@ runs:
     - name: Import Entity
       shell: bash
       run: |
-        yarn export:entity $ENTITY -f $ENTITY.json
+        yarn export:entity:${{ inputs.app }} $ENTITY -f $ENTITY.json
         jq -c '.[]' $ENTITY.json | algolia objects import $ALGOLIA_INDEX -F -
       env:
         ALGOLIA_APPLICATION_ID: ${{ inputs.algolia-app-id }}

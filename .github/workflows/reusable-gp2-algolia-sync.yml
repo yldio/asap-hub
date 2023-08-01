@@ -96,6 +96,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
+          app: 'gp2'
           entity-type: 'output'
           contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
@@ -138,6 +139,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
+          app: 'gp2'
           entity-type: 'output'
           squidex-app-name: ${{ steps.setup.outputs.gp2-squidex-app-name }}
           squidex-base-url: 'na'

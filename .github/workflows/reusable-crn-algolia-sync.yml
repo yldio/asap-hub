@@ -99,6 +99,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
+          app: 'crn'
           entity-type: 'research-output'
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
@@ -111,6 +112,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
+          app: 'crn'
           entity-type: 'user'
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
@@ -123,6 +125,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
+          app: 'crn'
           entity-type: 'external-author'
           contentful-env: ${{ inputs.contentful-environment-id }}
           contentful-access-token: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
@@ -139,6 +142,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
+          app: 'crn'
           entity-type: 'event'
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
@@ -179,6 +183,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
+          app: 'crn'
           entity-type: 'research-output'
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
@@ -196,6 +201,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
+          app: 'crn'
           entity-type: 'user'
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
@@ -213,6 +219,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
+          app: 'crn'
           entity-type: 'external-author'
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}
@@ -230,6 +237,7 @@ jobs:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           algolia-index: '${{ steps.setup.outputs.crn-algolia-index }}_temp'
+          app: 'crn'
           entity-type: 'event'
           squidex-app-name: ${{ steps.setup.outputs.crn-squidex-app-name }}
           squidex-base-url: ${{ steps.setup.outputs.squidex-base-url }}

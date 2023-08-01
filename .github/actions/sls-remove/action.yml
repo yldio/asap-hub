@@ -34,6 +34,9 @@ runs:
       uses: ./.github/actions/is-number
       with:
         number: ${{ github.event.inputs.pr-number }}
+    - name: Build type definitions
+      shell: bash
+      run: yarn build:typecheck
     - name: Rebuild dependencies
       shell: bash
       run: yarn rebuild

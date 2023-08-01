@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Branch
     outputs:
-      crn-contentful-env: ${{ steps.get-contentful-state.outputs.contentful-env }}
+      gp2-contentful-env: ${{ steps.get-contentful-state.outputs.contentful-env }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -49,7 +49,7 @@ jobs:
           contentful-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           max-contentful-envs: ${{ steps.setup.outputs.max-contentful-envs }}
           contentful-environment-id: ${{ steps.setup.outputs.gp2-contentful-env-id }}
-          app: crn
+          app: gp2
   algolia:
     uses: ./.github/workflows/reusable-gp2-algolia-sync.yml
     with:

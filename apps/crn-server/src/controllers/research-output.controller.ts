@@ -121,10 +121,6 @@ export default class ResearchOutputController {
       usageNotes: normalisedResearchOutputCreateData.usageNotes,
       usedInPublication: normalisedResearchOutputCreateData.usedInPublication,
       workingGroups: normalisedResearchOutputCreateData.workingGroups,
-      statusChangedById: normalisedResearchOutputCreateData.statusChangedById,
-      statusChangedAt: normalisedResearchOutputCreateData.hasStatusChanged
-        ? new Date(Date.now()).toISOString()
-        : undefined,
     };
 
     const createOptions = {

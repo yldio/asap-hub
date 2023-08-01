@@ -431,9 +431,6 @@ const prepareInput = (
         ? getLinkEntity(workingGroups[0])
         : null,
     subtype: subtypeId ? getLinkEntity(subtypeId) : null,
-    statusChangedBy: statusChangedById
-      ? getLinkEntity(statusChangedById)
-      : null,
   };
 
   return researchOutput;
@@ -458,5 +455,8 @@ const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
     ...prepareInput(researchOutput),
     updatedBy: getLinkEntity(input.updatedBy),
     lastUpdatedPartial: new Date().toISOString(),
+    statusChangedBy: _statusChangedById
+      ? getLinkEntity(_statusChangedById)
+      : null,
   };
 };

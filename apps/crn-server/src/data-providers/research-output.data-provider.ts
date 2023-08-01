@@ -210,7 +210,7 @@ export class ResearchOutputSquidexDataProvider
       subtypeId,
       keywordIds,
       workingGroups,
-      statusChangedById,
+      statusChangedById: _statusChangedById,
       ...researchOutputData
     } = input;
 
@@ -235,7 +235,6 @@ export class ResearchOutputSquidexDataProvider
       organisms: organismIds,
       workingGroups,
       subtype: (subtypeId && [subtypeId]) || [],
-      statusChangedBy: statusChangedById ? [statusChangedById] : [],
     });
 
     const { id: researchOutputId } =

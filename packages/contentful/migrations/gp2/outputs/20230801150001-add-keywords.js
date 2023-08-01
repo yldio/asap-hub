@@ -4,24 +4,24 @@ module.exports.up = (migration) => {
   const outputs = migration.editContentType('outputs');
 
   outputs
-    .createField("tags")
-    .name("Tags")
-    .type("Array")
+    .createField('tags')
+    .name('Tags')
+    .type('Array')
     .localized(false)
     .required(false)
     .validations([])
     .disabled(true)
     .omitted(false)
     .items({
-      type: "Link",
+      type: 'Link',
 
       validations: [
         {
-          linkContentType: ["keywords"],
+          linkContentType: ['keywords'],
         },
       ],
 
-      linkType: "Entry",
+      linkType: 'Entry',
     });
 
   outputs.moveField('tags').afterField('keywords');

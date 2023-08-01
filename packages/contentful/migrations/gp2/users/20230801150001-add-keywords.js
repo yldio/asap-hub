@@ -4,9 +4,9 @@ module.exports.up = (migration) => {
   const users = migration.editContentType('users');
 
   users
-    .createField("tags")
-    .name("Tags")
-    .type("Array")
+    .createField('tags')
+    .name('Tags')
+    .type('Array')
     .localized(false)
     .required(false)
     .validations([
@@ -20,15 +20,15 @@ module.exports.up = (migration) => {
     .disabled(true)
     .omitted(false)
     .items({
-      type: "Link",
+      type: 'Link',
 
       validations: [
         {
-          linkContentType: ["keywords"],
+          linkContentType: ['keywords'],
         },
       ],
 
-      linkType: "Entry",
+      linkType: 'Entry',
     });
 
   users.moveField('tags').afterField('keywords');

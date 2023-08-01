@@ -260,7 +260,7 @@ describe('usersResponseToStream', () => {
     await usersResponseToStream(
       mockCsvStream as unknown as Stringifier,
       jest.fn().mockResolvedValue(usersResponse),
-      jest.fn((x) => x),
+      jest.fn((x) => ({ ...x })),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       gp2Fixtures.createUserResponse({ id: '0' }),
@@ -276,7 +276,7 @@ describe('usersResponseToStream', () => {
         ...gp2Fixtures.createUsersResponse(),
         total: MAX_RESULTS + 1,
       }),
-      jest.fn((x) => x),
+      jest.fn((x) => ({ ...x })),
     );
     expect(mockCsvStream.write).toHaveBeenCalledWith(
       gp2Fixtures.createUserResponse({ id: '0' }),

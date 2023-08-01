@@ -6,8 +6,9 @@ import { indexGroupEventsHandler } from '../../../src/handlers/event/algolia-ind
 import { getListEventResponse } from '../../fixtures/events.fixtures';
 import { getInterestGroupEvent } from '../../fixtures/interest-groups.fixtures';
 import { toPayload } from '../../helpers/algolia';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
 const mapPayload = toPayload('event');
 

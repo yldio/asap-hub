@@ -6,6 +6,10 @@ import { LabEvent, ListResponse, UserResponse } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import UserController from '../../controllers/user.controller';
+import {
+  getAssetDataProvider,
+  getUserDataProvider,
+} from '../../dependencies/users.dependencies';
 import logger from '../../utils/logger';
 import {
   loopOverCustomCollection,
@@ -13,15 +17,11 @@ import {
 } from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { LabPayload } from '../event-bus';
-import {
-  getUserDataProvider,
-  getAssetDataProvider,
-} from '../../dependencies/users.dependencies';
 
 export const indexLabUsersHandler =
   (
     userController: UserController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): ((event: EventBridgeEvent<LabEvent, LabPayload>) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

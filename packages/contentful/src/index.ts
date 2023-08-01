@@ -1,17 +1,17 @@
-export type { EntryFieldTypes, ContentfulClientApi } from 'contentful';
+export type { ContentfulClientApi, EntryFieldTypes } from 'contentful';
 export type {
   Asset,
   AssetFileProp,
   BulkAction,
   BulkActionStatus,
   Collection,
+  EntityMetaSysProps,
   Entry,
   EntryProps,
   Environment,
   KeyValueMap,
   Link,
   SysLink,
-  EntityMetaSysProps,
   VersionedLink,
 } from 'contentful-management';
 export { gql, GraphQLClient } from 'graphql-request';
@@ -21,4 +21,5 @@ export * from './crn/queries';
 export * from './crn/types/webhook';
 export * as gp2 from './gp2';
 export * from './mocks/graphql-client.mock';
+export * from './types';
 export * from './utils';

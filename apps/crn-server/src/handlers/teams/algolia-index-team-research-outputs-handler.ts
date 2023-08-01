@@ -4,15 +4,15 @@ import {
 } from '@asap-hub/algolia';
 import {
   ListResponse,
-  TeamEvent,
   ResearchOutputResponse,
+  TeamEvent,
 } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ResearchOutputController from '../../controllers/research-output.controller';
 
-import { getResearchOutputDataProvider } from '../../dependencies/research-outputs.dependencies';
 import { getExternalAuthorDataProvider } from '../../dependencies/external-authors.dependencies';
+import { getResearchOutputDataProvider } from '../../dependencies/research-outputs.dependencies';
 import { getResearchTagDataProvider } from '../../dependencies/research-tags.dependencies';
 
 import logger from '../../utils/logger';
@@ -26,7 +26,7 @@ import { TeamPayload } from '../event-bus';
 export const indexResearchOutputByTeamHandler =
   (
     researchOutputController: ResearchOutputController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): EventBridgeHandler<TeamEvent, TeamPayload> =>
   async (event) => {
     const fetchFunction = ({

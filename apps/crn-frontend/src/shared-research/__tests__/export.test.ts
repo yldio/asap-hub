@@ -12,10 +12,10 @@ import { Stringifier } from 'csv-stringify';
 
 import { createAlgoliaResponse } from '../../__fixtures__/algolia';
 import {
-  researchOutputToCSV,
   algoliaResultsToStream,
-  squidexResultsToStream,
   MAX_SQUIDEX_RESULTS,
+  researchOutputToCSV,
+  squidexResultsToStream,
 } from '../export';
 
 afterEach(() => {
@@ -306,7 +306,9 @@ describe('algoliaResultsToStream', () => {
               {
                 ...createResearchOutputResponse(),
                 objectID: 'ro-1',
-                __meta: { type: 'research-output' },
+                __meta: {
+                  type: 'research-output',
+                },
               },
             ],
             {
@@ -371,7 +373,7 @@ describe('algoliaResultsToStream', () => {
       mockCsvStream as unknown as Stringifier,
       () =>
         Promise.resolve(
-          createAlgoliaResponse(
+          createAlgoliaResponse<'research-output'>(
             [
               {
                 ...createResearchOutputResponse(),

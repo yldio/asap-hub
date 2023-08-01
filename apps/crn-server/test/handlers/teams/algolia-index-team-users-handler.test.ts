@@ -1,23 +1,25 @@
 import Boom from '@hapi/boom';
-import { toPayload } from '../../helpers/algolia';
 import { indexTeamUsersHandler } from '../../../src/handlers/teams/algolia-index-team-users-handler';
 import {
   getListUserResponse,
   getUserResponse,
 } from '../../fixtures/users.fixtures';
+import { toPayload } from '../../helpers/algolia';
 
 import {
   createEvent,
-  updateEvent,
-  unpublishedEvent,
   deleteEvent,
   TeamEventGenerator,
+  unpublishedEvent,
+  updateEvent,
 } from '../../fixtures/teams.fixtures';
 
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 
 const mapPayload = toPayload('user');
+
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
 const possibleEvents: [string, TeamEventGenerator][] = [
   ['created', createEvent],

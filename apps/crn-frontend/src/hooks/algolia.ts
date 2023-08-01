@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
 
 export type AlgoliaHook = {
-  client: AlgoliaSearchClient;
+  client: AlgoliaSearchClient<'crn'>;
 };
 
 export const useAlgolia = () => {
@@ -18,7 +18,7 @@ export const useAlgolia = () => {
       throw new Error('Algolia unavailable while not logged in');
     }
 
-    const client = algoliaSearchClientFactory({
+    const client = algoliaSearchClientFactory<'crn'>({
       algoliaAppId: ALGOLIA_APP_ID,
       algoliaIndex:
         (isEnabled('CONTENTFUL') && `${ALGOLIA_INDEX}-contentful`) ||

@@ -12,15 +12,11 @@ const algoliasearchMock = algoliasearch as jest.MockedFunction<
 const algoliaSearchClientMock = {
   initIndex: jest.fn(),
 } as unknown as jest.Mocked<SearchClient>;
-algoliasearchMock.mockReturnValue(algoliaSearchClientMock);
 
 describe('Algolia Search Client', () => {
-  beforeAll(() => {
-    jest.clearAllMocks();
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
+  beforeEach(jest.resetAllMocks);
+  beforeEach(() => {
+    algoliasearchMock.mockReturnValue(algoliaSearchClientMock);
   });
 
   test('Should instantiate the Search Client', () => {

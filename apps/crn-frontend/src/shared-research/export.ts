@@ -1,14 +1,14 @@
-import { EntityResponses, SearchEntityResponse } from '@asap-hub/algolia';
-import { ListResponse, ResearchOutputResponse } from '@asap-hub/model';
-import { isInternalUser } from '@asap-hub/validation';
-/* eslint-disable-next-line import/no-unresolved */
-import { Stringifier } from 'csv-stringify/browser/esm';
+import { ClientSearchResponse, EntityResponses } from '@asap-hub/algolia';
 import {
   caseInsensitive,
   CSVValue,
   GetListOptions,
   htmlToCsvText,
 } from '@asap-hub/frontend-utils';
+import { ListResponse, ResearchOutputResponse } from '@asap-hub/model';
+import { isInternalUser } from '@asap-hub/validation';
+/* eslint-disable-next-line import/no-unresolved */
+import { Stringifier } from 'csv-stringify/browser/esm';
 
 export const MAX_ALGOLIA_RESULTS = 10000;
 // https://github.com/Squidex/squidex/blob/master/backend/src/Squidex/appsettings.json#L266
@@ -96,16 +96,19 @@ export const researchOutputToCSV = (
   isInReview: output.isInReview,
 });
 
-export const algoliaResultsToStream = async <T extends keyof EntityResponses>(
+export const algoliaResultsToStream = async <
+  EntityType extends keyof EntityResponses['crn'],
+>(
   csvStream: Stringifier,
   getResults: ({
     currentPage,
     pageSize,
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
-    Promise<SearchEntityResponse<T>>
+    Promise<ClientSearchResponse<'crn', EntityType>>
   >,
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  transform: (result: EntityResponses[T]) => Record<string, any>,
+  transform: (
+    result: ClientSearchResponse<'crn', EntityType>['hits'][number],
+  ) => Record<string, unknown>,
 ) => {
   let morePages = true;
   let currentPage = 0;
@@ -131,8 +134,7 @@ export const squidexResultsToStream = async <T>(
   }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
     Promise<ListResponse<T>>
   >,
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  transform: (result: T) => Record<string, any>,
+  transform: (result: T) => Record<string, unknown>,
 ) => {
   let morePages = true;
   let currentPage = 0;

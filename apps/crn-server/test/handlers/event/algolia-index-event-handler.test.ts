@@ -1,12 +1,13 @@
 import Boom from '@hapi/boom';
 import { indexEventHandler } from '../../../src/handlers/event/algolia-index-event-handler';
 import {
-  getEventSquidexEvent,
-  getEventResponse,
   getEventContentfulEvent,
+  getEventResponse,
+  getEventSquidexEvent,
 } from '../../fixtures/events.fixtures';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
 describe('Event index handler', () => {
   const indexHandler = indexEventHandler(

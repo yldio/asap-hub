@@ -35,7 +35,7 @@ describe('getResearchOutputs', () => {
     search: jest
       .fn()
       .mockResolvedValue(createResearchOutputListAlgoliaResponse(10)),
-  } as unknown as jest.Mocked<AlgoliaSearchClient>;
+  } as unknown as jest.Mocked<AlgoliaSearchClient<'crn'>>;
 
   beforeEach(() => {
     jest.clearAllMocks();

@@ -1,17 +1,17 @@
-import qs from 'qs';
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
-  createSentryHeaders,
   createFeatureFlagHeaders,
+  createSentryHeaders,
   GetListOptions,
 } from '@asap-hub/frontend-utils';
 import {
+  FetchResearchTagsOptions,
+  ListResponse,
   ResearchOutputDocumentType,
   ResearchOutputResponse,
   ResearchTagResponse,
-  FetchResearchTagsOptions,
-  ListResponse,
 } from '@asap-hub/model';
+import qs from 'qs';
 import { API_BASE_URL } from '../config';
 import createListApiUrl from '../CreateListApiUrl';
 
@@ -97,7 +97,7 @@ export const getAllFilters = (
 };
 
 export const getResearchOutputs = (
-  client: AlgoliaSearchClient,
+  client: AlgoliaSearchClient<'crn'>,
   options: ResearchOutputPublishedListOptions,
 ) =>
   client

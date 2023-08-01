@@ -9,7 +9,7 @@ import { API_BASE_URL } from '../config';
 import createListApiUrl from '../CreateListApiUrl';
 
 export const getEvents = async (
-  algoliaClient: AlgoliaSearchClient,
+  algoliaClient: AlgoliaSearchClient<'crn'>,
   {
     searchQuery,
     currentPage,

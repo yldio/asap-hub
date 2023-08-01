@@ -1,12 +1,14 @@
-import { EventBridgeEvent } from 'aws-lambda';
-import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/algolia-index-team-research-outputs-handler';
-import { TeamPayload } from '../../../src/handlers/event-bus';
-import { createEventBridgeEventMock } from '../../helpers/events';
-import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
-import { researchOutputControllerMock } from '../../mocks/research-output.controller.mock';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { TeamEvent } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
+import { TeamPayload } from '../../../src/handlers/event-bus';
+import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/algolia-index-team-research-outputs-handler';
+import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
 import { getTeamsEvent } from '../../fixtures/teams.fixtures';
+import { createEventBridgeEventMock } from '../../helpers/events';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { researchOutputControllerMock } from '../../mocks/research-output.controller.mock';
+
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
 describe('Team Research Outputs Index', () => {
   const indexHandler = indexResearchOutputByTeamHandler(

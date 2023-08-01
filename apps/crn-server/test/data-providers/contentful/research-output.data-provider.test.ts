@@ -16,7 +16,7 @@ import {
   getResearchOutputCreateDataObject,
   getResearchOutputUpdateDataObject,
   getContentfulResearchOutputGraphqlResponse,
-  getResearchOutputResponse,
+  getResearchOutputDataObject,
 } from '../../fixtures/research-output.fixtures';
 
 jest.mock('@asap-hub/contentful', () => ({
@@ -636,7 +636,7 @@ describe('Research Outputs Data Provider', () => {
 
       const result = await researchOutputDataProvider.fetchById('1');
 
-      const expectedResult = getResearchOutputResponse();
+      const expectedResult = getResearchOutputDataObject();
       expectedResult.usageNotesMD = researchOutputs.usageNotes as string;
       expectedResult.usageNotes = undefined;
       expectedResult.authors = [];

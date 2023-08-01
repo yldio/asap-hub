@@ -271,6 +271,7 @@ const getResearchOutputRemindersFromQuery = (
 
       const { associationName, associationType } =
         getAssociationNameAndType(researchOutput);
+      const userName = getUserName(researchOutput);
 
       const researchOutputTeams = researchOutput.flatData.teams.map(
         (team) => team.id,
@@ -286,13 +287,14 @@ const getResearchOutputRemindersFromQuery = (
         !researchOutput.flatData.title ||
         !associationType ||
         !associationName ||
-        !researchOutput.flatData.statusChangedBy?.[0]
+        !userName
       ) {
         return researchOutputReminders;
       }
 
-      const { firstName, lastName } =
-        researchOutput.flatData.statusChangedBy[0].flatData;
+      const firstLastName = researchOutput.flatData.statusChangedBy?.[0]
+        ? `${researchOutput.flatData.statusChangedBy?.[0].flatData.firstName} ${researchOutput.flatData.statusChangedBy?.[0].flatData.lastName}`
+        : userName;
 
       if (isInTeam) {
         researchOutputReminders.push({
@@ -304,7 +306,7 @@ const getResearchOutputRemindersFromQuery = (
             documentType: researchOutput.flatData.documentType,
             title: researchOutput.flatData.title,
             addedDate: researchOutput.flatData.addedDate,
-            statusChangedBy: `${firstName} ${lastName}`,
+            statusChangedBy: firstLastName,
             associationName,
             associationType,
           },

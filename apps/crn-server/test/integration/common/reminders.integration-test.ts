@@ -49,7 +49,7 @@ describe('Reminders', () => {
     loggedInUser = await fixtures.createUser(
       getUserFixture({
         firstName: 'LoggedIn',
-        email: 'loggedIn@user.com',
+        email: 'loggedIn2@user.com',
         teams: [
           {
             id: team.id,
@@ -208,8 +208,6 @@ describe('Reminders', () => {
           teams: [pmTeam.id],
           workingGroups: [],
           published: true,
-          statusChangedById: loggedInUser.id,
-          hasStatusChanged: true,
         });
 
         const response = await supertest(app)
@@ -228,8 +226,6 @@ describe('Reminders', () => {
           teams: [pmTeam.id],
           workingGroups: [leaderWorkingGroup.id],
           published: true,
-          statusChangedById: loggedInUser.id,
-          hasStatusChanged: true,
         });
 
         const response = await supertest(app)

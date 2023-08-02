@@ -1,17 +1,25 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { RecoilRoot, useRecoilState } from 'recoil';
+import { RecoilRoot, useRecoilState, useSetRecoilState } from 'recoil';
 import React from 'react';
 import { gp2 } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { getNewsById, getNews } from '../api';
-import { useNewsById, newsListState } from '../state';
+import { useNewsById, newsListState, newsItemState } from '../state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 jest.mock('../api');
 
 const mockGetNewsById = getNewsById as jest.MockedFunction<typeof getNewsById>;
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
+
+const news: gp2Model.NewsResponse = {
+  id: 'uuid-1',
+  created: '2020-09-07T17:36:54Z',
+  title: 'News Title',
+  type: 'news',
+  shortText: 'short text',
+};
 
 const wrapper: React.FC = ({ children }) => (
   <RecoilRoot>
@@ -24,19 +32,50 @@ const wrapper: React.FC = ({ children }) => (
 beforeEach(jest.resetAllMocks);
 describe('useNewsById', () => {
   it('should return a news item given an id', async () => {
-    const newsResponse = gp2.createNewsResponse();
-    const { items } = newsResponse;
-    const item = items[0] as gp2Model.NewsDataObject;
-    mockGetNewsById.mockResolvedValueOnce(item);
+    mockGetNewsById.mockResolvedValueOnce(news);
     const { result, waitForNextUpdate } = renderHook(
-      () => useNewsById(item.id),
+      () => useNewsById(news.id),
       { wrapper },
     );
     await waitForNextUpdate();
 
     const newsItem = result.current;
 
-    expect(newsItem).toEqual(item);
+    expect(newsItem).toEqual(news);
+  });
+
+  it('should update news item list', async () => {
+    const options: GetListOptions = {
+      searchQuery: '',
+      currentPage: 1,
+      pageSize: 10,
+      filters: new Set(),
+    };
+
+    mockGetNews.mockResolvedValueOnce({ items: [news], total: 1 });
+
+    const { result } = renderHook(
+      () => ({
+        newsListState: useRecoilState(newsListState(options)),
+        newsItemState: useSetRecoilState(newsItemState(news.id)),
+      }),
+      {
+        wrapper: RecoilRoot,
+      },
+    );
+
+    const setNewsList = result.current.newsListState[1];
+    const setItemState = result.current.newsItemState;
+
+    await act(() => mockGetNews(options, '').then(setNewsList));
+    const oldNewsList = result.current
+      .newsListState[0] as gp2Model.ListNewsResponse;
+    expect(oldNewsList.items.length).toBe(1);
+
+    act(() => setItemState(undefined));
+    const newNewsList = result.current
+      .newsListState[0] as gp2Model.ListNewsResponse;
+    expect(newNewsList.items.length).toBe(0);
   });
 
   it('should not return a news item given an invalid id', async () => {

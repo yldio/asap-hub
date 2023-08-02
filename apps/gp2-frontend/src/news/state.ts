@@ -37,7 +37,7 @@ export const fetchNewsItemState = selectorFamily<
     },
 });
 
-const newsItemState = atomFamily<gp2.NewsResponse | undefined, string>({
+export const newsItemState = atomFamily<gp2.NewsResponse | undefined, string>({
   key: 'newsItem',
   default: fetchNewsItemState,
 });

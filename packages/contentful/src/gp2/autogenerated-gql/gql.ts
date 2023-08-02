@@ -1,227 +1,379 @@
 /* eslint-disable */
-import * as graphql from './graphql';
+import * as types from './graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 
+/**
+ * Map of all GraphQL operations in the project.
+ *
+ * This map has several performance disadvantages:
+ * 1. It is not tree-shakeable, so it will include all operations in the project.
+ * 2. It is not minifiable, so the string of a GraphQL query will be multiple times inside the bundle.
+ * 3. It does not support dead code elimination, so it will add unused operations.
+ *
+ * Therefore it is highly recommended to use the babel-plugin for production.
+ */
 const documents = {
   '\n  fragment AnnouncementsContentData on Announcements {\n    sys {\n      id\n    }\n    description\n    deadline\n    link\n  }\n':
-    graphql.AnnouncementsContentDataFragmentDoc,
+    types.AnnouncementsContentDataFragmentDoc,
   '\n  query FetchAnnouncements($limit: Int) {\n    announcementsCollection(limit: $limit) {\n      total\n      items {\n        ...AnnouncementsContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchAnnouncementsDocument,
+    types.FetchAnnouncementsDocument,
   '\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    googleApiMetadata\n    linkedFrom {\n      projectsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n      workingGroupsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n    }\n  }\n':
-    graphql.CalendarsContentDataFragmentDoc,
+    types.CalendarsContentDataFragmentDoc,
   '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContentData\n    }\n  }\n  \n':
-    graphql.FetchCalendarByIdDocument,
+    types.FetchCalendarByIdDocument,
   '\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchCalendarsDocument,
+    types.FetchCalendarsDocument,
   '\n  fragment ContributingCohortsContentData on ContributingCohorts {\n    sys {\n      id\n    }\n    name\n  }\n':
-    graphql.ContributingCohortsContentDataFragmentDoc,
+    types.ContributingCohortsContentDataFragmentDoc,
   '\n  query FetchContributingCohorts(\n    $limit: Int\n    $skip: Int\n    $order: [ContributingCohortsOrder]\n  ) {\n    contributingCohortsCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ContributingCohortsContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchContributingCohortsDocument,
+    types.FetchContributingCohortsDocument,
   '\n  query FetchDashboard(\n    $orderAnnouncements: [DashboardAnnouncementsCollectionOrder]\n  ) {\n    dashboardCollection(limit: 1) {\n      total\n      items {\n        latestStats {\n          sampleCount\n          articleCount\n          cohortCount\n        }\n        announcementsCollection(order: $orderAnnouncements) {\n          items {\n            description\n            deadline\n            link\n            sys {\n              id\n            }\n          }\n        }\n        guidesCollection {\n          items {\n            sys {\n              id\n            }\n            title\n            icon {\n              url\n            }\n            descriptionCollection {\n              items {\n                sys {\n                  id\n                }\n                title\n                bodyText\n                linkUrl\n                linkText\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
-    graphql.FetchDashboardDocument,
+    types.FetchDashboardDocument,
   '\n  fragment EventsContentData on Events {\n    sys {\n      id\n      publishedAt\n      publishedVersion\n    }\n    description\n    endDate\n    endDateTimeZone\n    startDate\n    startDateTimeZone\n    meetingLink\n    hideMeetingLink\n    eventLink\n    status\n    hidden\n    tags\n    title\n    notesPermanentlyUnavailable\n    notes {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    notesUpdatedAt\n    videoRecordingPermanentlyUnavailable\n    videoRecording {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    videoRecordingUpdatedAt\n    presentationPermanentlyUnavailable\n    presentation {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    presentationUpdatedAt\n    meetingMaterialsPermanentlyUnavailable\n    meetingMaterials\n    calendar {\n      googleCalendarId\n      color\n      name\n      linkedFrom {\n        workingGroupsCollection {\n          items {\n            sys {\n              id\n            }\n            title\n          }\n        }\n        projectsCollection {\n          items {\n            sys {\n              id\n            }\n            title\n          }\n        }\n      }\n    }\n    thumbnail {\n      url\n    }\n    speakersCollection(limit: 10) {\n      items {\n        title\n        user {\n          __typename\n          ... on ExternalUsers {\n            sys {\n              id\n            }\n            name\n            orcid\n          }\n          ... on Users {\n            sys {\n              id\n            }\n            firstName\n            lastName\n            onboarded\n            avatar {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n':
-    graphql.EventsContentDataFragmentDoc,
+    types.EventsContentDataFragmentDoc,
   '\n  query FetchEventById($id: String!) {\n    events(id: $id) {\n      ...EventsContentData\n    }\n  }\n  \n':
-    graphql.FetchEventByIdDocument,
+    types.FetchEventByIdDocument,
   '\n  query FetchEvents(\n    $limit: Int\n    $skip: Int\n    $order: [EventsOrder]\n    $where: EventsFilter\n  ) {\n    eventsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...EventsContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchEventsDocument,
+    types.FetchEventsDocument,
   '\n  query FetchEventsByUserId($id: String!, $limit: Int, $skip: Int) {\n    users(id: $id) {\n      linkedFrom {\n        eventSpeakersCollection(limit: 1) {\n          items {\n            linkedFrom {\n              eventsCollection(limit: $limit, skip: $skip) {\n                total\n                items {\n                  ...EventsContentData\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  \n':
-    graphql.FetchEventsByUserIdDocument,
+    types.FetchEventsByUserIdDocument,
   '\n  query FetchEventsByExternalUserId($id: String!, $limit: Int, $skip: Int) {\n    externalUsers(id: $id) {\n      linkedFrom {\n        eventSpeakersCollection(limit: 1) {\n          items {\n            linkedFrom {\n              eventsCollection(limit: $limit, skip: $skip) {\n                total\n                items {\n                  ...EventsContentData\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  \n':
-    graphql.FetchEventsByExternalUserIdDocument,
+    types.FetchEventsByExternalUserIdDocument,
   '\n  query FetchProjectCalendar($id: String!) {\n    projects(id: $id) {\n      calendar {\n        sys {\n          id\n        }\n      }\n    }\n  }\n':
-    graphql.FetchProjectCalendarDocument,
+    types.FetchProjectCalendarDocument,
   '\n  query FetchWorkingGroupCalendar($id: String!) {\n    workingGroups(id: $id) {\n      calendar {\n        sys {\n          id\n        }\n      }\n    }\n  }\n':
-    graphql.FetchWorkingGroupCalendarDocument,
+    types.FetchWorkingGroupCalendarDocument,
   '\n  fragment ExternalUsersContentData on ExternalUsers {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    name\n    orcid\n  }\n':
-    graphql.ExternalUsersContentDataFragmentDoc,
+    types.ExternalUsersContentDataFragmentDoc,
   '\n  query FetchExternalUsers(\n    $limit: Int\n    $skip: Int\n    $order: [ExternalUsersOrder]\n    $where: ExternalUsersFilter\n  ) {\n    externalUsersCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ExternalUsersContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchExternalUsersDocument,
+    types.FetchExternalUsersDocument,
   '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n    type\n  }\n':
-    graphql.NewsContentDataFragmentDoc,
+    types.NewsContentDataFragmentDoc,
   '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n':
-    graphql.FetchNewsByIdDocument,
+    types.FetchNewsByIdDocument,
   '\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchNewsDocument,
+    types.FetchNewsDocument,
   '\n  fragment OutputsContentData on Outputs {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    title\n    documentType\n    type\n    subtype\n    link\n    addedDate\n    publishDate\n    lastUpdatedPartial\n    relatedEntity {\n      __typename\n      ... on Projects {\n        sys {\n          id\n        }\n        title\n      }\n      ... on WorkingGroups {\n        sys {\n          id\n        }\n        title\n      }\n    }\n    authorsCollection(limit: 10) {\n      total\n      items {\n        __typename\n        ... on Users {\n          sys {\n            id\n          }\n          firstName\n          lastName\n          email\n          avatar {\n            url\n          }\n          onboarded\n        }\n        ... on ExternalUsers {\n          sys {\n            id\n          }\n          name\n        }\n      }\n    }\n  }\n':
-    graphql.OutputsContentDataFragmentDoc,
+    types.OutputsContentDataFragmentDoc,
   '\n  query FetchOutputById($id: String!) {\n    outputs(id: $id) {\n      ...OutputsContentData\n    }\n  }\n  \n':
-    graphql.FetchOutputByIdDocument,
+    types.FetchOutputByIdDocument,
   '\n  query FetchOutputs(\n    $limit: Int\n    $skip: Int\n    $order: [OutputsOrder]\n    $where: OutputsFilter\n    $preview: Boolean\n  ) {\n    outputsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n      preview: $preview\n    ) {\n      total\n      items {\n        ...OutputsContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchOutputsDocument,
+    types.FetchOutputsDocument,
   '\n  query FetchOutputsByWorkingGroupId($id: String!, $limit: Int, $skip: Int) {\n    workingGroups(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n':
-    graphql.FetchOutputsByWorkingGroupIdDocument,
+    types.FetchOutputsByWorkingGroupIdDocument,
   '\n  query FetchOutputsByUserId($id: String!, $limit: Int, $skip: Int) {\n    users(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n':
-    graphql.FetchOutputsByUserIdDocument,
+    types.FetchOutputsByUserIdDocument,
   '\n  query FetchOutputsByProjectId($id: String!, $limit: Int, $skip: Int) {\n    projects(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n':
-    graphql.FetchOutputsByProjectIdDocument,
+    types.FetchOutputsByProjectIdDocument,
   '\n  fragment PageContentData on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n':
-    graphql.PageContentDataFragmentDoc,
+    types.PageContentDataFragmentDoc,
   '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchPagesDocument,
+    types.FetchPagesDocument,
   '\n  fragment ProjectsContentData on Projects {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    title\n    startDate\n    endDate\n    status\n    projectProposal\n    description\n    pmEmail\n    leadEmail\n    keywords\n    traineeProject\n    opportunitiesLink\n    membersCollection(limit: 50) {\n      total\n      items {\n        sys {\n          id\n        }\n        role\n        user {\n          sys {\n            id\n          }\n          firstName\n          lastName\n          onboarded\n          avatar {\n            url\n          }\n        }\n      }\n    }\n    milestonesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        description\n        externalLink\n        status\n        title\n      }\n    }\n    resourcesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        type\n        title\n        description\n        externalLink\n      }\n    }\n    calendar {\n      sys {\n        id\n      }\n      name\n    }\n  }\n':
-    graphql.ProjectsContentDataFragmentDoc,
+    types.ProjectsContentDataFragmentDoc,
   '\n  query FetchProjectById($id: String!) {\n    projects(id: $id) {\n      ...ProjectsContentData\n    }\n  }\n  \n':
-    graphql.FetchProjectByIdDocument,
+    types.FetchProjectByIdDocument,
   '\n  query FetchProjects($limit: Int, $skip: Int) {\n    projectsCollection(limit: $limit, skip: $skip) {\n      total\n      items {\n        ...ProjectsContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchProjectsDocument,
+    types.FetchProjectsDocument,
   '\n  fragment LatestStatsContentData on LatestStats {\n    sampleCount\n    articleCount\n    cohortCount\n  }\n':
-    graphql.LatestStatsContentDataFragmentDoc,
+    types.LatestStatsContentDataFragmentDoc,
   '\n  query FetchLatestStats {\n    latestStatsCollection(limit: 1) {\n      total\n      items {\n        ...LatestStatsContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchLatestStatsDocument,
+    types.FetchLatestStatsDocument,
   '\n  fragment UsersContentData on Users {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    activatedDate\n    firstName\n    lastName\n    avatar {\n      url\n    }\n    degrees\n    country\n    city\n    region\n    email\n    alternativeEmail\n    telephoneCountryCode\n    telephoneNumber\n    keywords\n    biography\n    questions\n    fundingStreams\n    blog\n    linkedIn\n    twitter\n    github\n    googleScholar\n    orcid\n    researchGate\n    researcherId\n    connections\n    role\n    onboarded\n    positions\n    activatedDate\n    contributingCohortsCollection(limit: 10) {\n      items {\n        contributingCohort {\n          sys {\n            id\n          }\n          name\n        }\n        role\n        studyLink\n      }\n    }\n    linkedFrom {\n      projectMembershipCollection(limit: 10) {\n        items {\n          user {\n            sys {\n              id\n            }\n          }\n          role\n          linkedFrom {\n            projectsCollection(limit: 1) {\n              items {\n                sys {\n                  id\n                }\n                title\n                status\n                membersCollection(limit: 25) {\n                  items {\n                    role\n                    user {\n                      sys {\n                        id\n                      }\n                      onboarded\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n      workingGroupMembershipCollection(limit: 10) {\n        items {\n          user {\n            sys {\n              id\n            }\n          }\n          role\n          linkedFrom {\n            workingGroupsCollection(limit: 1) {\n              items {\n                sys {\n                  id\n                }\n                title\n                membersCollection(limit: 25) {\n                  items {\n                    role\n                    user {\n                      sys {\n                        id\n                      }\n                      onboarded\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
-    graphql.UsersContentDataFragmentDoc,
+    types.UsersContentDataFragmentDoc,
   '\n  query FetchUserById($id: String!) {\n    users(id: $id) {\n      ...UsersContentData\n    }\n  }\n  \n':
-    graphql.FetchUserByIdDocument,
+    types.FetchUserByIdDocument,
   '\n  query FetchUsers(\n    $limit: Int\n    $skip: Int\n    $order: [UsersOrder]\n    $where: UsersFilter\n  ) {\n    usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...UsersContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchUsersDocument,
+    types.FetchUsersDocument,
   '\n  query FetchUsersByProjectId($id: [String]!) {\n    projectsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
-    graphql.FetchUsersByProjectIdDocument,
+    types.FetchUsersByProjectIdDocument,
   '\n  query FetchUsersByWorkingGroupId($id: [String]!) {\n    workingGroupsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
-    graphql.FetchUsersByWorkingGroupIdDocument,
+    types.FetchUsersByWorkingGroupIdDocument,
   '\n  fragment WorkingGroupNetworkContentData on WorkingGroupNetwork {\n    supportCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    monogenicCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    operationalCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    complexDiseaseCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n':
-    graphql.WorkingGroupNetworkContentDataFragmentDoc,
+    types.WorkingGroupNetworkContentDataFragmentDoc,
   '\n  query FetchWorkingGroupNetwork {\n    workingGroupNetworkCollection(limit: 1) {\n      total\n      items {\n        ...WorkingGroupNetworkContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchWorkingGroupNetworkDocument,
+    types.FetchWorkingGroupNetworkDocument,
   '\n  fragment WorkingGroupsContentData on WorkingGroups {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    title\n    shortDescription\n    description {\n      json\n    }\n    primaryEmail\n    secondaryEmail\n    leadingMembers\n    membersCollection(limit: 50) {\n      total\n      items {\n        sys {\n          id\n        }\n        role\n        user {\n          sys {\n            id\n          }\n          firstName\n          lastName\n          onboarded\n          avatar {\n            url\n          }\n        }\n      }\n    }\n    milestonesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        description\n        externalLink\n        status\n        title\n      }\n    }\n    resourcesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        type\n        title\n        description\n        externalLink\n      }\n    }\n    calendar {\n      sys {\n        id\n      }\n      name\n    }\n  }\n':
-    graphql.WorkingGroupsContentDataFragmentDoc,
+    types.WorkingGroupsContentDataFragmentDoc,
   '\n  query FetchWorkingGroupById($id: String!) {\n    workingGroups(id: $id) {\n      ...WorkingGroupsContentData\n    }\n  }\n  \n':
-    graphql.FetchWorkingGroupByIdDocument,
+    types.FetchWorkingGroupByIdDocument,
   '\n  query FetchWorkingGroups {\n    workingGroupsCollection(limit: 50) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n':
-    graphql.FetchWorkingGroupsDocument,
+    types.FetchWorkingGroupsDocument,
 };
 
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ *
+ *
+ * @example
+ * ```ts
+ * const query = gql(`query GetUser($id: ID!) { user(id: $id) { name } }`);
+ * ```
+ *
+ * The query argument is unknown!
+ * Please regenerate the types.
+ */
+export function gql(source: string): unknown;
+
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment AnnouncementsContentData on Announcements {\n    sys {\n      id\n    }\n    description\n    deadline\n    link\n  }\n',
 ): (typeof documents)['\n  fragment AnnouncementsContentData on Announcements {\n    sys {\n      id\n    }\n    description\n    deadline\n    link\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchAnnouncements($limit: Int) {\n    announcementsCollection(limit: $limit) {\n      total\n      items {\n        ...AnnouncementsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchAnnouncements($limit: Int) {\n    announcementsCollection(limit: $limit) {\n      total\n      items {\n        ...AnnouncementsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    googleApiMetadata\n    linkedFrom {\n      projectsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n      workingGroupsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  fragment CalendarsContentData on Calendars {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    googleCalendarId\n    name\n    color\n    googleApiMetadata\n    linkedFrom {\n      projectsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n      workingGroupsCollection {\n        items {\n          sys {\n            id\n          }\n          title\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchCalendarById($id: String!) {\n    calendars(id: $id) {\n      ...CalendarsContentData\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchCalendars(\n    $limit: Int\n    $skip: Int\n    $order: [CalendarsOrder]\n    $where: CalendarsFilter\n  ) {\n    calendarsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...CalendarsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment ContributingCohortsContentData on ContributingCohorts {\n    sys {\n      id\n    }\n    name\n  }\n',
 ): (typeof documents)['\n  fragment ContributingCohortsContentData on ContributingCohorts {\n    sys {\n      id\n    }\n    name\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchContributingCohorts(\n    $limit: Int\n    $skip: Int\n    $order: [ContributingCohortsOrder]\n  ) {\n    contributingCohortsCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ContributingCohortsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchContributingCohorts(\n    $limit: Int\n    $skip: Int\n    $order: [ContributingCohortsOrder]\n  ) {\n    contributingCohortsCollection(limit: $limit, skip: $skip, order: $order) {\n      total\n      items {\n        ...ContributingCohortsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchDashboard(\n    $orderAnnouncements: [DashboardAnnouncementsCollectionOrder]\n  ) {\n    dashboardCollection(limit: 1) {\n      total\n      items {\n        latestStats {\n          sampleCount\n          articleCount\n          cohortCount\n        }\n        announcementsCollection(order: $orderAnnouncements) {\n          items {\n            description\n            deadline\n            link\n            sys {\n              id\n            }\n          }\n        }\n        guidesCollection {\n          items {\n            sys {\n              id\n            }\n            title\n            icon {\n              url\n            }\n            descriptionCollection {\n              items {\n                sys {\n                  id\n                }\n                title\n                bodyText\n                linkUrl\n                linkText\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchDashboard(\n    $orderAnnouncements: [DashboardAnnouncementsCollectionOrder]\n  ) {\n    dashboardCollection(limit: 1) {\n      total\n      items {\n        latestStats {\n          sampleCount\n          articleCount\n          cohortCount\n        }\n        announcementsCollection(order: $orderAnnouncements) {\n          items {\n            description\n            deadline\n            link\n            sys {\n              id\n            }\n          }\n        }\n        guidesCollection {\n          items {\n            sys {\n              id\n            }\n            title\n            icon {\n              url\n            }\n            descriptionCollection {\n              items {\n                sys {\n                  id\n                }\n                title\n                bodyText\n                linkUrl\n                linkText\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment EventsContentData on Events {\n    sys {\n      id\n      publishedAt\n      publishedVersion\n    }\n    description\n    endDate\n    endDateTimeZone\n    startDate\n    startDateTimeZone\n    meetingLink\n    hideMeetingLink\n    eventLink\n    status\n    hidden\n    tags\n    title\n    notesPermanentlyUnavailable\n    notes {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    notesUpdatedAt\n    videoRecordingPermanentlyUnavailable\n    videoRecording {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    videoRecordingUpdatedAt\n    presentationPermanentlyUnavailable\n    presentation {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    presentationUpdatedAt\n    meetingMaterialsPermanentlyUnavailable\n    meetingMaterials\n    calendar {\n      googleCalendarId\n      color\n      name\n      linkedFrom {\n        workingGroupsCollection {\n          items {\n            sys {\n              id\n            }\n            title\n          }\n        }\n        projectsCollection {\n          items {\n            sys {\n              id\n            }\n            title\n          }\n        }\n      }\n    }\n    thumbnail {\n      url\n    }\n    speakersCollection(limit: 10) {\n      items {\n        title\n        user {\n          __typename\n          ... on ExternalUsers {\n            sys {\n              id\n            }\n            name\n            orcid\n          }\n          ... on Users {\n            sys {\n              id\n            }\n            firstName\n            lastName\n            onboarded\n            avatar {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  fragment EventsContentData on Events {\n    sys {\n      id\n      publishedAt\n      publishedVersion\n    }\n    description\n    endDate\n    endDateTimeZone\n    startDate\n    startDateTimeZone\n    meetingLink\n    hideMeetingLink\n    eventLink\n    status\n    hidden\n    tags\n    title\n    notesPermanentlyUnavailable\n    notes {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    notesUpdatedAt\n    videoRecordingPermanentlyUnavailable\n    videoRecording {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    videoRecordingUpdatedAt\n    presentationPermanentlyUnavailable\n    presentation {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    presentationUpdatedAt\n    meetingMaterialsPermanentlyUnavailable\n    meetingMaterials\n    calendar {\n      googleCalendarId\n      color\n      name\n      linkedFrom {\n        workingGroupsCollection {\n          items {\n            sys {\n              id\n            }\n            title\n          }\n        }\n        projectsCollection {\n          items {\n            sys {\n              id\n            }\n            title\n          }\n        }\n      }\n    }\n    thumbnail {\n      url\n    }\n    speakersCollection(limit: 10) {\n      items {\n        title\n        user {\n          __typename\n          ... on ExternalUsers {\n            sys {\n              id\n            }\n            name\n            orcid\n          }\n          ... on Users {\n            sys {\n              id\n            }\n            firstName\n            lastName\n            onboarded\n            avatar {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchEventById($id: String!) {\n    events(id: $id) {\n      ...EventsContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchEventById($id: String!) {\n    events(id: $id) {\n      ...EventsContentData\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchEvents(\n    $limit: Int\n    $skip: Int\n    $order: [EventsOrder]\n    $where: EventsFilter\n  ) {\n    eventsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...EventsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchEvents(\n    $limit: Int\n    $skip: Int\n    $order: [EventsOrder]\n    $where: EventsFilter\n  ) {\n    eventsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...EventsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchEventsByUserId($id: String!, $limit: Int, $skip: Int) {\n    users(id: $id) {\n      linkedFrom {\n        eventSpeakersCollection(limit: 1) {\n          items {\n            linkedFrom {\n              eventsCollection(limit: $limit, skip: $skip) {\n                total\n                items {\n                  ...EventsContentData\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchEventsByUserId($id: String!, $limit: Int, $skip: Int) {\n    users(id: $id) {\n      linkedFrom {\n        eventSpeakersCollection(limit: 1) {\n          items {\n            linkedFrom {\n              eventsCollection(limit: $limit, skip: $skip) {\n                total\n                items {\n                  ...EventsContentData\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchEventsByExternalUserId($id: String!, $limit: Int, $skip: Int) {\n    externalUsers(id: $id) {\n      linkedFrom {\n        eventSpeakersCollection(limit: 1) {\n          items {\n            linkedFrom {\n              eventsCollection(limit: $limit, skip: $skip) {\n                total\n                items {\n                  ...EventsContentData\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchEventsByExternalUserId($id: String!, $limit: Int, $skip: Int) {\n    externalUsers(id: $id) {\n      linkedFrom {\n        eventSpeakersCollection(limit: 1) {\n          items {\n            linkedFrom {\n              eventsCollection(limit: $limit, skip: $skip) {\n                total\n                items {\n                  ...EventsContentData\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchProjectCalendar($id: String!) {\n    projects(id: $id) {\n      calendar {\n        sys {\n          id\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchProjectCalendar($id: String!) {\n    projects(id: $id) {\n      calendar {\n        sys {\n          id\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchWorkingGroupCalendar($id: String!) {\n    workingGroups(id: $id) {\n      calendar {\n        sys {\n          id\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchWorkingGroupCalendar($id: String!) {\n    workingGroups(id: $id) {\n      calendar {\n        sys {\n          id\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment ExternalUsersContentData on ExternalUsers {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    name\n    orcid\n  }\n',
 ): (typeof documents)['\n  fragment ExternalUsersContentData on ExternalUsers {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    name\n    orcid\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchExternalUsers(\n    $limit: Int\n    $skip: Int\n    $order: [ExternalUsersOrder]\n    $where: ExternalUsersFilter\n  ) {\n    externalUsersCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ExternalUsersContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchExternalUsers(\n    $limit: Int\n    $skip: Int\n    $order: [ExternalUsersOrder]\n    $where: ExternalUsersFilter\n  ) {\n    externalUsersCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n    ) {\n      total\n      items {\n        ...ExternalUsersContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n    type\n  }\n',
 ): (typeof documents)['\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n    type\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchNewsById($id: String!) {\n    news(id: $id) {\n      ...NewsContentData\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchNews(\n    $limit: Int\n    $skip: Int\n    $order: [NewsOrder]\n    $where: NewsFilter\n  ) {\n    newsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...NewsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment OutputsContentData on Outputs {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    title\n    documentType\n    type\n    subtype\n    link\n    addedDate\n    publishDate\n    lastUpdatedPartial\n    relatedEntity {\n      __typename\n      ... on Projects {\n        sys {\n          id\n        }\n        title\n      }\n      ... on WorkingGroups {\n        sys {\n          id\n        }\n        title\n      }\n    }\n    authorsCollection(limit: 10) {\n      total\n      items {\n        __typename\n        ... on Users {\n          sys {\n            id\n          }\n          firstName\n          lastName\n          email\n          avatar {\n            url\n          }\n          onboarded\n        }\n        ... on ExternalUsers {\n          sys {\n            id\n          }\n          name\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  fragment OutputsContentData on Outputs {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    title\n    documentType\n    type\n    subtype\n    link\n    addedDate\n    publishDate\n    lastUpdatedPartial\n    relatedEntity {\n      __typename\n      ... on Projects {\n        sys {\n          id\n        }\n        title\n      }\n      ... on WorkingGroups {\n        sys {\n          id\n        }\n        title\n      }\n    }\n    authorsCollection(limit: 10) {\n      total\n      items {\n        __typename\n        ... on Users {\n          sys {\n            id\n          }\n          firstName\n          lastName\n          email\n          avatar {\n            url\n          }\n          onboarded\n        }\n        ... on ExternalUsers {\n          sys {\n            id\n          }\n          name\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchOutputById($id: String!) {\n    outputs(id: $id) {\n      ...OutputsContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchOutputById($id: String!) {\n    outputs(id: $id) {\n      ...OutputsContentData\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchOutputs(\n    $limit: Int\n    $skip: Int\n    $order: [OutputsOrder]\n    $where: OutputsFilter\n    $preview: Boolean\n  ) {\n    outputsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n      preview: $preview\n    ) {\n      total\n      items {\n        ...OutputsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchOutputs(\n    $limit: Int\n    $skip: Int\n    $order: [OutputsOrder]\n    $where: OutputsFilter\n    $preview: Boolean\n  ) {\n    outputsCollection(\n      limit: $limit\n      skip: $skip\n      order: $order\n      where: $where\n      preview: $preview\n    ) {\n      total\n      items {\n        ...OutputsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchOutputsByWorkingGroupId($id: String!, $limit: Int, $skip: Int) {\n    workingGroups(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchOutputsByWorkingGroupId($id: String!, $limit: Int, $skip: Int) {\n    workingGroups(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchOutputsByUserId($id: String!, $limit: Int, $skip: Int) {\n    users(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchOutputsByUserId($id: String!, $limit: Int, $skip: Int) {\n    users(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchOutputsByProjectId($id: String!, $limit: Int, $skip: Int) {\n    projects(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchOutputsByProjectId($id: String!, $limit: Int, $skip: Int) {\n    projects(id: $id) {\n      sys {\n        id\n      }\n      linkedFrom {\n        outputsCollection(limit: $limit, skip: $skip) {\n          total\n          items {\n            ...OutputsContentData\n          }\n        }\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment PageContentData on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n',
 ): (typeof documents)['\n  fragment PageContentData on Pages {\n    sys {\n      id\n    }\n    title\n    path\n    shortText\n    text {\n      json\n      links {\n        entries {\n          inline {\n            sys {\n              id\n            }\n            __typename\n            ... on Media {\n              url\n            }\n          }\n        }\n        assets {\n          block {\n            sys {\n              id\n            }\n            url\n            description\n            contentType\n            width\n            height\n          }\n        }\n      }\n    }\n    link\n    linkText\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchPages($where: PagesFilter) {\n    pagesCollection(limit: 100, where: $where) {\n      total\n      items {\n        ...PageContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment ProjectsContentData on Projects {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    title\n    startDate\n    endDate\n    status\n    projectProposal\n    description\n    pmEmail\n    leadEmail\n    keywords\n    traineeProject\n    opportunitiesLink\n    membersCollection(limit: 50) {\n      total\n      items {\n        sys {\n          id\n        }\n        role\n        user {\n          sys {\n            id\n          }\n          firstName\n          lastName\n          onboarded\n          avatar {\n            url\n          }\n        }\n      }\n    }\n    milestonesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        description\n        externalLink\n        status\n        title\n      }\n    }\n    resourcesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        type\n        title\n        description\n        externalLink\n      }\n    }\n    calendar {\n      sys {\n        id\n      }\n      name\n    }\n  }\n',
 ): (typeof documents)['\n  fragment ProjectsContentData on Projects {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    title\n    startDate\n    endDate\n    status\n    projectProposal\n    description\n    pmEmail\n    leadEmail\n    keywords\n    traineeProject\n    opportunitiesLink\n    membersCollection(limit: 50) {\n      total\n      items {\n        sys {\n          id\n        }\n        role\n        user {\n          sys {\n            id\n          }\n          firstName\n          lastName\n          onboarded\n          avatar {\n            url\n          }\n        }\n      }\n    }\n    milestonesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        description\n        externalLink\n        status\n        title\n      }\n    }\n    resourcesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        type\n        title\n        description\n        externalLink\n      }\n    }\n    calendar {\n      sys {\n        id\n      }\n      name\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchProjectById($id: String!) {\n    projects(id: $id) {\n      ...ProjectsContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchProjectById($id: String!) {\n    projects(id: $id) {\n      ...ProjectsContentData\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchProjects($limit: Int, $skip: Int) {\n    projectsCollection(limit: $limit, skip: $skip) {\n      total\n      items {\n        ...ProjectsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchProjects($limit: Int, $skip: Int) {\n    projectsCollection(limit: $limit, skip: $skip) {\n      total\n      items {\n        ...ProjectsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment LatestStatsContentData on LatestStats {\n    sampleCount\n    articleCount\n    cohortCount\n  }\n',
 ): (typeof documents)['\n  fragment LatestStatsContentData on LatestStats {\n    sampleCount\n    articleCount\n    cohortCount\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchLatestStats {\n    latestStatsCollection(limit: 1) {\n      total\n      items {\n        ...LatestStatsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchLatestStats {\n    latestStatsCollection(limit: 1) {\n      total\n      items {\n        ...LatestStatsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment UsersContentData on Users {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    activatedDate\n    firstName\n    lastName\n    avatar {\n      url\n    }\n    degrees\n    country\n    city\n    region\n    email\n    alternativeEmail\n    telephoneCountryCode\n    telephoneNumber\n    keywords\n    biography\n    questions\n    fundingStreams\n    blog\n    linkedIn\n    twitter\n    github\n    googleScholar\n    orcid\n    researchGate\n    researcherId\n    connections\n    role\n    onboarded\n    positions\n    activatedDate\n    contributingCohortsCollection(limit: 10) {\n      items {\n        contributingCohort {\n          sys {\n            id\n          }\n          name\n        }\n        role\n        studyLink\n      }\n    }\n    linkedFrom {\n      projectMembershipCollection(limit: 10) {\n        items {\n          user {\n            sys {\n              id\n            }\n          }\n          role\n          linkedFrom {\n            projectsCollection(limit: 1) {\n              items {\n                sys {\n                  id\n                }\n                title\n                status\n                membersCollection(limit: 25) {\n                  items {\n                    role\n                    user {\n                      sys {\n                        id\n                      }\n                      onboarded\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n      workingGroupMembershipCollection(limit: 10) {\n        items {\n          user {\n            sys {\n              id\n            }\n          }\n          role\n          linkedFrom {\n            workingGroupsCollection(limit: 1) {\n              items {\n                sys {\n                  id\n                }\n                title\n                membersCollection(limit: 25) {\n                  items {\n                    role\n                    user {\n                      sys {\n                        id\n                      }\n                      onboarded\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  fragment UsersContentData on Users {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    activatedDate\n    firstName\n    lastName\n    avatar {\n      url\n    }\n    degrees\n    country\n    city\n    region\n    email\n    alternativeEmail\n    telephoneCountryCode\n    telephoneNumber\n    keywords\n    biography\n    questions\n    fundingStreams\n    blog\n    linkedIn\n    twitter\n    github\n    googleScholar\n    orcid\n    researchGate\n    researcherId\n    connections\n    role\n    onboarded\n    positions\n    activatedDate\n    contributingCohortsCollection(limit: 10) {\n      items {\n        contributingCohort {\n          sys {\n            id\n          }\n          name\n        }\n        role\n        studyLink\n      }\n    }\n    linkedFrom {\n      projectMembershipCollection(limit: 10) {\n        items {\n          user {\n            sys {\n              id\n            }\n          }\n          role\n          linkedFrom {\n            projectsCollection(limit: 1) {\n              items {\n                sys {\n                  id\n                }\n                title\n                status\n                membersCollection(limit: 25) {\n                  items {\n                    role\n                    user {\n                      sys {\n                        id\n                      }\n                      onboarded\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n      workingGroupMembershipCollection(limit: 10) {\n        items {\n          user {\n            sys {\n              id\n            }\n          }\n          role\n          linkedFrom {\n            workingGroupsCollection(limit: 1) {\n              items {\n                sys {\n                  id\n                }\n                title\n                membersCollection(limit: 25) {\n                  items {\n                    role\n                    user {\n                      sys {\n                        id\n                      }\n                      onboarded\n                    }\n                  }\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchUserById($id: String!) {\n    users(id: $id) {\n      ...UsersContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchUserById($id: String!) {\n    users(id: $id) {\n      ...UsersContentData\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchUsers(\n    $limit: Int\n    $skip: Int\n    $order: [UsersOrder]\n    $where: UsersFilter\n  ) {\n    usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...UsersContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchUsers(\n    $limit: Int\n    $skip: Int\n    $order: [UsersOrder]\n    $where: UsersFilter\n  ) {\n    usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...UsersContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchUsersByProjectId($id: [String]!) {\n    projectsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchUsersByProjectId($id: [String]!) {\n    projectsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchUsersByWorkingGroupId($id: [String]!) {\n    workingGroupsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n',
 ): (typeof documents)['\n  query FetchUsersByWorkingGroupId($id: [String]!) {\n    workingGroupsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment WorkingGroupNetworkContentData on WorkingGroupNetwork {\n    supportCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    monogenicCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    operationalCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    complexDiseaseCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  fragment WorkingGroupNetworkContentData on WorkingGroupNetwork {\n    supportCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    monogenicCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    operationalCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    complexDiseaseCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchWorkingGroupNetwork {\n    workingGroupNetworkCollection(limit: 1) {\n      total\n      items {\n        ...WorkingGroupNetworkContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchWorkingGroupNetwork {\n    workingGroupNetworkCollection(limit: 1) {\n      total\n      items {\n        ...WorkingGroupNetworkContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  fragment WorkingGroupsContentData on WorkingGroups {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    title\n    shortDescription\n    description {\n      json\n    }\n    primaryEmail\n    secondaryEmail\n    leadingMembers\n    membersCollection(limit: 50) {\n      total\n      items {\n        sys {\n          id\n        }\n        role\n        user {\n          sys {\n            id\n          }\n          firstName\n          lastName\n          onboarded\n          avatar {\n            url\n          }\n        }\n      }\n    }\n    milestonesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        description\n        externalLink\n        status\n        title\n      }\n    }\n    resourcesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        type\n        title\n        description\n        externalLink\n      }\n    }\n    calendar {\n      sys {\n        id\n      }\n      name\n    }\n  }\n',
 ): (typeof documents)['\n  fragment WorkingGroupsContentData on WorkingGroups {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    title\n    shortDescription\n    description {\n      json\n    }\n    primaryEmail\n    secondaryEmail\n    leadingMembers\n    membersCollection(limit: 50) {\n      total\n      items {\n        sys {\n          id\n        }\n        role\n        user {\n          sys {\n            id\n          }\n          firstName\n          lastName\n          onboarded\n          avatar {\n            url\n          }\n        }\n      }\n    }\n    milestonesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        description\n        externalLink\n        status\n        title\n      }\n    }\n    resourcesCollection(limit: 10) {\n      total\n      items {\n        sys {\n          id\n        }\n        type\n        title\n        description\n        externalLink\n      }\n    }\n    calendar {\n      sys {\n        id\n      }\n      name\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchWorkingGroupById($id: String!) {\n    workingGroups(id: $id) {\n      ...WorkingGroupsContentData\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchWorkingGroupById($id: String!) {\n    workingGroups(id: $id) {\n      ...WorkingGroupsContentData\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(
   source: '\n  query FetchWorkingGroups {\n    workingGroupsCollection(limit: 50) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchWorkingGroups {\n    workingGroupsCollection(limit: 50) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n'];
 
-export function gql(source: string): unknown;
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
 }

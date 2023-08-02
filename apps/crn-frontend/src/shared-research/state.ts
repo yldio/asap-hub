@@ -192,10 +192,11 @@ export const useInvalidateResearchOutputIndex = () => {
 export const useCanShareResearchOutput = (
   association: 'teams' | 'workingGroups',
   associationIds: string[],
+  activeAssociation: boolean,
 ): boolean => {
   const user = useCurrentUserCRN();
   const userRole = getUserRole(user, association, associationIds);
-  return hasShareResearchOutputPermission(userRole);
+  return hasShareResearchOutputPermission(userRole) && activeAssociation;
 };
 
 export const useCanDuplicateResearchOutput = (

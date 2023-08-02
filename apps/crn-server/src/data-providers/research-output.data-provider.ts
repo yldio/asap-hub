@@ -210,7 +210,6 @@ export class ResearchOutputSquidexDataProvider
       subtypeId,
       keywordIds,
       workingGroups,
-      statusChangedById: _statusChangedById,
       ...researchOutputData
     } = input;
 

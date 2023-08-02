@@ -6910,6 +6910,11 @@ export type EventsContentDataFragment = Pick<
   | 'meetingMaterials'
 > & {
   sys: Pick<Sys, 'id' | 'publishedAt' | 'publishedVersion'>;
+  keywordsCollection?: Maybe<
+    Pick<EventsKeywordsCollection, 'total'> & {
+      items: Array<Maybe<Pick<Keywords, 'name'>>>;
+    }
+  >;
   notes?: Maybe<
     Pick<EventsNotes, 'json'> & {
       links: {
@@ -7148,6 +7153,11 @@ export type FetchEventByIdQuery = {
       | 'meetingMaterials'
     > & {
       sys: Pick<Sys, 'id' | 'publishedAt' | 'publishedVersion'>;
+      keywordsCollection?: Maybe<
+        Pick<EventsKeywordsCollection, 'total'> & {
+          items: Array<Maybe<Pick<Keywords, 'name'>>>;
+        }
+      >;
       notes?: Maybe<
         Pick<EventsNotes, 'json'> & {
           links: {
@@ -7409,6 +7419,11 @@ export type FetchEventsQuery = {
             | 'meetingMaterials'
           > & {
             sys: Pick<Sys, 'id' | 'publishedAt' | 'publishedVersion'>;
+            keywordsCollection?: Maybe<
+              Pick<EventsKeywordsCollection, 'total'> & {
+                items: Array<Maybe<Pick<Keywords, 'name'>>>;
+              }
+            >;
             notes?: Maybe<
               Pick<EventsNotes, 'json'> & {
                 links: {
@@ -7766,6 +7781,11 @@ export type FetchEventsByUserIdQuery = {
                         sys: Pick<
                           Sys,
                           'id' | 'publishedAt' | 'publishedVersion'
+                        >;
+                        keywordsCollection?: Maybe<
+                          Pick<EventsKeywordsCollection, 'total'> & {
+                            items: Array<Maybe<Pick<Keywords, 'name'>>>;
+                          }
                         >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
@@ -8178,6 +8198,11 @@ export type FetchEventsByExternalUserIdQuery = {
                         sys: Pick<
                           Sys,
                           'id' | 'publishedAt' | 'publishedVersion'
+                        >;
+                        keywordsCollection?: Maybe<
+                          Pick<EventsKeywordsCollection, 'total'> & {
+                            items: Array<Maybe<Pick<Keywords, 'name'>>>;
+                          }
                         >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
@@ -8693,6 +8718,11 @@ export type OutputsContentDataFragment = Pick<
       >;
     }
   >;
+  tagsCollection?: Maybe<
+    Pick<OutputsTagsCollection, 'total'> & {
+      items: Array<Maybe<Pick<Keywords, 'name'>>>;
+    }
+  >;
 };
 
 export type FetchOutputByIdQueryVariables = Exact<{
@@ -8741,6 +8771,11 @@ export type FetchOutputByIdQuery = {
                   })
             >
           >;
+        }
+      >;
+      tagsCollection?: Maybe<
+        Pick<OutputsTagsCollection, 'total'> & {
+          items: Array<Maybe<Pick<Keywords, 'name'>>>;
         }
       >;
     }
@@ -8805,6 +8840,11 @@ export type FetchOutputsQuery = {
                 >;
               }
             >;
+            tagsCollection?: Maybe<
+              Pick<OutputsTagsCollection, 'total'> & {
+                items: Array<Maybe<Pick<Keywords, 'name'>>>;
+              }
+            >;
           }
         >
       >;
@@ -8867,6 +8907,11 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                             })
                       >
                     >;
+                  }
+                >;
+                tagsCollection?: Maybe<
+                  Pick<OutputsTagsCollection, 'total'> & {
+                    items: Array<Maybe<Pick<Keywords, 'name'>>>;
                   }
                 >;
               }
@@ -8935,6 +8980,11 @@ export type FetchOutputsByUserIdQuery = {
                     >;
                   }
                 >;
+                tagsCollection?: Maybe<
+                  Pick<OutputsTagsCollection, 'total'> & {
+                    items: Array<Maybe<Pick<Keywords, 'name'>>>;
+                  }
+                >;
               }
             >
           >;
@@ -8999,6 +9049,11 @@ export type FetchOutputsByProjectIdQuery = {
                             })
                       >
                     >;
+                  }
+                >;
+                tagsCollection?: Maybe<
+                  Pick<OutputsTagsCollection, 'total'> & {
+                    items: Array<Maybe<Pick<Keywords, 'name'>>>;
                   }
                 >;
               }
@@ -9199,6 +9254,11 @@ export type ProjectsContentDataFragment = Pick<
     Sys,
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
   >;
+  tagsCollection?: Maybe<
+    Pick<ProjectsTagsCollection, 'total'> & {
+      items: Array<Maybe<Pick<Keywords, 'name'>>>;
+    }
+  >;
   membersCollection?: Maybe<
     Pick<ProjectsMembersCollection, 'total'> & {
       items: Array<
@@ -9265,6 +9325,11 @@ export type FetchProjectByIdQuery = {
       sys: Pick<
         Sys,
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+      >;
+      tagsCollection?: Maybe<
+        Pick<ProjectsTagsCollection, 'total'> & {
+          items: Array<Maybe<Pick<Keywords, 'name'>>>;
+        }
       >;
       membersCollection?: Maybe<
         Pick<ProjectsMembersCollection, 'total'> & {
@@ -9339,6 +9404,11 @@ export type FetchProjectsQuery = {
             sys: Pick<
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+            >;
+            tagsCollection?: Maybe<
+              Pick<ProjectsTagsCollection, 'total'> & {
+                items: Array<Maybe<Pick<Keywords, 'name'>>>;
+              }
             >;
             membersCollection?: Maybe<
               Pick<ProjectsMembersCollection, 'total'> & {
@@ -9443,6 +9513,11 @@ export type UsersContentDataFragment = Pick<
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
   >;
   avatar?: Maybe<Pick<Asset, 'url'>>;
+  tagsCollection?: Maybe<
+    Pick<UsersTagsCollection, 'total'> & {
+      items: Array<Maybe<Pick<Keywords, 'name'>>>;
+    }
+  >;
   contributingCohortsCollection?: Maybe<{
     items: Array<
       Maybe<
@@ -9565,6 +9640,11 @@ export type FetchUserByIdQuery = {
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
       >;
       avatar?: Maybe<Pick<Asset, 'url'>>;
+      tagsCollection?: Maybe<
+        Pick<UsersTagsCollection, 'total'> & {
+          items: Array<Maybe<Pick<Keywords, 'name'>>>;
+        }
+      >;
       contributingCohortsCollection?: Maybe<{
         items: Array<
           Maybe<
@@ -9695,6 +9775,11 @@ export type FetchUsersQuery = {
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
             avatar?: Maybe<Pick<Asset, 'url'>>;
+            tagsCollection?: Maybe<
+              Pick<UsersTagsCollection, 'total'> & {
+                items: Array<Maybe<Pick<Keywords, 'name'>>>;
+              }
+            >;
             contributingCohortsCollection?: Maybe<{
               items: Array<
                 Maybe<
@@ -9885,6 +9970,11 @@ export type WorkingGroupNetworkContentDataFragment = {
             calendar?: Maybe<
               Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
             >;
+            tagsCollection?: Maybe<
+              Pick<WorkingGroupsTagsCollection, 'total'> & {
+                items: Array<Maybe<Pick<Keywords, 'name'>>>;
+              }
+            >;
           }
         >
       >;
@@ -9950,6 +10040,11 @@ export type WorkingGroupNetworkContentDataFragment = {
             >;
             calendar?: Maybe<
               Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+            >;
+            tagsCollection?: Maybe<
+              Pick<WorkingGroupsTagsCollection, 'total'> & {
+                items: Array<Maybe<Pick<Keywords, 'name'>>>;
+              }
             >;
           }
         >
@@ -10017,6 +10112,11 @@ export type WorkingGroupNetworkContentDataFragment = {
             calendar?: Maybe<
               Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
             >;
+            tagsCollection?: Maybe<
+              Pick<WorkingGroupsTagsCollection, 'total'> & {
+                items: Array<Maybe<Pick<Keywords, 'name'>>>;
+              }
+            >;
           }
         >
       >;
@@ -10082,6 +10182,11 @@ export type WorkingGroupNetworkContentDataFragment = {
             >;
             calendar?: Maybe<
               Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+            >;
+            tagsCollection?: Maybe<
+              Pick<WorkingGroupsTagsCollection, 'total'> & {
+                items: Array<Maybe<Pick<Keywords, 'name'>>>;
+              }
             >;
           }
         >
@@ -10169,6 +10274,11 @@ export type FetchWorkingGroupNetworkQuery = {
                     calendar?: Maybe<
                       Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
                     >;
+                    tagsCollection?: Maybe<
+                      Pick<WorkingGroupsTagsCollection, 'total'> & {
+                        items: Array<Maybe<Pick<Keywords, 'name'>>>;
+                      }
+                    >;
                   }
                 >
               >;
@@ -10243,6 +10353,11 @@ export type FetchWorkingGroupNetworkQuery = {
                     >;
                     calendar?: Maybe<
                       Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                    tagsCollection?: Maybe<
+                      Pick<WorkingGroupsTagsCollection, 'total'> & {
+                        items: Array<Maybe<Pick<Keywords, 'name'>>>;
+                      }
                     >;
                   }
                 >
@@ -10319,6 +10434,11 @@ export type FetchWorkingGroupNetworkQuery = {
                     calendar?: Maybe<
                       Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
                     >;
+                    tagsCollection?: Maybe<
+                      Pick<WorkingGroupsTagsCollection, 'total'> & {
+                        items: Array<Maybe<Pick<Keywords, 'name'>>>;
+                      }
+                    >;
                   }
                 >
               >;
@@ -10394,6 +10514,11 @@ export type FetchWorkingGroupNetworkQuery = {
                     calendar?: Maybe<
                       Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
                     >;
+                    tagsCollection?: Maybe<
+                      Pick<WorkingGroupsTagsCollection, 'total'> & {
+                        items: Array<Maybe<Pick<Keywords, 'name'>>>;
+                      }
+                    >;
                   }
                 >
               >;
@@ -10459,6 +10584,11 @@ export type WorkingGroupsContentDataFragment = Pick<
     }
   >;
   calendar?: Maybe<Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }>;
+  tagsCollection?: Maybe<
+    Pick<WorkingGroupsTagsCollection, 'total'> & {
+      items: Array<Maybe<Pick<Keywords, 'name'>>>;
+    }
+  >;
 };
 
 export type FetchWorkingGroupByIdQueryVariables = Exact<{
@@ -10522,6 +10652,11 @@ export type FetchWorkingGroupByIdQuery = {
         }
       >;
       calendar?: Maybe<Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }>;
+      tagsCollection?: Maybe<
+        Pick<WorkingGroupsTagsCollection, 'total'> & {
+          items: Array<Maybe<Pick<Keywords, 'name'>>>;
+        }
+      >;
     }
   >;
 };
@@ -10589,6 +10724,11 @@ export type FetchWorkingGroupsQuery = {
             >;
             calendar?: Maybe<
               Pick<Calendars, 'name'> & { sys: Pick<Sys, 'id'> }
+            >;
+            tagsCollection?: Maybe<
+              Pick<WorkingGroupsTagsCollection, 'total'> & {
+                items: Array<Maybe<Pick<Keywords, 'name'>>>;
+              }
             >;
           }
         >
@@ -10816,6 +10956,26 @@ export const EventsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
           { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'keywordsCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           {
             kind: 'Field',
@@ -11788,6 +11948,26 @@ export const OutputsContentDataFragmentDoc = {
               ],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tagsCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -11994,6 +12174,26 @@ export const ProjectsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'pmEmail' } },
           { kind: 'Field', name: { kind: 'Name', value: 'leadEmail' } },
           { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tagsCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'traineeProject' } },
           { kind: 'Field', name: { kind: 'Name', value: 'opportunitiesLink' } },
           {
@@ -12287,6 +12487,26 @@ export const UsersContentDataFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'telephoneNumber' } },
           { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tagsCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
           { kind: 'Field', name: { kind: 'Name', value: 'questions' } },
           { kind: 'Field', name: { kind: 'Name', value: 'fundingStreams' } },
@@ -13043,6 +13263,26 @@ export const WorkingGroupsContentDataFragmentDoc = {
                   },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tagsCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
               ],
             },
           },

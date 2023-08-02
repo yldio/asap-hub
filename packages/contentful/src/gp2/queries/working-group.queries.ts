@@ -68,6 +68,12 @@ export const workingGroupsContentQueryFragment = gql`
       }
       name
     }
+    tagsCollection {
+      total
+      items {
+        name
+      }
+    }
   }
 `;
 

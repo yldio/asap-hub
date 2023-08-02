@@ -20,6 +20,12 @@ export const eventsContentQueryFragment = gql`
     status
     hidden
     tags
+    keywordsCollection {
+      total
+      items {
+        name
+      }
+    }
     title
     notesPermanentlyUnavailable
     notes {

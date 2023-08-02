@@ -54,9 +54,9 @@ describe('Filters', () => {
   });
 
   describe.each`
-    groupName           | entity            | field
-    ${`interest group`} | ${`group`}        | ${`groupId`}
-    ${`working group`}  | ${`workingGroup`} | ${`workingGroupId`}
+    groupName           | entity             | field
+    ${`interest group`} | ${`interestGroup`} | ${`interestGroupId`}
+    ${`working group`}  | ${`workingGroup`}  | ${`workingGroupId`}
   `('$groupName', ({ groupName, entity, field }) => {
     test(`dates constrained by ${groupName}`, () => {
       expect(

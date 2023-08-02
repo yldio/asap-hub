@@ -114,36 +114,3 @@ jobs:
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
-      - name: Remove the entity data (ENTITY)
-        if: ${{ inputs.entity != 'all'}}
-        run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -e $ENTITY_TYPE
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
-          ENTITY_TYPE: ${{ (inputs.entity == 'outputs' && 'output') }}
-      - name: Import Outputs (OUTPUTs | ALL)
-        if: ${{ inputs.entity == 'research-outputs' || inputs.entity == 'all'}}
-        uses: ./.github/actions/algolia-import-entity
-        with:
-          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
-          app: 'gp2'
-          entity-type: 'output'
-          squidex-app-name: ${{ steps.setup.outputs.gp2-squidex-app-name }}
-          squidex-base-url: 'na'
-          squidex-ci-client-id: 'na'
-          squidex-ci-client-secret: 'na'
-          contentful-env: ${{ inputs.contentful-environment-id }}
-          contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
-          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-          data-store: 'contentful'
-      - name: Override index with the temp one
-        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX-contentful
-        env:
-          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
-          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
-          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'

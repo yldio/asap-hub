@@ -1,4 +1,4 @@
-name: Sync CRN Algolia with Squidex
+name: Sync CRN Algolia
 on:
   workflow_dispatch:
     inputs:

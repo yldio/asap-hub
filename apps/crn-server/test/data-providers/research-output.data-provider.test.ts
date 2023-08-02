@@ -17,7 +17,6 @@ import {
 } from '../../src/data-providers/research-output.data-provider';
 import { getAuthToken } from '../../src/utils/auth';
 import {
-  getListResearchOutputDataObject,
   getResearchOutputCreateDataObject,
   getResearchOutputDataObject,
   getResearchOutputUpdateDataObject,
@@ -72,7 +71,10 @@ describe('ResearchOutputs data provider', () => {
         researchOutputId,
       );
 
-      expect(result).toMatchObject(getResearchOutputDataObject());
+      // versions are not supported in Squidex and default to []
+      const expectedResult = { ...getResearchOutputDataObject(), versions: [] };
+
+      expect(result).toMatchObject(expectedResult);
     });
 
     test('should return the research output', async () => {
@@ -100,6 +102,9 @@ describe('ResearchOutputs data provider', () => {
         firstName: 'First',
         lastName: 'Last',
       };
+
+      // versions are not supported in Squidex and default to []
+      expectedResult.versions = [];
 
       expect(result).toEqual(expectedResult);
     });
@@ -384,6 +389,9 @@ describe('ResearchOutputs data provider', () => {
       expectedResult.teams = [];
       expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
 
+      // versions are not supported in Squidex and default to []
+      expectedResult.versions = [];
+
       expect(result).toEqual(expectedResult);
     });
 
@@ -607,8 +615,12 @@ describe('ResearchOutputs data provider', () => {
         skip: 0,
         search: 'Title',
       });
-
-      expect(result).toMatchObject(getListResearchOutputDataObject());
+      // versions are not supported in Squidex and default to []
+      const expectedResult = {
+        total: 1,
+        items: [{ ...getResearchOutputDataObject(), versions: [] }],
+      };
+      expect(result).toMatchObject(expectedResult);
     });
 
     test('Should return an empty result when the client returns an empty array of data', async () => {

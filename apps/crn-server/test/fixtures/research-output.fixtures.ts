@@ -248,7 +248,16 @@ export const getResearchOutputDataObject =
     keywords: ['Keyword1'],
     published: true,
     isInReview: false,
-    versions: [],
+    versions: [
+      {
+        addedDate: '',
+        id: '1',
+        title: 'Version 1',
+        documentType: 'Article',
+        type: 'Preprint',
+        link: 'https://version1.com',
+      },
+    ],
   });
 export const getDraftResearchOutputDataObject =
   (): ResearchOutputDraftDataObject => ({
@@ -662,7 +671,17 @@ export const getContentfulResearchOutputGraphqlResponse =
       ],
     },
     versionsCollection: {
-      items: [],
+      items: [
+        {
+          sys: {
+            id: '1',
+          },
+          title: 'Version 1',
+          documentType: 'Article',
+          type: 'Preprint',
+          link: 'https://version1.com',
+        },
+      ],
     },
     workingGroup: null,
   });

@@ -1,9 +1,12 @@
 import algoliasearch, { SearchClient } from 'algoliasearch';
-import { AlgoliaSearchClient } from './client';
+import { AlgoliaSearchClient, Apps } from './client';
+import * as gp2 from './gp2';
 
 export type { SearchResponse } from '@algolia/client-search';
 export * from './client';
+export * from './crn/types';
 export * from './filters';
+export { gp2 };
 
 type AlgoliaSearchClientNativeFactoryParams = {
   algoliaApiKey: string;
@@ -23,13 +26,13 @@ type AlgoliaSearchClientFactoryParams =
     clickAnalytics?: ConstructorParameters<typeof AlgoliaSearchClient>['3'];
   };
 
-export const algoliaSearchClientFactory = ({
+export const algoliaSearchClientFactory = <App extends Apps>({
   algoliaIndex,
   algoliaApiKey,
   algoliaAppId,
   userToken,
   clickAnalytics,
-}: AlgoliaSearchClientFactoryParams): AlgoliaSearchClient => {
+}: AlgoliaSearchClientFactoryParams): AlgoliaSearchClient<App> => {
   const algoliaSearchClient = algoliasearch(algoliaAppId, algoliaApiKey);
 
   const index = algoliaSearchClient.initIndex(algoliaIndex);

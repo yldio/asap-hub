@@ -1,0 +1,116 @@
+name: Reusable GP2 Algolia data sync
+
+on:
+  workflow_call:
+    inputs:
+      entity:
+        required: false
+        type: string
+        description: Choose which entity to sync
+        default: all
+      environment-name:
+        required: true
+        type: string
+        description: Choose which environment to sync
+        default: Branch
+      pr-number:
+        required: false
+        type: string
+        description: The PR number to run for
+      contentful-environment-id:
+        description: 'GP2 Contentful environment name'
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description: 'AWS Access Key ID'
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: 'AWS Secret Access Key'
+        required: true
+      GP2_CONTENTFUL_ACCESS_TOKEN:
+        description: 'GP2 Contentful Access Token'
+        required: true
+      CONTENTFUL_MANAGEMENT_TOKEN:
+        description: 'Contentful Management Token'
+        required: true
+jobs:
+  sync_index:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Algolia CLI
+        uses: algolia/setup-algolia-cli@master
+        with:
+          version: 1.2.1
+      - name: Check PR Number
+        if: ${{ inputs.environment-name=='Branch' }}
+        uses: ./.github/actions/is-number
+        with:
+          number: ${{ inputs.pr-number }}
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+          pr-number: ${{ inputs.pr-number }}
+      - name: Get Algolia Keys
+        id: algolia-keys
+        uses: ./.github/actions/algolia-keys
+        with:
+          algolia-api-key-name: ${{ steps.setup.outputs.gp2-algolia-api-key-name }}
+          algolia-app-id-name: ${{ steps.setup.outputs.gp2-algolia-app-id-name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Build
+        run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/gp2-server}' run build:babel"
+      - name: Copy index to a temporary index (ALL)
+        run: algolia indices copy -y -w $SCOPE $ALGOLIA_INDEX $ALGOLIA_INDEX_TEMP
+        env:
+          ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
+          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
+          # Do not copy the records if all entities are being synced
+          SCOPE: ${{ inputs.entity == 'all' && '-s settings,synonyms' || '-s synonyms' }}
+      - name: Remove the entity data (ENTITY)
+        if: ${{ inputs.entity != 'all'}}
+        run: yarn algolia:remove-records -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -e $ENTITY_TYPE
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
+          ENTITY_TYPE: ${{ (inputs.entity == 'outputs' && 'output') }}
+      - name: Import Outputs (OUTPUTS | ALL)
+        if: ${{ inputs.entity == 'outputs' || inputs.entity == 'all'}}
+        uses: ./.github/actions/algolia-import-entity
+        with:
+          algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          algolia-index: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
+          app: 'gp2'
+          entity-type: 'output'
+          contentful-env: ${{ inputs.contentful-environment-id }}
+          contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
+          contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
+          squidex-app-name: 'na'
+          squidex-base-url: 'na'
+          squidex-ci-client-id: 'na'
+          squidex-ci-client-secret: 'na'
+          data-store: 'contentful'
+      - name: Override index with the temp one
+        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX
+        env:
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
+          ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'

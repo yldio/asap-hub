@@ -12,7 +12,7 @@ export const contenfulUserLink: Link<'User'> = {
   sys: { type: 'Link', linkType: 'User', id: 'user-id' },
 };
 
-type Field = Record<string, any>;
+type Field = Record<string, unknown>;
 
 export const getEntry = (fields: Field): Entry => ({
   update: jest.fn(),

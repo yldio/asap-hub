@@ -23,7 +23,7 @@ import { sentryWrapper } from '../../utils/sentry-wrapper';
 export const indexUserEventsHandler =
   (
     eventController: EventController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): ((event: EventBridgeEvent<UserEvent, UserPayload>) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

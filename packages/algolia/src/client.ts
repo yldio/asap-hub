@@ -2,103 +2,103 @@ import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import {
   EventResponse,
   ExternalAuthorResponse,
-  LabResponse,
+  gp2 as gp2Model,
   ResearchOutputResponse,
   UserResponse,
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
+import {
+  EVENT_ENTITY_TYPE,
+  EXTERNAL_AUTHOR_ENTITY_TYPE,
+  Payload,
+  RESEARCH_OUTPUT_ENTITY_TYPE,
+  USER_ENTITY_TYPE,
+} from './crn';
+import { OUTPUT_ENTITY_TYPE, Payload as GP2Payload } from './gp2';
 
-export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
-export const USER_ENTITY_TYPE = 'user';
-export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
-export const LAB_ENTITY_TYPE = 'lab';
-export const EVENT_ENTITY_TYPE = 'event';
-
-export type Payload =
-  | {
-      data: EventResponse;
-      type: 'event';
-    }
-  | {
-      data: ExternalAuthorResponse;
-      type: 'external-author';
-    }
-  | {
-      data: LabResponse;
-      type: 'lab';
-    }
-  | {
-      data: ResearchOutputResponse;
-      type: 'research-output';
-    }
-  | {
-      data: UserResponse;
-      type: 'user';
-    };
-
+const CRN = 'crn';
+const GP2 = 'gp2';
+export type Apps = typeof CRN | typeof GP2;
 export type EntityResponses = {
-  [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
-  [USER_ENTITY_TYPE]: UserResponse;
-  [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
-  [EVENT_ENTITY_TYPE]: EventResponse;
-};
-
-export type EntityRecord<T extends keyof EntityResponses> =
-  EntityResponses[T] & {
-    objectID: string;
-    __meta: {
-      type: T;
-    };
+  [CRN]: {
+    [RESEARCH_OUTPUT_ENTITY_TYPE]: ResearchOutputResponse;
+    [USER_ENTITY_TYPE]: UserResponse;
+    [EXTERNAL_AUTHOR_ENTITY_TYPE]: ExternalAuthorResponse;
+    [EVENT_ENTITY_TYPE]: EventResponse;
   };
+  [GP2]: {
+    [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
+  };
+};
+type SavePayload = Payload | GP2Payload;
+type DistributeToEntityRecords<
+  Responses extends EntityResponses[Apps],
+  ResponsesKey extends keyof Responses,
+> = Responses[ResponsesKey] & {
+  objectID: string;
+  __meta: {
+    type: ResponsesKey;
+  };
+};
+export type ClientSearchResponse<
+  App extends Apps,
+  ResponsesKey extends keyof EntityResponses[App],
+> = SearchResponse<
+  DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
+>;
+export type ClientSearch<
+  App extends Apps,
+  ResponsesKey extends keyof EntityResponses[App],
+> = (
+  entityTypes: ResponsesKey[],
+  query: string,
+  requestOptions?: SearchOptions,
+  descendingEvents?: boolean,
+) => Promise<ClientSearchResponse<App, keyof EntityResponses[App]>>;
+interface SearchClient {
+  search: ClientSearch<Apps, keyof EntityResponses[Apps]>;
+  save: (payload: SavePayload) => Promise<void>;
+  saveMany: (payload: SavePayload[]) => Promise<void>;
+  remove: (id: string) => Promise<void>;
+}
 
-export type DistributeToEntityRecords<U extends keyof EntityResponses> =
-  U extends keyof EntityResponses ? EntityRecord<U> : never;
-
-export type EntityHit<T extends keyof EntityResponses> =
-  DistributeToEntityRecords<T>;
-
-export type SearchEntityResponse<TEntityType extends keyof EntityResponses> =
-  SearchResponse<DistributeToEntityRecords<TEntityType>>;
-
-export class AlgoliaSearchClient {
-  public constructor(
+export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
+  constructor(
     private index: SearchIndex,
     private reverseEventsIndex: SearchIndex,
     private userToken?: SearchOptions['userToken'],
     private clickAnalytics?: SearchOptions['clickAnalytics'],
-  ) {
-    // do nothing
-  }
+  ) {} // eslint-disable-line no-empty-function
 
-  async save({ data, type }: Payload): Promise<void> {
+  async save({ data, type }: SavePayload) {
     await this.index.saveObject(
       AlgoliaSearchClient.getAlgoliaObject(data, type),
     );
   }
 
-  async saveMany(payloads: Payload[]): Promise<void> {
+  async saveMany(payload: SavePayload[]) {
     await this.index.saveObjects(
-      payloads.map(({ data, type }) =>
+      payload.map(({ data, type }) =>
         AlgoliaSearchClient.getAlgoliaObject(data, type),
       ),
     );
   }
 
-  async remove(objectID: string): Promise<void> {
-    await this.index.deleteObject(objectID);
+  async remove(id: string) {
+    await this.index.deleteObject(id);
   }
 
-  async search<T extends keyof EntityResponses>(
-    entityTypes: T[],
+  async search<ResponsesKey extends keyof EntityResponses[App]>(
+    entityTypes: ResponsesKey[],
     query: string,
     requestOptions?: SearchOptions,
     descendingEvents?: boolean,
-  ): Promise<SearchEntityResponse<T>> {
+  ): Promise<ClientSearchResponse<App, ResponsesKey>> {
     const entityTypesFilter = entityTypes
-      .map((entityType) => `__meta.type:"${entityType}"`)
+      .map((entityType) => `__meta.type:"${String(entityType)}"`)
       .join(' OR ');
 
-    const options: SearchOptions = {
+    const options = {
       ...requestOptions,
       clickAnalytics: this.clickAnalytics,
       userToken: this.userToken,
@@ -108,17 +108,16 @@ export class AlgoliaSearchClient {
     };
     if (descendingEvents) {
       const result = await this.reverseEventsIndex.search<
-        DistributeToEntityRecords<T>
+        DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
       >(query, options);
       return {
         ...result,
         index: this.reverseEventsIndex.indexName,
       };
     }
-    const result = await this.index.search<DistributeToEntityRecords<T>>(
-      query,
-      options,
-    );
+    const result = await this.index.search<
+      DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
+    >(query, options);
     return {
       ...result,
       index: this.index.indexName,
@@ -126,8 +125,8 @@ export class AlgoliaSearchClient {
   }
 
   private static getAlgoliaObject(
-    body: Payload['data'],
-    type: Payload['type'],
+    body: SavePayload['data'],
+    type: SavePayload['type'],
   ): Record<string, unknown> {
     return {
       ...body,

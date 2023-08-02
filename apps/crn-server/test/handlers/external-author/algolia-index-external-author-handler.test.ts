@@ -1,12 +1,13 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { indexExternalAuthorHandler } from '../../../src/handlers/external-author/algolia-index-external-author-handler';
 import {
-  getExternalAuthorSquidexEvent,
-  getExternalAuthorResponse,
   getExternalAuthorContentfulEvent,
+  getExternalAuthorResponse,
+  getExternalAuthorSquidexEvent,
 } from '../../fixtures/external-authors.fixtures';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { externalAuthorControllerMock } from '../../mocks/external-author.controller.mock';
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
 describe('External Author index handler', () => {
   const indexHandler = indexExternalAuthorHandler(

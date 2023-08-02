@@ -1,29 +1,23 @@
 /* eslint-disable no-use-before-define */
-import { SearchResponse } from '@algolia/client-search';
-import {
-  ExternalAuthorResponse,
-  LabResponse,
-  ResearchOutputResponse,
-  UserResponse,
-} from '@asap-hub/model';
 import {
   createEventResponse,
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import {
-  AlgoliaSearchClient,
-  EntityRecord,
-  RESEARCH_OUTPUT_ENTITY_TYPE,
-  USER_ENTITY_TYPE,
-  EVENT_ENTITY_TYPE,
-} from '../src/client';
+  ExternalAuthorResponse,
+  LabResponse,
+  ResearchOutputResponse,
+  UserResponse,
+} from '@asap-hub/model';
+import { AlgoliaSearchClient, ClientSearchResponse } from '../src/client';
 import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
 
 describe('Algolia Search Client', () => {
+  beforeEach(jest.resetAllMocks);
   const algoliaSearchIndex = getAlgoliaSearchIndexMock();
   const reverseAlgoliaSearchIndex = getAlgoliaSearchIndexMock();
-  const algoliaSearchClient = new AlgoliaSearchClient(
+  const algoliaSearchClient = new AlgoliaSearchClient<'crn'>(
     algoliaSearchIndex,
     reverseAlgoliaSearchIndex,
   );
@@ -180,7 +174,7 @@ describe('Algolia Search Client', () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
     const response = await algoliaSearchClient.search(
-      ['user', 'external-author', 'lab'],
+      ['user', 'external-author'],
       'query',
       {
         filters: 'some-filters',
@@ -190,13 +184,14 @@ describe('Algolia Search Client', () => {
     expect(response).toEqual(searchUserResponse);
     expect(algoliaSearchIndex.search).toBeCalledWith('query', {
       filters:
-        'some-filters AND (__meta.type:"user" OR __meta.type:"external-author" OR __meta.type:"lab")',
+        'some-filters AND (__meta.type:"user" OR __meta.type:"external-author")',
     });
   });
 });
 
-const searchResearchOutputResponse: SearchResponse<
-  EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE>
+const searchResearchOutputResponse: ClientSearchResponse<
+  'crn',
+  'research-output'
 > = {
   hits: [
     {
@@ -215,9 +210,7 @@ const searchResearchOutputResponse: SearchResponse<
   params: '',
 };
 
-const searchUserResponse: SearchResponse<
-  EntityRecord<typeof USER_ENTITY_TYPE>
-> = {
+const searchUserResponse: ClientSearchResponse<'crn', 'user'> = {
   hits: [
     {
       ...createUserResponse(),
@@ -235,9 +228,7 @@ const searchUserResponse: SearchResponse<
   params: '',
 };
 
-const searchEventResponse: SearchResponse<
-  EntityRecord<typeof EVENT_ENTITY_TYPE>
-> = {
+const searchEventResponse: ClientSearchResponse<'crn', 'event'> = {
   hits: [
     {
       ...createEventResponse(),

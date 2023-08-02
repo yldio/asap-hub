@@ -1,4 +1,4 @@
-import { EntityRecord, EntityResponses } from '@asap-hub/algolia';
+import { EntityResponses } from '@asap-hub/algolia';
 import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
@@ -14,8 +14,9 @@ import {
   getUserDataProvider,
 } from '../src/dependencies/users.dependencies';
 
+type EntityResponsesCRN = EntityResponses['crn'];
 export const exportEntity = async (
-  entity: keyof EntityResponses,
+  entity: keyof EntityResponsesCRN,
   filename?: string,
 ): Promise<void> => {
   const controller = getController(entity);
@@ -23,7 +24,7 @@ export const exportEntity = async (
 
   let recordCount = 0;
   let total: number;
-  let records: ListResponse<EntityResponses[keyof EntityResponses]>;
+  let records: ListResponse<EntityResponsesCRN[keyof EntityResponsesCRN]>;
   let page = 1;
 
   await file.write('[\n');
@@ -57,7 +58,7 @@ export const exportEntity = async (
   console.log(`Finished exporting ${recordCount} records`);
 };
 
-const getController = (entity: keyof EntityResponses) => {
+const getController = (entity: keyof EntityResponsesCRN) => {
   const userDataProvider = getUserDataProvider();
 
   const researchOutputDataProvider = getResearchOutputDataProvider();
@@ -82,10 +83,10 @@ const getController = (entity: keyof EntityResponses) => {
   return controllerMap[entity];
 };
 
-const transformRecords = <T extends keyof EntityResponses>(
-  record: EntityResponses[T],
-  type: T,
-): EntityRecord<T> => ({
+const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
+  record: T[K] & { id: string },
+  type: K,
+) => ({
   ...record,
   objectID: record.id,
   __meta: {

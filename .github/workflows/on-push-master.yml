@@ -102,9 +102,9 @@ jobs:
       GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
       GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
 
-  algolia-sync-development:
+  algolia-sync-development-crn:
     needs: [deployment-development]
-    uses: ./.github/workflows/reusable-algolia-sync.yml
+    uses: ./.github/workflows/reusable-crn-algolia-sync.yml
     with:
       environment-name: Development
       contentful-environment-id: Development
@@ -116,8 +116,26 @@ jobs:
       CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
 
+  algolia-sync-development-gp2:
+    needs: [deployment-development]
+    uses: ./.github/workflows/reusable-gp2-algolia-sync.yml
+    with:
+      environment-name: Development
+      contentful-environment-id: Development
+      entity: all
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
+      CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+
   verify-development:
-    needs: [deployment-development, algolia-sync-development]
+    needs:
+      [
+        deployment-development,
+        algolia-sync-development-crn,
+        algolia-sync-development-gp2,
+      ]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Development
@@ -150,9 +168,9 @@ jobs:
       GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
       GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ secrets.GP2_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
 
-  algolia-sync-production:
+  algolia-sync-production-crn:
     needs: [deployment-production]
-    uses: ./.github/workflows/reusable-algolia-sync.yml
+    uses: ./.github/workflows/reusable-crn-algolia-sync.yml
     with:
       environment-name: Production
       entity: all
@@ -164,8 +182,26 @@ jobs:
       CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
 
+  algolia-sync-production-gp2:
+    needs: [deployment-production]
+    uses: ./.github/workflows/reusable-gp2-algolia-sync.yml
+    with:
+      environment-name: Production
+      entity: all
+      contentful-environment-id: Production
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+      GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
+
   verify-production:
-    needs: [deployment-production, algolia-sync-production]
+    needs:
+      [
+        deployment-production,
+        algolia-sync-production-crn,
+        algolia-sync-production-gp2,
+      ]
     uses: ./.github/workflows/reusable-verify.yml
     with:
       environment-name: Production

@@ -9,11 +9,12 @@ import {
   updateEvent,
 } from '../../fixtures/teams.fixtures';
 import { toPayload } from '../../helpers/algolia';
-import { algoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
 
 const mapPayload = toPayload('event');
 
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 const possibleEvents: [string, TeamEventGenerator][] = [
   ['created', createEvent],
   ['updated', updateEvent],

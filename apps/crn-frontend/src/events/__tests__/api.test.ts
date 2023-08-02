@@ -1,4 +1,4 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { AlgoliaSearchClient, ClientSearch } from '@asap-hub/algolia';
 import {
   createEventResponse,
   createListEventResponse,
@@ -47,18 +47,20 @@ describe('getEvent', () => {
 });
 
 describe('getEvents', () => {
-  const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
+  type Search = ClientSearch<'crn', 'event'>;
+  const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {
     search,
-  } as unknown as AlgoliaSearchClient;
+  } as unknown as AlgoliaSearchClient<'crn'>;
 
   beforeEach(() => {
     search.mockReset();
   });
 
   it('makes request for events before a date', async () => {
-    search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
+    const res = createAlgoliaResponse<'event'>([]);
+    search.mockResolvedValueOnce(res);
 
     await getEvents(
       algoliaSearchClient,

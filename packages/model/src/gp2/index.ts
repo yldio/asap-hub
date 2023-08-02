@@ -14,5 +14,6 @@ export * from './output';
 export * from './project';
 export * from './stats';
 export * from './user';
-export * from './working-group-network';
+export * from './webhook';
 export * from './working-group';
+export * from './working-group-network';

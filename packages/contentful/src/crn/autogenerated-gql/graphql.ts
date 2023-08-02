@@ -9918,7 +9918,9 @@ export type EventsContentFragment = Pick<
                 teamsCollection?: Maybe<{
                   items: Array<
                     Maybe<
-                      Pick<TeamMembership, 'role'> & { sys: Pick<Sys, 'id'> }
+                      Pick<TeamMembership, 'role'> & {
+                        team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                      }
                     >
                   >;
                 }>;
@@ -10227,7 +10229,7 @@ export type FetchEventByIdQuery = {
                       items: Array<
                         Maybe<
                           Pick<TeamMembership, 'role'> & {
-                            sys: Pick<Sys, 'id'>;
+                            team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                           }
                         >
                       >;
@@ -10619,7 +10621,7 @@ export type FetchEventsQuery = {
                             items: Array<
                               Maybe<
                                 Pick<TeamMembership, 'role'> & {
-                                  sys: Pick<Sys, 'id'>;
+                                  team?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                                 }
                               >
                             >;
@@ -11081,7 +11083,9 @@ export type FetchEventsByUserIdQuery = {
                                         items: Array<
                                           Maybe<
                                             Pick<TeamMembership, 'role'> & {
-                                              sys: Pick<Sys, 'id'>;
+                                              team?: Maybe<{
+                                                sys: Pick<Sys, 'id'>;
+                                              }>;
                                             }
                                           >
                                         >;
@@ -11549,7 +11553,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         items: Array<
                                           Maybe<
                                             Pick<TeamMembership, 'role'> & {
-                                              sys: Pick<Sys, 'id'>;
+                                              team?: Maybe<{
+                                                sys: Pick<Sys, 'id'>;
+                                              }>;
                                             }
                                           >
                                         >;
@@ -12017,7 +12023,9 @@ export type FetchEventsByTeamIdQuery = {
                                         items: Array<
                                           Maybe<
                                             Pick<TeamMembership, 'role'> & {
-                                              sys: Pick<Sys, 'id'>;
+                                              team?: Maybe<{
+                                                sys: Pick<Sys, 'id'>;
+                                              }>;
                                             }
                                           >
                                         >;
@@ -16225,7 +16233,7 @@ export const EventsContentFragmentDoc = {
                                                 kind: 'Field',
                                                 name: {
                                                   kind: 'Name',
-                                                  value: 'sys',
+                                                  value: 'team',
                                                 },
                                                 selectionSet: {
                                                   kind: 'SelectionSet',
@@ -16234,7 +16242,19 @@ export const EventsContentFragmentDoc = {
                                                       kind: 'Field',
                                                       name: {
                                                         kind: 'Name',
-                                                        value: 'id',
+                                                        value: 'sys',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
                                                       },
                                                     },
                                                   ],

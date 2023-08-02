@@ -868,6 +868,30 @@ describe('Research Outputs Data Provider', () => {
         'pm4@example.com',
       ]);
     });
+
+    test('Should include the list of versions', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.versionsCollection = {
+        items: [{ sys: { id: '1' }, title: 'Version 1' }],
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+      const expectedVersionsResponse: ResearchOutputDataObject['versions'] = [
+        {
+          addedDate: '',
+          documentType: 'Grant Document',
+          id: '1',
+          link: '',
+          title: 'Version 1',
+          type: undefined,
+        },
+      ];
+
+      const result = await researchOutputDataProvider.fetchById('1');
+      expect(result?.versions).toEqual(expectedVersionsResponse);
+    });
   });
   describe('create', () => {
     beforeEach(() => {
@@ -1649,6 +1673,47 @@ describe('Research Outputs Data Provider', () => {
 });
 
 describe('mapOutputVersions ', () => {
+  it('pass data through', () => {
+    const data = {
+      title: 'Test',
+      documentType: 'Article',
+      type: 'Preprint',
+      link: 'https://test.com',
+      addedDate: '2022-01-01T12:00:00.000Z',
+    };
+
+    const versions = mapOutputVersions([
+      {
+        ...data,
+        sys: { id: '1' },
+      },
+    ]);
+    expect(versions).toEqual([
+      {
+        ...data,
+        id: '1',
+      },
+    ]);
+  });
+
+  it('handles empty data', () => {
+    const versions = mapOutputVersions([
+      {
+        sys: { id: '1' },
+      },
+    ]);
+    expect(versions).toEqual([
+      {
+        addedDate: '',
+        documentType: 'Grant Document',
+        id: '1',
+        link: '',
+        title: '',
+        type: undefined,
+      },
+    ]);
+  });
+
   it('filters null items', () => {
     const versions = mapOutputVersions([null, { sys: { id: '1' } }]);
     expect(versions.length).toBe(1);

@@ -661,5 +661,8 @@ export const getContentfulResearchOutputGraphqlResponse =
         },
       ],
     },
+    versionsCollection: {
+      items: [],
+    },
     workingGroup: null,
   });

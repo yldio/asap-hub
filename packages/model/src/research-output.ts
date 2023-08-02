@@ -244,7 +244,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   versions: Array<
     Pick<
       ResearchOutputDataObject,
-      'documentType' | 'type' | 'title' | 'id' | 'publishDate'
+      'documentType' | 'type' | 'title' | 'id' | 'link' | 'addedDate'
     >
   >;
   relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;

@@ -94,6 +94,27 @@ describe('Reminder Data Provider', () => {
         });
       });
 
+      test('Should fetch the published reminders from squidex graphql when the status is not changed', async () => {
+        const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
+        const contents = getSquidexReminderReseachOutputsContents();
+        contents.flatData.statusChangedBy = [];
+        squidexGraphqlResponse.queryResearchOutputsContents = [contents];
+        squidexGraphqlResponse.queryResearchOutputsContents[0]!.flatData.workingGroups =
+          [];
+        squidexGraphqlResponse.draftResearchOutputs = [];
+        squidexGraphqlResponse.inReviewResearchOutputs = [];
+        squidexGraphqlResponse.switchToDraftResearchOutputs = [];
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
+
+        const result = await reminderDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({
+          total: 1,
+          items: [getResearchOutputPublishedReminder()],
+        });
+      });
+
       test('Should return an empty result when no research outputs are found', async () => {
         const squidexGraphqlResponse = getSquidexRemindersGraphqlResponse();
         squidexGraphqlResponse.queryResearchOutputsContents = [];

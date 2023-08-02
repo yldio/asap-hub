@@ -41,8 +41,10 @@ import {
 } from './working-groups.fixtures';
 
 export const getContentfulUserSpeakerTeams = () => ({
-  sys: {
-    id: 'team-id-3',
+  team: {
+    sys: {
+      id: 'team-id-3',
+    },
   },
   role: 'Lead PI (Core Leadership)',
 });

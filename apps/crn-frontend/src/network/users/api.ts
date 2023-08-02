@@ -1,19 +1,19 @@
-import {
-  userTags,
-  ExternalAuthorResponse,
-  ListResponse,
-  ListUserResponse,
-  UserResponse,
-  UserPatchRequest,
-  UserAvatarPostRequest,
-  InstitutionsResponse,
-} from '@asap-hub/model';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
-  GetListOptions,
-  createSentryHeaders,
   createFeatureFlagHeaders,
+  createSentryHeaders,
+  GetListOptions,
 } from '@asap-hub/frontend-utils';
+import {
+  ExternalAuthorResponse,
+  InstitutionsResponse,
+  ListResponse,
+  ListUserResponse,
+  UserAvatarPostRequest,
+  UserPatchRequest,
+  UserResponse,
+  userTags,
+} from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';
 
@@ -41,7 +41,7 @@ export const getUser = async (
 };
 
 export const getUsers = async (
-  algoliaClient: AlgoliaSearchClient,
+  algoliaClient: AlgoliaSearchClient<'crn'>,
   { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): Promise<ListUserResponse> => {
   const isTagFilter = (filter: string) =>
@@ -78,7 +78,7 @@ export const getUsers = async (
 };
 
 export const getUsersAndExternalAuthors = async (
-  algoliaClient: AlgoliaSearchClient,
+  algoliaClient: AlgoliaSearchClient<'crn'>,
   { searchQuery, currentPage, pageSize }: GetListOptions,
 ): Promise<ListResponse<UserResponse | ExternalAuthorResponse>> => {
   const result = await algoliaClient.search(

@@ -18,6 +18,7 @@
     "serverless.ts"
   ],
   "references": [
+    { "path": "../../packages/algolia" },
     { "path": "../../packages/auth" },
     { "path": "../../packages/contentful" },
     { "path": "../../packages/errors" },

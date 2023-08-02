@@ -1,16 +1,21 @@
-import nock from 'nock';
+import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
 import {
+  inactiveUserTag,
+  InstitutionsResponse,
   UserAvatarPostRequest,
   UserPatchRequest,
   UserResponse,
-  inactiveUserTag,
-  InstitutionsResponse,
 } from '@asap-hub/model';
-import { createListUserResponse, createUserResponse } from '@asap-hub/fixtures';
+import nock from 'nock';
 
-import type { AlgoliaSearchClient } from '@asap-hub/algolia';
+import type {
+  AlgoliaSearchClient,
+  ClientSearchResponse,
+} from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 
+import { API_BASE_URL } from '../../../config';
+import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 import {
   getInstitutions,
   getUser,
@@ -19,21 +24,22 @@ import {
   patchUser,
   postUserAvatar,
 } from '../api';
-import { API_BASE_URL } from '../../../config';
-import { createAlgoliaResponse } from '../../../__fixtures__/algolia';
 
 jest.mock('../../../config');
 
 afterEach(() => {
   nock.cleanAll();
 });
+type Search = () => Promise<
+  ClientSearchResponse<'crn', 'user' | 'external-author'>
+>;
 
 describe('getUsers', () => {
-  const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
+  const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {
     search,
-  } as unknown as AlgoliaSearchClient;
+  } as unknown as AlgoliaSearchClient<'crn'>;
 
   const defaultOptions: GetListOptions = {
     searchQuery: '',
@@ -47,7 +53,7 @@ describe('getUsers', () => {
 
     const userResponse = createUserResponse();
     search.mockResolvedValue(
-      createAlgoliaResponse([
+      createAlgoliaResponse<'user'>([
         {
           ...userResponse,
           objectID: userResponse.id,
@@ -166,11 +172,11 @@ describe('getUsers', () => {
 });
 
 describe('getUsersAndExternalAuthors', () => {
-  const search: jest.MockedFunction<AlgoliaSearchClient['search']> = jest.fn();
+  const search: jest.MockedFunction<Search> = jest.fn();
 
   const algoliaSearchClient = {
     search,
-  } as unknown as AlgoliaSearchClient;
+  } as unknown as AlgoliaSearchClient<'crn'>;
 
   const defaultOptions: GetListOptions = {
     searchQuery: '',

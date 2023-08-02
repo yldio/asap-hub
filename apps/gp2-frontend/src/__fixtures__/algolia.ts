@@ -1,16 +1,14 @@
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import {
-  EntityRecord,
-  EntityHit,
-  RESEARCH_OUTPUT_ENTITY_TYPE,
-  EntityResponses,
-  SearchEntityResponse,
-} from '@asap-hub/algolia';
+import { ClientSearchResponse, EntityResponses } from '@asap-hub/algolia';
 
-export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
-  hits: EntityHit<EntityType>[],
-  overrides: Partial<SearchEntityResponse<EntityType>> = {},
-): SearchEntityResponse<EntityType> => ({
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+
+type SearchResponse = ClientSearchResponse<'gp2', 'output'>;
+export const createAlgoliaResponse = <
+  EntityType extends keyof EntityResponses['gp2'],
+>(
+  hits: ClientSearchResponse<'gp2', EntityType>['hits'],
+  overrides: Partial<ClientSearchResponse<'gp2', EntityType>> = {},
+): ClientSearchResponse<'gp2', EntityType> => ({
   nbHits: hits.length,
   page: 0,
   nbPages: 1,
@@ -24,27 +22,25 @@ export const createAlgoliaResponse = <EntityType extends keyof EntityResponses>(
   ...overrides,
 });
 
-export const createResearchOutputAlgoliaRecord = (
+export const createOutputAlgoliaRecord = (
   itemIndex = 0,
-): EntityRecord<typeof RESEARCH_OUTPUT_ENTITY_TYPE> => {
-  const response = createResearchOutputResponse(itemIndex);
+): SearchResponse['hits'][number] => {
+  const response = gp2Fixtures.createOutputResponse(itemIndex);
 
   return {
     ...response,
     objectID: response.id,
-    __meta: { type: 'research-output' },
+    __meta: { type: 'output' },
   };
 };
 
-export const createResearchOutputListAlgoliaResponse = (
+export const createOutputListAlgoliaResponse = (
   items: number,
-  responseOverride?: Partial<
-    SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>
-  >,
-): SearchEntityResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE> =>
-  createAlgoliaResponse<typeof RESEARCH_OUTPUT_ENTITY_TYPE>(
+  responseOverride?: Partial<SearchResponse>,
+): SearchResponse =>
+  createAlgoliaResponse<'output'>(
     Array.from({ length: items }, (_, itemIndex) =>
-      createResearchOutputAlgoliaRecord(itemIndex),
+      createOutputAlgoliaRecord(itemIndex),
     ),
     responseOverride,
   );

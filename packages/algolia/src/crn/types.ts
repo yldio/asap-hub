@@ -1,0 +1,34 @@
+import {
+  EventResponse,
+  ExternalAuthorResponse,
+  LabResponse,
+  ResearchOutputResponse,
+  UserResponse,
+} from '@asap-hub/model';
+
+export const RESEARCH_OUTPUT_ENTITY_TYPE = 'research-output';
+export const USER_ENTITY_TYPE = 'user';
+export const EXTERNAL_AUTHOR_ENTITY_TYPE = 'external-author';
+export const LAB_ENTITY_TYPE = 'lab';
+export const EVENT_ENTITY_TYPE = 'event';
+export type Payload =
+  | {
+      data: EventResponse;
+      type: typeof EVENT_ENTITY_TYPE;
+    }
+  | {
+      data: ExternalAuthorResponse;
+      type: typeof EXTERNAL_AUTHOR_ENTITY_TYPE;
+    }
+  | {
+      data: LabResponse;
+      type: typeof LAB_ENTITY_TYPE;
+    }
+  | {
+      data: ResearchOutputResponse;
+      type: typeof RESEARCH_OUTPUT_ENTITY_TYPE;
+    }
+  | {
+      data: UserResponse;
+      type: typeof USER_ENTITY_TYPE;
+    };

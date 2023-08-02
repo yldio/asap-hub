@@ -7,15 +7,15 @@ import { EventBridgeHandler } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ExternalAuthorController from '../../controllers/external-author.controller';
+import { getExternalAuthorDataProvider } from '../../dependencies/external-authors.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalAuthorPayload } from '../event-bus';
-import { getExternalAuthorDataProvider } from '../../dependencies/external-authors.dependencies';
 
 export const indexExternalAuthorHandler =
   (
     externalAuthorController: ExternalAuthorController,
-    algoliaClient: AlgoliaSearchClient,
+    algoliaClient: AlgoliaSearchClient<'crn'>,
   ): EventBridgeHandler<ExternalAuthorEvent, ExternalAuthorPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

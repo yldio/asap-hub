@@ -1,3 +1,4 @@
+import { gp2 } from '@asap-hub/model';
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 
@@ -59,6 +60,9 @@ const apiUrl = `https://${apiHostname}`;
 const currentRevision = process.env.CI_COMMIT_SHA;
 const nodeEnv = 'production';
 const sesRegion = process.env.GP2_SES_REGION!;
+const envRef = ['production', 'dev'].includes(stage) ? envAlias : `CI-${stage}`;
+
+const algoliaIndex = process.env.GP2_ALGOLIA_INDEX ?? `gp2-hub_${envRef}`;
 
 export const plugins = [
   './serverless-plugins/serverless-webpack',
@@ -250,7 +254,6 @@ const serverlessConfig: AWS = {
       events: [
         {
           eventBridge: {
-            eventBus: 'gp2-events-${self:provider.stage}',
             pattern: {
               source: [eventBusSource],
               'detail-type': ['CalendarsPublished'],
@@ -303,6 +306,30 @@ const serverlessConfig: AWS = {
         EMAIL_SENDER: `\${ssm:email-invite-sender-gp2-${envAlias}}`,
         EMAIL_BCC: `\${ssm:email-invite-bcc-gp2-${envAlias}}`,
         EMAIL_RETURN: `\${ssm:email-invite-return-gp2-${envAlias}}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexOutput: {
+      handler: './src/handlers/output/algolia-index-output-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'OutputsPublished',
+                'OutputsUpdated',
+                'OutputsUnpublished',
+                'OutputsDeleted',
+              ] satisfies gp2.WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
     },

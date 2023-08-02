@@ -1,9 +1,14 @@
-import type { gp2 as gp2Contentful } from '@asap-hub/contentful';
-import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
+import type {
+  ContentfulWebhookPayload,
+  gp2 as gp2Contentful,
+} from '@asap-hub/contentful';
+import { gp2 as gp2Model, ListResponse, WebhookDetail } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
 import {
   OutputCreateData,
   OutputUpdateData,
 } from '../../src/controllers/output.controller';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
@@ -183,3 +188,68 @@ export const getContentfulOutputsGraphqlResponse =
       items: [getContentfulGraphqlOutput()],
     },
   });
+
+export const getOutputWebhookPayload = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'output'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'crn-3046',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'output',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    title: {
+      'en-US':
+        'Sci 7 - Inflammation & Immune Reg., Presenting Teams: Sulzer, Desjardins, Kordower',
+    },
+  },
+});
+
+export const getOutputEvent = (
+  id: string,
+  eventType: gp2Model.OutputEvent,
+): EventBridgeEvent<
+  gp2Model.OutputEvent,
+  WebhookDetail<ContentfulWebhookPayload<'output'>>
+> => createEventBridgeEventMock(getOutputWebhookPayload(id), eventType, id);

@@ -101,7 +101,7 @@ describe('Reminder Controller', () => {
 
         expect(items[0]).toMatchObject({
           description:
-            '**Tom Hardy** on team **Team A** published a team output: Some Test title.',
+            '**Tom Hardy** on team **Team A** published a team Presentation output: Some Test title.',
           href: `/shared-research/some-research-output-id`,
         });
       });

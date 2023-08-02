@@ -42,7 +42,7 @@ export default class ReminderController {
             href: sharedResearch({}).researchOutput({
               researchOutputId: reminder.data.researchOutputId,
             }).$,
-            description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** published a ${reminder.data.associationType} output: ${reminder.data.title}.`,
+            description: `**${reminder.data.statusChangedBy}** on ${reminder.data.associationType} **${reminder.data.associationName}** published a ${reminder.data.associationType} ${reminder.data.documentType} output: ${reminder.data.title}.`,
           };
         }
 

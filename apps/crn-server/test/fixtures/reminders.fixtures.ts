@@ -255,7 +255,7 @@ export const getReminderResponse = (): ReminderResponse => {
   return {
     id: 'research-output-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
     description:
-      '**Tom Hardy** on team **Team A** published a team output: Test Proposal 1234.',
+      '**Tom Hardy** on team **Team A** published a team Bioinformatics output: Test Proposal 1234.',
     entity: 'Research Output',
     href: '/shared-research/ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   };

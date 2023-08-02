@@ -611,7 +611,7 @@ const getPublishedResearchOutputRemindersFromQuery = (
       ((associationType === 'team' && isInTeam) ||
         (associationType === 'working group' && isInWorkingGroup))
     ) {
-      const firstLastName = researchOutput.statusChangedBy
+      const publishedBy = researchOutput.statusChangedBy
         ? `${researchOutput.statusChangedBy.firstName} ${researchOutput.statusChangedBy.lastName}`
         : userName;
       researchOutputReminders.push({
@@ -623,7 +623,7 @@ const getPublishedResearchOutputRemindersFromQuery = (
           documentType: researchOutput.documentType,
           title: researchOutput.title,
           addedDate: researchOutput.addedDate,
-          statusChangedBy: firstLastName,
+          statusChangedBy: publishedBy,
           associationType,
           associationName,
         },

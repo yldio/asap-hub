@@ -292,7 +292,7 @@ const getResearchOutputRemindersFromQuery = (
         return researchOutputReminders;
       }
 
-      const firstLastName = researchOutput.flatData.statusChangedBy?.[0]
+      const publishedBy = researchOutput.flatData.statusChangedBy?.[0]
         ? `${researchOutput.flatData.statusChangedBy?.[0].flatData.firstName} ${researchOutput.flatData.statusChangedBy?.[0].flatData.lastName}`
         : userName;
 
@@ -306,7 +306,7 @@ const getResearchOutputRemindersFromQuery = (
             documentType: researchOutput.flatData.documentType,
             title: researchOutput.flatData.title,
             addedDate: researchOutput.flatData.addedDate,
-            statusChangedBy: firstLastName,
+            statusChangedBy: publishedBy,
             associationName,
             associationType,
           },

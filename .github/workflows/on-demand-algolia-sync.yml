@@ -1,4 +1,4 @@
-name: Sync GP2 Algolia
+name: Sync CRN Algolia
 on:
   workflow_dispatch:
     inputs:
@@ -8,7 +8,10 @@ on:
         description: Choose which entity to sync
         default: all
         options:
-          - outputs
+          - users
+          - research-outputs
+          - external-authors
+          - events
           - all
       environment-name:
         required: true
@@ -27,7 +30,7 @@ on:
 
 jobs:
   algolia:
-    uses: ./.github/workflows/reusable-gp2-algolia-sync.yml
+    uses: ./.github/workflows/reusable-crn-algolia-sync.yml
     with:
       environment-name: ${{ github.event.inputs.environment-name }}
       entity: ${{ github.event.inputs.entity }}
@@ -36,7 +39,8 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
+      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+      CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
 
   notify_failure:
@@ -48,6 +52,6 @@ jobs:
         uses: actions/checkout@v3
       - uses: ./.github/actions/slack/
         with:
-          message: GP2 Algolia Prod Sync
+          message: CRN Algolia Prod Sync
           webhook: ${{ env.SLACK_WEBHOOK }}
           status: failure

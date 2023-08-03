@@ -212,18 +212,19 @@ describe('getEvents', () => {
     });
   });
 
-  it('calls for upcoming events with a certain group id', async () => {
+  it('calls for upcoming events with a certain interest group id', async () => {
     search.mockResolvedValueOnce(createAlgoliaResponse<'event'>([]));
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
-      constraint: { groupId: 'group-5' },
+      constraint: { interestGroupId: 'group-5' },
     });
     expect(search).toBeCalledWith(
       ['event'],
       '',
       {
-        filters: '(endDateTimestamp > 1609498800) AND (group.id: "group-5")',
+        filters:
+          '(endDateTimestamp > 1609498800) AND (interestGroup.id: "group-5")',
         hitsPerPage: 10,
         page: 0,
       },
@@ -268,8 +269,8 @@ describe('getSquidexUrl', () => {
     );
   });
 
-  it('returns the group url if the constraint contains group id', () => {
-    options.constraint = { groupId: 'group-1' };
+  it('returns the interest group url if the constraint contains interest group id', () => {
+    options.constraint = { interestGroupId: 'group-1' };
     expect(getSquidexUrl(options).toString()).toEqual(
       'http://api/interest-groups/group-1/events?take=10&skip=10',
     );

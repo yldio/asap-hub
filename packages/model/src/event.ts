@@ -54,7 +54,7 @@ export type ListEventResponse = ListResponse<EventResponse>;
 
 export type EventConstraint = {
   workingGroupId?: string;
-  groupId?: string;
+  interestGroupId?: string;
   userId?: string;
   teamId?: string;
   notStatus?: string;

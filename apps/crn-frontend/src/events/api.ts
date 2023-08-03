@@ -41,9 +41,9 @@ export const getEvents = async (
 };
 
 export const getSquidexUrl = (options: GetEventListOptions): URL =>
-  options.constraint?.groupId
+  options.constraint?.interestGroupId
     ? createListApiUrl(
-        `interest-groups/${options.constraint?.groupId}/events`,
+        `interest-groups/${options.constraint?.interestGroupId}/events`,
         options,
       )
     : createListApiUrl('events', options);

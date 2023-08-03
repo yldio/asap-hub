@@ -4,14 +4,14 @@ import {
   gp2 as gp2Contentful,
   GraphQLClient,
 } from '@asap-hub/contentful';
-import { KeywordsDataProvider } from './types';
+import { KeywordDataProvider } from './types';
 import { gp2 as gp2Model } from '@asap-hub/model';
 
 type Keywords = gp2Contentful.FetchKeywordsQuery['keywordsCollection'];
 
 type KeywordItem = NonNullable<NonNullable<Keywords>['items'][number]>;
 
-export class KeywordsContentfulDataProvider implements KeywordsDataProvider {
+export class KeywordContentfulDataProvider implements KeywordDataProvider {
   constructor(
     private graphQLClient: GraphQLClient,
     private getRestClient: () => Promise<Environment>,
@@ -30,7 +30,7 @@ export class KeywordsContentfulDataProvider implements KeywordsDataProvider {
       total: keywordsCollection.items.length,
       items: keywordsCollection.items
         .filter((keyword): keyword is KeywordItem => keyword !== null)
-        .map(parseKeywords),
+        .map(parseKeyword),
     };
   }
 
@@ -52,7 +52,7 @@ export class KeywordsContentfulDataProvider implements KeywordsDataProvider {
   }
 }
 
-export const parseKeywords = (
+export const parseKeyword = (
   keyword: KeywordItem,
 ): gp2Model.KeywordDataObject => ({
   id: keyword.sys.id,

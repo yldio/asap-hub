@@ -47,7 +47,6 @@ const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOpti
         },
         nullable: true,
       },
-      includeDrafts: { type: 'boolean', nullable: true },
     },
     additionalProperties: false,
   };

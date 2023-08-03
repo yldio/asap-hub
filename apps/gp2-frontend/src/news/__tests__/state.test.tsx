@@ -1,13 +1,16 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot, useRecoilState, useSetRecoilState } from 'recoil';
+import React from 'react';
 import { gp2 } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import { getNews } from '../api';
-import { newsListState, newsItemState } from '../state';
+import { getNewsById, getNews } from '../api';
+import { useNewsById, newsListState, newsItemState } from '../state';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 jest.mock('../api');
 
+const mockGetNewsById = getNewsById as jest.MockedFunction<typeof getNewsById>;
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
 
 const news: gp2Model.NewsResponse = {
@@ -18,9 +21,30 @@ const news: gp2Model.NewsResponse = {
   shortText: 'short text',
 };
 
+const wrapper: React.FC = ({ children }) => (
+  <RecoilRoot>
+    <Auth0Provider user={{}}>
+      <WhenReady>{children}</WhenReady>
+    </Auth0Provider>
+  </RecoilRoot>
+);
+
 beforeEach(jest.resetAllMocks);
-describe('newsListState', () => {
-  it('should be updated when news item is updated', async () => {
+describe('useNewsById', () => {
+  it('should return a news item given an id', async () => {
+    mockGetNewsById.mockResolvedValueOnce(news);
+    const { result, waitForNextUpdate } = renderHook(
+      () => useNewsById(news.id),
+      { wrapper },
+    );
+    await waitForNextUpdate();
+
+    const newsItem = result.current;
+
+    expect(newsItem).toEqual(news);
+  });
+
+  it('should update news item list', async () => {
     const options: GetListOptions = {
       searchQuery: '',
       currentPage: 1,
@@ -54,7 +78,21 @@ describe('newsListState', () => {
     expect(newNewsList.items.length).toBe(0);
   });
 
-  it('can be set to undefined', async () => {
+  it('should not return a news item given an invalid id', async () => {
+    mockGetNewsById.mockResolvedValueOnce(undefined);
+
+    const { result, waitForNextUpdate } = renderHook(
+      () => useNewsById(Math.random().toString()),
+      { wrapper },
+    );
+    await waitForNextUpdate();
+
+    const newsItem = result.current;
+
+    expect(newsItem).toEqual(undefined);
+  });
+
+  it('should reset list to undefined', async () => {
     const options: GetListOptions = {
       searchQuery: '',
       currentPage: 1,

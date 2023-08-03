@@ -91,3 +91,5 @@ export const useNews = (options: GetListOptions) => {
   if (newsList instanceof Error) throw newsList;
   return newsList;
 };
+
+export const useNewsById = (id: string) => useRecoilValue(newsItemState(id));

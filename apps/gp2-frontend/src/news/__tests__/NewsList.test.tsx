@@ -1,4 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import {
@@ -15,6 +16,7 @@ import userEvent from '@testing-library/user-event';
 
 import { usePagination, usePaginationParams } from '../../hooks/pagination';
 import NewsPage from '../Routes';
+import { newsIndexState } from '../state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getNews } from '../api';
 
@@ -28,7 +30,18 @@ beforeEach(jest.resetAllMocks);
 mockConsoleError();
 const renderPage = async () => {
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset }) =>
+        reset(
+          newsIndexState({
+            currentPage: 0,
+            pageSize,
+            filters: new Set<gp2Model.NewsType>(),
+            searchQuery: '',
+          }),
+        )
+      }
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

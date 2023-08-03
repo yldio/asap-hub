@@ -10,7 +10,7 @@ on:
 jobs:
   detect_visual_changes:
     runs-on: ubuntu-latest
-    environment: Production
+    environment: Branch
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
       credentials:
@@ -23,7 +23,7 @@ jobs:
         id: setup
         uses: ./.github/actions/setup-environment
         with:
-          environment-name: Production
+          environment-name: Branch
       - name: Rebuild
         uses: ./.github/actions/build-rebuild
       - name: Run visual changes script
@@ -35,9 +35,9 @@ jobs:
           PR_URL: ${{ inputs.pr-url }}
           CMS_MIGRATION_USER_EMAIL: ${{ secrets.CMS_MIGRATION_USER_EMAIL }}
           CMS_MIGRATION_USER_PASSWORD: ${{ secrets.CMS_MIGRATION_USER_PASSWORD }}
-          CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
-          CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          # CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          # CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          # SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
       - name: Save Screenshots as Artifact
         if: always()
         uses: actions/upload-artifact@v2

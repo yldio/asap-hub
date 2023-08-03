@@ -10,7 +10,7 @@ export const outputDocumentTypes = [
   'Code/Software',
 ] as const;
 
-export type OutputDocumentType = typeof outputDocumentTypes[number];
+export type OutputDocumentType = (typeof outputDocumentTypes)[number];
 
 export const outputTypes = [
   'Research',
@@ -19,10 +19,10 @@ export const outputTypes = [
   'Hot Topic',
   'Blog',
 ] as const;
-export type OutputType = typeof outputTypes[number];
+export type OutputType = (typeof outputTypes)[number];
 
 export const outputSubtypes = ['Preprints', 'Published'] as const;
-export type OutputSubtype = typeof outputSubtypes[number];
+export type OutputSubtype = (typeof outputSubtypes)[number];
 
 export const outputDocumentTypeToType: Record<
   OutputDocumentType,

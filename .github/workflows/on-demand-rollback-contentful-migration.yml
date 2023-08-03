@@ -41,6 +41,8 @@ jobs:
           # CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           # CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           # SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+      - name: Run ls
+        run: ls -a
       - name: Save Screenshots as Artifact
         if: always()
         uses: actions/upload-artifact@v2

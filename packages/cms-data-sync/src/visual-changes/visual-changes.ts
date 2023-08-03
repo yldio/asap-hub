@@ -163,6 +163,8 @@ const login = async (page: Page) => {
   try {
     const browser = await puppeteer.launch({
       headless: true,
+      // https://github.com/puppeteer/puppeteer/issues/3698
+      args: ['--no-sandbox'],
       ignoreDefaultArgs: ['--disable-extensions'],
     });
     const page = await browser.newPage();

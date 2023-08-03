@@ -14,6 +14,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
+import { usePaginationParams } from '../hooks';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
@@ -33,8 +34,13 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
+  const { pageSize } = usePaginationParams();
   const { total: outputsTotal } = useOutputs({
-    filter: { workingGroup: workingGroupId },
+    currentPage: 0,
+    filters: new Set(),
+    pageSize,
+    searchQuery: '',
+    workingGroup: workingGroupId,
   });
 
   const currentUser = useCurrentUserGP2();
@@ -126,7 +132,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList filters={{ workingGroup: workingGroupId }} />
+                <OutputList workingGroup={workingGroupId} />
               </Frame>
             </Route>
             <Route path={upcoming}>

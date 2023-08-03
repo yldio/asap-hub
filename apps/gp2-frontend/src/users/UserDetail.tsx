@@ -19,6 +19,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
+import { usePaginationParams } from '../hooks';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { useKeywords } from '../shared/state';
 import OutputList from '../outputs/OutputList';
@@ -38,9 +39,14 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   const { userId } = useRouteParams(users({}).user);
   const isOwnProfile = userId === currentUser?.id;
   const user = useUserById(userId);
+  const { pageSize } = usePaginationParams();
 
   const { total: outputsTotal } = useOutputs({
-    filter: { author: userId },
+    currentPage: 0,
+    filters: new Set(),
+    pageSize,
+    searchQuery: '',
+    author: userId,
   });
 
   const userRoute = users({}).user({ userId });
@@ -152,7 +158,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
             </Route>
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList filters={{ author: userId }} />
+                <OutputList author={userId} />
               </Frame>
             </Route>
             <Route path={upcoming}>

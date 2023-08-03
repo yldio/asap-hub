@@ -1,15 +1,15 @@
-import { Auth0PostLoginApi } from '@vedicium/auth0-actions-sdk';
 import type { gp2 as gp2Auth, User } from '@asap-hub/auth';
 import type { gp2 as gp2Model, UserMetadataResponse } from '@asap-hub/model';
+import { Auth0PostLoginApi } from '@vedicium/auth0-actions-sdk';
 import got from 'got';
 import { URL, URLSearchParams } from 'url';
 import { Auth0PostLoginEventWithSecrets } from './types';
 
-type Auth0UserResponse = UserMetadataResponse | gp2Model.UserResponse;
+type Auth0UserResponse = UserMetadataResponse | gp2Model.UserMetadataResponse;
 
 const isUserMetadataResponse = (
-  response: UserMetadataResponse | gp2Model.UserResponse,
-): response is UserMetadataResponse => 'algoliaApiKey' in response;
+  response: UserMetadataResponse | gp2Model.UserMetadataResponse,
+): response is UserMetadataResponse => 'teams' in response;
 
 const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
   if (isUserMetadataResponse(response)) {
@@ -55,12 +55,14 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
     firstName,
     lastName,
     avatarUrl,
+    algoliaApiKey,
     onboarded,
     role,
   } = response;
 
   return {
     id,
+    algoliaApiKey,
     displayName,
     email,
     firstName,

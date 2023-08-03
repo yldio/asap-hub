@@ -14,6 +14,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
+import { usePaginationParams } from '../hooks';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { useProjectById, usePutProjectResources } from './state';
@@ -34,8 +35,13 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
+  const { pageSize } = usePaginationParams();
   const { total } = useOutputs({
-    filter: { project: projectId },
+    currentPage: 0,
+    filters: new Set(),
+    pageSize,
+    searchQuery: '',
+    project: projectId,
   });
 
   const currentUser = useCurrentUserGP2();
@@ -121,7 +127,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList filters={{ project: projectId }} />
+                <OutputList project={projectId} />
               </Frame>
             </Route>
             <Route path={upcoming}>

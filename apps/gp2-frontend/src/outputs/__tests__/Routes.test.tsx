@@ -4,13 +4,13 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { gp2 } from '@asap-hub/fixtures';
+import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import Routes from '../Routes';
+import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getOutputs } from '../api';
+import Routes from '../Routes';
 
 jest.mock('../api');
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
@@ -43,7 +43,7 @@ beforeEach(() => {
 
 describe('Routes', () => {
   it('renders the title', async () => {
-    mockGetOutputs.mockResolvedValue(gp2.createListOutputResponse(0));
+    mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(0));
     await renderRoutes();
     expect(
       screen.getByRole('heading', { name: 'Outputs' }),
@@ -51,7 +51,7 @@ describe('Routes', () => {
   });
 
   it('renders a list of  outputs', async () => {
-    mockGetOutputs.mockResolvedValue(gp2.createListOutputResponse(2));
+    mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(2));
     await renderRoutes();
     expect(screen.getByText('Output 1')).toBeVisible();
     expect(screen.getByText('Output 2')).toBeVisible();

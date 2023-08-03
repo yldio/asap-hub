@@ -1,32 +1,7 @@
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
-
-export const createOutputApiUrl = ({
-  search,
-  take,
-  skip,
-  filter,
-}: gp2.FetchOutputOptions) => {
-  const url = new URL('outputs', `${API_BASE_URL}/`);
-  if (search) url.searchParams.set('search', search);
-  if (take) {
-    url.searchParams.set('take', String(take));
-  }
-  if (skip) {
-    url.searchParams.set('skip', String(skip));
-  }
-  const addFilter = (name: string, items?: string[]) =>
-    items?.forEach((item) => url.searchParams.append(`filter[${name}]`, item));
-  addFilter(
-    'workingGroup',
-    filter?.workingGroup ? [filter?.workingGroup] : undefined,
-  );
-  addFilter('project', filter?.project ? [filter?.project] : undefined);
-  addFilter('author', filter?.author ? [filter?.author] : undefined);
-
-  return url;
-};
 
 export const getOutput = async (
   id: string,
@@ -46,21 +21,73 @@ export const getOutput = async (
   return resp.json();
 };
 
-export const getOutputs = async (
-  authorization: string,
-  options: gp2.FetchOutputOptions,
-): Promise<gp2.ListOutputResponse> => {
-  const resp = await fetch(createOutputApiUrl(options), {
-    headers: { authorization, ...createSentryHeaders() },
-  });
+export type OutputListOptions = GetListOptions & gp2.FetchOutputFilter;
 
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch the Outputs. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
+export const researchOutputDocumentTypeFilters: Record<
+  gp2.OutputDocumentType,
+  { filter: string }
+> = {
+  'Procedural Form': { filter: 'documentType:"Procedural Form"' },
+  'GP2 Reports': { filter: 'documentType:"GP2 Reports"' },
+  'Training Materials': { filter: 'documentType:"Training Materials"' },
+  Dataset: { filter: 'documentType:Dataset' },
+  Article: { filter: 'documentType:Article' },
+  'Code/Software': { filter: 'documentType:"Code/Software"' },
 };
+
+export const getTypeFilters = (filters: Set<string>): string =>
+  Object.entries(researchOutputDocumentTypeFilters)
+    .reduce<string[]>(
+      (acc, [key, { filter }]) => (filters.has(key) ? [filter, ...acc] : acc),
+      [],
+    )
+    .join(' OR ');
+
+export const getAllFilters = (
+  filters: Set<string>,
+  workingGroup?: string,
+  project?: string,
+  author?: string,
+) => {
+  const typeFilters = getTypeFilters(filters);
+  const typeFiltersWithParenthesis = typeFilters
+    ? `(${getTypeFilters(filters)})`
+    : typeFilters;
+
+  const workingGroupFilter = workingGroup
+    ? `workingGroup.id:"${workingGroup}"`
+    : '';
+  const projectFilter = project ? `project.id:"${project}"` : '';
+  const authorFilter = author ? `author.id:"${author}"` : '';
+
+  return [
+    typeFiltersWithParenthesis,
+    workingGroupFilter,
+    authorFilter,
+    projectFilter,
+  ]
+    .filter(Boolean)
+    .join(' AND ');
+};
+
+export const getOutputs = (
+  client: AlgoliaSearchClient<'gp2'>,
+  options: OutputListOptions,
+) =>
+  client
+    .search(['output'], options.searchQuery, {
+      page: options.currentPage ?? 0,
+      hitsPerPage: options.pageSize ?? 10,
+      filters: getAllFilters(
+        options.filters,
+        options.workingGroup,
+        options.project,
+        options.author,
+      ),
+    })
+    .catch((error: Error) => {
+      throw new Error(`Could not search: ${error.message}`);
+    });
 
 export const createOutput = async (
   output: gp2.OutputPostRequest,

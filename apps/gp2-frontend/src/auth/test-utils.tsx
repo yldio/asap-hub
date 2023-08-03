@@ -5,9 +5,9 @@ import { Auth0ContextGP2, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
 import { useContext, useEffect } from 'react';
 import {
+  useRecoilRefresher_UNSTABLE as useRecoilRefresher,
   useRecoilState,
   useRecoilValue,
-  useRecoilRefresher_UNSTABLE as useRecoilRefresher,
 } from 'recoil';
 import { auth0State } from './state';
 
@@ -35,6 +35,7 @@ const createAuth0 = (
       displayName: 'John Doe',
       firstName: 'John',
       lastName: 'Doe',
+      algoliaApiKey: 'test-api-key',
       role: 'Network Collaborator',
       ...user,
     };

@@ -871,23 +871,11 @@ describe('Research Outputs Data Provider', () => {
 
     test('Should include the list of versions', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
-      researchOutputs.versionsCollection = {
-        items: [{ sys: { id: '1' }, title: 'Version 1' }],
-      };
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchOutputs,
       });
-      const expectedVersionsResponse: ResearchOutputDataObject['versions'] = [
-        {
-          addedDate: '',
-          documentType: 'Grant Document',
-          id: '1',
-          link: '',
-          title: 'Version 1',
-          type: undefined,
-        },
-      ];
+      const expectedVersionsResponse = getResearchOutputDataObject().versions;
 
       const result = await researchOutputDataProvider.fetchById('1');
       expect(result?.versions).toEqual(expectedVersionsResponse);

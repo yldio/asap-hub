@@ -161,7 +161,10 @@ const login = async (page: Page) => {
 
   const nonMatchingResearchOutputIds: string[] = [];
   try {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+      headless: true,
+      ignoreDefaultArgs: ['--disable-extensions'],
+    });
     const page = await browser.newPage();
 
     for (let i = 0; i < researchOutputIds.length; i += 1) {

@@ -10,25 +10,22 @@ type NewsListProps = {
 
 const NewsList: React.FC<NewsListProps> = ({ searchQuery, filters }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const result = useNews({
+  const { items, total } = useNews({
     searchQuery,
     filters,
     currentPage,
     pageSize,
   });
-  const { numberOfPages, renderPageHref } = usePagination(
-    result.total || 0,
-    pageSize,
-  );
-  return result.total || searchQuery ? (
+  const { numberOfPages, renderPageHref } = usePagination(total || 0, pageSize);
+  return total || searchQuery ? (
     <ResultList
       icon={noNewsIcon}
-      numberOfItems={result.total}
+      numberOfItems={total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
     >
-      {result.items.map((news) => (
+      {items.map((news) => (
         <NewsItem key={news.id} {...news} />
       ))}
     </ResultList>

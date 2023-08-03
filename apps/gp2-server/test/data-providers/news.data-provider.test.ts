@@ -1,4 +1,7 @@
-import { getGP2ContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import {
+  gp2 as gp2Contentful,
+  getGP2ContentfulGraphqlClientMockServer,
+} from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
 import { NewsContentfulDataProvider } from '../../src/data-providers/news.data-provider';
 import {
@@ -167,7 +170,7 @@ describe('News data provider', () => {
 
         expect(result).toEqual(getListNewsDataObject());
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_NEWS,
           expect.objectContaining({
             limit: null,
             order: ['publishDate_DESC'],

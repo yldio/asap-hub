@@ -2,7 +2,12 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
-import { render, waitFor } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { renderHook } from '@testing-library/react-hooks';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
@@ -20,13 +25,11 @@ jest.mock('../api');
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
 const pageSize = 10;
 
-afterEach(() => {
-  mockGetNews.mockClear();
-});
-mockConsoleError();
+beforeEach(jest.resetAllMocks);
 
+mockConsoleError();
 const renderPage = async () => {
-  const result = render(
+  render(
     <RecoilRoot
       initializeState={({ reset }) =>
         reset(
@@ -53,13 +56,7 @@ const renderPage = async () => {
     </RecoilRoot>,
   );
 
-  await waitFor(() =>
-    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
-  );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
+  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
 it('renders the page title', async () => {
@@ -68,9 +65,9 @@ it('renders the page title', async () => {
 
   mockGetNews.mockResolvedValue(news);
 
-  const { getByRole } = await renderPage();
+  await renderPage();
 
-  expect(getByRole('heading', { level: 1 })).toHaveTextContent(/News/i);
+  expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/News/i);
 });
 
 it('renders a counter with the total number of items', async () => {
@@ -79,9 +76,9 @@ it('renders a counter with the total number of items', async () => {
     gp2Fixtures.createListNewsResponse(pageSize, numberOfItems),
   );
 
-  const { getByText } = await renderPage();
+  await renderPage();
   await waitFor(() => expect(mockGetNews).toHaveBeenCalled());
-  expect(getByText(`${numberOfItems} results found`)).toBeVisible();
+  expect(screen.getByText(`${numberOfItems} results found`)).toBeVisible();
 });
 
 it('renders a paginated list of news', async () => {
@@ -103,8 +100,8 @@ it('renders a paginated list of news', async () => {
     },
   );
 
-  const { getAllByText } = await renderPage();
-  expect(getAllByText('News Item')).toHaveLength(pageSize);
+  await renderPage();
+  expect(screen.getAllByText('News Item')).toHaveLength(pageSize);
   expect(result.current.usePagination.numberOfPages).toBe(4);
   expect(result.current.usePaginationParams.currentPage).toBe(0);
 });
@@ -112,15 +109,15 @@ it('renders a paginated list of news', async () => {
 it('renders error message when when the request it not a 2XX', async () => {
   mockGetNews.mockRejectedValue(new Error('error'));
 
-  const { getByText } = await renderPage();
+  await renderPage();
   expect(mockGetNews).toHaveBeenCalled();
-  expect(getByText(/Something went wrong/i)).toBeVisible();
+  expect(screen.getByText(/Something went wrong/i)).toBeVisible();
 });
 
 it('can perform a search', async () => {
   mockGetNews.mockResolvedValue(gp2Fixtures.createListNewsResponse(pageSize));
-  const { getByPlaceholderText } = await renderPage();
-  fireEvent.change(getByPlaceholderText(/Enter name/i), {
+  await renderPage();
+  fireEvent.change(screen.getByPlaceholderText(/Enter name/i), {
     target: { value: 'example' },
   });
   await waitFor(() =>
@@ -133,9 +130,9 @@ it('can perform a search', async () => {
 
 it('can perform a filter search', async () => {
   mockGetNews.mockResolvedValue(gp2Fixtures.createListNewsResponse(pageSize));
-  const { getByTitle, getByRole } = await renderPage();
-  userEvent.click(getByTitle('Filter'));
-  userEvent.click(getByRole('checkbox', { name: /Newsletters/i }));
+  await renderPage();
+  userEvent.click(screen.getByTitle('Filter'));
+  userEvent.click(screen.getByRole('checkbox', { name: /Newsletters/i }));
 
   await waitFor(() =>
     expect(mockGetNews).toHaveBeenLastCalledWith(

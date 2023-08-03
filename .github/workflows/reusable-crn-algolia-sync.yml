@@ -1,4 +1,4 @@
-name: Reusable GP2 Algolia data sync
+name: Reusable CRN Algolia data sync
 
 on:
   workflow_call:

@@ -419,6 +419,26 @@ describe('The draft output tab', () => {
     await waitFor(() => expect(mockGetDraftResearchOutputs).toHaveBeenCalled());
     expect(screen.getByText('Draft Output0')).toBeVisible();
   });
+  it('does not render the draft outputs tab for a complete working group', async () => {
+    mockGetDraftResearchOutputs.mockResolvedValue({
+      ...createListResearchOutputResponse(10),
+      items: createListResearchOutputResponse(10).items.map(
+        (output, index) => ({ ...output, title: `Draft Output${index}` }),
+      ),
+    });
+    await renderWorkingGroupProfile({
+      ...createUserResponse(),
+      workingGroups: [
+        {
+          active: false,
+          id: workingGroupId,
+          name: 'test',
+          role: 'Member',
+        },
+      ],
+    });
+    expect(screen.queryByText('Draft Outputs (10)')).not.toBeInTheDocument();
+  });
   it('renders the draft outputs tab for a working group member when there are zero results', async () => {
     mockGetDraftResearchOutputs.mockResolvedValue(
       createListResearchOutputResponse(0),

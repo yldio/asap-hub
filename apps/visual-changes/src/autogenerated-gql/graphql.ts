@@ -2,9 +2,15 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -19,7 +25,23 @@ export type Scalars = {
   Long: any;
 };
 
-export type AllContents = Calendars | Dashboard | Discover | Events | ExternalAuthors | Groups | Labs | Migrations | NewsAndEvents | Pages | ResearchOutputs | ResearchTags | Teams | Tutorials | Users | WorkingGroups;
+export type AllContents =
+  | Calendars
+  | Dashboard
+  | Discover
+  | Events
+  | ExternalAuthors
+  | Groups
+  | Labs
+  | Migrations
+  | NewsAndEvents
+  | Pages
+  | ResearchOutputs
+  | ResearchTags
+  | Teams
+  | Tutorials
+  | Users
+  | WorkingGroups;
 
 /** The app mutations. */
 export type ApplicationMutations = {
@@ -297,7 +319,6 @@ export type ApplicationMutations = {
   upsertWorkingGroupsContent: Maybe<WorkingGroups>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsChangeCalendarsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -305,7 +326,6 @@ export type ApplicationMutationsChangeCalendarsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsChangeDashboardContentArgs = {
@@ -315,7 +335,6 @@ export type ApplicationMutationsChangeDashboardContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsChangeDiscoverContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -323,7 +342,6 @@ export type ApplicationMutationsChangeDiscoverContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsChangeEventsContentArgs = {
@@ -333,7 +351,6 @@ export type ApplicationMutationsChangeEventsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsChangeExternalAuthorsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -341,7 +358,6 @@ export type ApplicationMutationsChangeExternalAuthorsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsChangeGroupsContentArgs = {
@@ -351,7 +367,6 @@ export type ApplicationMutationsChangeGroupsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsChangeLabsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -359,7 +374,6 @@ export type ApplicationMutationsChangeLabsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsChangeMigrationsContentArgs = {
@@ -369,7 +383,6 @@ export type ApplicationMutationsChangeMigrationsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsChangeNewsAndEventsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -377,7 +390,6 @@ export type ApplicationMutationsChangeNewsAndEventsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsChangePagesContentArgs = {
@@ -387,7 +399,6 @@ export type ApplicationMutationsChangePagesContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsChangeResearchOutputsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -395,7 +406,6 @@ export type ApplicationMutationsChangeResearchOutputsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsChangeResearchTagsContentArgs = {
@@ -405,7 +415,6 @@ export type ApplicationMutationsChangeResearchTagsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsChangeTeamsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -413,7 +422,6 @@ export type ApplicationMutationsChangeTeamsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsChangeTutorialsContentArgs = {
@@ -423,7 +431,6 @@ export type ApplicationMutationsChangeTutorialsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsChangeUsersContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -431,7 +438,6 @@ export type ApplicationMutationsChangeUsersContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsChangeWorkingGroupsContentArgs = {
@@ -441,7 +447,6 @@ export type ApplicationMutationsChangeWorkingGroupsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsCreateCalendarsContentArgs = {
   data: CalendarsDataInputDto;
@@ -449,7 +454,6 @@ export type ApplicationMutationsCreateCalendarsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsCreateDashboardContentArgs = {
@@ -459,7 +463,6 @@ export type ApplicationMutationsCreateDashboardContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsCreateDiscoverContentArgs = {
   data: DiscoverDataInputDto;
@@ -467,7 +470,6 @@ export type ApplicationMutationsCreateDiscoverContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsCreateEventsContentArgs = {
@@ -477,7 +479,6 @@ export type ApplicationMutationsCreateEventsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsCreateExternalAuthorsContentArgs = {
   data: ExternalAuthorsDataInputDto;
@@ -485,7 +486,6 @@ export type ApplicationMutationsCreateExternalAuthorsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsCreateGroupsContentArgs = {
@@ -495,7 +495,6 @@ export type ApplicationMutationsCreateGroupsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsCreateLabsContentArgs = {
   data: LabsDataInputDto;
@@ -503,7 +502,6 @@ export type ApplicationMutationsCreateLabsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsCreateMigrationsContentArgs = {
@@ -513,7 +511,6 @@ export type ApplicationMutationsCreateMigrationsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsCreateNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
@@ -521,7 +518,6 @@ export type ApplicationMutationsCreateNewsAndEventsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsCreatePagesContentArgs = {
@@ -531,7 +527,6 @@ export type ApplicationMutationsCreatePagesContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsCreateResearchOutputsContentArgs = {
   data: ResearchOutputsDataInputDto;
@@ -539,7 +534,6 @@ export type ApplicationMutationsCreateResearchOutputsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsCreateResearchTagsContentArgs = {
@@ -549,7 +543,6 @@ export type ApplicationMutationsCreateResearchTagsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsCreateTeamsContentArgs = {
   data: TeamsDataInputDto;
@@ -557,7 +550,6 @@ export type ApplicationMutationsCreateTeamsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsCreateTutorialsContentArgs = {
@@ -567,7 +559,6 @@ export type ApplicationMutationsCreateTutorialsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsCreateUsersContentArgs = {
   data: UsersDataInputDto;
@@ -575,7 +566,6 @@ export type ApplicationMutationsCreateUsersContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsCreateWorkingGroupsContentArgs = {
@@ -585,13 +575,11 @@ export type ApplicationMutationsCreateWorkingGroupsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsDeleteCalendarsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsDeleteDashboardContentArgs = {
@@ -599,13 +587,11 @@ export type ApplicationMutationsDeleteDashboardContentArgs = {
   id: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsDeleteDiscoverContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsDeleteEventsContentArgs = {
@@ -613,13 +599,11 @@ export type ApplicationMutationsDeleteEventsContentArgs = {
   id: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsDeleteExternalAuthorsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsDeleteGroupsContentArgs = {
@@ -627,13 +611,11 @@ export type ApplicationMutationsDeleteGroupsContentArgs = {
   id: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsDeleteLabsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsDeleteMigrationsContentArgs = {
@@ -641,13 +623,11 @@ export type ApplicationMutationsDeleteMigrationsContentArgs = {
   id: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsDeleteNewsAndEventsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsDeletePagesContentArgs = {
@@ -655,13 +635,11 @@ export type ApplicationMutationsDeletePagesContentArgs = {
   id: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsDeleteResearchOutputsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsDeleteResearchTagsContentArgs = {
@@ -669,13 +647,11 @@ export type ApplicationMutationsDeleteResearchTagsContentArgs = {
   id: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsDeleteTeamsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsDeleteTutorialsContentArgs = {
@@ -683,20 +659,17 @@ export type ApplicationMutationsDeleteTutorialsContentArgs = {
   id: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsDeleteUsersContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsDeleteWorkingGroupsContentArgs = {
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPatchCalendarsContentArgs = {
@@ -705,14 +678,12 @@ export type ApplicationMutationsPatchCalendarsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPatchDashboardContentArgs = {
   data: DashboardDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPatchDiscoverContentArgs = {
@@ -721,14 +692,12 @@ export type ApplicationMutationsPatchDiscoverContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPatchEventsContentArgs = {
   data: EventsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPatchExternalAuthorsContentArgs = {
@@ -737,14 +706,12 @@ export type ApplicationMutationsPatchExternalAuthorsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPatchGroupsContentArgs = {
   data: GroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPatchLabsContentArgs = {
@@ -753,14 +720,12 @@ export type ApplicationMutationsPatchLabsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPatchMigrationsContentArgs = {
   data: MigrationsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPatchNewsAndEventsContentArgs = {
@@ -769,14 +734,12 @@ export type ApplicationMutationsPatchNewsAndEventsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPatchPagesContentArgs = {
   data: PagesDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPatchResearchOutputsContentArgs = {
@@ -785,14 +748,12 @@ export type ApplicationMutationsPatchResearchOutputsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPatchResearchTagsContentArgs = {
   data: ResearchTagsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPatchTeamsContentArgs = {
@@ -801,14 +762,12 @@ export type ApplicationMutationsPatchTeamsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPatchTutorialsContentArgs = {
   data: TutorialsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPatchUsersContentArgs = {
@@ -817,14 +776,12 @@ export type ApplicationMutationsPatchUsersContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPatchWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPublishCalendarsContentArgs = {
@@ -834,7 +791,6 @@ export type ApplicationMutationsPublishCalendarsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPublishDashboardContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -842,7 +798,6 @@ export type ApplicationMutationsPublishDashboardContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPublishDiscoverContentArgs = {
@@ -852,7 +807,6 @@ export type ApplicationMutationsPublishDiscoverContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPublishEventsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -860,7 +814,6 @@ export type ApplicationMutationsPublishEventsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPublishExternalAuthorsContentArgs = {
@@ -870,7 +823,6 @@ export type ApplicationMutationsPublishExternalAuthorsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPublishGroupsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -878,7 +830,6 @@ export type ApplicationMutationsPublishGroupsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPublishLabsContentArgs = {
@@ -888,7 +839,6 @@ export type ApplicationMutationsPublishLabsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPublishMigrationsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -896,7 +846,6 @@ export type ApplicationMutationsPublishMigrationsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPublishNewsAndEventsContentArgs = {
@@ -906,7 +855,6 @@ export type ApplicationMutationsPublishNewsAndEventsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPublishPagesContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -914,7 +862,6 @@ export type ApplicationMutationsPublishPagesContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPublishResearchOutputsContentArgs = {
@@ -924,7 +871,6 @@ export type ApplicationMutationsPublishResearchOutputsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPublishResearchTagsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -932,7 +878,6 @@ export type ApplicationMutationsPublishResearchTagsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPublishTeamsContentArgs = {
@@ -942,7 +887,6 @@ export type ApplicationMutationsPublishTeamsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPublishTutorialsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -950,7 +894,6 @@ export type ApplicationMutationsPublishTutorialsContentArgs = {
   id: Scalars['String'];
   status: Scalars['String'];
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsPublishUsersContentArgs = {
@@ -960,7 +903,6 @@ export type ApplicationMutationsPublishUsersContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsPublishWorkingGroupsContentArgs = {
   dueTime: InputMaybe<Scalars['Instant']>;
@@ -969,14 +911,12 @@ export type ApplicationMutationsPublishWorkingGroupsContentArgs = {
   status: Scalars['String'];
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpdateCalendarsContentArgs = {
   data: CalendarsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpdateDashboardContentArgs = {
@@ -985,14 +925,12 @@ export type ApplicationMutationsUpdateDashboardContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpdateDiscoverContentArgs = {
   data: DiscoverDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpdateEventsContentArgs = {
@@ -1001,14 +939,12 @@ export type ApplicationMutationsUpdateEventsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpdateExternalAuthorsContentArgs = {
   data: ExternalAuthorsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpdateGroupsContentArgs = {
@@ -1017,14 +953,12 @@ export type ApplicationMutationsUpdateGroupsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpdateLabsContentArgs = {
   data: LabsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpdateMigrationsContentArgs = {
@@ -1033,14 +967,12 @@ export type ApplicationMutationsUpdateMigrationsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpdateNewsAndEventsContentArgs = {
   data: NewsAndEventsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpdatePagesContentArgs = {
@@ -1049,14 +981,12 @@ export type ApplicationMutationsUpdatePagesContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpdateResearchOutputsContentArgs = {
   data: ResearchOutputsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpdateResearchTagsContentArgs = {
@@ -1065,14 +995,12 @@ export type ApplicationMutationsUpdateResearchTagsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpdateTeamsContentArgs = {
   data: TeamsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpdateTutorialsContentArgs = {
@@ -1081,7 +1009,6 @@ export type ApplicationMutationsUpdateTutorialsContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpdateUsersContentArgs = {
   data: UsersDataInputDto;
@@ -1089,14 +1016,12 @@ export type ApplicationMutationsUpdateUsersContentArgs = {
   id: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpdateWorkingGroupsContentArgs = {
   data: WorkingGroupsDataInputDto;
   expectedVersion?: InputMaybe<Scalars['Int']>;
   id: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpsertCalendarsContentArgs = {
@@ -1108,7 +1033,6 @@ export type ApplicationMutationsUpsertCalendarsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpsertDashboardContentArgs = {
   data: DashboardDataInputDto;
@@ -1118,7 +1042,6 @@ export type ApplicationMutationsUpsertDashboardContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpsertDiscoverContentArgs = {
@@ -1130,7 +1053,6 @@ export type ApplicationMutationsUpsertDiscoverContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpsertEventsContentArgs = {
   data: EventsDataInputDto;
@@ -1140,7 +1062,6 @@ export type ApplicationMutationsUpsertEventsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpsertExternalAuthorsContentArgs = {
@@ -1152,7 +1073,6 @@ export type ApplicationMutationsUpsertExternalAuthorsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpsertGroupsContentArgs = {
   data: GroupsDataInputDto;
@@ -1162,7 +1082,6 @@ export type ApplicationMutationsUpsertGroupsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpsertLabsContentArgs = {
@@ -1174,7 +1093,6 @@ export type ApplicationMutationsUpsertLabsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpsertMigrationsContentArgs = {
   data: MigrationsDataInputDto;
@@ -1184,7 +1102,6 @@ export type ApplicationMutationsUpsertMigrationsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpsertNewsAndEventsContentArgs = {
@@ -1196,7 +1113,6 @@ export type ApplicationMutationsUpsertNewsAndEventsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpsertPagesContentArgs = {
   data: PagesDataInputDto;
@@ -1206,7 +1122,6 @@ export type ApplicationMutationsUpsertPagesContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpsertResearchOutputsContentArgs = {
@@ -1218,7 +1133,6 @@ export type ApplicationMutationsUpsertResearchOutputsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpsertResearchTagsContentArgs = {
   data: ResearchTagsDataInputDto;
@@ -1228,7 +1142,6 @@ export type ApplicationMutationsUpsertResearchTagsContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpsertTeamsContentArgs = {
@@ -1240,7 +1153,6 @@ export type ApplicationMutationsUpsertTeamsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpsertTutorialsContentArgs = {
   data: TutorialsDataInputDto;
@@ -1251,7 +1163,6 @@ export type ApplicationMutationsUpsertTutorialsContentArgs = {
   status: InputMaybe<Scalars['String']>;
 };
 
-
 /** The app mutations. */
 export type ApplicationMutationsUpsertUsersContentArgs = {
   data: UsersDataInputDto;
@@ -1261,7 +1172,6 @@ export type ApplicationMutationsUpsertUsersContentArgs = {
   publish?: InputMaybe<Scalars['Boolean']>;
   status: InputMaybe<Scalars['String']>;
 };
-
 
 /** The app mutations. */
 export type ApplicationMutationsUpsertWorkingGroupsContentArgs = {
@@ -1381,12 +1291,10 @@ export type ApplicationQueries = {
   queryWorkingGroupsContentsWithTotal: Maybe<WorkingGroupsResultDto>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesFindAssetArgs = {
   id: Scalars['String'];
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesFindCalendarsContentArgs = {
@@ -1394,13 +1302,11 @@ export type ApplicationQueriesFindCalendarsContentArgs = {
   version: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesFindDashboardContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesFindDiscoverContentArgs = {
@@ -1408,13 +1314,11 @@ export type ApplicationQueriesFindDiscoverContentArgs = {
   version: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesFindEventsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesFindExternalAuthorsContentArgs = {
@@ -1422,13 +1326,11 @@ export type ApplicationQueriesFindExternalAuthorsContentArgs = {
   version: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesFindGroupsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesFindLabsContentArgs = {
@@ -1436,13 +1338,11 @@ export type ApplicationQueriesFindLabsContentArgs = {
   version: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesFindMigrationsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesFindNewsAndEventsContentArgs = {
@@ -1450,13 +1350,11 @@ export type ApplicationQueriesFindNewsAndEventsContentArgs = {
   version: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesFindPagesContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesFindResearchOutputsContentArgs = {
@@ -1464,13 +1362,11 @@ export type ApplicationQueriesFindResearchOutputsContentArgs = {
   version: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesFindResearchTagsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesFindTeamsContentArgs = {
@@ -1478,13 +1374,11 @@ export type ApplicationQueriesFindTeamsContentArgs = {
   version: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesFindTutorialsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesFindUsersContentArgs = {
@@ -1492,13 +1386,11 @@ export type ApplicationQueriesFindUsersContentArgs = {
   version: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesFindWorkingGroupsContentArgs = {
   id: Scalars['String'];
   version: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryAssetsArgs = {
@@ -1508,7 +1400,6 @@ export type ApplicationQueriesQueryAssetsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryAssetsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1516,7 +1407,6 @@ export type ApplicationQueriesQueryAssetsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryCalendarsContentsArgs = {
@@ -1527,7 +1417,6 @@ export type ApplicationQueriesQueryCalendarsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryCalendarsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1537,12 +1426,10 @@ export type ApplicationQueriesQueryCalendarsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryContentsByIdsArgs = {
   ids: Array<Scalars['String']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryDashboardContentsArgs = {
@@ -1553,7 +1440,6 @@ export type ApplicationQueriesQueryDashboardContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryDashboardContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1562,7 +1448,6 @@ export type ApplicationQueriesQueryDashboardContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryDiscoverContentsArgs = {
@@ -1573,7 +1458,6 @@ export type ApplicationQueriesQueryDiscoverContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryDiscoverContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1582,7 +1466,6 @@ export type ApplicationQueriesQueryDiscoverContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryEventsContentsArgs = {
@@ -1593,7 +1476,6 @@ export type ApplicationQueriesQueryEventsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryEventsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1602,7 +1484,6 @@ export type ApplicationQueriesQueryEventsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryExternalAuthorsContentsArgs = {
@@ -1613,7 +1494,6 @@ export type ApplicationQueriesQueryExternalAuthorsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryExternalAuthorsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1622,7 +1502,6 @@ export type ApplicationQueriesQueryExternalAuthorsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryGroupsContentsArgs = {
@@ -1633,7 +1512,6 @@ export type ApplicationQueriesQueryGroupsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryGroupsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1642,7 +1520,6 @@ export type ApplicationQueriesQueryGroupsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryLabsContentsArgs = {
@@ -1653,7 +1530,6 @@ export type ApplicationQueriesQueryLabsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryLabsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1662,7 +1538,6 @@ export type ApplicationQueriesQueryLabsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryMigrationsContentsArgs = {
@@ -1673,7 +1548,6 @@ export type ApplicationQueriesQueryMigrationsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryMigrationsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1682,7 +1556,6 @@ export type ApplicationQueriesQueryMigrationsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryNewsAndEventsContentsArgs = {
@@ -1693,7 +1566,6 @@ export type ApplicationQueriesQueryNewsAndEventsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryNewsAndEventsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1702,7 +1574,6 @@ export type ApplicationQueriesQueryNewsAndEventsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryPagesContentsArgs = {
@@ -1713,7 +1584,6 @@ export type ApplicationQueriesQueryPagesContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryPagesContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1722,7 +1592,6 @@ export type ApplicationQueriesQueryPagesContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryResearchOutputsContentsArgs = {
@@ -1733,7 +1602,6 @@ export type ApplicationQueriesQueryResearchOutputsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryResearchOutputsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1742,7 +1610,6 @@ export type ApplicationQueriesQueryResearchOutputsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryResearchTagsContentsArgs = {
@@ -1753,7 +1620,6 @@ export type ApplicationQueriesQueryResearchTagsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryResearchTagsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1762,7 +1628,6 @@ export type ApplicationQueriesQueryResearchTagsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryTeamsContentsArgs = {
@@ -1773,7 +1638,6 @@ export type ApplicationQueriesQueryTeamsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryTeamsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1782,7 +1646,6 @@ export type ApplicationQueriesQueryTeamsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryTutorialsContentsArgs = {
@@ -1793,7 +1656,6 @@ export type ApplicationQueriesQueryTutorialsContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryTutorialsContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1802,7 +1664,6 @@ export type ApplicationQueriesQueryTutorialsContentsWithTotalArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryUsersContentsArgs = {
@@ -1813,7 +1674,6 @@ export type ApplicationQueriesQueryUsersContentsArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryUsersContentsWithTotalArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1823,7 +1683,6 @@ export type ApplicationQueriesQueryUsersContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The app queries. */
 export type ApplicationQueriesQueryWorkingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -1832,7 +1691,6 @@ export type ApplicationQueriesQueryWorkingGroupsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The app queries. */
 export type ApplicationQueriesQueryWorkingGroupsContentsWithTotalArgs = {
@@ -1850,11 +1708,9 @@ export type ApplicationSubscriptions = {
   contentChanges: Maybe<EnrichedContentEvent>;
 };
 
-
 export type ApplicationSubscriptionsAssetChangesArgs = {
   type: InputMaybe<EnrichedAssetEventType>;
 };
-
 
 export type ApplicationSubscriptionsContentChangesArgs = {
   schemaName: InputMaybe<Scalars['String']>;
@@ -1928,7 +1784,6 @@ export type Asset = {
   version: Scalars['Int'];
 };
 
-
 /** An asset */
 export type AssetMetadataArgs = {
   path: InputMaybe<Scalars['String']>;
@@ -1946,7 +1801,7 @@ export enum AssetType {
   Audio = 'AUDIO',
   Image = 'IMAGE',
   Unknown = 'UNKNOWN',
-  Video = 'VIDEO'
+  Video = 'VIDEO',
 }
 
 /** The structure of a Calendars content type. */
@@ -1999,7 +1854,6 @@ export type Calendars = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingEventsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2008,7 +1862,6 @@ export type CalendarsReferencingEventsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingEventsContentsWithTotalArgs = {
@@ -2019,7 +1872,6 @@ export type CalendarsReferencingEventsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2028,7 +1880,6 @@ export type CalendarsReferencingGroupsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingGroupsContentsWithTotalArgs = {
@@ -2039,7 +1890,6 @@ export type CalendarsReferencingGroupsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingWorkingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2048,7 +1898,6 @@ export type CalendarsReferencingWorkingGroupsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Calendars content type. */
 export type CalendarsReferencingWorkingGroupsContentsWithTotalArgs = {
@@ -2244,7 +2093,6 @@ export type Dashboard = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesNewsAndEventsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2253,7 +2101,6 @@ export type DashboardReferencesNewsAndEventsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesNewsAndEventsContentsWithTotalArgs = {
@@ -2264,7 +2111,6 @@ export type DashboardReferencesNewsAndEventsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesPagesContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2273,7 +2119,6 @@ export type DashboardReferencesPagesContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Dashboard content type. */
 export type DashboardReferencesPagesContentsWithTotalArgs = {
@@ -2388,7 +2233,6 @@ export type Discover = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesNewsAndEventsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2397,7 +2241,6 @@ export type DiscoverReferencesNewsAndEventsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesNewsAndEventsContentsWithTotalArgs = {
@@ -2408,7 +2251,6 @@ export type DiscoverReferencesNewsAndEventsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesPagesContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2417,7 +2259,6 @@ export type DiscoverReferencesPagesContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesPagesContentsWithTotalArgs = {
@@ -2428,7 +2269,6 @@ export type DiscoverReferencesPagesContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesTeamsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2437,7 +2277,6 @@ export type DiscoverReferencesTeamsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesTeamsContentsWithTotalArgs = {
@@ -2448,7 +2287,6 @@ export type DiscoverReferencesTeamsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesTutorialsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2457,7 +2295,6 @@ export type DiscoverReferencesTutorialsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesTutorialsContentsWithTotalArgs = {
@@ -2468,7 +2305,6 @@ export type DiscoverReferencesTutorialsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2477,7 +2313,6 @@ export type DiscoverReferencesUsersContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Discover ASAP content type. */
 export type DiscoverReferencesUsersContentsWithTotalArgs = {
@@ -2662,7 +2497,6 @@ export type EnrichedAssetEvent = {
   version: Scalars['Int'];
 };
 
-
 /** An asset event */
 export type EnrichedAssetEventMetadataArgs = {
   path: InputMaybe<Scalars['String']>;
@@ -2672,7 +2506,7 @@ export enum EnrichedAssetEventType {
   Annotated = 'ANNOTATED',
   Created = 'CREATED',
   Deleted = 'DELETED',
-  Updated = 'UPDATED'
+  Updated = 'UPDATED',
 }
 
 /** An content event */
@@ -2712,7 +2546,7 @@ export enum EnrichedContentEventType {
   ReferenceUpdated = 'REFERENCE_UPDATED',
   StatusChanged = 'STATUS_CHANGED',
   Unpublished = 'UNPUBLISHED',
-  Updated = 'UPDATED'
+  Updated = 'UPDATED',
 }
 
 /** The result of a mutation */
@@ -2779,7 +2613,6 @@ export type Events = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Events content type. */
 export type EventsReferencesCalendarsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2788,7 +2621,6 @@ export type EventsReferencesCalendarsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Events content type. */
 export type EventsReferencesCalendarsContentsWithTotalArgs = {
@@ -2799,7 +2631,6 @@ export type EventsReferencesCalendarsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Events content type. */
 export type EventsReferencesExternalAuthorsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2808,7 +2639,6 @@ export type EventsReferencesExternalAuthorsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Events content type. */
 export type EventsReferencesExternalAuthorsContentsWithTotalArgs = {
@@ -2819,7 +2649,6 @@ export type EventsReferencesExternalAuthorsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Events content type. */
 export type EventsReferencesTeamsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2828,7 +2657,6 @@ export type EventsReferencesTeamsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Events content type. */
 export type EventsReferencesTeamsContentsWithTotalArgs = {
@@ -2839,7 +2667,6 @@ export type EventsReferencesTeamsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Events content type. */
 export type EventsReferencesUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2848,7 +2675,6 @@ export type EventsReferencesUsersContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Events content type. */
 export type EventsReferencesUsersContentsWithTotalArgs = {
@@ -2859,7 +2685,6 @@ export type EventsReferencesUsersContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Events content type. */
 export type EventsReferencingResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -2868,7 +2693,6 @@ export type EventsReferencingResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Events content type. */
 export type EventsReferencingResearchOutputsContentsWithTotalArgs = {
@@ -3349,7 +3173,6 @@ export type ExternalAuthors = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a External authors content type. */
 export type ExternalAuthorsReferencingEventsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -3358,7 +3181,6 @@ export type ExternalAuthorsReferencingEventsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a External authors content type. */
 export type ExternalAuthorsReferencingEventsContentsWithTotalArgs = {
@@ -3369,7 +3191,6 @@ export type ExternalAuthorsReferencingEventsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a External authors content type. */
 export type ExternalAuthorsReferencingResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -3378,7 +3199,6 @@ export type ExternalAuthorsReferencingResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a External authors content type. */
 export type ExternalAuthorsReferencingResearchOutputsContentsWithTotalArgs = {
@@ -3488,7 +3308,6 @@ export type Groups = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Interest Groups content type. */
 export type GroupsReferencesCalendarsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -3497,7 +3316,6 @@ export type GroupsReferencesCalendarsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Interest Groups content type. */
 export type GroupsReferencesCalendarsContentsWithTotalArgs = {
@@ -3508,7 +3326,6 @@ export type GroupsReferencesCalendarsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Interest Groups content type. */
 export type GroupsReferencesTeamsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -3517,7 +3334,6 @@ export type GroupsReferencesTeamsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Interest Groups content type. */
 export type GroupsReferencesTeamsContentsWithTotalArgs = {
@@ -3528,7 +3344,6 @@ export type GroupsReferencesTeamsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Interest Groups content type. */
 export type GroupsReferencesUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -3537,7 +3352,6 @@ export type GroupsReferencesUsersContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Interest Groups content type. */
 export type GroupsReferencesUsersContentsWithTotalArgs = {
@@ -3760,7 +3574,6 @@ export type Labs = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Labs content type. */
 export type LabsReferencingResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -3769,7 +3582,6 @@ export type LabsReferencingResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Labs content type. */
 export type LabsReferencingResearchOutputsContentsWithTotalArgs = {
@@ -3780,7 +3592,6 @@ export type LabsReferencingResearchOutputsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Labs content type. */
 export type LabsReferencingUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -3789,7 +3600,6 @@ export type LabsReferencingUsersContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Labs content type. */
 export type LabsReferencingUsersContentsWithTotalArgs = {
@@ -3950,7 +3760,6 @@ export type NewsAndEvents = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a News content type. */
 export type NewsAndEventsReferencingDashboardContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -3959,7 +3768,6 @@ export type NewsAndEventsReferencingDashboardContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a News content type. */
 export type NewsAndEventsReferencingDashboardContentsWithTotalArgs = {
@@ -3970,7 +3778,6 @@ export type NewsAndEventsReferencingDashboardContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a News content type. */
 export type NewsAndEventsReferencingDiscoverContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -3979,7 +3786,6 @@ export type NewsAndEventsReferencingDiscoverContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a News content type. */
 export type NewsAndEventsReferencingDiscoverContentsWithTotalArgs = {
@@ -4153,7 +3959,6 @@ export type Pages = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Pages content type. */
 export type PagesReferencingDashboardContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4162,7 +3967,6 @@ export type PagesReferencingDashboardContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Pages content type. */
 export type PagesReferencingDashboardContentsWithTotalArgs = {
@@ -4173,7 +3977,6 @@ export type PagesReferencingDashboardContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Pages content type. */
 export type PagesReferencingDiscoverContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4182,7 +3985,6 @@ export type PagesReferencingDiscoverContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Pages content type. */
 export type PagesReferencingDiscoverContentsWithTotalArgs = {
@@ -4369,7 +4171,6 @@ export type ResearchOutputs = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesEventsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4378,7 +4179,6 @@ export type ResearchOutputsReferencesEventsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesEventsContentsWithTotalArgs = {
@@ -4389,7 +4189,6 @@ export type ResearchOutputsReferencesEventsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesExternalAuthorsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4398,7 +4197,6 @@ export type ResearchOutputsReferencesExternalAuthorsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesExternalAuthorsContentsWithTotalArgs = {
@@ -4409,7 +4207,6 @@ export type ResearchOutputsReferencesExternalAuthorsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4418,7 +4215,6 @@ export type ResearchOutputsReferencesLabsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
@@ -4429,7 +4225,6 @@ export type ResearchOutputsReferencesLabsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4438,7 +4233,6 @@ export type ResearchOutputsReferencesResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesResearchOutputsContentsWithTotalArgs = {
@@ -4449,7 +4243,6 @@ export type ResearchOutputsReferencesResearchOutputsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesResearchTagsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4458,7 +4251,6 @@ export type ResearchOutputsReferencesResearchTagsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesResearchTagsContentsWithTotalArgs = {
@@ -4469,7 +4261,6 @@ export type ResearchOutputsReferencesResearchTagsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesTeamsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4478,7 +4269,6 @@ export type ResearchOutputsReferencesTeamsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesTeamsContentsWithTotalArgs = {
@@ -4489,7 +4279,6 @@ export type ResearchOutputsReferencesTeamsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4498,7 +4287,6 @@ export type ResearchOutputsReferencesUsersContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesUsersContentsWithTotalArgs = {
@@ -4509,7 +4297,6 @@ export type ResearchOutputsReferencesUsersContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesWorkingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4518,7 +4305,6 @@ export type ResearchOutputsReferencesWorkingGroupsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencesWorkingGroupsContentsWithTotalArgs = {
@@ -4529,7 +4315,6 @@ export type ResearchOutputsReferencesWorkingGroupsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencingResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4538,7 +4323,6 @@ export type ResearchOutputsReferencingResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencingResearchOutputsContentsWithTotalArgs = {
@@ -4549,7 +4333,6 @@ export type ResearchOutputsReferencingResearchOutputsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencingTeamsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -4558,7 +4341,6 @@ export type ResearchOutputsReferencingTeamsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputsReferencingTeamsContentsWithTotalArgs = {
@@ -5137,7 +4919,6 @@ export type ResearchTags = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Research Tags content type. */
 export type ResearchTagsReferencingResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5146,7 +4927,6 @@ export type ResearchTagsReferencingResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Research Tags content type. */
 export type ResearchTagsReferencingResearchOutputsContentsWithTotalArgs = {
@@ -5294,7 +5074,6 @@ export type Teams = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Teams content type. */
 export type TeamsReferencesResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5303,7 +5082,6 @@ export type TeamsReferencesResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Teams content type. */
 export type TeamsReferencesResearchOutputsContentsWithTotalArgs = {
@@ -5314,7 +5092,6 @@ export type TeamsReferencesResearchOutputsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Teams content type. */
 export type TeamsReferencingDiscoverContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5323,7 +5100,6 @@ export type TeamsReferencingDiscoverContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingDiscoverContentsWithTotalArgs = {
@@ -5334,7 +5110,6 @@ export type TeamsReferencingDiscoverContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Teams content type. */
 export type TeamsReferencingEventsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5343,7 +5118,6 @@ export type TeamsReferencingEventsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingEventsContentsWithTotalArgs = {
@@ -5354,7 +5128,6 @@ export type TeamsReferencingEventsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Teams content type. */
 export type TeamsReferencingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5363,7 +5136,6 @@ export type TeamsReferencingGroupsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingGroupsContentsWithTotalArgs = {
@@ -5374,7 +5146,6 @@ export type TeamsReferencingGroupsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Teams content type. */
 export type TeamsReferencingResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5383,7 +5154,6 @@ export type TeamsReferencingResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingResearchOutputsContentsWithTotalArgs = {
@@ -5394,7 +5164,6 @@ export type TeamsReferencingResearchOutputsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Teams content type. */
 export type TeamsReferencingUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5403,7 +5172,6 @@ export type TeamsReferencingUsersContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Teams content type. */
 export type TeamsReferencingUsersContentsWithTotalArgs = {
@@ -5594,7 +5362,6 @@ export type Tutorials = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Tutorials content type. */
 export type TutorialsReferencingDiscoverContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5603,7 +5370,6 @@ export type TutorialsReferencingDiscoverContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Tutorials content type. */
 export type TutorialsReferencingDiscoverContentsWithTotalArgs = {
@@ -5791,7 +5557,6 @@ export type Users = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Users content type. */
 export type UsersReferencesLabsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5800,7 +5565,6 @@ export type UsersReferencesLabsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Users content type. */
 export type UsersReferencesLabsContentsWithTotalArgs = {
@@ -5811,7 +5575,6 @@ export type UsersReferencesLabsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Users content type. */
 export type UsersReferencesTeamsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5820,7 +5583,6 @@ export type UsersReferencesTeamsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Users content type. */
 export type UsersReferencesTeamsContentsWithTotalArgs = {
@@ -5831,7 +5593,6 @@ export type UsersReferencesTeamsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Users content type. */
 export type UsersReferencingDiscoverContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5840,7 +5601,6 @@ export type UsersReferencingDiscoverContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Users content type. */
 export type UsersReferencingDiscoverContentsWithTotalArgs = {
@@ -5851,7 +5611,6 @@ export type UsersReferencingDiscoverContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Users content type. */
 export type UsersReferencingEventsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5860,7 +5619,6 @@ export type UsersReferencingEventsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Users content type. */
 export type UsersReferencingEventsContentsWithTotalArgs = {
@@ -5871,7 +5629,6 @@ export type UsersReferencingEventsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Users content type. */
 export type UsersReferencingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5880,7 +5637,6 @@ export type UsersReferencingGroupsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Users content type. */
 export type UsersReferencingGroupsContentsWithTotalArgs = {
@@ -5891,7 +5647,6 @@ export type UsersReferencingGroupsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Users content type. */
 export type UsersReferencingResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5900,7 +5655,6 @@ export type UsersReferencingResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Users content type. */
 export type UsersReferencingResearchOutputsContentsWithTotalArgs = {
@@ -5911,7 +5665,6 @@ export type UsersReferencingResearchOutputsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Users content type. */
 export type UsersReferencingWorkingGroupsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -5920,7 +5673,6 @@ export type UsersReferencingWorkingGroupsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Users content type. */
 export type UsersReferencingWorkingGroupsContentsWithTotalArgs = {
@@ -6271,7 +6023,6 @@ export type UsersDataOrcidWorksChildDto = {
   type: Maybe<Scalars['String']>;
 };
 
-
 /** The structure of the ORCID Works nested schema. */
 export type UsersDataOrcidWorksChildDtoPublicationDateArgs = {
   path: InputMaybe<Scalars['String']>;
@@ -6524,7 +6275,6 @@ export type WorkingGroups = Content & {
   version: Scalars['Int'];
 };
 
-
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencesCalendarsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -6533,7 +6283,6 @@ export type WorkingGroupsReferencesCalendarsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencesCalendarsContentsWithTotalArgs = {
@@ -6544,7 +6293,6 @@ export type WorkingGroupsReferencesCalendarsContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencesUsersContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -6553,7 +6301,6 @@ export type WorkingGroupsReferencesUsersContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
@@ -6564,7 +6311,6 @@ export type WorkingGroupsReferencesUsersContentsWithTotalArgs = {
   top: InputMaybe<Scalars['Int']>;
 };
 
-
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencingResearchOutputsContentsArgs = {
   filter: InputMaybe<Scalars['String']>;
@@ -6573,7 +6319,6 @@ export type WorkingGroupsReferencingResearchOutputsContentsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
 };
-
 
 /** The structure of a Working Groups content type. */
 export type WorkingGroupsReferencingResearchOutputsContentsWithTotalArgs = {
@@ -6761,13 +6506,56 @@ export type WorkingGroupsResultDto = {
   total: Scalars['Int'];
 };
 
-export type FetchResearchOutputIdsQueryVariables = Exact<{ [key: string]: never; }>;
+export type FetchResearchOutputIdsQueryVariables = Exact<{
+  [key: string]: never;
+}>;
 
+export type FetchResearchOutputIdsQuery = {
+  queryResearchOutputsContentsWithTotal: Maybe<
+    Pick<ResearchOutputsResultDto, 'total'> & {
+      items: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
+    }
+  >;
+};
 
-export type FetchResearchOutputIdsQuery = { queryResearchOutputsContentsWithTotal: Maybe<(
-    Pick<ResearchOutputsResultDto, 'total'>
-    & { items: Maybe<Array<Pick<ResearchOutputs, 'id'>>> }
-  )> };
-
-
-export const FetchResearchOutputIdsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchResearchOutputIds"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"queryResearchOutputsContentsWithTotal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<FetchResearchOutputIdsQuery, FetchResearchOutputIdsQueryVariables>;
+export const FetchResearchOutputIdsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchResearchOutputIds' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: {
+              kind: 'Name',
+              value: 'queryResearchOutputsContentsWithTotal',
+            },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchResearchOutputIdsQuery,
+  FetchResearchOutputIdsQueryVariables
+>;

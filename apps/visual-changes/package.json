@@ -15,7 +15,7 @@
     "pngjs": "^7.0.0"
   },
   "devDependencies": {
-    "@asap-hub/contentful": "workspace:*",
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@graphql-codegen/cli": "2.16.5",
     "@graphql-codegen/gql-tag-operations-preset": "1.7.4",
     "@graphql-codegen/introspection": "2.2.3",
@@ -30,8 +30,14 @@
     "@types/node": "18.17.2",
     "@types/pixelmatch": "^5.2.4",
     "@types/pngjs": "^6.0.1",
+    "@types/prettier": "2.7.3",
     "graphql-typescript-integration": "1.2.1",
+    "prettier": "2.8.8",
     "puppeteer": "^21.0.1",
     "ts-node": "10.9.1"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
   }
 }

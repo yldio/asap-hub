@@ -1851,7 +1851,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/visual-changes@workspace:apps/visual-changes"
   dependencies:
-    "@asap-hub/contentful": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@graphql-codegen/cli": 2.16.5
     "@graphql-codegen/gql-tag-operations-preset": 1.7.4
@@ -1867,11 +1867,13 @@ __metadata:
     "@types/node": 18.17.2
     "@types/pixelmatch": ^5.2.4
     "@types/pngjs": ^6.0.1
+    "@types/prettier": 2.7.3
     graphql: 15.8.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
     pixelmatch: ^5.3.0
     pngjs: ^7.0.0
+    prettier: 2.8.8
     puppeteer: ^21.0.1
     ts-node: 10.9.1
   languageName: unknown

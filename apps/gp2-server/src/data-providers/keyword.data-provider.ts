@@ -4,8 +4,8 @@ import {
   gp2 as gp2Contentful,
   GraphQLClient,
 } from '@asap-hub/contentful';
-import { KeywordDataProvider } from './types';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { KeywordDataProvider } from './types';
 
 type Keywords = gp2Contentful.FetchKeywordsQuery['keywordsCollection'];
 

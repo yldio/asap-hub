@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { getAccessTokenFactory, SquidexGraphql } from '@asap-hub/squidex';
 import puppeteer, { Page } from 'puppeteer';

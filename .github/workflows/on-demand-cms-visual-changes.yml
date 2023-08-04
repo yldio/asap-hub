@@ -1,0 +1,55 @@
+name: Visual changes between Squidex and Contentful Research Outputs
+on:
+  workflow_dispatch:
+    inputs:
+      pr-url:
+        required: true
+        type: string
+        description: Hub PR url
+
+jobs:
+  detect_visual_changes:
+    runs-on: ubuntu-latest
+    environment: Branch
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      # https://stackoverflow.com/questions/58134793/error-while-loading-shared-libraries-libnss3-so-while-running-gtlab-ci-job-to
+      - name: Install missing libs
+        run: apt-get update && apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libnss3 lsb-release xdg-utils wget ca-certificates libgbm-dev
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Branch
+      - name: Rebuild
+        uses: ./.github/actions/build-rebuild
+      - name: Run visual changes script
+        run: |
+          yarn build:babel
+          yarn build:typecheck
+          yarn workspace @asap-hub/cms-data-sync visual-changes
+        env:
+          PR_URL: ${{ inputs.pr-url }}
+          CMS_MIGRATION_USER_EMAIL: ${{ secrets.CMS_MIGRATION_USER_EMAIL }}
+          CMS_MIGRATION_USER_PASSWORD: ${{ secrets.CMS_MIGRATION_USER_PASSWORD }}
+          CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
+          CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
+          SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+      - name: Save Screenshots as Artifact
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: packages/cms-data-sync/screenshots
+      - name: Save JSON as Artifact
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: json_data
+          path: packages/cms-data-sync/nonMatchingResearchOutputIds.json

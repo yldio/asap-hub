@@ -141,7 +141,7 @@
     "jwt-encode": "1.0.1",
     "limiter": "^2.1.0",
     "node-dev": "6.7.0",
-    "serverless": "3.33.0",
+    "serverless": "3.34.0",
     "serverless-iam-roles-per-function": "2.0.2",
     "serverless-offline": "8.8.1",
     "serverless-offline-aws-eventbridge": "1",

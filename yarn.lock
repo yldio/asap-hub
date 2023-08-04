@@ -1016,7 +1016,7 @@ __metadata:
     parse-data-url: 3.0.0
     pump: 3.0.0
     react-router-dom: 5.3.4
-    serverless: 3.33.0
+    serverless: 3.34.0
     serverless-http: 2.7.0
     serverless-iam-roles-per-function: 2.0.2
     serverless-offline: 8.8.1
@@ -1447,7 +1447,7 @@ __metadata:
     odata-query: 7.0.4
     p-throttle: 4.1.1
     parse-data-url: 3.0.0
-    serverless: 3.33.0
+    serverless: 3.34.0
     serverless-http: 2.7.0
     serverless-s3-sync: 3.1.0
     serverless-webpack: 5.13.0
@@ -43266,13 +43266,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serverless@npm:3.33.0":
-  version: 3.33.0
-  resolution: "serverless@npm:3.33.0"
+"serverless@npm:3.34.0":
+  version: 3.34.0
+  resolution: "serverless@npm:3.34.0"
   dependencies:
     "@serverless/dashboard-plugin": ^6.2.3
     "@serverless/platform-client": ^4.3.2
     "@serverless/utils": ^6.11.1
+    abort-controller: ^3.0.0
     ajv: ^8.12.0
     ajv-formats: ^2.1.1
     archiver: ^5.3.1
@@ -43295,7 +43296,6 @@ __metadata:
     fs-extra: ^10.1.0
     get-stdin: ^8.0.0
     globby: ^11.1.0
-    got: ^11.8.6
     graceful-fs: ^4.2.11
     https-proxy-agent: ^5.0.1
     is-docker: ^2.2.1
@@ -43329,7 +43329,7 @@ __metadata:
   bin:
     serverless: bin/serverless.js
     sls: bin/serverless.js
-  checksum: 233a2d0eb831bc295051f9a91a70b777e04bc97e04cbdaaf62bafc9e55010003b239f432f5c126874cba7497642ab74e8bc6e405a1dd1a7476e2dcf694e3a202
+  checksum: 890f558bd88378ee9ee0c854496acacadea242443177687965f74b44f8453a94e489c239bb7ae68cf79b59fbf1eaad4849a90e88fbd35ac001b71d9205340a37
   languageName: node
   linkType: hard
 

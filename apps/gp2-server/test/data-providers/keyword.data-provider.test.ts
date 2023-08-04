@@ -128,5 +128,18 @@ describe('Keyword data provider', () => {
 
       expect(keywordMock.publish).toHaveBeenCalled();
     });
+
+    test('Should throw error if error on publish', async () => {
+      const { name } = getKeywordCreateDataObject();
+
+      const keywordMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(keywordMock);
+
+      keywordMock.publish = jest
+        .fn()
+        .mockRejectedValue(new Error('error on publish'));
+
+      await expect(keywordDataProvider.create({ name })).rejects.toThrow(Error);
+    });
   });
 });

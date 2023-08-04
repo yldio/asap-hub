@@ -46,7 +46,12 @@ export class KeywordContentfulDataProvider implements KeywordDataProvider {
       }),
     });
 
-    await keywordEntry.publish();
+    try {
+      await keywordEntry.publish();
+    } catch (err) {
+      keywordEntry.delete();
+      throw err;
+    }
 
     return keywordEntry.sys.id;
   }

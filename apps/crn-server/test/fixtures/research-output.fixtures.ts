@@ -1,12 +1,12 @@
 import {
-  ResearchOutputDraftDataObject,
   ListResearchOutputResponse,
   ListResponse,
-  ResearchOutputPublishedDataObject,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
+  ResearchOutputDraftDataObject,
   ResearchOutputEvent,
   ResearchOutputPostRequest,
+  ResearchOutputPublishedDataObject,
   ResearchOutputPutRequest,
   ResearchOutputResponse,
   ResearchOutputUpdateDataObject,
@@ -109,8 +109,16 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
     asapFunded: 'Yes',
     usedInAPublication: 'No',
     type: '3D Printing',
-    statusChangedAt: null,
-    statusChangedBy: [],
+    statusChangedAt: '2021-05-21T13:18:31Z',
+    statusChangedBy: [
+      {
+        id: 'status-changed-by-id',
+        flatData: {
+          firstName: 'Tom',
+          lastName: 'Hardy',
+        },
+      },
+    ],
     relatedResearch: [
       {
         id: 'related-research-id-0',

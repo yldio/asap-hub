@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import { getAccessTokenFactory, SquidexGraphql } from '@asap-hub/squidex';
-/* eslint-disable-next-line import/no-unresolved */
 import puppeteer, { Page } from 'puppeteer';
 import fs from 'fs';
 import pixelmatch from 'pixelmatch';

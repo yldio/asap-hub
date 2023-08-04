@@ -3,13 +3,9 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "build",
-    "noUncheckedIndexedAccess": false,
-    "target": "es6",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "noUncheckedIndexedAccess": false
   },
-  "include": ["src", "types", "node_modules/puppeteer-tsd/src/index.d.ts"],
+  "include": ["src", "types"],
   "filesGlob": ["**/*.ts", "../scripts/**/*.ts", "../test/**/*.ts"],
   "references": [
     { "path": "../../packages/errors" },

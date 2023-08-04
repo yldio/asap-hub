@@ -240,7 +240,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: 'author.id:"12345"',
+        filters: 'authors.id:"12345"',
       }),
     );
   });
@@ -256,7 +256,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:Article) AND author.id:"12345"',
+        filters: '(documentType:Article) AND authors.id:"12345"',
       }),
     );
   });
@@ -273,7 +273,7 @@ describe('getOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(documentType:Article OR documentType:"GP2 Reports") AND author.id:"12345"',
+          '(documentType:Article OR documentType:"GP2 Reports") AND authors.id:"12345"',
       }),
     );
   });

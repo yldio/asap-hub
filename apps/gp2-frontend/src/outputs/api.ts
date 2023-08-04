@@ -58,7 +58,7 @@ export const getAllFilters = (
     ? `workingGroup.id:"${workingGroup}"`
     : '';
   const projectFilter = project ? `project.id:"${project}"` : '';
-  const authorFilter = author ? `author.id:"${author}"` : '';
+  const authorFilter = author ? `authors.id:"${author}"` : '';
 
   return [
     typeFiltersWithParenthesis,

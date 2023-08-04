@@ -15,6 +15,7 @@ export const researchOutputFilters: ReadonlyArray<
   { title: 'TYPE OF OUTPUTS' },
   { label: 'Article', value: 'Article' },
   { label: 'Bioinformatics', value: 'Bioinformatics' },
+  { label: 'CRN Report', value: 'Report' },
   { label: 'Dataset', value: 'Dataset' },
   { label: 'Grant Document', value: 'Grant Document' },
   { label: 'Lab Resource', value: 'Lab Resource' },

@@ -39,6 +39,7 @@
     "unified": "9.2.2"
   },
   "devDependencies": {
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@graphql-codegen/cli": "2.16.5",
     "@graphql-codegen/gql-tag-operations-preset": "1.7.4",
     "@graphql-codegen/introspection": "2.2.3",

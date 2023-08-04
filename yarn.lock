@@ -375,6 +375,7 @@ __metadata:
   dependencies:
     "@asap-hub/contentful": "workspace:*"
     "@asap-hub/crn-server": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/server-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"

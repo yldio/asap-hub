@@ -13,8 +13,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch",
     "migrate": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node ./src/index.ts",
     "schema:update:crn": "SQUIDEX_BASE_URL=$SQUIDEX_BASE_URL SQUIDEX_APP_NAME=$CRN_SQUIDEX_APP_NAME SQUIDEX_CLIENT_ID=$CRN_SQUIDEX_CLIENT_ID SQUIDEX_CLIENT_SECRET=$CRN_SQUIDEX_CLIENT_SECRET ./scripts/schema-update.sh",
-    "calendar:sync:all": "ts-node ./scripts/run-calendar-sync-all.ts",
-    "visual-changes": "ts-node ./src/visual-changes/visual-changes.ts"
+    "calendar:sync:all": "ts-node ./scripts/run-calendar-sync-all.ts"
   },
   "dependencies": {
     "@asap-hub/contentful": "workspace:*",
@@ -30,9 +29,6 @@
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6",
     "limiter": "^2.1.0",
-    "pixelmatch": "^5.3.0",
-    "pngjs": "^7.0.0",
-    "puppeteer": "^20.9.0",
     "rehype-parse": "7.0.1",
     "rehype-remark": "8.1.1",
     "rehype-sanitize": "4.0.0",
@@ -55,13 +51,10 @@
     "@types/jest": "29.5.3",
     "@types/jest-when": "3.5.2",
     "@types/node": "18.17.2",
-    "@types/pixelmatch": "^5",
-    "@types/pngjs": "^6.0.1",
     "@types/prettier": "2.7.3",
     "graphql-typescript-integration": "1.2.1",
     "jest-when": "3.5.2",
     "prettier": "2.8.8",
-    "puppeteer-tsd": "^0.0.2",
     "ts-node": "10.9.1"
   },
   "prettier": {

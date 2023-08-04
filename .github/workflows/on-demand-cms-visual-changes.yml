@@ -33,7 +33,7 @@ jobs:
         run: |
           yarn build:babel
           yarn build:typecheck
-          yarn workspace @asap-hub/cms-data-sync visual-changes
+          yarn workspace @asap-hub/visual-changes visual-changes
         env:
           PR_URL: ${{ inputs.pr-url }}
           CMS_MIGRATION_USER_EMAIL: ${{ secrets.CMS_MIGRATION_USER_EMAIL }}

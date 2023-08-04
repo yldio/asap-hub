@@ -395,8 +395,6 @@ __metadata:
     "@types/jest": 29.5.3
     "@types/jest-when": 3.5.2
     "@types/node": 18.17.2
-    "@types/pixelmatch": ^5
-    "@types/pngjs": ^6.0.1
     "@types/prettier": 2.7.3
     cheerio: ^1.0.0-rc.12
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.19"
@@ -406,10 +404,7 @@ __metadata:
     graphql-typescript-integration: 1.2.1
     jest-when: 3.5.2
     limiter: ^2.1.0
-    pixelmatch: ^5.3.0
-    pngjs: ^7.0.0
     prettier: 2.8.8
-    puppeteer: ^21.0.1
     rehype-parse: 7.0.1
     rehype-remark: 8.1.1
     rehype-sanitize: 4.0.0
@@ -1856,6 +1851,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/visual-changes@workspace:apps/visual-changes"
   dependencies:
+    "@asap-hub/contentful": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
     "@graphql-codegen/cli": 2.12.1
     "@graphql-codegen/gql-tag-operations-preset": 1.5.5
@@ -1869,7 +1865,7 @@ __metadata:
     "@graphql-tools/schema": 8.5.1
     "@graphql-typed-document-node/core": 3.1.1
     "@types/node": 14.18.33
-    "@types/pixelmatch": ^5
+    "@types/pixelmatch": ^5.2.4
     "@types/pngjs": ^6.0.1
     graphql: 15.8.0
     graphql-tag: 2.12.6
@@ -17865,7 +17861,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pixelmatch@npm:^5":
+"@types/pixelmatch@npm:^5.2.4":
   version: 5.2.4
   resolution: "@types/pixelmatch@npm:5.2.4"
   dependencies:

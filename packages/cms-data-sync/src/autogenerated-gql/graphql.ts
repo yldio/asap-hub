@@ -6975,18 +6975,6 @@ export type FetchUsersQuery = {
   >;
 };
 
-export type FetchResearchOutputIdsQueryVariables = Exact<{
-  [key: string]: never;
-}>;
-
-export type FetchResearchOutputIdsQuery = {
-  queryResearchOutputsContentsWithTotal: Maybe<
-    Pick<ResearchOutputsResultDto, 'total'> & {
-      items: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
-    }
-  >;
-};
-
 export type FetchWorkingGroupsQueryVariables = Exact<{
   take: InputMaybe<Scalars['Int']>;
   skip: InputMaybe<Scalars['Int']>;
@@ -9266,47 +9254,6 @@ export const FetchUsersDocument = {
     },
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
-export const FetchResearchOutputIdsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'FetchResearchOutputIds' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: {
-              kind: 'Name',
-              value: 'queryResearchOutputsContentsWithTotal',
-            },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  FetchResearchOutputIdsQuery,
-  FetchResearchOutputIdsQueryVariables
->;
 export const FetchWorkingGroupsDocument = {
   kind: 'Document',
   definitions: [

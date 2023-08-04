@@ -29,8 +29,6 @@
     "graphql": "15.8.0",
     "graphql-tag": "2.12.6",
     "limiter": "^2.1.0",
-    "pixelmatch": "^5.3.0",
-    "pngjs": "^7.0.0",
     "rehype-parse": "7.0.1",
     "rehype-remark": "8.1.1",
     "rehype-sanitize": "4.0.0",
@@ -53,13 +51,10 @@
     "@types/jest": "29.5.3",
     "@types/jest-when": "3.5.2",
     "@types/node": "18.17.2",
-    "@types/pixelmatch": "^5",
-    "@types/pngjs": "^6.0.1",
     "@types/prettier": "2.7.3",
     "graphql-typescript-integration": "1.2.1",
     "jest-when": "3.5.2",
     "prettier": "2.8.8",
-    "puppeteer": "^21.0.1",
     "ts-node": "10.9.1"
   },
   "prettier": {

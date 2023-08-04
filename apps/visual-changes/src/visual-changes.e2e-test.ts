@@ -169,7 +169,7 @@ const login = async (page: Page) => {
         diffScreenshotFilename,
       );
 
-      if (numDiffPixels > 0) {
+      if (numDiffPixels > 0 && researchOutputId) {
         nonMatchingResearchOutputIds.push(researchOutputId);
       } else {
         for (const file of [

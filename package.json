@@ -97,9 +97,6 @@
     "fsevents": {
       "built": false
     },
-    "puppeteer-core@21.0.1": {
-      "unplugged": true
-    },
     "serverless-offline@8.8.1": {
       "unplugged": true
     },

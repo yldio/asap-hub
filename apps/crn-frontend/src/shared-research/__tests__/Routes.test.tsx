@@ -2,7 +2,12 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { render, screen, waitFor } from '@testing-library/react';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -18,9 +23,9 @@ const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
 >;
 jest.setTimeout(30000);
 beforeEach(() => jest.spyOn(console, 'warn').mockImplementation());
-
+mockConsoleError();
 const renderSharedResearchPage = async (pathname: string, query = '') => {
-  const result = render(
+  render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
@@ -35,9 +40,7 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
+  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
 describe('the shared research listing page', () => {
@@ -47,9 +50,6 @@ describe('the shared research listing page', () => {
 
     userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
   });
 
   it('allows selection of filters', async () => {
@@ -61,12 +61,10 @@ describe('the shared research listing page', () => {
 
     userEvent.click(checkbox);
     expect(checkbox).toBeChecked();
-    await waitFor(() => {
-      expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
-        expect.anything(),
-        expect.objectContaining({ filters: new Set(['Grant Document']) }),
-      );
-    });
+    expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({ filters: new Set(['Grant Document']) }),
+    );
   });
 
   it('reads filters from url', async () => {

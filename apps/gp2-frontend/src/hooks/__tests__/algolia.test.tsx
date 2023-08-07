@@ -1,5 +1,4 @@
 import { algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { setCurrentOverrides } from '@asap-hub/flags';
 import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
 
@@ -18,6 +17,7 @@ jest.mock('@asap-hub/algolia', () => {
     algoliaSearchClientFactory: mockAlgoliaSearchClientFactory,
   };
 });
+
 beforeEach(() => {
   Object.defineProperty(window, 'dataLayer', {
     configurable: true,
@@ -37,8 +37,6 @@ describe('useAlgolia', () => {
     );
   });
   it('constructs algolia client linking GTM and Algolia with Auth0 user id', async () => {
-    setCurrentOverrides({ CONTENTFUL: false });
-
     const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
       wrapper: ({ children }) => (
         <RecoilRoot>
@@ -67,25 +65,5 @@ describe('useAlgolia', () => {
       userToken: 'usertoken',
     });
     expect(result.current.client).toBeDefined();
-  });
-
-  it('uses contentful index when the feature flag is on', async () => {
-    setCurrentOverrides({ CONTENTFUL: true });
-
-    const { waitForNextUpdate } = renderHook(() => useAlgolia(), {
-      wrapper: ({ children }) => (
-        <RecoilRoot>
-          <Auth0Provider user={{ algoliaApiKey: 'algolia key' }}>
-            <WhenReady>{children}</WhenReady>
-          </Auth0Provider>
-        </RecoilRoot>
-      ),
-    });
-    await waitForNextUpdate();
-    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith(
-      expect.objectContaining({
-        algoliaIndex: `${ALGOLIA_INDEX}-contentful`,
-      }),
-    );
   });
 });

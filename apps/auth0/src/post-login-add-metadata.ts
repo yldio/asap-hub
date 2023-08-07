@@ -24,17 +24,7 @@ const parseCommonUserMetadata = ({
   lastName,
   avatarUrl,
   onboarded,
-}: Pick<
-  Auth0UserResponse,
-  | 'id'
-  | 'email'
-  | 'algoliaApiKey'
-  | 'displayName'
-  | 'firstName'
-  | 'lastName'
-  | 'avatarUrl'
-  | 'onboarded'
->) => ({
+}: Auth0UserResponse) => ({
   id,
   email,
   algoliaApiKey,
@@ -44,11 +34,7 @@ const parseCommonUserMetadata = ({
   avatarUrl,
   onboarded,
 });
-const parseGP2UserMetadata = ({
-  role,
-  ...response
-}: gp2Model.UserMetadataResponse) => ({
-  ...parseCommonUserMetadata(response),
+const parseGP2UserMetadata = ({ role }: gp2Model.UserMetadataResponse) => ({
   role,
 });
 const parseTeam = ({ id, displayName, role, inactiveSinceDate }: UserTeam) => ({
@@ -62,18 +48,18 @@ const parseUserMetadata = ({
   workingGroups,
   interestGroups,
   role,
-  ...response
 }: UserMetadataResponse) => ({
-  ...parseCommonUserMetadata(response),
   teams: teams.map(parseTeam),
   workingGroups,
   interestGroups,
   role,
 });
-const extractUser = (response: Auth0UserResponse): User | gp2Auth.User =>
-  isUserMetadataResponse(response)
+const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => ({
+  ...parseCommonUserMetadata(response),
+  ...(isUserMetadataResponse(response)
     ? parseUserMetadata(response)
-    : parseGP2UserMetadata(response);
+    : parseGP2UserMetadata(response)),
+});
 
 const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
   const redirect_uri = new URLSearchParams(event.request.query).get(

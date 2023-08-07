@@ -44,3 +44,10 @@ export const useAlgolia = () => {
 
   return algolia;
 };
+
+export const EMPTY_ALGOLIA_RESPONSE = {
+  items: [],
+  total: 0,
+  algoliaIndexName: '',
+  algoliaQueryId: '',
+};

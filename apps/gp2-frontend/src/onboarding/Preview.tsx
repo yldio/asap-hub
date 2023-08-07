@@ -25,6 +25,7 @@ import {
   usePatchUserById,
   useUserById,
 } from '../users/state';
+import { useKeywords } from './state';
 
 const Preview: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
@@ -35,6 +36,8 @@ const Preview: React.FC<Record<string, never>> = () => {
   const patchUser = usePatchUserById(currentUser!.id);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
+
+  const { items: allKeywords } = useKeywords();
 
   const commonModalProps = {
     backHref: onboarding({}).preview({}).$,
@@ -94,7 +97,11 @@ const Preview: React.FC<Record<string, never>> = () => {
           <BiographyModal {...userData} {...commonModalProps} />
         </Route>
         <Route path={editKeywords({}).$}>
-          <KeywordsModal {...userData} {...commonModalProps} />
+          <KeywordsModal
+            {...userData}
+            {...commonModalProps}
+            suggestions={allKeywords}
+          />
         </Route>
         <Route path={editQuestions({}).$}>
           <OpenQuestionsModal {...userData} {...commonModalProps} />

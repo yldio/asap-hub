@@ -1,4 +1,4 @@
-import { ListResponse } from '..';
+import { ListResponse } from '../common';
 
 export type KeywordDataObject = {
   id: string;

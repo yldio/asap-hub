@@ -15,6 +15,7 @@ describe('KeywordsModal', () => {
     ...gp2Fixtures.createUserResponse(),
     backHref: '',
     onSave: jest.fn(),
+    suggestions: [{ name: 'Keyword-1', id: 'id-1' }],
   };
 
   const renderModal = (overrides: Partial<KeywordsModalProps> = {}) =>

@@ -8630,6 +8630,9 @@ export type KeywordsContentDataFragment = Pick<Keywords, 'name'> & {
 
 export type FetchKeywordsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<
+    Array<InputMaybe<KeywordsOrder>> | InputMaybe<KeywordsOrder>
+  >;
 }>;
 
 export type FetchKeywordsQuery = {
@@ -14839,6 +14842,20 @@ export const FetchKeywordsDocument = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'order' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'KeywordsOrder' },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -14853,6 +14870,14 @@ export const FetchKeywordsDocument = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'order' },
                 },
               },
             ],

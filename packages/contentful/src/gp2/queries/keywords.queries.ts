@@ -12,8 +12,8 @@ export const keywordsContentQueryFragment = gql`
 `;
 
 export const FETCH_KEYWORDS = gql`
-  query FetchKeywords($limit: Int) {
-    keywordsCollection(limit: $limit) {
+  query FetchKeywords($limit: Int, $order: [KeywordsOrder]) {
+    keywordsCollection(limit: $limit, order: $order) {
       total
       items {
         ...KeywordsContentData

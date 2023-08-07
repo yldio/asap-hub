@@ -49,7 +49,7 @@ const documents = {
     types.FetchExternalUsersDocument,
   '\n  fragment KeywordsContentData on Keywords {\n    sys {\n      id\n    }\n    name\n  }\n':
     types.KeywordsContentDataFragmentDoc,
-  '\n  query FetchKeywords($limit: Int) {\n    keywordsCollection(limit: $limit) {\n      total\n      items {\n        ...KeywordsContentData\n      }\n    }\n  }\n  \n':
+  '\n  query FetchKeywords($limit: Int, $order: [KeywordsOrder]) {\n    keywordsCollection(limit: $limit, order: $order) {\n      total\n      items {\n        ...KeywordsContentData\n      }\n    }\n  }\n  \n':
     types.FetchKeywordsDocument,
   '\n  fragment NewsContentData on News {\n    sys {\n      id\n      firstPublishedAt\n    }\n    title\n    shortText\n    link\n    linkText\n    publishDate\n    type\n  }\n':
     types.NewsContentDataFragmentDoc,
@@ -231,8 +231,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  query FetchKeywords($limit: Int) {\n    keywordsCollection(limit: $limit) {\n      total\n      items {\n        ...KeywordsContentData\n      }\n    }\n  }\n  \n',
-): (typeof documents)['\n  query FetchKeywords($limit: Int) {\n    keywordsCollection(limit: $limit) {\n      total\n      items {\n        ...KeywordsContentData\n      }\n    }\n  }\n  \n'];
+  source: '\n  query FetchKeywords($limit: Int, $order: [KeywordsOrder]) {\n    keywordsCollection(limit: $limit, order: $order) {\n      total\n      items {\n        ...KeywordsContentData\n      }\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchKeywords($limit: Int, $order: [KeywordsOrder]) {\n    keywordsCollection(limit: $limit, order: $order) {\n      total\n      items {\n        ...KeywordsContentData\n      }\n    }\n  }\n  \n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

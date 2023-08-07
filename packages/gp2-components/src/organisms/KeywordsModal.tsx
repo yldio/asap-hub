@@ -9,12 +9,14 @@ const { perRem } = pixels;
 type KeywordsModalProps = Pick<gp2.UserResponse, 'keywords'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
+    suggestions: gp2.KeywordDataObject[];
   };
 
 const KeywordsModal: React.FC<KeywordsModalProps> = ({
   onSave,
   backHref,
   keywords,
+  suggestions,
 }) => {
   const [newKeywords, setNewKeywords] = useState<gp2.Keyword[]>(keywords || []);
 
@@ -49,9 +51,9 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
             }))}
             required
             enabled={!isSaving}
-            suggestions={gp2.keywords.map((suggestion) => ({
-              label: suggestion,
-              value: suggestion,
+            suggestions={suggestions.map(({ id, name }) => ({
+              label: name,
+              value: id,
             }))}
             onChange={(newValues) => {
               setNewKeywords(

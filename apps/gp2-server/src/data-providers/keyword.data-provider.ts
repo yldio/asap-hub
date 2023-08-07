@@ -9,7 +9,7 @@ import { KeywordDataProvider } from './types';
 
 type Keywords = gp2Contentful.FetchKeywordsQuery['keywordsCollection'];
 
-type KeywordItem = NonNullable<NonNullable<Keywords>['items'][number]>;
+export type KeywordItem = NonNullable<NonNullable<Keywords>['items'][number]>;
 
 export class KeywordContentfulDataProvider implements KeywordDataProvider {
   constructor(
@@ -18,10 +18,14 @@ export class KeywordContentfulDataProvider implements KeywordDataProvider {
   ) {}
 
   async fetch() {
-    const { keywordsCollection } =
-      await this.graphQLClient.request<gp2Contentful.FetchKeywordsQuery>(
-        gp2Contentful.FETCH_KEYWORDS,
-      );
+    const { keywordsCollection } = await this.graphQLClient.request<
+      gp2Contentful.FetchKeywordsQuery,
+      gp2Contentful.FetchKeywordsQueryVariables
+    >(gp2Contentful.FETCH_KEYWORDS, {
+      limit: 1000,
+      order: [gp2Contentful.KeywordsOrder.NameAsc],
+    });
+
     if (!keywordsCollection?.items) {
       return { total: 0, items: [] };
     }

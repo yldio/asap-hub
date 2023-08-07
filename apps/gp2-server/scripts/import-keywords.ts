@@ -1,5 +1,7 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { gp2 } from '@asap-hub/model';
+import { writeFileSync } from 'fs';
+import util from 'util';
 import { RateLimiter } from 'limiter';
 import {
   contentfulAccessToken,
@@ -22,6 +24,7 @@ const keywordDataProvider = new KeywordContentfulDataProvider(
   getContentfulRestClientFactory,
 );
 
+let mapKeywordID: { [key: string]: string } = {};
 const app = async () => {
   let numberOfImportedKeywords = 0;
   let keywordsAlreadyExist = 0;
@@ -41,6 +44,8 @@ const app = async () => {
       const keywordId = await keywordDataProvider.create({ name: keyword });
       console.log(`created keyword: ${keyword} with id: ${keywordId}`);
 
+      mapKeywordID[keyword] = keywordId;
+
       numberOfImportedKeywords++;
       console.log(
         `number of keywords imported so far: ${numberOfImportedKeywords} `,
@@ -55,6 +60,11 @@ const app = async () => {
       }
     }
   }
+
+  writeFileSync(
+    'mapKeywordsId.ts',
+    'export const map = ' + util.inspect(mapKeywordID),
+  );
 
   console.log(
     `Imported ${numberOfImportedKeywords} keywords, already exist ${keywordsAlreadyExist}, failed ${keywordsFailed}`,

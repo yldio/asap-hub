@@ -166,8 +166,8 @@ export const researchOutputContentQueryFragment = gql`
         }
       }
     }
-    linkedFrom {
-      researchOutputsCollection(limit: 20) {
+    linkedFrom @include(if: $fetchLinkedRelatedResearch) {
+      researchOutputsCollection(limit: 60) {
         items {
           sys {
             id
@@ -203,6 +203,7 @@ export const FETCH_RESEARCH_OUTPUT_BY_ID = gql`
     $id: String!
     $preview: Boolean
     $fetchPMs: Boolean = true
+    $fetchLinkedRelatedResearch: Boolean = true
   ) {
     researchOutputs(id: $id, preview: $preview) {
       ...ResearchOutputsContent
@@ -219,6 +220,7 @@ export const FETCH_RESEARCH_OUTPUTS = gql`
     $where: ResearchOutputsFilter
     $preview: Boolean
     $fetchPMs: Boolean = false
+    $fetchLinkedRelatedResearch: Boolean = false
   ) {
     researchOutputsCollection(
       limit: $limit

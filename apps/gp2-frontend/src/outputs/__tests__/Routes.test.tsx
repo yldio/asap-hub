@@ -16,9 +16,6 @@ import Routes from '../Routes';
 jest.mock('../api');
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
 mockConsoleError();
 
 const renderRoutes = async () => {
@@ -39,9 +36,7 @@ const renderRoutes = async () => {
   );
   return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
-beforeEach(() => {
-  jest.resetAllMocks();
-});
+beforeEach(jest.resetAllMocks);
 
 describe('Routes', () => {
   it('renders the title', async () => {

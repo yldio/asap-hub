@@ -1,15 +1,15 @@
-import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Suspense } from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 
-import Routes from '../Routes';
 import { getResearchOutputs } from '../api';
+import Routes from '../Routes';
 
 jest.mock('../api');
 
@@ -36,32 +36,27 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
     </RecoilRoot>,
   );
   await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  return result;
 };
 
 describe('the shared research listing page', () => {
   it('allows typing in search queries', async () => {
-    const { getByRole, queryByText } = await renderSharedResearchPage(
-      '/shared-research',
-    );
-    const searchBox = getByRole('searchbox') as HTMLInputElement;
+    await renderSharedResearchPage('/shared-research');
+    const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
     userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
     await waitFor(() =>
-      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
   });
 
   it('allows selection of filters', async () => {
-    const { getByText, getByLabelText } = await renderSharedResearchPage(
-      '/shared-research',
-    );
+    await renderSharedResearchPage('/shared-research');
 
-    userEvent.click(getByText('Filters'));
-    const checkbox = getByLabelText('Grant Document');
+    userEvent.click(screen.getByText('Filters'));
+    const checkbox = screen.getByLabelText('Grant Document');
     expect(checkbox).not.toBeChecked();
 
     userEvent.click(checkbox);
@@ -75,18 +70,25 @@ describe('the shared research listing page', () => {
   });
 
   it('reads filters from url', async () => {
-    const { getByText, getByLabelText } = await renderSharedResearchPage(
+    await renderSharedResearchPage(
       '/shared-research',
       '?filter=Grant+Document',
     );
 
-    userEvent.click(getByText('Filters'));
-    const checkbox = getByLabelText('Grant Document');
+    userEvent.click(screen.getByText('Filters'));
+    const checkbox = screen.getByLabelText('Grant Document');
     expect(checkbox).toBeChecked();
 
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),
       expect.objectContaining({ filters: new Set(['Grant Document']) }),
     );
+  });
+  it('renders when when the request it not a 2XX', async () => {
+    mockGetResearchOutputs.mockRejectedValue(new Error('error'));
+
+    await renderSharedResearchPage('/shared-research');
+    expect(mockGetResearchOutputs).toHaveBeenCalled();
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });

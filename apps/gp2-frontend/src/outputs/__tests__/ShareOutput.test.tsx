@@ -14,7 +14,6 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
 import { getOutput, updateOutput } from '../api';
 import ShareOutput from '../ShareOutput';
-import { outputState } from '../state';
 
 jest.mock('../../outputs/api');
 
@@ -25,11 +24,7 @@ const mockGetOutput = getOutput as jest.MockedFunction<typeof getOutput>;
 
 const renderShareOutput = async (outputId: string = 'ro0') => {
   render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(outputState(outputId));
-      }}
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

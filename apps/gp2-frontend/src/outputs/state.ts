@@ -19,9 +19,6 @@ import {
   updateOutput,
 } from './api';
 
-type RefreshOutputListOptions = OutputListOptions & {
-  refreshToken: number;
-};
 const outputIndexState = atomFamily<
   | {
       ids: ReadonlyArray<string>;
@@ -31,14 +28,10 @@ const outputIndexState = atomFamily<
     }
   | Error
   | undefined,
-  RefreshOutputListOptions
+  OutputListOptions
 >({
   key: 'researchOutputIndex',
   default: undefined,
-});
-const refreshOutputIndex = atom<number>({
-  key: 'refreshOutputIndex',
-  default: 0,
 });
 export const outputsState = selectorFamily<
   gp2.ListOutputResponse | Error | undefined,
@@ -48,11 +41,9 @@ export const outputsState = selectorFamily<
   get:
     (options) =>
     ({ get }) => {
-      const refreshToken = get(refreshOutputIndex);
       const index = get(
         outputIndexState({
           ...options,
-          refreshToken,
         }),
       );
       if (index === undefined || index instanceof Error) return index;
@@ -72,8 +63,7 @@ export const outputsState = selectorFamily<
   set:
     (options) =>
     ({ get, set, reset }, outputs) => {
-      const refreshToken = get(refreshOutputIndex);
-      const indexStateOptions = { ...options, refreshToken };
+      const indexStateOptions = { ...options };
       if (outputs === undefined || outputs instanceof DefaultValue) {
         const oldOutputs = get(outputIndexState(indexStateOptions));
         if (!(oldOutputs instanceof Error)) {
@@ -94,18 +84,12 @@ export const outputsState = selectorFamily<
     },
 });
 
-export const refreshOutputState = atomFamily<number, string>({
-  key: 'refreshOutput',
-  default: 0,
-});
-
 const fetchOutputState = selectorFamily<gp2.OutputResponse | undefined, string>(
   {
     key: 'fetchOutput',
     get:
       (id) =>
       async ({ get }) => {
-        get(refreshOutputState(id));
         const authorization = get(authorizationState);
         return getOutput(id, authorization);
       },

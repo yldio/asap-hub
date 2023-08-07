@@ -41,6 +41,14 @@ export const wrapIframeWithPTag = (html: string): string => {
   return output ?? html;
 };
 
+export const wrapPlainTextWithPTag = (html: string): string => {
+  const $ = cheerio.load(html);
+  if ($('body').children().length === 0 && $('body').text()) {
+    return `<p>${html}</p>`;
+  }
+  return html;
+};
+
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
   ...htmlDocument,
   content: htmlDocument?.content
@@ -111,8 +119,8 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   processedHtml = removeStylingTagsWrappingIFrameTags(processedHtml);
   processedHtml = removeStylingTagsWrappingImgTags(processedHtml);
   processedHtml = wrapIframeWithPTag(processedHtml);
+  processedHtml = wrapPlainTextWithPTag(processedHtml);
 
-  // processedHtml = addPTagsToIframeTagNotWrappedByAnything(processedHtml);
   logger(`HTML pre-parsed:\n${html}`, 'DEBUG');
   logger(`HTML post-parsed:\n${processedHtml}`, 'DEBUG');
 

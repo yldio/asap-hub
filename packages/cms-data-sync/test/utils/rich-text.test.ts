@@ -37,6 +37,32 @@ describe('convertHtmlToContentfulFormat', () => {
       inlineIFramesBodies: [],
     });
   });
+  it('wraps plain text in a paragraph element', () => {
+    const html = 'Hello world';
+
+    expect(convertHtmlToContentfulFormat(html)).toEqual({
+      document: {
+        content: [
+          {
+            content: [
+              {
+                data: {},
+                marks: [],
+                value: 'Hello world',
+                nodeType: 'text',
+              },
+            ],
+            data: {},
+            nodeType: 'paragraph',
+          },
+        ],
+        data: {},
+        nodeType: 'document',
+      },
+      inlineAssetBodies: [],
+      inlineIFramesBodies: [],
+    });
+  });
 
   it('converts html with list to contentful expected rich text format properly', () => {
     const html = '<ul><li>item 1</li><li>item 2</li></ul>';

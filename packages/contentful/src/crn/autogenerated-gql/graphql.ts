@@ -12908,6 +12908,7 @@ export type FetchResearchOutputByIdQueryVariables = Exact<{
   id: Scalars['String'];
   preview?: InputMaybe<Scalars['Boolean']>;
   fetchPMs?: InputMaybe<Scalars['Boolean']>;
+  fetchRelatedResearch?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchResearchOutputByIdQuery = {
@@ -13115,6 +13116,7 @@ export type FetchResearchOutputsQueryVariables = Exact<{
   where?: InputMaybe<ResearchOutputsFilter>;
   preview?: InputMaybe<Scalars['Boolean']>;
   fetchPMs?: InputMaybe<Scalars['Boolean']>;
+  fetchRelatedResearch?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchResearchOutputsQuery = {
@@ -17265,6 +17267,22 @@ export const ResearchOutputsContentFragmentDoc = {
                 value: { kind: 'IntValue', value: '20' },
               },
             ],
+            directives: [
+              {
+                kind: 'Directive',
+                name: { kind: 'Name', value: 'include' },
+                arguments: [
+                  {
+                    kind: 'Argument',
+                    name: { kind: 'Name', value: 'if' },
+                    value: {
+                      kind: 'Variable',
+                      name: { kind: 'Name', value: 'fetchRelatedResearch' },
+                    },
+                  },
+                ],
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -17347,6 +17365,22 @@ export const ResearchOutputsContentFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'linkedFrom' },
+            directives: [
+              {
+                kind: 'Directive',
+                name: { kind: 'Name', value: 'include' },
+                arguments: [
+                  {
+                    kind: 'Argument',
+                    name: { kind: 'Name', value: 'if' },
+                    value: {
+                      kind: 'Variable',
+                      name: { kind: 'Name', value: 'fetchRelatedResearch' },
+                    },
+                  },
+                ],
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -17357,7 +17391,7 @@ export const ResearchOutputsContentFragmentDoc = {
                     {
                       kind: 'Argument',
                       name: { kind: 'Name', value: 'limit' },
-                      value: { kind: 'IntValue', value: '20' },
+                      value: { kind: 'IntValue', value: '60' },
                     },
                   ],
                   selectionSet: {
@@ -22410,6 +22444,15 @@ export const FetchResearchOutputByIdDocument = {
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: true },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'fetchRelatedResearch' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: true },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -22513,6 +22556,15 @@ export const FetchResearchOutputsDocument = {
           variable: {
             kind: 'Variable',
             name: { kind: 'Name', value: 'fetchPMs' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'fetchRelatedResearch' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: false },

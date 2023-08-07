@@ -182,13 +182,10 @@ export const useUpdateOutput = (id: string) => {
 export const useAuthorSuggestions = () => {
   const authorization = useRecoilValue(authorizationState);
 
-  return async (searchQuery: string) => {
-    const users = await getUsers(
-      { search: searchQuery, skip: 0, take: 10 },
-      authorization,
-    );
+  return async (search: string) => {
+    const users = await getUsers({ search, skip: 0, take: 10 }, authorization);
     const externalUsers = await getExternalUsers(
-      { search: searchQuery, skip: 0, take: 10 },
+      { search, skip: 0, take: 10 },
       authorization,
     );
     return [...users.items, ...externalUsers.items]

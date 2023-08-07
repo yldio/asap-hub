@@ -10,9 +10,11 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { PAGE_SIZE } from '../../hooks';
 import NotificationMessages from '../../NotificationMessages';
-import { updateOutput, getOutput } from '../api';
+import { getOutput, updateOutput } from '../api';
 import ShareOutput from '../ShareOutput';
+import { outputsState } from '../state';
 
 jest.mock('../../outputs/api');
 
@@ -23,7 +25,18 @@ const mockGetOutput = getOutput as jest.MockedFunction<typeof getOutput>;
 
 const renderShareOutput = async (outputId: string = 'ro0') => {
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset }) => {
+        reset(
+          outputsState({
+            searchQuery: '',
+            currentPage: 0,
+            filters: new Set(),
+            pageSize: PAGE_SIZE,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

@@ -37,12 +37,12 @@ export const fetchNewsItemState = selectorFamily<
     },
 });
 
-export const newsItemState = atomFamily<gp2.NewsResponse | undefined, string>({
+const newsItemState = atomFamily<gp2.NewsResponse | undefined, string>({
   key: 'newsItem',
   default: fetchNewsItemState,
 });
 
-export const newsListState = selectorFamily<
+const newsListState = selectorFamily<
   gp2.ListNewsResponse | Error | undefined,
   GetListOptions
 >({
@@ -91,5 +91,3 @@ export const useNews = (options: GetListOptions) => {
   if (newsList instanceof Error) throw newsList;
   return newsList;
 };
-
-export const useNewsById = (id: string) => useRecoilValue(newsItemState(id));

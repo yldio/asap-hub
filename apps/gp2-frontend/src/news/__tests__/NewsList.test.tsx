@@ -1,5 +1,4 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import {
@@ -9,14 +8,11 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { renderHook } from '@testing-library/react-hooks';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
-import { usePagination, usePaginationParams } from '../../hooks/pagination';
 import NewsPage from '../Routes';
-import { newsIndexState } from '../state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getNews } from '../api';
 
@@ -30,18 +26,7 @@ beforeEach(jest.resetAllMocks);
 mockConsoleError();
 const renderPage = async () => {
   render(
-    <RecoilRoot
-      initializeState={({ reset }) =>
-        reset(
-          newsIndexState({
-            currentPage: 0,
-            pageSize,
-            filters: new Set<gp2Model.NewsType>(),
-            searchQuery: '',
-          }),
-        )
-      }
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -87,23 +72,16 @@ it('renders a paginated list of news', async () => {
     gp2Fixtures.createListNewsResponse(pageSize, numberOfItems),
   );
 
-  const { result } = renderHook(
-    () => ({
-      usePaginationParams: usePaginationParams(),
-      usePagination: usePagination(numberOfItems, pageSize),
-    }),
-    {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [`/news`],
-      },
-    },
-  );
-
   await renderPage();
   expect(screen.getAllByText('News Item')).toHaveLength(pageSize);
-  expect(result.current.usePagination.numberOfPages).toBe(4);
-  expect(result.current.usePaginationParams.currentPage).toBe(0);
+  expect(screen.getByTitle(/next page/i).closest('a')).toHaveAttribute(
+    'href',
+    '/?currentPage=1',
+  );
+  expect(screen.getByTitle(/last page/i).closest('a')).toHaveAttribute(
+    'href',
+    '/?currentPage=3',
+  );
 });
 
 it('renders error message when when the request it not a 2XX', async () => {

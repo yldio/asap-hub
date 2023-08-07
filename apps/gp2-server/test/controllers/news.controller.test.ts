@@ -43,7 +43,8 @@ describe('News controller', () => {
       const expectedParameters: Parameters<NewsDataProvider['fetch']>[0] = {
         skip: 13,
         take: 9,
-        filter: { type: ['news'], title: 'search-value' },
+        search: 'search-value',
+        filter: { type: ['news'] },
       };
       expect(newsDataProviderMock.fetch).toBeCalledWith(expectedParameters);
     });

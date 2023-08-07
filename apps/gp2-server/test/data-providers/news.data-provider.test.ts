@@ -98,7 +98,7 @@ describe('News data provider', () => {
 
       expect(result).toEqual(getListNewsDataObject());
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-        expect.anything(),
+        gp2Contentful.FETCH_NEWS,
         expect.objectContaining({
           limit: null,
           order: ['publishDate_DESC'],
@@ -108,28 +108,7 @@ describe('News data provider', () => {
       );
     });
 
-    describe('Text Filter', () => {
-      test('Should query data properly when passing search param is selected', async () => {
-        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
-          getContentfulNewsGraphqlResponse(),
-        );
-
-        const result = await newsDataProvider.fetch({
-          filter: { title: 'hey' },
-        });
-
-        expect(result).toEqual(getListNewsDataObject());
-        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.objectContaining({
-            limit: null,
-            order: ['publishDate_DESC'],
-            skip: null,
-            where: { title_contains: 'hey' },
-          }),
-        );
-      });
-
+    describe('Search', () => {
       test('Should query data properly when passing search param', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           getContentfulNewsGraphqlResponse(),
@@ -138,14 +117,12 @@ describe('News data provider', () => {
         const result = await newsDataProvider.fetch({
           take: 8,
           skip: 5,
-          filter: {
-            title: 'hey',
-          },
+          search: 'hey',
         });
 
         expect(result).toEqual(getListNewsDataObject());
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_NEWS,
           expect.objectContaining({
             limit: 8,
             skip: 5,
@@ -191,7 +168,7 @@ describe('News data provider', () => {
 
         expect(result).toEqual(getListNewsDataObject());
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_NEWS,
           expect.objectContaining({
             limit: null,
             order: ['publishDate_DESC'],
@@ -207,12 +184,13 @@ describe('News data provider', () => {
         );
 
         const result = await newsDataProvider.fetch({
-          filter: { type: ['news'], title: 'new-search' },
+          search: 'new-search',
+          filter: { type: ['news'] },
         });
 
         expect(result).toEqual(getListNewsDataObject());
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
-          expect.anything(),
+          gp2Contentful.FETCH_NEWS,
           expect.objectContaining({
             limit: null,
             order: ['publishDate_DESC'],

@@ -63,7 +63,7 @@ export const researchOutputContentQueryFragment = gql`
     }
     statusChangedAt
     isInReview
-    authorsCollection(limit: 10) {
+    authorsCollection(limit: 100) {
       items {
         __typename
         ... on ExternalAuthors {
@@ -88,7 +88,7 @@ export const researchOutputContentQueryFragment = gql`
         }
       }
     }
-    teamsCollection(limit: 10) {
+    teamsCollection(limit: 20) {
       items {
         sys {
           id
@@ -117,7 +117,7 @@ export const researchOutputContentQueryFragment = gql`
       }
       title
     }
-    methodsCollection(limit: 20) {
+    methodsCollection(limit: 5) {
       items {
         name
       }
@@ -127,12 +127,12 @@ export const researchOutputContentQueryFragment = gql`
         name
       }
     }
-    organismsCollection(limit: 20) {
+    organismsCollection(limit: 5) {
       items {
         name
       }
     }
-    environmentsCollection(limit: 20) {
+    environmentsCollection(limit: 5) {
       items {
         name
       }
@@ -148,7 +148,7 @@ export const researchOutputContentQueryFragment = gql`
         name
       }
     }
-    relatedResearchCollection(limit: 10) {
+    relatedResearchCollection(limit: 20) {
       items {
         sys {
           id
@@ -156,7 +156,7 @@ export const researchOutputContentQueryFragment = gql`
         title
         type
         documentType
-        teamsCollection(limit: 10) {
+        teamsCollection(limit: 20) {
           items {
             sys {
               id
@@ -167,7 +167,7 @@ export const researchOutputContentQueryFragment = gql`
       }
     }
     linkedFrom {
-      researchOutputsCollection(limit: 10) {
+      researchOutputsCollection(limit: 20) {
         items {
           sys {
             id
@@ -175,7 +175,7 @@ export const researchOutputContentQueryFragment = gql`
           title
           type
           documentType
-          teamsCollection(limit: 10) {
+          teamsCollection(limit: 20) {
             items {
               sys {
                 id

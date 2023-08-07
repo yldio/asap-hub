@@ -16811,7 +16811,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
+                value: { kind: 'IntValue', value: '100' },
               },
             ],
             selectionSet: {
@@ -16931,7 +16931,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
+                value: { kind: 'IntValue', value: '20' },
               },
             ],
             selectionSet: {
@@ -17109,7 +17109,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '5' },
               },
             ],
             selectionSet: {
@@ -17161,7 +17161,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '5' },
               },
             ],
             selectionSet: {
@@ -17187,7 +17187,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '5' },
               },
             ],
             selectionSet: {
@@ -17262,7 +17262,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
+                value: { kind: 'IntValue', value: '20' },
               },
             ],
             selectionSet: {
@@ -17300,7 +17300,7 @@ export const ResearchOutputsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '10' },
+                            value: { kind: 'IntValue', value: '20' },
                           },
                         ],
                         selectionSet: {
@@ -17357,7 +17357,7 @@ export const ResearchOutputsContentFragmentDoc = {
                     {
                       kind: 'Argument',
                       name: { kind: 'Name', value: 'limit' },
-                      value: { kind: 'IntValue', value: '10' },
+                      value: { kind: 'IntValue', value: '20' },
                     },
                   ],
                   selectionSet: {
@@ -17401,7 +17401,7 @@ export const ResearchOutputsContentFragmentDoc = {
                                 {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '10' },
+                                  value: { kind: 'IntValue', value: '20' },
                                 },
                               ],
                               selectionSet: {

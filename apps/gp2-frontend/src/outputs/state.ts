@@ -71,29 +71,24 @@ export const outputsState = selectorFamily<
     },
   set:
     (options) =>
-    ({ get, set, reset }, researchOutputs) => {
+    ({ get, set, reset }, outputs) => {
       const refreshToken = get(refreshOutputIndex);
       const indexStateOptions = { ...options, refreshToken };
-      if (
-        researchOutputs === undefined ||
-        researchOutputs instanceof DefaultValue
-      ) {
+      if (outputs === undefined || outputs instanceof DefaultValue) {
         const oldOutputs = get(outputIndexState(indexStateOptions));
         if (!(oldOutputs instanceof Error)) {
           oldOutputs?.ids?.forEach((id) => reset(outputState(id)));
         }
         reset(outputIndexState(indexStateOptions));
-      } else if (researchOutputs instanceof Error) {
-        set(outputIndexState(indexStateOptions), researchOutputs);
+      } else if (outputs instanceof Error) {
+        set(outputIndexState(indexStateOptions), outputs);
       } else {
-        researchOutputs.items.forEach((output) =>
-          set(outputState(output.id), output),
-        );
+        outputs.items.forEach((output) => set(outputState(output.id), output));
         set(outputIndexState(indexStateOptions), {
-          total: researchOutputs.total,
-          ids: researchOutputs.items.map(({ id }) => id),
-          algoliaIndexName: researchOutputs.algoliaIndexName,
-          algoliaQueryId: researchOutputs.algoliaQueryId,
+          total: outputs.total,
+          ids: outputs.items.map(({ id }) => id),
+          algoliaIndexName: outputs.algoliaIndexName,
+          algoliaQueryId: outputs.algoliaQueryId,
         });
       }
     },
@@ -159,7 +154,6 @@ export const useOutputs = (options: OutputListOptions) => {
   }
   return outputs;
 };
-// useRecoilValue(outputsState(options));
 
 export const useOutputById = (id: string) => useRecoilValue(OutputState(id));
 

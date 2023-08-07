@@ -23915,8 +23915,8 @@ __metadata:
   linkType: hard
 
 "contentful@npm:^10.1.8":
-  version: 10.4.0
-  resolution: "contentful@npm:10.4.0"
+  version: 10.4.1
+  resolution: "contentful@npm:10.4.1"
   dependencies:
     "@contentful/rich-text-types": ^16.0.2
     axios: ^1.4.0
@@ -23924,7 +23924,7 @@ __metadata:
     contentful-sdk-core: ^8.1.0
     json-stringify-safe: ^5.0.1
     type-fest: ^4.0.0
-  checksum: b896545d66472ec7f38d226f475d8f61698c94b83ecf727edbf426ed0aa6b59253052987b13fd67ecea79f7e58c23de8a5e2902bf96945bcb69c01e3a34e79d0
+  checksum: 30f5e239c2fa4bdd9158edbd3037be8f3133d0009c9526ac5d1a3b7e591cede6009463142513f2745d79be5a7744e82e1473edd25301f9c527ec0023ce0768f3
   languageName: node
   linkType: hard
 

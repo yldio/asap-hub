@@ -221,6 +221,32 @@ describe('Reminders', () => {
         );
       });
 
+      test('Should see the published reminder when the research output was created and the user is associated with the team that owns it and status was changed', async () => {
+        const publishOutput = getResearchOutputFixture({
+          teams: [pmTeam.id],
+          workingGroups: [],
+          published: true,
+        });
+
+        const response = await supertest(app)
+          .post('/research-outputs')
+          .send(publishOutput)
+          .expect(201);
+        const publishOutputId = response.body.id;
+
+        await supertest(app)
+          .put(`/research-outputs/${publishOutputId}`)
+          .send({
+            ...publishOutput,
+            statusChangedById: loggedInUser.id,
+          })
+          .expect(200);
+
+        await expectReminderWithId(
+          `research-output-published-${publishOutputId}`,
+        );
+      });
+
       test('Should see the published reminder when the research output was created recently and the user is associated with the working group that owns it', async () => {
         const publishOutput = getResearchOutputFixture({
           teams: [pmTeam.id],

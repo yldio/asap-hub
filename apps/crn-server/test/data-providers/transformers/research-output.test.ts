@@ -116,24 +116,11 @@ describe('parseGraphQLResearchOutput', () => {
     expect(parseGraphQLResearchOutput(output).keywords).toStrictEqual([]);
   });
 
-  test('should not return statusChangedBy', () => {
-    expect(parseGraphQLResearchOutput(output).statusChangedBy).toBeUndefined();
-  });
-
   test('should return statusChangedBy', () => {
-    output.flatData.statusChangedBy = [
-      {
-        id: 'review-requested-by-id',
-        flatData: {
-          firstName: 'First',
-          lastName: 'Last',
-        },
-      },
-    ];
     expect(parseGraphQLResearchOutput(output).statusChangedBy).toStrictEqual({
-      id: 'review-requested-by-id',
-      firstName: 'First',
-      lastName: 'Last',
+      id: 'status-changed-by-id',
+      firstName: 'Tom',
+      lastName: 'Hardy',
     });
   });
 });

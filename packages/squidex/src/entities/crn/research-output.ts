@@ -54,6 +54,7 @@ export interface ResearchOutput<
   relatedResearch?: string[];
   relatedEvents?: string[];
   isInReview: boolean;
+  statusChangedBy?: TUserConnection[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

@@ -69,9 +69,11 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   const { workingGroupId } = useRouteParams(route);
   const workingGroup = useWorkingGroupById(workingGroupId);
 
-  const canShareResearchOutput = useCanShareResearchOutput('workingGroups', [
-    workingGroupId,
-  ]);
+  const canShareResearchOutput = useCanShareResearchOutput(
+    'workingGroups',
+    [workingGroupId],
+    !workingGroup?.complete,
+  );
   const canDuplicateResearchOutput = useCanDuplicateResearchOutput(
     'workingGroups',
     [workingGroupId],

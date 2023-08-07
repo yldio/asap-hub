@@ -27,7 +27,7 @@
     "@babel/preset-react": "7.22.5",
     "@types/auth0-js": "9.21.0",
     "@types/jest": "29.5.3",
-    "@types/node": "18.17.2",
+    "@types/node": "18.17.3",
     "@types/pify": "3.0.2"
   }
 }

@@ -22,7 +22,7 @@
     "@babel/core": "7.22.9",
     "@babel/preset-react": "7.22.5",
     "@babel/runtime-corejs3": "7.22.6",
-    "@types/node": "18.17.2",
+    "@types/node": "18.17.3",
     "@types/react": "17.0.62",
     "@types/react-dom": "17.0.20"
   }

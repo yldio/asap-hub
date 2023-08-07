@@ -121,7 +121,6 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   processedHtml = wrapIframeWithPTag(processedHtml);
   processedHtml = wrapPlainTextWithPTag(processedHtml);
 
-  // processedHtml = addPTagsToIframeTagNotWrappedByAnything(processedHtml);
   logger(`HTML pre-parsed:\n${html}`, 'DEBUG');
   logger(`HTML post-parsed:\n${processedHtml}`, 'DEBUG');
 

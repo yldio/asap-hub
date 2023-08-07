@@ -1022,5 +1022,15 @@ describe('Events Contentful Data Provider', () => {
         `"Invalid event (example) status "invalid""`,
       );
     });
+
+    test('handles null working group by returning an empty array', () => {
+      const graphqlEvent = getContentfulGraphqlEvent();
+      graphqlEvent.linkedFrom!.researchOutputsCollection!.items[0]!.workingGroup =
+        null;
+
+      expect(parseGraphQLEvent(graphqlEvent).relatedResearch[0]).toEqual(
+        expect.objectContaining({ workingGroups: [] }),
+      );
+    });
   });
 });

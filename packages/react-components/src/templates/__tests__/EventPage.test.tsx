@@ -120,6 +120,25 @@ it('renders calendar list when displayCalendar is true', () => {
   expect(queryByText('Event Calendar')).toBeInTheDocument();
 });
 
+it('renders related research when there are items to display', () => {
+  const { getByText } = render(
+    <EventPage
+      {...props}
+      relatedResearch={[
+        {
+          id: '123',
+          title: 'My Research',
+          type: '3D Printing',
+          documentType: 'Article',
+          teams: [],
+          workingGroups: [],
+        },
+      ]}
+    />,
+  );
+  expect(getByText('My Research')).toBeVisible();
+});
+
 it('renders the children', () => {
   const { queryByText } = render(<EventPage {...props}>Children</EventPage>);
   expect(queryByText('Children')).toBeVisible();

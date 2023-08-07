@@ -7039,7 +7039,7 @@ export type EventContentFragment = Pick<
           ResearchOutputsFlatDataDto,
           'documentType' | 'type' | 'title'
         >;
-        referencingTeamsContents: Maybe<
+        referencesTeamsContents: Maybe<
           Array<
             Pick<Teams, 'id'> & {
               flatData: Pick<TeamsFlatDataDto, 'displayName'>;
@@ -7482,7 +7482,7 @@ export type FetchEventsQuery = {
                     ResearchOutputsFlatDataDto,
                     'documentType' | 'type' | 'title'
                   >;
-                  referencingTeamsContents: Maybe<
+                  referencesTeamsContents: Maybe<
                     Array<
                       Pick<Teams, 'id'> & {
                         flatData: Pick<TeamsFlatDataDto, 'displayName'>;
@@ -7895,7 +7895,7 @@ export type FetchEventQuery = {
               ResearchOutputsFlatDataDto,
               'documentType' | 'type' | 'title'
             >;
-            referencingTeamsContents: Maybe<
+            referencesTeamsContents: Maybe<
               Array<
                 Pick<Teams, 'id'> & {
                   flatData: Pick<TeamsFlatDataDto, 'displayName'>;
@@ -12002,7 +12002,7 @@ export const EventContentFragmentDoc = {
                 },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'referencingTeamsContents' },
+                  name: { kind: 'Name', value: 'referencesTeamsContents' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [

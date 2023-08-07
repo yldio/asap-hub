@@ -96,7 +96,7 @@ describe('events entity', () => {
                 },
               },
             ],
-            referencingTeamsContents: [
+            referencesTeamsContents: [
               {
                 id: 'team-id-1',
                 flatData: {

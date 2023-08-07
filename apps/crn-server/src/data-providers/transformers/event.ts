@@ -262,7 +262,7 @@ export const parseGraphQLEvent = (
         documentType: research.flatData.documentType,
         type: research.flatData.type,
         title: research.flatData.title,
-        teams: (research.referencingTeamsContents ?? []).map(
+        teams: (research.referencesTeamsContents ?? []).map(
           ({ id, flatData: { displayName } }) => ({
             id,
             displayName,

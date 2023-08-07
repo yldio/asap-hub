@@ -75,7 +75,7 @@ const EventPage: React.FC<EventPageProps> = ({
       </Card>
       <EventMaterials {...props} />
       {eventConversation}
-      {relatedResearch !== undefined && (
+      {relatedResearch && relatedResearch?.length > 0 && (
         <RelatedResearchCard
           description="Find out all shared research outputs that are related to this event."
           relatedResearch={relatedResearch}

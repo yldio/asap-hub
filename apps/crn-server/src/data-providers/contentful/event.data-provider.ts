@@ -482,13 +482,15 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
       title: data?.title,
       type: data?.type,
       documentType: data?.documentType,
-      teams: (data?.teamsCollection?.items ?? []).map((team) => ({
-        id: team?.sys.id,
-        displayName: team?.displayName,
-      })),
-      workingGroups: [
-        { id: data?.workingGroup?.sys.id, title: data?.workingGroup?.title },
-      ],
+      teams: (data?.teamsCollection?.items ?? [])
+        .filter((x) => x !== null)
+        .map((team) => ({
+          id: team?.sys.id,
+          displayName: team?.displayName,
+        })),
+      workingGroups: data?.workingGroup
+        ? [{ id: data?.workingGroup?.sys.id, title: data?.workingGroup?.title }]
+        : [],
     })),
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),

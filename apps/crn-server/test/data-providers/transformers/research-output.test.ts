@@ -110,6 +110,21 @@ describe('parseGraphQLResearchOutput', () => {
         ...baseRelatedResearch,
         flatData: {
           ...baseRelatedResearch.flatData,
+          workingGroups: null,
+        },
+      },
+    ];
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toMatchObject([
+      {
+        workingGroups: [],
+      },
+    ]);
+
+    output.flatData.relatedResearch = [
+      {
+        ...baseRelatedResearch,
+        flatData: {
+          ...baseRelatedResearch.flatData,
           documentType: 'UnknowType',
           teams: null,
         },
@@ -128,6 +143,32 @@ describe('parseGraphQLResearchOutput', () => {
             title: 'Working Group B',
           },
         ],
+        isOwnRelatedResearchLink: true,
+      },
+    ]);
+
+    output.flatData.relatedResearch = [
+      {
+        ...baseRelatedResearch,
+        flatData: {
+          ...baseRelatedResearch.flatData,
+          workingGroups: null,
+        },
+      },
+    ];
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toStrictEqual([
+      {
+        id: '123',
+        title: 'RelatedR1',
+        type: 'Report',
+        documentType: 'Report',
+        teams: [
+          {
+            displayName: 'Team B',
+            id: 'team-id-1',
+          },
+        ],
+        workingGroups: [],
         isOwnRelatedResearchLink: true,
       },
     ]);

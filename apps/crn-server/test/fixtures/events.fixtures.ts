@@ -542,7 +542,7 @@ export const getSquidexGraphqlEvent = (): EventContentFragment => ({
           },
         },
       ],
-      referencingTeamsContents: [
+      referencesTeamsContents: [
         {
           id: getContentfulRelatedResearch().teamsCollection.items[0]!.sys.id,
           flatData: {

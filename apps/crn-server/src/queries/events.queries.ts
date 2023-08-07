@@ -98,7 +98,7 @@ export const eventContentFragment = gql`
         type
         title
       }
-      referencingTeamsContents {
+      referencesTeamsContents {
         id
         flatData {
           displayName

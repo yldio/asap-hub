@@ -12,6 +12,27 @@ directive @cache(
   duration: Int = 600
 ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 
+"Enable Query Optimizations"
+directive @optimizeFieldQueries on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+union AllContents =
+    Calendars
+  | Dashboard
+  | Discover
+  | Events
+  | ExternalAuthors
+  | Groups
+  | Labs
+  | Migrations
+  | NewsAndEvents
+  | Pages
+  | ResearchOutputs
+  | ResearchTags
+  | Teams
+  | Tutorials
+  | Users
+  | WorkingGroups
+
 """
 The app mutations.
 """
@@ -2560,6 +2581,15 @@ type ApplicationQueries {
     top: Int
   ): CalendarsResultDto
   """
+  Query content items by IDs across schemeas.
+  """
+  queryContentsByIds(
+    """
+    The list of IDs.
+    """
+    ids: [String!]!
+  ): [AllContents!]!
+  """
   Query Dashboard content items.
   """
   queryDashboardContents(
@@ -3497,6 +3527,10 @@ type Calendars implements Content {
   """
   data: CalendarsDataDto!
   """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
+  """
   The edit token.
   """
   editToken: String
@@ -3844,9 +3878,13 @@ The structure of all content types.
 """
 interface Component {
   """
-  The ID of the schema.
+  schemaId
   """
   schemaId: String!
+  """
+  schemaName
+  """
+  schemaName: String
 }
 
 """
@@ -3854,47 +3892,55 @@ The structure of all content types.
 """
 interface Content {
   """
-  The timestamp when the object was created.
+  created
   """
   created: Instant!
   """
-  The user who created the object.
+  createdBy
   """
   createdBy: String!
   """
-  The ID of the object (usually GUID).
+  data__dynamic
+  """
+  data__dynamic: JsonScalar
+  """
+  editToken
+  """
+  editToken: String
+  """
+  id
   """
   id: String!
   """
-  The timestamp when the object was updated the last time.
+  lastModified
   """
   lastModified: Instant!
   """
-  The user who updated the object the last time.
+  lastModifiedBy
   """
   lastModifiedBy: String!
   """
-  The new status of the content.
+  newStatus
   """
   newStatus: String
   """
-  The status color of the content.
+  newStatusColor
   """
   newStatusColor: String
   """
-  The status of the content.
+  status
   """
   status: String!
   """
-  The status color of the content.
+  statusColor
   """
   statusColor: String!
   """
-  The URL to the content.
+  url
   """
   url: String!
   """
-  The version of the objec.
+  version
   """
   version: Int!
 }
@@ -3919,6 +3965,10 @@ type Dashboard implements Content {
   The data of the content.
   """
   data: DashboardDataDto!
+  """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
   """
   The edit token.
   """
@@ -4155,6 +4205,10 @@ type Discover implements Content {
   The data of the content.
   """
   data: DiscoverDataDto!
+  """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
   """
   The edit token.
   """
@@ -4786,6 +4840,7 @@ enum EnrichedContentEventType {
   CREATED
   DELETED
   PUBLISHED
+  REFERENCE_UPDATED
   STATUS_CHANGED
   UNPUBLISHED
   UPDATED
@@ -4821,6 +4876,10 @@ type Events implements Content {
   The data of the content.
   """
   data: EventsDataDto!
+  """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
   """
   The edit token.
   """
@@ -5748,6 +5807,10 @@ type ExternalAuthors implements Content {
   """
   data: ExternalAuthorsDataDto!
   """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
+  """
   The edit token.
   """
   editToken: String
@@ -5992,6 +6055,10 @@ type Groups implements Content {
   The data of the content.
   """
   data: GroupsDataDto!
+  """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
   """
   The edit token.
   """
@@ -6451,6 +6518,10 @@ type Labs implements Content {
   """
   data: LabsDataDto!
   """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
+  """
   The edit token.
   """
   editToken: String
@@ -6672,6 +6743,10 @@ type Migrations implements Content {
   """
   data: MigrationsDataDto!
   """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
+  """
   The edit token.
   """
   editToken: String
@@ -6790,6 +6865,10 @@ type NewsAndEvents implements Content {
   The data of the content.
   """
   data: NewsAndEventsDataDto!
+  """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
   """
   The edit token.
   """
@@ -7130,6 +7209,10 @@ type Pages implements Content {
   """
   data: PagesDataDto!
   """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
+  """
   The edit token.
   """
   editToken: String
@@ -7433,6 +7516,10 @@ type ResearchOutputs implements Content {
   The data of the content.
   """
   data: ResearchOutputsDataDto!
+  """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
   """
   The edit token.
   """
@@ -8758,6 +8845,10 @@ type ResearchTags implements Content {
   """
   data: ResearchTagsDataDto!
   """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
+  """
   The edit token.
   """
   editToken: String
@@ -8986,6 +9077,10 @@ type Teams implements Content {
   The data of the content.
   """
   data: TeamsDataDto!
+  """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
   """
   The edit token.
   """
@@ -9543,6 +9638,10 @@ type Tutorials implements Content {
   """
   data: TutorialsDataDto!
   """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
+  """
   The edit token.
   """
   editToken: String
@@ -9823,6 +9922,10 @@ type Users implements Content {
   The data of the content.
   """
   data: UsersDataDto!
+  """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
   """
   The edit token.
   """
@@ -10991,6 +11094,10 @@ type WorkingGroups implements Content {
   The data of the content.
   """
   data: WorkingGroupsDataDto!
+  """
+  The data of the content.
+  """
+  data__dynamic: JsonScalar
   """
   The edit token.
   """

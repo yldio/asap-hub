@@ -25,24 +25,6 @@ export type Scalars = {
   Long: any;
 };
 
-export type AllContents =
-  | Calendars
-  | Dashboard
-  | Discover
-  | Events
-  | ExternalAuthors
-  | Groups
-  | Labs
-  | Migrations
-  | NewsAndEvents
-  | Pages
-  | ResearchOutputs
-  | ResearchTags
-  | Teams
-  | Tutorials
-  | Users
-  | WorkingGroups;
-
 /** The app mutations. */
 export type ApplicationMutations = {
   /** Change a Calendars content. */
@@ -1227,8 +1209,6 @@ export type ApplicationQueries = {
   queryCalendarsContents: Maybe<Array<Calendars>>;
   /** Query Calendars content items with total count. */
   queryCalendarsContentsWithTotal: Maybe<CalendarsResultDto>;
-  /** Query content items by IDs across schemeas. */
-  queryContentsByIds: Array<AllContents>;
   /** Query Dashboard content items. */
   queryDashboardContents: Maybe<Array<Dashboard>>;
   /** Query Dashboard content items with total count. */
@@ -1424,11 +1404,6 @@ export type ApplicationQueriesQueryCalendarsContentsWithTotalArgs = {
   search: InputMaybe<Scalars['String']>;
   skip?: InputMaybe<Scalars['Int']>;
   top: InputMaybe<Scalars['Int']>;
-};
-
-/** The app queries. */
-export type ApplicationQueriesQueryContentsByIdsArgs = {
-  ids: Array<Scalars['String']>;
 };
 
 /** The app queries. */
@@ -1814,8 +1789,6 @@ export type Calendars = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: CalendarsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -2011,39 +1984,33 @@ export type CalendarsResultDto = {
 
 /** The structure of all content types. */
 export type Component = {
-  /** schemaId */
+  /** The ID of the schema. */
   schemaId: Scalars['String'];
-  /** schemaName */
-  schemaName: Maybe<Scalars['String']>;
 };
 
 /** The structure of all content types. */
 export type Content = {
-  /** created */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** createdBy */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** data__dynamic */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
-  /** editToken */
-  editToken: Maybe<Scalars['String']>;
-  /** id */
+  /** The ID of the object (usually GUID). */
   id: Scalars['String'];
-  /** lastModified */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** lastModifiedBy */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** newStatus */
+  /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** newStatusColor */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
-  /** status */
+  /** The status of the content. */
   status: Scalars['String'];
-  /** statusColor */
+  /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** url */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** version */
+  /** The version of the objec. */
   version: Scalars['Int'];
 };
 
@@ -2057,8 +2024,6 @@ export type Dashboard = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: DashboardDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -2185,8 +2150,6 @@ export type Discover = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: DiscoverDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -2543,7 +2506,6 @@ export enum EnrichedContentEventType {
   Created = 'CREATED',
   Deleted = 'DELETED',
   Published = 'PUBLISHED',
-  ReferenceUpdated = 'REFERENCE_UPDATED',
   StatusChanged = 'STATUS_CHANGED',
   Unpublished = 'UNPUBLISHED',
   Updated = 'UPDATED',
@@ -2565,8 +2527,6 @@ export type Events = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: EventsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3137,8 +3097,6 @@ export type ExternalAuthors = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: ExternalAuthorsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3268,8 +3226,6 @@ export type Groups = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: GroupsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3538,8 +3494,6 @@ export type Labs = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: LabsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3653,8 +3607,6 @@ export type Migrations = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: MigrationsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3724,8 +3676,6 @@ export type NewsAndEvents = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: NewsAndEventsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -3923,8 +3873,6 @@ export type Pages = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: PagesDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -4103,8 +4051,6 @@ export type ResearchOutputs = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: ResearchOutputsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -4887,8 +4833,6 @@ export type ResearchTags = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: ResearchTagsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -5022,8 +4966,6 @@ export type Teams = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: TeamsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -5330,8 +5272,6 @@ export type Tutorials = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: TutorialsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -5501,8 +5441,6 @@ export type Users = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: UsersDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */
@@ -6235,8 +6173,6 @@ export type WorkingGroups = Content & {
   createdByUser: User;
   /** The data of the content. */
   data: WorkingGroupsDataDto;
-  /** The data of the content. */
-  data__dynamic: Maybe<Scalars['JsonScalar']>;
   /** The edit token. */
   editToken: Maybe<Scalars['String']>;
   /** The flat data of the content. */

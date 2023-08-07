@@ -1,3 +1,4 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   render,
   screen,
@@ -18,6 +19,7 @@ const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 beforeEach(() => {
   jest.clearAllMocks();
 });
+mockConsoleError();
 
 const renderRoutes = async () => {
   render(
@@ -55,5 +57,12 @@ describe('Routes', () => {
     await renderRoutes();
     expect(screen.getByText('Output 1')).toBeVisible();
     expect(screen.getByText('Output 2')).toBeVisible();
+  });
+  it('renders when when the request it not a 2XX', async () => {
+    mockGetOutputs.mockRejectedValue(new Error('error'));
+
+    await renderRoutes();
+    expect(mockGetOutputs).toHaveBeenCalled();
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 });

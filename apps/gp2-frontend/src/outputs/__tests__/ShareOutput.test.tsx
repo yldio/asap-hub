@@ -1,3 +1,4 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
@@ -10,11 +11,10 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { PAGE_SIZE } from '../../hooks';
 import NotificationMessages from '../../NotificationMessages';
 import { getOutput, updateOutput } from '../api';
 import ShareOutput from '../ShareOutput';
-import { outputsState } from '../state';
+import { outputState } from '../state';
 
 jest.mock('../../outputs/api');
 
@@ -27,14 +27,7 @@ const renderShareOutput = async (outputId: string = 'ro0') => {
   render(
     <RecoilRoot
       initializeState={({ reset }) => {
-        reset(
-          outputsState({
-            searchQuery: '',
-            currentPage: 0,
-            filters: new Set(),
-            pageSize: PAGE_SIZE,
-          }),
-        );
+        reset(outputState(outputId));
       }}
     >
       <Suspense fallback="loading">
@@ -67,8 +60,9 @@ const renderShareOutput = async (outputId: string = 'ro0') => {
 };
 
 describe('ShareOutput', () => {
-  jest.resetAllMocks();
+  beforeEach(jest.resetAllMocks);
   afterEach(jest.resetAllMocks);
+  mockConsoleError();
   it('renders the title', async () => {
     mockGetOutput.mockResolvedValueOnce(gp2.createOutputResponse());
     await renderShareOutput();

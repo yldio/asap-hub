@@ -654,6 +654,7 @@ describe('Research Outputs Data Provider', () => {
         avatar: {
           url: 'https://example.com/user-id-0',
         },
+        alumniSinceDate: null,
         __typename: 'Users',
       } as InternalUser;
       const user2 = {
@@ -666,6 +667,7 @@ describe('Research Outputs Data Provider', () => {
         avatar: {
           url: 'https://example.com/user-id-1',
         },
+        alumniSinceDate: '2023-01-01T12:00:00.000Z',
         __typename: 'Users',
       } as InternalUser;
       const externalAuthor = {
@@ -691,6 +693,7 @@ describe('Research Outputs Data Provider', () => {
           lastName: 'User',
           email: 'user0@example.com',
           avatarUrl: 'https://example.com/user-id-0',
+          alumniSinceDate: undefined,
         },
         {
           id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
@@ -704,6 +707,7 @@ describe('Research Outputs Data Provider', () => {
           lastName: 'User',
           email: 'user1@example.com',
           avatarUrl: 'https://example.com/user-id-1',
+          alumniSinceDate: '2023-01-01T12:00:00.000Z',
         },
       ];
 

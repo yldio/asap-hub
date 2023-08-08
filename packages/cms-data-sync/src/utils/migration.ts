@@ -67,12 +67,16 @@ export const migrateFromSquidexToContentfulFactory =
             : await createEntry();
         } catch (err) {
           if (err instanceof Error) {
-            const errorParsed = JSON.parse(err.message);
-            // this is a fallback when it should have updated the entry
-            // but it does not exist
-            if (shouldUpdateEntry && errorParsed.status === 404) {
-              const entry = await createEntry();
-              return entry;
+            try {
+              const errorParsed = JSON.parse(err?.message);
+              // this is a fallback when it should have updated the entry
+              // but it does not exist
+              if (shouldUpdateEntry && errorParsed.status === 404) {
+                const entry = await createEntry();
+                return entry;
+              }
+            } catch (e) {
+              throw err;
             }
           }
 

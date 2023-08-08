@@ -158,6 +158,21 @@ describe('Migration from Squidex to Contentful', () => {
       );
     });
 
+    test('Throw error if get entry does not work for an unexpected reason (not 404 status)', async () => {
+      fetchData.mockResolvedValueOnce([squidexRecord]);
+      parseData.mockResolvedValueOnce({
+        ...item,
+        updateEntry: true,
+      });
+      contentfulEnvironmentMock.getEntry.mockRejectedValueOnce(
+        new Error('unexpected'),
+      );
+
+      await expect(
+        migrateFromSquidexToContentful('entity', fetchData, parseData, true),
+      ).rejects.toThrowError('unexpected');
+    });
+
     test('Should use a fallback parser if the item fails to create with the first attempt and error is different than 404', async () => {
       fetchData.mockResolvedValueOnce([squidexRecord]);
       parseData.mockResolvedValueOnce(item);

@@ -22,12 +22,15 @@ export const fetchUserByCodeHandlerFactory = (
     const { code } = validateParams(request.params as never);
 
     const user = await userController.fetchByCode(code);
-    const apiKey = algoliaClient.generateSecuredApiKey(algoliaApiKey, {
-      validUntil: getValidUntilTimestampInSeconds({
-        date,
-        ttl,
-      }),
-    });
+
+    const apiKey = user.onboarded
+      ? algoliaClient.generateSecuredApiKey(algoliaApiKey, {
+          validUntil: getValidUntilTimestampInSeconds({
+            date,
+            ttl,
+          }),
+        })
+      : '';
 
     return {
       payload: {

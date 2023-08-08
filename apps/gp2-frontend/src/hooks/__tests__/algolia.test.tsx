@@ -1,4 +1,7 @@
-import { algoliaSearchClientFactory } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
 import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
 
@@ -6,17 +9,12 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../../config';
 import { useAlgolia } from '../algolia';
 
-var mockAlgoliaSearchClientFactory: jest.MockedFunction<
-  typeof algoliaSearchClientFactory
->;
-
-jest.mock('@asap-hub/algolia', () => {
-  mockAlgoliaSearchClientFactory = jest.fn().mockReturnValue({});
-  return {
-    ...jest.requireActual('@asap-hub/algolia'),
-    algoliaSearchClientFactory: mockAlgoliaSearchClientFactory,
-  };
-});
+jest.mock('@asap-hub/algolia', () => ({
+  ...jest.requireActual('@asap-hub/algolia'),
+  algoliaSearchClientFactory: jest
+    .fn()
+    .mockReturnValue({} as AlgoliaSearchClient<'gp2'>),
+}));
 
 beforeEach(() => {
   Object.defineProperty(window, 'dataLayer', {
@@ -37,6 +35,10 @@ describe('useAlgolia', () => {
     );
   });
   it('constructs algolia client linking GTM and Algolia with Auth0 user id', async () => {
+    const mockAlgoliaSearchClientFactory =
+      algoliaSearchClientFactory as jest.MockedFunction<
+        typeof algoliaSearchClientFactory
+      >;
     const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
       wrapper: ({ children }) => (
         <RecoilRoot>

@@ -210,6 +210,27 @@ describe('Migrations', () => {
     console.log = consoleLogRef;
   });
 
+  it('runs all migrations if flag with value `all` is passed', async () => {
+    spaceMock.getWebhooks.mockResolvedValue({
+      items: [],
+    } as unknown as Collection<WebHooks, WebhookProps>);
+
+    await runMigrations('--all');
+
+    expect(migrateTeams).toHaveBeenCalled();
+    expect(migrateExternalAuthors).toHaveBeenCalled();
+    expect(migrateCalendars).toHaveBeenCalled();
+    expect(migrateLabs).toHaveBeenCalled();
+    expect(migrateUsers).toHaveBeenCalled();
+    expect(migrateInterestGroups).toHaveBeenCalled();
+    expect(migrateWorkingGroups).toHaveBeenCalled();
+    expect(migrateTutorials).toHaveBeenCalled();
+    expect(migrateDiscover).toHaveBeenCalled();
+    expect(migrateResearchTags).toHaveBeenCalled();
+    expect(migrateResearchOutputs).toHaveBeenCalled();
+    expect(migrateTeamProposals).toHaveBeenCalled();
+  });
+
   it('runs only a subset of migrations if flags are passed', async () => {
     spaceMock.getWebhooks.mockResolvedValue({
       items: [],

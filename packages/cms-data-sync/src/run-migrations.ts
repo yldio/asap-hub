@@ -48,7 +48,9 @@ export const runMigrations = async (flags: Flag[] = []) => {
   });
 
   const hasFlag = (flag: ModelName): boolean =>
-    flags.length === 0 || flags.includes(`--${flag}`);
+    flags.length === 0 ||
+    flags.includes(`--${flag}`) ||
+    flags.includes('--all');
 
   const contentfulSpace = await contentfulClient.getSpace(CONTENTFUL_SPACE_ID!);
 

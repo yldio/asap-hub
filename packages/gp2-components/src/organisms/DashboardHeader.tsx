@@ -6,7 +6,7 @@ const props = {
   position: 'center',
   title: 'Dashboard',
   description:
-    'Discover how to use the platform and what’s currently happening within the network at a glance.',
+    'Discover how to use the platform and what’s currently happening within the network.',
 };
 
 const WorkingGroupsHeader: React.FC = () => <PageBanner {...props} />;

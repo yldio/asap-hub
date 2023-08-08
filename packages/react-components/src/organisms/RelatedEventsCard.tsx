@@ -30,28 +30,27 @@ const gridTitleStyles = css({
 });
 
 const rowTitleStyles = css({
-  paddingTop: `${32 / perRem}em`,
+  paddingTop: `${16 / perRem}em`,
   paddingBottom: `${16 / perRem}em`,
   ':first-of-type': { paddingTop: 0 },
   [`@media (min-width: ${tabletScreen.min}px)`]: { display: 'none' },
 });
 
-const rowStyles = css({
+const gridStyles = css({
   display: 'grid',
-  paddingTop: `${20 / perRem}em`,
-  paddingBottom: `${20 / perRem}em`,
-  borderBottom: `1px solid ${steel.rgb}`,
-  ':last-child': {
-    borderBottom: 'none',
-    marginBottom: 0,
-    paddingBottom: 0,
-  },
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: 'auto max-content',
     columnGap: `${15 / perRem}em`,
-    paddingTop: 0,
+    rowGap: `${16 / perRem}em`,
+  },
+});
+
+const underlineStyles = css({
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
     paddingBottom: `${16 / perRem}em`,
-    borderBottom: 'none',
+    '&:not(:last-child)': {
+      borderBottom: `1px solid ${steel.rgb}`,
+    },
   },
 });
 
@@ -105,7 +104,7 @@ const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
             <b>No related CRN Hub events available.</b>
           </Paragraph>
         ) : (
-          <div css={rowStyles}>
+          <div css={gridStyles}>
             <span css={[titleStyles, gridTitleStyles]}>Event Name</span>
             <span css={[titleStyles, gridTitleStyles]}>Date</span>
             {relatedEvents
@@ -119,7 +118,7 @@ const RelatedEventsCard: React.FC<RelatedEventsCardProps> = ({
                     </Link>
                   </p>
                   <span css={[titleStyles, rowTitleStyles]}>Date</span>
-                  <p css={paragraphStyle}>
+                  <p css={[paragraphStyle, underlineStyles]}>
                     {formatDateToTimezone(
                       endDate,
                       'EEE, dd MMM yyyy',

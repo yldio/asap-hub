@@ -354,6 +354,48 @@ describe('Research Outputs Data Provider', () => {
       expect(result!.documentType).toEqual('Grant Document');
     });
 
+    test('Should default missing working group reference to an empty array of teams', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.teamsCollection = {
+        items: [],
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.teams).toEqual([]);
+    });
+
+    test('Should default missing working group reference to an empty array', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.workingGroup = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.workingGroups).toEqual([]);
+    });
+
+    test('Should parse working group reference to array', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.workingGroup = {
+        sys: { id: 'wg-1' },
+        title: 'Working Group 1',
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.workingGroups).toEqual([
+        { id: 'wg-1', title: 'Working Group 1' },
+      ]);
+    });
     test('Should default sharingStatus to Network Only when missing', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
       researchOutputs.sharingStatus = null;

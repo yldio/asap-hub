@@ -113,6 +113,32 @@ export const eventsContentQueryFragment = gql`
     presentationUpdatedAt
     meetingMaterialsPermanentlyUnavailable
     meetingMaterials
+    linkedFrom {
+      researchOutputsCollection(limit: 10) {
+        items {
+          sys {
+            id
+          }
+          title
+          type
+          documentType
+          workingGroup {
+            sys {
+              id
+            }
+            title
+          }
+          teamsCollection(limit: 10) {
+            items {
+              sys {
+                id
+              }
+              displayName
+            }
+          }
+        }
+      }
+    }
     calendar {
       googleCalendarId
       color

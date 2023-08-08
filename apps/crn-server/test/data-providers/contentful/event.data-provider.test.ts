@@ -17,6 +17,7 @@ import {
   getContentfulGraphqlEvent,
   getContentfulGraphqlEventsResponse,
   getContentfulListEventDataObject,
+  getContentfulRelatedResearch,
   getContentfulUserSpeakerTeams,
   getEventCreateDataObject,
   getEventsByExternalAuthorIdGraphqlResponse,
@@ -58,6 +59,7 @@ describe('Events Contentful Data Provider', () => {
       Events: () => getContentfulGraphqlEvent(),
       WorkingGroups: () => getContentfulGraphqlWorkingGroup({}),
       InterestGroups: () => getContentfulGraphqlInterestGroup(),
+      ResearchOutputs: () => getContentfulRelatedResearch(),
     });
 
   const eventDataProviderMockGraphql = new EventContentfulDataProvider(
@@ -1018,6 +1020,16 @@ describe('Events Contentful Data Provider', () => {
         parseGraphQLEvent(graphqlEvent),
       ).toThrowErrorMatchingInlineSnapshot(
         `"Invalid event (example) status "invalid""`,
+      );
+    });
+
+    test('handles null working group by returning an empty array', () => {
+      const graphqlEvent = getContentfulGraphqlEvent();
+      graphqlEvent.linkedFrom!.researchOutputsCollection!.items[0]!.workingGroup =
+        null;
+
+      expect(parseGraphQLEvent(graphqlEvent).relatedResearch[0]).toEqual(
+        expect.objectContaining({ workingGroups: [] }),
       );
     });
   });

@@ -87,6 +87,14 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
             },
           },
         ],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            flatData: {
+              title: 'Working Group B',
+            },
+          },
+        ],
       },
     },
   ],
@@ -131,6 +139,14 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
               id: 'team-id-1',
               flatData: {
                 displayName: 'Team B',
+              },
+            },
+          ],
+          workingGroups: [
+            {
+              id: 'working-group-id-1',
+              flatData: {
+                title: 'Working Group B',
               },
             },
           ],
@@ -217,6 +233,12 @@ export const getResearchOutputDataObject =
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ id: 'team-id-1', displayName: 'Team B' }],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
         isOwnRelatedResearchLink: true,
       },
       {
@@ -225,6 +247,12 @@ export const getResearchOutputDataObject =
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ displayName: 'Team B', id: 'team-id-1' }],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
         isOwnRelatedResearchLink: false,
       },
     ],
@@ -571,6 +599,12 @@ export const getContentfulResearchOutputGraphqlResponse =
               },
             ],
           },
+          workingGroup: {
+            sys: {
+              id: 'working-group-id-1',
+            },
+            title: 'Working Group B',
+          },
         },
       ],
     },
@@ -593,6 +627,12 @@ export const getContentfulResearchOutputGraphqlResponse =
                   displayName: 'Team B',
                 },
               ],
+            },
+            workingGroup: {
+              sys: {
+                id: 'working-group-id-1',
+              },
+              title: 'Working Group B',
             },
           },
         ],

@@ -475,7 +475,23 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     status,
     hidden: hidden || false,
     tags: tags ?? [],
-
+    relatedResearch: (
+      item.linkedFrom?.researchOutputsCollection?.items ?? []
+    ).map((data) => ({
+      id: data?.sys.id ?? '',
+      title: data?.title,
+      type: data?.type,
+      documentType: data?.documentType,
+      teams: (data?.teamsCollection?.items ?? [])
+        .filter((x) => x !== null)
+        .map((team) => ({
+          id: team?.sys.id,
+          displayName: team?.displayName,
+        })),
+      workingGroups: data?.workingGroup
+        ? [{ id: data?.workingGroup?.sys.id, title: data?.workingGroup?.title }]
+        : [],
+    })),
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
     workingGroup,

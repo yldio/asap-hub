@@ -3,16 +3,24 @@ import {
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import { fireEvent, render } from '@testing-library/react';
-import RelatedResearch from '../RelatedResearch';
+import { ComponentProps } from 'react';
+import RelatedResearchCard from '../RelatedResearchCard';
+
+const props: ComponentProps<typeof RelatedResearchCard> = {
+  relatedResearch: [],
+  description: '',
+};
 
 it('displays the related research card header and description', () => {
   const { getByText, getByRole, queryByText } = render(
-    <RelatedResearch
+    <RelatedResearchCard
+      {...props}
       relatedResearch={[
         {
           ...createResearchOutputResponse(),
         },
       ]}
+      description="Find out all shared research outputs that contributed to this one."
     />,
   );
   expect(getByRole('heading', { name: 'Related Research' })).toBeVisible();
@@ -26,7 +34,8 @@ it('displays the related research card header and description', () => {
 
 it('displays the related research links and icons', () => {
   const { getByText, getByRole, getAllByText } = render(
-    <RelatedResearch
+    <RelatedResearchCard
+      {...props}
       relatedResearch={[
         {
           ...createResearchOutputResponse(),
@@ -35,6 +44,7 @@ it('displays the related research links and icons', () => {
           title: 'Genetics',
           type: 'Preprint',
           teams: [{ id: '1', displayName: 'Team 1' }],
+          workingGroups: [],
         },
       ]}
     />,
@@ -51,9 +61,10 @@ it('displays the related research links and icons', () => {
   );
 });
 
-it('does not display the team link if there is no team', () => {
+it('does not display the team link if there is no team or working group', () => {
   const { getAllByRole } = render(
-    <RelatedResearch
+    <RelatedResearchCard
+      {...props}
       relatedResearch={[
         {
           ...createResearchOutputResponse(),
@@ -62,6 +73,7 @@ it('does not display the team link if there is no team', () => {
           title: 'Genetics',
           type: 'Preprint',
           teams: [],
+          workingGroups: [],
         },
       ]}
     />,
@@ -72,10 +84,12 @@ it('does not display the team link if there is no team', () => {
 
 it('displays the multiple teams label', () => {
   const { getByText } = render(
-    <RelatedResearch
+    <RelatedResearchCard
+      {...props}
       relatedResearch={[
         {
           ...createResearchOutputResponse(),
+          workingGroups: [],
           teams: [
             { id: '1', displayName: 'Team 1' },
             { id: '2', displayName: 'Team 2' },
@@ -87,6 +101,25 @@ it('displays the multiple teams label', () => {
   expect(getByText('Multiple teams')).toBeVisible();
 });
 
+it('displays a working group over teams for working group outputs', () => {
+  const { getByText } = render(
+    <RelatedResearchCard
+      {...props}
+      relatedResearch={[
+        {
+          ...createResearchOutputResponse(),
+          workingGroups: [{ id: '1', title: 'Working Group 1' }],
+          teams: [
+            { id: '1', displayName: 'Team 1' },
+            { id: '2', displayName: 'Team 2' },
+          ],
+        },
+      ]}
+    />,
+  );
+  expect(getByText('Working Group 1')).toBeVisible();
+});
+
 it('displays the view more outputs button', () => {
   const relatedResearchList = createListResearchOutputResponse(10).items;
   relatedResearchList.push({
@@ -95,7 +128,7 @@ it('displays the view more outputs button', () => {
     title: 'Last related research output',
   });
   const { queryByText, getByRole } = render(
-    <RelatedResearch relatedResearch={relatedResearchList} />,
+    <RelatedResearchCard {...props} relatedResearch={relatedResearchList} />,
   );
 
   expect(getByRole('button', { name: 'View More Outputs' })).toBeVisible();

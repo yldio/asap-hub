@@ -38,6 +38,11 @@ on:
           - researchTags
           - researchOutputs
           - all
+      is-update-mode-enabled:
+        description: 'Is update mode enabled'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   sync_cms_data:
@@ -71,6 +76,7 @@ jobs:
           CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          IS_UPDATE_MODE_ENABLED: ${{ inputs.is-update-mode-enabled}}
 
   notify_failure:
     runs-on: ubuntu-latest

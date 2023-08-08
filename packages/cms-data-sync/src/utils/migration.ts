@@ -3,6 +3,7 @@ import { Environment, Entry } from 'contentful-management';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
 import { contentfulRateLimiter } from '../contentful-rate-limiter';
+import { isUpdateModeEnabled } from './setup';
 
 export const migrateFromSquidexToContentfulFactory =
   (contentfulEnvironment: Environment, logger: typeof loggerFunc) =>
@@ -19,7 +20,7 @@ export const migrateFromSquidexToContentfulFactory =
   ) => {
     const data = await fetchData();
 
-    if (clearPreviousEntries) {
+    if (clearPreviousEntries && !isUpdateModeEnabled) {
       await clearContentfulEntries(contentfulEnvironment, contentTypeId);
     }
     let n = 0;
@@ -30,11 +31,11 @@ export const migrateFromSquidexToContentfulFactory =
         const { id, updateEntry, ...payload } = parsed;
 
         try {
-          if (updateEntry) {
-            const entry = await contentfulEnvironment.getEntry(id);
+          const contentfulEntry = await contentfulEnvironment.getEntry(id);
 
-            updateEntryFields(entry, payload);
-            const updatedEntry = await entry.update();
+          if (contentfulEntry && (updateEntry || isUpdateModeEnabled)) {
+            updateEntryFields(contentfulEntry, payload);
+            const updatedEntry = await contentfulEntry.update();
             await contentfulRateLimiter.removeTokens(1);
 
             n += 1;
@@ -44,22 +45,31 @@ export const migrateFromSquidexToContentfulFactory =
             );
             return updatedEntry;
           }
-
-          const entry = await contentfulEnvironment.createEntryWithId(
-            contentTypeId,
-            id,
-            {
-              fields: addLocaleToFields(payload),
-            },
-          );
-          await contentfulRateLimiter.removeTokens(1);
-
-          n += 1;
-          logger(`Created entry with id ${id}. (${n}/${data.length})`, 'INFO');
-          if (item.status === 'PUBLISHED') {
-            return entry;
-          }
         } catch (err) {
+          if (err instanceof Error) {
+            const errorParsed = JSON.parse(err?.message);
+            if (errorParsed.status === 404) {
+              const createdEntry =
+                await contentfulEnvironment.createEntryWithId(
+                  contentTypeId,
+                  id,
+                  {
+                    fields: addLocaleToFields(payload),
+                  },
+                );
+              await contentfulRateLimiter.removeTokens(1);
+
+              n += 1;
+              logger(
+                `Created entry with id ${id}. (${n}/${data.length})`,
+                'INFO',
+              );
+              if (item.status === 'PUBLISHED') {
+                return createdEntry;
+              }
+            }
+          }
+
           logger(`Error details of entry ${id}:\n${err}`, 'ERROR');
 
           if (fallbackParseData) {

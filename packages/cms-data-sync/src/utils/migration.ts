@@ -59,10 +59,8 @@ export const migrateFromSquidexToContentfulFactory =
           return updatedEntry;
         };
 
-        const shouldUpdateEntry = updateEntry || isUpdateModeEnabled;
-
         try {
-          return shouldUpdateEntry
+          return updateEntry || isUpdateModeEnabled
             ? await updateExistingEntry()
             : await createEntry();
         } catch (err) {
@@ -71,7 +69,7 @@ export const migrateFromSquidexToContentfulFactory =
               const errorParsed = JSON.parse(err?.message);
               // this is a fallback when it should have updated the entry
               // but it does not exist
-              if (shouldUpdateEntry && errorParsed.status === 404) {
+              if (isUpdateModeEnabled && errorParsed.status === 404) {
                 const entry = await createEntry();
                 return entry;
               }

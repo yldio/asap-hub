@@ -384,9 +384,7 @@ describe('Migrate research outputs', () => {
       {
         fields: expect.objectContaining({
           usageNotes: {
-            'en-US': expect.stringContaining(
-              'Some content with em and strong tags.',
-            ),
+            'en-US': 'Some content with em and strong tags.',
           },
         }),
       },

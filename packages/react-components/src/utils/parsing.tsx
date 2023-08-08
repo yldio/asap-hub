@@ -178,5 +178,7 @@ export function richTextToMarkdown(text = '', poorText = false): string {
   });
 
   const { contents } = processor.processSync(text);
-  return contents as string;
+  const markdownText = contents as string;
+
+  return markdownText.replace(/\n$/, '');
 }

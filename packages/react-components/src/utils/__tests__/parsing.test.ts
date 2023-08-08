@@ -3,7 +3,7 @@ import { richTextToMarkdown } from '../parsing';
 describe('richTextToMarkdown', () => {
   it('handles basic text', () => {
     const result = richTextToMarkdown('text');
-    expect(result).toBe(`text\n`);
+    expect(result).toBe('text');
   });
 
   it('handles formatted text', () => {
@@ -13,7 +13,6 @@ describe('richTextToMarkdown', () => {
 
 **dasdasd**
 
-## dasdsad
-`);
+## dasdsad`);
   });
 });

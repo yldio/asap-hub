@@ -60,6 +60,9 @@ export const migrateFromSquidexToContentfulFactory =
         };
 
         const shouldUpdateEntry = updateEntry || isUpdateModeEnabled;
+        console.log('updateEntry', updateEntry);
+        console.log('isUpdateModeEnabled', isUpdateModeEnabled);
+        console.log('shouldUpdateEntry', shouldUpdateEntry);
 
         try {
           return shouldUpdateEntry

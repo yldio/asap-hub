@@ -334,8 +334,13 @@ describe('Migrate events', () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       getEventSquidexResponse(),
     );
-    jest
-      .spyOn(contentfulEnv, 'getEntry')
+
+    when(contentfulEnv.getEntry)
+      .calledWith('external-user-1')
+      .mockRejectedValue(new Error('{"status":404}'));
+
+    when(contentfulEnv.getEntry)
+      .calledWith('null')
       .mockRejectedValue(new Error('{"status":404}'));
 
     const entry = getEntry({});
@@ -346,7 +351,8 @@ describe('Migrate events', () => {
 
     await migrateEvents();
 
-    expect(console.log).toHaveBeenCalledWith(
+    expect(console.log).toHaveBeenNthCalledWith(
+      2,
       '\x1b[31m',
       '[ERROR] Either user external-user-1 or team null do not exist in contentful. Please review event with id event-1',
     );

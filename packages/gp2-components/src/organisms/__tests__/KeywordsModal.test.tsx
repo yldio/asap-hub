@@ -61,7 +61,6 @@ describe('KeywordsModal', () => {
 
   it('calls onSave with the updated fields', async () => {
     const onSave = jest.fn();
-    const keywords = 'Genetics';
     renderModal({
       keywords: [],
       onSave,
@@ -72,11 +71,11 @@ describe('KeywordsModal', () => {
         name: /Keywords/i,
       }),
     );
-    userEvent.click(screen.getByText(keywords));
+    userEvent.click(screen.getByText('Keyword-1'));
 
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      keywords: [keywords],
+      keywords: ['id-1'],
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });

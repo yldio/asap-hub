@@ -59,7 +59,6 @@ describe('Background', () => {
   it('renders biography and keywords', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
-    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderBackground(user.id);
     expect(screen.getByRole('heading', { name: 'Biography' })).toBeVisible();
     expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
@@ -67,7 +66,6 @@ describe('Background', () => {
 
   it('renders not found if no user is returned', async () => {
     mockGetUser.mockResolvedValueOnce(undefined);
-    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderBackground('unknown-id');
     expect(
       screen.getByRole('heading', {
@@ -80,7 +78,6 @@ describe('Background', () => {
     const biography = 'this is some biography';
     const user = { ...gp2Fixtures.createUserResponse(), biography };
     mockGetUser.mockResolvedValueOnce(user);
-    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderBackground(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const [, biographyEditButton] = screen.getAllByRole('link', {
@@ -103,7 +100,6 @@ describe('Background', () => {
     const keywords = ['Genetics'] as gp2Model.Keyword[];
     const user = { ...gp2Fixtures.createUserResponse(), keywords };
     mockGetUser.mockResolvedValueOnce(user);
-    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderBackground(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const [keywordsEditButton] = screen.getAllByRole('link', {

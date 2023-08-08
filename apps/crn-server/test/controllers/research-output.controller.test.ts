@@ -500,6 +500,18 @@ describe('ResearchOutputs controller', () => {
           }),
         );
       });
+
+      test('Should not throw error when no link is passed and its document type is Lab Resource', async () => {
+        const researchOutputEmptyLinkRequest = getResearchOutputCreateData();
+        researchOutputEmptyLinkRequest.documentType = 'Lab Resource';
+        researchOutputEmptyLinkRequest.link = undefined;
+
+        await researchOutputs.create(researchOutputEmptyLinkRequest);
+        expect(researchOutputDataProviderMock.fetch).not.toHaveBeenCalledWith({
+          filter: { link: expect.any(String) },
+          includeDrafts: true,
+        });
+      });
     });
 
     describe('Parsing Research Tags', () => {

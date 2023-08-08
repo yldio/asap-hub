@@ -1,4 +1,5 @@
 import News from '../../src/controllers/news.controller';
+import { NewsDataProvider } from '../../src/data-providers/types';
 import {
   getListNewsDataObject,
   getListNewsResponse,
@@ -25,6 +26,27 @@ describe('News controller', () => {
       const result = await newsController.fetch();
 
       expect(result).toMatchObject(getListNewsResponse());
+    });
+
+    test('Should call the data provider with correct parameters', async () => {
+      newsDataProviderMock.fetch.mockResolvedValueOnce(getListNewsDataObject());
+
+      const parameters: Parameters<typeof newsController.fetch>[0] = {
+        search: 'search-value',
+        skip: 13,
+        take: 9,
+        filter: { type: ['news'] },
+      };
+
+      await newsController.fetch(parameters);
+
+      const expectedParameters: Parameters<NewsDataProvider['fetch']>[0] = {
+        skip: 13,
+        take: 9,
+        search: 'search-value',
+        filter: { type: ['news'] },
+      };
+      expect(newsDataProviderMock.fetch).toBeCalledWith(expectedParameters);
     });
   });
 });

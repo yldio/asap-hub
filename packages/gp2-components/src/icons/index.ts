@@ -14,6 +14,7 @@ export { default as leftArrowIcon } from './left-arrow-icon';
 export { default as locationIcon } from './location-icon';
 export { default as noEventCalendarIcon } from './no-event-calendar-icon';
 export { default as noProjectsIcon } from './no-projects-icon';
+export { default as noNewsIcon } from './no-news-icon';
 export { default as projectIcon } from './project-icon';
 export { default as regionAfricaIcon } from './region-africa-icon';
 export { default as regionAsiaIcon } from './region-asia-icon';

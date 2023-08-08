@@ -1,5 +1,6 @@
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { UsersPageList } from '@asap-hub/gp2-components';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { ComponentProps, FC } from 'react';
@@ -27,7 +28,12 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
     setSearchQuery,
     debouncedSearchQuery,
     updateFilters,
-  } = useSearch();
+  } = useSearch<gp2Model.FetchUsersFilter>([
+    'regions',
+    'keywords',
+    'projects',
+    'working-groups',
+  ]);
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
 

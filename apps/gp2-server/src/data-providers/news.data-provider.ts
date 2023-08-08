@@ -2,7 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 
 import { gp2 as gp2Contentful, GraphQLClient } from '@asap-hub/contentful';
 
-import { FetchNewsProviderOptions, NewsDataProvider } from './types';
+import { NewsDataProvider } from './types';
 
 export type NewsItem = NonNullable<
   NonNullable<gp2Contentful.FetchNewsQuery['newsCollection']>['items'][number]
@@ -11,7 +11,7 @@ export type NewsItem = NonNullable<
 export class NewsContentfulDataProvider implements NewsDataProvider {
   constructor(private graphQLClient: GraphQLClient) {}
 
-  async fetch(options?: FetchNewsProviderOptions) {
+  async fetch(options?: gp2Model.FetchNewsOptions) {
     const { newsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchNewsQuery,
       gp2Contentful.FetchNewsQueryVariables
@@ -20,7 +20,8 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
       skip: options?.skip || null,
       order: [gp2Contentful.NewsOrder.PublishDateDesc],
       where: {
-        title_contains: options?.filter?.title || null,
+        type_in: options?.filter?.type as string[],
+        title_contains: options?.search || null,
       },
     });
 

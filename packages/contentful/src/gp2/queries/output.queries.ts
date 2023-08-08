@@ -60,6 +60,9 @@ export const outputsContentQueryFragment = gql`
     tagsCollection(limit: 10) {
       total
       items {
+        sys {
+          id
+        }
         name
       }
     }

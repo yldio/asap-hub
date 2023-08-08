@@ -6,7 +6,7 @@ import EditUserModal from './EditUserModal';
 
 const { perRem } = pixels;
 
-type KeywordsModalProps = Pick<gp2.UserResponse, 'keywords'> &
+type KeywordsModalProps = Pick<gp2.UserResponse, 'tags'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
     suggestions: gp2.KeywordDataObject[];
@@ -15,20 +15,28 @@ type KeywordsModalProps = Pick<gp2.UserResponse, 'keywords'> &
 const KeywordsModal: React.FC<KeywordsModalProps> = ({
   onSave,
   backHref,
-  keywords,
+  tags,
   suggestions,
 }) => {
-  const [newKeywords, setNewKeywords] = useState<gp2.Keyword[]>(keywords || []);
+  const [newKeywords, setNewKeywords] = useState<gp2.KeywordDataObject[]>(
+    tags || [],
+  );
 
   const checkDirty = () =>
-    (!keywords && newKeywords.length) ||
-    (!!keywords && !keywords.every((val, index) => val === newKeywords[index]));
+    (!tags && newKeywords.length) ||
+    (!!tags && !tags.every((val, index) => val === newKeywords[index]));
 
   return (
     <EditUserModal
       title="Keywords"
       description="Help others to understand your areas of expertise or what you’re passionate about."
-      onSave={() => onSave({ keywords: newKeywords })}
+      onSave={() =>
+        onSave({
+          tags: newKeywords.map((k) => ({
+            id: k.id,
+          })),
+        })
+      }
       backHref={backHref}
       dirty={checkDirty()}
     >
@@ -45,9 +53,9 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
                 </span>
               </>
             }
-            values={newKeywords.map((keyword) => ({
-              label: keyword,
-              value: keyword,
+            values={newKeywords.map(({ id, name }) => ({
+              label: name,
+              value: id,
             }))}
             required
             enabled={!isSaving}
@@ -60,8 +68,11 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
                 newValues
                   .slice(0, 10)
                   .reduce(
-                    (acc, curr) => [...acc, curr.label],
-                    [] as gp2.Keyword[],
+                    (acc, curr) => [
+                      ...acc,
+                      { id: curr.value, name: curr.label },
+                    ],
+                    [] as gp2.KeywordDataObject[],
                   ),
               );
             }}

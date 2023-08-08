@@ -1,11 +1,13 @@
 import {
   Environment,
+  getLinkEntities,
   gp2 as gp2Contentful,
   GraphQLClient,
   patchAndPublish,
   pollContentfulGql,
 } from '@asap-hub/contentful';
-import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { KeywordItem, parseKeyword } from './keyword.data-provider';
 import {
   deleteEntries,
   parseCalendar,
@@ -34,14 +36,21 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     return projects ? parseProjectToDataObject(projects) : null;
   }
 
-  async fetch(options: FetchOptions): Promise<gp2Model.ListProjectDataObject> {
-    const { take = 10, skip = 0 } = options;
+  async fetch(
+    options: gp2Model.FetchProjectOptions,
+  ): Promise<gp2Model.ListProjectDataObject> {
+    const { take = 10, skip = 0, filter } = options;
+    let where = {};
+    if (filter?.hasKeywords) {
+      where = { keywords_exists: true };
+    }
     const res = await this.graphQLClient.request<
       gp2Contentful.FetchProjectsQuery,
       gp2Contentful.FetchProjectsQueryVariables
     >(gp2Contentful.FETCH_PROJECTS, {
       limit: take,
       skip,
+      where,
     });
 
     const { projectsCollection } = res;
@@ -86,10 +95,16 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
           )
         : doNotProcessEntity;
     const previousProject = await environment.getEntry(id);
+
+    const previousTags = previousProject?.fields.tags || [];
+    const newTags =
+      project.tags && getLinkEntities(project.tags.map((tag) => tag.id));
+
     const result = await patchAndPublish(previousProject, {
       ...project,
       ...resourceFields,
       ...memberFields,
+      tags: [...previousTags, ...newTags!],
     });
 
     await deleteEntries(
@@ -120,6 +135,10 @@ export function parseProjectToDataObject(
   const milestones = parseMilestones(project.milestonesCollection);
   const resources = parseResources(project.resourcesCollection);
   const calendar = parseCalendar(project.calendar);
+  const tags =
+    project.tagsCollection?.items
+      .filter((keyword): keyword is KeywordItem => keyword !== null)
+      .map(parseKeyword) ?? [];
 
   return {
     id: project.sys.id,
@@ -133,6 +152,7 @@ export function parseProjectToDataObject(
     description: project.description ?? undefined,
     members,
     keywords: (project.keywords as gp2Model.Keyword[]) ?? [],
+    tags,
     milestones,
     resources,
     traineeProject: project.traineeProject ?? false,

@@ -1,6 +1,7 @@
 import { FetchOptions, ListResponse } from '../common';
 import { BasicEvent, SortOptions } from '../event-common';
 import { CalendarResponse } from './calendar';
+import { KeywordDataObject } from './keywords';
 import { ProjectResponse } from './project';
 import { WorkingGroupResponse } from './working-group';
 
@@ -24,6 +25,7 @@ export interface EventDataObject extends BasicEvent {
   project?: Pick<ProjectResponse, 'id' | 'title'>;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
+  keywords: KeywordDataObject[];
 }
 
 export type ListEventDataObject = ListResponse<EventDataObject>;
@@ -55,8 +57,9 @@ export type EventCreateDataObject = Pick<
 };
 
 export type EventUpdateDataObject = Partial<
-  Omit<EventDataObject, 'calendar'> & {
+  Omit<EventDataObject, 'calendar' | 'keywords'> & {
     calendar: string;
+    keywords?: Omit<KeywordDataObject, 'name'>[] | null;
   }
 >;
 
@@ -70,6 +73,7 @@ type BaseFilterOptions = {
   externalUserId?: never;
   googleId?: never;
   hidden?: never;
+  hasTags?: boolean;
 };
 
 type ExclusiveFilterOption<T> = Omit<BaseFilterOptions, keyof T> & T;

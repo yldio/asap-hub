@@ -60,6 +60,10 @@ export const getUserResponse = (): gp2Model.UserResponse => ({
   alternativeEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   biography: 'a biography of Tony Stark',
+  tags: [
+    { id: 'id-1', name: 'RNA' },
+    { id: 'id-2', name: 'Aging' },
+  ],
   keywords: ['RNA', 'Aging'],
   social: {
     googleScholar: 'https://scholar.google.com',
@@ -106,6 +110,7 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
       fundingStreams: undefined,
       contributingCohorts: [],
       keywords: [],
+      tags: [],
       questions: [],
     },
   ],
@@ -153,6 +158,10 @@ export const getUserDataObject = (): gp2Model.UserDataObject => ({
       ],
       title: 'Steering Committee',
     },
+  ],
+  tags: [
+    { id: 'id-1', name: 'RNA' },
+    { id: 'id-2', name: 'Aging' },
   ],
   keywords: ['RNA', 'Aging'],
   fundingStreams: 'A funding stream',
@@ -248,6 +257,7 @@ export const fetchUserResponseDataObject = (): gp2Model.UserDataObject => ({
   alternativeEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   keywords: [],
+  tags: [],
   questions: ['What was the name of Peter Parkers uncle?'],
 });
 

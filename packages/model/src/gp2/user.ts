@@ -1,6 +1,7 @@
 import { FetchOptions, ListResponse } from '../common';
 import { Connection, UserSocialLinks } from '../user';
 import { Keyword } from './common';
+import { KeywordDataObject } from './keywords';
 import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
 
@@ -99,6 +100,7 @@ export type UserDataObject = {
   email: string;
   firstName: string;
   fundingStreams?: string;
+  tags: KeywordDataObject[];
   keywords: string[];
   lastName: string;
   onboarded: boolean;
@@ -121,16 +123,19 @@ export type UserCreateDataObject = Omit<
   | 'workingGroups'
   | 'contributingCohorts'
   | 'connections'
+  | 'tags'
 > & {
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
   avatar?: string;
+  // add keywords - string[] but this would be the id or name? in update is the id
 };
 
 export type UserUpdateDataObject = Partial<
-  Omit<UserCreateDataObject, 'alternativeEmail'>
+  Omit<UserCreateDataObject, 'alternativeEmail' | 'keywords' | 'tags'>
 > &
   Partial<Pick<UserDataObject, 'connections'>> & {
     alternativeEmail?: string | null;
+    tags?: Omit<KeywordDataObject, 'name'>[];
   };
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
@@ -157,6 +162,7 @@ export type FetchUsersFilter = {
   projects?: string[];
   workingGroups?: string[];
   hidden?: boolean;
+  hasKeywords?: boolean;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

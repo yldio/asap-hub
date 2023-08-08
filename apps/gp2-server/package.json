@@ -13,7 +13,10 @@
     "typecheck": "tsc",
     "import:users": "ts-node ./scripts/import-users.ts",
     "import:cohorts": "ts-node ./scripts/import-cohorts.ts",
-    "import:keywords": "ts-node ./scripts/import-keywords.ts"
+    "import:keywords": "ts-node ./scripts/import-keywords.ts",
+    "import:keyword-refs-users": "ts-node ./scripts/import-keyword-refs-users.ts",
+    "import:keyword-refs-projects": "ts-node ./scripts/import-keyword-refs-projects.ts",
+    "import:keyword-refs-events": "ts-node ./scripts/import-keyword-refs-events.ts"
   },
   "dependencies": {
     "@asap-hub/algolia": "workspace:*",

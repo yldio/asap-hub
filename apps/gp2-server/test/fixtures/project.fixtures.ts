@@ -18,6 +18,7 @@ export const getProjectDataObject = (): gp2Model.ProjectDataObject => ({
     },
   ],
   keywords: ['RNA'],
+  tags: [{ id: '1', name: 'RNA' }],
   description: 'test description',
   leadEmail: 'peter@parker.com',
   pmEmail: 'tony@stark.com',

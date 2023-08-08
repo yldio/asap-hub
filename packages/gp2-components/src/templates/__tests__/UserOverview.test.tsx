@@ -145,6 +145,16 @@ describe('UserOverview', () => {
     expect(screen.getByText(keyword)).toBeVisible();
   });
 
+  // it('renders the keyword: Test', () => {
+  //   render(
+  //     <UserOverview {...defaultProps} keywords={[{ id: 'id', name: 'Test' }]}>
+  //       Body
+  //     </UserOverview>,
+  //   );
+
+  //   expect(screen.getByText('Test')).toBeVisible();
+  // });
+
   describe('funding streams', () => {
     it('renders the funding streams', () => {
       const fundingStreams = 'this is a funding stream';

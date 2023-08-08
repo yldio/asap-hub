@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 import type { gp2 } from '@asap-hub/model';
+import { validateFetchProjectsOptions } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { Router } from 'express';
 import ProjectController from '../controllers/project.controller';
 import {
-  validateFetchProjectsParameters,
   validateProjectParameters,
   validateProjectPutRequest,
 } from '../validation/project.validation';
@@ -17,7 +17,7 @@ export const projectRouteFactory = (
   projectRoutes.get<unknown, gp2.ListProjectResponse>(
     '/projects',
     async (req, res) => {
-      const query = validateFetchProjectsParameters(req.query);
+      const query = validateFetchProjectsOptions(req.query);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const loggedInUserId = req.loggedInUser!.id;
       const projects = await projectController.fetch(query, loggedInUserId);

@@ -3,6 +3,7 @@ import UserKeywords from '../UserKeywords';
 
 describe('UserKeywords', () => {
   it('renders keywords', () => {
+    // const keywords = [{ id: 'id', name: 'Python' } as const];
     const keywords = ['Python' as const];
     render(<UserKeywords keywords={keywords} />);
     expect(screen.getByRole('listitem').textContent).toBe('Python');

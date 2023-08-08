@@ -21,6 +21,7 @@ const UserKeywords: React.FC<UserKeywordsProps> = ({ keywords, editHref }) => (
         ten keywords.
       </UserProfilePlaceholderCard>
     ) : (
+      // <TagList tags={keywords.map((k) => k.name)} />
       <TagList tags={keywords} />
     )}
   </EditableCard>

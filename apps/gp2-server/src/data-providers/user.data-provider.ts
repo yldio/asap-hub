@@ -15,6 +15,7 @@ import {
 } from '@asap-hub/contentful';
 import logger from '../utils/logger';
 import { UserDataProvider } from './types';
+import { KeywordItem, parseKeyword } from './keyword.data-provider';
 
 export type UserItem = NonNullable<
   NonNullable<gp2Contentful.FetchUsersQuery['usersCollection']>['items'][number]
@@ -147,9 +148,15 @@ export class UserContentfulDataProvider implements UserDataProvider {
     );
 
     const cohortFields = getCohortFields(nextContributingCohorts);
+
+    const previousTags = user.fields.tags || [];
+    const newTags =
+      data.tags && getLinkEntities(data.tags.map((tag) => tag.id));
+
     const result = await patchAndPublish(user, {
       ...fields,
       ...cohortFields,
+      tags: [...previousTags, ...newTags!],
     });
 
     await removePreviousCohorts(
@@ -240,6 +247,10 @@ export const parseUserToDataObject = (
   const contributingCohorts = parseContributingCohorts(
     user.contributingCohortsCollection,
   );
+  const tags =
+    user.tagsCollection?.items
+      .filter((keyword): keyword is KeywordItem => keyword !== null)
+      .map(parseKeyword) ?? [];
 
   const positions = parsePositions(user.positions);
   const projects = parseProjects(user.linkedFrom?.projectMembershipCollection);
@@ -265,6 +276,7 @@ export const parseUserToDataObject = (
     degrees: (user.degrees as gp2Model.UserDegree[]) ?? [],
     connections: connections.map((connection) => ({ code: connection })),
     keywords,
+    tags,
     telephone,
     fundingStreams: user.fundingStreams ?? undefined,
     social: {
@@ -292,6 +304,7 @@ const generateFetchQueryFilter = (
     keywords,
     code,
     onlyOnboarded,
+    hasKeywords,
     hidden = true,
   } = filter || {};
 
@@ -309,6 +322,8 @@ const generateFetchQueryFilter = (
     : {};
   const filterKeywords: gp2Contentful.UsersFilter = keywords
     ? { keywords_contains_some: keywords }
+    : hasKeywords
+    ? { keywords_exists: true }
     : {};
   const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =

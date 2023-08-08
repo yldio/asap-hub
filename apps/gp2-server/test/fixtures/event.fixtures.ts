@@ -358,6 +358,7 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
   hideMeetingLink: false,
   status: 'Confirmed',
   tags: [],
+  keywords: [],
   title: 'Example Event',
   startDateTimeZone: 'UTC',
   endDateTimeZone: 'UTC',

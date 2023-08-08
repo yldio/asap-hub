@@ -3,6 +3,7 @@ import {
   addLocaleToFields,
   createLink,
   Environment,
+  getLinkEntities,
   gp2,
   GraphQLClient,
   patchAndPublish,
@@ -13,6 +14,7 @@ import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../controllers/calendar.controller';
+import { KeywordItem, parseKeyword } from './keyword.data-provider';
 import {
   getContentfulEventMaterial,
   MeetingMaterial,
@@ -183,6 +185,7 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
         ...(after ? { endDate_gt: after } : {}),
         ...(before ? { endDate_lt: before } : {}),
         ...(search ? { OR: searchFilter } : {}),
+        ...(filter?.hasTags ? { tags_exists: true } : {}),
       },
     });
 
@@ -213,10 +216,14 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
     const environment = await this.getRestClient();
     const event = await environment.getEntry(id);
     const { calendar, ...otherUpdateFields } = update;
+    const previousKeywords = event?.fields.keywords || [];
+    const newKeywords =
+      update.keywords && getLinkEntities(update.keywords.map((k) => k.id));
 
     const updateWithCalendarLink = {
       ...(calendar ? { calendar: createLink(calendar) } : {}),
       ...otherUpdateFields,
+      keywords: [...previousKeywords, ...newKeywords!],
     };
 
     const result = await patchAndPublish(event, updateWithCalendarLink);
@@ -336,6 +343,10 @@ export const parseGraphQLEvent = (
   } = item;
 
   const speakersItems = (speakersCollection?.items as SpeakerItem[]) ?? [];
+  const keywords =
+    item.keywordsCollection?.items
+      .filter((keyword): keyword is KeywordItem => keyword !== null)
+      .map(parseKeyword) ?? [];
 
   return {
     id,
@@ -377,6 +388,7 @@ export const parseGraphQLEvent = (
     hideMeetingLink: hideMeetingLink || false,
     status: status as EventStatus,
     tags: (tags as string[] | undefined | null) ?? [],
+    keywords,
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
     workingGroup: calendar.workingGroups?.[0],

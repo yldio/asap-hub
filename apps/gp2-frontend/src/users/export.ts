@@ -77,6 +77,7 @@ export const userToCSV = ({
   tertiaryPosition: getPositionString(positions[2]),
   biography,
   keywords: sorted(keywords),
+  // keywords: sorted(keywords.map(({ name }) => name)),
   projects: sorted(projects.map(({ title }) => title)),
   workingGroups: sorted(workingGroups.map(({ title }) => title)),
   questions: questions.join(',\n'),

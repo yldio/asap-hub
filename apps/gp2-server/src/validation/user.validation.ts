@@ -8,7 +8,7 @@ import {
 } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
 
-const { userDegrees, userRegions, keywords, userContributingCohortRole } = gp2;
+const { userDegrees, userRegions, userContributingCohortRole } = gp2;
 type UserParameters = {
   userId: string;
 };
@@ -87,13 +87,17 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         },
       },
     },
-    keywords: {
+    tags: {
       type: 'array',
       minItems: 1,
       maxItems: 10,
       items: {
-        type: 'string',
-        enum: keywords,
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          id: { type: 'string' },
+        },
+        required: ['id'],
       },
       nullable: true,
     },

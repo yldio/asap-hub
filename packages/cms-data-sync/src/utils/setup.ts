@@ -18,9 +18,8 @@ import { rateLimiter } from './rate-limiter';
 export const isVerbose = () =>
   process.env.VERBOSE_DATA_SYNC && process.env.VERBOSE_DATA_SYNC === 'true';
 
-export const isUpdateModeEnabled =
-  process.env.IS_UPDATE_MODE_ENABLED &&
-  process.env.IS_UPDATE_MODE_ENABLED === 'true';
+export const upsertInPlace =
+  process.env.UPSERT_IN_PLACE && process.env.UPSERT_IN_PLACE === 'true';
 
 class ApiAdapter extends RestAdapter {
   async makeRequest<R>(options: MakeRequestOptions): Promise<R> {

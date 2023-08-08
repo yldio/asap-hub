@@ -3,7 +3,7 @@ import { Environment, Entry } from 'contentful-management';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
 import { contentfulRateLimiter } from '../contentful-rate-limiter';
-import { isUpdateModeEnabled } from './setup';
+import { upsertInPlace } from './setup';
 
 export const migrateFromSquidexToContentfulFactory =
   (contentfulEnvironment: Environment, logger: typeof loggerFunc) =>
@@ -20,7 +20,7 @@ export const migrateFromSquidexToContentfulFactory =
   ) => {
     const data = await fetchData();
 
-    if (clearPreviousEntries && !isUpdateModeEnabled) {
+    if (clearPreviousEntries && !upsertInPlace) {
       await clearContentfulEntries(contentfulEnvironment, contentTypeId);
     }
     let n = 0;
@@ -60,7 +60,7 @@ export const migrateFromSquidexToContentfulFactory =
         };
 
         try {
-          return updateEntry || isUpdateModeEnabled
+          return updateEntry || upsertInPlace
             ? await updateExistingEntry()
             : await createEntry();
         } catch (err) {
@@ -69,7 +69,7 @@ export const migrateFromSquidexToContentfulFactory =
               const errorParsed = JSON.parse(err?.message);
               // this is a fallback when it should have updated the entry
               // but it does not exist
-              if (isUpdateModeEnabled && errorParsed.status === 404) {
+              if (upsertInPlace && errorParsed.status === 404) {
                 const entry = await createEntry();
                 return entry;
               }

@@ -9,7 +9,7 @@ import { gp2 } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
 
 import { usePatchUserById, useUserById } from '../users/state';
-import { useKeywords } from './state';
+import { useKeywords } from '../shared/state';
 
 const Background: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();

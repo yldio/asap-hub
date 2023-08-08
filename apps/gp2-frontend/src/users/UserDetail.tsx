@@ -20,7 +20,7 @@ import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
-import { useKeywords } from '../onboarding/state';
+import { useKeywords } from '../shared/state';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { getInstitutions } from './api';

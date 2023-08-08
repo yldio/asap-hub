@@ -26,12 +26,12 @@ import {
   patchUser,
   postUserAvatar,
 } from '../../users/api';
-import { getKeywords } from '../api';
+import { getKeywords } from '../../shared/api';
 import Preview from '../Preview';
 
 jest.mock('browser-image-compression');
 jest.mock('../../users/api');
-jest.mock('../api');
+jest.mock('../../shared/api');
 
 const fileBuffer = readFileSync(join(__dirname, 'jpeg.jpg'));
 const file = new File([new Uint8Array(fileBuffer)], 'jpeg.jpg', {

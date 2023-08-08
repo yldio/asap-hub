@@ -21,12 +21,12 @@ import {
   patchUser,
 } from '../api';
 import UserDetail from '../UserDetail';
-import { getKeywords } from '../../onboarding/api';
+import { getKeywords } from '../../shared/api';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
 jest.mock('../../events/api');
-jest.mock('../../onboarding/api');
+jest.mock('../../shared/api');
 
 const renderUserDetail = async (id: string) => {
   render(

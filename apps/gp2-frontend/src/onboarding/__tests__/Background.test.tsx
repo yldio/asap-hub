@@ -15,11 +15,11 @@ import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, patchUser } from '../../users/api';
-import { getKeywords } from '../api';
+import { getKeywords } from '../../shared/api';
 import Background from '../Background';
 
 jest.mock('../../users/api');
-jest.mock('../api');
+jest.mock('../../shared/api');
 
 mockConsoleError();
 

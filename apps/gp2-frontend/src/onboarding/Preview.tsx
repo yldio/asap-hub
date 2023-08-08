@@ -25,7 +25,7 @@ import {
   usePatchUserById,
   useUserById,
 } from '../users/state';
-import { useKeywords } from './state';
+import { useKeywords } from '../shared/state';
 
 const Preview: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();

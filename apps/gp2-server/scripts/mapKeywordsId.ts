@@ -822,5 +822,5 @@ export const map = {
   'Whole blood': '2mZthtSxyomF0R3IGnTOZi',
   WIPI2d: 'Xs4HWjrSZOBtyXOUevZa8',
   Xenobiotics: '1NM4akgCIOgPcWYjRn2fYL',
-  Yeast: '5Hz3s9u50WCDIasXmRFwiX'
-}
+  Yeast: '5Hz3s9u50WCDIasXmRFwiX',
+};

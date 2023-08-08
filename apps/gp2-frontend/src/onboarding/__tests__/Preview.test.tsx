@@ -111,12 +111,14 @@ describe('Preview', () => {
   it('renders header with title', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.getByRole('heading', { name: /tony stark/i })).toBeVisible();
   });
 
   it('renders not found if no user is returned', async () => {
     mockGetUser.mockResolvedValueOnce(undefined);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview('unknown-id');
     expect(
       screen.getByRole('heading', {
@@ -128,6 +130,7 @@ describe('Preview', () => {
   it('renders the primary email', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.getByRole('link', { name: /T@ark.io/i })).toBeVisible();
   });
@@ -138,6 +141,7 @@ describe('Preview', () => {
       ...user,
       alternativeEmail: 'alternative@stark.com',
     });
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(
       screen.getByRole('link', { name: /alternative@stark.com/i }),
@@ -147,6 +151,7 @@ describe('Preview', () => {
   it('renders projects and working groups', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.getByRole('heading', { name: 'Projects' })).toBeVisible();
     expect(
@@ -157,6 +162,7 @@ describe('Preview', () => {
   it('renders questions, funding providers, contributing cohorts and external profiles', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     mockGetContributingCohorts.mockResolvedValueOnce(
       contributingCohortResponse,
     );
@@ -178,6 +184,7 @@ describe('Preview', () => {
   it('opens the key information modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
@@ -207,6 +214,7 @@ describe('Preview', () => {
     });
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
@@ -223,6 +231,7 @@ describe('Preview', () => {
   it('saves the key information modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const [keyInformationEditButton] = screen.getAllByRole('link', {
@@ -244,6 +253,7 @@ describe('Preview', () => {
   it('saves the contact information modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const [, contactInformationEditButton] = screen.getAllByRole('link', {
@@ -272,6 +282,7 @@ describe('Preview', () => {
     const biography = 'this is some biography';
     const user = { ...gp2Fixtures.createUserResponse(), biography };
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const [, , , biographyEditButton] = screen.getAllByRole('link', {
@@ -294,6 +305,7 @@ describe('Preview', () => {
     const keywords = ['Genetics'] as gp2Model.Keyword[];
     const user = { ...gp2Fixtures.createUserResponse(), keywords };
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const [, , keywordsEditButton] = screen.getAllByRole('link', {
@@ -315,6 +327,7 @@ describe('Preview', () => {
   it('saves the open questions modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const [, , , , openQuestionsButton] = screen.getAllByRole('link', {
@@ -338,6 +351,7 @@ describe('Preview', () => {
   it('saves the funding providers modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const [fundingProvidersButton] = screen.getAllByRole('link', {
@@ -369,6 +383,7 @@ describe('Preview', () => {
     ];
     const user = { ...gp2Fixtures.createUserResponse(), contributingCohorts };
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     mockGetContributingCohorts.mockResolvedValueOnce(
       contributingCohortResponse,
     );
@@ -400,6 +415,7 @@ describe('Preview', () => {
   it('opens the external profiles modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     await renderPreview(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     const [, , , , , , externalProfilesButton] = screen.getAllByRole('link', {
@@ -436,6 +452,7 @@ describe('Preview', () => {
       id: '42',
     };
     mockGetUser.mockResolvedValueOnce(user);
+    mockGetKeywords.mockResolvedValueOnce(gp2Fixtures.createKeywordsResponse());
     imageCompressionMock.mockImplementationOnce((fileToCompress) =>
       Promise.resolve(fileToCompress),
     );

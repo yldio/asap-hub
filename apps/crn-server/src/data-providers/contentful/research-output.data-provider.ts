@@ -319,6 +319,7 @@ const parseGraphQLResearchOutput = (
               email: author.email || '',
               displayName: `${author.firstName} ${author.lastName}`,
               avatarUrl: author.avatar?.url || undefined,
+              alumniSinceDate: author.alumniSinceDate || undefined,
             };
           }
 

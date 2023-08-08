@@ -82,6 +82,7 @@ export const researchOutputContentQueryFragment = gql`
           email
           onboarded
           orcid
+          alumniSinceDate
           avatar {
             url
           }

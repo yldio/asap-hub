@@ -218,6 +218,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
         | 'avatarUrl'
         | 'orcid'
         | 'email'
+        | 'alumniSinceDate'
       >
     | ExternalAuthorResponse
   )[];

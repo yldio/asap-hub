@@ -30,43 +30,49 @@ export const migrateFromSquidexToContentfulFactory =
 
         const { id, updateEntry, ...payload } = parsed;
 
-        try {
-          const contentfulEntry = await contentfulEnvironment.getEntry(id);
+        const createEntry = async () => {
+          const createdEntry = await contentfulEnvironment.createEntryWithId(
+            contentTypeId,
+            id,
+            {
+              fields: addLocaleToFields(payload),
+            },
+          );
+          await contentfulRateLimiter.removeTokens(1);
 
-          if (contentfulEntry && (updateEntry || isUpdateModeEnabled)) {
-            updateEntryFields(contentfulEntry, payload);
-            const updatedEntry = await contentfulEntry.update();
-            await contentfulRateLimiter.removeTokens(1);
-
-            n += 1;
-            logger(
-              `Updated entry with id ${id}. (${n}/${data.length})`,
-              'INFO',
-            );
-            return updatedEntry;
+          n += 1;
+          logger(`Created entry with id ${id}. (${n}/${data.length})`, 'INFO');
+          if (item.status === 'PUBLISHED') {
+            return createdEntry;
           }
+          return null;
+        };
+
+        const updateExistingEntry = async () => {
+          const contentfulEntry = await contentfulEnvironment.getEntry(id);
+          updateEntryFields(contentfulEntry, payload);
+          const updatedEntry = await contentfulEntry.update();
+          await contentfulRateLimiter.removeTokens(1);
+
+          n += 1;
+          logger(`Updated entry with id ${id}. (${n}/${data.length})`, 'INFO');
+          return updatedEntry;
+        };
+
+        const shouldUpdateEntry = updateEntry || isUpdateModeEnabled;
+
+        try {
+          return shouldUpdateEntry
+            ? await updateExistingEntry()
+            : await createEntry();
         } catch (err) {
           if (err instanceof Error) {
-            const errorParsed = JSON.parse(err?.message);
-            if (errorParsed.status === 404) {
-              const createdEntry =
-                await contentfulEnvironment.createEntryWithId(
-                  contentTypeId,
-                  id,
-                  {
-                    fields: addLocaleToFields(payload),
-                  },
-                );
-              await contentfulRateLimiter.removeTokens(1);
-
-              n += 1;
-              logger(
-                `Created entry with id ${id}. (${n}/${data.length})`,
-                'INFO',
-              );
-              if (item.status === 'PUBLISHED') {
-                return createdEntry;
-              }
+            const errorParsed = JSON.parse(err.message);
+            // this is a fallback when it should have updated the entry
+            // but it does not exist
+            if (shouldUpdateEntry && errorParsed.status === 404) {
+              const entry = await createEntry();
+              return entry;
             }
           }
 

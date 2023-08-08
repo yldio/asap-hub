@@ -243,7 +243,7 @@ describe('Migrate news', () => {
       const convertHtmlToContentfulFormatMock =
         convertHtmlToContentfulFormat as jest.Mock;
       convertHtmlToContentfulFormatMock.mockImplementationOnce(() => {
-        throw new Error();
+        throw new Error('{"status":500}');
       });
 
       jest
@@ -291,7 +291,7 @@ describe('Migrate news', () => {
       jest
         .spyOn(contenfulEnv, 'createEntryWithId')
         .mockImplementationOnce(() => {
-          throw new Error();
+          throw new Error('{"status":500}');
         })
         .mockImplementationOnce(() => Promise.resolve(newsEntry));
 
@@ -314,7 +314,7 @@ describe('Migrate news', () => {
         publishContentfulEntries as jest.Mock;
 
       jest.spyOn(contenfulEnv, 'createEntryWithId').mockImplementation(() => {
-        throw new Error();
+        throw new Error('{"status":500}');
       });
 
       await migrateNews();

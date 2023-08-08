@@ -212,6 +212,10 @@ describe('Migrate events', () => {
     jest.spyOn(contentfulEnv, 'createEntry').mockResolvedValue(getEntry({}));
 
     jest.spyOn(eventEntry, 'publish').mockResolvedValue(getEntry({}));
+
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    jest.spyOn(contentfulEnv, 'getEntry').mockResolvedValue(entry);
   });
 
   afterEach(() => {
@@ -267,6 +271,12 @@ describe('Migrate events', () => {
       .calledWith('old-speaker')
       .mockResolvedValueOnce(previousSpeakerMock);
 
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    when(contentfulEnv.getEntry)
+      .calledWith('event-1')
+      .mockResolvedValueOnce(entry);
+
     await migrateEvents();
 
     expect(previousSpeakerMock.unpublish).toHaveBeenCalled();
@@ -304,7 +314,13 @@ describe('Migrate events', () => {
 
     when(contentfulEnv.getEntry)
       .calledWith('old-speaker')
-      .mockRejectedValueOnce(new Error());
+      .mockRejectedValueOnce(new Error('{"status":500}'));
+
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    when(contentfulEnv.getEntry)
+      .calledWith('event-1')
+      .mockResolvedValueOnce(entry);
 
     await migrateEvents();
 
@@ -320,7 +336,13 @@ describe('Migrate events', () => {
     );
     jest
       .spyOn(contentfulEnv, 'getEntry')
-      .mockRejectedValue(new Error('not-found'));
+      .mockRejectedValue(new Error('{"status":404}'));
+
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    when(contentfulEnv.getEntry)
+      .calledWith('event-1')
+      .mockResolvedValueOnce(entry);
 
     await migrateEvents();
 
@@ -534,7 +556,13 @@ describe('Migrate events', () => {
 
     when(contentfulEnv.getEntry)
       .calledWith('calendar-1')
-      .mockRejectedValueOnce(new Error('not-found'));
+      .mockRejectedValueOnce(new Error('{"status":404}'));
+
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    when(contentfulEnv.getEntry)
+      .calledWith('event-1')
+      .mockResolvedValueOnce(entry);
 
     jest
       .spyOn(contentfulEnv, 'getEntries')

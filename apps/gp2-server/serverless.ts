@@ -254,6 +254,7 @@ const serverlessConfig: AWS = {
       events: [
         {
           eventBridge: {
+            eventBus,
             pattern: {
               source: [eventBusSource],
               'detail-type': ['CalendarsPublished'],

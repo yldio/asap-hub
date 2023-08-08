@@ -18,6 +18,26 @@ on:
         required: true
         type: string
         description: Choose which Squidex app to sync from
+      entity:
+        required: false
+        type: choice
+        description: Choose which entity to sync
+        default: all
+        options:
+          - teams
+          - teamProposals
+          - externalAuthors
+          - calendars
+          - labs
+          - users
+          - events
+          - interestGroups
+          - workingGroups
+          - tutorials
+          - discover
+          - researchTags
+          - researchOutputs
+          - all
 
 jobs:
   sync_cms_data:
@@ -42,7 +62,7 @@ jobs:
         run: |
           yarn build:babel
           yarn build:typecheck
-          yarn workspace @asap-hub/cms-data-sync migrate
+          yarn workspace @asap-hub/cms-data-sync migrate --${{ inputs.entity }}
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}

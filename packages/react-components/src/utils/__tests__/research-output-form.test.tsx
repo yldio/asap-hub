@@ -144,6 +144,7 @@ describe('getOwnRelatedResearchLinks', () => {
           type: '3D Printing',
           documentType: 'Grant Document',
           teams: [],
+          workingGroups: [],
           isOwnRelatedResearchLink: true,
         },
         {
@@ -152,6 +153,7 @@ describe('getOwnRelatedResearchLinks', () => {
           type: '3D Printing',
           documentType: 'Grant Document',
           teams: [],
+          workingGroups: [],
           isOwnRelatedResearchLink: false,
         },
       ]),
@@ -186,6 +188,7 @@ describe('transformResearchOutputResponseToRequest', () => {
           type: '3D Printing',
           documentType: 'Grant Document',
           teams: [],
+          workingGroups: [],
         },
       ],
       relatedEvents: [

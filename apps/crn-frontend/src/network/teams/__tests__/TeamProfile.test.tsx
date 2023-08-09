@@ -472,6 +472,32 @@ describe('The draft output tab', () => {
     await waitFor(() => expect(mockGetDraftResearchOutputs).toHaveBeenCalled());
     expect(screen.getByText('Draft Output0')).toBeVisible();
   });
+  it('does not render the draft outputs tab if the team is inactive', async () => {
+    mockGetDraftResearchOutputs.mockResolvedValue({
+      ...createListResearchOutputResponse(10),
+      items: createListResearchOutputResponse(10).items.map(
+        (output, index) => ({ ...output, title: `Draft Output${index}` }),
+      ),
+    });
+    await renderPage(
+      {
+        ...createTeamResponse(),
+        id: 'example123',
+        inactiveSince: '2023-01-01',
+      },
+      {},
+      {
+        ...createUserResponse(),
+        teams: [
+          {
+            id: 'example123',
+            role: 'Key Personnel',
+          },
+        ],
+      },
+    );
+    expect(screen.queryByText('Draft Outputs (10)')).not.toBeInTheDocument();
+  });
 
   it('renders zero draft outputs tab for team members', async () => {
     mockGetDraftResearchOutputs.mockResolvedValue(

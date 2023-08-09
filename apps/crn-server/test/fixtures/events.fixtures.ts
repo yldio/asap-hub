@@ -49,6 +49,28 @@ export const getContentfulUserSpeakerTeams = () => ({
   role: 'Lead PI (Core Leadership)',
 });
 
+export const getContentfulRelatedResearch = () => ({
+  sys: {
+    id: 'research-output-id',
+  },
+  title: 'Research output title',
+  type: '3D Printing',
+  documentType: 'Article',
+  teamsCollection: {
+    items: [
+      {
+        sys: {
+          id: 'team-id-1',
+        },
+        displayName: 'The team one',
+      },
+    ],
+  },
+  workingGroup: {
+    sys: { id: 'wg-id' },
+    title: 'Working group name',
+  },
+});
 export const getContentfulGraphqlEvent = (): NonNullable<
   NonNullable<ContentfulFetchEventsQuery['eventsCollection']>['items'][number]
 > => ({
@@ -209,6 +231,11 @@ export const getContentfulGraphqlEvent = (): NonNullable<
       assets: {
         block: [],
       },
+    },
+  },
+  linkedFrom: {
+    researchOutputsCollection: {
+      items: [getContentfulRelatedResearch()],
     },
   },
   presentationUpdatedAt: '2010-09-01T08:00:04.000Z',
@@ -424,6 +451,26 @@ export const getEventDataObject = (): EventDataObject => ({
   interestGroup: getInterestGroupResponse(),
   workingGroup: getWorkingGroupResponse(),
   speakers: [getEventSpeakerUser()],
+  relatedResearch: [
+    {
+      id: 'research-output-id',
+      title: 'Research output title',
+      type: '3D Printing',
+      documentType: 'Article',
+      teams: [
+        {
+          id: 'team-id-1',
+          displayName: 'The team one',
+        },
+      ],
+      workingGroups: [
+        {
+          id: 'wg-id',
+          title: 'Working group name',
+        },
+      ],
+    },
+  ],
 });
 
 export const getEventResponse = (): EventResponse => getEventDataObject();
@@ -473,12 +520,40 @@ export const getEventCreateDataObject = (): EventCreateDataObject => ({
   hideMeetingLink: false,
 });
 
-export const getSquidexGraphqlEvent = () => ({
+export const getSquidexGraphqlEvent = (): EventContentFragment => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
   lastModified: '2021-05-14T14:48:46Z',
   version: 43,
   flatData: squidexGraphqlEventsFlatData(),
+  referencingResearchOutputsContents: [
+    {
+      id: getContentfulRelatedResearch().sys.id,
+      flatData: {
+        documentType: getContentfulRelatedResearch().documentType,
+        title: getContentfulRelatedResearch().title,
+        type: getContentfulRelatedResearch().type,
+      },
+      referencesWorkingGroupsContents: [
+        {
+          id: getContentfulRelatedResearch().workingGroup.sys.id,
+          flatData: {
+            title: getContentfulRelatedResearch().workingGroup.title,
+          },
+        },
+      ],
+      referencesTeamsContents: [
+        {
+          id: getContentfulRelatedResearch().teamsCollection.items[0]!.sys.id,
+          flatData: {
+            displayName:
+              getContentfulRelatedResearch().teamsCollection.items[0]!
+                .displayName,
+          },
+        },
+      ],
+    },
+  ],
 });
 
 export const getSquidexGraphqlEventSpeakerWithUser = (): NonNullable<
@@ -605,6 +680,7 @@ export const squidexGraphqlEventResponse = () => ({
     name: 'Tech 1 - Sequencing/omics',
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
   },
+  relatedResearch: [],
 });
 
 export const getSquidexEventsGraphqlResponse = (): FetchEventsQuery => ({

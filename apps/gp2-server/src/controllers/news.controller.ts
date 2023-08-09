@@ -4,8 +4,10 @@ import { NewsDataProvider } from '../data-providers/types';
 export default class NewsController {
   constructor(private newsDataProvider: NewsDataProvider) {}
 
-  async fetch(): Promise<gp2.ListNewsResponse> {
-    const { total, items } = await this.newsDataProvider.fetch({});
+  async fetch(options?: gp2.FetchNewsOptions): Promise<gp2.ListNewsResponse> {
+    const { total, items } = await this.newsDataProvider.fetch({
+      ...options,
+    });
 
     return {
       total,

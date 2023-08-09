@@ -102,6 +102,7 @@ describe('ResearchOutputs data provider', () => {
         firstName: 'First',
         lastName: 'Last',
       };
+      expectedResult.statusChangedAt = '2021-05-21T13:18:31Z';
 
       // versions are not supported in Squidex and default to []
       expectedResult.versions = [];
@@ -388,6 +389,12 @@ describe('ResearchOutputs data provider', () => {
       const expectedResult = getResearchOutputDataObject();
       expectedResult.teams = [];
       expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
+      expectedResult.statusChangedAt = '2021-05-21T13:18:31Z';
+      expectedResult.statusChangedBy = {
+        firstName: 'Tom',
+        id: 'status-changed-by-id',
+        lastName: 'Hardy',
+      };
 
       // versions are not supported in Squidex and default to []
       expectedResult.versions = [];

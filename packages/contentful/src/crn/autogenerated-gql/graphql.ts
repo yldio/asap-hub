@@ -9871,6 +9871,25 @@ export type EventsContentFragment = Pick<
       };
     }
   >;
+  linkedFrom?: Maybe<{
+    researchOutputsCollection?: Maybe<{
+      items: Array<
+        Maybe<
+          Pick<ResearchOutputs, 'title' | 'type' | 'documentType'> & {
+            sys: Pick<Sys, 'id'>;
+            workingGroup?: Maybe<
+              Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+            >;
+            teamsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
+          }
+        >
+      >;
+    }>;
+  }>;
   calendar?: Maybe<
     Pick<Calendars, 'googleCalendarId' | 'color' | 'name'> & {
       linkedFrom?: Maybe<{
@@ -10181,6 +10200,25 @@ export type FetchEventByIdQuery = {
           };
         }
       >;
+      linkedFrom?: Maybe<{
+        researchOutputsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<ResearchOutputs, 'title' | 'type' | 'documentType'> & {
+                sys: Pick<Sys, 'id'>;
+                workingGroup?: Maybe<
+                  Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                >;
+                teamsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
+                  >;
+                }>;
+              }
+            >
+          >;
+        }>;
+      }>;
       calendar?: Maybe<
         Pick<Calendars, 'googleCalendarId' | 'color' | 'name'> & {
           linkedFrom?: Maybe<{
@@ -10571,6 +10609,29 @@ export type FetchEventsQuery = {
                 };
               }
             >;
+            linkedFrom?: Maybe<{
+              researchOutputsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<ResearchOutputs, 'title' | 'type' | 'documentType'> & {
+                      sys: Pick<Sys, 'id'>;
+                      workingGroup?: Maybe<
+                        Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                      >;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            Pick<Teams, 'displayName'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
+                          >
+                        >;
+                      }>;
+                    }
+                  >
+                >;
+              }>;
+            }>;
             calendar?: Maybe<
               Pick<Calendars, 'googleCalendarId' | 'color' | 'name'> & {
                 linkedFrom?: Maybe<{
@@ -11025,6 +11086,34 @@ export type FetchEventsByUserIdQuery = {
                             };
                           }
                         >;
+                        linkedFrom?: Maybe<{
+                          researchOutputsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<
+                                  ResearchOutputs,
+                                  'title' | 'type' | 'documentType'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  workingGroup?: Maybe<
+                                    Pick<WorkingGroups, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >;
+                                  teamsCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<
+                                        Pick<Teams, 'displayName'> & {
+                                          sys: Pick<Sys, 'id'>;
+                                        }
+                                      >
+                                    >;
+                                  }>;
+                                }
+                              >
+                            >;
+                          }>;
+                        }>;
                         calendar?: Maybe<
                           Pick<
                             Calendars,
@@ -11495,6 +11584,34 @@ export type FetchEventsByExternalAuthorIdQuery = {
                             };
                           }
                         >;
+                        linkedFrom?: Maybe<{
+                          researchOutputsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<
+                                  ResearchOutputs,
+                                  'title' | 'type' | 'documentType'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  workingGroup?: Maybe<
+                                    Pick<WorkingGroups, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >;
+                                  teamsCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<
+                                        Pick<Teams, 'displayName'> & {
+                                          sys: Pick<Sys, 'id'>;
+                                        }
+                                      >
+                                    >;
+                                  }>;
+                                }
+                              >
+                            >;
+                          }>;
+                        }>;
                         calendar?: Maybe<
                           Pick<
                             Calendars,
@@ -11965,6 +12082,34 @@ export type FetchEventsByTeamIdQuery = {
                             };
                           }
                         >;
+                        linkedFrom?: Maybe<{
+                          researchOutputsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<
+                                  ResearchOutputs,
+                                  'title' | 'type' | 'documentType'
+                                > & {
+                                  sys: Pick<Sys, 'id'>;
+                                  workingGroup?: Maybe<
+                                    Pick<WorkingGroups, 'title'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >;
+                                  teamsCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<
+                                        Pick<Teams, 'displayName'> & {
+                                          sys: Pick<Sys, 'id'>;
+                                        }
+                                      >
+                                    >;
+                                  }>;
+                                }
+                              >
+                            >;
+                          }>;
+                        }>;
                         calendar?: Maybe<
                           Pick<
                             Calendars,
@@ -13195,7 +13340,12 @@ export type ResearchOutputsContentFragment = Pick<
           > & { sys: Pick<Sys, 'id'> })
         | ({ __typename: 'Users' } & Pick<
             Users,
-            'firstName' | 'lastName' | 'email' | 'onboarded' | 'orcid'
+            | 'firstName'
+            | 'lastName'
+            | 'email'
+            | 'onboarded'
+            | 'orcid'
+            | 'alumniSinceDate'
           > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
       >
     >;
@@ -13251,6 +13401,9 @@ export type ResearchOutputsContentFragment = Pick<
               Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
             >;
           }>;
+          workingGroup?: Maybe<
+            Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+          >;
         }
       >
     >;
@@ -13266,6 +13419,9 @@ export type ResearchOutputsContentFragment = Pick<
                 Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
               >;
             }>;
+            workingGroup?: Maybe<
+              Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+            >;
           }
         >
       >;
@@ -13292,6 +13448,7 @@ export type FetchResearchOutputByIdQueryVariables = Exact<{
   id: Scalars['String'];
   preview?: InputMaybe<Scalars['Boolean']>;
   fetchPMs?: InputMaybe<Scalars['Boolean']>;
+  fetchRelatedResearch?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchResearchOutputByIdQuery = {
@@ -13406,7 +13563,12 @@ export type FetchResearchOutputByIdQuery = {
               > & { sys: Pick<Sys, 'id'> })
             | ({ __typename: 'Users' } & Pick<
                 Users,
-                'firstName' | 'lastName' | 'email' | 'onboarded' | 'orcid'
+                | 'firstName'
+                | 'lastName'
+                | 'email'
+                | 'onboarded'
+                | 'orcid'
+                | 'alumniSinceDate'
               > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
           >
         >;
@@ -13464,6 +13626,9 @@ export type FetchResearchOutputByIdQuery = {
                   Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
                 >;
               }>;
+              workingGroup?: Maybe<
+                Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+              >;
             }
           >
         >;
@@ -13479,6 +13644,9 @@ export type FetchResearchOutputByIdQuery = {
                     Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
                   >;
                 }>;
+                workingGroup?: Maybe<
+                  Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                >;
               }
             >
           >;
@@ -13512,6 +13680,7 @@ export type FetchResearchOutputsQueryVariables = Exact<{
   where?: InputMaybe<ResearchOutputsFilter>;
   preview?: InputMaybe<Scalars['Boolean']>;
   fetchPMs?: InputMaybe<Scalars['Boolean']>;
+  fetchRelatedResearch?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchResearchOutputsQuery = {
@@ -13653,7 +13822,12 @@ export type FetchResearchOutputsQuery = {
                     > & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Users' } & Pick<
                       Users,
-                      'firstName' | 'lastName' | 'email' | 'onboarded' | 'orcid'
+                      | 'firstName'
+                      | 'lastName'
+                      | 'email'
+                      | 'onboarded'
+                      | 'orcid'
+                      | 'alumniSinceDate'
                     > & {
                         sys: Pick<Sys, 'id'>;
                         avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13721,6 +13895,9 @@ export type FetchResearchOutputsQuery = {
                         >
                       >;
                     }>;
+                    workingGroup?: Maybe<
+                      Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                    >;
                   }
                 >
               >;
@@ -13740,6 +13917,9 @@ export type FetchResearchOutputsQuery = {
                           >
                         >;
                       }>;
+                      workingGroup?: Maybe<
+                        Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                      >;
                     }
                   >
                 >;
@@ -15937,6 +16117,139 @@ export const EventsContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'meetingMaterials' } },
           {
             kind: 'Field',
+            name: { kind: 'Name', value: 'linkedFrom' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'researchOutputsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '10' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'type' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'documentType' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'workingGroup' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamsCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '10' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'displayName',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'calendar' },
             selectionSet: {
               kind: 'SelectionSet',
@@ -17236,7 +17549,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
+                value: { kind: 'IntValue', value: '100' },
               },
             ],
             selectionSet: {
@@ -17329,6 +17642,10 @@ export const ResearchOutputsContentFragmentDoc = {
                             },
                             {
                               kind: 'Field',
+                              name: { kind: 'Name', value: 'alumniSinceDate' },
+                            },
+                            {
+                              kind: 'Field',
                               name: { kind: 'Name', value: 'avatar' },
                               selectionSet: {
                                 kind: 'SelectionSet',
@@ -17356,7 +17673,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
+                value: { kind: 'IntValue', value: '20' },
               },
             ],
             selectionSet: {
@@ -17534,7 +17851,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '5' },
               },
             ],
             selectionSet: {
@@ -17586,7 +17903,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '5' },
               },
             ],
             selectionSet: {
@@ -17612,7 +17929,7 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
+                value: { kind: 'IntValue', value: '5' },
               },
             ],
             selectionSet: {
@@ -17687,7 +18004,23 @@ export const ResearchOutputsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            directives: [
+              {
+                kind: 'Directive',
+                name: { kind: 'Name', value: 'include' },
+                arguments: [
+                  {
+                    kind: 'Argument',
+                    name: { kind: 'Name', value: 'if' },
+                    value: {
+                      kind: 'Variable',
+                      name: { kind: 'Name', value: 'fetchRelatedResearch' },
+                    },
+                  },
+                ],
               },
             ],
             selectionSet: {
@@ -17725,7 +18058,7 @@ export const ResearchOutputsContentFragmentDoc = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '10' },
+                            value: { kind: 'IntValue', value: '20' },
                           },
                         ],
                         selectionSet: {
@@ -17763,6 +18096,32 @@ export const ResearchOutputsContentFragmentDoc = {
                           ],
                         },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'workingGroup' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -17772,6 +18131,22 @@ export const ResearchOutputsContentFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'linkedFrom' },
+            directives: [
+              {
+                kind: 'Directive',
+                name: { kind: 'Name', value: 'include' },
+                arguments: [
+                  {
+                    kind: 'Argument',
+                    name: { kind: 'Name', value: 'if' },
+                    value: {
+                      kind: 'Variable',
+                      name: { kind: 'Name', value: 'fetchRelatedResearch' },
+                    },
+                  },
+                ],
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -17782,7 +18157,7 @@ export const ResearchOutputsContentFragmentDoc = {
                     {
                       kind: 'Argument',
                       name: { kind: 'Name', value: 'limit' },
-                      value: { kind: 'IntValue', value: '10' },
+                      value: { kind: 'IntValue', value: '60' },
                     },
                   ],
                   selectionSet: {
@@ -17826,7 +18201,7 @@ export const ResearchOutputsContentFragmentDoc = {
                                 {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '10' },
+                                  value: { kind: 'IntValue', value: '20' },
                                 },
                               ],
                               selectionSet: {
@@ -17863,6 +18238,32 @@ export const ResearchOutputsContentFragmentDoc = {
                                         },
                                       ],
                                     },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'workingGroup' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
                                   },
                                 ],
                               },
@@ -22877,6 +23278,15 @@ export const FetchResearchOutputByIdDocument = {
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: true },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'fetchRelatedResearch' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: true },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -22980,6 +23390,15 @@ export const FetchResearchOutputsDocument = {
           variable: {
             kind: 'Variable',
             name: { kind: 'Name', value: 'fetchPMs' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'fetchRelatedResearch' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: false },

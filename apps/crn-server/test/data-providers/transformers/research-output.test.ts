@@ -21,6 +21,14 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Report',
         teams: [{ id: 'team-id-1', flatData: { displayName: 'Team B' } }],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            flatData: {
+              title: 'Working Group B',
+            },
+          },
+        ],
       },
     };
 
@@ -33,6 +41,12 @@ describe('parseGraphQLResearchOutput', () => {
         documentType: 'Report',
         teams: [{ id: 'team-id-1', displayName: 'Team B' }],
         isOwnRelatedResearchLink: true,
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
       },
       {
         id: 'related-referencing-research-id',
@@ -41,6 +55,12 @@ describe('parseGraphQLResearchOutput', () => {
         documentType: 'Bioinformatics',
         teams: [{ displayName: 'Team B', id: 'team-id-1' }],
         isOwnRelatedResearchLink: false,
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
       },
     ]);
 
@@ -52,6 +72,12 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Bioinformatics',
         teams: [{ displayName: 'Team B', id: 'team-id-1' }],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
         isOwnRelatedResearchLink: false,
       },
     ]);
@@ -61,6 +87,38 @@ describe('parseGraphQLResearchOutput', () => {
     expect(parseGraphQLResearchOutput(output).relatedResearch).toStrictEqual(
       [],
     );
+
+    output.flatData.relatedResearch = [
+      {
+        ...baseRelatedResearch,
+        flatData: {
+          ...baseRelatedResearch.flatData,
+          workingGroups: [
+            { id: 'wg-123', flatData: { title: 'Example Working Group' } },
+          ],
+        },
+      },
+    ];
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toMatchObject([
+      {
+        workingGroups: [{ id: 'wg-123', title: 'Example Working Group' }],
+      },
+    ]);
+
+    output.flatData.relatedResearch = [
+      {
+        ...baseRelatedResearch,
+        flatData: {
+          ...baseRelatedResearch.flatData,
+          workingGroups: null,
+        },
+      },
+    ];
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toMatchObject([
+      {
+        workingGroups: [],
+      },
+    ]);
 
     output.flatData.relatedResearch = [
       {
@@ -79,6 +137,38 @@ describe('parseGraphQLResearchOutput', () => {
         type: 'Report',
         documentType: 'Grant Document',
         teams: [],
+        workingGroups: [
+          {
+            id: 'working-group-id-1',
+            title: 'Working Group B',
+          },
+        ],
+        isOwnRelatedResearchLink: true,
+      },
+    ]);
+
+    output.flatData.relatedResearch = [
+      {
+        ...baseRelatedResearch,
+        flatData: {
+          ...baseRelatedResearch.flatData,
+          workingGroups: null,
+        },
+      },
+    ];
+    expect(parseGraphQLResearchOutput(output).relatedResearch).toStrictEqual([
+      {
+        id: '123',
+        title: 'RelatedR1',
+        type: 'Report',
+        documentType: 'Report',
+        teams: [
+          {
+            displayName: 'Team B',
+            id: 'team-id-1',
+          },
+        ],
+        workingGroups: [],
         isOwnRelatedResearchLink: true,
       },
     ]);
@@ -116,24 +206,11 @@ describe('parseGraphQLResearchOutput', () => {
     expect(parseGraphQLResearchOutput(output).keywords).toStrictEqual([]);
   });
 
-  test('should not return statusChangedBy', () => {
-    expect(parseGraphQLResearchOutput(output).statusChangedBy).toBeUndefined();
-  });
-
   test('should return statusChangedBy', () => {
-    output.flatData.statusChangedBy = [
-      {
-        id: 'review-requested-by-id',
-        flatData: {
-          firstName: 'First',
-          lastName: 'Last',
-        },
-      },
-    ];
     expect(parseGraphQLResearchOutput(output).statusChangedBy).toStrictEqual({
-      id: 'review-requested-by-id',
-      firstName: 'First',
-      lastName: 'Last',
+      id: 'status-changed-by-id',
+      firstName: 'Tom',
+      lastName: 'Hardy',
     });
   });
 });

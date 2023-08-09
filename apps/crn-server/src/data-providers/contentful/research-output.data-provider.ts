@@ -1,38 +1,38 @@
 import {
-  ListResearchOutputDataObject,
-  ResearchOutputCreateDataObject,
-  ResearchOutputDataObject,
-  ResearchOutputUpdateDataObject,
   convertBooleanToDecision,
   convertDecisionToBoolean,
   isResearchOutputDocumentType,
+  ListResearchOutputDataObject,
+  ResearchOutputCreateDataObject,
+  ResearchOutputDataObject,
   researchOutputMapType,
+  ResearchOutputUpdateDataObject,
 } from '@asap-hub/model';
 import {
-  GraphQLClient,
-  Environment,
   addLocaleToFields,
-  getLinkEntity,
-  getLinkEntities,
-  parseRichText,
-  patch,
-  RichTextFromQuery,
+  Environment,
   FETCH_RESEARCH_OUTPUT_BY_ID,
   FETCH_RESEARCH_OUTPUTS,
   FetchResearchOutputByIdQuery,
   FetchResearchOutputByIdQueryVariables,
   FetchResearchOutputsQuery,
   FetchResearchOutputsQueryVariables,
-  ResearchOutputsOrder,
-  ResearchOutputsFilter,
+  getLinkEntities,
+  getLinkEntity,
+  GraphQLClient,
+  parseRichText,
+  patch,
   pollContentfulGql,
+  ResearchOutputsFilter,
+  ResearchOutputsOrder,
+  RichTextFromQuery,
 } from '@asap-hub/contentful';
 import { isSharingStatus } from '../transformers/research-output';
 import {
-  ResearchOutputDataProvider,
-  FetchResearchOutputOptions,
-  UpdateResearchOutputOptions,
   CreateResearchOutputOptions,
+  FetchResearchOutputOptions,
+  ResearchOutputDataProvider,
+  UpdateResearchOutputOptions,
 } from '../types';
 
 type ResearchOutputItem = NonNullable<
@@ -264,6 +264,14 @@ const mapRelatedResearch = (
           ? ro.documentType
           : 'Grant Document',
       teams: mapTeams(ro.teamsCollection?.items || []),
+      workingGroups: ro.workingGroup
+        ? [
+            {
+              id: ro.workingGroup.sys.id,
+              title: ro.workingGroup.title || '',
+            },
+          ]
+        : [],
       isOwnRelatedResearchLink,
     }));
 
@@ -342,6 +350,7 @@ const parseGraphQLResearchOutput = (
               email: author.email || '',
               displayName: `${author.firstName} ${author.lastName}`,
               avatarUrl: author.avatar?.url || undefined,
+              alumniSinceDate: author.alumniSinceDate || undefined,
             };
           }
 
@@ -479,9 +488,9 @@ const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
   return {
     ...prepareInput(researchOutput),
     updatedBy: getLinkEntity(input.updatedBy),
-    statusChangedBy: input.statusChangedById
-      ? getLinkEntity(input.statusChangedById)
-      : null,
     lastUpdatedPartial: new Date().toISOString(),
+    statusChangedBy: _statusChangedById
+      ? getLinkEntity(_statusChangedById)
+      : null,
   };
 };

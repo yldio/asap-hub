@@ -13,7 +13,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.22.6",
+    "@babel/runtime-corejs3": "7.22.10",
     "auth0-js": "9.22.1",
     "camelcase": "6.3.0",
     "pify": "5.0.0",
@@ -23,11 +23,11 @@
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/model": "workspace:*",
-    "@babel/core": "7.22.9",
+    "@babel/core": "7.22.10",
     "@babel/preset-react": "7.22.5",
     "@types/auth0-js": "9.21.0",
     "@types/jest": "29.5.3",
-    "@types/node": "18.17.1",
+    "@types/node": "18.17.3",
     "@types/pify": "3.0.2"
   }
 }

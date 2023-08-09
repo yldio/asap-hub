@@ -41,7 +41,7 @@ export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndRe
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as RecentSharedOutputs } from './RecentSharedOutputs';
 export { default as RelatedEventsCard } from './RelatedEventsCard';
-export { default as RelatedResearch } from './RelatedResearch';
+export { default as RelatedResearchCard } from './RelatedResearchCard';
 export { default as RemindersCard } from './RemindersCard';
 export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
 export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';

@@ -177,14 +177,17 @@ describe('researchOutputToCSV', () => {
   it('flattens and orders related research', () => {
     const output: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
-      relatedResearch: [
-        { ...createResearchOutputResponse(), title: 't1' },
-        { ...createResearchOutputResponse(), title: 't2' },
-        { ...createResearchOutputResponse(), title: 't3' },
-      ],
+      relatedResearch: Array.from({ length: 3 }, (_, i) => ({
+        id: `t${i}`,
+        title: `t${i}`,
+        documentType: 'Grant Document',
+        type: '3D Printing',
+        teams: [{ id: 'team-id-1', displayName: 'Team B' }],
+        workingGroups: [],
+      })),
     };
     expect(researchOutputToCSV(output).relatedResearch).toMatchInlineSnapshot(
-      `"t1,t2,t3"`,
+      `"t0,t1,t2"`,
     );
     const outputWithoutRelatedResearch = {
       ...output,

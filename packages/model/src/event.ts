@@ -2,6 +2,10 @@ import { CalendarResponse } from './calendar';
 import { FetchOptions, ListResponse } from './common';
 import { BasicEvent, SortOptions } from './event-common';
 import { InterestGroupResponse } from './interest-group';
+import {
+  ResearchOutputResponse,
+  ResearchOutputWorkingGroupResponse,
+} from './research-output';
 import { TeamResponse } from './team';
 import { WorkingGroupResponse } from './working-group';
 
@@ -46,6 +50,21 @@ export interface EventDataObject extends BasicEvent {
   >;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
+  relatedResearch: (Pick<
+    ResearchOutputResponse,
+    'documentType' | 'type' | 'id' | 'title'
+  > & {
+    teams: Pick<
+      ResearchOutputResponse['teams'][number],
+      'displayName' | 'id'
+    >[];
+    workingGroups?:
+      | Pick<
+          ResearchOutputWorkingGroupResponse['workingGroups'][0],
+          'id' | 'title'
+        >[]
+      | ResearchOutputResponse['workingGroups'];
+  })[];
 }
 
 export type ListEventDataObject = ListResponse<EventDataObject>;
@@ -54,7 +73,7 @@ export type ListEventResponse = ListResponse<EventResponse>;
 
 export type EventConstraint = {
   workingGroupId?: string;
-  groupId?: string;
+  interestGroupId?: string;
   userId?: string;
   teamId?: string;
   notStatus?: string;

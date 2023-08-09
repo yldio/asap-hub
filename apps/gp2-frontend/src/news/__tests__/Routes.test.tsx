@@ -6,10 +6,10 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
-import { getNews } from '../../dashboard/api';
+import { getNews } from '../api';
 import Routes from '../Routes';
 
-jest.mock('../../dashboard/api');
+jest.mock('../api');
 
 afterEach(() => {
   jest.resetAllMocks();

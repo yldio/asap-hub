@@ -16,14 +16,14 @@
     "@algolia/client-common": "4.19.1",
     "@algolia/client-search": "4.19.1",
     "@asap-hub/model": "workspace:*",
-    "@babel/runtime-corejs3": "7.22.6",
+    "@babel/runtime-corejs3": "7.22.10",
     "algoliasearch": "4.19.1",
     "prettier": "2.8.8"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
-    "@types/node": "18.17.1",
+    "@types/node": "18.17.3",
     "@types/prettier": "2.7.3"
   }
 }

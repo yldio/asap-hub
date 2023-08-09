@@ -292,6 +292,10 @@ const getResearchOutputRemindersFromQuery = (
         return researchOutputReminders;
       }
 
+      const publishedBy = researchOutput.flatData.statusChangedBy?.[0]
+        ? `${researchOutput.flatData.statusChangedBy?.[0].flatData.firstName} ${researchOutput.flatData.statusChangedBy?.[0].flatData.lastName}`
+        : userName;
+
       if (isInTeam) {
         researchOutputReminders.push({
           id: `research-output-published-${researchOutput.id}`,
@@ -302,8 +306,7 @@ const getResearchOutputRemindersFromQuery = (
             documentType: researchOutput.flatData.documentType,
             title: researchOutput.flatData.title,
             addedDate: researchOutput.flatData.addedDate,
-            // TODO: `createdBy` should be replaced with `publishedBy` after https://asaphub.atlassian.net/browse/CRN-1428 is implemented
-            createdBy: userName,
+            statusChangedBy: publishedBy,
             associationName,
             associationType,
           },

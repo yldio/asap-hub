@@ -14,7 +14,6 @@ import {
   getRestEvent,
   getSquidexEventGraphqlResponse,
   getSquidexEventsGraphqlResponse,
-  getSquidexGraphqlEvents,
   getEventCreateDataObject,
 } from '../fixtures/events.fixtures';
 import {
@@ -54,8 +53,11 @@ describe('Event data provider', () => {
       const result = await eventDataProviderMockGraphql.fetch({
         before: 'before',
       });
-
-      expect(result).toMatchObject(getSquidexGraphqlEvents());
+      const { relatedResearch, ...event } = getEventResponse();
+      expect(result).toMatchObject({
+        items: [event],
+        total: 1,
+      });
     });
 
     test('Should return an empty result when the client returns an empty array of data', async () => {
@@ -672,7 +674,9 @@ describe('Event data provider', () => {
 
     test('Should fetch the event from squidex graphql', async () => {
       const result = await eventDataProviderMockGraphql.fetchById(eventId);
-      expect(result).toMatchObject(getEventDataObject());
+      const { relatedResearch, ...data } = getEventDataObject();
+
+      expect(result).toMatchObject(data);
     });
 
     test('Should return null when event not found', async () => {

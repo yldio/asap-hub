@@ -44,7 +44,7 @@ export const getResearchOutputPublishedReminder =
         documentType: researchOutputDataObject.documentType,
         title: researchOutputDataObject.title,
         addedDate: researchOutputDataObject.addedDate,
-        createdBy: 'Tom Hardy',
+        statusChangedBy: 'Tom Hardy',
         associationType: 'team',
         associationName: 'Team A',
       },
@@ -255,7 +255,7 @@ export const getReminderResponse = (): ReminderResponse => {
   return {
     id: 'research-output-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
     description:
-      'Test Proposal 1234 Bioinformatics from your ASAP Team is now published on the Hub. If there are errors, please let your PM know.',
+      '**Tom Hardy** on team **Team A** published a team Bioinformatics output: Test Proposal 1234.',
     entity: 'Research Output',
     href: '/shared-research/ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   };
@@ -326,6 +326,15 @@ export const getSquidexReminderReseachOutputsContents = (): NonNullable<
       title: researchOutput.flatData.title,
       createdBy: [
         {
+          flatData: {
+            firstName: 'Tom',
+            lastName: 'Hardy',
+          },
+        },
+      ],
+      statusChangedBy: [
+        {
+          id: 'user-id',
           flatData: {
             firstName: 'Tom',
             lastName: 'Hardy',
@@ -627,7 +636,13 @@ export const getContentfulReminderResearchOutputCollectionItem =
         },
         title: 'Working Group 1',
       },
-      statusChangedBy: null,
+      statusChangedBy: {
+        sys: {
+          id: 'user-1',
+        },
+        firstName: 'Tom',
+        lastName: 'Hardy',
+      },
       isInReview: false,
     };
   };

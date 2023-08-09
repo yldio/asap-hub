@@ -52,6 +52,7 @@ describe('Research Output index handler', () => {
             displayName: 'Team 1',
           },
         ],
+        workingGroups: [],
         documentType: 'Grant Document',
       },
     ];
@@ -92,6 +93,7 @@ describe('Research Output index handler', () => {
         type: 'Published',
         isOwnRelatedResearchLink: true,
         teams: [],
+        workingGroups: [],
         documentType: 'Grant Document',
       },
       {
@@ -100,6 +102,7 @@ describe('Research Output index handler', () => {
         type: 'Published',
         isOwnRelatedResearchLink: false,
         teams: [],
+        workingGroups: [],
         documentType: 'Grant Document',
       },
     ];

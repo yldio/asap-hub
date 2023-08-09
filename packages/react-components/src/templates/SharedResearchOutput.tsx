@@ -9,7 +9,7 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { CtaCard, TagList } from '../molecules';
 import {
   ConfirmModal,
-  RelatedResearch,
+  RelatedResearchCard,
   RichText,
   SharedResearchAdditionalInformationCard,
   SharedResearchOutputBanners,
@@ -249,7 +249,10 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             </Card>
           )}
           {!isGrantDocument && relatedResearch?.length > 0 && (
-            <RelatedResearch relatedResearch={relatedResearch} />
+            <RelatedResearchCard
+              description="Find out all shared research outputs that contributed to this one."
+              relatedResearch={relatedResearch}
+            />
           )}
           {versions.length > 0 && <OutputVersions versions={versions} />}
           {!isGrantDocument && (

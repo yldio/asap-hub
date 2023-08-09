@@ -63,7 +63,7 @@ export const researchOutputContentQueryFragment = gql`
     }
     statusChangedAt
     isInReview
-    authorsCollection(limit: 10) {
+    authorsCollection(limit: 100) {
       items {
         __typename
         ... on ExternalAuthors {
@@ -82,13 +82,14 @@ export const researchOutputContentQueryFragment = gql`
           email
           onboarded
           orcid
+          alumniSinceDate
           avatar {
             url
           }
         }
       }
     }
-    teamsCollection(limit: 10) {
+    teamsCollection(limit: 20) {
       items {
         sys {
           id
@@ -117,7 +118,7 @@ export const researchOutputContentQueryFragment = gql`
       }
       title
     }
-    methodsCollection(limit: 20) {
+    methodsCollection(limit: 5) {
       items {
         name
       }
@@ -127,12 +128,12 @@ export const researchOutputContentQueryFragment = gql`
         name
       }
     }
-    organismsCollection(limit: 20) {
+    organismsCollection(limit: 5) {
       items {
         name
       }
     }
-    environmentsCollection(limit: 20) {
+    environmentsCollection(limit: 5) {
       items {
         name
       }
@@ -148,7 +149,7 @@ export const researchOutputContentQueryFragment = gql`
         name
       }
     }
-    relatedResearchCollection(limit: 10) {
+    relatedResearchCollection(limit: 20) @include(if: $fetchRelatedResearch) {
       items {
         sys {
           id
@@ -156,7 +157,7 @@ export const researchOutputContentQueryFragment = gql`
         title
         type
         documentType
-        teamsCollection(limit: 10) {
+        teamsCollection(limit: 20) {
           items {
             sys {
               id
@@ -164,10 +165,16 @@ export const researchOutputContentQueryFragment = gql`
             displayName
           }
         }
+        workingGroup {
+          sys {
+            id
+          }
+          title
+        }
       }
     }
-    linkedFrom {
-      researchOutputsCollection(limit: 10) {
+    linkedFrom @include(if: $fetchRelatedResearch) {
+      researchOutputsCollection(limit: 60) {
         items {
           sys {
             id
@@ -175,13 +182,19 @@ export const researchOutputContentQueryFragment = gql`
           title
           type
           documentType
-          teamsCollection(limit: 10) {
+          teamsCollection(limit: 20) {
             items {
               sys {
                 id
               }
               displayName
             }
+          }
+          workingGroup {
+            sys {
+              id
+            }
+            title
           }
         }
       }
@@ -215,6 +228,7 @@ export const FETCH_RESEARCH_OUTPUT_BY_ID = gql`
     $id: String!
     $preview: Boolean
     $fetchPMs: Boolean = true
+    $fetchRelatedResearch: Boolean = true
   ) {
     researchOutputs(id: $id, preview: $preview) {
       ...ResearchOutputsContent
@@ -231,6 +245,7 @@ export const FETCH_RESEARCH_OUTPUTS = gql`
     $where: ResearchOutputsFilter
     $preview: Boolean
     $fetchPMs: Boolean = false
+    $fetchRelatedResearch: Boolean = false
   ) {
     researchOutputsCollection(
       limit: $limit

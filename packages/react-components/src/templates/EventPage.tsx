@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
-import { BasicEvent } from '@asap-hub/model';
+import { BasicEvent, EventResponse } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
 
 import { EventInfo, BackLink } from '../molecules';
@@ -13,6 +13,7 @@ import {
   JoinEvent,
   EventAbout,
   CalendarList,
+  RelatedResearchCard,
 } from '../organisms';
 
 const containerStyles = css({
@@ -36,6 +37,7 @@ type EventPageProps = ComponentProps<typeof EventInfo> &
     | 'hideMeetingLink'
     | 'calendar'
   > & {
+    readonly relatedResearch?: EventResponse['relatedResearch'];
     readonly backHref?: string;
     readonly displayCalendar: boolean;
     readonly eventConversation?: ReactNode;
@@ -48,6 +50,7 @@ const EventPage: React.FC<EventPageProps> = ({
   eventConversation,
   displayCalendar,
   children,
+  relatedResearch,
   ...props
 }) => (
   <div
@@ -72,6 +75,12 @@ const EventPage: React.FC<EventPageProps> = ({
       </Card>
       <EventMaterials {...props} />
       {eventConversation}
+      {relatedResearch && relatedResearch?.length > 0 && (
+        <RelatedResearchCard
+          description="Find out all shared research outputs that are related to this event."
+          relatedResearch={relatedResearch}
+        />
+      )}
       {displayCalendar && (
         <CalendarList
           calendars={[calendar]}

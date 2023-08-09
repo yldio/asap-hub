@@ -16,3 +16,33 @@ export const createNewsResponse = (
   items,
   total: items.length,
 });
+
+type FixtureOptions = {
+  key: string | number;
+  type?: gp2.NewsType;
+};
+
+export const newsResponseTemplate = ({
+  key,
+}: FixtureOptions): gp2.NewsResponse => ({
+  id: `uuid-${key}`,
+  title: `${key} title`,
+  link: `https://${key}`,
+  linkText: 'Read More',
+  shortText: `${key} short text`,
+  type: 'news',
+  created: new Date().toISOString(),
+});
+
+export const createListNewsResponse = (
+  items = 10,
+  total = 10,
+): gp2.ListNewsResponse => ({
+  total,
+  items: Array.from({ length: items }, (_, idx) => ({
+    ...newsResponseTemplate({ key: idx + 1 }),
+    title: 'News Item',
+  })),
+});
+
+export default createNewsResponse;

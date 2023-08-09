@@ -218,6 +218,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
         | 'avatarUrl'
         | 'orcid'
         | 'email'
+        | 'alumniSinceDate'
       >
     | ExternalAuthorResponse
   )[];
@@ -238,7 +239,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   relatedResearch: Array<
     Pick<
       ResearchOutputDataObject,
-      'id' | 'title' | 'type' | 'documentType' | 'teams'
+      'id' | 'title' | 'type' | 'documentType' | 'teams' | 'workingGroups'
     > & { isOwnRelatedResearchLink?: boolean }
   >;
   versions: Array<

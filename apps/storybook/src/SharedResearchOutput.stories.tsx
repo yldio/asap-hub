@@ -86,7 +86,16 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     : undefined,
   relatedResearch: createListResearchOutputResponse(
     number('Number of related research items', 0),
-  ).items,
+  ).items.map(
+    ({ documentType, id, title, type, teams, workingGroups = [] }) => ({
+      documentType,
+      id,
+      title,
+      type,
+      teams,
+      workingGroups,
+    }),
+  ),
   published: boolean('Published', true),
   publishedNow: boolean('Is Published Now', false),
   statusChangedBy: {

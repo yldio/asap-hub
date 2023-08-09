@@ -1,23 +1,29 @@
+import { NewsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { lazy, useEffect } from 'react';
 
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import Frame from '../Frame';
 
-const loadNewsList = () =>
-  import(/* webpackChunkName: "news-list" */ './NewsList');
+const loadNewsDirectory = () =>
+  import(/* webpackChunkName: "news-directory" */ './NewsDirectory');
 
-const NewsList = lazy(loadNewsList);
+const NewsDirectory = lazy(loadNewsDirectory);
 
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadNewsList();
+    loadNewsDirectory();
   }, []);
   const { path } = useRouteMatch();
 
   return (
     <Switch>
       <Route exact path={path}>
-        <NewsList />
+        <NewsPage>
+          <Frame title="News">
+            <NewsDirectory />
+          </Frame>
+        </NewsPage>
       </Route>
       <Route component={NotFoundPage} />
     </Switch>

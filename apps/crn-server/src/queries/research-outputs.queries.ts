@@ -125,6 +125,12 @@ export const researchOutputContentQueryFragment = gql`
               displayName
             }
           }
+          workingGroups {
+            id
+            flatData {
+              title
+            }
+          }
         }
       }
       relatedEvents {
@@ -212,6 +218,12 @@ export const researchOutputContentQueryFragment = gql`
           id
           flatData {
             displayName
+          }
+        }
+        workingGroups {
+          id
+          flatData {
+            title
           }
         }
       }

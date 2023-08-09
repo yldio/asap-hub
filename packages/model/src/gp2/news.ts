@@ -1,6 +1,6 @@
-import { ListResponse } from '../common';
+import { FetchOptions, ListResponse } from '../common';
 
-const newsTypes = ['news', 'update'] as const;
+export const newsTypes = ['news', 'update'] as const;
 
 export type NewsType = (typeof newsTypes)[number];
 
@@ -17,3 +17,9 @@ export type ListNewsDataObject = ListResponse<NewsDataObject>;
 
 export type NewsResponse = NewsDataObject;
 export type ListNewsResponse = ListResponse<NewsResponse>;
+
+export type FetchNewsFilter = {
+  type?: NewsType[];
+};
+
+export type FetchNewsOptions = FetchOptions<FetchNewsFilter>;

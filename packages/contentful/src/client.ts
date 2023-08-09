@@ -1,14 +1,19 @@
 import { createClient as createCDAClient } from 'contentful';
-import { createClient, Environment } from 'contentful-management';
+import { Adapter, createClient, Environment } from 'contentful-management';
 import { GraphQLClient } from 'graphql-request';
+
+export type { MakeRequestOptions } from 'contentful-management';
+export { RestAdapter } from 'contentful-management';
 
 const cache = new Map<string, Environment>();
 
 export type CreateClientParams = {
   space: string;
-  accessToken: string;
   environment: string;
+  accessToken: string;
+  apiAdapter?: Adapter;
 };
+
 type CreatePreviewClientParams = {
   space: string;
   previewAccessToken: string;
@@ -33,15 +38,22 @@ export const getRestClient = async ({
   space: spaceId,
   accessToken,
   environment: environmentId,
+  apiAdapter,
 }: CreateClientParams): Promise<Environment> => {
   const key = `${accessToken}-${spaceId}-${environmentId}`;
   const cached = cache.get(key);
   if (cached) {
     return cached;
   }
-  const client = createClient({
-    accessToken,
-  });
+  const client = createClient(
+    apiAdapter
+      ? {
+          apiAdapter,
+        }
+      : {
+          accessToken,
+        },
+  );
   const space = await client.getSpace(spaceId);
   const environment = await space.getEnvironment(environmentId);
   cache.set(key, environment);

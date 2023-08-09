@@ -32,6 +32,7 @@ describe('checkIfAssetAlreadyExistsInContentful', () => {
 
   it('returns true if contentful getAsset returns an asset', async () => {
     jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
+    jest.spyOn(contenfulAsset, 'isPublished').mockReturnValueOnce(true);
 
     const isAssetInContentful = await checkIfAssetAlreadyExistsInContentful(
       envMock,
@@ -39,6 +40,24 @@ describe('checkIfAssetAlreadyExistsInContentful', () => {
     );
     expect(envMock.getAsset).toHaveBeenCalledWith(squidexAsset.id);
     expect(isAssetInContentful).toBe(true);
+  });
+
+  it('publishes asset if it exists but is not published', async () => {
+    jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
+    jest.spyOn(contenfulAsset, 'isPublished').mockReturnValueOnce(false);
+    jest
+      .spyOn(contenfulAsset, 'processForAllLocales')
+      .mockResolvedValueOnce(contenfulAsset);
+
+    const isAssetInContentful = await checkIfAssetAlreadyExistsInContentful(
+      envMock,
+      squidexAsset.id,
+    );
+    expect(envMock.getAsset).toHaveBeenCalledWith(squidexAsset.id);
+    expect(isAssetInContentful).toBe(true);
+
+    expect(contenfulAsset.processForAllLocales).toHaveBeenCalled();
+    expect(contenfulAsset.publish).toHaveBeenCalled();
   });
 
   it('returns false if contentful getAsset returns a 404 error', async () => {
@@ -65,6 +84,16 @@ describe('checkIfAssetAlreadyExistsInContentful', () => {
     await expect(
       checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
     ).rejects.toThrowError();
+  });
+
+  it('throws if contentful getAsset returns a non-JSON error', async () => {
+    jest
+      .spyOn(envMock, 'getAsset')
+      .mockRejectedValueOnce(new Error('unknown error'));
+
+    await expect(
+      checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
+    ).rejects.toThrow('unknown error');
   });
 
   it('throws if contentful getAsset returns an unknown error', async () => {
@@ -209,6 +238,27 @@ describe('migrateAsset', () => {
 
     await expect(migrateAsset(envMock, [squidexAsset])).rejects.toThrow();
   });
+
+  it('throws if processForAllLocales rejects with a non-JSON error message', async () => {
+    const contenfulGetAssetErrorResponse = new Error();
+    contenfulGetAssetErrorResponse.message = '{"status":404}';
+    jest
+      .spyOn(envMock, 'getAsset')
+      .mockRejectedValueOnce(contenfulGetAssetErrorResponse);
+
+    const contenfulProcessForAllLocalesErrorResponse = new Error();
+    contenfulProcessForAllLocalesErrorResponse.message = 'unknown error';
+    contenfulAsset.processForAllLocales = jest
+      .fn()
+      .mockRejectedValueOnce(contenfulProcessForAllLocalesErrorResponse);
+    jest
+      .spyOn(envMock, 'createAssetWithId')
+      .mockResolvedValueOnce(contenfulAsset);
+
+    await expect(migrateAsset(envMock, [squidexAsset])).rejects.toThrow(
+      'unknown error',
+    );
+  });
 });
 
 describe('createInlineAssets', () => {
@@ -253,8 +303,9 @@ describe('createInlineAssets', () => {
     expect(contenfulAsset.publish).toHaveBeenCalled();
   });
 
-  it('does not call createAssetWithId if asset already exist', async () => {
+  it('does not call createAssetWithId if asset already exists', async () => {
     jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
+    jest.spyOn(contenfulAsset, 'isPublished').mockReturnValueOnce(true);
 
     await createInlineAssets(envMock, [
       ['asset-id', { fields: { ...contenfulUploadAssetFields } }],
@@ -276,6 +327,7 @@ describe('createAsset', () => {
 
   it('returns asset link payload properly', async () => {
     jest.spyOn(envMock, 'getAsset').mockResolvedValueOnce(contenfulAsset);
+    jest.spyOn(contenfulAsset, 'isPublished').mockReturnValueOnce(true);
 
     const assetLinkPayload = await createAsset(envMock, [squidexAsset]);
     expect(assetLinkPayload).toEqual({

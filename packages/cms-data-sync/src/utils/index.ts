@@ -3,6 +3,7 @@
 export * from './assets-and-media';
 export * from './calendar';
 export * from './entries';
+export * from './error';
 export * from './external-tools';
 export * from './fetch';
 export * from './rich-text';

@@ -214,7 +214,40 @@ describe('Migration from Squidex to Contentful', () => {
       );
     });
 
-    test('Should try to create an entry if it was supposed to update it but the entry does not exist when UPSERT_IN_PLACE is false and item has updateEntry as true', async () => {
+    test('Should throw when fallback create fails when UPSERT_IN_PLACE is true', async () => {
+      process.env.UPSERT_IN_PLACE = 'true';
+
+      fetchData.mockResolvedValueOnce([squidexRecord]);
+      parseData.mockResolvedValueOnce(item);
+
+      const {
+        migrateFromSquidexToContentfulFactory,
+      } = require('../../src/utils/migration');
+      const {
+        getContentfulEnvironmentMock,
+      } = require('../mocks/contentful.mocks');
+
+      const contentfulEnvironmentMock = getContentfulEnvironmentMock();
+      const migrateFromSquidexToContentful =
+        migrateFromSquidexToContentfulFactory(
+          contentfulEnvironmentMock,
+          loggerMock,
+        );
+
+      contentfulEnvironmentMock.getEntry.mockRejectedValueOnce(
+        new Error('{"status":404}'),
+      );
+
+      contentfulEnvironmentMock.createEntryWithId.mockRejectedValueOnce(
+        new Error('unknown error'),
+      );
+
+      await expect(
+        migrateFromSquidexToContentful('entity', fetchData, parseData, true),
+      ).rejects.toThrowError('unknown error');
+    });
+
+    test('Should not try to create an entry if it was supposed to update it but the entry does not exist when UPSERT_IN_PLACE is false and item has updateEntry as true', async () => {
       process.env.UPSERT_IN_PLACE = 'false';
 
       fetchData.mockResolvedValueOnce([squidexRecord]);
@@ -241,16 +274,13 @@ describe('Migration from Squidex to Contentful', () => {
         new Error('{"status":404}'),
       );
 
-      await migrateFromSquidexToContentful(
-        'entity',
-        fetchData,
-        parseData,
-        true,
-      );
-
       expect(
         contentfulEnvironmentMock.createEntryWithId,
       ).not.toHaveBeenCalled();
+
+      await expect(
+        migrateFromSquidexToContentful('entity', fetchData, parseData, true),
+      ).rejects.toThrowError('{"status":404}');
     });
 
     test('Throw error if get entry does not work for an unexpected reason (not 404 status)', async () => {

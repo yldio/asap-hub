@@ -3,6 +3,7 @@ import { Environment, Entry } from 'contentful-management';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
 import { contentfulRateLimiter } from '../contentful-rate-limiter';
+import { safeParse } from './error';
 import { upsertInPlace } from './setup';
 
 export const migrateFromSquidexToContentfulFactory =
@@ -65,15 +66,18 @@ export const migrateFromSquidexToContentfulFactory =
             : await createEntry();
         } catch (err) {
           if (err instanceof Error) {
-            try {
-              const errorParsed = JSON.parse(err?.message);
-              // this is a fallback when it should have updated the entry
-              // but it does not exist
-              if (upsertInPlace && errorParsed.status === 404) {
-                const entry = await createEntry();
-                return entry;
-              }
-            } catch (e) {
+            const errorParsed = safeParse(err.message);
+            // this is a fallback when it should have updated the entry
+            // but it does not exist
+            if (upsertInPlace && errorParsed && errorParsed.status === 404) {
+              const entry = await createEntry();
+              return entry;
+            }
+
+            // if in create mode we could still use
+            // fallbackParseData func so just throw when
+            // not in create mode
+            if (updateEntry || upsertInPlace) {
               throw err;
             }
           }

@@ -212,6 +212,10 @@ describe('Migrate events', () => {
     jest.spyOn(contentfulEnv, 'createEntry').mockResolvedValue(getEntry({}));
 
     jest.spyOn(eventEntry, 'publish').mockResolvedValue(getEntry({}));
+
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    jest.spyOn(contentfulEnv, 'getEntry').mockResolvedValue(entry);
   });
 
   afterEach(() => {
@@ -267,6 +271,12 @@ describe('Migrate events', () => {
       .calledWith('old-speaker')
       .mockResolvedValueOnce(previousSpeakerMock);
 
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    when(contentfulEnv.getEntry)
+      .calledWith('event-1')
+      .mockResolvedValueOnce(entry);
+
     await migrateEvents();
 
     expect(previousSpeakerMock.unpublish).toHaveBeenCalled();
@@ -304,7 +314,13 @@ describe('Migrate events', () => {
 
     when(contentfulEnv.getEntry)
       .calledWith('old-speaker')
-      .mockRejectedValueOnce(new Error());
+      .mockRejectedValueOnce(new Error('{"status":500}'));
+
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    when(contentfulEnv.getEntry)
+      .calledWith('event-1')
+      .mockResolvedValueOnce(entry);
 
     await migrateEvents();
 
@@ -318,13 +334,25 @@ describe('Migrate events', () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       getEventSquidexResponse(),
     );
-    jest
-      .spyOn(contentfulEnv, 'getEntry')
-      .mockRejectedValue(new Error('not-found'));
+
+    when(contentfulEnv.getEntry)
+      .calledWith('external-user-1')
+      .mockRejectedValue(new Error('{"status":404}'));
+
+    when(contentfulEnv.getEntry)
+      .calledWith('null')
+      .mockRejectedValue(new Error('{"status":404}'));
+
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    when(contentfulEnv.getEntry)
+      .calledWith('event-1')
+      .mockResolvedValueOnce(entry);
 
     await migrateEvents();
 
-    expect(console.log).toHaveBeenCalledWith(
+    expect(console.log).toHaveBeenNthCalledWith(
+      2,
       '\x1b[31m',
       '[ERROR] Either user external-user-1 or team null do not exist in contentful. Please review event with id event-1',
     );
@@ -534,7 +562,13 @@ describe('Migrate events', () => {
 
     when(contentfulEnv.getEntry)
       .calledWith('calendar-1')
-      .mockRejectedValueOnce(new Error('not-found'));
+      .mockRejectedValueOnce(new Error('{"status":404}'));
+
+    const entry = getEntry({});
+    entry.update = jest.fn();
+    when(contentfulEnv.getEntry)
+      .calledWith('event-1')
+      .mockResolvedValueOnce(entry);
 
     jest
       .spyOn(contentfulEnv, 'getEntries')

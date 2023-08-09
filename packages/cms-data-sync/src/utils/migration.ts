@@ -3,6 +3,7 @@ import { Environment, Entry } from 'contentful-management';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
 import { contentfulRateLimiter } from '../contentful-rate-limiter';
+import { upsertInPlace } from './setup';
 
 export const migrateFromSquidexToContentfulFactory =
   (contentfulEnvironment: Environment, logger: typeof loggerFunc) =>
@@ -19,7 +20,7 @@ export const migrateFromSquidexToContentfulFactory =
   ) => {
     const data = await fetchData();
 
-    if (clearPreviousEntries) {
+    if (clearPreviousEntries && !upsertInPlace) {
       await clearContentfulEntries(contentfulEnvironment, contentTypeId);
     }
     let n = 0;
@@ -29,23 +30,8 @@ export const migrateFromSquidexToContentfulFactory =
 
         const { id, updateEntry, ...payload } = parsed;
 
-        try {
-          if (updateEntry) {
-            const entry = await contentfulEnvironment.getEntry(id);
-
-            updateEntryFields(entry, payload);
-            const updatedEntry = await entry.update();
-            await contentfulRateLimiter.removeTokens(1);
-
-            n += 1;
-            logger(
-              `Updated entry with id ${id}. (${n}/${data.length})`,
-              'INFO',
-            );
-            return updatedEntry;
-          }
-
-          const entry = await contentfulEnvironment.createEntryWithId(
+        const createEntry = async () => {
+          const createdEntry = await contentfulEnvironment.createEntryWithId(
             contentTypeId,
             id,
             {
@@ -57,9 +43,41 @@ export const migrateFromSquidexToContentfulFactory =
           n += 1;
           logger(`Created entry with id ${id}. (${n}/${data.length})`, 'INFO');
           if (item.status === 'PUBLISHED') {
-            return entry;
+            return createdEntry;
           }
+          return null;
+        };
+
+        const updateExistingEntry = async () => {
+          const contentfulEntry = await contentfulEnvironment.getEntry(id);
+          updateEntryFields(contentfulEntry, payload);
+          const updatedEntry = await contentfulEntry.update();
+          await contentfulRateLimiter.removeTokens(1);
+
+          n += 1;
+          logger(`Updated entry with id ${id}. (${n}/${data.length})`, 'INFO');
+          return updatedEntry;
+        };
+
+        try {
+          return updateEntry || upsertInPlace
+            ? await updateExistingEntry()
+            : await createEntry();
         } catch (err) {
+          if (err instanceof Error) {
+            try {
+              const errorParsed = JSON.parse(err?.message);
+              // this is a fallback when it should have updated the entry
+              // but it does not exist
+              if (upsertInPlace && errorParsed.status === 404) {
+                const entry = await createEntry();
+                return entry;
+              }
+            } catch (e) {
+              throw err;
+            }
+          }
+
           logger(`Error details of entry ${id}:\n${err}`, 'ERROR');
 
           if (fallbackParseData) {

@@ -18,6 +18,10 @@ import { rateLimiter } from './rate-limiter';
 export const isVerbose = () =>
   process.env.VERBOSE_DATA_SYNC && process.env.VERBOSE_DATA_SYNC === 'true';
 
+export const upsertInPlace =
+  (process.env.UPSERT_IN_PLACE && process.env.UPSERT_IN_PLACE === 'true') ||
+  process.argv.includes('--upsert');
+
 class ApiAdapter extends RestAdapter {
   async makeRequest<R>(options: MakeRequestOptions): Promise<R> {
     await rateLimiter.removeTokens(1);

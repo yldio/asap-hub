@@ -38,6 +38,11 @@ on:
           - researchTags
           - researchOutputs
           - all
+      upsert-in-place:
+        description: 'Upsert entry in place'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   sync_cms_data:
@@ -71,6 +76,7 @@ jobs:
           CRN_SQUIDEX_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-ci-client-id }}
           CRN_SQUIDEX_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
           SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+          UPSERT_IN_PLACE: ${{ inputs.upsert-in-place}}
 
   notify_failure:
     runs-on: ubuntu-latest

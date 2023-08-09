@@ -135,7 +135,9 @@ describe('Migrate Pages', () => {
     squidexGraphqlClientMock.request.mockResolvedValueOnce(
       pagesSquidexGraphqlResponse,
     );
-    contentfulEnv.createEntryWithId.mockRejectedValueOnce(new Error('Error'));
+    contentfulEnv.createEntryWithId.mockRejectedValueOnce(
+      new Error('{"status":500}'),
+    );
     contentfulEnv.createEntryWithId.mockResolvedValueOnce(entry);
 
     await migratePages();

@@ -14,7 +14,7 @@ import { UserPatchRequest } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2, useRouteParams } from '@asap-hub/routing';
-import { FC } from 'react';
+import { FC, lazy } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
@@ -22,7 +22,6 @@ import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { useKeywords } from '../shared/state';
-import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { getInstitutions } from './api';
 import countryCodesSuggestions from './country-codes-suggestions';
@@ -33,6 +32,9 @@ const { users } = gp2;
 type UserDetailProps = {
   currentTime: Date;
 };
+const loadOutputs = () =>
+  import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
+const Outputs = lazy(loadOutputs);
 
 const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   const currentUser = useCurrentUserGP2();
@@ -158,7 +160,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
             </Route>
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList author={userId} searchQuery={''} />
+                <Outputs userId={userId} />
               </Frame>
             </Route>
             <Route path={upcoming}>

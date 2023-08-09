@@ -6,6 +6,7 @@ const props = {
   onChangeSearch: jest.fn(),
   searchQuery: '',
   filters: new Set<string>(),
+  hasOutputs: true,
 };
 
 describe('OutputPageList', () => {

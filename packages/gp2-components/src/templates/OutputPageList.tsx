@@ -2,7 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { SearchAndFilter } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 
-type OutputPageListProps = Pick<
+type OutputPageListProps = { hasOutputs: boolean } & Pick<
   ComponentProps<typeof SearchAndFilter>,
   'filters' | 'onChangeFilter' | 'onChangeSearch' | 'searchQuery'
 >;
@@ -30,16 +30,19 @@ const OutputPageList: React.FC<OutputPageListProps> = ({
   onChangeFilter,
   onChangeSearch,
   searchQuery,
+  hasOutputs = true,
 }) => (
   <>
-    <SearchAndFilter
-      onChangeSearch={onChangeSearch}
-      searchPlaceholder="Enter name or keyword..."
-      searchQuery={searchQuery}
-      onChangeFilter={onChangeFilter}
-      filterOptions={outputFilters}
-      filters={filters}
-    />
+    {hasOutputs && (
+      <SearchAndFilter
+        onChangeSearch={onChangeSearch}
+        searchPlaceholder="Enter name or keyword..."
+        searchQuery={searchQuery}
+        onChangeFilter={onChangeFilter}
+        filterOptions={outputFilters}
+        filters={filters}
+      />
+    )}
     <main>{children}</main>
   </>
 );

@@ -80,8 +80,8 @@ describe('FiltersModal', () => {
         .textContent,
     ).toContain(`0 filters`);
     userEvent.click(getExpertiseField());
-    userEvent.type(getExpertiseField(), "Parkinson's");
-    userEvent.click(screen.getByText("Parkinson's disease"));
+    userEvent.type(getExpertiseField(), 'Parkinson’s');
+    userEvent.click(screen.getByText('Advanced Parkinson’s therapies'));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
@@ -163,11 +163,11 @@ describe('FiltersModal', () => {
   it('calls the onApplyClick function with correct expertise filters', () => {
     render(<FiltersModal {...defaultProps} />);
     userEvent.click(getExpertiseField());
-    userEvent.click(screen.getByText('RNA'));
+    userEvent.click(screen.getByText('Administrative Support'));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
-      keywords: ['RNA'],
+      keywords: ['Administrative Support'],
       projects: [],
       workingGroups: [],
     });
@@ -200,7 +200,7 @@ describe('FiltersModal', () => {
   it.each`
     name               | getField                 | value
     ${'region'}        | ${getRegionsField}       | ${'Asia'}
-    ${'expertise'}     | ${getExpertiseField}     | ${'Aging'}
+    ${'expertise'}     | ${getExpertiseField}     | ${'Administrative Support'}
     ${'project'}       | ${getProjectsField}      | ${projects[0]!.title}
     ${'working group'} | ${getWorkingGroupsField} | ${workingGroups[0]!.title}
   `('resets selected filter, $name, on Reset', ({ getField, value }) => {
@@ -231,11 +231,11 @@ describe('FiltersModal', () => {
   });
 
   it.each`
-    name               | value                   | expected
-    ${'keywords'}      | ${'Aging'}              | ${'Aging'}
-    ${'regions'}       | ${'Asia'}               | ${'Asia'}
-    ${'projects'}      | ${projects[0]!.id}      | ${projects[0]!.title}
-    ${'workingGroups'} | ${workingGroups[0]!.id} | ${workingGroups[0]!.title}
+    name               | value                       | expected
+    ${'keywords'}      | ${'Administrative Support'} | ${'Administrative Support'}
+    ${'regions'}       | ${'Asia'}                   | ${'Asia'}
+    ${'projects'}      | ${projects[0]!.id}          | ${projects[0]!.title}
+    ${'workingGroups'} | ${workingGroups[0]!.id}     | ${workingGroups[0]!.title}
   `('displays current filter $name', ({ name, value, expected }) => {
     const filters: gp2Model.FetchUsersFilter = {
       [name]: [value],

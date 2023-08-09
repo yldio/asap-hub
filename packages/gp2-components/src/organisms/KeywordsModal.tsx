@@ -60,7 +60,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
                 newValues
                   .slice(0, 10)
                   .reduce(
-                    (acc, curr) => [...acc, curr.value],
+                    (acc, curr) => [...acc, curr.label],
                     [] as gp2.Keyword[],
                   ),
               );

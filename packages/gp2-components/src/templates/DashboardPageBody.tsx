@@ -16,7 +16,7 @@ import {
   RemindersCard,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { isEnabled } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
@@ -71,6 +71,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   upcomingEvents,
   guides,
 }) => {
+  const { isEnabled } = useFlags();
   const history = useHistory();
   const lastestNews = news.items[0];
   return (

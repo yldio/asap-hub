@@ -12,7 +12,7 @@ import {
   TabNav,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { isEnabled } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
 
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
@@ -81,6 +81,7 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
   upcomingTotal,
   pastTotal,
 }) => {
+  const { isEnabled } = useFlags();
   const route = gp2Routing.projects({}).project({ projectId: id });
   return (
     <header css={detailHeaderStyles}>

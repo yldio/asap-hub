@@ -1,7 +1,7 @@
 import { pixels, TabLink, TabNav } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { isEnabled } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
 
 import { workingGroupsImage } from '../images';
 import { mainStyles } from '../layout';
@@ -21,25 +21,28 @@ const navStyles = css({
   marginTop: rem(32),
 });
 
-const EventsPage: React.FC = ({ children }) => (
-  <article>
-    <PageBanner {...bannerProps} noMarginBottom>
-      <div css={navStyles}>
-        <TabNav>
-          {isEnabled('ASAP_UPCOMING_EVENTS') && (
-            <TabLink href={gp2.events({}).upcoming({}).$}>Upcoming</TabLink>
-          )}
-          {isEnabled('ASAP_PAST_EVENTS') && (
-            <TabLink href={gp2.events({}).past({}).$}>Past</TabLink>
-          )}
-          <TabLink href={gp2.events({}).calendar({}).$}>
-            Subscribe to Calendars
-          </TabLink>
-        </TabNav>
-      </div>
-    </PageBanner>
-    <main css={mainStyles}>{children}</main>
-  </article>
-);
+const EventsPage: React.FC = ({ children }) => {
+  const { isEnabled } = useFlags();
+  return (
+    <article>
+      <PageBanner {...bannerProps} noMarginBottom>
+        <div css={navStyles}>
+          <TabNav>
+            {isEnabled('ASAP_UPCOMING_EVENTS') && (
+              <TabLink href={gp2.events({}).upcoming({}).$}>Upcoming</TabLink>
+            )}
+            {isEnabled('ASAP_PAST_EVENTS') && (
+              <TabLink href={gp2.events({}).past({}).$}>Past</TabLink>
+            )}
+            <TabLink href={gp2.events({}).calendar({}).$}>
+              Subscribe to Calendars
+            </TabLink>
+          </TabNav>
+        </div>
+      </PageBanner>
+      <main css={mainStyles}>{children}</main>
+    </article>
+  );
+};
 
 export default EventsPage;

@@ -1,6 +1,6 @@
 import { TabLink, TabNav } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { isEnabled } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { detailHeaderStyles } from '../layout';
 import UserDetailHeaderCard from './UserDetailHeaderCard';
@@ -18,6 +18,7 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
   id,
   ...headerProps
 }) => {
+  const { isEnabled } = useFlags();
   const route = gp2Routing.users({}).user({ userId: id });
   return (
     <header css={detailHeaderStyles}>

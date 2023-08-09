@@ -70,8 +70,16 @@ export const migrateFromSquidexToContentfulFactory =
             // this is a fallback when it should have updated the entry
             // but it does not exist
             if (upsertInPlace && errorParsed && errorParsed.status === 404) {
-              const entry = await createEntry();
-              return entry;
+              try {
+                const entry = await createEntry();
+                return entry;
+              } catch (createError) {
+                logger(
+                  `(Fallback update) Error creating entry ${id}:\n${createError}`,
+                  'ERROR',
+                );
+                return null;
+              }
             }
 
             // if in create mode we could still use

@@ -284,6 +284,16 @@ export const getResearchOutputDataObject =
     keywords: ['Keyword1'],
     published: true,
     isInReview: false,
+    versions: [
+      {
+        addedDate: '',
+        id: '1',
+        title: 'Version 1',
+        documentType: 'Article',
+        type: 'Preprint',
+        link: 'https://version1.com',
+      },
+    ],
   });
 export const getDraftResearchOutputDataObject =
   (): ResearchOutputDraftDataObject => ({
@@ -373,6 +383,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     relatedResearch,
     published: _published,
     relatedEvents,
+    versions: _versions,
     ...researchOutputResponse
   } = getResearchOutputResponse();
   return {
@@ -420,6 +431,7 @@ export const getResearchOutputCreateDataObject =
       contactEmails: _contactEmails,
       workingGroups: _workingGroups, // @TODO send this data to squidex once the schema has changed (1/2)
       published: _published,
+      versions: _versions,
       ...researchOutputPostRequest
     } = getResearchOutputResponse();
 
@@ -703,6 +715,19 @@ export const getContentfulResearchOutputGraphqlResponse =
       items: [
         {
           name: 'Keyword1',
+        },
+      ],
+    },
+    versionsCollection: {
+      items: [
+        {
+          sys: {
+            id: '1',
+          },
+          title: 'Version 1',
+          documentType: 'Article',
+          type: 'Preprint',
+          link: 'https://version1.com',
         },
       ],
     },

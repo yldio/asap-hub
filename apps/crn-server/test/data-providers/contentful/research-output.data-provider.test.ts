@@ -8,12 +8,15 @@ import {
 import { ResearchOutputDataObject } from '@asap-hub/model';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
-import { ResearchOutputContentfulDataProvider } from '../../../src/data-providers/contentful/research-output.data-provider';
 import {
-  getResearchOutputDataObject,
+  ResearchOutputContentfulDataProvider,
+  mapOutputVersions,
+} from '../../../src/data-providers/contentful/research-output.data-provider';
+import {
   getResearchOutputCreateDataObject,
   getResearchOutputUpdateDataObject,
   getContentfulResearchOutputGraphqlResponse,
+  getResearchOutputDataObject,
 } from '../../fixtures/research-output.fixtures';
 
 jest.mock('@asap-hub/contentful', () => ({
@@ -668,6 +671,7 @@ describe('Research Outputs Data Provider', () => {
     test('Should return the research output without the team', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
       researchOutputs.teamsCollection!.items = [];
+      researchOutputs.workingGroup = { sys: { id: '1' }, title: 'wg' };
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         researchOutputs,
       });
@@ -680,6 +684,7 @@ describe('Research Outputs Data Provider', () => {
       expectedResult.authors = [];
       expectedResult.teams = [];
       expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
+      expectedResult.workingGroups = [{ title: 'wg', id: '1' }];
 
       expect(result).toEqual(expectedResult);
     });
@@ -908,6 +913,18 @@ describe('Research Outputs Data Provider', () => {
         'pm2@example.com',
         'pm4@example.com',
       ]);
+    });
+
+    test('Should include the list of versions', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+      const expectedVersionsResponse = getResearchOutputDataObject().versions;
+
+      const result = await researchOutputDataProvider.fetchById('1');
+      expect(result?.versions).toEqual(expectedVersionsResponse);
     });
   });
   describe('create', () => {
@@ -1686,6 +1703,61 @@ describe('Research Outputs Data Provider', () => {
         }),
       );
     });
+  });
+});
+
+describe('mapOutputVersions ', () => {
+  it('pass data through', () => {
+    const data = {
+      title: 'Test',
+      documentType: 'Article',
+      type: 'Preprint',
+      link: 'https://test.com',
+      addedDate: '2022-01-01T12:00:00.000Z',
+    };
+
+    const versions = mapOutputVersions([
+      {
+        ...data,
+        sys: { id: '1' },
+      },
+    ]);
+    expect(versions).toEqual([
+      {
+        ...data,
+        id: '1',
+      },
+    ]);
+  });
+
+  it('handles empty data', () => {
+    const versions = mapOutputVersions([
+      {
+        sys: { id: '1' },
+      },
+    ]);
+    expect(versions).toEqual([
+      {
+        addedDate: '',
+        documentType: 'Grant Document',
+        id: '1',
+        link: '',
+        title: '',
+        type: undefined,
+      },
+    ]);
+  });
+
+  it('filters null items', () => {
+    const versions = mapOutputVersions([null, { sys: { id: '1' } }]);
+    expect(versions.length).toBe(1);
+  });
+
+  it('handles documentType', () => {
+    const versions = mapOutputVersions([
+      { sys: { id: '1' }, documentType: 'Article' },
+    ]);
+    expect(versions[0]?.documentType).toBe('Article');
   });
 });
 

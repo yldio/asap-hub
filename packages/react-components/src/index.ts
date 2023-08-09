@@ -131,6 +131,7 @@ export {
   NewsSection,
   NoEvents,
   OnboardingFooter,
+  OutputVersions,
   PageCard,
   PagesSection,
   PastEventsDashboardCard,

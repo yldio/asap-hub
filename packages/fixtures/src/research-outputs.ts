@@ -54,6 +54,7 @@ const researchOutputResponse: Omit<
   keywords: ['Etag', 'Exercise'],
   published: true,
   isInReview: false,
+  versions: [],
 };
 
 export const createResearchOutputResponse = (

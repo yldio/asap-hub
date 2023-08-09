@@ -16,6 +16,7 @@ import {
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
   RelatedEventsCard,
+  OutputVersions,
 } from '../organisms';
 import { createMailTo, TECH_SUPPORT_EMAIL, mailToSupport } from '../mail';
 import {
@@ -50,6 +51,7 @@ type SharedResearchOutputProps = Pick<
   | 'relatedEvents'
   | 'statusChangedBy'
   | 'isInReview'
+  | 'versions'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -78,6 +80,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   statusChangedBy,
   isInReview,
   onRequestReview,
+  versions,
   onPublish,
   ...props
 }) => {
@@ -251,6 +254,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               relatedResearch={relatedResearch}
             />
           )}
+          {versions.length > 0 && <OutputVersions versions={versions} />}
           {!isGrantDocument && (
             <RelatedEventsCard relatedEvents={relatedEvents} truncateFrom={3} />
           )}

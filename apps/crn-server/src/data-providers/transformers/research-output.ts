@@ -151,6 +151,7 @@ export const parseGraphQLResearchOutput = (
       : undefined,
     statusChangedAt: data.statusChangedAt || undefined,
     isInReview: !!data.isInReview,
+    versions: [], // versions is a contentful only feature
   };
 };
 

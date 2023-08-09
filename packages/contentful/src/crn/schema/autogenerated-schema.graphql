@@ -2763,6 +2763,8 @@ type Query {
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
   pages(id: String!, locale: String, preview: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
+  researchOutputVersions(id: String!, locale: String, preview: Boolean): ResearchOutputVersions
+  researchOutputVersionsCollection(limit: Int = 100, locale: String, order: [ResearchOutputVersionsOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputVersionsFilter): ResearchOutputVersionsCollection
   researchOutputs(id: String!, locale: String, preview: Boolean): ResearchOutputs
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputsFilter): ResearchOutputsCollection
   researchTags(id: String!, locale: String, preview: Boolean): ResearchTags
@@ -2783,6 +2785,140 @@ type Query {
   workingGroupMembersCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembersOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembersFilter): WorkingGroupMembersCollection
   workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
   workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupsCollection
+}
+
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions)"""
+type ResearchOutputVersions implements Entry {
+  addedDate(locale: String): DateTime
+  contentfulMetadata: ContentfulMetadata!
+  documentType(locale: String): String
+  link(locale: String): String
+  linkedFrom(allowedLocales: [String]): ResearchOutputVersionsLinkingCollections
+  sys: Sys!
+  title(locale: String): String
+  type(locale: String): String
+}
+
+type ResearchOutputVersionsCollection {
+  items: [ResearchOutputVersions]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input ResearchOutputVersionsFilter {
+  AND: [ResearchOutputVersionsFilter]
+  OR: [ResearchOutputVersionsFilter]
+  addedDate: DateTime
+  addedDate_exists: Boolean
+  addedDate_gt: DateTime
+  addedDate_gte: DateTime
+  addedDate_in: [DateTime]
+  addedDate_lt: DateTime
+  addedDate_lte: DateTime
+  addedDate_not: DateTime
+  addedDate_not_in: [DateTime]
+  contentfulMetadata: ContentfulMetadataFilter
+  documentType: String
+  documentType_contains: String
+  documentType_exists: Boolean
+  documentType_in: [String]
+  documentType_not: String
+  documentType_not_contains: String
+  documentType_not_in: [String]
+  link: String
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
+type ResearchOutputVersionsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputVersionsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+}
+
+enum ResearchOutputVersionsLinkingCollectionsResearchOutputsCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  isInReview_ASC
+  isInReview_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+enum ResearchOutputVersionsOrder {
+  addedDate_ASC
+  addedDate_DESC
+  documentType_ASC
+  documentType_DESC
+  link_ASC
+  link_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs)"""
@@ -2825,6 +2961,7 @@ type ResearchOutputs implements Entry {
   updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
   usageNotes(locale: String): String
   usedInAPublication(locale: String): String
+  versionsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsVersionsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchOutputVersionsFilter): ResearchOutputsVersionsCollection
   workingGroup(locale: String, preview: Boolean, where: WorkingGroupsFilter): WorkingGroups
 }
 
@@ -3090,6 +3227,8 @@ input ResearchOutputsFilter {
   usedInAPublication_not: String
   usedInAPublication_not_contains: String
   usedInAPublication_not_in: [String]
+  versions: cfResearchOutputVersionsNestedFilter
+  versionsCollection_exists: Boolean
   workingGroup: cfWorkingGroupsNestedFilter
   workingGroup_exists: Boolean
 }
@@ -3421,6 +3560,34 @@ enum ResearchOutputsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+type ResearchOutputsVersionsCollection {
+  items: [ResearchOutputVersions]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ResearchOutputsVersionsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  documentType_ASC
+  documentType_DESC
+  link_ASC
+  link_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTags)"""
@@ -5427,6 +5594,50 @@ input cfPagesNestedFilter {
   title_not_in: [String]
 }
 
+input cfResearchOutputVersionsNestedFilter {
+  AND: [cfResearchOutputVersionsNestedFilter]
+  OR: [cfResearchOutputVersionsNestedFilter]
+  addedDate: DateTime
+  addedDate_exists: Boolean
+  addedDate_gt: DateTime
+  addedDate_gte: DateTime
+  addedDate_in: [DateTime]
+  addedDate_lt: DateTime
+  addedDate_lte: DateTime
+  addedDate_not: DateTime
+  addedDate_not_in: [DateTime]
+  contentfulMetadata: ContentfulMetadataFilter
+  documentType: String
+  documentType_contains: String
+  documentType_exists: Boolean
+  documentType_in: [String]
+  documentType_not: String
+  documentType_not_contains: String
+  documentType_not_in: [String]
+  link: String
+  link_contains: String
+  link_exists: Boolean
+  link_in: [String]
+  link_not: String
+  link_not_contains: String
+  link_not_in: [String]
+  sys: SysFilter
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+  type: String
+  type_contains: String
+  type_exists: Boolean
+  type_in: [String]
+  type_not: String
+  type_not_contains: String
+  type_not_in: [String]
+}
+
 input cfResearchOutputsNestedFilter {
   AND: [cfResearchOutputsNestedFilter]
   OR: [cfResearchOutputsNestedFilter]
@@ -5598,6 +5809,7 @@ input cfResearchOutputsNestedFilter {
   usedInAPublication_not: String
   usedInAPublication_not_contains: String
   usedInAPublication_not_in: [String]
+  versionsCollection_exists: Boolean
   workingGroup_exists: Boolean
 }
 

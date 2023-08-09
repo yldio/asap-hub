@@ -208,6 +208,18 @@ export const researchOutputContentQueryFragment = gql`
         endDate
       }
     }
+    versionsCollection {
+      items {
+        sys {
+          id
+        }
+        title
+        documentType
+        type
+        addedDate
+        link
+      }
+    }
   }
 `;
 

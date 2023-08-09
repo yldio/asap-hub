@@ -57,7 +57,7 @@ const FilterSearchExport: React.FC<FilterSearchExportProps> = ({
       <SearchField
         value={searchQuery}
         onChange={onSearchQueryChange}
-        placeholder="Enter name or keyword..."
+        placeholder="Enter name..."
         padding={false}
       />
     </div>

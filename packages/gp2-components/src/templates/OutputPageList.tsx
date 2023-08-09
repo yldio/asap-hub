@@ -34,7 +34,7 @@ const OutputPageList: React.FC<OutputPageListProps> = ({
   <>
     <SearchAndFilter
       onChangeSearch={onChangeSearch}
-      searchPlaceholder="Enter name..."
+      searchPlaceholder="Enter name or keyword..."
       searchQuery={searchQuery}
       onChangeFilter={onChangeFilter}
       filterOptions={outputFilters}

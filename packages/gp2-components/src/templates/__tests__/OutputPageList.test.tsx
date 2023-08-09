@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import NewsPageList from '../NewsPageList';
+import OutputPageList from '../OutputPageList';
 
 const props = {
   onChangeFilter: jest.fn(),
@@ -8,9 +8,9 @@ const props = {
   filters: new Set<string>(),
 };
 
-describe('NewsPageList', () => {
+describe('OutputPageList', () => {
   it('renders the header', () => {
-    render(<NewsPageList {...props}>Content</NewsPageList>);
+    render(<OutputPageList {...props}>Content</OutputPageList>);
     expect(screen.getByRole('search')).toBeVisible();
   });
 });

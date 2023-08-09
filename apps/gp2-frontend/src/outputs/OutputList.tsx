@@ -1,4 +1,8 @@
-import { EmptyState, noNewsIcon, OutputCard } from '@asap-hub/gp2-components';
+import {
+  EmptyState,
+  noOutputsIcon,
+  OutputCard,
+} from '@asap-hub/gp2-components';
 import { ResultList, SearchAndFilter } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
@@ -33,6 +37,7 @@ const OutputList: React.FC<OutputListProps> = ({
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return total || searchQuery ? (
     <ResultList
+      icon={noOutputsIcon}
       numberOfItems={total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
@@ -48,7 +53,7 @@ const OutputList: React.FC<OutputListProps> = ({
     </ResultList>
   ) : (
     <EmptyState
-      icon={noNewsIcon}
+      icon={noOutputsIcon}
       title={'No outputs available.'}
       description={
         'When a working group or project has an associated output, it will be listed here.'

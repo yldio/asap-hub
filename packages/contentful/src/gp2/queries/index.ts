@@ -4,7 +4,7 @@ export * from './contributing-cohort.queries';
 export * from './dashboard.queries';
 export * from './event.queries';
 export * from './external-user.queries';
-export * from './keywords.queries';
+export * from './keyword.queries';
 export * from './news.queries';
 export * from './output.queries';
 export * from './page.queries';

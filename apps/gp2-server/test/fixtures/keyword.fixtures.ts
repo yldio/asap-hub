@@ -33,7 +33,7 @@ export const getListKeywordsDataObject =
 
 export const getKeywordCreateDataObject =
   (): gp2Model.KeywordCreateDataObject => {
-    const { id: _id, name } = getKeywordDataObject();
+    const { name } = getKeywordDataObject();
 
     return {
       name,

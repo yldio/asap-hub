@@ -47,6 +47,26 @@ describe('graphQL and Rest clients', () => {
       expect(getEnvironment).toHaveBeenCalledWith(environmentId);
     });
 
+    it('should create a client using custom api-adapter', async () => {
+      const accessToken = 'token-2';
+      const spaceId = 'space-id';
+      const environmentId = 'env-id';
+      const apiAdapter = {} as contentfulManagement.Adapter;
+
+      await getRestClient({
+        space: spaceId,
+        accessToken,
+        environment: environmentId,
+        apiAdapter,
+      });
+
+      expect(contentfulManagement.createClient).toHaveBeenCalledWith({
+        apiAdapter,
+      });
+      expect(getSpaceFn).toHaveBeenCalledWith(spaceId);
+      expect(getEnvironment).toHaveBeenCalledWith(environmentId);
+    });
+
     it('returns the same client instance if called with the same credentials', async () => {
       const accessToken = 'token';
       const spaceId = 'space-id';

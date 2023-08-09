@@ -8,6 +8,7 @@ import {
   NotFoundPage,
   ResearchOutputForm,
   ResearchOutputHeader,
+  OutputVersionsFormCard,
   Toast,
   usePrevious,
 } from '@asap-hub/react-components';
@@ -37,6 +38,7 @@ import { useResearchOutputPermissions } from '../../shared-research/state';
 type WorkingGroupOutputProps = {
   workingGroupId: string;
   researchOutputData?: ResearchOutputResponse;
+  createVersion?: boolean;
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
@@ -45,6 +47,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   workingGroupId,
   researchOutputData,
   descriptionUnchangedWarning,
+  createVersion,
 }) => {
   const route = network({})
     .workingGroups({})
@@ -98,12 +101,19 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
+        {createVersion && (
+          <Toast accent="warning">
+            The previous output page will be replaced with a summarised version
+            history section.
+          </Toast>
+        )}
         <InnerToastContext.Provider value={toast}>
           {toastNode && <Toast accent="error">{toastNode}</Toast>}
           <ResearchOutputHeader
             documentType={documentType}
             workingGroupAssociation
           />
+          <OutputVersionsFormCard versions={[]} />
           <ResearchOutputForm
             tagSuggestions={researchSuggestions}
             documentType={documentType}

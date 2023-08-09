@@ -32,6 +32,7 @@ export { default as NewsSection } from './NewsSection';
 export { default as NoEvents } from './NoEvents';
 export { default as OnboardingFooter } from './OnboardingFooter';
 export { default as OutputVersions } from './OutputVersions';
+export { default as OutputVersionsFormCard } from './OutputVersionsFormCard';
 export { default as PageCard } from './PageCard';
 export { default as PagesSection } from './PagesSection';
 export { default as PastEventsDashboardCard } from './PastEventsDashboardCard';

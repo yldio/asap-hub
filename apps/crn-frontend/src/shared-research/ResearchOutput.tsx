@@ -90,6 +90,31 @@ const ResearchOutput: React.FC = () => {
               />
             </Frame>
           </Route>
+          {permissions.canVersionResearchOutput && (
+            <Route
+              path={
+                path +
+                sharedResearch({}).researchOutput({ researchOutputId })
+                  .versionResearchOutput.template
+              }
+            >
+              {isLinkedToWorkingGroup ? (
+                <WorkingGroupOutput
+                  workingGroupId={researchOutputData.workingGroups[0]?.id}
+                  researchOutputData={researchOutputData}
+                  createVersion
+                />
+              ) : (
+                researchOutputData.teams[0]?.id && (
+                  <TeamOutput
+                    teamId={researchOutputData.teams[0].id}
+                    researchOutputData={researchOutputData}
+                  />
+                )
+              )}
+            </Route>
+          )}
+
           {permissions.canEditResearchOutput && (
             <Route
               path={

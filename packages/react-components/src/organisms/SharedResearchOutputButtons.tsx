@@ -4,7 +4,7 @@ import { sharedResearch } from '@asap-hub/routing';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { mobileScreen, rem } from '../pixels';
 import { Link, Button } from '../atoms';
-import { editIcon, duplicateIcon, actionIcon } from '../icons';
+import { editIcon, duplicateIcon, actionIcon, VersionIcon } from '../icons';
 import { steel } from '../colors';
 
 const commonStyles = {
@@ -78,6 +78,7 @@ const SharedResearchOutputButtons: React.FC<
     canEditResearchOutput,
     canDuplicateResearchOutput,
     canRequestReview,
+    canVersionResearchOutput,
     canPublishResearchOutput,
   } = useContext(ResearchOutputPermissionsContext);
 
@@ -120,6 +121,24 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
+      {canVersionResearchOutput &&
+        (!isInReview || (isInReview && canPublishResearchOutput)) && (
+          <div css={leftButtons}>
+            <Link
+              noMargin
+              href={
+                sharedResearch({})
+                  .researchOutput({ researchOutputId: id })
+                  .versionResearchOutput({}).$
+              }
+              buttonStyle
+              small
+              primary
+            >
+              <VersionIcon /> Add Version
+            </Link>
+          </div>
+        )}
       {!published && isInReview && canPublishResearchOutput && (
         <div css={reviewButton}>
           <Button

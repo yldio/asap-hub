@@ -229,6 +229,7 @@ export const useResearchOutputPermissions = (
       userRole,
       published ?? false,
     ),
+    canVersionResearchOutput: hasPublishResearchOutputPermission(userRole),
     canPublishResearchOutput: hasPublishResearchOutputPermission(userRole),
     canShareResearchOutput: hasShareResearchOutputPermission(userRole),
     canDuplicateResearchOutput: hasDuplicateResearchOutputPermission(

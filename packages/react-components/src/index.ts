@@ -132,6 +132,7 @@ export {
   NoEvents,
   OnboardingFooter,
   OutputVersions,
+  OutputVersionsFormCard,
   PageCard,
   PagesSection,
   PastEventsDashboardCard,

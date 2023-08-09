@@ -8,11 +8,14 @@ import { perRem, tabletScreen } from '../pixels';
 import { charcoal, fern, lead, steel } from '../colors';
 import { formatDateToTimezone } from '../date';
 import { externalLinkIcon } from '../icons';
+import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 
-const container = css({
-  display: 'grid',
-  padding: `${32 / perRem}em ${24 / perRem}em`,
-});
+const container = (edit: boolean) =>
+  css({
+    background: edit ? steel.rgb : 'inherit',
+    display: 'grid',
+    padding: `${32 / perRem}em ${24 / perRem}em`,
+  });
 
 const descriptionStyles = css({
   marginTop: `${24 / perRem}em`,
@@ -92,9 +95,13 @@ export type OutputVersionsProps = {
     ResearchOutputResponse,
     'documentType' | 'type' | 'title' | 'id' | 'addedDate' | 'link'
   >[];
+  edit?: boolean;
 };
 
-const OutputVersions: React.FC<OutputVersionsProps> = ({ versions }) => {
+const OutputVersions: React.FC<OutputVersionsProps> = ({
+  versions,
+  edit = false,
+}) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = versions.length > 5;
@@ -110,7 +117,16 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({ versions }) => {
         <Headline2 noMargin>Version History</Headline2>
         <div css={descriptionStyles}>
           <Paragraph noMargin>
-            Find all previous output versions that contributed to this one.
+            {edit ? (
+              <>
+                List with all previous output versions that contributed to this
+                one. In case you want to add or edit older versions, please
+                contact
+                <Link href={mailToSupport()}> {TECH_SUPPORT_EMAIL}</Link>.
+              </>
+            ) : (
+              'Find all previous output versions that contributed to this one.'
+            )}
           </Paragraph>
         </div>
         <div css={[rowStyles, gridTitleStyles]}>

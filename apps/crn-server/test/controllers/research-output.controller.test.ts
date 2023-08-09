@@ -501,15 +501,29 @@ describe('ResearchOutputs controller', () => {
         );
       });
 
-      test('Should not throw error when no link is passed and its document type is Lab Resource', async () => {
+      describe('For document type = "Lab Resource"', () => {
         const researchOutputEmptyLinkRequest = getResearchOutputCreateData();
         researchOutputEmptyLinkRequest.documentType = 'Lab Resource';
         researchOutputEmptyLinkRequest.link = undefined;
 
-        await researchOutputs.create(researchOutputEmptyLinkRequest);
-        expect(researchOutputDataProviderMock.fetch).not.toHaveBeenCalledWith({
-          filter: { link: expect.any(String) },
-          includeDrafts: true,
+        test('Should not validate the unique link condition when no link is passed', async () => {
+          await researchOutputs.create(researchOutputEmptyLinkRequest);
+          expect(researchOutputDataProviderMock.fetch).not.toHaveBeenCalledWith(
+            {
+              filter: { link: expect.any(String) },
+              includeDrafts: true,
+            },
+          );
+        });
+
+        test('Should create the research output when no link is passed', async () => {
+          await researchOutputs.create(researchOutputEmptyLinkRequest);
+          expect(researchOutputDataProviderMock.create).toBeCalledWith(
+            expect.objectContaining({
+              link: undefined,
+            }),
+            { publish: true },
+          );
         });
       });
     });

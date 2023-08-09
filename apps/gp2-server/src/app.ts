@@ -21,6 +21,7 @@ import ContributingCohortController from './controllers/contributing-cohort.cont
 import DashboardController from './controllers/dashboard.controller';
 import Events from './controllers/event.controller';
 import ExternalUserController from './controllers/external-user.controller';
+import KeywordController from './controllers/keyword.controller';
 import NewsController from './controllers/news.controller';
 import OutputController from './controllers/output.controller';
 import PageController from './controllers/page.controller';
@@ -32,6 +33,7 @@ import { AssetContentfulDataProvider } from './data-providers/asset.data-provide
 import { ContributingCohortContentfulDataProvider } from './data-providers/contributing-cohort.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/dashboard.data-provider';
 import { ExternalUserContentfulDataProvider } from './data-providers/external-user.data-provider';
+import { KeywordContentfulDataProvider } from './data-providers/keyword.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/news.data-provider';
 import { OutputContentfulDataProvider } from './data-providers/output.data-provider';
 import { PageContentfulDataProvider } from './data-providers/page.data-provider';
@@ -40,6 +42,7 @@ import {
   AssetDataProvider,
   ContributingCohortDataProvider,
   DashboardDataProvider,
+  KeywordDataProvider,
   NewsDataProvider,
   OutputDataProvider,
   PageDataProvider,
@@ -63,6 +66,7 @@ import { contributingCohortRouteFactory } from './routes/contributing-cohort.rou
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import { eventRouteFactory } from './routes/event.route';
 import { externalUserRouteFactory } from './routes/external-user.route';
+import { keywordRouteFactory } from './routes/keyword.route';
 import { newsRouteFactory } from './routes/news.route';
 import { outputRouteFactory } from './routes/output.route';
 import { pageRouteFactory } from './routes/page.route';
@@ -173,6 +177,13 @@ export const appFactory = (libs: Libs = {}): Express => {
   const outputDataProvider =
     libs.outputDataProvider || outputContentfulDataProvider;
 
+  const keywordDataProvider =
+    libs.keywordDataProvider ||
+    new KeywordContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
+
   // Controllers
 
   const workingGroupController =
@@ -202,6 +213,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const contributingCohortController =
     libs.contributingCohortController ||
     new ContributingCohortController(contributingCohortDataProvider);
+
+  const keywordController =
+    libs.keywordController || new KeywordController(keywordDataProvider);
 
   /**
    * Public routes --->
@@ -241,6 +255,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const externalUsersRoutes = externalUserRouteFactory(externalUserController);
   const calendarRoutes = calendarRouteFactory(calendarController);
   const outputRoutes = outputRouteFactory(outputController);
+  const keywordRoutes = keywordRouteFactory(keywordController);
 
   /* istanbul ignore next */
   if (libs.sentryRequestHandler) {
@@ -279,6 +294,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(externalUsersRoutes);
   app.use(calendarRoutes);
   app.use(outputRoutes);
+  app.use(keywordRoutes);
 
   // Catch all
   app.get('*', async (_req, res) => {
@@ -318,6 +334,8 @@ export type Libs = {
   externalUserContentfulDataProvider?: ExternalUserDataProvider;
   externalUserController?: ExternalUserController;
   externalUserDataProvider?: ExternalUserDataProvider;
+  keywordDataProvider?: KeywordDataProvider;
+  keywordController?: KeywordController;
   logger?: Logger;
   newsController?: NewsController;
   newsDataProvider?: NewsDataProvider;

@@ -19,6 +19,12 @@ export const projectsContentQueryFragment = gql`
     pmEmail
     leadEmail
     keywords
+    tagsCollection {
+      total
+      items {
+        name
+      }
+    }
     traineeProject
     opportunitiesLink
     membersCollection(limit: 50) {

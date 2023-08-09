@@ -25,6 +25,12 @@ export const usersContentQueryFragment = gql`
     telephoneCountryCode
     telephoneNumber
     keywords
+    tagsCollection {
+      total
+      items {
+        name
+      }
+    }
     biography
     questions
     fundingStreams

@@ -26,10 +26,12 @@ import {
   patchUser,
   postUserAvatar,
 } from '../../users/api';
+import { getKeywords } from '../../shared/api';
 import Preview from '../Preview';
 
 jest.mock('browser-image-compression');
 jest.mock('../../users/api');
+jest.mock('../../shared/api');
 
 const fileBuffer = readFileSync(join(__dirname, 'jpeg.jpg'));
 const file = new File([new Uint8Array(fileBuffer)], 'jpeg.jpg', {
@@ -76,13 +78,19 @@ const renderPreview = async (
 };
 
 describe('Preview', () => {
-  beforeEach(jest.resetAllMocks);
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockGetKeywords.mockResolvedValue(gp2Fixtures.createKeywordsResponse());
+  });
   const contributingCohortResponse: gp2Model.ContributingCohortResponse[] = [
     { id: '7', name: 'AGPDS' },
     { id: '11', name: 'S3' },
   ];
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+  const mockGetKeywords = getKeywords as jest.MockedFunction<
+    typeof getKeywords
+  >;
   const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
     typeof postUserAvatar
   >;

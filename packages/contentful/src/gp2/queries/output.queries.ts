@@ -57,6 +57,12 @@ export const outputsContentQueryFragment = gql`
         }
       }
     }
+    tagsCollection {
+      total
+      items {
+        name
+      }
+    }
   }
 `;
 

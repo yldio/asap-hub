@@ -15,6 +15,7 @@ describe('KeywordsModal', () => {
     ...gp2Fixtures.createUserResponse(),
     backHref: '',
     onSave: jest.fn(),
+    suggestions: [{ name: 'Keyword-1', id: 'id-1' }],
   };
 
   const renderModal = (overrides: Partial<KeywordsModalProps> = {}) =>
@@ -60,7 +61,6 @@ describe('KeywordsModal', () => {
 
   it('calls onSave with the updated fields', async () => {
     const onSave = jest.fn();
-    const keywords = 'Genetics';
     renderModal({
       keywords: [],
       onSave,
@@ -71,11 +71,11 @@ describe('KeywordsModal', () => {
         name: /Keywords/i,
       }),
     );
-    userEvent.click(screen.getByText(keywords));
+    userEvent.click(screen.getByText('Keyword-1'));
 
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      keywords: [keywords],
+      keywords: ['Keyword-1'],
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });

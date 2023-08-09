@@ -9,6 +9,7 @@ import { gp2 } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
 
 import { usePatchUserById, useUserById } from '../users/state';
+import { useKeywords } from '../shared/state';
 
 const Background: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
@@ -18,6 +19,8 @@ const Background: React.FC<Record<string, never>> = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const patchUser = usePatchUserById(currentUser!.id);
+
+  const { items: allKeywords } = useKeywords();
 
   if (userData) {
     return (
@@ -39,6 +42,7 @@ const Background: React.FC<Record<string, never>> = () => {
             {...userData}
             backHref={onboarding({}).background({}).$}
             onSave={(patchedUser) => patchUser(patchedUser)}
+            suggestions={allKeywords}
           />
         </Route>
       </>

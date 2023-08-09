@@ -39,6 +39,24 @@ describe('useAlgolia', () => {
       new Error('Algolia unavailable while not logged in'),
     );
   });
+  it('throws when api key is null', async () => {
+    setCurrentOverrides({ CONTENTFUL: false });
+
+    const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
+      wrapper: ({ children }) => (
+        <RecoilRoot>
+          <Auth0Provider user={{ algoliaApiKey: null, id: 'usertoken' }}>
+            <WhenReady>{children}</WhenReady>
+          </Auth0Provider>
+        </RecoilRoot>
+      ),
+    });
+    await waitForNextUpdate();
+
+    expect(result.error).toEqual(
+      new Error('Algolia unavailable while not onboarded'),
+    );
+  });
   it('constructs algolia client linking GTM and Algolia with Auth0 user id', async () => {
     setCurrentOverrides({ CONTENTFUL: false });
 

@@ -154,7 +154,7 @@ describe('Fetch-user-by-code handler', () => {
       expect(JSON.parse(result.body)).toEqual(getUserResponse());
     });
 
-    test('should return an empty string as the algolia key if the user is not onboarded', async () => {
+    test('should return null as the algolia key if the user is not onboarded', async () => {
       userControllerMock.fetchByCode.mockResolvedValueOnce({
         ...getUserResponse(),
         onboarded: false,
@@ -166,7 +166,7 @@ describe('Fetch-user-by-code handler', () => {
 
       expect(result.statusCode).toStrictEqual(200);
       expect(JSON.parse(result.body)).toMatchObject({
-        algoliaApiKey: '',
+        algoliaApiKey: null,
       });
     });
 

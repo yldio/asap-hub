@@ -30,7 +30,7 @@ export const fetchUserByCodeHandlerFactory = (
             ttl,
           }),
         })
-      : '';
+      : null;
 
     return {
       payload: {

@@ -75,7 +75,7 @@ describe('KeywordsModal', () => {
 
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      keywords: ['id-1'],
+      keywords: ['Keyword-1'],
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });

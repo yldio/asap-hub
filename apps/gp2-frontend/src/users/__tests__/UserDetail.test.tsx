@@ -21,10 +21,12 @@ import {
   patchUser,
 } from '../api';
 import UserDetail from '../UserDetail';
+import { getKeywords } from '../../shared/api';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
 jest.mock('../../events/api');
+jest.mock('../../shared/api');
 
 const renderUserDetail = async (id: string) => {
   render(
@@ -58,6 +60,9 @@ describe('UserDetail', () => {
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+  const mockGetKeywords = getKeywords as jest.MockedFunction<
+    typeof getKeywords
+  >;
 
   const mockGetInstitutions = getInstitutions as jest.MockedFunction<
     typeof getInstitutions
@@ -75,6 +80,7 @@ describe('UserDetail', () => {
   beforeEach(() => {
     mockGetOutputs.mockResolvedValue(gp2Fixtures.createListOutputResponse(1));
     mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
+    mockGetKeywords.mockResolvedValue(gp2Fixtures.createKeywordsResponse());
   });
 
   it('renders header with title', async () => {

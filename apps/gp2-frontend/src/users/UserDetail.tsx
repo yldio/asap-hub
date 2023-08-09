@@ -20,6 +20,7 @@ import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
+import { useKeywords } from '../shared/state';
 import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { getInstitutions } from './api';
@@ -65,6 +66,8 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   const patchUser = usePatchUserById(userId);
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
+
+  const { items: allKeywords } = useKeywords();
 
   const commonModalProps = {
     backHref: backToUserDetails,
@@ -134,7 +137,11 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                       <FundingProviderModal {...user} {...commonModalProps} />
                     </Route>
                     <Route path={userOverviewRoute.editKeywords({}).$}>
-                      <KeywordsModal {...user} {...commonModalProps} />
+                      <KeywordsModal
+                        {...user}
+                        {...commonModalProps}
+                        suggestions={allKeywords}
+                      />
                     </Route>
                     <Route path={userOverviewRoute.editQuestions({}).$}>
                       <OpenQuestionsModal {...user} {...commonModalProps} />

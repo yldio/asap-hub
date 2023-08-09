@@ -15,9 +15,11 @@ import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, patchUser } from '../../users/api';
+import { getKeywords } from '../../shared/api';
 import Background from '../Background';
 
 jest.mock('../../users/api');
+jest.mock('../../shared/api');
 
 mockConsoleError();
 
@@ -43,9 +45,16 @@ const renderBackground = async (id: string) => {
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 describe('Background', () => {
-  beforeEach(jest.resetAllMocks);
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockGetKeywords.mockResolvedValue(gp2Fixtures.createKeywordsResponse());
+  });
+
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+  const mockGetKeywords = getKeywords as jest.MockedFunction<
+    typeof getKeywords
+  >;
 
   it('renders biography and keywords', async () => {
     const user = gp2Fixtures.createUserResponse();

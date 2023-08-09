@@ -3,6 +3,7 @@ export * from './external-users';
 export * from './calendars';
 export * from './dashboard';
 export * from './events';
+export * from './keywords';
 export * from './outputs';
 export * from './news';
 export * from './projects';

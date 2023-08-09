@@ -1,5 +1,6 @@
 import { TabLink, TabNav } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
+import { isEnabled } from '@asap-hub/flags';
 import { ComponentProps } from 'react';
 import { detailHeaderStyles } from '../layout';
 import UserDetailHeaderCard from './UserDetailHeaderCard';
@@ -26,10 +27,14 @@ const UserDetailHeader: React.FC<UserDetailHeaderProps> = ({
         <TabLink href={route.outputs({}).$}>
           Shared Outputs ({outputsTotal})
         </TabLink>
-        <TabLink href={route.upcoming({}).$}>
-          Upcoming Events ({upcomingTotal})
-        </TabLink>
-        <TabLink href={route.past({}).$}>Past Events ({pastTotal})</TabLink>
+        {isEnabled('ASAP_UPCOMING_EVENTS') && (
+          <TabLink href={route.upcoming({}).$}>
+            Upcoming Events ({upcomingTotal})
+          </TabLink>
+        )}
+        {isEnabled('ASAP_PAST_EVENTS') && (
+          <TabLink href={route.past({}).$}>Past Events ({pastTotal})</TabLink>
+        )}
       </TabNav>
     </header>
   );

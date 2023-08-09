@@ -8,6 +8,7 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { gp2 } from '@asap-hub/fixtures';
+import { setCurrentOverrides } from '@asap-hub/flags';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import Routes from '../Routes';
@@ -16,6 +17,7 @@ import { getEvents } from '../api';
 jest.mock('../api');
 
 const renderRoutes = async () => {
+  setCurrentOverrides({ ASAP_PAST_EVENTS: true, ASAP_UPCOMING_EVENTS: true });
   render(
     <RecoilRoot>
       <Suspense fallback="loading">

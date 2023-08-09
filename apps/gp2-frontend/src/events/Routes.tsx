@@ -1,5 +1,6 @@
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { isEnabled } from '@asap-hub/flags';
 
 import { gp2 } from '@asap-hub/routing';
 import { EventsPage } from '@asap-hub/gp2-components';
@@ -50,7 +51,11 @@ const Events: FC<Record<string, never>> = () => {
           <Event />
         </Frame>
       </Route>
-      <Redirect to={gp2.events({}).upcoming({}).$} />
+      {isEnabled('ASAP_UPCOMING_EVENTS') ? (
+        <Redirect to={gp2.events({}).upcoming({}).$} />
+      ) : (
+        <Redirect to={gp2.events({}).calendar({}).$} />
+      )}
     </Switch>
   );
 };

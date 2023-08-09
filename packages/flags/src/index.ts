@@ -2,6 +2,8 @@ export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'DRAFT_RESEARCH_OUTPUT'
   | 'ASAP_DRAFT_RESEARCH_OUTPUT'
+  | 'ASAP_PAST_EVENTS'
+  | 'ASAP_UPCOMING_EVENTS'
   | 'CONTENTFUL';
 
 export type Flags = Partial<Record<Flag, boolean | undefined>>;
@@ -9,6 +11,8 @@ let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   ASAP_DRAFT_RESEARCH_OUTPUT: false,
+  ASAP_PAST_EVENTS: false,
+  ASAP_UPCOMING_EVENTS: false,
   CONTENTFUL: false,
 };
 

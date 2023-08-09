@@ -16,6 +16,7 @@ import {
   RemindersCard,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { isEnabled } from '@asap-hub/flags';
 import { ComponentProps } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
@@ -129,24 +130,26 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </Card>
       )}
+      {isEnabled('ASAP_UPCOMING_EVENTS') && (
       <div>
-        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
-        <div css={infoStyles}>
-          Here are some of the upcoming events happening within the network.
-        </div>
-        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-        {totalOfUpcomingEvents > 3 && (
-          <p css={viewAllStyles} data-testid="view-upcoming-events">
-            <Button
-              onClick={() =>
-                history.push({ pathname: gp2Routes.events({}).upcoming({}).$ })
-              }
-            >
-              View All
-            </Button>
-          </p>
-        )}
+      <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+      <div css={infoStyles}>
+        Here are some of the upcoming events happening within the network.
       </div>
+      <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
+      {totalOfUpcomingEvents > 3 && (
+        <p css={viewAllStyles} data-testid="view-upcoming-events">
+          <Button
+            onClick={() =>
+              history.push({ pathname: gp2Routes.events({}).upcoming({}).$ })
+            }
+          >
+            View All
+          </Button>
+        </p>
+      )}
+    </div>
+      )}
       {lastestNews ? (
         <div css={columnContainer}>
           <Headline2>Latest Newsletter</Headline2>

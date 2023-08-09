@@ -1219,6 +1219,7 @@ __metadata:
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"

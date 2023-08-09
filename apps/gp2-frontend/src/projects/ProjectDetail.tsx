@@ -127,7 +127,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList project={projectId} />
+                <OutputList project={projectId} searchQuery={''} />
               </Frame>
             </Route>
             <Route path={upcoming}>

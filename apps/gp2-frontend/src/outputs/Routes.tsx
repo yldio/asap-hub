@@ -1,13 +1,22 @@
-import { FC } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { OutputsPage } from '@asap-hub/gp2-components';
+import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
-
-import OutputList from './OutputList';
-import ShareOutput from './ShareOutput';
+import { FC, lazy, useEffect } from 'react';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from '../Frame';
 
+const loadOutputDirectory = () =>
+  import(/* webpackChunkName: "output-directory" */ './OutputDirectory');
+const loadShareOutput = () =>
+  import(/* webpackChunkName: "share-output" */ './ShareOutput');
+
+const OutputDirectory = lazy(loadOutputDirectory);
+const ShareOutput = lazy(loadShareOutput);
+
 const Outputs: FC<Record<string, never>> = () => {
+  useEffect(() => {
+    loadOutputDirectory().then(loadShareOutput);
+  }, []);
   const { path } = useRouteMatch();
 
   return (
@@ -15,8 +24,8 @@ const Outputs: FC<Record<string, never>> = () => {
       <Route exact path={path}>
         <Frame title="Outputs">
           <OutputsPage>
-            <Frame title={null}>
-              <OutputList />
+            <Frame title="Outputs">
+              <OutputDirectory />
             </Frame>
           </OutputsPage>
         </Frame>
@@ -26,6 +35,7 @@ const Outputs: FC<Record<string, never>> = () => {
           <ShareOutput />
         </Frame>
       </Route>
+      <Route component={NotFoundPage} />
     </Switch>
   );
 };

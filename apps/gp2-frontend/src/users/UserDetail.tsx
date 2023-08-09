@@ -158,7 +158,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
             </Route>
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList author={userId} />
+                <OutputList author={userId} searchQuery={''} />
               </Frame>
             </Route>
             <Route path={upcoming}>

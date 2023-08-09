@@ -1,17 +1,15 @@
-import { OutputCard } from '@asap-hub/gp2-components';
-import { ResultList } from '@asap-hub/react-components';
+import { EmptyState, noNewsIcon, OutputCard } from '@asap-hub/gp2-components';
+import { ResultList, SearchAndFilter } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
+import { ComponentProps } from 'react';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useOutputs } from './state';
 
-interface OutputListProps {
-  searchQuery?: string;
-  filters?: Set<string>;
+type OutputListProps = {
   project?: string;
   workingGroup?: string;
   author?: string;
-}
-
+} & Pick<ComponentProps<typeof SearchAndFilter>, 'filters' | 'searchQuery'>;
 const OutputList: React.FC<OutputListProps> = ({
   searchQuery = '',
   filters = new Set(),
@@ -33,7 +31,7 @@ const OutputList: React.FC<OutputListProps> = ({
     author,
   });
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
-  return (
+  return total || searchQuery ? (
     <ResultList
       numberOfItems={total}
       numberOfPages={numberOfPages}
@@ -48,6 +46,14 @@ const OutputList: React.FC<OutputListProps> = ({
         />
       ))}
     </ResultList>
+  ) : (
+    <EmptyState
+      icon={noNewsIcon}
+      title={'No outputs available.'}
+      description={
+        'When a working group or project has an associated output, it will be listed here.'
+      }
+    />
   );
 };
 

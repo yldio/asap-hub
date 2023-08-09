@@ -132,7 +132,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList workingGroup={workingGroupId} />
+                <OutputList workingGroup={workingGroupId} searchQuery={''} />
               </Frame>
             </Route>
             <Route path={upcoming}>

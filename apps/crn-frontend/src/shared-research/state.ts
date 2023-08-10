@@ -1,4 +1,3 @@
-import { User } from '@asap-hub/auth';
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
@@ -23,7 +22,7 @@ import {
   useRecoilValue,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
-import { EMPTY_ALGOLIA_RESPONSE, useAlgolia } from '../hooks/algolia';
+import { useAlgolia } from '../hooks/algolia';
 import {
   getDraftResearchOutputs,
   getResearchOutput,
@@ -143,20 +142,12 @@ export const researchOutputState = atomFamily<
 export const useResearchOutputById = (id: string) =>
   useRecoilValue(researchOutputState(id));
 
-export const useResearchOutputs = (
-  options: ResearchOutputListOptions,
-  user?: User | null,
-) => {
+export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
   );
   const { client } = useAlgolia();
   const authorization = useRecoilValue(authorizationState);
-
-  if (user && !user.onboarded) {
-    return EMPTY_ALGOLIA_RESPONSE;
-  }
-
   if (researchOutputs === undefined) {
     throw (
       options.draftsOnly

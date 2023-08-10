@@ -137,7 +137,7 @@
     "babel-loader": "8.3.0",
     "copy-webpack-plugin": "9.1.0",
     "graphql-typescript-integration": "1.2.1",
-    "jest-when": "3.5.2",
+    "jest-when": "3.6.0",
     "jwt-encode": "1.0.1",
     "limiter": "^2.1.0",
     "node-dev": "6.7.0",

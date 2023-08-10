@@ -97,8 +97,8 @@ it('publishes the output', async () => {
       title,
       link,
       documentType: 'Procedural Form',
-      project: 'project-id-1',
-      workingGroup: undefined,
+      projectId: 'project-id-1',
+      workingGroupId: undefined,
       authors: [
         {
           userId: '1',

@@ -27,6 +27,10 @@ export const getContentfulGraphqlEvent = (): NonNullable<
   status: 'Confirmed',
   hidden: false,
   tags: [],
+  keywordsCollection: {
+    items: [],
+    total: 0,
+  },
   title: 'Example Event',
   notesPermanentlyUnavailable: false,
   notes: {

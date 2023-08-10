@@ -47,8 +47,8 @@ export const mockedUser: gp2.UserResponse = {
     },
   ],
   fundingStreams: undefined,
-  tags: [{ id: 'id-1', name: 'Aging' }],
-  keywords: ['Aging'],
+  tags: [{ id: 'id-1', name: 'Cohort' }],
+  keywords: ['Cohort'],
   telephone: {
     countryCode: '+1',
     number: '0123456789',

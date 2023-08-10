@@ -17,8 +17,8 @@ export const getProjectDataObject = (): gp2Model.ProjectDataObject => ({
       role: 'Project manager',
     },
   ],
-  keywords: ['RNA'],
-  tags: [{ id: '1', name: 'RNA' }],
+  keywords: ['BLAAC-PD'],
+  tags: [{ id: '1', name: 'BLAAC-PD' }],
   description: 'test description',
   leadEmail: 'peter@parker.com',
   pmEmail: 'tony@stark.com',
@@ -55,6 +55,7 @@ export const getProjectUpdateDataObject =
         role: 'Project manager',
       },
     ],
+    tags: [{ id: '34' }],
   });
 
 export const getListProjectDataObject = (): gp2Model.ListProjectResponse => ({
@@ -116,6 +117,18 @@ export const getContentfulGraphqlProjectResources = () => ({
     },
   ],
 });
+
+export const getContentfulGraphqlProjectTags = () => ({
+  total: 1,
+  items: [
+    {
+      sys: {
+        id: '1',
+      },
+      name: 'BLAAC-PD',
+    },
+  ],
+});
 export const getContentfulGraphqlProject = (
   props = {},
 ): NonNullable<
@@ -129,7 +142,8 @@ export const getContentfulGraphqlProject = (
   endDate: '2021-12-28',
   status: 'Completed',
   projectProposal: 'http://a-proposal',
-  keywords: ['RNA'],
+  keywords: ['BLAAC-PD'],
+  tagsCollection: { ...getContentfulGraphqlProjectTags() },
   description: 'test description',
   leadEmail: 'peter@parker.com',
   pmEmail: 'tony@stark.com',

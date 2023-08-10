@@ -149,14 +149,14 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
     const cohortFields = getCohortFields(nextContributingCohorts);
 
-    const previousTags = user.fields.tags || [];
-    const newTags =
-      data.tags && getLinkEntities(data.tags.map((tag) => tag.id));
+    const newTags = data.tags
+      ? { tags: getLinkEntities(data.tags.map((tag) => tag.id)) }
+      : {};
 
     const result = await patchAndPublish(user, {
       ...fields,
       ...cohortFields,
-      tags: [...previousTags, ...newTags!],
+      ...newTags,
     });
 
     await removePreviousCohorts(

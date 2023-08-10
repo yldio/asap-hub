@@ -96,15 +96,15 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
         : doNotProcessEntity;
     const previousProject = await environment.getEntry(id);
 
-    const previousTags = previousProject?.fields.tags || [];
-    const newTags =
-      project.tags && getLinkEntities(project.tags.map((tag) => tag.id));
+    const newTags = project.tags
+      ? { tags: getLinkEntities(project.tags.map((tag) => tag.id)) }
+      : {};
 
     const result = await patchAndPublish(previousProject, {
       ...project,
       ...resourceFields,
       ...memberFields,
-      tags: [...previousTags, ...newTags!],
+      ...newTags,
     });
 
     await deleteEntries(

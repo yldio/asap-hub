@@ -15,7 +15,7 @@ describe('KeywordsModal', () => {
     ...gp2Fixtures.createUserResponse(),
     backHref: '',
     onSave: jest.fn(),
-    suggestions: [{ name: 'Keyword-1', id: 'id-1' }],
+    suggestions: [{ name: 'Keyword-2', id: 'id-2' }],
   };
 
   const renderModal = (overrides: Partial<KeywordsModalProps> = {}) =>
@@ -33,9 +33,9 @@ describe('KeywordsModal', () => {
   });
 
   it.each`
-    keywords        | expected
-    ${undefined}    | ${'Start typing...'}
-    ${['Genetics']} | ${'Genetics'}
+    keywords                              | expected
+    ${undefined}                          | ${'Start typing...'}
+    ${[{ id: 'id-1', name: 'Genetics' }]} | ${'Genetics'}
   `('renders keywords with value "$expected"', ({ keywords, expected }) => {
     renderModal({ tags: keywords });
     const textbox = screen.getByRole('textbox', {
@@ -47,14 +47,16 @@ describe('KeywordsModal', () => {
 
   it('calls onSave with the right arguments', async () => {
     const onSave = jest.fn();
-    const tags = [{ id: '1', name: 'Genetics' }] as KeywordDataObject[];
+    const tags = [{ id: 'id-1', name: 'Genetics' }] as KeywordDataObject[];
     renderModal({
       tags,
       onSave,
     });
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      tags,
+      tags: tags.map((t) => ({
+        id: t.id,
+      })),
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
@@ -71,11 +73,11 @@ describe('KeywordsModal', () => {
         name: /Keywords/i,
       }),
     );
-    userEvent.click(screen.getByText('Keyword-1'));
+    userEvent.click(screen.getByText('Keyword-2'));
 
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      keywords: ['Keyword-1'],
+      tags: [{ id: 'id-2' }],
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });

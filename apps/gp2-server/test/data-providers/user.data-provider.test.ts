@@ -138,16 +138,6 @@ describe('User data provider', () => {
       },
     );
 
-    test.each(gp2Model.keywords)('keywords are added - %s', async (keyword) => {
-      const keywords = [keyword];
-      const mockResponse = getContentfulGraphqlUser({ keywords });
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        users: mockResponse,
-      });
-      const result = await userDataProvider.fetchById('user-id');
-      expect(result?.keywords).toEqual(keywords);
-    });
-
     test('questions are added', async () => {
       const questions = ['a valid question'];
       const mockResponse = getContentfulGraphqlUser({ questions });
@@ -857,9 +847,8 @@ describe('User data provider', () => {
     });
 
     test.each`
-      name          | value                 | fieldName
-      ${'regions'}  | ${['Africa', 'Asia']} | ${'region_in'}
-      ${'keywords'} | ${['Aging', 'RNA']}   | ${'keywords_contains_some'}
+      name         | value                 | fieldName
+      ${'regions'} | ${['Africa', 'Asia']} | ${'region_in'}
     `(
       'Should query with region filters',
       async ({ name, value, fieldName }) => {
@@ -1831,6 +1820,15 @@ describe('User data provider', () => {
       });
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
         alternativeEmail: 'tony@example.com',
+      });
+    });
+
+    test('Should update tags', async () => {
+      await userDataProvider.update(userId, {
+        tags: [{ id: '1' }],
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        tags: [{ sys: { id: '1', linkType: 'Entry', type: 'Link' } }],
       });
     });
 

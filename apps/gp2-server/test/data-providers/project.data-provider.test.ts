@@ -1189,5 +1189,32 @@ describe('Project Data Provider', () => {
       });
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(3);
     });
+
+    describe('keywords', () => {
+      test('It should associate the keyword to the project', async () => {
+        const projectId = '11';
+        const keywordId = '23';
+        const existingProjectMock = getEntry({}, projectId);
+        const project = getContentfulGraphqlProject();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          projects: {
+            ...project,
+            tagsCollection: {
+              total: 0,
+              items: [],
+            },
+          },
+        });
+        environmentMock.getEntry.mockResolvedValueOnce(existingProjectMock);
+
+        await projectDataProvider.update(projectId, {
+          tags: [{ id: keywordId }],
+        });
+
+        expect(patchAndPublish).toHaveBeenCalledWith(existingProjectMock, {
+          tags: [{ sys: { id: keywordId, linkType: 'Entry', type: 'Link' } }],
+        });
+      });
+    });
   });
 });

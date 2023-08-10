@@ -34,8 +34,9 @@ type UserDetailProps = {
 };
 
 const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
-  const currentUser = useCurrentUserGP2();
+  // const currentUser = useCurrentUserGP2();
   const { userId } = useRouteParams(users({}).user);
+  const currentUser = { ...useCurrentUserGP2(), id: userId };
   const isOwnProfile = userId === currentUser?.id;
   const user = useUserById(userId);
 

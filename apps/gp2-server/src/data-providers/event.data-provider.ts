@@ -216,14 +216,15 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
     const environment = await this.getRestClient();
     const event = await environment.getEntry(id);
     const { calendar, ...otherUpdateFields } = update;
-    const previousKeywords = event?.fields.keywords || [];
-    const newKeywords =
-      update.keywords && getLinkEntities(update.keywords.map((k) => k.id));
+
+    const newKeywords = update.keywords
+      ? { keywords: getLinkEntities(update.keywords.map((k) => k.id)) }
+      : {};
 
     const updateWithCalendarLink = {
       ...(calendar ? { calendar: createLink(calendar) } : {}),
       ...otherUpdateFields,
-      keywords: [...previousKeywords, ...newKeywords!],
+      ...newKeywords,
     };
 
     const result = await patchAndPublish(event, updateWithCalendarLink);

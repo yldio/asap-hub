@@ -1,5 +1,6 @@
 import { Entry } from 'contentful-management';
 import { migrateFromSquidexToContentfulFactory } from '../../src/utils/migration';
+import { logger as loggerFunc, RED_COLOR } from '../../src/utils/logs';
 import { getContentfulEnvironmentMock } from '../mocks/contentful.mocks';
 import { loggerMock } from '../mocks/logger.mock';
 
@@ -214,7 +215,7 @@ describe('Migration from Squidex to Contentful', () => {
       );
     });
 
-    test('Should throw when fallback create fails when UPSERT_IN_PLACE is true', async () => {
+    test('Should not throw when fallback create fails when UPSERT_IN_PLACE is true but it should log the error', async () => {
       process.env.UPSERT_IN_PLACE = 'true';
 
       fetchData.mockResolvedValueOnce([squidexRecord]);
@@ -231,7 +232,7 @@ describe('Migration from Squidex to Contentful', () => {
       const migrateFromSquidexToContentful =
         migrateFromSquidexToContentfulFactory(
           contentfulEnvironmentMock,
-          loggerMock,
+          loggerFunc,
         );
 
       contentfulEnvironmentMock.getEntry.mockRejectedValueOnce(
@@ -242,9 +243,17 @@ describe('Migration from Squidex to Contentful', () => {
         new Error('unknown error'),
       );
 
-      await expect(
-        migrateFromSquidexToContentful('entity', fetchData, parseData, true),
-      ).rejects.toThrowError('unknown error');
+      await migrateFromSquidexToContentful(
+        'entity',
+        fetchData,
+        parseData,
+        true,
+      );
+
+      expect(console.log).toHaveBeenCalledWith(
+        RED_COLOR,
+        `[ERROR] (Fallback update) Error creating entry squidex-id:\nError: unknown error`,
+      );
     });
 
     test('Should not try to create an entry if it was supposed to update it but the entry does not exist when UPSERT_IN_PLACE is false and item has updateEntry as true', async () => {

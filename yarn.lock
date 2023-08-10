@@ -429,7 +429,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -456,7 +456,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -484,7 +484,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -511,7 +511,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -539,7 +539,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -568,7 +568,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -597,7 +597,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -625,7 +625,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -654,7 +654,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -681,7 +681,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -710,7 +710,7 @@ __metadata:
     "@tsconfig/create-react-app": 2.0.1
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
     contentful-management: 10.39.2
@@ -780,7 +780,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 29.5.3
     "@types/jsdom": 16.2.15
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.9
@@ -832,7 +832,7 @@ __metadata:
     "@types/nock": 11.1.0
     "@types/node": 18.17.3
     "@types/qs": 6.9.7
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
@@ -888,7 +888,7 @@ __metadata:
     "@emotion/server": 11.11.0
     "@types/babel__core": 7.20.1
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     aws-sdk: 2.1430.0
     babel-loader: 8.3.0
@@ -1142,7 +1142,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 29.5.3
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-router-dom": 5.3.3
     "@types/streamsaver": 2.0.1
     "@types/testing-library__jest-dom": 5.14.9
@@ -1190,7 +1190,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 29.5.3
     "@types/jsdom": 16.2.15
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/testing-library__jest-dom": 5.14.9
@@ -1240,7 +1240,7 @@ __metadata:
     "@types/hast-util-sanitize": "workspace:*"
     "@types/history": 4.7.11
     "@types/jest": 29.5.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
@@ -1305,7 +1305,7 @@ __metadata:
     "@types/jest": 29.5.3
     "@types/nock": 11.1.0
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 17.0.2
@@ -1359,7 +1359,7 @@ __metadata:
     "@emotion/server": 11.11.0
     "@types/babel__core": 7.20.1
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     aws-sdk: 2.1430.0
     babel-loader: 8.3.0
@@ -1481,7 +1481,7 @@ __metadata:
     "@emotion/react": 11.11.1
     "@emotion/server": 11.11.0
     "@types/babel__core": 7.20.1
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
@@ -1551,7 +1551,7 @@ __metadata:
     "@types/history": 4.7.11
     "@types/jest": 29.5.3
     "@types/ramda": 0.27.20
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 1.2.1
@@ -1625,7 +1625,7 @@ __metadata:
     "@testing-library/react": 11.2.7
     "@testing-library/react-hooks": 8.0.1
     "@types/jest": 29.5.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
@@ -1802,7 +1802,7 @@ __metadata:
     "@storybook/manager-webpack5": ^6.5.13
     "@storybook/react": 6.5.16
     "@types/history": 4.7.11
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-router-dom": 5.3.3
     babel-preset-react-app: 10.0.1
     core-js: 3.32.0
@@ -1827,7 +1827,7 @@ __metadata:
     "@babel/preset-react": 7.22.5
     "@babel/runtime-corejs3": 7.22.10
     "@types/node": 18.17.3
-    "@types/react": 17.0.62
+    "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     react: 17.0.2
     react-dom: 17.0.2
@@ -10956,8 +10956,8 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-reference@npm:^5.9.0":
-  version: 5.13.2
-  resolution: "@contentful/field-editor-reference@npm:5.13.2"
+  version: 5.13.3
+  resolution: "@contentful/field-editor-reference@npm:5.13.3"
   dependencies:
     "@contentful/f36-components": ^4.0.27
     "@contentful/f36-icons": ^4.1.0
@@ -10969,7 +10969,7 @@ __metadata:
     array-move: ^3.0.0
     constate: 3.2.0
     contentful-management: ^10.14.0
-    deep-equal: 2.0.5
+    deep-equal: 2.2.2
     emotion: ^10.0.17
     lodash: ^4.17.15
     moment: ^2.20.0
@@ -10980,7 +10980,7 @@ __metadata:
   peerDependencies:
     "@contentful/app-sdk": ^4.2.0
     react: ">=16.8.0"
-  checksum: 84f92a90e13d52ef34b88f4452671b3930bd800a7c493bd2566c246403dbe195d9425f0eda0cfa6ebda4108e0b4b291ec610dde042dff6e139d375729e6163ff
+  checksum: 8434c6e11781ce3d79ad77044cae7b9f7fce8b89b9f3678f801a6c415e0a4a7bde8e662067b01da6783b40e4c02f0bf2b7af7c34526462f72153afd2e4e3a7f8
   languageName: node
   linkType: hard
 
@@ -17774,14 +17774,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.62":
-  version: 17.0.62
-  resolution: "@types/react@npm:17.0.62"
+"@types/react@npm:17.0.64":
+  version: 17.0.64
+  resolution: "@types/react@npm:17.0.64"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 428a5aff44824ef504e9a9259b5894fe44a5db1c344b536990f07e132900ff5b34cbef0be77a84f30f37be1f88fc8b56dce328f568de8d65de3bfe414c05b2e1
+  checksum: 71a7b402e8849ff31ed542d1d1a2ff6adb0e6f0e17321d126e7382a2fcb671ec1e1d1bf7045306922fa90b0319c57a8a45e6215bbf00fb6f73c3860d3f869870
   languageName: node
   linkType: hard
 
@@ -20071,6 +20071,16 @@ __metadata:
   version: 3.1.0
   resolution: "arr-union@npm:3.1.0"
   checksum: b5b0408c6eb7591143c394f3be082fee690ddd21f0fdde0a0a01106799e847f67fcae1b7e56b0a0c173290e29c6aca9562e82b300708a268bc8f88f3d6613cb9
+  languageName: node
+  linkType: hard
+
+"array-buffer-byte-length@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "array-buffer-byte-length@npm:1.0.0"
+  dependencies:
+    call-bind: ^1.0.2
+    is-array-buffer: ^3.0.1
+  checksum: 044e101ce150f4804ad19c51d6c4d4cfa505c5b2577bd179256e4aa3f3f6a0a5e9874c78cd428ee566ac574c8a04d7ce21af9fe52e844abfdccb82b33035a7c3
   languageName: node
   linkType: hard
 
@@ -25254,26 +25264,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deep-equal@npm:2.0.5":
-  version: 2.0.5
-  resolution: "deep-equal@npm:2.0.5"
+"deep-equal@npm:2.2.2":
+  version: 2.2.2
+  resolution: "deep-equal@npm:2.2.2"
   dependencies:
-    call-bind: ^1.0.0
-    es-get-iterator: ^1.1.1
-    get-intrinsic: ^1.0.1
-    is-arguments: ^1.0.4
-    is-date-object: ^1.0.2
-    is-regex: ^1.1.1
+    array-buffer-byte-length: ^1.0.0
+    call-bind: ^1.0.2
+    es-get-iterator: ^1.1.3
+    get-intrinsic: ^1.2.1
+    is-arguments: ^1.1.1
+    is-array-buffer: ^3.0.2
+    is-date-object: ^1.0.5
+    is-regex: ^1.1.4
+    is-shared-array-buffer: ^1.0.2
     isarray: ^2.0.5
-    object-is: ^1.1.4
+    object-is: ^1.1.5
     object-keys: ^1.1.1
-    object.assign: ^4.1.2
-    regexp.prototype.flags: ^1.3.0
-    side-channel: ^1.0.3
-    which-boxed-primitive: ^1.0.1
+    object.assign: ^4.1.4
+    regexp.prototype.flags: ^1.5.0
+    side-channel: ^1.0.4
+    which-boxed-primitive: ^1.0.2
     which-collection: ^1.0.1
-    which-typed-array: ^1.1.2
-  checksum: 2bb7332badf589b540184d25098acac750e30fe11c8dce4523d03fc5db15f46881a0105e6bf0b64bb0c57213a95ed964029ff0259026ad6f7f9e0019f8200de5
+    which-typed-array: ^1.1.9
+  checksum: eb61c35157b6ecb96a5359b507b083fbff8ddb4c86a78a781ee38485f77a667465e45d63ee2ebd8a00e86d94c80e499906900cd82c2debb400237e1662cd5397
   languageName: node
   linkType: hard
 
@@ -25415,6 +25428,16 @@ __metadata:
     has-property-descriptors: ^1.0.0
     object-keys: ^1.1.1
   checksum: ce0aef3f9eb193562b5cfb79b2d2c86b6a109dfc9fdcb5f45d680631a1a908c06824ddcdb72b7573b54e26ace07f0a23420aaba0d5c627b34d2c1de8ef527e2b
+  languageName: node
+  linkType: hard
+
+"define-properties@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "define-properties@npm:1.2.0"
+  dependencies:
+    has-property-descriptors: ^1.0.0
+    object-keys: ^1.1.1
+  checksum: e60aee6a19b102df4e2b1f301816804e81ab48bb91f00d0d935f269bf4b3f79c88b39e4f89eaa132890d23267335fd1140dfcd8d5ccd61031a0a2c41a54e33a6
   languageName: node
   linkType: hard
 
@@ -26608,7 +26631,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"es-get-iterator@npm:^1.1.1, es-get-iterator@npm:^1.1.2":
+"es-get-iterator@npm:^1.1.2, es-get-iterator@npm:^1.1.3":
   version: 1.1.3
   resolution: "es-get-iterator@npm:1.1.3"
   dependencies:
@@ -29323,7 +29346,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"functions-have-names@npm:^1.2.2":
+"functions-have-names@npm:^1.2.2, functions-have-names@npm:^1.2.3":
   version: 1.2.3
   resolution: "functions-have-names@npm:1.2.3"
   checksum: c3f1f5ba20f4e962efb71344ce0a40722163e85bee2101ce25f88214e78182d2d2476aa85ef37950c579eb6cf6ee811c17b3101bb84004bb75655f3e33f3fdb5
@@ -29439,6 +29462,18 @@ __metadata:
     has: ^1.0.3
     has-symbols: ^1.0.3
   checksum: 78fc0487b783f5c58cf2dccafc3ae656ee8d2d8062a8831ce4a95e7057af4587a1d4882246c033aca0a7b4965276f4802b45cc300338d1b77a73d3e3e3f4877d
+  languageName: node
+  linkType: hard
+
+"get-intrinsic@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "get-intrinsic@npm:1.2.1"
+  dependencies:
+    function-bind: ^1.1.1
+    has: ^1.0.3
+    has-proto: ^1.0.1
+    has-symbols: ^1.0.3
+  checksum: 5b61d88552c24b0cf6fa2d1b3bc5459d7306f699de060d76442cce49a4721f52b8c560a33ab392cf5575b7810277d54ded9d4d39a1ea61855619ebc005aa7e5f
   languageName: node
   linkType: hard
 
@@ -31588,6 +31623,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-array-buffer@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "is-array-buffer@npm:3.0.2"
+  dependencies:
+    call-bind: ^1.0.2
+    get-intrinsic: ^1.2.0
+    is-typed-array: ^1.1.10
+  checksum: dcac9dda66ff17df9cabdc58214172bf41082f956eab30bb0d86bc0fab1e44b690fc8e1f855cf2481245caf4e8a5a006a982a71ddccec84032ed41f9d8da8c14
+  languageName: node
+  linkType: hard
+
 "is-arrayish@npm:^0.2.1":
   version: 0.2.1
   resolution: "is-arrayish@npm:0.2.1"
@@ -31739,7 +31785,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-date-object@npm:^1.0.2, is-date-object@npm:^1.0.5":
+"is-date-object@npm:^1.0.5":
   version: 1.0.5
   resolution: "is-date-object@npm:1.0.5"
   dependencies:
@@ -37601,7 +37647,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-is@npm:^1.0.1, object-is@npm:^1.1.4, object-is@npm:^1.1.5":
+"object-is@npm:^1.0.1, object-is@npm:^1.1.5":
   version: 1.1.5
   resolution: "object-is@npm:1.1.5"
   dependencies:
@@ -41718,6 +41764,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"regexp.prototype.flags@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "regexp.prototype.flags@npm:1.5.0"
+  dependencies:
+    call-bind: ^1.0.2
+    define-properties: ^1.2.0
+    functions-have-names: ^1.2.3
+  checksum: c541687cdbdfff1b9a07f6e44879f82c66bbf07665f9a7544c5fd16acdb3ec8d1436caab01662d2fbcad403f3499d49ab0b77fbc7ef29ef961d98cc4bc9755b4
+  languageName: node
+  linkType: hard
+
 "regexpp@npm:^2.0.1":
   version: 2.0.1
   resolution: "regexpp@npm:2.0.1"
@@ -43522,7 +43579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"side-channel@npm:^1.0.3, side-channel@npm:^1.0.4":
+"side-channel@npm:^1.0.4":
   version: 1.0.4
   resolution: "side-channel@npm:1.0.4"
   dependencies:
@@ -48032,7 +48089,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"which-boxed-primitive@npm:^1.0.1, which-boxed-primitive@npm:^1.0.2":
+"which-boxed-primitive@npm:^1.0.2":
   version: 1.0.2
   resolution: "which-boxed-primitive@npm:1.0.2"
   dependencies:

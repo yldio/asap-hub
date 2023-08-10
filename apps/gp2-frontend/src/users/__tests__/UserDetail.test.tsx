@@ -258,7 +258,11 @@ describe('UserDetail', () => {
       });
       expect(mockPatchUser).toHaveBeenCalledWith(
         expect.anything(),
-        expect.objectContaining({ keywords: user.keywords }),
+        expect.objectContaining({
+          tags: user.tags.map((k) => ({
+            id: k.id,
+          })),
+        }),
         expect.anything(),
       );
     });

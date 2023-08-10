@@ -20,7 +20,7 @@ type UserOverviewProps = Pick<
   | 'email'
   | 'alternativeEmail'
   | 'biography'
-  | 'keywords'
+  | 'tags'
   | 'fundingStreams'
   | 'projects'
   | 'workingGroups'
@@ -60,7 +60,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   biography,
   email,
   alternativeEmail,
-  keywords,
+  tags,
   fundingStreams,
   questions,
   projects,
@@ -83,7 +83,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
         email={email}
         editHref={editContactInfoHref}
       />
-      <UserKeywords keywords={keywords} editHref={editKeywordsHref} />
+      <UserKeywords tags={tags} editHref={editKeywordsHref} />
     </div>
     <UserBiography biography={biography} editHref={editBiographyHref} />
     {projects.length > 0 && (

@@ -15,21 +15,23 @@ import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
-import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
 
+type WorkingGroupDetailProps = {
+  currentTime: Date;
+};
 const loadCreateWorkingGroupOutput = () =>
   import(
     /* webpackChunkName: "working-group-create-output-" */ './CreateWorkingGroupOutput'
   );
-
 const CreateWorkingGroupOutput = lazy(loadCreateWorkingGroupOutput);
-type WorkingGroupDetailProps = {
-  currentTime: Date;
-};
+const loadOutputs = () =>
+  import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
+const Outputs = lazy(loadOutputs);
+
 const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
@@ -64,7 +66,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
     usePutWorkingGroupResources(workingGroupId);
 
   useEffect(() => {
-    loadCreateWorkingGroupOutput();
+    loadCreateWorkingGroupOutput().then(loadOutputs);
   }, [workingGroup]);
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     workingGroupId,
@@ -132,7 +134,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList workingGroup={workingGroupId} searchQuery={''} />
+                <Outputs workingGroupId={workingGroupId} />
               </Frame>
             </Route>
             <Route path={upcoming}>

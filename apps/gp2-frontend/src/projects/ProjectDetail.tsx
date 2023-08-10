@@ -15,22 +15,24 @@ import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
-import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { useProjectById, usePutProjectResources } from './state';
 
 const { projects } = gp2Routing;
 
+type ProjectDetailProps = {
+  currentTime: Date;
+};
+
 const loadCreateProjectOutput = () =>
   import(
     /* webpackChunkName: "project-create-output-" */ './CreateProjectOutput'
   );
-
 const CreateProjectOutput = lazy(loadCreateProjectOutput);
+const loadOutputs = () =>
+  import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
+const Outputs = lazy(loadOutputs);
 
-type ProjectDetailProps = {
-  currentTime: Date;
-};
 const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { projectId } = useRouteParams(projects({}).project);
@@ -127,7 +129,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList project={projectId} searchQuery={''} />
+                <Outputs projectId={projectId} />
               </Frame>
             </Route>
             <Route path={upcoming}>

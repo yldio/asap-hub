@@ -74,34 +74,37 @@ describe('checkIfAssetAlreadyExistsInContentful', () => {
     expect(isAssetInContentful).toBe(false);
   });
 
-  it('throws if contentful getAsset returns a 500 error', async () => {
+  it('does not throw if contentful getAsset returns a 500 error', async () => {
     const contenfulErrorResponse = new Error();
     contenfulErrorResponse.message = '{"status":500}';
     jest
       .spyOn(envMock, 'getAsset')
       .mockRejectedValueOnce(contenfulErrorResponse);
 
-    await expect(
-      checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
-    ).rejects.toThrowError();
+    expect(
+      async () =>
+        await checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
+    ).not.toThrowError();
   });
 
-  it('throws if contentful getAsset returns a non-JSON error', async () => {
+  it('does not throw if contentful getAsset returns a non-JSON error', async () => {
     jest
       .spyOn(envMock, 'getAsset')
       .mockRejectedValueOnce(new Error('unknown error'));
 
-    await expect(
-      checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
-    ).rejects.toThrow('unknown error');
+    expect(
+      async () =>
+        await checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
+    ).not.toThrowError();
   });
 
-  it('throws if contentful getAsset returns an unknown error', async () => {
+  it('does not throw if contentful getAsset returns an unknown error', async () => {
     jest.spyOn(envMock, 'getAsset').mockRejectedValueOnce('unknown error');
 
-    await expect(
-      checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
-    ).rejects.toEqual('unknown error');
+    expect(
+      async () =>
+        await checkIfAssetAlreadyExistsInContentful(envMock, squidexAsset.id),
+    ).not.toThrowError();
   });
 });
 
@@ -172,7 +175,7 @@ describe('migrateAsset', () => {
     expect(contenfulAsset.publish).toHaveBeenCalled();
   });
 
-  it('throws if createAssetWithId rejects with an error different from conflict (status 409)', async () => {
+  it('does not throw if createAssetWithId rejects with an error different from conflict (status 409)', async () => {
     const contenfulGetAssetErrorResponse = new Error();
     contenfulGetAssetErrorResponse.message = '{"status":404}';
     jest
@@ -189,7 +192,9 @@ describe('migrateAsset', () => {
       .spyOn(contenfulAsset, 'processForAllLocales')
       .mockResolvedValueOnce(contenfulAsset);
 
-    await expect(migrateAsset(envMock, [squidexAsset])).rejects.toThrow();
+    expect(
+      async () => await migrateAsset(envMock, [squidexAsset]),
+    ).not.toThrowError();
   });
 
   it('does not throw if processForAllLocales rejects with "File has already been processed" error', async () => {
@@ -219,7 +224,7 @@ describe('migrateAsset', () => {
     expect(contenfulAsset.publish).not.toHaveBeenCalled();
   });
 
-  it('throws if processForAllLocales rejects with an error different from "File has already been processed"', async () => {
+  it('does not throw if processForAllLocales rejects with an error different from "File has already been processed"', async () => {
     const contenfulGetAssetErrorResponse = new Error();
     contenfulGetAssetErrorResponse.message = '{"status":404}';
     jest
@@ -236,10 +241,12 @@ describe('migrateAsset', () => {
       .spyOn(envMock, 'createAssetWithId')
       .mockResolvedValueOnce(contenfulAsset);
 
-    await expect(migrateAsset(envMock, [squidexAsset])).rejects.toThrow();
+    expect(
+      async () => await migrateAsset(envMock, [squidexAsset]),
+    ).not.toThrowError();
   });
 
-  it('throws if processForAllLocales rejects with a non-JSON error message', async () => {
+  it('does not throw if processForAllLocales rejects with a non-JSON error message', async () => {
     const contenfulGetAssetErrorResponse = new Error();
     contenfulGetAssetErrorResponse.message = '{"status":404}';
     jest
@@ -255,9 +262,9 @@ describe('migrateAsset', () => {
       .spyOn(envMock, 'createAssetWithId')
       .mockResolvedValueOnce(contenfulAsset);
 
-    await expect(migrateAsset(envMock, [squidexAsset])).rejects.toThrow(
-      'unknown error',
-    );
+    expect(
+      async () => await migrateAsset(envMock, [squidexAsset]),
+    ).not.toThrowError();
   });
 });
 

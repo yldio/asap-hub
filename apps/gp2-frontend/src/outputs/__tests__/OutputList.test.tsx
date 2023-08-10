@@ -21,7 +21,7 @@ jest.mock('../api');
 
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 
-const renderPage = async (searchQuery = '') => {
+const renderPage = async () => {
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
@@ -37,7 +37,9 @@ const renderPage = async (searchQuery = '') => {
       </Suspense>
     </RecoilRoot>,
   );
-  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i), {
+    timeout: 2500,
+  });
 };
 
 beforeEach(jest.resetAllMocks);

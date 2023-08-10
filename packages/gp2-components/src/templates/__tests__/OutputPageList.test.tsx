@@ -5,7 +5,6 @@ const props = {
   onChangeFilter: jest.fn(),
   onChangeSearch: jest.fn(),
   searchQuery: '',
-  filters: new Set<string>(),
   hasOutputs: true,
 };
 

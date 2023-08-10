@@ -15,7 +15,7 @@ type OutputListProps = {
   author?: string;
 } & Pick<ComponentProps<typeof SearchAndFilter>, 'filters' | 'searchQuery'>;
 const OutputList: React.FC<OutputListProps> = ({
-  searchQuery = '',
+  searchQuery,
   filters = new Set(),
   project,
   workingGroup,

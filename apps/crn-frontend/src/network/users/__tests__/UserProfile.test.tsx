@@ -495,3 +495,34 @@ it('navigates to the past events tab', async () => {
     },
   });
 });
+
+describe('for a non onboarded user', () => {
+  const userProfile: UserResponse = {
+    ...createUserResponse(),
+    avatarUrl: 'https://placekitten.com/200/300',
+    id: '42',
+    onboarded: false,
+  };
+  it('renders the tabs without the numbers', async () => {
+    await renderUserProfile(userProfile, { onboarded: userProfile.onboarded });
+
+    expect(screen.getByRole('link', { name: /^Past Events$/ })).toBeVisible();
+    expect(
+      screen.getByRole('link', { name: /^Upcoming Events$/ }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('link', { name: /^Shared Outputs$/ }),
+    ).toBeVisible();
+  });
+  it('does not call algolia', async () => {
+    await renderUserProfile(userProfile, { onboarded: userProfile.onboarded });
+
+    const response = createListEventResponse(1, { isEventInThePast: true });
+    mockUserEventsFromAlgolia.mockResolvedValue(response);
+    mockGetResearchOutputs.mockResolvedValue({
+      ...createResearchOutputListAlgoliaResponse(5),
+    });
+    expect(mockUserEventsFromAlgolia).toBeCalledTimes(0);
+    expect(mockGetResearchOutputs).toBeCalledTimes(0);
+  });
+});

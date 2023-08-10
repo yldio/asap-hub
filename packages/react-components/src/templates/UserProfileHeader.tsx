@@ -340,13 +340,16 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             <TabLink href={tabRoutes.about({}).$}>Background</TabLink>
             <TabLink href={tabRoutes.outputs({}).$}>
               Shared Outputs
-              {` (${sharedOutputsCount})`}
+              {sharedOutputsCount !== undefined && ` (${sharedOutputsCount})`}
             </TabLink>
             <TabLink href={tabRoutes.upcoming({}).$}>
-              Upcoming Events ({upcomingEventsCount})
+              Upcoming Events
+              {upcomingEventsCount !== undefined && ` (${upcomingEventsCount})`}
             </TabLink>
+
             <TabLink href={tabRoutes.past({}).$}>
-              Past Events ({pastEventsCount})
+              Past Events
+              {pastEventsCount !== undefined && ` (${pastEventsCount})`}
             </TabLink>
           </TabNav>
         </div>

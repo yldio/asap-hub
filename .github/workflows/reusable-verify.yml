@@ -166,6 +166,9 @@ jobs:
     environment: ${{ inputs.environment-name }}
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:f93db8bae8be7528565c2510dbc8e3eece97983d
+      # fixes git directory ownership issue
+      # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
+      options: --user 1001
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

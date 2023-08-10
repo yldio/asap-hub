@@ -440,7 +440,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            documentType: 'some-type',
+            documentType: 'Article',
             title: 'some-title',
           },
         });
@@ -450,7 +450,7 @@ describe('Outputs data provider', () => {
           {
             ...expectedDefaultParams,
             where: {
-              AND: [{ title: 'some-title' }, { documentType: 'some-type' }],
+              AND: [{ title: 'some-title' }, { documentType: 'Article' }],
             },
           },
         );
@@ -460,7 +460,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            documentType: ['some-type-1', 'some-type-2'],
+            documentType: ['Dataset', 'Article'],
             title: 'some-title',
           },
         });
@@ -472,7 +472,7 @@ describe('Outputs data provider', () => {
             where: {
               AND: [
                 { title: 'some-title' },
-                { documentType_in: ['some-type-1', 'some-type-2'] },
+                { documentType_in: ['Dataset', 'Article'] },
               ],
             },
           },
@@ -484,7 +484,7 @@ describe('Outputs data provider', () => {
           ...defaultParams,
           search: 'Title',
           filter: {
-            documentType: ['Grant Document', 'Presentation'],
+            documentType: ['Dataset', 'Article'],
           },
         });
 
@@ -495,7 +495,7 @@ describe('Outputs data provider', () => {
             where: {
               AND: [
                 { OR: [{ title_contains: 'Title' }] },
-                { documentType_in: ['Grant Document', 'Presentation'] },
+                { documentType_in: ['Dataset', 'Article'] },
               ],
             },
           },

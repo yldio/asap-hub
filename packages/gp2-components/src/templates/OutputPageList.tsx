@@ -30,7 +30,7 @@ const OutputPageList: React.FC<OutputPageListProps> = ({
   onChangeFilter,
   onChangeSearch,
   searchQuery,
-  hasOutputs = true,
+  hasOutputs,
 }) => (
   <>
     {hasOutputs && (

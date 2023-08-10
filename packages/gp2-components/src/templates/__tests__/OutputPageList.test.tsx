@@ -13,4 +13,13 @@ describe('OutputPageList', () => {
     render(<OutputPageList {...props}>Content</OutputPageList>);
     expect(screen.getByRole('search')).toBeVisible();
   });
+
+  it('does not render the header when hasOutputs is false', () => {
+    render(
+      <OutputPageList {...props} hasOutputs={false}>
+        Content
+      </OutputPageList>,
+    );
+    expect(screen.queryByRole('search')).not.toBeInTheDocument();
+  });
 });

@@ -35,7 +35,6 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
     filters: new Set(),
     currentPage,
     pageSize,
-
     workingGroup: workingGroupId,
     project: projectId,
     author: userId,

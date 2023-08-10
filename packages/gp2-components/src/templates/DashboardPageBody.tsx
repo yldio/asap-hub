@@ -93,7 +93,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div css={contentCardsStyles}>
           <InfoCard
             icon={<LabIcon color="#00202C" size={40} />}
-            title="Samples shared w/AMP PD"
+            title="Samples Processed & Shared"
             total={latestStats.sampleCount}
           />
           <InfoCard

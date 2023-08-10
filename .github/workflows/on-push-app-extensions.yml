@@ -68,6 +68,7 @@ jobs:
           - membership-reference
           - clear-on-change
           - working-group-deliverables
+          - partial-last-updated
     steps:
       - name: Checkout
         uses: actions/checkout@v3

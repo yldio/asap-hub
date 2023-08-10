@@ -57,21 +57,17 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const [avatarSaving, setAvatarSaving] = useState(false);
 
   const { pageSize } = usePaginationParams();
-  const researchOutputsResult = useResearchOutputs(
-    {
-      currentPage: 0,
-      filters: new Set(),
-      pageSize,
-      searchQuery: '',
-      userId,
-    },
-    currentUser,
-  );
+  const researchOutputsResult = useResearchOutputs({
+    currentPage: 0,
+    filters: new Set(),
+    pageSize,
+    searchQuery: '',
+    userId,
+  });
 
   const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
-  const isUserOnboarded = currentUser?.onboarded;
 
   const upcomingEventsResult = useEvents(
     getEventListOptions(currentTime, {
@@ -124,13 +120,9 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
             }
           : undefined,
       avatarSaving,
-      sharedOutputsCount: isUserOnboarded
-        ? researchOutputsResult.total
-        : undefined,
-      upcomingEventsCount: isUserOnboarded
-        ? upcomingEventsResult.total
-        : undefined,
-      pastEventsCount: isUserOnboarded ? pastEventsResult.total : undefined,
+      sharedOutputsCount: researchOutputsResult.total,
+      upcomingEventsCount: upcomingEventsResult.total,
+      pastEventsCount: pastEventsResult.total,
     };
 
     return (

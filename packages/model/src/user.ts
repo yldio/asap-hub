@@ -165,7 +165,7 @@ export interface UserResponse
 }
 
 export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
-  algoliaApiKey: string | null;
+  algoliaApiKey: string;
 };
 
 export type UserCreateDataObject = {

@@ -303,6 +303,13 @@ export default class ResearchOutputController {
     researchOutputData: ResearchOutputCreateData | ResearchOutputUpdateData,
     researchOutputId?: string,
   ): Promise<ValidationErrorResponse['data'][0] | null> {
+    if (
+      researchOutputData.documentType === 'Lab Resource' &&
+      !researchOutputData.link
+    ) {
+      return null;
+    }
+
     const result = await this.fetch({
       filter: {
         link: researchOutputData.link || '',
@@ -405,7 +412,7 @@ export default class ResearchOutputController {
   ): T => ({
     ...researchOutputData,
     title: (researchOutputData.title || '').trim(),
-    link: (researchOutputData.link || '').trim(),
+    link: researchOutputData.link?.trim() ?? researchOutputData.link,
   });
 }
 

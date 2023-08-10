@@ -10962,6 +10962,13 @@ export const EventsContentDataFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'keywordsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -11954,6 +11961,13 @@ export const OutputsContentDataFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -12180,6 +12194,13 @@ export const ProjectsContentDataFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '6' },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -12493,6 +12514,13 @@ export const UsersContentDataFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -13272,6 +13300,13 @@ export const WorkingGroupsContentDataFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [

@@ -68,7 +68,7 @@ export const workingGroupsContentQueryFragment = gql`
       }
       name
     }
-    tagsCollection {
+    tagsCollection(limit: 10) {
       total
       items {
         name

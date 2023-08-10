@@ -10,7 +10,7 @@ const mockStats = {
   articleCount: 0,
 };
 describe('DashboardPageBody', () => {
-  it('should render latest stats', () => {
+  it('should render GP2 Hub Stats', () => {
     render(
       <DashboardPageBody
         news={{ total: 0, items: [] }}
@@ -19,7 +19,9 @@ describe('DashboardPageBody', () => {
         totalOfUpcomingEvents={0}
       />,
     );
-    expect(screen.getByRole('heading', { name: 'Latest Stats' })).toBeVisible();
+    expect(
+      screen.getByRole('heading', { name: 'GP2 Hub Stats' }),
+    ).toBeVisible();
   });
 
   it('should render Latest Newsletter if there is a news item', () => {

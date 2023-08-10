@@ -34,10 +34,10 @@ describe('useAlgolia', () => {
       new Error('Algolia unavailable while not logged in'),
     );
   });
-  it('throws when api key is null', async () => {
+  it('constructs an algolia client with a junk key', async () => {
     setCurrentOverrides({ CONTENTFUL: false });
 
-    const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
+    const { waitForNextUpdate } = renderHook(() => useAlgolia(), {
       wrapper: ({ children }) => (
         <RecoilRoot>
           <Auth0Provider user={{ algoliaApiKey: null, id: 'usertoken' }}>
@@ -48,9 +48,13 @@ describe('useAlgolia', () => {
     });
     await waitForNextUpdate();
 
-    expect(result.error).toEqual(
-      new Error('Algolia unavailable while not onboarded'),
-    );
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith({
+      algoliaIndex: ALGOLIA_INDEX,
+      algoliaAppId: ALGOLIA_APP_ID,
+      algoliaApiKey: 'nonOnboardedJunkApiKey',
+      clickAnalytics: true,
+      userToken: 'usertoken',
+    });
   });
   it('constructs algolia client linking GTM and Algolia with Auth0 user id', async () => {
     const mockAlgoliaSearchClientFactory =

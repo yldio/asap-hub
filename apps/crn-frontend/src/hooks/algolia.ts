@@ -18,16 +18,12 @@ export const useAlgolia = () => {
       throw new Error('Algolia unavailable while not logged in');
     }
 
-    if (user.algoliaApiKey === null) {
-      throw new Error('Algolia unavailable while not onboarded');
-    }
-
     const client = algoliaSearchClientFactory<'crn'>({
       algoliaAppId: ALGOLIA_APP_ID,
       algoliaIndex:
         (isEnabled('CONTENTFUL') && `${ALGOLIA_INDEX}-contentful`) ||
         ALGOLIA_INDEX,
-      algoliaApiKey: user.algoliaApiKey,
+      algoliaApiKey: user.algoliaApiKey || 'nonOnboardedJunkApiKey',
       clickAnalytics: true,
       userToken: user.id,
     });

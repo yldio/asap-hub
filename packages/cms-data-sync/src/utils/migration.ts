@@ -81,13 +81,6 @@ export const migrateFromSquidexToContentfulFactory =
                 return null;
               }
             }
-
-            // if in create mode we could still use
-            // fallbackParseData func so just throw when
-            // not in create mode
-            if (updateEntry || upsertInPlace) {
-              throw err;
-            }
           }
 
           logger(`Error details of entry ${id}:\n${err}`, 'ERROR');

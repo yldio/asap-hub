@@ -50,7 +50,7 @@ describe('Routes', () => {
     const {
       result: { current },
     } = renderHook(useFlags);
-    current.enable('ASAP_UPCOMING_EVENTS');
+    current.enable('DISPLAY_EVENTS');
     mockGetEvents.mockResolvedValue(gp2.createListEventResponse(1));
     await renderRoutes();
     expect(screen.getByRole('heading', { name: 'Events' })).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe('Routes', () => {
     const {
       result: { current },
     } = renderHook(useFlags);
-    current.disable('ASAP_UPCOMING_EVENTS');
+    current.disable('DISPLAY_EVENTS');
     mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
     await renderRoutes();
     expect(

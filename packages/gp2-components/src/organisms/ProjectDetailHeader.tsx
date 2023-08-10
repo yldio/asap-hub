@@ -133,12 +133,12 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = ({
         <TabLink href={route.outputs({}).$}>
           Shared Outputs ({outputsTotal})
         </TabLink>
-        {isEnabled('ASAP_UPCOMING_EVENTS') && (
+        {isEnabled('DISPLAY_EVENTS') && (
           <TabLink href={route.upcoming({}).$}>
             Upcoming Events ({upcomingTotal})
           </TabLink>
         )}
-        {isEnabled('ASAP_UPCOMING_EVENTS') && (
+        {isEnabled('DISPLAY_EVENTS') && (
           <TabLink href={route.past({}).$}>Past Events ({pastTotal})</TabLink>
         )}
       </TabNav>

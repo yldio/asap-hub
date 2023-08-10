@@ -8,20 +8,13 @@ describe('EventsPage', () => {
     render(<EventsPage />);
     expect(screen.getByRole('banner')).toBeVisible();
   });
-  it('renders Upcoming Events when enabled', () => {
+  it('renders Events tabs when enabled', () => {
     const {
       result: { current },
     } = renderHook(useFlags);
-    current.enable('ASAP_UPCOMING_EVENTS');
+    current.enable('DISPLAY_EVENTS');
     render(<EventsPage />);
     expect(screen.getByRole('link', { name: /upcoming/i })).toBeVisible();
-  });
-  it('renders Past Events when enabled', () => {
-    const {
-      result: { current },
-    } = renderHook(useFlags);
-    current.enable('ASAP_PAST_EVENTS');
-    render(<EventsPage />);
     expect(screen.getByRole('link', { name: /past/i })).toBeVisible();
   });
 });

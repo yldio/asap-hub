@@ -28,10 +28,10 @@ const EventsPage: React.FC = ({ children }) => {
       <PageBanner {...bannerProps} noMarginBottom>
         <div css={navStyles}>
           <TabNav>
-            {isEnabled('ASAP_UPCOMING_EVENTS') && (
+            {isEnabled('DISPLAY_EVENTS') && (
               <TabLink href={gp2.events({}).upcoming({}).$}>Upcoming</TabLink>
             )}
-            {isEnabled('ASAP_PAST_EVENTS') && (
+            {isEnabled('DISPLAY_EVENTS') && (
               <TabLink href={gp2.events({}).past({}).$}>Past</TabLink>
             )}
             <TabLink href={gp2.events({}).calendar({}).$}>

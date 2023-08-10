@@ -131,7 +131,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </Card>
       )}
-      {isEnabled('ASAP_UPCOMING_EVENTS') && (
+      {isEnabled('DISPLAY_EVENTS') && (
         <div>
           <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
           <div css={infoStyles}>

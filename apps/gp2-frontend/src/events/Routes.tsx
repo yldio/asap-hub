@@ -52,7 +52,7 @@ const Events: FC<Record<string, never>> = () => {
           <Event />
         </Frame>
       </Route>
-      {isEnabled('ASAP_UPCOMING_EVENTS') ? (
+      {isEnabled('DISPLAY_EVENTS') ? (
         <Redirect to={gp2.events({}).upcoming({}).$} />
       ) : (
         <Redirect to={gp2.events({}).calendar({}).$} />

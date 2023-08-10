@@ -88,9 +88,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
       ) : null}
       <div css={columnContainer}>
-        <Headline2>Latest Stats</Headline2>
+        <Headline2>GP2 Hub Stats</Headline2>
         <Paragraph accent="lead" noMargin>
-          Here are some key actions to take within the GP2 network:
+          Here are the latest stats from the GP2 Hub.
         </Paragraph>
         <div css={contentCardsStyles}>
           <InfoCard
@@ -100,12 +100,12 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
           <InfoCard
             icon={<LibraryIcon color="#00202C" size={40} />}
-            title="Cohorts"
+            title="Cohorts Pledged"
             total={latestStats.cohortCount}
           />
           <InfoCard
             icon={<ArticleIcon color="#00202C" size={40} />}
-            title="Article Numbers"
+            title="Articles"
             total={latestStats.articleCount}
           />
         </div>
@@ -114,7 +114,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <Card>
           <Headline2>Tools and Tutorials</Headline2>
           <Paragraph accent="lead">
-            Here are some key actions to take within the GP2 Hub.
+            Here are some quick links to GP2 Hub resources.
           </Paragraph>
           <Accordion
             items={guides.map((guide: gp2Model.GuideDataObject) => ({
@@ -135,7 +135,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div>
           <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
           <div css={infoStyles}>
-            Here are some of the upcoming events happening within the network.
+            Here are some of the upcoming GP2 Hub events.
           </div>
           <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
           {totalOfUpcomingEvents > 3 && (

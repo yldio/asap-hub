@@ -57,7 +57,7 @@ export const outputsContentQueryFragment = gql`
         }
       }
     }
-    tagsCollection {
+    tagsCollection(limit: 10) {
       total
       items {
         name

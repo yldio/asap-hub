@@ -500,6 +500,32 @@ describe('ResearchOutputs controller', () => {
           }),
         );
       });
+
+      describe('For document type = "Lab Resource"', () => {
+        const researchOutputEmptyLinkRequest = getResearchOutputCreateData();
+        researchOutputEmptyLinkRequest.documentType = 'Lab Resource';
+        researchOutputEmptyLinkRequest.link = undefined;
+
+        test('Should not validate the unique link condition when no link is passed', async () => {
+          await researchOutputs.create(researchOutputEmptyLinkRequest);
+          expect(researchOutputDataProviderMock.fetch).not.toHaveBeenCalledWith(
+            {
+              filter: { link: expect.any(String) },
+              includeDrafts: true,
+            },
+          );
+        });
+
+        test('Should create the research output when no link is passed', async () => {
+          await researchOutputs.create(researchOutputEmptyLinkRequest);
+          expect(researchOutputDataProviderMock.create).toBeCalledWith(
+            expect.objectContaining({
+              link: undefined,
+            }),
+            { publish: true },
+          );
+        });
+      });
     });
 
     describe('Parsing Research Tags', () => {

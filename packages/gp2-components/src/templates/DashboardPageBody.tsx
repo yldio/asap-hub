@@ -9,7 +9,7 @@ import {
   Headline2,
   LabIcon,
   lead,
-  LibraryIcon,
+  WorkingGroupsIcon,
   Link,
   Paragraph,
   pixels,
@@ -93,11 +93,11 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <div css={contentCardsStyles}>
           <InfoCard
             icon={<LabIcon color="#00202C" size={40} />}
-            title="Samples Completed"
+            title="Samples shared w/AMP PD"
             total={latestStats.sampleCount}
           />
           <InfoCard
-            icon={<LibraryIcon color="#00202C" size={40} />}
+            icon={<WorkingGroupsIcon color="#00202C" width={40} height={40} />}
             title="Cohorts Pledged"
             total={latestStats.cohortCount}
           />

@@ -97,8 +97,10 @@ describe('Background', () => {
   });
 
   it('saves the keywords modal', async () => {
-    const keywords = ['Genetics'] as gp2Model.Keyword[];
-    const user = { ...gp2Fixtures.createUserResponse(), keywords };
+    const tags = [
+      { id: '1', name: 'Genetics' },
+    ] as gp2Model.KeywordDataObject[];
+    const user = { ...gp2Fixtures.createUserResponse(), tags };
     mockGetUser.mockResolvedValueOnce(user);
     await renderBackground(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -113,7 +115,7 @@ describe('Background', () => {
     });
     expect(mockPatchUser).toHaveBeenCalledWith(
       expect.anything(),
-      expect.objectContaining({ keywords }),
+      expect.objectContaining({ tags: tags.map((t) => ({ id: t.id })) }),
       expect.anything(),
     );
   });

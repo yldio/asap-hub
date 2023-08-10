@@ -44,7 +44,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
     filters: new Set(),
     pageSize,
     searchQuery: '',
-    workingGroup: workingGroupId,
+    workingGroupId,
   });
 
   const currentUser = useCurrentUserGP2();

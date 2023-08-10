@@ -35,9 +35,9 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
     filters: new Set(),
     currentPage,
     pageSize,
-    workingGroup: workingGroupId,
-    project: projectId,
-    author: userId,
+    workingGroupId,
+    projectId,
+    authorId: userId,
   });
   return (
     <OutputPageList
@@ -51,9 +51,9 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
         <OutputList
           searchQuery={debouncedSearchQuery}
           filters={filterSet}
-          workingGroup={workingGroupId}
-          project={projectId}
-          author={userId}
+          workingGroupId={workingGroupId}
+          projectId={projectId}
+          authorId={userId}
         />
       </Frame>
     </OutputPageList>

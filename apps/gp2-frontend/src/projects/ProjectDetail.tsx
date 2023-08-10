@@ -45,7 +45,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
     filters: new Set(),
     pageSize,
     searchQuery: '',
-    project: projectId,
+    projectId,
   });
 
   const currentUser = useCurrentUserGP2();

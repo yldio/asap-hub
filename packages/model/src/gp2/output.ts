@@ -86,8 +86,8 @@ export type AuthorUpsertDataObject =
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
-  workingGroup?: string;
-  project?: string;
+  workingGroupId?: string;
+  projectId?: string;
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
@@ -114,8 +114,8 @@ export type OutputPostRequest = {
   title: string;
   type?: OutputType;
   subtype?: OutputSubtype;
-  workingGroup?: string;
-  project?: string;
+  workingGroupId?: string;
+  projectId?: string;
 };
 
 export type OutputPutRequest = OutputPostRequest;
@@ -124,9 +124,9 @@ export type FetchOutputFilter = {
   documentType?: OutputDocumentType | OutputDocumentType[];
   title?: string;
   link?: string;
-  workingGroup?: string;
-  project?: string;
-  author?: string;
+  workingGroupId?: string;
+  projectId?: string;
+  authorId?: string;
 };
 
 export type FetchOutputOptions = FetchOptions<FetchOutputFilter>;

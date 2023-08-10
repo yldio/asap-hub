@@ -74,13 +74,13 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     ...outputResponse,
     link: 'http://a.link',
     type: 'Research',
-    project: project?.id,
+    projectId: project?.id,
     authors: authors.map(({ id }) => ({ userId: id })),
   };
 };
 
 export const getOutputPutRequest = (): gp2Model.OutputPutRequest => {
-  const { project, ...data } = getOutputPostRequest();
+  const { projectId, ...data } = getOutputPostRequest();
   return data;
 };
 
@@ -104,7 +104,7 @@ export const getOutputCreateDataObject =
     return {
       ...outputPostRequest,
       createdBy: 'userId',
-      project: project?.id,
+      projectId: project?.id,
       authors: authors.map(({ id }) => ({ userId: id })),
     };
   };
@@ -113,7 +113,7 @@ export const getOutputUpdateDataObject =
   (): gp2Model.OutputUpdateDataObject => {
     const {
       createdBy: _,
-      project: __,
+      projectId: __,
       ...outputCreateDataObject
     } = getOutputCreateDataObject();
 

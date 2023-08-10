@@ -50,7 +50,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
     filters: new Set(),
     pageSize,
     searchQuery: '',
-    author: userId,
+    authorId: userId,
   });
 
   const userRoute = users({}).user({ userId });

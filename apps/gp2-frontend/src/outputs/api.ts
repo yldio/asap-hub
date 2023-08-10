@@ -80,9 +80,9 @@ export const getOutputs = (
       hitsPerPage: options.pageSize ?? 10,
       filters: getAllFilters(
         options.filters,
-        options.workingGroup,
-        options.project,
-        options.author,
+        options.workingGroupId,
+        options.projectId,
+        options.authorId,
       ),
     })
     .catch((error: Error) => {

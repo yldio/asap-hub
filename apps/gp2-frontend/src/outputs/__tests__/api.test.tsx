@@ -139,7 +139,7 @@ describe('getOutputs', () => {
   it('uses project as a filter', async () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,
-      project: '12345',
+      projectId: '12345',
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -155,7 +155,7 @@ describe('getOutputs', () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<gp2Model.OutputDocumentType>(['Article']),
-      project: '12345',
+      projectId: '12345',
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -171,7 +171,7 @@ describe('getOutputs', () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<gp2Model.OutputDocumentType>(['Article', 'GP2 Reports']),
-      project: '12345',
+      projectId: '12345',
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -186,7 +186,7 @@ describe('getOutputs', () => {
   it('uses workingGroup as a filter', async () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,
-      workingGroup: '12345',
+      workingGroupId: '12345',
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -202,7 +202,7 @@ describe('getOutputs', () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<gp2Model.OutputDocumentType>(['Article']),
-      workingGroup: '12345',
+      workingGroupId: '12345',
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -218,7 +218,7 @@ describe('getOutputs', () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<gp2Model.OutputDocumentType>(['Article', 'GP2 Reports']),
-      workingGroup: '12345',
+      workingGroupId: '12345',
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -233,7 +233,7 @@ describe('getOutputs', () => {
   it('uses author as a filter', async () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,
-      author: '12345',
+      authorId: '12345',
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -249,7 +249,7 @@ describe('getOutputs', () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<gp2Model.OutputDocumentType>(['Article']),
-      author: '12345',
+      authorId: '12345',
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -265,7 +265,7 @@ describe('getOutputs', () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,
       filters: new Set<gp2Model.OutputDocumentType>(['Article', 'GP2 Reports']),
-      author: '12345',
+      authorId: '12345',
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(

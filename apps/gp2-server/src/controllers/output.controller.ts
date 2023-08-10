@@ -63,8 +63,8 @@ export default class OutputController {
       subtype: outputCreateData.subtype,
       title: outputCreateData.title,
       type: outputCreateData.type,
-      workingGroup: outputCreateData.workingGroup,
-      project: outputCreateData.project,
+      workingGroupId: outputCreateData.workingGroupId,
+      projectId: outputCreateData.projectId,
     };
 
     const outputId = await this.outputDataProvider.create(

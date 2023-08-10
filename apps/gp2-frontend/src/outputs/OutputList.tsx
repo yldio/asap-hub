@@ -10,16 +10,16 @@ import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useOutputs } from './state';
 
 type OutputListProps = {
-  project?: string;
-  workingGroup?: string;
-  author?: string;
+  projectId?: string;
+  workingGroupId?: string;
+  authorId?: string;
 } & Pick<ComponentProps<typeof SearchAndFilter>, 'filters' | 'searchQuery'>;
 const OutputList: React.FC<OutputListProps> = ({
   searchQuery,
   filters = new Set(),
-  project,
-  workingGroup,
-  author,
+  projectId,
+  workingGroupId,
+  authorId,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const currentUser = useCurrentUserGP2();
@@ -30,9 +30,9 @@ const OutputList: React.FC<OutputListProps> = ({
     filters,
     currentPage,
     pageSize,
-    project,
-    workingGroup,
-    author,
+    projectId,
+    workingGroupId,
+    authorId,
   });
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return total || searchQuery ? (

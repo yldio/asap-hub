@@ -1,6 +1,5 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { KeywordDataObject } from '@asap-hub/model/src/gp2';
-// import { gp2 } from '@asap-hub/model';
 import { RateLimiter } from 'limiter';
 import {
   contentfulAccessToken,
@@ -10,7 +9,7 @@ import {
 import { EventContentfulDataProvider } from '../src/data-providers/event.data-provider';
 import { KeywordContentfulDataProvider } from '../src/data-providers/keyword.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependency';
-import { map as mapKeywordID } from './mapKeywordsId';
+import { map as mapKeywordID } from './mapKeywordsIds-prod';
 
 console.log('Add tags refs to events...');
 
@@ -95,9 +94,9 @@ const app = async () => {
       console.log(`could not update event with id ${event.id}.`);
       eventsFailed++;
     }
-
-    console.log(`Events updated: ${eventsUpdated} failed ${eventsFailed}`);
   }
+
+  console.log(`Events updated: ${eventsUpdated} failed ${eventsFailed}`);
 };
 
 app().catch(console.error);

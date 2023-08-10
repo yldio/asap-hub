@@ -1,6 +1,5 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { KeywordDataObject } from '@asap-hub/model/src/gp2';
-// import { gp2 } from '@asap-hub/model';
 import { RateLimiter } from 'limiter';
 import {
   contentfulAccessToken,
@@ -10,7 +9,7 @@ import {
 import { KeywordContentfulDataProvider } from '../src/data-providers/keyword.data-provider';
 import { ProjectContentfulDataProvider } from '../src/data-providers/project.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependency';
-import { map as mapKeywordID } from './mapKeywordsId';
+import { map as mapKeywordID } from './mapKeywordsIds-prod';
 
 console.log('Add tags refs to projects...');
 
@@ -96,11 +95,11 @@ const app = async () => {
       console.log(`could not update project with id ${project.id}.`);
       projectsFailed++;
     }
-
-    console.log(
-      `Projects updated: ${projectsUpdated} failed ${projectsFailed}`,
-    );
   }
+
+  console.log(
+    `Total Projects updated: ${projectsUpdated} failed ${projectsFailed}`,
+  );
 };
 
 app().catch(console.error);

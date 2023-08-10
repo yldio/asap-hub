@@ -22,7 +22,7 @@ export class KeywordContentfulDataProvider implements KeywordDataProvider {
       gp2Contentful.FetchKeywordsQuery,
       gp2Contentful.FetchKeywordsQueryVariables
     >(gp2Contentful.FETCH_KEYWORDS, {
-      limit: 1000,
+      limit: 300,
       order: [gp2Contentful.KeywordsOrder.NameAsc],
     });
 

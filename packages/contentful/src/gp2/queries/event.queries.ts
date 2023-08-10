@@ -20,7 +20,7 @@ export const eventsContentQueryFragment = gql`
     status
     hidden
     tags
-    keywordsCollection {
+    keywordsCollection(limit: 10) {
       total
       items {
         name

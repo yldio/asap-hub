@@ -29,9 +29,11 @@ const loadCreateProjectOutput = () =>
     /* webpackChunkName: "project-create-output-" */ './CreateProjectOutput'
   );
 const CreateProjectOutput = lazy(loadCreateProjectOutput);
-const loadOutputs = () =>
-  import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
-const Outputs = lazy(loadOutputs);
+const loadOutputDirectory = () =>
+  import(
+    /* webpackChunkName: "project-outputs" */ '../outputs/OutputDirectory'
+  );
+const OutputDirectory = lazy(loadOutputDirectory);
 
 const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
@@ -65,7 +67,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const updateProjectResources = usePutProjectResources(projectId);
 
   useEffect(() => {
-    loadCreateProjectOutput();
+    loadOutputDirectory().then(loadCreateProjectOutput);
   }, [project]);
 
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
@@ -129,7 +131,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <Outputs projectId={projectId} />
+                <OutputDirectory projectId={projectId} />
               </Frame>
             </Route>
             <Route path={upcoming}>

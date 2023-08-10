@@ -28,9 +28,11 @@ const loadCreateWorkingGroupOutput = () =>
     /* webpackChunkName: "working-group-create-output-" */ './CreateWorkingGroupOutput'
   );
 const CreateWorkingGroupOutput = lazy(loadCreateWorkingGroupOutput);
-const loadOutputs = () =>
-  import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
-const Outputs = lazy(loadOutputs);
+const loadOutputDirectory = () =>
+  import(
+    /* webpackChunkName: "working-group-outputs" */ '../outputs/OutputDirectory'
+  );
+const OutputDirectory = lazy(loadOutputDirectory);
 
 const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
@@ -66,7 +68,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
     usePutWorkingGroupResources(workingGroupId);
 
   useEffect(() => {
-    loadCreateWorkingGroupOutput().then(loadOutputs);
+    loadOutputDirectory().then(loadCreateWorkingGroupOutput);
   }, [workingGroup]);
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     workingGroupId,
@@ -134,7 +136,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <Outputs workingGroupId={workingGroupId} />
+                <OutputDirectory workingGroupId={workingGroupId} />
               </Frame>
             </Route>
             <Route path={upcoming}>

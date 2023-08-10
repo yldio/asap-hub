@@ -13,7 +13,6 @@ export type AlgoliaHook = {
 
 export const useAlgolia = () => {
   const initAlgolia = (user: gp2.User | null): AlgoliaHook => {
-    console.log(user);
     if (!user) {
       throw new Error('Algolia unavailable while not logged in');
     }

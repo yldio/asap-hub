@@ -42,7 +42,7 @@ type OnboardingPreviewProps = ComponentProps<typeof OnboardingCoreDetails> &
 
 const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
   biography,
-  keywords,
+  tags,
   email,
   alternativeEmail,
   projects,
@@ -77,7 +77,7 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
         alternativeEmail={alternativeEmail}
         email={email}
       />
-      <UserKeywords keywords={keywords} editHref={editKeywordsHref} />
+      <UserKeywords tags={tags} editHref={editKeywordsHref} />
     </div>
     <UserBiography biography={biography} editHref={editBiographyHref} />
     {projects && (

@@ -969,6 +969,7 @@ __metadata:
     "@hapi/joi": 17.1.1
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.30.1
+    "@slack/webhook": ^6.1.0
     "@types/apr-intercept": "workspace:*"
     "@types/async-retry": ^1
     "@types/aws-lambda": 8.10.119
@@ -15130,6 +15131,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@slack/types@npm:^1.2.1":
+  version: 1.10.0
+  resolution: "@slack/types@npm:1.10.0"
+  checksum: 9dcf254ad4882146de7ed2db948e7ee56614c3aca47a1df7cbbf4faebe6f2672a704239c0c259b4825be140bd8bb97d994241f35dc432b9ca722333828dac666
+  languageName: node
+  linkType: hard
+
+"@slack/webhook@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@slack/webhook@npm:6.1.0"
+  dependencies:
+    "@slack/types": ^1.2.1
+    "@types/node": ">=12.0.0"
+    axios: ^0.21.4
+  checksum: f8db7b6614115c1df0f7f5fc828dfca48eedaa49dfe2fff88eaf936369385e7142c0c58d34e0e8e1bc4126ac0be651af2a15bc13bb38beeba2143068f888c91e
+  languageName: node
+  linkType: hard
+
 "@smithy/abort-controller@npm:^2.0.5":
   version: 2.0.5
   resolution: "@smithy/abort-controller@npm:2.0.5"
@@ -17857,6 +17876,13 @@ __metadata:
   version: 18.17.3
   resolution: "@types/node@npm:18.17.3"
   checksum: 884fb68936b2b0ff90863fcf80610dd2f3d9fe1947897248b0138df05fe41ee6ce62941b37b565e3b3fd77601cd3977a64de858654c6ab9064413b171740d6ba
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=12.0.0":
+  version: 20.4.9
+  resolution: "@types/node@npm:20.4.9"
+  checksum: 504e3da96274f3865c1251830f4750bb0a8f6ef6f8648902cd3bba33370c5f219235471bfbf55cce726b25c8eacfcc8e2aad0ec3b13e27ea6708b00d4a9a46c8
   languageName: node
   linkType: hard
 

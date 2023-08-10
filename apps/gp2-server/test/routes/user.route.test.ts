@@ -13,7 +13,7 @@ import {
 import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user.controller.mock';
 
-const { userDegrees, userRegions, keywords, userContributingCohortRole } = gp2;
+const { userDegrees, userRegions, userContributingCohortRole } = gp2;
 
 describe('/users/ route', () => {
   const loggedInUserId = '11';

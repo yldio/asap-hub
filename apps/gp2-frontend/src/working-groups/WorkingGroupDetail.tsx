@@ -30,7 +30,7 @@ const loadCreateWorkingGroupOutput = () =>
 const CreateWorkingGroupOutput = lazy(loadCreateWorkingGroupOutput);
 const loadOutputDirectory = () =>
   import(
-    /* webpackChunkName: "working-group-outputs" */ '../outputs/OutputDirectory'
+    /* webpackChunkName: "working-group-output-directory" */ '../outputs/OutputDirectory'
   );
 const OutputDirectory = lazy(loadOutputDirectory);
 
@@ -38,6 +38,10 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
+  useEffect(() => {
+    loadOutputDirectory().then(loadCreateWorkingGroupOutput);
+  }, [workingGroup]);
+
   const { pageSize } = usePaginationParams();
   const { total: outputsTotal } = useOutputs({
     currentPage: 0,
@@ -67,9 +71,6 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
 
-  useEffect(() => {
-    loadOutputDirectory().then(loadCreateWorkingGroupOutput);
-  }, [workingGroup]);
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     workingGroupId,
   });

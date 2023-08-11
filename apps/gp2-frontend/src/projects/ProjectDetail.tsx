@@ -31,7 +31,7 @@ const loadCreateProjectOutput = () =>
 const CreateProjectOutput = lazy(loadCreateProjectOutput);
 const loadOutputDirectory = () =>
   import(
-    /* webpackChunkName: "project-outputs" */ '../outputs/OutputDirectory'
+    /* webpackChunkName: "project-output-directory" */ '../outputs/OutputDirectory'
   );
 const OutputDirectory = lazy(loadOutputDirectory);
 
@@ -39,6 +39,10 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
+  useEffect(() => {
+    loadOutputDirectory().then(loadCreateProjectOutput);
+  }, [project]);
+
   const { pageSize } = usePaginationParams();
   const { total } = useOutputs({
     currentPage: 0,
@@ -65,10 +69,6 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const past = projectRoute.past({}).$;
 
   const updateProjectResources = usePutProjectResources(projectId);
-
-  useEffect(() => {
-    loadOutputDirectory().then(loadCreateProjectOutput);
-  }, [project]);
 
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     projectId,

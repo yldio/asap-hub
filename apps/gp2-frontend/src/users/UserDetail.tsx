@@ -34,7 +34,7 @@ type UserDetailProps = {
 };
 const loadOutputDirectory = () =>
   import(
-    /* webpackChunkName: "network-profile-outputs" */ '../outputs/OutputDirectory'
+    /* webpackChunkName: "user-output-directory" */ '../outputs/OutputDirectory'
   );
 const OutputDirectory = lazy(loadOutputDirectory);
 
@@ -43,6 +43,9 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   const { userId } = useRouteParams(users({}).user);
   const isOwnProfile = userId === currentUser?.id;
   const user = useUserById(userId);
+  useEffect(() => {
+    loadOutputDirectory();
+  }, [user]);
   const { pageSize } = usePaginationParams();
 
   const { total: outputsTotal } = useOutputs({
@@ -87,9 +90,6 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
     userId,
   });
 
-  useEffect(() => {
-    loadOutputDirectory();
-  }, [user]);
   if (user) {
     return (
       <Switch>

@@ -96,6 +96,20 @@ describe('Events Contentful Data Provider', () => {
       expect(result).toEqual(getContentfulListEventDataObject());
     });
 
+    test('Should return an empty result if no keywords', async () => {
+      const mockResponse = getContentfulGraphqlEventsResponse();
+      const event = getContentfulGraphqlEvent();
+      event.keywordsCollection = null;
+      mockResponse.eventsCollection!.items = [event];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const { items } = await eventDataProvider.fetch({});
+
+      expect(items[0]).toMatchObject({
+        keywords: [],
+      });
+    });
+
     test('Should apply the filter to remove hidden events by default', async () => {
       const contentfulGraphQLResponse = getContentfulGraphqlEventsResponse();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(

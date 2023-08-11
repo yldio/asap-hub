@@ -319,7 +319,7 @@ const generateFetchQueryFilter = (
     ? { region_in: regions }
     : {};
   const filterKeywords: gp2Contentful.UsersFilter = keywords
-    ? { keywords_contains_some: keywords }
+    ? { tags: { name_in: keywords } }
     : hasKeywords
     ? { keywords_exists: true }
     : {};

@@ -93,7 +93,7 @@ describe('User data provider', () => {
 
     test('tags default to empty array', async () => {
       const mockResponse = getContentfulGraphqlUser({
-        tagsCollection: { items: [], total: 0 },
+        tagsCollection: null,
       });
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: mockResponse,

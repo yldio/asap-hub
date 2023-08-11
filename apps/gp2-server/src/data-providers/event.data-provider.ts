@@ -157,6 +157,7 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
       return undefined;
     };
 
+    // TODO: confirm if we still need this when removing old tags, as search will be developed in a month
     const searchFilter = (search || '')
       .split(' ')
       .reduce(

@@ -279,6 +279,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   app.use(userRoutes);
   app.use(contributingCohortRoutes);
+  app.use(keywordRoutes);
   // Permission check
   app.use(permissionHandler);
 
@@ -294,7 +295,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(externalUsersRoutes);
   app.use(calendarRoutes);
   app.use(outputRoutes);
-  app.use(keywordRoutes);
 
   // Catch all
   app.get('*', async (_req, res) => {

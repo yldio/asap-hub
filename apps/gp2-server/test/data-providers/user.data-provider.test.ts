@@ -90,6 +90,17 @@ describe('User data provider', () => {
         expect(result?.degrees).toEqual([expected]);
       },
     );
+
+    test('tags default to empty array', async () => {
+      const mockResponse = getContentfulGraphqlUser({
+        tagsCollection: { items: [], total: 0 },
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: mockResponse,
+      });
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result!.tags).toEqual([]);
+    });
     test('degrees default to empty array', async () => {
       const mockResponse = getContentfulGraphqlUser({
         degrees: null,
@@ -813,6 +824,29 @@ describe('User data provider', () => {
           skip: 2,
           where: expect.objectContaining({
             onboarded: true,
+            role_not: 'Hidden',
+          }),
+        }),
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
+    test('Should query with hasKeywords filter', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        filter: {
+          hasKeywords: true,
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            keywords_exists: true,
             role_not: 'Hidden',
           }),
         }),

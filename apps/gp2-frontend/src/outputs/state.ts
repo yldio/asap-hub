@@ -2,31 +2,86 @@ import { gp2 } from '@asap-hub/model';
 import {
   atom,
   atomFamily,
+  DefaultValue,
   selectorFamily,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
+import { useAlgolia } from '../hooks/algolia';
 import { getExternalUsers, getUsers } from '../users/api';
-import { createOutput, getOutput, getOutputs, updateOutput } from './api';
+import {
+  createOutput,
+  getOutput,
+  getOutputs,
+  OutputListOptions,
+  updateOutput,
+} from './api';
 
-export const outputsState = selectorFamily<
-  gp2.ListOutputResponse,
-  gp2.FetchOutputOptions
+const outputIndexState = atomFamily<
+  | {
+      ids: ReadonlyArray<string>;
+      total: number;
+      algoliaQueryId?: string;
+      algoliaIndexName?: string;
+    }
+  | Error
+  | undefined,
+  OutputListOptions
 >({
-  key: 'outputState',
+  key: 'researchOutputIndex',
+  default: undefined,
+});
+export const outputsState = selectorFamily<
+  gp2.ListOutputResponse | Error | undefined,
+  OutputListOptions
+>({
+  key: 'outputs',
   get:
     (options) =>
     ({ get }) => {
-      get(refreshOutputsState);
-      return getOutputs(get(authorizationState), options);
+      const index = get(
+        outputIndexState({
+          ...options,
+        }),
+      );
+      if (index === undefined || index instanceof Error) return index;
+      const outputs: gp2.OutputResponse[] = [];
+      for (const id of index.ids) {
+        const output = get(outputState(id));
+        if (output === undefined) return undefined;
+        outputs.push(output);
+      }
+      return {
+        total: index.total,
+        items: outputs,
+        algoliaQueryId: index.algoliaQueryId,
+        algoliaIndexName: index.algoliaIndexName,
+      };
     },
-});
-
-const refreshOutputsState = atom<number>({
-  key: 'refreshOutputsState',
-  default: 0,
+  set:
+    (options) =>
+    ({ get, set, reset }, outputs) => {
+      const indexStateOptions = { ...options };
+      if (outputs === undefined || outputs instanceof DefaultValue) {
+        const oldOutputs = get(outputIndexState(indexStateOptions));
+        if (!(oldOutputs instanceof Error)) {
+          oldOutputs?.ids?.forEach((id) => reset(outputState(id)));
+        }
+        reset(outputIndexState(indexStateOptions));
+      } else if (outputs instanceof Error) {
+        set(outputIndexState(indexStateOptions), outputs);
+      } else {
+        outputs.items.forEach((output) => set(outputState(output.id), output));
+        set(outputIndexState(indexStateOptions), {
+          total: outputs.total,
+          ids: outputs.items.map(({ id }) => id),
+          algoliaIndexName: outputs.algoliaIndexName,
+          algoliaQueryId: outputs.algoliaQueryId,
+        });
+      }
+    },
 });
 
 const fetchOutputState = selectorFamily<gp2.OutputResponse | undefined, string>(
@@ -40,6 +95,14 @@ const fetchOutputState = selectorFamily<gp2.OutputResponse | undefined, string>(
       },
   },
 );
+export const outputState = atomFamily<gp2.OutputResponse | undefined, string>({
+  key: 'output',
+  default: fetchOutputState,
+});
+const refreshOutputsState = atom<number>({
+  key: 'refreshOutputsState',
+  default: 0,
+});
 
 const patchedOutputState = atomFamily<gp2.OutputResponse | undefined, string>({
   key: 'patchedOutput',
@@ -54,8 +117,27 @@ const OutputState = selectorFamily<gp2.OutputResponse | undefined, string>({
       get(patchedOutputState(id)) ?? get(fetchOutputState(id)),
 });
 
-export const useOutputs = (options: gp2.FetchOutputOptions) =>
-  useRecoilValue(outputsState(options));
+export const useOutputs = (options: OutputListOptions) => {
+  const [outputs, setOutputs] = useRecoilState(outputsState(options));
+  const { client } = useAlgolia();
+  if (outputs === undefined) {
+    throw getOutputs(client, options)
+      .then(
+        (data): gp2.ListOutputResponse => ({
+          total: data.nbHits,
+          items: data.hits,
+          algoliaQueryId: data.queryID,
+          algoliaIndexName: data.index,
+        }),
+      )
+      .then(setOutputs)
+      .catch(setOutputs);
+  }
+  if (outputs instanceof Error) {
+    throw outputs;
+  }
+  return outputs;
+};
 
 export const useOutputById = (id: string) => useRecoilValue(OutputState(id));
 
@@ -84,13 +166,10 @@ export const useUpdateOutput = (id: string) => {
 export const useAuthorSuggestions = () => {
   const authorization = useRecoilValue(authorizationState);
 
-  return async (searchQuery: string) => {
-    const users = await getUsers(
-      { search: searchQuery, skip: 0, take: 10 },
-      authorization,
-    );
+  return async (search: string) => {
+    const users = await getUsers({ search, skip: 0, take: 10 }, authorization);
     const externalUsers = await getExternalUsers(
-      { search: searchQuery, skip: 0, take: 10 },
+      { search, skip: 0, take: 10 },
       authorization,
     );
     return [...users.items, ...externalUsers.items]

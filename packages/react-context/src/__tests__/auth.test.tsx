@@ -160,6 +160,7 @@ describe('useCurrentUserGP2', () => {
           lastName: 'Doe',
           displayName: 'John Doe',
           role: 'Network Collaborator',
+          algoliaApiKey: 'asdasda',
         },
       }),
     });

@@ -440,7 +440,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            documentType: 'some-type',
+            documentType: 'Article',
             title: 'some-title',
           },
         });
@@ -450,7 +450,7 @@ describe('Outputs data provider', () => {
           {
             ...expectedDefaultParams,
             where: {
-              AND: [{ title: 'some-title' }, { documentType: 'some-type' }],
+              AND: [{ title: 'some-title' }, { documentType: 'Article' }],
             },
           },
         );
@@ -460,7 +460,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            documentType: ['some-type-1', 'some-type-2'],
+            documentType: ['Dataset', 'Article'],
             title: 'some-title',
           },
         });
@@ -472,7 +472,7 @@ describe('Outputs data provider', () => {
             where: {
               AND: [
                 { title: 'some-title' },
-                { documentType_in: ['some-type-1', 'some-type-2'] },
+                { documentType_in: ['Dataset', 'Article'] },
               ],
             },
           },
@@ -484,7 +484,7 @@ describe('Outputs data provider', () => {
           ...defaultParams,
           search: 'Title',
           filter: {
-            documentType: ['Grant Document', 'Presentation'],
+            documentType: ['Dataset', 'Article'],
           },
         });
 
@@ -495,7 +495,7 @@ describe('Outputs data provider', () => {
             where: {
               AND: [
                 { OR: [{ title_contains: 'Title' }] },
-                { documentType_in: ['Grant Document', 'Presentation'] },
+                { documentType_in: ['Dataset', 'Article'] },
               ],
             },
           },
@@ -544,7 +544,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            workingGroup: 'working-group-id',
+            workingGroupId: 'working-group-id',
           },
         });
 
@@ -561,7 +561,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            project: 'project-id',
+            projectId: 'project-id',
           },
         });
 
@@ -578,7 +578,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            author: 'user-id',
+            authorId: 'user-id',
           },
         });
 
@@ -607,8 +607,8 @@ describe('Outputs data provider', () => {
       expect(result).toEqual(outputId);
       const {
         publishDate: _,
-        workingGroup: __,
-        project,
+        workingGroupId: __,
+        projectId,
         ...fieldsCreated
       } = outputRequest;
       const fields = addLocaleToFields({
@@ -638,7 +638,7 @@ describe('Outputs data provider', () => {
           sys: {
             type: 'Link',
             linkType: 'Entry',
-            id: project,
+            id: projectId,
           },
         },
       });
@@ -691,8 +691,8 @@ describe('Outputs data provider', () => {
       await expect(
         outputDataProvider.create({
           ...outputRequest,
-          workingGroup: undefined,
-          project: undefined,
+          workingGroupId: undefined,
+          projectId: undefined,
         }),
       ).rejects.toThrow(/invalid related entity/i);
     });

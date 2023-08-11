@@ -4,13 +4,26 @@
   "hitsPerPage": 20,
   "maxValuesPerFacet": 100,
   "version": 2,
-  "attributesToIndex": ["title"],
+  "attributesToIndex": [
+    "title",
+    "authors.displayName",
+    "authors.firstName",
+    "authors.lastName",
+    "project.title",
+    "workingGroup.title"
+  ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,
   "unretrievableAttributes": null,
   "optionalWords": null,
   "queryLanguages": ["en"],
-  "attributesForFaceting": ["status"],
+  "attributesForFaceting": [
+    "documentType",
+    "authors.id",
+    "__meta.type",
+    "workingGroup.id",
+    "project.id"
+  ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,
   "paginationLimitedTo": 10000,

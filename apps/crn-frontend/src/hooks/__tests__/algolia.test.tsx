@@ -1,26 +1,21 @@
 import {
-  ALGOLIA_APP_ID,
-  ALGOLIA_INDEX,
-} from '@asap-hub/crn-frontend/src/config';
+  AlgoliaSearchClient,
+  algoliaSearchClientFactory,
+} from '@asap-hub/algolia';
+import { setCurrentOverrides } from '@asap-hub/flags';
 import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
-import { algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { setCurrentOverrides } from '@asap-hub/flags';
 
-import { useAlgolia } from '../algolia';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../../config';
+import { useAlgolia } from '../algolia';
 
-var mockAlgoliaSearchClientFactory: jest.MockedFunction<
-  typeof algoliaSearchClientFactory
->;
-
-jest.mock('@asap-hub/algolia', () => {
-  mockAlgoliaSearchClientFactory = jest.fn().mockReturnValue({});
-  return {
-    ...jest.requireActual('@asap-hub/algolia'),
-    algoliaSearchClientFactory: mockAlgoliaSearchClientFactory,
-  };
-});
+jest.mock('@asap-hub/algolia', () => ({
+  ...jest.requireActual('@asap-hub/algolia'),
+  algoliaSearchClientFactory: jest
+    .fn()
+    .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
+}));
 beforeEach(() => {
   Object.defineProperty(window, 'dataLayer', {
     configurable: true,
@@ -40,6 +35,10 @@ describe('useAlgolia', () => {
     );
   });
   it('constructs algolia client linking GTM and Algolia with Auth0 user id', async () => {
+    const mockAlgoliaSearchClientFactory =
+      algoliaSearchClientFactory as jest.MockedFunction<
+        typeof algoliaSearchClientFactory
+      >;
     setCurrentOverrides({ CONTENTFUL: false });
 
     const { result, waitForNextUpdate } = renderHook(() => useAlgolia(), {
@@ -73,6 +72,10 @@ describe('useAlgolia', () => {
   });
 
   it('uses contentful index when the feature flag is on', async () => {
+    const mockAlgoliaSearchClientFactory =
+      algoliaSearchClientFactory as jest.MockedFunction<
+        typeof algoliaSearchClientFactory
+      >;
     setCurrentOverrides({ CONTENTFUL: true });
 
     const { waitForNextUpdate } = renderHook(() => useAlgolia(), {

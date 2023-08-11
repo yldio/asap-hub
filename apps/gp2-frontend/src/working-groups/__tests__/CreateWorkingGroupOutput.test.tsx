@@ -107,8 +107,8 @@ it('publishes the output', async () => {
           externalUserId: '2',
         },
       ],
-      workingGroup: 'working-group-id-1',
-      project: undefined,
+      workingGroupId: 'working-group-id-1',
+      projectId: undefined,
     },
     expect.anything(),
   );

@@ -9,7 +9,7 @@ actions:
       - name: got
       - name: '@babel/runtime-corejs3'
     deployed: true
-    runtime: node18
+    runtime: node18-actions
     secrets:
       - name: AUTH0_ADDITIONAL_CLAIM_DOMAIN
         value: '##AUTH0_ADDITIONAL_CLAIM_DOMAIN##'
@@ -25,7 +25,7 @@ actions:
       - name: got
       - name: '@babel/runtime-corejs3'
     deployed: true
-    runtime: node18
+    runtime: node18-actions
     secrets:
       - name: AUTH0_ADDITIONAL_CLAIM_DOMAIN
         value: '##AUTH0_ADDITIONAL_CLAIM_DOMAIN##'

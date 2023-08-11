@@ -3,6 +3,7 @@ import {
   Environment,
   getGP2ContentfulGraphqlClientMockServer,
   patchAndPublish,
+  gp2 as gp2Contentful,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { ProjectContentfulDataProvider } from '../../src/data-providers/project.data-provider';
@@ -436,6 +437,23 @@ describe('Project Data Provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
+    test('Should call fetch with correct filter', async () => {
+      const mockResponse = getContentfulGraphqlProjectsResponse();
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      await projectDataProvider.fetch({
+        ...options,
+        filter: { hasKeywords: true },
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_PROJECTS,
+        expect.objectContaining({
+          where: { keywords_exists: true },
+        }),
+      );
+    });
+
     test('Should return an empty result if the client returns a response with a null items property', async () => {
       const mockResponse = getContentfulGraphqlProjectsResponse();
       mockResponse.projectsCollection = null;
@@ -443,6 +461,20 @@ describe('Project Data Provider', () => {
 
       const result = await projectDataProvider.fetch(options);
       expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result if no keywords', async () => {
+      const mockResponse = getContentfulGraphqlProjectsResponse();
+      const project = getContentfulGraphqlProject();
+      project.tagsCollection = null;
+      mockResponse.projectsCollection!.items = [project];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const { items } = await projectDataProvider.fetch(options);
+
+      expect(items[0]).toMatchObject({
+        tags: [],
+      });
     });
 
     test('Should return an empty result if no keywords', async () => {

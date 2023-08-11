@@ -854,6 +854,29 @@ describe('User data provider', () => {
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
 
+    test('Should query with keywords filter', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        filter: {
+          keywords: ['Keyword'],
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            tags: { name_in: ['Keyword'] },
+            role_not: 'Hidden',
+          }),
+        }),
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
     test('Should return all users when the onlyOnboard flag is false', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         getContentfulUsersGraphqlResponse(),

@@ -49,8 +49,16 @@ describe('getOutput', () => {
 
 describe('getOutputs', () => {
   const mockAlgoliaSearchClient = {
-    search: jest.fn().mockResolvedValue(createOutputListAlgoliaResponse(10)),
+    search: jest.fn(),
   } as unknown as jest.Mocked<AlgoliaSearchClient<'gp2'>>;
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockAlgoliaSearchClient.search = jest
+      .fn()
+      .mockResolvedValue(createOutputListAlgoliaResponse(10));
+  });
+
   const options: GetListOptions = {
     filters: new Set<string>(),
     pageSize: PAGE_SIZE,
@@ -58,9 +66,6 @@ describe('getOutputs', () => {
     searchQuery: '',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
   it('makes a search request with query, default page and page size', async () => {
     await getOutputs(mockAlgoliaSearchClient, {
       ...options,

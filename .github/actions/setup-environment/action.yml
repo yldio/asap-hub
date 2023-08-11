@@ -62,6 +62,9 @@ outputs:
   contentful-app-membership-reference:
     description: 'Contentful App Extension Membership Reference'
     value: ${{ steps.vars.outputs.contentful-app-membership-reference }}
+  contentful-app-partial-last-updated:
+    description: 'Contentful App Extension Partial Last Updated'
+    value: ${{ steps.vars.outputs.contentful-app-partial-last-updateds }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}

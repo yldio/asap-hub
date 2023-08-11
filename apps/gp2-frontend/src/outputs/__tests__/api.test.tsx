@@ -103,7 +103,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:Article)',
+        filters: '(documentType:"Article")',
       }),
     );
   });
@@ -118,7 +118,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:Article OR documentType:"GP2 Reports")',
+        filters: '(documentType:"Article" OR documentType:"GP2 Reports")',
       }),
     );
   });
@@ -136,7 +136,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:Article)',
+        filters: '(documentType:"Article")',
       }),
     );
   });
@@ -167,7 +167,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:Article) AND project.id:"12345"',
+        filters: '(documentType:"Article") AND project.id:"12345"',
       }),
     );
   });
@@ -184,7 +184,7 @@ describe('getOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(documentType:Article OR documentType:"GP2 Reports") AND project.id:"12345"',
+          '(documentType:"Article" OR documentType:"GP2 Reports") AND project.id:"12345"',
       }),
     );
   });
@@ -214,7 +214,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:Article) AND workingGroup.id:"12345"',
+        filters: '(documentType:"Article") AND workingGroup.id:"12345"',
       }),
     );
   });
@@ -231,7 +231,7 @@ describe('getOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(documentType:Article OR documentType:"GP2 Reports") AND workingGroup.id:"12345"',
+          '(documentType:"Article" OR documentType:"GP2 Reports") AND workingGroup.id:"12345"',
       }),
     );
   });
@@ -261,7 +261,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:Article) AND authors.id:"12345"',
+        filters: '(documentType:"Article") AND authors.id:"12345"',
       }),
     );
   });
@@ -272,13 +272,12 @@ describe('getOutputs', () => {
       filters: new Set<gp2Model.OutputDocumentType>(['Article', 'GP2 Reports']),
       authorId: '12345',
     });
-
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
       ['output'],
       '',
       expect.objectContaining({
         filters:
-          '(documentType:Article OR documentType:"GP2 Reports") AND authors.id:"12345"',
+          '(documentType:"Article" OR documentType:"GP2 Reports") AND authors.id:"12345"',
       }),
     );
   });

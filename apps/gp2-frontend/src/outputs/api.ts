@@ -23,17 +23,15 @@ export const getOutput = async (
 
 export type OutputListOptions = GetListOptions & gp2.FetchOutputFilter;
 
-export const researchOutputDocumentTypeFilters: Record<
-  gp2.OutputDocumentType,
-  { filter: string }
-> = {
-  'Procedural Form': { filter: 'documentType:"Procedural Form"' },
-  'GP2 Reports': { filter: 'documentType:"GP2 Reports"' },
-  'Training Materials': { filter: 'documentType:"Training Materials"' },
-  Dataset: { filter: 'documentType:Dataset' },
-  Article: { filter: 'documentType:Article' },
-  'Code/Software': { filter: 'documentType:"Code/Software"' },
-};
+type DocumentTypeFilter = Record<gp2.OutputDocumentType, { filter: string }>;
+export const researchOutputDocumentTypeFilters =
+  gp2.outputDocumentTypes.reduce<DocumentTypeFilter>(
+    (acc, type) => ({
+      ...acc,
+      [type]: { filter: `documentType:"${type}"` },
+    }),
+    {} as DocumentTypeFilter,
+  );
 
 export const getTypeFilters = (filters: Set<string>): string =>
   Object.entries(researchOutputDocumentTypeFilters)

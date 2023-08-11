@@ -14,41 +14,27 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
-import { usePaginationParams } from '../hooks';
+import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { usePutWorkingGroupResources, useWorkingGroupById } from './state';
 
 const { workingGroups } = gp2Routing;
 
-type WorkingGroupDetailProps = {
-  currentTime: Date;
-};
 const loadCreateWorkingGroupOutput = () =>
   import(
     /* webpackChunkName: "working-group-create-output-" */ './CreateWorkingGroupOutput'
   );
-const CreateWorkingGroupOutput = lazy(loadCreateWorkingGroupOutput);
-const loadOutputDirectory = () =>
-  import(
-    /* webpackChunkName: "working-group-output-directory" */ '../outputs/OutputDirectory'
-  );
-const OutputDirectory = lazy(loadOutputDirectory);
 
+const CreateWorkingGroupOutput = lazy(loadCreateWorkingGroupOutput);
+type WorkingGroupDetailProps = {
+  currentTime: Date;
+};
 const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { workingGroupId } = useRouteParams(workingGroups({}).workingGroup);
   const workingGroup = useWorkingGroupById(workingGroupId);
-  useEffect(() => {
-    loadOutputDirectory().then(loadCreateWorkingGroupOutput);
-  }, [workingGroup]);
-
-  const { pageSize } = usePaginationParams();
   const { total: outputsTotal } = useOutputs({
-    currentPage: 0,
-    filters: new Set(),
-    pageSize,
-    searchQuery: '',
-    workingGroupId,
+    filter: { workingGroup: workingGroupId },
   });
 
   const currentUser = useCurrentUserGP2();
@@ -71,6 +57,9 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
   const updateWorkingGroupResources =
     usePutWorkingGroupResources(workingGroupId);
 
+  useEffect(() => {
+    loadCreateWorkingGroupOutput();
+  }, [workingGroup]);
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     workingGroupId,
   });
@@ -137,7 +126,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputDirectory workingGroupId={workingGroupId} />
+                <OutputList filters={{ workingGroup: workingGroupId }} />
               </Frame>
             </Route>
             <Route path={upcoming}>

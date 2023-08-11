@@ -14,42 +14,28 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
-import { usePaginationParams } from '../hooks';
+import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
 import { useProjectById, usePutProjectResources } from './state';
 
 const { projects } = gp2Routing;
 
-type ProjectDetailProps = {
-  currentTime: Date;
-};
-
 const loadCreateProjectOutput = () =>
   import(
     /* webpackChunkName: "project-create-output-" */ './CreateProjectOutput'
   );
-const CreateProjectOutput = lazy(loadCreateProjectOutput);
-const loadOutputDirectory = () =>
-  import(
-    /* webpackChunkName: "project-output-directory" */ '../outputs/OutputDirectory'
-  );
-const OutputDirectory = lazy(loadOutputDirectory);
 
+const CreateProjectOutput = lazy(loadCreateProjectOutput);
+
+type ProjectDetailProps = {
+  currentTime: Date;
+};
 const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const { path } = useRouteMatch();
   const { projectId } = useRouteParams(projects({}).project);
   const project = useProjectById(projectId);
-  useEffect(() => {
-    loadOutputDirectory().then(loadCreateProjectOutput);
-  }, [project]);
-
-  const { pageSize } = usePaginationParams();
   const { total } = useOutputs({
-    currentPage: 0,
-    filters: new Set(),
-    pageSize,
-    searchQuery: '',
-    projectId,
+    filter: { project: projectId },
   });
 
   const currentUser = useCurrentUserGP2();
@@ -69,6 +55,10 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const past = projectRoute.past({}).$;
 
   const updateProjectResources = usePutProjectResources(projectId);
+
+  useEffect(() => {
+    loadCreateProjectOutput();
+  }, [project]);
 
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     projectId,
@@ -131,7 +121,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
             )}
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputDirectory projectId={projectId} />
+                <OutputList filters={{ project: projectId }} />
               </Frame>
             </Route>
             <Route path={upcoming}>

@@ -1,65 +1,75 @@
-import type { gp2 as gp2Auth, User } from '@asap-hub/auth';
-import type {
-  gp2 as gp2Model,
-  UserMetadataResponse,
-  UserTeam,
-} from '@asap-hub/model';
 import { Auth0PostLoginApi } from '@vedicium/auth0-actions-sdk';
+import type { gp2 as gp2Auth, User } from '@asap-hub/auth';
+import type { gp2 as gp2Model, UserMetadataResponse } from '@asap-hub/model';
 import got from 'got';
 import { URL, URLSearchParams } from 'url';
 import { Auth0PostLoginEventWithSecrets } from './types';
 
-type Auth0UserResponse = UserMetadataResponse | gp2Model.UserMetadataResponse;
+type Auth0UserResponse = UserMetadataResponse | gp2Model.UserResponse;
 
 const isUserMetadataResponse = (
-  response: UserMetadataResponse | gp2Model.UserMetadataResponse,
-): response is UserMetadataResponse => 'teams' in response;
+  response: UserMetadataResponse | gp2Model.UserResponse,
+): response is UserMetadataResponse => 'algoliaApiKey' in response;
 
-const parseCommonUserMetadata = ({
-  id,
-  email,
-  algoliaApiKey,
-  displayName,
-  firstName,
-  lastName,
-  avatarUrl,
-  onboarded,
-}: Auth0UserResponse) => ({
-  id,
-  email,
-  algoliaApiKey,
-  displayName,
-  firstName,
-  lastName,
-  avatarUrl,
-  onboarded,
-});
-const parseGP2UserMetadata = ({ role }: gp2Model.UserMetadataResponse) => ({
-  role,
-});
-const parseTeam = ({ id, displayName, role, inactiveSinceDate }: UserTeam) => ({
-  id,
-  displayName,
-  role,
-  inactiveSinceDate,
-});
-const parseUserMetadata = ({
-  teams,
-  workingGroups,
-  interestGroups,
-  role,
-}: UserMetadataResponse) => ({
-  teams: teams.map(parseTeam),
-  workingGroups,
-  interestGroups,
-  role,
-});
-const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => ({
-  ...parseCommonUserMetadata(response),
-  ...(isUserMetadataResponse(response)
-    ? parseUserMetadata(response)
-    : parseGP2UserMetadata(response)),
-});
+const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => {
+  if (isUserMetadataResponse(response)) {
+    const {
+      id,
+      onboarded,
+      displayName,
+      email,
+      firstName,
+      lastName,
+      avatarUrl,
+      teams,
+      algoliaApiKey,
+      workingGroups,
+      interestGroups,
+      role,
+    } = response;
+
+    return {
+      id,
+      onboarded,
+      displayName,
+      email,
+      firstName,
+      lastName,
+      avatarUrl,
+      teams: teams.map((team) => ({
+        id: team.id,
+        displayName: team.displayName,
+        role: team.role,
+        inactiveSinceDate: team.inactiveSinceDate,
+      })),
+      algoliaApiKey,
+      workingGroups,
+      interestGroups,
+      role,
+    };
+  }
+  const {
+    id,
+    email,
+    displayName,
+    firstName,
+    lastName,
+    avatarUrl,
+    onboarded,
+    role,
+  } = response;
+
+  return {
+    id,
+    displayName,
+    email,
+    firstName,
+    lastName,
+    avatarUrl,
+    onboarded,
+    role,
+  };
+};
 
 const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
   const redirect_uri = new URLSearchParams(event.request.query).get(
@@ -116,10 +126,11 @@ export const onExecutePostLogin = async (
       );
     }
   } catch (err) {
-    const errorMessage =
-      err instanceof Error ? err.message : 'Unexpected Error';
-
-    return api.access.deny(errorMessage);
+    let errorMessage;
+    if (err instanceof Error) {
+      errorMessage = err.message;
+    }
+    return api.access.deny(errorMessage ?? 'Unexpected Error');
   }
   return true;
 };

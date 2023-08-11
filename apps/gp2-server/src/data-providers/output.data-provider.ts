@@ -55,18 +55,14 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     skip: number,
     { search, filter }: gp2Model.FetchOutputOptions,
   ) {
-    if (filter?.workingGroupId) {
-      return this.fetchOutputsByWorkingGroupId(
-        take,
-        skip,
-        filter.workingGroupId,
-      );
+    if (filter?.workingGroup) {
+      return this.fetchOutputsByWorkingGroupId(take, skip, filter.workingGroup);
     }
-    if (filter?.projectId) {
-      return this.fetchOutputsByProjectId(take, skip, filter.projectId);
+    if (filter?.project) {
+      return this.fetchOutputsByProjectId(take, skip, filter.project);
     }
-    if (filter?.authorId) {
-      return this.fetchOutputsByUserId(take, skip, filter.authorId);
+    if (filter?.author) {
+      return this.fetchOutputsByUserId(take, skip, filter.author);
     }
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
@@ -130,11 +126,11 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
 
   async create({
     publishDate: _,
-    workingGroupId,
-    projectId,
+    workingGroup,
+    project,
     ...data
   }: gp2Model.OutputCreateDataObject) {
-    const relatedEntityId = workingGroupId || projectId;
+    const relatedEntityId = workingGroup || project;
     if (!relatedEntityId) {
       throw new Error('invalid related entity');
     }

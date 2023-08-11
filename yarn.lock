@@ -1452,7 +1452,6 @@ __metadata:
     "@types/yargs": 17.0.5
     "@yarnpkg/pnpify": 3.1.6
     ajv: 8.11.0
-    algoliasearch: 4.19.1
     apr-intercept: 3.0.4
     aws-lambda: 1.0.7
     babel-loader: 8.3.0

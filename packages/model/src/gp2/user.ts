@@ -147,9 +147,6 @@ export interface UserResponse extends Omit<UserDataObject, 'connections'> {
   displayName: string;
 }
 export type ListUserResponse = ListResponse<UserResponse>;
-export type UserMetadataResponse = UserResponse & {
-  algoliaApiKey: string;
-};
 export type UserUpdateRequest = UserUpdateDataObject;
 
 export type FetchUsersFilter = {

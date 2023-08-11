@@ -1,19 +1,19 @@
-import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { RecoilRoot } from 'recoil';
+import { Suspense } from 'react';
+import { render, waitFor } from '@testing-library/react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { renderHook } from '@testing-library/react-hooks';
 import { createListNewsResponse } from '@asap-hub/fixtures';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { NewsFrequency } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
-import { render, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
-import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 
-import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { usePagination, usePaginationParams } from '../../hooks';
-import { getNews } from '../api';
 import NewsPage from '../Routes';
 import { newsIndexState } from '../state';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getNews } from '../api';
 
 jest.mock('../api');
 

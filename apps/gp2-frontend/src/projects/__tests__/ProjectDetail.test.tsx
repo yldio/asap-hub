@@ -12,10 +12,9 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getProject, putProjectResources } from '../api';
 import { getEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
-import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getProject, putProjectResources } from '../api';
 import ProjectDetail from '../ProjectDetail';
 
 jest.mock('../api');
@@ -71,7 +70,7 @@ describe('ProjectDetail', () => {
 
   beforeEach(jest.resetAllMocks);
   beforeEach(() => {
-    mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
+    mockGetOutputs.mockResolvedValue(gp2Fixtures.createListOutputResponse(1));
     mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
   });
   it('renders header with title', async () => {

@@ -4,19 +4,6 @@
     "asc(addedDate)",
     "asc(createdDate)"
   ],
-  "attributesForFaceting": [
-    "documentType",
-    "authors.id",
-    "__meta.type",
-    "workingGroup.id",
-    "project.id"
-  ],
-  "attributesToIndex": [
-    "title",
-    "authors.displayName",
-    "authors.firstName",
-    "authors.lastName",
-    "project.title",
-    "workingGroup.title"
-  ]
+  "attributesForFaceting": ["status"],
+  "attributesToIndex": ["title"]
 }

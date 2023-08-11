@@ -1,20 +1,20 @@
-import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { fireEvent } from '@testing-library/dom';
+import { RecoilRoot } from 'recoil';
+import { Suspense } from 'react';
 import {
   render,
-  screen,
   waitFor,
+  screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { fireEvent } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
 
+import NewsPage from '../Routes';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getNews } from '../api';
-import NewsPage from '../Routes';
 
 jest.mock('../api');
 

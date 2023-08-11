@@ -1,7 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 
 export type User = Pick<
-  gp2.UserMetadataResponse,
+  gp2.UserResponse,
   | 'id'
   | 'onboarded'
   | 'displayName'
@@ -10,5 +10,4 @@ export type User = Pick<
   | 'lastName'
   | 'avatarUrl'
   | 'role'
-  | 'algoliaApiKey'
 >;

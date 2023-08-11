@@ -86,8 +86,8 @@ export type AuthorUpsertDataObject =
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
-  workingGroupId?: string;
-  projectId?: string;
+  workingGroup?: string;
+  project?: string;
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
@@ -114,19 +114,21 @@ export type OutputPostRequest = {
   title: string;
   type?: OutputType;
   subtype?: OutputSubtype;
-  workingGroupId?: string;
-  projectId?: string;
+  workingGroup?: string;
+  project?: string;
 };
 
 export type OutputPutRequest = OutputPostRequest;
 
 export type FetchOutputFilter = {
-  documentType?: OutputDocumentType | OutputDocumentType[];
+  documentType?: string | string[];
   title?: string;
   link?: string;
-  workingGroupId?: string;
-  projectId?: string;
-  authorId?: string;
+  workingGroup?: string;
+  project?: string;
+  author?: string;
 };
 
-export type FetchOutputOptions = FetchOptions<FetchOutputFilter>;
+export type FetchOutputOptions = FetchOptions<FetchOutputFilter> & {
+  includeDrafts?: boolean;
+};

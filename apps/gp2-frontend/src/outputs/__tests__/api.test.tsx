@@ -1,12 +1,14 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { PAGE_SIZE } from '../../hooks';
-import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
-import { createOutput, getOutput, getOutputs, updateOutput } from '../api';
+import {
+  createOutput,
+  createOutputApiUrl,
+  getOutput,
+  getOutputs,
+  updateOutput,
+} from '../api';
 
 jest.mock('../../config');
 
@@ -48,246 +50,35 @@ describe('getOutput', () => {
 });
 
 describe('getOutputs', () => {
-  const mockAlgoliaSearchClient = {
-    search: jest.fn(),
-  } as unknown as jest.Mocked<AlgoliaSearchClient<'gp2'>>;
-
-  beforeEach(() => {
-    jest.resetAllMocks();
-    mockAlgoliaSearchClient.search = jest
-      .fn()
-      .mockResolvedValue(createOutputListAlgoliaResponse(10));
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+    nock.cleanAll();
   });
-
-  const options: GetListOptions = {
-    filters: new Set<string>(),
-    pageSize: PAGE_SIZE,
-    currentPage: 0,
-    searchQuery: '',
+  const options: gp2Model.FetchOutputOptions = {
+    search: '',
   };
 
-  it('makes a search request with query, default page and page size', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      searchQuery: 'test',
-      currentPage: null,
-      pageSize: null,
-    });
+  it('returns a successfully fetched outputs', async () => {
+    const outputsResponse: gp2Model.ListOutputResponse =
+      gp2Fixtures.createListOutputResponse(1);
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/outputs')
+      .reply(200, outputsResponse);
 
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      'test',
-      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
-    );
-  });
-  it('passes page number and page size to request', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      currentPage: 1,
-      pageSize: 20,
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({ hitsPerPage: 20, page: 1 }),
-    );
-  });
-  it('builds a single filter query', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<gp2Model.OutputDocumentType>(['Article']),
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters: '(documentType:"Article")',
-      }),
-    );
+    const result = await getOutputs('Bearer x', options);
+    expect(result).toEqual(outputsResponse);
   });
 
-  it('builds a multiple filter query', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<gp2Model.OutputDocumentType>(['Article', 'GP2 Reports']),
-    });
+  it('errors for error status', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/outputs')
+      .reply(500);
 
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters: '(documentType:"Article" OR documentType:"GP2 Reports")',
-      }),
-    );
-  });
-
-  it('ignores unknown filters', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<gp2Model.OutputDocumentType | 'invalid'>([
-        'Article',
-        'invalid',
-      ]),
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters: '(documentType:"Article")',
-      }),
-    );
-  });
-
-  it('uses project as a filter', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      projectId: '12345',
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters: 'project.id:"12345"',
-      }),
-    );
-  });
-
-  it('adds project to documentType filter', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<gp2Model.OutputDocumentType>(['Article']),
-      projectId: '12345',
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters: '(documentType:"Article") AND project.id:"12345"',
-      }),
-    );
-  });
-
-  it('adds project to documentType filters', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<gp2Model.OutputDocumentType>(['Article', 'GP2 Reports']),
-      projectId: '12345',
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters:
-          '(documentType:"Article" OR documentType:"GP2 Reports") AND project.id:"12345"',
-      }),
-    );
-  });
-  it('uses workingGroup as a filter', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      workingGroupId: '12345',
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters: 'workingGroup.id:"12345"',
-      }),
-    );
-  });
-
-  it('adds workingGroup to documentType filter', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<gp2Model.OutputDocumentType>(['Article']),
-      workingGroupId: '12345',
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters: '(documentType:"Article") AND workingGroup.id:"12345"',
-      }),
-    );
-  });
-
-  it('adds workingGroup to documentType filters', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<gp2Model.OutputDocumentType>(['Article', 'GP2 Reports']),
-      workingGroupId: '12345',
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters:
-          '(documentType:"Article" OR documentType:"GP2 Reports") AND workingGroup.id:"12345"',
-      }),
-    );
-  });
-  it('uses author as a filter', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      authorId: '12345',
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters: 'authors.id:"12345"',
-      }),
-    );
-  });
-
-  it('adds author to documentType filter', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<gp2Model.OutputDocumentType>(['Article']),
-      authorId: '12345',
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters: '(documentType:"Article") AND authors.id:"12345"',
-      }),
-    );
-  });
-
-  it('adds author to documentType filters', async () => {
-    await getOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<gp2Model.OutputDocumentType>(['Article', 'GP2 Reports']),
-      authorId: '12345',
-    });
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['output'],
-      '',
-      expect.objectContaining({
-        filters:
-          '(documentType:"Article" OR documentType:"GP2 Reports") AND authors.id:"12345"',
-      }),
-    );
-  });
-  it('throws an error of type error', async () => {
-    mockAlgoliaSearchClient.search.mockRejectedValue({
-      message: 'Some Error',
-    });
     await expect(
-      getOutputs(mockAlgoliaSearchClient, options),
-    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
+      getOutputs('Bearer x', options),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch the Outputs. Expected status 2xx. Received status 500."`,
+    );
   });
 });
 
@@ -346,4 +137,36 @@ describe('updateOutput', () => {
       `"Failed to update output ro0. Expected status 200. Received status 500."`,
     );
   });
+});
+
+describe('createOutputApiUrl', () => {
+  it('uses the values for take and skip params', async () => {
+    const url = createOutputApiUrl({
+      take: 10,
+      skip: 10,
+    });
+    expect(url.search).toMatchInlineSnapshot(`"?take=10&skip=10"`);
+  });
+
+  it('handles requests with a search query', async () => {
+    const url = createOutputApiUrl({
+      search: 'test123',
+    });
+    expect(url.searchParams.get('search')).toEqual('test123');
+  });
+
+  it.each`
+    name              | value
+    ${'project'}      | ${'a project'}
+    ${'workingGroup'} | ${'a working group'}
+    ${'author'}       | ${'an author'}
+  `(
+    'handles requests with filters for $name - new',
+    async ({ name, value }) => {
+      const url = createOutputApiUrl({
+        filter: { [name]: value },
+      });
+      expect(url.searchParams.getAll(`filter[${name}]`)).toEqual([value]);
+    },
+  );
 });

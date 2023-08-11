@@ -53,7 +53,7 @@ describe('outputs controller', () => {
       });
 
       const fetchOptions: gp2Model.FetchOutputOptions = {
-        filter: { documentType: 'Article', link: 'link', title: 'title' },
+        filter: { documentType: 'document-type', link: 'link', title: 'title' },
         search: 'search',
         skip: 13,
         take: 7,
@@ -70,10 +70,7 @@ describe('outputs controller', () => {
         items: [],
       });
 
-      const documentTypes: gp2Model.OutputDocumentType[] = [
-        'Dataset',
-        'Article',
-      ];
+      const documentTypes = ['one', 'two'];
       const fetchOptions = { filter: documentTypes };
       await outputs.fetch(fetchOptions);
 

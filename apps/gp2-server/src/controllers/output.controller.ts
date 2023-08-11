@@ -63,8 +63,8 @@ export default class OutputController {
       subtype: outputCreateData.subtype,
       title: outputCreateData.title,
       type: outputCreateData.type,
-      workingGroupId: outputCreateData.workingGroupId,
-      projectId: outputCreateData.projectId,
+      workingGroup: outputCreateData.workingGroup,
+      project: outputCreateData.project,
     };
 
     const outputId = await this.outputDataProvider.create(
@@ -216,4 +216,4 @@ export type OutputCreateData = gp2Model.OutputPostRequest & {
 export type OutputUpdateData = gp2Model.OutputPutRequest & {
   updatedBy: string;
 };
-type OutputFilter = gp2Model.OutputDocumentType[] | gp2Model.FetchOutputFilter;
+type OutputFilter = string[] | gp2Model.FetchOutputFilter;

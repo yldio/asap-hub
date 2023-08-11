@@ -1,4 +1,3 @@
-import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
@@ -12,7 +11,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
-import { getOutput, updateOutput } from '../api';
+import { updateOutput, getOutput } from '../api';
 import ShareOutput from '../ShareOutput';
 
 jest.mock('../../outputs/api');
@@ -55,9 +54,8 @@ const renderShareOutput = async (outputId: string = 'ro0') => {
 };
 
 describe('ShareOutput', () => {
-  beforeEach(jest.resetAllMocks);
+  jest.resetAllMocks();
   afterEach(jest.resetAllMocks);
-  mockConsoleError();
   it('renders the title', async () => {
     mockGetOutput.mockResolvedValueOnce(gp2.createOutputResponse());
     await renderShareOutput();

@@ -115,6 +115,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             workingGroupAssociation
           />
           <ResearchOutputForm
+            createVersion={createVersion}
             tagSuggestions={researchSuggestions}
             documentType={documentType}
             getLabSuggestions={getLabSuggestions}

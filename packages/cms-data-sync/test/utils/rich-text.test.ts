@@ -6,7 +6,7 @@ import {
   removeStylingTagsWrappingImgTags,
   wrapIframeWithPTag,
   wrapPlainTextWithPTag,
-  removeClosingPTagWithoutOpening,
+  removeSinglePTag,
 } from '../../src/utils';
 import { createInlineAssets, createMediaEntries } from '../../src/utils';
 
@@ -369,11 +369,6 @@ describe('createDocumentIfNeeded', () => {
           nodeType: 'paragraph',
         },
         {
-          content: [{ data: {}, marks: [], nodeType: 'text', value: '' }],
-          data: {},
-          nodeType: 'paragraph',
-        },
-        {
           content: [],
           data: {
             target: {
@@ -580,19 +575,19 @@ describe('wrapPlainTextWithPTag', () => {
   });
 });
 
-describe('removeClosingPTagWithoutOpening', () => {
+describe('removeSinglePTag', () => {
   test('removes single closing </p>', () => {
     const html = 'Text</p>';
-    expect(removeClosingPTagWithoutOpening(html)).toEqual('Text');
+    expect(removeSinglePTag(html)).toEqual('Text');
   });
 
   test('removes single opening <p>', () => {
     const html = '<p>Text';
-    expect(removeClosingPTagWithoutOpening(html)).toEqual('Text');
+    expect(removeSinglePTag(html)).toEqual('Text');
   });
 
   test('does not remove closing </p> if there is a opening <p>', () => {
     const html = '<p>Text</p>';
-    expect(removeClosingPTagWithoutOpening(html)).toEqual('<p>Text</p>');
+    expect(removeSinglePTag(html)).toEqual('<p>Text</p>');
   });
 });

@@ -13,7 +13,8 @@
     "typecheck": "tsc",
     "import:users": "ts-node ./scripts/import-users.ts",
     "import:cohorts": "ts-node ./scripts/import-cohorts.ts",
-    "import:keywords": "ts-node ./scripts/import-keywords.ts"
+    "import:keywords": "ts-node ./scripts/import-keywords.ts",
+    "user:invitations": "ts-node ./scripts/user-invitations.ts"
   },
   "dependencies": {
     "@asap-hub/algolia": "workspace:*",

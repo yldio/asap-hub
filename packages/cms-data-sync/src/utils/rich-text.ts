@@ -41,12 +41,65 @@ export const wrapIframeWithPTag = (html: string): string => {
   return output ?? html;
 };
 
+export const removeClosingPTagWithoutOpening = (html: string): string => {
+  const openingTag = '<p>';
+  const closingTag = '</p>';
+
+  if (!html.startsWith(openingTag) && html.endsWith(closingTag)) {
+    return html.substring(0, html.length - closingTag.length);
+  }
+
+  if (html.startsWith(openingTag) && !html.endsWith(closingTag)) {
+    return html.substring(openingTag.length, html.length);
+  }
+
+  return html;
+};
+
 export const wrapPlainTextWithPTag = (html: string): string => {
   const $ = cheerio.load(html);
-  if ($('body').children().length === 0 && $('body').text()) {
-    return `<p>${html}</p>`;
-  }
-  return html;
+
+  $('*:not(p)')
+    .contents()
+    .filter((_, cheerio) => {
+      const filterTags = (parent: cheerio.ParentNode | null) => {
+        // we don't want to wrap by p those tags below
+        if (
+          parent &&
+          (parent as cheerio.ParentNode & { name?: string })?.name
+        ) {
+          return ![
+            'sup',
+            'sub',
+            'a',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'strong',
+            'b',
+            'em',
+            'i',
+          ].includes(
+            (cheerio.parent as cheerio.ParentNode & { name: string }).name,
+          );
+        }
+
+        return true;
+      };
+
+      return Boolean(
+        cheerio.nodeType === 3 &&
+          filterTags(cheerio?.parent) &&
+          cheerio.nodeValue &&
+          cheerio.nodeValue.trim().length > 0,
+      );
+    })
+    .wrap('<p></p>');
+
+  return $('body').html() ?? html;
 };
 
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
@@ -116,6 +169,7 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   // can just remove them here
   let processedHtml;
   processedHtml = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
+  processedHtml = removeClosingPTagWithoutOpening(processedHtml);
   processedHtml = removeStylingTagsWrappingIFrameTags(processedHtml);
   processedHtml = removeStylingTagsWrappingImgTags(processedHtml);
   processedHtml = wrapIframeWithPTag(processedHtml);

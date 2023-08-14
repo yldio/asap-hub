@@ -48,7 +48,7 @@ export const removeSinglePTag = (html: string): string => {
   if (html.endsWith(closingTag)) {
     const lastIndexOpeningTag = html.lastIndexOf(openingTag);
 
-    if (lastIndexOpeningTag == -1) {
+    if (lastIndexOpeningTag === -1) {
       return html.substring(0, html.length - closingTag.length);
     }
   }
@@ -56,7 +56,7 @@ export const removeSinglePTag = (html: string): string => {
   if (html.startsWith(openingTag)) {
     const lastIndexClosingTag = html.lastIndexOf(closingTag);
 
-    if (lastIndexClosingTag == -1) {
+    if (lastIndexClosingTag === -1) {
       return html.substring(openingTag.length, html.length);
     }
   }

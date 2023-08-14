@@ -5,8 +5,9 @@ import { getContentfulRestClientFactory } from './clients.dependency';
 
 export const getCalendarDataProvider = (
   contentfulGraphQLClient: GraphQLClient,
+  contentfulRestClientFactory?: typeof getContentfulRestClientFactory,
 ): gp2Model.CalendarDataProvider =>
   new CalendarContentfulDataProvider(
     contentfulGraphQLClient,
-    getContentfulRestClientFactory,
+    contentfulRestClientFactory || getContentfulRestClientFactory,
   );

@@ -38,12 +38,12 @@ const contentfulManagementApiRateLimiter = new RateLimiter({
   interval: 'second',
 });
 
-const contentDeliveryApi = new RateLimiter({
-  tokensPerInterval: 20,
+const contentDeliveryApiRateLimiter = new RateLimiter({
+  tokensPerInterval: 15,
   interval: 'second',
 });
 
-class ApiAdapter extends RestAdapter {
+class RateLimitedRestAdapter extends RestAdapter {
   async makeRequest<R>(options: MakeRequestOptions): Promise<R> {
     await contentfulManagementApiRateLimiter.removeTokens(1);
     return super.makeRequest(options);
@@ -54,7 +54,7 @@ class RateLimitedGraphqlClient extends GraphQLClient {
   request = (async (
     ...args: Parameters<GraphQLClient['request']>
   ): Promise<ReturnType<GraphQLClient['request']>> => {
-    await contentDeliveryApi.removeTokens(1);
+    await contentDeliveryApiRateLimiter.removeTokens(1);
     return super.request(...args);
   }) as GraphQLClient['request'];
 }
@@ -73,7 +73,7 @@ const contentfulRestClient = getRestClient({
   space: contentfulSpaceId,
   accessToken: contentfulManagementAccessToken,
   environment: contentfulEnvId,
-  apiAdapter: new ApiAdapter({
+  apiAdapter: new RateLimitedRestAdapter({
     accessToken: contentfulManagementAccessToken,
   }),
 });
@@ -92,7 +92,10 @@ const syncCalendar = syncCalendarFactory(
 
 export const handler: Handler = sentryWrapper(
   webhookEventUpdatedHandlerFactory(
-    getCalendarDataProvider(contentfulGraphQLClient),
+    getCalendarDataProvider(
+      contentfulGraphQLClient,
+      () => contentfulRestClient,
+    ),
     syncCalendar,
     logger,
     { googleApiToken },

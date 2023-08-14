@@ -8,6 +8,7 @@ import {
   hasDuplicateResearchOutputPermission,
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
+  hasVersionResearchOutputPermission,
   hasRequestForReviewPermission,
   hasShareResearchOutputPermission,
 } from '@asap-hub/validation';
@@ -229,6 +230,7 @@ export const useResearchOutputPermissions = (
       userRole,
       published ?? false,
     ),
+    canVersionResearchOutput: hasVersionResearchOutputPermission(userRole),
     canPublishResearchOutput: hasPublishResearchOutputPermission(userRole),
     canShareResearchOutput: hasShareResearchOutputPermission(userRole),
     canDuplicateResearchOutput: hasDuplicateResearchOutputPermission(

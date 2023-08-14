@@ -172,14 +172,8 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   processedHtml = removeSinglePTag(processedHtml);
   processedHtml = removeStylingTagsWrappingIFrameTags(processedHtml);
   processedHtml = removeStylingTagsWrappingImgTags(processedHtml);
-  console.log('before wrapIframeWithPTag', processedHtml);
-
   processedHtml = wrapIframeWithPTag(processedHtml);
-  console.log('\n\n');
-  console.log('before wrapPlainTextWithPTag', processedHtml);
   processedHtml = wrapPlainTextWithPTag(processedHtml);
-  console.log('after wrapPlainTextWithPTag', processedHtml);
-  console.log('\n\n');
 
   logger(`HTML pre-parsed:\n${html}`, 'DEBUG');
   logger(`HTML post-parsed:\n${processedHtml}`, 'DEBUG');

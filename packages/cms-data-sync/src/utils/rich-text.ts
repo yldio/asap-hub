@@ -84,21 +84,15 @@ export const wrapPlainTextWithPTag = (html: string): string => {
     'i',
   ];
 
-  const filterTags = (parent: ParentNode | null) => {
-    // we don't want to wrap by p those tags below
-    if (parent && parent?.name) {
-      return !excludedTags.includes(parent.name);
-    }
-
-    return true;
-  };
+  const filterTags = (parent: ParentNode | null) =>
+    parent && parent?.name && !excludedTags.includes(parent.name);
 
   $('*:not(p)')
     .contents()
     .filter((_, element) =>
       Boolean(
-        element.nodeType === 3 &&
-          filterTags(element?.parent) &&
+        filterTags(element?.parent) &&
+          element.nodeType === 3 &&
           element.nodeValue &&
           element.nodeValue.trim().length > 0,
       ),

@@ -996,7 +996,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/parse-data-url": 3.0.0
     "@types/pump": 1.1.1
-    "@types/serverless": 3.12.13
+    "@types/serverless": 3.12.14
     "@types/source-map-support": 0.5.4
     "@types/stream-json": 1.7.3
     "@types/supertest": 2.0.12
@@ -1246,6 +1246,7 @@ __metadata:
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
@@ -1445,7 +1446,7 @@ __metadata:
     "@types/mime-types": 2.1.1
     "@types/node": 18.17.3
     "@types/parse-data-url": 3.0.0
-    "@types/serverless": 3.12.13
+    "@types/serverless": 3.12.14
     "@types/source-map-support": 0.5.4
     "@types/supertest": 2.0.12
     "@types/uuid": 8.3.4
@@ -14494,8 +14495,8 @@ __metadata:
   linkType: hard
 
 "@sentry/cli@npm:^2.20.3":
-  version: 2.20.3
-  resolution: "@sentry/cli@npm:2.20.3"
+  version: 2.20.5
+  resolution: "@sentry/cli@npm:2.20.5"
   dependencies:
     https-proxy-agent: ^5.0.0
     node-fetch: ^2.6.7
@@ -14504,7 +14505,7 @@ __metadata:
     which: ^2.0.2
   bin:
     sentry-cli: bin/sentry-cli
-  checksum: a37c97fa2cc9d4661671c2d1806ecb5705965fd74cb3ab157a6e4ee44810c54d4df5c717c64e395fdaafa24d0280a184c6ddd5ad9178ac4579b66b6a4938d5c3
+  checksum: 4822e58e944e74b5982ea657c0d622d8ec40e9df371d4ba1da4f3c3a29b1c1e7a2556c0a8e63a92aee7e23d701ddf2311cbd0a6ae7751d3e7313b423f3430daf
   languageName: node
   linkType: hard
 
@@ -17933,10 +17934,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/serverless@npm:3.12.13":
-  version: 3.12.13
-  resolution: "@types/serverless@npm:3.12.13"
-  checksum: 97e623f97645d9b6b9190b396520b84eb0486e30329b7bbfaf8c367bf666375e43025b9fd7c0ddbe5e0e1fc815759eb3d1aeb77cedbf8f30c987a42d9b45c364
+"@types/serverless@npm:3.12.14":
+  version: 3.12.14
+  resolution: "@types/serverless@npm:3.12.14"
+  checksum: aafd5229b342ad9ae347904e13707f8ef716d4e4f59213a6df3a1e332f9f8520de87083ff850a7d4ee055453f7eaea71000ee2b714124a55b904f877f5ed8ff6
   languageName: node
   linkType: hard
 

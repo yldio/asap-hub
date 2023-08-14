@@ -16,6 +16,7 @@ import {
   RemindersCard,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { useFlags } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
@@ -70,6 +71,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   upcomingEvents,
   guides,
 }) => {
+  const { isEnabled } = useFlags();
   const history = useHistory();
   const lastestNews = news.items[0];
   return (
@@ -129,24 +131,28 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </Card>
       )}
-      <div>
-        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
-        <div css={infoStyles}>
-          Here are some of the upcoming GP2 Hub events.
+      {isEnabled('DISPLAY_EVENTS') && (
+        <div>
+          <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+          <div css={infoStyles}>
+            Here are some of the upcoming GP2 Hub events.
+          </div>
+          <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
+          {totalOfUpcomingEvents > 3 && (
+            <p css={viewAllStyles} data-testid="view-upcoming-events">
+              <Button
+                onClick={() =>
+                  history.push({
+                    pathname: gp2Routes.events({}).upcoming({}).$,
+                  })
+                }
+              >
+                View All
+              </Button>
+            </p>
+          )}
         </div>
-        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-        {totalOfUpcomingEvents > 3 && (
-          <p css={viewAllStyles} data-testid="view-upcoming-events">
-            <Button
-              onClick={() =>
-                history.push({ pathname: gp2Routes.events({}).upcoming({}).$ })
-              }
-            >
-              View All
-            </Button>
-          </p>
-        )}
-      </div>
+      )}
       {lastestNews ? (
         <div css={columnContainer}>
           <Headline2>Latest Newsletter</Headline2>

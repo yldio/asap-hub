@@ -354,7 +354,7 @@ const serverlessConfig: AWS = {
       },
     },
     eventsUpdated: {
-      timeout: 300,
+      timeout: 900,
       handler: './src/handlers/webhooks/events-updated.handler',
       events: [
         {

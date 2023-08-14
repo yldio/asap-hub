@@ -37,6 +37,7 @@ import { useResearchOutputPermissions } from '../../shared-research/state';
 type WorkingGroupOutputProps = {
   workingGroupId: string;
   researchOutputData?: ResearchOutputResponse;
+  createVersion?: boolean;
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
@@ -45,6 +46,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   workingGroupId,
   researchOutputData,
   descriptionUnchangedWarning,
+  createVersion = false,
 }) => {
   const route = network({})
     .workingGroups({})
@@ -100,6 +102,12 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
+        {createVersion && (
+          <Toast accent="warning">
+            The previous output page will be replaced with a summarised version
+            history section.
+          </Toast>
+        )}
         <InnerToastContext.Provider value={toast}>
           {toastNode && <Toast accent="error">{toastNode}</Toast>}
           <ResearchOutputHeader

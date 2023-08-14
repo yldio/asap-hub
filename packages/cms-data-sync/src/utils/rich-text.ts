@@ -61,7 +61,7 @@ export const wrapPlainTextWithPTag = (html: string): string => {
 
   $('*:not(p)')
     .contents()
-    .filter((_, cheerio) => {
+    .filter((_, element) => {
       const filterTags = (parent: cheerio.ParentNode | null) => {
         // we don't want to wrap by p those tags below
         if (
@@ -82,19 +82,17 @@ export const wrapPlainTextWithPTag = (html: string): string => {
             'b',
             'em',
             'i',
-          ].includes(
-            (cheerio.parent as cheerio.ParentNode & { name: string }).name,
-          );
+          ].includes((parent as cheerio.ParentNode & { name: string }).name);
         }
 
         return true;
       };
 
       return Boolean(
-        cheerio.nodeType === 3 &&
-          filterTags(cheerio?.parent) &&
-          cheerio.nodeValue &&
-          cheerio.nodeValue.trim().length > 0,
+        element.nodeType === 3 &&
+          filterTags(element?.parent) &&
+          element.nodeValue &&
+          element.nodeValue.trim().length > 0,
       );
     })
     .wrap('<p></p>');

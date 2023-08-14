@@ -63,7 +63,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
     <Card padding={false}>
       <div css={containerStyles}>
         <div>
-          <LinkHeadline href={workingGroupHref} level={3} css={titleStyles}>
+          <LinkHeadline href={workingGroupHref} level={3} css={titleStyles} noMargin>
             {title}
           </LinkHeadline>
         </div>

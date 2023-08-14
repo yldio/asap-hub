@@ -62,7 +62,7 @@ const WorkingGroupCard: React.FC<WorkingGroupCardProps> = ({
   return (
     <Card padding={false}>
       <div css={containerStyles}>
-        <div css={{ height: rem(96) }}>
+        <div>
           <LinkHeadline href={workingGroupHref} level={3} css={titleStyles}>
             {title}
           </LinkHeadline>

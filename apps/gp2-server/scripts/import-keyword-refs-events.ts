@@ -38,8 +38,10 @@ const app = async () => {
   let keywordsAlreadyExist = 0;
   let keywordsFailed = 0;
 
-  const events = (await eventDataProvider.fetch({ filter: { hasTags: true } }))
-    .items;
+  // atm there is only 1 event with tags
+  const events = (
+    await eventDataProvider.fetch({ filter: { hasTags: true }, take: 20 })
+  ).items;
 
   console.log(`starting import for ${contentfulEnvId}`);
   const rateLimiter = new RateLimiter({
@@ -49,7 +51,7 @@ const app = async () => {
 
   console.log(`updating ${events.length} events`);
 
-  for await (const event of events) {
+  for (const event of events) {
     let keywordsToAdd: Omit<KeywordDataObject, 'name'>[] = [];
     for (const tag of event.tags) {
       try {

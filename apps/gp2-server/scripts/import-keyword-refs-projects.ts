@@ -38,8 +38,9 @@ const app = async () => {
   let keywordsAlreadyExist = 0;
   let keywordsFailed = 0;
 
+  // atm there is only 12 projects with keywords
   const projects = (
-    await projectDataProvider.fetch({ filter: { hasKeywords: true } })
+    await projectDataProvider.fetch({ filter: { hasKeywords: true }, take: 15 })
   ).items;
 
   console.log(`starting import for ${contentfulEnvId}`);
@@ -50,7 +51,7 @@ const app = async () => {
 
   console.log(`updating ${projects.length} projects`);
 
-  for await (const project of projects) {
+  for (const project of projects) {
     let keywordsToAdd: Omit<KeywordDataObject, 'name'>[] = [];
     for (const keyword of project.keywords) {
       try {

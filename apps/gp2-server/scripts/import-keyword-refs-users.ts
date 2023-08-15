@@ -37,65 +37,79 @@ const app = async () => {
   let numberOfImportedKeywords = 0;
   let keywordsAlreadyExist = 0;
   let keywordsFailed = 0;
+  const take = 10;
 
-  const users = (
-    await userDataProvider.fetch({ filter: { hasKeywords: true } })
-  ).items;
+  const processUsers = async (skip: number) => {
+    // atm there is only 22-24 users with keywords
+    const { total, items: users } = await userDataProvider.fetch({
+      filter: { hasKeywords: true },
+      take,
+      skip,
+    });
 
-  console.log(`starting import for ${contentfulEnvId}`);
-  const rateLimiter = new RateLimiter({
-    tokensPerInterval: 5,
-    interval: 5000,
-  });
+    console.log(`starting import for ${contentfulEnvId}`);
+    const rateLimiter = new RateLimiter({
+      tokensPerInterval: 5,
+      interval: 5000,
+    });
 
-  console.log(`updating ${users.length} users`);
+    console.log(`updating ${users.length} users`);
 
-  for await (const user of users) {
-    let keywordsToAdd: Omit<KeywordDataObject, 'name'>[] = [];
-    for (const keyword of user.keywords) {
+    for (const user of users) {
+      let keywordsToAdd: Omit<KeywordDataObject, 'name'>[] = [];
+      for (const keyword of user.keywords) {
+        try {
+          if (!mapKeywordIds[keyword]) {
+            console.log(`about to create keyword: ${keyword}`);
+            await rateLimiter.removeTokens(5);
+
+            const keywordId = await keywordDataProvider.create({
+              name: keyword,
+            });
+            console.log(`created keyword: ${keyword} with id: ${keywordId}`);
+            mapKeywordIds[keyword] = keywordId;
+            numberOfImportedKeywords++;
+          }
+
+          keywordsToAdd.push({ id: mapKeywordIds[keyword]! });
+        } catch (e) {
+          if (
+            e instanceof Error &&
+            e.message?.includes('Same field value present in other entry')
+          ) {
+            keywordsAlreadyExist++;
+          } else {
+            keywordsFailed++;
+          }
+        }
+      }
+
+      console.log(
+        `Imported ${numberOfImportedKeywords} keywords, already exist ${keywordsAlreadyExist}, failed ${keywordsFailed}`,
+      );
+
       try {
-        if (!mapKeywordIds[keyword]) {
-          console.log(`about to create keyword: ${keyword}`);
-          await rateLimiter.removeTokens(5);
+        console.log(`about to update user: ${user.firstName} ${user.lastName}`);
+        await userDataProvider.update(user.id, {
+          tags: keywordsToAdd,
+        });
 
-          const keywordId = await keywordDataProvider.create({ name: keyword });
-          console.log(`created keyword: ${keyword} with id: ${keywordId}`);
-          mapKeywordIds[keyword] = keywordId;
-          numberOfImportedKeywords++;
-        }
-
-        keywordsToAdd.push({ id: mapKeywordIds[keyword]! });
+        console.log(`user with id ${user.id} updated.`);
+        usersUpdated++;
       } catch (e) {
-        if (
-          e instanceof Error &&
-          e.message?.includes('Same field value present in other entry')
-        ) {
-          keywordsAlreadyExist++;
-        } else {
-          keywordsFailed++;
-        }
+        console.log(e);
+        console.log(`could not update user with id ${user.id}.`);
+        usersFailed++;
       }
     }
 
-    console.log(
-      `Imported ${numberOfImportedKeywords} keywords, already exist ${keywordsAlreadyExist}, failed ${keywordsFailed}`,
-    );
-
-    try {
-      console.log(`about to update user: ${user.firstName} ${user.lastName}`);
-      await userDataProvider.update(user.id, {
-        tags: keywordsToAdd,
-      });
-
-      console.log(`user with id ${user.id} updated.`);
-      usersUpdated++;
-    } catch (e) {
-      console.log(e);
-      console.log(`could not update user with id ${user.id}.`);
-      usersFailed++;
+    const next = skip + take;
+    if (next < total) {
+      await processUsers(next);
     }
-  }
+  };
 
+  await processUsers(0);
   console.log(`Total Users updated: ${usersUpdated} failed ${usersFailed}`);
 };
 

@@ -71,6 +71,7 @@ export const wrapPlainTextWithPTag = (html: string): string => {
   const excludedTags = [
     'sup',
     'sub',
+    'span',
     'a',
     'h1',
     'h2',
@@ -82,6 +83,7 @@ export const wrapPlainTextWithPTag = (html: string): string => {
     'b',
     'em',
     'i',
+    'u',
   ];
 
   const filterTags = (parent: ParentNode | null) =>

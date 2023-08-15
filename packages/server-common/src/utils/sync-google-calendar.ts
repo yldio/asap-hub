@@ -1,3 +1,4 @@
+import { mapLimit } from 'async';
 import { Auth, calendar_v3 as calendarV3, google } from 'googleapis';
 import { DateTime } from 'luxon';
 import { GetJWTCredentials } from './aws-secret-manager';
@@ -73,12 +74,19 @@ export const syncCalendarFactory = (
     const eventItems = data.items ?? [];
     const defaultCalendarTimezone = data.timeZone || 'America/New_York';
 
-    const syncResults = await Promise.allSettled(
-      eventItems.map((e) =>
-        syncEvent(e, googleCalendarId, cmsCalendarId, defaultCalendarTimezone),
-      ),
-    );
-    logger.debug({ syncResults }, 'Sync events results');
+    await mapLimit(eventItems, 5, async (event: calendarV3.Schema$Event) => {
+      try {
+        const syncedEvent = await syncEvent(
+          event,
+          googleCalendarId,
+          cmsCalendarId,
+          defaultCalendarTimezone,
+        );
+        logger.debug({ syncedEvent }, 'Synced event');
+      } catch (error) {
+        logger.error(error, 'Error syncing event');
+      }
+    });
 
     if (data.nextPageToken) {
       // get next page

@@ -3,6 +3,7 @@ import { RateLimiter } from 'limiter';
 import { Handler } from 'aws-lambda';
 import {
   getRestClient,
+  GraphQLClient,
   MakeRequestOptions,
   RestAdapter,
 } from '@asap-hub/contentful';
@@ -13,6 +14,7 @@ import {
   webhookEventUpdatedHandlerFactory,
 } from '@asap-hub/server-common';
 import {
+  contentfulAccessToken,
   contentfulEnvId,
   contentfulManagementAccessToken,
   contentfulSpaceId,
@@ -23,7 +25,6 @@ import {
 import Events from '../../controllers/event.controller';
 import { EventContentfulDataProvider } from '../../data-providers/event.data-provider';
 import { getCalendarDataProvider } from '../../dependencies/calendar.dependency';
-import { getContentfulGraphQLClientFactory } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
@@ -32,27 +33,51 @@ const getJWTCredentials = getJWTCredentialsFactory({
   region,
 });
 
-export const rateLimiter = new RateLimiter({
+const contentfulManagementApiRateLimiter = new RateLimiter({
   tokensPerInterval: 3,
   interval: 'second',
 });
 
-class ApiAdapter extends RestAdapter {
+const contentDeliveryApiRateLimiter = new RateLimiter({
+  tokensPerInterval: 15,
+  interval: 'second',
+});
+
+class RateLimitedRestAdapter extends RestAdapter {
   async makeRequest<R>(options: MakeRequestOptions): Promise<R> {
-    await rateLimiter.removeTokens(1);
+    await contentfulManagementApiRateLimiter.removeTokens(1);
     return super.makeRequest(options);
   }
 }
 
-const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
+class RateLimitedGraphqlClient extends GraphQLClient {
+  request = (async (
+    ...args: Parameters<GraphQLClient['request']>
+  ): Promise<ReturnType<GraphQLClient['request']>> => {
+    await contentDeliveryApiRateLimiter.removeTokens(1);
+    return super.request(...args);
+  }) as GraphQLClient['request'];
+}
+
+const contentfulGraphQLClient = new RateLimitedGraphqlClient(
+  `https://graphql.contentful.com/content/v1/spaces/${contentfulSpaceId}/environments/${contentfulEnvId}`,
+  {
+    errorPolicy: 'ignore',
+    headers: {
+      authorization: `Bearer ${contentfulAccessToken}`,
+    },
+  },
+);
+
 const contentfulRestClient = getRestClient({
   space: contentfulSpaceId,
   accessToken: contentfulManagementAccessToken,
   environment: contentfulEnvId,
-  apiAdapter: new ApiAdapter({
+  apiAdapter: new RateLimitedRestAdapter({
     accessToken: contentfulManagementAccessToken,
   }),
 });
+
 const eventDataProvider = new EventContentfulDataProvider(
   contentfulGraphQLClient,
   () => contentfulRestClient,
@@ -67,7 +92,10 @@ const syncCalendar = syncCalendarFactory(
 
 export const handler: Handler = sentryWrapper(
   webhookEventUpdatedHandlerFactory(
-    getCalendarDataProvider(contentfulGraphQLClient),
+    getCalendarDataProvider(
+      contentfulGraphQLClient,
+      () => contentfulRestClient,
+    ),
     syncCalendar,
     logger,
     { googleApiToken },

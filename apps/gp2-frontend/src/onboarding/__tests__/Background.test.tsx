@@ -115,7 +115,7 @@ describe('Background', () => {
     });
     expect(mockPatchUser).toHaveBeenCalledWith(
       expect.anything(),
-      expect.objectContaining({ tags: tags.map((t) => ({ id: t.id })) }),
+      expect.objectContaining({ tags: tags.map(({ id }) => ({ id })) }),
       expect.anything(),
     );
   });

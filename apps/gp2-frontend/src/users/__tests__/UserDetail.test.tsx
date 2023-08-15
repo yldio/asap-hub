@@ -259,9 +259,7 @@ describe('UserDetail', () => {
       expect(mockPatchUser).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({
-          tags: user.tags.map((k) => ({
-            id: k.id,
-          })),
+          tags: user.tags.map(({ id }) => ({ id })),
         }),
         expect.anything(),
       );

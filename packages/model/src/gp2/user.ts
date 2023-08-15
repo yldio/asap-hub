@@ -127,7 +127,7 @@ export type UserCreateDataObject = Omit<
 > & {
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
   avatar?: string;
-  // add keywords - string[] but this would be the id or name? in update is the id
+  tags?: Omit<KeywordDataObject, 'name'>[];
 };
 
 export type UserUpdateDataObject = Partial<

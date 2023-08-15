@@ -1,5 +1,6 @@
 import { FetchOptions, ListResponse } from '../common';
 import { ExternalUserResponse } from './external-user';
+import { KeywordDataObject } from './keywords';
 
 export const outputDocumentTypes = [
   'Procedural Form',
@@ -75,6 +76,7 @@ export type OutputDataObject = OutputCoreObject & {
   lastUpdatedPartial: string;
   workingGroup?: OutputOwner;
   project?: OutputOwner;
+  tags?: KeywordDataObject[];
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;

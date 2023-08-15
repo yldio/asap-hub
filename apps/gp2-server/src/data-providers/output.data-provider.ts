@@ -9,6 +9,7 @@ import {
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import logger from '../utils/logger';
+import { KeywordItem, parseKeyword } from './keyword.data-provider';
 import { OutputDataProvider } from './types';
 
 export type OutputItem = NonNullable<
@@ -227,6 +228,10 @@ export const parseContentfulGraphQLOutput = (
   const subtype = getSubType(documentType, type, data.subtype);
   const authors = getAuthors(data.authorsCollection?.items);
   const relatedEntity = getRelatedEntity(data.relatedEntity);
+  const tags =
+    data.tagsCollection?.items
+      .filter((keyword): keyword is KeywordItem => keyword !== null)
+      .map(parseKeyword) ?? [];
   return {
     id: data.sys.id,
     created: data.sys.firstPublishedAt,
@@ -242,6 +247,7 @@ export const parseContentfulGraphQLOutput = (
       data.sys.publishedAt ??
       data.sys.firstPublishedAt,
     authors,
+    tags,
     ...relatedEntity,
   };
 };

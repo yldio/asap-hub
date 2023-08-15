@@ -126,6 +126,9 @@ export class UserContentfulDataProvider implements UserDataProvider {
       fields: addLocaleToFields({
         ...fields,
         ...cohortFields,
+        ...(data.tags
+          ? { tags: getLinkEntities(data.tags.map((tag) => tag.id)) }
+          : {}),
       }),
     });
 

@@ -32,9 +32,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
       description="Help others to understand your areas of expertise or what you’re passionate about."
       onSave={() =>
         onSave({
-          tags: newKeywords.map((k) => ({
-            id: k.id,
-          })),
+          tags: newKeywords.map(({ id }) => ({ id })),
         })
       }
       backHref={backHref}

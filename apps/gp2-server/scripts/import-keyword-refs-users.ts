@@ -52,7 +52,7 @@ const app = async () => {
 
   for await (const user of users) {
     let keywordsToAdd: Omit<KeywordDataObject, 'name'>[] = [];
-    for await (const keyword of user.keywords) {
+    for (const keyword of user.keywords) {
       try {
         if (!mapKeywordIds[keyword]) {
           console.log(`about to create keyword: ${keyword}`);
@@ -67,9 +67,8 @@ const app = async () => {
         keywordsToAdd.push({ id: mapKeywordIds[keyword]! });
       } catch (e) {
         if (
-          (e as any)?.message?.includes(
-            'Same field value present in other entry',
-          )
+          e instanceof Error &&
+          e.message?.includes('Same field value present in other entry')
         ) {
           keywordsAlreadyExist++;
         } else {

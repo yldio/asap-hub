@@ -38,7 +38,7 @@ export const map = {
   'Patient Engagement': '1p72qCOxK0ac9eAiBQ7ueL',
   Pharmacogenomics: '3VJAHB9LUD0DwAKVGIpzqd',
   'Progressive supranuclear palsy (PSP)': '4VQ0nvdWEP7ZanpiIU6HwK',
-  'Project Management': '5oVPw9DXszWpLs3Cnkgsln',
+  'Project management': '5oVPw9DXszWpLs3Cnkgsln',
   'Program Management': '7erlsQixrYNY2BlSEpZKbq',
   PRS: '6ly7LMQdtf3RfKrNL6YvD2',
   'Rare Genetic Disorders': '10kXGhb4rfQSHXOxYJxacE',

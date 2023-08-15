@@ -208,7 +208,7 @@ export const researchOutputContentQueryFragment = gql`
       statusChangedAt
       isInReview
     }
-    referencingResearchOutputsContents {
+    referencingResearchOutputsContents(orderby: "data/addedDate/iv asc") {
       id
       flatData {
         title

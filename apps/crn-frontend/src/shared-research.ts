@@ -80,7 +80,7 @@ export const useLabSuggestions = () => {
     );
 };
 
-export const useRelatedResearchSuggestions = () => {
+export const useRelatedResearchSuggestions = (currentId?: string) => {
   const algoliaClient = useAlgolia();
   return (searchQuery: string) =>
     getResearchOutputs(algoliaClient.client, {
@@ -88,14 +88,18 @@ export const useRelatedResearchSuggestions = () => {
       filters: new Set(),
       currentPage: null,
       pageSize: null,
-    }).then(({ hits }) =>
-      hits.map(({ id, title, type, documentType }) => ({
-        label: title,
-        value: id,
-        type,
-        documentType,
-      })),
-    );
+    })
+      .then(({ hits }) =>
+        hits.map(({ id, title, type, documentType }) => ({
+          label: title,
+          value: id,
+          type,
+          documentType,
+        })),
+      )
+      .then((hits) =>
+        currentId ? hits.filter(({ value }) => value !== currentId) : hits,
+      );
 };
 
 export const useRelatedEventsSuggestions = () => {

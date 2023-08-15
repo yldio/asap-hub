@@ -121,24 +121,23 @@ const SharedResearchOutputButtons: React.FC<
           </Button>
         </div>
       )}
-      {canVersionResearchOutput &&
-        (!isInReview || (isInReview && canPublishResearchOutput)) && (
-          <div css={leftButtons}>
-            <Link
-              noMargin
-              href={
-                sharedResearch({})
-                  .researchOutput({ researchOutputId: id })
-                  .versionResearchOutput({}).$
-              }
-              buttonStyle
-              small
-              primary
-            >
-              <VersionIcon /> Add Version
-            </Link>
-          </div>
-        )}
+      {canVersionResearchOutput && published && (
+        <div css={leftButtons}>
+          <Link
+            noMargin
+            href={
+              sharedResearch({})
+                .researchOutput({ researchOutputId: id })
+                .versionResearchOutput({}).$
+            }
+            buttonStyle
+            small
+            primary
+          >
+            <VersionIcon /> Add Version
+          </Link>
+        </div>
+      )}
       {!published && isInReview && canPublishResearchOutput && (
         <div css={reviewButton}>
           <Button

@@ -126,6 +126,7 @@ const mockUpdateResearchOutput =
 interface RenderPageOptions {
   user?: UserResponse;
   teamId: string;
+  createVersion?: boolean;
   outputDocumentType?: OutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
 }
@@ -516,6 +517,21 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   expect(window.scrollTo).toBeCalled();
 });
 
+it('display a toast warning when creating a new version', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'article',
+    researchOutputData: baseResearchOutput,
+    createVersion: true,
+  });
+
+  expect(
+    screen.queryByText(
+      'The previous output page will be replaced with a summarised version history section.',
+    ),
+  ).toBeInTheDocument();
+});
+
 async function renderPage({
   user = {
     ...baseUser,
@@ -524,6 +540,7 @@ async function renderPage({
   teamId,
   outputDocumentType = 'bioinformatics',
   researchOutputData,
+  createVersion = false,
 }: RenderPageOptions) {
   const path =
     network.template +
@@ -552,6 +569,7 @@ async function renderPage({
                 <TeamOutput
                   teamId={teamId}
                   researchOutputData={researchOutputData}
+                  createVersion={createVersion}
                 />
               </Route>
             </StaticRouter>

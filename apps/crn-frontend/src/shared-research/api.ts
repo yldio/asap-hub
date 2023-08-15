@@ -1,4 +1,4 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { AlgoliaClient } from '@asap-hub/algolia';
 import {
   createFeatureFlagHeaders,
   createSentryHeaders,
@@ -97,7 +97,7 @@ export const getAllFilters = (
 };
 
 export const getResearchOutputs = (
-  client: AlgoliaSearchClient<'crn'>,
+  client: AlgoliaClient<'crn'>,
   options: ResearchOutputPublishedListOptions,
 ) =>
   client

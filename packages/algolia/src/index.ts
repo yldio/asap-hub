@@ -1,6 +1,7 @@
 import algoliasearch, { SearchClient } from 'algoliasearch';
 import { AlgoliaSearchClient, Apps } from './client';
 import * as gp2 from './gp2';
+import { NoTokenAlgoliaClient } from './no-token-client';
 
 export type { SearchResponse } from '@algolia/client-search';
 export * from './client';
@@ -8,16 +9,24 @@ export * from './crn/types';
 export * from './filters';
 export { gp2 };
 
+export type AlgoliaClient<App extends Apps> =
+  | AlgoliaSearchClient<App>
+  | NoTokenAlgoliaClient<App>;
+
 type AlgoliaSearchClientNativeFactoryParams = {
-  algoliaApiKey: string;
+  algoliaApiKey: string | null;
   algoliaAppId: string;
 };
 
 export const algoliaSearchClientNativeFactory = ({
   algoliaApiKey,
   algoliaAppId,
-}: AlgoliaSearchClientNativeFactoryParams): SearchClient =>
-  algoliasearch(algoliaAppId, algoliaApiKey);
+}: AlgoliaSearchClientNativeFactoryParams): SearchClient => {
+  if (algoliaApiKey === null) {
+    return algoliasearch(algoliaAppId, 'dummyKey');
+  }
+  return algoliasearch(algoliaAppId, algoliaApiKey);
+};
 
 type AlgoliaSearchClientFactoryParams =
   AlgoliaSearchClientNativeFactoryParams & {
@@ -32,9 +41,12 @@ export const algoliaSearchClientFactory = <App extends Apps>({
   algoliaAppId,
   userToken,
   clickAnalytics,
-}: AlgoliaSearchClientFactoryParams): AlgoliaSearchClient<App> => {
-  const algoliaSearchClient = algoliasearch(algoliaAppId, algoliaApiKey);
+}: AlgoliaSearchClientFactoryParams): AlgoliaClient<App> => {
+  if (algoliaApiKey === null) {
+    return new NoTokenAlgoliaClient('index', 'reverseIndex');
+  }
 
+  const algoliaSearchClient = algoliasearch(algoliaAppId, algoliaApiKey);
   const index = algoliaSearchClient.initIndex(algoliaIndex);
   const reverseIndex = algoliaSearchClient.initIndex(
     `${algoliaIndex}-reverse-timestamp`,

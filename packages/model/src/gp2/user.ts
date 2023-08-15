@@ -151,7 +151,7 @@ export interface UserResponse
 }
 export type ListUserResponse = ListResponse<UserResponse>;
 export type UserMetadataResponse = UserResponse & {
-  algoliaApiKey: string;
+  algoliaApiKey: string | null;
 };
 export type UserUpdateRequest = UserUpdateDataObject;
 

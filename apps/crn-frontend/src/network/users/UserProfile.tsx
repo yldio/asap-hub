@@ -57,16 +57,13 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const [avatarSaving, setAvatarSaving] = useState(false);
 
   const { pageSize } = usePaginationParams();
-  const researchOutputsResult = useResearchOutputs(
-    {
-      currentPage: 0,
-      filters: new Set(),
-      pageSize,
-      searchQuery: '',
-      userId,
-    },
-    currentUser,
-  );
+  const researchOutputsResult = useResearchOutputs({
+    currentPage: 0,
+    filters: new Set(),
+    pageSize,
+    searchQuery: '',
+    userId,
+  });
 
   const toast = useContext(ToastContext);
 

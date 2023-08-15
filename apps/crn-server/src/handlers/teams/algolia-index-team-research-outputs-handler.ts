@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import {
   ListResponse,
   ResearchOutputResponse,
@@ -26,7 +23,7 @@ import { TeamPayload } from '../event-bus';
 export const indexResearchOutputByTeamHandler =
   (
     researchOutputController: ResearchOutputController,
-    algoliaClient: AlgoliaSearchClient<'crn'>,
+    algoliaClient: AlgoliaClient<'crn'>,
   ): EventBridgeHandler<TeamEvent, TeamPayload> =>
   async (event) => {
     const fetchFunction = ({

@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { algoliaSearchClientFactory, AlgoliaClient } from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
 import { isEnabled } from '@asap-hub/flags';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
@@ -9,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
 
 export type AlgoliaHook = {
-  client: AlgoliaSearchClient<'crn'>;
+  client: AlgoliaClient<'crn'>;
 };
 
 export const useAlgolia = () => {
@@ -23,7 +20,7 @@ export const useAlgolia = () => {
       algoliaIndex:
         (isEnabled('CONTENTFUL') && `${ALGOLIA_INDEX}-contentful`) ||
         ALGOLIA_INDEX,
-      algoliaApiKey: user.algoliaApiKey || 'nonOnboardedJunkApiKey',
+      algoliaApiKey: user.algoliaApiKey,
       clickAnalytics: true,
       userToken: user.id,
     });
@@ -43,11 +40,4 @@ export const useAlgolia = () => {
   }, [user]);
 
   return algolia;
-};
-
-export const EMPTY_ALGOLIA_RESPONSE = {
-  items: [],
-  total: 0,
-  algoliaIndexName: '',
-  algoliaQueryId: '',
 };

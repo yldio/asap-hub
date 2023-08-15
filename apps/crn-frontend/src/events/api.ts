@@ -1,4 +1,4 @@
-import { AlgoliaSearchClient, getEventFilters } from '@asap-hub/algolia';
+import { AlgoliaClient, getEventFilters } from '@asap-hub/algolia';
 import {
   createFeatureFlagHeaders,
   createSentryHeaders,
@@ -9,7 +9,7 @@ import { API_BASE_URL } from '../config';
 import createListApiUrl from '../CreateListApiUrl';
 
 export const getEvents = async (
-  algoliaClient: AlgoliaSearchClient<'crn'>,
+  algoliaClient: AlgoliaClient<'crn'>,
   {
     searchQuery,
     currentPage,

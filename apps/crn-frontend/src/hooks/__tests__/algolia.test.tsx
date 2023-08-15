@@ -36,7 +36,10 @@ describe('useAlgolia', () => {
   });
   it('constructs an algolia client with a junk key', async () => {
     setCurrentOverrides({ CONTENTFUL: false });
-
+    const mockAlgoliaSearchClientFactory =
+      algoliaSearchClientFactory as jest.MockedFunction<
+        typeof algoliaSearchClientFactory
+      >;
     const { waitForNextUpdate } = renderHook(() => useAlgolia(), {
       wrapper: ({ children }) => (
         <RecoilRoot>
@@ -51,7 +54,7 @@ describe('useAlgolia', () => {
     expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith({
       algoliaIndex: ALGOLIA_INDEX,
       algoliaAppId: ALGOLIA_APP_ID,
-      algoliaApiKey: 'nonOnboardedJunkApiKey',
+      algoliaApiKey: null,
       clickAnalytics: true,
       userToken: 'usertoken',
     });

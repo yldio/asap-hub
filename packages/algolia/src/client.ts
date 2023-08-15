@@ -30,8 +30,8 @@ export type EntityResponses = {
     [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
   };
 };
-type SavePayload = Payload | GP2Payload;
-type DistributeToEntityRecords<
+export type SavePayload = Payload | GP2Payload;
+export type DistributeToEntityRecords<
   Responses extends EntityResponses[Apps],
   ResponsesKey extends keyof Responses,
 > = Responses[ResponsesKey] & {
@@ -55,7 +55,7 @@ export type ClientSearch<
   requestOptions?: SearchOptions,
   descendingEvents?: boolean,
 ) => Promise<ClientSearchResponse<App, keyof EntityResponses[App]>>;
-interface SearchClient {
+export interface SearchClient {
   search: ClientSearch<Apps, keyof EntityResponses[Apps]>;
   save: (payload: SavePayload) => Promise<void>;
   saveMany: (payload: SavePayload[]) => Promise<void>;

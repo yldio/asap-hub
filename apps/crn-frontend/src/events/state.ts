@@ -11,7 +11,7 @@ import {
 } from 'recoil';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../auth/state';
-import { EMPTY_ALGOLIA_RESPONSE, useAlgolia } from '../hooks/algolia';
+import { useAlgolia } from '../hooks/algolia';
 import { getEvent, getEvents } from './api';
 
 const eventIndexState = atomFamily<
@@ -116,10 +116,6 @@ export const usePrefetchEvents = (options: GetEventListOptions) => {
 export const useEvents = (options: GetEventListOptions, user?: User | null) => {
   const [events, setEvents] = useRecoilState(eventsState(options));
   const { client } = useAlgolia();
-
-  if (user && !user.onboarded) {
-    return EMPTY_ALGOLIA_RESPONSE;
-  }
 
   if (events === undefined) {
     throw getEvents(client, options).then(setEvents).catch(setEvents);

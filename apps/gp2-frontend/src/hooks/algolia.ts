@@ -1,14 +1,11 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 } from '@asap-hub/auth';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { useEffect, useState } from 'react';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
 
 export type AlgoliaHook = {
-  client: AlgoliaSearchClient<'gp2'>;
+  client: AlgoliaClient<'gp2'>;
 };
 
 export const useAlgolia = () => {

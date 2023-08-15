@@ -33,6 +33,17 @@ describe('Algolia Search Client', () => {
     );
   });
 
+  test('Should instantiate the No Token Search Client', () => {
+    algoliaSearchClientFactory({
+      algoliaApiKey: null,
+      algoliaAppId: 'test-app-id',
+      algoliaIndex: 'test-index',
+    });
+
+    expect(algoliasearchMock).not.toBeCalled();
+    expect(algoliaSearchClientMock.initIndex).not.toBeCalled();
+  });
+
   test('Should instantiate the native client', () => {
     algoliaSearchClientNativeFactory({
       algoliaApiKey: 'native-test-key',
@@ -43,5 +54,13 @@ describe('Algolia Search Client', () => {
       'native-test-app-id',
       'native-test-key',
     );
+  });
+  test('Should instantiate the dummy token native client', () => {
+    algoliaSearchClientNativeFactory({
+      algoliaApiKey: null,
+      algoliaAppId: 'native-test-app-id',
+    });
+
+    expect(algoliasearchMock).toBeCalledWith('native-test-app-id', 'dummyKey');
   });
 });

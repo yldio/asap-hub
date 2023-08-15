@@ -514,15 +514,4 @@ describe('for a non onboarded user', () => {
       screen.getByRole('link', { name: /^Shared Outputs$/ }),
     ).toBeVisible();
   });
-  it('does not call algolia', async () => {
-    await renderUserProfile(userProfile, { onboarded: userProfile.onboarded });
-
-    const response = createListEventResponse(1, { isEventInThePast: true });
-    mockUserEventsFromAlgolia.mockResolvedValue(response);
-    mockGetResearchOutputs.mockResolvedValue({
-      ...createResearchOutputListAlgoliaResponse(5),
-    });
-    expect(mockUserEventsFromAlgolia).toBeCalledTimes(0);
-    expect(mockGetResearchOutputs).toBeCalledTimes(0);
-  });
 });

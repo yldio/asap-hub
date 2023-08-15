@@ -554,6 +554,7 @@ describe('wrapPlainTextWithPTag', () => {
     ${`b`}
     ${`em`}
     ${`i`}
+    ${`span`}
   `('does not wrap $tag by p', ({ tag }) => {
     const input = `<p>this is <${tag}>any text</${tag}></p>`;
     const expectedOutput = `<p>this is <${tag}>any text</${tag}></p>`;

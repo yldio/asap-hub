@@ -71,6 +71,7 @@ export const wrapPlainTextWithPTag = (html: string): string => {
   const excludedTags = [
     'sup',
     'sub',
+    'span',
     'a',
     'h1',
     'h2',

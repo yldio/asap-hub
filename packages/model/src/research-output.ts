@@ -207,15 +207,16 @@ export type ResearchOutputCoreObject = {
   usedInPublication?: boolean;
 };
 
-export type ResearchOutputVersion = Pick<
-  ResearchOutputDataObject,
-  'documentType' | 'type' | 'title' | 'id' | 'link' | 'addedDate'
+export type ResearchOutputVersionCoreObject = Pick<
+  ResearchOutputCoreObject,
+  'documentType' | 'type' | 'title' | 'link' | 'addedDate'
 >;
 
-export type ResearchOutputVersionPostRequest = Omit<
-  ResearchOutputVersion,
-  'id'
->;
+export type ResearchOutputVersionPostRequest = ResearchOutputVersionCoreObject;
+
+export type ResearchOutputVersion = ResearchOutputVersionCoreObject & {
+  id: string;
+};
 
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   authors: (

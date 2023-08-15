@@ -1173,7 +1173,7 @@ describe('ResearchOutputs data provider', () => {
         ).resolves.not.toThrow();
       });
 
-      test('Should publish a draft research-output', async () => {
+      test.only('Should publish a draft research-output', async () => {
         const researchOutputUpdateData = getResearchOutputUpdateDataObject();
 
         const restResearchOutputUpdateData = getRestResearchOutputUpdateData();

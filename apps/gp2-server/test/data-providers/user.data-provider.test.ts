@@ -1789,6 +1789,47 @@ describe('User data provider', () => {
         expect(userMock.publish).toHaveBeenCalled();
       },
     );
+    test('Should create with tags', async () => {
+      const {
+        contributingCohorts: _,
+        tags,
+        ...userCreateDataObject
+      } = getUserCreateDataObject();
+
+      const userMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(userMock);
+      userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
+
+      await userDataProvider.create({
+        ...userCreateDataObject,
+        contributingCohorts: [],
+        tags,
+      });
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
+        fields: expect.objectContaining({
+          tags: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'keyword-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'keyword-2',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        }),
+      });
+
+      expect(userMock.publish).toHaveBeenCalled();
+    });
   });
   describe('Update', () => {
     const userId = 'user-id';

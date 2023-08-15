@@ -1,6 +1,11 @@
 import * as cheerio from 'cheerio';
 import { Environment, Maybe } from '@asap-hub/contentful';
-import { Document } from '@contentful/rich-text-types';
+import {
+  Document,
+  Node,
+  Text,
+  TopLevelBlock,
+} from '@contentful/rich-text-types';
 import {
   parseHtml,
   parseAssets,
@@ -136,6 +141,33 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
           }
         : node,
     )
+    /*
+      Wrap any text nodes that have content into a paragraph.
+      Where there are multiple consecutive text nodes then place all
+      into the same paragraph container.
+    */
+    .reduce(
+      (nodes: TopLevelBlock[], node: Text | TopLevelBlock): TopLevelBlock[] => {
+        if (node?.nodeType === 'text' && node?.value.trim()) {
+          // if the previous node was a paragraph then roll the text node into that paragraph
+          if (nodes[nodes.length - 1]?.nodeType === 'paragraph') {
+            nodes[nodes.length - 1].content.push(node);
+            return nodes;
+          }
+          // otherwise wrap the text node in a paragraph
+          return [
+            ...nodes,
+            {
+              content: [node],
+              data: {},
+              nodeType: 'paragraph',
+            } as TopLevelBlock,
+          ];
+        }
+        return [...nodes, node as TopLevelBlock];
+      },
+      [],
+    )
     /* 
       When we have \n in html, parseHtml function from 
       contentful-html-rich-text-converter converts it 
@@ -160,8 +192,7 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
       },
       then can be filtered without losing the new line purpose
     */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .filter((node: any) => node?.nodeType !== 'text'),
+    .filter((node: Node) => node?.nodeType !== 'text'),
 });
 
 export const convertHtmlToContentfulFormat = (html: string) => {

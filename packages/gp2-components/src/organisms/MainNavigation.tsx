@@ -6,7 +6,7 @@ import {
   eventsIcon,
   outputsIcon,
   projectIcon,
-  usersIcon,
+  userIcon,
   workingGroupIcon,
 } from '../icons';
 import newsIcon from '../icons/news-icon';
@@ -65,7 +65,7 @@ const MainNavigation: React.FC = () => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={users({}).$} icon={usersIcon}>
+        <NavigationLink href={users({}).$} icon={userIcon}>
           People
         </NavigationLink>
       </li>

@@ -1632,6 +1632,7 @@ describe('User data provider', () => {
       await userDataProvider.create({
         ...userCreateDataObject,
         contributingCohorts: [],
+        tags: [],
       });
 
       const { social, telephone, ...fieldsWithoutLocale } =
@@ -1639,6 +1640,7 @@ describe('User data provider', () => {
       const fields = addLocaleToFields({
         ...fieldsWithoutLocale,
         contributingCohorts: [],
+        tags: [],
         ...social,
         telephoneCountryCode: telephone?.countryCode,
         telephoneNumber: telephone?.number,

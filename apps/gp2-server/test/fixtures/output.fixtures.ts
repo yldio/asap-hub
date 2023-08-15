@@ -43,6 +43,7 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
     id: '42',
     title: 'A Project',
   },
+  tags: [{ id: 'keyword-1', name: 'Cohort' }],
 });
 
 export const getListOutputDataObject =
@@ -68,6 +69,7 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     authors,
     workingGroup,
     project,
+    tags,
     ...outputResponse
   } = getOutputResponse();
   return {
@@ -98,6 +100,7 @@ export const getOutputCreateDataObject =
       created: _created,
       workingGroup,
       project,
+      tags,
       ...outputPostRequest
     } = getOutputResponse();
 
@@ -176,6 +179,17 @@ export const getContentfulGraphqlOutput = (): NonNullable<
         email: 'peter.parker@email.com',
         avatar: null,
         onboarded: true,
+      },
+    ],
+  },
+  tagsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'keyword-1',
+        },
+        name: 'Cohort',
       },
     ],
   },

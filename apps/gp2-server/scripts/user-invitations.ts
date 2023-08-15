@@ -37,10 +37,10 @@ const resetConnections = async ({ id }: gp2.UserDataObject) => {
     }
   }
 };
-const hasInviteConnection = (user: gp2.UserDataObject) =>
-  user.connections?.length === 1 &&
-  user.connections[0] &&
-  uuidRegex.test(user.connections[0].code);
+const hasInviteConnection = ({ connections }: gp2.UserDataObject) =>
+  connections?.length === 1 &&
+  connections[0] &&
+  uuidRegex.test(connections[0].code);
 
 const app = async () => {
   const rateLimiter = new RateLimiter({

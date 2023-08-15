@@ -51,6 +51,7 @@ const app = async () => {
     interval: 3000,
   });
   const take = 10;
+  let numberOfInvitedUsers = 0;
 
   const processUsers = async (skip: number) => {
     await rateLimiter.removeTokens(1);
@@ -59,15 +60,16 @@ const app = async () => {
       skip,
     });
 
-    await Promise.all(
-      users
-        .filter(recentlyUpdated)
-        .filter(hasInviteConnection)
-        .map(async (user) => {
-          await rateLimiter.removeTokens(1);
-          await resetConnections(user);
-        }),
-    );
+    const usersToInvite = users
+      .filter(recentlyUpdated)
+      .filter(hasInviteConnection);
+
+    for (const user of usersToInvite) {
+      await rateLimiter.removeTokens(1);
+      await resetConnections(user);
+      numberOfInvitedUsers++;
+      console.log(`number of users invited so far: ${numberOfInvitedUsers}`);
+    }
 
     const next = skip + take;
     if (next < total) {
@@ -76,6 +78,7 @@ const app = async () => {
   };
   console.log(`starting import for ${contentfulEnvId}`);
   await processUsers(0);
+  console.log(`Invited ${numberOfInvitedUsers} users.`);
 };
 
 app().catch(console.error);

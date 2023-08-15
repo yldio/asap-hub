@@ -1,6 +1,7 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { gp2 } from '@asap-hub/model';
 import { RateLimiter } from 'limiter';
+import { DateTime } from 'luxon';
 import {
   contentfulAccessToken,
   contentfulEnvId,
@@ -41,6 +42,8 @@ const hasInviteConnection = ({ connections }: gp2.UserDataObject) =>
   connections?.length === 1 &&
   connections[0] &&
   uuidRegex.test(connections[0].code);
+const recentlyUpdated = ({ lastModifiedDate }: gp2.UserDataObject) =>
+  DateTime.fromISO(lastModifiedDate).diffNow('hours').get('hours') < -8;
 
 const app = async () => {
   const rateLimiter = new RateLimiter({
@@ -57,10 +60,13 @@ const app = async () => {
     });
 
     await Promise.all(
-      users.filter(hasInviteConnection).map(async (user) => {
-        await rateLimiter.removeTokens(1);
-        await resetConnections(user);
-      }),
+      users
+        .filter(recentlyUpdated)
+        .filter(hasInviteConnection)
+        .map(async (user) => {
+          await rateLimiter.removeTokens(1);
+          await resetConnections(user);
+        }),
     );
 
     const next = skip + take;

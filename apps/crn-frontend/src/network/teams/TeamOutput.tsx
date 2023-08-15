@@ -163,6 +163,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                 ? updateAndPublishResearchOutput(researchOutputData.id, {
                     ...output,
                     published: true,
+                    createVersion,
                     statusChangedById: researchOutputData.statusChangedBy?.id,
                     isInReview: researchOutputData.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))

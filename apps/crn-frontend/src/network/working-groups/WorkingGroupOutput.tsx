@@ -154,6 +154,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
+                    createVersion,
                     statusChangedById: researchOutputData.statusChangedBy?.id,
                     isInReview: researchOutputData.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))

@@ -110,6 +110,30 @@ describe('Migration from Squidex to Contentful', () => {
       );
     });
 
+    test('Should publish the record in Contentful if it has a status of PUBLISHED', async () => {
+      fetchData.mockResolvedValueOnce([
+        { ...squidexRecord, status: 'PUBLISHED' },
+      ]);
+      parseData.mockResolvedValueOnce(item);
+      entry.publish = jest.fn().mockResolvedValueOnce(entry);
+      contentfulEnvironmentMock.createEntryWithId.mockResolvedValueOnce(entry);
+
+      await migrateFromSquidexToContentful('entity', fetchData, parseData);
+
+      expect(entry.publish).toBeCalled();
+    });
+
+    test('Should not publish the record in Contentful if it has a status of DRAFT', async () => {
+      fetchData.mockResolvedValueOnce([{ ...squidexRecord, status: 'DRAFT' }]);
+      parseData.mockResolvedValueOnce(item);
+      entry.publish = jest.fn().mockResolvedValueOnce(entry);
+      contentfulEnvironmentMock.createEntryWithId.mockResolvedValueOnce(entry);
+
+      await migrateFromSquidexToContentful('entity', fetchData, parseData);
+
+      expect(entry.publish).not.toBeCalled();
+    });
+
     test('Should update the entry if updateEntry is true and entry exists', async () => {
       fetchData.mockResolvedValueOnce([squidexRecord]);
       parseData.mockResolvedValueOnce({
@@ -170,6 +194,84 @@ describe('Migration from Squidex to Contentful', () => {
       );
 
       expect(entry.update).toBeCalled();
+    });
+
+    test('Should publish the updated entry if UPSERT_IN_PLACE is true and entry has a status of PUBLISHED', async () => {
+      process.env.UPSERT_IN_PLACE = 'true';
+
+      fetchData.mockResolvedValueOnce([
+        { ...squidexRecord, status: 'PUBLISHED' },
+      ]);
+      parseData.mockResolvedValueOnce(item);
+
+      const {
+        migrateFromSquidexToContentfulFactory,
+      } = require('../../src/utils/migration');
+      const {
+        getContentfulEnvironmentMock,
+      } = require('../mocks/contentful.mocks');
+
+      const contentfulEnvironmentMock = getContentfulEnvironmentMock();
+      const migrateFromSquidexToContentful =
+        migrateFromSquidexToContentfulFactory(
+          contentfulEnvironmentMock,
+          loggerMock,
+        );
+
+      entry.fields = {
+        title: 'old title',
+        description: 'old description',
+      };
+      entry.publish = jest.fn().mockResolvedValueOnce(entry);
+      entry.update = jest.fn().mockResolvedValueOnce(entry);
+      contentfulEnvironmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await migrateFromSquidexToContentful(
+        'entity',
+        fetchData,
+        parseData,
+        true,
+      );
+
+      expect(entry.publish).toBeCalled();
+    });
+
+    test('Should not publish the updated entry if UPSERT_IN_PLACE is true and entry has a status of DRAFT', async () => {
+      process.env.UPSERT_IN_PLACE = 'true';
+
+      fetchData.mockResolvedValueOnce([{ ...squidexRecord, status: 'DRAFT' }]);
+      parseData.mockResolvedValueOnce(item);
+
+      const {
+        migrateFromSquidexToContentfulFactory,
+      } = require('../../src/utils/migration');
+      const {
+        getContentfulEnvironmentMock,
+      } = require('../mocks/contentful.mocks');
+
+      const contentfulEnvironmentMock = getContentfulEnvironmentMock();
+      const migrateFromSquidexToContentful =
+        migrateFromSquidexToContentfulFactory(
+          contentfulEnvironmentMock,
+          loggerMock,
+        );
+
+      entry.fields = {
+        title: 'old title',
+        description: 'old description',
+      };
+      entry.publish = jest.fn().mockResolvedValueOnce(entry);
+      entry.update = jest.fn().mockResolvedValueOnce(entry);
+      contentfulEnvironmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await migrateFromSquidexToContentful(
+        'entity',
+        fetchData,
+        parseData,
+        true,
+      );
+
+      expect(entry.publish).not.toBeCalled();
     });
 
     test('Should try to create an entry if it was supposed to update it but the entry does not exist when UPSERT_IN_PLACE is true', async () => {

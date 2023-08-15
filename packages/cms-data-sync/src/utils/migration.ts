@@ -57,7 +57,10 @@ export const migrateFromSquidexToContentfulFactory =
 
           n += 1;
           logger(`Updated entry with id ${id}. (${n}/${data.length})`, 'INFO');
-          return updatedEntry;
+          if (item.status === 'PUBLISHED') {
+            return updatedEntry;
+          }
+          return null;
         };
 
         try {

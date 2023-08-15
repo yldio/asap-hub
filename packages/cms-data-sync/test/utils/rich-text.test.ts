@@ -5,6 +5,8 @@ import {
   removeStylingTagsWrappingIFrameTags,
   removeStylingTagsWrappingImgTags,
   wrapIframeWithPTag,
+  wrapPlainTextWithPTag,
+  removeSinglePTag,
 } from '../../src/utils';
 import { createInlineAssets, createMediaEntries } from '../../src/utils';
 
@@ -82,12 +84,6 @@ describe('convertHtmlToContentfulFormat', () => {
                         data: {},
                         marks: [],
                         nodeType: 'text',
-                        value: '',
-                      },
-                      {
-                        data: {},
-                        marks: [],
-                        nodeType: 'text',
                         value: 'item 1',
                       },
                     ],
@@ -102,12 +98,6 @@ describe('convertHtmlToContentfulFormat', () => {
                   {
                     data: {},
                     content: [
-                      {
-                        data: {},
-                        marks: [],
-                        nodeType: 'text',
-                        value: '',
-                      },
                       {
                         data: {},
                         marks: [],
@@ -537,5 +527,67 @@ describe('wrapIframeWithPTag', () => {
     expect(wrapIframeWithPTag(html)).toEqual(
       '<p>Presenter 1<br><iframe src="video"></iframe></p>',
     );
+  });
+});
+
+describe('wrapPlainTextWithPTag', () => {
+  test('works when text does not have any p tag', () => {
+    const input = 'Hello';
+    const expectedOutput = '<p>Hello</p>';
+    expect(wrapPlainTextWithPTag(input)).toEqual(expectedOutput);
+  });
+
+  test('works when there is a paragraph with p tag and one without it', () => {
+    const input =
+      '<p>SNCAflox delta neo mouse line; first coding exon is flanked by loxP sites.</p>Full name: B6(Cg)-Sncatm1.1Vlb/J mie';
+    const expectedOutput =
+      '<p>SNCAflox delta neo mouse line; first coding exon is flanked by loxP sites.</p><p>Full name: B6(Cg)-Sncatm1.1Vlb/J mie</p>';
+    expect(wrapPlainTextWithPTag(input)).toEqual(expectedOutput);
+  });
+
+  test.each`
+    tag
+    ${`sup`}
+    ${`sub`}
+    ${`a`}
+    ${`strong`}
+    ${`b`}
+    ${`em`}
+    ${`i`}
+  `('does not wrap $tag by p', ({ tag }) => {
+    const input = `<p>this is <${tag}>any text</${tag}></p>`;
+    const expectedOutput = `<p>this is <${tag}>any text</${tag}></p>`;
+    expect(wrapPlainTextWithPTag(input)).toEqual(expectedOutput);
+  });
+
+  test.each`
+    tag
+    ${`h1`}
+    ${`h2`}
+    ${`h3`}
+    ${`h4`}
+    ${`h5`}
+    ${`h6`}
+  `('does not wrap inner text of $tag by p', ({ tag }) => {
+    const input = `<${tag}>heading</${tag}>`;
+    const expectedOutput = `<${tag}>heading</${tag}>`;
+    expect(wrapPlainTextWithPTag(input)).toEqual(expectedOutput);
+  });
+});
+
+describe('removeSinglePTag', () => {
+  test('removes single closing </p>', () => {
+    const html = 'Text</p>';
+    expect(removeSinglePTag(html)).toEqual('Text');
+  });
+
+  test('removes single opening <p>', () => {
+    const html = '<p>Text';
+    expect(removeSinglePTag(html)).toEqual('Text');
+  });
+
+  test('does not remove closing </p> if there is a opening <p>', () => {
+    const html = '<p>Text</p>';
+    expect(removeSinglePTag(html)).toEqual('<p>Text</p>');
   });
 });

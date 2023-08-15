@@ -23,7 +23,7 @@ export const algoliaSearchClientNativeFactory = ({
   algoliaAppId,
 }: AlgoliaSearchClientNativeFactoryParams): SearchClient => {
   if (algoliaApiKey === null) {
-    return algoliasearch(algoliaAppId, 'dummyKey');
+    throw new Error('Algolia API key is not set');
   }
   return algoliasearch(algoliaAppId, algoliaApiKey);
 };

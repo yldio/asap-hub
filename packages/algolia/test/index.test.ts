@@ -56,11 +56,11 @@ describe('Algolia Search Client', () => {
     );
   });
   test('Should instantiate the dummy token native client', () => {
-    algoliaSearchClientNativeFactory({
-      algoliaApiKey: null,
-      algoliaAppId: 'native-test-app-id',
-    });
-
-    expect(algoliasearchMock).toBeCalledWith('native-test-app-id', 'dummyKey');
+    expect(() => {
+      algoliaSearchClientNativeFactory({
+        algoliaApiKey: null,
+        algoliaAppId: 'native-test-app-id',
+      });
+    }).toThrow('Algolia API key is not set');
   });
 });

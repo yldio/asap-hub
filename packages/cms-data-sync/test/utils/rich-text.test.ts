@@ -583,6 +583,28 @@ describe('convertHtmlToContentfulFormat', () => {
       },
     ]);
   });
+
+  it('removes empty section tags from content', () => {
+    const html = `<div>
+      <section>
+      </section>
+      <p>Content</p>
+    </div>`;
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [
+          {
+            value: 'Content',
+            marks: [],
+            data: {},
+            nodeType: 'text',
+          },
+        ],
+        data: {},
+        nodeType: 'paragraph',
+      },
+    ]);
+  });
 });
 
 describe('createDocumentIfNeeded', () => {

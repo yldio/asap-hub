@@ -7,6 +7,7 @@ import {
 import { crnWelcomeTemplate, SendEmail } from '../../../src/utils';
 import { getUserDataObject } from '../../fixtures/users.fixtures';
 import { loggerMock as logger } from '../../mocks/logger.mock';
+import { UserDataObject } from '@asap-hub/model';
 
 describe('Invite Handler', () => {
   const sendEmailMock: jest.MockedFunction<SendEmail> = jest.fn();
@@ -20,6 +21,8 @@ describe('Invite Handler', () => {
     dataProvider,
     origin,
     logger,
+    'Crn-Welcome',
+    jest.fn(),
   );
 
   afterEach(() => {

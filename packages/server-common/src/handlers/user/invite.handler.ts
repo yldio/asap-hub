@@ -19,6 +19,9 @@ interface DataProvider {
   ): Promise<void>;
 }
 
+/* istanbul ignore next */
+const sleepFn = (delay: number) =>
+  new Promise((resolve) => setTimeout(resolve, delay));
 export const inviteHandlerFactory =
   <Provider extends DataProvider>(
     sendEmail: SendEmail,
@@ -26,8 +29,12 @@ export const inviteHandlerFactory =
     origin: string,
     logger: Logger,
     template: SendEmailTemplate = 'Crn-Welcome',
+    /* istanbul ignore next */
+    sleep = sleepFn,
   ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {
+    // temp fix to delay the lamdba
+    await sleep(30_000);
     const user = await dataProvider.fetchById(event.detail.resourceId);
     if (!user) {
       throw new Error(

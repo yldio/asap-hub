@@ -1487,5 +1487,64 @@ describe('ResearchOutputs controller', () => {
         );
       });
     });
+
+    test('Should create a new version when flag is set', async () => {
+      researchOutputDataProviderMock.update.mockResolvedValueOnce(
+        researchOutputId,
+      );
+
+      await researchOutputs.update(researchOutputId, {
+        ...getResearchOutputUpdateData(),
+        createVersion: true,
+      });
+
+      expect(researchOutputDataProviderMock.update).toBeCalledWith(
+        researchOutputId,
+        expect.anything(),
+        {
+          newVersion: {
+            documentType: 'Bioinformatics',
+            link: '',
+            title: 'Test Proposal 1234',
+            type: '3D Printing',
+          },
+          publish: true,
+        },
+      );
+    });
+
+    test('Should create a grant document new version when flag is set and document type is missing', async () => {
+      researchOutputDataProviderMock.update.mockResolvedValueOnce(
+        researchOutputId,
+      );
+      researchOutputDataProviderMock.fetchById.mockResolvedValueOnce({
+        ...getResearchOutputUpdateData(),
+        teams: [{ id: 'team-id-a', displayName: 'Team A' }],
+        documentType: undefined,
+        title: 'Old Version Title',
+        type: '3D Printing',
+        link: 'http://example.com',
+      });
+
+      await researchOutputs.update(researchOutputId, {
+        ...getResearchOutputUpdateData(),
+        teams: ['team-id-a'],
+        createVersion: true,
+      });
+
+      expect(researchOutputDataProviderMock.update).toBeCalledWith(
+        researchOutputId,
+        expect.anything(),
+        {
+          newVersion: {
+            documentType: 'Grant Document',
+            link: 'http://example.com',
+            title: 'Old Version Title',
+            type: '3D Printing',
+          },
+          publish: true,
+        },
+      );
+    });
   });
 });

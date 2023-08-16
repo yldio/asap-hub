@@ -366,6 +366,39 @@ describe('convertHtmlToContentfulFormat', () => {
     ]);
   });
 
+  it('does not split list items with <sup> tags into separate paragraphs', () => {
+    const html = '<ul><li>On the 1<sup>st</sup> January</li></ul>';
+
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [
+          {
+            content: [
+              {
+                content: [
+                  { data: {}, value: 'On the 1', marks: [], nodeType: 'text' },
+                  {
+                    data: {},
+                    value: 'st',
+                    marks: [{ type: 'superscript' }],
+                    nodeType: 'text',
+                  },
+                  { data: {}, value: ' January', marks: [], nodeType: 'text' },
+                ],
+                data: {},
+                nodeType: 'paragraph',
+              },
+            ],
+            data: {},
+            nodeType: 'list-item',
+          },
+        ],
+        data: {},
+        nodeType: 'unordered-list',
+      },
+    ]);
+  });
+
   it('handles multiple spans nested inside divs with a list in between', () => {
     const html = `<div>
     <span>Some</span><span> text</span>
@@ -419,6 +452,134 @@ describe('convertHtmlToContentfulFormat', () => {
         ],
         data: {},
         nodeType: 'paragraph',
+      },
+    ]);
+  });
+
+  it('handles nested lists with sibling list items', () => {
+    const html = `<div>
+      <ul>
+        <li>List item 1</li>
+        <li>List item 2</li>
+        <ul>
+          <li>Sublist item</li>
+        </ul>
+      </ul>
+    </div>`;
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [
+          {
+            content: [
+              {
+                content: [
+                  {
+                    data: {},
+                    marks: [],
+                    nodeType: 'text',
+                    value: 'List item 1',
+                  },
+                ],
+                data: {},
+                nodeType: 'paragraph',
+              },
+            ],
+            data: {},
+            nodeType: 'list-item',
+          },
+          {
+            content: [
+              {
+                content: [
+                  {
+                    data: {},
+                    marks: [],
+                    nodeType: 'text',
+                    value: 'List item 2',
+                  },
+                ],
+                data: {},
+                nodeType: 'paragraph',
+              },
+              {
+                content: [
+                  {
+                    content: [
+                      {
+                        content: [
+                          {
+                            data: {},
+                            marks: [],
+                            nodeType: 'text',
+                            value: 'Sublist item',
+                          },
+                        ],
+                        data: {},
+                        nodeType: 'paragraph',
+                      },
+                    ],
+                    data: {},
+                    nodeType: 'list-item',
+                  },
+                ],
+                data: {},
+                nodeType: 'unordered-list',
+              },
+            ],
+            data: {},
+            nodeType: 'list-item',
+          },
+        ],
+        data: {},
+        nodeType: 'unordered-list',
+      },
+    ]);
+  });
+
+  it('handles nested lists without sibling list items', () => {
+    const html = `<div>
+      <ul>
+        <ul>
+          <li>Sublist item</li>
+        </ul>
+      </ul>
+    </div>`;
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [
+          {
+            content: [
+              {
+                content: [
+                  {
+                    content: [
+                      {
+                        content: [
+                          {
+                            data: {},
+                            marks: [],
+                            nodeType: 'text',
+                            value: 'Sublist item',
+                          },
+                        ],
+                        data: {},
+                        nodeType: 'paragraph',
+                      },
+                    ],
+                    data: {},
+                    nodeType: 'list-item',
+                  },
+                ],
+                data: {},
+                nodeType: 'unordered-list',
+              },
+            ],
+            data: {},
+            nodeType: 'list-item',
+          },
+        ],
+        data: {},
+        nodeType: 'unordered-list',
       },
     ]);
   });

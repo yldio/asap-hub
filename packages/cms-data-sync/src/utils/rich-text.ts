@@ -3,6 +3,8 @@ import { Environment, Maybe } from '@asap-hub/contentful';
 import {
   Document,
   Node,
+  Block,
+  Inline,
   Text,
   TopLevelBlock,
 } from '@contentful/rich-text-types';
@@ -69,6 +71,21 @@ export const removeSinglePTag = (html: string): string => {
   return html;
 };
 
+const wrapNestedLists = (html: string): string => {
+  const $ = cheerio.load(html);
+
+  $('ul > ul').each((_, element) => {
+    const previous = $(element).prev();
+    if (previous && previous.length && previous[0].name === 'li') {
+      $(element).appendTo(previous);
+    } else {
+      $(element).wrap('<li></li>');
+    }
+  });
+
+  return $('body').html() ?? html;
+};
+
 type ParentNode = cheerio.ParentNode & { name?: string };
 export const wrapPlainTextWithPTag = (html: string): string => {
   const $ = cheerio.load(html);
@@ -89,6 +106,7 @@ export const wrapPlainTextWithPTag = (html: string): string => {
     'em',
     'i',
     'u',
+    'li',
   ];
 
   const filterTags = (parent: ParentNode | null) =>
@@ -107,6 +125,21 @@ export const wrapPlainTextWithPTag = (html: string): string => {
     .wrap('<p></p>');
 
   return $('body').html() ?? html;
+};
+
+type SomeNode = Block | Inline | Text;
+const removeEmptyTextNodes = (list: SomeNode[], node: SomeNode): SomeNode[] => {
+  if (node.nodeType === 'text' && 'value' in node) {
+    return node.value ? [...list, node] : list;
+  }
+
+  return [
+    ...list,
+    {
+      ...node,
+      content: (node.content as SomeNode[]).reduce(removeEmptyTextNodes, []),
+    } as Block | Inline,
+  ];
 };
 
 export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
@@ -192,7 +225,8 @@ export const clearParsedHtmlOutput = (htmlDocument: Document) => ({
       },
       then can be filtered without losing the new line purpose
     */
-    .filter((node: Node) => node?.nodeType !== 'text'),
+    .filter((node: Node) => node?.nodeType !== 'text')
+    .reduce(removeEmptyTextNodes, []) as TopLevelBlock[],
 });
 
 export const convertHtmlToContentfulFormat = (html: string) => {
@@ -207,6 +241,7 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   processedHtml = removeStylingTagsWrappingImgTags(processedHtml);
   processedHtml = wrapIframeWithPTag(processedHtml);
   processedHtml = wrapPlainTextWithPTag(processedHtml);
+  processedHtml = wrapNestedLists(processedHtml);
 
   logger(`HTML pre-parsed:\n${html}`, 'DEBUG');
   logger(`HTML post-parsed:\n${processedHtml}`, 'DEBUG');

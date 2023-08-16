@@ -45,7 +45,11 @@ const UsersPageBody: React.FC<UsersPageBodyProps> = ({
             Showing {firstItem}-{lastItem} of {users.total} results
           </Subtitle>
           {users.items.map((user) => (
-            <UserCard key={user.id} {...user} />
+            <UserCard
+              key={user.id}
+              {...user}
+              tags={user.tags.map((tag) => tag.name)}
+            />
           ))}
           <section>
             <PageControls {...pageProps} />

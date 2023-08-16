@@ -45,6 +45,7 @@ describe('userToCSV', () => {
       github: 'github',
       createdDate: expect.anything(),
       keywords: expect.anything(),
+      tags: expect.anything(),
       questions: expect.anything(),
       location: expect.anything(),
       contributingCohorts: expect.anything(),

@@ -1,5 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { Keyword } from '@asap-hub/model/src/gp2';
+import { KeywordDataObject } from '@asap-hub/model/src/gp2';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -15,7 +15,7 @@ describe('KeywordsModal', () => {
     ...gp2Fixtures.createUserResponse(),
     backHref: '',
     onSave: jest.fn(),
-    suggestions: [{ name: 'Keyword-1', id: 'id-1' }],
+    suggestions: [{ name: 'Keyword-2', id: 'id-2' }],
   };
 
   const renderModal = (overrides: Partial<KeywordsModalProps> = {}) =>
@@ -33,11 +33,11 @@ describe('KeywordsModal', () => {
   });
 
   it.each`
-    keywords        | expected
-    ${undefined}    | ${'Start typing...'}
-    ${['Genetics']} | ${'Genetics'}
+    keywords                              | expected
+    ${undefined}                          | ${'Start typing...'}
+    ${[{ id: 'id-1', name: 'Genetics' }]} | ${'Genetics'}
   `('renders keywords with value "$expected"', ({ keywords, expected }) => {
-    renderModal({ keywords });
+    renderModal({ tags: keywords });
     const textbox = screen.getByRole('textbox', {
       name: /Keywords/i,
     });
@@ -47,14 +47,16 @@ describe('KeywordsModal', () => {
 
   it('calls onSave with the right arguments', async () => {
     const onSave = jest.fn();
-    const keywords = ['Genetics'] as Keyword[];
+    const tags = [{ id: 'id-1', name: 'Genetics' }] as KeywordDataObject[];
     renderModal({
-      keywords,
+      tags,
       onSave,
     });
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      keywords,
+      tags: tags.map((t) => ({
+        id: t.id,
+      })),
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
@@ -62,7 +64,7 @@ describe('KeywordsModal', () => {
   it('calls onSave with the updated fields', async () => {
     const onSave = jest.fn();
     renderModal({
-      keywords: [],
+      tags: [],
       onSave,
     });
 
@@ -71,11 +73,11 @@ describe('KeywordsModal', () => {
         name: /Keywords/i,
       }),
     );
-    userEvent.click(screen.getByText('Keyword-1'));
+    userEvent.click(screen.getByText('Keyword-2'));
 
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
-      keywords: ['Keyword-1'],
+      tags: [{ id: 'id-2' }],
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
@@ -83,7 +85,7 @@ describe('KeywordsModal', () => {
   it('shows validation message', async () => {
     const onSave = jest.fn();
     renderModal({
-      keywords: [],
+      tags: [],
       onSave,
     });
 

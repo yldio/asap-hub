@@ -274,6 +274,7 @@ describe('For a GP2 login', () => {
     contributingCohorts: [],
     fundingStreams: undefined,
     keywords: [],
+    tags: [],
     questions: [],
   };
   it('adds the user metadata on successful fetch for crn', async () => {

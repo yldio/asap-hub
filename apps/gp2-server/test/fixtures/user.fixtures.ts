@@ -60,7 +60,11 @@ export const getUserResponse = (): gp2Model.UserResponse => ({
   alternativeEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   biography: 'a biography of Tony Stark',
-  keywords: ['RNA', 'Aging'],
+  tags: [
+    { id: 'keyword-1', name: 'BLAAC-PD' },
+    { id: 'keyword-2', name: 'Cohort' },
+  ],
+  keywords: ['BLAAC-PD', 'Cohort'],
   social: {
     googleScholar: 'https://scholar.google.com',
     orcid: 'https://orcid.org',
@@ -106,6 +110,7 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
       fundingStreams: undefined,
       contributingCohorts: [],
       keywords: [],
+      tags: [],
       questions: [],
     },
   ],
@@ -155,7 +160,11 @@ export const getUserDataObject = (): gp2Model.UserDataObject => ({
       title: 'Steering Committee',
     },
   ],
-  keywords: ['RNA', 'Aging'],
+  tags: [
+    { id: 'keyword-1', name: 'BLAAC-PD' },
+    { id: 'keyword-2', name: 'Cohort' },
+  ],
+  keywords: ['BLAAC-PD', 'Cohort'],
   fundingStreams: 'A funding stream',
   biography: 'a biography of Tony Stark',
   contributingCohorts: [
@@ -250,6 +259,7 @@ export const fetchUserResponseDataObject = (): gp2Model.UserDataObject => ({
   alternativeEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
   keywords: [],
+  tags: [],
   questions: ['What was the name of Peter Parkers uncle?'],
 });
 
@@ -290,7 +300,8 @@ export const getContentfulGraphqlUser = (
     'What color was Iron Mans original armour?',
     'Who is the Stark family butler?',
   ],
-  keywords: ['RNA', 'Aging'],
+  keywords: ['BLAAC-PD', 'Cohort'],
+  tagsCollection: { ...getContentfulGraphqKeywords() },
   email: 'T@ark.io',
   alternativeEmail: 'tony@stark.com',
   firstName: 'Tony',
@@ -367,6 +378,24 @@ export const getContentfulGraphqlUser = (
     },
   },
   ...props,
+});
+
+export const getContentfulGraphqKeywords = () => ({
+  total: 2,
+  items: [
+    {
+      sys: {
+        id: 'keyword-1',
+      },
+      name: 'BLAAC-PD',
+    },
+    {
+      sys: {
+        id: 'keyword-2',
+      },
+      name: 'Cohort',
+    },
+  ],
 });
 export const getContentfulGraphqlWorkingGroupMembership = () => ({
   total: 1,

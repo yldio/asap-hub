@@ -26,7 +26,11 @@ export const getContentfulGraphqlEvent = (): NonNullable<
   eventLink: 'https://zoom.com/room/123',
   status: 'Confirmed',
   hidden: false,
-  tags: [],
+  tags: ['Cohort'],
+  keywordsCollection: {
+    items: [{ sys: { id: 'id-1' }, name: 'Cohort' }],
+    total: 0,
+  },
   title: 'Example Event',
   notesPermanentlyUnavailable: false,
   notes: {
@@ -357,7 +361,8 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
   meetingLink: 'https://zoom.com/room/123',
   hideMeetingLink: false,
   status: 'Confirmed',
-  tags: [],
+  tags: ['Cohort'],
+  keywords: [{ id: 'id-1', name: 'Cohort' }],
   title: 'Example Event',
   startDateTimeZone: 'UTC',
   endDateTimeZone: 'UTC',

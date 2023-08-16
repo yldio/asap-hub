@@ -85,6 +85,7 @@ export const createEventResponse = (
   description: `Event ${itemIndex} description`,
   status: 'Confirmed',
   tags: [],
+  keywords: [],
   title: `${customTitle} ${itemIndex}`,
   lastModifiedDate: new Date().toISOString(),
   meetingLink: 'https://example.com/meeting',

@@ -7,13 +7,13 @@ type OnboardingBackgroundProps = Pick<
   ComponentProps<typeof UserBiography>,
   'biography'
 > &
-  Pick<ComponentProps<typeof UserKeywords>, 'keywords'> & {
+  Pick<ComponentProps<typeof UserKeywords>, 'tags'> & {
     editBiographyHref: string;
     editKeywordsHref: string;
   };
 const OnboardingBackground: React.FC<OnboardingBackgroundProps> = ({
   biography,
-  keywords,
+  tags,
   editBiographyHref,
   editKeywordsHref,
 }) => (
@@ -22,7 +22,7 @@ const OnboardingBackground: React.FC<OnboardingBackgroundProps> = ({
       Next up, we’d like to capture some more information around your skills and
       experiences in order to help others to understand your areas of focus.
     </Paragraph>
-    <UserKeywords keywords={keywords} editHref={editKeywordsHref} />
+    <UserKeywords tags={tags} editHref={editKeywordsHref} />
     <UserBiography biography={biography} editHref={editBiographyHref} />
   </>
 );

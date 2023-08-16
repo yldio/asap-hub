@@ -79,6 +79,24 @@ export const fetchOptionsValidationSchema: JSONSchemaType<FetchOptions> = {
   additionalProperties: false,
 };
 
+export const fetchProjectsOptionsValidationSchema: JSONSchemaType<gp2.FetchProjectOptions> =
+  {
+    type: 'object',
+    properties: {
+      take: { type: 'number', nullable: true },
+      skip: { type: 'number', nullable: true },
+      search: { type: 'string', nullable: true },
+      filter: {
+        type: 'object',
+        properties: {
+          hasKeywords: { type: 'boolean', nullable: true },
+        },
+        nullable: true,
+      },
+    },
+    additionalProperties: false,
+  };
+
 export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOptions> =
   {
     type: 'object',
@@ -111,6 +129,7 @@ export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOpt
           },
           code: { type: 'string', nullable: true },
           onlyOnboarded: { type: 'boolean', nullable: true, default: true },
+          hasKeywords: { type: 'boolean', nullable: true },
           hidden: { type: 'boolean', nullable: true },
         },
         nullable: true,
@@ -141,6 +160,14 @@ export const validateFetchOptions = validateInput(
     coerce: true,
   },
 );
+export const validateFetchProjectsOptions = validateInput(
+  fetchProjectsOptionsValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
+
 export const validateFetchUsersOptions = validateInput(
   fetchUsersOptionsValidationSchema,
   {

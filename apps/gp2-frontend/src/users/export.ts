@@ -17,6 +17,7 @@ export const userFields = {
   secondaryPosition: 'Secondary position',
   tertiaryPosition: 'Tertiary position',
   keywords: 'Keywords',
+  tags: 'Tags',
   biography: 'Biography',
   projects: 'Projects',
   workingGroups: 'Working groups',
@@ -62,6 +63,7 @@ export const userToCSV = ({
   social: { googleScholar, orcid, blog, twitter, linkedIn, github } = {},
   biography,
   keywords,
+  tags,
   questions,
 }: gp2.UserResponse): UserCSV => ({
   firstName,
@@ -77,6 +79,7 @@ export const userToCSV = ({
   tertiaryPosition: getPositionString(positions[2]),
   biography,
   keywords: sorted(keywords),
+  tags: sorted(tags.map(({ name }) => name)),
   projects: sorted(projects.map(({ title }) => title)),
   workingGroups: sorted(workingGroups.map(({ title }) => title)),
   questions: questions.join(',\n'),

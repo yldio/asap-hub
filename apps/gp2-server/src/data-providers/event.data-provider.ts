@@ -3,6 +3,7 @@ import {
   addLocaleToFields,
   createLink,
   Environment,
+  getLinkEntities,
   gp2,
   GraphQLClient,
   patchAndPublish,
@@ -13,6 +14,7 @@ import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../controllers/calendar.controller';
+import { KeywordItem, parseKeyword } from './keyword.data-provider';
 import {
   getContentfulEventMaterial,
   MeetingMaterial,
@@ -155,6 +157,7 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
       return undefined;
     };
 
+    // TODO: confirm if we still need this when removing old tags, as search will be developed in a month
     const searchFilter = (search || '')
       .split(' ')
       .reduce(
@@ -183,6 +186,7 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
         ...(after ? { endDate_gt: after } : {}),
         ...(before ? { endDate_lt: before } : {}),
         ...(search ? { OR: searchFilter } : {}),
+        ...(filter?.hasTags ? { tags_exists: true } : {}),
       },
     });
 
@@ -212,10 +216,13 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
   ): Promise<void> {
     const environment = await this.getRestClient();
     const event = await environment.getEntry(id);
-    const { calendar, ...otherUpdateFields } = update;
+    const { calendar, keywords, ...otherUpdateFields } = update;
 
     const updateWithCalendarLink = {
       ...(calendar ? { calendar: createLink(calendar) } : {}),
+      ...(keywords
+        ? { keywords: getLinkEntities(keywords.map((k) => k.id)) }
+        : {}),
       ...otherUpdateFields,
     };
 
@@ -336,6 +343,10 @@ export const parseGraphQLEvent = (
   } = item;
 
   const speakersItems = (speakersCollection?.items as SpeakerItem[]) ?? [];
+  const keywords =
+    item.keywordsCollection?.items
+      .filter((keyword): keyword is KeywordItem => keyword !== null)
+      .map(parseKeyword) ?? [];
 
   return {
     id,
@@ -377,6 +388,7 @@ export const parseGraphQLEvent = (
     hideMeetingLink: hideMeetingLink || false,
     status: status as EventStatus,
     tags: (tags as string[] | undefined | null) ?? [],
+    keywords,
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
     workingGroup: calendar.workingGroups?.[0],

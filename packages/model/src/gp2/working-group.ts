@@ -1,5 +1,6 @@
 import { ListResponse } from '../common';
 import { Calendar, Member, Milestone, Resource, UpdateMember } from './common';
+import { KeywordDataObject } from './keywords';
 
 export const workingGroupMemberRole = [
   'Lead',
@@ -22,6 +23,7 @@ export type WorkingGroupDataObject = {
   milestones: Milestone[];
   resources?: Resource[];
   calendar?: Calendar;
+  tags?: KeywordDataObject;
 };
 
 export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;
@@ -34,6 +36,7 @@ export type WorkingGroupUpdateDataObject = Partial<
   Pick<WorkingGroupDataObject, 'resources'>
 > & {
   members?: UpdateMember<WorkingGroupMemberRole>[];
+  tags?: Omit<KeywordDataObject, 'name'>[] | null;
 };
 
 export type WorkingGroupUpdateRequest = WorkingGroupUpdateDataObject;

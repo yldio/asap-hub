@@ -22,6 +22,9 @@ export const projectsContentQueryFragment = gql`
     tagsCollection(limit: 6) {
       total
       items {
+        sys {
+          id
+        }
         name
       }
     }
@@ -90,8 +93,8 @@ export const FETCH_PROJECT_BY_ID = gql`
 `;
 
 export const FETCH_PROJECTS = gql`
-  query FetchProjects($limit: Int, $skip: Int) {
-    projectsCollection(limit: $limit, skip: $skip) {
+  query FetchProjects($limit: Int, $skip: Int, $where: ProjectsFilter) {
+    projectsCollection(limit: $limit, skip: $skip, where: $where) {
       total
       items {
         ...ProjectsContentData

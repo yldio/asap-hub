@@ -13,7 +13,7 @@ import {
 import { loggerMock } from '../mocks/logger.mock';
 import { userControllerMock } from '../mocks/user.controller.mock';
 
-const { userDegrees, userRegions, keywords, userContributingCohortRole } = gp2;
+const { userDegrees, userRegions, userContributingCohortRole } = gp2;
 
 describe('/users/ route', () => {
   const loggedInUserId = '11';
@@ -115,11 +115,9 @@ describe('/users/ route', () => {
       test.each`
         name               | value
         ${'regions'}       | ${['Africa']}
-        ${'keywords'}      | ${['Administrative Support']}
         ${'projects'}      | ${['a project']}
         ${'workingGroups'} | ${['a working group']}
         ${'regions'}       | ${['Africa', 'Asia']}
-        ${'keywords'}      | ${['Administrative Support', 'GBA1']}
         ${'projects'}      | ${['a project', 'another project']}
         ${'workingGroups'} | ${['a working group', 'another working group']}
       `(
@@ -505,35 +503,11 @@ describe('/users/ route', () => {
         });
       });
       describe('keywords', () => {
-        test.each(keywords)('allows valid keywords: %s', async (keyword) => {
+        test('allows valid keywords:', async () => {
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
-            .send({ keywords: [keyword] });
+            .send({ tags: [{ id: 'id-1' }] });
           expect(response.status).toBe(200);
-        });
-        test('does not allow invalid keywords', async () => {
-          const response = await supertest(app)
-            .patch(`/users/${loggedInUserId}`)
-            .send({ keywords: ['invalid keyword'] });
-          expect(response.status).toBe(400);
-        });
-        test('not allows empty keywords', async () => {
-          const response = await supertest(app)
-            .patch(`/users/${loggedInUserId}`)
-            .send({ keywords: [] });
-          expect(response.status).toBe(400);
-        });
-        test('allows 10 keywords', async () => {
-          const response = await supertest(app)
-            .patch(`/users/${loggedInUserId}`)
-            .send({ keywords: keywords.slice(0, 10) });
-          expect(response.status).toBe(200);
-        });
-        test('allows no more than 10 keywords', async () => {
-          const response = await supertest(app)
-            .patch(`/users/${loggedInUserId}`)
-            .send({ keywords: keywords.slice(0, 11) });
-          expect(response.status).toBe(400);
         });
       });
       describe('questions', () => {

@@ -96,6 +96,20 @@ describe('Events Contentful Data Provider', () => {
       expect(result).toEqual(getContentfulListEventDataObject());
     });
 
+    test('Should return an empty result if no keywords', async () => {
+      const mockResponse = getContentfulGraphqlEventsResponse();
+      const event = getContentfulGraphqlEvent();
+      event.keywordsCollection = null;
+      mockResponse.eventsCollection!.items = [event];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const { items } = await eventDataProvider.fetch({});
+
+      expect(items[0]).toMatchObject({
+        keywords: [],
+      });
+    });
+
     test('Should apply the filter to remove hidden events by default', async () => {
       const contentfulGraphQLResponse = getContentfulGraphqlEventsResponse();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -633,6 +647,40 @@ describe('Events Contentful Data Provider', () => {
             type: 'Link',
           },
         },
+      });
+    });
+
+    test('updates keywords`', async () => {
+      const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+        typeof patchAndPublish
+      >;
+      mockPatchAndPublish.mockResolvedValue({
+        sys: {
+          publishedVersion: 2,
+        },
+      } as Entry);
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        events: {
+          sys: {
+            publishedVersion: 2,
+          },
+        },
+      });
+
+      await eventDataProvider.update('123', {
+        keywords: [{ id: 'key-1' }],
+      });
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        keywords: [
+          {
+            sys: {
+              id: 'key-1',
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        ],
       });
     });
   });

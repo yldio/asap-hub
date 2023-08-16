@@ -334,6 +334,17 @@ describe('Outputs data provider', () => {
         expect(result!.workingGroup).toBeUndefined();
       });
     });
+    test('Should return empty array for tags if no tags', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlResponse.tagsCollection = null;
+      graphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
+
+      const result = await outputDataProvider.fetchById(outputId);
+
+      expect(result!.tags).toMatchObject([]);
+    });
   });
 
   describe('Fetch method', () => {

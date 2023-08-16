@@ -23,6 +23,9 @@ export const eventsContentQueryFragment = gql`
     keywordsCollection(limit: 10) {
       total
       items {
+        sys {
+          id
+        }
         name
       }
     }

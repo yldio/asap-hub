@@ -90,6 +90,17 @@ describe('User data provider', () => {
         expect(result?.degrees).toEqual([expected]);
       },
     );
+
+    test('tags default to empty array', async () => {
+      const mockResponse = getContentfulGraphqlUser({
+        tagsCollection: null,
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: mockResponse,
+      });
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result!.tags).toEqual([]);
+    });
     test('degrees default to empty array', async () => {
       const mockResponse = getContentfulGraphqlUser({
         degrees: null,
@@ -137,16 +148,6 @@ describe('User data provider', () => {
         expect(result?.role).toEqual(role);
       },
     );
-
-    test.each(gp2Model.keywords)('keywords are added - %s', async (keyword) => {
-      const keywords = [keyword];
-      const mockResponse = getContentfulGraphqlUser({ keywords });
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        users: mockResponse,
-      });
-      const result = await userDataProvider.fetchById('user-id');
-      expect(result?.keywords).toEqual(keywords);
-    });
 
     test('questions are added', async () => {
       const questions = ['a valid question'];
@@ -830,6 +831,52 @@ describe('User data provider', () => {
       expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
     });
 
+    test('Should query with hasKeywords filter', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        filter: {
+          hasKeywords: true,
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            keywords_exists: true,
+            role_not: 'Hidden',
+          }),
+        }),
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
+    test('Should query with keywords filter', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        filter: {
+          keywords: ['Keyword'],
+        },
+      };
+      const users = await userDataProvider.fetch(fetchOptions);
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            tags: { name_in: ['Keyword'] },
+            role_not: 'Hidden',
+          }),
+        }),
+      );
+      expect(users).toMatchObject({ total: 1, items: [getUserDataObject()] });
+    });
+
     test('Should return all users when the onlyOnboard flag is false', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         getContentfulUsersGraphqlResponse(),
@@ -857,9 +904,8 @@ describe('User data provider', () => {
     });
 
     test.each`
-      name          | value                 | fieldName
-      ${'regions'}  | ${['Africa', 'Asia']} | ${'region_in'}
-      ${'keywords'} | ${['Aging', 'RNA']}   | ${'keywords_contains_some'}
+      name         | value                 | fieldName
+      ${'regions'} | ${['Africa', 'Asia']} | ${'region_in'}
     `(
       'Should query with region filters',
       async ({ name, value, fieldName }) => {
@@ -1576,8 +1622,11 @@ describe('User data provider', () => {
     });
 
     test('Should create the user', async () => {
-      const { contributingCohorts: _, ...userCreateDataObject } =
-        getUserCreateDataObject();
+      const {
+        contributingCohorts: _,
+        tags,
+        ...userCreateDataObject
+      } = getUserCreateDataObject();
 
       const userMock = getEntry({});
       environmentMock.createEntry.mockResolvedValue(userMock);
@@ -1741,6 +1790,47 @@ describe('User data provider', () => {
         expect(userMock.publish).toHaveBeenCalled();
       },
     );
+    test('Should create with tags', async () => {
+      const {
+        contributingCohorts: _,
+        tags,
+        ...userCreateDataObject
+      } = getUserCreateDataObject();
+
+      const userMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(userMock);
+      userMock.publish = jest.fn().mockResolvedValueOnce(userMock);
+
+      await userDataProvider.create({
+        ...userCreateDataObject,
+        contributingCohorts: [],
+        tags,
+      });
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('users', {
+        fields: expect.objectContaining({
+          tags: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'keyword-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+              {
+                sys: {
+                  id: 'keyword-2',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        }),
+      });
+
+      expect(userMock.publish).toHaveBeenCalled();
+    });
   });
   describe('Update', () => {
     const userId = 'user-id';
@@ -1831,6 +1921,15 @@ describe('User data provider', () => {
       });
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
         alternativeEmail: 'tony@example.com',
+      });
+    });
+
+    test('Should update tags', async () => {
+      await userDataProvider.update(userId, {
+        tags: [{ id: '1' }],
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        tags: [{ sys: { id: '1', linkType: 'Entry', type: 'Link' } }],
       });
     });
 

@@ -7,7 +7,7 @@ describe('UserOverview', () => {
   const defaultProps: ComponentProps<typeof UserOverview> = {
     id: '1',
     email: 'someone@example.com',
-    keywords: [],
+    tags: [],
     questions: [],
     projects: [],
     workingGroups: [],
@@ -135,14 +135,14 @@ describe('UserOverview', () => {
     });
   });
 
-  it.each(gp2.keywords)('renders the keyword: %s', (keyword) => {
+  it('renders the keyword: Test', () => {
     render(
-      <UserOverview {...defaultProps} keywords={[keyword]}>
+      <UserOverview {...defaultProps} tags={[{ id: 'id', name: 'Test' }]}>
         Body
       </UserOverview>,
     );
 
-    expect(screen.getByText(keyword)).toBeVisible();
+    expect(screen.getByText('Test')).toBeVisible();
   });
 
   describe('funding streams', () => {

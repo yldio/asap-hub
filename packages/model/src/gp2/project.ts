@@ -1,5 +1,6 @@
-import { ListResponse } from '../common';
+import { FetchOptions, ListResponse } from '../common';
 import { Calendar, Member, Milestone, Resource, UpdateMember } from './common';
+import { KeywordDataObject } from './keywords';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
 export type ProjectStatus = (typeof projectStatus)[number];
@@ -20,6 +21,7 @@ export type ProjectDataObject = {
   endDate?: string;
   id: string;
   keywords: string[];
+  tags: KeywordDataObject[];
   leadEmail?: string;
   members: ProjectMember[];
   milestones: Milestone[];
@@ -43,6 +45,7 @@ export type ProjectUpdateDataObject = Partial<
   Pick<ProjectDataObject, 'resources'>
 > & {
   members?: UpdateMember<ProjectMemberRole>[];
+  tags?: Omit<KeywordDataObject, 'name'>[];
 };
 
 export type ProjectUpdateRequest = ProjectUpdateDataObject;
@@ -50,3 +53,9 @@ export type ProjectUpdateRequest = ProjectUpdateDataObject;
 export type ProjectResourcesPutRequest = NonNullable<
   ProjectDataObject['resources']
 >;
+
+export type FetchProjectFilter = {
+  hasKeywords?: boolean;
+};
+
+export type FetchProjectOptions = FetchOptions<FetchProjectFilter>;

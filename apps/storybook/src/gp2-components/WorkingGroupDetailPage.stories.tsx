@@ -13,7 +13,6 @@ const props: ComponentProps<typeof WorkingGroupDetailPage> = {
   id: '',
   title: 'Underrepresented Populations',
   members: [],
-  projects: [],
   isWorkingGroupMember: false,
   isAdministrator: boolean('is admin', false),
   outputsTotal: 1,

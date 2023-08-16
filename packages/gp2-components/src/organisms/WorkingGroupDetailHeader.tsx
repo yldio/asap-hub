@@ -11,7 +11,7 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { useFlags } from '@asap-hub/react-context';
 
 import { css } from '@emotion/react';
-import { projectIcon, usersIcon } from '../icons';
+import { usersIcon } from '../icons';
 import { workingGroupsImage } from '../images';
 import { detailHeaderStyles } from '../layout';
 import CardWithBackground from '../molecules/CardWithBackground';
@@ -24,7 +24,6 @@ type WorkingGroupDetailHeaderProps = Pick<
   gp2Model.WorkingGroupResponse,
   'title' | 'members' | 'id'
 > & {
-  projects?: unknown[];
   isWorkingGroupMember: boolean;
   isAdministrator: boolean;
   outputsTotal: number;
@@ -46,7 +45,6 @@ const { getCounterString } = utils;
 const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
   title,
   members,
-  projects,
   id,
   isWorkingGroupMember,
   isAdministrator,
@@ -66,9 +64,6 @@ const WorkingGroupDetailHeader: React.FC<WorkingGroupDetailHeaderProps> = ({
         <div css={infoContainerStyles}>
           <IconWithLabel icon={usersIcon}>
             {getCounterString(members.length, 'member')}
-          </IconWithLabel>
-          <IconWithLabel icon={projectIcon}>
-            {getCounterString(projects?.length || 0, 'project')}
           </IconWithLabel>
           {isAdministrator && (
             <div css={css({ marginLeft: 'auto' })}>

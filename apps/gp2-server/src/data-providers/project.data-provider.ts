@@ -149,7 +149,6 @@ export function parseProjectToDataObject(
     leadEmail: project.leadEmail ?? undefined,
     description: project.description ?? undefined,
     members,
-    keywords: (project.keywords as gp2Model.Keyword[]) ?? [],
     tags,
     milestones,
     resources,

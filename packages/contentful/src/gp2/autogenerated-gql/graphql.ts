@@ -6898,7 +6898,6 @@ export type EventsContentDataFragment = Pick<
   | 'eventLink'
   | 'status'
   | 'hidden'
-  | 'tags'
   | 'title'
   | 'notesPermanentlyUnavailable'
   | 'notesUpdatedAt'
@@ -7141,7 +7140,6 @@ export type FetchEventByIdQuery = {
       | 'eventLink'
       | 'status'
       | 'hidden'
-      | 'tags'
       | 'title'
       | 'notesPermanentlyUnavailable'
       | 'notesUpdatedAt'
@@ -7409,7 +7407,6 @@ export type FetchEventsQuery = {
             | 'eventLink'
             | 'status'
             | 'hidden'
-            | 'tags'
             | 'title'
             | 'notesPermanentlyUnavailable'
             | 'notesUpdatedAt'
@@ -7771,7 +7768,6 @@ export type FetchEventsByUserIdQuery = {
                         | 'eventLink'
                         | 'status'
                         | 'hidden'
-                        | 'tags'
                         | 'title'
                         | 'notesPermanentlyUnavailable'
                         | 'notesUpdatedAt'
@@ -8194,7 +8190,6 @@ export type FetchEventsByExternalUserIdQuery = {
                         | 'eventLink'
                         | 'status'
                         | 'hidden'
-                        | 'tags'
                         | 'title'
                         | 'notesPermanentlyUnavailable'
                         | 'notesUpdatedAt'
@@ -9275,7 +9270,6 @@ export type ProjectsContentDataFragment = Pick<
   | 'description'
   | 'pmEmail'
   | 'leadEmail'
-  | 'keywords'
   | 'traineeProject'
   | 'opportunitiesLink'
 > & {
@@ -9347,7 +9341,6 @@ export type FetchProjectByIdQuery = {
       | 'description'
       | 'pmEmail'
       | 'leadEmail'
-      | 'keywords'
       | 'traineeProject'
       | 'opportunitiesLink'
     > & {
@@ -9429,7 +9422,6 @@ export type FetchProjectsQuery = {
             | 'description'
             | 'pmEmail'
             | 'leadEmail'
-            | 'keywords'
             | 'traineeProject'
             | 'opportunitiesLink'
           > & {
@@ -9525,7 +9517,6 @@ export type UsersContentDataFragment = Pick<
   | 'alternativeEmail'
   | 'telephoneCountryCode'
   | 'telephoneNumber'
-  | 'keywords'
   | 'biography'
   | 'questions'
   | 'fundingStreams'
@@ -9652,7 +9643,6 @@ export type FetchUserByIdQuery = {
       | 'alternativeEmail'
       | 'telephoneCountryCode'
       | 'telephoneNumber'
-      | 'keywords'
       | 'biography'
       | 'questions'
       | 'fundingStreams'
@@ -9789,7 +9779,6 @@ export type FetchUsersQuery = {
             | 'alternativeEmail'
             | 'telephoneCountryCode'
             | 'telephoneNumber'
-            | 'keywords'
             | 'biography'
             | 'questions'
             | 'fundingStreams'
@@ -11021,7 +11010,6 @@ export const EventsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'eventLink' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'keywordsCollection' },
@@ -12279,7 +12267,6 @@ export const ProjectsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'pmEmail' } },
           { kind: 'Field', name: { kind: 'Name', value: 'leadEmail' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tagsCollection' },
@@ -12612,7 +12599,6 @@ export const UsersContentDataFragmentDoc = {
             name: { kind: 'Name', value: 'telephoneCountryCode' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'telephoneNumber' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tagsCollection' },

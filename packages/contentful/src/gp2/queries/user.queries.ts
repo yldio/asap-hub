@@ -24,7 +24,6 @@ export const usersContentQueryFragment = gql`
     alternativeEmail
     telephoneCountryCode
     telephoneNumber
-    keywords
     tagsCollection(limit: 10) {
       total
       items {

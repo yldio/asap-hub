@@ -20,7 +20,6 @@ export type ProjectDataObject = {
   description?: string;
   endDate?: string;
   id: string;
-  keywords: string[];
   tags: KeywordDataObject[];
   leadEmail?: string;
   members: ProjectMember[];

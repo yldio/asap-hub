@@ -93,21 +93,6 @@ describe('Project Data Provider', () => {
       expect(projectDataObject?.description).toEqual(description);
     });
 
-    describe('keywords', () => {
-      test.each(gp2Model.keywords)(
-        'keywords are added - %s',
-        async (keyword) => {
-          const expectedKeywords = [keyword];
-          const project = getContentfulGraphqlProject();
-          contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-            projects: { ...project, keywords: expectedKeywords },
-          });
-          const projectDataObject = await projectDataProvider.fetchById('id');
-          expect(projectDataObject?.keywords).toEqual(expectedKeywords);
-        },
-      );
-    });
-
     describe('traineeProject', () => {
       test('if doesnt exist returns as false', async () => {
         const project = getContentfulGraphqlProject();

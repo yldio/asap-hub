@@ -3,7 +3,6 @@ module.exports.description = 'Remove keywords from outputs content model';
 module.exports.up = (migration) => {
   const outputs = migration.editContentType('outputs');
 
-  outputs.deleteField('keywords');
   outputs.editField('tags').disabled(false);
 };
 

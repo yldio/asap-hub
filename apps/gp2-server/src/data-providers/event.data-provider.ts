@@ -338,7 +338,6 @@ export const parseGraphQLEvent = (
     thumbnail,
     hideMeetingLink,
     status,
-    tags,
     speakersCollection,
   } = item;
 
@@ -387,7 +386,6 @@ export const parseGraphQLEvent = (
     meetingLink: meetingLink || undefined,
     hideMeetingLink: hideMeetingLink || false,
     status: status as EventStatus,
-    tags: (tags as string[] | undefined | null) ?? [],
     keywords,
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),

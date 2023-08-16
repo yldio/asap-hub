@@ -20,13 +20,14 @@ export interface SpeakerInfo {
   speaker: EventSpeakerUser | EventSpeakerExternalUser | undefined;
 }
 export type EventSpeaker = SpeakerInfo & { topic?: string };
-export interface EventDataObject extends BasicEvent {
+
+export type EventDataObject = Omit<BasicEvent, 'tags'> & {
   calendar: CalendarResponse;
   project?: Pick<ProjectResponse, 'id' | 'title'>;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
   keywords: KeywordDataObject[];
-}
+};
 
 export type ListEventDataObject = ListResponse<EventDataObject>;
 export type EventResponse = EventDataObject;
@@ -47,7 +48,6 @@ export type EventCreateDataObject = Pick<
   | 'endDate'
   | 'endDateTimeZone'
   | 'status'
-  | 'tags'
   | 'meetingLink'
   | 'hideMeetingLink'
 > & {

@@ -341,6 +341,87 @@ describe('convertHtmlToContentfulFormat', () => {
       },
     ]);
   });
+
+  it('handles multiple spans nested inside divs', () => {
+    const html = '<div><span>Some</span><span> text</span></div>';
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [
+          {
+            data: {},
+            marks: [],
+            nodeType: 'text',
+            value: 'Some',
+          },
+          {
+            data: {},
+            marks: [],
+            nodeType: 'text',
+            value: ' text',
+          },
+        ],
+        data: {},
+        nodeType: 'paragraph',
+      },
+    ]);
+  });
+
+  it('handles multiple spans nested inside divs with a list in between', () => {
+    const html = `<div>
+    <span>Some</span><span> text</span>
+    <ol><li>List</li></ol>
+    <span>More</span><span> text</span>
+    </div>`;
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [
+          {
+            data: {},
+            marks: [],
+            nodeType: 'text',
+            value: 'Some',
+          },
+          {
+            data: {},
+            marks: [],
+            nodeType: 'text',
+            value: ' text',
+          },
+        ],
+        data: {},
+        nodeType: 'paragraph',
+      },
+      {
+        content: [
+          {
+            content: expect.arrayContaining([]),
+            data: {},
+            nodeType: 'list-item',
+          },
+        ],
+        data: {},
+        nodeType: 'ordered-list',
+      },
+      {
+        content: [
+          {
+            data: {},
+            marks: [],
+            nodeType: 'text',
+            value: 'More',
+          },
+          {
+            data: {},
+            marks: [],
+            nodeType: 'text',
+            value: ' text',
+          },
+        ],
+        data: {},
+        nodeType: 'paragraph',
+      },
+    ]);
+  });
 });
 
 describe('createDocumentIfNeeded', () => {

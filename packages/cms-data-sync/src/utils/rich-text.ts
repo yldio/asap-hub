@@ -35,6 +35,20 @@ export const removeStylingTagsWrappingImgTags = (html: string): string =>
     '$3',
   );
 
+const removeUnsupportedTags = (html: string): string => {
+  const $ = cheerio.load(html);
+  const tags = ['section'];
+  tags.forEach((tag) => {
+    $(tag).each((_, element) => {
+      if ($(element).text().trim() === '') {
+        $(element).remove();
+      }
+    });
+  });
+
+  return $('body').html() ?? html;
+};
+
 export const wrapIframeWithPTag = (html: string): string => {
   const $ = cheerio.load(html);
   const iframe = $('iframe');
@@ -236,6 +250,7 @@ export const convertHtmlToContentfulFormat = (html: string) => {
   // can just remove them here
   let processedHtml;
   processedHtml = html.replace(/<[\\/]{0,1}(div)[^><]*>/g, '');
+  processedHtml = removeUnsupportedTags(processedHtml);
   processedHtml = removeSinglePTag(processedHtml);
   processedHtml = removeStylingTagsWrappingIFrameTags(processedHtml);
   processedHtml = removeStylingTagsWrappingImgTags(processedHtml);

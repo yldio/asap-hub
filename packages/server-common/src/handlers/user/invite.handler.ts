@@ -19,6 +19,7 @@ interface DataProvider {
   ): Promise<void>;
 }
 
+/* istanbul ignore next */
 const sleepFn = (delay: number) =>
   new Promise((resolve) => setTimeout(resolve, delay));
 export const inviteHandlerFactory =
@@ -28,6 +29,7 @@ export const inviteHandlerFactory =
     origin: string,
     logger: Logger,
     template: SendEmailTemplate = 'Crn-Welcome',
+    /* istanbul ignore next */
     sleep = sleepFn,
   ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {

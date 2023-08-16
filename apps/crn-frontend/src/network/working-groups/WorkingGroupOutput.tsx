@@ -80,7 +80,9 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
-  const getRelatedResearchSuggestions = useRelatedResearchSuggestions();
+  const getRelatedResearchSuggestions = useRelatedResearchSuggestions(
+    researchOutputData?.id,
+  );
   const researchTags = useResearchTags();
 
   const published = researchOutputData ? !!researchOutputData.published : false;

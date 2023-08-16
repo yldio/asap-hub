@@ -89,7 +89,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const getLabSuggestions = useLabSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const getTeamSuggestions = useTeamSuggestions();
-  const getRelatedResearchSuggestions = useRelatedResearchSuggestions();
+  const getRelatedResearchSuggestions = useRelatedResearchSuggestions(
+    researchOutputData?.id,
+  );
   const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const researchTags = useResearchTags();
 

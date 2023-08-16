@@ -68,6 +68,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
+  const isUserOnboarded = currentUser?.onboarded;
 
   const upcomingEventsResult = useEvents(
     getEventListOptions(currentTime, {
@@ -120,9 +121,13 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
             }
           : undefined,
       avatarSaving,
-      sharedOutputsCount: researchOutputsResult.total,
-      upcomingEventsCount: upcomingEventsResult.total,
-      pastEventsCount: pastEventsResult.total,
+      sharedOutputsCount: isUserOnboarded
+        ? researchOutputsResult.total
+        : undefined,
+      upcomingEventsCount: isUserOnboarded
+        ? upcomingEventsResult.total
+        : undefined,
+      pastEventsCount: isUserOnboarded ? pastEventsResult.total : undefined,
     };
 
     return (

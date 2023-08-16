@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { LabEvent, ListResponse, UserResponse } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -21,7 +18,7 @@ import { LabPayload } from '../event-bus';
 export const indexLabUsersHandler =
   (
     userController: UserController,
-    algoliaClient: AlgoliaSearchClient<'crn'>,
+    algoliaClient: AlgoliaClient<'crn'>,
   ): ((event: EventBridgeEvent<LabEvent, LabPayload>) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

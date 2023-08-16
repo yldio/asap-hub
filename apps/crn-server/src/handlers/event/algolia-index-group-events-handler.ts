@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import {
   EventController,
   EventResponse,
@@ -23,7 +20,7 @@ import { InterestGroupPayload } from '../event-bus';
 export const indexGroupEventsHandler =
   (
     eventController: EventController,
-    algoliaClient: AlgoliaSearchClient<'crn'>,
+    algoliaClient: AlgoliaClient<'crn'>,
   ): ((
     event: EventBridgeEvent<GroupEvent, InterestGroupPayload>,
   ) => Promise<void>) =>

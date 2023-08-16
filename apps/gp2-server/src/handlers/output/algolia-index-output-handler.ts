@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
@@ -20,7 +17,7 @@ import { OutputPayload } from '../event-bus';
 export const indexOutputHandler =
   (
     outputController: OutputController,
-    algoliaClient: AlgoliaSearchClient<'gp2'>,
+    algoliaClient: AlgoliaClient<'gp2'>,
     log: Logger,
   ): EventBridgeHandler<gp2Model.OutputEvent, OutputPayload> =>
   async (event) => {

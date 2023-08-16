@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { algoliaSearchClientFactory, AlgoliaClient } from '@asap-hub/algolia';
 import { User } from '@asap-hub/auth';
 import { isEnabled } from '@asap-hub/flags';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
@@ -9,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { ALGOLIA_APP_ID, ALGOLIA_INDEX } from '../config';
 
 export type AlgoliaHook = {
-  client: AlgoliaSearchClient<'crn'>;
+  client: AlgoliaClient<'crn'>;
 };
 
 export const useAlgolia = () => {

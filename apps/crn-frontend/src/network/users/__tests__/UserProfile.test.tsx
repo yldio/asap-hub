@@ -495,3 +495,23 @@ it('navigates to the past events tab', async () => {
     },
   });
 });
+
+describe('for a non onboarded user', () => {
+  const userProfile: UserResponse = {
+    ...createUserResponse(),
+    avatarUrl: 'https://placekitten.com/200/300',
+    id: '42',
+    onboarded: false,
+  };
+  it('renders the tabs without the numbers', async () => {
+    await renderUserProfile(userProfile, { onboarded: userProfile.onboarded });
+
+    expect(screen.getByRole('link', { name: /^Past Events$/ })).toBeVisible();
+    expect(
+      screen.getByRole('link', { name: /^Upcoming Events$/ }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('link', { name: /^Shared Outputs$/ }),
+    ).toBeVisible();
+  });
+});

@@ -1,4 +1,4 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import { AlgoliaClient } from '@asap-hub/algolia';
 import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
@@ -69,7 +69,7 @@ export const getAllFilters = (
 };
 
 export const getOutputs = (
-  client: AlgoliaSearchClient<'gp2'>,
+  client: AlgoliaClient<'gp2'>,
   options: OutputListOptions,
 ) =>
   client

@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { EventController, EventEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
@@ -16,7 +13,7 @@ import { EventPayload } from '../event-bus';
 export const indexEventHandler =
   (
     eventController: EventController,
-    algoliaClient: AlgoliaSearchClient<'crn'>,
+    algoliaClient: AlgoliaClient<'crn'>,
   ): EventBridgeHandler<EventEvent, EventPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

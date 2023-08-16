@@ -154,6 +154,22 @@ describe('Fetch-user-by-code handler', () => {
       expect(JSON.parse(result.body)).toEqual(getUserResponse());
     });
 
+    test('should return null as the algolia key if the user is not onboarded', async () => {
+      userControllerMock.fetchByCode.mockResolvedValueOnce({
+        ...getUserResponse(),
+        onboarded: false,
+      });
+
+      const result = (await handler(
+        successfulApiGatewayEvent,
+      )) as APIGatewayProxyResult;
+
+      expect(result.statusCode).toStrictEqual(200);
+      expect(JSON.parse(result.body)).toMatchObject({
+        algoliaApiKey: null,
+      });
+    });
+
     test('should return an algolia API key', async () => {
       const mockApiKey = 'test-api-key';
       algoliaClientMock.generateSecuredApiKey.mockReturnValueOnce(mockApiKey);
@@ -200,6 +216,10 @@ describe('Fetch-user-by-code handler', () => {
         );
         const now = new Date();
         const tenHoursOneMinuteLater = new Date(now.getTime() + 601 * 60000);
+        userControllerMock.fetchByCode.mockResolvedValueOnce({
+          ...getUserResponse(),
+          onboarded: true,
+        });
 
         await handler(
           getApiGatewayEvent({

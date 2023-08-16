@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { ExternalAuthorEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
@@ -15,7 +12,7 @@ import { ExternalAuthorPayload } from '../event-bus';
 export const indexExternalAuthorHandler =
   (
     externalAuthorController: ExternalAuthorController,
-    algoliaClient: AlgoliaSearchClient<'crn'>,
+    algoliaClient: AlgoliaClient<'crn'>,
   ): EventBridgeHandler<ExternalAuthorEvent, ExternalAuthorPayload> =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

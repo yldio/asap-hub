@@ -34,6 +34,31 @@ describe('useAlgolia', () => {
       new Error('Algolia unavailable while not logged in'),
     );
   });
+  it('constructs an algolia client with a junk key', async () => {
+    setCurrentOverrides({ CONTENTFUL: false });
+    const mockAlgoliaSearchClientFactory =
+      algoliaSearchClientFactory as jest.MockedFunction<
+        typeof algoliaSearchClientFactory
+      >;
+    const { waitForNextUpdate } = renderHook(() => useAlgolia(), {
+      wrapper: ({ children }) => (
+        <RecoilRoot>
+          <Auth0Provider user={{ algoliaApiKey: null, id: 'usertoken' }}>
+            <WhenReady>{children}</WhenReady>
+          </Auth0Provider>
+        </RecoilRoot>
+      ),
+    });
+    await waitForNextUpdate();
+
+    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith({
+      algoliaIndex: ALGOLIA_INDEX,
+      algoliaAppId: ALGOLIA_APP_ID,
+      algoliaApiKey: null,
+      clickAnalytics: true,
+      userToken: 'usertoken',
+    });
+  });
   it('constructs algolia client linking GTM and Algolia with Auth0 user id', async () => {
     const mockAlgoliaSearchClientFactory =
       algoliaSearchClientFactory as jest.MockedFunction<

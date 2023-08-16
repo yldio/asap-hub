@@ -1,7 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  algoliaSearchClientFactory,
-} from '@asap-hub/algolia';
+import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import {
   EventController,
   EventResponse,
@@ -23,7 +20,7 @@ import { sentryWrapper } from '../../utils/sentry-wrapper';
 export const indexUserEventsHandler =
   (
     eventController: EventController,
-    algoliaClient: AlgoliaSearchClient<'crn'>,
+    algoliaClient: AlgoliaClient<'crn'>,
   ): ((event: EventBridgeEvent<UserEvent, UserPayload>) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

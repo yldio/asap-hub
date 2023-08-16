@@ -1,4 +1,4 @@
-import type { AlgoliaSearchClient } from '@asap-hub/algolia';
+import type { AlgoliaClient } from '@asap-hub/algolia';
 import {
   createFeatureFlagHeaders,
   createSentryHeaders,
@@ -41,7 +41,7 @@ export const getUser = async (
 };
 
 export const getUsers = async (
-  algoliaClient: AlgoliaSearchClient<'crn'>,
+  algoliaClient: AlgoliaClient<'crn'>,
   { searchQuery, filters, currentPage, pageSize }: GetListOptions,
 ): Promise<ListUserResponse> => {
   const isTagFilter = (filter: string) =>
@@ -78,7 +78,7 @@ export const getUsers = async (
 };
 
 export const getUsersAndExternalAuthors = async (
-  algoliaClient: AlgoliaSearchClient<'crn'>,
+  algoliaClient: AlgoliaClient<'crn'>,
   { searchQuery, currentPage, pageSize }: GetListOptions,
 ): Promise<ListResponse<UserResponse | ExternalAuthorResponse>> => {
   const result = await algoliaClient.search(

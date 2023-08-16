@@ -37,3 +37,13 @@ To run the import script use this command from the root of this repository:
 ```bash
 yarn import:keywords
 ```
+
+### User invitations
+
+To run the script use this command from the root of this repository.
+This will re-trigger all invitations for users with an invitation code.
+The invitation code will be re-generated:
+
+```bash
+yarn user:invitations
+```

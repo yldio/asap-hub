@@ -436,6 +436,7 @@ const serverlessConfig: AWS = {
       },
     },
     inviteUserSquidex: {
+      timeout: 120,
       handler: './src/handlers/user/invite-handler.handler',
       events: [
         {

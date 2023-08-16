@@ -16,13 +16,14 @@ describe('Invite Handler', () => {
     fetchById: jest.fn(),
     update: jest.fn(),
   };
+  const sleep = jest.fn();
   const inviteHandler = inviteHandlerFactory(
     sendEmailMock,
     dataProvider,
     origin,
     logger,
     'Crn-Welcome',
-    jest.fn(),
+    sleep,
   );
 
   afterEach(() => {
@@ -121,6 +122,7 @@ describe('Invite Handler', () => {
 
     await inviteHandler(event);
 
+    expect(sleep).toHaveBeenCalledWith(30_000);
     expect(dataProvider.fetchById).toBeCalledWith(userWithoutConnection.id);
     expect(dataProvider.update).toBeCalledWith(userWithoutConnection.id, {
       connections: [{ code: expect.any(String) }],

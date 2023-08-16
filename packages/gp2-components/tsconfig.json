@@ -15,6 +15,7 @@
     { "path": "../dom-test-utils" },
     { "path": "../react-context" },
     { "path": "../fixtures" },
+    { "path": "../flags" },
     { "path": "../validation" },
     { "path": "../model" },
     { "path": "../routing" }

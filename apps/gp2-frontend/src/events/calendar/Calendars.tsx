@@ -8,7 +8,7 @@ const Calendars: React.FC<Record<string, never>> = () => {
     <div>
       <EventsCalendar calendars={items}>
         <CalendarList
-          title="Subscribe to Working Groups on Calendar"
+          title="Subscribe to Working Groups Calendar"
           description="Below you can find the list of all working groups. Hitting subscribe will allow you to add them to your own personal calendar."
           calendars={items.filter(
             ({ projects, workingGroups }) =>
@@ -18,7 +18,7 @@ const Calendars: React.FC<Record<string, never>> = () => {
         />
         <CalendarList
           calendars={items.filter(({ projects }) => projects.length > 0)}
-          title="Subscribe to Projects on Calendar"
+          title="Subscribe to Projects Calendar"
           description="Below you can find the list of all projects. Hitting subscribe will allow you to add them to your own personal calendar."
         />
       </EventsCalendar>

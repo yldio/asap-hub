@@ -8,12 +8,16 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { gp2 } from '@asap-hub/fixtures';
+import { useFlags } from '@asap-hub/react-context';
+import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import Routes from '../Routes';
 import { getEvents } from '../api';
+import { getCalendars } from '../calendar/api';
 
 jest.mock('../api');
+jest.mock('../calendar/api');
 
 const renderRoutes = async () => {
   render(
@@ -39,11 +43,31 @@ beforeEach(() => {
 
 describe('Routes', () => {
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+  const mockGetCalendars = getCalendars as jest.MockedFunction<
+    typeof getCalendars
+  >;
   it('renders the title', async () => {
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.enable('DISPLAY_EVENTS');
     mockGetEvents.mockResolvedValue(gp2.createListEventResponse(1));
     await renderRoutes();
     expect(screen.getByRole('heading', { name: 'Events' })).toBeInTheDocument();
   });
+
+  it('renders the Calendar page as default when Upcoming Events is disabled', async () => {
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.disable('DISPLAY_EVENTS');
+    mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
+    await renderRoutes();
+    expect(
+      screen.getByRole('link', { name: /subscribe to calendar/i }),
+    ).toBeVisible();
+  });
+
   it('renders the empty state for the upcoming and the past events', async () => {
     mockGetEvents.mockResolvedValue(gp2.createListEventResponse(0));
     await renderRoutes();

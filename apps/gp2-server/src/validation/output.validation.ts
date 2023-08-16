@@ -27,9 +27,9 @@ const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOpti
       filter: {
         type: 'object',
         properties: {
-          workingGroup: { type: 'string', nullable: true },
-          project: { type: 'string', nullable: true },
-          author: {
+          workingGroupId: { type: 'string', nullable: true },
+          projectId: { type: 'string', nullable: true },
+          authorId: {
             type: 'string',
             nullable: true,
           },
@@ -47,7 +47,6 @@ const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOpti
         },
         nullable: true,
       },
-      includeDrafts: { type: 'boolean', nullable: true },
     },
     additionalProperties: false,
   };
@@ -119,11 +118,11 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
         },
         nullable: true,
       },
-      workingGroup: {
+      workingGroupId: {
         type: 'string',
         nullable: true,
       },
-      project: {
+      projectId: {
         type: 'string',
         nullable: true,
       },

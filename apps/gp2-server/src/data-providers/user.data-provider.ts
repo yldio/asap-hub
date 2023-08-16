@@ -262,6 +262,7 @@ export const parseUserToDataObject = (
     id: user.sys.id,
     createdDate: user.sys.firstPublishedAt,
     activatedDate: user.activatedDate ?? undefined,
+    lastModifiedDate: user.sys.publishedAt,
     onboarded: !!user.onboarded,
     email: user.email ?? '',
     alternativeEmail: user.alternativeEmail ?? undefined,

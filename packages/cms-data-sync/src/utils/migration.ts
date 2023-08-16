@@ -57,7 +57,10 @@ export const migrateFromSquidexToContentfulFactory =
 
           n += 1;
           logger(`Updated entry with id ${id}. (${n}/${data.length})`, 'INFO');
-          return updatedEntry;
+          if (item.status === 'PUBLISHED') {
+            return updatedEntry;
+          }
+          return null;
         };
 
         try {
@@ -80,13 +83,6 @@ export const migrateFromSquidexToContentfulFactory =
                 );
                 return null;
               }
-            }
-
-            // if in create mode we could still use
-            // fallbackParseData func so just throw when
-            // not in create mode
-            if (updateEntry || upsertInPlace) {
-              throw err;
             }
           }
 

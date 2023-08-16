@@ -1,8 +1,8 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import { gp2 } from '@asap-hub/model';
 import { writeFileSync } from 'fs';
-import util from 'util';
 import { RateLimiter } from 'limiter';
+import util from 'util';
 import {
   contentfulAccessToken,
   contentfulEnvId,
@@ -52,7 +52,8 @@ const app = async () => {
       );
     } catch (e) {
       if (
-        (e as any)?.message?.includes('Same field value present in other entry')
+        e instanceof Error &&
+        e.message.includes('Same field value present in other entry')
       ) {
         keywordsAlreadyExist++;
       } else {

@@ -12,8 +12,9 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getOutputs } from '../../outputs/api';
 import { getEvents } from '../../events/api';
+import { getOutputs } from '../../outputs/api';
+import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import {
   getContributingCohorts,
   getInstitutions,
@@ -78,7 +79,7 @@ describe('UserDetail', () => {
     { id: '11', name: 'S3' },
   ];
   beforeEach(() => {
-    mockGetOutputs.mockResolvedValue(gp2Fixtures.createListOutputResponse(1));
+    mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
     mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
     mockGetKeywords.mockResolvedValue(gp2Fixtures.createKeywordsResponse());
   });

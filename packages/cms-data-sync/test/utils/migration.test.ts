@@ -110,6 +110,30 @@ describe('Migration from Squidex to Contentful', () => {
       );
     });
 
+    test('Should publish the record in Contentful if it has a status of PUBLISHED', async () => {
+      fetchData.mockResolvedValueOnce([
+        { ...squidexRecord, status: 'PUBLISHED' },
+      ]);
+      parseData.mockResolvedValueOnce(item);
+      entry.publish = jest.fn().mockResolvedValueOnce(entry);
+      contentfulEnvironmentMock.createEntryWithId.mockResolvedValueOnce(entry);
+
+      await migrateFromSquidexToContentful('entity', fetchData, parseData);
+
+      expect(entry.publish).toBeCalled();
+    });
+
+    test('Should not publish the record in Contentful if it has a status of DRAFT', async () => {
+      fetchData.mockResolvedValueOnce([{ ...squidexRecord, status: 'DRAFT' }]);
+      parseData.mockResolvedValueOnce(item);
+      entry.publish = jest.fn().mockResolvedValueOnce(entry);
+      contentfulEnvironmentMock.createEntryWithId.mockResolvedValueOnce(entry);
+
+      await migrateFromSquidexToContentful('entity', fetchData, parseData);
+
+      expect(entry.publish).not.toBeCalled();
+    });
+
     test('Should update the entry if updateEntry is true and entry exists', async () => {
       fetchData.mockResolvedValueOnce([squidexRecord]);
       parseData.mockResolvedValueOnce({
@@ -170,6 +194,84 @@ describe('Migration from Squidex to Contentful', () => {
       );
 
       expect(entry.update).toBeCalled();
+    });
+
+    test('Should publish the updated entry if UPSERT_IN_PLACE is true and entry has a status of PUBLISHED', async () => {
+      process.env.UPSERT_IN_PLACE = 'true';
+
+      fetchData.mockResolvedValueOnce([
+        { ...squidexRecord, status: 'PUBLISHED' },
+      ]);
+      parseData.mockResolvedValueOnce(item);
+
+      const {
+        migrateFromSquidexToContentfulFactory,
+      } = require('../../src/utils/migration');
+      const {
+        getContentfulEnvironmentMock,
+      } = require('../mocks/contentful.mocks');
+
+      const contentfulEnvironmentMock = getContentfulEnvironmentMock();
+      const migrateFromSquidexToContentful =
+        migrateFromSquidexToContentfulFactory(
+          contentfulEnvironmentMock,
+          loggerMock,
+        );
+
+      entry.fields = {
+        title: 'old title',
+        description: 'old description',
+      };
+      entry.publish = jest.fn().mockResolvedValueOnce(entry);
+      entry.update = jest.fn().mockResolvedValueOnce(entry);
+      contentfulEnvironmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await migrateFromSquidexToContentful(
+        'entity',
+        fetchData,
+        parseData,
+        true,
+      );
+
+      expect(entry.publish).toBeCalled();
+    });
+
+    test('Should not publish the updated entry if UPSERT_IN_PLACE is true and entry has a status of DRAFT', async () => {
+      process.env.UPSERT_IN_PLACE = 'true';
+
+      fetchData.mockResolvedValueOnce([{ ...squidexRecord, status: 'DRAFT' }]);
+      parseData.mockResolvedValueOnce(item);
+
+      const {
+        migrateFromSquidexToContentfulFactory,
+      } = require('../../src/utils/migration');
+      const {
+        getContentfulEnvironmentMock,
+      } = require('../mocks/contentful.mocks');
+
+      const contentfulEnvironmentMock = getContentfulEnvironmentMock();
+      const migrateFromSquidexToContentful =
+        migrateFromSquidexToContentfulFactory(
+          contentfulEnvironmentMock,
+          loggerMock,
+        );
+
+      entry.fields = {
+        title: 'old title',
+        description: 'old description',
+      };
+      entry.publish = jest.fn().mockResolvedValueOnce(entry);
+      entry.update = jest.fn().mockResolvedValueOnce(entry);
+      contentfulEnvironmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await migrateFromSquidexToContentful(
+        'entity',
+        fetchData,
+        parseData,
+        true,
+      );
+
+      expect(entry.publish).not.toBeCalled();
     });
 
     test('Should try to create an entry if it was supposed to update it but the entry does not exist when UPSERT_IN_PLACE is true', async () => {
@@ -282,17 +384,19 @@ describe('Migration from Squidex to Contentful', () => {
       contentfulEnvironmentMock.getEntry.mockRejectedValueOnce(
         new Error('{"status":404}'),
       );
+      await migrateFromSquidexToContentful(
+        'entity',
+        fetchData,
+        parseData,
+        true,
+      );
 
       expect(
         contentfulEnvironmentMock.createEntryWithId,
       ).not.toHaveBeenCalled();
-
-      await expect(
-        migrateFromSquidexToContentful('entity', fetchData, parseData, true),
-      ).rejects.toThrowError('{"status":404}');
     });
 
-    test('Throw error if get entry does not work for an unexpected reason (not 404 status)', async () => {
+    test('Does not throw error when get entry does not work for an unexpected reason (not 404 status)', async () => {
       process.env.UPSERT_IN_PLACE = 'true';
 
       fetchData.mockResolvedValueOnce([squidexRecord]);
@@ -309,16 +413,23 @@ describe('Migration from Squidex to Contentful', () => {
       const migrateFromSquidexToContentful =
         migrateFromSquidexToContentfulFactory(
           contentfulEnvironmentMock,
-          loggerMock,
+          loggerFunc,
         );
 
       contentfulEnvironmentMock.getEntry.mockRejectedValueOnce(
         new Error('unexpected'),
       );
 
-      await expect(
-        migrateFromSquidexToContentful('entity', fetchData, parseData, true),
-      ).rejects.toThrowError('unexpected');
+      await migrateFromSquidexToContentful(
+        'entity',
+        fetchData,
+        parseData,
+        true,
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        RED_COLOR,
+        `[ERROR] Error details of entry squidex-id:\nError: unexpected`,
+      );
     });
 
     test('Should use a fallback parser if the item fails to create with the first attempt and error is different than 404', async () => {

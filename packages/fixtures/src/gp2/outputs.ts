@@ -11,7 +11,7 @@ const userAuthor: gp2.UserAuthor = {
   onboarded: mockedUser.onboarded,
 };
 
-const OutputResponse: Omit<gp2.ListOutputResponse['items'][0], 'id'> = {
+const outputResponse: Omit<gp2.ListOutputResponse['items'][0], 'id'> = {
   created: '2020-09-07T17:36:54Z',
   addedDate: '2020-10-08T16:35:54Z',
   lastUpdatedPartial: '2020-11-09T20:36:54Z',
@@ -22,9 +22,9 @@ const OutputResponse: Omit<gp2.ListOutputResponse['items'][0], 'id'> = {
 };
 
 export const createOutputResponse = (itemIndex = 0): gp2.OutputResponse => ({
-  ...OutputResponse,
+  ...outputResponse,
   id: `ro${itemIndex}`,
-  title: `${OutputResponse.title} ${itemIndex + 1}`,
+  title: `${outputResponse.title} ${itemIndex + 1}`,
 });
 
 export const createListOutputResponse = (

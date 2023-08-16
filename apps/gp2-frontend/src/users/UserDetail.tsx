@@ -14,15 +14,15 @@ import { UserPatchRequest } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2, useRouteParams } from '@asap-hub/routing';
-import { FC } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
+import { usePaginationParams } from '../hooks';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
-import { useKeywords } from '../shared/state';
-import OutputList from '../outputs/OutputList';
 import { useOutputs } from '../outputs/state';
+import { useKeywords } from '../shared/state';
 import { getInstitutions } from './api';
 import countryCodesSuggestions from './country-codes-suggestions';
 import locationSuggestions from './location-suggestions';
@@ -32,15 +32,28 @@ const { users } = gp2;
 type UserDetailProps = {
   currentTime: Date;
 };
+const loadOutputDirectory = () =>
+  import(
+    /* webpackChunkName: "user-output-directory" */ '../outputs/OutputDirectory'
+  );
+const OutputDirectory = lazy(loadOutputDirectory);
 
 const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   const currentUser = useCurrentUserGP2();
   const { userId } = useRouteParams(users({}).user);
   const isOwnProfile = userId === currentUser?.id;
   const user = useUserById(userId);
+  useEffect(() => {
+    loadOutputDirectory();
+  }, [user]);
+  const { pageSize } = usePaginationParams();
 
   const { total: outputsTotal } = useOutputs({
-    filter: { author: userId },
+    currentPage: 0,
+    filters: new Set(),
+    pageSize,
+    searchQuery: '',
+    authorId: userId,
   });
 
   const userRoute = users({}).user({ userId });
@@ -152,7 +165,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
             </Route>
             <Route path={outputs}>
               <Frame title="Shared Outputs">
-                <OutputList filters={{ author: userId }} />
+                <OutputDirectory userId={userId} />
               </Frame>
             </Route>
             <Route path={upcoming}>

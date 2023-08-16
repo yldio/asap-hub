@@ -120,6 +120,7 @@ export const getUserDataObject = (): gp2Model.UserDataObject => ({
   id: 'user-id-1',
   createdDate: '2020-09-23T20:45:22.000Z',
   activatedDate: '2020-09-24T20:45:22.000Z',
+  lastModifiedDate: '2023-07-06T07:23:32.000Z',
   connections: [{ code: 'some-code' }],
   email: 'T@ark.io',
   firstName: 'Tony',
@@ -214,6 +215,7 @@ export const getUserCreateDataObject = (): gp2Model.UserCreateDataObject => {
 
 export const fetchUserResponseDataObject = (): gp2Model.UserDataObject => ({
   createdDate: '2020-09-25T09:42:51.000Z',
+  lastModifiedDate: '2023-07-06T07:23:32.000Z',
   email: 'peter@parker.com',
   firstName: 'Peter',
   id: 'userId',
@@ -287,7 +289,7 @@ export const getContentfulGraphqlUser = (
   sys: {
     id: 'user-id-1',
     firstPublishedAt: '2020-09-23T20:45:22.000Z',
-    publishedAt: '2021-09-23T20:45:22.000Z',
+    publishedAt: '2023-07-06T07:23:32.000Z',
   },
   activatedDate: '2020-09-24T20:45:22.000Z',
   avatar: null,

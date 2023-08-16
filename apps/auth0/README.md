@@ -4,6 +4,10 @@ To deploy actions and the login page html you will need to provide the CI Applic
 
 `AUTH0_CLIENT_ID=XXXX AUTH0_CLIENT_SECRET=XXXX AUTH0_DOMAIN=XXXX yarn deploy`
 
+i.e. For GP2:
+
+`APPLICATION_NAME=gp2 API_URL=https://api-dev.gp2.asap.science AUTH0_CLIENT_ID=o6NEEPm9WVKt1aqRr25tbFDlAV8WQVnR AUTH0_CLIENT_SECRET=XXXX AUTH0_DOMAIN=dev-gp2-hub.us.auth0.com BASE_PR_APP_DOMAIN=gp2.asap.science AUTH0_ADDITIONAL_CLAIM_DOMAIN=https://dev.gp2.asap.science AUTH0_SHARED_SECRET=XXXX yarn deploy`
+
 # Auth0 Connect User Action
 
 > Connects user's auth0 profile to an ASAP user using invitationCode.

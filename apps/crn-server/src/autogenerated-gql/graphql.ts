@@ -13068,6 +13068,17 @@ export const ResearchOutputContentFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'referencingResearchOutputsContents' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'orderby' },
+                value: {
+                  kind: 'StringValue',
+                  value: 'data/addedDate/iv asc',
+                  block: false,
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [

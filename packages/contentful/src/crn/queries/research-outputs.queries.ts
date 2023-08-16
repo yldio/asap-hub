@@ -174,7 +174,7 @@ export const researchOutputContentQueryFragment = gql`
       }
     }
     linkedFrom @include(if: $fetchRelatedResearch) {
-      researchOutputsCollection(limit: 60) {
+      researchOutputsCollection(limit: 60, order: [addedDate_ASC]) {
         items {
           sys {
             id

@@ -107,7 +107,12 @@ export default class UserController {
 }
 
 export const parseUserToResponse = (
-  { connections: _, telephone, ...user }: gp2.UserDataObject,
+  {
+    connections: _,
+    lastModifiedDate: __,
+    telephone,
+    ...user
+  }: gp2.UserDataObject,
   loggedInUserId?: string,
 ): gp2.UserResponse => ({
   ...user,

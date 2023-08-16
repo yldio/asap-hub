@@ -88,6 +88,7 @@ export interface UserSocial
 export type UserDataObject = {
   id: string;
   activatedDate?: string;
+  lastModifiedDate: string;
   alternativeEmail?: string;
   avatarUrl?: string;
   biography?: string;
@@ -118,6 +119,7 @@ export type UserCreateDataObject = Omit<
   UserDataObject,
   | 'id'
   | 'createdDate'
+  | 'lastModifiedDate'
   | 'avatarUrl'
   | 'projects'
   | 'workingGroups'
@@ -148,10 +150,14 @@ export type UserAvatarPostRequest = {
 
 export type ListUserDataObject = ListResponse<UserDataObject>;
 
-export interface UserResponse extends Omit<UserDataObject, 'connections'> {
+export interface UserResponse
+  extends Omit<UserDataObject, 'connections' | 'lastModifiedDate'> {
   displayName: string;
 }
 export type ListUserResponse = ListResponse<UserResponse>;
+export type UserMetadataResponse = UserResponse & {
+  algoliaApiKey: string;
+};
 export type UserUpdateRequest = UserUpdateDataObject;
 
 export type FetchUsersFilter = {

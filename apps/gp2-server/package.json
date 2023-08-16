@@ -17,6 +17,7 @@
     "import:keyword-refs-users": "ts-node ./scripts/import-keyword-refs-users.ts",
     "import:keyword-refs-projects": "ts-node ./scripts/import-keyword-refs-projects.ts",
     "import:keyword-refs-events": "ts-node ./scripts/import-keyword-refs-events.ts"
+    "user:invitations": "ts-node ./scripts/user-invitations.ts"
   },
   "dependencies": {
     "@asap-hub/algolia": "workspace:*",
@@ -36,6 +37,7 @@
     "@sentry/serverless": "6.19.7",
     "@types/yargs": "17.0.5",
     "ajv": "8.11.0",
+    "algoliasearch": "4.19.1",
     "apr-intercept": "3.0.4",
     "aws-lambda": "1.0.7",
     "cors": "2.8.5",
@@ -82,7 +84,7 @@
     "@types/mime-types": "2.1.1",
     "@types/node": "18.17.3",
     "@types/parse-data-url": "3.0.0",
-    "@types/serverless": "3.12.13",
+    "@types/serverless": "3.12.14",
     "@types/source-map-support": "0.5.4",
     "@types/supertest": "2.0.12",
     "@types/uuid": "8.3.4",

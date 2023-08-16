@@ -53,10 +53,10 @@ describe('Calendars', () => {
     mockGetCalendars.mockResolvedValue(listCalendars);
     await renderCalendars();
     const projectSection = screen.getByRole('heading', {
-      name: /Subscribe to Projects on Calendar/i,
+      name: /Subscribe to Projects Calendar/i,
     }).parentElement?.parentElement as HTMLElement;
     const workingGroupSection = screen.getByRole('heading', {
-      name: /Subscribe to Working Groups on Calendar/i,
+      name: /Subscribe to Working Groups Calendar/i,
     }).parentElement?.parentElement as HTMLElement;
     expect(within(projectSection).getByText(/calendar title/)).toBeVisible();
     expect(
@@ -75,10 +75,10 @@ describe('Calendars', () => {
     mockGetCalendars.mockResolvedValue(listCalendars);
     await renderCalendars();
     const projectSection = screen.getByRole('heading', {
-      name: /Subscribe to Projects on Calendar/i,
+      name: /Subscribe to Projects Calendar/i,
     }).parentElement?.parentElement as HTMLElement;
     const workingGroupSection = screen.getByRole('heading', {
-      name: /Subscribe to Working Groups on Calendar/i,
+      name: /Subscribe to Working Groups Calendar/i,
     }).parentElement?.parentElement as HTMLElement;
     expect(
       within(workingGroupSection).getByText(/calendar title/),
@@ -99,10 +99,10 @@ describe('Calendars', () => {
     mockGetCalendars.mockResolvedValue(listCalendars);
     await renderCalendars();
     const projectSection = screen.getByRole('heading', {
-      name: /Subscribe to Projects on Calendar/i,
+      name: /Subscribe to Projects Calendar/i,
     }).parentElement?.parentElement as HTMLElement;
     const workingGroupSection = screen.getByRole('heading', {
-      name: /Subscribe to Working Groups on Calendar/i,
+      name: /Subscribe to Working Groups Calendar/i,
     }).parentElement?.parentElement as HTMLElement;
     expect(
       within(workingGroupSection).getByText(/calendar title/),
@@ -123,10 +123,10 @@ describe('Calendars', () => {
     mockGetCalendars.mockResolvedValue(listCalendars);
     await renderCalendars();
     const projectSection = screen.getByRole('heading', {
-      name: /Subscribe to Projects on Calendar/i,
+      name: /Subscribe to Projects Calendar/i,
     }).parentElement?.parentElement as HTMLElement;
     const workingGroupSection = screen.getByRole('heading', {
-      name: /Subscribe to Working Groups on Calendar/i,
+      name: /Subscribe to Working Groups Calendar/i,
     }).parentElement?.parentElement as HTMLElement;
     expect(
       within(workingGroupSection).getByText(/calendar title/),

@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import NewsPageList from '../NewsPageList';
 
 const props = {
@@ -10,9 +10,7 @@ const props = {
 
 describe('NewsPageList', () => {
   it('renders the header', () => {
-    const { getByRole } = render(
-      <NewsPageList {...props}>Content</NewsPageList>,
-    );
-    expect(getByRole('search')).toBeVisible();
+    render(<NewsPageList {...props}>Content</NewsPageList>);
+    expect(screen.getByRole('search')).toBeVisible();
   });
 });

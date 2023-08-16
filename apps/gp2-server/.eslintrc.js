@@ -19,5 +19,6 @@ module.exports = {
     '@typescript-eslint/no-empty-function': ['error'],
     '@typescript-eslint/no-redeclare': ['error'],
     'class-methods-use-this': 'off',
+    'max-classes-per-file': 'off',
   },
 };

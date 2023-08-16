@@ -9,13 +9,14 @@ import {
   Headline2,
   LabIcon,
   lead,
-  LibraryIcon,
+  WorkingGroupsIcon,
   Link,
   Paragraph,
   pixels,
   RemindersCard,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { useFlags } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
@@ -70,6 +71,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   upcomingEvents,
   guides,
 }) => {
+  const { isEnabled } = useFlags();
   const history = useHistory();
   const lastestNews = news.items[0];
   return (
@@ -86,24 +88,24 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </div>
       ) : null}
       <div css={columnContainer}>
-        <Headline2>Latest Stats</Headline2>
+        <Headline2>GP2 Hub Stats</Headline2>
         <Paragraph accent="lead" noMargin>
-          Here are some key actions to take within the GP2 network:
+          Here are the latest stats from the GP2 Hub.
         </Paragraph>
         <div css={contentCardsStyles}>
           <InfoCard
             icon={<LabIcon color="#00202C" size={40} />}
-            title="Samples Completed"
+            title="Samples Processed & Shared"
             total={latestStats.sampleCount}
           />
           <InfoCard
-            icon={<LibraryIcon color="#00202C" size={40} />}
-            title="Cohorts"
+            icon={<WorkingGroupsIcon color="#00202C" width={40} height={40} />}
+            title="Cohorts Pledged"
             total={latestStats.cohortCount}
           />
           <InfoCard
             icon={<ArticleIcon color="#00202C" size={40} />}
-            title="Article Numbers"
+            title="Articles"
             total={latestStats.articleCount}
           />
         </div>
@@ -112,7 +114,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <Card>
           <Headline2>Tools and Tutorials</Headline2>
           <Paragraph accent="lead">
-            Here are some key actions to take within the GP2 Hub.
+            Here are some quick links to GP2 Hub resources.
           </Paragraph>
           <Accordion
             items={guides.map((guide: gp2Model.GuideDataObject) => ({
@@ -129,24 +131,28 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
         </Card>
       )}
-      <div>
-        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
-        <div css={infoStyles}>
-          Here are some of the upcoming events happening within the network.
+      {isEnabled('DISPLAY_EVENTS') && (
+        <div>
+          <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
+          <div css={infoStyles}>
+            Here are some of the upcoming GP2 Hub events.
+          </div>
+          <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
+          {totalOfUpcomingEvents > 3 && (
+            <p css={viewAllStyles} data-testid="view-upcoming-events">
+              <Button
+                onClick={() =>
+                  history.push({
+                    pathname: gp2Routes.events({}).upcoming({}).$,
+                  })
+                }
+              >
+                View All
+              </Button>
+            </p>
+          )}
         </div>
-        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-        {totalOfUpcomingEvents > 3 && (
-          <p css={viewAllStyles} data-testid="view-upcoming-events">
-            <Button
-              onClick={() =>
-                history.push({ pathname: gp2Routes.events({}).upcoming({}).$ })
-              }
-            >
-              View All
-            </Button>
-          </p>
-        )}
-      </div>
+      )}
       {lastestNews ? (
         <div css={columnContainer}>
           <Headline2>Latest Newsletter</Headline2>

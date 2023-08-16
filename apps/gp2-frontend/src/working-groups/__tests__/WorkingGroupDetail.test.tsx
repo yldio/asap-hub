@@ -14,6 +14,7 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
+import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getWorkingGroup, putWorkingGroupResources } from '../api';
 import WorkingGroupDetail from '../WorkingGroupDetail';
 
@@ -75,8 +76,8 @@ describe('WorkingGroupDetail', () => {
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
-  const outputs = gp2Fixtures.createListOutputResponse(1);
-  outputs.items[0]!.workingGroup = {
+  const outputs = createOutputListAlgoliaResponse(1);
+  outputs.hits[0]!.workingGroup = {
     id: '42',
     title: 'Steering Committee',
   };

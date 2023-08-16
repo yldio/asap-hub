@@ -1,3 +1,4 @@
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { ListNewsResponse, NewsResponse } from '@asap-hub/model';
 import {
   atomFamily,
@@ -6,7 +7,6 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import { authorizationState } from '../auth/state';
 import { getNews, getNewsById } from './api';
 
@@ -88,7 +88,9 @@ export const useNews = (options: GetListOptions) => {
   if (newsList === undefined) {
     throw getNews(options, authorization).then(setNewsList).catch(setNewsList);
   }
-  if (newsList instanceof Error) throw newsList;
+  if (newsList instanceof Error) {
+    throw newsList;
+  }
   return newsList;
 };
 

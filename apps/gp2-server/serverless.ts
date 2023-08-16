@@ -229,6 +229,7 @@ const serverlessConfig: AWS = {
       environment: {
         AUTH0_CLIENT_ID: auth0ClientId,
         AUTH0_SHARED_SECRET: auth0SharedSecret,
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-search-api-key-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
@@ -354,7 +355,7 @@ const serverlessConfig: AWS = {
       },
     },
     eventsUpdated: {
-      timeout: 300,
+      timeout: 900,
       handler: './src/handlers/webhooks/events-updated.handler',
       events: [
         {

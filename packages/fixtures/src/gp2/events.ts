@@ -84,6 +84,7 @@ export const createEventResponse = (
     : addHours(new Date(), 1).getTime(),
   description: `Event ${itemIndex} description`,
   status: 'Confirmed',
+  tags: [],
   keywords: [],
   title: `${customTitle} ${itemIndex}`,
   lastModifiedDate: new Date().toISOString(),

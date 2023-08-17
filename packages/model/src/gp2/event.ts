@@ -21,13 +21,13 @@ export interface SpeakerInfo {
 }
 export type EventSpeaker = SpeakerInfo & { topic?: string };
 
-export type EventDataObject = Omit<BasicEvent, 'tags'> & {
+export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
   project?: Pick<ProjectResponse, 'id' | 'title'>;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
   keywords: KeywordDataObject[];
-};
+}
 
 export type ListEventDataObject = ListResponse<EventDataObject>;
 export type EventResponse = EventDataObject;

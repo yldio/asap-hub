@@ -1,5 +1,4 @@
 import { BasicEvent, EventController, EventStatus, gp2 } from '@asap-hub/model';
-import { EventDataObject } from '@asap-hub/model/src/gp2';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import {
   GoogleEvent,
@@ -12,7 +11,7 @@ export type SyncEvent = (
   googleCalendarId: string,
   cmsCalendarId: string,
   defaultTimezone: string,
-) => Promise<BasicEvent | EventDataObject>;
+) => Promise<BasicEvent>;
 
 const getEventDate = (eventDate: calendarV3.Schema$EventDateTime): string =>
   eventDate.dateTime
@@ -83,7 +82,7 @@ export const syncEventFactory =
       const eventToCreate = {
         ...newEvent,
         hidden: newEvent.status === 'Cancelled',
-        tags: [], // GP2 does not have tags anymore - will this break create when in GP2?
+        tags: [],
       };
       logger.info(
         { id: googleEvent.id, event: eventToCreate },

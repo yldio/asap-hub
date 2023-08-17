@@ -1504,7 +1504,7 @@ describe('ResearchOutputs controller', () => {
         {
           newVersion: {
             documentType: 'Bioinformatics',
-            link: '',
+            link: undefined,
             title: 'Test Proposal 1234',
             type: '3D Printing',
           },

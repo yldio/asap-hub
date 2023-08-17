@@ -4,11 +4,12 @@ module.exports.up = (migration) => {
   const events = migration.editContentType('events');
 
   events.deleteField('tags');
+  events.editField('keywords').disabled(false);
 };
 
 module.exports.down = (migration) => {
-  migration
-    .editContentType('events')
+  const events = migration.editContentType('events');
+  events
     .createField('tags')
     .name('Tags')
     .type('Array')
@@ -21,4 +22,5 @@ module.exports.down = (migration) => {
       type: 'Symbol',
       validations: [],
     });
+  events.editField('keywords').disabled(true);
 };

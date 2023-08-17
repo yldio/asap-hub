@@ -71,6 +71,41 @@ describe('Project controller', () => {
         },
       ]);
     });
+    test('Should remove the resources if the user is not specified', async () => {
+      const nonMemberProject = {
+        ...getProjectDataObject(),
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Contributor' as const,
+          },
+        ],
+      };
+      const listWithNonMemberProject = {
+        total: 1,
+        items: [nonMemberProject],
+      };
+      projectDataProviderMock.fetch.mockResolvedValue(listWithNonMemberProject);
+      const result = await projectController.fetch({});
+
+      const { resources: _, ...expectedProject } = getProjectResponse();
+
+      expect(result.items).toStrictEqual([
+        {
+          ...expectedProject,
+          members: [
+            {
+              userId: '7',
+              firstName: 'Peter',
+              lastName: 'Parker',
+              role: 'Contributor',
+            },
+          ],
+        },
+      ]);
+    });
   });
   describe('FetchById', () => {
     beforeEach(jest.resetAllMocks);
@@ -105,6 +140,33 @@ describe('Project controller', () => {
         ],
       });
       const result = await projectController.fetchById('project-id', '11');
+
+      const { resources: _, ...expectedProject } = getProjectResponse();
+      expect(result).toStrictEqual({
+        ...expectedProject,
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Contributor',
+          },
+        ],
+      });
+    });
+    test('Should not return the resource when the user is not specified', async () => {
+      projectDataProviderMock.fetchById.mockResolvedValue({
+        ...getProjectDataObject(),
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Contributor' as const,
+          },
+        ],
+      });
+      const result = await projectController.fetchById('project-id');
 
       const { resources: _, ...expectedProject } = getProjectResponse();
       expect(result).toStrictEqual({

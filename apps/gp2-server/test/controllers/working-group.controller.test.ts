@@ -77,6 +77,44 @@ describe('Working Group controller', () => {
         },
       ]);
     });
+    test('Should remove the resource if the user is not specified', async () => {
+      const nonMemberWorkingGroup = {
+        ...getWorkingGroupDataObject(),
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Lead' as const,
+          },
+        ],
+      };
+      const listWithNonMemberWorkingGroup = {
+        total: 1,
+        items: [nonMemberWorkingGroup],
+      };
+      workingGroupDataProviderMock.fetch.mockResolvedValue(
+        listWithNonMemberWorkingGroup,
+      );
+      const result = await workingGroupController.fetch();
+
+      const { resources: _, ...expectedWorkingGroup } =
+        getWorkingGroupResponse();
+
+      expect(result.items).toStrictEqual([
+        {
+          ...expectedWorkingGroup,
+          members: [
+            {
+              userId: '7',
+              firstName: 'Peter',
+              lastName: 'Parker',
+              role: 'Lead',
+            },
+          ],
+        },
+      ]);
+    });
   });
   describe('FetchById', () => {
     beforeEach(jest.resetAllMocks);
@@ -117,6 +155,34 @@ describe('Working Group controller', () => {
         'working-group-id',
         '11',
       );
+
+      const { resources: _, ...expectedWorkingGroup } =
+        getWorkingGroupResponse();
+      expect(result).toStrictEqual({
+        ...expectedWorkingGroup,
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Lead',
+          },
+        ],
+      });
+    });
+    test('Should not return the resource when the user is not specified', async () => {
+      workingGroupDataProviderMock.fetchById.mockResolvedValue({
+        ...getWorkingGroupDataObject(),
+        members: [
+          {
+            userId: '7',
+            firstName: 'Peter',
+            lastName: 'Parker',
+            role: 'Lead' as const,
+          },
+        ],
+      });
+      const result = await workingGroupController.fetchById('working-group-id');
 
       const { resources: _, ...expectedWorkingGroup } =
         getWorkingGroupResponse();

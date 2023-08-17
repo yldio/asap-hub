@@ -20,7 +20,7 @@ export default class ProjectController {
   }
   async fetchById(
     id: string,
-    loggedInUserId: string,
+    loggedInUserId?: string,
   ): Promise<gp2.ProjectResponse> {
     const project = await this.projectDataProvider.fetchById(id);
     if (!project) {

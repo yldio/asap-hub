@@ -10,7 +10,7 @@ export const outputFields = {
   type: 'Type',
   subtype: 'Subtype',
   link: 'Link',
-  authors: 'Authors', // (Display Label for External Authors)
+  authors: 'Authors',
   workingGroup: 'Working Group',
   project: 'Project',
   date: 'Date Added',

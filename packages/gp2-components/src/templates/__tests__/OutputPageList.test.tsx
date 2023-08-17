@@ -2,12 +2,10 @@ import { render, screen } from '@testing-library/react';
 import OutputPageList from '../OutputPageList';
 
 const props = {
-  onFiltersClick: jest.fn(),
-  onSearchQueryChange: jest.fn(),
-  onExportClick: jest.fn(),
+  onChangeFilter: jest.fn(),
+  onChangeSearch: jest.fn(),
   searchQuery: '',
   hasOutputs: true,
-  isAdministrator: true,
 };
 
 describe('OutputPageList', () => {

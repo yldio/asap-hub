@@ -150,7 +150,7 @@ export default class ResearchOutputController {
     if (researchOutputUpdateData.createVersion) {
       version = {
         title: currentResearchOutput?.title || '',
-        link: currentResearchOutput?.link || '',
+        link: currentResearchOutput?.link,
         type: currentResearchOutput?.type,
         documentType:
           currentResearchOutput?.documentType &&

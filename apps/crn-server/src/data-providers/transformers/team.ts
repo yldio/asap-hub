@@ -115,12 +115,20 @@ export const parseGraphQLTeam = (
       ({ role, alumniSinceDate, inactiveSinceDate }) =>
         role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
     ),
-    members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
+    members: members.sort(sortMembers),
     projectSummary: team.flatData.projectSummary ?? undefined,
     proposalURL: team.flatData.proposal
       ? team.flatData.proposal[0]?.id
       : undefined,
   };
+};
+
+export const sortMembers = (a: TeamMember, b: TeamMember) => {
+  if (priorities[a.role] === priorities[b.role]) {
+    // sort ascending on lastName
+    return a.lastName < b.lastName ? -1 : 1;
+  }
+  return priorities[a.role] - priorities[b.role];
 };
 
 export const isTeamRole = (data: string | null): data is TeamRole =>

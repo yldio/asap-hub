@@ -23,7 +23,7 @@ import {
   addLocaleToFields,
 } from '@asap-hub/contentful';
 
-import { isTeamRole, priorities } from '../transformers';
+import { isTeamRole, sortMembers } from '../transformers';
 
 import { TeamDataProvider } from '../team.data-provider';
 
@@ -285,7 +285,7 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
     expertiseAndResourceTags,
     tools,
     projectSummary: item.projectSummary ?? undefined,
-    members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
+    members: members.sort(sortMembers),
     labCount,
     pointOfContact: members.find(
       ({ role, alumniSinceDate, inactiveSinceDate }) =>

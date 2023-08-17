@@ -551,6 +551,85 @@ describe('Teams data provider', () => {
           expect.objectContaining({ role: 'Key Personnel', id: '1' }),
         ]);
       });
+
+      test('should sort team members with the same role priority by last name', async () => {
+        const contentfulGraphQLResponse = {
+          teams: {
+            ...getContentfulGraphqlTeam(),
+            linkedFrom: {
+              teamMembershipCollection: {
+                total: 1,
+                items: [
+                  {
+                    role: 'Key Personnel',
+                    inactiveSinceDate: null,
+                    linkedFrom: {
+                      usersCollection: {
+                        total: 1,
+                        items: [
+                          {
+                            ...getContentfulGraphqlTeamMembers(),
+                            lastName: 'Baker',
+                            sys: {
+                              id: '1',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    role: 'Key Personnel',
+                    inactiveSinceDate: null,
+                    linkedFrom: {
+                      usersCollection: {
+                        total: 1,
+                        items: [
+                          {
+                            ...getContentfulGraphqlTeamMembers(),
+                            lastName: 'Cooper',
+                            sys: {
+                              id: '2',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    role: 'Key Personnel',
+                    inactiveSinceDate: null,
+                    linkedFrom: {
+                      usersCollection: {
+                        total: 1,
+                        items: [
+                          {
+                            ...getContentfulGraphqlTeamMembers(),
+                            lastName: 'Anderson',
+                            sys: {
+                              id: '3',
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+        const result = await teamDataProvider.fetchById('1');
+        expect(result?.members).toEqual([
+          expect.objectContaining({ lastName: 'Anderson' }),
+          expect.objectContaining({ lastName: 'Baker' }),
+          expect.objectContaining({ lastName: 'Cooper' }),
+        ]);
+      });
     });
 
     describe('labs', () => {

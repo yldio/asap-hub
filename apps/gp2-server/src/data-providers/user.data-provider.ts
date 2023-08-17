@@ -304,7 +304,6 @@ const generateFetchQueryFilter = (
     keywords,
     code,
     onlyOnboarded,
-    hasKeywords,
     hidden = true,
   } = filter || {};
 
@@ -322,8 +321,6 @@ const generateFetchQueryFilter = (
     : {};
   const filterKeywords: gp2Contentful.UsersFilter = keywords
     ? { tags: { name_in: keywords } }
-    : hasKeywords
-    ? { keywords_exists: true }
     : {};
   const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =

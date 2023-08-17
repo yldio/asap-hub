@@ -167,7 +167,6 @@ export type FetchUsersFilter = {
   projects?: string[];
   workingGroups?: string[];
   hidden?: boolean;
-  hasKeywords?: boolean;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

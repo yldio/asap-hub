@@ -162,11 +162,14 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
       .split(' ')
       .reduce(
         (
-          acc: ({ title_contains: string } | { tags_contains_all: string[] })[],
+          acc: (
+            | { title_contains: string }
+            | { keywords: { name_in: string[] } }
+          )[],
           word,
         ) => {
           acc.push({ title_contains: word });
-          acc.push({ tags_contains_all: [word] });
+          acc.push({ keywords: { name_in: [word] } });
           return acc;
         },
         [],
@@ -186,7 +189,6 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
         ...(after ? { endDate_gt: after } : {}),
         ...(before ? { endDate_lt: before } : {}),
         ...(search ? { OR: searchFilter } : {}),
-        ...(filter?.hasTags ? { tags_exists: true } : {}),
       },
     });
 

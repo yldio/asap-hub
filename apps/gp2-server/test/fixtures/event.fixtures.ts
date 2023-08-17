@@ -360,6 +360,7 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
   meetingLink: 'https://zoom.com/room/123',
   hideMeetingLink: false,
   status: 'Confirmed',
+  tags: ['Cohort'],
   keywords: [{ id: 'id-1', name: 'Cohort' }],
   title: 'Example Event',
   startDateTimeZone: 'UTC',

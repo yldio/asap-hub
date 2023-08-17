@@ -6,7 +6,6 @@ describe('WorkingGroupDetailHeader', () => {
   const defaultProps: ComponentProps<typeof WorkingGroupDetailHeader> = {
     title: 'Underrepresented Populations',
     members: [],
-    projects: [],
     id: '1',
     isWorkingGroupMember: true,
     isAdministrator: false,
@@ -21,7 +20,6 @@ describe('WorkingGroupDetailHeader', () => {
       screen.getByRole('heading', { name: 'Underrepresented Populations' }),
     ).toBeVisible();
     expect(screen.getByText('0 members')).toBeVisible();
-    expect(screen.getByText('0 projects')).toBeVisible();
   });
 
   it('renders overview tab', () => {

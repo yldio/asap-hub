@@ -210,7 +210,10 @@ export const parseContentfulGraphQlTeams = (item: TeamItem): TeamDataObject => {
     item.linkedFrom?.teamMembershipCollection?.items || []
   ).reduce(
     (userList: TeamMember[], membership: Membership | null): TeamMember[] => {
-      if (!membership) {
+      if (
+        !membership ||
+        !membership.linkedFrom?.usersCollection?.items[0]?.onboarded
+      ) {
         return userList;
       }
 

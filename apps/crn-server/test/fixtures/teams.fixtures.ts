@@ -91,6 +91,7 @@ export const getContentfulGraphqlTeamMembers = () => ({
   lastName: 'Hardy',
   avatar: null,
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
+  onboarded: true,
 });
 
 export const getContentfulGraphqlTeamMemberLabs = () => ({

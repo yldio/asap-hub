@@ -5,7 +5,7 @@ import { APIGatewayEvent, Handler } from 'aws-lambda';
 import 'source-map-support/register';
 import {
   contentfulEnvId,
-  contentfulPreviewAccessToken,
+  contentfulAccessToken,
   contentfulSpaceId,
   contentfulWebhookAuthenticationToken,
   eventBus,
@@ -23,7 +23,7 @@ export const contentfulWebhookFactory = (
     {
       eventBus,
       eventSource,
-      previewAccessToken: contentfulPreviewAccessToken,
+      accessToken: contentfulAccessToken,
       environment: contentfulEnvId,
       space: contentfulSpaceId,
     },

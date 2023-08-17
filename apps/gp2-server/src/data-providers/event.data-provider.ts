@@ -387,7 +387,7 @@ export const parseGraphQLEvent = (
     hideMeetingLink: hideMeetingLink || false,
     status: status as EventStatus,
     // keeping tags as this is mandatory in BasicEvent and a lot of workarounds would be needed to not interefere with CRN
-    tags: keywords.map((k) => k.name),
+    tags: [],
     keywords,
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),

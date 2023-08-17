@@ -40,7 +40,17 @@ describe('isUserOnboardable validation', () => {
       positions: { valid: false },
     });
   });
+  it('Should fail if there are no tags', async () => {
+    const userIncompleteResponse: gp2.UserResponse = {
+      ...getUserResponse(),
+      tags: [],
+    };
 
+    expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+      isOnboardable: false,
+      tags: { valid: false },
+    });
+  });
   it('Should fail if there are no degrees', async () => {
     const userIncompleteResponse: gp2.UserResponse = {
       ...getUserResponse(),

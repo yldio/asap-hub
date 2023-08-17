@@ -1,5 +1,6 @@
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { OutputPageList } from '@asap-hub/gp2-components';
+import { useCurrentUserGP2 } from '@asap-hub/react-context/build/auth';
 import { gp2 } from '@asap-hub/model';
 import { FC } from 'react';
 import Frame from '../Frame';
@@ -10,7 +11,6 @@ import { getOutputs } from './api';
 import { useOutputs } from './state';
 import { outputFields, outputsResponseToStream, outputToCSV } from './export';
 import { useAlgolia } from '../hooks/algolia';
-import { useCurrentUserGP2 } from '@asap-hub/react-context/build/auth';
 
 type OutputDirectoryProps = {
   projectId?: string;

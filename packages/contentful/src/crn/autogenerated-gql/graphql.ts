@@ -14005,7 +14005,11 @@ export type TeamsContentFragment = Pick<
                   Maybe<
                     Pick<
                       Users,
-                      'firstName' | 'lastName' | 'email' | 'alumniSinceDate'
+                      | 'onboarded'
+                      | 'firstName'
+                      | 'lastName'
+                      | 'email'
+                      | 'alumniSinceDate'
                     > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -14062,7 +14066,11 @@ export type FetchTeamByIdQuery = {
                       Maybe<
                         Pick<
                           Users,
-                          'firstName' | 'lastName' | 'email' | 'alumniSinceDate'
+                          | 'onboarded'
+                          | 'firstName'
+                          | 'lastName'
+                          | 'email'
+                          | 'alumniSinceDate'
                         > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -14129,6 +14137,7 @@ export type FetchTeamsQuery = {
                             Maybe<
                               Pick<
                                 Users,
+                                | 'onboarded'
                                 | 'firstName'
                                 | 'lastName'
                                 | 'email'
@@ -18159,6 +18168,14 @@ export const ResearchOutputsContentFragmentDoc = {
                       name: { kind: 'Name', value: 'limit' },
                       value: { kind: 'IntValue', value: '60' },
                     },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'order' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [{ kind: 'EnumValue', value: 'addedDate_ASC' }],
+                      },
+                    },
                   ],
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -18567,6 +18584,13 @@ export const TeamsContentFragmentDoc = {
                                                       },
                                                     },
                                                   ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'onboarded',
                                                 },
                                               },
                                               {

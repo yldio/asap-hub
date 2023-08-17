@@ -439,6 +439,67 @@ describe('Teams data provider', () => {
         expect(result?.members[0]?.lastName).toEqual('Hardy');
       });
 
+      test('should filter non onboarded users', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = {
+          teams: {
+            ...getContentfulGraphqlTeam(),
+            linkedFrom: {
+              teamMembershipCollection: {
+                total: 3,
+                items: [
+                  {
+                    role: 'Collaborating PI',
+                    inactiveSinceDate: null,
+                    linkedFrom: {
+                      usersCollection: {
+                        total: 1,
+                        items: [getContentfulGraphqlTeamMembers()],
+                      },
+                    },
+                  },
+                  {
+                    role: 'Key Personnel',
+                    inactiveSinceDate: null,
+                    linkedFrom: {
+                      usersCollection: {
+                        total: 1,
+                        items: [
+                          {
+                            ...getContentfulGraphqlTeamMembers(),
+                            onboarded: false,
+                          },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    role: 'Project Manager',
+                    inactiveSinceDate: null,
+                    linkedFrom: {
+                      usersCollection: {
+                        total: 1,
+                        items: [getContentfulGraphqlTeamMembers()],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result?.members).toHaveLength(2);
+        expect(result?.members[0]?.role).toEqual('Project Manager');
+        expect(result?.members[1]?.role).toEqual('Collaborating PI');
+      });
+
       test('should not include team members with an invalid role', async () => {
         const id = 'some-id';
         const contentfulGraphQLResponse = {
@@ -707,6 +768,7 @@ describe('Teams data provider', () => {
                   avatar: null,
                   alumniSinceDate,
                   labsCollection: getContentfulGraphqlTeamMemberLabs(),
+                  onboarded: true,
                 },
               ],
             },

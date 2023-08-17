@@ -39,6 +39,7 @@ export const teamsContentQueryFragment = gql`
                 sys {
                   id
                 }
+                onboarded
                 firstName
                 lastName
                 email

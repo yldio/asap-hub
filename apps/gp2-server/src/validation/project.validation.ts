@@ -1,7 +1,7 @@
 import { FetchOptions, gp2 } from '@asap-hub/model';
 import {
+  fetchOptionsValidationSchema,
   validateInput,
-  fetchProjectsOptionsValidationSchema,
 } from '@asap-hub/server-common';
 import { urlExpression } from '@asap-hub/validation';
 import { JSONSchemaType } from 'ajv';
@@ -13,7 +13,7 @@ type ProjectParameters = {
 const projectFetchValidationSchema: JSONSchemaType<FetchOptions> = {
   type: 'object',
   properties: {
-    ...fetchProjectsOptionsValidationSchema.properties,
+    ...fetchOptionsValidationSchema.properties,
   },
   additionalProperties: false,
   required: [],

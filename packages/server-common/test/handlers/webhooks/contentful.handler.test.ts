@@ -20,7 +20,7 @@ const mockGetEntry: jest.MockedFunction<
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
-  getCPAClient: () => ({
+  getCDAClient: () => ({
     getEntry: mockGetEntry,
   }),
   pollContentfulDeliveryApi: jest.fn(),

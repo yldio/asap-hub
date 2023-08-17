@@ -270,7 +270,11 @@ export class ResearchOutputSquidexDataProvider
       relatedEventIds,
       ...researchOutputData
     } = input;
-    const { usedInPublication, ...researchOutput } = parseToSquidex({
+    const {
+      usedInPublication,
+      versions: _, // unsupported in squidex
+      ...researchOutput
+    } = parseToSquidex({
       ...researchOutputData,
       asapFunded: convertBooleanToDecision(researchOutputData.asapFunded),
       usedInPublication: convertBooleanToDecision(

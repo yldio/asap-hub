@@ -21,7 +21,7 @@ const documents = {
     types.FetchCalendarsDocument,
   '\n  query FetchDashboard {\n    dashboardCollection(limit: 1, order: sys_publishedAt_DESC) {\n      items {\n        newsCollection {\n          items {\n            ...NewsContent\n          }\n        }\n\n        pagesCollection {\n          items {\n            ...PageContent\n          }\n        }\n      }\n    }\n  }\n  \n  \n':
     types.FetchDashboardDocument,
-  '\n  fragment PartialUsersContent on Users {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n\n    email\n    firstName\n    institution\n    jobTitle\n    lastName\n    avatar {\n      url\n    }\n  }\n':
+  '\n  fragment PartialUsersContent on Users {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    lastUpdated\n    email\n    firstName\n    institution\n    jobTitle\n    lastName\n    avatar {\n      url\n    }\n  }\n':
     types.PartialUsersContentFragmentDoc,
   '\n  query FetchDiscover {\n    discoverCollection(limit: 1, order: sys_publishedAt_DESC) {\n      items {\n        pagesCollection(limit: 20) {\n          items {\n            ...PageContent\n          }\n        }\n        trainingCollection(limit: 20) {\n          items {\n            ...TutorialsContent\n          }\n        }\n        aboutUs {\n          json\n          links {\n            entries {\n              inline {\n                sys {\n                  id\n                }\n                __typename\n                ... on Media {\n                  url\n                }\n              }\n            }\n            assets {\n              block {\n                sys {\n                  id\n                }\n                url\n                description\n                contentType\n                width\n                height\n              }\n            }\n          }\n        }\n        membersCollection {\n          items {\n            ...PartialUsersContent\n          }\n        }\n        membersTeam {\n          sys {\n            id\n          }\n        }\n        scientificAdvisoryBoardCollection {\n          items {\n            ...PartialUsersContent\n          }\n        }\n      }\n    }\n  }\n  \n  \n  \n':
     types.FetchDiscoverDocument,
@@ -151,8 +151,8 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  fragment PartialUsersContent on Users {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n\n    email\n    firstName\n    institution\n    jobTitle\n    lastName\n    avatar {\n      url\n    }\n  }\n',
-): (typeof documents)['\n  fragment PartialUsersContent on Users {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n\n    email\n    firstName\n    institution\n    jobTitle\n    lastName\n    avatar {\n      url\n    }\n  }\n'];
+  source: '\n  fragment PartialUsersContent on Users {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    lastUpdated\n    email\n    firstName\n    institution\n    jobTitle\n    lastName\n    avatar {\n      url\n    }\n  }\n',
+): (typeof documents)['\n  fragment PartialUsersContent on Users {\n    sys {\n      id\n      firstPublishedAt\n      publishedAt\n      publishedVersion\n    }\n    lastUpdated\n    email\n    firstName\n    institution\n    jobTitle\n    lastName\n    avatar {\n      url\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -9369,7 +9369,12 @@ export type FetchDashboardQuery = {
 
 export type PartialUsersContentFragment = Pick<
   Users,
-  'email' | 'firstName' | 'institution' | 'jobTitle' | 'lastName'
+  | 'lastUpdated'
+  | 'email'
+  | 'firstName'
+  | 'institution'
+  | 'jobTitle'
+  | 'lastName'
 > & {
   sys: Pick<
     Sys,
@@ -9720,7 +9725,12 @@ export type FetchDiscoverQuery = {
             Maybe<
               Pick<
                 Users,
-                'email' | 'firstName' | 'institution' | 'jobTitle' | 'lastName'
+                | 'lastUpdated'
+                | 'email'
+                | 'firstName'
+                | 'institution'
+                | 'jobTitle'
+                | 'lastName'
               > & {
                 sys: Pick<
                   Sys,
@@ -9737,7 +9747,12 @@ export type FetchDiscoverQuery = {
             Maybe<
               Pick<
                 Users,
-                'email' | 'firstName' | 'institution' | 'jobTitle' | 'lastName'
+                | 'lastUpdated'
+                | 'email'
+                | 'firstName'
+                | 'institution'
+                | 'jobTitle'
+                | 'lastName'
               > & {
                 sys: Pick<
                   Sys,
@@ -15773,6 +15788,7 @@ export const PartialUsersContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
           { kind: 'Field', name: { kind: 'Name', value: 'institution' } },

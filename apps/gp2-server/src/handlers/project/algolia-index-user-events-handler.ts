@@ -1,23 +1,21 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
-import {
-  EventController,
-  EventResponse,
-  ListResponse,
-  UserEvent,
-} from '@asap-hub/model';
+import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
 import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
-  UserPayload,
 } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
+import ProjectController from '../../controllers/project.controller';
 import logger from '../../utils/logger';
+import { UserPayload } from '../event-bus';
 
 export const indexUserEventsHandler =
   (
-    eventController: EventController,
-    algoliaClient: AlgoliaClient<'crn'>,
-  ): ((event: EventBridgeEvent<UserEvent, UserPayload>) => Promise<void>) =>
+    projectController: ProjectController,
+    algoliaClient: AlgoliaClient<'gp2'>,
+  ): ((
+    event: EventBridgeEvent<gp2Model.UserEvent, UserPayload>,
+  ) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
@@ -25,29 +23,29 @@ export const indexUserEventsHandler =
       skip,
       take,
     }: LoopOverCustomCollectionFetchOptions): Promise<
-      ListResponse<EventResponse>
+      ListResponse<gp2Model.ProjectResponse>
     > =>
-      eventController.fetch({
+      projectController.fetch({
         skip,
         take,
         filter: { userId: event.detail.resourceId },
       });
 
     const processingFunction = async (
-      foundEvents: ListResponse<EventResponse>,
+      foundProjects: ListResponse<gp2Model.ProjectResponse>,
     ) => {
       logger.info(
-        `Found ${foundEvents.total} events. Processing ${foundEvents.items.length} events.`,
+        `Found ${foundProjects.total} events. Processing ${foundProjects.items.length} projects.`,
       );
 
       await algoliaClient.saveMany(
-        foundEvents.items.map((data) => ({
+        foundProjects.items.map((data) => ({
           data,
-          type: 'event',
+          type: 'project',
         })),
       );
 
-      logger.info(`Updated ${foundEvents.items.length} events.`);
+      logger.info(`Updated ${foundProjects.items.length} events.`);
     };
 
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);

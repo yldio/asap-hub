@@ -127,7 +127,9 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({ versions }) => {
               <p css={paragraphStyle}>#{index + 1}</p>
               <span css={[titleStyles, rowTitleStyles]}>Type</span>
               <p css={paragraphStyle}>
-                {documentType === 'Article' && (
+                {documentType === 'Report' ? (
+                  <Pill accent="gray">Report</Pill>
+                ) : (
                   <Pill accent="gray">{type}</Pill>
                 )}
               </p>

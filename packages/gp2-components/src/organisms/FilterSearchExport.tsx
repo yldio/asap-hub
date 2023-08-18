@@ -72,7 +72,7 @@ const FilterSearchExport: React.FC<FilterSearchExportProps> = ({
         </Button>
       )}
     </div>
-    <div css={css({ gridArea: 'search' })}>
+    <div css={css({ gridArea: 'search' })} role="search">
       <SearchField
         value={searchQuery}
         onChange={onSearchQueryChange}

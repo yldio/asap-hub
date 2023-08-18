@@ -70,7 +70,6 @@ export const outputsResponseToStream = async (
       skip: currentPage * MAX_RESULTS,
       take: MAX_RESULTS,
     });
-    console.log(data);
     data.items.map(transform).forEach((row) => csvStream.write(row));
     currentPage += 1;
     morePages = currentPage * MAX_RESULTS < data.total;

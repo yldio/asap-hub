@@ -21,7 +21,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/core": "7.22.10",
     "@types/jest": "29.5.3",
-    "@types/jsdom": "16.2.15",
+    "@types/jsdom": "21.1.1",
     "@types/node": "18.17.3"
   }
 }

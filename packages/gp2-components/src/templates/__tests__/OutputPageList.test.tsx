@@ -2,8 +2,12 @@ import { render, screen } from '@testing-library/react';
 import OutputPageList from '../OutputPageList';
 
 const props = {
-  onChangeFilter: jest.fn(),
-  onChangeSearch: jest.fn(),
+  onFiltersClick: jest.fn(),
+  onSearchQueryChange: jest.fn(),
+  onExportClick: jest.fn(),
+  onChangeFilters: jest.fn(),
+  filters: new Set<string>(),
+  isAdministrator: true,
   searchQuery: '',
   hasOutputs: true,
 };

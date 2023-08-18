@@ -1,11 +1,12 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { SearchAndFilter } from '@asap-hub/react-components';
+import { Filter } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
+import FilterSearchExport from '../organisms/FilterSearchExport';
 
-type OutputPageListProps = { hasOutputs: boolean } & Pick<
-  ComponentProps<typeof SearchAndFilter>,
-  'filters' | 'onChangeFilter' | 'onChangeSearch' | 'searchQuery'
->;
+type OutputPageListProps = {
+  hasOutputs: boolean;
+} & ComponentProps<typeof FilterSearchExport> &
+  Pick<ComponentProps<typeof Filter>, 'onChangeFilter' | 'filters'>;
 
 interface Option<V extends string> {
   value: V;
@@ -28,19 +29,25 @@ const OutputPageList: React.FC<OutputPageListProps> = ({
   children,
   filters,
   onChangeFilter,
-  onChangeSearch,
+  onFiltersClick,
+  onSearchQueryChange,
+  onExportClick,
+  isAdministrator,
   searchQuery,
   hasOutputs,
 }) => (
   <>
     {hasOutputs && (
-      <SearchAndFilter
-        onChangeSearch={onChangeSearch}
-        searchPlaceholder="Enter name or keyword..."
+      <FilterSearchExport
         searchQuery={searchQuery}
-        onChangeFilter={onChangeFilter}
-        filterOptions={outputFilters}
+        onSearchQueryChange={onSearchQueryChange}
+        onFiltersClick={onFiltersClick}
+        onExportClick={onExportClick}
+        isAdministrator={isAdministrator}
+        useFilterComponent
         filters={filters}
+        filterOptions={outputFilters}
+        onChangeFilter={onChangeFilter}
       />
     )}
     <main>{children}</main>

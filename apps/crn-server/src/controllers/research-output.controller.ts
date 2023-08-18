@@ -152,6 +152,7 @@ export default class ResearchOutputController {
         title: currentResearchOutput?.title || '',
         link: currentResearchOutput?.link,
         type: currentResearchOutput?.type,
+        addedDate: currentResearchOutput?.addedDate,
         documentType:
           currentResearchOutput?.documentType &&
           isResearchOutputDocumentType(currentResearchOutput?.documentType)

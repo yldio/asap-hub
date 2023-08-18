@@ -1507,6 +1507,7 @@ describe('ResearchOutputs controller', () => {
             link: undefined,
             title: 'Test Proposal 1234',
             type: '3D Printing',
+            addedDate: '2021-05-21T13:18:31Z',
           },
           publish: true,
         },
@@ -1524,6 +1525,7 @@ describe('ResearchOutputs controller', () => {
         title: 'Old Version Title',
         type: '3D Printing',
         link: 'http://example.com',
+        addedDate: '2021-05-21T13:18:31Z',
       });
 
       await researchOutputs.update(researchOutputId, {
@@ -1541,6 +1543,7 @@ describe('ResearchOutputs controller', () => {
             link: 'http://example.com',
             title: 'Old Version Title',
             type: '3D Printing',
+            addedDate: '2021-05-21T13:18:31Z',
           },
           publish: true,
         },

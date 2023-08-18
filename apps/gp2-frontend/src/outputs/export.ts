@@ -1,6 +1,7 @@
 import { caseInsensitive, CSVValue } from '@asap-hub/frontend-utils';
 import { FetchOptions, gp2 } from '@asap-hub/model';
 import { formatDate } from '@asap-hub/react-components';
+import { isInternalUser } from '@asap-hub/validation';
 /* eslint-disable-next-line import/no-unresolved */
 import { Stringifier } from 'csv-stringify/browser/esm';
 
@@ -38,8 +39,10 @@ export const outputToCSV = ({
   subtype,
   link,
   authors: sorted(
-    authors.map(({ displayName, id }) =>
-      id ? displayName : `${displayName} (external)`,
+    authors.map((author) =>
+      isInternalUser(author)
+        ? author.displayName
+        : `${author.displayName} (external)`,
     ),
   ),
   workingGroup: workingGroup?.title,

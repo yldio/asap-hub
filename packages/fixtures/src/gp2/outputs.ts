@@ -28,7 +28,7 @@ export const createOutputResponse = (itemIndex = 0): gp2.OutputResponse => ({
 });
 
 export const createListOutputResponse = (
-  items: number,
+  items: number = 1,
 ): gp2.ListOutputResponse => ({
   total: items,
   items: Array.from({ length: items }, (_, itemIndex) =>

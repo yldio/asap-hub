@@ -2,7 +2,7 @@ import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { OutputPageList } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
 import { useAlgolia } from '../hooks/algolia';
@@ -37,9 +37,6 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
     toggleFilter(filter, 'documentType');
   };
 
-  const onFiltersClick = () => setShowFilters(!showFilters);
-
-  const [showFilters, setShowFilters] = useState(false);
   const { currentPage, pageSize } = usePaginationParams();
   const { total } = useOutputs({
     searchQuery: '',
@@ -74,7 +71,6 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
       onSearchQueryChange={setSearchQuery}
       onExportClick={exportOutputs}
       filters={filterSet}
-      onFiltersClick={onFiltersClick}
       onChangeFilter={onChangeFilter}
       hasOutputs={!!total}
       isAdministrator={isAdministrator}

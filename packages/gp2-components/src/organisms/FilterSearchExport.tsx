@@ -36,7 +36,7 @@ type FilterSearchExportProps = {
   searchQuery: ComponentProps<typeof SearchField>['value'];
   onSearchQueryChange: ComponentProps<typeof SearchField>['onChange'];
   isAdministrator: boolean;
-  onFiltersClick: () => void;
+  onFiltersClick?: () => void;
   onExportClick: () => void;
   useFilterComponent?: boolean;
 } & Partial<

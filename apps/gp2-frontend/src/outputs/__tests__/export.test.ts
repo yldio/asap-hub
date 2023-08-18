@@ -32,6 +32,7 @@ describe('outputToCSV', () => {
       workingGroup: 'WG-1',
       project: 'Project-1',
       authors: expect.anything(),
+      tags: expect.anything(),
       date: expect.anything(),
     });
   });
@@ -62,6 +63,32 @@ describe('outputToCSV', () => {
       "Albert (external),
       John (external),
       Maria Smith"
+    `);
+  });
+
+  it('flattens and order tags', () => {
+    const outputResponse: gp2Model.OutputResponse = {
+      ...gp2Fixtures.createOutputResponse(),
+      tags: [
+        {
+          id: '1',
+          name: 'Administrative Support',
+        },
+        {
+          id: '2',
+          name: 'GP2',
+        },
+        {
+          id: '1',
+          name: 'Cohort',
+        },
+      ],
+    };
+    const { tags } = outputToCSV(outputResponse);
+    expect(tags).toMatchInlineSnapshot(`
+      "Administrative Support,
+      Cohort,
+      GP2"
     `);
   });
 

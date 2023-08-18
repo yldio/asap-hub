@@ -12,6 +12,7 @@ export const outputFields = {
   subtype: 'Subtype',
   link: 'Link',
   authors: 'Authors',
+  tags: 'Tags',
   workingGroup: 'Working Group',
   project: 'Project',
   date: 'Date Added',
@@ -32,6 +33,7 @@ export const outputToCSV = ({
   workingGroup,
   project,
   addedDate,
+  tags,
 }: gp2.OutputResponse): OutputCSV => ({
   title,
   documentType,
@@ -45,6 +47,7 @@ export const outputToCSV = ({
         : `${author.displayName} (external)`,
     ),
   ),
+  tags: sorted(tags?.map(({ name }) => name)) || '',
   workingGroup: workingGroup?.title,
   project: project?.title,
   date: formatDate(new Date(addedDate)),
@@ -67,6 +70,7 @@ export const outputsResponseToStream = async (
       skip: currentPage * MAX_RESULTS,
       take: MAX_RESULTS,
     });
+    console.log(data);
     data.items.map(transform).forEach((row) => csvStream.write(row));
     currentPage += 1;
     morePages = currentPage * MAX_RESULTS < data.total;

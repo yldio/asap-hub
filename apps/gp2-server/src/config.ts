@@ -74,6 +74,6 @@ export const sentryDsn = SENTRY_DSN;
 export const sentryTraceSampleRate = 1.0;
 export const sesRegion = SES_REGION || 'eu-west-1';
 export const userInviteBcc = EMAIL_BCC || 'gp2.invites.dev@asap.science';
-export const userInviteReturn = EMAIL_RETURN || 'gp2.invites.dev@asap.science';
+export const userInviteReturn = EMAIL_RETURN || 'techsupport@gp2.org';
 export const userInviteSender =
   EMAIL_SENDER || `"GP2 Hub" <techsupport@gp2.org>`;

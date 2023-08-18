@@ -22,7 +22,10 @@
     "authors.id",
     "__meta.type",
     "workingGroup.id",
-    "project.id"
+    "project.id",
+    "status",
+    "traineeProject",
+    "opportunitiesLink"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

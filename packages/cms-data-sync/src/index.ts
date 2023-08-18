@@ -5,6 +5,7 @@ const flags = process.argv.slice(2);
 
 const allowedFlags = [
   '--upsert',
+  '--all',
   ...models.map((model: string) => `--${model}`),
 ];
 

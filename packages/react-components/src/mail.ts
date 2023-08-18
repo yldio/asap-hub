@@ -1,6 +1,7 @@
 interface MailOptions {
   subject?: string;
   body?: string;
+  email?: string;
 }
 
 export const TECH_SUPPORT_EMAIL = 'techsupport@asap.science';
@@ -40,13 +41,7 @@ export const mailToGrants = (overrides?: MailOptions): string =>
   });
 
 export const mailToSupport = (overrides?: MailOptions): string =>
-  createMailTo(TECH_SUPPORT_EMAIL, {
-    subject: 'ASAP Hub: Tech support',
-    ...overrides,
-  });
-
-export const inviteMailToSupport = (overrides?: MailOptions): string =>
-  createMailTo(INVITE_SUPPORT_EMAIL, {
+  createMailTo(overrides?.email || TECH_SUPPORT_EMAIL, {
     subject: 'ASAP Hub: Tech support',
     ...overrides,
   });

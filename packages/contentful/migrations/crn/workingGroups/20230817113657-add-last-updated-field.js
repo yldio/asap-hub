@@ -19,7 +19,7 @@ module.exports.up = function (migration) {
     {
       // this is a hack, we dont want to exclude any field
       // but exclude is required
-      exclude: '"non-existent"',
+      exclude: '',
     },
   );
 };

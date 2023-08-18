@@ -168,6 +168,8 @@ enum AssetLinkingCollectionsInterestGroupsCollectionOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC
@@ -410,6 +412,8 @@ enum CalendarsLinkingCollectionsInterestGroupsCollectionOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC
@@ -2026,6 +2030,8 @@ enum InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC
@@ -2062,6 +2068,7 @@ type InterestGroups implements Entry {
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   googleDrive(locale: String): String
+  lastUpdated(locale: String): DateTime
   leadersCollection(limit: Int = 100, locale: String, order: [InterestGroupsLeadersCollectionOrder], preview: Boolean, skip: Int = 0, where: InterestGroupLeadersFilter): InterestGroupsLeadersCollection
   linkedFrom(allowedLocales: [String]): InterestGroupsLinkingCollections
   name(locale: String): String
@@ -2102,6 +2109,15 @@ input InterestGroupsFilter {
   googleDrive_not: String
   googleDrive_not_contains: String
   googleDrive_not_in: [String]
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   leaders: cfInterestGroupLeadersNestedFilter
   leadersCollection_exists: Boolean
   name: String
@@ -2159,6 +2175,8 @@ enum InterestGroupsOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC
@@ -3993,6 +4011,8 @@ enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC

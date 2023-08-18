@@ -314,6 +314,8 @@ export enum AssetLinkingCollectionsInterestGroupsCollectionOrder {
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -618,6 +620,8 @@ export enum CalendarsLinkingCollectionsInterestGroupsCollectionOrder {
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -2798,6 +2802,8 @@ export enum InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionOrder 
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -2834,6 +2840,7 @@ export type InterestGroups = Entry & {
   contentfulMetadata: ContentfulMetadata;
   description?: Maybe<Scalars['String']>;
   googleDrive?: Maybe<Scalars['String']>;
+  lastUpdated?: Maybe<Scalars['DateTime']>;
   leadersCollection?: Maybe<InterestGroupsLeadersCollection>;
   linkedFrom?: Maybe<InterestGroupsLinkingCollections>;
   name?: Maybe<Scalars['String']>;
@@ -2863,6 +2870,11 @@ export type InterestGroupsDescriptionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
 export type InterestGroupsGoogleDriveArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsLastUpdatedArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -2942,6 +2954,15 @@ export type InterestGroupsFilter = {
   googleDrive_not?: InputMaybe<Scalars['String']>;
   googleDrive_not_contains?: InputMaybe<Scalars['String']>;
   googleDrive_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   leaders?: InputMaybe<CfInterestGroupLeadersNestedFilter>;
   leadersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
@@ -3006,6 +3027,8 @@ export enum InterestGroupsOrder {
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -6030,6 +6053,8 @@ export enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -12328,7 +12353,13 @@ export type FetchGuideByTitleQuery = {
 
 export type InterestGroupsContentFragment = Pick<
   InterestGroups,
-  'name' | 'active' | 'tags' | 'description' | 'slack' | 'googleDrive'
+  | 'name'
+  | 'active'
+  | 'tags'
+  | 'description'
+  | 'slack'
+  | 'googleDrive'
+  | 'lastUpdated'
 > & {
   sys: Pick<
     Sys,
@@ -12397,7 +12428,13 @@ export type FetchInterestGroupByIdQuery = {
   interestGroups?: Maybe<
     Pick<
       InterestGroups,
-      'name' | 'active' | 'tags' | 'description' | 'slack' | 'googleDrive'
+      | 'name'
+      | 'active'
+      | 'tags'
+      | 'description'
+      | 'slack'
+      | 'googleDrive'
+      | 'lastUpdated'
     > & {
       sys: Pick<
         Sys,
@@ -12476,7 +12513,13 @@ export type FetchInterestGroupsQuery = {
         Maybe<
           Pick<
             InterestGroups,
-            'name' | 'active' | 'tags' | 'description' | 'slack' | 'googleDrive'
+            | 'name'
+            | 'active'
+            | 'tags'
+            | 'description'
+            | 'slack'
+            | 'googleDrive'
+            | 'lastUpdated'
           > & {
             sys: Pick<
               Sys,
@@ -12572,6 +12615,7 @@ export type FetchInterestGroupsByUserIdQuery = {
                     | 'description'
                     | 'slack'
                     | 'googleDrive'
+                    | 'lastUpdated'
                   > & {
                     sys: Pick<
                       Sys,
@@ -17047,6 +17091,7 @@ export const InterestGroupsContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
         ],
       },
     },

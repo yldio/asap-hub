@@ -111,7 +111,7 @@ export class SquidexFixture implements Fixture {
 
   private async prepareInterestGroup(props: InterestGroupCreateDataObject) {
     return {
-      ...omit(props, 'calendar'),
+      ...omit(props, ['calendar', 'lastUpdated']),
       teams: props.teams?.map((team) => team.id),
       leaders: props.leaders?.map((leader) => ({
         user: [leader.user],

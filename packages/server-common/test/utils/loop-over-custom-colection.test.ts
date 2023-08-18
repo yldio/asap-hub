@@ -1,5 +1,5 @@
 import { ListResponse } from '@asap-hub/model';
-import { loopOverCustomCollection } from '../../src/utils/loop-over-custom-colection';
+import { loopOverCustomCollection } from '../../src/utils/loop-over-custom-collection';
 
 export const xxloopOverCustomCollection = async <TResponse>(
   fetcher: (skip: number) => Promise<ListResponse<TResponse>>,

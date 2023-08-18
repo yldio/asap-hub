@@ -1,27 +1,23 @@
-import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { AlgoliaClient } from '@asap-hub/algolia';
 import {
   EventController,
   EventResponse,
   ListResponse,
-  TeamEvent,
+  UserEvent,
 } from '@asap-hub/model';
 import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
+  UserPayload,
 } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
-import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import Events from '../../controllers/event.controller';
-import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
-import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { TeamPayload } from '../event-bus';
 
-export const indexTeamEventsHandler =
+export const indexUserEventsHandler =
   (
     eventController: EventController,
     algoliaClient: AlgoliaClient<'crn'>,
-  ): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) =>
+  ): ((event: EventBridgeEvent<UserEvent, UserPayload>) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
@@ -34,9 +30,7 @@ export const indexTeamEventsHandler =
       eventController.fetch({
         skip,
         take,
-        filter: {
-          teamId: event.detail.resourceId,
-        },
+        filter: { userId: event.detail.resourceId },
       });
 
     const processingFunction = async (
@@ -59,15 +53,15 @@ export const indexTeamEventsHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
-const eventDataProvider = getEventDataProvider();
-/* istanbul ignore next */
-export const handler = sentryWrapper(
-  indexTeamEventsHandler(
-    new Events(eventDataProvider),
-    algoliaSearchClientFactory({
-      algoliaApiKey,
-      algoliaAppId,
-      algoliaIndex,
-    }),
-  ),
-);
+// const eventDataProvider = getEventDataProvider();
+// /* istanbul ignore next */
+// export const handler = sentryWrapper(
+//   indexUserEventsHandler(
+//     new Events(eventDataProvider),
+//     algoliaSearchClientFactory({
+//       algoliaApiKey,
+//       algoliaAppId,
+//       algoliaIndex,
+//     }),
+//   ),
+// );

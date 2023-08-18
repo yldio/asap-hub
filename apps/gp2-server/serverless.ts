@@ -336,6 +336,30 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    algoliaIndexProject: {
+      handler: './src/handlers/project/algolia-index-project-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'ProjectsPublished',
+                'ProjectsUpdated',
+                'ProjectsUnpublished',
+                'ProjectsDeleted',
+              ] satisfies gp2.WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
     contentfulWebhook: {
       handler: './src/handlers/webhooks/contentful.handler',
       events: [

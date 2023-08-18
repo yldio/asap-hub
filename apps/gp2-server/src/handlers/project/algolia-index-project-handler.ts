@@ -3,43 +3,42 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
-import OutputController from '../../controllers/output.controller';
-import { ExternalUserContentfulDataProvider } from '../../data-providers/external-user.data-provider';
-import { OutputContentfulDataProvider } from '../../data-providers/output.data-provider';
+import ProjectController from '../../controllers/project.controller';
+import { ProjectContentfulDataProvider } from '../../data-providers/project.data-provider';
 import {
   getContentfulGraphQLClientFactory,
   getContentfulRestClientFactory,
 } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { OutputPayload } from '../event-bus';
+import { ProjectPayload } from '../event-bus';
 
 export const indexOutputHandler =
   (
-    outputController: OutputController,
+    projectController: ProjectController,
     algoliaClient: AlgoliaClient<'gp2'>,
     log: Logger,
-  ): EventBridgeHandler<gp2Model.OutputEvent, OutputPayload> =>
+  ): EventBridgeHandler<gp2Model.ProjectEvent, ProjectPayload> =>
   async (event) => {
     log.debug(`Event ${event['detail-type']}`);
 
-    const reindexOutput = async (id: string) => {
+    const reindexProject = async (id: string) => {
       try {
-        const output = await outputController.fetchById(id);
-        log.debug(`Fetched output ${output.id}`);
+        const project = await projectController.fetchById(id);
+        log.debug(`Fetched project ${project.id}`);
 
         await algoliaClient.save({
-          data: output,
-          type: 'output',
+          data: project,
+          type: 'project',
         });
 
-        log.debug(`Saved output ${output.id}`);
+        log.debug(`Saved project ${project.id}`);
 
-        return output;
+        return project;
       } catch (e) {
-        log.error(e, `Error while reindexing output ${id}`);
+        log.error(e, `Error while reindexing project ${id}`);
         if (isBoom(e) && e.output.statusCode === 404) {
-          log.error(`Output ${id} not found`);
+          log.error(`Project ${id} not found`);
           await algoliaClient.remove(id);
         }
         throw e;
@@ -47,11 +46,11 @@ export const indexOutputHandler =
     };
 
     try {
-      await reindexOutput(event.detail.resourceId);
+      await reindexProject(event.detail.resourceId);
     } catch (e) {
       log.error(
         e,
-        `Error while reindexing output ${event.detail.resourceId} and its related research outputs`,
+        `Error while reindexing research output ${event.detail.resourceId} and its related research outputs`,
       );
       if (isBoom(e) && e.output.statusCode === 404) {
         return;
@@ -61,18 +60,14 @@ export const indexOutputHandler =
   };
 
 const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
-const outputDataProvider = new OutputContentfulDataProvider(
-  contentfulGraphQLClient,
-  getContentfulRestClientFactory,
-);
-const externalAuthorDataProvider = new ExternalUserContentfulDataProvider(
+const projectDataProvider = new ProjectContentfulDataProvider(
   contentfulGraphQLClient,
   getContentfulRestClientFactory,
 );
 
 export const handler = sentryWrapper(
   indexOutputHandler(
-    new OutputController(outputDataProvider, externalAuthorDataProvider),
+    new ProjectController(projectDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,
       algoliaAppId,

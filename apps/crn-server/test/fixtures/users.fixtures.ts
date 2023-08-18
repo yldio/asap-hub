@@ -806,6 +806,7 @@ export const getContentfulGraphqlUser = (
     firstPublishedAt: '2021-09-23T20:45:22.000Z',
     publishedAt: '2021-09-23T20:45:22.000Z',
   },
+  lastUpdated: '2021-09-23T20:45:22.000Z',
   avatar: null,
   biography: 'some bio',
   onboarded: true,

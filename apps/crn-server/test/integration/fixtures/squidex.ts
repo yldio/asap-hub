@@ -88,7 +88,7 @@ export class SquidexFixture implements Fixture {
       avatar = [props.avatar];
     }
     return {
-      ...props,
+      ...omit(props, 'lastUpdated'),
       onboarded: props.onboarded === true,
       connections: props.connections || [],
       dismissedGettingStarted: props.onboarded === true,

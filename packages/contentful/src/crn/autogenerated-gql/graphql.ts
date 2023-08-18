@@ -397,6 +397,8 @@ export enum AssetLinkingCollectionsUsersCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -992,6 +994,8 @@ export enum DiscoverMembersCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -1095,6 +1099,8 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -3213,6 +3219,8 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -5781,6 +5789,8 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -6368,6 +6378,7 @@ export type Users = Entry & {
   jobTitle?: Maybe<Scalars['String']>;
   labsCollection?: Maybe<UsersLabsCollection>;
   lastName?: Maybe<Scalars['String']>;
+  lastUpdated?: Maybe<Scalars['DateTime']>;
   linkedFrom?: Maybe<UsersLinkingCollections>;
   linkedIn?: Maybe<Scalars['String']>;
   onboarded?: Maybe<Scalars['Boolean']>;
@@ -6502,6 +6513,11 @@ export type UsersLabsCollectionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersLastNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersLastUpdatedArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -6758,6 +6774,15 @@ export type UsersFilter = {
   lastName_not?: InputMaybe<Scalars['String']>;
   lastName_not_contains?: InputMaybe<Scalars['String']>;
   lastName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   linkedIn?: InputMaybe<Scalars['String']>;
   linkedIn_contains?: InputMaybe<Scalars['String']>;
   linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7105,6 +7130,8 @@ export enum UsersOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -8749,6 +8776,15 @@ export type CfUsersNestedFilter = {
   lastName_not?: InputMaybe<Scalars['String']>;
   lastName_not_contains?: InputMaybe<Scalars['String']>;
   lastName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   linkedIn?: InputMaybe<Scalars['String']>;
   linkedIn_contains?: InputMaybe<Scalars['String']>;
   linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
@@ -14408,6 +14444,7 @@ export type FetchTutorialByIdQuery = {
 
 export type UsersContentFragment = Pick<
   Users,
+  | 'lastUpdated'
   | 'alumniSinceDate'
   | 'alumniLocation'
   | 'biography'
@@ -14546,6 +14583,7 @@ export type FetchUserByIdQuery = {
   users?: Maybe<
     Pick<
       Users,
+      | 'lastUpdated'
       | 'alumniSinceDate'
       | 'alumniLocation'
       | 'biography'
@@ -14692,6 +14730,7 @@ export type FetchUsersQuery = {
         Maybe<
           Pick<
             Users,
+            | 'lastUpdated'
             | 'alumniSinceDate'
             | 'alumniLocation'
             | 'biography'
@@ -14846,6 +14885,7 @@ export type FetchUsersByTeamIdQuery = {
                 Maybe<
                   Pick<
                     Users,
+                    | 'lastUpdated'
                     | 'alumniSinceDate'
                     | 'alumniLocation'
                     | 'biography'
@@ -15011,6 +15051,7 @@ export type FetchUsersByLabIdQuery = {
             Maybe<
               Pick<
                 Users,
+                | 'lastUpdated'
                 | 'alumniSinceDate'
                 | 'alumniLocation'
                 | 'biography'
@@ -19013,6 +19054,7 @@ export const UsersContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniLocation' } },
           { kind: 'Field', name: { kind: 'Name', value: 'biography' } },

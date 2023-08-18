@@ -25,7 +25,12 @@ export type EventUpdateDataObject = Pick<
   CommonEventUpdateDataObject,
   'notes' | 'presentation' | 'videoRecording'
 >;
-export type UserCreateDataObject = Omit<CommonUserCreateDataObject, 'labIds'>;
+export type UserCreateDataObject = Omit<
+  CommonUserCreateDataObject,
+  'labIds'
+> & {
+  lastUpdated: string;
+};
 export type TeamCreateDataObject = CommonTeamCreateDataObject;
 export type ResearchOutputCreateDataObject = Omit<
   CommonResearchOutputCreateDataObject,

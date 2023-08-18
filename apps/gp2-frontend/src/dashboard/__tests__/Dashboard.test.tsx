@@ -63,9 +63,7 @@ it('renders the news when theres at least one news', async () => {
   mockGetEvents.mockResolvedValueOnce(gp2.createListEventResponse(1));
   mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
   await renderDashboard({});
-  expect(
-    screen.getByRole('heading', { name: 'Latest Newsletter' }),
-  ).toBeVisible();
+  expect(screen.getByRole('heading', { name: 'Latest News' })).toBeVisible();
 });
 
 it("renders the upcoming events with events when there's at least one upcoming event", async () => {

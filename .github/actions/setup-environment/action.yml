@@ -233,6 +233,9 @@ outputs:
   react-app-gtm-container-id:
     description: 'React App GTM Container ID'
     value: ${{ steps.vars.outputs.react-app-gtm-container-id }}
+  react-app-gp2-gtm-container-id:
+    description: 'React App GP2 GTM Container ID'
+    value: ${{ steps.vars.outputs.react-app-gp2-gtm-container-id }}
   sls-stage:
     description: 'SLS Stage'
     value: ${{ steps.vars.outputs.sls-stage }}

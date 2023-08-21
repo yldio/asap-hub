@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/model';
 import {
   NotFoundPage,
+  OutputVersions,
   ResearchOutputForm,
   ResearchOutputHeader,
   Toast,
@@ -99,6 +100,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);
 
+  const versions = researchOutputData?.versions ?? [];
+
   if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
@@ -114,6 +117,9 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             documentType={documentType}
             workingGroupAssociation
           />
+          {createVersion && versions.length > 0 && (
+            <OutputVersions versions={versions} createVersion />
+          )}
           <ResearchOutputForm
             tagSuggestions={researchSuggestions}
             documentType={documentType}

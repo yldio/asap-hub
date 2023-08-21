@@ -314,7 +314,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     id: item.sys.id,
     _tags: [item.alumniSinceDate ? inactiveUserTag : activeUserTag],
     createdDate: item.createdDate || item.sys.firstPublishedAt,
-    lastModifiedDate: item.sys.publishedAt,
+    lastModifiedDate: item.lastUpdated,
     workingGroups,
     interestGroups,
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : undefined,

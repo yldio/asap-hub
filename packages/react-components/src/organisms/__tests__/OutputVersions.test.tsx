@@ -1,17 +1,17 @@
 import { createVersionList, createVersionResponse } from '@asap-hub/fixtures';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import OutputVersions, { OutputVersionsProps } from '../OutputVersions';
 
+const version: OutputVersionsProps['versions'][number] = {
+  id: '1',
+  type: 'Preprint',
+  documentType: 'Article',
+  title: 'Test',
+  link: 'https://test.com',
+};
+
 const baseProps: OutputVersionsProps = {
-  versions: [
-    {
-      id: '1',
-      type: 'Preprint',
-      documentType: 'Article',
-      title: 'Test',
-      link: 'https://test.com',
-    },
-  ],
+  versions: [version],
 };
 
 it('displays the output versions header', () => {
@@ -39,4 +39,20 @@ it('displays the view more versions button', () => {
 
   expect(getByRole('button', { name: 'View Less Versions' })).toBeVisible();
   expect(queryByText('Last version')).toBeVisible();
+});
+
+it('displays type as Report when document type is report.', () => {
+  render(
+    <OutputVersions
+      versions={[{ ...version, documentType: 'Article', type: '3D Printing' }]}
+    />,
+  );
+  expect(screen.getByText('3D Printing')).toBeVisible();
+
+  render(
+    <OutputVersions
+      versions={[{ ...version, documentType: 'Report', type: '3D Printing' }]}
+    />,
+  );
+  expect(screen.getByText('Report')).toBeVisible();
 });

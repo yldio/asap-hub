@@ -9,6 +9,7 @@ export const workingGroupsQuery = gql`
       items {
         id
         status
+        lastModified
         flatData {
           title
           description

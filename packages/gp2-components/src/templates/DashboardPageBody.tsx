@@ -155,9 +155,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       )}
       {lastestNews ? (
         <div css={columnContainer}>
-          <Headline2>Latest Newsletter</Headline2>
+          <Headline2>Latest News</Headline2>
           <Paragraph accent="lead" noMargin>
-            Here is the latest GP2 newsletter.
+            Here is the latest GP2 news.
           </Paragraph>
           <div css={[contentCardsStyles, columnContainer, { gap: rem(32) }]}>
             <NewsItem {...lastestNews} />

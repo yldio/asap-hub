@@ -88,7 +88,7 @@ export class SquidexFixture implements Fixture {
       avatar = [props.avatar];
     }
     return {
-      ...props,
+      ...omit(props, 'lastUpdated'),
       onboarded: props.onboarded === true,
       connections: props.connections || [],
       dismissedGettingStarted: props.onboarded === true,
@@ -111,7 +111,7 @@ export class SquidexFixture implements Fixture {
 
   private async prepareInterestGroup(props: InterestGroupCreateDataObject) {
     return {
-      ...omit(props, 'calendar'),
+      ...omit(props, ['calendar', 'lastUpdated']),
       teams: props.teams?.map((team) => team.id),
       leaders: props.leaders?.map((leader) => ({
         user: [leader.user],
@@ -126,8 +126,9 @@ export class SquidexFixture implements Fixture {
   }
 
   private async prepareWorkingGroup(props: WorkingGroupCreateDataObject) {
+    const { lastUpdated, ...rest } = props;
     return {
-      ...props,
+      ...rest,
       leaders: props.leaders?.map((leader) => ({
         user: [leader.user],
         role: leader.role,

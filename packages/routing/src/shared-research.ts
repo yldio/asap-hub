@@ -5,6 +5,13 @@ const editResearchOutput = route(
   { researchOutputId: stringParser },
   {},
 );
+
+const versionResearchOutput = route(
+  '/version',
+  { researchOutputId: stringParser },
+  {},
+);
+
 const researchOutputPublished = route(
   '/publishedNow',
   { researchOutputId: stringParser },
@@ -17,7 +24,7 @@ const researchOutput = route(
     researchOutputId: stringParser,
     draftCreated: booleanParser,
   },
-  { editResearchOutput, researchOutputPublished },
+  { editResearchOutput, researchOutputPublished, versionResearchOutput },
 );
 
 const sharedResearch = route('/shared-research', {}, { researchOutput });

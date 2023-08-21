@@ -15,6 +15,8 @@ import {
   VALIDATION_ERROR_MESSAGE,
   ValidationErrorResponse,
   WorkingGroupResponse,
+  isResearchOutputDocumentType,
+  ResearchOutputVersionPostRequest,
 } from '@asap-hub/model';
 import {
   FetchResearchOutputOptions,
@@ -144,6 +146,21 @@ export default class ResearchOutputController {
     const currentResearchOutput =
       await this.researchOutputDataProvider.fetchById(id);
 
+    let version: ResearchOutputVersionPostRequest | undefined;
+    if (researchOutputUpdateData.createVersion) {
+      version = {
+        title: currentResearchOutput?.title || '',
+        link: currentResearchOutput?.link,
+        type: currentResearchOutput?.type,
+        addedDate: currentResearchOutput?.addedDate,
+        documentType:
+          currentResearchOutput?.documentType &&
+          isResearchOutputDocumentType(currentResearchOutput?.documentType)
+            ? currentResearchOutput?.documentType
+            : 'Grant Document',
+      };
+    }
+
     if (!currentResearchOutput) {
       throw new NotFoundError(
         undefined,
@@ -205,11 +222,14 @@ export default class ResearchOutputController {
       usageNotes: normalisedResearchOutputUpdateData.usageNotes,
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
       workingGroups: normalisedResearchOutputUpdateData.workingGroups,
+      versions: [],
     };
 
     const updateOptions = {
       publish: normalisedResearchOutputUpdateData.published,
+      newVersion: version,
     };
+
     await this.researchOutputDataProvider.update(
       id,
       researchOutputUpdateDataObject,
@@ -422,6 +442,7 @@ export type ResearchOutputCreateData = ResearchOutputPostRequest & {
 
 export type ResearchOutputUpdateData = ResearchOutputPutRequest & {
   updatedBy: string;
+  createVersion?: boolean;
 };
 
 const mapResearchTags = (

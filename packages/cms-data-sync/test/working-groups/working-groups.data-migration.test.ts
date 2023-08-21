@@ -19,6 +19,7 @@ jest.mock('../../src/utils/entries');
 const getWorkingGroupSquidex = (): WorkingGroupItem => ({
   id: 'wg-1',
   status: 'PUBLISHED',
+  lastModified: '2021-01-01T00:00:00.000Z',
   flatData: {
     title: 'Working Group 1',
     description: '<p><strong>Description</strong></p>',
@@ -67,6 +68,7 @@ const baseCreatePayload = {
   deliverables: { 'en-US': [] },
   members: { 'en-US': [] },
   calendars: { 'en-US': null },
+  lastUpdated: { 'en-US': '2021-01-01T00:00:00.000Z' },
 };
 
 describe('Migrate working groups', () => {

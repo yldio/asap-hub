@@ -5,14 +5,18 @@ import {
 import { WebhookDetail, WebhookDetailType } from '@asap-hub/model';
 import { EventBridge } from '@aws-sdk/client-eventbridge';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { eventBus, eventSource } from '../../../src/config';
+import {
+  eventBus,
+  eventSource,
+  contentfulWebhookAuthenticationToken,
+} from '../../../src/config';
 import { contentfulWebhookFactory } from '../../../src/handlers/webhooks/contentful';
 import { getNewsPublishContentfulWebhookPayload } from '../../fixtures/news.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
-  getCPAClient: () => ({
+  getCDAClient: () => ({
     getEntry: jest.fn().mockResolvedValue({
       sys: {
         id: '1',
@@ -27,8 +31,6 @@ describe('Contentful event webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn(),
   } as unknown as jest.Mocked<EventBridge>;
-  const contentfulWebhookAuthenticationToken =
-    'contentful-webhook-authentication-token';
   const handler = contentfulWebhookFactory(evenBridgeMock);
 
   beforeEach(jest.resetAllMocks);

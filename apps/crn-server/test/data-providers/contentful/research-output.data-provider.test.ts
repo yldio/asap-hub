@@ -18,6 +18,7 @@ import {
   getContentfulResearchOutputGraphqlResponse,
   getResearchOutputDataObject,
 } from '../../fixtures/research-output.fixtures';
+import { getEntry } from '../../fixtures/contentful.fixtures';
 
 jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
@@ -1703,6 +1704,125 @@ describe('Research Outputs Data Provider', () => {
         }),
       );
     });
+  });
+  describe('create Version', () => {
+    test('can create a first version', async () => {
+      const publish = jest.fn();
+      const researchOutputMock = getEntry({});
+      environmentMock.getEntry.mockResolvedValue(researchOutputMock);
+
+      environmentMock.createEntry.mockResolvedValue({
+        sys: { id: '1' },
+        publish,
+      } as unknown as Entry);
+      await researchOutputDataProvider.update(
+        '1',
+        getResearchOutputUpdateDataObject(),
+        {
+          publish: false,
+          newVersion: {
+            documentType: 'Article',
+            title: 'Test',
+            addedDate: '2022-01-01T12:00:00.000Z',
+            link: 'https://example.com',
+            type: '3D Printing',
+          },
+        },
+      );
+
+      expect(environmentMock.createEntry).toHaveBeenCalledWith(
+        'researchOutputVersions',
+        {
+          fields: {
+            documentType: {
+              'en-US': 'Article',
+            },
+            title: {
+              'en-US': 'Test',
+            },
+            addedDate: {
+              'en-US': '2022-01-01T12:00:00.000Z',
+            },
+            link: {
+              'en-US': 'https://example.com',
+            },
+            type: {
+              'en-US': '3D Printing',
+            },
+          },
+        },
+      );
+      expect(publish).toHaveBeenCalled();
+    });
+  });
+  test('can create a second version', async () => {
+    const researchOutputMock = getEntry({
+      versions: {
+        'en-US': [
+          getEntry(
+            {
+              documentType: {
+                'en-US': 'Article',
+              },
+              title: {
+                'en-US': 'Test',
+              },
+              addedDate: {
+                'en-US': '2022-01-01T12:00:00.000Z',
+              },
+              link: {
+                'en-US': 'https://example.com',
+              },
+              type: {
+                'en-US': '3D Printing',
+              },
+            },
+            { id: 'version-1' },
+          ),
+        ],
+      },
+    });
+    environmentMock.getEntry.mockResolvedValue(researchOutputMock);
+
+    environmentMock.createEntry.mockResolvedValue(
+      getEntry({}, { id: 'version-2' }),
+    );
+    await researchOutputDataProvider.update(
+      '1',
+      getResearchOutputUpdateDataObject(),
+      {
+        publish: false,
+        newVersion: {
+          documentType: 'Article',
+          title: 'Version 2',
+          addedDate: '2022-01-01T12:00:00.000Z',
+          link: 'https://example.com',
+          type: '3D Printing',
+        },
+      },
+    );
+    const mockPatch = patch as jest.MockedFunction<typeof patch>;
+    expect(mockPatch).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        versions: [
+          {
+            sys: {
+              id: 'version-1',
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+          {
+            sys: {
+              id: 'version-2',
+              linkType: 'Entry',
+              type: 'Link',
+            },
+          },
+        ],
+      }),
+    );
   });
 });
 

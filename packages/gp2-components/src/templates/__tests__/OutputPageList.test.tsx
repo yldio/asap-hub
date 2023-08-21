@@ -4,6 +4,7 @@ import OutputPageList from '../OutputPageList';
 const props = {
   onChangeFilter: jest.fn(),
   onChangeSearch: jest.fn(),
+  isAdministrator: true,
   searchQuery: '',
   hasOutputs: true,
 };

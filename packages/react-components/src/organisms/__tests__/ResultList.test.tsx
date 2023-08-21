@@ -124,6 +124,25 @@ it('triggers an error toast when export fails', async () => {
   );
 });
 
+it('triggers an error toast when export link fails', async () => {
+  const mockToast = jest.fn();
+  const mockExport = jest.fn(() => Promise.reject());
+  render(
+    <ToastContext.Provider value={mockToast}>
+      <ResultList {...props} exportResults={mockExport}>
+        cards
+      </ResultList>
+    </ToastContext.Provider>,
+  );
+  userEvent.click(screen.getByText(/export as csv/i));
+  expect(mockExport).toHaveBeenCalled();
+  await waitFor(() =>
+    expect(mockToast).toHaveBeenCalledWith(
+      expect.stringMatching(/issue exporting/i),
+    ),
+  );
+});
+
 it('renders custom component when no results found', () => {
   const noEventsComponent = <>Custom No Events Component</>;
 

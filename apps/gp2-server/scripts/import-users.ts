@@ -96,7 +96,7 @@ const app = async () => {
         onboarded: true,
         degrees: [],
         fundingStreams: data[13]!,
-        keywords: [],
+        tags: [],
         questions: [],
         contributingCohorts: [],
         workingGroup: userWorkingGroup,

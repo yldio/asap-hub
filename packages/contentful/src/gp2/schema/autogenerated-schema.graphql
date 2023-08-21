@@ -949,7 +949,6 @@ type Events implements Entry {
   startDateTimeZone(locale: String): String
   status(locale: String): String
   sys: Sys!
-  tags(locale: String): [String]
   thumbnail(locale: String, preview: Boolean): Asset
   title(locale: String): String
   videoRecording(locale: String): EventsVideoRecording
@@ -1082,10 +1081,6 @@ input EventsFilter {
   status_not_contains: String
   status_not_in: [String]
   sys: SysFilter
-  tags_contains_all: [String]
-  tags_contains_none: [String]
-  tags_contains_some: [String]
-  tags_exists: Boolean
   thumbnail_exists: Boolean
   title: String
   title_contains: String
@@ -2665,7 +2660,6 @@ type Projects implements Entry {
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   endDate(locale: String): DateTime
-  keywords(locale: String): [String]
   leadEmail(locale: String): String
   linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectsMembersCollection
@@ -2711,10 +2705,6 @@ input ProjectsFilter {
   endDate_lte: DateTime
   endDate_not: DateTime
   endDate_not_in: [DateTime]
-  keywords_contains_all: [String]
-  keywords_contains_none: [String]
-  keywords_contains_some: [String]
-  keywords_exists: Boolean
   leadEmail: String
   leadEmail_contains: String
   leadEmail_exists: Boolean
@@ -3196,7 +3186,6 @@ type Users implements Entry {
   fundingStreams(locale: String): String
   github(locale: String): String
   googleScholar(locale: String): String
-  keywords(locale: String): [String]
   lastName(locale: String): String
   linkedFrom(allowedLocales: [String]): UsersLinkingCollections
   linkedIn(locale: String): String
@@ -3338,10 +3327,6 @@ input UsersFilter {
   googleScholar_not: String
   googleScholar_not_contains: String
   googleScholar_not_in: [String]
-  keywords_contains_all: [String]
-  keywords_contains_none: [String]
-  keywords_contains_some: [String]
-  keywords_exists: Boolean
   lastName: String
   lastName_contains: String
   lastName_exists: Boolean
@@ -4455,10 +4440,6 @@ input cfUsersNestedFilter {
   googleScholar_not: String
   googleScholar_not_contains: String
   googleScholar_not_in: [String]
-  keywords_contains_all: [String]
-  keywords_contains_none: [String]
-  keywords_contains_some: [String]
-  keywords_exists: Boolean
   lastName: String
   lastName_contains: String
   lastName_exists: Boolean

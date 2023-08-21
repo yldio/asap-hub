@@ -21,7 +21,6 @@ const mockedProject: gp2.ProjectResponse = {
   ],
   startDate: '2021-12-28',
   status: 'Active',
-  keywords: ['RNA', 'Aging', 'Diversity', 'Data Science'],
   tags: [
     { id: '1', name: 'RNA' },
     { id: '2', name: 'Aging' },

@@ -16,7 +16,6 @@ describe('isUserOnboardable validation', () => {
     'country',
     'positions',
     'biography',
-    'keywords',
     'degrees',
   ])('Should fail if %s is missing from user profile', async (fieldName) => {
     const userResponse: gp2.UserResponse = {
@@ -41,15 +40,15 @@ describe('isUserOnboardable validation', () => {
       positions: { valid: false },
     });
   });
-  it('Should fail if there are no keywords', async () => {
+  it('Should fail if there are no tags', async () => {
     const userIncompleteResponse: gp2.UserResponse = {
       ...getUserResponse(),
-      keywords: [],
+      tags: [],
     };
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
-      keywords: { valid: false },
+      tags: { valid: false },
     });
   });
   it('Should fail if there are no degrees', async () => {

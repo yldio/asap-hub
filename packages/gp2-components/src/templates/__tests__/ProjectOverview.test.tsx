@@ -1,4 +1,3 @@
-import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import ProjectOverview from '../ProjectOverview';
@@ -76,14 +75,14 @@ describe('ProjectOverview', () => {
       screen.getByRole('link', { name: 'tony@stark.com' }),
     ).toBeInTheDocument();
   });
-  it.each(gp2.keywords)('renders the keyword: %s', (keyword) => {
+  it('renders the keyword: Test', () => {
     render(
-      <ProjectOverview {...defaultProps} keywords={[keyword]}>
+      <ProjectOverview {...defaultProps} keywords={['Test']}>
         Body
       </ProjectOverview>,
     );
 
-    expect(screen.getByText(keyword)).toBeInTheDocument();
+    expect(screen.getByText('Test')).toBeInTheDocument();
   });
   it('displays the milestones', () => {
     render(

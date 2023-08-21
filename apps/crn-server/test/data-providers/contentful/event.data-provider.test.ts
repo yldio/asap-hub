@@ -442,6 +442,33 @@ describe('Events Contentful Data Provider', () => {
     });
 
     describe('Event speakers', () => {
+      test('Should remove null speakers from the list', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse.speakersCollection!.items = [
+          null,
+          ...contentfulGraphQLResponse.speakersCollection!.items,
+        ];
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+        expect(result!.speakers.length).toEqual(1);
+        const speakerResult = result!.speakers[0]! as EventSpeakerTeam;
+        expect(speakerResult.team.displayName).toEqual('The team three');
+      });
+      test('Should default speakers to an empty array', async () => {
+        const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+        contentfulGraphQLResponse.speakersCollection = null;
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          events: contentfulGraphQLResponse,
+        });
+
+        const result = await eventDataProvider.fetchById(eventId);
+        expect(result!.speakers).toEqual([]);
+      });
       test('Should return team inactiveSince as undefined when it comes as null from graphql response', async () => {
         const contentfulGraphQLResponse = getContentfulGraphqlEvent();
         contentfulGraphQLResponse.speakersCollection!.items![0]!.team!.inactiveSince! =

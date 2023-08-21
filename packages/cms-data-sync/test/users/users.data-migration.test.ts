@@ -172,6 +172,7 @@ describe('Migrate users', () => {
             labs: { 'en-US': null },
             teams: { 'en-US': [] },
             avatar: { 'en-US': undefined },
+            lastUpdated: { 'en-US': '2023-03-15T00:00:00.0000Z' },
           },
         },
       );

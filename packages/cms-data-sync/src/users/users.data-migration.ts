@@ -53,7 +53,7 @@ export const migrateUsers = async () => {
   };
 
   const parseUserItem = async (user: UserItem): Promise<ContentfulUser> => {
-    const { flatData: squidexUserItem, id, created } = user;
+    const { flatData: squidexUserItem, id, created, lastModified } = user;
 
     const {
       avatar,
@@ -145,6 +145,7 @@ export const migrateUsers = async () => {
         })) || null,
       avatar: avatarAsset,
       teams: teamLinks.filter(Boolean),
+      lastUpdated: lastModified,
     };
 
     return { id, ...userPayload };

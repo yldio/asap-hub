@@ -168,6 +168,8 @@ enum AssetLinkingCollectionsInterestGroupsCollectionOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC
@@ -249,6 +251,8 @@ enum AssetLinkingCollectionsUsersCollectionOrder {
   institution_DESC
   lastName_ASC
   lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   linkedIn_ASC
   linkedIn_DESC
   onboarded_ASC
@@ -410,6 +414,8 @@ enum CalendarsLinkingCollectionsInterestGroupsCollectionOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC
@@ -693,6 +699,8 @@ enum DiscoverMembersCollectionOrder {
   institution_DESC
   lastName_ASC
   lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   linkedIn_ASC
   linkedIn_DESC
   onboarded_ASC
@@ -796,6 +804,8 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   institution_DESC
   lastName_ASC
   lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   linkedIn_ASC
   linkedIn_DESC
   onboarded_ASC
@@ -2026,6 +2036,8 @@ enum InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC
@@ -2062,6 +2074,7 @@ type InterestGroups implements Entry {
   contentfulMetadata: ContentfulMetadata!
   description(locale: String): String
   googleDrive(locale: String): String
+  lastUpdated(locale: String): DateTime
   leadersCollection(limit: Int = 100, locale: String, order: [InterestGroupsLeadersCollectionOrder], preview: Boolean, skip: Int = 0, where: InterestGroupLeadersFilter): InterestGroupsLeadersCollection
   linkedFrom(allowedLocales: [String]): InterestGroupsLinkingCollections
   name(locale: String): String
@@ -2102,6 +2115,15 @@ input InterestGroupsFilter {
   googleDrive_not: String
   googleDrive_not_contains: String
   googleDrive_not_in: [String]
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   leaders: cfInterestGroupLeadersNestedFilter
   leadersCollection_exists: Boolean
   name: String
@@ -2159,6 +2181,8 @@ enum InterestGroupsOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC
@@ -2309,6 +2333,8 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   institution_DESC
   lastName_ASC
   lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   linkedIn_ASC
   linkedIn_DESC
   onboarded_ASC
@@ -3836,6 +3862,8 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   institution_DESC
   lastName_ASC
   lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   linkedIn_ASC
   linkedIn_DESC
   onboarded_ASC
@@ -3993,6 +4021,8 @@ enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
   active_DESC
   googleDrive_ASC
   googleDrive_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   name_ASC
   name_DESC
   slack_ASC
@@ -4253,6 +4283,7 @@ type Users implements Entry {
   jobTitle(locale: String): String
   labsCollection(limit: Int = 100, locale: String, order: [UsersLabsCollectionOrder], preview: Boolean, skip: Int = 0, where: LabsFilter): UsersLabsCollection
   lastName(locale: String): String
+  lastUpdated(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): UsersLinkingCollections
   linkedIn(locale: String): String
   onboarded(locale: String): Boolean
@@ -4422,6 +4453,15 @@ input UsersFilter {
   lastName_not: String
   lastName_not_contains: String
   lastName_not_in: [String]
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   linkedIn: String
   linkedIn_contains: String
   linkedIn_exists: Boolean
@@ -4698,6 +4738,8 @@ enum UsersOrder {
   institution_DESC
   lastName_ASC
   lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   linkedIn_ASC
   linkedIn_DESC
   onboarded_ASC
@@ -6115,6 +6157,15 @@ input cfUsersNestedFilter {
   lastName_not: String
   lastName_not_contains: String
   lastName_not_in: [String]
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   linkedIn: String
   linkedIn_contains: String
   linkedIn_exists: Boolean

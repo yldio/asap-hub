@@ -12,7 +12,7 @@ const usersContentQueryFragment = gql`
       publishedAt
       publishedVersion
     }
-
+    lastUpdated
     email
     firstName
     institution

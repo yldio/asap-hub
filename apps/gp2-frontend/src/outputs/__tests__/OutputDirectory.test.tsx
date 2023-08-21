@@ -83,7 +83,7 @@ it('renders the filters modal', async () => {
   expect(screen.getByText('TYPE OF OUTPUT')).toBeVisible();
 });
 
-it('triggers export with the same parameters but overrides onlyOnboarded with false', async () => {
+it('triggers export', async () => {
   await renderOutputDirectory({ isAdministrator: true });
   await waitFor(() =>
     expect(mockGetOutputs).toHaveBeenCalledWith(
@@ -94,7 +94,7 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
       }),
     ),
   );
-  userEvent.click(screen.getByRole('button', { name: 'Export Export' }));
+  userEvent.click(screen.getByRole('button', { name: 'Export CSV' }));
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching(/output_export\.csv/),
     expect.anything(),

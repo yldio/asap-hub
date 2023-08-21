@@ -27,7 +27,9 @@ const headerNoResultsStyles = css({
   },
 });
 
-const exportStyles = css({
+const exportStyles = css({ marginLeft: `${24 / perRem}em` });
+
+const exportSectionStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: `${15 / perRem}em`,
@@ -46,9 +48,10 @@ const exportButton = css({
     width: '100%',
   },
 
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    minWidth: 'unset',
-  },
+  [`@media (min-width:${tabletScreen.min}px) and (max-width: ${mobileScreen.max}px)`]:
+    {
+      minWidth: 'auto',
+    },
 });
 
 const resultsParagraphStyles = css({
@@ -132,29 +135,52 @@ const ResultList: React.FC<ResultListProps> = ({
         css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}
       >
         {numberOfItems > 0 && (
-          <Paragraph styles={resultsParagraphStyles}>
+          <Paragraph
+            styles={
+              exportResults && isAdministrator
+                ? resultsParagraphStyles
+                : undefined
+            }
+          >
             <strong>
               {numberOfItems} result{numberOfItems === 1 || 's'} found
             </strong>
-            {exportResults && isAdministrator && (
-              <span css={exportStyles}>
-                <strong>Export as:</strong>
-                <Button
-                  noMargin
-                  onClick={() =>
-                    exportResults().catch(() =>
-                      toast(
-                        'There was an issue exporting to CSV. Please try again.',
-                      ),
-                    )
-                  }
-                  overrideStyles={exportButton}
-                >
-                  {ExportIcon}
-                  CSV
-                </Button>
-              </span>
-            )}
+
+            {exportResults &&
+              (isAdministrator ? (
+                <span css={exportSectionStyles}>
+                  <strong>Export as:</strong>
+                  <Button
+                    noMargin
+                    onClick={() =>
+                      exportResults().catch(() =>
+                        toast(
+                          'There was an issue exporting to CSV. Please try again.',
+                        ),
+                      )
+                    }
+                    overrideStyles={exportButton}
+                  >
+                    {ExportIcon}
+                    CSV
+                  </Button>
+                </span>
+              ) : (
+                <span css={exportStyles}>
+                  <Button
+                    linkStyle
+                    onClick={() =>
+                      exportResults().catch(() =>
+                        toast(
+                          'There was an issue exporting to CSV. Please try again.',
+                        ),
+                      )
+                    }
+                  >
+                    Export as CSV
+                  </Button>
+                </span>
+              ))}
           </Paragraph>
         )}
         {cardViewHref && listViewHref && (

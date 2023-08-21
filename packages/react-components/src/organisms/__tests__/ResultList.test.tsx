@@ -86,17 +86,36 @@ it('renders export link', () => {
   expect(mockExport).toHaveBeenCalled();
 });
 
+it('renders export csv as admin', () => {
+  const { rerender } = render(
+    <ResultList {...props} exportResults={undefined} isAdministrator>
+      cards
+    </ResultList>,
+  );
+  expect(screen.queryByText(/export as:/i)).toBeNull();
+  expect(screen.queryByText(/csv/i)).toBeNull();
+  const mockExport = jest.fn(() => Promise.resolve());
+  rerender(
+    <ResultList {...props} exportResults={mockExport} isAdministrator>
+      cards
+    </ResultList>,
+  );
+  expect(screen.getByText(/export as:/i)).toBeVisible();
+  userEvent.click(screen.getByText(/csv/i));
+  expect(mockExport).toHaveBeenCalled();
+});
+
 it('triggers an error toast when export fails', async () => {
   const mockToast = jest.fn();
   const mockExport = jest.fn(() => Promise.reject());
   render(
     <ToastContext.Provider value={mockToast}>
-      <ResultList {...props} exportResults={mockExport}>
+      <ResultList {...props} exportResults={mockExport} isAdministrator>
         cards
       </ResultList>
     </ToastContext.Provider>,
   );
-  userEvent.click(screen.getByText(/export/i));
+  userEvent.click(screen.getByText(/csv/i));
   expect(mockExport).toHaveBeenCalled();
   await waitFor(() =>
     expect(mockToast).toHaveBeenCalledWith(

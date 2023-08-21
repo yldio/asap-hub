@@ -141,7 +141,7 @@ const serverlessConfig: AWS = {
             Resource: ['*'],
             Condition: {
               StringLike: {
-                'ses:FromAddress': '*@asap.science',
+                'ses:FromAddress': ['*@asap.science', '*@gp2.org'],
               },
             },
           },

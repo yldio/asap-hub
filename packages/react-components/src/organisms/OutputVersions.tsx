@@ -1,5 +1,4 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
@@ -128,25 +127,16 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({ versions }) => {
               <p css={paragraphStyle}>#{index + 1}</p>
               <span css={[titleStyles, rowTitleStyles]}>Type</span>
               <p css={paragraphStyle}>
-                {documentType === 'Article' && (
+                {documentType === 'Report' ? (
+                  <Pill accent="gray">Report</Pill>
+                ) : (
                   <Pill accent="gray">{type}</Pill>
                 )}
               </p>
               <span css={[titleStyles, rowTitleStyles]}>
                 Shared Output Name
               </span>
-              <p css={paragraphStyle}>
-                <Link
-                  ellipsed
-                  href={
-                    sharedResearch({}).researchOutput({
-                      researchOutputId: id,
-                    }).$
-                  }
-                >
-                  {title}
-                </Link>
-              </p>
+              <p css={paragraphStyle}>{title}</p>
               <span css={[titleStyles, rowTitleStyles]}>Date Posted</span>
               <p css={paragraphStyle}>
                 {addedDate &&

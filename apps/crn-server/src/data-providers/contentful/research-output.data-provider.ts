@@ -196,7 +196,33 @@ export class ResearchOutputContentfulDataProvider
   ): Promise<void> {
     const environment = await this.getRestClient();
     const entry = await environment.getEntry(id);
-    const update = prepareInputForUpdate(input);
+    const data = input;
+
+    if (updateOptions.newVersion) {
+      const versionEntry = await environment.createEntry(
+        'researchOutputVersions',
+        {
+          fields: addLocaleToFields({
+            ...updateOptions.newVersion,
+          }),
+        },
+      );
+      await versionEntry.publish();
+
+      const { id: versionId } = versionEntry.sys;
+      data.versions = entry.fields?.versions?.['en-US']
+        ? [
+            ...entry.fields.versions['en-US']
+              .filter(
+                (version: { sys: { id: string } } | null) => version !== null,
+              )
+              .map(({ sys }: { sys: { id: string } }) => sys.id),
+            versionId,
+          ]
+        : [versionId];
+    }
+
+    const update = prepareInputForUpdate(data);
     const result = await patch(entry, update);
 
     if (updateOptions.publish) {
@@ -489,6 +515,7 @@ const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
     ...prepareInput(researchOutput),
     updatedBy: getLinkEntity(input.updatedBy),
     lastUpdatedPartial: new Date().toISOString(),
+    versions: input.versions ? getLinkEntities(input.versions) : undefined,
     statusChangedBy: _statusChangedById
       ? getLinkEntity(_statusChangedById)
       : null,

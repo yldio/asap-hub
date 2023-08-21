@@ -137,6 +137,7 @@ const renderPage = async ({
     ],
   },
   workingGroupId = 'wg1',
+  createVersion = false,
   outputDocumentType = 'article',
   researchOutputData,
   history = createMemoryHistory({
@@ -154,6 +155,7 @@ const renderPage = async ({
   canEditResearchOutput?: boolean;
   researchOutputData?: ResearchOutputResponse;
   history?: History;
+  createVersion?: boolean;
 } = {}) => {
   const path =
     network.template +
@@ -176,6 +178,7 @@ const renderPage = async ({
                 <WorkingGroupOutput
                   workingGroupId={workingGroupId}
                   researchOutputData={researchOutputData}
+                  createVersion={createVersion}
                 />
               </Route>
             </Router>
@@ -421,6 +424,17 @@ it('will toast server side errors for unknown errors', async () => {
     ),
   ).toBeInTheDocument();
   expect(window.scrollTo).toBeCalled();
+});
+
+it('display a toast warning when creating a new version', async () => {
+  await renderPage({
+    createVersion: true,
+  });
+  expect(
+    screen.queryByText(
+      'The previous output page will be replaced with a summarised version history section.',
+    ),
+  ).toBeInTheDocument();
 });
 
 it.each([

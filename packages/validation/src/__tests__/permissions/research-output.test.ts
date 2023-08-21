@@ -5,6 +5,7 @@ import {
   hasDuplicateResearchOutputPermission,
   hasEditResearchOutputPermission,
   hasPublishResearchOutputPermission,
+  hasVersionResearchOutputPermission,
   hasRequestForReviewPermission,
   hasShareResearchOutputPermission,
   isActiveAndBelongsToAssociation,
@@ -221,6 +222,33 @@ describe('hasPublishResearchOutputPermission', () => {
     'returns $expected when user role is $userRole',
     ({ userRole, expected }) => {
       expect(hasPublishResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
+});
+
+describe('hasVersionResearchOutputPermission', () => {
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${true}
+    ${`Member`} | ${false}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole',
+    ({ userRole, expected }) => {
+      expect(hasVersionResearchOutputPermission(userRole)).toEqual(expected);
+    },
+  );
+
+  test.each`
+    userRole    | expected
+    ${`Staff`}  | ${false}
+    ${`Member`} | ${false}
+    ${`None`}   | ${false}
+  `(
+    'returns $expected when user role is $userRole and feature flag is disabled',
+    ({ userRole, expected }) => {
+      disable('CONTENTFUL');
+      expect(hasVersionResearchOutputPermission(userRole)).toEqual(expected);
     },
   );
 });

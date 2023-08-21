@@ -424,7 +424,10 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
         title: wg.title || '',
       }))[0] || undefined;
 
-  const speakersItems = (speakersCollection?.items as SpeakerItem[]) ?? [];
+  const speakersItems =
+    speakersCollection?.items.filter(
+      (x: SpeakerItem | null): x is SpeakerItem => x !== null,
+    ) ?? [];
   return {
     id,
     title: title!,

@@ -16,7 +16,7 @@ export default class ProjectController {
 
   async fetch(
     options: gp2.FetchProjectOptions,
-    loggedInUserId: string,
+    loggedInUserId?: string,
   ): Promise<gp2.ListProjectResponse> {
     const projects = await this.projectDataProvider.fetch(options);
     return {
@@ -40,7 +40,7 @@ export default class ProjectController {
   async update(
     id: string,
     update: gp2.ProjectUpdateRequest,
-    loggedInUserId: string,
+    loggedInUserId?: string,
   ): Promise<gp2.ProjectResponse> {
     await this.projectDataProvider.update(id, {
       ...update,

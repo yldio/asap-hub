@@ -6,7 +6,7 @@ import {
   patchAndPublish,
   pollContentfulGql,
 } from '@asap-hub/contentful';
-import { FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { KeywordItem, parseKeyword } from './keyword.data-provider';
 import {
   deleteEntries,
@@ -39,11 +39,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
   async fetch(
     options: gp2Model.FetchProjectOptions,
   ): Promise<gp2Model.ListProjectDataObject> {
-    const { take = 10, skip = 0, filter } = options;
-    let where = {};
-    if (filter?.hasKeywords) {
-      where = { keywords_exists: true };
-    }
+    const { take = 10, skip = 0 } = options;
     const { projectsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchProjectsQuery,
       gp2Contentful.FetchProjectsQueryVariables

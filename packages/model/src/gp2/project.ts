@@ -3,7 +3,7 @@ import { Calendar, Member, Milestone, Resource, UpdateMember } from './common';
 import { KeywordDataObject } from './keywords';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
-export type ProjectStatus = typeof projectStatus[number];
+export type ProjectStatus = (typeof projectStatus)[number];
 
 export const projectMemberRole = [
   'Contributor',
@@ -12,7 +12,7 @@ export const projectMemberRole = [
   'Project lead',
   'Project manager',
 ] as const;
-export type ProjectMemberRole = typeof projectMemberRole[number];
+export type ProjectMemberRole = (typeof projectMemberRole)[number];
 
 export type ProjectMember = Member<ProjectMemberRole>;
 
@@ -55,11 +55,6 @@ export type ProjectResourcesPutRequest = NonNullable<
   ProjectDataObject['resources']
 >;
 
-export type FetchProjectFilter = {
-  hasKeywords?: boolean;
-  userId?: string;
-};
-
-export type FetchProjectOptions = FetchOptions<FetchProjectFilter>;
+export type FetchProjectOptions = FetchOptions;
 
 export const opportunitiesAvailable = 'Opportunities Available';

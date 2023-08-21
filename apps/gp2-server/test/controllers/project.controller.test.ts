@@ -202,7 +202,9 @@ describe('Project controller', () => {
       projectDataProviderMock.fetchById.mockResolvedValue(mockResponse);
       const result = await projectController.update(
         '7',
-        { resources: [{ type: 'Note', title: 'a title to update' }] },
+        {
+          resources: [{ type: 'Note', title: 'a title to update' }],
+        },
         '11',
       );
 

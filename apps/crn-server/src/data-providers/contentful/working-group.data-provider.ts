@@ -26,7 +26,10 @@ import {
 } from '@asap-hub/contentful';
 
 import { WorkingGroupDataProvider } from '../types';
-import { parseContentfulGraphqlCalendarToResponse } from '../transformers';
+import {
+  parseContentfulGraphqlCalendarToResponse,
+  mapDeliverables,
+} from '../transformers';
 import logger from '../../utils/logger';
 
 export type WorkingGroupItem = NonNullable<
@@ -201,7 +204,8 @@ export const parseContentfulGraphQlWorkingGroup = (
       status: deliverable.status!,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       description: deliverable.description!,
-    }));
+    }))
+    .map(mapDeliverables(!!complete));
 
   const getUserFromMemberCollection = (member: MemberItem) => ({
     id: member.user?.sys.id || '',

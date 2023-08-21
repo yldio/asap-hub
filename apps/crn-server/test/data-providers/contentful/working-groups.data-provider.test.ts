@@ -437,6 +437,54 @@ describe('Working Groups data provider', () => {
           { description: 'Deliverable 1', status: 'In Progress' },
         ]);
       });
+
+      test('should normalise deliverable statuses for complete working groups', async () => {
+        const contentfulGraphQLResponse =
+          getContentfulWorkingGroupGraphqlResponse();
+        contentfulGraphQLResponse.workingGroups!.complete = true;
+        contentfulGraphQLResponse.workingGroups!.deliverablesCollection = {
+          items: [
+            { description: 'Deliverable 1', status: 'Complete' },
+            { description: 'Deliverable 2', status: 'In Progress' },
+            { description: 'Deliverable 3', status: 'Pending' },
+          ],
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById('wg-0');
+
+        expect(response?.deliverables).toEqual([
+          { description: 'Deliverable 1', status: 'Complete' },
+          { description: 'Deliverable 2', status: 'Incomplete' },
+          { description: 'Deliverable 3', status: 'Not Started' },
+        ]);
+      });
+
+      test('should normalise deliverable statuses for incomplete working groups', async () => {
+        const contentfulGraphQLResponse =
+          getContentfulWorkingGroupGraphqlResponse();
+        contentfulGraphQLResponse.workingGroups!.complete = false;
+        contentfulGraphQLResponse.workingGroups!.deliverablesCollection = {
+          items: [
+            { description: 'Deliverable 1', status: 'Complete' },
+            { description: 'Deliverable 2', status: 'Incomplete' },
+            { description: 'Deliverable 3', status: 'Not Started' },
+          ],
+        };
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          contentfulGraphQLResponse,
+        );
+
+        const response = await workingGroupDataProvider.fetchById('wg-0');
+
+        expect(response?.deliverables).toEqual([
+          { description: 'Deliverable 1', status: 'Complete' },
+          { description: 'Deliverable 2', status: 'In Progress' },
+          { description: 'Deliverable 3', status: 'Pending' },
+        ]);
+      });
     });
 
     describe('leaders and members', () => {

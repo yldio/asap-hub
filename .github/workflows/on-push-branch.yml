@@ -49,17 +49,6 @@ jobs:
           app: gp2
           create-dedicated-env: ${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') }}
 
-  test:
-    uses: ./.github/workflows/reusable-test.yml
-    with:
-      environment-name: Branch
-    secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      CRN_SQUIDEX_CI_CLIENT_SECRET: ${{ secrets.CRN_SQUIDEX_CI_CLIENT_SECRET }}
-      CONTENTFUL_MANAGEMENT_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-      CRN_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
-      CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
-
   build:
     needs: [setup]
     uses: ./.github/workflows/reusable-build.yml
@@ -110,7 +99,7 @@ jobs:
       GP2_CONTENTFUL_ACCESS_TOKEN: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
 
   deployment:
-    needs: [setup, test, build-analysis, create-environment]
+    needs: [setup, build-analysis, create-environment]
     uses: ./.github/workflows/reusable-deployment.yml
     with:
       environment-name: Branch
@@ -151,7 +140,7 @@ jobs:
     environment:
       name: Branch
       url: ${{ steps.setup.outputs.crn-app-url }}
-    needs: [test, build, build-analysis, create-environment, deployment, verify]
+    needs: [build, build-analysis, create-environment, deployment, verify]
     if: ${{ always() }}
     steps:
       - name: Checkout

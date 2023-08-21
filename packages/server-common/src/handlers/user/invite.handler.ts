@@ -1,6 +1,4 @@
 import { EventBridgeEvent } from 'aws-lambda';
-import path from 'path';
-import url from 'url';
 import { v4 as uuidV4 } from 'uuid';
 import { gp2, UserDataObject, UserUpdateDataObject } from '@asap-hub/model';
 import {
@@ -19,22 +17,17 @@ interface DataProvider {
   ): Promise<void>;
 }
 
-/* istanbul ignore next */
-const sleepFn = (delay: number) =>
-  new Promise((resolve) => setTimeout(resolve, delay));
 export const inviteHandlerFactory =
   <Provider extends DataProvider>(
     sendEmail: SendEmail,
     dataProvider: Provider,
     origin: string,
     logger: Logger,
-    template: SendEmailTemplate = 'Crn-Welcome',
-    /* istanbul ignore next */
-    sleep = sleepFn,
+    _template: SendEmailTemplate = 'Crn-Welcome',
   ): EventBridgeHandler<'UsersPublished', UserPayload> =>
   async (event) => {
-    // temp fix to delay the lamdba
-    await sleep(30_000);
+    logger.info(`Received event for user with ID ${event.detail.resourceId}`);
+    logger.info(event.detail);
     const user = await dataProvider.fetchById(event.detail.resourceId);
     if (!user) {
       throw new Error(
@@ -48,7 +41,6 @@ export const inviteHandlerFactory =
       );
       return;
     }
-
     logger.debug(
       `Attempting to invite user with ID ${event.detail.resourceId}, e-mail address ${user.email}`,
     );
@@ -63,24 +55,6 @@ export const inviteHandlerFactory =
       logger.error(error, 'Error while saving user data');
       throw new Error(
         `Unable to save the code for the user with ID ${event.detail.resourceId}`,
-      );
-    }
-
-    const link = new url.URL(path.join(`/welcome/${code}`), origin);
-
-    try {
-      await sendEmail({
-        to: [user.email],
-        template,
-        values: {
-          firstName: user.firstName,
-          link: link.toString(),
-        },
-      });
-    } catch (error) {
-      logger.error(error, 'Error while sending email');
-      throw new Error(
-        `Unable to send the email for the user with ID ${event.detail.resourceId}`,
       );
     }
 

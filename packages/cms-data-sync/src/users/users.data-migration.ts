@@ -14,7 +14,6 @@ import {
 } from '../utils';
 import { migrateFromSquidexToContentfulFactory } from '../utils/migration';
 import { date } from '../utils/normalise';
-import { contentfulRateLimiter } from '../contentful-rate-limiter';
 
 type UserItem = NonNullable<
   NonNullable<FetchUsersQuery['queryUsersContentsWithTotal']>['items']
@@ -100,10 +99,8 @@ export const migrateUsers = async () => {
               }),
             },
           );
-          await contentfulRateLimiter.removeTokens(1);
 
           await membership.publish();
-          await contentfulRateLimiter.removeTokens(1);
           return {
             sys: {
               type: 'Link',

@@ -2,7 +2,6 @@ import { addLocaleToFields, updateEntryFields } from '@asap-hub/contentful';
 import { Environment, Entry } from 'contentful-management';
 import { clearContentfulEntries, publishContentfulEntries } from './entries';
 import { logger as loggerFunc } from './logs';
-import { contentfulRateLimiter } from '../contentful-rate-limiter';
 import { safeParse } from './error';
 import { upsertInPlace } from './setup';
 
@@ -39,7 +38,6 @@ export const migrateFromSquidexToContentfulFactory =
               fields: addLocaleToFields(payload),
             },
           );
-          await contentfulRateLimiter.removeTokens(1);
 
           n += 1;
           logger(`Created entry with id ${id}. (${n}/${data.length})`, 'INFO');
@@ -53,7 +51,6 @@ export const migrateFromSquidexToContentfulFactory =
           const contentfulEntry = await contentfulEnvironment.getEntry(id);
           updateEntryFields(contentfulEntry, payload);
           const updatedEntry = await contentfulEntry.update();
-          await contentfulRateLimiter.removeTokens(1);
 
           n += 1;
           logger(`Updated entry with id ${id}. (${n}/${data.length})`, 'INFO');
@@ -100,7 +97,6 @@ export const migrateFromSquidexToContentfulFactory =
                     fields: addLocaleToFields(fallbackPayload),
                   },
                 );
-              await contentfulRateLimiter.removeTokens(1);
 
               logger(
                 `Entry with ID ${id} was uploaded with fallback data`,

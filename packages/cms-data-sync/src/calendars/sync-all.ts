@@ -11,7 +11,7 @@ export async function syncCalendars({
   dataProvider: CalendarDataProvider;
   logger: Logger;
 }) {
-  const { contentfulEnvironment } = await getContentfulClient();
+  const contentfulEnvironment = await getContentfulClient();
 
   const calendars = await fetchContentfulEntries(
     contentfulEnvironment,

@@ -14,7 +14,6 @@ import { migrateDiscover } from './discover/discover.data-migration';
 import { migrateResearchTags } from './research-tags/research-tags.data-migration';
 import { migrateResearchOutputs } from './research-outputs/research-outputs.data-migration';
 import { logger } from './utils';
-import { contentfulRateLimiter } from './contentful-rate-limiter';
 
 export const models = [
   'teams',
@@ -56,7 +55,6 @@ export const runMigrations = async (flags: Flag[] = []) => {
 
   const disabledWebhooks: WebHooks[] = [];
   try {
-    await contentfulRateLimiter.removeTokens(1);
     const webhooks = await contentfulSpace.getWebhooks();
     const currentEnvironmentWebhooks = webhooks.items.filter((webhook) =>
       webhook.filters?.some(
@@ -69,7 +67,6 @@ export const runMigrations = async (flags: Flag[] = []) => {
 
     for (const webhook of currentEnvironmentWebhooks) {
       webhook.active = false;
-      await contentfulRateLimiter.removeTokens(1);
       const disabledWebhook = await webhook.update();
       disabledWebhooks.push(disabledWebhook);
     }
@@ -124,7 +121,6 @@ export const runMigrations = async (flags: Flag[] = []) => {
       for (const disabledWebhook of disabledWebhooks) {
         disabledWebhook.active = true;
         try {
-          await contentfulRateLimiter.removeTokens(1);
           await disabledWebhook.update();
         } catch (err) {
           logger(`Error reactivating webhook ${disabledWebhook.name}`, 'ERROR');

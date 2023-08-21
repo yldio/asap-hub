@@ -9,19 +9,5 @@ module.exports.up = (migration) => {
 module.exports.down = (migration) => {
   const workingGroups = migration.editContentType('workingGroups');
 
-  workingGroups
-    .createField('keywords')
-    .name('Keywords')
-    .type('Array')
-    .localized(false)
-    .required(false)
-    .validations([])
-    .disabled(false)
-    .omitted(false)
-    .items({
-      type: 'Symbol',
-      validations: [],
-    });
-
   workingGroups.editField('tags').disabled(true);
 };

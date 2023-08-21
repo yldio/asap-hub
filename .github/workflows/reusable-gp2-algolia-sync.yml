@@ -88,7 +88,7 @@ jobs:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_INDEX_TEMP: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
-          ENTITY_TYPE: ${{ (inputs.entity == 'outputs' && 'output') || (inputs.entity == 'project' && 'project')  }}
+          ENTITY_TYPE: ${{ (inputs.entity == 'outputs' && 'output') || (inputs.entity == 'projects' && 'project')  }}
       - name: Import Outputs (OUTPUTS | ALL)
         if: ${{ inputs.entity == 'outputs' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity
@@ -108,7 +108,7 @@ jobs:
           squidex-ci-client-secret: 'na'
           data-store: 'contentful'
       - name: Import Outputs (PROJECTS | ALL)
-        if: ${{ inputs.entity == 'project' || inputs.entity == 'all'}}
+        if: ${{ inputs.entity == 'projects' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity
         with:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}

@@ -9,10 +9,7 @@ import FilterSearchExport from '../organisms/FilterSearchExport';
 
 const { rem } = pixels;
 
-type UsersPageListProps = Omit<
-  ComponentProps<typeof FilterSearchExport>,
-  'filters' | 'filtersOptions' | 'onChangeFilter'
-> & {
+type UsersPageListProps = ComponentProps<typeof FilterSearchExport> & {
   displayFilters?: boolean;
   changeLocation: (path: string) => void;
   updateFilters: (path: string, filter: FetchUsersFilter) => void;

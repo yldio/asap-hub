@@ -1,6 +1,5 @@
 import {
   Button,
-  Filter,
   filterIcon,
   pixels,
   SearchField,
@@ -36,15 +35,9 @@ type FilterSearchExportProps = {
   searchQuery: ComponentProps<typeof SearchField>['value'];
   onSearchQueryChange: ComponentProps<typeof SearchField>['onChange'];
   isAdministrator: boolean;
-  onFiltersClick?: () => void;
+  onFiltersClick: () => void;
   onExportClick: () => void;
-  useFilterComponent?: boolean;
-} & Partial<
-  Pick<
-    ComponentProps<typeof Filter>,
-    'filters' | 'filterOptions' | 'onChangeFilter'
-  >
->;
+};
 
 const FilterSearchExport: React.FC<FilterSearchExportProps> = ({
   isAdministrator,
@@ -52,25 +45,13 @@ const FilterSearchExport: React.FC<FilterSearchExportProps> = ({
   onSearchQueryChange,
   onFiltersClick,
   onExportClick,
-  useFilterComponent = false,
-  filters,
-  filterOptions = [],
-  onChangeFilter,
 }) => (
   <div css={[containerStyles, !isAdministrator && notAdminStyles]}>
     <div css={css({ gridArea: 'filter' })}>
-      {useFilterComponent ? (
-        <Filter
-          filters={filters}
-          onChangeFilter={onChangeFilter}
-          filterOptions={filterOptions}
-        />
-      ) : (
-        <Button noMargin onClick={onFiltersClick}>
-          {filterIcon}
-          <span css={buttonTextStyles}>Filters</span>
-        </Button>
-      )}
+      <Button noMargin onClick={onFiltersClick}>
+        {filterIcon}
+        <span css={buttonTextStyles}>Filters</span>
+      </Button>
     </div>
     <div css={css({ gridArea: 'search' })} role="search">
       <SearchField

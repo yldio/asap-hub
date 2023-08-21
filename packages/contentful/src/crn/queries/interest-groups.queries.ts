@@ -81,6 +81,7 @@ export const interestGroupContentQueryFragment = gql`
       googleCalendarId
       name
     }
+    lastUpdated
   }
 `;
 

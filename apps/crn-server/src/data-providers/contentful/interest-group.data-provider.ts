@@ -219,7 +219,7 @@ const parseGraphQLInterestGroup = (
     id: interestGroup.sys.id,
     active: !!interestGroup.active,
     createdDate: interestGroup.sys.firstPublishedAt,
-    lastModifiedDate: interestGroup.sys.publishedAt,
+    lastModifiedDate: interestGroup.lastUpdated,
     name: interestGroup.name || '',
     description: interestGroup.description || '',
     tags: (interestGroup.tags || []).filter(isString),

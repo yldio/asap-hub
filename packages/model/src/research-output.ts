@@ -207,6 +207,17 @@ export type ResearchOutputCoreObject = {
   usedInPublication?: boolean;
 };
 
+export type ResearchOutputVersionCoreObject = Pick<
+  ResearchOutputCoreObject,
+  'documentType' | 'type' | 'title' | 'link' | 'addedDate'
+>;
+
+export type ResearchOutputVersionPostRequest = ResearchOutputVersionCoreObject;
+
+export type ResearchOutputVersion = ResearchOutputVersionCoreObject & {
+  id: string;
+};
+
 export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   authors: (
     | Pick<
@@ -242,12 +253,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
       'id' | 'title' | 'type' | 'documentType' | 'teams' | 'workingGroups'
     > & { isOwnRelatedResearchLink?: boolean }
   >;
-  versions: Array<
-    Pick<
-      ResearchOutputDataObject,
-      'documentType' | 'type' | 'title' | 'id' | 'link' | 'addedDate'
-    >
-  >;
+  versions: Array<ResearchOutputVersion>;
   relatedEvents: Array<Pick<EventDataObject, 'id' | 'title' | 'endDate'>>;
   statusChangedBy?: Pick<UserDataObject, 'id' | 'firstName' | 'lastName'>;
   statusChangedAt?: string;
@@ -308,6 +314,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   relatedEventIds: string[];
   statusChangedById?: string;
   statusChangedAt?: string;
+  versions?: string[];
 };
 
 export type ResearchOutputBaseResponse = Omit<
@@ -371,6 +378,7 @@ export type ResearchOutputPutRequest = ResearchOutputPostRequest & {
   statusChangedById?: string;
   hasStatusChanged?: boolean;
   isInReview: boolean;
+  createVersion?: boolean;
 };
 
 type NonEmptyArray<T> = [T, ...T[]];

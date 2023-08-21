@@ -464,6 +464,7 @@ export const getResearchOutputUpdateDataObject =
 
     return {
       ...researchOutputCreateDataObject,
+      versions: [],
       workingGroups: workingGroups || [],
       updatedBy: 'userId',
       isInReview: false,

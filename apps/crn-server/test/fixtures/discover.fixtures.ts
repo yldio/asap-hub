@@ -237,6 +237,7 @@ export const getContentfulGraphqlDiscoverMembers = () => [
       firstPublishedAt: '2020-10-15T17:55:21.000Z',
       publishedAt: '2020-10-15T17:55:21Z',
     },
+    lastUpdated: '2020-10-15T17:55:21Z',
     firstName: 'John',
     lastName: 'Doe',
     email: 'john@example.com',
@@ -250,6 +251,7 @@ export const getContentfulGraphqlDiscoverMembers = () => [
       firstPublishedAt: '2020-10-14T17:55:21.000Z',
       publishedAt: '2020-10-15T17:55:21Z',
     },
+    lastUpdated: '2020-10-15T17:55:21Z',
     firstName: 'John',
     lastName: 'Do',
     email: '',
@@ -389,6 +391,7 @@ export const getContentfulGraphqlDiscover = (props = {}) => ({
         avatar: {
           url: `${baseUrl}/api/assets/${appName}/sab-uuid-1`,
         },
+        lastUpdated: '2020-10-15T17:55:21Z',
       },
       {
         sys: {
@@ -399,6 +402,7 @@ export const getContentfulGraphqlDiscover = (props = {}) => ({
         firstName: 'sab-John',
         lastName: 'sab-Do',
         email: '',
+        lastUpdated: '2020-10-15T17:55:21Z',
       },
     ],
   },

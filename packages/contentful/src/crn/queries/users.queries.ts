@@ -10,7 +10,7 @@ export const usersContentQueryFragment = gql`
       publishedAt
       publishedVersion
     }
-
+    lastUpdated
     alumniSinceDate
     alumniLocation
     biography

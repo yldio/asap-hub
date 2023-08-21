@@ -314,6 +314,8 @@ export enum AssetLinkingCollectionsInterestGroupsCollectionOrder {
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -395,6 +397,8 @@ export enum AssetLinkingCollectionsUsersCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -618,6 +622,8 @@ export enum CalendarsLinkingCollectionsInterestGroupsCollectionOrder {
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -637,6 +643,8 @@ export enum CalendarsLinkingCollectionsWorkingGroupsCollectionOrder {
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
   ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -986,6 +994,8 @@ export enum DiscoverMembersCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -1089,6 +1099,8 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -2796,6 +2808,8 @@ export enum InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionOrder 
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -2832,6 +2846,7 @@ export type InterestGroups = Entry & {
   contentfulMetadata: ContentfulMetadata;
   description?: Maybe<Scalars['String']>;
   googleDrive?: Maybe<Scalars['String']>;
+  lastUpdated?: Maybe<Scalars['DateTime']>;
   leadersCollection?: Maybe<InterestGroupsLeadersCollection>;
   linkedFrom?: Maybe<InterestGroupsLinkingCollections>;
   name?: Maybe<Scalars['String']>;
@@ -2861,6 +2876,11 @@ export type InterestGroupsDescriptionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
 export type InterestGroupsGoogleDriveArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsLastUpdatedArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -2940,6 +2960,15 @@ export type InterestGroupsFilter = {
   googleDrive_not?: InputMaybe<Scalars['String']>;
   googleDrive_not_contains?: InputMaybe<Scalars['String']>;
   googleDrive_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   leaders?: InputMaybe<CfInterestGroupLeadersNestedFilter>;
   leadersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
@@ -3004,6 +3033,8 @@ export enum InterestGroupsOrder {
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -3188,6 +3219,8 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -5756,6 +5789,8 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -6028,6 +6063,8 @@ export enum TeamsLinkingCollectionsInterestGroupsCollectionOrder {
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
   GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
   SlackAsc = 'slack_ASC',
@@ -6341,6 +6378,7 @@ export type Users = Entry & {
   jobTitle?: Maybe<Scalars['String']>;
   labsCollection?: Maybe<UsersLabsCollection>;
   lastName?: Maybe<Scalars['String']>;
+  lastUpdated?: Maybe<Scalars['DateTime']>;
   linkedFrom?: Maybe<UsersLinkingCollections>;
   linkedIn?: Maybe<Scalars['String']>;
   onboarded?: Maybe<Scalars['Boolean']>;
@@ -6475,6 +6513,11 @@ export type UsersLabsCollectionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersLastNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersLastUpdatedArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -6731,6 +6774,15 @@ export type UsersFilter = {
   lastName_not?: InputMaybe<Scalars['String']>;
   lastName_not_contains?: InputMaybe<Scalars['String']>;
   lastName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   linkedIn?: InputMaybe<Scalars['String']>;
   linkedIn_contains?: InputMaybe<Scalars['String']>;
   linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
@@ -7078,6 +7130,8 @@ export enum UsersOrder {
   InstitutionDesc = 'institution_DESC',
   LastNameAsc = 'lastName_ASC',
   LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkedInAsc = 'linkedIn_ASC',
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
@@ -7214,6 +7268,8 @@ export enum WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCollectionOrd
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
   ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7345,6 +7401,8 @@ export enum WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionOrder {
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
   ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7454,6 +7512,8 @@ export enum WorkingGroupMembersLinkingCollectionsWorkingGroupsCollectionOrder {
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
   ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7487,6 +7547,7 @@ export type WorkingGroups = Entry & {
   deliverablesCollection?: Maybe<WorkingGroupsDeliverablesCollection>;
   description?: Maybe<WorkingGroupsDescription>;
   externalLink?: Maybe<Scalars['String']>;
+  lastUpdated?: Maybe<Scalars['DateTime']>;
   linkedFrom?: Maybe<WorkingGroupsLinkingCollections>;
   membersCollection?: Maybe<WorkingGroupsMembersCollection>;
   shortText?: Maybe<Scalars['String']>;
@@ -7525,6 +7586,11 @@ export type WorkingGroupsDescriptionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
 export type WorkingGroupsExternalLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsLastUpdatedArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -7626,6 +7692,15 @@ export type WorkingGroupsFilter = {
   externalLink_not?: InputMaybe<Scalars['String']>;
   externalLink_not_contains?: InputMaybe<Scalars['String']>;
   externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   members?: InputMaybe<CfmembersMultiTypeNestedFilter>;
   membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   shortText?: InputMaybe<Scalars['String']>;
@@ -7747,6 +7822,8 @@ export enum WorkingGroupsOrder {
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
   ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -8699,6 +8776,15 @@ export type CfUsersNestedFilter = {
   lastName_not?: InputMaybe<Scalars['String']>;
   lastName_not_contains?: InputMaybe<Scalars['String']>;
   lastName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   linkedIn?: InputMaybe<Scalars['String']>;
   linkedIn_contains?: InputMaybe<Scalars['String']>;
   linkedIn_exists?: InputMaybe<Scalars['Boolean']>;
@@ -8845,6 +8931,15 @@ export type CfWorkingGroupsNestedFilter = {
   externalLink_not?: InputMaybe<Scalars['String']>;
   externalLink_not_contains?: InputMaybe<Scalars['String']>;
   externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
   shortText?: InputMaybe<Scalars['String']>;
   shortText_contains?: InputMaybe<Scalars['String']>;
@@ -9274,7 +9369,12 @@ export type FetchDashboardQuery = {
 
 export type PartialUsersContentFragment = Pick<
   Users,
-  'email' | 'firstName' | 'institution' | 'jobTitle' | 'lastName'
+  | 'lastUpdated'
+  | 'email'
+  | 'firstName'
+  | 'institution'
+  | 'jobTitle'
+  | 'lastName'
 > & {
   sys: Pick<
     Sys,
@@ -9625,7 +9725,12 @@ export type FetchDiscoverQuery = {
             Maybe<
               Pick<
                 Users,
-                'email' | 'firstName' | 'institution' | 'jobTitle' | 'lastName'
+                | 'lastUpdated'
+                | 'email'
+                | 'firstName'
+                | 'institution'
+                | 'jobTitle'
+                | 'lastName'
               > & {
                 sys: Pick<
                   Sys,
@@ -9642,7 +9747,12 @@ export type FetchDiscoverQuery = {
             Maybe<
               Pick<
                 Users,
-                'email' | 'firstName' | 'institution' | 'jobTitle' | 'lastName'
+                | 'lastUpdated'
+                | 'email'
+                | 'firstName'
+                | 'institution'
+                | 'jobTitle'
+                | 'lastName'
               > & {
                 sys: Pick<
                   Sys,
@@ -12294,7 +12404,13 @@ export type FetchGuideByTitleQuery = {
 
 export type InterestGroupsContentFragment = Pick<
   InterestGroups,
-  'name' | 'active' | 'tags' | 'description' | 'slack' | 'googleDrive'
+  | 'name'
+  | 'active'
+  | 'tags'
+  | 'description'
+  | 'slack'
+  | 'googleDrive'
+  | 'lastUpdated'
 > & {
   sys: Pick<
     Sys,
@@ -12363,7 +12479,13 @@ export type FetchInterestGroupByIdQuery = {
   interestGroups?: Maybe<
     Pick<
       InterestGroups,
-      'name' | 'active' | 'tags' | 'description' | 'slack' | 'googleDrive'
+      | 'name'
+      | 'active'
+      | 'tags'
+      | 'description'
+      | 'slack'
+      | 'googleDrive'
+      | 'lastUpdated'
     > & {
       sys: Pick<
         Sys,
@@ -12442,7 +12564,13 @@ export type FetchInterestGroupsQuery = {
         Maybe<
           Pick<
             InterestGroups,
-            'name' | 'active' | 'tags' | 'description' | 'slack' | 'googleDrive'
+            | 'name'
+            | 'active'
+            | 'tags'
+            | 'description'
+            | 'slack'
+            | 'googleDrive'
+            | 'lastUpdated'
           > & {
             sys: Pick<
               Sys,
@@ -12538,6 +12666,7 @@ export type FetchInterestGroupsByUserIdQuery = {
                     | 'description'
                     | 'slack'
                     | 'googleDrive'
+                    | 'lastUpdated'
                   > & {
                     sys: Pick<
                       Sys,
@@ -14330,6 +14459,7 @@ export type FetchTutorialByIdQuery = {
 
 export type UsersContentFragment = Pick<
   Users,
+  | 'lastUpdated'
   | 'alumniSinceDate'
   | 'alumniLocation'
   | 'biography'
@@ -14468,6 +14598,7 @@ export type FetchUserByIdQuery = {
   users?: Maybe<
     Pick<
       Users,
+      | 'lastUpdated'
       | 'alumniSinceDate'
       | 'alumniLocation'
       | 'biography'
@@ -14614,6 +14745,7 @@ export type FetchUsersQuery = {
         Maybe<
           Pick<
             Users,
+            | 'lastUpdated'
             | 'alumniSinceDate'
             | 'alumniLocation'
             | 'biography'
@@ -14768,6 +14900,7 @@ export type FetchUsersByTeamIdQuery = {
                 Maybe<
                   Pick<
                     Users,
+                    | 'lastUpdated'
                     | 'alumniSinceDate'
                     | 'alumniLocation'
                     | 'biography'
@@ -14933,6 +15066,7 @@ export type FetchUsersByLabIdQuery = {
             Maybe<
               Pick<
                 Users,
+                | 'lastUpdated'
                 | 'alumniSinceDate'
                 | 'alumniLocation'
                 | 'biography'
@@ -15077,7 +15211,7 @@ export type FetchUsersByLabIdQuery = {
 
 export type WorkingGroupsContentFragment = Pick<
   WorkingGroups,
-  'title' | 'externalLink' | 'shortText' | 'complete'
+  'title' | 'externalLink' | 'shortText' | 'complete' | 'lastUpdated'
 > & {
   sys: Pick<Sys, 'id' | 'publishedAt'>;
   description?: Maybe<
@@ -15189,7 +15323,10 @@ export type FetchWorkingGroupByIdQueryVariables = Exact<{
 
 export type FetchWorkingGroupByIdQuery = {
   workingGroups?: Maybe<
-    Pick<WorkingGroups, 'title' | 'externalLink' | 'shortText' | 'complete'> & {
+    Pick<
+      WorkingGroups,
+      'title' | 'externalLink' | 'shortText' | 'complete' | 'lastUpdated'
+    > & {
       sys: Pick<Sys, 'id' | 'publishedAt'>;
       description?: Maybe<
         Pick<WorkingGroupsDescription, 'json'> & {
@@ -15328,7 +15465,7 @@ export type FetchWorkingGroupsQuery = {
         Maybe<
           Pick<
             WorkingGroups,
-            'title' | 'externalLink' | 'shortText' | 'complete'
+            'title' | 'externalLink' | 'shortText' | 'complete' | 'lastUpdated'
           > & {
             sys: Pick<Sys, 'id' | 'publishedAt'>;
             description?: Maybe<
@@ -15651,6 +15788,7 @@ export const PartialUsersContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'email' } },
           { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
           { kind: 'Field', name: { kind: 'Name', value: 'institution' } },
@@ -17010,6 +17148,7 @@ export const InterestGroupsContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
         ],
       },
     },
@@ -18931,6 +19070,7 @@ export const UsersContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniLocation' } },
           { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
@@ -19932,6 +20072,7 @@ export const WorkingGroupsContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
         ],
       },
     },

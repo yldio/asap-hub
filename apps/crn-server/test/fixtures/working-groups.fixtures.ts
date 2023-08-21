@@ -358,6 +358,7 @@ export const getContentfulGraphqlWorkingGroup = (
     color: '#B1365F',
     googleCalendarId: 'hub@asap.science',
   },
+  lastUpdated: '2021-01-01T00:00:00.000Z',
   ...props,
 });
 

@@ -313,6 +313,10 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
         type: 'boolean',
         nullable: true,
       },
+      createVersion: {
+        type: 'boolean',
+        nullable: true,
+      },
     },
     required: [
       'documentType',

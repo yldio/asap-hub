@@ -45,7 +45,7 @@ export const migrateInterestGroups = async () => {
   };
 
   const parseInterestGroupItem = async (group: InterestGroupItem) => {
-    const { id, flatData } = group;
+    const { id, lastModified, flatData } = group;
     const { teams, calendars, leaders, tools, thumbnail, ...props } = flatData;
 
     const leaderLinks = await Promise.all(
@@ -117,6 +117,7 @@ export const migrateInterestGroups = async () => {
             `Interest Group with id ${id} is going to be created without a calendar.`,
           )
         : null,
+      lastUpdated: lastModified,
       ...props,
     };
   };

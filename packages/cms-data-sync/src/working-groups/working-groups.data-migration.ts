@@ -56,6 +56,7 @@ export const migrateWorkingGroups = async () => {
   const parseWorkingGroupItem = async (workingGroup: WorkingGroupItem) => {
     const {
       id,
+      lastModified,
       flatData: {
         description,
         calendars,
@@ -133,6 +134,7 @@ export const migrateWorkingGroups = async () => {
       members: [...leadersEntries, ...membersEntries]
         .filter((x): x is Entry => x !== null)
         .map((entry) => createLink(entry.sys.id)),
+      lastUpdated: lastModified,
     };
   };
 

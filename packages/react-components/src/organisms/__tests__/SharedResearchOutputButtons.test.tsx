@@ -351,3 +351,50 @@ describe('the publish draft button', () => {
     expect(mockDisplayPublishModal).toHaveBeenCalled();
   });
 });
+
+describe('add version button', () => {
+  it('is displayed when user has permissions and RO is published', async () => {
+    const { getByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutputButtons {...props} published={true} />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = getByText('Add Version');
+    expect(button).toBeInTheDocument();
+  });
+
+  it('is not displayed when user has permissions and RO is not published', async () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: true,
+        }}
+      >
+        <SharedResearchOutputButtons {...props} published={false} />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = queryByText('Add Version');
+    expect(button).toBeNull();
+  });
+
+  it('is not displayed when user does not have permissions', async () => {
+    const { queryByText } = render(
+      <ResearchOutputPermissionsContext.Provider
+        value={{
+          canVersionResearchOutput: false,
+        }}
+      >
+        <SharedResearchOutputButtons {...props} published={true} />,
+      </ResearchOutputPermissionsContext.Provider>,
+    );
+
+    const button = queryByText('Add Version');
+    expect(button).toBeNull();
+  });
+});

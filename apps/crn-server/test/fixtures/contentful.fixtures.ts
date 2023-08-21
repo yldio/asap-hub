@@ -14,7 +14,10 @@ export const contenfulUserLink: Link<'User'> = {
 
 type Field = Record<string, unknown>;
 
-export const getEntry = (fields: Field): Entry => ({
+export const getEntry = (
+  fields: Field,
+  sys: Partial<Entry['sys']> = {},
+): Entry => ({
   update: jest.fn(),
   patch: jest.fn(),
   delete: jest.fn(),
@@ -50,6 +53,7 @@ export const getEntry = (fields: Field): Entry => ({
     publishedCounter: 0,
     version: 1,
     contentType: { sys: { type: 'Link', linkType: 'ContentType', id: 'news' } },
+    ...sys,
   },
   fields,
 });

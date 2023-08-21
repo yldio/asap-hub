@@ -103,6 +103,7 @@ export { default as UserIcon } from './user';
 export { default as userPlaceholderIcon } from './user-placeholder';
 export { default as validTickIcon } from './valid-tick-icon';
 export { default as verticalDividerIcon } from './vertical-divider';
+export { default as VersionIcon } from './version';
 export { default as WarningIcon } from './warning';
 export { default as warningTransparentIcon } from './warning-transparent';
 export { default as WorkingGroupsIcon } from './working-groups';

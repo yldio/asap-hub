@@ -307,7 +307,7 @@ __metadata:
     "@types/jest": 29.5.3
     "@types/jsdom": 16.2.15
     "@types/node": 18.17.3
-    core-js: 3.32.0
+    core-js: 3.32.1
     jsdom: 16.7.0
   languageName: unknown
   linkType: soft
@@ -920,7 +920,7 @@ __metadata:
     aws-sdk: 2.1439.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
-    core-js: 3.32.0
+    core-js: 3.32.1
     juice: 7.0.0
     react: 17.0.2
     react-dom: 17.0.2
@@ -1132,7 +1132,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.22.10
     "@types/jsonwebtoken": 8.5.9
-    core-js: 3.32.0
+    core-js: 3.32.1
     date-fns: 2.30.0
     jsonwebtoken: 9.0.0
     ramda: 0.27.1
@@ -1147,7 +1147,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.22.10
     "@types/asap-hub__inline-environment": "workspace:*"
     "@types/jest": 29.5.3
-    core-js: 3.32.0
+    core-js: 3.32.1
   languageName: unknown
   linkType: soft
 
@@ -1190,7 +1190,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@sentry/react": 6.19.7
-    core-js: 3.32.0
+    core-js: 3.32.1
     react: ^17.0.2
     react-error-boundary: 3.1.4
     react-router-dom: 5.3.4
@@ -1276,7 +1276,7 @@ __metadata:
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
-    core-js: 3.32.0
+    core-js: 3.32.1
     date-fns: 2.30.0
     dom-to-playwright: ^0.1.3
     emotion-normalize: 11.0.1
@@ -1391,7 +1391,7 @@ __metadata:
     aws-sdk: 2.1439.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
-    core-js: 3.32.0
+    core-js: 3.32.1
     juice: 7.0.0
     react: 17.0.2
     react-dom: 17.0.2
@@ -1513,7 +1513,7 @@ __metadata:
     "@types/react-dom": 17.0.20
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
-    core-js: 3.32.0
+    core-js: 3.32.1
     juice: 7.0.0
     react: 17.0.2
     react-dom: 17.0.2
@@ -1590,7 +1590,7 @@ __metadata:
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
-    core-js: 3.32.0
+    core-js: 3.32.1
     date-fns: 2.30.0
     date-fns-tz: 1.3.8
     dom-to-playwright: ^0.1.3
@@ -1657,7 +1657,7 @@ __metadata:
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
-    core-js: 3.32.0
+    core-js: 3.32.1
     react: 17.0.2
     react-dom: 17.0.2
     react-test-renderer: 17.0.2
@@ -1835,7 +1835,7 @@ __metadata:
     "@types/react": 17.0.64
     "@types/react-router-dom": 5.3.3
     babel-preset-react-app: 10.0.1
-    core-js: 3.32.0
+    core-js: 3.32.1
     date-fns: 2.30.0
     emotion: 10.0.27
     history: 4.10.1
@@ -14202,18 +14202,18 @@ __metadata:
   linkType: hard
 
 "@playwright/test@npm:^1.30.0":
-  version: 1.36.2
-  resolution: "@playwright/test@npm:1.36.2"
+  version: 1.37.1
+  resolution: "@playwright/test@npm:1.37.1"
   dependencies:
     "@types/node": "*"
     fsevents: 2.3.2
-    playwright-core: 1.36.2
+    playwright-core: 1.37.1
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     playwright: cli.js
-  checksum: 659304e0bbbafb2fa36395fbd8bd2c5db2b7791bbb55fa62409946ec7ec726cf8fff89f2b8a1a74fe831bf50a8780a37a5322a1251a6f7db2a9220a57ac408f0
+  checksum: b7038f29000289103c08b215eff7aabdda70cdc1375fa7dad0e81651be71086a1e2fc0e0e29dc70348037c366cf0cc69f762373fda34ba1a74aa1658741d9195
   languageName: node
   linkType: hard
 
@@ -24169,8 +24169,8 @@ __metadata:
   linkType: hard
 
 "contentful@npm:^10.1.8":
-  version: 10.4.1
-  resolution: "contentful@npm:10.4.1"
+  version: 10.4.2
+  resolution: "contentful@npm:10.4.2"
   dependencies:
     "@contentful/rich-text-types": ^16.0.2
     axios: ^1.4.0
@@ -24178,7 +24178,7 @@ __metadata:
     contentful-sdk-core: ^8.1.0
     json-stringify-safe: ^5.0.1
     type-fest: ^4.0.0
-  checksum: 30f5e239c2fa4bdd9158edbd3037be8f3133d0009c9526ac5d1a3b7e591cede6009463142513f2745d79be5a7744e82e1473edd25301f9c527ec0023ce0768f3
+  checksum: 8d12c139036e4aa69ce797362df014a06854cdf7d91534ecf18e89b1592df20984134d2a0c05521a54b762959aa81677d300fc46393db692312bfad05d2f5dad
   languageName: node
   linkType: hard
 
@@ -24369,10 +24369,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:3.32.0":
-  version: 3.32.0
-  resolution: "core-js@npm:3.32.0"
-  checksum: 52921395028550e4c9d21d47b9836439bb5b6b9eefc34d45a3948a68d81fdd093acc0fadf69f9cf632b82f01f95f22f484408a93dd9e940b19119ac204cd2925
+"core-js@npm:3.32.1":
+  version: 3.32.1
+  resolution: "core-js@npm:3.32.1"
+  checksum: e4af91d9c6be7b59235feb3f273d16705126ce09a0b4a787144d131d874f0cd10be3c24fc52e5eea7d7cb03ceabe4be7b255abcd9474b5eb1ff365d2c5611f9a
   languageName: node
   linkType: hard
 
@@ -39313,23 +39313,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.36.2, playwright-core@npm:>=1.2.0, playwright-core@npm:^1.30.0":
-  version: 1.36.2
-  resolution: "playwright-core@npm:1.36.2"
+"playwright-core@npm:1.37.1, playwright-core@npm:>=1.2.0, playwright-core@npm:^1.30.0":
+  version: 1.37.1
+  resolution: "playwright-core@npm:1.37.1"
   bin:
     playwright-core: cli.js
-  checksum: 2193ce802ef93c28b9b5e11a0b1d7b60778c686015659978d1cbf0eb9cda2cdc85ec5575b887c1346e9d161cc2805bf27638d76a2f7f857dffeae968e6ceffcd
+  checksum: 69f818da2230057584140d5b3af7778a4f4a822b5b18d133abfc5d259128becb943c343a2ddf6b0635277a69f28983e83e2bc3fce23595ececb1e410475b6368
   languageName: node
   linkType: hard
 
 "playwright@npm:^1.30.0":
-  version: 1.36.2
-  resolution: "playwright@npm:1.36.2"
+  version: 1.37.1
+  resolution: "playwright@npm:1.37.1"
   dependencies:
-    playwright-core: 1.36.2
+    playwright-core: 1.37.1
   bin:
     playwright: cli.js
-  checksum: 5876b65a0f1303e45f99c7d120706af0ab808efd5d89c514741584ff1060408b62148ae2790c2e6527642f2b8f49db682710b87d3df7b3ba510e8e847e6041ef
+  checksum: 99406ef3e15b83a659cb23ef1d92d9935789aad430580d1e0371087dfdf266891483c6f97cfa06bf5f49f081eacd44245d05d20714f98531edef4cc317044d6b
   languageName: node
   linkType: hard
 

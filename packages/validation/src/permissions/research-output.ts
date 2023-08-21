@@ -80,6 +80,11 @@ export const hasPublishResearchOutputPermission = (
   userRole: UserRole,
 ): boolean => userRole === 'Staff';
 
+export const hasVersionResearchOutputPermission = (
+  userRole: UserRole,
+): boolean =>
+  hasPublishResearchOutputPermission(userRole) && isEnabled('CONTENTFUL');
+
 export const hasEditResearchOutputPermission = (
   userRole: UserRole,
   published: boolean,

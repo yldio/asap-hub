@@ -50,6 +50,7 @@ const useParamOutputDocumentType = (
 type TeamOutputProps = {
   teamId: string;
   researchOutputData?: ResearchOutputResponse;
+  createVersion?: boolean;
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
@@ -58,6 +59,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   teamId,
   researchOutputData,
   descriptionUnchangedWarning,
+  createVersion = false,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
   const documentType =
@@ -108,6 +110,12 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   if (team) {
     return (
       <Frame title="Share Research Output">
+        {createVersion && (
+          <Toast accent="warning">
+            The previous output page will be replaced with a summarised version
+            history section.
+          </Toast>
+        )}
         <InnerToastContext.Provider value={toast}>
           {toastNode && <Toast accent="error">{toastNode}</Toast>}
           <ResearchOutputHeader
@@ -155,6 +163,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                 ? updateAndPublishResearchOutput(researchOutputData.id, {
                     ...output,
                     published: true,
+                    createVersion,
                     statusChangedById: researchOutputData.statusChangedBy?.id,
                     isInReview: researchOutputData.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))

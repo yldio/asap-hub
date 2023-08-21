@@ -3,7 +3,7 @@ import { OutputVersions } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './layout';
 
 export default {
-  title: 'Organisms / OutputVersions',
+  title: 'Organisms / Output Versions',
   component: OutputVersions,
   decorators: [NoPaddingDecorator],
 };
@@ -21,7 +21,7 @@ const versions: Pick<
   },
   {
     documentType: 'Article',
-    type: 'Preprint',
+    type: 'Report',
     title: 'A title',
     id: '2',
     addedDate: '2023-07-25T16:58:41.000Z',

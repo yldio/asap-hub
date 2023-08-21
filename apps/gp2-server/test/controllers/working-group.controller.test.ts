@@ -35,85 +35,65 @@ describe('Working Group controller', () => {
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    test('Should remove the resource if the user is not a member of the working group', async () => {
-      const list = getListWorkingGroupDataObject();
+    describe('resources', () => {
+      const member = {
+        userId: '7',
+        firstName: 'Peter',
+        lastName: 'Parker',
+        role: 'Lead' as const,
+      };
+      test('Should remove the resource if the user is not a member of the working group', async () => {
+        const list = getListWorkingGroupDataObject();
 
-      const nonMemberWorkingGroup = {
-        ...getWorkingGroupDataObject(),
-        members: [
+        const nonMemberWorkingGroup = {
+          ...getWorkingGroupDataObject(),
+          members: [member],
+        };
+        const listWithNonMemberWorkingGroup = {
+          total: 2,
+          items: [...list.items, nonMemberWorkingGroup],
+        };
+        workingGroupDataProviderMock.fetch.mockResolvedValue(
+          listWithNonMemberWorkingGroup,
+        );
+        const result = await workingGroupController.fetch('11');
+
+        const expectedItems = getListWorkingGroupsResponse().items;
+        const { resources: _, ...expectedWorkingGroup } =
+          getWorkingGroupResponse();
+
+        expect(result.items).toStrictEqual([
+          ...expectedItems,
           {
-            userId: '7',
-            firstName: 'Peter',
-            lastName: 'Parker',
-            role: 'Lead' as const,
+            ...expectedWorkingGroup,
+            members: [member],
           },
-        ],
-      };
-      const listWithNonMemberWorkingGroup = {
-        total: 2,
-        items: [...list.items, nonMemberWorkingGroup],
-      };
-      workingGroupDataProviderMock.fetch.mockResolvedValue(
-        listWithNonMemberWorkingGroup,
-      );
-      const result = await workingGroupController.fetch('11');
+        ]);
+      });
+      test('Should remove the resource if the user is not specified', async () => {
+        const nonMemberWorkingGroup = {
+          ...getWorkingGroupDataObject(),
+          members: [member],
+        };
+        const listWithNonMemberWorkingGroup = {
+          total: 1,
+          items: [nonMemberWorkingGroup],
+        };
+        workingGroupDataProviderMock.fetch.mockResolvedValue(
+          listWithNonMemberWorkingGroup,
+        );
+        const result = await workingGroupController.fetch();
 
-      const expectedItems = getListWorkingGroupsResponse().items;
-      const { resources: _, ...expectedWorkingGroup } =
-        getWorkingGroupResponse();
+        const { resources: _, ...expectedWorkingGroup } =
+          getWorkingGroupResponse();
 
-      expect(result.items).toStrictEqual([
-        ...expectedItems,
-        {
-          ...expectedWorkingGroup,
-          members: [
-            {
-              userId: '7',
-              firstName: 'Peter',
-              lastName: 'Parker',
-              role: 'Lead',
-            },
-          ],
-        },
-      ]);
-    });
-    test('Should remove the resource if the user is not specified', async () => {
-      const nonMemberWorkingGroup = {
-        ...getWorkingGroupDataObject(),
-        members: [
+        expect(result.items).toStrictEqual([
           {
-            userId: '7',
-            firstName: 'Peter',
-            lastName: 'Parker',
-            role: 'Lead' as const,
+            ...expectedWorkingGroup,
+            members: [member],
           },
-        ],
-      };
-      const listWithNonMemberWorkingGroup = {
-        total: 1,
-        items: [nonMemberWorkingGroup],
-      };
-      workingGroupDataProviderMock.fetch.mockResolvedValue(
-        listWithNonMemberWorkingGroup,
-      );
-      const result = await workingGroupController.fetch();
-
-      const { resources: _, ...expectedWorkingGroup } =
-        getWorkingGroupResponse();
-
-      expect(result.items).toStrictEqual([
-        {
-          ...expectedWorkingGroup,
-          members: [
-            {
-              userId: '7',
-              firstName: 'Peter',
-              lastName: 'Parker',
-              role: 'Lead',
-            },
-          ],
-        },
-      ]);
+        ]);
+      });
     });
   });
   describe('FetchById', () => {
@@ -139,63 +119,45 @@ describe('Working Group controller', () => {
       expect(result).toEqual(getWorkingGroupResponse());
     });
 
-    test('Should not return the resource when the user is not part of the working group', async () => {
-      workingGroupDataProviderMock.fetchById.mockResolvedValue({
-        ...getWorkingGroupDataObject(),
-        members: [
-          {
-            userId: '7',
-            firstName: 'Peter',
-            lastName: 'Parker',
-            role: 'Lead' as const,
-          },
-        ],
-      });
-      const result = await workingGroupController.fetchById(
-        'working-group-id',
-        '11',
-      );
+    describe('resources', () => {
+      const member = {
+        userId: '7',
+        firstName: 'Peter',
+        lastName: 'Parker',
+        role: 'Lead' as const,
+      };
+      test('Should not return the resource when the user is not part of the working group', async () => {
+        workingGroupDataProviderMock.fetchById.mockResolvedValue({
+          ...getWorkingGroupDataObject(),
+          members: [member],
+        });
+        const result = await workingGroupController.fetchById(
+          'working-group-id',
+          '11',
+        );
 
-      const { resources: _, ...expectedWorkingGroup } =
-        getWorkingGroupResponse();
-      expect(result).toStrictEqual({
-        ...expectedWorkingGroup,
-        members: [
-          {
-            userId: '7',
-            firstName: 'Peter',
-            lastName: 'Parker',
-            role: 'Lead',
-          },
-        ],
+        const { resources: _, ...expectedWorkingGroup } =
+          getWorkingGroupResponse();
+        expect(result).toStrictEqual({
+          ...expectedWorkingGroup,
+          members: [member],
+        });
       });
-    });
-    test('Should not return the resource when the user is not specified', async () => {
-      workingGroupDataProviderMock.fetchById.mockResolvedValue({
-        ...getWorkingGroupDataObject(),
-        members: [
-          {
-            userId: '7',
-            firstName: 'Peter',
-            lastName: 'Parker',
-            role: 'Lead' as const,
-          },
-        ],
-      });
-      const result = await workingGroupController.fetchById('working-group-id');
+      test('Should not return the resource when the user is not specified', async () => {
+        workingGroupDataProviderMock.fetchById.mockResolvedValue({
+          ...getWorkingGroupDataObject(),
+          members: [member],
+        });
+        const result = await workingGroupController.fetchById(
+          'working-group-id',
+        );
 
-      const { resources: _, ...expectedWorkingGroup } =
-        getWorkingGroupResponse();
-      expect(result).toStrictEqual({
-        ...expectedWorkingGroup,
-        members: [
-          {
-            userId: '7',
-            firstName: 'Peter',
-            lastName: 'Parker',
-            role: 'Lead',
-          },
-        ],
+        const { resources: _, ...expectedWorkingGroup } =
+          getWorkingGroupResponse();
+        expect(result).toStrictEqual({
+          ...expectedWorkingGroup,
+          members: [member],
+        });
       });
     });
   });
@@ -204,17 +166,18 @@ describe('Working Group controller', () => {
     beforeEach(jest.resetAllMocks);
 
     test('Should return the newly updated working group', async () => {
+      const resource = { type: 'Note' as const, title: 'a title to update' };
       const mockResponse = getWorkingGroupDataObject();
       workingGroupDataProviderMock.fetchById.mockResolvedValue(mockResponse);
       const result = await workingGroupController.update(
         '7',
-        { resources: [{ type: 'Note', title: 'a title to update' }] },
+        { resources: [resource] },
         '11',
       );
 
       expect(result).toEqual(getWorkingGroupResponse());
       expect(workingGroupDataProviderMock.update).toHaveBeenCalledWith('7', {
-        resources: [{ type: 'Note', title: 'a title to update' }],
+        resources: [resource],
       });
     });
   });

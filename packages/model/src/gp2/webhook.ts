@@ -4,4 +4,4 @@ export type OutputEvent = `Outputs${EntityEventAction}`;
 export type ProjectEvent = `Projects${EntityEventAction}`;
 export type UserEvent = `Users${EntityEventAction}`;
 
-export type WebhookDetailType = OutputEvent | ProjectEvent | UserEvent;
+export type WebhookDetailType = OutputEvent | ProjectEvent;

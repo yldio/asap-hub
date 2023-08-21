@@ -8,8 +8,8 @@ export type UserValidationFields = Partial<
     | 'degrees'
     | 'region'
     | 'country'
+    | 'tags'
     | 'positions'
-    | 'keywords'
     | 'biography'
   >
 >;
@@ -48,8 +48,8 @@ export const isUserOnboardable = (
   ) {
     response.positions = { valid: false };
   }
-  if (!user.keywords || user.keywords.length === 0) {
-    response.keywords = { valid: false };
+  if (!user.tags || user.tags.length === 0) {
+    response.tags = { valid: false };
   }
   if (!user.biography) {
     response.biography = { valid: false };

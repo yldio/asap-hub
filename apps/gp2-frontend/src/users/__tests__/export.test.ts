@@ -44,7 +44,6 @@ describe('userToCSV', () => {
       linkedIn: 'linkedIn',
       github: 'github',
       createdDate: expect.anything(),
-      keywords: expect.anything(),
       tags: expect.anything(),
       questions: expect.anything(),
       location: expect.anything(),

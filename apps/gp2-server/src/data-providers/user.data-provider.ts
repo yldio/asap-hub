@@ -236,7 +236,6 @@ export const parseUserToDataObject = (
 
   const questions = normaliseArray(user.questions);
   const connections = normaliseArray(user.connections);
-  const keywords = normaliseArray(user.keywords);
 
   const telephone =
     user.telephoneNumber || user.telephoneCountryCode
@@ -277,7 +276,6 @@ export const parseUserToDataObject = (
     role: user.role as gp2Model.UserRole,
     degrees: (user.degrees as gp2Model.UserDegree[]) ?? [],
     connections: connections.map((connection) => ({ code: connection })),
-    keywords,
     tags,
     telephone,
     fundingStreams: user.fundingStreams ?? undefined,
@@ -306,7 +304,6 @@ const generateFetchQueryFilter = (
     keywords,
     code,
     onlyOnboarded,
-    hasKeywords,
     hidden = true,
   } = filter || {};
 
@@ -324,8 +321,6 @@ const generateFetchQueryFilter = (
     : {};
   const filterKeywords: gp2Contentful.UsersFilter = keywords
     ? { tags: { name_in: keywords } }
-    : hasKeywords
-    ? { keywords_exists: true }
     : {};
   const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =

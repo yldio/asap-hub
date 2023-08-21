@@ -19,7 +19,6 @@ export const eventsContentQueryFragment = gql`
     eventLink
     status
     hidden
-    tags
     keywordsCollection(limit: 10) {
       total
       items {

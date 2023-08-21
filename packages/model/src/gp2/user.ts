@@ -102,7 +102,6 @@ export type UserDataObject = {
   firstName: string;
   fundingStreams?: string;
   tags: KeywordDataObject[];
-  keywords: string[];
   lastName: string;
   onboarded: boolean;
   positions: UserPosition[];
@@ -133,7 +132,7 @@ export type UserCreateDataObject = Omit<
 };
 
 export type UserUpdateDataObject = Partial<
-  Omit<UserCreateDataObject, 'alternativeEmail' | 'keywords' | 'tags'>
+  Omit<UserCreateDataObject, 'alternativeEmail' | 'tags'>
 > &
   Partial<Pick<UserDataObject, 'connections'>> & {
     alternativeEmail?: string | null;
@@ -168,7 +167,6 @@ export type FetchUsersFilter = {
   projects?: string[];
   workingGroups?: string[];
   hidden?: boolean;
-  hasKeywords?: boolean;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

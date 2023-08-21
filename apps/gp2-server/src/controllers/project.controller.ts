@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { gp2 } from '@asap-hub/model';
+import { FetchOptions, gp2 } from '@asap-hub/model';
 import { ProjectDataProvider } from '../data-providers/types/project.data-provider.type';
 import { removeNotAllowedResources } from '../utils/resources';
 
@@ -7,7 +7,7 @@ export default class ProjectController {
   constructor(private projectDataProvider: ProjectDataProvider) {}
 
   async fetch(
-    options: gp2.FetchProjectOptions,
+    options: FetchOptions,
     loggedInUserId: string,
   ): Promise<gp2.ListProjectResponse> {
     const projects = await this.projectDataProvider.fetch(options);

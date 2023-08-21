@@ -13,14 +13,16 @@ const milestone = (id: number) => ({
   status: 'Active' as const,
   link: 'http://example.com/',
 });
+const project = createProjectResponse();
 
 export const Normal = () => (
   <ProjectOverview
-    {...createProjectResponse()}
+    {...project}
     milestones={Array.from({ length: number('Milestone count', 5) }, (_, i) =>
       milestone(i),
     )}
     pmEmail={text('PM Email', 'pm@example.com')}
     leadEmail={text('Lead Email', 'lead@example.com')}
+    keywords={project.tags.map((t) => t.name)}
   />
 );

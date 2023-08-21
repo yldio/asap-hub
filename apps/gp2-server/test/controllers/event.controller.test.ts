@@ -62,7 +62,6 @@ describe('Event controller', () => {
         endDate,
         endDateTimeZone,
         status,
-        tags,
         meetingLink,
         hideMeetingLink,
       } = getEventDataObject();
@@ -76,7 +75,6 @@ describe('Event controller', () => {
         endDate,
         endDateTimeZone,
         status,
-        tags,
         meetingLink,
         hideMeetingLink,
         googleId,
@@ -93,7 +91,6 @@ describe('Event controller', () => {
         endDate,
         endDateTimeZone,
         status,
-        tags,
         meetingLink,
         hideMeetingLink,
         googleId,

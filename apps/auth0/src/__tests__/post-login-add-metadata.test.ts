@@ -273,7 +273,6 @@ describe('For a GP2 login', () => {
     workingGroups: [],
     contributingCohorts: [],
     fundingStreams: undefined,
-    keywords: [],
     tags: [],
     questions: [],
   };

@@ -1,9 +1,8 @@
-import { DataProvider, gp2 as gp2Model } from '@asap-hub/model';
-import { FetchProjectOptions } from '@asap-hub/model/src/gp2';
+import { DataProvider, FetchOptions, gp2 as gp2Model } from '@asap-hub/model';
 
 export type ProjectDataProvider = DataProvider<
   gp2Model.ProjectDataObject,
-  FetchProjectOptions,
+  FetchOptions,
   null,
   null,
   gp2Model.ProjectUpdateDataObject

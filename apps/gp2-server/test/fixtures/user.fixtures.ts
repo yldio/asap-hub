@@ -64,7 +64,6 @@ export const getUserResponse = (): gp2Model.UserResponse => ({
     { id: 'keyword-1', name: 'BLAAC-PD' },
     { id: 'keyword-2', name: 'Cohort' },
   ],
-  keywords: ['BLAAC-PD', 'Cohort'],
   social: {
     googleScholar: 'https://scholar.google.com',
     orcid: 'https://orcid.org',
@@ -109,7 +108,6 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
       workingGroups: [],
       fundingStreams: undefined,
       contributingCohorts: [],
-      keywords: [],
       tags: [],
       questions: [],
     },
@@ -164,7 +162,6 @@ export const getUserDataObject = (): gp2Model.UserDataObject => ({
     { id: 'keyword-1', name: 'BLAAC-PD' },
     { id: 'keyword-2', name: 'Cohort' },
   ],
-  keywords: ['BLAAC-PD', 'Cohort'],
   fundingStreams: 'A funding stream',
   biography: 'a biography of Tony Stark',
   contributingCohorts: [
@@ -258,7 +255,6 @@ export const fetchUserResponseDataObject = (): gp2Model.UserDataObject => ({
   contributingCohorts: [],
   alternativeEmail: 'tony@stark.com',
   telephone: { countryCode: '+1', number: '212-970-4133' },
-  keywords: [],
   tags: [],
   questions: ['What was the name of Peter Parkers uncle?'],
 });
@@ -300,7 +296,6 @@ export const getContentfulGraphqlUser = (
     'What color was Iron Mans original armour?',
     'Who is the Stark family butler?',
   ],
-  keywords: ['BLAAC-PD', 'Cohort'],
   tagsCollection: { ...getContentfulGraphqKeywords() },
   email: 'T@ark.io',
   alternativeEmail: 'tony@stark.com',

@@ -20,6 +20,7 @@ export interface SpeakerInfo {
   speaker: EventSpeakerUser | EventSpeakerExternalUser | undefined;
 }
 export type EventSpeaker = SpeakerInfo & { topic?: string };
+
 export interface EventDataObject extends BasicEvent {
   calendar: CalendarResponse;
   project?: Pick<ProjectResponse, 'id' | 'title'>;
@@ -47,7 +48,6 @@ export type EventCreateDataObject = Pick<
   | 'endDate'
   | 'endDateTimeZone'
   | 'status'
-  | 'tags'
   | 'meetingLink'
   | 'hideMeetingLink'
 > & {
@@ -73,7 +73,6 @@ type BaseFilterOptions = {
   externalUserId?: never;
   googleId?: never;
   hidden?: never;
-  hasTags?: boolean;
 };
 
 type ExclusiveFilterOption<T> = Omit<BaseFilterOptions, keyof T> & T;

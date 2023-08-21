@@ -21,7 +21,6 @@ export const getUserResponse = (): gp2.UserResponse => ({
   avatarUrl: `https://test.com/api/assets/asap-dev/asset-id`,
   role: 'Network Investigator',
   tags: [{ id: 'id-1', name: 'Data Science' }],
-  keywords: ['Data Science'],
   biography:
     'Anthony Edward "Tony" Stark was a billionaire industrialist, a founding member of the Avengers, and the former CEO of Stark Industries.',
   degrees: ['PhD'],

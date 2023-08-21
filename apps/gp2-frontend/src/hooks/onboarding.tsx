@@ -32,7 +32,7 @@ const fieldToStep: Record<
   country: 'Core Details',
   positions: 'Core Details',
   biography: 'Background',
-  keywords: 'Background',
+  tags: 'Background',
 };
 
 export const useOnboarding = (id: string) => {

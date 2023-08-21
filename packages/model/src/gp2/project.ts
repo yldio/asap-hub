@@ -37,7 +37,9 @@ export type ProjectDataObject = {
 
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;
 
-export type ProjectResponse = ProjectDataObject;
+export type ProjectResponse = ProjectDataObject & {
+  _tags: string[];
+};
 
 export type ListProjectResponse = ListResponse<ProjectResponse>;
 export type ProjectUpdateDataObject = Partial<
@@ -59,3 +61,5 @@ export type FetchProjectFilter = {
 };
 
 export type FetchProjectOptions = FetchOptions<FetchProjectFilter>;
+
+export const opportunitiesAvailable = 'Opportunities Available';

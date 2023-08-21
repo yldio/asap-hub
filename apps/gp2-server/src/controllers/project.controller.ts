@@ -3,6 +3,14 @@ import { gp2 } from '@asap-hub/model';
 import { ProjectDataProvider } from '../data-providers/types/project.data-provider.type';
 import { removeNotAllowedResources } from '../utils/resources';
 
+const processProject = (
+  project: gp2.ProjectDataObject,
+  loggedInUserId?: string,
+): gp2.ProjectResponse => ({
+  ...removeNotAllowedResources(project, loggedInUserId),
+  _tags: project.opportunitiesLink ? [gp2.opportunitiesAvailable] : [],
+});
+
 export default class ProjectController {
   constructor(private projectDataProvider: ProjectDataProvider) {}
 
@@ -14,7 +22,7 @@ export default class ProjectController {
     return {
       ...projects,
       items: projects.items.map((project) =>
-        removeNotAllowedResources(project, loggedInUserId),
+        processProject(project, loggedInUserId),
       ),
     };
   }
@@ -27,7 +35,7 @@ export default class ProjectController {
       throw new NotFoundError(undefined, `project with id ${id} not found`);
     }
 
-    return removeNotAllowedResources(project, loggedInUserId);
+    return processProject(project, loggedInUserId);
   }
   async update(
     id: string,

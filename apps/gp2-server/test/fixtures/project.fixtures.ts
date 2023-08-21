@@ -2,7 +2,7 @@ import type {
   ContentfulWebhookPayload,
   gp2 as gp2Contentful,
 } from '@asap-hub/contentful';
-import type { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
+import { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
 
@@ -62,13 +62,15 @@ export const getProjectUpdateDataObject =
     tags: [{ id: '34' }],
   });
 
-export const getListProjectDataObject = (): gp2Model.ListProjectResponse => ({
+export const getListProjectDataObject = (): gp2Model.ListProjectDataObject => ({
   total: 1,
   items: [getProjectDataObject()],
 });
 
-export const getProjectResponse = (): gp2Model.ProjectResponse =>
-  getProjectDataObject();
+export const getProjectResponse = (): gp2Model.ProjectResponse => ({
+  ...getProjectDataObject(),
+  _tags: [gp2Model.opportunitiesAvailable],
+});
 
 export const getListProjectsResponse = (): gp2Model.ListProjectResponse => ({
   total: 1,

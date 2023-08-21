@@ -126,6 +126,18 @@ describe('Project controller', () => {
 
       expect(result).toEqual(getProjectResponse());
     });
+    test('Should not set the opportunitiesAvailable in _tags if there is no opportunity link', async () => {
+      const { opportunitiesLink: _, ...projectDataObject } =
+        getProjectDataObject();
+      projectDataProviderMock.fetchById.mockResolvedValue(projectDataObject);
+      const result = await projectController.fetchById('project-id', '11');
+
+      const { opportunitiesLink: __, ...expected } = getProjectResponse();
+      expect(result).toEqual({
+        ...expected,
+        _tags: [],
+      });
+    });
 
     test('Should not return the resource when the user is not part of the project', async () => {
       projectDataProviderMock.fetchById.mockResolvedValue({

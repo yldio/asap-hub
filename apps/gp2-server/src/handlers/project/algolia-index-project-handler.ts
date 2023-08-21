@@ -13,7 +13,7 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ProjectPayload } from '../event-bus';
 
-export const indexOutputHandler =
+export const indexProjectHandler =
   (
     projectController: ProjectController,
     algoliaClient: AlgoliaClient<'gp2'>,
@@ -48,10 +48,7 @@ export const indexOutputHandler =
     try {
       await reindexProject(event.detail.resourceId);
     } catch (e) {
-      log.error(
-        e,
-        `Error while reindexing research output ${event.detail.resourceId} and its related research outputs`,
-      );
+      log.error(e, `Error while reindexing project ${event.detail.resourceId}`);
       if (isBoom(e) && e.output.statusCode === 404) {
         return;
       }
@@ -66,7 +63,7 @@ const projectDataProvider = new ProjectContentfulDataProvider(
 );
 
 export const handler = sentryWrapper(
-  indexOutputHandler(
+  indexProjectHandler(
     new ProjectController(projectDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,

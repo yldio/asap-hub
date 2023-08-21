@@ -49,10 +49,7 @@ export const indexOutputHandler =
     try {
       await reindexOutput(event.detail.resourceId);
     } catch (e) {
-      log.error(
-        e,
-        `Error while reindexing output ${event.detail.resourceId} and its related research outputs`,
-      );
+      log.error(e, `Error while reindexing output ${event.detail.resourceId}`);
       if (isBoom(e) && e.output.statusCode === 404) {
         return;
       }

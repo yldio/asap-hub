@@ -190,6 +190,7 @@ export const parseContentfulGraphQlWorkingGroup = (
     shortText,
     description,
     membersCollection,
+    lastUpdated,
   } = item;
 
   const deliverables = (deliverablesCollection?.items || [])
@@ -244,7 +245,7 @@ export const parseContentfulGraphQlWorkingGroup = (
     description: description
       ? parseRichText(description as RichTextFromQuery)
       : '',
-    lastModifiedDate: sys.publishedAt,
+    lastModifiedDate: lastUpdated,
     shortText: shortText || '',
     complete: !!complete,
     deliverables,

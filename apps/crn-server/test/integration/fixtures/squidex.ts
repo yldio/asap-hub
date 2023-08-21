@@ -126,8 +126,9 @@ export class SquidexFixture implements Fixture {
   }
 
   private async prepareWorkingGroup(props: WorkingGroupCreateDataObject) {
+    const { lastUpdated, ...rest } = props;
     return {
-      ...props,
+      ...rest,
       leaders: props.leaders?.map((leader) => ({
         user: [leader.user],
         role: leader.role,

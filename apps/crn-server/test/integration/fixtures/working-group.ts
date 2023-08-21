@@ -14,6 +14,7 @@ export const getWorkingGroupFixture = (
     members: [],
     leaders: [],
     deliverables: [],
+    lastUpdated: '2021-01-01T00:00:00.000Z',
     ...props,
   };
 };

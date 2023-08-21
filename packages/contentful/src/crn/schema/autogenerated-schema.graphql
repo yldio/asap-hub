@@ -429,6 +429,8 @@ enum CalendarsLinkingCollectionsWorkingGroupsCollectionOrder {
   complete_DESC
   externalLink_ASC
   externalLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4797,6 +4799,8 @@ enum WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCollectionOrder {
   complete_DESC
   externalLink_ASC
   externalLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4882,6 +4886,8 @@ enum WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionOrder {
   complete_DESC
   externalLink_ASC
   externalLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4955,6 +4961,8 @@ enum WorkingGroupMembersLinkingCollectionsWorkingGroupsCollectionOrder {
   complete_DESC
   externalLink_ASC
   externalLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4988,6 +4996,7 @@ type WorkingGroups implements Entry {
   deliverablesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsDeliverablesCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupDeliverablesFilter): WorkingGroupsDeliverablesCollection
   description(locale: String): WorkingGroupsDescription
   externalLink(locale: String): String
+  lastUpdated(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: WorkingGroupsMembersFilter): WorkingGroupsMembersCollection
   shortText(locale: String): String
@@ -5069,6 +5078,15 @@ input WorkingGroupsFilter {
   externalLink_not: String
   externalLink_not_contains: String
   externalLink_not_in: [String]
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   members: cfmembersMultiTypeNestedFilter
   membersCollection_exists: Boolean
   shortText: String
@@ -5169,6 +5187,8 @@ enum WorkingGroupsOrder {
   complete_DESC
   externalLink_ASC
   externalLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -6239,6 +6259,15 @@ input cfWorkingGroupsNestedFilter {
   externalLink_not: String
   externalLink_not_contains: String
   externalLink_not_in: [String]
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   membersCollection_exists: Boolean
   shortText: String
   shortText_contains: String

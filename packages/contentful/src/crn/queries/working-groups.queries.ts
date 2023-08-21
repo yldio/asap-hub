@@ -92,6 +92,7 @@ export const workingGroupsContentQueryFragment = gql`
       color
       googleCalendarId
     }
+    lastUpdated
   }
 `;
 

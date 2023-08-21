@@ -86,6 +86,7 @@ export type WorkingGroupCreateDataObject = Omit<
     inactiveSinceDate?: string;
   }[];
   members: string[];
+  lastUpdated: string;
 };
 
 type EntryFixture<T> = T & { id: string };

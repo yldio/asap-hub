@@ -8,7 +8,11 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getProjects } from '../api';
+import {
+  createProjectAlgoliaRecord,
+  createProjectListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
+import { getAlgoliaProjects } from '../api';
 import Routes from '../Routes';
 
 const renderRoutes = async () => {
@@ -38,8 +42,8 @@ beforeEach(() => {
 jest.mock('../api');
 describe('Routes', () => {
   it('renders a list of projects', async () => {
-    const mockGetProjects = getProjects as jest.MockedFunction<
-      typeof getProjects
+    const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+      typeof getAlgoliaProjects
     >;
     const firstGroup = gp2.createProjectResponse({
       id: '42',
@@ -50,7 +54,12 @@ describe('Routes', () => {
       title: 'Project 11',
     });
     mockGetProjects.mockResolvedValue(
-      gp2.createProjectsResponse([firstGroup, secondGroup]),
+      createProjectListAlgoliaResponse(2, {
+        hits: [
+          createProjectAlgoliaRecord(0, gp2.createProjectResponse(firstGroup)),
+          createProjectAlgoliaRecord(0, gp2.createProjectResponse(secondGroup)),
+        ],
+      }),
     );
     await renderRoutes();
     expect(

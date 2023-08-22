@@ -1,8 +1,8 @@
 import { ClientSearchResponse, EntityResponses } from '@asap-hub/algolia';
 
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { ProjectResponse } from '@asap-hub/model/build/gp2';
 
-type SearchResponse = ClientSearchResponse<'gp2', 'output'>;
 export const createAlgoliaResponse = <
   EntityType extends keyof EntityResponses['gp2'],
 >(
@@ -22,9 +22,10 @@ export const createAlgoliaResponse = <
   ...overrides,
 });
 
+type OutputSearchResponse = ClientSearchResponse<'gp2', 'output'>;
 export const createOutputAlgoliaRecord = (
   itemIndex = 0,
-): SearchResponse['hits'][number] => {
+): OutputSearchResponse['hits'][number] => {
   const response = gp2Fixtures.createOutputResponse(itemIndex);
 
   return {
@@ -36,11 +37,36 @@ export const createOutputAlgoliaRecord = (
 
 export const createOutputListAlgoliaResponse = (
   items: number,
-  responseOverride?: Partial<SearchResponse>,
-): SearchResponse =>
+  responseOverride?: Partial<OutputSearchResponse>,
+): OutputSearchResponse =>
   createAlgoliaResponse<'output'>(
     Array.from({ length: items }, (_, itemIndex) =>
       createOutputAlgoliaRecord(itemIndex),
+    ),
+    responseOverride,
+  );
+
+type ProjectSearchResponse = ClientSearchResponse<'gp2', 'project'>;
+export const createProjectAlgoliaRecord = (
+  itemIndex = 0,
+  overrides?: Partial<ProjectResponse>,
+): ProjectSearchResponse['hits'][number] => {
+  const response = gp2Fixtures.createProjectResponse(overrides);
+
+  return {
+    ...response,
+    objectID: response.id,
+    __meta: { type: 'project' },
+  };
+};
+
+export const createProjectListAlgoliaResponse = (
+  items: number,
+  responseOverride?: Partial<ProjectSearchResponse>,
+): ProjectSearchResponse =>
+  createAlgoliaResponse<'project'>(
+    Array.from({ length: items }, (_, itemIndex) =>
+      createProjectAlgoliaRecord(itemIndex),
     ),
     responseOverride,
   );

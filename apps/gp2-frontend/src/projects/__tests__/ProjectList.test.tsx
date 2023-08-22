@@ -9,7 +9,11 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getProjects } from '../api';
+import {
+  createProjectAlgoliaRecord,
+  createProjectListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
+import { getAlgoliaProjects } from '../api';
 import ProjectList from '../ProjectList';
 
 jest.mock('../api');
@@ -37,10 +41,10 @@ beforeEach(() => {
 });
 
 it('renders the Title', async () => {
-  const mockGetProjects = getProjects as jest.MockedFunction<
-    typeof getProjects
+  const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+    typeof getAlgoliaProjects
   >;
-  mockGetProjects.mockResolvedValueOnce(gp2Fixtures.createProjectsResponse());
+  mockGetProjects.mockResolvedValueOnce(createProjectListAlgoliaResponse(1));
   await renderProjectsList();
   expect(
     screen.getByRole('heading', { name: 'Project Title' }),
@@ -48,8 +52,8 @@ it('renders the Title', async () => {
 });
 
 it('renders a list of working groups', async () => {
-  const mockGetProjects = getProjects as jest.MockedFunction<
-    typeof getProjects
+  const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+    typeof getAlgoliaProjects
   >;
   const firstProject = gp2Fixtures.createProjectResponse({
     id: '42',
@@ -60,7 +64,18 @@ it('renders a list of working groups', async () => {
     title: 'Project 11',
   });
   mockGetProjects.mockResolvedValue(
-    gp2Fixtures.createProjectsResponse([firstProject, secondProject]),
+    createProjectListAlgoliaResponse(2, {
+      hits: [
+        createProjectAlgoliaRecord(
+          0,
+          gp2Fixtures.createProjectResponse(firstProject),
+        ),
+        createProjectAlgoliaRecord(
+          0,
+          gp2Fixtures.createProjectResponse(secondProject),
+        ),
+      ],
+    }),
   );
   await renderProjectsList();
   expect(

@@ -2,6 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 
 export const OUTPUT_ENTITY_TYPE = 'output';
 export const PROJECT_ENTITY_TYPE = 'project';
+export const EVENT_ENTITY_TYPE = 'event';
 
 export type Payload =
   | {
@@ -11,4 +12,8 @@ export type Payload =
   | {
       data: gp2Model.ProjectResponse;
       type: typeof PROJECT_ENTITY_TYPE;
+    }
+  | {
+      data: gp2Model.EventResponse;
+      type: typeof EVENT_ENTITY_TYPE;
     };

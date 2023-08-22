@@ -33,6 +33,7 @@ export type EntityResponses = {
   [GP2]: {
     [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
     [PROJECT_ENTITY_TYPE]: gp2Model.ProjectResponse;
+    [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;
   };
 };
 export type SavePayload = Payload | GP2Payload;

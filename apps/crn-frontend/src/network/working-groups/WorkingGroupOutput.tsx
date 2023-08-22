@@ -2,6 +2,7 @@ import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
   researchOutputDocumentTypeToType,
   ResearchOutputResponse,
+  ResearchOutputVersion,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
@@ -100,7 +101,18 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);
 
-  const versions = researchOutputData?.versions ?? [];
+  const researchOutputAsVersion: ResearchOutputVersion = {
+    id: researchOutputData?.id ?? '',
+    title: researchOutputData?.title ?? '',
+    documentType: researchOutputData?.documentType ?? 'Article',
+    type: researchOutputData?.type,
+    link: researchOutputData?.link,
+    addedDate: researchOutputData?.addedDate,
+  };
+
+  const versions = researchOutputData?.versions
+    ? [researchOutputAsVersion, ...researchOutputData.versions]
+    : [researchOutputAsVersion];
 
   if (workingGroup) {
     return (
@@ -117,7 +129,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             documentType={documentType}
             workingGroupAssociation
           />
-          {createVersion && versions.length > 0 && (
+          {createVersion && (
             <OutputVersions versions={versions} createVersion />
           )}
           <ResearchOutputForm

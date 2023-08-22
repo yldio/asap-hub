@@ -39,21 +39,15 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
   async fetch(
     options: gp2Model.FetchProjectOptions,
   ): Promise<gp2Model.ListProjectDataObject> {
-    const { take = 10, skip = 0, filter } = options;
-    let where = {};
-    if (filter?.hasKeywords) {
-      where = { keywords_exists: true };
-    }
-    const res = await this.graphQLClient.request<
+    const { take = 10, skip = 0 } = options;
+    const { projectsCollection } = await this.graphQLClient.request<
       gp2Contentful.FetchProjectsQuery,
       gp2Contentful.FetchProjectsQueryVariables
     >(gp2Contentful.FETCH_PROJECTS, {
       limit: take,
       skip,
-      where,
     });
 
-    const { projectsCollection } = res;
     if (!projectsCollection) {
       return {
         total: 0,
@@ -149,7 +143,6 @@ export function parseProjectToDataObject(
     leadEmail: project.leadEmail ?? undefined,
     description: project.description ?? undefined,
     members,
-    keywords: (project.keywords as gp2Model.Keyword[]) ?? [],
     tags,
     milestones,
     resources,

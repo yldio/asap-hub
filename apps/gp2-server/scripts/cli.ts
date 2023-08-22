@@ -13,7 +13,7 @@ yargs(hideBin(process.argv))
         .positional('entity', {
           describe: 'specific an entity to import',
           type: 'string',
-          choices: ['output'],
+          choices: ['output', 'project'],
           demandOption: true,
         })
         .option('filename', {

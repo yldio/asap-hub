@@ -20,7 +20,6 @@ export type ProjectDataObject = {
   description?: string;
   endDate?: string;
   id: string;
-  keywords: string[];
   tags: KeywordDataObject[];
   leadEmail?: string;
   members: ProjectMember[];
@@ -38,7 +37,9 @@ export type ProjectDataObject = {
 
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;
 
-export type ProjectResponse = ProjectDataObject;
+export type ProjectResponse = ProjectDataObject & {
+  _tags: string[];
+};
 
 export type ListProjectResponse = ListResponse<ProjectResponse>;
 export type ProjectUpdateDataObject = Partial<
@@ -54,8 +55,6 @@ export type ProjectResourcesPutRequest = NonNullable<
   ProjectDataObject['resources']
 >;
 
-export type FetchProjectFilter = {
-  hasKeywords?: boolean;
-};
+export type FetchProjectOptions = FetchOptions;
 
-export type FetchProjectOptions = FetchOptions<FetchProjectFilter>;
+export const opportunitiesAvailable = 'Opportunities Available';

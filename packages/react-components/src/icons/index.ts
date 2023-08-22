@@ -29,6 +29,7 @@ export { default as duplicateIcon } from './duplicate';
 export { default as editIcon } from './edit';
 export { default as errorIcon } from './error';
 export { default as EventIcon } from './event';
+export { default as ExportIcon } from './export';
 export { default as eventPlaceholderIcon } from './event-placeholder';
 export { default as externalLinkIcon } from './external-link';
 export { default as feedbackIcon } from './feedback';

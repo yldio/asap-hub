@@ -1299,7 +1299,6 @@ export type Events = Entry & {
   startDateTimeZone?: Maybe<Scalars['String']>;
   status?: Maybe<Scalars['String']>;
   sys: Sys;
-  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
   thumbnail?: Maybe<Asset>;
   title?: Maybe<Scalars['String']>;
   videoRecording?: Maybe<EventsVideoRecording>;
@@ -1431,11 +1430,6 @@ export type EventsStartDateTimeZoneArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsStatusArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
-export type EventsTagsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -1594,10 +1588,6 @@ export type EventsFilter = {
   status_not_contains?: InputMaybe<Scalars['String']>;
   status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  tags_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  tags_exists?: InputMaybe<Scalars['Boolean']>;
   thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
@@ -3724,7 +3714,6 @@ export type Projects = Entry & {
   contentfulMetadata: ContentfulMetadata;
   description?: Maybe<Scalars['String']>;
   endDate?: Maybe<Scalars['DateTime']>;
-  keywords?: Maybe<Array<Maybe<Scalars['String']>>>;
   leadEmail?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<ProjectsLinkingCollections>;
   membersCollection?: Maybe<ProjectsMembersCollection>;
@@ -3755,11 +3744,6 @@ export type ProjectsDescriptionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsEndDateArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
-export type ProjectsKeywordsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -3877,10 +3861,6 @@ export type ProjectsFilter = {
   endDate_lte?: InputMaybe<Scalars['DateTime']>;
   endDate_not?: InputMaybe<Scalars['DateTime']>;
   endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_exists?: InputMaybe<Scalars['Boolean']>;
   leadEmail?: InputMaybe<Scalars['String']>;
   leadEmail_contains?: InputMaybe<Scalars['String']>;
   leadEmail_exists?: InputMaybe<Scalars['Boolean']>;
@@ -4827,7 +4807,6 @@ export type Users = Entry & {
   fundingStreams?: Maybe<Scalars['String']>;
   github?: Maybe<Scalars['String']>;
   googleScholar?: Maybe<Scalars['String']>;
-  keywords?: Maybe<Array<Maybe<Scalars['String']>>>;
   lastName?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<UsersLinkingCollections>;
   linkedIn?: Maybe<Scalars['String']>;
@@ -4926,11 +4905,6 @@ export type UsersGithubArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersGoogleScholarArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
-export type UsersKeywordsArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -5137,10 +5111,6 @@ export type UsersFilter = {
   googleScholar_not?: InputMaybe<Scalars['String']>;
   googleScholar_not_contains?: InputMaybe<Scalars['String']>;
   googleScholar_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_exists?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
   lastName_contains?: InputMaybe<Scalars['String']>;
   lastName_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6517,10 +6487,6 @@ export type CfUsersNestedFilter = {
   googleScholar_not?: InputMaybe<Scalars['String']>;
   googleScholar_not_contains?: InputMaybe<Scalars['String']>;
   googleScholar_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  keywords_exists?: InputMaybe<Scalars['Boolean']>;
   lastName?: InputMaybe<Scalars['String']>;
   lastName_contains?: InputMaybe<Scalars['String']>;
   lastName_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6898,7 +6864,6 @@ export type EventsContentDataFragment = Pick<
   | 'eventLink'
   | 'status'
   | 'hidden'
-  | 'tags'
   | 'title'
   | 'notesPermanentlyUnavailable'
   | 'notesUpdatedAt'
@@ -7141,7 +7106,6 @@ export type FetchEventByIdQuery = {
       | 'eventLink'
       | 'status'
       | 'hidden'
-      | 'tags'
       | 'title'
       | 'notesPermanentlyUnavailable'
       | 'notesUpdatedAt'
@@ -7409,7 +7373,6 @@ export type FetchEventsQuery = {
             | 'eventLink'
             | 'status'
             | 'hidden'
-            | 'tags'
             | 'title'
             | 'notesPermanentlyUnavailable'
             | 'notesUpdatedAt'
@@ -7771,7 +7734,6 @@ export type FetchEventsByUserIdQuery = {
                         | 'eventLink'
                         | 'status'
                         | 'hidden'
-                        | 'tags'
                         | 'title'
                         | 'notesPermanentlyUnavailable'
                         | 'notesUpdatedAt'
@@ -8194,7 +8156,6 @@ export type FetchEventsByExternalUserIdQuery = {
                         | 'eventLink'
                         | 'status'
                         | 'hidden'
-                        | 'tags'
                         | 'title'
                         | 'notesPermanentlyUnavailable'
                         | 'notesUpdatedAt'
@@ -9275,7 +9236,6 @@ export type ProjectsContentDataFragment = Pick<
   | 'description'
   | 'pmEmail'
   | 'leadEmail'
-  | 'keywords'
   | 'traineeProject'
   | 'opportunitiesLink'
 > & {
@@ -9347,7 +9307,6 @@ export type FetchProjectByIdQuery = {
       | 'description'
       | 'pmEmail'
       | 'leadEmail'
-      | 'keywords'
       | 'traineeProject'
       | 'opportunitiesLink'
     > & {
@@ -9429,7 +9388,6 @@ export type FetchProjectsQuery = {
             | 'description'
             | 'pmEmail'
             | 'leadEmail'
-            | 'keywords'
             | 'traineeProject'
             | 'opportunitiesLink'
           > & {
@@ -9525,7 +9483,6 @@ export type UsersContentDataFragment = Pick<
   | 'alternativeEmail'
   | 'telephoneCountryCode'
   | 'telephoneNumber'
-  | 'keywords'
   | 'biography'
   | 'questions'
   | 'fundingStreams'
@@ -9652,7 +9609,6 @@ export type FetchUserByIdQuery = {
       | 'alternativeEmail'
       | 'telephoneCountryCode'
       | 'telephoneNumber'
-      | 'keywords'
       | 'biography'
       | 'questions'
       | 'fundingStreams'
@@ -9789,7 +9745,6 @@ export type FetchUsersQuery = {
             | 'alternativeEmail'
             | 'telephoneCountryCode'
             | 'telephoneNumber'
-            | 'keywords'
             | 'biography'
             | 'questions'
             | 'fundingStreams'
@@ -11021,7 +10976,6 @@ export const EventsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'eventLink' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'tags' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'keywordsCollection' },
@@ -12279,7 +12233,6 @@ export const ProjectsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'pmEmail' } },
           { kind: 'Field', name: { kind: 'Name', value: 'leadEmail' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tagsCollection' },
@@ -12612,7 +12565,6 @@ export const UsersContentDataFragmentDoc = {
             name: { kind: 'Name', value: 'telephoneCountryCode' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'telephoneNumber' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'keywords' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'tagsCollection' },

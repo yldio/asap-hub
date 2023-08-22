@@ -14,7 +14,11 @@ import {
   RESEARCH_OUTPUT_ENTITY_TYPE,
   USER_ENTITY_TYPE,
 } from './crn';
-import { OUTPUT_ENTITY_TYPE, Payload as GP2Payload } from './gp2';
+import {
+  OUTPUT_ENTITY_TYPE,
+  Payload as GP2Payload,
+  PROJECT_ENTITY_TYPE,
+} from './gp2';
 
 const CRN = 'crn';
 const GP2 = 'gp2';
@@ -28,6 +32,7 @@ export type EntityResponses = {
   };
   [GP2]: {
     [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
+    [PROJECT_ENTITY_TYPE]: gp2Model.ProjectResponse;
   };
 };
 export type SavePayload = Payload | GP2Payload;

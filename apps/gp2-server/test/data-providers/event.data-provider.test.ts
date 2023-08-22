@@ -384,13 +384,13 @@ describe('Events Contentful Data Provider', () => {
                   title_contains: 'parkinson',
                 },
                 {
-                  tags_contains_all: ['parkinson'],
+                  keywords: { name_in: ['parkinson'] },
                 },
                 {
                   title_contains: 'disease',
                 },
                 {
-                  tags_contains_all: ['disease'],
+                  keywords: { name_in: ['disease'] },
                 },
               ],
               hidden_not: true,
@@ -741,9 +741,6 @@ describe('Events Contentful Data Provider', () => {
           },
           status: {
             'en-US': 'Confirmed',
-          },
-          tags: {
-            'en-US': [],
           },
           title: {
             'en-US': 'Event Tittle',

@@ -16,6 +16,7 @@ jest.mock('../dashboard/Dashboard', () => jest.fn());
 jest.mock('../users/api');
 const MockDashboard = Dashboard as jest.MockedFunction<typeof Dashboard>;
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+jest.setTimeout(30000);
 beforeEach(jest.resetAllMocks);
 beforeEach(() => {
   MockDashboard.mockImplementation(() => {

@@ -5,11 +5,11 @@
   "maxValuesPerFacet": 100,
   "version": 2,
   "attributesToIndex": [
-    "title",
     "authors.displayName",
     "authors.firstName",
     "authors.lastName",
     "project.title",
+    "title",
     "workingGroup.title"
   ],
   "numericAttributesToIndex": null,
@@ -18,11 +18,13 @@
   "optionalWords": null,
   "queryLanguages": ["en"],
   "attributesForFaceting": [
-    "documentType",
-    "authors.id",
     "__meta.type",
-    "workingGroup.id",
-    "project.id"
+    "authors.id",
+    "documentType",
+    "id",
+    "project.id",
+    "status",
+    "workingGroup.id"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

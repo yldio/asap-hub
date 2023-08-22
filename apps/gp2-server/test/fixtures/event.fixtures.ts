@@ -1,5 +1,10 @@
-import { gp2 as gp2Contentful } from '@asap-hub/contentful';
-import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
+import {
+  ContentfulWebhookPayload,
+  gp2 as gp2Contentful,
+} from '@asap-hub/contentful';
+import { EventStatus, gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getContentfulGraphql = () => ({
   Events: () => getContentfulGraphqlEvent(),
@@ -409,3 +414,68 @@ export const getEventCreateDataObject = (): gp2Model.EventCreateDataObject => ({
   meetingLink: 'https://zweem.com',
   hideMeetingLink: false,
 });
+
+export const getEventWebhookPayload = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'event'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'an-environment',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'event',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    title: {
+      'en-US':
+        'Sci 7 - Inflammation & Immune Reg., Presenting Teams: Sulzer, Desjardins, Kordower',
+    },
+  },
+});
+
+export const getEventEvent = (
+  id: string,
+  eventType: gp2Model.EventEvent,
+): EventBridgeEvent<
+  gp2Model.EventEvent,
+  WebhookDetail<ContentfulWebhookPayload<'event'>>
+> => createEventBridgeEventMock(getEventWebhookPayload(id), eventType, id);

@@ -1,6 +1,5 @@
 import { ProjectsBody } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
-import { ProjectStatus } from '@asap-hub/model/build/gp2';
 import { FC } from 'react';
 import { useSearch } from '../hooks';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
@@ -21,7 +20,7 @@ const ProjectList: FC<Record<string, never>> = () => {
 
   const filterSet = new Set<string>(filterList);
   const onChangeFilter = (filter: string) => {
-    if (gp2.projectStatus.includes(filter as unknown as ProjectStatus)) {
+    if (gp2.projectStatus.includes(filter as unknown as gp2.ProjectStatus)) {
       toggleFilter(filter, 'status');
     } else {
       toggleFilter(filter, 'type');

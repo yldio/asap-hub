@@ -21,8 +21,9 @@ import {
   ResearchOutputFormSharingCard,
   ResearchOutputRelatedEventsCard,
 } from '../organisms';
+import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 import { mobileScreen, perRem } from '../pixels';
-import { Button } from '../atoms';
+import { Button, Link } from '../atoms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
 import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
 
@@ -50,6 +51,7 @@ type ResearchOutputFormProps = Pick<
     | 'getTeamSuggestions'
     | 'authorsRequired'
   > & {
+    createVersion?: boolean;
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
@@ -166,6 +168,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   clearServerValidationError,
   published,
   permissions,
+  createVersion = false,
 }) => {
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
@@ -249,6 +252,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     !dismissedDescriptionChangePrompt;
   const [showDescriptionChangePrompt, setShowDescriptionChangePrompt] =
     useState<false | 'draft' | 'publish'>(false);
+
+  const [dismissedVersionPrompt, setDismissedVersionPrompt] = useState(false);
+  const [showVersionPrompt, setShowVersionPrompt] = useState(false);
+  const promptNewVersion = createVersion && !dismissedVersionPrompt;
 
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>(
     researchOutputData?.link || '',
@@ -365,7 +372,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   })
                   .researchOutputPublished({}).$;
                 setRedirectOnSave(
-                  !published && !draftSave ? publishPath : savePath,
+                  (!published || createVersion) && !draftSave
+                    ? publishPath
+                    : savePath,
                 );
               }
               return researchOutput;
@@ -375,6 +384,32 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
           }`;
           return (
             <>
+              {showVersionPrompt && (
+                <ConfirmModal
+                  title="Publish new version for the whole hub?"
+                  cancelText="Cancel"
+                  onCancel={() => setShowVersionPrompt(false)}
+                  confirmText="Publish new version"
+                  onSave={async () => {
+                    setDismissedVersionPrompt(true);
+                    const result = await save(false);
+                    if (!result) {
+                      setShowVersionPrompt(false);
+                    }
+                  }}
+                  description={
+                    <>
+                      All team members listed on this output will be notified
+                      and all CRN members will be able to access it. If you want
+                      to add or edit older versions after this new version was
+                      published you need to contact{' '}
+                      {<Link href={mailToSupport()}>{TECH_SUPPORT_EMAIL}</Link>}
+                      .
+                    </>
+                  }
+                />
+              )}
+
               {showDescriptionChangePrompt && (
                 <ConfirmModal
                   title="Keep the same description?"
@@ -520,6 +555,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                         onClick={() =>
                           promptDescriptionChange
                             ? setShowDescriptionChangePrompt('publish')
+                            : promptNewVersion
+                            ? setShowVersionPrompt(true)
                             : save(false)
                         }
                       >

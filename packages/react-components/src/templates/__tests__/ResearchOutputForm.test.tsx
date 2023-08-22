@@ -824,12 +824,16 @@ describe('form buttons', () => {
       researchTags = [{ id: '1', name: 'research tag 1' }],
       descriptionUnchangedWarning = false,
       researchOutputData = undefined,
+      createVersion = undefined,
     }: {
       canEditResearchOutput?: boolean;
       canPublishResearchOutput?: boolean;
 
       published?: boolean;
       documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
+      createVersion?: ComponentProps<
+        typeof ResearchOutputForm
+      >['createVersion'];
       researchTags?: ResearchTagResponse[];
       descriptionUnchangedWarning?: ComponentProps<
         typeof ResearchOutputForm
@@ -847,6 +851,7 @@ describe('form buttons', () => {
         <Router history={history}>
           <ResearchOutputForm
             {...props}
+            createVersion={createVersion}
             researchOutputData={researchOutputData}
             descriptionUnchangedWarning={descriptionUnchangedWarning}
             selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
@@ -1039,6 +1044,95 @@ describe('form buttons', () => {
       });
       userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
+    });
+  });
+
+  describe('Create Version Warning', () => {
+    it('Shows warning', async () => {
+      await setupForm({
+        createVersion: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        researchOutputData: createResearchOutputResponse(),
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(
+        screen.getByText(/Publish new version for the whole hub?/i),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('button', { name: /Publish new version/i }),
+      ).toBeVisible();
+    });
+
+    it('is cancelable', async () => {
+      await setupForm({
+        createVersion: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        researchOutputData: createResearchOutputResponse(),
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(
+        screen.getByText(/Publish new version for the whole hub?/i),
+      ).toBeVisible();
+      userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+      expect(
+        screen.queryByText(/Publish new version for the whole hub?/i),
+      ).toBeNull();
+    });
+
+    it('Will be dismissed if there are errors on the form', async () => {
+      await setupForm({
+        createVersion: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+        researchOutputData: {
+          ...createResearchOutputResponse(),
+          link: '',
+        },
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(
+        screen.getByText(/Publish new version for the whole hub?/i),
+      ).toBeVisible();
+      userEvent.click(
+        screen.getByRole('button', { name: /Publish new version/i }),
+      );
+      await waitFor(() => {
+        expect(
+          screen.queryByText(/Publish new version for the whole hub?/i),
+        ).toBeNull();
+        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
+      });
+    });
+    it('Will not reappear once dismissed', async () => {
+      await setupForm({
+        createVersion: true,
+        canEditResearchOutput: true,
+        canPublishResearchOutput: true,
+
+        researchOutputData: {
+          ...createResearchOutputResponse(),
+          link: '',
+        },
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(
+        screen.getByText(/Publish new version for the whole hub?/i),
+      ).toBeVisible();
+      userEvent.click(
+        screen.getByRole('button', { name: /Publish new version/i }),
+      );
+      await waitFor(() => {
+        expect(
+          screen.queryByText(/Publish new version for the whole hub?/i),
+        ).toBeNull();
+        expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
+      });
+      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      expect(
+        screen.queryByText(/Publish new version for the whole hub?/i),
+      ).toBeNull();
     });
   });
 });

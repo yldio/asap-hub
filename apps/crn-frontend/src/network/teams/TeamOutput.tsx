@@ -123,6 +123,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             workingGroupAssociation={false}
           />
           <ResearchOutputForm
+            createVersion={createVersion}
             tagSuggestions={researchSuggestions}
             documentType={documentType}
             getLabSuggestions={getLabSuggestions}

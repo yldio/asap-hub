@@ -5,21 +5,20 @@
     "asc(createdDate)"
   ],
   "attributesForFaceting": [
-    "documentType",
-    "authors.id",
     "__meta.type",
-    "workingGroup.id",
+    "authors.id",
+    "documentType",
     "project.id",
     "status",
-    "traineeProject",
-    "opportunitiesLink"
+    "workingGroup.id"
   ],
   "attributesToIndex": [
-    "title",
     "authors.displayName",
     "authors.firstName",
     "authors.lastName",
+    "id",
     "project.title",
+    "title",
     "workingGroup.title"
   ]
 }

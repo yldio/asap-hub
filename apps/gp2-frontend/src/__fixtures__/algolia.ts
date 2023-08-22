@@ -1,7 +1,7 @@
 import { ClientSearchResponse, EntityResponses } from '@asap-hub/algolia';
 
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { ProjectResponse } from '@asap-hub/model/build/gp2';
+import { gp2 } from '@asap-hub/model';
 
 export const createAlgoliaResponse = <
   EntityType extends keyof EntityResponses['gp2'],
@@ -49,7 +49,7 @@ export const createOutputListAlgoliaResponse = (
 type ProjectSearchResponse = ClientSearchResponse<'gp2', 'project'>;
 export const createProjectAlgoliaRecord = (
   itemIndex = 0,
-  overrides?: Partial<ProjectResponse>,
+  overrides?: Partial<gp2.ProjectResponse>,
 ): ProjectSearchResponse['hits'][number] => {
   const response = gp2Fixtures.createProjectResponse(overrides);
 

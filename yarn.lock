@@ -1593,18 +1593,12 @@ __metadata:
     core-js: 3.32.1
     date-fns: 2.30.0
     date-fns-tz: 1.3.8
-    dom-to-playwright: ^0.1.3
     emotion-normalize: 11.0.1
-    expect-playwright: ^0.8.0
     fast-check: 2.25.0
     fast-deep-equal: 3.1.3
     hast-util-sanitize: 3.0.2
     history: 4.10.1
     ismounted: ^0.1.8
-    jest-playwright-jsdom: ^0.0.4
-    jest-playwright-preset: ^3.0.1
-    playwright: ^1.30.0
-    playwright-core: ^1.30.0
     ramda: 0.27.1
     react: 17.0.2
     react-dom: 17.0.2

@@ -372,7 +372,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   })
                   .researchOutputPublished({}).$;
                 setRedirectOnSave(
-                  !published && !draftSave ? publishPath : savePath,
+                  (!published || createVersion) && !draftSave
+                    ? publishPath
+                    : savePath,
                 );
               }
               return researchOutput;

@@ -76,8 +76,8 @@ export const getContentfulGraphqlEvent = (): NonNullable<
 > => ({
   sys: {
     id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-    publishedAt: '2021-05-14T14:48:46.000Z',
   },
+  lastUpdated: '2021-05-14T14:48:46.000Z',
   description: 'This event is awesome',
   endDate: '2009-12-24T16:30:54.000Z',
   endDateTimeZone: 'UTC',

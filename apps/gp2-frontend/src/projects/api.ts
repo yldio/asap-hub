@@ -5,10 +5,6 @@ import {
   GetListOptions,
 } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
-import {
-  opportunitiesAvailable,
-  traineeProject,
-} from '@asap-hub/model/build/gp2';
 import { API_BASE_URL } from '../config';
 import CreateListApiUrl from '../CreateListApiUrl';
 
@@ -32,10 +28,10 @@ const getAllFilters = ({ status = [], type = [] }: gp2.FetchProjectFilter) => {
     ?.map((filter) => `status:"${filter}"`)
     .join(' OR ');
   const opportunityFilter =
-    type?.includes(opportunitiesAvailable) &&
-    `_tags:"${opportunitiesAvailable}"`;
+    type?.includes(gp2.opportunitiesAvailable) &&
+    `_tags:"${gp2.opportunitiesAvailable}"`;
   const traineeFilter =
-    type?.includes(traineeProject) && 'traineeProject: true';
+    type?.includes(gp2.traineeProject) && 'traineeProject: true';
 
   return [statusFilters, opportunityFilter, traineeFilter]
     .filter(Boolean)

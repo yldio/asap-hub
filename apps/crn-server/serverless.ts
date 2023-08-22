@@ -462,6 +462,7 @@ const serverlessConfig: AWS = {
       },
     },
     inviteUserContentful: {
+      timeout: 120,
       handler: './src/handlers/user/invite-handler.handler',
       events: [
         {

@@ -18,7 +18,6 @@ export const projectsContentQueryFragment = gql`
     description
     pmEmail
     leadEmail
-    keywords
     tagsCollection(limit: 6) {
       total
       items {

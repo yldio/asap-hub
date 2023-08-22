@@ -281,7 +281,7 @@ __metadata:
     algoliasearch: 4.19.1
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1439.0
+    aws-sdk: 2.1441.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -917,7 +917,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1439.0
+    aws-sdk: 2.1441.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.32.1
@@ -1388,7 +1388,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1439.0
+    aws-sdk: 2.1441.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.32.1
@@ -20906,9 +20906,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1439.0":
-  version: 2.1439.0
-  resolution: "aws-sdk@npm:2.1439.0"
+"aws-sdk@npm:2.1441.0":
+  version: 2.1441.0
+  resolution: "aws-sdk@npm:2.1441.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -20920,7 +20920,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.5.0
-  checksum: e2b90eea8b1465d1e91f5b4473fc1e033056f5581256d3f52605beed99ac9d4645fa585a3624fdc65771826782cba13a438ad1824601eca710ffd550a131b5b4
+  checksum: fc80ff193b02893e913084e6173f364af73e3620f112697a302c43fd24fbf0c71b7d3313f709872d535b09fbd9d0339d73a44e704d932f053edf71ab344686a4
   languageName: node
   linkType: hard
 
@@ -24169,8 +24169,8 @@ __metadata:
   linkType: hard
 
 "contentful@npm:^10.1.8":
-  version: 10.4.1
-  resolution: "contentful@npm:10.4.1"
+  version: 10.4.2
+  resolution: "contentful@npm:10.4.2"
   dependencies:
     "@contentful/rich-text-types": ^16.0.2
     axios: ^1.4.0
@@ -24178,7 +24178,7 @@ __metadata:
     contentful-sdk-core: ^8.1.0
     json-stringify-safe: ^5.0.1
     type-fest: ^4.0.0
-  checksum: 30f5e239c2fa4bdd9158edbd3037be8f3133d0009c9526ac5d1a3b7e591cede6009463142513f2745d79be5a7744e82e1473edd25301f9c527ec0023ce0768f3
+  checksum: 8d12c139036e4aa69ce797362df014a06854cdf7d91534ecf18e89b1592df20984134d2a0c05521a54b762959aa81677d300fc46393db692312bfad05d2f5dad
   languageName: node
   linkType: hard
 

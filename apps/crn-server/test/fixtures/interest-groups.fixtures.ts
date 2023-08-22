@@ -580,4 +580,5 @@ export const getContentfulGraphqlInterestGroup = (): NonNullable<
     color: '#B1365F',
     name: 'ASAP Hub',
   },
+  lastUpdated: '2020-12-11T15:06:26.000Z',
 });

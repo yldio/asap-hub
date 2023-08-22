@@ -55,7 +55,9 @@ describe('users', () => {
       const response = await supertest(app)
         .get(`/users/${user.id}`)
         .expect(200);
-      expect(response.body).toMatchObject(omit(user, 'connections'));
+      expect(response.body).toMatchObject(
+        omit(user, ['connections', 'lastUpdated']),
+      );
     });
   });
 

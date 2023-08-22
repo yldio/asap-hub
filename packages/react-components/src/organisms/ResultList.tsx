@@ -10,6 +10,7 @@ import {
   mobileScreen,
   tabletScreen,
 } from '../pixels';
+import { ExportIcon } from '../icons';
 import { charcoal } from '../colors';
 
 const headerStyles = css({
@@ -27,6 +28,43 @@ const headerNoResultsStyles = css({
 });
 
 const exportStyles = css({ marginLeft: `${24 / perRem}em` });
+
+const exportSectionStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: `${15 / perRem}em`,
+
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    marginTop: `${24 / perRem}em`,
+    width: '100%',
+  },
+});
+
+const exportButton = css({
+  padding: `${8 / perRem}em`,
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    width: '100%',
+  },
+
+  [`@media (min-width:${tabletScreen.min}px) and (max-width: ${mobileScreen.max}px)`]:
+    {
+      minWidth: 'auto',
+    },
+});
+
+const resultsParagraphStyles = css({
+  display: 'flex',
+  justifyContent: 'space-between',
+  width: '100%',
+  alignItems: 'center',
+
+  [`@media (max-width: ${tabletScreen.min}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+});
 
 const mainStyles = css({
   justifySelf: 'stretch',
@@ -70,6 +108,7 @@ type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly noEventsComponent?: React.ReactNode;
   readonly children: React.ReactNode;
   readonly algoliaIndexName?: string;
+  readonly isAdministrator?: boolean;
 };
 const ResultList: React.FC<ResultListProps> = ({
   icon,
@@ -81,6 +120,7 @@ const ResultList: React.FC<ResultListProps> = ({
   children,
   noEventsComponent,
   algoliaIndexName,
+  isAdministrator,
   ...pageControlsProps
 }) => {
   const toast = useContext(ToastContext);
@@ -95,26 +135,52 @@ const ResultList: React.FC<ResultListProps> = ({
         css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}
       >
         {numberOfItems > 0 && (
-          <Paragraph>
+          <Paragraph
+            styles={
+              exportResults && isAdministrator
+                ? resultsParagraphStyles
+                : undefined
+            }
+          >
             <strong>
               {numberOfItems} result{numberOfItems === 1 || 's'} found
             </strong>
-            {exportResults && (
-              <span css={exportStyles}>
-                <Button
-                  linkStyle
-                  onClick={() =>
-                    exportResults().catch(() =>
-                      toast(
-                        'There was an issue exporting to CSV. Please try again.',
-                      ),
-                    )
-                  }
-                >
-                  Export as CSV
-                </Button>
-              </span>
-            )}
+
+            {exportResults &&
+              (isAdministrator ? (
+                <span css={exportSectionStyles}>
+                  <strong>Export as:</strong>
+                  <Button
+                    noMargin
+                    onClick={() =>
+                      exportResults().catch(() =>
+                        toast(
+                          'There was an issue exporting to CSV. Please try again.',
+                        ),
+                      )
+                    }
+                    overrideStyles={exportButton}
+                  >
+                    {ExportIcon}
+                    CSV
+                  </Button>
+                </span>
+              ) : (
+                <span css={exportStyles}>
+                  <Button
+                    linkStyle
+                    onClick={() =>
+                      exportResults().catch(() =>
+                        toast(
+                          'There was an issue exporting to CSV. Please try again.',
+                        ),
+                      )
+                    }
+                  >
+                    Export as CSV
+                  </Button>
+                </span>
+              ))}
           </Paragraph>
         )}
         {cardViewHref && listViewHref && (

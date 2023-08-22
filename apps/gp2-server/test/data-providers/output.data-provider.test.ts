@@ -28,6 +28,7 @@ jest.mock('@asap-hub/contentful', () => ({
   ...jest.requireActual('@asap-hub/contentful'),
   patchAndPublish: jest.fn().mockResolvedValue(undefined),
 }));
+jest.mock('../../src/utils/logger');
 
 describe('Outputs data provider', () => {
   const graphqlClientMock = getContentfulGraphqlClientMock();

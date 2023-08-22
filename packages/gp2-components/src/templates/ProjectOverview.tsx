@@ -19,11 +19,12 @@ type ProjectOverviewProps = Pick<
   | 'pmEmail'
   | 'leadEmail'
   | 'description'
-  | 'keywords'
   | 'milestones'
   | 'members'
   | 'calendar'
->;
+> & {
+  keywords: string[];
+};
 
 const { rem } = pixels;
 

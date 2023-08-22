@@ -315,6 +315,49 @@ describe('Working Group Data Provider', () => {
       ]);
     });
 
+    test('Should normalise deliverable statuses for complete working groups', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.complete = true;
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.deliverables = [
+        { description: 'Deliverable 1', status: 'Complete' },
+        { description: 'Deliverable 2', status: 'In Progress' },
+        { description: 'Deliverable 3', status: 'Pending' },
+      ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const response = await workingGroupDataProvider.fetchById(workingGroupId);
+
+      expect(response?.deliverables).toEqual([
+        { description: 'Deliverable 1', status: 'Complete' },
+        { description: 'Deliverable 2', status: 'Incomplete' },
+        { description: 'Deliverable 3', status: 'Not Started' },
+      ]);
+    });
+
+    test('Should normalise deliverable statuses for incomplete working groups', async () => {
+      const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.complete =
+        false;
+      squidexGraphqlResponse.findWorkingGroupsContent!.flatData.deliverables = [
+        { description: 'Deliverable 1', status: 'Complete' },
+        { description: 'Deliverable 2', status: 'Incomplete' },
+        { description: 'Deliverable 3', status: 'Not Started' },
+      ];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const response = await workingGroupDataProvider.fetchById(workingGroupId);
+
+      expect(response?.deliverables).toEqual([
+        { description: 'Deliverable 1', status: 'Complete' },
+        { description: 'Deliverable 2', status: 'In Progress' },
+        { description: 'Deliverable 3', status: 'Pending' },
+      ]);
+    });
+
     test('Should provide default values if squidex data is missing', async () => {
       const squidexGraphqlResponse = getSquidexWorkingGroupGraphqlResponse();
       squidexGraphqlResponse.findWorkingGroupsContent!.flatData.deliverables =

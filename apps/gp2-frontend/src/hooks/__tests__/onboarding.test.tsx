@@ -18,7 +18,6 @@ const emptyUser: gp2Model.UserResponse = {
   biography: undefined,
   positions: [],
   city: undefined,
-  keywords: [],
   degrees: [],
   questions: [],
 };
@@ -80,7 +79,6 @@ describe('useOnboarding', () => {
         { institution: 'institution', role: 'cto', department: 'dept' },
       ],
       city: 'home',
-      keywords: ['Administrative Support'],
       degrees: ['AA'],
     };
     mockGetUser.mockResolvedValueOnce(user);
@@ -118,7 +116,6 @@ describe('useOnboarding', () => {
           { institution: 'institution', role: 'cto', department: 'dept' },
         ],
         city: 'home',
-        keywords: ['Administrative Support'],
         degrees: ['AA'],
       };
       mockGetUser.mockResolvedValueOnce(user);
@@ -143,7 +140,6 @@ describe('if on the last step', () => {
         { institution: 'institution', role: 'cto', department: 'dept' },
       ],
       city: 'home',
-      keywords: ['Administrative Support'],
       degrees: ['AA'],
     };
     mockGetUser.mockResolvedValueOnce(user);

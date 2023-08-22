@@ -131,6 +131,7 @@ describe('DashboardPageBody', () => {
               ...event,
               hasSpeakersToBeAnnounced: speakers.length === 0,
               eventOwner: <div>GP2 Team</div>,
+              tags: event.keywords.map((k) => k.name),
             }))}
           totalOfUpcomingEvents={1}
         />,
@@ -157,6 +158,7 @@ describe('DashboardPageBody', () => {
                 ...event,
                 hasSpeakersToBeAnnounced: speakers.length === 0,
                 eventOwner: <div>GP2 Team</div>,
+                tags: event.keywords.map((k) => k.name),
               }))}
             totalOfUpcomingEvents={4}
           />

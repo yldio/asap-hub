@@ -6,7 +6,7 @@ import { removeNotAllowedResources } from '../utils/resources';
 export default class WorkingGroupController {
   constructor(private workingGroupDataProvider: WorkingGroupDataProvider) {}
 
-  async fetch(loggedInUserId: string): Promise<gp2.ListWorkingGroupResponse> {
+  async fetch(loggedInUserId?: string): Promise<gp2.ListWorkingGroupResponse> {
     const workingGroups = await this.workingGroupDataProvider.fetch(null);
     return {
       ...workingGroups,
@@ -17,7 +17,7 @@ export default class WorkingGroupController {
   }
   async fetchById(
     id: string,
-    loggedInUserId: string,
+    loggedInUserId?: string,
   ): Promise<gp2.WorkingGroupResponse> {
     const workingGroup = await this.workingGroupDataProvider.fetchById(id);
     if (!workingGroup) {

@@ -168,6 +168,7 @@ describe('Migrate interest groups', () => {
             googleDrive: { 'en-US': undefined },
             thumbnail: { 'en-US': undefined },
             calendar: { 'en-US': null },
+            lastUpdated: { 'en-US': '2023-03-15T00:00:00.0000Z' },
           },
         },
       );

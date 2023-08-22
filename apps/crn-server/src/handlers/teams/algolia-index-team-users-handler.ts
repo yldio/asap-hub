@@ -1,5 +1,9 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { ListResponse, TeamEvent, UserResponse } from '@asap-hub/model';
+import {
+  loopOverCustomCollection,
+  LoopOverCustomCollectionFetchOptions,
+} from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import UserController from '../../controllers/user.controller';
@@ -8,10 +12,6 @@ import {
   getUserDataProvider,
 } from '../../dependencies/users.dependencies';
 import logger from '../../utils/logger';
-import {
-  loopOverCustomCollection,
-  LoopOverCustomCollectionFetchOptions,
-} from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
 

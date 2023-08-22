@@ -230,9 +230,9 @@ outputs:
   react-app-gp2-sentry-dsn:
     description: 'React App GP2 Sentry DSN'
     value: ${{ steps.vars.outputs.react-app-gp2-sentry-dsn }}
-  react-app-gtm-container-id:
+  react-app-crn-gtm-container-id:
     description: 'React App GTM Container ID'
-    value: ${{ steps.vars.outputs.react-app-gtm-container-id }}
+    value: ${{ steps.vars.outputs.react-app-crn-gtm-container-id }}
   react-app-gp2-gtm-container-id:
     description: 'React App GP2 GTM Container ID'
     value: ${{ steps.vars.outputs.react-app-gp2-gtm-container-id }}

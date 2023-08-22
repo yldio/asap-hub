@@ -58,8 +58,8 @@ describe('Routes', () => {
     mockGetProjects.mockResolvedValue(
       createProjectListAlgoliaResponse(2, {
         hits: [
-          createProjectAlgoliaRecord(0, gp2.createProjectResponse(firstGroup)),
-          createProjectAlgoliaRecord(0, gp2.createProjectResponse(secondGroup)),
+          createProjectAlgoliaRecord(gp2.createProjectResponse(firstGroup)),
+          createProjectAlgoliaRecord(gp2.createProjectResponse(secondGroup)),
         ],
       }),
     );

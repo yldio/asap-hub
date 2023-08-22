@@ -48,7 +48,6 @@ export const createOutputListAlgoliaResponse = (
 
 type ProjectSearchResponse = ClientSearchResponse<'gp2', 'project'>;
 export const createProjectAlgoliaRecord = (
-  itemIndex = 0,
   overrides?: Partial<gp2.ProjectResponse>,
 ): ProjectSearchResponse['hits'][number] => {
   const response = gp2Fixtures.createProjectResponse(overrides);
@@ -66,7 +65,7 @@ export const createProjectListAlgoliaResponse = (
 ): ProjectSearchResponse =>
   createAlgoliaResponse<'project'>(
     Array.from({ length: items }, (_, itemIndex) =>
-      createProjectAlgoliaRecord(itemIndex),
+      createProjectAlgoliaRecord(),
     ),
     responseOverride,
   );

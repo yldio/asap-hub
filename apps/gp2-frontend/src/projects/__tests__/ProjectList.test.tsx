@@ -5,10 +5,12 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { useSearch } from '../../hooks/search';
 import {
   createProjectAlgoliaRecord,
   createProjectListAlgoliaResponse,
@@ -17,6 +19,14 @@ import { getAlgoliaProjects } from '../api';
 import ProjectList from '../ProjectList';
 
 jest.mock('../api');
+jest.mock('../../hooks/search');
+
+const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
+const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+  typeof getAlgoliaProjects
+>;
+
+const mockToggleFilter = jest.fn();
 
 const renderProjectsList = async () => {
   render(
@@ -38,12 +48,18 @@ const renderProjectsList = async () => {
 };
 beforeEach(() => {
   jest.resetAllMocks();
+  mockUseSearch.mockImplementation(() => ({
+    changeLocation: jest.fn(),
+    filters: new Set(),
+    updateFilters: jest.fn(),
+    toggleFilter: mockToggleFilter,
+    searchQuery: '',
+    debouncedSearchQuery: '',
+    setSearchQuery: jest.fn(),
+  }));
 });
 
 it('renders the Title', async () => {
-  const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-    typeof getAlgoliaProjects
-  >;
   mockGetProjects.mockResolvedValueOnce(createProjectListAlgoliaResponse(1));
   await renderProjectsList();
   expect(
@@ -52,9 +68,6 @@ it('renders the Title', async () => {
 });
 
 it('renders a list of working groups', async () => {
-  const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-    typeof getAlgoliaProjects
-  >;
   const firstProject = gp2Fixtures.createProjectResponse({
     id: '42',
     title: 'Project 42',
@@ -67,11 +80,9 @@ it('renders a list of working groups', async () => {
     createProjectListAlgoliaResponse(2, {
       hits: [
         createProjectAlgoliaRecord(
-          0,
           gp2Fixtures.createProjectResponse(firstProject),
         ),
         createProjectAlgoliaRecord(
-          0,
           gp2Fixtures.createProjectResponse(secondProject),
         ),
       ],
@@ -84,4 +95,25 @@ it('renders a list of working groups', async () => {
   expect(
     screen.getByRole('heading', { name: 'Project 11' }),
   ).toBeInTheDocument();
+});
+
+it('handles filter switching', async () => {
+  mockGetProjects.mockResolvedValueOnce(createProjectListAlgoliaResponse(1));
+
+  await renderProjectsList();
+  userEvent.click(
+    screen.getByRole('checkbox', {
+      name: 'Opportunities Available',
+    }),
+  );
+  expect(mockToggleFilter).toHaveBeenLastCalledWith(
+    'Opportunities Available',
+    'type',
+  );
+  userEvent.click(
+    screen.getByRole('checkbox', {
+      name: 'Active',
+    }),
+  );
+  expect(mockToggleFilter).toHaveBeenLastCalledWith('Active', 'status');
 });

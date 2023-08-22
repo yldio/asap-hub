@@ -497,7 +497,7 @@ export const parseGraphQLUserToDataObject = (
     expertiseAndResourceTags: flatExpertiseAndResourceTags,
     expertiseAndResourceDescription:
       item.flatData.expertiseAndResourceDescription ?? undefined,
-    lastModifiedDate: item.flatData.lastModifiedDate || createdDate,
+    lastModifiedDate: item.lastModified || createdDate,
     teams,
     social,
     workingGroups,

@@ -8,7 +8,7 @@ import { useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import Frame from '../Frame';
 import { useSearch } from '../hooks/search';
-import { useProjectsState } from '../projects/state';
+import { useProjects } from '../projects/state';
 import { useWorkingGroupsState } from '../working-groups/state';
 import { getUsers } from './api';
 import { userFields, usersResponseToStream, userToCSV } from './export';
@@ -61,7 +61,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
       userToCSV,
     );
 
-  const { items: projects } = useProjectsState({
+  const { items: projects } = useProjects({
     pageSize: 20,
     searchQuery: '',
     currentPage: 0,

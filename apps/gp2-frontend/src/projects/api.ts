@@ -1,9 +1,14 @@
+import { AlgoliaClient } from '@asap-hub/algolia';
 import {
   BackendError,
   createSentryHeaders,
   GetListOptions,
 } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
+import {
+  opportunitiesAvailable,
+  traineeProject,
+} from '@asap-hub/model/build/gp2';
 import { API_BASE_URL } from '../config';
 import CreateListApiUrl from '../CreateListApiUrl';
 
@@ -21,6 +26,36 @@ export const getProjects = async (
   }
   return resp.json();
 };
+
+const getAllFilters = ({ status = [], type = [] }: gp2.FetchProjectFilter) => {
+  const statusFilters = status
+    ?.map((filter) => `status:"${filter}"`)
+    .join(' OR ');
+  const opportunityFilter =
+    type?.includes(opportunitiesAvailable) &&
+    `_tags:"${opportunitiesAvailable}"`;
+  const traineeFilter =
+    type?.includes(traineeProject) && 'traineeProject: true';
+
+  return [statusFilters, opportunityFilter, traineeFilter]
+    .filter(Boolean)
+    .join(' AND ');
+};
+
+export type ProjectListOptions = GetListOptions & gp2.FetchProjectFilter;
+export const getAlgoliaProjects = async (
+  client: AlgoliaClient<'gp2'>,
+  options: ProjectListOptions,
+) =>
+  client
+    .search(['project'], options.searchQuery, {
+      page: options.currentPage ?? 0,
+      hitsPerPage: options.pageSize ?? 10,
+      filters: getAllFilters(options),
+    })
+    .catch((error: Error) => {
+      throw new Error(`Could not search: ${error.message}`);
+    });
 
 export const getProject = async (
   id: string,

@@ -11,11 +11,12 @@ const processProject = (
   _tags: project.opportunitiesLink ? [gp2.opportunitiesAvailable] : [],
 });
 
+export type FetchOptions = Omit<gp2.FetchProjectOptions, 'filter'>;
 export default class ProjectController {
   constructor(private projectDataProvider: ProjectDataProvider) {}
 
   async fetch(
-    options: gp2.FetchProjectOptions,
+    options: FetchOptions,
     loggedInUserId?: string,
   ): Promise<gp2.ListProjectResponse> {
     const projects = await this.projectDataProvider.fetch(options);

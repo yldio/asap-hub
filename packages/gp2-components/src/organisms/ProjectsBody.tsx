@@ -1,5 +1,9 @@
 import { gp2 } from '@asap-hub/model';
-import { pixels, ResultList } from '@asap-hub/react-components';
+import {
+  pixels,
+  ResultList,
+  SearchAndFilter,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { noProjectsIcon } from '../icons';
@@ -7,7 +11,11 @@ import { EmptyState } from '../molecules';
 import ProjectCard from './ProjectCard';
 
 const { rem } = pixels;
-export type ProjectsBodyProps = {
+
+export type ProjectsBodyProps = Pick<
+  ComponentProps<typeof SearchAndFilter>,
+  'filters' | 'searchQuery' | 'onChangeFilter' | 'onChangeSearch'
+> & {
   projects: gp2.ListProjectResponse['items'];
 } & Omit<ComponentProps<typeof ResultList>, 'children'>;
 
@@ -18,7 +26,19 @@ const gridContainerStyles = css({
   marginTop: rem(48),
 });
 
+const filterOptions = [
+  { title: 'STATUS' },
+  ...gp2.projectStatus.map((value) => ({ label: value, value })),
+  { title: 'TYPE' },
+  { label: gp2.opportunitiesAvailable, value: gp2.opportunitiesAvailable },
+  { label: gp2.traineeProject, value: gp2.traineeProject },
+];
+
 const ProjectsBody: React.FC<ProjectsBodyProps> = ({
+  filters,
+  searchQuery,
+  onChangeFilter,
+  onChangeSearch,
   projects,
   numberOfItems,
   numberOfPages,
@@ -26,6 +46,14 @@ const ProjectsBody: React.FC<ProjectsBodyProps> = ({
   renderPageHref,
 }) => (
   <article>
+    <SearchAndFilter
+      onChangeSearch={onChangeSearch}
+      onChangeFilter={onChangeFilter}
+      filterOptions={filterOptions}
+      filters={filters}
+      searchPlaceholder="Enter name or keyword..."
+      searchQuery={searchQuery}
+    />
     {projects.length ? (
       <div css={gridContainerStyles}>
         <ResultList

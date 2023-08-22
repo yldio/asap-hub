@@ -1,15 +1,41 @@
 import { ProjectsBody } from '@asap-hub/gp2-components';
+import { gp2 } from '@asap-hub/model';
+import { ProjectStatus } from '@asap-hub/model/build/gp2';
 import { FC } from 'react';
+import { useSearch } from '../hooks';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
-import { useProjectsState } from './state';
+import { useProjects } from './state';
 
 const ProjectList: FC<Record<string, never>> = () => {
+  const {
+    debouncedSearchQuery,
+    searchQuery,
+    setSearchQuery,
+    filters,
+    toggleFilter,
+  } = useSearch<gp2.FetchProjectFilter>(['status', 'type']);
+
+  const filterList = [filters.status, filters.type]
+    .filter((value) => value !== undefined)
+    .flat() as string[];
+
+  const filterSet = new Set<string>(filterList);
+  const onChangeFilter = (filter: string) => {
+    if (gp2.projectStatus.includes(filter as unknown as ProjectStatus)) {
+      toggleFilter(filter, 'status');
+    } else {
+      toggleFilter(filter, 'type');
+    }
+  };
+
   const { currentPage, pageSize } = usePaginationParams();
-  const { total, items } = useProjectsState({
-    searchQuery: '',
+  const { total, items } = useProjects({
+    searchQuery: debouncedSearchQuery,
+    filters: filterSet,
+    status: filters.status,
+    type: filters.type,
     currentPage,
     pageSize,
-    filters: new Set(),
   });
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
@@ -20,6 +46,10 @@ const ProjectList: FC<Record<string, never>> = () => {
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
       projects={items}
+      searchQuery={searchQuery}
+      onChangeSearch={setSearchQuery}
+      filters={filterSet}
+      onChangeFilter={onChangeFilter}
     />
   );
 };

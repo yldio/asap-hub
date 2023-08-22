@@ -4,7 +4,11 @@ import {
   ResearchOutputResponse,
   TeamEvent,
 } from '@asap-hub/model';
-import { EventBridgeHandler } from '@asap-hub/server-common';
+import {
+  EventBridgeHandler,
+  loopOverCustomCollection,
+  LoopOverCustomCollectionFetchOptions,
+} from '@asap-hub/server-common';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ResearchOutputController from '../../controllers/research-output.controller';
 
@@ -13,10 +17,6 @@ import { getResearchOutputDataProvider } from '../../dependencies/research-outpu
 import { getResearchTagDataProvider } from '../../dependencies/research-tags.dependencies';
 
 import logger from '../../utils/logger';
-import {
-  loopOverCustomCollection,
-  LoopOverCustomCollectionFetchOptions,
-} from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
 

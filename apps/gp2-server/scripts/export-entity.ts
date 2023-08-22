@@ -2,8 +2,10 @@ import { EntityResponses } from '@asap-hub/algolia';
 import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Outputs from '../src/controllers/output.controller';
+import Projects from '../src/controllers/project.controller';
 import { ExternalUserContentfulDataProvider } from '../src/data-providers/external-user.data-provider';
 import { OutputContentfulDataProvider } from '../src/data-providers/output.data-provider';
+import { ProjectContentfulDataProvider } from '../src/data-providers/project.data-provider';
 import {
   getContentfulGraphQLClientFactory,
   getContentfulRestClientFactory,
@@ -64,8 +66,13 @@ const getController = (entity: keyof EntityResponsesGP2) => {
     graphQLClient,
     getContentfulRestClientFactory,
   );
+  const projectDataProvider = new ProjectContentfulDataProvider(
+    graphQLClient,
+    getContentfulRestClientFactory,
+  );
   const controllerMap = {
     output: new Outputs(outputDataProvider, externalUserDataProvider),
+    project: new Projects(projectDataProvider),
   };
 
   return controllerMap[entity];

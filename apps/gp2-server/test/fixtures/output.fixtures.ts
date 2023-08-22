@@ -222,7 +222,7 @@ export const getOutputWebhookPayload = (
     },
     environment: {
       sys: {
-        id: 'crn-3046',
+        id: 'an-environment',
         type: 'Link',
         linkType: 'Environment',
       },
@@ -238,14 +238,14 @@ export const getOutputWebhookPayload = (
       sys: {
         type: 'Link',
         linkType: 'User',
-        id: '2SHvngTJ24kxZGAPDJ8J1y',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
       },
     },
     updatedBy: {
       sys: {
         type: 'Link',
         linkType: 'User',
-        id: '2SHvngTJ24kxZGAPDJ8J1y',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
       },
     },
     revision: 14,

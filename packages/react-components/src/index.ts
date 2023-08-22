@@ -115,6 +115,7 @@ export {
   EventConversation,
   EventMaterials,
   EventSearch,
+  Filter,
   Form,
   GoogleCalendar,
   InterestGroupCard,

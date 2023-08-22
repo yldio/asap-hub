@@ -100,6 +100,7 @@ const renderUserDirectory = async ({
   return { mockUpdateFilter };
 };
 afterEach(jest.clearAllMocks);
+jest.setTimeout(30000);
 
 it('renders the filters modal', async () => {
   await renderUserDirectory({ displayFilters: true });

@@ -1,1 +1,1 @@
-export type ContentfulWebhookPayloadType = 'output';
+export type ContentfulWebhookPayloadType = 'output' | 'project';

@@ -34,7 +34,6 @@ export const applyToAllItemsInCollectionFactory =
     let pointer = 0;
     let result: Results<T>;
 
-    /* eslint-disable no-await-in-loop */
     /* eslint-disable no-restricted-syntax */
     do {
       result = await squidexClient.fetch({
@@ -49,6 +48,5 @@ export const applyToAllItemsInCollectionFactory =
 
       pointer += 10;
     } while (pointer < result.total);
-    /* eslint-enable no-await-in-loop */
     /* eslint-enable no-restricted-syntax */
   };

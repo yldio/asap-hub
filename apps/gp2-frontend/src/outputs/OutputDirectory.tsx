@@ -29,6 +29,7 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
   const onChangeFilter = (filter: string) => {
     toggleFilter(filter, 'documentType');
   };
+
   const { currentPage, pageSize } = usePaginationParams();
   const { total } = useOutputs({
     searchQuery: '',
@@ -39,6 +40,7 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
     projectId,
     authorId: userId,
   });
+
   return (
     <OutputPageList
       searchQuery={searchQuery}
@@ -47,7 +49,7 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
       onChangeFilter={onChangeFilter}
       hasOutputs={!!total}
     >
-      <Frame title="News List">
+      <Frame title="Outputs List">
         <OutputList
           searchQuery={debouncedSearchQuery}
           filters={filterSet}

@@ -1,5 +1,10 @@
-import type { gp2 as gp2Contentful } from '@asap-hub/contentful';
-import type { gp2 as gp2Model } from '@asap-hub/model';
+import type {
+  ContentfulWebhookPayload,
+  gp2 as gp2Contentful,
+} from '@asap-hub/contentful';
+import { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getProjectDataObject = (): gp2Model.ProjectDataObject => ({
   id: '7',
@@ -57,13 +62,15 @@ export const getProjectUpdateDataObject =
     tags: [{ id: '34' }],
   });
 
-export const getListProjectDataObject = (): gp2Model.ListProjectResponse => ({
+export const getListProjectDataObject = (): gp2Model.ListProjectDataObject => ({
   total: 1,
   items: [getProjectDataObject()],
 });
 
-export const getProjectResponse = (): gp2Model.ProjectResponse =>
-  getProjectDataObject();
+export const getProjectResponse = (): gp2Model.ProjectResponse => ({
+  ...getProjectDataObject(),
+  _tags: [gp2Model.opportunitiesAvailable],
+});
 
 export const getListProjectsResponse = (): gp2Model.ListProjectResponse => ({
   total: 1,
@@ -166,3 +173,68 @@ export const getContentfulGraphqlProjectsResponse =
       items: [getContentfulGraphqlProject()],
     },
   });
+
+export const getProjectWebhookPayload = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'project'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'an-environment',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'project',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    title: {
+      'en-US':
+        'Sci 7 - Inflammation & Immune Reg., Presenting Teams: Sulzer, Desjardins, Kordower',
+    },
+  },
+});
+
+export const getProjectEvent = (
+  id: string,
+  eventType: gp2Model.ProjectEvent,
+): EventBridgeEvent<
+  gp2Model.ProjectEvent,
+  WebhookDetail<ContentfulWebhookPayload<'project'>>
+> => createEventBridgeEventMock(getProjectWebhookPayload(id), eventType, id);

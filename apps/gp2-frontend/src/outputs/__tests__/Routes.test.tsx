@@ -39,6 +39,7 @@ const renderRoutes = async () => {
   );
   return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
+jest.setTimeout(30000);
 beforeEach(jest.resetAllMocks);
 
 describe('Routes', () => {

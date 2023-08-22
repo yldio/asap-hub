@@ -5,16 +5,16 @@ import {
   ListResponse,
   UserEvent,
 } from '@asap-hub/model';
-import { UserPayload } from '@asap-hub/server-common';
+import {
+  loopOverCustomCollection,
+  LoopOverCustomCollectionFetchOptions,
+  UserPayload,
+} from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Events from '../../controllers/event.controller';
 import { getEventDataProvider } from '../../dependencies/events.dependencies';
 import logger from '../../utils/logger';
-import {
-  loopOverCustomCollection,
-  LoopOverCustomCollectionFetchOptions,
-} from '../../utils/loop-over-custom-colection';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const indexUserEventsHandler =

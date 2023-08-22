@@ -151,7 +151,6 @@ export const runMigrationFactory =
 
     const executedMigrations: string[] = [];
     let executionError: unknown | null = null;
-    /* eslint-disable no-await-in-loop */
     /* eslint-disable no-restricted-syntax */
     for (const migration of migrations) {
       logger.debug(`Executing migration '${migration.getPath()}`);
@@ -172,7 +171,6 @@ export const runMigrationFactory =
         break;
       }
     }
-    /* eslint-enable no-await-in-loop */
     /* eslint-enable no-restricted-syntax */
 
     logger.info(`Executed and saved ${executedMigrations.length} migrations`);

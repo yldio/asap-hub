@@ -8,8 +8,9 @@ on:
         description: Choose which entity to sync
         default: all
         options:
-          - outputs
           - all
+          - outputs
+          - projects
       environment-name:
         required: true
         type: environment

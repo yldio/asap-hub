@@ -33,13 +33,13 @@ export const indexOutputHandler =
           type: 'output',
         });
 
-        log.debug(`Saved research-output ${output.id}`);
+        log.debug(`Saved output ${output.id}`);
 
         return output;
       } catch (e) {
-        log.error(e, `Error while reindexing research output ${id}`);
+        log.error(e, `Error while reindexing output ${id}`);
         if (isBoom(e) && e.output.statusCode === 404) {
-          log.error(`Research output ${id} not found`);
+          log.error(`Output ${id} not found`);
           await algoliaClient.remove(id);
         }
         throw e;
@@ -49,10 +49,7 @@ export const indexOutputHandler =
     try {
       await reindexOutput(event.detail.resourceId);
     } catch (e) {
-      log.error(
-        e,
-        `Error while reindexing research output ${event.detail.resourceId} and its related research outputs`,
-      );
+      log.error(e, `Error while reindexing output ${event.detail.resourceId}`);
       if (isBoom(e) && e.output.statusCode === 404) {
         return;
       }

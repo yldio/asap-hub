@@ -281,7 +281,7 @@ __metadata:
     algoliasearch: 4.19.1
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1439.0
+    aws-sdk: 2.1441.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -917,7 +917,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1439.0
+    aws-sdk: 2.1441.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.32.1
@@ -1388,7 +1388,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1439.0
+    aws-sdk: 2.1441.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.32.1
@@ -1593,18 +1593,12 @@ __metadata:
     core-js: 3.32.1
     date-fns: 2.30.0
     date-fns-tz: 1.3.8
-    dom-to-playwright: ^0.1.3
     emotion-normalize: 11.0.1
-    expect-playwright: ^0.8.0
     fast-check: 2.25.0
     fast-deep-equal: 3.1.3
     hast-util-sanitize: 3.0.2
     history: 4.10.1
     ismounted: ^0.1.8
-    jest-playwright-jsdom: ^0.0.4
-    jest-playwright-preset: ^3.0.1
-    playwright: ^1.30.0
-    playwright-core: ^1.30.0
     ramda: 0.27.1
     react: 17.0.2
     react-dom: 17.0.2
@@ -20906,9 +20900,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1439.0":
-  version: 2.1439.0
-  resolution: "aws-sdk@npm:2.1439.0"
+"aws-sdk@npm:2.1441.0":
+  version: 2.1441.0
+  resolution: "aws-sdk@npm:2.1441.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -20920,7 +20914,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.5.0
-  checksum: e2b90eea8b1465d1e91f5b4473fc1e033056f5581256d3f52605beed99ac9d4645fa585a3624fdc65771826782cba13a438ad1824601eca710ffd550a131b5b4
+  checksum: fc80ff193b02893e913084e6173f364af73e3620f112697a302c43fd24fbf0c71b7d3313f709872d535b09fbd9d0339d73a44e704d932f053edf71ab344686a4
   languageName: node
   linkType: hard
 

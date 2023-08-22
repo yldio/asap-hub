@@ -6549,7 +6549,7 @@ export type FetchEventsQuery = {
     Pick<EventsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Events, 'id' | 'status'> & {
+          Pick<Events, 'id' | 'status' | 'lastModified'> & {
             flatData: Pick<
               EventsFlatDataDto,
               | 'googleId'
@@ -7239,6 +7239,10 @@ export const FetchEventsDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastModified' },
                       },
                       {
                         kind: 'Field',

@@ -73,8 +73,10 @@ export class SquidexFixture implements Fixture {
   }
 
   private async prepareEvent(props: EventCreateDataObject) {
+    // lastUpdated does not exist in Squidex only in Contentful
+    const { lastUpdated, ...rest } = props;
     return {
-      ...props,
+      ...rest,
       calendar: [props.calendar],
       notes: props.notes ?? undefined,
       presentation: props.presentation ?? undefined,

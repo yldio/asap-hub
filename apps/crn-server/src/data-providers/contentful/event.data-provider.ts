@@ -378,7 +378,8 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
   const isStale = endDate.diffNow('days').get('days') < -14; // 14 days have passed after the event
 
   const {
-    sys: { id, publishedAt },
+    sys: { id },
+    lastUpdated,
     title,
     description,
     startDateTimeZone,
@@ -438,7 +439,7 @@ export const parseGraphQLEvent = (item: EventItem): EventDataObject => {
     endDate: endDate.toUTC().toString(),
     endDateTimeZone: endDateTimeZone!,
     endDateTimestamp: endDate.toSeconds(),
-    lastModifiedDate: publishedAt,
+    lastModifiedDate: lastUpdated,
     notes: getContentfulEventMaterial<string, undefined>(
       notes as RichTextFromQuery,
       !!notesPermanentlyUnavailable,

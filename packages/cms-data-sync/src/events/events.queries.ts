@@ -7,6 +7,7 @@ export const eventsQuery = gql`
       items {
         id
         status
+        lastModified
         flatData {
           googleId
           description

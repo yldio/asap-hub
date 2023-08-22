@@ -20,6 +20,7 @@ jest.mock('../../src/utils/entries');
 const getEventSquidex = (): EventItem => ({
   id: 'event-1',
   status: 'PUBLISHED',
+  lastModified: '2023-08-01T17:00:00Z',
   flatData: {
     googleId: '1jhm4181bs6ck0esegje4nf6ur',
     description: null,
@@ -168,6 +169,7 @@ const baseCreatePayload = {
   startDateTimeZone: { 'en-US': 'America/Sao_Paulo' },
   status: { 'en-US': 'Confirmed' },
   title: { 'en-US': 'Amazing event!!!' },
+  lastUpdated: { 'en-US': '2023-08-01T17:00:00Z' },
 };
 
 describe('Migrate events', () => {

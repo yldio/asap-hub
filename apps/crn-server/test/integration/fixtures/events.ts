@@ -8,6 +8,7 @@ export const getEventFixture = (
   props: Partial<EventCreateDataObject> = {},
 ): EventCreateDataObject => {
   return {
+    lastUpdated: '2021-01-01T00:00:00.000Z',
     title: 'Event Title',
     description: 'This event will be good',
     startDate: '2021-02-23T19:32:00Z',

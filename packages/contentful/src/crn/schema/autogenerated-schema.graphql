@@ -116,6 +116,8 @@ enum AssetLinkingCollectionsEventsCollectionOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -375,6 +377,8 @@ enum CalendarsLinkingCollectionsEventsCollectionOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -939,6 +943,8 @@ enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -1011,6 +1017,7 @@ type Events implements Entry {
   googleId(locale: String): String
   hidden(locale: String): Boolean
   hideMeetingLink(locale: String): Boolean
+  lastUpdated(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): EventsLinkingCollections
   meetingLink(locale: String): String
   meetingMaterials(locale: String): JSON
@@ -1090,6 +1097,15 @@ input EventsFilter {
   hideMeetingLink: Boolean
   hideMeetingLink_exists: Boolean
   hideMeetingLink_not: Boolean
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   meetingLink: String
   meetingLink_contains: String
   meetingLink_exists: Boolean
@@ -1275,6 +1291,8 @@ enum EventsOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -3480,6 +3498,8 @@ enum ResearchOutputsRelatedEventsCollectionOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -5329,6 +5349,15 @@ input cfEventsNestedFilter {
   hideMeetingLink: Boolean
   hideMeetingLink_exists: Boolean
   hideMeetingLink_not: Boolean
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   meetingLink: String
   meetingLink_contains: String
   meetingLink_exists: Boolean

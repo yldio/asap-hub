@@ -9,6 +9,7 @@ import { getUserResponse } from '../fixtures/user.fixtures';
 import { pageControllerMock } from '../mocks/page.controller.mock';
 import { projectControllerMock } from '../mocks/project.controller.mock';
 import { userControllerMock } from '../mocks/user.controller.mock';
+import { loggerMock as logger } from '../mocks/logger.mock';
 
 describe('Permission middleware', () => {
   const mockUser = getUserResponse();
@@ -36,6 +37,7 @@ describe('Permission middleware', () => {
     pageController: pageControllerMock,
     authHandler: authHandlerMock,
     mockRequestHandlers: [mockRoutes],
+    logger,
   });
 
   // test the generic permission handler

@@ -2,8 +2,10 @@ import { gp2 } from '@asap-hub/fixtures';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -40,11 +42,11 @@ beforeEach(() => {
 });
 
 jest.mock('../api');
+const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+  typeof getAlgoliaProjects
+>;
 describe('Routes', () => {
   it('renders a list of projects', async () => {
-    const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
-      typeof getAlgoliaProjects
-    >;
     const firstGroup = gp2.createProjectResponse({
       id: '42',
       title: 'Project 42',
@@ -69,4 +71,16 @@ describe('Routes', () => {
       screen.getByRole('heading', { name: 'Project 11' }),
     ).toBeInTheDocument();
   }, 30_000);
+
+  it('can perform a search', async () => {
+    mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
+    await renderRoutes();
+    userEvent.type(screen.getByPlaceholderText(/Enter name/i), 'example');
+    await waitFor(() =>
+      expect(mockGetProjects).toHaveBeenLastCalledWith(
+        expect.anything(),
+        expect.objectContaining({ searchQuery: 'example' }),
+      ),
+    );
+  });
 });

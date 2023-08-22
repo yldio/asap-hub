@@ -1,7 +1,6 @@
 import { Anchor, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { gp2LogoFull } from '../icons';
-// import gp2LogoSmall from '../icons/gp2-logo-small';
 
 const { rem } = pixels;
 

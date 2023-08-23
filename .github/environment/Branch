@@ -1,4 +1,4 @@
-contentful-environment=Development
+contentful-environment=Production
 crn-algolia-api-key-name=crn-algolia-api-key-ci-dev
 crn-algolia-app-id-name=crn-algolia-app-id-dev
 crn-auth0-audience=https://dev.hub.asap.science

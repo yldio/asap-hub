@@ -274,7 +274,7 @@ runs:
           echo "sls-stage=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "crn-squidex-app-name=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "crn-squidex-app-name-legacy=$PR_NUMBER" >> $GITHUB_OUTPUT
-          echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "crn-contentful-env-id=Production" >> $GITHUB_OUTPUT
           echo "gp2-contentful-env-id=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "is-contentful-enabled=$HAS_CONTENTFUL_LABEL" >> $GITHUB_OUTPUT
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then

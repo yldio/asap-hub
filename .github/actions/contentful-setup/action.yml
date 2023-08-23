@@ -31,7 +31,7 @@ runs:
       run: yarn workspace @asap-hub/contentful space:setup-webhook
       env:
         API_URL: ${{ inputs.api-url }}
-        CONTENTFUL_ENVIRONMENT: ${{ inputs.contentful-environment }}
+        CONTENTFUL_ENVIRONMENT: Production
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
         CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN: ${{ inputs.contentful-webhook-authentication-token }}

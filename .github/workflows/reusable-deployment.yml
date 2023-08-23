@@ -247,8 +247,6 @@ jobs:
 
   crn-contentful-setup:
     needs: [crn-sls-deploy]
-    # Run for dev and prod, also run for branch-workflow but only when it has a dedicated environment
-    if: ${{ (inputs.environment-name == 'Branch' && inputs.crn-contentful-env != 'Development' &&  inputs.crn-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:

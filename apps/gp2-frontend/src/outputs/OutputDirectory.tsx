@@ -23,7 +23,7 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
     setSearchQuery,
     filters,
     toggleFilter,
-  } = useSearch<gp2.FetchOutputFilter>(['documentType']);
+  } = useSearch<gp2.FetchOutputSearchFilter>(['documentType']);
 
   const filterSet = new Set<string>(filters.documentType);
   const onChangeFilter = (filter: string) => {

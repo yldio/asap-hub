@@ -63,7 +63,7 @@ beforeEach(() => {
   jest.resetAllMocks();
   mockUseSearch.mockImplementation(() => ({
     changeLocation: jest.fn(),
-    filters: new Set(),
+    filters: {},
     updateFilters: jest.fn(),
     toggleFilter: mockToggleFilter,
     searchQuery: '',

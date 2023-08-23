@@ -1,6 +1,6 @@
-import { FetchUsersFilter } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { pixels } from '@asap-hub/react-components';
-import { gp2 } from '@asap-hub/routing';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { FiltersModal } from '../organisms';
@@ -12,7 +12,10 @@ const { rem } = pixels;
 type UsersPageListProps = ComponentProps<typeof FilterSearchExport> & {
   displayFilters?: boolean;
   changeLocation: (path: string) => void;
-  updateFilters: (path: string, filter: FetchUsersFilter) => void;
+  updateFilters: (
+    path: string,
+    filter: gp2Model.FetchUsersSearchFilter,
+  ) => void;
 } & Pick<
     ComponentProps<typeof FiltersModal>,
     'filters' | 'projects' | 'workingGroups'
@@ -39,7 +42,7 @@ const UsersPageList: React.FC<UsersPageListProps> = ({
   projects,
   workingGroups,
 }) => {
-  const { users } = gp2;
+  const { users } = gp2Routing;
   const backHref = users({}).$;
   const onBackClick = () => changeLocation(backHref);
 

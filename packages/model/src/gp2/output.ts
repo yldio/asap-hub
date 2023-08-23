@@ -122,8 +122,10 @@ export type OutputPostRequest = {
 
 export type OutputPutRequest = OutputPostRequest;
 
-export type FetchOutputFilter = {
-  documentType?: OutputDocumentType | OutputDocumentType[];
+export type FetchOutputSearchFilter = {
+  documentType?: OutputDocumentType[];
+};
+export type FetchOutputFilter = FetchOutputSearchFilter & {
   title?: string;
   link?: string;
   workingGroupId?: string;

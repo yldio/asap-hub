@@ -28,7 +28,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
     setSearchQuery,
     debouncedSearchQuery,
     updateFilters,
-  } = useSearch<gp2Model.FetchUsersFilter>([
+  } = useSearch<gp2Model.FetchUsersSearchFilter>([
     'regions',
     'keywords',
     'projects',

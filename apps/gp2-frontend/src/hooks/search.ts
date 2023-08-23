@@ -1,21 +1,23 @@
-import { useHistory, useLocation } from 'react-router-dom';
 import { searchQueryParam } from '@asap-hub/routing';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
-export const useSearch = <TFilter>(filterNames: string[] = ['filter']) => {
+export const useSearch = <TFilter extends Record<string, string[]>>(
+  filterNames: string[] = ['filter'],
+) => {
   const currentUrlParams = new URLSearchParams(useLocation().search);
   const history = useHistory();
 
   const { resetPagination } = usePaginationParams();
 
-  const filters = filterNames.reduce(
+  const filters = filterNames.reduce<TFilter>(
     (filterObject, filterName) => ({
       ...filterObject,
       [filterName]: currentUrlParams.getAll(filterName),
     }),
-    {} as { [x: string]: string[] },
-  ) as TFilter;
+    {} as TFilter,
+  );
 
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
 
@@ -33,34 +35,21 @@ export const useSearch = <TFilter>(filterNames: string[] = ['filter']) => {
     history.replace({ search: newUrlParams.toString() });
   };
 
-  const updateParams = (search: string) => {
-    const newUrlParams = new URLSearchParams(search);
-    return {
-      newUrlParams,
-      updateParams: function update(name: string, items?: string[]) {
-        newUrlParams.delete(name);
-        items?.forEach((item) => newUrlParams.append(name, item));
-        return this;
-      },
-    };
-  };
-
   const changeLocation = (pathname: string) => {
     history.push({ pathname, search: currentUrlParams.toString() });
   };
 
-  const updateFilters = (pathname: string, filterObj: TFilter) => {
+  const updateFilters = (pathname: string, updatedFilters: TFilter) => {
     resetPagination();
 
-    const currentFilters = filterObj as { [x: string]: string[] };
+    const newUrlParams = new URLSearchParams(history.location.search);
 
-    const { newUrlParams } = filterNames.reduce((prevUrlParams, filterName) => {
-      const currentParams = prevUrlParams.updateParams(
-        filterName,
-        currentFilters[filterName],
-      );
-      return currentParams;
-    }, updateParams(history.location.search));
+    filterNames.forEach((filterName) => {
+      newUrlParams.delete(filterName);
+      updatedFilters[filterName]?.forEach((filter) => {
+        newUrlParams.append(filterName, filter);
+      });
+    });
 
     history.push({ pathname, search: newUrlParams.toString() });
   };

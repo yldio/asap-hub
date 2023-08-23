@@ -159,13 +159,15 @@ export type UserMetadataResponse = UserResponse & {
 };
 export type UserUpdateRequest = UserUpdateDataObject;
 
-export type FetchUsersFilter = {
-  regions?: UserRegion[];
-  keywords?: Keyword[];
-  code?: string;
-  onlyOnboarded?: boolean;
+export type FetchUsersSearchFilter = {
   projects?: string[];
   workingGroups?: string[];
+  regions?: UserRegion[];
+  keywords?: Keyword[];
+};
+export type FetchUsersFilter = FetchUsersSearchFilter & {
+  code?: string;
+  onlyOnboarded?: boolean;
   hidden?: boolean;
 };
 

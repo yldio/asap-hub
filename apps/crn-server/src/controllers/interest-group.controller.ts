@@ -80,18 +80,23 @@ export default class InterestGroupController {
     }
 
     const teamIds = user.teams.map((team) => team.id);
-    const { items: interestGroupsByTeams } =
-      await this.interestGroupDataProvider.fetch({
-        filter: {
-          teamId: teamIds,
-        },
-      });
+    const { items: interestGroupsByTeams } = teamIds.length
+      ? await this.interestGroupDataProvider.fetch({
+          filter: {
+            teamId: teamIds,
+          },
+        })
+      : {
+          items: [],
+        };
+
     const { items: interestGroupsByUser } =
       await this.interestGroupDataProvider.fetch({
         filter: {
           userId,
         },
       });
+
     const interestGroups = [...interestGroupsByTeams, ...interestGroupsByUser];
     const items = uniqBy(interestGroups, 'id');
 

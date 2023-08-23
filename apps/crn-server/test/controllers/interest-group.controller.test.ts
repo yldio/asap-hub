@@ -148,6 +148,24 @@ describe('Group controller', () => {
       expect(result).toEqual({ items: [getInterestGroupResponse()], total: 1 });
     });
 
+    test('Should not call the data provider to fetch based on teams if user does not belong to any team', async () => {
+      const userDataObject = getUserDataObject();
+      userDataObject.teams = [];
+      userDataProviderMock.fetchById.mockResolvedValueOnce(userDataObject);
+      interestGroupDataProviderMock.fetch.mockResolvedValue({
+        total: 1,
+        items: [getInterestGroupDataObject()],
+      });
+
+      await interestGroupController.fetchByUserId(userId);
+
+      expect(userDataProviderMock.fetchById).toBeCalledWith(userId);
+      expect(interestGroupDataProviderMock.fetch).toBeCalledTimes(1);
+      expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
+        filter: { userId },
+      });
+    });
+
     test('Should call the data provider with correct parameters', async () => {
       const userDataObject = getUserDataObject();
       userDataObject.teams = [

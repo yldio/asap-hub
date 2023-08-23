@@ -1,7 +1,5 @@
 import supertest from 'supertest';
 import { authHandlerMock } from './mocks/auth-handler.mock';
-import { appFactory as appFactoryDefault } from '../src/app';
-
 import { UserDataProvider } from '../src/data-providers/types';
 import { loggerMock } from './mocks/logger.mock';
 
@@ -33,37 +31,6 @@ describe('Contentful feature flag', () => {
     beforeEach(() => {
       userSquidexDataProviderMock.fetch.mockResolvedValue(response);
       userContentfulDataProviderMock.fetch.mockResolvedValue(response);
-    });
-
-    describe('Switching with the cookie', () => {
-      const app = appFactoryDefault({
-        userSquidexDataProvider: userSquidexDataProviderMock,
-        userContentfulDataProvider: userContentfulDataProviderMock,
-        authHandler: authHandlerMock,
-        logger: loggerMock,
-      });
-
-      afterEach(() => jest.clearAllMocks());
-
-      test('user controller uses squidex data provider when the feature flag is set to false', async () => {
-        const response = await supertest(app)
-          .get('/users')
-          .set('X-Contentful-Enabled', 'false');
-
-        expect(response.status).toBe(200);
-        expect(userSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
-        expect(userContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
-      });
-
-      test('user controller uses squidex data provider when the feature flag is set to false', async () => {
-        const response = await supertest(app)
-          .get('/users')
-          .set('X-Contentful-Enabled', 'true');
-
-        expect(response.status).toBe(200);
-        expect(userSquidexDataProviderMock.fetch).not.toHaveBeenCalled();
-        expect(userContentfulDataProviderMock.fetch).toHaveBeenCalledTimes(1);
-      });
     });
 
     test('user controller uses contentful data provider when the environment var is true', async () => {
@@ -100,26 +67,6 @@ describe('Contentful feature flag', () => {
       expect(response.status).toBe(200);
       expect(userContentfulDataProviderMock.fetch).not.toHaveBeenCalled();
       expect(userSquidexDataProviderMock.fetch).toHaveBeenCalledTimes(1);
-    });
-
-    test('user controller uses contentful data provider when the environment var is false but the cookie is set to true', async () => {
-      process.env.IS_CONTENTFUL_ENABLED = 'false';
-
-      const { appFactory } = require('../src/app');
-
-      const app = appFactory({
-        userSquidexDataProvider: userSquidexDataProviderMock,
-        userContentfulDataProvider: userContentfulDataProviderMock,
-        authHandler: authHandlerMock,
-        logger: loggerMock,
-      });
-      const response = await supertest(app)
-        .get('/users')
-        .set('X-Contentful-Enabled', 'true');
-
-      expect(response.status).toBe(200);
-      expect(userSquidexDataProviderMock.fetch).not.toHaveBeenCalled();
-      expect(userContentfulDataProviderMock.fetch).toHaveBeenCalledTimes(1);
     });
   });
 });

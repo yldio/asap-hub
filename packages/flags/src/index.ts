@@ -11,7 +11,7 @@ let overrides: Flags = {
   // can also be used to manually disable a flag in development:
   ASAP_DRAFT_RESEARCH_OUTPUT: false,
   DISPLAY_EVENTS: false,
-  CONTENTFUL: false,
+  CONTENTFUL: true,
 };
 
 const envDefaults: Record<string, boolean> = {

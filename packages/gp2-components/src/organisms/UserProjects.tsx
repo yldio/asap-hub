@@ -25,8 +25,8 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   const getUserProjectRole = (
     userId: gp2.UserResponse['id'],
     project: gp2.UserResponse['projects'][number],
-  ): gp2.ProjectMemberRole | null =>
-    project.members.find((member) => member.userId === userId)?.role || null;
+  ): gp2.UserResponse['projects'][number]['members'] =>
+    project.members.filter((member) => member.userId === userId);
 
   return (
     <EditableCard
@@ -43,29 +43,34 @@ const UserProjects: React.FC<UserProjectsProps> = ({
             isOnboarding ? ['Name', 'Status'] : ['Name', 'Role', 'Status']
           }
         >
-          {projects.map((project) => {
-            const name = noLinks ? (
-              project.title
-            ) : (
-              <Link
-                underlined
-                href={
-                  gp2Routing.projects({}).project({
-                    projectId: project.id,
-                  }).$
-                }
-              >
-                {project.title}
-              </Link>
-            );
-            const role = getUserProjectRole(id, project) || '';
-            const status = <StatusPill status={project.status} />;
+          {projects
+            .filter((proj, idx) => {
+              return idx === projects.findIndex((p) => p.id === proj.id);
+            })
+            .flatMap((project) => {
+              const name = noLinks ? (
+                project.title
+              ) : (
+                <Link
+                  underlined
+                  href={
+                    gp2Routing.projects({}).project({
+                      projectId: project.id,
+                    }).$
+                  }
+                >
+                  {project.title}
+                </Link>
+              );
+              const roles = getUserProjectRole(id, project);
 
-            return {
-              id: project.id,
-              values: isOnboarding ? [name, status] : [name, role, status],
-            };
-          })}
+              const status = <StatusPill status={project.status} />;
+
+              return roles.map(({ role }) => ({
+                id: project.id,
+                values: isOnboarding ? [name, status] : [name, role, status],
+              }));
+            })}
         </CardTable>
       ) : (
         <Subtitle accent={'lead'}>

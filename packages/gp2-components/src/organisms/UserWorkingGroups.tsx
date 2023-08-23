@@ -29,8 +29,8 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
   const getUserWorkingGroupRole = (
     userId: gp2Model.UserResponse['id'],
     members: gp2Model.UserWorkingGroupMember[],
-  ): gp2Model.WorkingGroupMemberRole | null =>
-    members.find((member) => member.userId === userId)?.role || null;
+  ): gp2Model.UserWorkingGroupMember[] =>
+    members.filter((member) => member.userId === userId);
 
   return (
     <EditableCard
@@ -47,35 +47,41 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
             isOnboarding ? ['Name', 'Members'] : ['Name', 'Role', 'Members']
           }
         >
-          {workingGroups.map(({ title, members, id: workingGroupId }) => {
-            const name = noLinks ? (
-              title
-            ) : (
-              <Link
-                underlined
-                href={
-                  gp2Routing.workingGroups({}).workingGroup({
-                    workingGroupId,
-                  }).$
-                }
-              >
-                {title}
-              </Link>
-            );
-            const role = getUserWorkingGroupRole(id, members) || '';
-            const numberOfMembers = (
-              <IconWithLabel noMargin icon={usersIcon}>
-                {getCounterString(members.length, 'Member')}
-              </IconWithLabel>
-            );
+          {workingGroups
+            .filter((wgroup, idx) => {
+              return (
+                idx === workingGroups.findIndex((wg) => wg.id === wgroup.id)
+              );
+            })
+            .flatMap(({ title, members, id: workingGroupId }) => {
+              const name = noLinks ? (
+                title
+              ) : (
+                <Link
+                  underlined
+                  href={
+                    gp2Routing.workingGroups({}).workingGroup({
+                      workingGroupId,
+                    }).$
+                  }
+                >
+                  {title}
+                </Link>
+              );
+              const roles = getUserWorkingGroupRole(id, members);
+              const numberOfMembers = (
+                <IconWithLabel noMargin icon={usersIcon}>
+                  {getCounterString(members.length, 'Member')}
+                </IconWithLabel>
+              );
 
-            return {
-              id: workingGroupId,
-              values: isOnboarding
-                ? [name, numberOfMembers]
-                : [name, role, numberOfMembers],
-            };
-          })}
+              return roles.map(({ role }) => ({
+                id: workingGroupId,
+                values: isOnboarding
+                  ? [name, numberOfMembers]
+                  : [name, role, numberOfMembers],
+              }));
+            })}
         </CardTable>
       ) : (
         <Subtitle accent={'lead'}>

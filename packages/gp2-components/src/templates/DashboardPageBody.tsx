@@ -105,7 +105,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           />
           <InfoCard
             icon={<ArticleIcon color="#00202C" size={40} />}
-            title="Articles"
+            title="Research Articles"
             total={latestStats.articleCount}
           />
         </div>

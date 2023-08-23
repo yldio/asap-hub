@@ -19,6 +19,10 @@ export type ProjectsBodyProps = Pick<
   projects: gp2.ListProjectResponse['items'];
 } & Omit<ComponentProps<typeof ResultList>, 'children'>;
 
+const containerStyles = css({
+  marginTop: rem(48),
+});
+
 const gridContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -45,7 +49,7 @@ const ProjectsBody: React.FC<ProjectsBodyProps> = ({
   currentPageIndex,
   renderPageHref,
 }) => (
-  <article>
+  <article css={containerStyles}>
     <SearchAndFilter
       onChangeSearch={onChangeSearch}
       onChangeFilter={onChangeFilter}

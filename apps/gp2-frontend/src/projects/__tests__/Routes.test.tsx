@@ -1,3 +1,4 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import {
   render,
@@ -16,6 +17,8 @@ import {
 } from '../../__fixtures__/algolia';
 import { getAlgoliaProjects } from '../api';
 import Routes from '../Routes';
+
+mockConsoleError();
 
 const renderRoutes = async () => {
   render(
@@ -72,6 +75,13 @@ describe('Routes', () => {
     ).toBeInTheDocument();
   }, 30_000);
 
+  it('renders error message when the request is not a 2XX', async () => {
+    mockGetProjects.mockRejectedValue(new Error('error'));
+
+    await renderRoutes();
+    expect(mockGetProjects).toHaveBeenCalled();
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
   it('can perform a search', async () => {
     mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
     await renderRoutes();

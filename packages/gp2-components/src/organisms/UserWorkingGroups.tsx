@@ -26,7 +26,7 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
   noLinks = false,
   isOnboarding = false,
 }) => {
-  const getUserWorkingGroupRole = (
+  const getUserWorkingGroup = (
     userId: gp2Model.UserResponse['id'],
     members: gp2Model.UserWorkingGroupMember[],
   ): gp2Model.UserWorkingGroupMember[] =>
@@ -48,11 +48,10 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
           }
         >
           {workingGroups
-            .filter((wgroup, idx) => {
-              return (
-                idx === workingGroups.findIndex((wg) => wg.id === wgroup.id)
-              );
-            })
+            .filter(
+              (wgroup, idx) =>
+                idx === workingGroups.findIndex((wg) => wg.id === wgroup.id),
+            )
             .flatMap(({ title, members, id: workingGroupId }) => {
               const name = noLinks ? (
                 title
@@ -68,14 +67,23 @@ const UserWorkingGroups: React.FC<UserWorkingGroupsProps> = ({
                   {title}
                 </Link>
               );
-              const roles = getUserWorkingGroupRole(id, members);
+              const userMembership = getUserWorkingGroup(id, members);
+
               const numberOfMembers = (
                 <IconWithLabel noMargin icon={usersIcon}>
                   {getCounterString(members.length, 'Member')}
                 </IconWithLabel>
               );
 
-              return roles.map(({ role }) => ({
+              if (userMembership.length === 0) {
+                return {
+                  id: workingGroupId,
+                  values: isOnboarding
+                    ? [name, numberOfMembers]
+                    : [name, '', numberOfMembers],
+                };
+              }
+              return userMembership.map(({ role }) => ({
                 id: workingGroupId,
                 values: isOnboarding
                   ? [name, numberOfMembers]

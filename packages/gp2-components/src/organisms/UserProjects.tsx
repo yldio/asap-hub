@@ -22,7 +22,7 @@ const UserProjects: React.FC<UserProjectsProps> = ({
   noLinks = false,
   isOnboarding = false,
 }) => {
-  const getUserProjectRole = (
+  const getUserProject = (
     userId: gp2.UserResponse['id'],
     project: gp2.UserResponse['projects'][number],
   ): gp2.UserResponse['projects'][number]['members'] =>
@@ -44,9 +44,10 @@ const UserProjects: React.FC<UserProjectsProps> = ({
           }
         >
           {projects
-            .filter((proj, idx) => {
-              return idx === projects.findIndex((p) => p.id === proj.id);
-            })
+            .filter(
+              (proj, idx) =>
+                idx === projects.findIndex((p) => p.id === proj.id),
+            )
             .flatMap((project) => {
               const name = noLinks ? (
                 project.title
@@ -62,11 +63,18 @@ const UserProjects: React.FC<UserProjectsProps> = ({
                   {project.title}
                 </Link>
               );
-              const roles = getUserProjectRole(id, project);
+              const userMembership = getUserProject(id, project);
 
               const status = <StatusPill status={project.status} />;
 
-              return roles.map(({ role }) => ({
+              if (userMembership.length === 0) {
+                return {
+                  id: project.id,
+                  values: isOnboarding ? [name, status] : [name, '', status],
+                };
+              }
+
+              return userMembership.map(({ role }) => ({
                 id: project.id,
                 values: isOnboarding ? [name, status] : [name, role, status],
               }));

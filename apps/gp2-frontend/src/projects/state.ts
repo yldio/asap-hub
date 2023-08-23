@@ -87,9 +87,6 @@ const refreshProjectsState = atom<number>({
   default: 0,
 });
 
-export const useProjectsState = (options: ProjectListOptions) =>
-  useRecoilValue(projectsState(options));
-
 export const useProjects = (options: ProjectListOptions) => {
   const [projects, setProjects] = useRecoilState(projectsState(options));
   const { client } = useAlgolia();

@@ -29,7 +29,7 @@ const projectIndexState = atomFamily<
   ProjectListOptions
 >({ key: 'projectIndex', default: undefined });
 
-const projectsState = selectorFamily<
+export const projectsState = selectorFamily<
   gp2.ListProjectResponse | Error | undefined,
   ProjectListOptions
 >({

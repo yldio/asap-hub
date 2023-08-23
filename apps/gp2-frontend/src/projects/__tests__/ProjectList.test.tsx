@@ -16,7 +16,9 @@ import {
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
 import { getAlgoliaProjects } from '../api';
+import { projectsState } from '../state';
 import ProjectList from '../ProjectList';
+import { PAGE_SIZE } from '../../hooks';
 
 jest.mock('../api');
 jest.mock('../../hooks/search');
@@ -28,9 +30,20 @@ const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
 
 const mockToggleFilter = jest.fn();
 
-const renderProjectsList = async () => {
+const renderProjectsList = async (searchQuery = '') => {
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset }) => {
+        reset(
+          projectsState({
+            searchQuery,
+            currentPage: 0,
+            filters: new Set(),
+            pageSize: PAGE_SIZE,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

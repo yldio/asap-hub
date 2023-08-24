@@ -9,7 +9,7 @@ import { eventControllerMock } from '../../mocks/event.controller.mock';
 import { loggerMock } from '../../mocks/logger.mock';
 
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
-describe('Output index handler', () => {
+describe('Event index handler', () => {
   const indexHandler = indexEventHandler(
     eventControllerMock,
     algoliaSearchClientMock,
@@ -17,7 +17,7 @@ describe('Output index handler', () => {
   );
   beforeEach(jest.resetAllMocks);
 
-  test('Should fetch the output and create a record in Algolia when output is created', async () => {
+  test('Should fetch the event and create a record in Algolia when event is created', async () => {
     const eventResponse = getEventResponse();
     eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
 
@@ -25,11 +25,11 @@ describe('Output index handler', () => {
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: eventResponse,
-      type: 'output',
+      type: 'event',
     });
   });
 
-  test('Should fetch the output and create a record in Algolia when output is updated', async () => {
+  test('Should fetch the event and create a record in Algolia when event is updated', async () => {
     const eventResponse = getEventResponse();
     eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
 
@@ -37,11 +37,11 @@ describe('Output index handler', () => {
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: eventResponse,
-      type: 'output',
+      type: 'event',
     });
   });
 
-  test('Should fetch the output and remove the record in Algolia when output is unpublished', async () => {
+  test('Should fetch the event and remove the record in Algolia when event is unpublished', async () => {
     const event = unpublishedEvent('42');
 
     eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -55,7 +55,7 @@ describe('Output index handler', () => {
     );
   });
 
-  test('Should fetch the output and remove the record in Algolia when output is deleted', async () => {
+  test('Should fetch the event and remove the record in Algolia when event is deleted', async () => {
     const event = deleteEvent('42');
 
     eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -69,7 +69,7 @@ describe('Output index handler', () => {
     );
   });
 
-  test('Should throw an error and do not trigger algolia when the output request fails with another error code', async () => {
+  test('Should throw an error and do not trigger algolia when the event request fails with another error code', async () => {
     eventControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
     await expect(indexHandler(createEvent('42'))).rejects.toThrow(
@@ -100,13 +100,13 @@ describe('Output index handler', () => {
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
     test('receives the events created and updated in correct order', async () => {
       const id = '42';
-      const OutputResponse = {
+      const eventResponse = {
         ...getEventResponse(),
         id,
       };
 
       eventControllerMock.fetchById.mockResolvedValue({
-        ...OutputResponse,
+        ...eventResponse,
       });
 
       await indexHandler(createEvent(id));
@@ -115,19 +115,19 @@ describe('Output index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: OutputResponse,
-        type: 'output',
+        data: eventResponse,
+        type: 'event',
       });
     });
 
     test('receives the events created and updated in reverse order', async () => {
       const id = '42';
-      const OutputResponse = {
+      const eventResponse = {
         ...getEventResponse(),
         id,
       };
 
-      eventControllerMock.fetchById.mockResolvedValue(OutputResponse);
+      eventControllerMock.fetchById.mockResolvedValue(eventResponse);
 
       await indexHandler(updateEvent(id));
       await indexHandler(createEvent(id));
@@ -135,8 +135,8 @@ describe('Output index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: OutputResponse,
-        type: 'output',
+        data: eventResponse,
+        type: 'event',
       });
     });
 

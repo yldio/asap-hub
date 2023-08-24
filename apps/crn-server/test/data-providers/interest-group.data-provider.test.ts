@@ -180,7 +180,7 @@ describe('Group Data Provider', () => {
     });
 
     test('Should filter by multiple team IDs', async () => {
-      const teamIds = [
+      const teamIds: [string, ...string[]] = [
         'eb531b6e-195c-46e2-b347-58fb86715033',
         'dc312b6e-195c-46e2-b347-58fb86715033',
       ];
@@ -249,7 +249,7 @@ describe('Group Data Provider', () => {
 
     test('Should apply the team, user and active filters', async () => {
       const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
-      const teamIds = ['team-id-1', 'team-id-3'];
+      const teamIds: [string, ...string[]] = ['team-id-1', 'team-id-3'];
       const active = true;
 
       squidexGraphqlClientMock.request.mockResolvedValue(
@@ -275,7 +275,7 @@ describe('Group Data Provider', () => {
 
     test('Should return the deduped result', async () => {
       const userId = 'eb531b6e-195c-46e2-b347-58fb86715033';
-      const teamIds = ['team-id-1', 'team-id-3'];
+      const teamIds: [string, ...string[]] = ['team-id-1', 'team-id-3'];
 
       squidexGraphqlClientMock.request.mockResolvedValueOnce(
         getSquidexInterestGroupsGraphqlResponse(),

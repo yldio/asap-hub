@@ -62,12 +62,17 @@ export default class InterestGroupController {
     options: FetchPaginationOptions,
   ): Promise<ListInterestGroupResponse> {
     const teamIds = Array.isArray(teamId) ? teamId : [teamId];
-    const { total, items } = await this.interestGroupDataProvider.fetch({
-      filter: {
-        teamId: teamIds,
-      },
-      ...options,
-    });
+    const { total, items } = teamIds.length
+      ? await this.interestGroupDataProvider.fetch({
+          filter: {
+            teamId: teamIds as [string, ...string[]],
+          },
+          ...options,
+        })
+      : {
+          total: 0,
+          items: [],
+        };
 
     return { total, items };
   }
@@ -83,7 +88,7 @@ export default class InterestGroupController {
     const { items: interestGroupsByTeams } = teamIds.length
       ? await this.interestGroupDataProvider.fetch({
           filter: {
-            teamId: teamIds,
+            teamId: teamIds as [string, ...string[]],
           },
         })
       : {

@@ -106,6 +106,13 @@ describe('Group controller', () => {
       });
     });
 
+    test('Should not call the data provider if teamId is empty and should return empty result', async () => {
+      const response = await interestGroupController.fetchByTeamId([], {});
+
+      expect(interestGroupDataProviderMock.fetch).not.toHaveBeenCalled();
+      expect(response).toEqual({ items: [], total: 0 });
+    });
+
     test('Should filter by multiple team IDs and add pagination parameters', async () => {
       const teamIds = [teamId, 'dc312b6e-195c-46e2-b347-58fb86715033'];
       const pagination = {
@@ -148,22 +155,23 @@ describe('Group controller', () => {
       expect(result).toEqual({ items: [getInterestGroupResponse()], total: 1 });
     });
 
-    test('Should not call the data provider to fetch based on teams if user does not belong to any team', async () => {
+    test('Should not call the data provider to fetch based on teams if user does not belong to any team and should return empty result', async () => {
       const userDataObject = getUserDataObject();
       userDataObject.teams = [];
       userDataProviderMock.fetchById.mockResolvedValueOnce(userDataObject);
       interestGroupDataProviderMock.fetch.mockResolvedValue({
-        total: 1,
-        items: [getInterestGroupDataObject()],
+        total: 0,
+        items: [],
       });
 
-      await interestGroupController.fetchByUserId(userId);
+      const response = await interestGroupController.fetchByUserId(userId);
 
       expect(userDataProviderMock.fetchById).toBeCalledWith(userId);
       expect(interestGroupDataProviderMock.fetch).toBeCalledTimes(1);
       expect(interestGroupDataProviderMock.fetch).toBeCalledWith({
         filter: { userId },
       });
+      expect(response).toEqual({ items: [], total: 0 });
     });
 
     test('Should call the data provider with correct parameters', async () => {

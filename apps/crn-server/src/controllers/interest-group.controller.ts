@@ -62,10 +62,12 @@ export default class InterestGroupController {
     options: FetchPaginationOptions,
   ): Promise<ListInterestGroupResponse> {
     const teamIds = Array.isArray(teamId) ? teamId : [teamId];
-    const { total, items } = teamIds.length
+    const { total, items } = teamIds[0]
       ? await this.interestGroupDataProvider.fetch({
           filter: {
-            teamId: teamIds as [string, ...string[]],
+            // this [teamIds[0], ...teamIds.slice(1)] is necessary
+            // because the type of teams is [string, ...string[]],
+            teamId: [teamIds[0], ...teamIds.slice(1)],
           },
           ...options,
         })
@@ -85,10 +87,12 @@ export default class InterestGroupController {
     }
 
     const teamIds = user.teams.map((team) => team.id);
-    const { items: interestGroupsByTeams } = teamIds.length
+    const { items: interestGroupsByTeams } = teamIds[0]
       ? await this.interestGroupDataProvider.fetch({
           filter: {
-            teamId: teamIds as [string, ...string[]],
+            // this [teamIds[0], ...teamIds.slice(1)] is necessary
+            // because the type of teams is [string, ...string[]],
+            teamId: [teamIds[0], ...teamIds.slice(1)],
           },
         })
       : {

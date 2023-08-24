@@ -21,16 +21,20 @@ export const getEvents = async (
 ): Promise<ListEventResponse> => {
   const filters = getEventFilters({ before, after }, constraint);
 
-  const result = await algoliaClient.search(
-    ['event'],
-    searchQuery,
-    {
-      filters,
-      page: currentPage ?? undefined,
-      hitsPerPage: pageSize ?? undefined,
-    },
-    !!before,
-  );
+  const result = await algoliaClient
+    .search(
+      ['event'],
+      searchQuery,
+      {
+        filters,
+        page: currentPage ?? undefined,
+        hitsPerPage: pageSize ?? undefined,
+      },
+      !!before,
+    )
+    .catch((error: Error) => {
+      throw new Error(`Could not search: ${error.message}`);
+    });
 
   return {
     items: result.hits,

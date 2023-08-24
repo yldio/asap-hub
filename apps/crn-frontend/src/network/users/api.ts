@@ -63,11 +63,15 @@ export const getUsers = async (
       ? `(${tagFilters}) AND (${roleFilters})`
       : tagFilters || roleFilters;
 
-  const result = await algoliaClient.search(['user'], searchQuery, {
-    filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
+  const result = await algoliaClient
+    .search(['user'], searchQuery, {
+      filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+    })
+    .catch((error: Error) => {
+      throw new Error(`Could not search: ${error.message}`);
+    });
 
   return {
     items: result.hits,

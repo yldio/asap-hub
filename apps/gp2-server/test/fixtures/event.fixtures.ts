@@ -322,17 +322,11 @@ export const getContentfulEventDataObject = (): gp2Model.EventDataObject => ({
   },
 });
 
-export const getContentfulEventResponse = (): gp2Model.EventResponse =>
-  getEventDataObject();
-
 export const getContentfulListEventDataObject =
   (): gp2Model.ListEventDataObject => ({
     total: 1,
     items: [getContentfulEventDataObject()],
   });
-
-export const getContentfulListEventResponse = (): gp2Model.ListEventResponse =>
-  getContentfulListEventDataObject();
 
 export const getEventSpeaker = (): gp2Model.EventSpeaker => ({
   speaker: getEventSpeakerUser(),
@@ -393,12 +387,20 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
 
 export const getListEventDataObject = (): gp2Model.ListEventDataObject => ({
   total: 1,
-  items: [getEventDataObject()],
+  items: [
+    {
+      ...getEventDataObject(),
+    },
+  ],
 });
-export const getEventResponse = (): gp2Model.EventResponse =>
-  getEventDataObject();
-export const getListEventResponse = (): gp2Model.ListEventResponse =>
-  getListEventDataObject();
+export const getEventResponse = (): gp2Model.EventResponse => ({
+  ...getEventDataObject(),
+  _tags: [gp2Model.eventWorkingGroups, gp2Model.eventProjects],
+});
+export const getListEventResponse = (): gp2Model.ListEventResponse => ({
+  total: 1,
+  items: [getEventResponse()],
+});
 
 export const getEventCreateDataObject = (): gp2Model.EventCreateDataObject => ({
   googleId: 'google-event-id',

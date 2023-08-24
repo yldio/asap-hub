@@ -30,7 +30,9 @@ export interface EventDataObject extends BasicEvent {
 }
 
 export type ListEventDataObject = ListResponse<EventDataObject>;
-export type EventResponse = EventDataObject;
+export type EventResponse = EventDataObject & {
+  _tags: string[];
+};
 export type ListEventResponse = ListResponse<EventResponse>;
 
 export type EventConstraint = {
@@ -93,6 +95,6 @@ export type FetchEventsOptions = {
 } & SortOptions &
   FetchOptions<FilterOptions>;
 
-export const workingGroups = 'Working Groups';
-export const projects = 'Projects';
-export const gp2Hub = 'GP2 Hub';
+export const eventWorkingGroups = 'Working Groups';
+export const eventProjects = 'Projects';
+export const eventGP2Hub = 'GP2 Hub';

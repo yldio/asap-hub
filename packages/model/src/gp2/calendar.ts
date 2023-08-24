@@ -18,3 +18,5 @@ export interface CalendarResponse extends BasicCalendarResponse {
 export type ListCalendarResponse = ListResponse<CalendarResponse>;
 
 export type FetchCalendarOptions = FetchPaginationOptions;
+
+export const gp2CalendarName = 'GP2 Hub';

@@ -32,7 +32,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
     'regions',
     'keywords',
     'projects',
-    'working-groups',
+    'workingGroups',
   ]);
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';

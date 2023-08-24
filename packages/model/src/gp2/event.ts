@@ -92,3 +92,7 @@ export type FetchEventsOptions = {
   before?: string;
 } & SortOptions &
   FetchOptions<FilterOptions>;
+
+export const workingGroups = 'Working Groups';
+export const projects = 'Projects';
+export const gp2Hub = 'GP2 Hub';

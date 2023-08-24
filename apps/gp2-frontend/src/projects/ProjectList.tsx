@@ -12,7 +12,7 @@ const ProjectList: FC<Record<string, never>> = () => {
     setSearchQuery,
     filters,
     toggleFilter,
-  } = useSearch<gp2.FetchProjectFilter>(['status', 'type']);
+  } = useSearch(['status', 'type']);
 
   const filterList = [filters.status, filters.type]
     .filter((value) => value !== undefined)

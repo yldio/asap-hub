@@ -1,27 +1,33 @@
+import { gp2 } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
-export const useSearch = <TFilter extends Record<string, string[]>>(
-  filterNames: string[] = ['filter'],
-) => {
+type Filter = {
+  filter?: string[];
+} & gp2.FetchProjectFilter &
+  gp2.FetchUsersSearchFilter &
+  gp2.FetchOutputSearchFilter &
+  gp2.FetchNewsFilter;
+
+export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
   const currentUrlParams = new URLSearchParams(useLocation().search);
   const history = useHistory();
 
   const { resetPagination } = usePaginationParams();
 
-  const filters = filterNames.reduce<TFilter>(
+  const filters = filterNames.reduce(
     (filterObject, filterName) => ({
       ...filterObject,
       [filterName]: currentUrlParams.getAll(filterName),
     }),
-    {} as TFilter,
+    {} as Filter,
   );
 
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
 
-  const toggleFilter = (filter: string, filterName: string) => {
+  const toggleFilter = (filter: string, filterName: keyof Filter) => {
     resetPagination();
     const newUrlParams = new URLSearchParams(history.location.search);
     newUrlParams.delete(filterName);
@@ -39,13 +45,14 @@ export const useSearch = <TFilter extends Record<string, string[]>>(
     history.push({ pathname, search: currentUrlParams.toString() });
   };
 
-  const updateFilters = (pathname: string, updatedFilters: TFilter) => {
+  const updateFilters = (pathname: string, updatedFilters: Filter) => {
     resetPagination();
 
     const newUrlParams = new URLSearchParams(history.location.search);
 
     filterNames.forEach((filterName) => {
       newUrlParams.delete(filterName);
+
       updatedFilters[filterName]?.forEach((filter) => {
         newUrlParams.append(filterName, filter);
       });

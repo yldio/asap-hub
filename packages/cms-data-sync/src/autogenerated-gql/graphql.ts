@@ -6851,7 +6851,7 @@ export type FetchTutorialsQuery = {
     Pick<TutorialsResultDto, 'total'> & {
       items: Maybe<
         Array<
-          Pick<Tutorials, 'id' | 'status'> & {
+          Pick<Tutorials, 'id' | 'created' | 'status'> & {
             flatData: Pick<
               TutorialsFlatDataDto,
               'title' | 'shortText' | 'text' | 'link' | 'linkText'
@@ -8745,6 +8745,10 @@ export const FetchTutorialsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'created' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'status' },

@@ -48,8 +48,8 @@ export const getContentfulGraphqlTutorial = (): NonNullable<
   return {
     sys: {
       id: 'tutorial-1',
-      firstPublishedAt: '2020-09-08T16:35:28.000Z',
     },
+    publishDate: '2020-09-08T16:35:28.000Z',
     title: 'Tutorial 1',
     shortText: 'Short text of tutorial 1',
     text: {

@@ -6,6 +6,7 @@ export const tutorialsQuery = gql`
       total
       items {
         id
+        created
         status
         flatData {
           title

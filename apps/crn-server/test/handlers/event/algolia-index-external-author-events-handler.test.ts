@@ -3,8 +3,14 @@ import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { ExternalAuthorSquidexPayload } from '../../../src/handlers/event-bus';
 import { indexExternalAuthorEventsHandler } from '../../../src/handlers/event/algolia-index-external-author-events-handler';
-import { getListEventResponse } from '../../fixtures/events.fixtures';
-import { getExternalAuthorSquidexEvent } from '../../fixtures/external-authors.fixtures';
+import {
+  getListEventResponse,
+  getEventDataObject,
+} from '../../fixtures/events.fixtures';
+import {
+  getExternalAuthorSquidexEvent,
+  getExternalAuthorContentfulEvent,
+} from '../../fixtures/external-authors.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
@@ -82,6 +88,40 @@ describe('Index Events on External Author event handler', () => {
         ),
       ),
     ).rejects.toThrow(algoliaError);
+  });
+
+  test('Should not index hidden events', async () => {
+    eventControllerMock.fetch.mockResolvedValueOnce({
+      total: 3,
+      items: [
+        {
+          ...getEventDataObject(),
+          id: 'event-1',
+          hidden: true,
+        },
+        {
+          ...getEventDataObject(),
+          id: 'event-2',
+          hidden: false,
+        },
+        {
+          ...getEventDataObject(),
+          id: 'event-3',
+          hidden: true,
+        },
+      ],
+    });
+
+    await indexHandler(
+      getExternalAuthorContentfulEvent('author-id', 'ExternalAuthorsPublished'),
+    );
+
+    expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
+      {
+        type: 'event',
+        data: { ...getEventDataObject(), id: 'event-2', hidden: false },
+      },
+    ]);
   });
 
   test.each(possibleEvents)(

@@ -1,6 +1,9 @@
 import Boom from '@hapi/boom';
 import { indexTeamEventsHandler } from '../../../src/handlers/event/algolia-index-team-events-handler';
-import { getListEventResponse } from '../../fixtures/events.fixtures';
+import {
+  getListEventResponse,
+  getEventDataObject,
+} from '../../fixtures/events.fixtures';
 import {
   createEvent,
   deleteEvent,
@@ -48,6 +51,38 @@ describe('Index Events on Team event handler', () => {
     await expect(indexHandler(updateEvent('team-id'))).rejects.toThrow(
       algoliaError,
     );
+  });
+
+  test('Should not index hidden events', async () => {
+    eventControllerMock.fetch.mockResolvedValueOnce({
+      total: 3,
+      items: [
+        {
+          ...getEventDataObject(),
+          id: 'event-1',
+          hidden: true,
+        },
+        {
+          ...getEventDataObject(),
+          id: 'event-2',
+          hidden: false,
+        },
+        {
+          ...getEventDataObject(),
+          id: 'event-3',
+          hidden: true,
+        },
+      ],
+    });
+
+    await indexHandler(updateEvent('team-id'));
+
+    expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
+      {
+        type: 'event',
+        data: { ...getEventDataObject(), id: 'event-2', hidden: false },
+      },
+    ]);
   });
 
   test.each(possibleEvents)(

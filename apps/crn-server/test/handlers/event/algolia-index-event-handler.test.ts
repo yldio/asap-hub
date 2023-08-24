@@ -95,6 +95,18 @@ describe('Event index handler', () => {
     );
   });
 
+  test('Should fetch the event and remove the record in Algolia when event is hidden', async () => {
+    const event = updateEvent();
+    const eventResponse = { ...getEventResponse(), hidden: true };
+    eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      event.detail.resourceId,
+    );
+  });
+
   test('Should throw an error and do not trigger algolia when the event request fails with another error code', async () => {
     eventControllerMock.fetchById.mockRejectedValue(Boom.badData());
 

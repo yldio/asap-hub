@@ -396,9 +396,9 @@ export const getContentfulEventDataObject = (): EventDataObject => ({
   interestGroup: undefined,
   workingGroup: undefined,
   notes: '<p>These are the notes from the meeting</p>',
-  presentation: '<p><iframe src="https://example.com"/></p>',
+  presentation: '<p><iframe src="https://example.com"></iframe></p>',
   videoRecording:
-    '<p><iframe src="https://player.vimeo.com/video/493052720"/></p>',
+    '<p><iframe src="https://player.vimeo.com/video/493052720"></iframe></p>',
   thumbnail: 'https://example.com',
 });
 

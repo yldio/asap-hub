@@ -20,6 +20,7 @@ export type EventCreateDataObject = CommonEventCreateDataObject & {
   notes?: string | null;
   videoRecording?: string | null;
   presentation?: string | null;
+  lastUpdated: string;
 };
 export type EventUpdateDataObject = Pick<
   CommonEventUpdateDataObject,

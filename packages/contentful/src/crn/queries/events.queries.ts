@@ -6,9 +6,9 @@ export const eventsContentQueryFragment = gql`
   fragment EventsContent on Events {
     sys {
       id
-      publishedAt
       publishedVersion
     }
+    lastUpdated
     description
     endDate
     endDateTimeZone

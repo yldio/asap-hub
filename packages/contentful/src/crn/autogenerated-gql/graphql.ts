@@ -356,6 +356,8 @@ export enum AssetLinkingCollectionsTutorialsCollectionOrder {
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   ShortTextAsc = 'shortText_ASC',
   ShortTextDesc = 'shortText_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -1149,6 +1151,8 @@ export enum DiscoverTrainingCollectionOrder {
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   ShortTextAsc = 'shortText_ASC',
   ShortTextDesc = 'shortText_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -6211,6 +6215,7 @@ export type Tutorials = Entry & {
   link?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<TutorialsLinkingCollections>;
+  publishDate?: Maybe<Scalars['DateTime']>;
   shortText?: Maybe<Scalars['String']>;
   sys: Sys;
   text?: Maybe<TutorialsText>;
@@ -6231,6 +6236,11 @@ export type TutorialsLinkTextArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
 export type TutorialsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsPublishDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
@@ -6279,6 +6289,15 @@ export type TutorialsFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publishDate?: InputMaybe<Scalars['DateTime']>;
+  publishDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publishDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publishDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   shortText?: InputMaybe<Scalars['String']>;
   shortText_contains?: InputMaybe<Scalars['String']>;
   shortText_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6338,6 +6357,8 @@ export enum TutorialsOrder {
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   ShortTextAsc = 'shortText_ASC',
   ShortTextDesc = 'shortText_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -8639,6 +8660,15 @@ export type CfTutorialsNestedFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publishDate?: InputMaybe<Scalars['DateTime']>;
+  publishDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publishDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publishDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   shortText?: InputMaybe<Scalars['String']>;
   shortText_contains?: InputMaybe<Scalars['String']>;
   shortText_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9551,8 +9581,11 @@ export type FetchDiscoverQuery = {
         trainingCollection?: Maybe<{
           items: Array<
             Maybe<
-              Pick<Tutorials, 'title' | 'shortText' | 'link' | 'linkText'> & {
-                sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+              Pick<
+                Tutorials,
+                'publishDate' | 'title' | 'shortText' | 'link' | 'linkText'
+              > & {
+                sys: Pick<Sys, 'id'>;
                 thumbnail?: Maybe<Pick<Asset, 'url'>>;
                 text?: Maybe<
                   Pick<TutorialsText, 'json'> & {
@@ -14333,9 +14366,9 @@ export type FetchTeamsQuery = {
 
 export type TutorialsContentFragment = Pick<
   Tutorials,
-  'title' | 'shortText' | 'link' | 'linkText'
+  'publishDate' | 'title' | 'shortText' | 'link' | 'linkText'
 > & {
-  sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+  sys: Pick<Sys, 'id'>;
   thumbnail?: Maybe<Pick<Asset, 'url'>>;
   text?: Maybe<
     Pick<TutorialsText, 'json'> & {
@@ -14408,8 +14441,11 @@ export type FetchTutorialByIdQueryVariables = Exact<{
 
 export type FetchTutorialByIdQuery = {
   tutorials?: Maybe<
-    Pick<Tutorials, 'title' | 'shortText' | 'link' | 'linkText'> & {
-      sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+    Pick<
+      Tutorials,
+      'publishDate' | 'title' | 'shortText' | 'link' | 'linkText'
+    > & {
+      sys: Pick<Sys, 'id'>;
       thumbnail?: Maybe<Pick<Asset, 'url'>>;
       text?: Maybe<
         Pick<TutorialsText, 'json'> & {
@@ -18916,13 +18952,10 @@ export const TutorialsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'firstPublishedAt' },
-                },
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
           {

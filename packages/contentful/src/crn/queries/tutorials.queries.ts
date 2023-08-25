@@ -6,8 +6,8 @@ export const tutorialsContentQueryFragment = gql`
   fragment TutorialsContent on Tutorials {
     sys {
       id
-      firstPublishedAt
     }
+    publishDate
     title
     shortText
     thumbnail {

@@ -44,7 +44,7 @@ export const migrateTutorials = async () => {
   };
 
   const parseTutorialsItem = async (page: TutorialItem) => {
-    const { flatData: squidexTutorialItem, id } = page;
+    const { flatData: squidexTutorialItem, id, created } = page;
 
     const { title, shortText, link, linkText, text, thumbnail } =
       squidexTutorialItem;
@@ -73,6 +73,7 @@ export const migrateTutorials = async () => {
       text: await createDocumentIfNeeded(contentfulEnvironment, text),
       thumbnail: thumbnailAsset,
       link: payload.link || null,
+      publishDate: created,
     };
   };
 

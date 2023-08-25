@@ -36,7 +36,7 @@ export const parseContentfulGraphQlTutorials = (
   tutorial: TutorialItem,
 ): TutorialsDataObject => ({
   id: tutorial.sys.id,
-  created: tutorial.sys.firstPublishedAt,
+  created: tutorial.publishDate,
   title: tutorial.title || '',
   text: tutorial.text
     ? parseRichText(tutorial.text as RichTextFromQuery)

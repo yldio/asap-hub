@@ -32,6 +32,28 @@ describe('Project controller', () => {
 
       expect(result).toEqual({ items: [], total: 0 });
     });
+    test('Should not set the opportunitiesAvailable in _tags if there is no opportunity link', async () => {
+      const listProjectDataObject = getListProjectsResponse();
+
+      projectDataProviderMock.fetch.mockResolvedValue({
+        ...listProjectDataObject,
+        items: listProjectDataObject.items.map(
+          ({ opportunitiesLink: _, ...projectDataObject }) => projectDataObject,
+        ),
+      });
+      const result = await projectController.fetch({}, '11');
+
+      const listProjectResponse = getListProjectsResponse();
+      expect(result).toEqual({
+        ...listProjectResponse,
+        items: listProjectResponse.items.map(
+          ({ opportunitiesLink: __, ...expected }) => ({
+            ...expected,
+            _tags: [],
+          }),
+        ),
+      });
+    });
     describe('resources', () => {
       const member = {
         userId: '7',

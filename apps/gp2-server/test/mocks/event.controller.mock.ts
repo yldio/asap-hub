@@ -1,9 +1,9 @@
-import { gp2 } from '@asap-hub/model';
+import EventContoller from '../../src/controllers/event.controller';
 
-export const eventControllerMock: jest.Mocked<gp2.EventController> = {
+export const eventControllerMock = {
   create: jest.fn(),
   fetch: jest.fn(),
   fetchById: jest.fn(),
   fetchByGoogleId: jest.fn(),
   update: jest.fn(),
-};
+} as unknown as jest.Mocked<EventContoller>;

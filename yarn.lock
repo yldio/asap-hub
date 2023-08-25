@@ -1270,7 +1270,7 @@ __metadata:
     "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-router-hash-link": 1.2.1
+    "@types/react-router-hash-link": 2.4.6
     "@types/react-test-renderer": 18.0.0
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1582,7 +1582,7 @@ __metadata:
     "@types/react": 17.0.64
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-router-hash-link": 1.2.1
+    "@types/react-router-hash-link": 2.4.6
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
     "@types/react-test-renderer": 18.0.0
     "@types/rehype-slug": "workspace:*"
@@ -17986,18 +17986,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-dom@npm:*":
-  version: 5.1.5
-  resolution: "@types/react-router-dom@npm:5.1.5"
-  dependencies:
-    "@types/history": "npm:*"
-    "@types/react": "npm:*"
-    "@types/react-router": "npm:*"
-  checksum: 995316331c0fb270c4ad8f20e5c76cfeb219ab8a35cd3d6d392ec7da8bf82092e5234dc6d70a2f8bfc9cd37c1b4c4aee3398f2950b52e04c2cb37c8e61facb8b
-  languageName: node
-  linkType: hard
-
-"@types/react-router-dom@npm:5.3.3":
+"@types/react-router-dom@npm:5.3.3, @types/react-router-dom@npm:^5.3.0":
   version: 5.3.3
   resolution: "@types/react-router-dom@npm:5.3.3"
   dependencies:
@@ -18008,13 +17997,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-hash-link@npm:1.2.1":
-  version: 1.2.1
-  resolution: "@types/react-router-hash-link@npm:1.2.1"
+"@types/react-router-hash-link@npm:2.4.6":
+  version: 2.4.6
+  resolution: "@types/react-router-hash-link@npm:2.4.6"
   dependencies:
-    "@types/react": "npm:*"
-    "@types/react-router-dom": "npm:*"
-  checksum: bfd72a0117723b179b4e76cfc7e3cb71f02b6e614cb8d41f1fe5a668c5fd7138deb31729f12dbda5d1cec109b7a92806999f9f25e8fc15f145d3b4a54aad4b4c
+    "@types/history": ^4.7.11
+    "@types/react": "*"
+    "@types/react-router-dom": ^5.3.0
+  checksum: 9c3b02d9e2355c71f40dd9120b7057782bba72f989ef4dee0fde53db37a7adbb2d0438a977d7d3d98ac3f5236e5ca84c687df339d488b9787ca9d178e058b394
   languageName: node
   linkType: hard
 

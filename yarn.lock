@@ -418,7 +418,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -446,7 +446,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-date-field-as-first-published-at@workspace:packages/contentful-app-extensions/date-field-as-first-published-at"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -473,7 +473,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -501,7 +501,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-additional-materials@workspace:packages/contentful-app-extensions/event-additional-materials"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -528,7 +528,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-custom-validation@workspace:packages/contentful-app-extensions/event-custom-validation"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -556,7 +556,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-speakers-gp2@workspace:packages/contentful-app-extensions/event-speakers-gp2"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -585,7 +585,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-event-speakers-title@workspace:packages/contentful-app-extensions/event-speakers-title"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -614,7 +614,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-field-as-updated-at@workspace:packages/contentful-app-extensions/field-as-updated-at"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -642,7 +642,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-membership-reference@workspace:packages/contentful-app-extensions/membership-reference"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -671,7 +671,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-partial-last-updated@workspace:packages/contentful-app-extensions/partial-last-updated"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -698,7 +698,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-user-positions@workspace:packages/contentful-app-extensions/user-positions"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -725,7 +725,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-working-group-deliverables@workspace:packages/contentful-app-extensions/working-group-deliverables"
   dependencies:
-    "@contentful/app-scripts": 1.10.2
+    "@contentful/app-scripts": 1.12.0
     "@contentful/app-sdk": 4.22.1
     "@contentful/f36-components": 4.48.1
     "@contentful/f36-tokens": 4.0.2
@@ -9623,25 +9623,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/app-scripts@npm:1.10.2":
-  version: 1.10.2
-  resolution: "@contentful/app-scripts@npm:1.10.2"
+"@contentful/app-scripts@npm:1.12.0":
+  version: 1.12.0
+  resolution: "@contentful/app-scripts@npm:1.12.0"
   dependencies:
     adm-zip: 0.5.10
     analytics-node: ^6.2.0
     bottleneck: 2.19.5
     chalk: 4.1.2
-    commander: 10.0.1
-    contentful-management: 10.35.4
-    dotenv: 16.0.3
+    commander: 11.0.0
+    contentful-management: 10.40.0
+    dotenv: 16.3.1
     ignore: 5.2.4
-    inquirer: 8.2.5
+    inquirer: 8.2.6
     lodash: 4.17.21
     open: 8.4.2
     ora: 5.4.1
   bin:
     contentful-app-scripts: bin/app-scripts
-  checksum: 5e1f39cb8cd46f3546ae70bc7108c98df0fb5af2cb798fea45e9b355e43794ec138bccd792f575457325554f8eb487f8a1d3c440a6793ed538ee3fd3faffc658
+  checksum: 88887be0cea4ade8fb1cf6bd429b3882dadbe8723bbf2104384fccd9c6d48c715ac07abf26de29f36778f8236455d773e3bf89c235e815e862299a8f356b6405
   languageName: node
   linkType: hard
 
@@ -23621,10 +23621,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:10.0.1":
-  version: 10.0.1
-  resolution: "commander@npm:10.0.1"
-  checksum: 436901d64a818295803c1996cd856621a74f30b9f9e28a588e726b2b1670665bccd7c1a77007ebf328729f0139838a88a19265858a0fa7a8728c4656796db948
+"commander@npm:11.0.0":
+  version: 11.0.0
+  resolution: "commander@npm:11.0.0"
+  checksum: 6621954e1e1d078b4991c1f5bbd9439ad37aa7768d6ab4842de1dbd4d222c8a27e1b8e62108b3a92988614af45031d5bb2a2aaa92951f4d0c934d1a1ac564bb4
   languageName: node
   linkType: hard
 
@@ -24022,21 +24022,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful-management@npm:10.35.4":
-  version: 10.35.4
-  resolution: "contentful-management@npm:10.35.4"
-  dependencies:
-    "@contentful/rich-text-types": ^16.0.3
-    "@types/json-patch": 0.0.30
-    axios: ^0.27.1
-    contentful-sdk-core: ^7.0.1
-    fast-copy: ^3.0.0
-    lodash.isplainobject: ^4.0.6
-    type-fest: ^3.0.0
-  checksum: a3018690392a1916a2af657f7f9640c2fe92525be4fb1a7cf0ddbe1fe4772619ea587f1cf33a121c36c5ad81557ecfdecf866d98d1a3b0b236b58d839f5e4dd1
-  languageName: node
-  linkType: hard
-
 "contentful-management@npm:10.39.2":
   version: 10.39.2
   resolution: "contentful-management@npm:10.39.2"
@@ -24049,6 +24034,21 @@ __metadata:
     lodash.isplainobject: ^4.0.6
     type-fest: ^4.0.0
   checksum: 549b2d018b6fb0714db4213a29e3c20c35a4b239c3283d57636acd55029894a4efa62891d6fa6036f44c5dedaf6cba000ccf5598c7ddf47d97d69e25133cd3c1
+  languageName: node
+  linkType: hard
+
+"contentful-management@npm:10.40.0":
+  version: 10.40.0
+  resolution: "contentful-management@npm:10.40.0"
+  dependencies:
+    "@contentful/rich-text-types": ^16.0.3
+    "@types/json-patch": 0.0.30
+    axios: ^1.4.0
+    contentful-sdk-core: ^8.1.0
+    fast-copy: ^3.0.0
+    lodash.isplainobject: ^4.0.6
+    type-fest: ^4.0.0
+  checksum: dd5b45cdeca1f749c130dd56ce3d9b3ef5c5ac5b1a3fe1885ba78e216b43ec591d8fc72184784103e6cb27761fd36100c560456dc40e3253c7ae9b9cda35f866
   languageName: node
   linkType: hard
 
@@ -26295,13 +26295,6 @@ __metadata:
   version: 5.1.0
   resolution: "dotenv-expand@npm:5.1.0"
   checksum: 8017675b7f254384915d55f9eb6388e577cf0a1231a28d54b0ca03b782be9501b0ac90ac57338636d395fa59051e6209e9b44b8ddf169ce6076dffb5dea227d3
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:16.0.3":
-  version: 16.0.3
-  resolution: "dotenv@npm:16.0.3"
-  checksum: afcf03f373d7a6d62c7e9afea6328e62851d627a4e73f2e12d0a8deae1cd375892004f3021883f8aec85932cd2834b091f568ced92b4774625b321db83b827f8
   languageName: node
   linkType: hard
 
@@ -31757,9 +31750,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:8.2.5, inquirer@npm:^8.2.5":
-  version: 8.2.5
-  resolution: "inquirer@npm:8.2.5"
+"inquirer@npm:8.2.6":
+  version: 8.2.6
+  resolution: "inquirer@npm:8.2.6"
   dependencies:
     ansi-escapes: ^4.2.1
     chalk: ^4.1.1
@@ -31775,8 +31768,8 @@ __metadata:
     string-width: ^4.1.0
     strip-ansi: ^6.0.0
     through: ^2.3.6
-    wrap-ansi: ^7.0.0
-  checksum: f13ee4c444187786fb393609dedf6b30870115a57b603f2e6424f29a99abc13446fd45ee22461c33c9c40a92a60a8df62d0d6b25d74fc6676fa4cb211de55b55
+    wrap-ansi: ^6.0.1
+  checksum: 387ffb0a513559cc7414eb42c57556a60e302f820d6960e89d376d092e257a919961cd485a1b4de693dbb5c0de8bc58320bfd6247dfd827a873aa82a4215a240
   languageName: node
   linkType: hard
 
@@ -31821,6 +31814,29 @@ __metadata:
     through: "npm:^2.3.6"
     wrap-ansi: "npm:^7.0.0"
   checksum: dfcb6529d3af443dfea2241cb471508091b51f5121a088fdb8728b23ec9b349ef0a5e13a0ef2c8e19457b0bed22f7cbbcd561f7a4529d084c562a58c605e2655
+  languageName: node
+  linkType: hard
+
+"inquirer@npm:^8.2.5":
+  version: 8.2.5
+  resolution: "inquirer@npm:8.2.5"
+  dependencies:
+    ansi-escapes: ^4.2.1
+    chalk: ^4.1.1
+    cli-cursor: ^3.1.0
+    cli-width: ^3.0.0
+    external-editor: ^3.0.3
+    figures: ^3.0.0
+    lodash: ^4.17.21
+    mute-stream: 0.0.8
+    ora: ^5.4.1
+    run-async: ^2.4.0
+    rxjs: ^7.5.5
+    string-width: ^4.1.0
+    strip-ansi: ^6.0.0
+    through: ^2.3.6
+    wrap-ansi: ^7.0.0
+  checksum: f13ee4c444187786fb393609dedf6b30870115a57b603f2e6424f29a99abc13446fd45ee22461c33c9c40a92a60a8df62d0d6b25d74fc6676fa4cb211de55b55
   languageName: node
   linkType: hard
 
@@ -49039,7 +49055,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wrap-ansi@npm:^6.2.0":
+"wrap-ansi@npm:^6.0.1, wrap-ansi@npm:^6.2.0":
   version: 6.2.0
   resolution: "wrap-ansi@npm:6.2.0"
   dependencies:

@@ -15,6 +15,7 @@ import {
 import { getApiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 
+jest.mock('../../../src/utils/logger');
 const user: RestUser = {
   id: 'userId',
   lastModified: '2020-09-25T11:06:27.164Z',

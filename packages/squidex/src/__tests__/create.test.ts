@@ -49,7 +49,7 @@ describe('squidex wrapper', () => {
         },
       );
 
-    await expect(() =>
+    await expect(
       client.create({
         string: {
           iv: 'value',
@@ -71,7 +71,7 @@ describe('squidex wrapper', () => {
         statusCode: 400,
       });
 
-    await expect(() =>
+    await expect(
       client.create({
         string: {
           iv: 'value',
@@ -90,7 +90,7 @@ describe('squidex wrapper', () => {
       .query(() => true)
       .reply(400, '<not>json</not>');
 
-    await expect(() =>
+    await expect(
       client.create({
         string: {
           iv: 'value',
@@ -105,7 +105,7 @@ describe('squidex wrapper', () => {
       .query(() => true)
       .reply(200, '<not>json</not>');
 
-    await expect(() =>
+    await expect(
       client.create({
         string: {
           iv: 'value',
@@ -120,7 +120,7 @@ describe('squidex wrapper', () => {
       .query(() => true)
       .reply(500);
 
-    await expect(() =>
+    await expect(
       client.create({
         string: {
           iv: 'value',

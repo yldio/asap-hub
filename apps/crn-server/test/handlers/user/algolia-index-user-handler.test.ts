@@ -4,6 +4,7 @@ import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 
+jest.mock('../../../src/utils/logger');
 describe('User index handler', () => {
   const algoliaSearchClientMock = getAlgoliaSearchClientMock();
   const indexHandler = indexUserHandler(

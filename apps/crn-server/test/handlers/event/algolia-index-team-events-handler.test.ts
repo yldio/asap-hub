@@ -22,6 +22,7 @@ const possibleEvents: [string, TeamEventGenerator][] = [
   ['deleted', deleteEvent],
 ];
 
+jest.mock('../../../src/utils/logger');
 describe('Index Events on Team event handler', () => {
   const indexHandler = indexTeamEventsHandler(
     eventControllerMock,

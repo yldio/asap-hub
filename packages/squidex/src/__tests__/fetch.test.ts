@@ -34,7 +34,7 @@ describe('squidex wrapper', () => {
       .query(() => true)
       .reply(500);
 
-    await expect(() => client.fetch()).rejects.toThrow(GenericError);
+    await expect(client.fetch()).rejects.toThrow(GenericError);
   });
 
   it('returns GenericError on HTTP error', async () => {
@@ -46,7 +46,7 @@ describe('squidex wrapper', () => {
       )
       .reply(401);
 
-    await expect(() => client.fetch()).rejects.toThrow(GenericError);
+    await expect(client.fetch()).rejects.toThrow(GenericError);
   });
 
   it('returns a list of documents', async () => {

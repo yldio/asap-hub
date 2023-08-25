@@ -27,6 +27,7 @@ jest.mock('../../../src/migrations/2-test-migration', () => MockModule, {
 jest.mock('../../../src/migrations/3-test-migration', () => MockModule, {
   virtual: true,
 });
+jest.mock('../../../src/utils/logger');
 describe('Run-migrations Webhook', () => {
   const mockFSPromises = promises as jest.Mocked<typeof promises>;
   const mockHandlerArguments = [{}, {}, undefined] as [any, any, any];

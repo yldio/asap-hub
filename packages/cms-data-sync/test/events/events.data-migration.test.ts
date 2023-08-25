@@ -147,6 +147,7 @@ const baseUpdatePayload = {
   videoRecording: { 'en-US': null },
   videoRecordingPermanentlyUnavailable: { 'en-US': null },
   videoRecordingUpdatedAt: { 'en-US': null },
+  lastUpdated: { 'en-US': '2023-08-01T17:00:00Z' },
 };
 
 const baseCreatePayload = {
@@ -169,7 +170,6 @@ const baseCreatePayload = {
   startDateTimeZone: { 'en-US': 'America/Sao_Paulo' },
   status: { 'en-US': 'Confirmed' },
   title: { 'en-US': 'Amazing event!!!' },
-  lastUpdated: { 'en-US': '2023-08-01T17:00:00Z' },
 };
 
 describe('Migrate events', () => {

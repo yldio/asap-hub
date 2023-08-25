@@ -250,6 +250,7 @@ export const migrateEvents = async () => {
         meetingMaterials,
         meetingMaterialsPermanentlyUnavailable,
         ...materialsSpeakersThumbAndMeetingLink,
+        lastUpdated: lastModified,
       };
     }
 

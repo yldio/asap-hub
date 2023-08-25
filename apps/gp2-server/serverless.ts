@@ -385,7 +385,7 @@ const serverlessConfig: AWS = {
       },
     },
     algoliaIndexUser: {
-      handler: './src/handlers/event/algolia-index-user-handler.handler',
+      handler: './src/handlers/user/algolia-index-user-handler.handler',
       events: [
         {
           eventBridge: {

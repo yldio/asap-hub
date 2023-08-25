@@ -111,7 +111,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   };
 
   const versions = researchOutputData?.versions
-    ? [researchOutputAsVersion, ...researchOutputData.versions]
+    ? researchOutputData.versions.concat([researchOutputAsVersion])
     : [researchOutputAsVersion];
 
   if (workingGroup) {

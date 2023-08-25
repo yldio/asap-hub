@@ -120,7 +120,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   };
 
   const versions = researchOutputData?.versions
-    ? [researchOutputAsVersion, ...researchOutputData.versions]
+    ? researchOutputData.versions.concat([researchOutputAsVersion])
     : [researchOutputAsVersion];
 
   if (team) {

@@ -66,6 +66,7 @@ jobs:
           - field-as-updated-at
           - user-positions
           - membership-reference
+          - membership-custom-validation
           - clear-on-change
           - working-group-deliverables
           - partial-last-updated

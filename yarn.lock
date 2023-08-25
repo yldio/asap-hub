@@ -9707,6 +9707,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@contentful/app-scripts@npm:1.10.2":
+  version: 1.10.2
+  resolution: "@contentful/app-scripts@npm:1.10.2"
+  dependencies:
+    adm-zip: 0.5.10
+    analytics-node: ^6.2.0
+    bottleneck: 2.19.5
+    chalk: 4.1.2
+    commander: 10.0.1
+    contentful-management: 10.35.4
+    dotenv: 16.0.3
+    ignore: 5.2.4
+    inquirer: 8.2.5
+    lodash: 4.17.21
+    open: 8.4.2
+    ora: 5.4.1
+  bin:
+    contentful-app-scripts: bin/app-scripts
+  checksum: 5e1f39cb8cd46f3546ae70bc7108c98df0fb5af2cb798fea45e9b355e43794ec138bccd792f575457325554f8eb487f8a1d3c440a6793ed538ee3fd3faffc658
+  languageName: node
+  linkType: hard
+
 "@contentful/app-scripts@npm:1.12.0":
   version: 1.12.0
   resolution: "@contentful/app-scripts@npm:1.12.0"
@@ -17599,7 +17621,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*":
+"@types/jest@npm:*, @types/jest@npm:29.5.3":
   version: 29.5.3
   resolution: "@types/jest@npm:29.5.3"
   dependencies:
@@ -23821,6 +23843,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:10.0.1":
+  version: 10.0.1
+  resolution: "commander@npm:10.0.1"
+  checksum: 436901d64a818295803c1996cd856621a74f30b9f9e28a588e726b2b1670665bccd7c1a77007ebf328729f0139838a88a19265858a0fa7a8728c4656796db948
+  languageName: node
+  linkType: hard
+
 "commander@npm:11.0.0":
   version: 11.0.0
   resolution: "commander@npm:11.0.0"
@@ -24219,6 +24248,21 @@ __metadata:
   bin:
     contentful-import: bin/contentful-import
   checksum: 7cb4f5f5d8f2b53a4b261deac1a9c7b0a88118d956cd7666ee8f72f1ff821f885294cfa0ab4e260d37da165fc38dcf6b283ee802bb6e85b0e81a73fafb862b3a
+  languageName: node
+  linkType: hard
+
+"contentful-management@npm:10.35.4":
+  version: 10.35.4
+  resolution: "contentful-management@npm:10.35.4"
+  dependencies:
+    "@contentful/rich-text-types": ^16.0.3
+    "@types/json-patch": 0.0.30
+    axios: ^0.27.1
+    contentful-sdk-core: ^7.0.1
+    fast-copy: ^3.0.0
+    lodash.isplainobject: ^4.0.6
+    type-fest: ^3.0.0
+  checksum: a3018690392a1916a2af657f7f9640c2fe92525be4fb1a7cf0ddbe1fe4772619ea587f1cf33a121c36c5ad81557ecfdecf866d98d1a3b0b236b58d839f5e4dd1
   languageName: node
   linkType: hard
 
@@ -26502,6 +26546,13 @@ __metadata:
   version: 5.1.0
   resolution: "dotenv-expand@npm:5.1.0"
   checksum: 8017675b7f254384915d55f9eb6388e577cf0a1231a28d54b0ca03b782be9501b0ac90ac57338636d395fa59051e6209e9b44b8ddf169ce6076dffb5dea227d3
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:16.0.3":
+  version: 16.0.3
+  resolution: "dotenv@npm:16.0.3"
+  checksum: afcf03f373d7a6d62c7e9afea6328e62851d627a4e73f2e12d0a8deae1cd375892004f3021883f8aec85932cd2834b091f568ced92b4774625b321db83b827f8
   languageName: node
   linkType: hard
 
@@ -31970,6 +32021,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"inquirer@npm:8.2.5, inquirer@npm:^8.2.5":
+  version: 8.2.5
+  resolution: "inquirer@npm:8.2.5"
+  dependencies:
+    ansi-escapes: ^4.2.1
+    chalk: ^4.1.1
+    cli-cursor: ^3.1.0
+    cli-width: ^3.0.0
+    external-editor: ^3.0.3
+    figures: ^3.0.0
+    lodash: ^4.17.21
+    mute-stream: 0.0.8
+    ora: ^5.4.1
+    run-async: ^2.4.0
+    rxjs: ^7.5.5
+    string-width: ^4.1.0
+    strip-ansi: ^6.0.0
+    through: ^2.3.6
+    wrap-ansi: ^7.0.0
+  checksum: f13ee4c444187786fb393609dedf6b30870115a57b603f2e6424f29a99abc13446fd45ee22461c33c9c40a92a60a8df62d0d6b25d74fc6676fa4cb211de55b55
+  languageName: node
+  linkType: hard
+
 "inquirer@npm:8.2.6":
   version: 8.2.6
   resolution: "inquirer@npm:8.2.6"
@@ -32034,29 +32108,6 @@ __metadata:
     through: "npm:^2.3.6"
     wrap-ansi: "npm:^7.0.0"
   checksum: dfcb6529d3af443dfea2241cb471508091b51f5121a088fdb8728b23ec9b349ef0a5e13a0ef2c8e19457b0bed22f7cbbcd561f7a4529d084c562a58c605e2655
-  languageName: node
-  linkType: hard
-
-"inquirer@npm:^8.2.5":
-  version: 8.2.5
-  resolution: "inquirer@npm:8.2.5"
-  dependencies:
-    ansi-escapes: ^4.2.1
-    chalk: ^4.1.1
-    cli-cursor: ^3.1.0
-    cli-width: ^3.0.0
-    external-editor: ^3.0.3
-    figures: ^3.0.0
-    lodash: ^4.17.21
-    mute-stream: 0.0.8
-    ora: ^5.4.1
-    run-async: ^2.4.0
-    rxjs: ^7.5.5
-    string-width: ^4.1.0
-    strip-ansi: ^6.0.0
-    through: ^2.3.6
-    wrap-ansi: ^7.0.0
-  checksum: f13ee4c444187786fb393609dedf6b30870115a57b603f2e6424f29a99abc13446fd45ee22461c33c9c40a92a60a8df62d0d6b25d74fc6676fa4cb211de55b55
   languageName: node
   linkType: hard
 

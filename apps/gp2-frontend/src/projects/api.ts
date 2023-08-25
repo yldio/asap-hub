@@ -1,3 +1,4 @@
+import { AlgoliaClient } from '@asap-hub/algolia';
 import {
   BackendError,
   createSentryHeaders,
@@ -21,6 +22,36 @@ export const getProjects = async (
   }
   return resp.json();
 };
+
+const getAllFilters = ({ status = [], type = [] }: gp2.FetchProjectFilter) => {
+  const statusFilters = status
+    ?.map((filter) => `status:"${filter}"`)
+    .join(' OR ');
+  const opportunityFilter =
+    type?.includes(gp2.opportunitiesAvailable) &&
+    `_tags:"${gp2.opportunitiesAvailable}"`;
+  const traineeFilter =
+    type?.includes(gp2.traineeProject) && 'traineeProject: true';
+
+  return [statusFilters, opportunityFilter, traineeFilter]
+    .filter(Boolean)
+    .join(' AND ');
+};
+
+export type ProjectListOptions = GetListOptions & gp2.FetchProjectFilter;
+export const getAlgoliaProjects = async (
+  client: AlgoliaClient<'gp2'>,
+  options: ProjectListOptions,
+) =>
+  client
+    .search(['project'], options.searchQuery, {
+      page: options.currentPage ?? 0,
+      hitsPerPage: options.pageSize ?? 10,
+      filters: getAllFilters(options),
+    })
+    .catch((error: Error) => {
+      throw new Error(`Could not search: ${error.message}`);
+    });
 
 export const getProject = async (
   id: string,

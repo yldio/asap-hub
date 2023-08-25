@@ -45,7 +45,7 @@ const renderOutputDirectory = async ({
   const mockToggleFilter = jest.fn();
   mockUseSearch.mockImplementation(() => ({
     changeLocation: jest.fn(),
-    filters: new Set(),
+    filters: {},
     updateFilters: mockUpdateFilter,
     toggleFilter: mockToggleFilter,
     searchQuery: '',

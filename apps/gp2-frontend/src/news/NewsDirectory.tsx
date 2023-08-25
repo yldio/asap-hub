@@ -1,5 +1,4 @@
 import { NewsPageList } from '@asap-hub/gp2-components';
-import { gp2 } from '@asap-hub/model';
 import Frame from '../Frame';
 import { useSearch } from '../hooks/search';
 import NewsList from './NewsList';
@@ -11,7 +10,7 @@ const NewsDirectory = () => {
     setSearchQuery,
     filters,
     toggleFilter,
-  } = useSearch<gp2.FetchNewsFilter>(['type']);
+  } = useSearch(['type']);
 
   const filterSet = new Set<string>(filters.type);
   const onChangeFilter = (filter: string) => {

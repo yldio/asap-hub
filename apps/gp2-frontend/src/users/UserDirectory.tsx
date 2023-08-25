@@ -1,6 +1,5 @@
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { UsersPageList } from '@asap-hub/gp2-components';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { ComponentProps, FC } from 'react';
@@ -8,7 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import Frame from '../Frame';
 import { useSearch } from '../hooks/search';
-import { useProjectsState } from '../projects/state';
+import { useProjects } from '../projects/state';
 import { useWorkingGroupsState } from '../working-groups/state';
 import { getUsers } from './api';
 import { userFields, usersResponseToStream, userToCSV } from './export';
@@ -28,12 +27,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
     setSearchQuery,
     debouncedSearchQuery,
     updateFilters,
-  } = useSearch<gp2Model.FetchUsersFilter>([
-    'regions',
-    'keywords',
-    'projects',
-    'workingGroups',
-  ]);
+  } = useSearch(['regions', 'keywords', 'projects', 'workingGroups']);
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
 
@@ -61,7 +55,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
       userToCSV,
     );
 
-  const { items: projects } = useProjectsState({
+  const { items: projects } = useProjects({
     pageSize: 20,
     searchQuery: '',
     currentPage: 0,

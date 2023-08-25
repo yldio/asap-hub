@@ -1,7 +1,7 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { EventController, EventEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
-import { isBoom } from '@hapi/boom';
+import { notFound, isBoom } from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import Event from '../../controllers/event.controller';
@@ -22,7 +22,9 @@ export const indexEventHandler =
       const crnEvent = await eventController.fetchById(event.detail.resourceId);
 
       logger.debug(`Fetched event ${crnEvent.id}`);
-
+      if (crnEvent.hidden) {
+        throw notFound();
+      }
       await algoliaClient.save({
         data: crnEvent,
         type: 'event',

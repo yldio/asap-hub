@@ -47,10 +47,12 @@ export const indexGroupEventsHandler =
       );
 
       await algoliaClient.saveMany(
-        foundEvents.items.map((data) => ({
-          data,
-          type: 'event',
-        })),
+        foundEvents.items
+          .filter((e) => !e.hidden)
+          .map((data) => ({
+            data,
+            type: 'event',
+          })),
       );
 
       logger.info(`Updated ${foundEvents.items.length} events.`);

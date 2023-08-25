@@ -3,7 +3,10 @@ import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { InterestGroupPayload } from '../../../src/handlers/event-bus';
 import { indexGroupEventsHandler } from '../../../src/handlers/event/algolia-index-group-events-handler';
-import { getListEventResponse } from '../../fixtures/events.fixtures';
+import {
+  getListEventResponse,
+  getEventDataObject,
+} from '../../fixtures/events.fixtures';
 import { getInterestGroupEvent } from '../../fixtures/interest-groups.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
@@ -49,6 +52,38 @@ describe('Index Events on Group event handler', () => {
     await expect(
       indexHandler(getInterestGroupEvent('group-id', 'GroupsUpdated')),
     ).rejects.toThrow(algoliaError);
+  });
+
+  test('Should not index hidden events', async () => {
+    eventControllerMock.fetch.mockResolvedValueOnce({
+      total: 3,
+      items: [
+        {
+          ...getEventDataObject(),
+          id: 'event-1',
+          hidden: true,
+        },
+        {
+          ...getEventDataObject(),
+          id: 'event-2',
+          hidden: false,
+        },
+        {
+          ...getEventDataObject(),
+          id: 'event-3',
+          hidden: true,
+        },
+      ],
+    });
+
+    await indexHandler(getInterestGroupEvent('group-id', 'GroupsPublished'));
+
+    expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
+      {
+        type: 'event',
+        data: { ...getEventDataObject(), id: 'event-2', hidden: false },
+      },
+    ]);
   });
 
   test.each(possibleEvents)(

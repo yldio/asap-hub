@@ -1,13 +1,16 @@
 import { EntityResponses } from '@asap-hub/algolia';
 import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
+import Events from '../src/controllers/event.controller';
 import Outputs from '../src/controllers/output.controller';
 import Projects from '../src/controllers/project.controller';
-import Events from '../src/controllers/event.controller';
+import Users from '../src/controllers/user.controller';
+import { AssetContentfulDataProvider } from '../src/data-providers/asset.data-provider';
 import { EventContentfulDataProvider } from '../src/data-providers/event.data-provider';
 import { ExternalUserContentfulDataProvider } from '../src/data-providers/external-user.data-provider';
 import { OutputContentfulDataProvider } from '../src/data-providers/output.data-provider';
 import { ProjectContentfulDataProvider } from '../src/data-providers/project.data-provider';
+import { UserContentfulDataProvider } from '../src/data-providers/user.data-provider';
 import {
   getContentfulGraphQLClientFactory,
   getContentfulRestClientFactory,
@@ -76,10 +79,18 @@ const getController = (entity: keyof EntityResponsesGP2) => {
     graphQLClient,
     getContentfulRestClientFactory,
   );
+  const userDataProvider = new UserContentfulDataProvider(
+    graphQLClient,
+    getContentfulRestClientFactory,
+  );
+  const assetDataProvider = new AssetContentfulDataProvider(
+    getContentfulRestClientFactory,
+  );
   const controllerMap = {
     output: new Outputs(outputDataProvider, externalUserDataProvider),
     project: new Projects(projectDataProvider),
     event: new Events(eventDataProvider),
+    user: new Users(userDataProvider, assetDataProvider),
   };
 
   return controllerMap[entity];

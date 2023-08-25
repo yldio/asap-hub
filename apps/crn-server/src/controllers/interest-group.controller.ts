@@ -62,12 +62,19 @@ export default class InterestGroupController {
     options: FetchPaginationOptions,
   ): Promise<ListInterestGroupResponse> {
     const teamIds = Array.isArray(teamId) ? teamId : [teamId];
-    const { total, items } = await this.interestGroupDataProvider.fetch({
-      filter: {
-        teamId: teamIds,
-      },
-      ...options,
-    });
+    const { total, items } = teamIds[0]
+      ? await this.interestGroupDataProvider.fetch({
+          filter: {
+            // this [teamIds[0], ...teamIds.slice(1)] is necessary
+            // because the type of teams is [string, ...string[]],
+            teamId: [teamIds[0], ...teamIds.slice(1)],
+          },
+          ...options,
+        })
+      : {
+          total: 0,
+          items: [],
+        };
 
     return { total, items };
   }
@@ -80,18 +87,25 @@ export default class InterestGroupController {
     }
 
     const teamIds = user.teams.map((team) => team.id);
-    const { items: interestGroupsByTeams } =
-      await this.interestGroupDataProvider.fetch({
-        filter: {
-          teamId: teamIds,
-        },
-      });
+    const { items: interestGroupsByTeams } = teamIds[0]
+      ? await this.interestGroupDataProvider.fetch({
+          filter: {
+            // this [teamIds[0], ...teamIds.slice(1)] is necessary
+            // because the type of teams is [string, ...string[]],
+            teamId: [teamIds[0], ...teamIds.slice(1)],
+          },
+        })
+      : {
+          items: [],
+        };
+
     const { items: interestGroupsByUser } =
       await this.interestGroupDataProvider.fetch({
         filter: {
           userId,
         },
       });
+
     const interestGroups = [...interestGroupsByTeams, ...interestGroupsByUser];
     const items = uniqBy(interestGroups, 'id');
 

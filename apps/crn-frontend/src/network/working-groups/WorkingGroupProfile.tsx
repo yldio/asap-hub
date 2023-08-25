@@ -88,7 +88,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
 
   const [upcomingEventsResult, pastEventsResult] = useUpcomingAndPastEvents(
     currentTime,
-    { workingGroupId },
+    { workingGroupId, hidden: 'false' },
   );
   const { pageSize } = usePaginationParams();
 
@@ -181,7 +181,7 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
               }
               currentTime={currentTime}
               displayName={workingGroup.title}
-              eventConstraint={{ workingGroupId }}
+              eventConstraint={{ workingGroupId, hidden: 'false' }}
               isActive={!workingGroup.complete}
               Outputs={
                 <Outputs

@@ -59,7 +59,8 @@
     "status",
     "interestGroup.id",
     "workingGroup.id",
-    "workingGroups.id"
+    "workingGroups.id",
+    "hidden"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

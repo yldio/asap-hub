@@ -44,6 +44,7 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
 
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     interestGroupId,
+    hidden: 'false',
   });
 
   if (interestGroup) {
@@ -85,7 +86,7 @@ const InterestGroupProfile: FC<InterestGroupProfileProps> = ({
           )}
           currentTime={currentTime}
           displayName={interestGroup.name}
-          eventConstraint={{ interestGroupId }}
+          eventConstraint={{ interestGroupId, hidden: 'false' }}
           isActive={interestGroup.active}
           paths={paths}
           type="interest group"

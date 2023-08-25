@@ -430,6 +430,7 @@ it.each`
     searchQuery: '',
     constraint: {
       teamId: 't0',
+      hidden: 'false',
     },
   });
 });

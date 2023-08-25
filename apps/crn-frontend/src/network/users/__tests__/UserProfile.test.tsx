@@ -464,6 +464,7 @@ it('navigates to the upcoming events tab', async () => {
     searchQuery: '',
     constraint: {
       userId: userResponse.id,
+      hidden: 'false',
     },
   });
 });
@@ -492,6 +493,7 @@ it('navigates to the past events tab', async () => {
     searchQuery: '',
     constraint: {
       userId: userResponse.id,
+      hidden: 'false',
     },
   });
 });

@@ -74,7 +74,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     getEventListOptions(currentTime, {
       past: false,
       pageSize,
-      constraint: { userId },
+      constraint: { userId, hidden: 'false' },
     }),
     currentUser,
   );
@@ -83,7 +83,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     getEventListOptions(currentTime, {
       past: true,
       pageSize,
-      constraint: { userId },
+      constraint: { userId, hidden: 'false' },
     }),
     currentUser,
   );
@@ -155,7 +155,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   <Route path={path + tabRoutes.upcoming.template}>
                     <Frame title="Upcoming Events">
                       <EventsList
-                        constraint={{ userId: user?.id }}
+                        constraint={{ userId: user?.id, hidden: 'false' }}
                         currentTime={currentTime}
                         past={false}
                         noEventsComponent={
@@ -171,7 +171,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     <Frame title="Past Events">
                       <EventsList
                         past
-                        constraint={{ userId: user?.id }}
+                        constraint={{ userId: user?.id, hidden: 'false' }}
                         currentTime={currentTime}
                         noEventsComponent={
                           <NoEvents

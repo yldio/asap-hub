@@ -118,7 +118,12 @@ export const useEvents = (options: GetEventListOptions, user?: User | null) => {
   const { client } = useAlgolia();
 
   if (events === undefined) {
-    throw getEvents(client, options).then(setEvents).catch(setEvents);
+    throw getEvents(client, {
+      ...options,
+      constraint: { ...options.constraint, hidden: 'false' },
+    })
+      .then(setEvents)
+      .catch(setEvents);
   }
 
   if (events instanceof Error) {

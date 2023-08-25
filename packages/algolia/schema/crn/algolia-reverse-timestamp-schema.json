@@ -15,7 +15,8 @@
     "status",
     "interestGroup.id",
     "workingGroup.id",
-    "workingGroups.id"
+    "workingGroups.id",
+    "hidden"
   ],
   "attributesToIndex": [
     "displayName",

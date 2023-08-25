@@ -49,6 +49,7 @@ const EventList: React.FC<EventListProps> = ({
       searchQuery,
       currentPage,
       pageSize,
+      constraint: { hidden: 'false' },
     }),
   );
 
@@ -58,6 +59,7 @@ const EventList: React.FC<EventListProps> = ({
       searchQuery,
       currentPage,
       pageSize,
+      constraint: { hidden: 'false' },
     }),
   );
   usePrefetchCalendars();

@@ -88,6 +88,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   ]);
   const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     teamId,
+    hidden: 'false',
   });
 
   const { pageSize } = usePaginationParams();
@@ -165,7 +166,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               )}
               currentTime={currentTime}
               displayName={team.displayName}
-              eventConstraint={{ teamId }}
+              eventConstraint={{ teamId, hidden: 'false' }}
               isActive={!team?.inactiveSince}
               Outputs={
                 <Outputs

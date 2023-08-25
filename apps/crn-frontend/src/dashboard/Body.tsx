@@ -25,7 +25,7 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
       past: true,
       pageSize,
       currentPage: 0,
-      constraint: { notStatus: 'Cancelled' },
+      constraint: { notStatus: 'Cancelled', hidden: 'false' },
     }),
     user,
   );

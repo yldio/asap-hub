@@ -86,7 +86,7 @@ describe('getEvents', () => {
       algoliaSearchClient,
       getEventListOptions(new Date('2021-01-01T12:00:00'), {
         past: true,
-        constraint: { notStatus: 'Cancelled' },
+        constraint: { notStatus: 'Cancelled', hidden: 'false' },
       }),
     );
 
@@ -94,7 +94,8 @@ describe('getEvents', () => {
       ['event'],
       '',
       {
-        filters: '(endDateTimestamp < 1609498800) AND (NOT status:Cancelled)',
+        filters:
+          '(endDateTimestamp < 1609498800) AND (NOT status:Cancelled AND hidden:false)',
         hitsPerPage: 10,
         page: 0,
       },
@@ -125,14 +126,14 @@ describe('getEvents', () => {
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
-      constraint: { userId: 'user-1' },
+      constraint: { userId: 'user-1', hidden: 'false' },
     });
     expect(search).toBeCalledWith(
       ['event'],
       '',
       {
         filters:
-          '(endDateTimestamp > 1609498800) AND (speakers.user.id: "user-1")',
+          '(endDateTimestamp > 1609498800) AND (speakers.user.id: "user-1" AND hidden:false)',
         hitsPerPage: 10,
         page: 0,
       },
@@ -145,14 +146,14 @@ describe('getEvents', () => {
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00Z'), { past: true }),
-      constraint: { userId: 'user-1' },
+      constraint: { userId: 'user-1', hidden: 'false' },
     });
     expect(search).toBeCalledWith(
       ['event'],
       '',
       {
         filters:
-          '(endDateTimestamp < 1609498800) AND (speakers.user.id: "user-1")',
+          '(endDateTimestamp < 1609498800) AND (speakers.user.id: "user-1" AND hidden:false)',
         hitsPerPage: 10,
         page: 0,
       },
@@ -165,14 +166,14 @@ describe('getEvents', () => {
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
-      constraint: { teamId: 'team-1' },
+      constraint: { teamId: 'team-1', hidden: 'false' },
     });
     expect(search).toBeCalledWith(
       ['event'],
       '',
       {
         filters:
-          '(endDateTimestamp > 1609498800) AND (speakers.team.id: "team-1")',
+          '(endDateTimestamp > 1609498800) AND (speakers.team.id: "team-1" AND hidden:false)',
         hitsPerPage: 10,
         page: 0,
       },
@@ -217,14 +218,14 @@ describe('getEvents', () => {
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
-      constraint: { interestGroupId: 'group-5' },
+      constraint: { interestGroupId: 'group-5', hidden: 'false' },
     });
     expect(search).toBeCalledWith(
       ['event'],
       '',
       {
         filters:
-          '(endDateTimestamp > 1609498800) AND (interestGroup.id: "group-5")',
+          '(endDateTimestamp > 1609498800) AND (interestGroup.id: "group-5" AND hidden:false)',
         hitsPerPage: 10,
         page: 0,
       },
@@ -237,14 +238,14 @@ describe('getEvents', () => {
 
     await getEvents(algoliaSearchClient, {
       ...getEventListOptions(new Date('2021-01-01T12:00:00'), { past: false }),
-      constraint: { workingGroupId: 'wg-1' },
+      constraint: { workingGroupId: 'wg-1', hidden: 'false' },
     });
     expect(search).toBeCalledWith(
       ['event'],
       '',
       {
         filters:
-          '(endDateTimestamp > 1609498800) AND (workingGroup.id: "wg-1")',
+          '(endDateTimestamp > 1609498800) AND (workingGroup.id: "wg-1" AND hidden:false)',
         hitsPerPage: 10,
         page: 0,
       },
@@ -263,14 +264,14 @@ describe('getSquidexUrl', () => {
   };
 
   it('returns the user or team url', () => {
-    options.constraint = { teamId: 'team-1' };
+    options.constraint = { teamId: 'team-1', hidden: 'false' };
     expect(getSquidexUrl(options).toString()).toEqual(
       'http://api/events?take=10&skip=10',
     );
   });
 
   it('returns the interest group url if the constraint contains interest group id', () => {
-    options.constraint = { interestGroupId: 'group-1' };
+    options.constraint = { interestGroupId: 'group-1', hidden: 'false' };
     expect(getSquidexUrl(options).toString()).toEqual(
       'http://api/interest-groups/group-1/events?take=10&skip=10',
     );

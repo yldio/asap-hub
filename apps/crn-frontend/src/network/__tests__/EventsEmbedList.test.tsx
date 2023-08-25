@@ -92,9 +92,9 @@ const userPath = (userId: string) =>
 const teamPath = (teamId: string) =>
   network({}).teams({}).team({ teamId }).upcoming({}).$;
 it.each`
-  description                     | constraint            | getPath     | refreshState        | after                         | before
-  ${'upcoming events by userId '} | ${{ userId: '1013' }} | ${userPath} | ${refreshUserState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
-  ${'upcoming events by teamId '} | ${{ teamId: '1009' }} | ${teamPath} | ${refreshTeamState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+  description                     | constraint                             | getPath     | refreshState        | after                         | before
+  ${'upcoming events by userId '} | ${{ userId: '1013', hidden: 'false' }} | ${userPath} | ${refreshUserState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+  ${'upcoming events by teamId '} | ${{ teamId: '1009', hidden: 'false' }} | ${teamPath} | ${refreshTeamState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
 `(
   'renders a list of $description',
   async ({ constraint, getPath, after, before }) => {
@@ -127,7 +127,7 @@ it.each`
 
 describe('EventsEmbed with no upcoming events', () => {
   it('shows the component for no upcoming events', async () => {
-    const constraint = { teamId: '1010' };
+    const constraint = { teamId: '1010', hidden: 'false' };
     const pathName = teamPath(constraint.teamId);
     const isPast = false;
 
@@ -143,7 +143,7 @@ describe('EventsEmbed with no upcoming events', () => {
   });
 
   it('shows the component for no past events', async () => {
-    const constraint = { teamId: '1010' };
+    const constraint = { teamId: '1010', hidden: 'false' };
     const pathName = teamPath(constraint.teamId);
     const isPast = true;
 
@@ -159,7 +159,7 @@ describe('EventsEmbed with no upcoming events', () => {
   });
 
   it('shows empty state when no noEventsComponent is passed', async () => {
-    const constraint = { teamId: '1010' };
+    const constraint = { teamId: '1010', hidden: 'false' };
     const pathName = teamPath(constraint.teamId);
     const isPast = false;
 

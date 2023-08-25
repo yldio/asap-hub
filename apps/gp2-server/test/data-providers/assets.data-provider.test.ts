@@ -32,13 +32,13 @@ describe('Assets data provider', () => {
 
   describe('Fetch', () => {
     test('not implemented', async () => {
-      expect(async () => assetsDataProvider.fetch(null)).rejects.toThrow();
+      await expect(assetsDataProvider.fetch(null)).rejects.toThrow();
     });
   });
 
   describe('Fetch by ID', () => {
     test('not implemented', async () => {
-      expect(async () => assetsDataProvider.fetchById('123')).rejects.toThrow();
+      await expect(assetsDataProvider.fetchById('123')).rejects.toThrow();
     });
   });
 

@@ -1,5 +1,5 @@
-import nock from 'nock';
 import { GenericError, NotFoundError } from '@asap-hub/errors';
+import nock from 'nock';
 import { Squidex } from '../rest';
 // eslint-disable-next-line jest/no-mocks-import
 import { getAccessTokenMock } from '../__mocks__/access-token.mock';
@@ -37,7 +37,7 @@ describe('squidex wrapper', () => {
         message: 'The model is not valid',
       });
 
-    await expect(() =>
+    await expect(
       client.patch('42', {
         string: {
           iv: 'value',
@@ -51,7 +51,7 @@ describe('squidex wrapper', () => {
       .patch(`/api/content/${appName}/${collection}/42`)
       .reply(200, 'unparsable}json');
 
-    await expect(() =>
+    await expect(
       client.patch('42', {
         string: {
           iv: 'value',
@@ -63,7 +63,7 @@ describe('squidex wrapper', () => {
   it('returns NotFoundError when document doesnt exist', async () => {
     nock(baseUrl).patch(`/api/content/${appName}/${collection}/42`).reply(404);
 
-    await expect(() =>
+    await expect(
       client.patch('42', {
         string: {
           iv: 'value',
@@ -75,7 +75,7 @@ describe('squidex wrapper', () => {
   it('returns GenericError when squidex returns error', async () => {
     nock(baseUrl).patch(`/api/content/${appName}/${collection}/42`).reply(500);
 
-    await expect(() =>
+    await expect(
       client.patch('42', {
         string: {
           iv: 'value',
@@ -96,7 +96,7 @@ describe('squidex wrapper', () => {
         statusCode: 400,
       });
 
-    await expect(() =>
+    await expect(
       client.patch('42', {
         string: {
           iv: 'value',
@@ -115,7 +115,7 @@ describe('squidex wrapper', () => {
       .query(() => true)
       .reply(400, '<not>json</not>');
 
-    await expect(() =>
+    await expect(
       client.patch('42', {
         string: {
           iv: 'value',

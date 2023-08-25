@@ -15,6 +15,7 @@ describe('Assets data provider', () => {
   const processMock = jest.fn();
   const publishMock = jest.fn();
 
+  beforeEach(jest.resetAllMocks);
   beforeEach(() => {
     environmentMock.createAssetFromFiles.mockResolvedValueOnce({
       processForAllLocales: processMock,
@@ -29,19 +30,15 @@ describe('Assets data provider', () => {
     });
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
   describe('Fetch', () => {
     test('not implemented', async () => {
-      expect(async () => assetsDataProvider.fetch(null)).rejects.toThrow();
+      await expect(assetsDataProvider.fetch(null)).rejects.toThrow();
     });
   });
 
   describe('Fetch by ID', () => {
     test('not implemented', async () => {
-      expect(async () => assetsDataProvider.fetchById('123')).rejects.toThrow();
+      await expect(assetsDataProvider.fetchById('123')).rejects.toThrow();
     });
   });
 

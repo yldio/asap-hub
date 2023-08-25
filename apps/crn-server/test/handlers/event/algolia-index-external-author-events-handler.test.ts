@@ -46,6 +46,7 @@ const possibleEvents: [
   ],
 ];
 
+jest.mock('../../../src/utils/logger');
 describe('Index Events on External Author event handler', () => {
   const indexHandler = indexExternalAuthorEventsHandler(
     eventControllerMock,

@@ -19,6 +19,7 @@ const possibleEvents: [string, EventBridgeEvent<UserEvent, UserPayload>][] = [
   ['deleted', getUserEvent('user-id', 'UsersDeleted')],
 ];
 
+jest.mock('../../../src/utils/logger');
 describe('Index Events on User event handler', () => {
   const indexHandler = indexUserEventsHandler(
     eventControllerMock,

@@ -13,6 +13,7 @@ import * as fixtures from './cronjob-sync-orcid.fixtures';
 const mockGraphqlClient = getSquidexGraphqlClientMock();
 const mockRestClient = getSquidexClientMock();
 
+jest.mock('../../../src/utils/logger');
 jest.mock('@asap-hub/squidex', () => ({
   ...jest.requireActual('@asap-hub/squidex'),
   SquidexGraphql: jest.fn(() => mockGraphqlClient),

@@ -9,6 +9,7 @@ import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { researchOutputControllerMock } from '../../mocks/research-output.controller.mock';
 
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
+jest.mock('../../../src/utils/logger');
 
 describe('Team Research Outputs Index', () => {
   const indexHandler = indexResearchOutputByTeamHandler(

@@ -107,7 +107,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
     return {
       total: result?.total,
       items: result?.items
-        .filter((x): x is UserItem => x !== null)
+        .filter((user): user is UserItem => user !== null)
         .map(parseContentfulGraphQlUsers),
     };
   }

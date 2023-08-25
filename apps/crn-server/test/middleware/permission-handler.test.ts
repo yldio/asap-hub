@@ -8,6 +8,7 @@ import { listInterestGroupsResponse } from '../fixtures/interest-groups.fixtures
 import { pageResponse } from '../fixtures/page.fixtures';
 import { getUserResponse } from '../fixtures/users.fixtures';
 import { interestGroupControllerMock } from '../mocks/interest-group.controller.mock';
+import { loggerMock } from '../mocks/logger.mock';
 import { pageControllerMock } from '../mocks/page.controller.mock';
 import { userControllerMock } from '../mocks/user.controller.mock';
 
@@ -37,6 +38,7 @@ describe('Permission middleware', () => {
     pageController: pageControllerMock,
     authHandler: authHandlerMock,
     mockRequestHandlers: [mockRoutes],
+    logger: loggerMock,
   });
 
   // test the generic permission handler

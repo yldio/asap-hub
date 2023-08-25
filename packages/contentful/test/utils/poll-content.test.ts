@@ -33,9 +33,7 @@ describe('pollContentfulGql', () => {
       users: null,
     });
 
-    expect(
-      async () => await pollContentfulGql(2, fetchData, 'users'),
-    ).rejects.toThrow();
+    await expect(pollContentfulGql(2, fetchData, 'users')).rejects.toThrow();
   });
 });
 
@@ -67,8 +65,6 @@ describe('pollContentfulDeliveryApi', () => {
   test('throws if polling query does not return a value', async () => {
     const fetchEntry = jest.fn().mockResolvedValueOnce(null);
 
-    expect(
-      async () => await pollContentfulDeliveryApi(fetchEntry, 2),
-    ).rejects.toThrow();
+    await expect(pollContentfulDeliveryApi(fetchEntry, 2)).rejects.toThrow();
   });
 });

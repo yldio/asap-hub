@@ -22,6 +22,7 @@ const possibleEvents: [
   ['deleted', getInterestGroupEvent('group-id', 'GroupsDeleted')],
 ];
 
+jest.mock('../../../src/utils/logger');
 describe('Index Events on Group event handler', () => {
   const indexHandler = indexGroupEventsHandler(
     eventControllerMock,

@@ -9,9 +9,10 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUsers } from '../api';
-import { getProjects } from '../../projects/api';
+import { getAlgoliaProjects } from '../../projects/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import Routes from '../Routes';
+import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
 
 const renderRoutes = async () => {
   render(
@@ -42,10 +43,10 @@ describe('Routes', () => {
   it('renders a list of users', async () => {
     const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
     mockGetUsers.mockResolvedValue(gp2.createUsersResponse(1));
-    const mockGetProjects = getProjects as jest.MockedFunction<
-      typeof getProjects
+    const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+      typeof getAlgoliaProjects
     >;
-    mockGetProjects.mockResolvedValue(gp2.createProjectsResponse());
+    mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
     const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
       typeof getWorkingGroups
     >;

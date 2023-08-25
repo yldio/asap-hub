@@ -500,7 +500,7 @@ describe('Migrations', () => {
       new Error(JSON.stringify({ status: 500 })),
     );
 
-    expect(async () => runMigrations()).rejects.toThrow();
+    await expect(runMigrations()).rejects.toThrow();
 
     expect(migrateTeams).not.toHaveBeenCalled();
     expect(migrateExternalAuthors).not.toHaveBeenCalled();
@@ -519,7 +519,7 @@ describe('Migrations', () => {
   it('rejects if disabling webhook fails with a non-Error', async () => {
     spaceMock.getWebhooks.mockRejectedValue('not an Error');
 
-    expect(async () => runMigrations()).rejects.toThrow();
+    await expect(runMigrations()).rejects.toThrow();
 
     expect(migrateTeams).not.toHaveBeenCalled();
     expect(migrateExternalAuthors).not.toHaveBeenCalled();

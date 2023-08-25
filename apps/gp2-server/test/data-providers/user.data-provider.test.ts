@@ -2126,11 +2126,12 @@ describe('User data provider', () => {
     });
 
     test('throws if polling query does not return a value', async () => {
+      jest.resetAllMocks();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         users: null,
       });
 
-      expect(async () =>
+      await expect(
         userDataProvider.update('123', {
           firstName: 'Colin',
         }),

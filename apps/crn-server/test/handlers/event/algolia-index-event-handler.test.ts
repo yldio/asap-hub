@@ -9,6 +9,7 @@ import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
+jest.mock('../../../src/utils/logger');
 describe('Event index handler', () => {
   const indexHandler = indexEventHandler(
     eventControllerMock,
@@ -87,6 +88,18 @@ describe('Event index handler', () => {
     const event = deleteEventContentful();
 
     eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      event.detail.resourceId,
+    );
+  });
+
+  test('Should fetch the event and remove the record in Algolia when event is hidden', async () => {
+    const event = updateEvent();
+    const eventResponse = { ...getEventResponse(), hidden: true };
+    eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
 
     await indexHandler(event);
 

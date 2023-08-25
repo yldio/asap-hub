@@ -36,7 +36,6 @@ const getTutorialSquidex: (
   flatData: {
     title: 'Tutorial',
     shortText: 'Short Text',
-    shortText: 'Short Text',
     link: 'https://example.com',
     linkText: 'Example Dot Com',
     text: '<p>Hello world</p>',
@@ -180,6 +179,7 @@ describe('Migrate tutorials', () => {
             linkText: { 'en-US': 'Example Dot Com' },
             text: { 'en-US': textDocument },
             thumbnail: { 'en-US': undefined },
+            publishDate: { 'en-US': '2023-03-15T00:00:00.0000Z' },
           },
         },
       );

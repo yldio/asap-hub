@@ -3,6 +3,8 @@ import { ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Outputs from '../src/controllers/output.controller';
 import Projects from '../src/controllers/project.controller';
+import Events from '../src/controllers/event.controller';
+import { EventContentfulDataProvider } from '../src/data-providers/event.data-provider';
 import { ExternalUserContentfulDataProvider } from '../src/data-providers/external-user.data-provider';
 import { OutputContentfulDataProvider } from '../src/data-providers/output.data-provider';
 import { ProjectContentfulDataProvider } from '../src/data-providers/project.data-provider';
@@ -70,9 +72,14 @@ const getController = (entity: keyof EntityResponsesGP2) => {
     graphQLClient,
     getContentfulRestClientFactory,
   );
+  const eventDataProvider = new EventContentfulDataProvider(
+    graphQLClient,
+    getContentfulRestClientFactory,
+  );
   const controllerMap = {
     output: new Outputs(outputDataProvider, externalUserDataProvider),
     project: new Projects(projectDataProvider),
+    event: new Events(eventDataProvider),
   };
 
   return controllerMap[entity];

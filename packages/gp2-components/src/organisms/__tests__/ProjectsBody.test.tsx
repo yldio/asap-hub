@@ -1,11 +1,14 @@
 import { gp2 } from '@asap-hub/fixtures';
-import { ResultList } from '@asap-hub/react-components';
 import { render, screen } from '@testing-library/react';
-import { ComponentProps } from 'react';
-import ProjectsBody from '../ProjectsBody';
+import ProjectsBody, { ProjectsBodyProps } from '../ProjectsBody';
 
 describe('ProjectsBody', () => {
-  const props: Omit<ComponentProps<typeof ResultList>, 'children'> = {
+  const props: ProjectsBodyProps = {
+    projects: [],
+    filters: new Set(),
+    searchQuery: '',
+    onChangeFilter: () => '',
+    onChangeSearch: () => '',
     numberOfPages: 1,
     numberOfItems: 3,
     currentPageIndex: 0,

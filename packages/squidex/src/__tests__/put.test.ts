@@ -1,5 +1,5 @@
-import nock from 'nock';
 import { GenericError, NotFoundError } from '@asap-hub/errors';
+import nock from 'nock';
 import { Squidex } from '../rest';
 // eslint-disable-next-line jest/no-mocks-import
 import { getAccessTokenMock } from '../__mocks__/access-token.mock';
@@ -53,7 +53,7 @@ describe('squidex wrapper', () => {
   it('returns NotFoundError when document doesnt exist', async () => {
     nock(baseUrl).put(`/api/content/${appName}/${collection}/42`).reply(404);
 
-    await expect(() =>
+    await expect(
       client.put('42', {
         string: {
           iv: 'value',
@@ -68,7 +68,7 @@ describe('squidex wrapper', () => {
       .query(() => true)
       .reply(500);
 
-    await expect(() =>
+    await expect(
       client.put('42', {
         string: {
           iv: 'value',

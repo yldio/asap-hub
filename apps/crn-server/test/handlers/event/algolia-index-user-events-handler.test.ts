@@ -3,7 +3,10 @@ import { UserPayload } from '@asap-hub/server-common';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { indexUserEventsHandler } from '../../../src/handlers/event/algolia-index-user-events-handler';
-import { getListEventResponse } from '../../fixtures/events.fixtures';
+import {
+  getListEventResponse,
+  getEventDataObject,
+} from '../../fixtures/events.fixtures';
 import { getUserEvent } from '../../fixtures/users.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
@@ -19,6 +22,7 @@ const possibleEvents: [string, EventBridgeEvent<UserEvent, UserPayload>][] = [
   ['deleted', getUserEvent('user-id', 'UsersDeleted')],
 ];
 
+jest.mock('../../../src/utils/logger');
 describe('Index Events on User event handler', () => {
   const indexHandler = indexUserEventsHandler(
     eventControllerMock,
@@ -45,6 +49,38 @@ describe('Index Events on User event handler', () => {
     await expect(
       indexHandler(getUserEvent('user-id', 'UsersUpdated')),
     ).rejects.toThrow(algoliaError);
+  });
+
+  test('Should not index hidden events', async () => {
+    eventControllerMock.fetch.mockResolvedValueOnce({
+      total: 3,
+      items: [
+        {
+          ...getEventDataObject(),
+          id: 'event-1',
+          hidden: true,
+        },
+        {
+          ...getEventDataObject(),
+          id: 'event-2',
+          hidden: false,
+        },
+        {
+          ...getEventDataObject(),
+          id: 'event-3',
+          hidden: true,
+        },
+      ],
+    });
+
+    await indexHandler(getUserEvent('user-id', 'UsersCreated'));
+
+    expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
+      {
+        type: 'event',
+        data: { ...getEventDataObject(), id: 'event-2', hidden: false },
+      },
+    ]);
   });
 
   test.each(possibleEvents)(

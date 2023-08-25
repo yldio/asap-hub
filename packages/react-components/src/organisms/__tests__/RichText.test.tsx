@@ -19,6 +19,18 @@ it('renders <iframe>', () => {
   expect(getByTitle('Some Frame')).toBeInTheDocument();
 });
 
+it('renders more than one <iframe>', () => {
+  const { getByTitle } = render(
+    <RichText
+      text={
+        '<iframe title="First Frame"></iframe><p>Next iframe</p><iframe title="Second Frame" ></iframe>'
+      }
+    />,
+  );
+  expect(getByTitle('First Frame')).toBeInTheDocument();
+  expect(getByTitle('Second Frame')).toBeInTheDocument();
+});
+
 it('renders <a> as a link', () => {
   const { getByText } = render(
     <RichText text={'<a href="https://localhost/">anchor</a>'} />,

@@ -262,6 +262,8 @@ export enum AssetLinkingCollectionsEventsCollectionOrder {
   HiddenDesc = 'hidden_DESC',
   HideMeetingLinkAsc = 'hideMeetingLink_ASC',
   HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   MeetingLinkAsc = 'meetingLink_ASC',
   MeetingLinkDesc = 'meetingLink_DESC',
   MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
@@ -354,6 +356,8 @@ export enum AssetLinkingCollectionsTutorialsCollectionOrder {
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   ShortTextAsc = 'shortText_ASC',
   ShortTextDesc = 'shortText_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -583,6 +587,8 @@ export enum CalendarsLinkingCollectionsEventsCollectionOrder {
   HiddenDesc = 'hidden_DESC',
   HideMeetingLinkAsc = 'hideMeetingLink_ASC',
   HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   MeetingLinkAsc = 'meetingLink_ASC',
   MeetingLinkDesc = 'meetingLink_DESC',
   MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
@@ -1145,6 +1151,8 @@ export enum DiscoverTrainingCollectionOrder {
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   ShortTextAsc = 'shortText_ASC',
   ShortTextDesc = 'shortText_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -1270,6 +1278,8 @@ export enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
   HiddenDesc = 'hidden_DESC',
   HideMeetingLinkAsc = 'hideMeetingLink_ASC',
   HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   MeetingLinkAsc = 'meetingLink_ASC',
   MeetingLinkDesc = 'meetingLink_DESC',
   MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
@@ -1342,6 +1352,7 @@ export type Events = Entry & {
   googleId?: Maybe<Scalars['String']>;
   hidden?: Maybe<Scalars['Boolean']>;
   hideMeetingLink?: Maybe<Scalars['Boolean']>;
+  lastUpdated?: Maybe<Scalars['DateTime']>;
   linkedFrom?: Maybe<EventsLinkingCollections>;
   meetingLink?: Maybe<Scalars['String']>;
   meetingMaterials?: Maybe<Scalars['JSON']>;
@@ -1404,6 +1415,11 @@ export type EventsHiddenArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
 export type EventsHideMeetingLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
+export type EventsLastUpdatedArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -1569,6 +1585,15 @@ export type EventsFilter = {
   hideMeetingLink?: InputMaybe<Scalars['Boolean']>;
   hideMeetingLink_exists?: InputMaybe<Scalars['Boolean']>;
   hideMeetingLink_not?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   meetingLink?: InputMaybe<Scalars['String']>;
   meetingLink_contains?: InputMaybe<Scalars['String']>;
   meetingLink_exists?: InputMaybe<Scalars['Boolean']>;
@@ -1779,6 +1804,8 @@ export enum EventsOrder {
   HiddenDesc = 'hidden_DESC',
   HideMeetingLinkAsc = 'hideMeetingLink_ASC',
   HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   MeetingLinkAsc = 'meetingLink_ASC',
   MeetingLinkDesc = 'meetingLink_DESC',
   MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
@@ -5324,6 +5351,8 @@ export enum ResearchOutputsRelatedEventsCollectionOrder {
   HiddenDesc = 'hidden_DESC',
   HideMeetingLinkAsc = 'hideMeetingLink_ASC',
   HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   MeetingLinkAsc = 'meetingLink_ASC',
   MeetingLinkDesc = 'meetingLink_DESC',
   MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
@@ -6186,6 +6215,7 @@ export type Tutorials = Entry & {
   link?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<TutorialsLinkingCollections>;
+  publishDate?: Maybe<Scalars['DateTime']>;
   shortText?: Maybe<Scalars['String']>;
   sys: Sys;
   text?: Maybe<TutorialsText>;
@@ -6206,6 +6236,11 @@ export type TutorialsLinkTextArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
 export type TutorialsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsPublishDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
@@ -6254,6 +6289,15 @@ export type TutorialsFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publishDate?: InputMaybe<Scalars['DateTime']>;
+  publishDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publishDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publishDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   shortText?: InputMaybe<Scalars['String']>;
   shortText_contains?: InputMaybe<Scalars['String']>;
   shortText_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6313,6 +6357,8 @@ export enum TutorialsOrder {
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   ShortTextAsc = 'shortText_ASC',
   ShortTextDesc = 'shortText_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -7922,6 +7968,15 @@ export type CfEventsNestedFilter = {
   hideMeetingLink?: InputMaybe<Scalars['Boolean']>;
   hideMeetingLink_exists?: InputMaybe<Scalars['Boolean']>;
   hideMeetingLink_not?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   meetingLink?: InputMaybe<Scalars['String']>;
   meetingLink_contains?: InputMaybe<Scalars['String']>;
   meetingLink_exists?: InputMaybe<Scalars['Boolean']>;
@@ -8605,6 +8660,15 @@ export type CfTutorialsNestedFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publishDate?: InputMaybe<Scalars['DateTime']>;
+  publishDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publishDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publishDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   shortText?: InputMaybe<Scalars['String']>;
   shortText_contains?: InputMaybe<Scalars['String']>;
   shortText_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9517,8 +9581,11 @@ export type FetchDiscoverQuery = {
         trainingCollection?: Maybe<{
           items: Array<
             Maybe<
-              Pick<Tutorials, 'title' | 'shortText' | 'link' | 'linkText'> & {
-                sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+              Pick<
+                Tutorials,
+                'publishDate' | 'title' | 'shortText' | 'link' | 'linkText'
+              > & {
+                sys: Pick<Sys, 'id'>;
                 thumbnail?: Maybe<Pick<Asset, 'url'>>;
                 text?: Maybe<
                   Pick<TutorialsText, 'json'> & {
@@ -9770,6 +9837,7 @@ export type FetchDiscoverQuery = {
 
 export type EventsContentFragment = Pick<
   Events,
+  | 'lastUpdated'
   | 'description'
   | 'endDate'
   | 'endDateTimeZone'
@@ -9791,7 +9859,7 @@ export type EventsContentFragment = Pick<
   | 'meetingMaterialsPermanentlyUnavailable'
   | 'meetingMaterials'
 > & {
-  sys: Pick<Sys, 'id' | 'publishedAt' | 'publishedVersion'>;
+  sys: Pick<Sys, 'id' | 'publishedVersion'>;
   notes?: Maybe<
     Pick<EventsNotes, 'json'> & {
       links: {
@@ -10069,6 +10137,7 @@ export type FetchEventByIdQuery = {
   events?: Maybe<
     Pick<
       Events,
+      | 'lastUpdated'
       | 'description'
       | 'endDate'
       | 'endDateTimeZone'
@@ -10090,7 +10159,7 @@ export type FetchEventByIdQuery = {
       | 'meetingMaterialsPermanentlyUnavailable'
       | 'meetingMaterials'
     > & {
-      sys: Pick<Sys, 'id' | 'publishedAt' | 'publishedVersion'>;
+      sys: Pick<Sys, 'id' | 'publishedVersion'>;
       notes?: Maybe<
         Pick<EventsNotes, 'json'> & {
           links: {
@@ -10406,6 +10475,7 @@ export type FetchEventsQuery = {
         Maybe<
           Pick<
             Events,
+            | 'lastUpdated'
             | 'description'
             | 'endDate'
             | 'endDateTimeZone'
@@ -10427,7 +10497,7 @@ export type FetchEventsQuery = {
             | 'meetingMaterialsPermanentlyUnavailable'
             | 'meetingMaterials'
           > & {
-            sys: Pick<Sys, 'id' | 'publishedAt' | 'publishedVersion'>;
+            sys: Pick<Sys, 'id' | 'publishedVersion'>;
             notes?: Maybe<
               Pick<EventsNotes, 'json'> & {
                 links: {
@@ -10829,6 +10899,7 @@ export type FetchEventsByUserIdQuery = {
                     Maybe<
                       Pick<
                         Events,
+                        | 'lastUpdated'
                         | 'description'
                         | 'endDate'
                         | 'endDateTimeZone'
@@ -10850,10 +10921,7 @@ export type FetchEventsByUserIdQuery = {
                         | 'meetingMaterialsPermanentlyUnavailable'
                         | 'meetingMaterials'
                       > & {
-                        sys: Pick<
-                          Sys,
-                          'id' | 'publishedAt' | 'publishedVersion'
-                        >;
+                        sys: Pick<Sys, 'id' | 'publishedVersion'>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -11327,6 +11395,7 @@ export type FetchEventsByExternalAuthorIdQuery = {
                     Maybe<
                       Pick<
                         Events,
+                        | 'lastUpdated'
                         | 'description'
                         | 'endDate'
                         | 'endDateTimeZone'
@@ -11348,10 +11417,7 @@ export type FetchEventsByExternalAuthorIdQuery = {
                         | 'meetingMaterialsPermanentlyUnavailable'
                         | 'meetingMaterials'
                       > & {
-                        sys: Pick<
-                          Sys,
-                          'id' | 'publishedAt' | 'publishedVersion'
-                        >;
+                        sys: Pick<Sys, 'id' | 'publishedVersion'>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -11825,6 +11891,7 @@ export type FetchEventsByTeamIdQuery = {
                     Maybe<
                       Pick<
                         Events,
+                        | 'lastUpdated'
                         | 'description'
                         | 'endDate'
                         | 'endDateTimeZone'
@@ -11846,10 +11913,7 @@ export type FetchEventsByTeamIdQuery = {
                         | 'meetingMaterialsPermanentlyUnavailable'
                         | 'meetingMaterials'
                       > & {
-                        sys: Pick<
-                          Sys,
-                          'id' | 'publishedAt' | 'publishedVersion'
-                        >;
+                        sys: Pick<Sys, 'id' | 'publishedVersion'>;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -14302,9 +14366,9 @@ export type FetchTeamsQuery = {
 
 export type TutorialsContentFragment = Pick<
   Tutorials,
-  'title' | 'shortText' | 'link' | 'linkText'
+  'publishDate' | 'title' | 'shortText' | 'link' | 'linkText'
 > & {
-  sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+  sys: Pick<Sys, 'id'>;
   thumbnail?: Maybe<Pick<Asset, 'url'>>;
   text?: Maybe<
     Pick<TutorialsText, 'json'> & {
@@ -14377,8 +14441,11 @@ export type FetchTutorialByIdQueryVariables = Exact<{
 
 export type FetchTutorialByIdQuery = {
   tutorials?: Maybe<
-    Pick<Tutorials, 'title' | 'shortText' | 'link' | 'linkText'> & {
-      sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+    Pick<
+      Tutorials,
+      'publishDate' | 'title' | 'shortText' | 'link' | 'linkText'
+    > & {
+      sys: Pick<Sys, 'id'>;
       thumbnail?: Maybe<Pick<Asset, 'url'>>;
       text?: Maybe<
         Pick<TutorialsText, 'json'> & {
@@ -15829,7 +15896,6 @@ export const EventsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'publishedVersion' },
@@ -15837,6 +15903,7 @@ export const EventsContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'endDateTimeZone' } },
@@ -18885,13 +18952,10 @@ export const TutorialsContentFragmentDoc = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'firstPublishedAt' },
-                },
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
           {

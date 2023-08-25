@@ -34,19 +34,19 @@ describe('squidex wrapper', () => {
   it("return NotFoundError when document doesn't exist", async () => {
     nock(baseUrl).get(`/api/content/${appName}/${collection}/42`).reply(404);
 
-    await expect(() => client.fetchById('42')).rejects.toThrow(NotFoundError);
+    await expect(client.fetchById('42')).rejects.toThrow(NotFoundError);
   });
 
   it('return GenericError on HTTP Error', async () => {
     nock(baseUrl).get(`/api/content/${appName}/${collection}/42`).reply(405);
 
-    await expect(() => client.fetchById('42')).rejects.toThrow(GenericError);
+    await expect(client.fetchById('42')).rejects.toThrow(GenericError);
   });
 
   it('returns GenericError when squidex returns error', async () => {
     nock(baseUrl).get(`/api/content/${appName}/${collection}/42`).reply(500);
 
-    await expect(() => client.fetchById('42')).rejects.toThrow(GenericError);
+    await expect(client.fetchById('42')).rejects.toThrow(GenericError);
   });
 
   it('returns a single document using id', async () => {
@@ -157,7 +157,7 @@ describe('squidex wrapper', () => {
         items: [],
       });
 
-    await expect(() =>
+    await expect(
       client.fetchOne({
         filter: {
           path: 'data.string.iv',

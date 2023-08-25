@@ -55,6 +55,15 @@ export type ProjectResourcesPutRequest = NonNullable<
   ProjectDataObject['resources']
 >;
 
-export type FetchProjectOptions = FetchOptions;
-
 export const opportunitiesAvailable = 'Opportunities Available';
+export const traineeProject = 'Trainee Project';
+export type ProjectFilterType =
+  | typeof opportunitiesAvailable
+  | typeof traineeProject;
+
+export type FetchProjectFilter = {
+  status?: ProjectStatus[];
+  type?: ProjectFilterType[];
+};
+
+export type FetchProjectOptions = FetchOptions<FetchProjectFilter>;

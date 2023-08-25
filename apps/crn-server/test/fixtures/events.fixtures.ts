@@ -76,8 +76,8 @@ export const getContentfulGraphqlEvent = (): NonNullable<
 > => ({
   sys: {
     id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-    publishedAt: '2021-05-14T14:48:46.000Z',
   },
+  lastUpdated: '2021-05-14T14:48:46.000Z',
   description: 'This event is awesome',
   endDate: '2009-12-24T16:30:54.000Z',
   endDateTimeZone: 'UTC',
@@ -396,9 +396,9 @@ export const getContentfulEventDataObject = (): EventDataObject => ({
   interestGroup: undefined,
   workingGroup: undefined,
   notes: '<p>These are the notes from the meeting</p>',
-  presentation: '<p><iframe src="https://example.com"/></p>',
+  presentation: '<p><iframe src="https://example.com"></iframe></p>',
   videoRecording:
-    '<p><iframe src="https://player.vimeo.com/video/493052720"/></p>',
+    '<p><iframe src="https://player.vimeo.com/video/493052720"></iframe></p>',
   thumbnail: 'https://example.com',
 });
 

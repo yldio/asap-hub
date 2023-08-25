@@ -9,6 +9,7 @@ import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { externalAuthorControllerMock } from '../../mocks/external-author.controller.mock';
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
+jest.mock('../../../src/utils/logger');
 describe('External Author index handler', () => {
   const indexHandler = indexExternalAuthorHandler(
     externalAuthorControllerMock,

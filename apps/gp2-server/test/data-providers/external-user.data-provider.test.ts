@@ -160,7 +160,7 @@ describe('External User Contentful Data Provider', () => {
 
   describe('Fetch-by-id method', () => {
     test('not implemented', async () => {
-      expect(async () =>
+      await expect(
         externalUsersDataProviderMockGraphql.fetchById(),
       ).rejects.toThrow();
     });

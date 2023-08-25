@@ -1,15 +1,16 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
 import Boom from '@hapi/boom';
 import { SearchClient } from 'algoliasearch';
-import { getApiGatewayEvent } from '../../../helpers/events';
+import { APIGatewayProxyResult } from 'aws-lambda';
 import {
   algoliaApiKey,
   auth0SharedSecret as secret,
 } from '../../../../src/config';
 import { fetchUserByCodeHandlerFactory } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
-import { userControllerMock } from '../../../mocks/user.controller.mock';
 import { getUserResponse } from '../../../fixtures/users.fixtures';
+import { getApiGatewayEvent } from '../../../helpers/events';
+import { userControllerMock } from '../../../mocks/user.controller.mock';
 
+jest.mock('../../../../src/utils/logger');
 const successfulApiGatewayEvent = getApiGatewayEvent({
   pathParameters: {
     code: 'welcomeCode',

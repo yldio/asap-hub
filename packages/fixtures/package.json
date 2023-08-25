@@ -16,7 +16,7 @@
     "@algolia/client-search": "4.19.1",
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/model": "workspace:*",
-    "@babel/runtime-corejs3": "7.22.10",
+    "@babel/runtime-corejs3": "7.22.11",
     "core-js": "3.32.1",
     "date-fns": "2.30.0",
     "jsonwebtoken": "9.0.0",

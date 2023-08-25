@@ -136,7 +136,7 @@ export default class OutputController {
   ): Promise<ValidationErrorResponse['data'][0] | null> {
     const result = await this.outputDataProvider.fetch({
       filter: {
-        documentType: outputData.documentType,
+        documentType: [outputData.documentType],
         title: outputData.title,
       },
     });

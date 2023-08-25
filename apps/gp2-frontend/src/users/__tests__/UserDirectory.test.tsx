@@ -1,3 +1,4 @@
+import { ClientSearchResponse } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
@@ -13,8 +14,9 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useSearch } from '../../hooks/search';
-import { getProjects } from '../../projects/api';
+import { getAlgoliaProjects } from '../../projects/api';
 import { getWorkingGroups } from '../../working-groups/api';
+import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getUsers } from '../api';
 import { MAX_RESULTS } from '../export';
 import UserDirectory from '../UserDirectory';
@@ -33,7 +35,9 @@ jest.mock('../../projects/api');
 jest.mock('../../working-groups/api');
 jest.mock('../../hooks/search');
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
-const mockGetProjects = getProjects as jest.MockedFunction<typeof getProjects>;
+const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+  typeof getAlgoliaProjects
+>;
 const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
   typeof getWorkingGroups
 >;
@@ -44,14 +48,14 @@ const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
 
 const renderUserDirectory = async ({
   listUserResponse = gp2Fixtures.createUsersResponse(),
-  listProjectResponse = gp2Fixtures.createProjectsResponse(),
+  listProjectResponse = createProjectListAlgoliaResponse(1),
   listWorkingGroupResponse = gp2Fixtures.createWorkingGroupsResponse(),
   displayFilters = false,
   isAdministrator = false,
   filters = {},
 }: {
   listUserResponse?: gp2Model.ListUserResponse;
-  listProjectResponse?: gp2Model.ListProjectResponse;
+  listProjectResponse?: ClientSearchResponse<'gp2', 'project'>;
   listWorkingGroupResponse?: gp2Model.ListWorkingGroupResponse;
   displayFilters?: boolean;
   isAdministrator?: boolean;

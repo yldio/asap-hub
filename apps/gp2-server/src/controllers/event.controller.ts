@@ -1,11 +1,24 @@
 import { NotFoundError } from '@asap-hub/errors';
 import { FetchEventsOptions, gp2 } from '@asap-hub/model';
 
+const processEvent = (event: gp2.EventDataObject) => ({
+  ...event,
+  _tags: [
+    ...(event.workingGroup ? [gp2.eventWorkingGroups] : []),
+    ...(event.project ? [gp2.eventProjects] : []),
+    ...(event.calendar.name === gp2.gp2CalendarName ? [gp2.eventGP2Hub] : []),
+  ],
+});
 export default class EventController {
   constructor(private dataProvider: gp2.EventDataProvider) {}
 
   async fetch(options: FetchEventsOptions): Promise<gp2.ListEventResponse> {
-    return this.dataProvider.fetch(options);
+    const events = await this.dataProvider.fetch(options);
+
+    return {
+      ...events,
+      items: events.items.map(processEvent),
+    };
   }
 
   async fetchById(eventId: string): Promise<gp2.EventResponse> {
@@ -13,7 +26,7 @@ export default class EventController {
     if (!event) {
       throw new NotFoundError(undefined, `Event with id ${eventId} not found`);
     }
-    return event;
+    return processEvent(event);
   }
 
   async create(event: gp2.EventCreateRequest): Promise<gp2.EventResponse> {
@@ -36,6 +49,6 @@ export default class EventController {
     });
 
     const [event] = events.items;
-    return event || null;
+    return event ? processEvent(event) : null;
   }
 }

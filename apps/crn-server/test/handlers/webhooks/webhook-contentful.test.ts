@@ -27,6 +27,7 @@ jest.mock('@asap-hub/contentful', () => ({
     }),
   }),
 }));
+jest.mock('../../../src/utils/logger');
 
 describe('Contentful event webhook', () => {
   const evenBridgeMock = {

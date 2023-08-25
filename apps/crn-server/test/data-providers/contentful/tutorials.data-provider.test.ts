@@ -15,7 +15,7 @@ describe('Tutorials data provider', () => {
 
   describe('Fetch', () => {
     test('not implemented', async () => {
-      expect(async () => dataProvider.fetch(null)).rejects.toThrow();
+      await expect(dataProvider.fetch(null)).rejects.toThrow();
     });
   });
 

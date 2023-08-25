@@ -8,6 +8,7 @@ import { getLabWebhookPayload } from '../../fixtures/labs.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { createSignedPayload } from '../../helpers/webhooks';
 
+jest.mock('../../../src/utils/logger');
 describe('Squidex event webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn().mockReturnValue({ promise: jest.fn() }),

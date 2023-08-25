@@ -1,5 +1,10 @@
-import { gp2 as gp2Contentful } from '@asap-hub/contentful';
-import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
+import {
+  ContentfulWebhookPayload,
+  gp2 as gp2Contentful,
+} from '@asap-hub/contentful';
+import { EventStatus, gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getContentfulGraphql = () => ({
   Events: () => getContentfulGraphqlEvent(),
@@ -296,9 +301,9 @@ export const getEventSpeakerUser = (): gp2Model.EventSpeakerUser => ({
 export const getContentfulEventDataObject = (): gp2Model.EventDataObject => ({
   ...getEventDataObject(),
   notes: '<p>These are the notes from the meeting</p>',
-  presentation: '<p><iframe src="https://example.com"/></p>',
+  presentation: '<p><iframe src="https://example.com"></iframe></p>',
   videoRecording:
-    '<p><iframe src="https://player.vimeo.com/video/493052720"/></p>',
+    '<p><iframe src="https://player.vimeo.com/video/493052720"></iframe></p>',
   thumbnail: 'https://example.com',
   calendar: {
     ...getEventDataObject().calendar,
@@ -317,17 +322,11 @@ export const getContentfulEventDataObject = (): gp2Model.EventDataObject => ({
   },
 });
 
-export const getContentfulEventResponse = (): gp2Model.EventResponse =>
-  getEventDataObject();
-
 export const getContentfulListEventDataObject =
   (): gp2Model.ListEventDataObject => ({
     total: 1,
     items: [getContentfulEventDataObject()],
   });
-
-export const getContentfulListEventResponse = (): gp2Model.ListEventResponse =>
-  getContentfulListEventDataObject();
 
 export const getEventSpeaker = (): gp2Model.EventSpeaker => ({
   speaker: getEventSpeakerUser(),
@@ -388,12 +387,20 @@ export const getEventDataObject = (): gp2Model.EventDataObject => ({
 
 export const getListEventDataObject = (): gp2Model.ListEventDataObject => ({
   total: 1,
-  items: [getEventDataObject()],
+  items: [
+    {
+      ...getEventDataObject(),
+    },
+  ],
 });
-export const getEventResponse = (): gp2Model.EventResponse =>
-  getEventDataObject();
-export const getListEventResponse = (): gp2Model.ListEventResponse =>
-  getListEventDataObject();
+export const getEventResponse = (): gp2Model.EventResponse => ({
+  ...getEventDataObject(),
+  _tags: [gp2Model.eventWorkingGroups, gp2Model.eventProjects],
+});
+export const getListEventResponse = (): gp2Model.ListEventResponse => ({
+  total: 1,
+  items: [getEventResponse()],
+});
 
 export const getEventCreateDataObject = (): gp2Model.EventCreateDataObject => ({
   googleId: 'google-event-id',
@@ -409,3 +416,68 @@ export const getEventCreateDataObject = (): gp2Model.EventCreateDataObject => ({
   meetingLink: 'https://zweem.com',
   hideMeetingLink: false,
 });
+
+export const getEventWebhookPayload = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'event'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'an-environment',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'event',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    title: {
+      'en-US':
+        'Sci 7 - Inflammation & Immune Reg., Presenting Teams: Sulzer, Desjardins, Kordower',
+    },
+  },
+});
+
+export const getEventEvent = (
+  id: string,
+  eventType: gp2Model.EventEvent,
+): EventBridgeEvent<
+  gp2Model.EventEvent,
+  WebhookDetail<ContentfulWebhookPayload<'event'>>
+> => createEventBridgeEventMock(getEventWebhookPayload(id), eventType, id);

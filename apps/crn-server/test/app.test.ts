@@ -3,6 +3,7 @@ import { authHandlerMock } from './mocks/auth-handler.mock';
 import { appFactory as appFactoryDefault } from '../src/app';
 
 import { UserDataProvider } from '../src/data-providers/types';
+import { loggerMock } from './mocks/logger.mock';
 
 describe('Contentful feature flag', () => {
   const OLD_ENV = process.env;
@@ -39,6 +40,7 @@ describe('Contentful feature flag', () => {
         userSquidexDataProvider: userSquidexDataProviderMock,
         userContentfulDataProvider: userContentfulDataProviderMock,
         authHandler: authHandlerMock,
+        logger: loggerMock,
       });
 
       afterEach(() => jest.clearAllMocks());
@@ -73,6 +75,7 @@ describe('Contentful feature flag', () => {
         userSquidexDataProvider: userSquidexDataProviderMock,
         userContentfulDataProvider: userContentfulDataProviderMock,
         authHandler: authHandlerMock,
+        logger: loggerMock,
       });
       const response = await supertest(app).get('/users');
 
@@ -90,6 +93,7 @@ describe('Contentful feature flag', () => {
         userSquidexDataProvider: userSquidexDataProviderMock,
         userContentfulDataProvider: userContentfulDataProviderMock,
         authHandler: authHandlerMock,
+        logger: loggerMock,
       });
       const response = await supertest(app).get('/users');
 
@@ -107,6 +111,7 @@ describe('Contentful feature flag', () => {
         userSquidexDataProvider: userSquidexDataProviderMock,
         userContentfulDataProvider: userContentfulDataProviderMock,
         authHandler: authHandlerMock,
+        logger: loggerMock,
       });
       const response = await supertest(app)
         .get('/users')

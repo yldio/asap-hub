@@ -2,10 +2,12 @@ import { clearAjvErrorForPath, Frame } from '@asap-hub/frontend-utils';
 import {
   researchOutputDocumentTypeToType,
   ResearchOutputResponse,
+  ResearchOutputVersion,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import {
   NotFoundPage,
+  OutputVersions,
   ResearchOutputForm,
   ResearchOutputHeader,
   Toast,
@@ -107,6 +109,20 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const researchSuggestions = researchTags
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);
+
+  const researchOutputAsVersion: ResearchOutputVersion = {
+    id: researchOutputData?.id ?? '',
+    title: researchOutputData?.title ?? '',
+    documentType: researchOutputData?.documentType ?? 'Article',
+    type: researchOutputData?.type,
+    link: researchOutputData?.link,
+    addedDate: researchOutputData?.addedDate,
+  };
+
+  const versions = researchOutputData?.versions
+    ? researchOutputData.versions.concat([researchOutputAsVersion])
+    : [researchOutputAsVersion];
+
   if (team) {
     return (
       <Frame title="Share Research Output">
@@ -122,6 +138,9 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             documentType={documentType}
             workingGroupAssociation={false}
           />
+          {createVersion && (
+            <OutputVersions versions={versions} createVersion />
+          )}
           <ResearchOutputForm
             createVersion={createVersion}
             tagSuggestions={researchSuggestions}

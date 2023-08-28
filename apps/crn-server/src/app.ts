@@ -69,6 +69,7 @@ import { DiscoverContentfulDataProvider } from './data-providers/contentful/disc
 import { EventContentfulDataProvider } from './data-providers/contentful/event.data-provider';
 import { ExternalAuthorContentfulDataProvider } from './data-providers/contentful/external-author.data-provider';
 import { InterestGroupContentfulDataProvider } from './data-providers/contentful/interest-group.data-provider';
+import { LabContentfulDataProvider } from './data-providers/contentful/lab.data-provider';
 import { NewsContentfulDataProvider } from './data-providers/contentful/news.data-provider';
 import { PageContentfulDataProvider } from './data-providers/contentful/page.data-provider';
 import { ReminderContentfulDataProvider } from './data-providers/contentful/reminder.data-provider';
@@ -87,10 +88,7 @@ import {
   ExternalAuthorSquidexDataProvider,
 } from './data-providers/external-author.data-provider';
 import { InterestGroupSquidexDataProvider } from './data-providers/interest-group.data-provider';
-import {
-  LabDataProvider,
-  LabSquidexDataProvider,
-} from './data-providers/lab.data-provider';
+import { LabSquidexDataProvider } from './data-providers/lab.data-provider';
 import { ReminderSquidexDataProvider } from './data-providers/reminder.data-provider';
 import { ResearchOutputSquidexDataProvider } from './data-providers/research-output.data-provider';
 import { ResearchTagSquidexDataProvider } from './data-providers/research-tag.data-provider';
@@ -105,6 +103,7 @@ import {
   DiscoverDataProvider,
   GuideDataProvider,
   InterestGroupDataProvider,
+  LabDataProvider,
   NewsDataProvider,
   PageDataProvider,
   ReminderDataProvider,
@@ -531,8 +530,23 @@ export const appFactory = (libs: Libs = {}): Express => {
       'IS_CONTENTFUL_ENABLED',
     );
 
+  featureFlagDependencySwitch.setDependency(
+    'labs',
+    libs.labSquidexDataProvider ||
+      new LabSquidexDataProvider(squidexGraphqlClient),
+    'IS_CONTENTFUL_ENABLED',
+    false,
+  );
+  featureFlagDependencySwitch.setDependency(
+    'labs',
+    libs.labContentfulDataProvider ||
+      new LabContentfulDataProvider(contentfulGraphQLClient),
+    'IS_CONTENTFUL_ENABLED',
+    true,
+  );
   const labDataProvider =
-    libs.labDataProvider || new LabSquidexDataProvider(squidexGraphqlClient);
+    libs.labDataProvider ||
+    featureFlagDependencySwitch.getDependency('labs', 'IS_CONTENTFUL_ENABLED');
 
   // Controllers
   const calendarController =
@@ -727,6 +741,8 @@ export type Libs = {
   interestGroupSquidexDataProvider?: InterestGroupDataProvider;
   interestGroupContentfulDataProvider?: InterestGroupDataProvider;
   labDataProvider?: LabDataProvider;
+  labSquidexDataProvider?: LabDataProvider;
+  labContentfulDataProvider?: LabDataProvider;
   newsContentfulDataProvider?: NewsDataProvider;
   newsDataProvider?: NewsDataProvider;
   newsSquidexDataProvider?: NewsDataProvider;

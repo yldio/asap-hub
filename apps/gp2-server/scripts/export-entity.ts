@@ -31,10 +31,11 @@ export const exportEntity = async (
 
   await file.write('[\n');
 
+  const take = 10;
   do {
     records = await controller.fetch({
-      take: 20,
-      skip: (page - 1) * 20,
+      take,
+      skip: (page - 1) * take,
     });
 
     total = records.total;

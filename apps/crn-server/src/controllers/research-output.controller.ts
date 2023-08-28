@@ -159,6 +159,11 @@ export default class ResearchOutputController {
             ? currentResearchOutput?.documentType
             : 'Grant Document',
       };
+      await this.validateVersionUniqueness(
+        normalisedResearchOutputUpdateData,
+        version,
+        currentResearchOutput?.versions,
+      );
     }
 
     if (!currentResearchOutput) {
@@ -259,14 +264,7 @@ export default class ResearchOutputController {
       ])
     ).filter(isError);
 
-    if (errors.length > 0) {
-      // TODO: Remove Boom from the controller layer
-      // https://asaphub.atlassian.net/browse/CRN-777
-      throw Boom.badRequest<ValidationErrorResponse['data']>(
-        `${VALIDATION_ERROR_MESSAGE} ${JSON.stringify(errors)}`,
-        errors,
-      );
-    }
+    await this.handleErrors(errors);
   }
 
   private async validateTitleUniqueness(
@@ -289,15 +287,7 @@ export default class ResearchOutputController {
       return null;
     }
 
-    return {
-      instancePath: '/title',
-      keyword: 'unique',
-      message: 'must be unique',
-      params: {
-        type: 'string',
-      },
-      schemaPath: '#/properties/title/unique',
-    };
+    return ERROR_UNIQUE_TITLE;
   }
 
   private validateTeamList(
@@ -305,16 +295,35 @@ export default class ResearchOutputController {
     currentResearchOutput: ResearchOutputDataObject,
   ): ValidationErrorResponse['data'][0] | null {
     if (currentResearchOutput.teams[0]?.id !== researchOutputData.teams?.[0]) {
-      return {
-        instancePath: '/teams',
-        keyword: 'invalid',
-        message: 'first team cannot be removed or changed',
-        params: {
-          type: 'string',
-        },
-        schemaPath: '#/properties/teams/invalid',
-      };
+      return ERROR_TEAMS_ORDER_CHANGED;
     }
+
+    return null;
+  }
+
+  private async validateVersionUniqueness(
+    newResearchOutput: ResearchOutputUpdateData,
+    newVersion: ResearchOutputVersionPostRequest,
+    versions: ResearchOutputVersionPostRequest[] | undefined,
+  ): Promise<void | null> {
+    const errors: ValidationErrorResponse['data'] = [];
+
+    if (
+      newResearchOutput.link === newVersion.link ||
+      (versions && versions.some((version) => version.link === newVersion.link))
+    ) {
+      errors.push(ERROR_UNIQUE_LINK);
+    }
+
+    if (
+      newResearchOutput.title === newVersion.title ||
+      (versions &&
+        versions.some((version) => version.title === newVersion.title))
+    ) {
+      errors.push(ERROR_UNIQUE_TITLE);
+    }
+
+    await this.handleErrors(errors);
 
     return null;
   }
@@ -345,15 +354,7 @@ export default class ResearchOutputController {
       return null;
     }
 
-    return {
-      instancePath: '/link',
-      keyword: 'unique',
-      message: 'must be unique',
-      params: {
-        type: 'string',
-      },
-      schemaPath: '#/properties/link/unique',
-    };
+    return ERROR_UNIQUE_LINK;
   }
 
   private async parseResearchTags(
@@ -405,6 +406,17 @@ export default class ResearchOutputController {
       subtype,
       keywords,
     };
+  }
+
+  private async handleErrors(errors: ValidationErrorResponse['data']) {
+    if (errors.length > 0) {
+      // TODO: Remove Boom from the controller layer
+      // https://asaphub.atlassian.net/browse/CRN-777
+      throw Boom.badRequest<ValidationErrorResponse['data']>(
+        `${VALIDATION_ERROR_MESSAGE} ${JSON.stringify(errors)}`,
+        errors,
+      );
+    }
   }
 
   private mapAuthorsPostRequestToId = async (
@@ -516,4 +528,34 @@ export type ResearchOutputFetchOptions = {
   search?: string;
   filter?: ResearchOutputFilter;
   includeDrafts?: boolean;
+};
+
+export const ERROR_UNIQUE_LINK = {
+  instancePath: '/link',
+  keyword: 'unique',
+  message: 'must be unique',
+  params: {
+    type: 'string',
+  },
+  schemaPath: '#/properties/link/unique',
+};
+
+export const ERROR_UNIQUE_TITLE = {
+  instancePath: '/title',
+  keyword: 'unique',
+  message: 'must be unique',
+  params: {
+    type: 'string',
+  },
+  schemaPath: '#/properties/title/unique',
+};
+
+export const ERROR_TEAMS_ORDER_CHANGED = {
+  instancePath: '/teams',
+  keyword: 'invalid',
+  message: 'first team cannot be removed or changed',
+  params: {
+    type: 'string',
+  },
+  schemaPath: '#/properties/teams/invalid',
 };

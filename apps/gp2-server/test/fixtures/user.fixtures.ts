@@ -1,5 +1,10 @@
-import { gp2 as gp2Contentful } from '@asap-hub/contentful';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import {
+  ContentfulWebhookPayload,
+  gp2 as gp2Contentful,
+} from '@asap-hub/contentful';
+import { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getUserResponse = (): gp2Model.UserResponse => ({
   id: 'user-id-1',
@@ -609,3 +614,67 @@ export const getProjectGraphQL = ({
     },
   },
 });
+
+export const getUserWebhookPayload = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'user'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'an-environment',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'user',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    firstName: {
+      'en-US': 'Tony',
+    },
+  },
+});
+
+export const getUserEvent = (
+  id: string,
+  eventType: gp2Model.UserEvent,
+): EventBridgeEvent<
+  gp2Model.UserEvent,
+  WebhookDetail<ContentfulWebhookPayload<'user'>>
+> => createEventBridgeEventMock(getUserWebhookPayload(id), eventType, id);

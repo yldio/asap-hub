@@ -1,4 +1,5 @@
 import { ResearchOutputEvent } from '@asap-hub/model';
+import { NotFoundError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { ResearchOutputPayload } from '../../../src/handlers/event-bus';
@@ -145,7 +146,7 @@ describe('Research Output index handler', () => {
     });
   });
 
-  test('Should fetch the research-output and remove the record in Algolia when research-output is unpublished', async () => {
+  test('Should fetch the research-output and remove the record in Algolia when research-output is deleted', async () => {
     const event = unpublishedEvent('ro-1234');
 
     researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -159,10 +160,89 @@ describe('Research Output index handler', () => {
     );
   });
 
+  test('Should fetch the research-output and remove the record in Algolia when research-output is unpublished', async () => {
+    const event = unpublishedEvent('ro-1234');
+    const researchOutputResponse = getResearchOutputResponse();
+
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce({
+      ...researchOutputResponse,
+      relatedResearch: [],
+      published: false,
+    });
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(1);
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      event.detail.resourceId,
+    );
+  });
+
+  test('Should reindex the related research when research-output is unpublished', async () => {
+    const event = unpublishedEvent('ro-1234');
+    const researchOutputResponse = getResearchOutputResponse();
+    const relatedResearchOutputResponse = getResearchOutputResponse();
+    relatedResearchOutputResponse.id = 'ro-1235';
+    relatedResearchOutputResponse.title = 'Related research output';
+
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce({
+      ...researchOutputResponse,
+      relatedResearch: [
+        {
+          id: relatedResearchOutputResponse.id,
+          title: relatedResearchOutputResponse.title,
+          type: 'Published',
+          isOwnRelatedResearchLink: true,
+          teams: [
+            {
+              id: 'team-1234',
+              displayName: 'Team 1',
+            },
+          ],
+          workingGroups: [],
+          documentType: 'Grant Document',
+        },
+      ],
+      published: false,
+    });
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+      relatedResearchOutputResponse,
+    );
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(1);
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      event.detail.resourceId,
+    );
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(1);
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining({ id: 'ro-1235' }),
+      type: 'research-output',
+    });
+  });
+
   test('Should fetch the research-output and remove the record in Algolia when research-output is deleted', async () => {
     const event = deleteEvent('ro-1234');
 
     researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(1);
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      event.detail.resourceId,
+    );
+  });
+
+  test('Should fetch the research-output and remove the record in Algolia when controller throws NotFoundError', async () => {
+    const event = deleteEvent('ro-1234');
+
+    researchOutputControllerMock.fetchById.mockRejectedValue(
+      new NotFoundError(undefined, 'not found'),
+    );
 
     await indexHandler(event);
 

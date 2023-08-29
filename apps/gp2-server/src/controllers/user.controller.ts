@@ -46,7 +46,7 @@ export default class UserController {
 
   async fetchById(
     id: string,
-    loggedInUserId: string,
+    loggedInUserId?: string,
   ): Promise<gp2.UserResponse> {
     const user = await this.userDataProvider.fetchById(id);
     if (!user) {

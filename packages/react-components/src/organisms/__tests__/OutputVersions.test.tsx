@@ -56,3 +56,24 @@ it('displays type as Report when document type is report.', () => {
   );
   expect(screen.getByText('Report')).toBeVisible();
 });
+it('displays the correct message when createVersion = true', () => {
+  const { getByText } = render(
+    <OutputVersions {...baseProps} createVersion={true} />,
+  );
+  expect(
+    getByText(
+      /list with all previous output versions that contributed to this one/gi,
+    ),
+  ).toBeVisible();
+});
+
+it('displays the correct message when createVersion = false', () => {
+  const { getByText } = render(
+    <OutputVersions {...baseProps} createVersion={false} />,
+  );
+  expect(
+    getByText(
+      /find all previous output versions that contributed to this one/gi,
+    ),
+  ).toBeVisible();
+});

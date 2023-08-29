@@ -1,4 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { NotFoundError } from '@asap-hub/errors';
 import { ResearchOutputEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
@@ -24,6 +25,12 @@ export const indexResearchOutputHandler =
         const researchOutput = await researchOutputController.fetchById(id);
         logger.debug(`Fetched research-output ${researchOutput.id}`);
 
+        if (!researchOutput.published) {
+          await algoliaClient.remove(id);
+          logger.debug(`Removed research-output ${researchOutput.id}`);
+          return researchOutput;
+        }
+
         await algoliaClient.save({
           data: researchOutput,
           type: 'research-output',
@@ -34,7 +41,10 @@ export const indexResearchOutputHandler =
         return researchOutput;
       } catch (e) {
         logger.error(e, `Error while reindexing research output ${id}`);
-        if (isBoom(e) && e.output.statusCode === 404) {
+        if (
+          (isBoom(e) && e.output.statusCode === 404) ||
+          e instanceof NotFoundError
+        ) {
           logger.error(`Research output ${id} not found`);
           await algoliaClient.remove(id);
         }
@@ -55,7 +65,10 @@ export const indexResearchOutputHandler =
         e,
         `Error while reindexing research output ${event.detail.resourceId} and its related research outputs`,
       );
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof NotFoundError
+      ) {
         return;
       }
       throw e;

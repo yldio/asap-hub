@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@contentful/app-sdk": "4.22.1",
-    "@contentful/f36-components": "4.48.1",
+    "@contentful/app-sdk": "4.23.0",
+    "@contentful/f36-components": "4.49.1",
     "@contentful/f36-tokens": "4.0.2",
     "@contentful/field-editor-reference": "^5.9.0",
     "@contentful/field-editor-shared": "^1.2.0",
@@ -38,7 +38,7 @@
     ]
   },
   "devDependencies": {
-    "@contentful/app-scripts": "1.12.0",
+    "@contentful/app-scripts": "1.13.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "11.2.7",
     "@tsconfig/create-react-app": "2.0.1",

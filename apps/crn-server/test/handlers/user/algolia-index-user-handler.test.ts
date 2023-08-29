@@ -1,3 +1,4 @@
+import { NotFoundError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import { indexUserHandler } from '../../../src/handlers/user/algolia-index-user-handler';
 import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
@@ -73,6 +74,20 @@ describe('User index handler', () => {
     const event = unpublishedEvent();
 
     userControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      event.detail.payload.id,
+    );
+  });
+
+  test('Should fetch the user and remove the record in Algolia when controller throws NotFoundError', async () => {
+    const event = unpublishedEvent();
+
+    userControllerMock.fetchById.mockRejectedValue(
+      new NotFoundError(undefined, 'not found'),
+    );
 
     await indexHandler(event);
 

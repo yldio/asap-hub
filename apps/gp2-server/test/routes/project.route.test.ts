@@ -56,7 +56,13 @@ describe('/projects/ route', () => {
       const { app, loggedInUserId } = getApp();
       await supertest(app).get('/projects').query(query);
 
-      expect(projectControllerMock.fetch).toBeCalledWith(query, loggedInUserId);
+      expect(projectControllerMock.fetch).toBeCalledWith(
+        {
+          ...query,
+          filter: {},
+        },
+        loggedInUserId,
+      );
     });
   });
   describe('GET /project/{project_id}', () => {

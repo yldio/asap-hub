@@ -42,15 +42,24 @@ export const indexUserProjectsHandler =
       foundProjects: ListResponse<gp2Model.ProjectResponse>,
     ) => {
       logger.info(
-        `Found ${foundProjects.total} events. Processing ${foundProjects.items.length} projects.`,
+        `Found ${foundProjects.total} projects. Processing ${foundProjects.items.length} projects.`,
       );
 
-      await algoliaClient.saveMany(
-        foundProjects.items.map((data) => ({
+      try {
+        const projects = foundProjects.items.map((data) => ({
           data,
-          type: 'project',
-        })),
-      );
+          type: 'project' as const,
+        }));
+        logger.info(`trying to save: ${JSON.stringify(projects, null, 2)}`);
+        await algoliaClient.saveMany(projects);
+      } catch (err) {
+        logger.error('Error occurred during saveMany');
+        logger.error(JSON.stringify(err, null, 2));
+        if (err instanceof Error) {
+          logger.error(`The error message: ${err.message}`);
+        }
+        throw err;
+      }
 
       logger.info(`Updated ${foundProjects.items.length} events.`);
     };

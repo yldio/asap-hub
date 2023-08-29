@@ -1,50 +1,53 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import { EventPayload } from '../../../src/handlers/event-bus';
-import { indexEventHandler } from '../../../src/handlers/event/algolia-index-event-handler';
-import { getEventEvent, getEventResponse } from '../../fixtures/event.fixtures';
+import { ProjectPayload } from '../../../src/handlers/event-bus';
+import { indexProjectHandler } from '../../../src/handlers/project/algolia-index-handler';
+import {
+  getProjectEvent,
+  getProjectResponse,
+} from '../../fixtures/project.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
-import { eventControllerMock } from '../../mocks/event.controller.mock';
 import { loggerMock } from '../../mocks/logger.mock';
+import { projectControllerMock } from '../../mocks/project.controller.mock';
 
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
-describe('Event index handler', () => {
-  const indexHandler = indexEventHandler(
-    eventControllerMock,
+describe('Project index handler', () => {
+  const indexHandler = indexProjectHandler(
+    projectControllerMock,
     algoliaSearchClientMock,
     loggerMock,
   );
   beforeEach(jest.resetAllMocks);
 
-  test('Should fetch the event and create a record in Algolia when event is created', async () => {
-    const eventResponse = getEventResponse();
-    eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
+  test('Should fetch the project and create a record in Algolia when project is created', async () => {
+    const projectResponse = getProjectResponse();
+    projectControllerMock.fetchById.mockResolvedValueOnce(projectResponse);
 
     await indexHandler(createEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: eventResponse,
-      type: 'event',
+      data: projectResponse,
+      type: 'project',
     });
   });
 
-  test('Should fetch the event and create a record in Algolia when event is updated', async () => {
-    const eventResponse = getEventResponse();
-    eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
+  test('Should fetch the project and create a record in Algolia when project is updated', async () => {
+    const projectResponse = getProjectResponse();
+    projectControllerMock.fetchById.mockResolvedValueOnce(projectResponse);
 
     await indexHandler(updateEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: eventResponse,
-      type: 'event',
+      data: projectResponse,
+      type: 'project',
     });
   });
 
-  test('Should fetch the event and remove the record in Algolia when event is unpublished', async () => {
+  test('Should fetch the project and remove the record in Algolia when project is unpublished', async () => {
     const event = unpublishedEvent('42');
 
-    eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     await indexHandler(event);
 
@@ -55,10 +58,10 @@ describe('Event index handler', () => {
     );
   });
 
-  test('Should fetch the event and remove the record in Algolia when event is deleted', async () => {
+  test('Should fetch the project and remove the record in Algolia when project is deleted', async () => {
     const event = deleteEvent('42');
 
-    eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     await indexHandler(event);
 
@@ -69,8 +72,8 @@ describe('Event index handler', () => {
     );
   });
 
-  test('Should throw an error and do not trigger algolia when the event request fails with another error code', async () => {
-    eventControllerMock.fetchById.mockRejectedValue(Boom.badData());
+  test('Should throw an error and do not trigger algolia when the project request fails with another error code', async () => {
+    projectControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
     await expect(indexHandler(createEvent('42'))).rejects.toThrow(
       Boom.badData(),
@@ -81,7 +84,7 @@ describe('Event index handler', () => {
   test('Should throw the algolia error when saving the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    eventControllerMock.fetchById.mockResolvedValueOnce(getEventResponse());
+    projectControllerMock.fetchById.mockResolvedValueOnce(getProjectResponse());
     algoliaSearchClientMock.save.mockRejectedValueOnce(algoliaError);
 
     await expect(indexHandler(updateEvent('42'))).rejects.toThrow(algoliaError);
@@ -90,7 +93,7 @@ describe('Event index handler', () => {
   test('Should throw the algolia error when deleting the record fails', async () => {
     const algoliaError = new Error('ERROR');
 
-    eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+    projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
@@ -100,13 +103,13 @@ describe('Event index handler', () => {
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
     test('receives the events created and updated in correct order', async () => {
       const id = '42';
-      const eventResponse = {
-        ...getEventResponse(),
+      const projectResponse = {
+        ...getProjectResponse(),
         id,
       };
 
-      eventControllerMock.fetchById.mockResolvedValue({
-        ...eventResponse,
+      projectControllerMock.fetchById.mockResolvedValue({
+        ...projectResponse,
       });
 
       await indexHandler(createEvent(id));
@@ -115,19 +118,19 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: eventResponse,
-        type: 'event',
+        data: projectResponse,
+        type: 'project',
       });
     });
 
     test('receives the events created and updated in reverse order', async () => {
       const id = '42';
-      const eventResponse = {
-        ...getEventResponse(),
+      const projectResponse = {
+        ...getProjectResponse(),
         id,
       };
 
-      eventControllerMock.fetchById.mockResolvedValue(eventResponse);
+      projectControllerMock.fetchById.mockResolvedValue(projectResponse);
 
       await indexHandler(updateEvent(id));
       await indexHandler(createEvent(id));
@@ -135,8 +138,8 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: eventResponse,
-        type: 'event',
+        data: projectResponse,
+        type: 'project',
       });
     });
 
@@ -146,7 +149,7 @@ describe('Event index handler', () => {
       const unpublishedEv = unpublishedEvent(id);
       const algoliaError = new Error('ERROR');
 
-      eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -166,7 +169,7 @@ describe('Event index handler', () => {
       const unpublishedEv = unpublishedEvent(id);
       const algoliaError = new Error('ERROR');
 
-      eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -186,7 +189,7 @@ describe('Event index handler', () => {
       const deleteEv = deleteEvent(id);
       const algoliaError = new Error('ERROR');
 
-      eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -206,7 +209,7 @@ describe('Event index handler', () => {
       const deleteEv = deleteEvent(id);
       const algoliaError = new Error('ERROR');
 
-      eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -226,7 +229,7 @@ describe('Event index handler', () => {
       const deleteEv = deleteEvent(id);
       const algoliaError = new Error('ERROR');
 
-      eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -246,7 +249,7 @@ describe('Event index handler', () => {
       const deleteEv = deleteEvent(id);
       const algoliaError = new Error('ERROR');
 
-      eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -265,7 +268,7 @@ describe('Event index handler', () => {
       const unpublishedEv = unpublishedEvent(id);
       const algoliaError = new Error('ERROR');
 
-      eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -285,7 +288,7 @@ describe('Event index handler', () => {
       const unpublishedEv = unpublishedEvent(id);
       const algoliaError = new Error('ERROR');
 
-      eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+      projectControllerMock.fetchById.mockRejectedValue(Boom.notFound());
       algoliaSearchClientMock.remove.mockResolvedValueOnce(undefined);
       algoliaSearchClientMock.remove.mockRejectedValue(algoliaError);
 
@@ -302,25 +305,25 @@ describe('Event index handler', () => {
 });
 
 const unpublishedEvent = (id: string) =>
-  getEventEvent(id, 'EventsUnpublished') as EventBridgeEvent<
-    gp2Model.EventEvent,
-    EventPayload
+  getProjectEvent(id, 'ProjectsUnpublished') as EventBridgeEvent<
+    gp2Model.ProjectEvent,
+    ProjectPayload
   >;
 
 const deleteEvent = (id: string) =>
-  getEventEvent(id, 'EventsDeleted') as EventBridgeEvent<
-    gp2Model.EventEvent,
-    EventPayload
+  getProjectEvent(id, 'ProjectsDeleted') as EventBridgeEvent<
+    gp2Model.ProjectEvent,
+    ProjectPayload
   >;
 
 const createEvent = (id: string) =>
-  getEventEvent(id, 'EventsPublished') as EventBridgeEvent<
-    gp2Model.EventEvent,
-    EventPayload
+  getProjectEvent(id, 'ProjectsPublished') as EventBridgeEvent<
+    gp2Model.ProjectEvent,
+    ProjectPayload
   >;
 
 const updateEvent = (id: string) =>
-  getEventEvent(id, 'EventsUpdated') as EventBridgeEvent<
-    gp2Model.EventEvent,
-    EventPayload
+  getProjectEvent(id, 'ProjectsUpdated') as EventBridgeEvent<
+    gp2Model.ProjectEvent,
+    ProjectPayload
   >;

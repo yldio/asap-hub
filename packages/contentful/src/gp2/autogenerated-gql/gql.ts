@@ -79,6 +79,8 @@ const documents = {
     types.FetchProjectByIdDocument,
   '\n  query FetchProjects($limit: Int, $skip: Int, $where: ProjectsFilter) {\n    projectsCollection(limit: $limit, skip: $skip, where: $where) {\n      total\n      items {\n        ...ProjectsContentData\n      }\n    }\n  }\n  \n':
     types.FetchProjectsDocument,
+  '\n  query FetchProjectsByUser($limit: Int, $skip: Int, $userId: String!) {\n    projectMembershipCollection(\n      limit: $limit\n      skip: $skip\n      where: { user: { sys: { id: $userId } } }\n    ) {\n      total\n      items {\n        linkedFrom {\n          projectsCollection(limit: 1) {\n            total\n            items {\n              ...ProjectsContentData\n            }\n          }\n        }\n      }\n    }\n  }\n  \n':
+    types.FetchProjectsByUserDocument,
   '\n  fragment LatestStatsContentData on LatestStats {\n    sampleCount\n    articleCount\n    cohortCount\n  }\n':
     types.LatestStatsContentDataFragmentDoc,
   '\n  query FetchLatestStats {\n    latestStatsCollection(limit: 1) {\n      total\n      items {\n        ...LatestStatsContentData\n      }\n    }\n  }\n  \n':
@@ -317,6 +319,12 @@ export function gql(
 export function gql(
   source: '\n  query FetchProjects($limit: Int, $skip: Int, $where: ProjectsFilter) {\n    projectsCollection(limit: $limit, skip: $skip, where: $where) {\n      total\n      items {\n        ...ProjectsContentData\n      }\n    }\n  }\n  \n',
 ): (typeof documents)['\n  query FetchProjects($limit: Int, $skip: Int, $where: ProjectsFilter) {\n    projectsCollection(limit: $limit, skip: $skip, where: $where) {\n      total\n      items {\n        ...ProjectsContentData\n      }\n    }\n  }\n  \n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query FetchProjectsByUser($limit: Int, $skip: Int, $userId: String!) {\n    projectMembershipCollection(\n      limit: $limit\n      skip: $skip\n      where: { user: { sys: { id: $userId } } }\n    ) {\n      total\n      items {\n        linkedFrom {\n          projectsCollection(limit: 1) {\n            total\n            items {\n              ...ProjectsContentData\n            }\n          }\n        }\n      }\n    }\n  }\n  \n',
+): (typeof documents)['\n  query FetchProjectsByUser($limit: Int, $skip: Int, $userId: String!) {\n    projectMembershipCollection(\n      limit: $limit\n      skip: $skip\n      where: { user: { sys: { id: $userId } } }\n    ) {\n      total\n      items {\n        linkedFrom {\n          projectsCollection(limit: 1) {\n            total\n            items {\n              ...ProjectsContentData\n            }\n          }\n        }\n      }\n    }\n  }\n  \n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

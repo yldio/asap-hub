@@ -456,7 +456,7 @@ describe('convertHtmlToContentfulFormat', () => {
     ]);
   });
 
-  it('handles nested lists with sibling list items', () => {
+  it('handles nested unordered lists with sibling list items', () => {
     const html = `<div>
       <ul>
         <li>List item 1</li>
@@ -536,7 +536,87 @@ describe('convertHtmlToContentfulFormat', () => {
     ]);
   });
 
-  it('handles nested lists without sibling list items', () => {
+  it('handles nested ordered lists with sibling list items', () => {
+    const html = `<div>
+      <ol>
+        <li>List item 1</li>
+        <li>List item 2</li>
+        <ol>
+          <li>Sublist item</li>
+        </ol>
+      </ol>
+    </div>`;
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [
+          {
+            content: [
+              {
+                content: [
+                  {
+                    data: {},
+                    marks: [],
+                    nodeType: 'text',
+                    value: 'List item 1',
+                  },
+                ],
+                data: {},
+                nodeType: 'paragraph',
+              },
+            ],
+            data: {},
+            nodeType: 'list-item',
+          },
+          {
+            content: [
+              {
+                content: [
+                  {
+                    data: {},
+                    marks: [],
+                    nodeType: 'text',
+                    value: 'List item 2',
+                  },
+                ],
+                data: {},
+                nodeType: 'paragraph',
+              },
+              {
+                content: [
+                  {
+                    content: [
+                      {
+                        content: [
+                          {
+                            data: {},
+                            marks: [],
+                            nodeType: 'text',
+                            value: 'Sublist item',
+                          },
+                        ],
+                        data: {},
+                        nodeType: 'paragraph',
+                      },
+                    ],
+                    data: {},
+                    nodeType: 'list-item',
+                  },
+                ],
+                data: {},
+                nodeType: 'ordered-list',
+              },
+            ],
+            data: {},
+            nodeType: 'list-item',
+          },
+        ],
+        data: {},
+        nodeType: 'ordered-list',
+      },
+    ]);
+  });
+
+  it('handles nested unordered lists without sibling list items', () => {
     const html = `<div>
       <ul>
         <ul>
@@ -580,6 +660,53 @@ describe('convertHtmlToContentfulFormat', () => {
         ],
         data: {},
         nodeType: 'unordered-list',
+      },
+    ]);
+  });
+  it('handles nested ordered lists without sibling list items', () => {
+    const html = `<div>
+      <ol>
+        <ol>
+          <li>Sublist item</li>
+        </ol>
+      </ol>
+    </div>`;
+    expect(convertHtmlToContentfulFormat(html).document.content).toEqual([
+      {
+        content: [
+          {
+            content: [
+              {
+                content: [
+                  {
+                    content: [
+                      {
+                        content: [
+                          {
+                            data: {},
+                            marks: [],
+                            nodeType: 'text',
+                            value: 'Sublist item',
+                          },
+                        ],
+                        data: {},
+                        nodeType: 'paragraph',
+                      },
+                    ],
+                    data: {},
+                    nodeType: 'list-item',
+                  },
+                ],
+                data: {},
+                nodeType: 'ordered-list',
+              },
+            ],
+            data: {},
+            nodeType: 'list-item',
+          },
+        ],
+        data: {},
+        nodeType: 'ordered-list',
       },
     ]);
   });

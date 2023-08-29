@@ -9,6 +9,6 @@ const props = {
     'Discover how to use the platform and what’s currently happening within the network.',
 };
 
-const WorkingGroupsHeader: React.FC = () => <PageBanner {...props} />;
+const DashboardHeader: React.FC = () => <PageBanner {...props} />;
 
-export default WorkingGroupsHeader;
+export default DashboardHeader;

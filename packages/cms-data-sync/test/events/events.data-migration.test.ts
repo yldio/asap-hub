@@ -20,6 +20,7 @@ jest.mock('../../src/utils/entries');
 const getEventSquidex = (): EventItem => ({
   id: 'event-1',
   status: 'PUBLISHED',
+  lastModified: '2023-08-01T17:00:00Z',
   flatData: {
     googleId: '1jhm4181bs6ck0esegje4nf6ur',
     description: null,
@@ -146,6 +147,7 @@ const baseUpdatePayload = {
   videoRecording: { 'en-US': null },
   videoRecordingPermanentlyUnavailable: { 'en-US': null },
   videoRecordingUpdatedAt: { 'en-US': null },
+  lastUpdated: { 'en-US': '2023-08-01T17:00:00Z' },
 };
 
 const baseCreatePayload = {

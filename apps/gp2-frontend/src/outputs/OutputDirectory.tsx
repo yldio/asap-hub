@@ -1,5 +1,4 @@
 import { OutputPageList } from '@asap-hub/gp2-components';
-import { gp2 } from '@asap-hub/model';
 import { FC } from 'react';
 import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
@@ -23,7 +22,7 @@ const OutputDirectory: FC<OutputDirectoryProps> = ({
     setSearchQuery,
     filters,
     toggleFilter,
-  } = useSearch<gp2.FetchOutputFilter>(['documentType']);
+  } = useSearch(['documentType']);
 
   const filterSet = new Set<string>(filters.documentType);
   const onChangeFilter = (filter: string) => {

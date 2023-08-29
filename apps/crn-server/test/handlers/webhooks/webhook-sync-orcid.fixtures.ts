@@ -1,5 +1,5 @@
 import { OrcidWork } from '@asap-hub/model';
-import { SquidexWebhookPayload, User, RestUser } from '@asap-hub/squidex';
+import { RestUser, SquidexWebhookPayload, User } from '@asap-hub/squidex';
 import { ORCIDWorksResponse } from '../../../src/utils/fetch-orcid';
 
 export const fetchUserResponse: RestUser = {
@@ -36,6 +36,7 @@ export const fetchUserResponse: RestUser = {
   version: 42,
 };
 
+jest.mock('../../../src/utils/logger');
 export const updateUserEvent: SquidexWebhookPayload<User> = {
   type: 'UsersUpdated',
   timestamp: '2021-02-15T13:11:25Z',

@@ -13,11 +13,11 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "7.22.10",
+    "@babel/runtime-corejs3": "7.22.11",
     "core-js": "3.32.1"
   },
   "devDependencies": {
     "@types/asap-hub__inline-environment": "workspace:*",
-    "@types/jest": "29.5.3"
+    "@types/jest": "29.5.4"
   }
 }

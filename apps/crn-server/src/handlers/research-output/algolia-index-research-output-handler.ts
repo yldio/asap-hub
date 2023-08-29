@@ -24,6 +24,12 @@ export const indexResearchOutputHandler =
         const researchOutput = await researchOutputController.fetchById(id);
         logger.debug(`Fetched research-output ${researchOutput.id}`);
 
+        if (!researchOutput.published) {
+          await algoliaClient.remove(id);
+          logger.debug(`Removed research-output ${researchOutput.id}`);
+          return researchOutput;
+        }
+
         await algoliaClient.save({
           data: researchOutput,
           type: 'research-output',

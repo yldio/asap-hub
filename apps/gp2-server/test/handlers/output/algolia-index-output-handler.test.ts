@@ -21,25 +21,25 @@ describe('Output index handler', () => {
   beforeEach(jest.resetAllMocks);
 
   test('Should fetch the output and create a record in Algolia when output is created', async () => {
-    const OutputResponse = getOutputResponse();
-    outputControllerMock.fetchById.mockResolvedValueOnce(OutputResponse);
+    const outputResponse = getOutputResponse();
+    outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
 
     await indexHandler(createEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: OutputResponse,
+      data: outputResponse,
       type: 'output',
     });
   });
 
   test('Should fetch the output and create a record in Algolia when output is updated', async () => {
-    const OutputResponse = getOutputResponse();
-    outputControllerMock.fetchById.mockResolvedValueOnce(OutputResponse);
+    const outputResponse = getOutputResponse();
+    outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
 
     await indexHandler(updateEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: OutputResponse,
+      data: outputResponse,
       type: 'output',
     });
   });
@@ -103,13 +103,13 @@ describe('Output index handler', () => {
   describe('Should process the events, handle race conditions and not rely on the order of the events', () => {
     test('receives the events created and updated in correct order', async () => {
       const id = '42';
-      const OutputResponse = {
+      const outputResponse = {
         ...getOutputResponse(),
         id,
       };
 
       outputControllerMock.fetchById.mockResolvedValue({
-        ...OutputResponse,
+        ...outputResponse,
       });
 
       await indexHandler(createEvent(id));
@@ -118,19 +118,19 @@ describe('Output index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: OutputResponse,
+        data: outputResponse,
         type: 'output',
       });
     });
 
     test('receives the events created and updated in reverse order', async () => {
       const id = '42';
-      const OutputResponse = {
+      const outputResponse = {
         ...getOutputResponse(),
         id,
       };
 
-      outputControllerMock.fetchById.mockResolvedValue(OutputResponse);
+      outputControllerMock.fetchById.mockResolvedValue(outputResponse);
 
       await indexHandler(updateEvent(id));
       await indexHandler(createEvent(id));
@@ -138,7 +138,7 @@ describe('Output index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: OutputResponse,
+        data: outputResponse,
         type: 'output',
       });
     });

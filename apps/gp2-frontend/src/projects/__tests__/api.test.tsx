@@ -1,9 +1,17 @@
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock, { DataMatcherMap } from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getProject, getProjects, putProjectResources } from '../api';
+import { PAGE_SIZE } from '../../hooks';
+import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  getAlgoliaProjects,
+  getProject,
+  getProjects,
+  putProjectResources,
+} from '../api';
 
 jest.mock('../../config');
 
@@ -41,6 +49,145 @@ describe('getProject', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch project with id unknown-id. Expected status 2xx or 404. Received status 500."`,
     );
+  });
+});
+
+describe('getAlgoliaProjects', () => {
+  const mockAlgoliaSearchClient = {
+    search: jest.fn(),
+  } as unknown as jest.Mocked<AlgoliaSearchClient<'gp2'>>;
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockAlgoliaSearchClient.search = jest
+      .fn()
+      .mockResolvedValue(createProjectListAlgoliaResponse(10));
+  });
+  const options: GetListOptions = {
+    filters: new Set<string>(),
+    pageSize: PAGE_SIZE,
+    currentPage: 0,
+    searchQuery: '',
+  };
+
+  it('makes a search request with query, default page and page size', async () => {
+    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+      ...options,
+      searchQuery: 'test',
+      currentPage: null,
+      pageSize: null,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['project'],
+      'test',
+      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+    );
+  });
+
+  it('passes page number and page size to request', async () => {
+    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+      ...options,
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['project'],
+      '',
+      expect.objectContaining({ hitsPerPage: 20, page: 1 }),
+    );
+  });
+
+  it('builds a single status filter query', async () => {
+    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+      ...options,
+      status: ['Active'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['project'],
+      '',
+      expect.objectContaining({ filters: 'status:"Active"' }),
+    );
+  });
+
+  it('builds a multiple status filter query', async () => {
+    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+      ...options,
+      status: ['Active', 'Paused'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['project'],
+      '',
+      expect.objectContaining({
+        filters: 'status:"Active" OR status:"Paused"',
+      }),
+    );
+  });
+
+  it('builds a opportunitiesAvailable filter query', async () => {
+    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+      ...options,
+      type: ['Opportunities Available'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['project'],
+      '',
+      expect.objectContaining({
+        filters: '_tags:"Opportunities Available"',
+      }),
+    );
+  });
+
+  it('builds a traineeProject filter query', async () => {
+    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+      ...options,
+      type: ['Trainee Project'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['project'],
+      '',
+      expect.objectContaining({
+        filters: 'traineeProject: true',
+      }),
+    );
+  });
+  it('builds a combined status + type filter query', async () => {
+    await getAlgoliaProjects(mockAlgoliaSearchClient, {
+      ...options,
+      status: ['Active'],
+      type: ['Trainee Project'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['project'],
+      '',
+      expect.objectContaining({
+        filters: 'status:"Active" AND traineeProject: true',
+      }),
+    );
+  });
+
+  it('throws an error of type error', async () => {
+    mockAlgoliaSearchClient.search.mockRejectedValue({
+      message: 'Some Error',
+    });
+    await expect(
+      getAlgoliaProjects(mockAlgoliaSearchClient, options),
+    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
   });
 });
 

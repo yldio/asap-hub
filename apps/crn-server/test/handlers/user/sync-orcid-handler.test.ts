@@ -2,6 +2,7 @@ import { syncOrcidUserHandler } from '../../../src/handlers/user/sync-orcid-hand
 import { getUserEvent, getUserResponse } from '../../fixtures/users.fixtures';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 
+jest.mock('../../../src/utils/logger');
 describe('POST /webhook/users/orcid', () => {
   const syncHandler = syncOrcidUserHandler(userControllerMock);
 

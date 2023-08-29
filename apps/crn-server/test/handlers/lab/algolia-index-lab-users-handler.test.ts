@@ -14,6 +14,7 @@ import {
 import { toPayload } from '../../helpers/algolia';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
+jest.mock('../../../src/utils/logger');
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
 const mapPayload = toPayload('user');

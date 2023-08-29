@@ -1,4 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import Events from '../../src/controllers/event.controller';
 import {
   getEventDataObject,
@@ -13,7 +14,6 @@ describe('Event controller', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
-    jest.useRealTimers();
   });
 
   describe('Fetch method', () => {
@@ -32,6 +32,75 @@ describe('Event controller', () => {
 
       expect(result).toEqual({ items: [], total: 0 });
     });
+    test('if there is no project, it should not set the project _tags', async () => {
+      const listEventDataObject = getListEventDataObject();
+      eventDataProviderMock.fetch.mockResolvedValue({
+        ...listEventDataObject,
+        items: listEventDataObject.items.map(
+          ({ project: _, ...eventDataObject }) => eventDataObject,
+        ),
+      });
+      const result = await eventController.fetch({});
+
+      const listEventResponse = getListEventResponse();
+      expect(result).toEqual({
+        ...listEventResponse,
+        items: listEventResponse.items.map(
+          ({ project: __, _tags, ...eventResponse }) => ({
+            ...eventResponse,
+            _tags: _tags.filter((tag) => tag !== gp2Model.eventProjects),
+          }),
+        ),
+      });
+    });
+    test('if there is no working group, it should not set the working group _tags', async () => {
+      const listEventDataObject = getListEventDataObject();
+      eventDataProviderMock.fetch.mockResolvedValue({
+        ...listEventDataObject,
+        items: listEventDataObject.items.map(
+          ({ workingGroup: _, ...eventDataObject }) => eventDataObject,
+        ),
+      });
+      const result = await eventController.fetch({});
+
+      const listEventResponse = getListEventResponse();
+      expect(result).toEqual({
+        ...listEventResponse,
+        items: listEventResponse.items.map(
+          ({ workingGroup: __, _tags, ...eventResponse }) => ({
+            ...eventResponse,
+            _tags: _tags.filter((tag) => tag !== gp2Model.eventWorkingGroups),
+          }),
+        ),
+      });
+    });
+    test('if the calender is GP2 Hub, it should set the gp2 hub _tags', async () => {
+      const listEventDataObject = getListEventDataObject();
+      eventDataProviderMock.fetch.mockResolvedValue({
+        ...listEventDataObject,
+        items: listEventDataObject.items.map((eventDataObject) => ({
+          ...eventDataObject,
+          calendar: {
+            ...eventDataObject.calendar,
+            name: gp2Model.gp2CalendarName,
+          },
+        })),
+      });
+      const result = await eventController.fetch({});
+
+      const listEventResponse = getListEventResponse();
+      expect(result).toEqual({
+        ...listEventResponse,
+        items: listEventResponse.items.map(({ _tags, ...eventResponse }) => ({
+          ...eventResponse,
+          calendar: {
+            ...eventResponse.calendar,
+            name: gp2Model.gp2CalendarName,
+          },
+          _tags: [..._tags, gp2Model.eventGP2Hub],
+        })),
+      });
+    });
   });
 
   describe('Fetch by id method', () => {
@@ -42,11 +111,54 @@ describe('Event controller', () => {
         NotFoundError,
       );
     });
-    test('Should return the project when it finds it', async () => {
+    test('Should return the event when it finds it', async () => {
       eventDataProviderMock.fetchById.mockResolvedValue(getEventDataObject());
-      const result = await eventController.fetchById('project-id');
+      const result = await eventController.fetchById('event-id');
 
       expect(result).toEqual(getEventResponse());
+    });
+    test('if there is no project, it should not set the project _tags', async () => {
+      const { project: _, ...eventDataObject } = getEventDataObject();
+      eventDataProviderMock.fetchById.mockResolvedValue(eventDataObject);
+      const result = await eventController.fetchById('event-id');
+
+      const { project: __, _tags, ...eventResponse } = getEventResponse();
+      expect(result).toEqual({
+        ...eventResponse,
+        _tags: _tags.filter((tag) => tag !== gp2Model.eventProjects),
+      });
+    });
+    test('if there is no working group, it should not set the working group _tags', async () => {
+      const { workingGroup: _, ...eventDataObject } = getEventDataObject();
+      eventDataProviderMock.fetchById.mockResolvedValue(eventDataObject);
+      const result = await eventController.fetchById('event-id');
+
+      const { workingGroup: __, _tags, ...eventResponse } = getEventResponse();
+      expect(result).toEqual({
+        ...eventResponse,
+        _tags: _tags.filter((tag) => tag !== gp2Model.eventWorkingGroups),
+      });
+    });
+    test('if the calender is GP2 Hub, it should set the gp2 hub _tags', async () => {
+      const eventDataObject = getEventDataObject();
+      eventDataProviderMock.fetchById.mockResolvedValue({
+        ...eventDataObject,
+        calendar: {
+          ...eventDataObject.calendar,
+          name: gp2Model.gp2CalendarName,
+        },
+      });
+      const result = await eventController.fetchById('event-id');
+
+      const { calendar, _tags, ...eventResponse } = getEventResponse();
+      expect(result).toEqual({
+        ...eventResponse,
+        calendar: {
+          ...calendar,
+          name: gp2Model.gp2CalendarName,
+        },
+        _tags: [..._tags, gp2Model.eventGP2Hub],
+      });
     });
   });
   describe('Create method', () => {

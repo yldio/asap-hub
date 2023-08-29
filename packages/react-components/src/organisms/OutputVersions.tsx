@@ -4,9 +4,11 @@ import { useState } from 'react';
 
 import { Button, Card, Headline2, Link, Paragraph, Pill } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
-import { charcoal, fern, lead, steel } from '../colors';
+import { charcoal, fern, lead, neutral200, steel } from '../colors';
 import { formatDateToTimezone } from '../date';
 import { externalLinkIcon } from '../icons';
+import { contentSidePaddingWithNavigation } from '../layout';
+import { mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 
 const container = css({
   display: 'grid',
@@ -19,6 +21,7 @@ const descriptionStyles = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     marginBottom: `${32 / perRem}em`,
   },
+  color: lead.rgb,
 });
 
 const gridTitleStyles = css({
@@ -86,82 +89,111 @@ const iconsStyles = css({
   },
 });
 
+const createVersionWrapperStyles = css({
+  margin: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  maxWidth: `${800 / perRem}em`,
+});
+
+const createVersionCardStyles = css({
+  background: neutral200.rgb,
+});
+
 export type OutputVersionsProps = {
   versions: Pick<
     ResearchOutputResponse,
     'documentType' | 'type' | 'title' | 'id' | 'addedDate' | 'link'
   >[];
+  createVersion?: boolean;
 };
 
-const OutputVersions: React.FC<OutputVersionsProps> = ({ versions }) => {
+const OutputVersions: React.FC<OutputVersionsProps> = ({
+  versions,
+  createVersion,
+}) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = versions.length > 5;
 
   return (
-    <Card padding={false}>
-      <div
-        css={[
-          container,
-          ...(displayShowMoreButton ? [{ paddingBottom: 0 }] : []),
-        ]}
+    <main css={createVersion ? [createVersionWrapperStyles] : []}>
+      <Card
+        padding={false}
+        overrideStyles={createVersion ? createVersionCardStyles : undefined}
       >
-        <Headline2 noMargin>Version History</Headline2>
-        <div css={descriptionStyles}>
-          <Paragraph noMargin>
-            Find all previous output versions that contributed to this one.
-          </Paragraph>
+        <div
+          css={[
+            container,
+            ...(displayShowMoreButton ? [{ paddingBottom: 0 }] : []),
+          ]}
+        >
+          <Headline2 noMargin>Version History</Headline2>
+          <div css={descriptionStyles}>
+            {createVersion ? (
+              <Paragraph noMargin>
+                List with all previous output versions that contributed to this
+                one. In case you want to add or edit older versions, please
+                contact{' '}
+                <Link href={mailToSupport()}> {TECH_SUPPORT_EMAIL}</Link>.
+              </Paragraph>
+            ) : (
+              <Paragraph noMargin>
+                Find all previous output versions that contributed to this one.
+              </Paragraph>
+            )}
+          </div>
+          <div css={[rowStyles, gridTitleStyles]}>
+            <span css={titleStyles}>Ver.</span>
+            <span css={titleStyles}>Type</span>
+            <span css={titleStyles}>Shared Output Name</span>
+            <span css={titleStyles}>Date Posted</span>
+            <span css={titleStyles}>Link</span>
+          </div>
+          {versions
+            .slice(0, showMore ? undefined : truncateFrom)
+            .map(
+              ({ id, documentType, title, type, addedDate, link }, index) => (
+                <div key={id} css={[rowStyles]}>
+                  <span css={[titleStyles, rowTitleStyles]}>Ver.</span>
+                  <p css={paragraphStyle}>#{index + 1}</p>
+                  <span css={[titleStyles, rowTitleStyles]}>Type</span>
+                  <p css={paragraphStyle}>
+                    {documentType === 'Report' ? (
+                      <Pill accent="gray">Report</Pill>
+                    ) : (
+                      <Pill accent="gray">{type}</Pill>
+                    )}
+                  </p>
+                  <span css={[titleStyles, rowTitleStyles]}>
+                    Shared Output Name
+                  </span>
+                  <p css={paragraphStyle}>{title}</p>
+                  <span css={[titleStyles, rowTitleStyles]}>Date Posted</span>
+                  <p css={paragraphStyle}>
+                    {addedDate &&
+                      formatDateToTimezone(
+                        addedDate,
+                        'EEE, dd MMM yyyy',
+                      ).toUpperCase()}
+                  </p>
+                  <span css={[titleStyles, rowTitleStyles]}>Link</span>
+                  <p css={paragraphStyle}>
+                    <Link ellipsed href={link}>
+                      Output <span css={iconsStyles}>{externalLinkIcon}</span>
+                    </Link>
+                  </p>
+                </div>
+              ),
+            )}
         </div>
-        <div css={[rowStyles, gridTitleStyles]}>
-          <span css={titleStyles}>Ver.</span>
-          <span css={titleStyles}>Type</span>
-          <span css={titleStyles}>Shared Output Name</span>
-          <span css={titleStyles}>Date Posted</span>
-          <span css={titleStyles}>Link</span>
-        </div>
-        {versions
-          .slice(0, showMore ? undefined : truncateFrom)
-          .map(({ id, documentType, title, type, addedDate, link }, index) => (
-            <div key={id} css={[rowStyles]}>
-              <span css={[titleStyles, rowTitleStyles]}>Ver.</span>
-              <p css={paragraphStyle}>#{index + 1}</p>
-              <span css={[titleStyles, rowTitleStyles]}>Type</span>
-              <p css={paragraphStyle}>
-                {documentType === 'Report' ? (
-                  <Pill accent="gray">Report</Pill>
-                ) : (
-                  <Pill accent="gray">{type}</Pill>
-                )}
-              </p>
-              <span css={[titleStyles, rowTitleStyles]}>
-                Shared Output Name
-              </span>
-              <p css={paragraphStyle}>{title}</p>
-              <span css={[titleStyles, rowTitleStyles]}>Date Posted</span>
-              <p css={paragraphStyle}>
-                {addedDate &&
-                  formatDateToTimezone(
-                    addedDate,
-                    'EEE, dd MMM yyyy',
-                  ).toUpperCase()}
-              </p>
-              <span css={[titleStyles, rowTitleStyles]}>Link</span>
-              <p css={paragraphStyle}>
-                <Link ellipsed href={link}>
-                  Output <span css={iconsStyles}>{externalLinkIcon}</span>
-                </Link>
-              </p>
-            </div>
-          ))}
-      </div>
-      {displayShowMoreButton && (
-        <div css={showMoreStyles}>
-          <Button linkStyle onClick={() => setShowMore(!showMore)}>
-            View {showMore ? 'Less' : 'More'} Versions
-          </Button>
-        </div>
-      )}
-    </Card>
+        {displayShowMoreButton && (
+          <div css={showMoreStyles}>
+            <Button linkStyle onClick={() => setShowMore(!showMore)}>
+              View {showMore ? 'Less' : 'More'} Versions
+            </Button>
+          </div>
+        )}
+      </Card>
+    </main>
   );
 };
 

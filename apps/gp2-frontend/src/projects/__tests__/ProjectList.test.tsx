@@ -5,18 +5,45 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getProjects } from '../api';
+import { useSearch } from '../../hooks/search';
+import {
+  createProjectAlgoliaRecord,
+  createProjectListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
+import { getAlgoliaProjects } from '../api';
+import { projectsState } from '../state';
 import ProjectList from '../ProjectList';
+import { PAGE_SIZE } from '../../hooks';
 
 jest.mock('../api');
+jest.mock('../../hooks/search');
 
-const renderProjectsList = async () => {
+const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
+const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+  typeof getAlgoliaProjects
+>;
+
+const mockToggleFilter = jest.fn();
+
+const renderProjectsList = async (searchQuery = '') => {
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset }) => {
+        reset(
+          projectsState({
+            searchQuery,
+            currentPage: 0,
+            filters: new Set(),
+            pageSize: PAGE_SIZE,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -34,13 +61,19 @@ const renderProjectsList = async () => {
 };
 beforeEach(() => {
   jest.resetAllMocks();
+  mockUseSearch.mockImplementation(() => ({
+    changeLocation: jest.fn(),
+    filters: {},
+    updateFilters: jest.fn(),
+    toggleFilter: mockToggleFilter,
+    searchQuery: '',
+    debouncedSearchQuery: '',
+    setSearchQuery: jest.fn(),
+  }));
 });
 
 it('renders the Title', async () => {
-  const mockGetProjects = getProjects as jest.MockedFunction<
-    typeof getProjects
-  >;
-  mockGetProjects.mockResolvedValueOnce(gp2Fixtures.createProjectsResponse());
+  mockGetProjects.mockResolvedValueOnce(createProjectListAlgoliaResponse(1));
   await renderProjectsList();
   expect(
     screen.getByRole('heading', { name: 'Project Title' }),
@@ -48,9 +81,6 @@ it('renders the Title', async () => {
 });
 
 it('renders a list of working groups', async () => {
-  const mockGetProjects = getProjects as jest.MockedFunction<
-    typeof getProjects
-  >;
   const firstProject = gp2Fixtures.createProjectResponse({
     id: '42',
     title: 'Project 42',
@@ -60,7 +90,16 @@ it('renders a list of working groups', async () => {
     title: 'Project 11',
   });
   mockGetProjects.mockResolvedValue(
-    gp2Fixtures.createProjectsResponse([firstProject, secondProject]),
+    createProjectListAlgoliaResponse(2, {
+      hits: [
+        createProjectAlgoliaRecord(
+          gp2Fixtures.createProjectResponse(firstProject),
+        ),
+        createProjectAlgoliaRecord(
+          gp2Fixtures.createProjectResponse(secondProject),
+        ),
+      ],
+    }),
   );
   await renderProjectsList();
   expect(
@@ -69,4 +108,25 @@ it('renders a list of working groups', async () => {
   expect(
     screen.getByRole('heading', { name: 'Project 11' }),
   ).toBeInTheDocument();
+});
+
+it('handles filter switching', async () => {
+  mockGetProjects.mockResolvedValueOnce(createProjectListAlgoliaResponse(1));
+
+  await renderProjectsList();
+  userEvent.click(
+    screen.getByRole('checkbox', {
+      name: 'Opportunities Available',
+    }),
+  );
+  expect(mockToggleFilter).toHaveBeenLastCalledWith(
+    'Opportunities Available',
+    'type',
+  );
+  userEvent.click(
+    screen.getByRole('checkbox', {
+      name: 'Active',
+    }),
+  );
+  expect(mockToggleFilter).toHaveBeenLastCalledWith('Active', 'status');
 });

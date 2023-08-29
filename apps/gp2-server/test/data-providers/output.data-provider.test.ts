@@ -452,7 +452,7 @@ describe('Outputs data provider', () => {
         await outputDataProvider.fetch({
           ...defaultParams,
           filter: {
-            documentType: 'Article',
+            documentType: ['Article'],
             title: 'some-title',
           },
         });
@@ -462,7 +462,7 @@ describe('Outputs data provider', () => {
           {
             ...expectedDefaultParams,
             where: {
-              AND: [{ title: 'some-title' }, { documentType: 'Article' }],
+              AND: [{ title: 'some-title' }, { documentType_in: ['Article'] }],
             },
           },
         );

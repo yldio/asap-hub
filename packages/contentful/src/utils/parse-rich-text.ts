@@ -63,7 +63,7 @@ export const parseRichText = (rtf: RichTextFromQuery) => {
 
         if (entryById && entryById[entryId]) {
           const { url } = entryById[entryId];
-          return `<iframe src="${url}"/>`;
+          return `<iframe src="${url}"></iframe>`;
         }
         throw new Error(
           `Entry with id ${entryId} does not exist in contentful`,
@@ -80,10 +80,10 @@ export const parseRichText = (rtf: RichTextFromQuery) => {
 
           switch (contentType) {
             case 'application/pdf':
-              return `<iframe src="${url}"${dimensions}>`;
+              return `<iframe src="${url}"${dimensions}></iframe>`;
 
             case 'video/mp4':
-              return `<iframe src="${url}"${dimensions} allowFullScreen>`;
+              return `<iframe src="${url}"${dimensions} allowFullScreen></iframe>`;
 
             default:
               return `<img src="${url}"${dimensions} alt=${

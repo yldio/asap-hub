@@ -5,6 +5,7 @@ import {
   AssetDataProvider,
   UserDataProvider,
   InterestGroupDataProvider,
+  LabDataProvider,
   WorkingGroupDataProvider,
   TutorialDataProvider,
   DiscoverDataProvider,
@@ -27,6 +28,7 @@ type DependencyList = {
   teams: DependencySwitch<TeamDataProvider>;
   externalAuthors: DependencySwitch<ExternalAuthorDataProvider>;
   interestGroups: DependencySwitch<InterestGroupDataProvider>;
+  labs: DependencySwitch<LabDataProvider>;
   calendars: DependencySwitch<CalendarDataProvider>;
   events: DependencySwitch<EventDataProvider>;
   workingGroups: DependencySwitch<WorkingGroupDataProvider>;
@@ -91,6 +93,10 @@ export class FeatureFlagDependencySwitch {
         false: undefined,
       },
       researchOutputs: {
+        true: undefined,
+        false: undefined,
+      },
+      labs: {
         true: undefined,
         false: undefined,
       },

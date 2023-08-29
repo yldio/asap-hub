@@ -256,22 +256,15 @@ export const parseContentfulGraphQLOutput = (
   };
 };
 
-const getDocumentTypeFilter = (documentType: string | string[]) =>
-  Array.isArray(documentType)
-    ? [{ documentType_in: documentType }]
-    : [{ documentType }];
 const getFilterWhere = ({
   title,
   documentType,
   link,
-}: gp2Model.FetchOutputFilter) => {
-  const titleFilter = title ? [{ title }] : [];
-  const linkFilter = link ? [{ link }] : [];
-  const documentTypeFilter = documentType
-    ? getDocumentTypeFilter(documentType)
-    : [];
-  return [...titleFilter, ...documentTypeFilter, ...linkFilter];
-};
+}: gp2Model.FetchOutputFilter) => [
+  ...(title ? [{ title }] : []),
+  ...(documentType ? [{ documentType_in: documentType }] : []),
+  ...(link ? [{ link }] : []),
+];
 const getSearchWhere = (search: string) => {
   type SearchFields = Pick<gp2Contentful.OutputsFilter, 'title_contains'>;
   const where = search

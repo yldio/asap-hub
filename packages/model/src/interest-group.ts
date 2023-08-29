@@ -59,7 +59,7 @@ export type InterestGroupResponse = InterestGroupDataObject;
 export type ListInterestGroupResponse = ListResponse<InterestGroupResponse>;
 
 type InterestGroupFilter = {
-  teamId?: string[];
+  teamId?: [string, ...string[]];
   userId?: string;
   active?: boolean;
 };

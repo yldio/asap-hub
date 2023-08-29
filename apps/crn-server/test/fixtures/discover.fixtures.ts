@@ -342,8 +342,8 @@ export const getContentfulGraphqlDiscover = (props = {}) => ({
       {
         sys: {
           id: 'uuid-training-1',
-          firstPublishedAt: '2020-09-24T11:06:27.164Z',
         },
+        publishDate: '2020-09-24T11:06:27.164Z',
         link: 'https://hub.asap.science',
         linkText: 'ASAP Training',
         text: {

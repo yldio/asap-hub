@@ -53,7 +53,7 @@ describe('outputs controller', () => {
       });
 
       const fetchOptions: gp2Model.FetchOutputOptions = {
-        filter: { documentType: 'Article', link: 'link', title: 'title' },
+        filter: { documentType: ['Article'], link: 'link', title: 'title' },
         search: 'search',
         skip: 13,
         take: 7,
@@ -133,7 +133,7 @@ describe('outputs controller', () => {
           .calledWith({
             filter: {
               title: outputRequest.title,
-              documentType: outputRequest.documentType,
+              documentType: [outputRequest.documentType],
             },
           })
           .mockResolvedValueOnce({
@@ -180,7 +180,7 @@ describe('outputs controller', () => {
           .calledWith({
             filter: {
               title: outputRequest.title,
-              documentType: outputRequest.documentType,
+              documentType: [outputRequest.documentType],
             },
           })
           .mockResolvedValueOnce({
@@ -210,7 +210,7 @@ describe('outputs controller', () => {
           .calledWith({
             filter: {
               title: outputRequest.title,
-              documentType: outputRequest.documentType,
+              documentType: [outputRequest.documentType],
             },
           })
           .mockResolvedValueOnce({
@@ -380,7 +380,7 @@ describe('outputs controller', () => {
             .calledWith({
               filter: {
                 title: outputRequest.title,
-                documentType: outputRequest.documentType,
+                documentType: [outputRequest.documentType],
               },
             })
             .mockResolvedValueOnce({
@@ -432,7 +432,7 @@ describe('outputs controller', () => {
             .calledWith({
               filter: {
                 title: outputRequest.title,
-                documentType: outputRequest.documentType,
+                documentType: [outputRequest.documentType],
               },
             })
             .mockResolvedValueOnce({
@@ -464,7 +464,7 @@ describe('outputs controller', () => {
             .calledWith({
               filter: {
                 title: outputRequest.title,
-                documentType: outputRequest.documentType,
+                documentType: [outputRequest.documentType],
               },
             })
             .mockResolvedValueOnce({

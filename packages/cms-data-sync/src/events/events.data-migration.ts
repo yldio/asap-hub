@@ -187,7 +187,7 @@ export const migrateEvents = async () => {
   };
 
   const parseEventItem = async (event: EventItem) => {
-    const { id, flatData: squidexFlatData } = event;
+    const { id, lastModified, flatData: squidexFlatData } = event;
     const {
       googleId,
       hidden,
@@ -250,6 +250,7 @@ export const migrateEvents = async () => {
         meetingMaterials,
         meetingMaterialsPermanentlyUnavailable,
         ...materialsSpeakersThumbAndMeetingLink,
+        lastUpdated: lastModified,
       };
     }
 
@@ -265,6 +266,7 @@ export const migrateEvents = async () => {
             `Event with id ${id} is going to be created without a calendar.`,
           )
         : null,
+      lastUpdated: lastModified,
     };
   };
 

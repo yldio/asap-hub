@@ -10,8 +10,8 @@ const { userRegions, keywords } = gp2Model;
 
 type FiltersModalProps = {
   onBackClick: () => void;
-  filters: gp2Model.FetchUsersFilter;
-  onApplyClick: (filters: gp2Model.FetchUsersFilter) => void;
+  filters: gp2Model.FetchUsersSearchFilter;
+  onApplyClick: (filters: gp2Model.FetchUsersSearchFilter) => void;
   projects: Pick<gp2Model.ProjectResponse, 'id' | 'title'>[];
   workingGroups: Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
 };

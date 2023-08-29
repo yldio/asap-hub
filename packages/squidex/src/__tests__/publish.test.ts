@@ -33,7 +33,7 @@ describe('squidex wrapper', () => {
       .put(`/api/content/${appName}/${collection}/42/status`)
       .reply(404);
 
-    await expect(() => client.publish('42')).rejects.toThrow(NotFoundError);
+    await expect(client.publish('42')).rejects.toThrow(NotFoundError);
   });
 
   it('return GenericError on HTTP Error', async () => {
@@ -41,7 +41,7 @@ describe('squidex wrapper', () => {
       .put(`/api/content/${appName}/${collection}/42/status`)
       .reply(405);
 
-    await expect(() => client.publish('42')).rejects.toThrow(GenericError);
+    await expect(client.publish('42')).rejects.toThrow(GenericError);
   });
 
   it('publishes a specific document', async () => {

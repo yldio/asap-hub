@@ -91,10 +91,8 @@ export const createEventResponse = (
   meetingLink: 'https://example.com/meeting',
   hideMeetingLink: false,
   notes: 'Meeting notes go here',
-
   presentation: 'Presentation',
   videoRecording: 'Video Recording',
-
   meetingMaterials: Array.from({ length: meetingMaterials }).map((_, i) => ({
     title: `Material ${i + 1}`,
     url: `https://example.com/materials/${i}`,
@@ -104,6 +102,7 @@ export const createEventResponse = (
     numberOfExternalSpeakers,
     numberOfSpeakersToBeAnnounced,
   ),
+  _tags: [],
 });
 
 export const createListEventResponse = (

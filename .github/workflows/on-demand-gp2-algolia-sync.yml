@@ -9,8 +9,10 @@ on:
         default: all
         options:
           - all
+          - events
           - outputs
           - projects
+          - users
       environment-name:
         required: true
         type: environment

@@ -9,6 +9,7 @@
     "authors.id",
     "documentType",
     "project.id",
+    "speakers.user.id",
     "status",
     "workingGroup.id"
   ],
@@ -16,8 +17,14 @@
     "authors.displayName",
     "authors.firstName",
     "authors.lastName",
+    "displayName",
+    "firstName",
     "id",
+    "lastName",
     "project.title",
+    "speakers.externalUser.name",
+    "speakers.team.displayName",
+    "speakers.user.displayName",
     "title",
     "workingGroup.title"
   ]

@@ -116,6 +116,8 @@ enum AssetLinkingCollectionsEventsCollectionOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -208,6 +210,8 @@ enum AssetLinkingCollectionsTutorialsCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
+  publishDate_ASC
+  publishDate_DESC
   shortText_ASC
   shortText_DESC
   sys_firstPublishedAt_ASC
@@ -375,6 +379,8 @@ enum CalendarsLinkingCollectionsEventsCollectionOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -850,6 +856,8 @@ enum DiscoverTrainingCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
+  publishDate_ASC
+  publishDate_DESC
   shortText_ASC
   shortText_DESC
   sys_firstPublishedAt_ASC
@@ -939,6 +947,8 @@ enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -1011,6 +1021,7 @@ type Events implements Entry {
   googleId(locale: String): String
   hidden(locale: String): Boolean
   hideMeetingLink(locale: String): Boolean
+  lastUpdated(locale: String): DateTime
   linkedFrom(allowedLocales: [String]): EventsLinkingCollections
   meetingLink(locale: String): String
   meetingMaterials(locale: String): JSON
@@ -1090,6 +1101,15 @@ input EventsFilter {
   hideMeetingLink: Boolean
   hideMeetingLink_exists: Boolean
   hideMeetingLink_not: Boolean
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   meetingLink: String
   meetingLink_contains: String
   meetingLink_exists: Boolean
@@ -1275,6 +1295,8 @@ enum EventsOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -3480,6 +3502,8 @@ enum ResearchOutputsRelatedEventsCollectionOrder {
   hidden_DESC
   hideMeetingLink_ASC
   hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   meetingLink_ASC
   meetingLink_DESC
   meetingMaterialsPermanentlyUnavailable_ASC
@@ -4144,6 +4168,7 @@ type Tutorials implements Entry {
   link(locale: String): String
   linkText(locale: String): String
   linkedFrom(allowedLocales: [String]): TutorialsLinkingCollections
+  publishDate(locale: String): DateTime
   shortText(locale: String): String
   sys: Sys!
   text(locale: String): TutorialsText
@@ -4176,6 +4201,15 @@ input TutorialsFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
+  publishDate: DateTime
+  publishDate_exists: Boolean
+  publishDate_gt: DateTime
+  publishDate_gte: DateTime
+  publishDate_in: [DateTime]
+  publishDate_lt: DateTime
+  publishDate_lte: DateTime
+  publishDate_not: DateTime
+  publishDate_not_in: [DateTime]
   shortText: String
   shortText_contains: String
   shortText_exists: Boolean
@@ -4218,6 +4252,8 @@ enum TutorialsOrder {
   linkText_DESC
   link_ASC
   link_DESC
+  publishDate_ASC
+  publishDate_DESC
   shortText_ASC
   shortText_DESC
   sys_firstPublishedAt_ASC
@@ -5329,6 +5365,15 @@ input cfEventsNestedFilter {
   hideMeetingLink: Boolean
   hideMeetingLink_exists: Boolean
   hideMeetingLink_not: Boolean
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   meetingLink: String
   meetingLink_contains: String
   meetingLink_exists: Boolean
@@ -5996,6 +6041,15 @@ input cfTutorialsNestedFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
+  publishDate: DateTime
+  publishDate_exists: Boolean
+  publishDate_gt: DateTime
+  publishDate_gte: DateTime
+  publishDate_in: [DateTime]
+  publishDate_lt: DateTime
+  publishDate_lte: DateTime
+  publishDate_not: DateTime
+  publishDate_not_in: [DateTime]
   shortText: String
   shortText_contains: String
   shortText_exists: Boolean

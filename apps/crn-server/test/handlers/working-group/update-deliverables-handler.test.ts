@@ -1,12 +1,13 @@
 import { WorkingGroupDeliverable } from '@asap-hub/model';
 import { workingGroupUpdateHandler } from '../../../src/handlers/working-group/update-deliverables-handler';
 import {
-  getWorkingGroupSquidexEvent,
   getWorkingGroupContentfulEvent,
   getWorkingGroupResponse,
+  getWorkingGroupSquidexEvent,
 } from '../../fixtures/working-groups.fixtures';
 import { getDataProviderMock } from '../../mocks/data-provider.mock';
 
+jest.mock('../../../src/utils/logger');
 describe.each`
   cms             | getEventFunction
   ${`Squidex`}    | ${getWorkingGroupSquidexEvent}

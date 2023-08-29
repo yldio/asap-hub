@@ -42,7 +42,7 @@ describe('squidex wrapper - upsert', () => {
       });
 
     // JSON parse/stringify so TS won't complain
-    await expect(() =>
+    await expect(
       client.upsert(
         contentId,
         JSON.parse(
@@ -68,7 +68,7 @@ describe('squidex wrapper - upsert', () => {
         statusCode: 400,
       });
 
-    await expect(() =>
+    await expect(
       client.upsert(
         contentId,
         JSON.parse(
@@ -92,7 +92,7 @@ describe('squidex wrapper - upsert', () => {
       .query(() => true)
       .reply(400, '<not>json</not>');
 
-    await expect(() =>
+    await expect(
       client.upsert(
         contentId,
         JSON.parse(
@@ -112,7 +112,7 @@ describe('squidex wrapper - upsert', () => {
       .query(() => true)
       .reply(500);
 
-    await expect(() =>
+    await expect(
       client.upsert(contentId, {
         string: {
           iv: 'value',

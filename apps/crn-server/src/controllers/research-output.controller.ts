@@ -3,6 +3,7 @@ import Boom from '@hapi/boom';
 import {
   AuthorPostRequest,
   AuthorUpsertDataObject,
+  isResearchOutputDocumentType,
   ListResearchOutputResponse,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
@@ -10,13 +11,12 @@ import {
   ResearchOutputPutRequest,
   ResearchOutputResponse,
   ResearchOutputUpdateDataObject,
+  ResearchOutputVersionPostRequest,
   ResearchTagCategory,
   ResearchTagDataObject,
   VALIDATION_ERROR_MESSAGE,
   ValidationErrorResponse,
   WorkingGroupResponse,
-  isResearchOutputDocumentType,
-  ResearchOutputVersionPostRequest,
 } from '@asap-hub/model';
 import {
   FetchResearchOutputOptions,
@@ -159,7 +159,7 @@ export default class ResearchOutputController {
             ? currentResearchOutput?.documentType
             : 'Grant Document',
       };
-      await this.validateVersionUniqueness(
+      this.validateVersionUniqueness(
         normalisedResearchOutputUpdateData,
         version,
         currentResearchOutput?.versions,
@@ -264,7 +264,7 @@ export default class ResearchOutputController {
       ])
     ).filter(isError);
 
-    await this.handleErrors(errors);
+    this.handleErrors(errors);
   }
 
   private async validateTitleUniqueness(
@@ -301,11 +301,11 @@ export default class ResearchOutputController {
     return null;
   }
 
-  private async validateVersionUniqueness(
+  private validateVersionUniqueness(
     newResearchOutput: ResearchOutputUpdateData,
     newVersion: ResearchOutputVersionPostRequest,
     versions: ResearchOutputVersionPostRequest[] | undefined,
-  ): Promise<void | null> {
+  ): void {
     const errors: ValidationErrorResponse['data'] = [];
 
     if (
@@ -323,9 +323,7 @@ export default class ResearchOutputController {
       errors.push(ERROR_UNIQUE_TITLE);
     }
 
-    await this.handleErrors(errors);
-
-    return null;
+    this.handleErrors(errors);
   }
 
   private async validateLinkUniqueness(
@@ -408,7 +406,7 @@ export default class ResearchOutputController {
     };
   }
 
-  private async handleErrors(errors: ValidationErrorResponse['data']) {
+  private handleErrors(errors: ValidationErrorResponse['data']) {
     if (errors.length > 0) {
       // TODO: Remove Boom from the controller layer
       // https://asaphub.atlassian.net/browse/CRN-777

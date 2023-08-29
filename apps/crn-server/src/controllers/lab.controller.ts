@@ -1,5 +1,5 @@
 import { FetchOptions, ListLabsResponse } from '@asap-hub/model';
-import { LabDataProvider } from '../data-providers/lab.data-provider';
+import { LabDataProvider } from '../data-providers/types';
 
 export default class LabController {
   constructor(private labDataProvider: LabDataProvider) {}

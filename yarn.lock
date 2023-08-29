@@ -11095,8 +11095,8 @@ __metadata:
   linkType: hard
 
 "@contentful/field-editor-reference@npm:^5.9.0":
-  version: 5.14.0
-  resolution: "@contentful/field-editor-reference@npm:5.14.0"
+  version: 5.15.0
+  resolution: "@contentful/field-editor-reference@npm:5.15.0"
   dependencies:
     "@contentful/f36-components": ^4.0.27
     "@contentful/f36-icons": ^4.1.0
@@ -11119,7 +11119,7 @@ __metadata:
   peerDependencies:
     "@contentful/app-sdk": ^4.2.0
     react: ">=16.8.0"
-  checksum: 0a5d77b77e642a8246e04044a8f77c2a963119a37a1bf6b304e1c8e16c4e19738c073f7d011e10b076c8863b7403d9560920a2df9cfc41b500c2d1a807cf5db3
+  checksum: ad6a746214c8afd8403c58978c438f25878608a83e92aa0320128963f1a8dcbf22faadb2b179e9fd321d860af84bb61021b6dc3630a43cd59de844338719e52f
   languageName: node
   linkType: hard
 

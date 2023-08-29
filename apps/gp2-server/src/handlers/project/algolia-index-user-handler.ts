@@ -1,15 +1,22 @@
-import { AlgoliaClient } from '@asap-hub/algolia';
+import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
 import {
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
+import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ProjectController from '../../controllers/project.controller';
+import { ProjectContentfulDataProvider } from '../../data-providers/project.data-provider';
+import {
+  getContentfulGraphQLClientFactory,
+  getContentfulRestClientFactory,
+} from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
+import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { UserPayload } from '../event-bus';
 
-export const indexUserEventsHandler =
+export const indexUserProjectsHandler =
   (
     projectController: ProjectController,
     algoliaClient: AlgoliaClient<'gp2'>,
@@ -51,15 +58,19 @@ export const indexUserEventsHandler =
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
 
-// const eventDataProvider = getEventDataProvider();
-// /* istanbul ignore next */
-// export const handler = sentryWrapper(
-//   indexUserEventsHandler(
-//     new Events(eventDataProvider),
-//     algoliaSearchClientFactory({
-//       algoliaApiKey,
-//       algoliaAppId,
-//       algoliaIndex,
-//     }),
-//   ),
-// );
+const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
+const projectDataProvider = new ProjectContentfulDataProvider(
+  contentfulGraphQLClient,
+  getContentfulRestClientFactory,
+);
+
+export const handler = sentryWrapper(
+  indexUserProjectsHandler(
+    new ProjectController(projectDataProvider),
+    algoliaSearchClientFactory({
+      algoliaApiKey,
+      algoliaAppId,
+      algoliaIndex,
+    }),
+  ),
+);

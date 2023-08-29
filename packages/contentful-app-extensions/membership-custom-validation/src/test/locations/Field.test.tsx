@@ -187,7 +187,7 @@ describe('Field component', () => {
               },
             ]),
           },
-        },        
+        },
       },
       cma: {
         entry: {
@@ -218,7 +218,6 @@ describe('Field component', () => {
     await waitFor(() => {
       expect(sdk.field.setValue).toHaveBeenCalledWith('true');
     });
-    expect(
-      await screen.findByText(VALID_ENTRY_MESSAGE)).toBeInTheDocument();
+    expect(await screen.findByText(VALID_ENTRY_MESSAGE)).toBeInTheDocument();
   });
 });

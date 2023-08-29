@@ -5,7 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { getEntry, onEntryChanged } from '../utils';
 
 export const DUPLICATE_MEMBERS_MESSAGE =
-  'The same member relation has been added multiple times';
+  'The same membership has been added multiple times';
+export const VALID_ENTRY_MESSAGE = 'Valid membership list';
 const hasDuplicates = (array: string[]) => {
   const uniqueItems = new Set(array);
   return uniqueItems.size !== array.length;
@@ -93,13 +94,15 @@ const Field = () => {
 
   return (
     <Stack flexDirection="column" alignItems="flex-start">
-      {warnings.length > 0
-        ? warnings.map((warning, index) => (
-            <Note key={index} variant="warning">
-              {warning}
-            </Note>
-          ))
-        : null}
+      {warnings.length > 0 ? (
+        warnings.map((warning, index) => (
+          <Note key={index} variant="warning">
+            {warning}
+          </Note>
+        ))
+      ) : (
+        <Note variant="positive">{VALID_ENTRY_MESSAGE}</Note>
+      )}
     </Stack>
   );
 };

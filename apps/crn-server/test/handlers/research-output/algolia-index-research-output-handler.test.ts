@@ -1,4 +1,5 @@
 import { ResearchOutputEvent } from '@asap-hub/model';
+import { NotFoundError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { ResearchOutputPayload } from '../../../src/handlers/event-bus';
@@ -226,6 +227,22 @@ describe('Research Output index handler', () => {
     const event = deleteEvent('ro-1234');
 
     researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(1);
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      event.detail.resourceId,
+    );
+  });
+
+  test('Should fetch the research-output and remove the record in Algolia when controller throws NotFoundError', async () => {
+    const event = deleteEvent('ro-1234');
+
+    researchOutputControllerMock.fetchById.mockRejectedValue(
+      new NotFoundError(undefined, 'not found'),
+    );
 
     await indexHandler(event);
 

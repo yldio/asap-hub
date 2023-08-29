@@ -30,7 +30,7 @@ describe('Labs data provider', () => {
   });
 
   describe('Fetch', () => {
-    test('Should fetch the list of news from Contentful GraphQl', async () => {
+    test('Should fetch the list of Labs from Contentful GraphQl', async () => {
       const result = await labDataProviderMockGraphql.fetch({});
 
       expect(result).toMatchObject(getListLabsResponse());

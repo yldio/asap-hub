@@ -1,3 +1,4 @@
+import { NotFoundError } from '@asap-hub/errors';
 import Boom from '@hapi/boom';
 import { indexEventHandler } from '../../../src/handlers/event/algolia-index-event-handler';
 import {
@@ -76,6 +77,20 @@ describe('Event index handler', () => {
     const event = deleteEventSquidex();
 
     eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
+
+    await indexHandler(event);
+
+    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
+      event.detail.resourceId,
+    );
+  });
+
+  test('Should fetch the event and remove the record in Algolia when controller throws NotFoundError', async () => {
+    const event = deleteEventSquidex();
+
+    eventControllerMock.fetchById.mockRejectedValue(
+      new NotFoundError(undefined, 'not found'),
+    );
 
     await indexHandler(event);
 

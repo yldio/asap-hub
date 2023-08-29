@@ -1,4 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
+import { NotFoundError } from '@asap-hub/errors';
 import { EventController, EventEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import { notFound, isBoom } from '@hapi/boom';
@@ -32,7 +33,10 @@ export const indexEventHandler =
 
       logger.debug(`Saved event  ${crnEvent.id}`);
     } catch (e) {
-      if (isBoom(e) && e.output.statusCode === 404) {
+      if (
+        (isBoom(e) && e.output.statusCode === 404) ||
+        e instanceof NotFoundError
+      ) {
         await algoliaClient.remove(event.detail.resourceId);
         return;
       }

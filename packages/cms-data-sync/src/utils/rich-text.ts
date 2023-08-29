@@ -88,7 +88,7 @@ export const removeSinglePTag = (html: string): string => {
 const wrapNestedLists = (html: string): string => {
   const $ = cheerio.load(html);
 
-  $('ul > ul').each((_, element) => {
+  $('ul > ul, ol > ol, ol > ul, ul > ol').each((_, element) => {
     const previous = $(element).prev();
     if (previous && previous.length && previous[0].name === 'li') {
       $(element).appendTo(previous);

@@ -656,7 +656,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2

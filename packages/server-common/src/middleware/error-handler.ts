@@ -42,14 +42,6 @@ export const errorHandlerFactory =
       }
     }
 
-    if (err.status === 405) {
-      return res.status(405).json({
-        error: 'Method Not Allowed',
-        message: err.message,
-        statusCode: 405,
-      });
-    }
-
     if (isBoom(err)) {
       return res.status(err.output.statusCode).json({
         ...err.output.payload,

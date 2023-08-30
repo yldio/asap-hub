@@ -45,7 +45,7 @@ const Field = () => {
 
     const validationMessages = await Promise.all(
       Object.entries(groupedUsers).map(async ([userId, duplicateRoles]) => {
-        if (duplicateRoles?.length > 1) {
+        if (duplicateRoles.length > 1) {
           const userEntry = await sdk.cma.entry.get({
             entryId: userId,
           });

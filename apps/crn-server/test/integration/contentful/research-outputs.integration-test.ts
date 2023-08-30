@@ -16,7 +16,9 @@ jest.setTimeout(120000);
 
 const fixtures = new ContentfulFixture();
 
-describe('research outputs', () => {
+// skipping it because it creates RO via post and writing is disabled
+// TODO: remove skip after write block is removed
+describe.skip('research outputs', () => {
   let app: Express;
   let team: TeamFixture;
   let loggedInUser: UserFixture;

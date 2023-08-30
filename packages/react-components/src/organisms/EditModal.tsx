@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { CustomError } from '@asap-hub/errors';
 import { css } from '@emotion/react';
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
 import { Prompt } from 'react-router-dom';
@@ -49,7 +50,7 @@ const EditModal: React.FC<EditModalProps> = ({
   const formRef = useRef<HTMLFormElement>(null);
   const historyPush = usePushFromHere();
   const [status, setStatus] = useState<
-    'initial' | 'isSaving' | 'hasError' | 'hasSaved'
+    'initial' | 'isSaving' | 'hasError' | 'hasSaved' | 'writingDisabled'
   >('initial');
 
   useEffect(() => {
@@ -69,7 +70,14 @@ const EditModal: React.FC<EditModalProps> = ({
         if (formRef.current) {
           setStatus('hasSaved');
         }
-      } catch {
+      } catch (error) {
+        if (error instanceof CustomError) {
+          const { statusCode } = error;
+          if (statusCode === 405) {
+            setStatus('writingDisabled');
+            return;
+          }
+        }
         if (!formRef.current) return;
         setStatus('hasError');
       }
@@ -89,6 +97,11 @@ const EditModal: React.FC<EditModalProps> = ({
       {status === 'hasError' && (
         <Toast>
           There was an error and we were unable to save your changes
+        </Toast>
+      )}
+      {status === 'writingDisabled' && (
+        <Toast>
+          All writing operations are disabled while we are migrating the CMS
         </Toast>
       )}
       <form

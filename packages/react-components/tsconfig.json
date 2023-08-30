@@ -12,6 +12,7 @@
   "references": [
     { "path": "../auth" },
     { "path": "../dom-test-utils" },
+    { "path": "../errors" },
     { "path": "../fixtures" },
     { "path": "../flags" },
     { "path": "../model" },

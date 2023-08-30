@@ -1,4 +1,5 @@
 import type { AlgoliaClient } from '@asap-hub/algolia';
+import { CustomError } from '@asap-hub/errors';
 import {
   createFeatureFlagHeaders,
   createSentryHeaders,
@@ -116,6 +117,9 @@ export const patchUser = async (
     body: JSON.stringify(patch),
   });
   if (!resp.ok) {
+    if (resp.status === 405) {
+      throw new CustomError(resp.statusText, resp.status);
+    }
     throw new Error(
       `Failed to update user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );

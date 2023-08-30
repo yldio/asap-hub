@@ -8,7 +8,7 @@ module.exports.up = (migration) => {
     .name('Validation')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([
       {
         in: ['true', 'false'],

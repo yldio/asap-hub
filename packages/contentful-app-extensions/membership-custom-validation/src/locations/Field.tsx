@@ -4,13 +4,7 @@ import { useSDK, useAutoResizer } from '@contentful/react-apps-toolkit';
 import React, { useEffect, useState } from 'react';
 import { getEntry, onEntryChanged } from '../utils';
 
-export const DUPLICATE_MEMBERS_MESSAGE =
-  'The same membership has been added multiple times';
 export const VALID_ENTRY_MESSAGE = 'Valid membership list';
-const hasDuplicates = (array: string[]) => {
-  const uniqueItems = new Set(array);
-  return uniqueItems.size !== array.length;
-};
 
 const Field = () => {
   useAutoResizer();
@@ -62,12 +56,7 @@ const Field = () => {
       }),
     );
 
-    return {
-      duplicateMembers: hasDuplicates(memberIds),
-      duplicateUserMessages: validationMessages.filter(
-        (x) => x !== null,
-      ) as string[],
-    };
+    return validationMessages.filter((x) => x !== null) as string[];
   };
 
   useEffect(
@@ -76,18 +65,14 @@ const Field = () => {
         const newWarnings: string[] = [];
 
         const validationMessages = await getValidations();
-        if (validationMessages?.duplicateMembers) {
-          newWarnings.push(DUPLICATE_MEMBERS_MESSAGE);
-        }
 
-        if (validationMessages?.duplicateUserMessages?.length) {
-          validationMessages.duplicateUserMessages.forEach((message) => {
+        if (validationMessages?.length) {
+          validationMessages.forEach((message) => {
             newWarnings.push(message);
           });
         }
 
         setWarnings(newWarnings);
-        sdk.field.setValue(newWarnings.length === 0 ? 'true' : 'false');
       }),
     [sdk],
   );

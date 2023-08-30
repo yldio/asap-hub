@@ -1,8 +1,11 @@
+import { NotFoundError } from '@asap-hub/errors';
 import News from '../../src/controllers/news.controller';
 import { NewsDataProvider } from '../../src/data-providers/types';
 import {
   getListNewsDataObject,
   getListNewsResponse,
+  getNewsDataObject,
+  getNewsResponse,
 } from '../fixtures/news.fixtures';
 import { newsDataProviderMock } from '../mocks/news.data-provider.mock';
 
@@ -47,6 +50,24 @@ describe('News controller', () => {
         filter: { type: ['news'] },
       };
       expect(newsDataProviderMock.fetch).toBeCalledWith(expectedParameters);
+    });
+  });
+  describe('FetchById', () => {
+    beforeEach(jest.resetAllMocks);
+
+    test('Should throw when project is not found', async () => {
+      newsDataProviderMock.fetchById.mockResolvedValue(null);
+
+      await expect(newsController.fetchById('not-found')).rejects.toThrow(
+        NotFoundError,
+      );
+    });
+
+    test('Should return the project when it finds it', async () => {
+      newsDataProviderMock.fetchById.mockResolvedValue(getNewsDataObject());
+      const result = await newsController.fetchById('project-id');
+
+      expect(result).toEqual(getNewsResponse());
     });
   });
 });

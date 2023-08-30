@@ -379,7 +379,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-index-api-key-${envAlias}}`,
         ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
       },

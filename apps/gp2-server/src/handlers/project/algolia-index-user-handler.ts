@@ -54,7 +54,6 @@ export const indexUserProjectsHandler =
         await algoliaClient.saveMany(projects);
       } catch (err) {
         logger.error('Error occurred during saveMany');
-        logger.error(JSON.stringify(err, null, 2));
         if (err instanceof Error) {
           logger.error(`The error message: ${err.message}`);
         }

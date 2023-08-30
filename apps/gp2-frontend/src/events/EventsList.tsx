@@ -1,4 +1,3 @@
-import { ComponentProps } from 'react';
 import { getEventListOptions } from '@asap-hub/frontend-utils';
 import {
   EmptyState,
@@ -11,7 +10,6 @@ import { gp2 } from '@asap-hub/model';
 import {
   EventsList as EventsListTemplate,
   Paragraph,
-  SearchAndFilter,
   utils,
 } from '@asap-hub/react-components';
 
@@ -24,7 +22,8 @@ type EventListProps = {
   constraint?: gp2.EventConstraint;
   paddingTop?: number;
   eventType?: gp2.EventType[];
-} & Pick<ComponentProps<typeof SearchAndFilter>, 'filters' | 'searchQuery'>;
+  searchQuery?: string;
+};
 
 export const eventMapper = ({
   speakers,
@@ -87,7 +86,7 @@ const setStateInformation = (constraint: gp2.EventConstraint) => {
 };
 
 const EventList: React.FC<EventListProps> = ({
-  searchQuery,
+  searchQuery = '',
   currentTime,
   past = false,
   constraint,

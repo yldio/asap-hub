@@ -7,16 +7,16 @@ import { EventsPage } from '@asap-hub/gp2-components';
 import Calendars from './calendar/Calendars';
 import Frame from '../Frame';
 
-const loadEventList = () =>
-  import(/* webpackChunkName: "events-list" */ './EventsList');
+const loadEventDirectory = () =>
+  import(/* webpackChunkName: "events-list" */ './EventDirectory');
 const loadEvent = () => import(/* webpackChunkName: "event" */ './Event');
 
-const EventList = lazy(loadEventList);
+const EventsDirectory = lazy(loadEventDirectory);
 const Event = lazy(loadEvent);
 
 const Events: FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadEventList().then(loadEvent);
+    loadEventDirectory().then(loadEvent);
   }, []);
 
   const { path } = useRouteMatch();
@@ -35,16 +35,12 @@ const Events: FC<Record<string, never>> = () => {
 
       <Route exact path={path + gp2.events({}).upcoming.template}>
         <EventsPage>
-          <Frame title="Upcoming Events">
-            <EventList currentTime={currentTime} paddingTop={32} />
-          </Frame>
+          <EventsDirectory currentTime={currentTime} paddingTop={32} />
         </EventsPage>
       </Route>
       <Route exact path={path + gp2.events({}).past.template}>
         <EventsPage>
-          <Frame title="Past Events">
-            <EventList past currentTime={currentTime} paddingTop={32} />
-          </Frame>
+          <EventsDirectory past currentTime={currentTime} paddingTop={32} />
         </EventsPage>
       </Route>
       <Route path={path + gp2.events({}).event.template}>

@@ -54,7 +54,6 @@ const EventDirectory: React.FC<EventDirectoryProps> = ({
           past={past}
           constraint={constraint}
           searchQuery={debouncedSearchQuery}
-          filters={filterSet}
           paddingTop={paddingTop}
           eventType={filters.eventType}
         />

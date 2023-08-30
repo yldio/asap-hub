@@ -4,9 +4,9 @@ import Boom from '@hapi/boom';
 import { Router } from 'express';
 import ProjectController from '../controllers/project.controller';
 import {
+  validateFetchProjectsParameters,
   validateProjectParameters,
   validateProjectPutRequest,
-  validateFetchProjectsParameters,
 } from '../validation/project.validation';
 
 export const projectRouteFactory = (
@@ -20,7 +20,13 @@ export const projectRouteFactory = (
       const query = validateFetchProjectsParameters(req.query);
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const loggedInUserId = req.loggedInUser!.id;
-      const projects = await projectController.fetch(query, loggedInUserId);
+      const projects = await projectController.fetch(
+        {
+          ...query,
+          filter: {},
+        },
+        loggedInUserId,
+      );
 
       res.json(projects);
     },

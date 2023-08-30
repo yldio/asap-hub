@@ -4,8 +4,8 @@ import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { indexUserEventsHandler } from '../../../src/handlers/event/algolia-index-user-events-handler';
 import {
-  getListEventResponse,
   getEventDataObject,
+  getListEventResponse,
 } from '../../fixtures/events.fixtures';
 import { getUserEvent } from '../../fixtures/users.fixtures';
 import { toPayload } from '../../helpers/algolia';

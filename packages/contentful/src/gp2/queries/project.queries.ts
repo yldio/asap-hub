@@ -102,3 +102,26 @@ export const FETCH_PROJECTS = gql`
   }
   ${projectsContentQueryFragment}
 `;
+
+export const FETCH_PROJECTS_BY_USER = gql`
+  query FetchProjectsByUser($limit: Int, $skip: Int, $userId: String!) {
+    projectMembershipCollection(
+      limit: $limit
+      skip: $skip
+      where: { user: { sys: { id: $userId } } }
+    ) {
+      total
+      items {
+        linkedFrom {
+          projectsCollection(limit: 1) {
+            total
+            items {
+              ...ProjectsContentData
+            }
+          }
+        }
+      }
+    }
+  }
+  ${projectsContentQueryFragment}
+`;

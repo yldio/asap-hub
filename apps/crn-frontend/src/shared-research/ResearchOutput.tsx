@@ -102,14 +102,14 @@ const ResearchOutput: React.FC = () => {
                 <WorkingGroupOutput
                   workingGroupId={researchOutputData.workingGroups[0]?.id}
                   researchOutputData={researchOutputData}
-                  createVersion
+                  versionAction={'create'}
                 />
               ) : (
                 researchOutputData.teams[0]?.id && (
                   <TeamOutput
                     teamId={researchOutputData.teams[0]?.id}
                     researchOutputData={researchOutputData}
-                    createVersion
+                    versionAction={'create'}
                   />
                 )
               )}
@@ -127,12 +127,14 @@ const ResearchOutput: React.FC = () => {
                 <WorkingGroupOutput
                   workingGroupId={researchOutputData.workingGroups[0]?.id}
                   researchOutputData={researchOutputData}
+                  versionAction={'edit'}
                 />
               ) : (
                 researchOutputData.teams[0]?.id && (
                   <TeamOutput
                     teamId={researchOutputData.teams[0].id}
                     researchOutputData={researchOutputData}
+                    versionAction={'edit'}
                   />
                 )
               )}

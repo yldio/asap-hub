@@ -569,7 +569,7 @@ async function renderPage({
                 <TeamOutput
                   teamId={teamId}
                   researchOutputData={researchOutputData}
-                  createVersion={createVersion}
+                  versionAction={'create'}
                 />
               </Route>
             </StaticRouter>

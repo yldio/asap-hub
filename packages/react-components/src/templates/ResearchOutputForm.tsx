@@ -28,12 +28,12 @@ import ResearchOutputContributorsCard from '../organisms/ResearchOutputContribut
 import ResearchOutputRelatedResearchCard from '../organisms/ResearchOutputRelatedResearchCard';
 
 import {
-  noop,
   getDecision,
-  getPublishDate,
   getIdentifierType,
-  getPayload,
   getOwnRelatedResearchLinks,
+  getPayload,
+  getPublishDate,
+  noop,
 } from '../utils';
 import { richTextToMarkdown } from '../utils/parsing';
 
@@ -51,7 +51,7 @@ type ResearchOutputFormProps = Pick<
     | 'getTeamSuggestions'
     | 'authorsRequired'
   > & {
-    createVersion?: boolean;
+    versionAction?: 'create' | 'edit';
     onSave: (
       output: ResearchOutputPostRequest,
     ) => Promise<ResearchOutputResponse | void>;
@@ -168,7 +168,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   clearServerValidationError,
   published,
   permissions,
-  createVersion = false,
+  versionAction,
 }) => {
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
@@ -255,7 +255,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
 
   const [dismissedVersionPrompt, setDismissedVersionPrompt] = useState(false);
   const [showVersionPrompt, setShowVersionPrompt] = useState(false);
-  const promptNewVersion = createVersion && !dismissedVersionPrompt;
+  const promptNewVersion =
+    versionAction === 'create' && !dismissedVersionPrompt;
 
   const [link, setLink] = useState<ResearchOutputPostRequest['link']>(
     researchOutputData?.link || '',
@@ -372,7 +373,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   })
                   .researchOutputPublished({}).$;
                 setRedirectOnSave(
-                  (!published || createVersion) && !draftSave
+                  (!published || versionAction === 'create') && !draftSave
                     ? publishPath
                     : savePath,
                 );

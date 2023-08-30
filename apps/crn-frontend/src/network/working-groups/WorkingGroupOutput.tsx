@@ -39,7 +39,7 @@ import { useResearchOutputPermissions } from '../../shared-research/state';
 type WorkingGroupOutputProps = {
   workingGroupId: string;
   researchOutputData?: ResearchOutputResponse;
-  createVersion?: boolean;
+  versionAction?: 'create' | 'edit';
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
@@ -48,7 +48,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   workingGroupId,
   researchOutputData,
   descriptionUnchangedWarning,
-  createVersion = false,
+  versionAction,
 }) => {
   const route = network({})
     .workingGroups({})
@@ -117,7 +117,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
-        {createVersion && (
+        {versionAction && (
           <Toast accent="warning">
             The previous output page will be replaced with a summarised version
             history section.
@@ -129,11 +129,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             documentType={documentType}
             workingGroupAssociation
           />
-          {createVersion && (
-            <OutputVersions versions={versions} createVersion />
+          {versionAction && (
+            <OutputVersions versions={versions} versionAction={versionAction} />
           )}
           <ResearchOutputForm
-            createVersion={createVersion}
+            versionAction={versionAction}
             tagSuggestions={researchSuggestions}
             documentType={documentType}
             getLabSuggestions={getLabSuggestions}
@@ -173,7 +173,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
-                    createVersion,
+                    createVersion: versionAction === 'create',
                     statusChangedById: researchOutputData.statusChangedBy?.id,
                     isInReview: researchOutputData.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))

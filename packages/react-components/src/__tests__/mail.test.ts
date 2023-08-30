@@ -3,6 +3,7 @@ import {
   mailToFeedback,
   mailToGrants,
   mailToSupport,
+  INVITE_SUPPORT_EMAIL,
 } from '../mail';
 
 describe('createMailTo', () => {
@@ -109,5 +110,13 @@ describe('mailToSupport', () => {
     );
     expect(mailTo.searchParams.get('body')).toEqual('body123');
     expect(mailTo.searchParams.get('subject')).toEqual('subject123');
+  });
+
+  it('sends mail with different address', () => {
+    expect(
+      mailToSupport({ email: INVITE_SUPPORT_EMAIL }),
+    ).toMatchInlineSnapshot(
+      `"mailto:techsupport@gp2.org?subject=ASAP%20Hub%3A%20Tech%20support"`,
+    );
   });
 });

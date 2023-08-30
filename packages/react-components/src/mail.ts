@@ -1,9 +1,11 @@
 interface MailOptions {
   subject?: string;
   body?: string;
+  email?: string;
 }
 
 export const TECH_SUPPORT_EMAIL = 'techsupport@asap.science';
+export const INVITE_SUPPORT_EMAIL = 'techsupport@gp2.org';
 export const GRANTS_EMAIL = 'grants@parkinsonsroadmap.org';
 
 export const createMailTo = (
@@ -39,7 +41,7 @@ export const mailToGrants = (overrides?: MailOptions): string =>
   });
 
 export const mailToSupport = (overrides?: MailOptions): string =>
-  createMailTo(TECH_SUPPORT_EMAIL, {
+  createMailTo(overrides?.email || TECH_SUPPORT_EMAIL, {
     subject: 'ASAP Hub: Tech support',
     ...overrides,
   });

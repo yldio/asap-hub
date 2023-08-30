@@ -27,6 +27,6 @@ describe('welcome email template', () => {
     }) as HTMLAnchorElement;
 
     expect(mailToSupport.protocol).toBe('mailto:');
-    expect(mailToSupport.pathname).toBe('techsupport@asap.science');
+    expect(mailToSupport.pathname).toBe('techsupport@gp2.org');
   });
 });

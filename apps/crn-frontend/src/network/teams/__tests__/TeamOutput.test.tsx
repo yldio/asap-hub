@@ -126,7 +126,7 @@ const mockUpdateResearchOutput =
 interface RenderPageOptions {
   user?: UserResponse;
   teamId: string;
-  createVersion?: boolean;
+  versionAction?: 'create' | 'edit';
   outputDocumentType?: OutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
 }
@@ -522,7 +522,7 @@ it('display a toast warning when creating a new version', async () => {
     teamId: '42',
     outputDocumentType: 'article',
     researchOutputData: baseResearchOutput,
-    createVersion: true,
+    versionAction: 'create',
   });
 
   expect(
@@ -540,7 +540,7 @@ async function renderPage({
   teamId,
   outputDocumentType = 'bioinformatics',
   researchOutputData,
-  createVersion = false,
+  versionAction,
 }: RenderPageOptions) {
   const path =
     network.template +
@@ -569,7 +569,7 @@ async function renderPage({
                 <TeamOutput
                   teamId={teamId}
                   researchOutputData={researchOutputData}
-                  versionAction={'create'}
+                  versionAction={versionAction}
                 />
               </Route>
             </StaticRouter>

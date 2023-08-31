@@ -858,7 +858,7 @@ __metadata:
     "@types/jest": 29.5.4
     "@types/nock": 11.1.0
     "@types/node": 18.17.3
-    "@types/qs": 6.9.7
+    "@types/qs": 6.9.8
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
@@ -1666,7 +1666,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": 7.22.11
-    "@types/qs": 6.9.7
+    "@types/qs": 6.9.8
     "@types/react-router-dom": 5.3.3
     qs: 6.11.2
     typesafe-routes: 9.0.1
@@ -17976,10 +17976,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:6.9.7, @types/qs@npm:^6.9.7":
-  version: 6.9.7
-  resolution: "@types/qs@npm:6.9.7"
-  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
+"@types/qs@npm:6.9.8":
+  version: 6.9.8
+  resolution: "@types/qs@npm:6.9.8"
+  checksum: c28e07d00d07970e5134c6eed184a0189b8a4649e28fdf36d9117fe671c067a44820890de6bdecef18217647a95e9c6aebdaaae69f5fe4b0bec9345db885f77e
   languageName: node
   linkType: hard
 
@@ -17987,6 +17987,13 @@ __metadata:
   version: 6.9.6
   resolution: "@types/qs@npm:6.9.6"
   checksum: 01871b1cf7062717ec76fcb9b29ddae1e04fcfadc1c76d86ec2571e72f27bf09ff31b094b295be8d4ca664aeec9b8965563680b31fcab7aba1ed93afac5181cd
+  languageName: node
+  linkType: hard
+
+"@types/qs@npm:^6.9.7":
+  version: 6.9.7
+  resolution: "@types/qs@npm:6.9.7"
+  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
   languageName: node
   linkType: hard
 

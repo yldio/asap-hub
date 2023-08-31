@@ -13,6 +13,7 @@ import {
   Toast,
   usePrevious,
 } from '@asap-hub/react-components';
+import type { ToastAccents } from '@asap-hub/react-components';
 import { InnerToastContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import React, {
@@ -35,8 +36,6 @@ import {
   useTeamSuggestions,
 } from '../../shared-research';
 import { useResearchOutputPermissions } from '../../shared-research/state';
-
-type ToastAccents = 'error' | 'info' | 'warning' | 'success' | 'successLarge';
 
 type WorkingGroupOutputProps = {
   workingGroupId: string;

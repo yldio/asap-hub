@@ -180,6 +180,7 @@ export {
   WorkingGroupMembers,
   WorkingGroupsTabbedCard,
 } from './organisms';
+export type { ToastAccents } from './organisms';
 export {
   BasicLayout,
   BiographyModal,

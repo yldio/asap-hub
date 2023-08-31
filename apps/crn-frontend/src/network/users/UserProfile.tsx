@@ -87,7 +87,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     }),
     currentUser,
   );
-  console.log('User Profile', toast);
+
   if (user) {
     const profilePageProps: Omit<
       ComponentProps<typeof UserProfilePage>,

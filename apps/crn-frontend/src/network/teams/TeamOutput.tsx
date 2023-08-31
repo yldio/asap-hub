@@ -13,6 +13,7 @@ import {
   Toast,
   usePrevious,
 } from '@asap-hub/react-components';
+import type { ToastAccents } from '@asap-hub/react-components';
 import { InnerToastContext } from '@asap-hub/react-context';
 import {
   network,
@@ -48,8 +49,6 @@ const useParamOutputDocumentType = (
   const { outputDocumentType } = useRouteParams(route);
   return outputDocumentType;
 };
-
-type ToastAccents = 'error' | 'info' | 'warning' | 'success' | 'successLarge';
 
 type TeamOutputProps = {
   teamId: string;

@@ -1,6 +1,6 @@
 import {
-  gp2 as gp2Contentful,
   getGP2ContentfulGraphqlClientMockServer,
+  gp2 as gp2Contentful,
 } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
 import { NewsContentfulDataProvider } from '../../src/data-providers/news.data-provider';
@@ -8,6 +8,7 @@ import {
   getContentfulGraphqlNews,
   getContentfulNewsGraphqlResponse,
   getListNewsDataObject,
+  getNewsDataObject,
 } from '../fixtures/news.fixtures';
 import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
 
@@ -18,13 +19,12 @@ describe('News data provider', () => {
     contentfulGraphqlClientMock,
   );
 
-  const contentfulGraphqlClientMockServer =
-    getGP2ContentfulGraphqlClientMockServer({
-      News: () => getContentfulGraphqlNews(),
-    });
+  const newsGraphqlClientMockServer = getGP2ContentfulGraphqlClientMockServer({
+    News: () => getContentfulGraphqlNews(),
+  });
 
   const newsDataProviderMockGraphql = new NewsContentfulDataProvider(
-    contentfulGraphqlClientMockServer,
+    newsGraphqlClientMockServer,
   );
 
   beforeEach(jest.resetAllMocks);
@@ -203,11 +203,24 @@ describe('News data provider', () => {
   });
 
   describe('Fetch-by-id method', () => {
-    test('Should throw as not implemented', async () => {
-      expect.assertions(1);
-      await expect(newsDataProvider.fetchById()).rejects.toThrow(
-        /Method not implemented/i,
-      );
+    test('Should fetch the news from graphql', async () => {
+      const result = await newsDataProviderMockGraphql.fetchById('id');
+      expect(result).toMatchObject(getNewsDataObject());
+    });
+
+    test('Should return null when the news is not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        news: null,
+      });
+
+      expect(await newsDataProvider.fetchById('not-found')).toBeNull();
+    });
+    test('the news is parsed', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        news: getContentfulGraphqlNews(),
+      });
+      const projectDataObject = await newsDataProvider.fetchById('id');
+      expect(projectDataObject).toEqual(getNewsDataObject());
     });
   });
 });

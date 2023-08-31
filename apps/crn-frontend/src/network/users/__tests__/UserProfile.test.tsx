@@ -409,6 +409,7 @@ describe('a header edit button', () => {
       await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith(
           'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to update your profile on the hub. Normal service will resume on 11th September.',
+          'warning',
         );
       });
     });

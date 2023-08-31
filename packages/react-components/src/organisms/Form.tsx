@@ -78,6 +78,7 @@ const Form = <T extends void | Record<string, unknown>>({
               'The hub is undergoing maintenance between from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
               'warning',
             );
+            // eslint-disable-next-line consistent-return
             return;
           }
 

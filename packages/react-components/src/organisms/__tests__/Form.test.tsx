@@ -347,6 +347,7 @@ describe('when saving', () => {
       await waitFor(() =>
         expect(innerMockToast).toHaveBeenCalledWith(
           'The hub is undergoing maintenance between from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
+          'warning',
         ),
       );
     });

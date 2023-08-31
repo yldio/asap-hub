@@ -13,8 +13,9 @@ import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import Routes from '../Routes';
-import { getEvents } from '../api';
+import { getAlgoliaEvents } from '../api';
 import { getCalendars } from '../calendar/api';
+import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
 
 jest.mock('../api');
 jest.mock('../calendar/api');
@@ -42,7 +43,9 @@ beforeEach(() => {
 });
 
 describe('Routes', () => {
-  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
+    typeof getAlgoliaEvents
+  >;
   const mockGetCalendars = getCalendars as jest.MockedFunction<
     typeof getCalendars
   >;
@@ -51,7 +54,7 @@ describe('Routes', () => {
       result: { current },
     } = renderHook(useFlags);
     current.enable('DISPLAY_EVENTS');
-    mockGetEvents.mockResolvedValue(gp2.createListEventResponse(1));
+    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
     await renderRoutes();
     expect(screen.getByRole('heading', { name: 'Events' })).toBeInTheDocument();
   });
@@ -69,7 +72,7 @@ describe('Routes', () => {
   });
 
   it('renders the empty state for the upcoming and the past events', async () => {
-    mockGetEvents.mockResolvedValue(gp2.createListEventResponse(0));
+    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(0));
     await renderRoutes();
 
     const upcomingEventsLink = screen.getByRole('link', { name: /upcoming/i });

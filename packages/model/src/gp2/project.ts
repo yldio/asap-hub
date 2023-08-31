@@ -67,3 +67,6 @@ export type FetchProjectFilter = {
 };
 
 export type FetchProjectOptions = FetchOptions<FetchProjectFilter>;
+export type FetchApiProjectOptions = FetchOptions<{
+  userId?: string;
+}>;

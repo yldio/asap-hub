@@ -398,7 +398,7 @@ __metadata:
     "@types/prettier": 2.7.3
     cheerio: ^1.0.0-rc.12
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.19"
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     graphql: 15.8.0
     graphql-tag: 2.12.6
     graphql-typescript-integration: 1.2.1
@@ -432,7 +432,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -459,7 +459,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -487,7 +487,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -514,7 +514,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -542,7 +542,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -571,7 +571,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -600,7 +600,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -628,7 +628,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -657,7 +657,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -684,7 +684,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -711,7 +711,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -740,7 +740,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/testing-library__jest-dom": 5.14.9
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     cross-env: 7.0.3
     emotion: 10.0.27
     react: 17.0.2
@@ -777,7 +777,7 @@ __metadata:
     async-retry: 1.3.3
     contentful: ^10.1.8
     contentful-cli: 1.19.1
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     contentful-migrate: "deluan/contentful-migrate#37b9b898599b9ba48644534d3f340b4c169df212"
     graphql: 15.8.0
     graphql-request: 6.1.0
@@ -858,7 +858,7 @@ __metadata:
     "@types/jest": 29.5.4
     "@types/nock": 11.1.0
     "@types/node": 18.17.3
-    "@types/qs": 6.9.7
+    "@types/qs": 6.9.8
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
@@ -1012,7 +1012,7 @@ __metadata:
     babel-loader: 8.3.0
     chance: 1.1.11
     contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.19"
-    contentful-management: 10.39.2
+    contentful-management: 10.40.1
     copy-webpack-plugin: 9.1.0
     cors: 2.8.5
     csv-parse: 4.16.3
@@ -1270,7 +1270,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-router-hash-link": 1.2.1
+    "@types/react-router-hash-link": 2.4.6
     "@types/react-test-renderer": 18.0.0
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1582,7 +1582,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-router-hash-link": 1.2.1
+    "@types/react-router-hash-link": 2.4.6
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
     "@types/react-test-renderer": 18.0.0
     "@types/rehype-slug": "workspace:*"
@@ -1666,7 +1666,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": 7.22.11
-    "@types/qs": 6.9.7
+    "@types/qs": 6.9.8
     "@types/react-router-dom": 5.3.3
     qs: 6.11.2
     typesafe-routes: 9.0.1
@@ -17976,10 +17976,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:6.9.7, @types/qs@npm:^6.9.7":
-  version: 6.9.7
-  resolution: "@types/qs@npm:6.9.7"
-  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
+"@types/qs@npm:6.9.8":
+  version: 6.9.8
+  resolution: "@types/qs@npm:6.9.8"
+  checksum: c28e07d00d07970e5134c6eed184a0189b8a4649e28fdf36d9117fe671c067a44820890de6bdecef18217647a95e9c6aebdaaae69f5fe4b0bec9345db885f77e
   languageName: node
   linkType: hard
 
@@ -17987,6 +17987,13 @@ __metadata:
   version: 6.9.6
   resolution: "@types/qs@npm:6.9.6"
   checksum: 01871b1cf7062717ec76fcb9b29ddae1e04fcfadc1c76d86ec2571e72f27bf09ff31b094b295be8d4ca664aeec9b8965563680b31fcab7aba1ed93afac5181cd
+  languageName: node
+  linkType: hard
+
+"@types/qs@npm:^6.9.7":
+  version: 6.9.7
+  resolution: "@types/qs@npm:6.9.7"
+  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
   languageName: node
   linkType: hard
 
@@ -18042,18 +18049,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-dom@npm:*":
-  version: 5.1.5
-  resolution: "@types/react-router-dom@npm:5.1.5"
-  dependencies:
-    "@types/history": "npm:*"
-    "@types/react": "npm:*"
-    "@types/react-router": "npm:*"
-  checksum: 995316331c0fb270c4ad8f20e5c76cfeb219ab8a35cd3d6d392ec7da8bf82092e5234dc6d70a2f8bfc9cd37c1b4c4aee3398f2950b52e04c2cb37c8e61facb8b
-  languageName: node
-  linkType: hard
-
-"@types/react-router-dom@npm:5.3.3":
+"@types/react-router-dom@npm:5.3.3, @types/react-router-dom@npm:^5.3.0":
   version: 5.3.3
   resolution: "@types/react-router-dom@npm:5.3.3"
   dependencies:
@@ -18064,13 +18060,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-hash-link@npm:1.2.1":
-  version: 1.2.1
-  resolution: "@types/react-router-hash-link@npm:1.2.1"
+"@types/react-router-hash-link@npm:2.4.6":
+  version: 2.4.6
+  resolution: "@types/react-router-hash-link@npm:2.4.6"
   dependencies:
-    "@types/react": "npm:*"
-    "@types/react-router-dom": "npm:*"
-  checksum: bfd72a0117723b179b4e76cfc7e3cb71f02b6e614cb8d41f1fe5a668c5fd7138deb31729f12dbda5d1cec109b7a92806999f9f25e8fc15f145d3b4a54aad4b4c
+    "@types/history": ^4.7.11
+    "@types/react": "*"
+    "@types/react-router-dom": ^5.3.0
+  checksum: 9c3b02d9e2355c71f40dd9120b7057782bba72f989ef4dee0fde53db37a7adbb2d0438a977d7d3d98ac3f5236e5ca84c687df339d488b9787ca9d178e058b394
   languageName: node
   linkType: hard
 
@@ -24191,21 +24188,6 @@ __metadata:
   bin:
     contentful-import: bin/contentful-import
   checksum: 7cb4f5f5d8f2b53a4b261deac1a9c7b0a88118d956cd7666ee8f72f1ff821f885294cfa0ab4e260d37da165fc38dcf6b283ee802bb6e85b0e81a73fafb862b3a
-  languageName: node
-  linkType: hard
-
-"contentful-management@npm:10.39.2":
-  version: 10.39.2
-  resolution: "contentful-management@npm:10.39.2"
-  dependencies:
-    "@contentful/rich-text-types": ^16.0.3
-    "@types/json-patch": 0.0.30
-    axios: ^0.27.1
-    contentful-sdk-core: ^7.0.1
-    fast-copy: ^3.0.0
-    lodash.isplainobject: ^4.0.6
-    type-fest: ^4.0.0
-  checksum: 549b2d018b6fb0714db4213a29e3c20c35a4b239c3283d57636acd55029894a4efa62891d6fa6036f44c5dedaf6cba000ccf5598c7ddf47d97d69e25133cd3c1
   languageName: node
   linkType: hard
 

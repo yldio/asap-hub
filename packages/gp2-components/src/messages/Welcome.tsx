@@ -1,6 +1,6 @@
 import { Display, Link, mail, Paragraph } from '@asap-hub/react-components';
 
-const { mailToSupport } = mail;
+const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
 
 type WelcomeProps = {
   readonly firstName: string;
@@ -26,7 +26,12 @@ const Welcome: React.FC<WelcomeProps> = ({ firstName, link }) => (
     </Link>
     <Paragraph>
       As with every new experience, you may have some questions and{' '}
-      <Link href={mailToSupport({ subject: 'ASAP GP2: Tech Support' })}>
+      <Link
+        href={mailToSupport({
+          email: INVITE_SUPPORT_EMAIL,
+          subject: 'ASAP GP2: Tech Support',
+        })}
+      >
         our team
       </Link>{' '}
       would be delighted to answer them.

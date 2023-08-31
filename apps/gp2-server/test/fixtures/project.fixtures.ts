@@ -174,6 +174,23 @@ export const getContentfulGraphqlProjectsResponse =
     },
   });
 
+export const getContentfulGraphqlProjectsByUserResponse =
+  (): gp2Contentful.FetchProjectsByUserQuery => ({
+    projectMembershipCollection: {
+      total: 1,
+      items: [
+        {
+          linkedFrom: {
+            projectsCollection: {
+              total: 1,
+              items: [getContentfulGraphqlProject()],
+            },
+          },
+        },
+      ],
+    },
+  });
+
 export const getProjectWebhookPayload = (
   id: string,
 ): WebhookDetail<ContentfulWebhookPayload<'project'>> => ({

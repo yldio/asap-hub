@@ -2,6 +2,7 @@ import {
   Entry,
   Environment,
   getGP2ContentfulGraphqlClientMockServer,
+  gp2 as gp2Contentful,
   patchAndPublish,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
@@ -9,6 +10,7 @@ import { ProjectContentfulDataProvider } from '../../src/data-providers/project.
 import { getEntry } from '../fixtures/contentful.fixtures';
 import {
   getContentfulGraphqlProject,
+  getContentfulGraphqlProjectsByUserResponse,
   getContentfulGraphqlProjectsResponse,
   getListProjectDataObject,
   getProjectDataObject,
@@ -173,7 +175,7 @@ describe('Project Data Provider', () => {
           const project = {
             ...getContentfulGraphqlProject(),
             membersCollection: {
-              total: 0,
+              total: 1,
               items: [
                 {
                   sys: { id: '11' },
@@ -418,7 +420,118 @@ describe('Project Data Provider', () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const result = await projectDataProvider.fetch(options);
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_PROJECTS,
+        expect.objectContaining({
+          limit: 10,
+          skip: 0,
+        }),
+      );
       expect(result).toEqual({ total: 0, items: [] });
+    });
+    test('Should call the query with no filters', async () => {
+      const mockResponse = getContentfulGraphqlProjectsResponse();
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+
+      const result = await projectDataProvider.fetch(options);
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_PROJECTS,
+        expect.objectContaining({
+          limit: 10,
+          skip: 0,
+        }),
+      );
+      expect(result).toMatchObject(getListProjectDataObject());
+    });
+    describe('filter by user id', () => {
+      test('Should call the query with user id', async () => {
+        const mockResponse = getContentfulGraphqlProjectsByUserResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+        const userId = '42';
+        const result = await projectDataProvider.fetch({
+          ...options,
+          filter: { userId },
+        });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_PROJECTS_BY_USER,
+          expect.objectContaining({
+            limit: 10,
+            skip: 0,
+            userId,
+          }),
+        );
+        expect(result).toMatchObject(getListProjectDataObject());
+      });
+      test('should return empty if no membership collection', async () => {
+        const mockResponse = getContentfulGraphqlProjectsByUserResponse();
+        mockResponse.projectMembershipCollection = null;
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+        const userId = '42';
+        const result = await projectDataProvider.fetch({
+          ...options,
+          filter: { userId },
+        });
+        expect(result).toMatchObject({ total: 0, items: [] });
+      });
+      test('should return empty if empty membership collection items', async () => {
+        const mockResponse = getContentfulGraphqlProjectsByUserResponse();
+        mockResponse.projectMembershipCollection!.items = [];
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+        const userId = '42';
+        const result = await projectDataProvider.fetch({
+          ...options,
+          filter: { userId },
+        });
+        expect(result).toMatchObject({ total: 0, items: [] });
+      });
+      test('should return empty if membership collection items is null', async () => {
+        const mockResponse = getContentfulGraphqlProjectsByUserResponse();
+        mockResponse.projectMembershipCollection!.items = [null];
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+        const userId = '42';
+        const result = await projectDataProvider.fetch({
+          ...options,
+          filter: { userId },
+        });
+        expect(result).toMatchObject({ total: 0, items: [] });
+      });
+      test('should return empty if membership collection items linkedFrom is null', async () => {
+        const mockResponse = getContentfulGraphqlProjectsByUserResponse();
+        mockResponse.projectMembershipCollection!.items = [
+          {
+            linkedFrom: null,
+          },
+        ];
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+        const userId = '42';
+        const result = await projectDataProvider.fetch({
+          ...options,
+          filter: { userId },
+        });
+        expect(result).toMatchObject({ total: 0, items: [] });
+      });
+      test('should return empty if membership collection items linkedFrom projectsCollection is null', async () => {
+        const mockResponse = getContentfulGraphqlProjectsByUserResponse();
+        mockResponse.projectMembershipCollection!.items = [
+          {
+            linkedFrom: {
+              projectsCollection: null,
+            },
+          },
+        ];
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
+        const userId = '42';
+        const result = await projectDataProvider.fetch({
+          ...options,
+          filter: { userId },
+        });
+        expect(result).toMatchObject({ total: 0, items: [] });
+      });
     });
 
     test('Should return an empty result if the client returns a response with a null items property', async () => {

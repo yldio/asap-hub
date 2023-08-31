@@ -36,6 +36,8 @@ import {
 } from '../../shared-research';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 
+type ToastAccents = 'error' | 'info' | 'warning' | 'success' | 'successLarge';
+
 type WorkingGroupOutputProps = {
   workingGroupId: string;
   researchOutputData?: ResearchOutputResponse;
@@ -64,8 +66,14 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
   const previousErrors = usePrevious(errors);
 
+  const [accent, setAccent] = useState<ToastAccents>();
   const [toastNode, setToastNode] = useState<ReactNode>(undefined);
-  const toast = useCallback((node: ReactNode) => setToastNode(node), []);
+  const toast = useCallback((node: ReactNode, newAccent?: ToastAccents) => {
+    if (newAccent) {
+      setAccent(newAccent);
+    }
+    setToastNode(node);
+  }, []);
   const previousToast = usePrevious(toastNode);
 
   useEffect(() => {
@@ -124,7 +132,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           </Toast>
         )}
         <InnerToastContext.Provider value={toast}>
-          {toastNode && <Toast accent="error">{toastNode}</Toast>}
+          {toastNode && <Toast accent={accent}>{toastNode}</Toast>}
           <ResearchOutputHeader
             documentType={documentType}
             workingGroupAssociation

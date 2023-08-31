@@ -395,6 +395,24 @@ describe('a header edit button', () => {
       await waitFor(() => expect(mockPostUserAvatar).toHaveBeenCalled());
     });
 
+    it('toasts if the upload fails with WritingDisabled error', async () => {
+      const userProfile: UserResponse = {
+        ...createUserResponse(),
+        avatarUrl: 'https://placekitten.com/200/300',
+        id: '42',
+      };
+      await renderUserProfile(userProfile);
+
+      mockPostUserAvatar.mockRejectedValue(new Error('WritingDisabled'));
+      const upload = await screen.findByLabelText(/upload.+avatar/i);
+      userEvent.upload(upload, file);
+      await waitFor(() => {
+        expect(mockToast).toHaveBeenCalledWith(
+          'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to update your profile on the hub. Normal service will resume on 11th September.',
+        );
+      });
+    });
+
     it('toasts if the upload fails', async () => {
       const userProfile: UserResponse = {
         ...createUserResponse(),

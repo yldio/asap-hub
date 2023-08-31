@@ -834,7 +834,6 @@ __metadata:
     "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
-    "@asap-hub/errors": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/flags": "workspace:*"
@@ -1556,7 +1555,6 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
-    "@asap-hub/errors": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
     "@asap-hub/flags": "workspace:*"

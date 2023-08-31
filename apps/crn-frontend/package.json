@@ -16,7 +16,6 @@
   "dependencies": {
     "@asap-hub/algolia": "workspace:*",
     "@asap-hub/auth": "workspace:*",
-    "@asap-hub/errors": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/frontend-utils": "workspace:*",

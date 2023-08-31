@@ -74,6 +74,9 @@ export const patchTeam = async (
     body: JSON.stringify(patch),
   });
   if (!resp.ok) {
+    if (resp.status === 405) {
+      throw new Error('WritingDisabled');
+    }
     throw new Error(
       `Failed to update team with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
@@ -97,6 +100,9 @@ export const createResearchOutput = async (
   });
   const response = await resp.json();
   if (!resp.ok) {
+    if (resp.status === 405) {
+      throw new Error('WritingDisabled');
+    }
     throw new BackendError(
       `Failed to create research output for ${
         isResearchOutputWorkingGroupRequest(researchOutput)
@@ -130,6 +136,9 @@ export const updateTeamResearchOutput = async (
   );
   const response = await resp.json();
   if (!resp.ok) {
+    if (resp.status === 405) {
+      throw new Error('WritingDisabled');
+    }
     throw new BackendError(
       `Failed to update research output for teams ${
         researchOutput.teams

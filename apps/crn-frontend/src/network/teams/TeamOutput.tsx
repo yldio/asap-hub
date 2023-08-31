@@ -49,6 +49,8 @@ const useParamOutputDocumentType = (
   return outputDocumentType;
 };
 
+type ToastAccents = 'error' | 'info' | 'warning' | 'success' | 'successLarge';
+
 type TeamOutputProps = {
   teamId: string;
   researchOutputData?: ResearchOutputResponse;
@@ -73,8 +75,14 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
   const previousErrors = usePrevious(errors);
 
+  const [accent, setAccent] = useState<ToastAccents>();
   const [toastNode, setToastNode] = useState<ReactNode>(undefined);
-  const toast = useCallback((node: ReactNode) => setToastNode(node), []);
+  const toast = useCallback((node: ReactNode, newAccent?: ToastAccents) => {
+    if (newAccent) {
+      setAccent(newAccent);
+    }
+    setToastNode(node);
+  }, []);
   const previousToast = usePrevious(toastNode);
 
   useEffect(() => {
@@ -133,7 +141,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
           </Toast>
         )}
         <InnerToastContext.Provider value={toast}>
-          {toastNode && <Toast accent="error">{toastNode}</Toast>}
+          {toastNode && <Toast accent={accent}>{toastNode}</Toast>}
           <ResearchOutputHeader
             documentType={documentType}
             workingGroupAssociation={false}

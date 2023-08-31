@@ -338,6 +338,19 @@ describe('when saving', () => {
         );
       });
     });
+
+    it('shows an error message when fails with WritingDisabled', async () => {
+      act(() => rejectSave(new Error('WritingDisabled')));
+      const { getByText } = result;
+
+      userEvent.click(getByText(/^save/i));
+      await waitFor(() =>
+        expect(innerMockToast).toHaveBeenCalledWith(
+          'The hub is undergoing maintenance between from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
+        ),
+      );
+    });
+
     describe('and the save fails', () => {
       beforeEach(() => {
         act(() => rejectSave(new Error()));

@@ -87,7 +87,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     }),
     currentUser,
   );
-
+  console.log('User Profile', toast);
   if (user) {
     const profilePageProps: Omit<
       ComponentProps<typeof UserProfilePage>,
@@ -112,11 +112,20 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   imageCompression.getDataUrlFromFile(compressedFile),
                 )
                 .then((encodedFile) => patchUserAvatar(encodedFile))
-                .catch(() =>
-                  toast(
+                .catch((error) => {
+                  if (
+                    error instanceof Error &&
+                    error.message === 'WritingDisabled'
+                  ) {
+                    return toast(
+                      'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to update your profile on the hub. Normal service will resume on 11th September.',
+                      'warning',
+                    );
+                  }
+                  return toast(
                     'There was an error and we were unable to save your picture',
-                  ),
-                )
+                  );
+                })
                 .finally(() => setAvatarSaving(false));
             }
           : undefined,

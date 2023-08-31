@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { CustomError } from '@asap-hub/errors';
 import { css } from '@emotion/react';
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
 import { Prompt } from 'react-router-dom';
@@ -71,12 +70,9 @@ const EditModal: React.FC<EditModalProps> = ({
           setStatus('hasSaved');
         }
       } catch (error) {
-        if (error instanceof CustomError) {
-          const { statusCode } = error;
-          if (statusCode === 405) {
-            setStatus('writingDisabled');
-            return;
-          }
+        if (error instanceof Error && error.message === 'WritingDisabled') {
+          setStatus('writingDisabled');
+          return;
         }
         if (!formRef.current) return;
         setStatus('hasError');
@@ -100,8 +96,10 @@ const EditModal: React.FC<EditModalProps> = ({
         </Toast>
       )}
       {status === 'writingDisabled' && (
-        <Toast>
-          All writing operations are disabled while we are migrating the CMS
+        <Toast accent="warning">
+          The hub is undergoing maintenance from 4th to 8th September. During
+          this period you will not be able to update your profile on the hub.
+          Normal service will resume on 11th September.
         </Toast>
       )}
       <form

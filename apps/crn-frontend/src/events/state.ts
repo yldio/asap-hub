@@ -40,7 +40,7 @@ export const eventsState = selectorFamily<
       if (index === undefined || index instanceof Error) return index;
       const events: EventResponse[] = [];
       for (const id of index.ids) {
-        const event = get(eventState(id));
+        const event = get(eventListState(id));
         if (event === undefined) return undefined;
         events.push(event);
       }
@@ -55,15 +55,13 @@ export const eventsState = selectorFamily<
     (options) =>
     ({ get, set, reset }, newEvents) => {
       if (newEvents === undefined || newEvents instanceof DefaultValue) {
-        const oldEvents = get(eventIndexState(options));
-        if (!(oldEvents instanceof Error)) {
-          oldEvents?.ids?.forEach((id) => reset(eventState(id)));
-        }
         reset(eventIndexState(options));
       } else if (newEvents instanceof Error) {
         set(eventIndexState(options), newEvents);
       } else {
-        newEvents?.items.forEach((event) => set(eventState(event.id), event));
+        newEvents?.items.forEach((event) =>
+          set(eventListState(event.id), event),
+        );
         set(eventIndexState(options), {
           total: newEvents.total,
           ids: newEvents.items.map((event) => event.id),
@@ -90,6 +88,10 @@ const fetchEventState = selectorFamily<EventResponse | undefined, string>({
 export const eventState = atomFamily<EventResponse | undefined, string>({
   key: 'event',
   default: fetchEventState,
+});
+export const eventListState = atomFamily<EventResponse | undefined, string>({
+  key: 'eventList',
+  default: eventState,
 });
 
 export const useEventById = (id: string) => useRecoilValue(eventState(id));

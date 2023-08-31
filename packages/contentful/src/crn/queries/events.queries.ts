@@ -122,13 +122,13 @@ export const eventsContentQueryFragment = gql`
           title
           type
           documentType
-          workingGroup {
+          workingGroup @include(if: $singleEvent) {
             sys {
               id
             }
             title
           }
-          teamsCollection(limit: 10) {
+          teamsCollection(limit: 10) @include(if: $singleEvent) {
             items {
               sys {
                 id
@@ -168,7 +168,7 @@ export const eventsContentQueryFragment = gql`
     thumbnail {
       url
     }
-    speakersCollection(limit: 10) {
+    speakersCollection(limit: 25) {
       items {
         team {
           sys {
@@ -213,7 +213,7 @@ export const eventsContentQueryFragment = gql`
 `;
 
 export const FETCH_EVENT_BY_ID = gql`
-  query FetchEventById($id: String!) {
+  query FetchEventById($id: String!, $singleEvent: Boolean = true) {
     events(id: $id) {
       ...EventsContent
     }
@@ -227,6 +227,7 @@ export const FETCH_EVENTS = gql`
     $skip: Int
     $order: [EventsOrder]
     $where: EventsFilter
+    $singleEvent: Boolean = false
   ) {
     eventsCollection(limit: $limit, skip: $skip, order: $order, where: $where) {
       total
@@ -239,7 +240,12 @@ export const FETCH_EVENTS = gql`
 `;
 
 export const FETCH_EVENTS_BY_USER_ID = gql`
-  query FetchEventsByUserId($id: String!, $limit: Int, $skip: Int) {
+  query FetchEventsByUserId(
+    $id: String!
+    $limit: Int
+    $skip: Int
+    $singleEvent: Boolean = false
+  ) {
     users(id: $id) {
       linkedFrom {
         eventSpeakersCollection(limit: 1) {
@@ -261,7 +267,12 @@ export const FETCH_EVENTS_BY_USER_ID = gql`
 `;
 
 export const FETCH_EVENTS_BY_EXTERNAL_AUTHOR_ID = gql`
-  query FetchEventsByExternalAuthorId($id: String!, $limit: Int, $skip: Int) {
+  query FetchEventsByExternalAuthorId(
+    $id: String!
+    $limit: Int
+    $skip: Int
+    $singleEvent: Boolean = false
+  ) {
     externalAuthors(id: $id) {
       linkedFrom {
         eventSpeakersCollection(limit: 1) {
@@ -283,7 +294,12 @@ export const FETCH_EVENTS_BY_EXTERNAL_AUTHOR_ID = gql`
 `;
 
 export const FETCH_EVENTS_BY_TEAM_ID = gql`
-  query FetchEventsByTeamId($id: String!, $limit: Int, $skip: Int) {
+  query FetchEventsByTeamId(
+    $id: String!
+    $limit: Int
+    $skip: Int
+    $singleEvent: Boolean = false
+  ) {
     teams(id: $id) {
       linkedFrom {
         eventSpeakersCollection(limit: 1) {

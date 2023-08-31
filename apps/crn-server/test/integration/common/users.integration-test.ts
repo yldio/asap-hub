@@ -3,6 +3,7 @@ import { Express } from 'express';
 import { v4 as uuid } from 'uuid';
 import { omit } from 'lodash';
 
+import { PAGE_SIZE } from '../../../scripts/export-entity';
 import { AppHelper } from '../helpers/app';
 import { retryable } from '../helpers/retryable';
 import {
@@ -33,7 +34,10 @@ describe('users', () => {
 
   test('can fetch a list of users', async () => {
     await retryable(async () => {
-      const response = await supertest(app).get('/users').expect(200);
+      const response = await supertest(app)
+        .get('/users')
+        .query({ take: PAGE_SIZE })
+        .expect(200);
       expect(response.body.total).toEqual(expect.any(Number));
       expect(response.body.items).toEqual(expect.any(Array));
     });

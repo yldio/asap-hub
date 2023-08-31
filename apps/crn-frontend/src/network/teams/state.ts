@@ -36,7 +36,7 @@ export const teamsState = selectorFamily<
       if (index === undefined || index instanceof Error) return index;
       const teams: TeamResponse[] = [];
       for (const id of index.ids) {
-        const team = get(teamState(id));
+        const team = get(teamListState(id));
         if (team === undefined) return undefined;
         teams.push(team);
       }
@@ -46,15 +46,11 @@ export const teamsState = selectorFamily<
     (options) =>
     ({ get, set, reset }, newTeams) => {
       if (newTeams === undefined || newTeams instanceof DefaultValue) {
-        const oldTeams = get(teamIndexState(options));
-        if (!(oldTeams instanceof Error)) {
-          oldTeams?.ids?.forEach((id) => reset(patchedTeamState(id)));
-        }
         reset(teamIndexState(options));
       } else if (newTeams instanceof Error) {
         set(teamIndexState(options), newTeams);
       } else {
-        newTeams?.items.forEach((team) => set(patchedTeamState(team.id), team));
+        newTeams?.items.forEach((team) => set(teamListState(team.id), team));
         set(teamIndexState(options), {
           total: newTeams.total,
           ids: newTeams.items.map((team) => team.id),
@@ -88,6 +84,10 @@ export const teamState = selectorFamily<TeamResponse | undefined, string>({
     (id) =>
     ({ get }) =>
       get(patchedTeamState(id)) ?? get(initialTeamState(id)),
+});
+export const teamListState = atomFamily<TeamResponse | undefined, string>({
+  key: 'teamList',
+  default: teamState,
 });
 
 export const usePrefetchTeams = (

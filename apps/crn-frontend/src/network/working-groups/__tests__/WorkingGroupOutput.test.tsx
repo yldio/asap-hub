@@ -406,6 +406,25 @@ it('will show server side validation error for link', async () => {
   ).toBeNull();
 });
 
+it('will toast when error is WritingDisabled', async () => {
+  mockCreateResearchOutput.mockRejectedValue(new Error('WritingDisabled'));
+
+  await renderPage({
+    outputDocumentType: 'article',
+  });
+
+  const { publish } = await mandatoryFields({}, true);
+
+  await publish();
+
+  expect(mockCreateResearchOutput).toHaveBeenCalled();
+  expect(
+    screen.queryByText(
+      'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
+    ),
+  ).toBeInTheDocument();
+});
+
 it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
 

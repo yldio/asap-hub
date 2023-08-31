@@ -344,12 +344,12 @@ describe('when saving', () => {
       const { getByText } = result;
 
       userEvent.click(getByText(/^save/i));
-      await waitFor(() =>
+      await waitFor(() => {
         expect(innerMockToast).toHaveBeenCalledWith(
-          'The hub is undergoing maintenance between from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
+          'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
           'warning',
-        ),
-      );
+        );
+      });
     });
 
     describe('and the save fails', () => {

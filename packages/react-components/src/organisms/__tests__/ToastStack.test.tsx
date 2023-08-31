@@ -79,3 +79,26 @@ it('renders an unique list of messages', () => {
   expect(getByRole('list')).toHaveTextContent('t1');
   expect(getByRole('list')).toHaveTextContent('t2');
 });
+
+it.each`
+  accent            | title
+  ${'info'}         | ${/information/i}
+  ${'warning'}      | ${/warning/i}
+  ${'success'}      | ${/success/i}
+  ${'successLarge'} | ${/success large/i}
+`('applies $accent accent when it is passed', ({ accent, title }) => {
+  const ResetStack: React.FC<Record<string, never>> = () => {
+    const toast = useContext(ToastContext);
+    useEffect(() => {
+      toast('t1', accent);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    return null;
+  };
+  const screen = render(
+    <ToastStack>
+      <ResetStack />
+    </ToastStack>,
+  );
+  expect(screen.getByTitle(title)).toBeInTheDocument();
+});

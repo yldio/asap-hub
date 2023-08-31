@@ -8,21 +8,21 @@ import { NewsContentfulDataProvider } from '../../data-providers/news.data-provi
 import { getContentfulGraphQLClientFactory } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { ProjectPayload } from '../event-bus';
+import { NewsPayload } from '../event-bus';
 
 export const indexNewsHandler =
   (
     newsController: NewsController,
     algoliaClient: AlgoliaClient<'gp2'>,
     log: Logger,
-  ): EventBridgeHandler<gp2Model.ProjectEvent, ProjectPayload> =>
+  ): EventBridgeHandler<gp2Model.NewsEvent, NewsPayload> =>
   async (event) => {
     log.debug(`Event ${event['detail-type']}`);
 
     const reindexNews = async (id: string) => {
       try {
         const news = await newsController.fetchById(id);
-        log.debug(`Fetched project ${news.id}`);
+        log.debug(`Fetched news ${news.id}`);
 
         await algoliaClient.save({
           data: news,
@@ -35,7 +35,7 @@ export const indexNewsHandler =
       } catch (e) {
         log.error(e, `Error while reindexing news ${id}`);
         if (isBoom(e) && e.output.statusCode === 404) {
-          log.error(`Project ${id} not found`);
+          log.error(`News ${id} not found`);
           await algoliaClient.remove(id);
         }
         throw e;

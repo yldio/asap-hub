@@ -1,8 +1,11 @@
 import {
+  ContentfulWebhookPayload,
   ContentfulWebhookPublishPayload,
   gp2 as gp2Contentful,
 } from '@asap-hub/contentful';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getContentfulGraphqlNews = (): NonNullable<
   NonNullable<gp2Contentful.FetchNewsQuery['newsCollection']>['items'][number]
@@ -131,3 +134,68 @@ export const getNewsPublishContentfulWebhookPayload =
       },
     },
   });
+
+export const getNewsWebhookPayload = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'news'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'an-environment',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'news',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    title: {
+      'en-US':
+        'Sci 7 - Inflammation & Immune Reg., Presenting Teams: Sulzer, Desjardins, Kordower',
+    },
+  },
+});
+
+export const getNewsEvent = (
+  id: string,
+  eventType: gp2Model.NewsEvent,
+): EventBridgeEvent<
+  gp2Model.NewsEvent,
+  WebhookDetail<ContentfulWebhookPayload<'news'>>
+> => createEventBridgeEventMock(getNewsWebhookPayload(id), eventType, id);

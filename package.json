@@ -151,7 +151,7 @@
     "@yarnpkg/pnpify": "3.1.6",
     "babel-jest": "29.6.4",
     "babel-plugin-lodash": "3.3.4",
-    "babel-plugin-transform-inline-environment-variables": "0.5.0-alpha.42",
+    "babel-plugin-transform-inline-environment-variables": "6.8.0",
     "babel-preset-react-app": "10.0.1",
     "bundlewatch": "0.3.3",
     "dotenv": "16.3.1",

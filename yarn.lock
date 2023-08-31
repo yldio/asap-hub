@@ -20748,7 +20748,7 @@ __metadata:
     "@yarnpkg/pnpify": 3.1.6
     babel-jest: 29.6.4
     babel-plugin-lodash: 3.3.4
-    babel-plugin-transform-inline-environment-variables: 0.5.0-alpha.42
+    babel-plugin-transform-inline-environment-variables: 6.8.0
     babel-preset-react-app: 10.0.1
     bundlewatch: 0.3.3
     dotenv: 16.3.1
@@ -21728,10 +21728,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-transform-inline-environment-variables@npm:0.5.0-alpha.42":
-  version: 0.5.0-alpha.42
-  resolution: "babel-plugin-transform-inline-environment-variables@npm:0.5.0-alpha.42"
-  checksum: 82ab1525eb5c90afba9c2f3bceefe6a9a687588d438bcbfcb318f7db2eaffc9ab31236f355eab39ae9e54673613c67e9bccf81eb6175d1f60151faf4bf2622fd
+"babel-plugin-transform-inline-environment-variables@npm:6.8.0":
+  version: 6.8.0
+  resolution: "babel-plugin-transform-inline-environment-variables@npm:6.8.0"
+  dependencies:
+    babel-runtime: ^6.0.0
+  checksum: 6c78819456ee4e2b2000486e756ca25f6f1b2557a6533a39c01ca2d2e2e1e81157fce1c1261f6fadce6163ede2391e980b13e76d0e350af8b362c780b35a10db
   languageName: node
   linkType: hard
 
@@ -21858,6 +21860,16 @@ __metadata:
     babel-plugin-macros: "npm:^3.1.0"
     babel-plugin-transform-react-remove-prop-types: "npm:^0.4.24"
   checksum: ee66043484e67b8aef2541976388299691478ea00834f3bb14b6b3d5edcd316a5ac95351f6ec084b41ee555cad820d4194280ad38ce51884fedc7e8946a57b74
+  languageName: node
+  linkType: hard
+
+"babel-runtime@npm:^6.0.0":
+  version: 6.26.0
+  resolution: "babel-runtime@npm:6.26.0"
+  dependencies:
+    core-js: ^2.4.0
+    regenerator-runtime: ^0.11.0
+  checksum: 8aeade94665e67a73c1ccc10f6fd42ba0c689b980032b70929de7a6d9a12eb87ef51902733f8fefede35afea7a5c3ef7e916a64d503446c1eedc9e3284bd3d50
   languageName: node
   linkType: hard
 
@@ -24643,6 +24655,13 @@ __metadata:
   version: 3.32.1
   resolution: "core-js@npm:3.32.1"
   checksum: e4af91d9c6be7b59235feb3f273d16705126ce09a0b4a787144d131d874f0cd10be3c24fc52e5eea7d7cb03ceabe4be7b255abcd9474b5eb1ff365d2c5611f9a
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^2.4.0":
+  version: 2.6.12
+  resolution: "core-js@npm:2.6.12"
+  checksum: 44fa9934a85f8c78d61e0c8b7b22436330471ffe59ec5076fe7f324d6e8cf7f824b14b1c81ca73608b13bdb0fef035bd820989bf059767ad6fa13123bb8bd016
   languageName: node
   linkType: hard
 
@@ -42669,6 +42688,13 @@ __metadata:
   version: 0.14.0
   resolution: "regenerator-runtime@npm:0.14.0"
   checksum: 1c977ad82a82a4412e4f639d65d22be376d3ebdd30da2c003eeafdaaacd03fc00c2320f18120007ee700900979284fc78a9f00da7fb593f6e6eeebc673fba9a3
+  languageName: node
+  linkType: hard
+
+"regenerator-runtime@npm:^0.11.0":
+  version: 0.11.1
+  resolution: "regenerator-runtime@npm:0.11.1"
+  checksum: 3c97bd2c7b2b3247e6f8e2147a002eb78c995323732dad5dc70fac8d8d0b758d0295e7015b90d3d444446ae77cbd24b9f9123ec3a77018e81d8999818301b4f4
   languageName: node
   linkType: hard
 

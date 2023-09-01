@@ -121,6 +121,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     // maintenance toast is already appearing
                     // it is possible to add an empty toast because
                     // it does not appear
+                    /* istanbul ignore next */
                     return toast('');
                   }
                   return toast(

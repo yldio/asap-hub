@@ -8,7 +8,7 @@ export const toastGenerator = () => {
     const toast = useContext(ToastContext);
     useEffect(() => {
       Array.from({ length: numToasts }, (_, i) => `Toast ${i + 1}`).forEach(
-        (content) => toast(content),
+        toast,
       );
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

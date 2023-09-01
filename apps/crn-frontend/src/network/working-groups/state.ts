@@ -34,7 +34,7 @@ export const workingGroupsState = selectorFamily<
       if (index === undefined || index instanceof Error) return index;
       const workingGroups: WorkingGroupResponse[] = [];
       for (const id of index.ids) {
-        const group = get(workingGroupState(id));
+        const group = get(workingGroupListState(id));
         if (group === undefined) return undefined;
         workingGroups.push(group);
       }
@@ -47,16 +47,12 @@ export const workingGroupsState = selectorFamily<
         newWorkingGroups === undefined ||
         newWorkingGroups instanceof DefaultValue
       ) {
-        const oldWorkingGroups = get(workingGroupIndexState(options));
-        if (!(oldWorkingGroups instanceof Error)) {
-          oldWorkingGroups?.ids?.forEach((id) => reset(workingGroupState(id)));
-        }
         reset(workingGroupIndexState(options));
       } else if (newWorkingGroups instanceof Error) {
         set(workingGroupIndexState(options), newWorkingGroups);
       } else {
         newWorkingGroups?.items.forEach((workingGroup) =>
-          set(workingGroupState(workingGroup.id), workingGroup),
+          set(workingGroupListState(workingGroup.id), workingGroup),
         );
         set(workingGroupIndexState(options), {
           total: newWorkingGroups.total,
@@ -90,6 +86,13 @@ export const workingGroupState = atomFamily<
 >({
   key: 'workingGroup',
   default: fetchWorkingGroupState,
+});
+export const workingGroupListState = atomFamily<
+  WorkingGroupResponse | undefined,
+  string
+>({
+  key: 'workingGroupList',
+  default: workingGroupState,
 });
 
 export const useWorkingGroupById = (id: string) =>

@@ -10,7 +10,7 @@ import {
   ListInterestGroupResponse,
 } from '@asap-hub/model';
 
-import { interestGroupState } from '../../interest-groups/state';
+import { interestGroupListState } from '../../interest-groups/state';
 import { authorizationState } from '../../../auth/state';
 import { getTeamInterestGroups } from './api';
 
@@ -41,7 +41,7 @@ export const teamInterestGroupsState = selectorFamily<
         return index;
       const interestGroups: InterestGroupResponse[] = [];
       for (const id of index.ids) {
-        const interestGroup = get(interestGroupState(id));
+        const interestGroup = get(interestGroupListState(id));
         if (interestGroup === undefined) return undefined;
         interestGroups.push(interestGroup);
       }
@@ -54,16 +54,6 @@ export const teamInterestGroupsState = selectorFamily<
         newInterestGroups === undefined ||
         newInterestGroups instanceof DefaultValue
       ) {
-        const oldInterestGroups = get(teamInterestGroupIndexState(teamId));
-        if (
-          !(
-            oldInterestGroups === undefined ||
-            oldInterestGroups === 'noSuchTeam' ||
-            oldInterestGroups instanceof Error
-          )
-        ) {
-          oldInterestGroups.ids.forEach((id) => reset(interestGroupState(id)));
-        }
         reset(teamInterestGroupIndexState(teamId));
       } else if (
         newInterestGroups instanceof Error ||
@@ -72,7 +62,7 @@ export const teamInterestGroupsState = selectorFamily<
         set(teamInterestGroupIndexState(teamId), newInterestGroups);
       } else {
         newInterestGroups?.items.forEach((interestGroup) =>
-          set(interestGroupState(interestGroup.id), interestGroup),
+          set(interestGroupListState(interestGroup.id), interestGroup),
         );
         set(teamInterestGroupIndexState(teamId), {
           total: newInterestGroups.total,

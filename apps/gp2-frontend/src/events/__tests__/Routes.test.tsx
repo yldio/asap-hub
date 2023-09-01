@@ -7,6 +7,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import { useFlags } from '@asap-hub/react-context';
 import { renderHook } from '@testing-library/react-hooks';
@@ -19,7 +20,7 @@ import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
 
 jest.mock('../api');
 jest.mock('../calendar/api');
-
+mockConsoleError();
 const renderRoutes = async () => {
   render(
     <RecoilRoot>
@@ -69,6 +70,18 @@ describe('Routes', () => {
     expect(
       screen.getByRole('link', { name: /subscribe to calendar/i }),
     ).toBeVisible();
+  });
+
+  it('renders error message when the request is not a 2XX', async () => {
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.enable('DISPLAY_EVENTS');
+    mockGetEvents.mockRejectedValueOnce(new Error('error'));
+
+    await renderRoutes();
+    expect(mockGetEvents).toHaveBeenCalled();
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 
   it('renders the empty state for the upcoming and the past events', async () => {

@@ -206,6 +206,18 @@ it('Renders the working group research output form with relevant fields', async 
   ).toBeVisible();
 });
 
+it('Renders the maintenance message', async () => {
+  await renderPage({
+    outputDocumentType: 'article',
+  });
+
+  expect(
+    screen.getByText(
+      'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
+    ),
+  ).toBeVisible();
+});
+
 it('shows the sorry not found page when the working group does not exist', async () => {
   mockGetWorkingGroup.mockResolvedValueOnce(undefined);
   await renderPage({
@@ -404,25 +416,6 @@ it('will show server side validation error for link', async () => {
       'A Research Output with this URL already exists. Please enter a different URL.',
     ),
   ).toBeNull();
-});
-
-it('will toast when error is WritingDisabled', async () => {
-  mockCreateResearchOutput.mockRejectedValue(new Error('WritingDisabled'));
-
-  await renderPage({
-    outputDocumentType: 'article',
-  });
-
-  const { publish } = await mandatoryFields({}, true);
-
-  await publish();
-
-  expect(mockCreateResearchOutput).toHaveBeenCalled();
-  expect(
-    screen.queryByText(
-      'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
-    ),
-  ).toBeInTheDocument();
 });
 
 it('will toast server side errors for unknown errors', async () => {

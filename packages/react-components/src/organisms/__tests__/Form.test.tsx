@@ -29,43 +29,19 @@ beforeEach(() => {
 });
 
 it('renders a form with given children', () => {
-  const { getByText } = render(
-    <InnerToastContext.Provider value={jest.fn()}>
-      <Form {...props}>{() => 'Content'}</Form>
-    </InnerToastContext.Provider>,
-    {
-      wrapper: MemoryRouter,
-    },
-  );
+  const { getByText } = render(<Form {...props}>{() => 'Content'}</Form>, {
+    wrapper: MemoryRouter,
+  });
   expect(getByText('Content')).toBeVisible();
-});
-
-it('renders maintenance toast', () => {
-  const innerMockToast: () => void = jest.fn();
-
-  render(
-    <InnerToastContext.Provider value={innerMockToast}>
-      <Form {...props}>{() => 'Content'}</Form>
-    </InnerToastContext.Provider>,
-    {
-      wrapper: MemoryRouter,
-    },
-  );
-  expect(innerMockToast).toHaveBeenCalledWith(
-    'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
-    'warning',
-  );
 });
 
 it('initially does not prompt when trying to leave', () => {
   const { getByText } = render(
-    <InnerToastContext.Provider value={jest.fn()}>
-      <Router history={history}>
-        <Form {...props}>
-          {() => <Link to={'/another-url'}>Navigate away</Link>}
-        </Form>
-      </Router>
-    </InnerToastContext.Provider>,
+    <Router history={history}>
+      <Form {...props}>
+        {() => <Link to={'/another-url'}>Navigate away</Link>}
+      </Form>
+    </Router>,
   );
 
   userEvent.click(getByText(/navigate/i));
@@ -334,24 +310,22 @@ describe('when saving', () => {
           expect(getByText(/^save/i).closest('button')).toBeEnabled(),
         );
         rerender(
-          <InnerToastContext.Provider value={innerMockToast}>
-            <Router history={history}>
-              <Form {...props}>
-                {({ getWrappedOnSave, isSaving }) => (
-                  <>
-                    <Link to={'/another-url'}>Navigate away</Link>
-                    <Button
-                      primary
-                      enabled={!isSaving}
-                      onClick={getWrappedOnSave(handleSave)}
-                    >
-                      save
-                    </Button>
-                  </>
-                )}
-              </Form>
-            </Router>
-          </InnerToastContext.Provider>,
+          <Router history={history}>
+            <Form {...props}>
+              {({ getWrappedOnSave, isSaving }) => (
+                <>
+                  <Link to={'/another-url'}>Navigate away</Link>
+                  <Button
+                    primary
+                    enabled={!isSaving}
+                    onClick={getWrappedOnSave(handleSave)}
+                  >
+                    save
+                  </Button>
+                </>
+              )}
+            </Form>
+          </Router>,
         );
       });
 
@@ -364,7 +338,6 @@ describe('when saving', () => {
         );
       });
     });
-
     describe('and the save fails', () => {
       beforeEach(() => {
         act(() => rejectSave(new Error()));

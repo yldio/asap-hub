@@ -13,7 +13,6 @@ import {
   Toast,
   usePrevious,
 } from '@asap-hub/react-components';
-import type { ToastAccents } from '@asap-hub/react-components';
 import { InnerToastContext } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 import React, {
@@ -65,14 +64,8 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
   const previousErrors = usePrevious(errors);
 
-  const [accent, setAccent] = useState<ToastAccents>();
   const [toastNode, setToastNode] = useState<ReactNode>(undefined);
-  const toast = useCallback((node: ReactNode, newAccent?: ToastAccents) => {
-    if (newAccent) {
-      setAccent(newAccent);
-    }
-    setToastNode(node);
-  }, []);
+  const toast = useCallback((node: ReactNode) => setToastNode(node), []);
   const previousToast = usePrevious(toastNode);
 
   useEffect(() => {
@@ -124,6 +117,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
+        <Toast accent="warning">
+          The hub is undergoing maintenance from 4th to 8th September. During
+          this period you will not be able to create or update research outputs
+          on the hub. Normal service will resume on 11th September.
+        </Toast>
         {createVersion && (
           <Toast accent="warning">
             The previous output page will be replaced with a summarised version
@@ -131,7 +129,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           </Toast>
         )}
         <InnerToastContext.Provider value={toast}>
-          {toastNode && <Toast accent={accent}>{toastNode}</Toast>}
+          {toastNode && <Toast accent="error">{toastNode}</Toast>}
           <ResearchOutputHeader
             documentType={documentType}
             workingGroupAssociation

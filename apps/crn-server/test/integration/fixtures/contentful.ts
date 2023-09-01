@@ -389,12 +389,12 @@ export class ContentfulFixture implements Fixture {
       content_type: 'events',
     });
 
-    events.forEach(async (entry) => {
+    for (const entry of events) {
       if (entry.isPublished()) {
         await entry.unpublish();
       }
       await entry.delete();
-    });
+    }
   }
 }
 

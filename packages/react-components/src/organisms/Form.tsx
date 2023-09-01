@@ -73,16 +73,13 @@ const Form = <T extends void | Record<string, unknown>>({
           return result;
         } catch (error) {
           if (error instanceof Error && error.message === 'WritingDisabled') {
-            setStatus('hasError');
-            toast(
-              'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
-              'warning',
-            );
-            // eslint-disable-next-line consistent-return
-            return;
-          }
-
-          if (formRef.current) {
+            // it does not add a new toast because
+            // maintenance toast is already appearing
+            // it is possible to add an empty toast because
+            // it does not appear
+            /* istanbul ignore next */
+            toast('');
+          } else if (formRef.current) {
             setStatus('hasError');
             toast(
               'There was an error and we were unable to save your changes. Please try again.',
@@ -116,6 +113,10 @@ const Form = <T extends void | Record<string, unknown>>({
         }}
       />
       <form ref={formRef} css={styles}>
+        {toast(
+          'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
+          'warning',
+        )}
         {children({
           onCancel,
           isSaving: status === 'isSaving',

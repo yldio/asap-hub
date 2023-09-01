@@ -138,6 +138,21 @@ it('renders the personal info', async () => {
   expect((await screen.findByText('Someone')).tagName).toBe('H1');
 });
 
+it('renders maintenance message', async () => {
+  const userProfile: UserResponse = {
+    ...createUserResponse(),
+    avatarUrl: 'https://placekitten.com/200/300',
+    id: '42',
+  };
+  await renderUserProfile(userProfile);
+
+  expect(
+    await screen.findByText(
+      'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to update your profile on the hub. Normal service will resume on 11th September.',
+    ),
+  ).toBeVisible();
+});
+
 it('by default renders the research tab', async () => {
   await renderUserProfile({
     ...createUserResponse(),
@@ -393,25 +408,6 @@ describe('a header edit button', () => {
       userEvent.upload(upload, file);
       await waitFor(() => expect(mockToken).toHaveBeenCalled());
       await waitFor(() => expect(mockPostUserAvatar).toHaveBeenCalled());
-    });
-
-    it('toasts if the upload fails with WritingDisabled error', async () => {
-      const userProfile: UserResponse = {
-        ...createUserResponse(),
-        avatarUrl: 'https://placekitten.com/200/300',
-        id: '42',
-      };
-      await renderUserProfile(userProfile);
-
-      mockPostUserAvatar.mockRejectedValue(new Error('WritingDisabled'));
-      const upload = await screen.findByLabelText(/upload.+avatar/i);
-      userEvent.upload(upload, file);
-      await waitFor(() => {
-        expect(mockToast).toHaveBeenCalledWith(
-          'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to update your profile on the hub. Normal service will resume on 11th September.',
-          'warning',
-        );
-      });
     });
 
     it('toasts if the upload fails', async () => {

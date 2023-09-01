@@ -117,10 +117,11 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                     error instanceof Error &&
                     error.message === 'WritingDisabled'
                   ) {
-                    return toast(
-                      'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to update your profile on the hub. Normal service will resume on 11th September.',
-                      'warning',
-                    );
+                    // it does not add a new toast because
+                    // maintenance toast is already appearing
+                    // it is possible to add an empty toast because
+                    // it does not appear
+                    return toast('');
                   }
                   return toast(
                     'There was an error and we were unable to save your picture',

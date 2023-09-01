@@ -29,19 +29,43 @@ beforeEach(() => {
 });
 
 it('renders a form with given children', () => {
-  const { getByText } = render(<Form {...props}>{() => 'Content'}</Form>, {
-    wrapper: MemoryRouter,
-  });
+  const { getByText } = render(
+    <InnerToastContext.Provider value={jest.fn()}>
+      <Form {...props}>{() => 'Content'}</Form>
+    </InnerToastContext.Provider>,
+    {
+      wrapper: MemoryRouter,
+    },
+  );
   expect(getByText('Content')).toBeVisible();
+});
+
+it('renders maintenance toast', () => {
+  const innerMockToast: () => void = jest.fn();
+
+  render(
+    <InnerToastContext.Provider value={innerMockToast}>
+      <Form {...props}>{() => 'Content'}</Form>
+    </InnerToastContext.Provider>,
+    {
+      wrapper: MemoryRouter,
+    },
+  );
+  expect(innerMockToast).toHaveBeenCalledWith(
+    'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
+    'warning',
+  );
 });
 
 it('initially does not prompt when trying to leave', () => {
   const { getByText } = render(
-    <Router history={history}>
-      <Form {...props}>
-        {() => <Link to={'/another-url'}>Navigate away</Link>}
-      </Form>
-    </Router>,
+    <InnerToastContext.Provider value={jest.fn()}>
+      <Router history={history}>
+        <Form {...props}>
+          {() => <Link to={'/another-url'}>Navigate away</Link>}
+        </Form>
+      </Router>
+    </InnerToastContext.Provider>,
   );
 
   userEvent.click(getByText(/navigate/i));
@@ -310,22 +334,24 @@ describe('when saving', () => {
           expect(getByText(/^save/i).closest('button')).toBeEnabled(),
         );
         rerender(
-          <Router history={history}>
-            <Form {...props}>
-              {({ getWrappedOnSave, isSaving }) => (
-                <>
-                  <Link to={'/another-url'}>Navigate away</Link>
-                  <Button
-                    primary
-                    enabled={!isSaving}
-                    onClick={getWrappedOnSave(handleSave)}
-                  >
-                    save
-                  </Button>
-                </>
-              )}
-            </Form>
-          </Router>,
+          <InnerToastContext.Provider value={innerMockToast}>
+            <Router history={history}>
+              <Form {...props}>
+                {({ getWrappedOnSave, isSaving }) => (
+                  <>
+                    <Link to={'/another-url'}>Navigate away</Link>
+                    <Button
+                      primary
+                      enabled={!isSaving}
+                      onClick={getWrappedOnSave(handleSave)}
+                    >
+                      save
+                    </Button>
+                  </>
+                )}
+              </Form>
+            </Router>
+          </InnerToastContext.Provider>,
         );
       });
 
@@ -335,19 +361,6 @@ describe('when saving', () => {
         userEvent.click(getByText(/^save/i));
         await waitFor(() =>
           expect(getByText(/^save/i).closest('button')).toBeEnabled(),
-        );
-      });
-    });
-
-    it('shows an error message when fails with WritingDisabled', async () => {
-      act(() => rejectSave(new Error('WritingDisabled')));
-      const { getByText } = result;
-
-      userEvent.click(getByText(/^save/i));
-      await waitFor(() => {
-        expect(innerMockToast).toHaveBeenCalledWith(
-          'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
-          'warning',
         );
       });
     });

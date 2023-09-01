@@ -98,7 +98,6 @@ const eventState = atomFamily<gp2.EventResponse | undefined, string>({
 });
 
 export const useEvents = (options: EventListOptions) => {
-  console.log(options);
   const [events, setEvents] = useRecoilState(eventsState(options));
   const { client } = useAlgolia();
   if (events === undefined) {
@@ -117,7 +116,6 @@ export const useEvents = (options: EventListOptions) => {
   if (events instanceof Error) {
     throw events;
   }
-  console.log(events);
   return events;
 };
 

@@ -71,7 +71,7 @@ export const getAlgoliaEvents = (
       hitsPerPage: options.pageSize ?? 10,
     })
     .catch((error: Error) => {
-      throw new Error(`Could not search:${error.message}`);
+      throw new Error(`Could not search: ${error.message}`);
     });
 };
 

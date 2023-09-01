@@ -16,7 +16,7 @@ import {
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useEvents } from './state';
 
-type EventListProps = {
+export type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
   constraint?: gp2.EventConstraint;

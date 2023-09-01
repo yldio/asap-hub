@@ -9859,7 +9859,7 @@ export type EventsContentFragment = Pick<
   | 'meetingMaterialsPermanentlyUnavailable'
   | 'meetingMaterials'
 > & {
-  sys: Pick<Sys, 'id' | 'publishedVersion'>;
+  sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
   notes?: Maybe<
     Pick<EventsNotes, 'json'> & {
       links: {
@@ -10160,7 +10160,7 @@ export type FetchEventByIdQuery = {
       | 'meetingMaterialsPermanentlyUnavailable'
       | 'meetingMaterials'
     > & {
-      sys: Pick<Sys, 'id' | 'publishedVersion'>;
+      sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
       notes?: Maybe<
         Pick<EventsNotes, 'json'> & {
           links: {
@@ -10499,7 +10499,7 @@ export type FetchEventsQuery = {
             | 'meetingMaterialsPermanentlyUnavailable'
             | 'meetingMaterials'
           > & {
-            sys: Pick<Sys, 'id' | 'publishedVersion'>;
+            sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
             notes?: Maybe<
               Pick<EventsNotes, 'json'> & {
                 links: {
@@ -10924,7 +10924,10 @@ export type FetchEventsByUserIdQuery = {
                         | 'meetingMaterialsPermanentlyUnavailable'
                         | 'meetingMaterials'
                       > & {
-                        sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedVersion' | 'publishedAt'
+                        >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -11421,7 +11424,10 @@ export type FetchEventsByExternalAuthorIdQuery = {
                         | 'meetingMaterialsPermanentlyUnavailable'
                         | 'meetingMaterials'
                       > & {
-                        sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedVersion' | 'publishedAt'
+                        >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -11918,7 +11924,10 @@ export type FetchEventsByTeamIdQuery = {
                         | 'meetingMaterialsPermanentlyUnavailable'
                         | 'meetingMaterials'
                       > & {
-                        sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedVersion' | 'publishedAt'
+                        >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -15919,6 +15928,7 @@ export const EventsContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'publishedVersion' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
               ],
             },
           },

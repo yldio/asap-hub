@@ -7,6 +7,7 @@ export const eventsContentQueryFragment = gql`
     sys {
       id
       publishedVersion
+      publishedAt
     }
     lastUpdated
     description

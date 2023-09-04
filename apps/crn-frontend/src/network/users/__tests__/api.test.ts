@@ -318,15 +318,6 @@ describe('patchUser', () => {
     expect(await patchUser('42', patch, '')).toEqual(updated);
   });
 
-  it('throws with WritingDisabled for an 405 status', async () => {
-    const patch = { biography: 'New Bio' };
-    nock(API_BASE_URL).patch('/users/42', patch).reply(405, {});
-
-    await expect(
-      patchUser('42', patch, ''),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`"WritingDisabled"`);
-  });
-
   it('errors for an error status', async () => {
     const patch = { biography: 'New Bio' };
     nock(API_BASE_URL).patch('/users/42', patch).reply(500, {});
@@ -366,15 +357,6 @@ describe('postUserAvatar', () => {
     nock(API_BASE_URL).post('/users/42/avatar', post).reply(200, updated);
 
     expect(await postUserAvatar('42', post, '')).toEqual(updated);
-  });
-
-  it('throws with WritingDisabled for an 405 status', async () => {
-    const post = { avatar: '123' };
-    nock(API_BASE_URL).post('/users/42/avatar', post).reply(405, {});
-
-    await expect(
-      postUserAvatar('42', post, ''),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`"WritingDisabled"`);
   });
 
   it('errors for an error status', async () => {

@@ -215,25 +215,6 @@ describe('when saving', () => {
     });
 
     describe('and the save fails', () => {
-      it('shows an error message when fails with WritingDisabled', async () => {
-        const handleSave = jest
-          .fn()
-          .mockRejectedValueOnce(new Error('WritingDisabled'));
-        renderEditModal({ handleSave });
-
-        const saveButton = screen.getByRole('button', { name: 'Save' });
-        userEvent.click(saveButton);
-
-        await waitFor(() => {
-          expect(screen.getByTitle(/warning/i)).toBeInTheDocument();
-          expect(
-            screen.getByText(
-              /The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to update your profile on the hub. Normal service will resume on 11th September./i,
-            ),
-          ).toBeInTheDocument();
-        });
-      });
-
       it('shows an error message', async () => {
         const handleSave = jest.fn().mockRejectedValueOnce(new Error());
         renderEditModal({ handleSave });

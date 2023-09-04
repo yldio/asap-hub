@@ -83,27 +83,7 @@ describe('research outputs', () => {
       );
     });
 
-    test('cannot create a draft team research output', async () => {
-      const input = getResearchOutputFixture(
-        {
-          teams: [nonPmTeam.id],
-          workingGroups: [],
-          published: false,
-        },
-        { researchTags },
-      );
-      const response = await supertest(app)
-        .post('/research-outputs')
-        .send(input)
-        .expect(405);
-
-      expect(response.body).toEqual({
-        message: 'Method Not Allowed',
-      });
-    });
-
-    // TODO: remove skip after write block is removed
-    describe.skip('create', () => {
+    describe('create', () => {
       test('can create a draft team research output as a team non-PM', async () => {
         const input = getResearchOutputFixture(
           {
@@ -176,8 +156,7 @@ describe('research outputs', () => {
       });
     });
 
-    // TODO: remove skip after write block is removed
-    describe.skip('update', () => {
+    describe('update', () => {
       let researchOutput: ResearchOutputCreateDataObject;
       let researchOutputId: string;
 
@@ -352,9 +331,7 @@ describe('research outputs', () => {
       });
     });
 
-    // skipping it because it creates RO via post and writing is disabled
-    // TODO: remove skip after write block is removed
-    describe.skip('fetch by ID', () => {
+    describe('fetch by ID', () => {
       let researchOutputId: string;
 
       beforeAll(async () => {
@@ -413,8 +390,7 @@ describe('research outputs', () => {
       );
     });
 
-    // TODO: remove skip after write block is removed
-    describe.skip('create', () => {
+    describe('create', () => {
       test('can create a draft working group output in a working group you are a member of', async () => {
         const input = getResearchOutputFixture(
           {

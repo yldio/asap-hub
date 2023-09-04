@@ -203,11 +203,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 
   return (
     <>
-      <Toast accent="warning">
-        The hub is undergoing maintenance from 4th to 8th September. During this
-        period you will not be able to update your profile on the hub. Normal
-        service will resume on 11th September.
-      </Toast>
       {alumniSinceDate && (
         <Toast accent="warning">
           This alumni might not have all content updated or available. This user

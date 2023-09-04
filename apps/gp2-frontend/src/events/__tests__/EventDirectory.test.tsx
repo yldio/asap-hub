@@ -3,18 +3,20 @@ import {
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { PAGE_SIZE, useSearch } from '../../hooks';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getAlgoliaEvents } from '../api';
 import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
-import EventsList, { EventListProps } from '../EventsList';
+import { getAlgoliaEvents } from '../api';
 import { eventsState } from '../state';
-import { PAGE_SIZE } from '../../hooks';
+import EventDirectory from '../EventDirectory';
+import { EventListProps } from '../EventsList';
 
 jest.mock('../api');
-jest.mock('../calendar/api');
+jest.mock('../../hooks/search');
 
 const renderList = async (props: EventListProps, searchQuery = '') => {
   render(
@@ -35,7 +37,7 @@ const renderList = async (props: EventListProps, searchQuery = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/events']}>
-              <EventsList {...props} />
+              <EventDirectory {...props} />
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -47,20 +49,30 @@ const renderList = async (props: EventListProps, searchQuery = '') => {
 beforeEach(() => {
   jest.resetAllMocks();
 });
+const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
+const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
+  typeof getAlgoliaEvents
+>;
+describe('EventDirectory', () => {
+  it('handles filter switching', async () => {
+    mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
+    const mockToggleFilter = jest.fn();
+    mockUseSearch.mockImplementation(() => ({
+      changeLocation: jest.fn(),
+      filters: {},
+      updateFilters: jest.fn(),
+      toggleFilter: mockToggleFilter,
+      searchQuery: '',
+      debouncedSearchQuery: '',
+      setSearchQuery: jest.fn(),
+    }));
 
-describe('EventsList', () => {
-  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
-    typeof getAlgoliaEvents
-  >;
-  it('renders events', async () => {
-    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
-    await renderList({ currentTime: new Date() });
-    expect(screen.getByRole('link', { name: 'Event 0' })).toBeInTheDocument();
-  });
-
-  it('renders past events', async () => {
-    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
-    await renderList({ currentTime: new Date(), past: true });
-    expect(screen.getByRole('link', { name: 'Event 0' })).toBeInTheDocument();
+    await renderList({ currentTime: new Date(), searchQuery: '' });
+    userEvent.click(
+      screen.getByRole('checkbox', {
+        name: 'GP2 Hub',
+      }),
+    );
+    expect(mockToggleFilter).toHaveBeenLastCalledWith('GP2 Hub', 'eventType');
   });
 });

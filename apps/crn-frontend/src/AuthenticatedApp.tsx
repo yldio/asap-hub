@@ -8,6 +8,7 @@ import {
   network,
   news,
   sharedResearch,
+  tags,
 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -29,12 +30,15 @@ const loadDiscover = () =>
   import(/* webpackChunkName: "discover" */ './discover/Routes');
 const loadEvents = () =>
   import(/* webpackChunkName: "events" */ './events/Events');
+const loadTags = () => import(/* webpackChunkName: "tags" */ './tags/Routes');
+
 const News = lazy(loadNews);
 const Network = lazy(loadNetwork);
 const SharedResearch = lazy(loadSharedResearch);
 const Dashboard = lazy(loadDashboard);
 const Discover = lazy(loadDiscover);
 const Events = lazy(loadEvents);
+const Tags = lazy(loadTags);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
   const auth0 = useAuth0CRN();
@@ -52,7 +56,8 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
       .then(loadNetwork)
       .then(loadSharedResearch)
       .then(loadDiscover)
-      .then(loadEvents);
+      .then(loadEvents)
+      .then(loadTags);
   }, []);
 
   const user = useCurrentUserCRN();
@@ -137,6 +142,12 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                   <Events />
                 </Frame>
               </Route>
+              <Route path={tags.template}>
+                <Frame title="Tags">
+                  <Tags />
+                </Frame>
+              </Route>
+
               <Route>
                 <Frame title="Not Found">
                   <NotFoundPage />

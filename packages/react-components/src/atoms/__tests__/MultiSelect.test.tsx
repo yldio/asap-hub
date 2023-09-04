@@ -15,6 +15,7 @@ import { ember, fern, pine } from '../../colors';
 
 import MultiSelect, { arrayMove } from '../MultiSelect';
 import { noop } from '../../utils';
+import { searchIcon } from '../../icons';
 
 interface SortableMock {
   onSortEnd?: SortEndHandler;
@@ -108,6 +109,13 @@ it('when empty shows a placeholder message', () => {
     />,
   );
   expect(container).toHaveTextContent(/start typing/i);
+});
+
+it('shows left indicator when one is provided', () => {
+  const { getByTitle } = render(
+    <MultiSelect suggestions={[]} leftIndicator={<div>{searchIcon}</div>} />,
+  );
+  expect(getByTitle('Search')).toBeInTheDocument();
 });
 
 it('shows the no option message when there are no options', () => {

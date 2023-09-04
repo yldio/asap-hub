@@ -6,10 +6,12 @@ import {
   useCallback,
   useEffect,
   useRef,
+  ReactNode,
 } from 'react';
 import Select, {
   ActionMeta,
   components as reactAsyncComponents,
+  ControlProps,
   MultiValueProps,
   OptionsType,
   Props,
@@ -135,6 +137,7 @@ export type MultiSelectProps<T extends MultiSelectOptionsType> = {
   readonly required?: boolean;
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
   readonly maxMenuHeight?: number;
+  readonly leftIndicator?: ReactNode;
 } & (
   | (Pick<Props<T, true>, 'noOptionsMessage' | 'components'> & {
       readonly suggestions: ReadonlyArray<T>;
@@ -165,6 +168,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
   creatable = false,
   required = false,
   getValidationMessage,
+  leftIndicator,
 }: MultiSelectProps<T>): ReactElement => {
   const theme = useTheme();
   // This is to handle a bug with Select where the right click would make it impossible to write
@@ -223,6 +227,28 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
       // @ts-expect-error // We're failing to provide a required index prop to SortableElement
       MultiValue: sortable ? SortableMultiValue : undefined,
       MultiValueLabel: sortable ? SortableMultiValueLabel : undefined,
+      ...(leftIndicator
+        ? {
+            Control: (props) => {
+              return (
+                <reactAsyncComponents.Control {...props}>
+                  <div
+                    css={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      paddingLeft: rem(6),
+                      paddingRight: rem(3),
+                    }}
+                  >
+                    {leftIndicator}
+                  </div>
+                  {props.children}
+                </reactAsyncComponents.Control>
+              );
+            },
+          }
+        : {}),
+
       ...components,
     },
     noOptionsMessage,

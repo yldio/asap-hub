@@ -108,6 +108,7 @@ const baseUpdatePayload = {
   hidden: { 'en-US': true },
   hideMeetingLink: { 'en-US': true },
   meetingLink: { 'en-US': 'https://meet.google.com/idr-kixv-hhm' },
+  eventLink: { 'en-US': null },
   meetingMaterials: {
     'en-US': [
       {
@@ -520,6 +521,41 @@ describe('Migrate events', () => {
         fields: {
           ...baseCreatePayload,
           meetingLink: { 'en-US': null },
+        },
+      },
+    );
+  });
+
+  it('handles empty event link', async () => {
+    const eventWithEmptyEventLink = getEventSquidexResponse();
+    eventWithEmptyEventLink.queryEventsContentsWithTotal!.items![0].flatData.eventLink =
+      '';
+    squidexGraphqlClientMock.request.mockResolvedValueOnce(
+      eventWithEmptyEventLink,
+    );
+
+    jest
+      .spyOn(contentfulEnv, 'getEntries')
+      .mockReset()
+      .mockImplementation(() =>
+        Promise.resolve({
+          total: 0,
+          items: [],
+          skip: 0,
+          limit: 10,
+          toPlainObject: jest.fn(),
+          sys: { type: 'Array' },
+        }),
+      );
+    await migrateEvents();
+
+    expect(contentfulEnv.createEntryWithId).toHaveBeenCalledWith(
+      'events',
+      'event-1',
+      {
+        fields: {
+          ...baseCreatePayload,
+          eventLink: { 'en-US': null },
         },
       },
     );

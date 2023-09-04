@@ -149,7 +149,7 @@ export const researchOutputContentQueryFragment = gql`
         name
       }
     }
-    relatedResearchCollection(limit: 20) @include(if: $fetchRelatedResearch) {
+    relatedResearchCollection(limit: 20) {
       items {
         sys {
           id
@@ -157,7 +157,7 @@ export const researchOutputContentQueryFragment = gql`
         title
         type
         documentType
-        teamsCollection(limit: 20) {
+        teamsCollection(limit: 20) @include(if: $singleOutput) {
           items {
             sys {
               id
@@ -165,7 +165,7 @@ export const researchOutputContentQueryFragment = gql`
             displayName
           }
         }
-        workingGroup {
+        workingGroup @include(if: $singleOutput) {
           sys {
             id
           }
@@ -173,7 +173,7 @@ export const researchOutputContentQueryFragment = gql`
         }
       }
     }
-    linkedFrom @include(if: $fetchRelatedResearch) {
+    linkedFrom {
       researchOutputsCollection(limit: 60, order: [addedDate_ASC]) {
         items {
           sys {
@@ -182,7 +182,7 @@ export const researchOutputContentQueryFragment = gql`
           title
           type
           documentType
-          teamsCollection(limit: 20) {
+          teamsCollection(limit: 20) @include(if: $singleOutput) {
             items {
               sys {
                 id
@@ -190,7 +190,7 @@ export const researchOutputContentQueryFragment = gql`
               displayName
             }
           }
-          workingGroup {
+          workingGroup @include(if: $singleOutput) {
             sys {
               id
             }
@@ -228,7 +228,7 @@ export const FETCH_RESEARCH_OUTPUT_BY_ID = gql`
     $id: String!
     $preview: Boolean
     $fetchPMs: Boolean = true
-    $fetchRelatedResearch: Boolean = true
+    $singleOutput: Boolean = true
   ) {
     researchOutputs(id: $id, preview: $preview) {
       ...ResearchOutputsContent
@@ -245,7 +245,7 @@ export const FETCH_RESEARCH_OUTPUTS = gql`
     $where: ResearchOutputsFilter
     $preview: Boolean
     $fetchPMs: Boolean = false
-    $fetchRelatedResearch: Boolean = false
+    $singleOutput: Boolean = false
   ) {
     researchOutputsCollection(
       limit: $limit

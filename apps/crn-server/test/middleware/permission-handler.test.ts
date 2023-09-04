@@ -145,7 +145,8 @@ describe('Permission middleware', () => {
           expect(response.status).toBe(403);
         });
 
-        test('Should allow access to PATCH /users/{user_id}', async () => {
+        // TODO: remove skip after write block is removed
+        test.skip('Should allow access to PATCH /users/{user_id}', async () => {
           userControllerMock.update.mockResolvedValueOnce(getUserResponse());
 
           const response = await supertest(appWithMockedAuth)

@@ -15,13 +15,13 @@ import {
 } from '../src/dependencies/users.dependencies';
 
 type EntityResponsesCRN = EntityResponses['crn'];
+export const PAGE_SIZE = 10;
 export const exportEntity = async (
   entity: keyof EntityResponsesCRN,
   filename?: string,
 ): Promise<void> => {
   const controller = getController(entity);
   const file = await fs.open(filename || `${entity}.json`, 'w');
-
   let recordCount = 0;
   let total: number;
   let records: ListResponse<EntityResponsesCRN[keyof EntityResponsesCRN]>;
@@ -31,8 +31,8 @@ export const exportEntity = async (
 
   do {
     records = await controller.fetch({
-      take: 20,
-      skip: (page - 1) * 20,
+      take: PAGE_SIZE,
+      skip: (page - 1) * PAGE_SIZE,
     });
 
     total = records.total;

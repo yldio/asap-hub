@@ -129,7 +129,7 @@ describe('Event controller', () => {
         filter: { googleId, hidden: true },
         take: 1,
       });
-      expect(result).toEqual(getEventResponse());
+      expect(result).toEqual(getEventResponse(true));
     });
     test('it should return null if no events found', async () => {
       eventDataProviderMock.fetch.mockResolvedValue({ total: 0, items: [] });

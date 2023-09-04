@@ -43,7 +43,7 @@ export const usersState = selectorFamily<
       if (index === undefined || index instanceof Error) return index;
       const users: UserResponse[] = [];
       for (const id of index.ids) {
-        const user = get(userState(id));
+        const user = get(userListState(id));
         if (user === undefined) return undefined;
         users.push(user);
       }
@@ -58,15 +58,11 @@ export const usersState = selectorFamily<
     (options) =>
     ({ get, set, reset }, newUsers) => {
       if (newUsers === undefined || newUsers instanceof DefaultValue) {
-        const oldUsers = get(userIndexState(options));
-        if (!(oldUsers instanceof Error)) {
-          oldUsers?.ids?.forEach((id) => reset(patchedUserState(id)));
-        }
         reset(userIndexState(options));
       } else if (newUsers instanceof Error) {
         set(userIndexState(options), newUsers);
       } else {
-        newUsers?.items.forEach((user) => set(patchedUserState(user.id), user));
+        newUsers?.items.forEach((user) => set(userListState(user.id), user));
         set(userIndexState(options), {
           total: newUsers.total,
           ids: newUsers.items.map((user) => user.id),
@@ -103,6 +99,11 @@ const userState = selectorFamily<UserResponse | undefined, string>({
     (id) =>
     ({ get }) =>
       get(patchedUserState(id)) ?? get(initialUserState(id)),
+});
+
+const userListState = atomFamily<UserResponse | undefined, string>({
+  key: 'userList',
+  default: userState,
 });
 
 export const useUsers = (options: GetListOptions) => {

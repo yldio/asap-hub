@@ -49,7 +49,7 @@ const EditModal: React.FC<EditModalProps> = ({
   const formRef = useRef<HTMLFormElement>(null);
   const historyPush = usePushFromHere();
   const [status, setStatus] = useState<
-    'initial' | 'isSaving' | 'hasError' | 'hasSaved'
+    'initial' | 'isSaving' | 'hasError' | 'hasSaved' | 'writingDisabled'
   >('initial');
 
   useEffect(() => {
@@ -69,7 +69,11 @@ const EditModal: React.FC<EditModalProps> = ({
         if (formRef.current) {
           setStatus('hasSaved');
         }
-      } catch {
+      } catch (error) {
+        if (error instanceof Error && error.message === 'WritingDisabled') {
+          setStatus('writingDisabled');
+          return;
+        }
         if (!formRef.current) return;
         setStatus('hasError');
       }
@@ -89,6 +93,13 @@ const EditModal: React.FC<EditModalProps> = ({
       {status === 'hasError' && (
         <Toast>
           There was an error and we were unable to save your changes
+        </Toast>
+      )}
+      {status === 'writingDisabled' && (
+        <Toast accent="warning">
+          The hub is undergoing maintenance from 4th to 8th September. During
+          this period you will not be able to update your profile on the hub.
+          Normal service will resume on 11th September.
         </Toast>
       )}
       <form

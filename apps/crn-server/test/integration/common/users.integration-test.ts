@@ -3,6 +3,7 @@ import { Express } from 'express';
 import { v4 as uuid } from 'uuid';
 import { omit } from 'lodash';
 
+import { PAGE_SIZE } from '../../../scripts/export-entity';
 import { AppHelper } from '../helpers/app';
 import { retryable } from '../helpers/retryable';
 import {
@@ -33,7 +34,10 @@ describe('users', () => {
 
   test('can fetch a list of users', async () => {
     await retryable(async () => {
-      const response = await supertest(app).get('/users').expect(200);
+      const response = await supertest(app)
+        .get('/users')
+        .query({ take: PAGE_SIZE })
+        .expect(200);
       expect(response.body.total).toEqual(expect.any(Number));
       expect(response.body.items).toEqual(expect.any(Array));
     });
@@ -217,7 +221,20 @@ describe('users', () => {
     });
   });
 
-  test('can patch the logged-in user', async () => {
+  test('cannot patch the logged-in user', async () => {
+    await retryable(async () => {
+      const response = await supertest(app)
+        .patch(`/users/${loggedInUser.id}`)
+        .send({ firstName: 'Changed' })
+        .expect(405);
+      expect(response.body).toEqual({
+        message: 'Method Not Allowed',
+      });
+    });
+  });
+
+  // TODO: remove skip after write block is removed
+  test.skip('cannot patch the logged-in user', async () => {
     await supertest(app)
       .patch(`/users/${loggedInUser.id}`)
       .send({ firstName: 'Changed' })
@@ -231,7 +248,8 @@ describe('users', () => {
     });
   });
 
-  test('cannot patch a non-logged-in user', async () => {
+  // TODO: remove skip after write block is removed
+  test.skip('cannot patch a non-logged-in user', async () => {
     const user = await fixtures.createUser(getUserFixture());
 
     await supertest(app)

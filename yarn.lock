@@ -281,7 +281,7 @@ __metadata:
     algoliasearch: 4.19.1
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1447.0
+    aws-sdk: 2.1448.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -917,7 +917,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1447.0
+    aws-sdk: 2.1448.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.32.1
@@ -969,6 +969,7 @@ __metadata:
     "@hapi/joi": 17.1.1
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.30.1
+    "@slack/webhook": ^6.1.0
     "@types/apr-intercept": "workspace:*"
     "@types/async-retry": ^1
     "@types/aws-lambda": 8.10.119
@@ -1388,7 +1389,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1447.0
+    aws-sdk: 2.1448.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.32.1
@@ -14758,8 +14759,8 @@ __metadata:
   linkType: hard
 
 "@sentry/cli@npm:^2.20.3":
-  version: 2.20.5
-  resolution: "@sentry/cli@npm:2.20.5"
+  version: 2.20.6
+  resolution: "@sentry/cli@npm:2.20.6"
   dependencies:
     https-proxy-agent: ^5.0.0
     node-fetch: ^2.6.7
@@ -14768,7 +14769,7 @@ __metadata:
     which: ^2.0.2
   bin:
     sentry-cli: bin/sentry-cli
-  checksum: 4822e58e944e74b5982ea657c0d622d8ec40e9df371d4ba1da4f3c3a29b1c1e7a2556c0a8e63a92aee7e23d701ddf2311cbd0a6ae7751d3e7313b423f3430daf
+  checksum: 6e694bd875233b18f320da336001aaa3c46118fb23c2b80e450f2b3d8597bdc2ef0bed8f5dde64d81c02078b58ae29b2cfac5376e752460216a32850df36de48
   languageName: node
   linkType: hard
 
@@ -15127,6 +15128,24 @@ __metadata:
   dependencies:
     "@sinonjs/commons": ^1.7.0
   checksum: 09b5a158ce013a6c37613258bad79ca4efeb99b1f59c41c73cca36cac00b258aefcf46eeea970fccf06b989414d86fe9f54c1102272c0c3bdd51a313cea80949
+  languageName: node
+  linkType: hard
+
+"@slack/types@npm:^1.2.1":
+  version: 1.10.0
+  resolution: "@slack/types@npm:1.10.0"
+  checksum: 9dcf254ad4882146de7ed2db948e7ee56614c3aca47a1df7cbbf4faebe6f2672a704239c0c259b4825be140bd8bb97d994241f35dc432b9ca722333828dac666
+  languageName: node
+  linkType: hard
+
+"@slack/webhook@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@slack/webhook@npm:6.1.0"
+  dependencies:
+    "@slack/types": ^1.2.1
+    "@types/node": ">=12.0.0"
+    axios: ^0.21.4
+  checksum: f8db7b6614115c1df0f7f5fc828dfca48eedaa49dfe2fff88eaf936369385e7142c0c58d34e0e8e1bc4126ac0be651af2a15bc13bb38beeba2143068f888c91e
   languageName: node
   linkType: hard
 
@@ -17857,6 +17876,13 @@ __metadata:
   version: 18.17.3
   resolution: "@types/node@npm:18.17.3"
   checksum: 884fb68936b2b0ff90863fcf80610dd2f3d9fe1947897248b0138df05fe41ee6ce62941b37b565e3b3fd77601cd3977a64de858654c6ab9064413b171740d6ba
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=12.0.0":
+  version: 20.4.9
+  resolution: "@types/node@npm:20.4.9"
+  checksum: 504e3da96274f3865c1251830f4750bb0a8f6ef6f8648902cd3bba33370c5f219235471bfbf55cce726b25c8eacfcc8e2aad0ec3b13e27ea6708b00d4a9a46c8
   languageName: node
   linkType: hard
 
@@ -21115,9 +21141,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1447.0":
-  version: 2.1447.0
-  resolution: "aws-sdk@npm:2.1447.0"
+"aws-sdk@npm:2.1448.0":
+  version: 2.1448.0
+  resolution: "aws-sdk@npm:2.1448.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -21129,7 +21155,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.5.0
-  checksum: 06314deae0999ad9e3fe2da3ae0ae11eeb547c7cb1b469f9765a2d733b1187c2eba5cc9954eed46ce001ac442f54c46721d20025cefc9c508a16025955d94359
+  checksum: 2e0a7974fdb9278bf3c0326df9ddc17ed36f5157323339aeb5d5c200d3c05be2a5c3ed123b82894c48c46500a971338610ec6d96f19f76948c584dbc5ecd4ae0
   languageName: node
   linkType: hard
 

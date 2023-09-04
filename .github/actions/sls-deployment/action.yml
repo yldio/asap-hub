@@ -56,6 +56,9 @@ inputs:
   gp2-auth0-shared-secret:
     description: 'GP2 Auth0 Shared Secret'
     required: false
+  slack-webhook:
+    description: 'Slack webhook URL'
+    required: false
 
 outputs:
   crn-api-url:
@@ -140,3 +143,4 @@ runs:
         NODE_OPTIONS: '--max-old-space-size=8192'
         SLS_STAGE: ${{ steps.setup.outputs.sls-stage}}
         SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+        SLACK_WEBHOOK: ${{ inputs.slack-webhook }}

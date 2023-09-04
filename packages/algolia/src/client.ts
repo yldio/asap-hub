@@ -15,6 +15,7 @@ import {
   USER_ENTITY_TYPE,
 } from './crn';
 import {
+  NEWS_ENTITY_TYPE,
   OUTPUT_ENTITY_TYPE,
   Payload as GP2Payload,
   PROJECT_ENTITY_TYPE,
@@ -35,6 +36,7 @@ export type EntityResponses = {
     [PROJECT_ENTITY_TYPE]: gp2Model.ProjectResponse;
     [EVENT_ENTITY_TYPE]: gp2Model.EventResponse;
     [USER_ENTITY_TYPE]: gp2Model.UserResponse;
+    [NEWS_ENTITY_TYPE]: gp2Model.NewsResponse;
   };
 };
 export type SavePayload = Payload | GP2Payload;

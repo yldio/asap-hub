@@ -54,7 +54,7 @@ on:
         required: false
       SLACK_WEBHOOK:
         description: 'Slack webhook URL'
-        required: true
+        required: false
 
 jobs:
   transpile:

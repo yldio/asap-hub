@@ -67,7 +67,7 @@ on:
         required: true
       SLACK_WEBHOOK:
         description: 'Slack webhook URL'
-        required: true
+        required: false
 
 jobs:
   crn-sls-deploy:

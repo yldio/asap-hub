@@ -78,7 +78,8 @@ describe('Reminders', () => {
     jest.useRealTimers();
   });
 
-  describe('Multiple reminders', () => {
+  // TODO: remove skip after write block is removed
+  describe.skip('Multiple reminders', () => {
     // TODO: add research output reminders here
     test('Should retrieve multiple reminders and sort them by the date they refer to', async () => {
       // setting system time to 9:00AM in UTC
@@ -124,7 +125,8 @@ describe('Reminders', () => {
     });
   });
 
-  describe('Research Output', () => {
+  // TODO: remove skip after write block is removed
+  describe.skip('Research Output', () => {
     let pmTeam: TeamFixture;
     let nonPmTeam: TeamFixture;
     let leaderWorkingGroup: WorkingGroupFixture;

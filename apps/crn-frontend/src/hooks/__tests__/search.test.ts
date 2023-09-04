@@ -184,4 +184,82 @@ describe('useSearch', () => {
       );
     });
   });
+
+  describe('Tag Filters', () => {
+    it('defaults to empty', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+      });
+      expect(result.current.tags).toEqual([]);
+    });
+
+    it('loads tags from the query param', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test?tag=key%3Avalue'],
+        },
+      });
+      expect(result.current.tags).toEqual([['key', 'value']]);
+    });
+
+    it('can handle multiple tags', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test?tag=key%3Avalue&tag=key2%3Avalue2'],
+        },
+      });
+      expect(result.current.tags).toEqual([
+        ['key', 'value'],
+        ['key2', 'value2'],
+      ]);
+    });
+
+    it('can add a tag', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test'],
+        },
+      });
+      result.current.setTags([['key', 'value']]);
+      expect(result.current.tags).toEqual([['key', 'value']]);
+    });
+
+    it('can add multiple tags', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test'],
+        },
+      });
+      result.current.setTags([
+        ['key', 'value'],
+        ['key2', 'value2'],
+      ]);
+      expect(result.current.tags).toEqual([
+        ['key', 'value'],
+        ['key2', 'value2'],
+      ]);
+    });
+    it('resets the pagination when changed', () => {
+      const { result } = renderHook(
+        () => ({
+          useSearch: useSearch(),
+          usePaginationParams: usePaginationParams(),
+          usePagination: usePagination(50, 1),
+        }),
+        {
+          wrapper: MemoryRouter,
+          initialProps: {
+            initialEntries: ['/test?tag=key%3Avalue&currentPage=2'],
+          },
+        },
+      );
+      expect(result.current.usePaginationParams.currentPage).toBe(2);
+      result.current.useSearch.setTags([]);
+      expect(result.current.usePaginationParams.currentPage).toBe(0);
+    });
+  });
 });

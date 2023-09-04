@@ -105,6 +105,28 @@ it('disables publish & back while submitting', async () => {
   await waitFor(() => expect(publish.closest('button')).toBeEnabled());
 });
 
+it('displays error message when fails with WritingDisabled', async () => {
+  const handleSave = jest
+    .fn()
+    .mockRejectedValueOnce(new Error('WritingDisabled'));
+
+  const { getByText } = render(
+    <ConfirmModal {...props} confirmText="Publish" onSave={handleSave} />,
+    { wrapper: StaticRouter },
+  );
+  const publish = getByText(/Publish/i);
+  userEvent.click(publish);
+
+  await waitFor(() => {
+    expect(publish.closest('button')).toBeEnabled();
+    expect(
+      getByText(
+        'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
+      ),
+    ).toBeVisible();
+  });
+});
+
 it('displays error message when save fails', async () => {
   let rejectSubmit!: () => void;
   const handleSave = () =>

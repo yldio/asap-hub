@@ -127,6 +127,14 @@ describe('patchTeam', () => {
     expect(await patchTeam('42', patch, '')).toEqual(updated);
   });
 
+  it('throws with WritingDisabled for an 405 status', async () => {
+    nock(API_BASE_URL).patch('/teams/42', patch).reply(405, {});
+
+    await expect(
+      patchTeam('42', patch, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"WritingDisabled"`);
+  });
+
   it('errors for an error status', async () => {
     nock(API_BASE_URL).patch('/teams/42', patch).reply(500, {});
 
@@ -196,6 +204,14 @@ describe('Team Research Output', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  it('throws with WritingDisabled for an 405 status in insert mode', async () => {
+    nock(API_BASE_URL).post('/research-outputs').reply(405, {});
+
+    await expect(
+      createResearchOutput(payload, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"WritingDisabled"`);
+  });
+
   it('errors for an error status', async () => {
     nock(API_BASE_URL).post('/research-outputs').reply(500, {});
 
@@ -204,6 +220,14 @@ describe('Team Research Output', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to create research output for Team. Expected status 201. Received status 500."`,
     );
+  });
+
+  it('throws with WritingDisabled for an 405 status in edit mode', async () => {
+    nock(API_BASE_URL).put('/research-outputs/123').reply(405, {});
+
+    await expect(
+      updateTeamResearchOutput('123', payload, 'Bearer x'),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"WritingDisabled"`);
   });
 
   it('errors for an error status in edit mode', async () => {

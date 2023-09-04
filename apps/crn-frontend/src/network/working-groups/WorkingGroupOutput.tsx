@@ -117,6 +117,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
+        <Toast accent="warning">
+          The hub is undergoing maintenance from 4th to 8th September. During
+          this period you will not be able to create or update research outputs
+          on the hub. Normal service will resume on 11th September.
+        </Toast>
         {createVersion && (
           <Toast accent="warning">
             The previous output page will be replaced with a summarised version

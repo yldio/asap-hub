@@ -138,6 +138,21 @@ it('renders the personal info', async () => {
   expect((await screen.findByText('Someone')).tagName).toBe('H1');
 });
 
+it('renders maintenance message', async () => {
+  const userProfile: UserResponse = {
+    ...createUserResponse(),
+    avatarUrl: 'https://placekitten.com/200/300',
+    id: '42',
+  };
+  await renderUserProfile(userProfile);
+
+  expect(
+    await screen.findByText(
+      'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to update your profile on the hub. Normal service will resume on 11th September.',
+    ),
+  ).toBeVisible();
+});
+
 it('by default renders the research tab', async () => {
   await renderUserProfile({
     ...createUserResponse(),

@@ -7,6 +7,7 @@ import { calendarCreatedContentfulHandlerFactory } from '../../../src/handlers/c
 import { Alerts } from '../../../src/utils/alerts';
 import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
 import { loggerMock as logger } from '../../mocks/logger.mock';
+import { expectChannelId } from './utils';
 import {
   getCalendarContentfulEvent,
   getCalendarFromDeliveryApi,
@@ -180,8 +181,12 @@ describe('Calendar handler', () => {
 
     expect(res).toBe('OK');
     expect(unsubscribe).not.toHaveBeenCalled();
-    expect(subscribe).toHaveBeenCalledWith('calendar-1', 'calendar-1');
+    expect(subscribe).toHaveBeenCalledWith(
+      'calendar-1',
+      expectChannelId('calendar-1'),
+    );
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
+      channelId: expectChannelId('calendar-1'),
       expirationDate: expiration,
       resourceId,
     });
@@ -237,15 +242,22 @@ describe('Calendar handler', () => {
     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
       1,
       'calendar-1',
-      { resourceId: null },
+      { resourceId: null, channelId: null },
     );
 
-    expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
+    expect(subscribe).toHaveBeenCalledWith(
+      'google-calendar-2',
+      expectChannelId('calendar-1'),
+    );
 
     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
       2,
       'calendar-1',
-      { resourceId, expirationDate: expiration },
+      {
+        channelId: expectChannelId('calendar-1'),
+        resourceId,
+        expirationDate: expiration,
+      },
     );
   });
 
@@ -276,18 +288,22 @@ describe('Calendar handler', () => {
     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
       1,
       'calendar-1',
-      { resourceId: null },
+      { resourceId: null, channelId: null },
     );
 
     expect(subscribe).toHaveBeenCalledWith(
       'google-calendar-2',
-      'cms:calendar-1',
+      expectChannelId('cms:calendar-1'),
     );
 
     expect(calendarDataProviderMock.update).toHaveBeenNthCalledWith(
       2,
       'calendar-1',
-      { resourceId, expirationDate: expiration },
+      {
+        channelId: expectChannelId('cms:calendar-1'),
+        resourceId,
+        expirationDate: expiration,
+      },
     );
   });
 
@@ -317,6 +333,7 @@ describe('Calendar handler', () => {
     expect(unsubscribe).toHaveBeenCalledWith('resource-id-1', 'calendar-1');
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
       resourceId: null,
+      channelId: null,
     });
 
     expect(subscribe).not.toHaveBeenCalled();
@@ -347,9 +364,13 @@ describe('Calendar handler', () => {
     expect(res).toBe('OK');
     expect(unsubscribe).not.toHaveBeenCalled();
 
-    expect(subscribe).toHaveBeenCalledWith('google-calendar-2', 'calendar-1');
+    expect(subscribe).toHaveBeenCalledWith(
+      'google-calendar-2',
+      expectChannelId('calendar-1'),
+    );
 
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith('calendar-1', {
+      channelId: expectChannelId('calendar-1'),
       resourceId,
       expirationDate: expiration,
     });

@@ -203,6 +203,18 @@ describe('useSearch', () => {
       expect(result.current.tags).toEqual([['key', 'value']]);
     });
 
+    it('will throw if there url is invalid', () => {
+      const {
+        result: { error },
+      } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test?tag=key%3Aval%3Aue'],
+        },
+      });
+      expect(error?.message).toEqual('Invalid tag param: key:val:ue');
+    });
+
     it('can handle multiple tags', () => {
       const { result } = renderHook(() => useSearch(), {
         wrapper: MemoryRouter,
@@ -242,6 +254,17 @@ describe('useSearch', () => {
         ['key', 'value'],
         ['key2', 'value2'],
       ]);
+    });
+
+    it('can handle tags with characters that need to be escaped', () => {
+      const { result } = renderHook(() => useSearch(), {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: ['/test'],
+        },
+      });
+      result.current.setTags([['key:&=', ':&=value']]);
+      expect(result.current.tags).toEqual([['key:&=', ':&=value']]);
     });
     it('resets the pagination when changed', () => {
       const { result } = renderHook(

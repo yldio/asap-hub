@@ -49,7 +49,7 @@ const TagsPageBody: React.FC<TagsPageBodyProps> = ({
     numberOfItems={numberOfItems}
     currentPageIndex={currentPage}
     renderPageHref={renderPageHref}
-    noEventsComponent={
+    noResultsComponent={
       <MessageBody
         title="Explore any tags on the CRN Hub."
         body="All CRN Hub research outputs with the selected tags will be listed on this page."

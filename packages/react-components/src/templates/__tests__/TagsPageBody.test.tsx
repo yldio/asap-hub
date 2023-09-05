@@ -10,6 +10,18 @@ const props: ComponentProps<typeof TagsPageBody> = {
   renderPageHref: () => '',
   results: [],
 };
+
+it('renders no results page', () => {
+  render(
+    <TagsPageBody
+      {...props}
+      numberOfItems={0}
+      numberOfPages={0}
+      results={[]}
+    />,
+  );
+  expect(screen.getByText(/Explore any tags/i)).toBeVisible();
+});
 it('renders a list of cards', () => {
   render(
     <TagsPageBody

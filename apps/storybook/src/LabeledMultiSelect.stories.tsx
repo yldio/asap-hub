@@ -59,7 +59,7 @@ export const Invalid = () => (
   />
 );
 
-const loadOptionsMock = (suggestions: string[], delay = 2000) => {
+export const loadOptionsMock = (suggestions: string[], delay = 2000) => {
   const options = suggestions.map((value) => ({ label: value, value }));
   return (
     inputValue = '',

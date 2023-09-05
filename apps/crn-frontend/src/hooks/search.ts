@@ -3,11 +3,15 @@ import { searchQueryParam } from '@asap-hub/routing';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
-const tupleToParam = ([key, value]: [string, string]) => [key, value].join(':');
+const tupleToParam = ([key, value]: [string, string]) =>
+  [encodeURIComponent(key), encodeURIComponent(value)].join(':');
 const paramToTuple = (param: string): [string, string] => {
   const tuple = param.split(':');
   if (tuple.length === 2) {
-    return tuple as [string, string];
+    return [
+      decodeURIComponent(tuple[0] ?? ''),
+      decodeURIComponent(tuple[1] ?? ''),
+    ];
   }
   throw new Error(`Invalid tag param: ${param}`);
 };

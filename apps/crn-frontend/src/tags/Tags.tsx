@@ -6,7 +6,19 @@ const Tags: React.FC<Record<string, never>> = () => {
   const { currentPage, pageSize } = usePaginationParams();
   const { numberOfPages, renderPageHref } = usePagination(0, pageSize);
   return (
-    <TagsPage tags={tags} setTags={setTags}>
+    <TagsPage
+      tags={tags}
+      setTags={setTags}
+      loadTags={() =>
+        new Promise((resolve) =>
+          resolve([
+            { value: '1', label: 'test' },
+            { value: '2', label: 'test2' },
+            { value: '3', label: 'test3' },
+          ]),
+        )
+      }
+    >
       <TagsPageBody
         currentPage={currentPage}
         numberOfItems={0}

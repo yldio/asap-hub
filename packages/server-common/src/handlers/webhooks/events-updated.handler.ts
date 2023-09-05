@@ -10,20 +10,20 @@ export const webhookEventUpdatedHandlerFactory = (
   { googleApiToken }: { googleApiToken: string },
 ): lambda.Handler => {
   const getCalendar = async (resourceId: string) => {
+    let calendars;
     try {
-      const calendars = await calendarDataProvider.fetch({
+      calendars = await calendarDataProvider.fetch({
         resourceId,
       });
-
-      if (!calendars.items[0]) {
-        throw new Error('Failed to fetch calendar by resource ID.');
-      }
-      const [calendar] = calendars.items;
-      return calendar;
     } catch (error) {
       logger.error(error, 'Error fetching calendar');
       throw Boom.badGateway();
     }
+    if (!calendars.items[0]) {
+      throw Boom.notFound();
+    }
+    const [calendar] = calendars.items;
+    return calendar;
   };
   return lambda.http(async (request) => {
     logger.debug(JSON.stringify(request, null, 2), 'Request');

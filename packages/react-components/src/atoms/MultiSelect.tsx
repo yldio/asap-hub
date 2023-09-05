@@ -34,6 +34,13 @@ import { pixels } from '..';
 
 const { rem } = pixels;
 
+const indicatorStyles = css({
+  display: 'flex',
+  justifyContent: 'center',
+  paddingLeft: rem(6),
+  paddingRight: rem(3),
+});
+
 export function arrayMove<T>(
   array: readonly T[],
   from: number,
@@ -230,16 +237,7 @@ const MultiSelect = <T extends MultiSelectOptionsType>({
         ? {
             Control: (props) => (
               <reactAsyncComponents.Control {...props}>
-                <div
-                  css={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    paddingLeft: rem(6),
-                    paddingRight: rem(3),
-                  }}
-                >
-                  {leftIndicator}
-                </div>
+                <div css={indicatorStyles}>{leftIndicator}</div>
                 {props.children}
               </reactAsyncComponents.Control>
             ),

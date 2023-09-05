@@ -12,9 +12,9 @@ const Tags: React.FC<Record<string, never>> = () => {
       loadTags={() =>
         new Promise((resolve) =>
           resolve([
-            { value: '1', label: 'test' },
-            { value: '2', label: 'test2' },
-            { value: '3', label: 'test3' },
+            { value: 'test', label: 'test' },
+            { value: 'test2', label: 'test2' },
+            { value: 'test3', label: 'test3' },
           ]),
         )
       }

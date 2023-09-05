@@ -16,7 +16,7 @@ it('renders the header', () => {
 });
 
 it('displays supplied tag', () => {
-  render(<TagsPageHeader {...props} tags={[['key', 'value']]} />);
+  render(<TagsPageHeader {...props} tags={['key']} />);
   expect(screen.getByText('key')).toBeVisible();
 });
 
@@ -33,11 +33,11 @@ it("shows the no results found message when there aren't any tags", async () => 
 it('will call set tags when a tag has been selected', async () => {
   const loadTags = jest
     .fn()
-    .mockResolvedValue([{ label: 'foo', value: 'bar' }]);
+    .mockResolvedValue([{ label: 'foo', value: 'foo' }]);
   const setTags = jest.fn();
   render(<TagsPageHeader {...props} loadTags={loadTags} setTags={setTags} />);
   userEvent.type(screen.getByRole('textbox'), "doesn't matter");
   await waitFor(() => expect(screen.getByText('foo')).toBeVisible());
   userEvent.click(screen.getByText('foo'));
-  expect(setTags).toHaveBeenCalledWith([['foo', 'bar']]);
+  expect(setTags).toHaveBeenCalledWith(['foo']);
 });

@@ -14,7 +14,7 @@ export const Normal = () => (
   <TagsPage
     loadTags={loadOptionsMock(['Tag 1', 'Example 2', 'Orange 3', 'Oops 4'])}
     tags={Array.from({ length: number('Number of tags to show', 1) }).map(
-      (_, i) => [`Tag ${i + 1}`, `tag${i}`],
+      (_, i) => `Tag ${i + 1}`,
     )}
   />
 );

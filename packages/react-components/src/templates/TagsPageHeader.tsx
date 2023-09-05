@@ -28,8 +28,8 @@ const controlsStyles = css({
 });
 
 type TagsPageHeaderProps = {
-  tags: [string, string][];
-  setTags?: (tags: [string, string][]) => void;
+  tags: string[];
+  setTags?: (tags: string[]) => void;
   loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
 };
 
@@ -52,12 +52,10 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
         leftIndicator={searchIcon}
         noOptionsMessage={() => 'No results found'}
         loadOptions={loadTags}
-        onChange={(items) =>
-          setTags(items.map(({ label, value }) => [label, value]))
-        }
-        values={tags.map(([label, value]) => ({
-          label,
-          value,
+        onChange={(items) => setTags(items.map(({ value }) => value))}
+        values={tags.map((tag) => ({
+          label: tag,
+          value: tag,
         }))}
         placeholder="Search for any tags..."
       />

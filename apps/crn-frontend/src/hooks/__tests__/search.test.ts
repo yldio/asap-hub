@@ -197,35 +197,20 @@ describe('useSearch', () => {
       const { result } = renderHook(() => useSearch(), {
         wrapper: MemoryRouter,
         initialProps: {
-          initialEntries: ['/test?tag=key%3Avalue'],
+          initialEntries: ['/test?tag=tag'],
         },
       });
-      expect(result.current.tags).toEqual([['key', 'value']]);
-    });
-
-    it('will throw if there url is invalid', () => {
-      const {
-        result: { error },
-      } = renderHook(() => useSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: ['/test?tag=key%3Aval%3Aue'],
-        },
-      });
-      expect(error?.message).toEqual('Invalid tag param: key:val:ue');
+      expect(result.current.tags).toEqual(['tag']);
     });
 
     it('can handle multiple tags', () => {
       const { result } = renderHook(() => useSearch(), {
         wrapper: MemoryRouter,
         initialProps: {
-          initialEntries: ['/test?tag=key%3Avalue&tag=key2%3Avalue2'],
+          initialEntries: ['/test?tag=tag1&tag=tag2'],
         },
       });
-      expect(result.current.tags).toEqual([
-        ['key', 'value'],
-        ['key2', 'value2'],
-      ]);
+      expect(result.current.tags).toEqual(['tag1', 'tag2']);
     });
 
     it('can add a tag', () => {
@@ -235,8 +220,8 @@ describe('useSearch', () => {
           initialEntries: ['/test'],
         },
       });
-      result.current.setTags([['key', 'value']]);
-      expect(result.current.tags).toEqual([['key', 'value']]);
+      result.current.setTags(['tag']);
+      expect(result.current.tags).toEqual(['tag']);
     });
 
     it('can add multiple tags', () => {
@@ -246,26 +231,10 @@ describe('useSearch', () => {
           initialEntries: ['/test'],
         },
       });
-      result.current.setTags([
-        ['key', 'value'],
-        ['key2', 'value2'],
-      ]);
-      expect(result.current.tags).toEqual([
-        ['key', 'value'],
-        ['key2', 'value2'],
-      ]);
+      result.current.setTags(['Tag1', 'Tag2']);
+      expect(result.current.tags).toEqual(['Tag1', 'Tag2']);
     });
 
-    it('can handle tags with characters that need to be escaped', () => {
-      const { result } = renderHook(() => useSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: ['/test'],
-        },
-      });
-      result.current.setTags([['key:&=', ':&=value']]);
-      expect(result.current.tags).toEqual([['key:&=', ':&=value']]);
-    });
     it('resets the pagination when changed', () => {
       const { result } = renderHook(
         () => ({
@@ -276,7 +245,7 @@ describe('useSearch', () => {
         {
           wrapper: MemoryRouter,
           initialProps: {
-            initialEntries: ['/test?tag=key%3Avalue&currentPage=2'],
+            initialEntries: ['/test?tag=test&currentPage=2'],
           },
         },
       );

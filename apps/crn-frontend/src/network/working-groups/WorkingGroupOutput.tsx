@@ -122,7 +122,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
           this period you will not be able to create or update research outputs
           on the hub. Normal service will resume on 11th September.
         </Toast>
-        {versionAction && (
+        {versionAction === 'create' && (
           <Toast accent="warning">
             The previous output page will be replaced with a summarised version
             history section.

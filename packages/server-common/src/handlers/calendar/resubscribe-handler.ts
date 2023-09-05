@@ -33,7 +33,10 @@ export const resubscribeCalendarsHandlerFactory =
       calendars.map(async (calendar) => {
         if (calendar.resourceId) {
           try {
-            await unsubscribe(calendar.resourceId, getCalendarId(calendar.id));
+            await unsubscribe(
+              calendar.resourceId,
+              calendar.channelId || getCalendarId(calendar.id),
+            );
             await calendarDataProvider.update(calendar.id, {
               resourceId: null,
             });
@@ -43,13 +46,15 @@ export const resubscribeCalendarsHandlerFactory =
         }
 
         try {
+          const channelId = `${getCalendarId(calendar.id)}_${Date.now()}`;
           const { expiration, resourceId } = await subscribe(
             calendar.googleCalendarId,
-            getCalendarId(calendar.id),
+            channelId,
           );
 
           await calendarDataProvider.update(calendar.id, {
             resourceId,
+            channelId,
             expirationDate: expiration,
           });
           logger.info(`Successfully resubscribed the calendar '${calendar.id}`);

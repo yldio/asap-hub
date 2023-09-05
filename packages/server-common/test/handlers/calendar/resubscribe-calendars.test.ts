@@ -11,6 +11,7 @@ import {
 } from '../../helpers/events';
 import { calendarDataProviderMock } from '../../mocks/calendar-data-provider.mock';
 import { loggerMock as logger } from '../../mocks/logger.mock';
+import { expectChannelId } from './utils';
 
 describe('Resubscribe calendar handler', () => {
   const unsubscribeMock: jest.MockedFunction<UnsubscribeFromEventChanges> =
@@ -102,11 +103,11 @@ describe('Resubscribe calendar handler', () => {
     );
     expect(subscribeMock).toHaveBeenCalledWith(
       calendarDataObject1.googleCalendarId,
-      calendarDataObject1.id,
+      expectChannelId(calendarDataObject1.id),
     );
     expect(subscribeMock).toHaveBeenCalledWith(
       calendarDataObject2.googleCalendarId,
-      calendarDataObject2.id,
+      expectChannelId(calendarDataObject2.id),
     );
   });
 
@@ -138,11 +139,11 @@ describe('Resubscribe calendar handler', () => {
     );
     expect(subscribeMock).toHaveBeenCalledWith(
       calendarDataObject1.googleCalendarId,
-      `cms:${calendarDataObject1.id}`,
+      expectChannelId(`cms:${calendarDataObject1.id}`),
     );
     expect(subscribeMock).toHaveBeenCalledWith(
       calendarDataObject2.googleCalendarId,
-      `cms:${calendarDataObject2.id}`,
+      expectChannelId(`cms:${calendarDataObject2.id}`),
     );
   });
 
@@ -169,11 +170,11 @@ describe('Resubscribe calendar handler', () => {
     expect(subscribeMock).toHaveBeenCalledTimes(2);
     expect(subscribeMock).toHaveBeenCalledWith(
       calendarDataObject1.googleCalendarId,
-      calendarDataObject1.id,
+      expectChannelId(calendarDataObject1.id),
     );
     expect(subscribeMock).toHaveBeenCalledWith(
       calendarDataObject2.googleCalendarId,
-      calendarDataObject2.id,
+      expectChannelId(calendarDataObject2.id),
     );
   });
 
@@ -199,6 +200,7 @@ describe('Resubscribe calendar handler', () => {
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith(
       getCalendarDataObject().id,
       {
+        channelId: expectChannelId(getCalendarDataObject().id),
         resourceId,
         expirationDate: expiration,
       },
@@ -227,6 +229,7 @@ describe('Resubscribe calendar handler', () => {
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith(
       getCalendarDataObject().id,
       {
+        channelId: expectChannelId(getCalendarDataObject().id),
         resourceId,
         expirationDate: expiration,
       },
@@ -256,6 +259,7 @@ describe('Resubscribe calendar handler', () => {
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith(
       getCalendarDataObject().id,
       {
+        channelId: expectChannelId(getCalendarDataObject().id),
         resourceId,
         expirationDate: expiration,
       },
@@ -282,6 +286,7 @@ describe('Resubscribe calendar handler', () => {
     expect(calendarDataProviderMock.update).toHaveBeenCalledWith(
       getCalendarDataObject().id,
       {
+        channelId: expectChannelId(getCalendarDataObject().id),
         resourceId,
         expirationDate: expiration,
       },

@@ -106,7 +106,7 @@ describe('Event Webhook', () => {
     expect(res.statusCode).toStrictEqual(502);
   });
 
-  test('Should return 502 when fails to find the calendar by resourceId', async () => {
+  test('Should return 404 when fails to find the calendar by resourceId', async () => {
     calendarDataProviderMock.fetch.mockResolvedValueOnce({
       items: [],
       total: 0,
@@ -116,7 +116,7 @@ describe('Event Webhook', () => {
       getApiGatewayEvent(googlePayload),
     )) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(502);
+    expect(res.statusCode).toStrictEqual(404);
   });
 
   test('Should return 200 and save nextSyncToken to squidex when it receives one from google', async () => {

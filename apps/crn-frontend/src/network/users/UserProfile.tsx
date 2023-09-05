@@ -112,22 +112,11 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   imageCompression.getDataUrlFromFile(compressedFile),
                 )
                 .then((encodedFile) => patchUserAvatar(encodedFile))
-                .catch((error) => {
-                  if (
-                    error instanceof Error &&
-                    error.message === 'WritingDisabled'
-                  ) {
-                    // it does not add a new toast because
-                    // maintenance toast is already appearing
-                    // it is possible to add an empty toast because
-                    // it does not appear
-                    /* istanbul ignore next */
-                    return toast('');
-                  }
-                  return toast(
+                .catch(() =>
+                  toast(
                     'There was an error and we were unable to save your picture',
-                  );
-                })
+                  ),
+                )
                 .finally(() => setAvatarSaving(false));
             }
           : undefined,

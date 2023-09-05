@@ -221,20 +221,7 @@ describe('users', () => {
     });
   });
 
-  test('cannot patch the logged-in user', async () => {
-    await retryable(async () => {
-      const response = await supertest(app)
-        .patch(`/users/${loggedInUser.id}`)
-        .send({ firstName: 'Changed' })
-        .expect(405);
-      expect(response.body).toEqual({
-        message: 'Method Not Allowed',
-      });
-    });
-  });
-
-  // TODO: remove skip after write block is removed
-  test.skip('cannot patch the logged-in user', async () => {
+  test('can patch the logged-in user', async () => {
     await supertest(app)
       .patch(`/users/${loggedInUser.id}`)
       .send({ firstName: 'Changed' })
@@ -248,8 +235,7 @@ describe('users', () => {
     });
   });
 
-  // TODO: remove skip after write block is removed
-  test.skip('cannot patch a non-logged-in user', async () => {
+  test('cannot patch a non-logged-in user', async () => {
     const user = await fixtures.createUser(getUserFixture());
 
     await supertest(app)

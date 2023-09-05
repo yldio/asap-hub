@@ -116,7 +116,6 @@ import {
 import { UserSquidexDataProvider } from './data-providers/user.data-provider';
 import { WorkingGroupSquidexDataProvider } from './data-providers/working-group.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
-import { disableWriteMiddleware } from './middleware/disable-write';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { dashboardRouteFactory } from './routes/dashboard.route';
@@ -641,7 +640,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(sentryTransactionIdHandler);
   app.use(cors());
   app.use(express.json({ limit: '10MB' }));
-  app.use(disableWriteMiddleware);
   app.use(featureFlagMiddlewareFactory(featureFlagDependencySwitch));
 
   /**

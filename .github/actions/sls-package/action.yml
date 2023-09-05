@@ -126,7 +126,7 @@ runs:
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'
         SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
-        SQUIDEX_BASE_URL: ${{ steps.setup.outputs.squidex-base-url }}
+        SQUIDEX_BASE_URL: 'https://override-disabled.squidex.io'
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
     - uses: actions/upload-artifact@v3
       with:

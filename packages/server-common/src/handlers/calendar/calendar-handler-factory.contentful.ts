@@ -27,6 +27,7 @@ type CalendarSkeleton = {
     googleApiMetadata: EntryFieldTypes.Object<{
       associatedGoogleCalendarId?: string | null;
       resourceId?: string | null;
+      channelId?: string | null;
     }>;
   };
 };
@@ -94,11 +95,13 @@ export const calendarCreatedContentfulHandlerFactory =
       try {
         await unsubscribe(
           googleApiMetadata.resourceId as string,
-          getCalendarSubscriptionId(calendarId),
+          (googleApiMetadata.channelId ||
+            getCalendarSubscriptionId(calendarId)) as string,
         );
 
         await calendarDataProvider.update(calendarId, {
           resourceId: null,
+          channelId: null,
         });
       } catch (error) {
         logger.error(error, 'Error during unsubscribing from the calendar');
@@ -119,13 +122,17 @@ export const calendarCreatedContentfulHandlerFactory =
       !googleApiMetadata?.resourceId
     ) {
       try {
+        const channelId = `${getCalendarSubscriptionId(
+          calendarId,
+        )}_${Date.now()}`;
         const { resourceId, expiration } = await subscribe(
           webhookEventGoogleCalendarId,
-          getCalendarSubscriptionId(calendarId),
+          channelId,
         );
 
         await calendarDataProvider.update(calendarId, {
           resourceId,
+          channelId,
           expirationDate: expiration,
         });
       } catch (error) {

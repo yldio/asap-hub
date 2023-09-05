@@ -673,6 +673,18 @@ describe('User data provider', () => {
         },
       });
     });
+    test('converts empty string values to `null`', async () => {
+      await userDataProvider.update('123', {
+        firstName: '  ',
+        degree: '',
+        onboarded: false,
+      });
+      expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+        firstName: null,
+        degree: null,
+        onboarded: false,
+      });
+    });
 
     test('checks version of published data and polls until they match', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({

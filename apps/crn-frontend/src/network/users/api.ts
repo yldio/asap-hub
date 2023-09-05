@@ -116,9 +116,6 @@ export const patchUser = async (
     body: JSON.stringify(patch),
   });
   if (!resp.ok) {
-    if (resp.status === 405) {
-      throw new Error('WritingDisabled');
-    }
     throw new Error(
       `Failed to update user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
@@ -142,9 +139,6 @@ export const postUserAvatar = async (
     body: JSON.stringify(post),
   });
   if (!resp.ok) {
-    if (resp.status === 405) {
-      throw new Error('WritingDisabled');
-    }
     throw new Error(
       `Failed to update avatar for user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );

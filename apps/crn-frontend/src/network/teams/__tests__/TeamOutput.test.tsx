@@ -142,19 +142,6 @@ it('Renders the research output', async () => {
   ).toBeInTheDocument();
 });
 
-it('Renders the maintenance message', async () => {
-  await renderPage({
-    teamId: '42',
-    outputDocumentType: 'bioinformatics',
-  });
-
-  expect(
-    screen.getByText(
-      'The hub is undergoing maintenance from 4th to 8th September. During this period you will not be able to create or update research outputs on the hub. Normal service will resume on 11th September.',
-    ),
-  ).toBeInTheDocument();
-});
-
 it('Shows the not found page if the team does not exist', async () => {
   mockGetTeam.mockResolvedValueOnce(undefined);
   await renderPage({

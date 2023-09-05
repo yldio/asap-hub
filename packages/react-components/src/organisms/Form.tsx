@@ -71,15 +71,8 @@ const Form = <T extends void | Record<string, unknown>>({
             setStatus('hasSaved');
           }
           return result;
-        } catch (error) {
-          if (error instanceof Error && error.message === 'WritingDisabled') {
-            // it does not add a new toast because
-            // maintenance toast is already appearing
-            // it is possible to add an empty toast because
-            // it does not appear
-            /* istanbul ignore next */
-            toast('');
-          } else if (formRef.current) {
+        } catch {
+          if (formRef.current) {
             setStatus('hasError');
             toast(
               'There was an error and we were unable to save your changes. Please try again.',

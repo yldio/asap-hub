@@ -63,6 +63,16 @@ describe('getUsers', () => {
     );
   });
 
+  it('should return an error and not retry the search', async () => {
+    search.mockRejectedValueOnce(new Error('Network error'));
+    await expect(
+      getUsers(algoliaSearchClient, {
+        ...defaultOptions,
+      }),
+    ).rejects.toThrowError('Failed to fetch users.');
+    expect(search).toHaveBeenCalledTimes(1);
+  });
+
   it('will not filter users by default', async () => {
     await getUsers(algoliaSearchClient, {
       ...defaultOptions,
@@ -216,6 +226,16 @@ describe('getUsersAndExternalAuthors', () => {
         ...alogliaExternalAuthorsResponse.hits,
       ],
     });
+  });
+
+  it('should return an error and not retry the search', async () => {
+    search.mockRejectedValueOnce(new Error('Network error'));
+    await expect(
+      getUsersAndExternalAuthors(algoliaSearchClient, {
+        ...defaultOptions,
+      }),
+    ).rejects.toThrowError('Failed to fetch users and authors.');
+    expect(search).toHaveBeenCalledTimes(1);
   });
 
   it('will not filter users nor external-authors by default', async () => {

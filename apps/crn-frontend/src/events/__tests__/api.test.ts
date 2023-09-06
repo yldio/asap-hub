@@ -58,6 +58,17 @@ describe('getEvents', () => {
     search.mockReset();
   });
 
+  it('should return an error and not retry the search', async () => {
+    search.mockRejectedValueOnce(new Error('Network error'));
+    await expect(
+      getEvents(
+        algoliaSearchClient,
+        getEventListOptions(new Date('2021-01-01T12:00:00'), { past: true }),
+      ),
+    ).rejects.toThrowError('Failed to fetch events.');
+    expect(search).toHaveBeenCalledTimes(1);
+  });
+
   it('makes request for events before a date', async () => {
     const res = createAlgoliaResponse<'event'>([]);
     search.mockResolvedValueOnce(res);

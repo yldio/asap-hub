@@ -40,7 +40,7 @@ export const getEvents = async (
       algoliaQueryId: result.queryID,
     };
   } catch (error) {
-    throw new Error(`Failed to fetch events: ${error}`);
+    throw new Error(`Failed to fetch events.`);
   }
 };
 

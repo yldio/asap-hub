@@ -77,7 +77,7 @@ export const getUsers = async (
       algoliaQueryId: result.queryID,
     };
   } catch (error) {
-    throw new Error(`Failed to fetch users: ${error}.`);
+    throw new Error(`Failed to fetch users.`);
   }
 };
 
@@ -104,7 +104,7 @@ export const getUsersAndExternalAuthors = async (
       algoliaQueryId: result.queryID,
     };
   } catch (error) {
-    throw new Error(`Failed to fetch users and external authors: ${error}.`);
+    throw new Error(`Failed to fetch users and authors.`);
   }
 };
 

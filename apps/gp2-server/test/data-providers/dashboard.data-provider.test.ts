@@ -169,7 +169,7 @@ describe('Dashboard data provider', () => {
     });
 
     test('if present it parses the deadline', async () => {
-      const deadline = DateTime.fromISO('2023-09-06');
+      const deadline = DateTime.now().plus({ weeks: 1 });
       const dashboard = {
         ...getContentfulGraphqlDashboard(),
         announcementsCollection: {
@@ -195,6 +195,33 @@ describe('Dashboard data provider', () => {
       expect(dashboardDataObject.items[0]?.announcements[0]?.deadline).toEqual(
         deadline.toUTC().toString(),
       );
+    });
+
+    test('does not include announcements with deadlines in the past', async () => {
+      const deadline = DateTime.now().minus({ weeks: 1 });
+      const dashboard = {
+        ...getContentfulGraphqlDashboard(),
+        announcementsCollection: {
+          total: 1,
+          items: [
+            {
+              deadline,
+              description: 'test',
+              sys: {
+                id: '1',
+              },
+            },
+          ],
+        },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        dashboardCollection: {
+          total: 1,
+          items: [dashboard],
+        },
+      });
+      const dashboardDataObject = await dashboardDataProvider.fetch({});
+      expect(dashboardDataObject.items[0]!.announcements).toEqual([]);
     });
   });
 

@@ -272,22 +272,7 @@ describe('/teams/ route', () => {
     });
   });
 
-  test('Should return 405 when user tries to update team', async () => {
-    const teamResponse = getTeamResponse();
-    teamControllerMock.update.mockResolvedValueOnce(teamResponse);
-
-    const response = await supertest(app).patch('/teams/team-id-1').send({
-      tools: [],
-    });
-
-    expect(response.status).toBe(405);
-    expect(response.body).toEqual({
-      message: 'Method Not Allowed',
-    });
-  });
-
-  // TODO: remove skip after write block is removed
-  describe.skip('PATCH /teams/{team_id}', () => {
+  describe('PATCH /teams/{team_id}', () => {
     const teamResponse = getTeamResponse();
     test('Should return a 400 error when the payload is invalid', async () => {
       const response = await supertest(app).patch('/teams/123').send({

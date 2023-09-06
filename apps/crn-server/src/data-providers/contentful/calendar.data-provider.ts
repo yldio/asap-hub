@@ -155,7 +155,8 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
     const calendar = await environment.getEntry(id);
     const previousGoogleApiMetadata = calendar.fields.googleApiMetadata;
 
-    const { resourceId, expirationDate, syncToken, ...otherFields } = update;
+    const { resourceId, channelId, expirationDate, syncToken, ...otherFields } =
+      update;
 
     updateEntryFields(calendar, otherFields);
 
@@ -175,6 +176,7 @@ export class CalendarContentfulDataProvider implements CalendarDataProvider {
                   calendar.fields.googleCalendarId['en-US'],
               }
             : {}),
+          ...(channelId ? { channelId } : {}),
           ...(syncToken ? { syncToken } : {}),
           ...(expirationDate ? { expirationDate } : {}),
         },
@@ -209,6 +211,7 @@ export const parseGraphQlCalendarToDataObject = (
     id: item.sys.id,
     version: item.sys.publishedVersion ?? 1,
     resourceId: item.googleApiMetadata?.resourceId ?? undefined,
+    channelId: item.googleApiMetadata?.channelId ?? undefined,
     expirationDate: item.googleApiMetadata?.expirationDate ?? undefined,
     syncToken: item.googleApiMetadata?.syncToken ?? undefined,
     workingGroups,

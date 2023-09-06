@@ -87,19 +87,12 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onSave = noop,
 }) => {
   const [status, setStatus] = useState<
-    'initial' | 'isSaving' | 'hasError' | 'hasSaved' | 'writingDisabled'
+    'initial' | 'isSaving' | 'hasError' | 'hasSaved'
   >('initial');
   const historyPush = usePushFromHere();
   const mounted = useIsMounted();
   return (
     <Modal padding={false}>
-      {status === 'writingDisabled' && (
-        <Toast accent="warning">
-          The hub is undergoing maintenance from 4th to 8th September. During
-          this period you will not be able to create or update research outputs
-          on the hub. Normal service will resume on 11th September.
-        </Toast>
-      )}
       {status === 'hasError' && <Toast>{error}</Toast>}
       <header css={headerStyles}>
         <div css={controlsContainerStyles}>
@@ -144,11 +137,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                     historyPush(redirect);
                   }
                 } catch (e) {
-                  if (e instanceof Error && e.message === 'WritingDisabled') {
-                    setStatus('writingDisabled');
-                  } else {
-                    setStatus('hasError');
-                  }
+                  setStatus('hasError');
                 }
               }}
             >

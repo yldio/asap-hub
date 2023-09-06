@@ -295,36 +295,7 @@ describe('/users/ route', () => {
     });
   });
 
-  test('Should return 405 when user tries to update the user data', async () => {
-    const userId = userMock.id;
-    userControllerMock.update.mockResolvedValueOnce(getUserResponse());
-
-    const response = await supertest(appWithMockedAuth)
-      .patch(`/users/${userId}`)
-      .send({ jobTitle: 'CEO' });
-
-    expect(response.status).toBe(405);
-    expect(response.body).toEqual({
-      message: 'Method Not Allowed',
-    });
-  });
-
-  test('Should return 405 when user tries to update the avatar', async () => {
-    const userId = userMock.id;
-    userControllerMock.updateAvatar.mockResolvedValueOnce(getUserResponse());
-
-    const response = await supertest(appWithMockedAuth)
-      .post(`/users/${userId}/avatar`)
-      .send(updateAvatarBody);
-
-    expect(response.status).toBe(405);
-    expect(response.body).toEqual({
-      message: 'Method Not Allowed',
-    });
-  });
-
-  // TODO: remove skip after write block is removed
-  describe.skip('PATCH /users/{user_id}', () => {
+  describe('PATCH /users/{user_id}', () => {
     const userId = userMock.id;
 
     test('Should return the results correctly', async () => {
@@ -670,8 +641,7 @@ describe('/users/ route', () => {
     });
   });
 
-  // TODO: remove skip after write block is removed
-  describe.skip('POST /users/{user_id}/avatar', () => {
+  describe('POST /users/{user_id}/avatar', () => {
     const userId = userMock.id;
 
     test('Should return the results correctly', async () => {

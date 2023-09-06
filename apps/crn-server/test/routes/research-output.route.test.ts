@@ -359,41 +359,7 @@ describe('/research-outputs/ route', () => {
     });
   });
 
-  test('Should return a 405 when user tries to create a research output', async () => {
-    const createResearchOutputRequest = getResearchOutputPostRequest();
-
-    const response = await supertest(app)
-      .post('/research-outputs')
-      .send(createResearchOutputRequest)
-      .set('Accept', 'application/json');
-
-    expect(response.status).toBe(405);
-    expect(response.body).toEqual({
-      message: 'Method Not Allowed',
-    });
-  });
-
-  test('Should return 405 when user tries to update a research output', async () => {
-    const {
-      rrid: _rrid,
-      doi: _doi,
-      accession: _accession,
-      ...researchOutputPutRequest
-    } = getResearchOutputPutRequest();
-    const response = await supertest(app)
-      .put('/research-outputs/abc123')
-      .send(researchOutputPutRequest)
-      .set('Accept', 'application/json');
-
-    expect(response.status).toBe(405);
-
-    expect(response.body).toEqual({
-      message: 'Method Not Allowed',
-    });
-  });
-
-  // TODO: remove skip after write block is removed
-  describe.skip('POST /research-outputs/', () => {
+  describe('POST /research-outputs/', () => {
     const researchOutputResponse = getResearchOutputResponse();
 
     test('Should return a 201 when is hit', async () => {
@@ -862,8 +828,7 @@ describe('/research-outputs/ route', () => {
     });
   });
 
-  // TODO: remove skip after write block is removed
-  describe.skip('PUT /research-outputs/', () => {
+  describe('PUT /research-outputs/', () => {
     const researchOutputResponse = getResearchOutputResponse();
     const {
       rrid: _rrid,

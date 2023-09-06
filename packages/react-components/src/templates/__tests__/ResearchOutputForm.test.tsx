@@ -48,6 +48,8 @@ const props: ComponentProps<typeof ResearchOutputForm> = {
     canPublishResearchOutput: true,
     canShareResearchOutput: true,
   },
+  getRelatedResearchSuggestions: jest.fn(),
+  getRelatedEventSuggestions: jest.fn(),
 };
 
 jest.setTimeout(60000);

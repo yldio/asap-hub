@@ -11,6 +11,8 @@ const props: ComponentProps<typeof ResearchOutputRelatedEventsCard> = {
   relatedEvents: [],
   isSaving: false,
   isEditMode: false,
+  getRelatedEventSuggestions: jest.fn(),
+  onChangeRelatedEvents: jest.fn(),
 };
 
 it('renders the related events card', async () => {

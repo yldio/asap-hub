@@ -37,6 +37,7 @@ export {
   Tooltip,
   MaterialAvailability,
   StateTag,
+  ScrollToTop,
 } from './atoms';
 export * from './colors';
 export { borderWidth } from './form';

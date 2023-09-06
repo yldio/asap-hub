@@ -2,6 +2,7 @@ import {
   NotFoundPage,
   SharedResearchOutput,
   utils,
+  ScrollToTop,
 } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
@@ -58,6 +59,7 @@ const ResearchOutput: React.FC = () => {
   if (researchOutputData) {
     return (
       <ResearchOutputPermissionsContext.Provider value={permissions}>
+        <ScrollToTop />
         <Switch>
           <Route exact path={publishedNow ? publishedNowPath : path}>
             <Frame title={researchOutputData.title}>

@@ -26,6 +26,10 @@ jest.mock('../../network/users/api');
 jest.mock('../../network/working-groups/api');
 jest.mock('../api');
 
+beforeEach(() => {
+  window.scrollTo = jest.fn();
+});
+
 const id = '42';
 
 const mockGetResearchOutput = getResearchOutput as jest.MockedFunction<

@@ -208,6 +208,7 @@ export const migrateEvents = async () => {
       meetingMaterials,
       meetingMaterialsPermanentlyUnavailable,
       calendar,
+      eventLink,
     } = squidexFlatData;
 
     const materialsSpeakersThumbAndMeetingLink = {
@@ -224,9 +225,12 @@ export const migrateEvents = async () => {
         contentfulEnvironment,
         presentation,
       ),
-      // it throws an error if meetingLink is ''
-      // because it's not a valid url
-      meetingLink: meetingLink?.trim() === '' ? null : meetingLink?.trim(),
+      // it throws an error if meetingLink or eventLink
+      // is '' because it's not a valid url
+      meetingLink:
+        meetingLink?.trim() === '' || !meetingLink ? null : meetingLink?.trim(),
+      eventLink:
+        eventLink?.trim() === '' || !eventLink ? null : eventLink?.trim(),
     };
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

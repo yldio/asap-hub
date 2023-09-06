@@ -35,7 +35,7 @@ export const interestGroupsState = selectorFamily<
       if (index === undefined || index instanceof Error) return index;
       const interestGroups: InterestGroupResponse[] = [];
       for (const id of index.ids) {
-        const group = get(interestGroupState(id));
+        const group = get(interestGroupListState(id));
         if (group === undefined) return undefined;
         interestGroups.push(group);
       }
@@ -48,18 +48,12 @@ export const interestGroupsState = selectorFamily<
         newInterestGroups === undefined ||
         newInterestGroups instanceof DefaultValue
       ) {
-        const oldInterestGroups = get(interestGroupIndexState(options));
-        if (!(oldInterestGroups instanceof Error)) {
-          oldInterestGroups?.ids?.forEach((id) =>
-            reset(interestGroupState(id)),
-          );
-        }
         reset(interestGroupIndexState(options));
       } else if (newInterestGroups instanceof Error) {
         set(interestGroupIndexState(options), newInterestGroups);
       } else {
         newInterestGroups?.items.forEach((group) =>
-          set(interestGroupState(group.id), group),
+          set(interestGroupListState(group.id), group),
         );
         set(interestGroupIndexState(options), {
           total: newInterestGroups.total,
@@ -92,6 +86,13 @@ export const interestGroupState = atomFamily<
 >({
   key: 'interestGroup',
   default: fetchInterestGroupState,
+});
+export const interestGroupListState = atomFamily<
+  InterestGroupResponse | undefined,
+  string
+>({
+  key: 'interestGroupList',
+  default: interestGroupState,
 });
 
 export const usePrefetchInterestGroups = (

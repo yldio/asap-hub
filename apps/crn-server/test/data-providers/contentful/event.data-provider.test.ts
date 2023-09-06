@@ -441,6 +441,21 @@ describe('Events Contentful Data Provider', () => {
       expect(result).toEqual(getContentfulEventDataObject());
     });
 
+    test('Should return the publishedAt as lastModifiedDate lastUpdated is not available', async () => {
+      const contentfulGraphQLResponse = getContentfulGraphqlEvent();
+      contentfulGraphQLResponse.lastUpdated = null;
+      contentfulGraphQLResponse.sys.publishedAt = '2023-08-31T14:00:00.000Z';
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        events: contentfulGraphQLResponse,
+      });
+
+      const result = await eventDataProvider.fetchById(eventId);
+      expect(result).toEqual({
+        ...getContentfulEventDataObject(),
+        lastModifiedDate: '2023-08-31T14:00:00.000Z',
+      });
+    });
+
     describe('Event speakers', () => {
       test('Should remove null speakers from the list', async () => {
         const contentfulGraphQLResponse = getContentfulGraphqlEvent();

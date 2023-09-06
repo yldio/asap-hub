@@ -281,7 +281,7 @@ __metadata:
     algoliasearch: 4.19.1
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1447.0
+    aws-sdk: 2.1448.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -886,7 +886,7 @@ __metadata:
     "@types/jest": 29.5.4
     "@types/nock": 11.1.0
     "@types/node": 18.17.3
-    "@types/qs": 6.9.7
+    "@types/qs": 6.9.8
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
@@ -945,7 +945,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1447.0
+    aws-sdk: 2.1448.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.32.1
@@ -997,6 +997,7 @@ __metadata:
     "@hapi/joi": 17.1.1
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.30.1
+    "@slack/webhook": ^6.1.0
     "@types/apr-intercept": "workspace:*"
     "@types/async-retry": ^1
     "@types/aws-lambda": 8.10.119
@@ -1298,7 +1299,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-router-hash-link": 1.2.1
+    "@types/react-router-hash-link": 2.4.6
     "@types/react-test-renderer": 18.0.0
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1416,7 +1417,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
-    aws-sdk: 2.1447.0
+    aws-sdk: 2.1448.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.32.1
@@ -1610,7 +1611,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-router-hash-link": 1.2.1
+    "@types/react-router-hash-link": 2.4.6
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
     "@types/react-test-renderer": 18.0.0
     "@types/rehype-slug": "workspace:*"
@@ -1694,7 +1695,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": 7.22.11
-    "@types/qs": 6.9.7
+    "@types/qs": 6.9.8
     "@types/react-router-dom": 5.3.3
     qs: 6.11.2
     typesafe-routes: 9.0.1
@@ -14786,8 +14787,8 @@ __metadata:
   linkType: hard
 
 "@sentry/cli@npm:^2.20.3":
-  version: 2.20.5
-  resolution: "@sentry/cli@npm:2.20.5"
+  version: 2.20.6
+  resolution: "@sentry/cli@npm:2.20.6"
   dependencies:
     https-proxy-agent: ^5.0.0
     node-fetch: ^2.6.7
@@ -14796,7 +14797,7 @@ __metadata:
     which: ^2.0.2
   bin:
     sentry-cli: bin/sentry-cli
-  checksum: 4822e58e944e74b5982ea657c0d622d8ec40e9df371d4ba1da4f3c3a29b1c1e7a2556c0a8e63a92aee7e23d701ddf2311cbd0a6ae7751d3e7313b423f3430daf
+  checksum: 6e694bd875233b18f320da336001aaa3c46118fb23c2b80e450f2b3d8597bdc2ef0bed8f5dde64d81c02078b58ae29b2cfac5376e752460216a32850df36de48
   languageName: node
   linkType: hard
 
@@ -15155,6 +15156,24 @@ __metadata:
   dependencies:
     "@sinonjs/commons": ^1.7.0
   checksum: 09b5a158ce013a6c37613258bad79ca4efeb99b1f59c41c73cca36cac00b258aefcf46eeea970fccf06b989414d86fe9f54c1102272c0c3bdd51a313cea80949
+  languageName: node
+  linkType: hard
+
+"@slack/types@npm:^1.2.1":
+  version: 1.10.0
+  resolution: "@slack/types@npm:1.10.0"
+  checksum: 9dcf254ad4882146de7ed2db948e7ee56614c3aca47a1df7cbbf4faebe6f2672a704239c0c259b4825be140bd8bb97d994241f35dc432b9ca722333828dac666
+  languageName: node
+  linkType: hard
+
+"@slack/webhook@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@slack/webhook@npm:6.1.0"
+  dependencies:
+    "@slack/types": ^1.2.1
+    "@types/node": ">=12.0.0"
+    axios: ^0.21.4
+  checksum: f8db7b6614115c1df0f7f5fc828dfca48eedaa49dfe2fff88eaf936369385e7142c0c58d34e0e8e1bc4126ac0be651af2a15bc13bb38beeba2143068f888c91e
   languageName: node
   linkType: hard
 
@@ -17888,6 +17907,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:>=12.0.0":
+  version: 20.4.9
+  resolution: "@types/node@npm:20.4.9"
+  checksum: 504e3da96274f3865c1251830f4750bb0a8f6ef6f8648902cd3bba33370c5f219235471bfbf55cce726b25c8eacfcc8e2aad0ec3b13e27ea6708b00d4a9a46c8
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^14.0.10 || ^16.0.0, @types/node@npm:^14.14.20 || ^16.0.0, @types/node@npm:^16.9.6":
   version: 16.11.26
   resolution: "@types/node@npm:16.11.26"
@@ -18004,10 +18030,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:6.9.7, @types/qs@npm:^6.9.7":
-  version: 6.9.7
-  resolution: "@types/qs@npm:6.9.7"
-  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
+"@types/qs@npm:6.9.8":
+  version: 6.9.8
+  resolution: "@types/qs@npm:6.9.8"
+  checksum: c28e07d00d07970e5134c6eed184a0189b8a4649e28fdf36d9117fe671c067a44820890de6bdecef18217647a95e9c6aebdaaae69f5fe4b0bec9345db885f77e
   languageName: node
   linkType: hard
 
@@ -18015,6 +18041,13 @@ __metadata:
   version: 6.9.6
   resolution: "@types/qs@npm:6.9.6"
   checksum: 01871b1cf7062717ec76fcb9b29ddae1e04fcfadc1c76d86ec2571e72f27bf09ff31b094b295be8d4ca664aeec9b8965563680b31fcab7aba1ed93afac5181cd
+  languageName: node
+  linkType: hard
+
+"@types/qs@npm:^6.9.7":
+  version: 6.9.7
+  resolution: "@types/qs@npm:6.9.7"
+  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
   languageName: node
   linkType: hard
 
@@ -18070,18 +18103,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-dom@npm:*":
-  version: 5.1.5
-  resolution: "@types/react-router-dom@npm:5.1.5"
-  dependencies:
-    "@types/history": "npm:*"
-    "@types/react": "npm:*"
-    "@types/react-router": "npm:*"
-  checksum: 995316331c0fb270c4ad8f20e5c76cfeb219ab8a35cd3d6d392ec7da8bf82092e5234dc6d70a2f8bfc9cd37c1b4c4aee3398f2950b52e04c2cb37c8e61facb8b
-  languageName: node
-  linkType: hard
-
-"@types/react-router-dom@npm:5.3.3":
+"@types/react-router-dom@npm:5.3.3, @types/react-router-dom@npm:^5.3.0":
   version: 5.3.3
   resolution: "@types/react-router-dom@npm:5.3.3"
   dependencies:
@@ -18092,13 +18114,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-router-hash-link@npm:1.2.1":
-  version: 1.2.1
-  resolution: "@types/react-router-hash-link@npm:1.2.1"
+"@types/react-router-hash-link@npm:2.4.6":
+  version: 2.4.6
+  resolution: "@types/react-router-hash-link@npm:2.4.6"
   dependencies:
-    "@types/react": "npm:*"
-    "@types/react-router-dom": "npm:*"
-  checksum: bfd72a0117723b179b4e76cfc7e3cb71f02b6e614cb8d41f1fe5a668c5fd7138deb31729f12dbda5d1cec109b7a92806999f9f25e8fc15f145d3b4a54aad4b4c
+    "@types/history": ^4.7.11
+    "@types/react": "*"
+    "@types/react-router-dom": ^5.3.0
+  checksum: 9c3b02d9e2355c71f40dd9120b7057782bba72f989ef4dee0fde53db37a7adbb2d0438a977d7d3d98ac3f5236e5ca84c687df339d488b9787ca9d178e058b394
   languageName: node
   linkType: hard
 
@@ -21146,9 +21169,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1447.0":
-  version: 2.1447.0
-  resolution: "aws-sdk@npm:2.1447.0"
+"aws-sdk@npm:2.1448.0":
+  version: 2.1448.0
+  resolution: "aws-sdk@npm:2.1448.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -21160,7 +21183,7 @@ __metadata:
     util: ^0.12.4
     uuid: 8.0.0
     xml2js: 0.5.0
-  checksum: 06314deae0999ad9e3fe2da3ae0ae11eeb547c7cb1b469f9765a2d733b1187c2eba5cc9954eed46ce001ac442f54c46721d20025cefc9c508a16025955d94359
+  checksum: 2e0a7974fdb9278bf3c0326df9ddc17ed36f5157323339aeb5d5c200d3c05be2a5c3ed123b82894c48c46500a971338610ec6d96f19f76948c584dbc5ecd4ae0
   languageName: node
   linkType: hard
 

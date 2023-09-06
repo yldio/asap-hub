@@ -9859,7 +9859,7 @@ export type EventsContentFragment = Pick<
   | 'meetingMaterialsPermanentlyUnavailable'
   | 'meetingMaterials'
 > & {
-  sys: Pick<Sys, 'id' | 'publishedVersion'>;
+  sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
   notes?: Maybe<
     Pick<EventsNotes, 'json'> & {
       links: {
@@ -10131,6 +10131,7 @@ export type EventsContentFragment = Pick<
 
 export type FetchEventByIdQueryVariables = Exact<{
   id: Scalars['String'];
+  singleEvent?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchEventByIdQuery = {
@@ -10159,7 +10160,7 @@ export type FetchEventByIdQuery = {
       | 'meetingMaterialsPermanentlyUnavailable'
       | 'meetingMaterials'
     > & {
-      sys: Pick<Sys, 'id' | 'publishedVersion'>;
+      sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
       notes?: Maybe<
         Pick<EventsNotes, 'json'> & {
           links: {
@@ -10466,6 +10467,7 @@ export type FetchEventsQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<Array<InputMaybe<EventsOrder>> | InputMaybe<EventsOrder>>;
   where?: InputMaybe<EventsFilter>;
+  singleEvent?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchEventsQuery = {
@@ -10497,7 +10499,7 @@ export type FetchEventsQuery = {
             | 'meetingMaterialsPermanentlyUnavailable'
             | 'meetingMaterials'
           > & {
-            sys: Pick<Sys, 'id' | 'publishedVersion'>;
+            sys: Pick<Sys, 'id' | 'publishedVersion' | 'publishedAt'>;
             notes?: Maybe<
               Pick<EventsNotes, 'json'> & {
                 links: {
@@ -10884,6 +10886,7 @@ export type FetchEventsByUserIdQueryVariables = Exact<{
   id: Scalars['String'];
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  singleEvent?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchEventsByUserIdQuery = {
@@ -10921,7 +10924,10 @@ export type FetchEventsByUserIdQuery = {
                         | 'meetingMaterialsPermanentlyUnavailable'
                         | 'meetingMaterials'
                       > & {
-                        sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedVersion' | 'publishedAt'
+                        >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -11380,6 +11386,7 @@ export type FetchEventsByExternalAuthorIdQueryVariables = Exact<{
   id: Scalars['String'];
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  singleEvent?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchEventsByExternalAuthorIdQuery = {
@@ -11417,7 +11424,10 @@ export type FetchEventsByExternalAuthorIdQuery = {
                         | 'meetingMaterialsPermanentlyUnavailable'
                         | 'meetingMaterials'
                       > & {
-                        sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedVersion' | 'publishedAt'
+                        >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -11876,6 +11886,7 @@ export type FetchEventsByTeamIdQueryVariables = Exact<{
   id: Scalars['String'];
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
+  singleEvent?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchEventsByTeamIdQuery = {
@@ -11913,7 +11924,10 @@ export type FetchEventsByTeamIdQuery = {
                         | 'meetingMaterialsPermanentlyUnavailable'
                         | 'meetingMaterials'
                       > & {
-                        sys: Pick<Sys, 'id' | 'publishedVersion'>;
+                        sys: Pick<
+                          Sys,
+                          'id' | 'publishedVersion' | 'publishedAt'
+                        >;
                         notes?: Maybe<
                           Pick<EventsNotes, 'json'> & {
                             links: {
@@ -13655,7 +13669,7 @@ export type FetchResearchOutputByIdQueryVariables = Exact<{
   id: Scalars['String'];
   preview?: InputMaybe<Scalars['Boolean']>;
   fetchPMs?: InputMaybe<Scalars['Boolean']>;
-  fetchRelatedResearch?: InputMaybe<Scalars['Boolean']>;
+  singleOutput?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchResearchOutputByIdQuery = {
@@ -13887,7 +13901,7 @@ export type FetchResearchOutputsQueryVariables = Exact<{
   where?: InputMaybe<ResearchOutputsFilter>;
   preview?: InputMaybe<Scalars['Boolean']>;
   fetchPMs?: InputMaybe<Scalars['Boolean']>;
-  fetchRelatedResearch?: InputMaybe<Scalars['Boolean']>;
+  singleOutput?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 export type FetchResearchOutputsQuery = {
@@ -15914,6 +15928,7 @@ export const EventsContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'publishedVersion' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
               ],
             },
           },
@@ -16396,6 +16411,25 @@ export const EventsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'workingGroup' },
+                              directives: [
+                                {
+                                  kind: 'Directive',
+                                  name: { kind: 'Name', value: 'include' },
+                                  arguments: [
+                                    {
+                                      kind: 'Argument',
+                                      name: { kind: 'Name', value: 'if' },
+                                      value: {
+                                        kind: 'Variable',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'singleEvent',
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
                               selectionSet: {
                                 kind: 'SelectionSet',
                                 selections: [
@@ -16427,6 +16461,25 @@ export const EventsContentFragmentDoc = {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
                                   value: { kind: 'IntValue', value: '10' },
+                                },
+                              ],
+                              directives: [
+                                {
+                                  kind: 'Directive',
+                                  name: { kind: 'Name', value: 'include' },
+                                  arguments: [
+                                    {
+                                      kind: 'Argument',
+                                      name: { kind: 'Name', value: 'if' },
+                                      value: {
+                                        kind: 'Variable',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'singleEvent',
+                                        },
+                                      },
+                                    },
+                                  ],
                                 },
                               ],
                               selectionSet: {
@@ -16622,7 +16675,7 @@ export const EventsContentFragmentDoc = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '10' },
+                value: { kind: 'IntValue', value: '25' },
               },
             ],
             selectionSet: {
@@ -18236,22 +18289,6 @@ export const ResearchOutputsContentFragmentDoc = {
                 value: { kind: 'IntValue', value: '20' },
               },
             ],
-            directives: [
-              {
-                kind: 'Directive',
-                name: { kind: 'Name', value: 'include' },
-                arguments: [
-                  {
-                    kind: 'Argument',
-                    name: { kind: 'Name', value: 'if' },
-                    value: {
-                      kind: 'Variable',
-                      name: { kind: 'Name', value: 'fetchRelatedResearch' },
-                    },
-                  },
-                ],
-              },
-            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -18288,6 +18325,22 @@ export const ResearchOutputsContentFragmentDoc = {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
                             value: { kind: 'IntValue', value: '20' },
+                          },
+                        ],
+                        directives: [
+                          {
+                            kind: 'Directive',
+                            name: { kind: 'Name', value: 'include' },
+                            arguments: [
+                              {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'if' },
+                                value: {
+                                  kind: 'Variable',
+                                  name: { kind: 'Name', value: 'singleOutput' },
+                                },
+                              },
+                            ],
                           },
                         ],
                         selectionSet: {
@@ -18328,6 +18381,22 @@ export const ResearchOutputsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'workingGroup' },
+                        directives: [
+                          {
+                            kind: 'Directive',
+                            name: { kind: 'Name', value: 'include' },
+                            arguments: [
+                              {
+                                kind: 'Argument',
+                                name: { kind: 'Name', value: 'if' },
+                                value: {
+                                  kind: 'Variable',
+                                  name: { kind: 'Name', value: 'singleOutput' },
+                                },
+                              },
+                            ],
+                          },
+                        ],
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
@@ -18360,22 +18429,6 @@ export const ResearchOutputsContentFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'linkedFrom' },
-            directives: [
-              {
-                kind: 'Directive',
-                name: { kind: 'Name', value: 'include' },
-                arguments: [
-                  {
-                    kind: 'Argument',
-                    name: { kind: 'Name', value: 'if' },
-                    value: {
-                      kind: 'Variable',
-                      name: { kind: 'Name', value: 'fetchRelatedResearch' },
-                    },
-                  },
-                ],
-              },
-            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -18441,6 +18494,25 @@ export const ResearchOutputsContentFragmentDoc = {
                                   value: { kind: 'IntValue', value: '20' },
                                 },
                               ],
+                              directives: [
+                                {
+                                  kind: 'Directive',
+                                  name: { kind: 'Name', value: 'include' },
+                                  arguments: [
+                                    {
+                                      kind: 'Argument',
+                                      name: { kind: 'Name', value: 'if' },
+                                      value: {
+                                        kind: 'Variable',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'singleOutput',
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
                               selectionSet: {
                                 kind: 'SelectionSet',
                                 selections: [
@@ -18482,6 +18554,25 @@ export const ResearchOutputsContentFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'workingGroup' },
+                              directives: [
+                                {
+                                  kind: 'Directive',
+                                  name: { kind: 'Name', value: 'include' },
+                                  arguments: [
+                                    {
+                                      kind: 'Argument',
+                                      name: { kind: 'Name', value: 'if' },
+                                      value: {
+                                        kind: 'Variable',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'singleOutput',
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              ],
                               selectionSet: {
                                 kind: 'SelectionSet',
                                 selections: [
@@ -20793,6 +20884,15 @@ export const FetchEventByIdDocument = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'singleEvent' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: true },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -20871,6 +20971,15 @@ export const FetchEventsDocument = {
             kind: 'NamedType',
             name: { kind: 'Name', value: 'EventsFilter' },
           },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'singleEvent' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
         },
       ],
       selectionSet: {
@@ -20970,6 +21079,15 @@ export const FetchEventsByUserIdDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'singleEvent' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
         },
       ],
       selectionSet: {
@@ -21149,6 +21267,15 @@ export const FetchEventsByExternalAuthorIdDocument = {
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'singleEvent' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -21326,6 +21453,15 @@ export const FetchEventsByTeamIdDocument = {
           kind: 'VariableDefinition',
           variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'singleEvent' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
+          defaultValue: { kind: 'BooleanValue', value: false },
         },
       ],
       selectionSet: {
@@ -23630,7 +23766,7 @@ export const FetchResearchOutputByIdDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'fetchRelatedResearch' },
+            name: { kind: 'Name', value: 'singleOutput' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: true },
@@ -23746,7 +23882,7 @@ export const FetchResearchOutputsDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'fetchRelatedResearch' },
+            name: { kind: 'Name', value: 'singleOutput' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: false },

@@ -239,7 +239,7 @@ const ResearchOutputFormSharingCard: React.FC<
           title={'Date Published'}
           subtitle={'(optional)'}
           description={
-            'This should be the date your output was shared publicly on it’s repository.'
+            'This should be the date your output was shared publicly on its repository.'
           }
           onChange={onChangePublishDate}
           value={publishDate}

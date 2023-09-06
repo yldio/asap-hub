@@ -10,11 +10,11 @@ import {
   getEventDataObject,
   getEventInput,
   getEventResponse,
-  getListEventResponse,
   getRestEvent,
   getSquidexEventGraphqlResponse,
   getSquidexEventsGraphqlResponse,
   getEventCreateDataObject,
+  getListEventDataObject,
 } from '../fixtures/events.fixtures';
 import {
   getSquidexGraphqlInterestGroup,
@@ -92,7 +92,7 @@ describe('Event data provider', () => {
           top: 10,
         },
       );
-      expect(result).toEqual(getListEventResponse());
+      expect(result).toEqual(getListEventDataObject(false));
     });
 
     test('Should apply the filter to remove hidden events by default', async () => {
@@ -112,7 +112,7 @@ describe('Event data provider', () => {
           top: 10,
         },
       );
-      expect(result).toEqual(getListEventResponse());
+      expect(result).toEqual(getListEventDataObject(false));
     });
     describe('Date filters', () => {
       test('Should apply the "after" filter to the end-date', async () => {
@@ -131,7 +131,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
 
       test('Should apply the "before" filter to the end-date', async () => {
@@ -151,7 +151,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
 
       test('Should apply both the "after" and "before" filters', async () => {
@@ -174,7 +174,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
 
       test('Should apply search query params', async () => {
@@ -198,7 +198,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
 
       test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
@@ -222,7 +222,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
 
       test('Should sanitise double quotation mark by encoding to hex', async () => {
@@ -245,7 +245,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
     });
     describe('Filters', () => {
@@ -319,8 +319,9 @@ describe('Event data provider', () => {
                 top: 10,
               },
             );
-            expect(result).toEqual(getListEventResponse());
+            expect(result).toEqual(getListEventDataObject(false));
           });
+          false;
         },
       );
 
@@ -343,7 +344,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
       test('Should apply the "userId" filter', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
@@ -364,7 +365,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
       test('Should apply the "externalUserId" filter', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
@@ -385,7 +386,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
       test('Should apply the "hidden" filter', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
@@ -406,7 +407,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
     });
     describe('Sorting', () => {
@@ -430,7 +431,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
       test('Should apply the "orderBy" option using the endDate field and descending order', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
@@ -452,7 +453,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
       test('Should not apply any order if the parameters are not provided', async () => {
         const eventsGraphqlResponse = getSquidexEventsGraphqlResponse();
@@ -472,7 +473,7 @@ describe('Event data provider', () => {
             top: 10,
           },
         );
-        expect(result).toEqual(getListEventResponse());
+        expect(result).toEqual(getListEventDataObject(false));
       });
     });
     describe('Event link', () => {
@@ -643,7 +644,7 @@ describe('Event data provider', () => {
           top: 10,
         },
       );
-      expect(result).toEqual(getListEventResponse());
+      expect(result).toEqual(getListEventDataObject(false));
     });
     test('can filter by googleId', async () => {
       const googleId = 'google-event-id';
@@ -666,7 +667,7 @@ describe('Event data provider', () => {
           top: 10,
         },
       );
-      expect(result).toEqual(getListEventResponse());
+      expect(result).toEqual(getListEventDataObject(false));
     });
   });
   describe('Fetch by ID', () => {

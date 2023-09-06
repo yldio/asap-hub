@@ -65,6 +65,9 @@ on:
       CONTENTFUL_MANAGEMENT_TOKEN:
         description: 'Contentful Management Token'
         required: true
+      SLACK_WEBHOOK:
+        description: 'Slack webhook URL'
+        required: false
 
 jobs:
   crn-sls-deploy:
@@ -97,6 +100,7 @@ jobs:
           crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
           crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           environment-name: ${{ inputs.environment-name }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
 
   gp2-sls-deploy:
     concurrency:

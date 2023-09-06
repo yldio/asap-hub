@@ -4,6 +4,7 @@ export const OUTPUT_ENTITY_TYPE = 'output';
 export const PROJECT_ENTITY_TYPE = 'project';
 export const EVENT_ENTITY_TYPE = 'event';
 export const USER_ENTITY_TYPE = 'user';
+export const NEWS_ENTITY_TYPE = 'news';
 
 export type Payload =
   | {
@@ -17,6 +18,10 @@ export type Payload =
   | {
       data: gp2Model.EventResponse;
       type: typeof EVENT_ENTITY_TYPE;
+    }
+  | {
+      data: gp2Model.NewsResponse;
+      type: typeof NEWS_ENTITY_TYPE;
     }
   | {
       data: gp2Model.UserResponse;

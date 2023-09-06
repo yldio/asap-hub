@@ -51,6 +51,7 @@ const {
   CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
   IS_CONTENTFUL_ENABLED = 'false',
   LOG_LEVEL,
+  SLACK_WEBHOOK,
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
@@ -272,6 +273,8 @@ const serverlessConfig: AWS = {
       stages: ['local'],
       ssm: offlineSSM,
     },
+    apiGateway5xxTopic:
+      '${self:service}-${self:provider.stage}-topic-api-gateway-5xx',
   },
   functions: {
     apiHandler: {
@@ -1190,6 +1193,20 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
+    sendSlackAlert: {
+      handler: './src/handlers/send-slack-alert.handler',
+      events: [
+        {
+          sns: {
+            arn: { Ref: 'TopicCloudwatchAlarm' },
+            topicName: '${self:custom.apiGateway5xxTopic}',
+          },
+        },
+      ],
+      environment: {
+        SLACK_WEBHOOK: SLACK_WEBHOOK!,
+      },
+    },
   },
   resources: {
     Conditions: {
@@ -1817,6 +1834,41 @@ const serverlessConfig: AWS = {
               Ref: `SubscribeCalendarContentfulDLQ`,
             },
           ],
+        },
+      },
+      ApiGatewayAlarm5xx: {
+        Type: 'AWS::CloudWatch::Alarm',
+        Properties: {
+          AlarmDescription: '5xx errors detected at API Gateway',
+          Namespace: 'AWS/ApiGateway',
+          MetricName: '5xx',
+          Statistic: 'Sum',
+          Threshold: 0,
+          ComparisonOperator: 'GreaterThanThreshold',
+          EvaluationPeriods: 1,
+          Period: 60,
+          AlarmActions: [{ Ref: 'TopicCloudwatchAlarm' }],
+          TreatMissingData: 'notBreaching',
+          Dimensions: [
+            {
+              Name: 'ApiId',
+              Value: {
+                Ref: 'HttpApi',
+              },
+            },
+            {
+              Name: 'Stage',
+              Value: {
+                Ref: 'HttpApiStage',
+              },
+            },
+          ],
+        },
+      },
+      TopicCloudwatchAlarm: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: '${self:custom.apiGateway5xxTopic}',
         },
       },
     },

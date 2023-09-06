@@ -58,6 +58,7 @@ export interface BasicCalendar {
   name: string;
   syncToken?: string | null;
   resourceId?: string | null;
+  channelId?: string | null;
   expirationDate?: number | null;
   version: number;
 }
@@ -73,5 +74,6 @@ export type CalendarUpdateDataObject = Partial<CalendarCreateDataObject>;
 
 export interface CalendarUpdateRequest {
   resourceId?: string | null;
+  channelId?: string | null;
   expirationDate?: number | null;
 }

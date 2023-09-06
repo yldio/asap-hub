@@ -36,18 +36,20 @@ export class NewsContentfulDataProvider implements NewsDataProvider {
       total: newsCollection?.total,
       items: newsCollection?.items
         .filter((news): news is NewsItem => news !== null)
-        .map(parseContentfulGraphQlNews),
+        .map(parseGraphQlNews),
     };
   }
 
-  async fetchById(): Promise<null> {
-    throw new Error('Method not implemented.');
+  async fetchById(id: string): Promise<gp2Model.NewsDataObject | null> {
+    const { news } = await this.graphQLClient.request<
+      gp2Contentful.FetchNewsByIdQuery,
+      gp2Contentful.FetchNewsByIdQueryVariables
+    >(gp2Contentful.FETCH_NEWS_BY_ID, { id });
+    return news ? parseGraphQlNews(news) : null;
   }
 }
 
-export const parseContentfulGraphQlNews = (
-  item: NewsItem,
-): gp2Model.NewsDataObject => ({
+export const parseGraphQlNews = (item: NewsItem): gp2Model.NewsDataObject => ({
   // Every field in Contentful is marked as nullable even when its required
   // this is because Contentful use the same schema for preview and production
   // Read more in the link below

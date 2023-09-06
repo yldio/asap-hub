@@ -113,7 +113,8 @@ export class CalendarContentfulDataProvider
     const calendar = await environment.getEntry(id);
     const previousGoogleApiMetadata = calendar.fields.googleApiMetadata;
 
-    const { resourceId, expirationDate, syncToken, ...otherFields } = update;
+    const { resourceId, channelId, expirationDate, syncToken, ...otherFields } =
+      update;
 
     const calendarWithUpdatedFields = updateEntryFields(calendar, otherFields);
 
@@ -133,6 +134,7 @@ export class CalendarContentfulDataProvider
                   calendar.fields.googleCalendarId['en-US'],
               }
             : {}),
+          ...(channelId ? { channelId } : {}),
           ...(syncToken ? { syncToken } : {}),
           ...(expirationDate ? { expirationDate } : {}),
         },
@@ -150,6 +152,7 @@ export const parseGraphQlCalendarToDataObject = (
   id: item.sys.id,
   version: item.sys.publishedVersion ?? 1,
   resourceId: item.googleApiMetadata?.resourceId,
+  channelId: item.googleApiMetadata?.channelId,
   expirationDate: item.googleApiMetadata?.expirationDate,
   syncToken: item.googleApiMetadata?.syncToken,
   ...parseContentfulGraphqlCalendarPartialToDataObject(item),

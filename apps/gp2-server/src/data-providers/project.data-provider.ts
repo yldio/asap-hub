@@ -19,6 +19,10 @@ import {
 } from './transformers';
 import { ProjectDataProvider } from './types';
 
+const noRecords = {
+  total: 0,
+  items: [],
+};
 export class ProjectContentfulDataProvider implements ProjectDataProvider {
   constructor(
     private graphQLClient: GraphQLClient,
@@ -31,36 +35,82 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       gp2Contentful.FetchProjectByIdQueryVariables
     >(gp2Contentful.FETCH_PROJECT_BY_ID, { id });
   }
+  private async fetchProjects(limit: number, skip: number) {
+    const { projectsCollection } = await this.graphQLClient.request<
+      gp2Contentful.FetchProjectsQuery,
+      gp2Contentful.FetchProjectsQueryVariables
+    >(gp2Contentful.FETCH_PROJECTS, {
+      limit,
+      skip,
+    });
+
+    return projectsCollection;
+  }
+  private async fetchProjectsByUserId(
+    limit: number,
+    skip: number,
+    userId: string,
+  ) {
+    const { projectMembershipCollection } = await this.graphQLClient.request<
+      gp2Contentful.FetchProjectsByUserQuery,
+      gp2Contentful.FetchProjectsByUserQueryVariables
+    >(gp2Contentful.FETCH_PROJECTS_BY_USER, {
+      limit,
+      skip,
+      userId,
+    });
+
+    return projectMembershipCollection;
+  }
+
   async fetchById(id: string): Promise<gp2Model.ProjectDataObject | null> {
     const { projects } = await this.fetchProjectById(id);
     return projects ? parseProjectToDataObject(projects) : null;
   }
 
   async fetch(
-    options: gp2Model.FetchProjectOptions,
+    options: gp2Model.FetchApiProjectOptions,
   ): Promise<gp2Model.ListProjectDataObject> {
-    const { take = 10, skip = 0 } = options;
-    const { projectsCollection } = await this.graphQLClient.request<
-      gp2Contentful.FetchProjectsQuery,
-      gp2Contentful.FetchProjectsQueryVariables
-    >(gp2Contentful.FETCH_PROJECTS, {
-      limit: take,
-      skip,
-    });
-
-    if (!projectsCollection) {
-      return {
-        total: 0,
-        items: [],
-      };
+    const { take = 10, skip = 0, filter } = options;
+    if (filter?.userId) {
+      return this.fetchFilterByUserId(take, skip, filter.userId);
     }
 
-    return {
-      total: projectsCollection.total,
-      items: projectsCollection.items
-        .filter((project): project is GraphQLProject => project !== null)
-        .map(parseProjectToDataObject),
-    };
+    const projectsCollection = await this.fetchProjects(take, skip);
+    return projectsCollection
+      ? {
+          total: projectsCollection.total,
+          items: projectsCollection.items
+            .filter((project): project is GraphQLProject => project !== null)
+            .map(parseProjectToDataObject),
+        }
+      : noRecords;
+  }
+
+  private async fetchFilterByUserId(
+    take: number,
+    skip: number,
+    userId: string,
+  ) {
+    const projectMembershipCollection = await this.fetchProjectsByUserId(
+      take,
+      skip,
+      userId,
+    );
+    const items = projectMembershipCollection?.items
+      .map(
+        (projectMembership) =>
+          projectMembership?.linkedFrom?.projectsCollection?.items,
+      )
+      .flat()
+      .filter((project): project is GraphQLProject => !!project);
+
+    return projectMembershipCollection && items && items.length
+      ? {
+          total: projectMembershipCollection.total,
+          items: items.map(parseProjectToDataObject),
+        }
+      : noRecords;
   }
 
   async update(

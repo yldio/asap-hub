@@ -49,29 +49,35 @@ export const getContentfulUserSpeakerTeams = () => ({
   role: 'Lead PI (Core Leadership)',
 });
 
-export const getContentfulRelatedResearch = () => ({
+export const getContentfulRelatedResearch = (isList: boolean = false) => ({
   sys: {
     id: 'research-output-id',
   },
   title: 'Research output title',
   type: '3D Printing',
   documentType: 'Article',
-  teamsCollection: {
-    items: [
-      {
-        sys: {
-          id: 'team-id-1',
-        },
-        displayName: 'The team one',
+  teamsCollection: isList
+    ? undefined
+    : {
+        items: [
+          {
+            sys: {
+              id: 'team-id-1',
+            },
+            displayName: 'The team one',
+          },
+        ],
       },
-    ],
-  },
-  workingGroup: {
-    sys: { id: 'wg-id' },
-    title: 'Working group name',
-  },
+  workingGroup: isList
+    ? undefined
+    : {
+        sys: { id: 'wg-id' },
+        title: 'Working group name',
+      },
 });
-export const getContentfulGraphqlEvent = (): NonNullable<
+export const getContentfulGraphqlEvent = (
+  isList: boolean = false,
+): NonNullable<
   NonNullable<ContentfulFetchEventsQuery['eventsCollection']>['items'][number]
 > => ({
   sys: {
@@ -235,7 +241,7 @@ export const getContentfulGraphqlEvent = (): NonNullable<
   },
   linkedFrom: {
     researchOutputsCollection: {
-      items: [getContentfulRelatedResearch()],
+      items: [getContentfulRelatedResearch(isList)],
     },
   },
   presentationUpdatedAt: '2010-09-01T08:00:04.000Z',
@@ -288,7 +294,7 @@ export const getContentfulGraphqlEventsResponse =
   (): ContentfulFetchEventsQuery => ({
     eventsCollection: {
       total: 1,
-      items: [getContentfulGraphqlEvent()],
+      items: [getContentfulGraphqlEvent(true)],
     },
   });
 
@@ -302,7 +308,7 @@ export const getEventsByUserIdGraphqlResponse =
               linkedFrom: {
                 eventsCollection: {
                   total: 1,
-                  items: [getContentfulGraphqlEvent()],
+                  items: [getContentfulGraphqlEvent(true)],
                 },
               },
             },
@@ -322,7 +328,7 @@ export const getEventsByExternalAuthorIdGraphqlResponse =
               linkedFrom: {
                 eventsCollection: {
                   total: 1,
-                  items: [getContentfulGraphqlEvent()],
+                  items: [getContentfulGraphqlEvent(true)],
                 },
               },
             },
@@ -342,7 +348,7 @@ export const getEventsByTeamIdGraphqlResponse =
               linkedFrom: {
                 eventsCollection: {
                   total: 1,
-                  items: [getContentfulGraphqlEvent()],
+                  items: [getContentfulGraphqlEvent(true)],
                 },
               },
             },
@@ -391,8 +397,10 @@ export const getEventSpeakerUser = (): EventSpeakerUser => ({
   role: 'Lead PI (Core Leadership)',
 });
 
-export const getContentfulEventDataObject = (): EventDataObject => ({
-  ...getEventDataObject(),
+export const getContentfulEventDataObject = (
+  isList: boolean = false,
+): EventDataObject => ({
+  ...getEventDataObject(isList),
   interestGroup: undefined,
   workingGroup: undefined,
   notes: '<p>These are the notes from the meeting</p>',
@@ -407,12 +415,14 @@ export const getContentfulEventResponse = (): EventResponse =>
 
 export const getContentfulListEventDataObject = (): ListEventDataObject => ({
   total: 1,
-  items: [getContentfulEventDataObject()],
+  items: [getContentfulEventDataObject(true)],
 });
 export const getContentfulListEventResponse = (): ListEventResponse =>
   getContentfulListEventDataObject();
 
-export const getEventDataObject = (): EventDataObject => ({
+export const getEventDataObject = (
+  isList: boolean = false,
+): EventDataObject => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   description: 'This event is awesome',
   lastModifiedDate: '2021-05-14T14:48:46.000Z',
@@ -457,30 +467,38 @@ export const getEventDataObject = (): EventDataObject => ({
       title: 'Research output title',
       type: '3D Printing',
       documentType: 'Article',
-      teams: [
-        {
-          id: 'team-id-1',
-          displayName: 'The team one',
-        },
-      ],
-      workingGroups: [
-        {
-          id: 'wg-id',
-          title: 'Working group name',
-        },
-      ],
+      teams: isList
+        ? []
+        : [
+            {
+              id: 'team-id-1',
+              displayName: 'The team one',
+            },
+          ],
+      workingGroups: isList
+        ? []
+        : [
+            {
+              id: 'wg-id',
+              title: 'Working group name',
+            },
+          ],
     },
   ],
 });
 
-export const getEventResponse = (): EventResponse => getEventDataObject();
+export const getEventResponse = (isList: boolean = false): EventResponse =>
+  getEventDataObject(isList);
 
-export const getListEventDataObject = (): ListEventDataObject => ({
+export const getListEventDataObject = (
+  isReducedResponse: boolean = true,
+): ListEventDataObject => ({
   total: 1,
-  items: [getEventDataObject()],
+  items: [getEventDataObject(isReducedResponse)],
 });
-export const getListEventResponse = (): ListEventResponse =>
-  getListEventDataObject();
+export const getListEventResponse = (
+  isReducedResponse: boolean = true,
+): ListEventResponse => getListEventDataObject(isReducedResponse);
 
 export const getRestEvent = (): RestEvent => ({
   id: 'squidex-event-id',
@@ -536,18 +554,19 @@ export const getSquidexGraphqlEvent = (): EventContentFragment => ({
       },
       referencesWorkingGroupsContents: [
         {
-          id: getContentfulRelatedResearch().workingGroup.sys.id,
+          id: getContentfulRelatedResearch(false).workingGroup!.sys.id,
           flatData: {
-            title: getContentfulRelatedResearch().workingGroup.title,
+            title: getContentfulRelatedResearch(false).workingGroup!.title,
           },
         },
       ],
       referencesTeamsContents: [
         {
-          id: getContentfulRelatedResearch().teamsCollection.items[0]!.sys.id,
+          id: getContentfulRelatedResearch(false).teamsCollection!.items[0]!.sys
+            .id,
           flatData: {
             displayName:
-              getContentfulRelatedResearch().teamsCollection.items[0]!
+              getContentfulRelatedResearch(false).teamsCollection!.items[0]!
                 .displayName,
           },
         },

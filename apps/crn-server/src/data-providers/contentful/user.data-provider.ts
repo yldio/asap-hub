@@ -217,6 +217,9 @@ const cleanUser = (userToUpdate: UserUpdateDataObject) =>
         connections: connections.map(({ code }) => code),
       };
     }
+    if (typeof value === 'string') {
+      return { ...acc, [key]: value.trim() === '' ? null : value };
+    }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 

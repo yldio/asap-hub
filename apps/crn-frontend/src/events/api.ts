@@ -21,23 +21,27 @@ export const getEvents = async (
 ): Promise<ListEventResponse> => {
   const filters = getEventFilters({ before, after }, constraint);
 
-  const result = await algoliaClient.search(
-    ['event'],
-    searchQuery,
-    {
-      filters,
-      page: currentPage ?? undefined,
-      hitsPerPage: pageSize ?? undefined,
-    },
-    !!before,
-  );
+  try {
+    const result = await algoliaClient.search(
+      ['event'],
+      searchQuery,
+      {
+        filters,
+        page: currentPage ?? undefined,
+        hitsPerPage: pageSize ?? undefined,
+      },
+      !!before,
+    );
 
-  return {
-    items: result.hits,
-    total: result.nbHits,
-    algoliaIndexName: result.index,
-    algoliaQueryId: result.queryID,
-  };
+    return {
+      items: result.hits,
+      total: result.nbHits,
+      algoliaIndexName: result.index,
+      algoliaQueryId: result.queryID,
+    };
+  } catch (error) {
+    throw new Error(`Failed to fetch events: ${error}`);
+  }
 };
 
 export const getSquidexUrl = (options: GetEventListOptions): URL =>

@@ -63,41 +63,49 @@ export const getUsers = async (
       ? `(${tagFilters}) AND (${roleFilters})`
       : tagFilters || roleFilters;
 
-  const result = await algoliaClient.search(['user'], searchQuery, {
-    filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
+  try {
+    const result = await algoliaClient.search(['user'], searchQuery, {
+      filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
+      page: currentPage ?? undefined,
+      hitsPerPage: pageSize ?? undefined,
+    });
 
-  return {
-    items: result.hits,
-    total: result.nbHits,
-    algoliaIndexName: result.index,
-    algoliaQueryId: result.queryID,
-  };
+    return {
+      items: result.hits,
+      total: result.nbHits,
+      algoliaIndexName: result.index,
+      algoliaQueryId: result.queryID,
+    };
+  } catch (error) {
+    throw new Error(`Failed to fetch users: ${error}.`);
+  }
 };
 
 export const getUsersAndExternalAuthors = async (
   algoliaClient: AlgoliaClient<'crn'>,
   { searchQuery, currentPage, pageSize }: GetListOptions,
 ): Promise<ListResponse<UserResponse | ExternalAuthorResponse>> => {
-  const result = await algoliaClient.search(
-    ['user', 'external-author'],
-    searchQuery,
-    {
-      filters: undefined,
-      page: currentPage ?? undefined,
-      hitsPerPage: pageSize ?? undefined,
-      restrictSearchableAttributes: ['displayName'],
-    },
-  );
+  try {
+    const result = await algoliaClient.search(
+      ['user', 'external-author'],
+      searchQuery,
+      {
+        filters: undefined,
+        page: currentPage ?? undefined,
+        hitsPerPage: pageSize ?? undefined,
+        restrictSearchableAttributes: ['displayName'],
+      },
+    );
 
-  return {
-    items: result.hits,
-    total: result.nbHits,
-    algoliaIndexName: result.index,
-    algoliaQueryId: result.queryID,
-  };
+    return {
+      items: result.hits,
+      total: result.nbHits,
+      algoliaIndexName: result.index,
+      algoliaQueryId: result.queryID,
+    };
+  } catch (error) {
+    throw new Error(`Failed to fetch users and external authors: ${error}.`);
+  }
 };
 
 export const patchUser = async (

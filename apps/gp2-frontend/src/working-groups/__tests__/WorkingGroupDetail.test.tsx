@@ -12,9 +12,12 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getEvents } from '../../events/api';
+import { getAlgoliaEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
-import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  createEventListAlgoliaResponse,
+  createOutputListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
 import { getWorkingGroup, putWorkingGroupResources } from '../api';
 import WorkingGroupDetail from '../WorkingGroupDetail';
 
@@ -74,7 +77,9 @@ describe('WorkingGroupDetail', () => {
       typeof putWorkingGroupResources
     >;
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
-  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
+    typeof getAlgoliaEvents
+  >;
 
   const outputs = createOutputListAlgoliaResponse(1);
   outputs.hits[0]!.workingGroup = {
@@ -84,7 +89,7 @@ describe('WorkingGroupDetail', () => {
 
   beforeEach(() => {
     mockGetOutputs.mockResolvedValue(outputs);
-    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
+    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
   });
   it('renders header with title', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
@@ -458,8 +463,8 @@ describe('WorkingGroupDetail', () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     mockGetEvents
-      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(2))
-      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(3));
+      .mockResolvedValueOnce(createEventListAlgoliaResponse(2))
+      .mockResolvedValueOnce(createEventListAlgoliaResponse(3));
     await renderWorkingGroupDetail({ id: workingGroup.id });
     expect(await screen.findByText(/upcoming events \(2\)/i)).toBeVisible();
     expect(await screen.findByText(/past events \(3\)/i)).toBeVisible();

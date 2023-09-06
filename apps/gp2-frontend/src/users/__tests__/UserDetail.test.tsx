@@ -12,9 +12,12 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getEvents } from '../../events/api';
+import { getAlgoliaEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
-import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  createEventListAlgoliaResponse,
+  createOutputListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
 import {
   getContributingCohorts,
   getInstitutions,
@@ -60,7 +63,9 @@ describe('UserDetail', () => {
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
   const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
-  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
+    typeof getAlgoliaEvents
+  >;
   const mockGetKeywords = getKeywords as jest.MockedFunction<
     typeof getKeywords
   >;
@@ -80,7 +85,7 @@ describe('UserDetail', () => {
   ];
   beforeEach(() => {
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
-    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
+    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
     mockGetKeywords.mockResolvedValue(gp2Fixtures.createKeywordsResponse());
   });
 
@@ -465,8 +470,8 @@ describe('UserDetail', () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     mockGetEvents
-      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(2))
-      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(3));
+      .mockResolvedValueOnce(createEventListAlgoliaResponse(2))
+      .mockResolvedValueOnce(createEventListAlgoliaResponse(3));
     await renderUserDetail(user.id);
     expect(await screen.findByText(/upcoming events \(2\)/i)).toBeVisible();
     expect(await screen.findByText(/past events \(3\)/i)).toBeVisible();

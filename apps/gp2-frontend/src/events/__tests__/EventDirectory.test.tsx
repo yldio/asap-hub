@@ -1,0 +1,78 @@
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Suspense } from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import { PAGE_SIZE, useSearch } from '../../hooks';
+import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getAlgoliaEvents } from '../api';
+import { eventsState } from '../state';
+import EventDirectory from '../EventDirectory';
+import { EventListProps } from '../EventsList';
+
+jest.mock('../api');
+jest.mock('../../hooks/search');
+
+const renderList = async (props: EventListProps, searchQuery = '') => {
+  render(
+    <RecoilRoot
+      initializeState={({ reset }) => {
+        reset(
+          eventsState({
+            after: new Date().toDateString(),
+            searchQuery,
+            currentPage: 0,
+            filters: new Set(),
+            pageSize: PAGE_SIZE,
+          }),
+        );
+      }}
+    >
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/events']}>
+              <EventDirectory {...props} />
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
+  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+};
+beforeEach(() => {
+  jest.resetAllMocks();
+});
+const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
+const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
+  typeof getAlgoliaEvents
+>;
+describe('EventDirectory', () => {
+  it('handles filter switching', async () => {
+    mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
+    const mockToggleFilter = jest.fn();
+    mockUseSearch.mockImplementation(() => ({
+      changeLocation: jest.fn(),
+      filters: {},
+      updateFilters: jest.fn(),
+      toggleFilter: mockToggleFilter,
+      searchQuery: '',
+      debouncedSearchQuery: '',
+      setSearchQuery: jest.fn(),
+    }));
+
+    await renderList({ currentTime: new Date(), searchQuery: '' });
+    userEvent.click(
+      screen.getByRole('checkbox', {
+        name: 'GP2 Hub',
+      }),
+    );
+    expect(mockToggleFilter).toHaveBeenLastCalledWith('GP2 Hub', 'eventType');
+  });
+});

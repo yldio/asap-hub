@@ -50,7 +50,7 @@ export const getSpeakers = (
   return speakerList;
 };
 
-interface FixtureOptions {
+export interface EventFixtureOptions {
   meetingMaterials?: number;
   numberOfInternalSpeakers?: number;
   numberOfExternalSpeakers?: number;
@@ -67,7 +67,7 @@ export const createEventResponse = (
     numberOfSpeakersToBeAnnounced = 0,
     isEventInThePast = false,
     customTitle = 'Event',
-  }: FixtureOptions = {},
+  }: EventFixtureOptions = {},
   itemIndex = 0,
 ): gp2.EventResponse => ({
   id: `event-${itemIndex}`,
@@ -107,7 +107,7 @@ export const createEventResponse = (
 
 export const createListEventResponse = (
   items: number,
-  options: FixtureOptions = {},
+  options: EventFixtureOptions = {},
 ): gp2.ListEventResponse => ({
   total: items,
   items: Array.from({ length: items }, (_, itemIndex) =>

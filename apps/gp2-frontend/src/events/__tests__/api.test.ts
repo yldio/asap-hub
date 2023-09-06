@@ -1,9 +1,17 @@
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetEventListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getEvent, getEvents } from '../api';
+import { PAGE_SIZE } from '../../hooks';
+import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  EventListOptions,
+  getAlgoliaEvents,
+  getEvent,
+  getEvents,
+} from '../api';
 
 jest.mock('../../config');
 
@@ -40,6 +48,99 @@ describe('getEvent', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch event with id unknown-id. Expected status 2xx or 404. Received status 500."`,
     );
+  });
+});
+
+describe('getAlgoliaEvents', () => {
+  const mockAlgoliaSearchClient = {
+    search: jest.fn(),
+  } as unknown as jest.Mocked<AlgoliaSearchClient<'gp2'>>;
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockAlgoliaSearchClient.search = jest
+      .fn()
+      .mockResolvedValue(createEventListAlgoliaResponse(10));
+  });
+  const options: EventListOptions = {
+    filters: new Set<string>(),
+    after: new Date('1-1-2020').toDateString(),
+    before: undefined,
+    pageSize: PAGE_SIZE,
+    currentPage: 0,
+    searchQuery: '',
+  };
+
+  it('makes a search request with query, default page and page size', async () => {
+    await getAlgoliaEvents(mockAlgoliaSearchClient, {
+      ...options,
+      searchQuery: 'test',
+      currentPage: null,
+      pageSize: null,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['event'],
+      'test',
+      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+    );
+  });
+
+  it('passes page number and page size to request', async () => {
+    await getAlgoliaEvents(mockAlgoliaSearchClient, {
+      ...options,
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['event'],
+      '',
+      expect.objectContaining({ hitsPerPage: 20, page: 1 }),
+    );
+  });
+
+  it('builds a single status filter query', async () => {
+    await getAlgoliaEvents(mockAlgoliaSearchClient, {
+      ...options,
+      eventType: ['GP2 Hub'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['event'],
+      '',
+      expect.objectContaining({
+        filters: 'endDateTimestamp > 1577836800 AND _tags:"GP2 Hub"',
+      }),
+    );
+  });
+
+  it('builds a multiple status filter query', async () => {
+    await getAlgoliaEvents(mockAlgoliaSearchClient, {
+      ...options,
+      eventType: ['GP2 Hub', 'Projects'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['event'],
+      '',
+      expect.objectContaining({
+        filters:
+          'endDateTimestamp > 1577836800 AND _tags:"GP2 Hub" OR _tags:"Projects"',
+      }),
+    );
+  });
+
+  it('throws an error of type error', async () => {
+    mockAlgoliaSearchClient.search.mockRejectedValue({
+      message: 'Some Error',
+    });
+    await expect(
+      getAlgoliaEvents(mockAlgoliaSearchClient, options),
+    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
   });
 });
 

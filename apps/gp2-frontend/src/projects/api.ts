@@ -31,7 +31,7 @@ const getAllFilters = ({ status = [], type = [] }: gp2.FetchProjectFilter) => {
     type?.includes(gp2.opportunitiesAvailable) &&
     `_tags:"${gp2.opportunitiesAvailable}"`;
   const traineeFilter =
-    type?.includes(gp2.traineeProject) && 'traineeProject: true';
+    type?.includes(gp2.traineeProject) && 'traineeProject=1';
 
   return [statusFilters, opportunityFilter, traineeFilter]
     .filter(Boolean)

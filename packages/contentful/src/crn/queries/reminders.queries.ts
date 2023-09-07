@@ -58,6 +58,8 @@ export const FETCH_REMINDERS = gql`
         startDate
         endDate
         title
+        status
+        hidden
         videoRecordingUpdatedAt
         presentationUpdatedAt
         notesUpdatedAt

@@ -30,6 +30,7 @@ import {
   useLabSuggestions,
   usePostResearchOutput,
   usePutResearchOutput,
+  useRelatedEventsSuggestions,
   useRelatedResearchSuggestions,
   useResearchTags,
   useTeamSuggestions,
@@ -87,6 +88,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   const getRelatedResearchSuggestions = useRelatedResearchSuggestions(
     researchOutputData?.id,
   );
+  const getRelatedEventSuggestions = useRelatedEventsSuggestions();
   const researchTags = useResearchTags();
 
   const published = researchOutputData ? !!researchOutputData.published : false;
@@ -148,6 +150,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             }
             getTeamSuggestions={getTeamSuggestions}
             getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+            getRelatedEventSuggestions={getRelatedEventSuggestions}
             researchTags={researchTags}
             serverValidationErrors={errors}
             clearServerValidationError={(instancePath: string) =>

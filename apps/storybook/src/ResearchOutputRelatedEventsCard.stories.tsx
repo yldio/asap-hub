@@ -31,5 +31,6 @@ export const Normal = () => (
     }
     isSaving={false}
     relatedEvents={[]}
+    onChangeRelatedEvents={() => null}
   />
 );

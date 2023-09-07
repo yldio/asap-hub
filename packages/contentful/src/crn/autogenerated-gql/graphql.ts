@@ -13362,6 +13362,8 @@ export type FetchRemindersQuery = {
           | 'startDate'
           | 'endDate'
           | 'title'
+          | 'status'
+          | 'hidden'
           | 'videoRecordingUpdatedAt'
           | 'presentationUpdatedAt'
           | 'notesUpdatedAt'
@@ -23063,6 +23065,14 @@ export const FetchRemindersDocument = {
                         name: { kind: 'Name', value: 'endDate' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'hidden' },
+                      },
                       {
                         kind: 'Field',
                         name: {

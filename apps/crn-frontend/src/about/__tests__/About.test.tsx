@@ -7,7 +7,7 @@ import { DiscoverResponse } from '@asap-hub/model';
 
 import About from '../About';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshDiscoverState } from '../state';
+import { refreshDiscoverState } from '../../discover/state';
 import { getDiscover } from '../api';
 
 jest.mock('../api');

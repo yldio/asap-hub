@@ -1,3 +1,6 @@
+export { default as AboutPage } from './AboutPage';
+export { default as AboutPageBody } from './AboutPageBody';
+export { default as AboutPageHeader } from './AboutPageHeader';
 export { default as BasicLayout } from './BasicLayout';
 export { default as BiographyModal } from './BiographyModal';
 export { default as ContactInfoModal } from './ContactInfoModal';

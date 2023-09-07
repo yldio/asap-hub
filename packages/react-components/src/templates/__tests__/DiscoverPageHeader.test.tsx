@@ -11,6 +11,6 @@ it('displays header mesage', () => {
   const { getByRole } = render(<DiscoverPageHeader />);
 
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
-    `"Discover ASAP"`,
+    `"Guides & Tutorials"`,
   );
 });

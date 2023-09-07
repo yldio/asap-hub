@@ -11,7 +11,7 @@ import {
   createTutorialsResponse,
 } from '@asap-hub/fixtures';
 import { TutorialsResponse } from '@asap-hub/model';
-import { discover } from '@asap-hub/routing';
+import { guides } from '@asap-hub/routing';
 import userEvent from '@testing-library/user-event';
 
 import Routes from '../Routes';
@@ -36,7 +36,7 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={discover.template}>
+              <Route path={guides.template}>
                 <Routes />
               </Route>
             </MemoryRouter>
@@ -50,7 +50,7 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
   );
 };
 it('redirects to the guides page when the index page accessed', async () => {
-  await renderDiscoverPage(discover({}).$);
+  await renderDiscoverPage(guides({}).$);
   expect(
     await screen.findByText(/Guides/i, {
       selector: 'h2',
@@ -59,7 +59,7 @@ it('redirects to the guides page when the index page accessed', async () => {
 });
 
 it('renders tutorial page when user clicks tutorial card title', async () => {
-  await renderDiscoverPage(discover({}).$);
+  await renderDiscoverPage(guides({}).$);
 
   const tutorial: TutorialsResponse = {
     id: '55724942-3408-4ad6-9a73-14b92226ffb6',
@@ -74,7 +74,7 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
 
   mockGetTutorialById.mockResolvedValue(tutorial);
 
-  const tutorialsAnchorTab = screen.getByText(/Tutorials/i);
+  const tutorialsAnchorTab = screen.getByText(/Tutorials/i, { selector: 'p' });
   expect(tutorialsAnchorTab).toBeVisible();
 
   userEvent.click(tutorialsAnchorTab);

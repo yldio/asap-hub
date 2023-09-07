@@ -1,13 +1,13 @@
 import { FC } from 'react';
-import { DiscoverAbout } from '@asap-hub/react-components';
-import { useDiscoverState } from './state';
+import { AboutPageBody } from '@asap-hub/react-components';
+import { useDiscoverState } from '../discover/state';
 
 const About: FC<Record<string, never>> = () => {
   const { members, scientificAdvisoryBoard, aboutUs, membersTeamId } =
     useDiscoverState();
 
   return (
-    <DiscoverAbout
+    <AboutPageBody
       aboutUs={aboutUs}
       members={members}
       scientificAdvisoryBoard={scientificAdvisoryBoard}

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { NewsResponse, NewsType, TutorialsResponse } from '@asap-hub/model';
-import { news, discover } from '@asap-hub/routing';
+import { news, tutorials } from '@asap-hub/routing';
 
 import { Card, Paragraph, Headline4 } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
@@ -75,7 +75,7 @@ const NewsCard: React.FC<
 }) => {
   const href =
     type === 'Tutorial'
-      ? discover({}).tutorials({}).tutorial({ tutorialId: id }).$
+      ? tutorials({}).tutorial({ tutorialId: id }).$
       : news({}).article({ articleId: id }).$;
   const titleComponent = text ? (
     <LinkHeadline href={href} level={4}>

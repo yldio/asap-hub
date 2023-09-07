@@ -2,12 +2,14 @@ import { Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
+  about,
   dashboard,
-  discover,
   events,
+  guides,
   network,
   news,
   sharedResearch,
+  tutorials,
 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -29,12 +31,16 @@ const loadDiscover = () =>
   import(/* webpackChunkName: "discover" */ './discover/Routes');
 const loadEvents = () =>
   import(/* webpackChunkName: "events" */ './events/Events');
+const loadAbout = () =>
+  import(/* webpackChunkName: "events" */ './about/Routes');
+
 const News = lazy(loadNews);
 const Network = lazy(loadNetwork);
 const SharedResearch = lazy(loadSharedResearch);
 const Dashboard = lazy(loadDashboard);
 const Discover = lazy(loadDiscover);
 const Events = lazy(loadEvents);
+const About = lazy(loadAbout);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
   const auth0 = useAuth0CRN();
@@ -52,6 +58,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
       .then(loadNetwork)
       .then(loadSharedResearch)
       .then(loadDiscover)
+      .then(loadAbout)
       .then(loadEvents);
   }, []);
 
@@ -112,9 +119,14 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                   <Dashboard />
                 </Frame>
               </Route>
-              <Route path={discover.template}>
-                <Frame title="Discover ASAP">
+              <Route path={[guides.template, tutorials.template]}>
+                <Frame title="Guides & Tutorials">
                   <Discover />
+                </Frame>
+              </Route>
+              <Route path={about.template}>
+                <Frame title="About ASAP">
+                  <About />
                 </Frame>
               </Route>
               <Route path={news.template}>

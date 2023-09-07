@@ -69,7 +69,7 @@ const Dashboard: FC<Record<string, never>> = () => {
           backHref="/"
           error="There was an error and we were unable to dismiss the guides"
           title="Remove help guides from dashboard?"
-          description="You will not be able to see them again on the dashboard but you can always access them on the Discover ASAP page."
+          description="You will not be able to see them again on the dashboard but you can always access them on the Guides &amp; Tutorials page."
           cancelText="Cancel"
           confirmText="Remove"
           onSave={() => patchUser({ dismissedGettingStarted: true })}

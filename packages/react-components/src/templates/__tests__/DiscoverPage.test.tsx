@@ -6,7 +6,7 @@ it('renders the header', () => {
   const { getByRole } = render(<DiscoverPage>Content</DiscoverPage>);
   expect(getByRole('heading')).toBeVisible();
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
-    `"Discover ASAP"`,
+    `"Guides & Tutorials"`,
   );
 });
 

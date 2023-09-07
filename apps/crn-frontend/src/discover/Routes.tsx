@@ -1,7 +1,7 @@
 import { FC, lazy, useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { Frame } from '@asap-hub/frontend-utils';
-import { discover } from '@asap-hub/routing';
+import { guides, tutorials } from '@asap-hub/routing';
 import { DiscoverPage } from '@asap-hub/react-components';
 
 const loadGuides = () =>
@@ -16,52 +16,37 @@ const loadTutorialPage = () =>
     /* webpackChunkName: "tutorials-details-page" */ './tutorials/Tutorial'
   );
 
-const loadAbout = () =>
-  import(/* webpackChunkName: "discover-about" */ './About');
-
 const Guides = lazy(loadGuides);
 const TutorialList = lazy(loadTutorialList);
 const TutorialPage = lazy(loadTutorialPage);
-const About = lazy(loadAbout);
 
 const Discover: FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadGuides().then(loadTutorialList).then(loadAbout).then(loadTutorialPage);
+    loadGuides().then(loadTutorialList).then(loadTutorialPage);
   }, []);
 
   const { path } = useRouteMatch();
 
   return (
     <Switch>
-      <Route
-        path={
-          path +
-          discover({}).tutorials.template +
-          discover({}).tutorials({}).tutorial.template
-        }
-      >
+      <Route exact path={tutorials({}).$ + tutorials({}).tutorial}>
         <Frame title={null}>
           <TutorialPage />
         </Frame>
       </Route>
       <DiscoverPage>
         <Switch>
-          <Route exact path={path + discover({}).guides.template}>
+          <Route path={guides({}).$}>
             <Frame title="Guides">
               <Guides />
             </Frame>
           </Route>
-          <Route exact path={path + discover({}).tutorials.template}>
+          <Route path={tutorials({}).$}>
             <Frame title="Tutorials">
               <TutorialList />
             </Frame>
           </Route>
-          <Route exact path={path + discover({}).about.template}>
-            <Frame title="About ASAP">
-              <About />
-            </Frame>
-          </Route>
-          <Redirect to={discover({}).guides({}).$} />
+          <Redirect to={guides({}).$} />
         </Switch>
       </DiscoverPage>
     </Switch>

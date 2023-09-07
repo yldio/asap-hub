@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { discover } from '@asap-hub/routing';
+import { guides, tutorials } from '@asap-hub/routing';
 
 import { Display, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
@@ -15,15 +15,13 @@ const containerStyles = css({
 
 const DashboardPageHeader: React.FC = () => (
   <header css={containerStyles}>
-    <Display styleAsHeading={2}>Discover ASAP</Display>
+    <Display styleAsHeading={2}>Guides &amp; Tutorials</Display>
     <Paragraph accent="lead">
-      Guidance and resources about ASAP’s programs and policies as well as the
-      ASAP and MJFF team.
+      Guidance and resources about ASAP’s programs and policies.
     </Paragraph>
     <TabNav>
-      <TabLink href={discover({}).guides({}).$}>Guides</TabLink>
-      <TabLink href={discover({}).tutorials({}).$}>Tutorials</TabLink>
-      <TabLink href={discover({}).about({}).$}>About ASAP</TabLink>
+      <TabLink href={guides({}).$}>Guides</TabLink>
+      <TabLink href={tutorials({}).$}>Tutorials</TabLink>
     </TabNav>
   </header>
 );

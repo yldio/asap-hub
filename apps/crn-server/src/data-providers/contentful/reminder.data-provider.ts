@@ -289,6 +289,7 @@ export const getEventFilter = (zone: string): EventsFilter => {
     now,
   } = getReferenceDates(zone);
   return {
+    AND: [{ hidden: false, status_not: 'Cancelled' }],
     OR: [
       { videoRecordingUpdatedAt_gte: last24HoursISO },
       { presentationUpdatedAt_gte: last24HoursISO },

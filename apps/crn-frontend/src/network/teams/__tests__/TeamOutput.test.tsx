@@ -170,6 +170,28 @@ it('displays the save button for existing research outputs', async () => {
   expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
 });
 
+it('displays the research output with one version in create mode', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'bioinformatics',
+    researchOutputData: baseResearchOutput,
+    versionAction: 'create',
+  });
+
+  expect(screen.getByText(/#1/i)).toBeInTheDocument();
+});
+
+it('displays the research output with no version in edit mode', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'bioinformatics',
+    researchOutputData: baseResearchOutput,
+    versionAction: 'edit',
+  });
+
+  expect(screen.queryByText(/#1/i)).not.toBeInTheDocument();
+});
+
 it('switches research output type based on parameter', async () => {
   await renderPage({ teamId: '42', outputDocumentType: 'article' });
 

@@ -206,6 +206,26 @@ it('Renders the working group research output form with relevant fields', async 
   ).toBeVisible();
 });
 
+it('displays the research output with one version in create mode', async () => {
+  await renderPage({
+    outputDocumentType: 'article',
+    versionAction: 'create',
+    researchOutputData: createResearchOutputResponse(),
+  });
+
+  expect(screen.getByText(/#1/i)).toBeInTheDocument();
+});
+
+it('displays the research output with no version in edit mode', async () => {
+  await renderPage({
+    outputDocumentType: 'article',
+    versionAction: 'edit',
+    researchOutputData: createResearchOutputResponse(),
+  });
+
+  expect(screen.queryByText(/#1/i)).not.toBeInTheDocument();
+});
+
 it('shows the sorry not found page when the working group does not exist', async () => {
   mockGetWorkingGroup.mockResolvedValueOnce(undefined);
   await renderPage({

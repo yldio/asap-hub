@@ -228,7 +228,9 @@ export default class ResearchOutputController {
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
       workingGroups: normalisedResearchOutputUpdateData.workingGroups,
       versions:
-        currentResearchOutput?.versions?.map((version) => version.id) || [],
+        currentResearchOutput?.versions?.map(
+          ({ id: versionId }) => versionId,
+        ) || [],
     };
 
     const updateOptions = {

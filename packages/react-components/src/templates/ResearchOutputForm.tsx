@@ -69,7 +69,7 @@ type ResearchOutputFormProps = Pick<
         typeof ResearchOutputRelatedResearchCard
       >['getRelatedResearchSuggestions']
     >;
-    getRelatedEventSuggestions?: NonNullable<
+    getRelatedEventSuggestions: NonNullable<
       ComponentProps<
         typeof ResearchOutputRelatedEventsCard
       >['getRelatedEventSuggestions']
@@ -162,7 +162,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   getTeamSuggestions = noop,
   getAuthorSuggestions = noop,
   getRelatedResearchSuggestions = noop,
-  getRelatedEventSuggestions = noop,
+  getRelatedEventSuggestions,
   researchTags,
   serverValidationErrors,
   clearServerValidationError,

@@ -1,22 +1,85 @@
 import {
   getEventListOptions,
   GetEventListOptions,
+  GetListOptions,
 } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
-import { selectorFamily, useRecoilValue } from 'recoil';
+import {
+  atomFamily,
+  DefaultValue,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 import { authorizationState } from '../auth/state';
+import { useAlgolia } from '../hooks/algolia';
 import { usePaginationParams } from '../hooks/pagination';
-import { getEvent, getEvents } from './api';
+import { EventListOptions, getAlgoliaEvents, getEvent } from './api';
+
+const eventIndexState = atomFamily<
+  | {
+      ids: ReadonlyArray<string>;
+      total: number;
+      algoliaQueryId?: string;
+      algoliIndexName?: string;
+    }
+  | Error
+  | undefined,
+  GetListOptions
+>({
+  key: 'eventIndex',
+  default: undefined,
+});
 
 export const eventsState = selectorFamily<
-  gp2.ListEventResponse,
+  gp2.ListEventResponse | Error | undefined,
   GetEventListOptions<gp2.EventConstraint>
 >({
   key: 'eventsState',
   get:
     (options) =>
-    ({ get }) =>
-      getEvents(get(authorizationState), options),
+    ({ get }) => {
+      const index = get(
+        eventIndexState({
+          ...options,
+        }),
+      );
+      if (index === undefined || index instanceof Error) return index;
+      const events: gp2.EventResponse[] = [];
+      for (const id of index.ids) {
+        const event = get(eventState(id));
+        if (event === undefined) return undefined;
+        events.push(event);
+      }
+      return {
+        total: index.total,
+        items: events,
+        algoliaIndexName: index.algoliIndexName,
+        algoliaQueryId: index.algoliaQueryId,
+      };
+    },
+  set:
+    (options) =>
+    ({ get, set, reset }, events) => {
+      const indexStateOptions = { ...options };
+      if (events === undefined || events instanceof DefaultValue) {
+        const oldEvents = get(eventIndexState(indexStateOptions));
+        if (!(oldEvents instanceof Error)) {
+          oldEvents?.ids.forEach((id) => reset(eventState(id)));
+        }
+        reset(eventIndexState(indexStateOptions));
+      } else if (events instanceof Error) {
+        set(eventIndexState(indexStateOptions), events);
+      } else {
+        events.items.forEach((event) => set(eventState(event.id), event));
+        set(eventIndexState(indexStateOptions), {
+          total: events.total,
+          ids: events.items.map(({ id }) => id),
+          algoliaQueryId: events.algoliaQueryId,
+          algoliIndexName: events.algoliaIndexName,
+        });
+      }
+    },
 });
 
 const fetchEventState = selectorFamily<gp2.EventResponse | undefined, string>({
@@ -29,16 +92,32 @@ const fetchEventState = selectorFamily<gp2.EventResponse | undefined, string>({
     },
 });
 
-const eventState = selectorFamily<gp2.EventResponse | undefined, string>({
+const eventState = atomFamily<gp2.EventResponse | undefined, string>({
   key: 'event',
-  get:
-    (id) =>
-    ({ get }) =>
-      get(fetchEventState(id)),
+  default: fetchEventState,
 });
 
-export const useEvents = (options: GetEventListOptions<gp2.EventConstraint>) =>
-  useRecoilValue(eventsState(options));
+export const useEvents = (options: EventListOptions) => {
+  const [events, setEvents] = useRecoilState(eventsState(options));
+  const { client } = useAlgolia();
+  if (events === undefined) {
+    throw getAlgoliaEvents(client, options)
+      .then(
+        (data): gp2.ListEventResponse => ({
+          total: data.nbHits,
+          items: data.hits,
+          algoliaQueryId: data.queryID,
+          algoliaIndexName: data.index,
+        }),
+      )
+      .then(setEvents)
+      .catch(setEvents);
+  }
+  if (events instanceof Error) {
+    throw events;
+  }
+  return events;
+};
 
 export const useEventById = (id: string) => useRecoilValue(eventState(id));
 

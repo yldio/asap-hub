@@ -110,18 +110,23 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);
 
-  const researchOutputAsVersion: ResearchOutputVersion = {
-    id: researchOutputData?.id ?? '',
-    title: researchOutputData?.title ?? '',
-    documentType: researchOutputData?.documentType ?? 'Article',
-    type: researchOutputData?.type,
-    link: researchOutputData?.link,
-    addedDate: researchOutputData?.addedDate,
-  };
+  let versions: ResearchOutputVersion[] = [];
+  if (versionAction === 'create') {
+    const researchOutputAsVersion: ResearchOutputVersion = {
+      id: researchOutputData?.id ?? '',
+      title: researchOutputData?.title ?? '',
+      documentType: researchOutputData?.documentType ?? 'Article',
+      type: researchOutputData?.type,
+      link: researchOutputData?.link,
+      addedDate: researchOutputData?.addedDate,
+    };
 
-  const versions = researchOutputData?.versions
-    ? researchOutputData.versions.concat([researchOutputAsVersion])
-    : [researchOutputAsVersion];
+    versions = researchOutputData?.versions
+      ? researchOutputData.versions.concat([researchOutputAsVersion])
+      : [researchOutputAsVersion];
+  } else if (versionAction === 'edit') {
+    versions = researchOutputData?.versions ?? [];
+  }
 
   if (team) {
     return (

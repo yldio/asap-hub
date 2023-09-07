@@ -12,9 +12,12 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getEvents } from '../../events/api';
+import { getAlgoliaEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
-import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  createEventListAlgoliaResponse,
+  createOutputListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
 import { getProject, putProjectResources } from '../api';
 import ProjectDetail from '../ProjectDetail';
 
@@ -67,12 +70,14 @@ describe('ProjectDetail', () => {
   const mockPutProjectResources = putProjectResources as jest.MockedFunction<
     typeof putProjectResources
   >;
-  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
+    typeof getAlgoliaEvents
+  >;
 
   beforeEach(jest.resetAllMocks);
   beforeEach(() => {
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
-    mockGetEvents.mockResolvedValue(gp2Fixtures.createListEventResponse(1));
+    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
   });
   it('renders header with title', async () => {
     const project = gp2Fixtures.createProjectResponse();
@@ -445,8 +450,8 @@ describe('ProjectDetail', () => {
     const project = gp2Fixtures.createProjectResponse();
     mockGetProject.mockResolvedValueOnce(project);
     mockGetEvents
-      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(2))
-      .mockResolvedValueOnce(gp2Fixtures.createListEventResponse(3));
+      .mockResolvedValueOnce(createEventListAlgoliaResponse(2))
+      .mockResolvedValueOnce(createEventListAlgoliaResponse(3));
     await renderProjectDetail({ id: project.id });
     expect(await screen.findByText(/upcoming events \(2\)/i)).toBeVisible();
     expect(await screen.findByText(/past events \(3\)/i)).toBeVisible();

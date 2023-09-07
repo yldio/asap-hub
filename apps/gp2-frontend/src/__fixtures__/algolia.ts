@@ -64,8 +64,28 @@ export const createProjectListAlgoliaResponse = (
   responseOverride?: Partial<ProjectSearchResponse>,
 ): ProjectSearchResponse =>
   createAlgoliaResponse<'project'>(
-    Array.from({ length: items }, (_, itemIndex) =>
-      createProjectAlgoliaRecord(),
-    ),
+    Array.from({ length: items }, () => createProjectAlgoliaRecord()),
+    responseOverride,
+  );
+
+type EventSearchResponse = ClientSearchResponse<'gp2', 'event'>;
+export const createEventAlgoliaRecord = (
+  overrides?: gp2Fixtures.EventFixtureOptions,
+): EventSearchResponse['hits'][number] => {
+  const response = gp2Fixtures.createEventResponse(overrides);
+
+  return {
+    ...response,
+    objectID: response.id,
+    __meta: { type: 'event' },
+  };
+};
+
+export const createEventListAlgoliaResponse = (
+  items: number,
+  responseOverride?: Partial<EventSearchResponse>,
+): EventSearchResponse =>
+  createAlgoliaResponse<'event'>(
+    Array.from({ length: items }, () => createEventAlgoliaRecord()),
     responseOverride,
   );

@@ -13,3 +13,5 @@ export const getEvents = jest.fn(
     ...gp2Fixtures.createListEventResponse(2),
   }),
 );
+
+export const getAlgoliaEvents = jest.fn();

@@ -7,16 +7,22 @@ import {
   speakerIcon,
 } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
-import { EventsList, Paragraph, utils } from '@asap-hub/react-components';
+import {
+  EventsList as EventsListTemplate,
+  Paragraph,
+  utils,
+} from '@asap-hub/react-components';
 
 import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { useEvents } from './state';
 
-type EventListProps = {
+export type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
   constraint?: gp2.EventConstraint;
   paddingTop?: number;
+  eventType?: gp2.EventType[];
+  searchQuery?: string;
 };
 
 export const eventMapper = ({
@@ -80,21 +86,25 @@ const setStateInformation = (constraint: gp2.EventConstraint) => {
 };
 
 const EventList: React.FC<EventListProps> = ({
+  searchQuery = '',
   currentTime,
   past = false,
   constraint,
   paddingTop = 48,
+  eventType,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
-  const { items, total } = useEvents(
-    getEventListOptions<gp2.EventConstraint>(currentTime, {
+  const { items, total } = useEvents({
+    ...getEventListOptions<gp2.EventConstraint>(currentTime, {
+      searchQuery,
       past,
       currentPage,
       pageSize,
       constraint,
     }),
-  );
+    eventType,
+  });
 
   const stateInformation = constraint
     ? setStateInformation(constraint)
@@ -108,7 +118,7 @@ const EventList: React.FC<EventListProps> = ({
   return (
     <>
       {total ? (
-        <EventsList
+        <EventsListTemplate
           currentPageIndex={currentPage}
           numberOfItems={total}
           renderPageHref={renderPageHref}

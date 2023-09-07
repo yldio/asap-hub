@@ -7,18 +7,20 @@ import {
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import { useFlags } from '@asap-hub/react-context';
 import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import Routes from '../Routes';
-import { getEvents } from '../api';
+import { getAlgoliaEvents } from '../api';
 import { getCalendars } from '../calendar/api';
+import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
 
 jest.mock('../api');
 jest.mock('../calendar/api');
-
+mockConsoleError();
 const renderRoutes = async () => {
   render(
     <RecoilRoot>
@@ -42,7 +44,9 @@ beforeEach(() => {
 });
 
 describe('Routes', () => {
-  const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+  const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
+    typeof getAlgoliaEvents
+  >;
   const mockGetCalendars = getCalendars as jest.MockedFunction<
     typeof getCalendars
   >;
@@ -51,7 +55,7 @@ describe('Routes', () => {
       result: { current },
     } = renderHook(useFlags);
     current.enable('DISPLAY_EVENTS');
-    mockGetEvents.mockResolvedValue(gp2.createListEventResponse(1));
+    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
     await renderRoutes();
     expect(screen.getByRole('heading', { name: 'Events' })).toBeInTheDocument();
   });
@@ -68,8 +72,20 @@ describe('Routes', () => {
     ).toBeVisible();
   });
 
+  it('renders error message when the request is not a 2XX', async () => {
+    const {
+      result: { current },
+    } = renderHook(useFlags);
+    current.enable('DISPLAY_EVENTS');
+    mockGetEvents.mockRejectedValueOnce(new Error('error'));
+
+    await renderRoutes();
+    expect(mockGetEvents).toHaveBeenCalled();
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
+
   it('renders the empty state for the upcoming and the past events', async () => {
-    mockGetEvents.mockResolvedValue(gp2.createListEventResponse(0));
+    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(0));
     await renderRoutes();
 
     const upcomingEventsLink = screen.getByRole('link', { name: /upcoming/i });

@@ -9,6 +9,7 @@ type Filter = {
 } & gp2.FetchProjectFilter &
   gp2.FetchUsersSearchFilter &
   gp2.FetchOutputSearchFilter &
+  gp2.FetchEventSearchFilter &
   gp2.FetchNewsFilter;
 
 export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {

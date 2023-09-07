@@ -89,12 +89,21 @@ type FilterOptions =
       hidden?: boolean;
     }>;
 
+export const eventWorkingGroups = 'Working Groups';
+export const eventProjects = 'Projects';
+export const eventGP2Hub = 'GP2 Hub';
+
+export type EventType =
+  | typeof eventWorkingGroups
+  | typeof eventProjects
+  | typeof eventGP2Hub;
+
+export type FetchEventSearchFilter = {
+  eventType?: EventType[];
+};
+
 export type FetchEventsOptions = {
   after?: string;
   before?: string;
 } & SortOptions &
   FetchOptions<FilterOptions>;
-
-export const eventWorkingGroups = 'Working Groups';
-export const eventProjects = 'Projects';
-export const eventGP2Hub = 'GP2 Hub';

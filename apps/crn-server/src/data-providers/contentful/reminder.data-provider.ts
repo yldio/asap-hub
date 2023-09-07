@@ -53,7 +53,6 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
   async fetch(options: FetchRemindersOptions): Promise<ListReminderDataObject> {
     const { timezone, userId } = options;
     const eventFilter = getEventFilter(timezone);
-    console.log(eventFilter);
     const researchOutputFilter = getResearchOutputFilter(timezone);
     const {
       eventsCollection,

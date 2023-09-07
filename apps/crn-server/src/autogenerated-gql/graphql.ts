@@ -8758,6 +8758,8 @@ export type FetchReminderDataQuery = {
           EventsFlatDataDto,
           | 'startDate'
           | 'endDate'
+          | 'status'
+          | 'hidden'
           | 'title'
           | 'videoRecordingUpdatedAt'
           | 'presentationUpdatedAt'
@@ -15526,6 +15528,14 @@ export const FetchReminderDataDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'endDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'hidden' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {

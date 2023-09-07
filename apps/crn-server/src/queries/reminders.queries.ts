@@ -165,6 +165,8 @@ export const FETCH_REMINDER_DATA = gql`
       flatData {
         startDate
         endDate
+        status
+        hidden
         title
         speakers {
           team {

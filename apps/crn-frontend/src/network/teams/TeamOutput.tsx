@@ -142,7 +142,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             documentType={documentType}
             workingGroupAssociation={false}
           />
-          {versionAction && (
+          {versionAction && versions.length > 0 && (
             <OutputVersions versions={versions} versionAction={versionAction} />
           )}
           <ResearchOutputForm

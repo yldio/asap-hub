@@ -134,7 +134,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             documentType={documentType}
             workingGroupAssociation
           />
-          {versionAction && (
+          {versionAction && versions.length > 0 && (
             <OutputVersions versions={versions} versionAction={versionAction} />
           )}
           <ResearchOutputForm

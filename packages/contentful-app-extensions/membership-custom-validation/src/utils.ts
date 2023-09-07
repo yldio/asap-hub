@@ -25,10 +25,13 @@ export function onEntryChanged(sdk: SDK, callback: () => void): () => void {
   subscriptions.push(sdk.entry.onSysChanged(triggerCallback));
   /* eslint-disable no-restricted-syntax */
 
+  subscriptions.push(sdk.navigator.onSlideInNavigation(triggerCallback));
+  
   for (const field of Object.values(sdk.entry.fields)) {
-    subscriptions.push(field.onValueChanged(triggerCallback));
+    if (field.id === 'members'){
+      subscriptions.push(field.onValueChanged(triggerCallback));
+    }
   }
-  subscriptions.push(sdk.entry.onMetadataChanged(triggerCallback));
 
   return () => {
     subscriptions.forEach((unsubscribe) => unsubscribe());

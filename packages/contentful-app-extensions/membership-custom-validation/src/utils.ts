@@ -26,9 +26,9 @@ export function onEntryChanged(sdk: SDK, callback: () => void): () => void {
   /* eslint-disable no-restricted-syntax */
 
   subscriptions.push(sdk.navigator.onSlideInNavigation(triggerCallback));
-  
+
   for (const field of Object.values(sdk.entry.fields)) {
-    if (field.id === 'members'){
+    if (field.id === 'members') {
       subscriptions.push(field.onValueChanged(triggerCallback));
     }
   }

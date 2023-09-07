@@ -87,7 +87,7 @@ const mockBaseSdk = () => ({
   },
   navigator: {
     onSlideInNavigation: jest.fn(() => unsubscribeFn),
-  }
+  },
 });
 
 describe('Field component', () => {

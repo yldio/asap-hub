@@ -1,3 +1,4 @@
+import { AlgoliaClient, getEventFilters } from '@asap-hub/algolia';
 import {
   createSentryHeaders,
   GetEventListOptions,
@@ -35,6 +36,43 @@ export const getEvents = async (
     );
   }
   return resp.json();
+};
+
+export const getAllFilters = ({
+  before,
+  after,
+  constraint,
+  eventType,
+}: {
+  before?: string;
+  after?: string;
+  constraint?: gp2.EventConstraint;
+  eventType?: gp2.EventType[];
+}) => {
+  const typeFilters = eventType
+    ?.map((filter) => `_tags:"${filter}"`)
+    .join(' OR ');
+  const eventFilters = getEventFilters({ before, after }, constraint);
+  return [eventFilters, typeFilters].filter(Boolean).join(' AND ');
+};
+
+export type EventListOptions = GetEventListOptions<gp2.EventConstraint> &
+  gp2.FetchEventSearchFilter;
+export const getAlgoliaEvents = (
+  client: AlgoliaClient<'gp2'>,
+  options: EventListOptions,
+) => {
+  const filters = getAllFilters(options);
+
+  return client
+    .search(['event'], options.searchQuery, {
+      filters,
+      page: options.currentPage ?? 0,
+      hitsPerPage: options.pageSize ?? 10,
+    })
+    .catch((error: Error) => {
+      throw new Error(`Could not search: ${error.message}`);
+    });
 };
 
 export const getEvent = async (

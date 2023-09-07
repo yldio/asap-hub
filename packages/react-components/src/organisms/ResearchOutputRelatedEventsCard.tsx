@@ -16,10 +16,10 @@ type ResearchOutputRelatedEventsCardProps = {
   readonly relatedEvents: ComponentPropsWithRef<
     typeof LabeledMultiSelect<ResearchOutputRelatedEventsOption>
   >['values'];
-  readonly getRelatedEventSuggestions?: ComponentPropsWithRef<
+  readonly getRelatedEventSuggestions: ComponentPropsWithRef<
     typeof LabeledMultiSelect<ResearchOutputRelatedEventsOption>
   >['loadOptions'];
-  readonly onChangeRelatedEvents?: ComponentPropsWithRef<
+  readonly onChangeRelatedEvents: ComponentPropsWithRef<
     typeof LabeledMultiSelect<ResearchOutputRelatedEventsOption>
   >['onChange'];
 

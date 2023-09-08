@@ -1,51 +1,25 @@
-import { RestUser, SquidexGraphql } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import nock from 'nock';
 import {
-  appName,
-  auth0SharedSecret as secret,
-  baseUrl,
-} from '../../../src/config';
-import { unloggedHandler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
+  unloggedHandler,
+  connectByCodeHandler,
+} from '../../../src/handlers/webhooks/webhook-connect-by-code';
 import {
-  generateGraphqlFetchUsersResponse,
-  getGraphQLUser,
-  getSquidexUserGraphqlResponse,
-} from '../../fixtures/users.fixtures';
+  getDataProviderMock,
+  getDataProviderMock as mockGetDataProvider,
+} from '../../mocks/data-provider.mock';
+import { fetchUserResponseDataObject } from '../../fixtures/users.fixtures';
+import { auth0SharedSecret as secret } from '../../../src/config';
+import UserController from '../../../src/controllers/user.controller';
+
 import { getApiGatewayEvent } from '../../helpers/events';
-import { identity } from '../../helpers/squidex';
 
 jest.mock('../../../src/utils/logger');
-const user: RestUser = {
-  id: 'userId',
-  lastModified: '2020-09-25T11:06:27.164Z',
-  version: 42,
-  created: '2020-09-24T11:06:27.164Z',
-  data: {
-    role: {
-      iv: 'Grantee',
-    },
-    lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
-    email: { iv: 'me@example.com' },
-    firstName: { iv: 'First' },
-    lastName: { iv: 'Last' },
-    jobTitle: { iv: 'Title' },
-    institution: { iv: 'Institution' },
-    connections: { iv: [] },
-    biography: { iv: 'Biography' },
-    avatar: { iv: [] },
-    expertiseAndResourceTags: { iv: [] },
-    questions: { iv: [] },
-    teams: { iv: [] },
-    onboarded: {
-      iv: true,
-    },
-    dismissedGettingStarted: {
-      iv: false,
-    },
-    labs: { iv: [] },
-  },
-};
+jest.mock('../../../src/dependencies/users.dependencies', () => {
+  return {
+    getUserDataProvider: jest.fn(),
+    getAssetDataProvider: jest.fn(),
+  };
+});
 
 describe('POST /webhook/users/connections - validations', () => {
   test('returns 400 when code is not defined', async () => {
@@ -113,44 +87,31 @@ describe('POST /webhook/users/connections - validations', () => {
 });
 
 describe('POST /webhook/users/connections - success', () => {
-  beforeAll(() => {
-    identity();
-  });
-
   beforeEach(() => {
     jest.resetAllMocks();
   });
   test('returns 202 for valid code and updates the user', async () => {
-    const userId = `google-oauth2|token`;
-    const email = 'a-email';
-    const patchedUser = JSON.parse(JSON.stringify(user));
-    patchedUser.data.connections.iv = [{ code: userId }];
+    const mockDataProvider = getDataProviderMock();
+    const handler = connectByCodeHandler(
+      new UserController(mockDataProvider, getDataProviderMock()),
+    );
+    const user = {
+      ...fetchUserResponseDataObject(),
+      id: 'user-0',
+      email: 'test@example.com',
+      conections: [],
+    };
+    mockDataProvider.fetch.mockResolvedValueOnce({
+      total: 1,
+      items: [user],
+    });
+    mockDataProvider.fetchById.mockResolvedValueOnce(user);
 
-    const userResponse = getGraphQLUser({ id: user.id });
-    userResponse.flatData.email = email;
-    const response = generateGraphqlFetchUsersResponse([userResponse]);
-
-    const squidexGraphqlMocks = jest
-      .spyOn(SquidexGraphql.prototype, 'request')
-      .mockImplementationOnce(() => Promise.resolve(response))
-      .mockImplementationOnce(() =>
-        Promise.resolve(getSquidexUserGraphqlResponse()),
-      );
-
-    nock(baseUrl)
-      .patch(`/api/content/${appName}/users/${user.id}`, {
-        email: { iv: email },
-        connections: {
-          iv: [...userResponse.flatData.connections!, { code: userId }],
-        },
-      })
-      .reply(200, patchedUser);
-
-    const res = (await unloggedHandler(
+    const res = (await handler(
       getApiGatewayEvent({
         body: JSON.stringify({
           code: 'asapWelcomeCode',
-          userId,
+          userId: 'oauth-connection-code',
         }),
         headers: {
           Authorization: `Basic ${secret}`,
@@ -159,21 +120,20 @@ describe('POST /webhook/users/connections - success', () => {
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toEqual(202);
-    expect(squidexGraphqlMocks).toHaveBeenNthCalledWith(1, expect.anything(), {
-      top: 1,
-      skip: 0,
-      filter: "data/connections/iv/code eq 'asapWelcomeCode'",
-      orderBy: 'data/firstName/iv,data/lastName/iv',
+    expect(mockDataProvider.update).toHaveBeenCalledWith('user-0', {
+      connections: [{ code: 'oauth-connection-code' }],
+      email: 'test@example.com',
     });
-    expect(nock.isDone()).toBe(true);
   });
 
   test('returns 500 for invalid code', async () => {
-    jest
-      .spyOn(SquidexGraphql.prototype, 'request')
-      .mockImplementationOnce(() => Promise.reject('Invalid Code'));
+    const mockDataProvider = mockGetDataProvider();
+    const handler = connectByCodeHandler(
+      new UserController(mockDataProvider, getDataProviderMock()),
+    );
+    mockDataProvider.fetch.mockRejectedValue(new Error('some error'));
 
-    const res = (await unloggedHandler(
+    const res = (await handler(
       getApiGatewayEvent({
         body: JSON.stringify({
           code: 'invalidConnectCode',

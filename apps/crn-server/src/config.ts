@@ -31,7 +31,6 @@ const {
   EVENT_SOURCE,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
   GOOGLE_API_TOKEN,
-  IS_CONTENTFUL_ENABLED,
   LOG_ENABLED,
   LOG_LEVEL,
   NODE_ENV,
@@ -86,7 +85,7 @@ export const googleApiCredentialsSecretId =
   GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';
 export const googleApiToken = GOOGLE_API_TOKEN || 'asap-google-api-token';
 export const googleApiUrl = 'https://www.googleapis.com/';
-export const isContentfulEnabled = IS_CONTENTFUL_ENABLED === 'true';
+export const isContentfulEnabled = true;
 export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
 export const logLevel = LOG_LEVEL || 'info';
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';

@@ -3,23 +3,7 @@ describe('Calendars Dependencies', () => {
     jest.resetModules();
   });
 
-  it('Should resolve Calendar Squidex Data Provider when the Contentful feature flag is off', async () => {
-    process.env.IS_CONTENTFUL_ENABLED = 'false';
-
-    const { CalendarSquidexDataProvider } = await import(
-      '../../src/data-providers/calendar.data-provider'
-    );
-    const getCalendarDataProviderModule = await import(
-      '../../src/dependencies/calendars.dependencies'
-    );
-    const calendarDataProvider =
-      getCalendarDataProviderModule.getCalendarDataProvider();
-
-    expect(calendarDataProvider).toBeInstanceOf(CalendarSquidexDataProvider);
-  });
-
-  it('Should resolve Calendar Contentful Data Provider when the Contentful feature flag is on', async () => {
-    process.env.IS_CONTENTFUL_ENABLED = 'true';
+  it('Should resolve Calendar Contentful Data Provider', async () => {
     const { CalendarContentfulDataProvider } = await import(
       '../../src/data-providers/contentful/calendar.data-provider'
     );

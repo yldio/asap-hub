@@ -3,25 +3,7 @@ describe('External Authors Dependencies', () => {
     jest.resetModules();
   });
 
-  it('Should resolve External-Author Squidex Data Provider when the Contentful feature flag is off', async () => {
-    process.env.IS_CONTENTFUL_ENABLED = 'false';
-
-    const { ExternalAuthorSquidexDataProvider } = await import(
-      '../../src/data-providers/external-author.data-provider'
-    );
-    const getExternalAuthorDataProviderModule = await import(
-      '../../src/dependencies/external-authors.dependencies'
-    );
-    const externalAuthorDataProvider =
-      getExternalAuthorDataProviderModule.getExternalAuthorDataProvider();
-
-    expect(externalAuthorDataProvider).toBeInstanceOf(
-      ExternalAuthorSquidexDataProvider,
-    );
-  });
-
-  it('Should resolve External-Author Contentful Data Provider when the Contentful feature flag is on', async () => {
-    process.env.IS_CONTENTFUL_ENABLED = 'true';
+  it('Should resolve External-Author Contentful Data Provider', async () => {
     const { ExternalAuthorContentfulDataProvider } = await import(
       '../../src/data-providers/contentful/external-author.data-provider'
     );

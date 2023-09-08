@@ -4,22 +4,7 @@ describe('Users Dependencies', () => {
   });
 
   describe('getUserDataProvider', () => {
-    it('Should resolve User Squidex Data Provider when the Contentful feature flag is off', async () => {
-      process.env.IS_CONTENTFUL_ENABLED = 'false';
-
-      const { UserSquidexDataProvider } = await import(
-        '../../src/data-providers/user.data-provider'
-      );
-      const getDependenciesModule = await import(
-        '../../src/dependencies/users.dependencies'
-      );
-      const userDataProvider = getDependenciesModule.getUserDataProvider();
-
-      expect(userDataProvider).toBeInstanceOf(UserSquidexDataProvider);
-    });
-
-    it('Should resolve User Contentful Data Provider when the Contentful feature flag is on', async () => {
-      process.env.IS_CONTENTFUL_ENABLED = 'true';
+    it('Should resolve User Contentful Data Provider', async () => {
       const { UserContentfulDataProvider } = await import(
         '../../src/data-providers/contentful/user.data-provider'
       );
@@ -33,22 +18,7 @@ describe('Users Dependencies', () => {
   });
 
   describe('getAssetDataProvider', () => {
-    it('Should resolve Asset Squidex Data Provider when the Contentful feature flag is off', async () => {
-      process.env.IS_CONTENTFUL_ENABLED = 'false';
-
-      const { AssetSquidexDataProvider } = await import(
-        '../../src/data-providers/asset.data-provider'
-      );
-      const getDependenciesModule = await import(
-        '../../src/dependencies/users.dependencies'
-      );
-      const assetDataProvider = getDependenciesModule.getAssetDataProvider();
-
-      expect(assetDataProvider).toBeInstanceOf(AssetSquidexDataProvider);
-    });
-
-    it('Should resolve Asset Contentful Data Provider when the Contentful feature flag is on', async () => {
-      process.env.IS_CONTENTFUL_ENABLED = 'true';
+    it('Should resolve Asset Contentful Data Provider', async () => {
       const { AssetContentfulDataProvider } = await import(
         '../../src/data-providers/contentful/asset.data-provider'
       );

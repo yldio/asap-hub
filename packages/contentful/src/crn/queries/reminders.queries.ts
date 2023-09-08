@@ -7,6 +7,7 @@ export const FETCH_REMINDERS = gql`
     $researchOutputFilter: ResearchOutputsFilter
     $eventFilter: EventsFilter
     $userId: String!
+    $researchOutputVersionsFilter: ResearchOutputVersionsFilter
   ) {
     researchOutputsCollection(where: $researchOutputFilter, preview: true) {
       items {
@@ -131,6 +132,40 @@ export const FETCH_REMINDERS = gql`
                   title
                   endDate
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+    researchOutputVersionsCollection(where: $researchOutputVersionsFilter) {
+      items {
+        sys {
+          id
+          publishedAt
+        }
+        documentType
+        title
+        linkedFrom {
+          researchOutputsCollection(limit: 1) {
+            items {
+              sys {
+                id
+              }
+              title
+              teamsCollection(limit: 10) {
+                items {
+                  sys {
+                    id
+                  }
+                  displayName
+                }
+              }
+              workingGroup {
+                sys {
+                  id
+                }
+                title
               }
             }
           }

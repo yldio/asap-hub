@@ -4,5 +4,5 @@ import AboutPageHeader from '../AboutPageHeader';
 
 it('renders the header', () => {
   render(<AboutPageHeader />);
-  expect(screen.getByText(/About ASAP/, { selector: 'h2' })).toBeVisible();
+  expect(screen.getByText(/About ASAP/, { selector: 'h1' })).toBeVisible();
 });

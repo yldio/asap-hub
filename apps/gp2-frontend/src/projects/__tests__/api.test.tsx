@@ -159,7 +159,7 @@ describe('getAlgoliaProjects', () => {
       ['project'],
       '',
       expect.objectContaining({
-        filters: 'traineeProject: true',
+        filters: 'traineeProject=1',
       }),
     );
   });
@@ -176,7 +176,7 @@ describe('getAlgoliaProjects', () => {
       ['project'],
       '',
       expect.objectContaining({
-        filters: 'status:"Active" AND traineeProject: true',
+        filters: 'status:"Active" AND traineeProject=1',
       }),
     );
   });

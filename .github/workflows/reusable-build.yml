@@ -34,12 +34,6 @@ on:
       CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
         description: 'CRN Contentful Webhook Authentication Token'
         required: true
-      CRN_SQUIDEX_API_CLIENT_SECRET:
-        description: 'CRN Squidex Client Secret'
-        required: true
-      CRN_SQUIDEX_SHARED_SECRET:
-        description: 'CRN Squidex Shared Secret'
-        required: true
       GP2_CONTENTFUL_ACCESS_TOKEN:
         description: 'GP2 Contentful Access Token'
         required: true
@@ -264,8 +258,6 @@ jobs:
           crn-contentful-env: ${{ inputs.crn-contentful-env }}
           crn-contentful-management-access-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           crn-contentful-webhook-authentication-token: ${{ secrets.CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN }}
-          crn-squidex-api-client-secret: ${{ secrets.CRN_SQUIDEX_API_CLIENT_SECRET }}
-          crn-squidex-shared-secret: ${{ secrets.CRN_SQUIDEX_SHARED_SECRET }}
           environment-name: ${{ inputs.environment-name }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
 

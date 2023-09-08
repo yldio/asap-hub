@@ -1,11 +1,13 @@
 import { NotFoundPage, NewsDetailsPage } from '@asap-hub/react-components';
-import { tutorials as tutorialsRoute, useRouteParams } from '@asap-hub/routing';
+import { discover as discoverRoute, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
 import { useTutorialById } from './state';
 
 const Tutorial: React.FC<Record<string, never>> = () => {
-  const { tutorialId } = useRouteParams(tutorialsRoute({}).tutorial);
+  const { tutorialId } = useRouteParams(
+    discoverRoute({}).tutorials({}).tutorial,
+  );
 
   const tutorial = useTutorialById(tutorialId);
 

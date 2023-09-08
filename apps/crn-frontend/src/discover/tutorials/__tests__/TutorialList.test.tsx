@@ -7,7 +7,7 @@ import {
   createDiscoverResponse,
   createTutorialsResponse,
 } from '@asap-hub/fixtures';
-import { tutorials } from '@asap-hub/routing';
+import { discover } from '@asap-hub/routing';
 
 import Tutorials from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -32,8 +32,8 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
       >
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: tutorials({}).$ }]}>
-              <Route path={tutorials.template}>
+            <MemoryRouter initialEntries={[{ pathname: discover({}).$ }]}>
+              <Route path={discover.template}>
                 <Tutorials />
               </Route>
             </MemoryRouter>

@@ -1,3 +1,4 @@
+export { default as aboutIcon } from './about';
 export { default as actionIcon } from './action';
 export { default as alumniBadgeIcon } from './alumni-badge';
 export { default as article } from './article';
@@ -45,7 +46,6 @@ export { default as GoogleScholarIcon } from './google-scholar';
 export { default as googleSigninLightNormalIcon } from './google-signin-light-normal';
 export { default as gp2Logo } from './gp2-logo';
 export { default as grantDocument } from './grantDocument';
-export { default as guideIcon } from './guide';
 export { default as InterestGroupsIcon } from './interest-groups';
 export { default as hidePasswordIcon } from './hide-password';
 export { default as inactiveBadgeIcon } from './inactive-badge';

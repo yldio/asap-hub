@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import {
   about,
-  guides,
+  discover,
   network,
   sharedResearch,
   news,
@@ -19,7 +19,7 @@ import { NavigationLink } from '../atoms';
 import {
   networkIcon,
   discoverIcon,
-  guideIcon,
+  aboutIcon,
   LibraryIcon,
   newsIcon,
   calendarIcon,
@@ -103,8 +103,8 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
       </li>
       <li>
         <NavigationLink
-          href={guides({}).$}
-          icon={guideIcon}
+          href={discover({}).$}
+          icon={discoverIcon}
           enabled={userOnboarded}
         >
           Guides &amp; Tutorials
@@ -113,7 +113,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
       <li>
         <NavigationLink
           href={about({}).$}
-          icon={discoverIcon}
+          icon={aboutIcon}
           enabled={userOnboarded}
         >
           About ASAP

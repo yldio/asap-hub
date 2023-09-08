@@ -8,9 +8,9 @@ import { DiscoverResponse } from '@asap-hub/model';
 import About from '../About';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshDiscoverState } from '../../discover/state';
-import { getDiscover } from '../api';
+import { getDiscover } from '../../discover/api';
 
-jest.mock('../api');
+jest.mock('../../discover/api');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -26,7 +26,7 @@ const props: DiscoverResponse = {
   training: [],
 };
 
-const renderDiscoverAbout = async (user: Partial<User>) => {
+const renderPage = async (user: Partial<User>) => {
   const result = render(
     <Suspense fallback="loading">
       <RecoilRoot
@@ -63,7 +63,7 @@ it('renders about with members', async () => {
     scientificAdvisoryBoard: [],
   });
 
-  await renderDiscoverAbout({});
+  await renderPage({});
   expect(screen.getByText('John Doe').closest('a')!.href).toContain('uuid');
   expect(screen.getByText('CEO')).toBeInTheDocument();
   expect(screen.getByText('ASAP')).toBeInTheDocument();
@@ -80,6 +80,6 @@ it('renders about with scientific advisory board', async () => {
     ],
   });
 
-  await renderDiscoverAbout({});
+  await renderPage({});
   expect(screen.getByText('John Doe').closest('a')!.href).toContain('uuid');
 });

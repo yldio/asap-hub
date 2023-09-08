@@ -1,7 +1,7 @@
 import { FC, lazy, useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { Frame } from '@asap-hub/frontend-utils';
-import { guides, tutorials } from '@asap-hub/routing';
+import { discover } from '@asap-hub/routing';
 import { DiscoverPage } from '@asap-hub/react-components';
 
 const loadGuides = () =>
@@ -29,24 +29,30 @@ const Discover: FC<Record<string, never>> = () => {
 
   return (
     <Switch>
-      <Route exact path={tutorials({}).$ + tutorials({}).tutorial}>
+      <Route
+        path={
+          path +
+          discover({}).tutorials.template +
+          discover({}).tutorials({}).tutorial.template
+        }
+      >
         <Frame title={null}>
           <TutorialPage />
         </Frame>
       </Route>
       <DiscoverPage>
         <Switch>
-          <Route path={guides({}).$}>
+          <Route exact path={path + discover({}).guides.template}>
             <Frame title="Guides">
               <Guides />
             </Frame>
           </Route>
-          <Route path={tutorials({}).$}>
+          <Route exact path={path + discover({}).tutorials.template}>
             <Frame title="Tutorials">
               <TutorialList />
             </Frame>
           </Route>
-          <Redirect to={guides({}).$} />
+          <Redirect to={discover({}).guides({}).$} />
         </Switch>
       </DiscoverPage>
     </Switch>

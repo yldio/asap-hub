@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { guides, tutorials } from '@asap-hub/routing';
+import { discover } from '@asap-hub/routing';
 
 import { Display, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
@@ -20,8 +20,8 @@ const DashboardPageHeader: React.FC = () => (
       Guidance and resources about ASAP’s programs and policies.
     </Paragraph>
     <TabNav>
-      <TabLink href={guides({}).$}>Guides</TabLink>
-      <TabLink href={tutorials({}).$}>Tutorials</TabLink>
+      <TabLink href={discover({}).guides({}).$}>Guides</TabLink>
+      <TabLink href={discover({}).tutorials({}).$}>Tutorials</TabLink>
     </TabNav>
   </header>
 );

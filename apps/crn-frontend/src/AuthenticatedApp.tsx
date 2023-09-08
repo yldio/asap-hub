@@ -4,12 +4,11 @@ import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   about,
   dashboard,
+  discover,
   events,
-  guides,
   network,
   news,
   sharedResearch,
-  tutorials,
 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -119,7 +118,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                   <Dashboard />
                 </Frame>
               </Route>
-              <Route path={[guides.template, tutorials.template]}>
+              <Route path={discover.template}>
                 <Frame title="Guides & Tutorials">
                   <Discover />
                 </Frame>

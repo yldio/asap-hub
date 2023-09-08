@@ -38,18 +38,12 @@ const {
   CRN_SES_REGION,
   CRN_AUTH0_AUDIENCE,
   CRN_AUTH0_CLIENT_ID,
-  CRN_SQUIDEX_APP_NAME,
-  SQUIDEX_BASE_URL,
-  CRN_SQUIDEX_API_CLIENT_ID,
-  CRN_SQUIDEX_API_CLIENT_SECRET,
-  CRN_SQUIDEX_SHARED_SECRET,
   CRN_CONTENTFUL_ENV,
   CRN_CONTENTFUL_ACCESS_TOKEN,
   CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN,
   CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN,
   CRN_CONTENTFUL_SPACE_ID,
   CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN,
-  IS_CONTENTFUL_ENABLED = 'false',
   LOG_LEVEL,
   SLACK_WEBHOOK,
 } = process.env;
@@ -66,11 +60,6 @@ const sentryDsnApi = CRN_SENTRY_DSN_API!;
 const sentryDsnHandlers = CRN_SENTRY_DSN_HANDLERS!;
 const auth0ClientId = CRN_AUTH0_CLIENT_ID!;
 const auth0Audience = CRN_AUTH0_AUDIENCE!;
-const squidexAppName = CRN_SQUIDEX_APP_NAME!;
-const squidexBaseUrl = SQUIDEX_BASE_URL!;
-const squidexClientId = CRN_SQUIDEX_API_CLIENT_ID!;
-const squidexClientSecret = CRN_SQUIDEX_API_CLIENT_SECRET!;
-const squidexSharedSecret = CRN_SQUIDEX_SHARED_SECRET!;
 const contentfulEnvironment = CRN_CONTENTFUL_ENV!;
 const contentfulAccessToken = CRN_CONTENTFUL_ACCESS_TOKEN!;
 const contentfulPreviewAccessToken = CRN_CONTENTFUL_PREVIEW_ACCESS_TOKEN!;
@@ -78,7 +67,6 @@ const contentfulManagementAccessToken = CRN_CONTENTFUL_MANAGEMENT_ACCESS_TOKEN!;
 const contentfulWebhookAuthenticationToken =
   CRN_CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN!;
 const contentfulSpaceId = CRN_CONTENTFUL_SPACE_ID!;
-const isContentfulEnabled = IS_CONTENTFUL_ENABLED;
 const sesRegion = CRN_SES_REGION!;
 
 const algoliaIndex = CRN_ALGOLIA_INDEX
@@ -119,7 +107,6 @@ if (SLS_STAGE === 'local') {
   plugins.push(...offlinePlugins);
 }
 
-const eventBusSourceSquidex = 'asap.squidex';
 const eventBusSourceContentful = 'asap.contentful';
 
 const serverlessConfig: AWS = {
@@ -165,18 +152,13 @@ const serverlessConfig: AWS = {
       DEBUG: SLS_STAGE === 'production' ? '' : 'crn-server,http',
       NODE_ENV: '${env:NODE_ENV}',
       ENVIRONMENT: '${env:SLS_STAGE}',
-      SQUIDEX_APP_NAME: squidexAppName,
-      SQUIDEX_BASE_URL: squidexBaseUrl,
-      SQUIDEX_CLIENT_ID: squidexClientId,
-      SQUIDEX_CLIENT_SECRET: squidexClientSecret,
-      SQUIDEX_SHARED_SECRET: squidexSharedSecret,
       REGION: '${env:AWS_REGION}',
       CRN_API_URL: '${env:CRN_API_URL}',
       LOG_LEVEL: LOG_LEVEL || (SLS_STAGE === 'production' ? 'error' : 'info'),
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:crn-algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: CI_COMMIT_SHA || '${env:CURRENT_REVISION}',
-      IS_CONTENTFUL_ENABLED: isContentfulEnabled,
+      IS_CONTENTFUL_ENABLED: 'true',
       CONTENTFUL_ENV_ID: contentfulEnvironment,
       CONTENTFUL_ACCESS_TOKEN: contentfulAccessToken,
       CONTENTFUL_PREVIEW_ACCESS_TOKEN: contentfulPreviewAccessToken,
@@ -326,26 +308,6 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    gcalSubscribeCalendarSquidex: {
-      handler: './src/handlers/calendar/gcal-subscribe-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': ['CalendarsCreated', 'CalendarsUpdated'],
-            },
-          },
-        },
-      ],
-      environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-        SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'false',
-      },
-    },
     gcalSubscribeCalendarContentful: {
       handler: './src/handlers/calendar/gcal-subscribe-handler.handler',
       events: [
@@ -366,21 +328,6 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    gcalResubscribeCalendarsSquidex: {
-      handler: './src/handlers/calendar/gcal-resubscribe-handler.handler',
-      timeout: 120,
-      events: [
-        {
-          schedule: 'cron(0 1 * * ? *)',
-        },
-      ],
-      environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-        SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'false',
-      },
-    },
     gcalResubscribeCalendarsContentful: {
       handler: './src/handlers/calendar/gcal-resubscribe-handler.handler',
       timeout: 120,
@@ -394,27 +341,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
-      },
-    },
-    syncUserOrcidSquidex: {
-      handler: './src/handlers/user/sync-orcid-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': ['UsersCreated', 'UsersUpdated'],
-            },
-            retryPolicy: {
-              maximumRetryAttempts: 2,
-            },
-          },
-        },
-      ],
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     syncUserOrcidContentful: {
@@ -436,32 +362,6 @@ const serverlessConfig: AWS = {
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
-      },
-    },
-    inviteUserSquidex: {
-      timeout: 120,
-      handler: './src/handlers/user/invite-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': ['UsersPublished'],
-            },
-            retryPolicy: {
-              maximumRetryAttempts: 2,
-            },
-          },
-        },
-      ],
-      environment: {
-        SES_REGION: sesRegion,
-        EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
-        EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
-        EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
-        SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     inviteUserContentful: {
@@ -490,31 +390,6 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexResearchOutputSquidex: {
-      handler:
-        './src/handlers/research-output/algolia-index-research-output-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': [
-                'ResearchOutputsPublished',
-                'ResearchOutputsUpdated',
-                'ResearchOutputsUnpublished',
-                'ResearchOutputsDeleted',
-              ] satisfies WebhookDetailType[],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
     algoliaIndexResearchOutputContentful: {
       handler:
         './src/handlers/research-output/algolia-index-research-output-handler.handler',
@@ -539,31 +414,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
-      },
-    },
-    algoliaIndexUserSquidex: {
-      handler: './src/handlers/user/algolia-index-user-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': [
-                'UsersPublished',
-                'UsersUpdated',
-                'UsersCreated',
-                'UsersUnpublished',
-                'UsersDeleted',
-              ] satisfies WebhookDetailType[],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     algoliaIndexUserContentful: {
@@ -592,32 +442,6 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexExternalAuthorSquidex: {
-      handler:
-        './src/handlers/external-author/algolia-index-external-author-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': [
-                'ExternalAuthorsPublished',
-                'ExternalAuthorsUpdated',
-                'ExternalAuthorsUnpublished',
-                'ExternalAuthorsDeleted',
-              ] satisfies WebhookDetailType[],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
-        SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'false',
-      },
-    },
     algoliaIndexExternalAuthorContentful: {
       handler:
         './src/handlers/external-author/algolia-index-external-author-handler.handler',
@@ -644,31 +468,6 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexEventsSquidex: {
-      handler: './src/handlers/event/algolia-index-event-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': [
-                'EventsPublished',
-                'EventsUpdated',
-                'EventsUnpublished',
-                'EventsDeleted',
-              ] satisfies WebhookDetailType[],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'false',
-      },
-    },
     algoliaIndexEventsContentful: {
       handler: './src/handlers/event/algolia-index-event-handler.handler',
       events: [
@@ -690,30 +489,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
-      },
-    },
-    algoliaIndexUserEventsSquidex: {
-      handler: './src/handlers/event/algolia-index-user-events-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': [
-                'UsersPublished',
-                'UsersUpdated',
-                'UsersUnpublished',
-                'UsersDeleted',
-              ] satisfies WebhookDetailType[],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     algoliaIndexUserEventsContentful: {
@@ -739,31 +514,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
-      },
-    },
-    algoliaIndexExternalUserEventsSquidex: {
-      handler:
-        './src/handlers/event/algolia-index-external-author-events-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': [
-                'ExternalAuthorsPublished',
-                'ExternalAuthorsUpdated',
-                'ExternalAuthorsUnpublished',
-                'ExternalAuthorsDeleted',
-              ] satisfies WebhookDetailType[],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     algoliaIndexExternalUserEventsContentful: {
@@ -792,30 +542,6 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexTeamEventsSquidex: {
-      handler: './src/handlers/event/algolia-index-team-events-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': [
-                'TeamsPublished',
-                'TeamsUpdated',
-                'TeamsUnpublished',
-                'TeamsDeleted',
-              ] satisfies WebhookDetailType[],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
     algoliaIndexTeamEventsContentful: {
       handler: './src/handlers/event/algolia-index-team-events-handler.handler',
       events: [
@@ -839,31 +565,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
-      },
-    },
-    algoliaIndexGroupEventsSquidex: {
-      handler:
-        './src/handlers/event/algolia-index-group-events-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': [
-                'GroupsPublished',
-                'GroupsUpdated',
-                'GroupsUnpublished',
-                'GroupsDeleted',
-              ] satisfies WebhookDetailType[],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     algoliaIndexGroupEventsContentful: {
@@ -892,30 +593,6 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexLabUsersSquidex: {
-      handler: './src/handlers/lab/algolia-index-lab-users-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': [
-                'LabsPublished',
-                'LabsUpdated',
-                'LabsUnpublished',
-                'LabsDeleted',
-              ] satisfies WebhookDetailType[],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
     algoliaIndexLabUsersContentful: {
       handler: './src/handlers/lab/algolia-index-lab-users-handler.handler',
       events: [
@@ -941,24 +618,6 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    gcalEventsUpdatedSquidex: {
-      timeout: 300,
-      handler: './src/handlers/webhooks/gcal-webhook-events-updated.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/events',
-          },
-        },
-      ],
-      environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
-        SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'false',
-      },
-    },
     gcalEventsUpdatedContentful: {
       timeout: 300,
       handler: './src/handlers/webhooks/gcal-webhook-events-updated.handler',
@@ -975,20 +634,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
-      },
-    },
-    runMigrations: {
-      handler: './src/handlers/webhooks/webhook-run-migrations.run',
-      timeout: 900,
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
-    rollbackMigrations: {
-      handler: './src/handlers/webhooks/webhook-run-migrations.rollback',
-      timeout: 900,
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     invalidateCache: {
@@ -1017,26 +662,6 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexTeamResearchOutputsSquidex: {
-      handler:
-        './src/handlers/teams/algolia-index-team-research-outputs-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
     algoliaIndexTeamResearchOutputsContentful: {
       handler:
         './src/handlers/teams/algolia-index-team-research-outputs-handler.handler',
@@ -1056,25 +681,6 @@ const serverlessConfig: AWS = {
         ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
-      },
-    },
-    algoliaIndexTeamUsersSquidex: {
-      handler: './src/handlers/teams/algolia-index-team-users-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': ['TeamsPublished', 'TeamsUpdated', 'TeamsDeleted'],
-            },
-          },
-        },
-      ],
-      environment: {
-        ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}`,
-        SENTRY_DSN: sentryDsnHandlers,
       },
     },
     algoliaIndexTeamUsersContentful: {
@@ -1097,25 +703,6 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    updateSquidexWorkingGroupDeliverables: {
-      handler:
-        './src/handlers/working-group/update-deliverables-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceSquidex],
-              'detail-type': ['WorkingGroupsPublished', 'WorkingGroupsUpdated'],
-            },
-          },
-        },
-      ],
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'false',
-      },
-    },
     updateContentfulWorkingGroupDeliverables: {
       handler:
         './src/handlers/working-group/update-deliverables-handler.handler',
@@ -1135,22 +722,6 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    squidexWebhook: {
-      handler: './src/handlers/webhooks/webhook-squidex.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/squidex',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: eventBusSourceSquidex,
-        SENTRY_DSN: sentryDsnHandlers,
-      },
-    },
     contentfulWebhook: {
       handler: './src/handlers/webhooks/webhook-contentful.handler',
       events: [
@@ -1167,18 +738,6 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
         CONTENTFUL_WEBHOOK_AUTHENTICATION_TOKEN:
           contentfulWebhookAuthenticationToken,
-      },
-    },
-    cronjobSyncOrcidSquidex: {
-      handler: './src/handlers/webhooks/cronjob-sync-orcid.handler',
-      events: [
-        {
-          schedule: 'rate(1 hour)', // run every hour
-        },
-      ],
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
-        IS_CONTENTFUL_ENABLED: 'false',
       },
     },
     cronjobSyncOrcidContentful: {
@@ -1766,41 +1325,6 @@ const serverlessConfig: AWS = {
           ],
         },
       },
-      SubscribeCalendarSquidexDLQ: {
-        Type: 'AWS::SQS::Queue',
-        Properties: {
-          MessageRetentionPeriod: 1_209_600, // 14 days
-          QueueName:
-            '${self:service}-${self:provider.stage}-subscribe-calendar-squidex-dlq',
-        },
-      },
-      SubscribeCalendarSquidexDLQPolicy: {
-        Type: 'AWS::SQS::QueuePolicy',
-        Properties: {
-          PolicyDocument: {
-            Id: '${self:service}-${self:provider.stage}-subscribe-calendar-squidex-dlq-policy',
-            Version: '2012-10-17',
-            Statement: [
-              {
-                Sid: 'Publisher-statement-id',
-                Effect: 'Allow',
-                Principal: {
-                  AWS: '*',
-                },
-                Action: 'sqs:SendMessage',
-                Resource: {
-                  'Fn::GetAtt': [`SubscribeCalendarSquidexDLQ`, 'Arn'],
-                },
-              },
-            ],
-          },
-          Queues: [
-            {
-              Ref: `SubscribeCalendarSquidexDLQ`,
-            },
-          ],
-        },
-      },
       SubscribeCalendarContentfulDLQ: {
         Type: 'AWS::SQS::Queue',
         Properties: {
@@ -1873,15 +1397,6 @@ const serverlessConfig: AWS = {
       },
     },
     extensions: {
-      GcalSubscribeCalendarSquidexLambdaFunction: {
-        Properties: {
-          DeadLetterConfig: {
-            TargetArn: {
-              'Fn::GetAtt': ['SubscribeCalendarSquidexDLQ', 'Arn'],
-            },
-          },
-        },
-      },
       GcalSubscribeCalendarContentfulLambdaFunction: {
         Properties: {
           DeadLetterConfig: {

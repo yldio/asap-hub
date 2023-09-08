@@ -26,12 +26,6 @@ inputs:
   crn-contentful-webhook-authentication-token:
     description: 'CRN Contentful Webhook Authentication Token'
     required: false
-  crn-squidex-api-client-secret:
-    description: 'Squidex Client Secret'
-    required: false
-  crn-squidex-shared-secret:
-    description: 'Squidex Shared Secret'
-    required: false
   environment-name:
     description: 'The environment name'
     required: true
@@ -102,10 +96,6 @@ runs:
         CRN_SENTRY_DSN_API: ${{ steps.setup.outputs.crn-sentry-dsn-api }}
         CRN_SENTRY_DSN_HANDLERS: ${{ steps.setup.outputs.crn-sentry-dsn-handlers }}
         CRN_SES_REGION: ${{ steps.setup.outputs.crn-ses-region }}
-        CRN_SQUIDEX_API_CLIENT_ID: ${{ steps.setup.outputs.crn-squidex-api-client-id }}
-        CRN_SQUIDEX_API_CLIENT_SECRET: ${{ inputs.crn-squidex-api-client-secret }}
-        CRN_SQUIDEX_APP_NAME: ${{ steps.setup.outputs.crn-squidex-app-name }}
-        CRN_SQUIDEX_SHARED_SECRET: ${{ inputs.crn-squidex-shared-secret }}
         CURRENT_REVISION: ${{ github.sha }}
         GP2_ALGOLIA_INDEX: ${{ steps.setup.outputs.gp2-algolia-index }}
         GP2_AUTH0_AUDIENCE: ${{ steps.setup.outputs.gp2-auth0-audience }}
@@ -126,7 +116,6 @@ runs:
         NODE_ENV: 'production'
         NODE_OPTIONS: '--max-old-space-size=8192'
         SLS_STAGE: ${{ steps.setup.outputs.sls-stage }}
-        SQUIDEX_BASE_URL: 'https://override-disabled.squidex.io'
         SLACK_WEBHOOK: ${{ inputs.slack-webhook }}
     - uses: actions/upload-artifact@v3
       with:

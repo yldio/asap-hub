@@ -17,11 +17,6 @@ RUN apt-get update && apt-get install -y \
   awscli \
   && ln -s /usr/bin/python3 /usr/bin/python
 
-RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v8.21.0/linux-x64.zip && \
-  unzip linux-x64.zip && \
-  rm linux-x64.zip && \
-  mv sq /bin
-
 FROM base AS integration
 
 RUN curl -sL https://deb.nodesource.com/setup_18.x | bash \
@@ -29,6 +24,3 @@ RUN curl -sL https://deb.nodesource.com/setup_18.x | bash \
   nodejs \
   git \
   && npm i -g npm@^6 yarn
-
-COPY .github/scripts/squidex/requirements.txt /tmp/
-RUN pip install -r /tmp/requirements.txt

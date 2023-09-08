@@ -38,4 +38,3 @@ gp2-max-contentful-envs=6
 gp2-sentry-dsn-api=https://3b2b13538d05486a977fc315700bd820@o850903.ingest.sentry.io/6643761
 gp2-sentry-dsn-handlers=https://dca6e589151c4a16bc49b2d93c9ddfd8@o850903.ingest.sentry.io/6643762
 print-sync-logs-on-success=TRUE
-squidex-base-url=https://cloud.squidex.io

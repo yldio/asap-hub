@@ -137,7 +137,7 @@ const renderPage = async ({
     ],
   },
   workingGroupId = 'wg1',
-  createVersion = false,
+  versionAction = undefined,
   outputDocumentType = 'article',
   researchOutputData,
   history = createMemoryHistory({
@@ -155,7 +155,7 @@ const renderPage = async ({
   canEditResearchOutput?: boolean;
   researchOutputData?: ResearchOutputResponse;
   history?: History;
-  createVersion?: boolean;
+  versionAction?: 'create' | 'edit';
 } = {}) => {
   const path =
     network.template +
@@ -178,7 +178,7 @@ const renderPage = async ({
                 <WorkingGroupOutput
                   workingGroupId={workingGroupId}
                   researchOutputData={researchOutputData}
-                  createVersion={createVersion}
+                  versionAction={versionAction}
                 />
               </Route>
             </Router>
@@ -204,6 +204,26 @@ it('Renders the working group research output form with relevant fields', async 
   expect(
     screen.getByText('Add an abstract or a summary that describes this work.'),
   ).toBeVisible();
+});
+
+it('displays the research output with one version in create mode', async () => {
+  await renderPage({
+    outputDocumentType: 'article',
+    versionAction: 'create',
+    researchOutputData: createResearchOutputResponse(),
+  });
+
+  expect(screen.getByText(/#1/i)).toBeInTheDocument();
+});
+
+it('displays the research output with no version in edit mode', async () => {
+  await renderPage({
+    outputDocumentType: 'article',
+    versionAction: 'edit',
+    researchOutputData: createResearchOutputResponse(),
+  });
+
+  expect(screen.queryByText(/#1/i)).not.toBeInTheDocument();
 });
 
 it('shows the sorry not found page when the working group does not exist', async () => {
@@ -428,7 +448,7 @@ it('will toast server side errors for unknown errors', async () => {
 
 it('display a toast warning when creating a new version', async () => {
   await renderPage({
-    createVersion: true,
+    versionAction: 'create',
   });
   expect(
     screen.queryByText(

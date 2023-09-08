@@ -798,7 +798,7 @@ describe('ResearchOutputs controller', () => {
       expect(result).toEqual(getResearchOutputResponse());
       expect(researchOutputDataProviderMock.update).toBeCalledWith(
         researchOutputId,
-        getResearchOutputUpdateDataObject(),
+        { ...getResearchOutputUpdateDataObject(), versions: ['1'] },
         { publish: true },
       );
     });
@@ -839,6 +839,7 @@ describe('ResearchOutputs controller', () => {
         researchOutputId,
         {
           ...getResearchOutputUpdateDataObject(),
+          versions: ['1'],
           addedDate: undefined,
           statusChangedById: 'review-requested-by-id',
         },
@@ -865,6 +866,7 @@ describe('ResearchOutputs controller', () => {
         researchOutputId,
         {
           ...getResearchOutputUpdateDataObject(),
+          versions: ['1'],
           addedDate: expect.anything(),
         },
 
@@ -892,6 +894,7 @@ describe('ResearchOutputs controller', () => {
           researchOutputId,
           {
             ...getResearchOutputUpdateDataObject(),
+            versions: ['1'],
             addedDate: undefined,
           },
           { publish: false },
@@ -921,6 +924,7 @@ describe('ResearchOutputs controller', () => {
           {
             ...getResearchOutputUpdateDataObject(),
             addedDate: mockDate.toISOString(),
+            versions: ['1'],
           },
           { publish: true },
         );
@@ -947,6 +951,7 @@ describe('ResearchOutputs controller', () => {
           {
             ...getResearchOutputUpdateDataObject(),
             addedDate: '2020-01-01',
+            versions: ['1'],
           },
           { publish: true },
         );

@@ -126,7 +126,7 @@ const mockUpdateResearchOutput =
 interface RenderPageOptions {
   user?: UserResponse;
   teamId: string;
-  createVersion?: boolean;
+  versionAction?: 'create' | 'edit';
   outputDocumentType?: OutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
 }
@@ -168,6 +168,28 @@ it('displays the save button for existing research outputs', async () => {
   });
 
   expect(screen.getByRole('button', { name: /Save/i })).toBeInTheDocument();
+});
+
+it('displays the research output with one version in create mode', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'bioinformatics',
+    researchOutputData: baseResearchOutput,
+    versionAction: 'create',
+  });
+
+  expect(screen.getByText(/#1/i)).toBeInTheDocument();
+});
+
+it('displays the research output with no version in edit mode', async () => {
+  await renderPage({
+    teamId: '42',
+    outputDocumentType: 'bioinformatics',
+    researchOutputData: baseResearchOutput,
+    versionAction: 'edit',
+  });
+
+  expect(screen.queryByText(/#1/i)).not.toBeInTheDocument();
 });
 
 it('switches research output type based on parameter', async () => {
@@ -522,7 +544,7 @@ it('display a toast warning when creating a new version', async () => {
     teamId: '42',
     outputDocumentType: 'article',
     researchOutputData: baseResearchOutput,
-    createVersion: true,
+    versionAction: 'create',
   });
 
   expect(
@@ -540,7 +562,7 @@ async function renderPage({
   teamId,
   outputDocumentType = 'bioinformatics',
   researchOutputData,
-  createVersion = false,
+  versionAction,
 }: RenderPageOptions) {
   const path =
     network.template +
@@ -569,7 +591,7 @@ async function renderPage({
                 <TeamOutput
                   teamId={teamId}
                   researchOutputData={researchOutputData}
-                  createVersion={createVersion}
+                  versionAction={versionAction}
                 />
               </Route>
             </StaticRouter>

@@ -102,12 +102,8 @@ jobs:
           contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-          squidex-app-name: 'na'
-          squidex-base-url: 'na'
-          squidex-ci-client-id: 'na'
-          squidex-ci-client-secret: 'na'
           data-store: 'contentful'
-      - name: Import Outputs (PROJECTS | ALL)
+      - name: Import Projects (PROJECTS | ALL)
         if: ${{ inputs.entity == 'projects' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity
         with:
@@ -120,12 +116,8 @@ jobs:
           contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-          squidex-app-name: 'na'
-          squidex-base-url: 'na'
-          squidex-ci-client-id: 'na'
-          squidex-ci-client-secret: 'na'
           data-store: 'contentful'
-      - name: Import Outputs (EVENTS | ALL)
+      - name: Import Events (EVENTS | ALL)
         if: ${{ inputs.entity == 'events' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity
         with:
@@ -138,12 +130,8 @@ jobs:
           contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-          squidex-app-name: 'na'
-          squidex-base-url: 'na'
-          squidex-ci-client-id: 'na'
-          squidex-ci-client-secret: 'na'
           data-store: 'contentful'
-      - name: Import Outputs (USERS | ALL)
+      - name: Import Users (USERS | ALL)
         if: ${{ inputs.entity == 'users' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity
         with:
@@ -156,12 +144,8 @@ jobs:
           contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-          squidex-app-name: 'na'
-          squidex-base-url: 'na'
-          squidex-ci-client-id: 'na'
-          squidex-ci-client-secret: 'na'
           data-store: 'contentful'
-      - name: Import Outputs (NEWS | ALL)
+      - name: Import News (NEWS | ALL)
         if: ${{ inputs.entity == 'news' || inputs.entity == 'all'}}
         uses: ./.github/actions/algolia-import-entity
         with:
@@ -174,10 +158,6 @@ jobs:
           contentful-access-token: ${{ secrets.GP2_CONTENTFUL_ACCESS_TOKEN }}
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.gp2-contentful-space-id }}
-          squidex-app-name: 'na'
-          squidex-base-url: 'na'
-          squidex-ci-client-id: 'na'
-          squidex-ci-client-secret: 'na'
           data-store: 'contentful'
       - name: Override index with the temp one
         run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX

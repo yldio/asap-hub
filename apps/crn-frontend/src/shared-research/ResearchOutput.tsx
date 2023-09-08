@@ -2,6 +2,7 @@ import {
   NotFoundPage,
   SharedResearchOutput,
   utils,
+  ScrollToTop,
 } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
@@ -61,6 +62,7 @@ const ResearchOutput: React.FC = () => {
         <Switch>
           <Route exact path={publishedNow ? publishedNowPath : path}>
             <Frame title={researchOutputData.title}>
+              {publishedNow && <ScrollToTop />}
               <SharedResearchOutput
                 {...researchOutputData}
                 backHref={backHref}
@@ -102,14 +104,14 @@ const ResearchOutput: React.FC = () => {
                 <WorkingGroupOutput
                   workingGroupId={researchOutputData.workingGroups[0]?.id}
                   researchOutputData={researchOutputData}
-                  createVersion
+                  versionAction={'create'}
                 />
               ) : (
                 researchOutputData.teams[0]?.id && (
                   <TeamOutput
                     teamId={researchOutputData.teams[0]?.id}
                     researchOutputData={researchOutputData}
-                    createVersion
+                    versionAction={'create'}
                   />
                 )
               )}
@@ -127,12 +129,14 @@ const ResearchOutput: React.FC = () => {
                 <WorkingGroupOutput
                   workingGroupId={researchOutputData.workingGroups[0]?.id}
                   researchOutputData={researchOutputData}
+                  versionAction={'edit'}
                 />
               ) : (
                 researchOutputData.teams[0]?.id && (
                   <TeamOutput
                     teamId={researchOutputData.teams[0].id}
                     researchOutputData={researchOutputData}
+                    versionAction={'edit'}
                   />
                 )
               )}

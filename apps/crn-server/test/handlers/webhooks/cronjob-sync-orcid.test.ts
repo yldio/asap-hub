@@ -1,23 +1,15 @@
 import nock from 'nock';
 import { unloggedHandler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
-import {
-  generateGraphqlFetchUsersResponse,
-  getGraphQLUser,
-  getSquidexUserGraphqlResponse,
-  patchResponse,
-} from '../../fixtures/users.fixtures';
-import { getSquidexClientMock } from '../../mocks/squidex-client.mock';
-import { getSquidexGraphqlClientMock } from '../../mocks/squidex-graphql-client.mock';
+import { getDataProviderMock } from '../../mocks/data-provider.mock';
+import { fetchUserResponseDataObject } from '../../fixtures/users.fixtures';
 import * as fixtures from './cronjob-sync-orcid.fixtures';
 
-const mockGraphqlClient = getSquidexGraphqlClientMock();
-const mockRestClient = getSquidexClientMock();
+const mockDataProvider = getDataProviderMock();
 
 jest.mock('../../../src/utils/logger');
-jest.mock('@asap-hub/squidex', () => ({
-  ...jest.requireActual('@asap-hub/squidex'),
-  SquidexGraphql: jest.fn(() => mockGraphqlClient),
-  SquidexRest: jest.fn(() => mockRestClient),
+jest.mock('../../../src/dependencies/users.dependencies', () => ({
+  getUserDataProvider: () => mockDataProvider,
+  getAssetDataProvider: jest.fn(),
 }));
 
 describe('Cronjob - Sync Users ORCID', () => {
@@ -30,37 +22,28 @@ describe('Cronjob - Sync Users ORCID', () => {
       .get(`/v2.1/${orcid}/works`)
       .reply(200, fixtures.orcidWorksResponse);
 
-    const userResponse = patchResponse();
-    const user = getGraphQLUser();
-    const userToSync = {
-      ...user,
-      flatData: {
-        ...user.flatData,
-        orcidLastSyncDate: '2020-01-01T00:00:00.000Z',
-        orcid,
-        orcidWorks: fixtures.ORCIDWorksDeserialisedExpectation,
-      },
+    const user = {
+      ...fetchUserResponseDataObject(),
+      id: 'user-1',
+      orcid,
+      orcidLastSyncDate: '2020-01-01T00:00:00.000Z',
     };
-    const outdatedUsersResponse = generateGraphqlFetchUsersResponse([
-      userToSync,
-    ]);
-    const singleUserResponse = getSquidexUserGraphqlResponse(userToSync);
 
-    mockGraphqlClient.request
-      .mockResolvedValueOnce(outdatedUsersResponse)
-      .mockResolvedValueOnce(singleUserResponse);
+    mockDataProvider.fetch.mockResolvedValueOnce({
+      total: 1,
+      items: [user],
+    });
 
-    mockRestClient.patch.mockResolvedValueOnce(userResponse);
+    mockDataProvider.fetchById.mockResolvedValueOnce(user);
 
     const { statusCode } = await unloggedHandler();
     expect(statusCode).toBe(200);
-    expect(mockRestClient.patch).toHaveBeenCalledWith(
-      singleUserResponse.findUsersContent?.id,
+    expect(mockDataProvider.update).toHaveBeenCalledWith(
+      'user-1',
       expect.objectContaining({
-        email: { iv: userToSync.flatData.email },
-        orcidWorks: {
-          iv: expect.arrayContaining(userToSync.flatData.orcidWorks),
-        },
+        orcidWorks: expect.arrayContaining(
+          fixtures.ORCIDWorksDeserialisedExpectation,
+        ),
       }),
     );
   });

@@ -17,28 +17,13 @@ import {
   sentryTransactionIdMiddleware,
   shouldHandleError,
 } from '@asap-hub/server-common';
-import {
-  InputCalendar,
-  InputUser,
-  RestCalendar,
-  RestEvent,
-  RestExternalAuthor,
-  RestResearchOutput,
-  RestTeam,
-  RestUser,
-  RestWorkingGroup,
-  SquidexGraphql,
-  SquidexRest,
-} from '@asap-hub/squidex';
 
 import * as Sentry from '@sentry/serverless';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import 'express-async-errors';
 import {
-  appName,
   auth0Audience,
-  baseUrl,
   contentfulAccessToken,
   contentfulEnvId,
   contentfulPreviewAccessToken,
@@ -60,8 +45,6 @@ import TeamController from './controllers/team.controller';
 import TutorialController from './controllers/tutorial.controller';
 import UserController from './controllers/user.controller';
 import WorkingGroupController from './controllers/working-group.controller';
-import { AssetSquidexDataProvider } from './data-providers/asset.data-provider';
-import { CalendarSquidexDataProvider } from './data-providers/calendar.data-provider';
 import { AssetContentfulDataProvider } from './data-providers/contentful/asset.data-provider';
 import { CalendarContentfulDataProvider } from './data-providers/contentful/calendar.data-provider';
 import { DashboardContentfulDataProvider } from './data-providers/contentful/dashboard.data-provider';
@@ -81,22 +64,8 @@ import { UserContentfulDataProvider } from './data-providers/contentful/user.dat
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
 
 import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
-import { DiscoverSquidexDataProvider } from './data-providers/discover.data-provider';
-import { EventSquidexDataProvider } from './data-providers/event.data-provider';
-import {
-  ExternalAuthorDataProvider,
-  ExternalAuthorSquidexDataProvider,
-} from './data-providers/external-author.data-provider';
-import { InterestGroupSquidexDataProvider } from './data-providers/interest-group.data-provider';
-import { LabSquidexDataProvider } from './data-providers/lab.data-provider';
-import { ReminderSquidexDataProvider } from './data-providers/reminder.data-provider';
-import { ResearchOutputSquidexDataProvider } from './data-providers/research-output.data-provider';
-import { ResearchTagSquidexDataProvider } from './data-providers/research-tag.data-provider';
-import {
-  TeamDataProvider,
-  TeamSquidexDataProvider,
-} from './data-providers/team.data-provider';
-import { TutorialsSquidexDataProvider } from './data-providers/tutorial.data-provider';
+import { ExternalAuthorDataProvider } from './data-providers/external-author.data-provider';
+import { TeamDataProvider } from './data-providers/team.data-provider';
 import {
   AssetDataProvider,
   DashboardDataProvider,
@@ -113,8 +82,6 @@ import {
   UserDataProvider,
   WorkingGroupDataProvider,
 } from './data-providers/types';
-import { UserSquidexDataProvider } from './data-providers/user.data-provider';
-import { WorkingGroupSquidexDataProvider } from './data-providers/working-group.data-provider';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
 import { calendarRouteFactory } from './routes/calendar.route';
@@ -134,7 +101,6 @@ import { tutorialRouteFactory } from './routes/tutorial.route';
 import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { workingGroupRouteFactory } from './routes/working-group.route';
 import assignUserToContext from './utils/assign-user-to-context';
-import { getAuthToken } from './utils/auth';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
 
@@ -165,388 +131,102 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Clients
   const decodeToken = decodeTokenFactory(auth0Audience);
-  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-    appName,
-    baseUrl,
-  });
-  const calendarRestClient = new SquidexRest<RestCalendar, InputCalendar>(
-    getAuthToken,
-    'calendars',
-    { appName, baseUrl },
-  );
-  const eventRestClient = new SquidexRest<RestEvent>(getAuthToken, 'events', {
-    appName,
-    baseUrl,
-  });
-  const userRestClient = new SquidexRest<RestUser, InputUser>(
-    getAuthToken,
-    'users',
-    {
-      appName,
-      baseUrl,
-    },
-  );
-  const workingGroupRestClient = new SquidexRest<RestWorkingGroup>(
-    getAuthToken,
-    'working-groups',
-    {
-      appName,
-      baseUrl,
-    },
-  );
-
-  const researchOutputRestClient = new SquidexRest<RestResearchOutput>(
-    getAuthToken,
-    'research-outputs',
-    { appName, baseUrl },
-  );
-  const teamRestClient = new SquidexRest<RestTeam>(getAuthToken, 'teams', {
-    appName,
-    baseUrl,
-  });
-  const externalAuthorRestClient = new SquidexRest<RestExternalAuthor>(
-    getAuthToken,
-    'external-authors',
-    { appName, baseUrl },
-  );
   const userResponseCacheClient = new MemoryCacheClient<UserResponse>();
 
   // Data Providers
-  const dashboardContentfulDataProvider =
-    libs.dashboardContentfulDataProvider ||
-    new DashboardContentfulDataProvider(contentfulGraphQLClient);
+
   const dashboardDataProvider =
-    libs.dashboardDataProvider || dashboardContentfulDataProvider;
-  const newsContentfulDataProvider =
-    libs.newsContentfulDataProvider ||
+    libs.dashboardDataProvider ||
+    new DashboardContentfulDataProvider(contentfulGraphQLClient);
+
+  const newsDataProvider =
+    libs.newsDataProvider ||
     new NewsContentfulDataProvider(contentfulGraphQLClient);
-  const newsDataProvider = libs.newsDataProvider || newsContentfulDataProvider;
-  const pageContentfulDataProvider =
-    libs.pageContentfulDataProvider ||
+
+  const pageDataProvider =
+    libs.pageDataProvider ||
     new PageContentfulDataProvider(contentfulGraphQLClient);
-  const pageDataProvider = pageContentfulDataProvider;
 
-  featureFlagDependencySwitch.setDependency(
-    'teams',
-    libs.teamSquidexDataProvider ||
-      new TeamSquidexDataProvider(squidexGraphqlClient, teamRestClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-
-  featureFlagDependencySwitch.setDependency(
-    'teams',
-    libs.teamContentfulDataProvider ||
-      new TeamContentfulDataProvider(
-        contentfulGraphQLClient,
-        getContentfulRestClientFactory,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
   const teamDataProvider =
     libs.teamDataProvider ||
-    featureFlagDependencySwitch.getDependency('teams', 'IS_CONTENTFUL_ENABLED');
+    new TeamContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
 
-  featureFlagDependencySwitch.setDependency(
-    'assets',
-    libs.assetSquidexDataProvider ||
-      new AssetSquidexDataProvider(userRestClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'assets',
-    libs.assetContentfulDataProvider ||
-      new AssetContentfulDataProvider(getContentfulRestClientFactory),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'users',
-    libs.userSquidexDataProvider ||
-      new UserSquidexDataProvider(squidexGraphqlClient, userRestClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'users',
-    libs.userContentfulDataProvider ||
-      new UserContentfulDataProvider(
-        contentfulGraphQLClient,
-        getContentfulRestClientFactory,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
   const userDataProvider =
     libs.userDataProvider ||
-    featureFlagDependencySwitch.getDependency('users', 'IS_CONTENTFUL_ENABLED');
+    new UserContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
   const assetDataProvider =
     libs.assetDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'assets',
-      'IS_CONTENTFUL_ENABLED',
-    );
-  featureFlagDependencySwitch.setDependency(
-    'interestGroups',
-    libs.interestGroupSquidexDataProvider ||
-      new InterestGroupSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'interestGroups',
-    libs.interestGroupContentfulDataProvider ||
-      new InterestGroupContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
+    new AssetContentfulDataProvider(getContentfulRestClientFactory);
+
   const interestGroupDataProvider =
     libs.interestGroupDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'interestGroups',
-      'IS_CONTENTFUL_ENABLED',
-    );
+    new InterestGroupContentfulDataProvider(contentfulGraphQLClient);
 
-  featureFlagDependencySwitch.setDependency(
-    'reminders',
-    libs.reminderSquidexDataProvider ||
-      new ReminderSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'reminders',
-    libs.reminderContentfulDataProvider ||
-      new ReminderContentfulDataProvider(contentfulPreviewGraphQLClient),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
   const reminderDataProvider =
     libs.reminderDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'reminders',
-      'IS_CONTENTFUL_ENABLED',
-    );
-
-  featureFlagDependencySwitch.setDependency(
-    'externalAuthors',
-    libs.externalAuthorSquidexDataProvider ||
-      new ExternalAuthorSquidexDataProvider(
-        externalAuthorRestClient,
-        squidexGraphqlClient,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'externalAuthors',
-    libs.externalAuthorContentfulDataProvider ||
-      new ExternalAuthorContentfulDataProvider(
-        contentfulGraphQLClient,
-        getContentfulRestClientFactory,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
+    new ReminderContentfulDataProvider(contentfulPreviewGraphQLClient);
 
   const externalAuthorDataProvider =
     libs.externalAuthorDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'externalAuthors',
-      'IS_CONTENTFUL_ENABLED',
+    new ExternalAuthorContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
     );
-
-  featureFlagDependencySwitch.setDependency(
-    'calendars',
-    libs.calendarSquidexDataProvider ||
-      new CalendarSquidexDataProvider(calendarRestClient, squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'calendars',
-    libs.calendarContentfulDataProvider ||
-      new CalendarContentfulDataProvider(
-        contentfulGraphQLClient,
-        getContentfulRestClientFactory,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
 
   const calendarDataProvider =
     libs.calendarDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'calendars',
-      'IS_CONTENTFUL_ENABLED',
+    new CalendarContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
     );
-
-  featureFlagDependencySwitch.setDependency(
-    'workingGroups',
-    libs.workingGroupSquidexDataProvider ||
-      new WorkingGroupSquidexDataProvider(
-        squidexGraphqlClient,
-        workingGroupRestClient,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'workingGroups',
-    libs.workingGroupContentfulDataProvider ||
-      new WorkingGroupContentfulDataProvider(
-        contentfulGraphQLClient,
-        getContentfulRestClientFactory,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
 
   const workingGroupDataProvider =
     libs.workingGroupDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'workingGroups',
-      'IS_CONTENTFUL_ENABLED',
+    new WorkingGroupContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
     );
 
-  featureFlagDependencySwitch.setDependency(
-    'events',
-    libs.eventSquidexDataProvider ||
-      new EventSquidexDataProvider(eventRestClient, squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'events',
-    libs.eventContentfulDataProvider ||
-      new EventContentfulDataProvider(
-        contentfulGraphQLClient,
-        getContentfulRestClientFactory,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
   const eventDataProvider =
     libs.eventDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'events',
-      'IS_CONTENTFUL_ENABLED',
+    new EventContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
     );
 
-  featureFlagDependencySwitch.setDependency(
-    'tutorials',
-    libs.tutorialSquidexDataProvider ||
-      new TutorialsSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'tutorials',
-    libs.tutorialContentfulDataProvider ||
-      new TutorialContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
   const tutorialDataProvider =
     libs.tutorialDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'tutorials',
-      'IS_CONTENTFUL_ENABLED',
-    );
+    new TutorialContentfulDataProvider(contentfulGraphQLClient);
 
-  featureFlagDependencySwitch.setDependency(
-    'discover',
-    libs.discoverSquidexDataProvider ||
-      new DiscoverSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'discover',
-    libs.discoverContentfulDataProvider ||
-      new DiscoverContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
   const discoverDataProvider =
     libs.discoverDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'discover',
-      'IS_CONTENTFUL_ENABLED',
-    );
+    new DiscoverContentfulDataProvider(contentfulGraphQLClient);
 
   const guideDataProvider =
     libs.guideDataProvider ||
     new GuideContentfulDataProvider(contentfulGraphQLClient);
 
-  featureFlagDependencySwitch.setDependency(
-    'researchTags',
-    libs.researchTagSquidexDataProvider ||
-      new ResearchTagSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'researchTags',
-    libs.researchTagContentfulDataProvider ||
-      new ResearchTagContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
   const researchTagDataProvider =
     libs.researchTagDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'researchTags',
-      'IS_CONTENTFUL_ENABLED',
-    );
+    new ResearchTagContentfulDataProvider(contentfulGraphQLClient);
 
-  featureFlagDependencySwitch.setDependency(
-    'researchOutputs',
-    libs.researchOutputSquidexDataProvider ||
-      new ResearchOutputSquidexDataProvider(
-        squidexGraphqlClient,
-        researchOutputRestClient,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'researchOutputs',
-    libs.researchOutputContentfulDataProvider ||
-      new ResearchOutputContentfulDataProvider(
-        contentfulGraphQLClient,
-        contentfulPreviewGraphQLClient,
-        getContentfulRestClientFactory,
-      ),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
   const researchOutputDataProvider =
     libs.researchOutputDataProvider ||
-    featureFlagDependencySwitch.getDependency(
-      'researchOutputs',
-      'IS_CONTENTFUL_ENABLED',
+    new ResearchOutputContentfulDataProvider(
+      contentfulGraphQLClient,
+      contentfulPreviewGraphQLClient,
+      getContentfulRestClientFactory,
     );
 
-  featureFlagDependencySwitch.setDependency(
-    'labs',
-    libs.labSquidexDataProvider ||
-      new LabSquidexDataProvider(squidexGraphqlClient),
-    'IS_CONTENTFUL_ENABLED',
-    false,
-  );
-  featureFlagDependencySwitch.setDependency(
-    'labs',
-    libs.labContentfulDataProvider ||
-      new LabContentfulDataProvider(contentfulGraphQLClient),
-    'IS_CONTENTFUL_ENABLED',
-    true,
-  );
   const labDataProvider =
     libs.labDataProvider ||
-    featureFlagDependencySwitch.getDependency('labs', 'IS_CONTENTFUL_ENABLED');
+    new LabContentfulDataProvider(contentfulGraphQLClient);
 
   // Controllers
   const calendarController =
@@ -722,55 +402,22 @@ export type Libs = {
   userController?: UserController;
   workingGroupController?: WorkingGroupController;
   assetDataProvider?: AssetDataProvider;
-  assetSquidexDataProvider?: AssetDataProvider;
-  assetContentfulDataProvider?: AssetDataProvider;
   calendarDataProvider?: CalendarDataProvider;
-  calendarSquidexDataProvider?: CalendarDataProvider;
-  calendarContentfulDataProvider?: CalendarDataProvider;
   dashboardDataProvider?: DashboardDataProvider;
-  dashboardSquidexDataProvider?: DashboardDataProvider;
-  dashboardContentfulDataProvider?: DashboardDataProvider;
   discoverDataProvider?: DiscoverDataProvider;
-  discoverSquidexDataProvider?: DiscoverDataProvider;
-  discoverContentfulDataProvider?: DiscoverDataProvider;
   guideDataProvider?: GuideDataProvider;
-  externalAuthorSquidexDataProvider?: ExternalAuthorDataProvider;
-  externalAuthorContentfulDataProvider?: ExternalAuthorDataProvider;
   externalAuthorDataProvider?: ExternalAuthorDataProvider;
   interestGroupDataProvider?: InterestGroupDataProvider;
-  interestGroupSquidexDataProvider?: InterestGroupDataProvider;
-  interestGroupContentfulDataProvider?: InterestGroupDataProvider;
   labDataProvider?: LabDataProvider;
-  labSquidexDataProvider?: LabDataProvider;
-  labContentfulDataProvider?: LabDataProvider;
-  newsContentfulDataProvider?: NewsDataProvider;
   newsDataProvider?: NewsDataProvider;
-  newsSquidexDataProvider?: NewsDataProvider;
-  pageSquidexDataProvider?: PageDataProvider;
-  pageContentfulDataProvider?: PageDataProvider;
+  pageDataProvider?: PageDataProvider;
   reminderDataProvider?: ReminderDataProvider;
-  reminderSquidexDataProvider?: ReminderDataProvider;
-  reminderContentfulDataProvider?: ReminderDataProvider;
   researchOutputDataProvider?: ResearchOutputDataProvider;
-  researchOutputSquidexDataProvider?: ResearchOutputDataProvider;
-  researchOutputContentfulDataProvider?: ResearchOutputDataProvider;
   researchTagDataProvider?: ResearchTagDataProvider;
-  researchTagSquidexDataProvider?: ResearchTagDataProvider;
-  researchTagContentfulDataProvider?: ResearchTagDataProvider;
-  teamSquidexDataProvider?: TeamDataProvider;
-  teamContentfulDataProvider?: TeamDataProvider;
   teamDataProvider?: TeamDataProvider;
   tutorialDataProvider?: TutorialDataProvider;
-  tutorialSquidexDataProvider?: TutorialDataProvider;
-  tutorialContentfulDataProvider?: TutorialDataProvider;
   userDataProvider?: UserDataProvider;
-  userSquidexDataProvider?: UserDataProvider;
-  userContentfulDataProvider?: UserDataProvider;
   eventDataProvider?: EventDataProvider;
-  eventSquidexDataProvider?: EventDataProvider;
-  eventContentfulDataProvider?: EventDataProvider;
-  workingGroupSquidexDataProvider?: WorkingGroupDataProvider;
-  workingGroupContentfulDataProvider?: WorkingGroupDataProvider;
   workingGroupDataProvider?: WorkingGroupDataProvider;
   authHandler?: AuthHandler;
   httpLogger?: HttpLogger;

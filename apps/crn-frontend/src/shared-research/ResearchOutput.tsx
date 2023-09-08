@@ -59,10 +59,10 @@ const ResearchOutput: React.FC = () => {
   if (researchOutputData) {
     return (
       <ResearchOutputPermissionsContext.Provider value={permissions}>
-        <ScrollToTop />
         <Switch>
           <Route exact path={publishedNow ? publishedNowPath : path}>
             <Frame title={researchOutputData.title}>
+              {publishedNow && <ScrollToTop />}
               <SharedResearchOutput
                 {...researchOutputData}
                 backHref={backHref}

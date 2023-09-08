@@ -14,12 +14,6 @@ import UserController from '../../../src/controllers/user.controller';
 import { getApiGatewayEvent } from '../../helpers/events';
 
 jest.mock('../../../src/utils/logger');
-jest.mock('../../../src/dependencies/users.dependencies', () => {
-  return {
-    getUserDataProvider: jest.fn(),
-    getAssetDataProvider: jest.fn(),
-  };
-});
 
 describe('POST /webhook/users/connections - validations', () => {
   test('returns 400 when code is not defined', async () => {

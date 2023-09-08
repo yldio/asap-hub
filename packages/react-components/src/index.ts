@@ -190,7 +190,6 @@ export {
   ContentPage,
   DashboardPage,
   DashboardPageBody,
-  DiscoverAbout,
   DiscoverGuides,
   DiscoverTutorialsCardList,
   DiscoverPage,

@@ -3,7 +3,7 @@ import { select } from '@storybook/addon-knobs';
 import { MainNavigation } from '@asap-hub/react-components';
 import {
   about,
-  guides,
+  discover,
   network,
   news,
   sharedResearch,
@@ -24,7 +24,7 @@ export const Normal = () => {
       Network: network({}).$,
       'Shared Research': sharedResearch({}).$,
       News: news({}).$,
-      'Guides & Tutorials': guides({}).$,
+      'Guides & Tutorials': discover({}).$,
       'About ASAP': about({}).$,
       None: '/none',
     },

@@ -2,9 +2,11 @@ import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
 import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { DiscoverResponse } from '@asap-hub/model';
 
+import { AboutPage } from '@asap-hub/react-components';
 import About from '../About';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshDiscoverState } from '../../discover/state';
@@ -28,19 +30,25 @@ const props: DiscoverResponse = {
 
 const renderPage = async (user: Partial<User>) => {
   const result = render(
-    <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(refreshDiscoverState, Math.random());
-        }}
-      >
+    <RecoilRoot
+      initializeState={({ set }) => {
+        set(refreshDiscoverState, Math.random());
+      }}
+    >
+      <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <About />
+            <MemoryRouter initialEntries={['/about']}>
+              <Route path="/about">
+                <AboutPage>
+                  <About />
+                </AboutPage>
+              </Route>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </RecoilRoot>
-    </Suspense>,
+      </Suspense>
+    </RecoilRoot>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

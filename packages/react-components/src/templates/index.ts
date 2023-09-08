@@ -8,7 +8,6 @@ export { default as ContentPage } from './ContentPage';
 export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as DashboardPageHeader } from './DashboardPageHeader';
-export { default as DiscoverAbout } from './DiscoverAbout';
 export { default as DiscoverGuides } from './DiscoverGuides';
 export { default as DiscoverTutorialsCardList } from './DiscoverTutorialsCardList';
 export { default as DiscoverPage } from './DiscoverPage';

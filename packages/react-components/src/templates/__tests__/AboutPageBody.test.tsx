@@ -2,27 +2,22 @@ import { ComponentProps } from 'react';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 
-import DiscoverAbout from '../DiscoverAbout';
+import AboutPageBody from '../AboutPageBody';
 
-const props: ComponentProps<typeof DiscoverAbout> = {
+const props: ComponentProps<typeof AboutPageBody> = {
   aboutUs: '',
   members: [],
   scientificAdvisoryBoard: [],
 };
 
-it('renders the about page', () => {
-  render(<DiscoverAbout {...props} />);
-  expect(screen.getByText(/About ASAP/, { selector: 'h2' })).toBeVisible();
-});
-
 it('renders about section', () => {
-  render(<DiscoverAbout {...props} aboutUs="About us content" />);
+  render(<AboutPageBody {...props} aboutUs="About us content" />);
   expect(screen.getByText('About us content')).toBeVisible();
 });
 
 it('renders members section without link', () => {
   render(
-    <DiscoverAbout
+    <AboutPageBody
       {...props}
       members={[{ ...createUserResponse(), displayName: 'first member' }]}
     />,
@@ -33,7 +28,7 @@ it('renders members section without link', () => {
 });
 it('renders members section with link', () => {
   render(
-    <DiscoverAbout
+    <AboutPageBody
       {...props}
       members={[{ ...createUserResponse(), displayName: 'first member' }]}
       membersTeamId="member-1"
@@ -46,7 +41,7 @@ it('renders members section with link', () => {
 });
 it('renders scientific Advisory Board section', () => {
   render(
-    <DiscoverAbout
+    <AboutPageBody
       {...props}
       scientificAdvisoryBoard={[
         { ...createUserResponse(), displayName: 'first advisor' },

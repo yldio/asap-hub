@@ -2,6 +2,7 @@ import {
   NotFoundPage,
   SharedResearchOutput,
   utils,
+  ScrollToTop,
 } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
@@ -61,6 +62,7 @@ const ResearchOutput: React.FC = () => {
         <Switch>
           <Route exact path={publishedNow ? publishedNowPath : path}>
             <Frame title={researchOutputData.title}>
+              {publishedNow && <ScrollToTop />}
               <SharedResearchOutput
                 {...researchOutputData}
                 backHref={backHref}

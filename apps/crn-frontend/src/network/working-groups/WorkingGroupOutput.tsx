@@ -40,7 +40,7 @@ import { useResearchOutputPermissions } from '../../shared-research/state';
 type WorkingGroupOutputProps = {
   workingGroupId: string;
   researchOutputData?: ResearchOutputResponse;
-  createVersion?: boolean;
+  versionAction?: 'create' | 'edit';
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
@@ -49,7 +49,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
   workingGroupId,
   researchOutputData,
   descriptionUnchangedWarning,
-  createVersion = false,
+  versionAction,
 }) => {
   const route = network({})
     .workingGroups({})
@@ -103,23 +103,28 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     .filter((tag) => tag.category === 'Keyword')
     .map((keyword) => keyword.name);
 
-  const researchOutputAsVersion: ResearchOutputVersion = {
-    id: researchOutputData?.id ?? '',
-    title: researchOutputData?.title ?? '',
-    documentType: researchOutputData?.documentType ?? 'Article',
-    type: researchOutputData?.type,
-    link: researchOutputData?.link,
-    addedDate: researchOutputData?.addedDate,
-  };
+  let versions: ResearchOutputVersion[] = [];
+  if (versionAction === 'create') {
+    const researchOutputAsVersion: ResearchOutputVersion = {
+      id: researchOutputData?.id ?? '',
+      title: researchOutputData?.title ?? '',
+      documentType: researchOutputData?.documentType ?? 'Article',
+      type: researchOutputData?.type,
+      link: researchOutputData?.link,
+      addedDate: researchOutputData?.addedDate,
+    };
 
-  const versions = researchOutputData?.versions
-    ? researchOutputData.versions.concat([researchOutputAsVersion])
-    : [researchOutputAsVersion];
+    versions = researchOutputData?.versions
+      ? researchOutputData.versions.concat([researchOutputAsVersion])
+      : [researchOutputAsVersion];
+  } else if (versionAction === 'edit') {
+    versions = researchOutputData?.versions ?? [];
+  }
 
   if (workingGroup) {
     return (
       <Frame title="Share Working Group Research Output">
-        {createVersion && (
+        {versionAction === 'create' && (
           <Toast accent="warning">
             The previous output page will be replaced with a summarised version
             history section.
@@ -131,11 +136,11 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
             documentType={documentType}
             workingGroupAssociation
           />
-          {createVersion && (
-            <OutputVersions versions={versions} createVersion />
+          {versionAction && versions.length > 0 && (
+            <OutputVersions versions={versions} versionAction={versionAction} />
           )}
           <ResearchOutputForm
-            createVersion={createVersion}
+            versionAction={versionAction}
             tagSuggestions={researchSuggestions}
             documentType={documentType}
             getLabSuggestions={getLabSuggestions}
@@ -176,7 +181,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     ...output,
                     workingGroups: [workingGroupId],
                     published: true,
-                    createVersion,
+                    createVersion: versionAction === 'create',
                     statusChangedById: researchOutputData.statusChangedBy?.id,
                     isInReview: researchOutputData.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))

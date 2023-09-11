@@ -1,20 +1,6 @@
-import { CalendarDataProvider, EventDataProvider } from '@asap-hub/model';
-import { ExternalAuthorDataProvider } from '../data-providers/external-author.data-provider';
-import { TeamDataProvider } from '../data-providers/team.data-provider';
-import {
-  AssetDataProvider,
-  UserDataProvider,
-  InterestGroupDataProvider,
-  LabDataProvider,
-  WorkingGroupDataProvider,
-  TutorialDataProvider,
-  DiscoverDataProvider,
-  ResearchTagDataProvider,
-  ResearchOutputDataProvider,
-  ReminderDataProvider,
-} from '../data-providers/types';
+import { DataProvider } from '@asap-hub/model';
 
-const featureFlags = ['IS_CONTENTFUL_ENABLED'] as const;
+const featureFlags = ['PERSISTENT_EXAMPLE'] as const;
 type FeatureFlag = (typeof featureFlags)[number];
 
 type DependencySwitch<T> = {
@@ -23,80 +9,15 @@ type DependencySwitch<T> = {
 };
 
 type DependencyList = {
-  assets: DependencySwitch<AssetDataProvider>;
-  users: DependencySwitch<UserDataProvider>;
-  teams: DependencySwitch<TeamDataProvider>;
-  externalAuthors: DependencySwitch<ExternalAuthorDataProvider>;
-  interestGroups: DependencySwitch<InterestGroupDataProvider>;
-  labs: DependencySwitch<LabDataProvider>;
-  calendars: DependencySwitch<CalendarDataProvider>;
-  events: DependencySwitch<EventDataProvider>;
-  workingGroups: DependencySwitch<WorkingGroupDataProvider>;
-  tutorials: DependencySwitch<TutorialDataProvider>;
-  discover: DependencySwitch<DiscoverDataProvider>;
-  researchTags: DependencySwitch<ResearchTagDataProvider>;
-  researchOutputs: DependencySwitch<ResearchOutputDataProvider>;
-  reminders: DependencySwitch<ReminderDataProvider>;
+  key: DependencySwitch<DataProvider>;
 };
 
 export class FeatureFlagDependencySwitch {
   private dependencies: {
     [key in FeatureFlag]: DependencyList;
   } = {
-    IS_CONTENTFUL_ENABLED: {
-      assets: {
-        true: undefined,
-        false: undefined,
-      },
-      users: {
-        true: undefined,
-        false: undefined,
-      },
-      teams: {
-        true: undefined,
-        false: undefined,
-      },
-      externalAuthors: {
-        true: undefined,
-        false: undefined,
-      },
-      interestGroups: {
-        true: undefined,
-        false: undefined,
-      },
-      calendars: {
-        true: undefined,
-        false: undefined,
-      },
-      events: {
-        true: undefined,
-        false: undefined,
-      },
-      workingGroups: {
-        true: undefined,
-        false: undefined,
-      },
-      tutorials: {
-        true: undefined,
-        false: undefined,
-      },
-      discover: {
-        true: undefined,
-        false: undefined,
-      },
-      researchTags: {
-        true: undefined,
-        false: undefined,
-      },
-      reminders: {
-        true: undefined,
-        false: undefined,
-      },
-      researchOutputs: {
-        true: undefined,
-        false: undefined,
-      },
-      labs: {
+    PERSISTENT_EXAMPLE: {
+      key: {
         true: undefined,
         false: undefined,
       },
@@ -106,7 +27,7 @@ export class FeatureFlagDependencySwitch {
   private featureFlags: {
     [key in FeatureFlag]: boolean;
   } = {
-    IS_CONTENTFUL_ENABLED: false,
+    PERSISTENT_EXAMPLE: false,
   };
 
   setDependency<T extends keyof DependencyList>(

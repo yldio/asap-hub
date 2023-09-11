@@ -398,6 +398,10 @@ sh .github/scripts/manage-workflows/list-workflows.sh
   sh .github/scripts/manage-workflows/delete-workflow-runs.sh 21969391
 ```
 
+## Accessing AWS
+
+For AWS access please use the guide here: <https://www.notion.so/AWS-0e3cc65f60524aa4b65e1ee7c2029270>
+
 ## License
 
 The source code of this project is licensed under the MIT License.

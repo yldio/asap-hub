@@ -80,7 +80,7 @@ const groupFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
 const workingGroupFilters: ReadonlyArray<
   Option<'Active' | 'Complete'> | Title
 > = [
-  { title: 'INTEREST GROUP STATUS' },
+  { title: 'WORKING GROUP STATUS' },
   { label: 'Active', value: 'Active' },
   { label: 'Complete', value: 'Complete' },
 ];

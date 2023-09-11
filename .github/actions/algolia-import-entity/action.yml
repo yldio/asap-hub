@@ -1,5 +1,5 @@
 name: 'Import entity'
-description: 'Export entity data from Squidex and into Algolia index'
+description: 'Export entity data from Contentful and into Algolia index'
 inputs:
   algolia-api-key:
     description: 'Algolia api key name'
@@ -16,18 +16,6 @@ inputs:
   entity-type:
     description: 'Entity type (ie. "user")'
     required: true
-  squidex-app-name:
-    description: 'Squidex App name'
-    required: true
-  squidex-base-url:
-    description: 'Squidex Base URL'
-    required: true
-  squidex-ci-client-id:
-    description: 'Squidex Client ID'
-    required: true
-  squidex-ci-client-secret:
-    description: 'Squidex Client secret'
-    required: true
   contentful-space-id:
     description: 'Contentful Space ID'
     required: true
@@ -40,10 +28,6 @@ inputs:
   contentful-management-token:
     description: 'Contentful management token'
     required: true
-  data-store:
-    description: 'Data store'
-    required: false
-    default: 'squidex'
 outputs:
   algolia-app-id:
     description: 'Algolia App ID'
@@ -64,12 +48,8 @@ runs:
         ALGOLIA_ADMIN_API_KEY: ${{ inputs.algolia-api-key }}
         ALGOLIA_INDEX: ${{ inputs.algolia-index }}
         ENTITY: ${{ inputs.entity-type }}
-        SQUIDEX_APP_NAME: ${{ inputs.squidex-app-name }}
-        SQUIDEX_BASE_URL: ${{ inputs.squidex-base-url }}
-        SQUIDEX_CLIENT_ID: ${{ inputs.squidex-ci-client-id }}
-        SQUIDEX_CLIENT_SECRET: ${{ inputs.squidex-ci-client-secret }}
         CONTENTFUL_ACCESS_TOKEN: ${{ inputs.contentful-access-token }}
         CONTENTFUL_ENV_ID: ${{  inputs.contentful-env }}
         CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{  inputs.contentful-management-token }}
         CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
-        IS_CONTENTFUL_ENABLED: ${{ inputs.data-store == 'contentful' }}
+        IS_CONTENTFUL_ENABLED: true

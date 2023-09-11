@@ -103,22 +103,22 @@ export type OutputVersionsProps = {
     ResearchOutputResponse,
     'documentType' | 'type' | 'title' | 'id' | 'addedDate' | 'link'
   >[];
-  createVersion?: boolean;
+  versionAction?: 'create' | 'edit';
 };
 
 const OutputVersions: React.FC<OutputVersionsProps> = ({
   versions,
-  createVersion,
+  versionAction,
 }) => {
   const truncateFrom = 5;
   const [showMore, setShowMore] = useState(false);
   const displayShowMoreButton = versions.length > 5;
 
   return (
-    <main css={createVersion ? [createVersionWrapperStyles] : []}>
+    <main css={versionAction ? [createVersionWrapperStyles] : []}>
       <Card
         padding={false}
-        overrideStyles={createVersion ? createVersionCardStyles : undefined}
+        overrideStyles={versionAction ? createVersionCardStyles : undefined}
       >
         <div
           css={[
@@ -128,7 +128,7 @@ const OutputVersions: React.FC<OutputVersionsProps> = ({
         >
           <Headline2 noMargin>Version History</Headline2>
           <div css={descriptionStyles}>
-            {createVersion ? (
+            {versionAction ? (
               <Paragraph noMargin>
                 List with all previous output versions that contributed to this
                 one. In case you want to add or edit older versions, please

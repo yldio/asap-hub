@@ -227,7 +227,10 @@ export default class ResearchOutputController {
       usageNotes: normalisedResearchOutputUpdateData.usageNotes,
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
       workingGroups: normalisedResearchOutputUpdateData.workingGroups,
-      versions: [],
+      versions:
+        currentResearchOutput?.versions?.map(
+          ({ id: versionId }) => versionId,
+        ) || [],
     };
 
     const updateOptions = {

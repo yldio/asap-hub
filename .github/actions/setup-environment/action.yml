@@ -134,21 +134,6 @@ outputs:
   crn-ses-region:
     description: 'CRN SES Region'
     value: ${{ steps.vars.outputs.crn-ses-region }}
-  crn-squidex-api-client-id:
-    description: 'CRN API Squidex Client ID'
-    value: ${{ steps.vars.outputs.crn-squidex-api-client-id }}
-  crn-squidex-app-name-legacy:
-    description: 'Legacy CRN Squidex App Name'
-    value: ${{ steps.vars.outputs.crn-squidex-app-name-legacy }}
-  crn-squidex-app-name:
-    description: 'CRN Squidex App Name'
-    value: ${{ steps.vars.outputs.crn-squidex-app-name }}
-  crn-squidex-backup-bucket-name:
-    description: 'CRN Squidex Backup Bucket Name'
-    value: ${{ steps.vars.outputs.crn-squidex-backup-bucket-name }}
-  crn-squidex-ci-client-id:
-    description: 'CRN CI Squidex Client ID'
-    value: ${{ steps.vars.outputs.crn-squidex-ci-client-id }}
   gp2-algolia-api-key-name:
     description: 'GP2 Algolia Api key SSM Name'
     value: ${{ steps.vars.outputs.gp2-algolia-api-key-name }}
@@ -242,9 +227,6 @@ outputs:
   sls-stage:
     description: 'SLS Stage'
     value: ${{ steps.vars.outputs.sls-stage }}
-  squidex-base-url:
-    description: 'Squidex Base Url'
-    value: ${{ steps.vars.outputs.squidex-base-url }}
 runs:
   using: 'composite'
   steps:
@@ -275,8 +257,6 @@ runs:
           echo "gp2-app-url=https://$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
           echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "sls-stage=$PR_NUMBER" >> $GITHUB_OUTPUT
-          echo "crn-squidex-app-name=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
-          echo "crn-squidex-app-name-legacy=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "crn-contentful-env-id=crn-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "gp2-contentful-env-id=gp2-$PR_NUMBER" >> $GITHUB_OUTPUT
         elif [ "$ENVIRONMENT_NAME" = 'Development' ]; then

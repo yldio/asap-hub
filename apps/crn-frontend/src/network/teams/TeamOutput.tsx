@@ -52,7 +52,7 @@ const useParamOutputDocumentType = (
 type TeamOutputProps = {
   teamId: string;
   researchOutputData?: ResearchOutputResponse;
-  createVersion?: boolean;
+  versionAction?: 'create' | 'edit';
 } & Pick<
   ComponentProps<typeof ResearchOutputForm>,
   'descriptionUnchangedWarning'
@@ -61,7 +61,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
   teamId,
   researchOutputData,
   descriptionUnchangedWarning,
-  createVersion = false,
+  versionAction,
 }) => {
   const paramOutputDocumentType = useParamOutputDocumentType(teamId);
   const documentType =
@@ -119,14 +119,18 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     addedDate: researchOutputData?.addedDate,
   };
 
-  const versions = researchOutputData?.versions
+  let versions: ResearchOutputVersion[] = researchOutputData?.versions
     ? researchOutputData.versions.concat([researchOutputAsVersion])
     : [researchOutputAsVersion];
+
+  if (versionAction === 'edit') {
+    versions = researchOutputData?.versions ?? [];
+  }
 
   if (team) {
     return (
       <Frame title="Share Research Output">
-        {createVersion && (
+        {versionAction === 'create' && (
           <Toast accent="warning">
             The previous output page will be replaced with a summarised version
             history section.
@@ -138,11 +142,11 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
             documentType={documentType}
             workingGroupAssociation={false}
           />
-          {createVersion && (
-            <OutputVersions versions={versions} createVersion />
+          {versionAction && versions.length > 0 && (
+            <OutputVersions versions={versions} versionAction={versionAction} />
           )}
           <ResearchOutputForm
-            createVersion={createVersion}
+            versionAction={versionAction}
             tagSuggestions={researchSuggestions}
             documentType={documentType}
             getLabSuggestions={getLabSuggestions}
@@ -183,7 +187,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                 ? updateAndPublishResearchOutput(researchOutputData.id, {
                     ...output,
                     published: true,
-                    createVersion,
+                    createVersion: versionAction === 'create',
                     statusChangedById: researchOutputData.statusChangedBy?.id,
                     isInReview: researchOutputData.isInReview,
                   }).catch(handleError(['/link', '/title'], setErrors))

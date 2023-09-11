@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter, Router } from 'react-router-dom';
+import { Router, StaticRouter } from 'react-router-dom';
 import { InnerToastContext } from '@asap-hub/react-context';
 
 import {
@@ -12,10 +12,10 @@ import {
   researchTagSubtypeResponse,
 } from '@asap-hub/fixtures';
 import {
+  researchOutputDocumentTypeToType,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
-  researchOutputDocumentTypeToType,
   ResearchOutputType,
   ResearchTagResponse,
 } from '@asap-hub/model';
@@ -826,16 +826,16 @@ describe('form buttons', () => {
       researchTags = [{ id: '1', name: 'research tag 1' }],
       descriptionUnchangedWarning = false,
       researchOutputData = undefined,
-      createVersion = undefined,
+      versionAction = undefined,
     }: {
       canEditResearchOutput?: boolean;
       canPublishResearchOutput?: boolean;
 
       published?: boolean;
       documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
-      createVersion?: ComponentProps<
+      versionAction?: ComponentProps<
         typeof ResearchOutputForm
-      >['createVersion'];
+      >['versionAction'];
       researchTags?: ResearchTagResponse[];
       descriptionUnchangedWarning?: ComponentProps<
         typeof ResearchOutputForm
@@ -853,7 +853,7 @@ describe('form buttons', () => {
         <Router history={history}>
           <ResearchOutputForm
             {...props}
-            createVersion={createVersion}
+            versionAction={versionAction}
             researchOutputData={researchOutputData}
             descriptionUnchangedWarning={descriptionUnchangedWarning}
             selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
@@ -1052,7 +1052,7 @@ describe('form buttons', () => {
   describe('Create Version Warning', () => {
     it('Shows warning', async () => {
       await setupForm({
-        createVersion: true,
+        versionAction: 'create',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
@@ -1068,7 +1068,7 @@ describe('form buttons', () => {
 
     it('is cancelable', async () => {
       await setupForm({
-        createVersion: true,
+        versionAction: 'create',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
@@ -1085,7 +1085,7 @@ describe('form buttons', () => {
 
     it('Will be dismissed if there are errors on the form', async () => {
       await setupForm({
-        createVersion: true,
+        versionAction: 'create',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
         researchOutputData: {
@@ -1109,7 +1109,7 @@ describe('form buttons', () => {
     });
     it('Will not reappear once dismissed', async () => {
       await setupForm({
-        createVersion: true,
+        versionAction: 'create',
         canEditResearchOutput: true,
         canPublishResearchOutput: true,
 

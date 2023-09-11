@@ -22,7 +22,7 @@ import {
 
 jest.setTimeout(120000);
 
-const fixtures = FixtureFactory(process.env.INTEGRATION_TEST_CMS);
+const fixtures = FixtureFactory();
 
 describe('research outputs', () => {
   let app: Express;

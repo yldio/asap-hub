@@ -121,7 +121,7 @@ jobs:
           CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
       - name: Run integration tests
         timeout-minutes: 20
-        run: yarn test:integration:contentful --coverage --forceExit
+        run: yarn test:integration --coverage --forceExit
         env:
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}

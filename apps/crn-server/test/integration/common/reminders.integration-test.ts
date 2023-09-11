@@ -29,7 +29,7 @@ jest.mock('../../../src/config', () => ({
 
 jest.setTimeout(120000);
 
-const fixtures = FixtureFactory(process.env.INTEGRATION_TEST_CMS);
+const fixtures = FixtureFactory();
 
 type AppResponse<T> = {
   status: number;

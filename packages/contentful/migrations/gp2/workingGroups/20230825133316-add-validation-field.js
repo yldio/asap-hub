@@ -5,7 +5,7 @@ module.exports.up = (migration) => {
 
   events
     .createField('validation')
-    .name('Validation')
+    .name('Member Validation')
     .type('Symbol')
     .localized(false)
     .required(false)

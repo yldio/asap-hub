@@ -1,12 +1,15 @@
 import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
-import { render, waitFor, screen } from '@testing-library/react';
+import {
+  render,
+  waitForElementToBeRemoved,
+  screen,
+} from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { DiscoverResponse } from '@asap-hub/model';
 
-import { AboutPage } from '@asap-hub/react-components';
 import About from '../About';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { refreshDiscoverState } from '../../discover/state';
@@ -29,7 +32,7 @@ const props: DiscoverResponse = {
 };
 
 const renderPage = async (user: Partial<User>) => {
-  const result = render(
+  render(
     <RecoilRoot
       initializeState={({ set }) => {
         set(refreshDiscoverState, Math.random());
@@ -40,9 +43,7 @@ const renderPage = async (user: Partial<User>) => {
           <WhenReady>
             <MemoryRouter initialEntries={['/about']}>
               <Route path="/about">
-                <AboutPage>
-                  <About />
-                </AboutPage>
+                <About />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -50,10 +51,7 @@ const renderPage = async (user: Partial<User>) => {
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
+  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
 };
 
 it('renders about with members', async () => {

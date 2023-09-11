@@ -3,8 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { AboutPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
 
-const loadAbout = () =>
-  import(/* webpackChunkName: "discover-about" */ './About');
+const loadAbout = () => import(/* webpackChunkName: "about" */ './About');
 
 const AboutBody = lazy(loadAbout);
 

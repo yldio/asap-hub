@@ -23,8 +23,10 @@ import {
 } from '@asap-hub/contentful';
 
 import { isTeamRole, sortMembers } from '../transformers';
-import { FetchTeamsOptions, TeamDataProvider } from '../types/teams.data-provider.types';
-
+import {
+  FetchTeamsOptions,
+  TeamDataProvider,
+} from '../types/teams.data-provider.types';
 
 export type TeamItem = NonNullable<
   NonNullable<FetchTeamsQuery['teamsCollection']>['items'][number]

@@ -86,10 +86,29 @@ const getController = (entity: keyof EntityResponsesCRN) => {
 const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
   record: T[K] & { id: string },
   type: K,
-) => ({
-  ...record,
-  objectID: record.id,
-  __meta: {
-    type,
-  },
-});
+) => {
+  const payload = {
+    ...record,
+    objectID: record.id,
+    __meta: {
+      type,
+    },
+  };
+
+  if (type === 'research-output') {
+    const subtype = (record as unknown as EntityResponsesCRN['research-output'])
+      .subtype;
+
+    // @ts-ignore
+    payload._tags = [
+      ...(record as unknown as EntityResponsesCRN['research-output']).methods,
+      ...(record as unknown as EntityResponsesCRN['research-output']).organisms,
+      ...(record as unknown as EntityResponsesCRN['research-output'])
+        .environments,
+      ...(subtype ? [subtype] : []),
+      ...(record as unknown as EntityResponsesCRN['research-output']).keywords,
+    ];
+  }
+
+  return payload;
+};

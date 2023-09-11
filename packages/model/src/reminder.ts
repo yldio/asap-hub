@@ -1,11 +1,12 @@
 import { ListResponse } from './common';
 import { EventResponse } from './event';
 import {
+  ResearchOutputDataObject,
   ResearchOutputDraftDataObject,
   ResearchOutputPublishedDataObject,
 } from './research-output';
 
-type ReminderEntity = 'Research Output' | 'Event';
+type ReminderEntity = 'Research Output' | 'Event' | 'Research Output Version';
 
 type ResearchOutputReminderType =
   | 'Published'
@@ -103,6 +104,19 @@ export interface ResearchOutputSwitchToDraftReminder
   };
 }
 
+export interface ResearchOutputVersionPublishedReminder extends Reminder {
+  entity: 'Research Output Version';
+  type: 'Published';
+  data: {
+    researchOutputId: ResearchOutputDataObject['id'];
+    title: ResearchOutputDataObject['title'];
+    documentType: ResearchOutputDataObject['documentType'];
+    publishedAt: string;
+    associationType: 'team' | 'working group';
+    associationName: string;
+  };
+}
+
 export interface EventHappeningTodayReminder extends EventReminder {
   entity: 'Event';
   type: 'Happening Today';
@@ -190,6 +204,7 @@ export type ReminderDataObject =
   | ResearchOutputDraftReminder
   | ResearchOutputInReviewReminder
   | ResearchOutputSwitchToDraftReminder
+  | ResearchOutputVersionPublishedReminder
   | EventHappeningTodayReminder
   | EventHappeningNowReminder
   | VideoEventReminder

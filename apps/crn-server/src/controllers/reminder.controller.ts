@@ -23,6 +23,9 @@ export const formattedMaterialByEventType = (
   }
 };
 
+const capitalizeFirstLetter = (str: string) =>
+  str.slice(0, 1).toUpperCase() + str.slice(1);
+
 export default class ReminderController {
   constructor(private reminderDataProvider: ReminderDataProvider) {}
 
@@ -32,6 +35,25 @@ export default class ReminderController {
     return {
       total: reminders.total,
       items: reminders.items.map((reminder) => {
+        if (
+          reminder.entity === 'Research Output Version' &&
+          reminder.type === 'Published'
+        ) {
+          return {
+            id: reminder.id,
+            entity: reminder.entity,
+            href: sharedResearch({}).researchOutput({
+              researchOutputId: reminder.data.researchOutputId,
+            }).$,
+            description: `${capitalizeFirstLetter(
+              reminder.data.associationType,
+            )} **${reminder.data.associationName}** published a new ${
+              reminder.data.associationType
+            } ${reminder.data.documentType} output version: ${
+              reminder.data.title
+            }.`,
+          };
+        }
         if (
           reminder.entity === 'Research Output' &&
           reminder.type === 'Published'

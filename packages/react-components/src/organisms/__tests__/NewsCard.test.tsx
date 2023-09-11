@@ -66,7 +66,7 @@ describe('News', () => {
   it.each`
     type          | route
     ${'News'}     | ${'/news/id-1'}
-    ${'Tutorial'} | ${'/discover/tutorials/id-1'}
+    ${'Tutorial'} | ${'/guides-tutorials/tutorials/id-1'}
   `(
     'links to detail page when text is present and type is $type',
     ({ type, route }) => {

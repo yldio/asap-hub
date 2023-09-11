@@ -1,66 +1,26 @@
 import { getGraphQLClient as getContentfulGraphQLClient } from '@asap-hub/contentful';
 import {
-  RestUser,
-  InputUser,
-  SquidexGraphql,
-  SquidexRest,
-  SquidexRestClient,
-} from '@asap-hub/squidex';
-import {
-  appName,
-  baseUrl,
   contentfulAccessToken,
   contentfulEnvId,
   contentfulSpaceId,
-  isContentfulEnabled,
 } from '../config';
 import { UserContentfulDataProvider } from '../data-providers/contentful/user.data-provider';
 import { AssetContentfulDataProvider } from '../data-providers/contentful/asset.data-provider';
 import { UserDataProvider, AssetDataProvider } from '../data-providers/types';
-import { UserSquidexDataProvider } from '../data-providers/user.data-provider';
-import { AssetSquidexDataProvider } from '../data-providers/asset.data-provider';
-import { getAuthToken } from '../utils/auth';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 
-let restClient: SquidexRestClient<RestUser, InputUser> | undefined;
-
-const getRestClient = (): SquidexRestClient<RestUser, InputUser> => {
-  if (restClient) {
-    return restClient;
-  }
-  restClient = new SquidexRest<RestUser, InputUser>(getAuthToken, 'users', {
-    appName,
-    baseUrl,
-  });
-  return restClient;
-};
-
 export const getUserDataProvider = (): UserDataProvider => {
-  if (isContentfulEnabled) {
-    const contentfulGraphQLClient = getContentfulGraphQLClient({
-      space: contentfulSpaceId,
-      accessToken: contentfulAccessToken,
-      environment: contentfulEnvId,
-    });
-
-    return new UserContentfulDataProvider(
-      contentfulGraphQLClient,
-      getContentfulRestClientFactory,
-    );
-  }
-
-  const squidexGraphqlClient = new SquidexGraphql(getAuthToken, {
-    appName,
-    baseUrl,
+  const contentfulGraphQLClient = getContentfulGraphQLClient({
+    space: contentfulSpaceId,
+    accessToken: contentfulAccessToken,
+    environment: contentfulEnvId,
   });
 
-  return new UserSquidexDataProvider(squidexGraphqlClient, getRestClient());
+  return new UserContentfulDataProvider(
+    contentfulGraphQLClient,
+    getContentfulRestClientFactory,
+  );
 };
 
-export const getAssetDataProvider = (): AssetDataProvider => {
-  if (isContentfulEnabled) {
-    return new AssetContentfulDataProvider(getContentfulRestClientFactory);
-  }
-
-  return new AssetSquidexDataProvider(getRestClient());
-};
+export const getAssetDataProvider = (): AssetDataProvider =>
+  new AssetContentfulDataProvider(getContentfulRestClientFactory);

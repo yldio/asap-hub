@@ -1,6 +1,8 @@
+import { OrcidWork } from '@asap-hub/model';
 import Got from 'got';
 import get from 'lodash.get';
-import { CMSOrcidWork } from '../data-providers/user.data-provider';
+
+export type CMSOrcidWork = OrcidWork;
 
 interface ORCIDExternalId {
   'external-id-type': string;

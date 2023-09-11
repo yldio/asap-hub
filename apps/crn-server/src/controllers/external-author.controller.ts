@@ -4,7 +4,7 @@ import {
   ExternalAuthorResponse,
   FetchOptions,
 } from '@asap-hub/model';
-import { ExternalAuthorDataProvider } from '../data-providers/external-author.data-provider';
+import { ExternalAuthorDataProvider } from '../data-providers/types/external-authors.data-provider.types';
 
 export default class ExternalAuthorController {
   constructor(private externalAuthorDataProvider: ExternalAuthorDataProvider) {}

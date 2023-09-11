@@ -10,19 +10,28 @@ export const useSearch = () => {
   const { resetPagination } = usePaginationParams();
 
   const filters = new Set<string>(currentUrlParams.getAll('filter'));
+  const tags = currentUrlParams.getAll('tag');
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
 
   const toggleFilter = (filter: string) => {
     resetPagination();
-    const newUrlParams = new URLSearchParams(history.location.search);
-    newUrlParams.delete('filter');
-
     const currentFilters = currentUrlParams.getAll('filter');
     const filterIndex = currentFilters.indexOf(filter);
     filterIndex > -1
       ? currentFilters.splice(filterIndex, 1)
       : currentFilters.push(filter);
-    currentFilters.forEach((f) => newUrlParams.append('filter', f));
+    replaceArrayParams('filter', currentFilters);
+  };
+
+  const setTags = (newTags: string[]) => {
+    resetPagination();
+    replaceArrayParams('tag', newTags);
+  };
+
+  const replaceArrayParams = (paramName: string, values: string[]) => {
+    const newUrlParams = new URLSearchParams(history.location.search);
+    newUrlParams.delete(paramName);
+    values.forEach((v) => newUrlParams.append(paramName, v));
     history.replace({ search: newUrlParams.toString() });
   };
 
@@ -45,5 +54,7 @@ export const useSearch = () => {
     setSearchQuery,
     filters,
     toggleFilter,
+    tags,
+    setTags,
   };
 };

@@ -89,7 +89,7 @@ const EventsDisplay: React.FC<EventsDisplayProps> = ({
       renderPageHref={renderPageHref}
       numberOfPages={numberOfPages}
       events={items.map(eventMapper)}
-      noEventsComponent={noEventsComponent}
+      noResultsComponent={noEventsComponent}
     />
   );
 };

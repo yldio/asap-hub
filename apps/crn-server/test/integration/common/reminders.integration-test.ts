@@ -875,6 +875,33 @@ describe('Reminders', () => {
       await expectReminderWithId(`event-happening-today-${event.id}`);
     });
 
+    test('Should not see the reminder when the event is hidden', async () => {
+      // setting system time to 5AM in UTC, event happening at 4PM in UTC
+      const hiddenEvent = await createEvent({
+        startDate: new Date('2022-08-10T10:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T11:00:00.0Z').toISOString(),
+        hidden: true,
+      });
+
+      jest.setSystemTime(new Date('2022-08-10T05:00:00.0Z'));
+      await expectNotToContainReminderWithId(
+        `event-happening-today-${hiddenEvent.id}`,
+      );
+    });
+    test('Should not see the reminder when the event is cancelled', async () => {
+      // setting system time to 5AM in UTC, event happening at 4PM in UTC
+      const cancelledEvent = await createEvent({
+        startDate: new Date('2022-08-10T10:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T11:00:00.0Z').toISOString(),
+        status: 'Cancelled',
+      });
+
+      jest.setSystemTime(new Date('2022-08-10T05:00:00.0Z'));
+      await expectNotToContainReminderWithId(
+        `event-happening-today-${cancelledEvent.id}`,
+      );
+    });
+
     test('Should not see the reminder if the event has already started', async () => {
       // setting system time to 5PM in UTC, event happening at 4PM in UTC
       jest.setSystemTime(new Date('2022-08-10T17:00:00.0Z'));
@@ -934,6 +961,38 @@ describe('Reminders', () => {
       // waiting for the entry to become a draft
       await delay(1000);
       await expectNotToContainReminderWithId(`event-happening-now-${event.id}`);
+    });
+
+    test('Should not see the reminder when the event is hidden', async () => {
+      // setting system time to 10:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      const hiddenEvent = await createEvent({
+        startDate: new Date('2022-08-10T10:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T11:00:00.0Z').toISOString(),
+        hidden: true,
+      });
+      jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
+
+      await expectNotToContainReminderWithId(
+        `event-happening-now-${hiddenEvent.id}`,
+      );
+      await fixtures.deleteEvents([hiddenEvent.id]);
+    });
+    test('Should not see the reminder when the event is cancelled', async () => {
+      // setting system time to 10:05AM in UTC
+      // event happening at 10PM in UTC and ending at 11AM UTC
+      const cancelledEvent = await createEvent({
+        startDate: new Date('2022-08-10T10:00:00.0Z').toISOString(),
+        endDate: new Date('2022-08-10T11:00:00.0Z').toISOString(),
+        hidden: false,
+        status: 'Cancelled',
+      });
+      jest.setSystemTime(new Date('2022-08-10T10:05:00.0Z'));
+
+      await expectNotToContainReminderWithId(
+        `event-happening-now-${cancelledEvent.id}`,
+      );
+      await fixtures.deleteEvents([cancelledEvent.id]);
     });
   });
 

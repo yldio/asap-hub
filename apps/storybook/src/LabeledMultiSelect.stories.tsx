@@ -1,4 +1,4 @@
-import { LabeledMultiSelect } from '@asap-hub/react-components';
+import { LabeledMultiSelect, searchIcon } from '@asap-hub/react-components';
 import { number, text, boolean } from '@storybook/addon-knobs';
 import { ComponentPropsWithRef } from 'react';
 
@@ -15,6 +15,9 @@ export const Normal = () => (
       'Description',
       'Select the keywords that best apply to your work. Please add a minimum of 5 tags.',
     )}
+    leftIndicator={
+      boolean('Left Search Indicator', false) ? searchIcon : undefined
+    }
     placeholder={text('Placeholder', 'Add a tag (E.g. Cell Biology)')}
     suggestions={[
       'Neurological Diseases',
@@ -56,7 +59,7 @@ export const Invalid = () => (
   />
 );
 
-const loadOptionsMock = (suggestions: string[], delay = 2000) => {
+export const loadOptionsMock = (suggestions: string[], delay = 2000) => {
   const options = suggestions.map((value) => ({ label: value, value }));
   return (
     inputValue = '',

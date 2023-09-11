@@ -105,7 +105,7 @@ type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly exportResults?: () => Promise<void>;
   readonly cardViewHref?: string;
   readonly listViewHref?: string;
-  readonly noEventsComponent?: React.ReactNode;
+  readonly noResultsComponent?: React.ReactNode;
   readonly children: React.ReactNode;
   readonly algoliaIndexName?: string;
   readonly isAdministrator?: boolean;
@@ -118,7 +118,7 @@ const ResultList: React.FC<ResultListProps> = ({
   cardViewHref,
   listViewHref,
   children,
-  noEventsComponent,
+  noResultsComponent,
   algoliaIndexName,
   isAdministrator,
   ...pageControlsProps
@@ -199,7 +199,7 @@ const ResultList: React.FC<ResultListProps> = ({
           </section>
         </>
       ) : (
-        noEventsComponent ?? (
+        noResultsComponent ?? (
           <main css={{ textAlign: 'center' }}>
             {icon && <span css={iconStyles}>{icon}</span>}
             <Headline3>No results have been found.</Headline3>

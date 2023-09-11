@@ -890,7 +890,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-test-renderer": 18.0.0
+    "@types/react-test-renderer": 18.0.1
     "@types/streamsaver": 2.0.1
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1007,7 +1007,7 @@ __metadata:
     "@types/debug": 4.1.8
     "@types/express": 4.17.17
     "@types/graphql": 14.5.0
-    "@types/hapi": 18.0.9
+    "@types/hapi": 18.0.10
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.9
@@ -1300,7 +1300,7 @@ __metadata:
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 2.4.6
-    "@types/react-test-renderer": 18.0.0
+    "@types/react-test-renderer": 18.0.1
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
@@ -1364,7 +1364,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-test-renderer": 18.0.0
+    "@types/react-test-renderer": 18.0.1
     "@types/streamsaver": 2.0.1
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1613,7 +1613,7 @@ __metadata:
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 2.4.6
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
-    "@types/react-test-renderer": 18.0.0
+    "@types/react-test-renderer": 18.0.1
     "@types/rehype-slug": "workspace:*"
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1779,7 +1779,7 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.119
     "@types/debug": 4.1.8
-    "@types/hapi": 18.0.9
+    "@types/hapi": 18.0.10
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.9
@@ -1813,7 +1813,7 @@ __metadata:
     "@hapi/joi": 17.1.1
     "@types/apr-intercept": "workspace:*"
     "@types/debug": 4.1.8
-    "@types/hapi": 18.0.9
+    "@types/hapi": 18.0.10
     "@types/hapi__boom": 9.0.1
     "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": 17.1.9
@@ -17459,9 +17459,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/hapi@npm:18.0.9":
-  version: 18.0.9
-  resolution: "@types/hapi@npm:18.0.9"
+"@types/hapi@npm:18.0.10":
+  version: 18.0.10
+  resolution: "@types/hapi@npm:18.0.10"
   dependencies:
     "@types/boom": "*"
     "@types/catbox": "*"
@@ -17471,7 +17471,7 @@ __metadata:
     "@types/podium": "*"
     "@types/shot": "*"
     joi: ^17.3.0
-  checksum: 92bff55dae8f728700705e97b3bf411820b8b32508455c2dd91416cd4ebb609e925661dc82cf7177017e828face20885c3481e6e667edaa61590e193ac2334f2
+  checksum: f22addc5335d04b8d37aad97f34c2e5942212fcbbb209bf42f406803485a05385663ea9526776e404e19bccbda0c65d0c91fdaee901102c8bfb2568edc25dbc6
   languageName: node
   linkType: hard
 
@@ -17784,9 +17784,9 @@ __metadata:
   linkType: hard
 
 "@types/lodash@npm:*, @types/lodash@npm:^4, @types/lodash@npm:^4.14.123, @types/lodash@npm:^4.14.167":
-  version: 4.14.197
-  resolution: "@types/lodash@npm:4.14.197"
-  checksum: 53d7567d1704de76cf33266c78062e0fd722d4b846e5b1417d0b6ef0ee41c0d9c451b92bc34f73d5f1fcc45c7d36511e92f6f47a9279b48157ba60a92ddaa078
+  version: 4.14.198
+  resolution: "@types/lodash@npm:4.14.198"
+  checksum: b290e4480707151bcec738bca40527915defe52a0d8e26c83685c674163a265e1a88cb2ee56b0fb587a89819d0cd5df86ada836aec3e9c2e4bf516e7d348d524
   languageName: node
   linkType: hard
 
@@ -18168,12 +18168,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:18.0.0":
-  version: 18.0.0
-  resolution: "@types/react-test-renderer@npm:18.0.0"
+"@types/react-test-renderer@npm:18.0.1":
+  version: 18.0.1
+  resolution: "@types/react-test-renderer@npm:18.0.1"
   dependencies:
     "@types/react": "*"
-  checksum: 6afc938a1d7618d88ab8793e251f0bd5981bf3f08c1b600f74df3f8800b92589ea534dc6dcb7c8d683893fcc740bf8d7843a42bf2dae59785cfe88f004bd7b0b
+  checksum: ec149c2ab4d76c7286ef5d8ca9546765632e0c7a0788e5850081af38526f7fcb6413641e083520ee4b2fc57755f475990fbfabcbcdda8d954aa708708c866a96
   languageName: node
   linkType: hard
 
@@ -20770,7 +20770,7 @@ __metadata:
     "@peculiar/webcrypto": 1.4.3
     "@testing-library/jest-dom": ^5.16.5
     "@types/jest": 29.5.4
-    "@types/react-test-renderer": 18.0.0
+    "@types/react-test-renderer": 18.0.1
     "@types/uuid": 8.3.4
     "@types/webpack": 4.41.33
     "@yarnpkg/pnpify": 3.1.6

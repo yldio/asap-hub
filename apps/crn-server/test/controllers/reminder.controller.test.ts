@@ -6,6 +6,7 @@ import {
   ResearchOutputDraftReminder,
   ResearchOutputInReviewReminder,
   ResearchOutputPublishedReminder,
+  ResearchOutputVersionPublishedReminder,
   SharePresentationReminder,
   UploadPresentationReminder,
 } from '@asap-hub/model';
@@ -23,6 +24,7 @@ import {
   getResearchOutputDraftWorkingGroupReminder,
   getResearchOutputInReviewTeamReminder,
   getResearchOutputPublishedReminder,
+  getResearchOutputVersionPublishedReminder,
   getSharePresentationReminder,
   getUploadPresentationReminder,
   getVideoEventUpdatedReminder,
@@ -76,6 +78,64 @@ describe('Reminder Controller', () => {
     });
 
     describe('Description and href', () => {
+      test('Should return the correct description and href for the research-output-version-published team reminder', async () => {
+        const researchOutputPublishedReminder =
+          getResearchOutputVersionPublishedReminder();
+        const reminderDataObject: ResearchOutputVersionPublishedReminder = {
+          ...researchOutputPublishedReminder,
+          data: {
+            ...researchOutputPublishedReminder.data,
+            documentType: 'Presentation',
+            title: 'Some Test title',
+            researchOutputId: 'some-research-output-id',
+            publishedAt: '2021-01-01',
+          },
+        };
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            'Team **Team A** published a new team Presentation output version: Some Test title.',
+          href: `/shared-research/some-research-output-id`,
+        });
+      });
+
+      test('Should return the correct description and href for the research-output-version-published working group reminder', async () => {
+        const researchOutputPublishedReminder =
+          getResearchOutputVersionPublishedReminder();
+        const reminderDataObject: ResearchOutputVersionPublishedReminder = {
+          ...researchOutputPublishedReminder,
+          data: {
+            ...researchOutputPublishedReminder.data,
+            documentType: 'Presentation',
+            title: 'Some Test title',
+            researchOutputId: 'some-research-output-id',
+            publishedAt: '2021-01-01',
+            associationType: 'working group',
+            associationName: 'Working Group 1',
+          },
+        };
+
+        reminderDataProviderMock.fetch.mockResolvedValueOnce({
+          total: 1,
+          items: [reminderDataObject],
+        });
+
+        const { items } = await reminderController.fetch(options);
+
+        expect(items[0]).toMatchObject({
+          description:
+            'Working group **Working Group 1** published a new working group Presentation output version: Some Test title.',
+          href: `/shared-research/some-research-output-id`,
+        });
+      });
+
       test('Should return the correct description and href for the research-output-published reminder', async () => {
         const researchOutputPublishedReminder =
           getResearchOutputPublishedReminder();

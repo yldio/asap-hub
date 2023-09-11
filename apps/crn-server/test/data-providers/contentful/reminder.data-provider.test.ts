@@ -16,6 +16,7 @@ import { getContentfulGraphqlEvent } from '../../fixtures/events.fixtures';
 import {
   getContentfulReminderEventsCollectionItem,
   getContentfulReminderResearchOutputCollectionItem,
+  getContentfulReminderResearchOutputVersionCollectionItem,
   getContentfulReminderUsersContent,
   getEventHappeningNowReminder,
   getEventHappeningTodayReminder,
@@ -27,6 +28,7 @@ import {
   getResearchOutputPublishedReminder,
   getResearchOutputSwitchToDraftTeamReminder,
   getResearchOutputSwitchToDraftWorkingGroupReminder,
+  getResearchOutputVersionPublishedReminder,
   getSharePresentationReminder,
   getTeamProjectManagerResponse,
   getUploadPresentationReminder,
@@ -1076,6 +1078,305 @@ describe('Reminders data provider', () => {
 
           expect(result.items.map((r) => r.type)).not.toContain('In Review');
         });
+      });
+    });
+
+    describe('Research Output Versions', () => {
+      type ResearchOutputVersionItem = NonNullable<
+        FetchRemindersQuery['researchOutputVersionsCollection']
+      >['items'][number];
+
+      let researchOutputVersionItem: ResearchOutputVersionItem;
+
+      const publishedAt = '2023-01-01T08:00:00Z';
+
+      const setNowToLast24Hours = (date: string) => {
+        jest.setSystemTime(
+          DateTime.fromISO(date).plus({ hours: 2 }).toJSDate(),
+        );
+      };
+
+      const setContentfulMock = (
+        researchOutputVersionsCollection: FetchRemindersQuery['researchOutputVersionsCollection'],
+        users?: FetchRemindersQuery['users'],
+      ) => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          researchOutputVersionsCollection,
+          users:
+            users === undefined ? getContentfulReminderUsersContent() : users,
+        });
+      };
+
+      beforeEach(() => {
+        researchOutputVersionItem =
+          getContentfulReminderResearchOutputVersionCollectionItem();
+        researchOutputVersionItem!.sys.publishedAt = publishedAt;
+        setNowToLast24Hours(publishedAt);
+      });
+
+      afterEach(() => {
+        jest.clearAllMocks();
+      });
+
+      test('Should fetch and sort appropriately research output version reminders when conditions are met', async () => {
+        const version1 = {
+          ...researchOutputVersionItem,
+          sys: {
+            id: 'version-1',
+            publishedAt: '2023-01-01T08:00:00Z',
+          },
+        };
+        const version2 = {
+          ...researchOutputVersionItem,
+          sys: {
+            id: 'version-2',
+            publishedAt: '2023-01-01T09:00:00Z',
+          },
+        };
+        const version3 = {
+          ...researchOutputVersionItem,
+          sys: {
+            id: 'version-3',
+            publishedAt: '2023-01-01T10:00:00Z',
+          },
+        };
+
+        const researchOutputVersionsCollection = {
+          items: [version1, version2, version3],
+        };
+        const usersResponse = getContentfulReminderUsersContent();
+        usersResponse!.role = 'Staff';
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({
+          items: [
+            expect.objectContaining({
+              id: 'research-output-version-published-version-3',
+              entity: 'Research Output Version',
+              type: 'Published',
+            }),
+            expect.objectContaining({
+              id: 'research-output-version-published-version-2',
+              entity: 'Research Output Version',
+              type: 'Published',
+            }),
+            expect.objectContaining({
+              id: 'research-output-version-published-version-1',
+              entity: 'Research Output Version',
+              type: 'Published',
+            }),
+          ],
+          total: 3,
+        });
+      });
+
+      test('Should not fetch the reminders if user data is null', async () => {
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+        const usersResponse = null;
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should not fetch the reminders if user does not belong to a team', async () => {
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+        const usersResponse = getContentfulReminderUsersContent();
+        usersResponse!.role = 'Staff';
+        usersResponse!.teamsCollection = null;
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test("Should not fetch the published reminder if there isn't any research output versions", async () => {
+        const researchOutputVersionsCollection = { items: [] };
+        const usersResponse = getContentfulReminderUsersContent();
+        usersResponse!.role = 'Staff';
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test("Should not fetch the reminders if the research output version doesn't have a title", async () => {
+        researchOutputVersionItem!.title = null;
+
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+        const usersResponse = getContentfulReminderUsersContent();
+        usersResponse!.role = 'Staff';
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test("Should not fetch the reminders if the research output version doesn't have a documentType", async () => {
+        researchOutputVersionItem!.documentType = null;
+
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+        const usersResponse = getContentfulReminderUsersContent();
+        usersResponse!.role = 'Staff';
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should not fetch the reminder if the research output version documentType property is not a valid documentType', async () => {
+        researchOutputVersionItem!.documentType = 'invalid-document-type';
+
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+        const usersResponse = getContentfulReminderUsersContent();
+        usersResponse!.role = 'Staff';
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should not fetch the reminder if associated team name is null', async () => {
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.teamsCollection!.items[0]!.displayName =
+          null;
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.workingGroup =
+          null;
+
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+        const usersResponse = getContentfulReminderUsersContent();
+        usersResponse!.role = 'Staff';
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should not fetch the reminder if associated working group name is null', async () => {
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.teamsCollection!.items =
+          [];
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.workingGroup!.title =
+          null;
+
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+        const usersResponse = getContentfulReminderUsersContent();
+        usersResponse!.role = 'Staff';
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ items: [], total: 0 });
+      });
+
+      test('Should fetch the published reminder if user is part of a team associated with the research output version', async () => {
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.workingGroup =
+          null;
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+
+        setContentfulMock(researchOutputVersionsCollection);
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+
+        const expectedReminder = getResearchOutputVersionPublishedReminder();
+        expectedReminder.data.publishedAt = publishedAt;
+
+        expect(result.items.map((r) => r.type)).toContain('Published');
+        expect(result).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+
+      test('Should fetch the published reminder if user is part of the working group associated with the research output version', async () => {
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+
+        setContentfulMock(researchOutputVersionsCollection);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+
+        const expectedReminder = getResearchOutputVersionPublishedReminder();
+        expectedReminder.data.publishedAt = publishedAt;
+        expectedReminder.data.associationName = 'Working Group 1';
+        expectedReminder.data.associationType = 'working group';
+
+        expect(result.items.map((r) => r.type)).toContain('Published');
+        expect(result).toEqual({
+          total: 1,
+          items: [expectedReminder],
+        });
+      });
+
+      test('Should not fetch the published reminder of research output version associated with working group if user is not part of any working group', async () => {
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+
+        const usersResponse = getContentfulReminderUsersContent();
+        usersResponse!.linkedFrom!.workingGroupMembersCollection = null;
+        usersResponse!.linkedFrom!.workingGroupLeadersCollection = null;
+
+        setContentfulMock(researchOutputVersionsCollection, usersResponse);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+
+      test('Should not fetch the published reminder if the user is not associated with any team or working group from the research output version', async () => {
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.teamsCollection!.items =
+          [
+            {
+              sys: {
+                id: 'team-user-is-not-part-of',
+              },
+              displayName: 'Team that user is not part of',
+            },
+          ];
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.workingGroup =
+          {
+            sys: {
+              id: 'wg-user-is-not-part-of',
+            },
+            title: 'Working Group that user is not part of',
+          };
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+        setContentfulMock(researchOutputVersionsCollection);
+
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ total: 0, items: [] });
+      });
+
+      test('Should not fetch the published reminder if it is has been more than 24 hours sinced it was published', async () => {
+        jest.setSystemTime(
+          DateTime.fromISO(publishedAt).plus({ hours: 25 }).toJSDate(),
+        );
+
+        const researchOutputVersionsCollection = {
+          items: [researchOutputVersionItem],
+        };
+
+        setContentfulMock(researchOutputVersionsCollection);
+        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
+        expect(result).toEqual({ total: 0, items: [] });
       });
     });
 

@@ -152,7 +152,7 @@ it('renders custom component when no results found', () => {
       numberOfItems={0}
       numberOfPages={1}
       currentPageIndex={0}
-      noEventsComponent={noEventsComponent}
+      noResultsComponent={noEventsComponent}
     >
       cards
     </ResultList>,

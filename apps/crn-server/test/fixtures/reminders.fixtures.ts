@@ -12,6 +12,7 @@ import {
   ResearchOutputInReviewReminder,
   ResearchOutputPublishedReminder,
   ResearchOutputSwitchToDraftReminder,
+  ResearchOutputVersionPublishedReminder,
   SharePresentationReminder,
   UploadPresentationReminder,
   VideoEventReminder,
@@ -31,6 +32,23 @@ import {
   getSquidexGraphqlResearchOutput,
 } from './research-output.fixtures';
 import { getSquidexGraphqlTeam } from './teams.fixtures';
+
+export const getResearchOutputVersionPublishedReminder =
+  (): ResearchOutputVersionPublishedReminder => {
+    return {
+      id: 'research-output-version-published-ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+      entity: 'Research Output Version',
+      type: 'Published',
+      data: {
+        researchOutputId: 'research-output-1',
+        documentType: 'Bioinformatics',
+        title: 'test-research-output-version',
+        publishedAt: '2023-01-01T08:00:00Z',
+        associationType: 'team',
+        associationName: 'Team A',
+      },
+    };
+  };
 
 export const getResearchOutputPublishedReminder =
   (): ResearchOutputPublishedReminder => {
@@ -644,6 +662,47 @@ export const getContentfulReminderResearchOutputCollectionItem =
         lastName: 'Hardy',
       },
       isInReview: false,
+    };
+  };
+
+export const getContentfulReminderResearchOutputVersionCollectionItem =
+  (): NonNullable<
+    FetchRemindersQuery['researchOutputVersionsCollection']
+  >['items'][number] => {
+    return {
+      sys: {
+        id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+        publishedAt: '2020-09-23T16:34:26.842Z',
+      },
+      documentType: 'Bioinformatics',
+      title: 'test-research-output-version',
+      linkedFrom: {
+        researchOutputsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'research-output-1',
+              },
+              teamsCollection: {
+                items: [
+                  {
+                    sys: {
+                      id: 'team-1',
+                    },
+                    displayName: 'Team A',
+                  },
+                ],
+              },
+              workingGroup: {
+                sys: {
+                  id: 'wg-id-1',
+                },
+                title: 'Working Group 1',
+              },
+            },
+          ],
+        },
+      },
     };
   };
 

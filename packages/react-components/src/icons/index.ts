@@ -94,6 +94,7 @@ export { default as speakerIcon } from './speaker';
 export { default as successIcon } from './success';
 export { default as successLargeIcon } from './success-large';
 export { default as systemCalendarIcon } from './system-calendar';
+export { default as tagsIcon } from './tags';
 export { default as TeamIcon } from './team';
 export { default as tickIcon } from './tick';
 export { default as tickSmallIcon } from './tick-small';

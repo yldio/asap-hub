@@ -13,6 +13,7 @@ export { default as news } from './news';
 export { default as sharedResearch } from './shared-research';
 export { default as staticPages } from './static-pages';
 export { default as welcome } from './welcome';
+export { default as tags } from './tags';
 export { default as dashboard } from './dashboard';
 
 export type { RouteNode };

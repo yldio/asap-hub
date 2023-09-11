@@ -3,25 +3,7 @@ describe('Working Groups Dependencies', () => {
     jest.resetModules();
   });
 
-  it('Should resolve Working Group Squidex Data Provider when the Contentful feature flag is off', async () => {
-    process.env.IS_CONTENTFUL_ENABLED = 'false';
-
-    const { WorkingGroupSquidexDataProvider } = await import(
-      '../../src/data-providers/working-group.data-provider'
-    );
-    const getWorkingGroupDataProviderModule = await import(
-      '../../src/dependencies/working-groups.dependencies'
-    );
-    const WorkingGroupDataProvider =
-      getWorkingGroupDataProviderModule.getWorkingGroupDataProvider();
-
-    expect(WorkingGroupDataProvider).toBeInstanceOf(
-      WorkingGroupSquidexDataProvider,
-    );
-  });
-
-  it('Should resolve Working Group Contentful Data Provider when the Contentful feature flag is on', async () => {
-    process.env.IS_CONTENTFUL_ENABLED = 'true';
+  it('Should resolve Working Group Contentful Data Provider', async () => {
     const { WorkingGroupContentfulDataProvider } = await import(
       '../../src/data-providers/contentful/working-group.data-provider'
     );

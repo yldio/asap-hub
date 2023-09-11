@@ -1,0 +1,40 @@
+import { EditorAppSDK, FieldAppSDK, SidebarAppSDK } from '@contentful/app-sdk';
+import { EntryProps } from 'contentful-management';
+
+type SDK = FieldAppSDK | SidebarAppSDK | EditorAppSDK;
+
+export function getEntry(sdk: SDK): EntryProps {
+  return {
+    // @ts-expect-error type
+    sys: sdk.entry.getSys(),
+    fields: Object.fromEntries(
+      Object.values(sdk.entry.fields).map((field) => [
+        field.id,
+        field.getValue(),
+      ]),
+    ),
+    metadata: sdk.entry.getMetadata(),
+  };
+}
+
+export function onEntryChanged(sdk: SDK, callback: () => void): () => void {
+  const triggerCallback = () => callback();
+
+  const subscriptions: (() => void)[] = [];
+
+  subscriptions.push(sdk.entry.onSysChanged(triggerCallback));
+  /* eslint-disable no-restricted-syntax */
+
+  subscriptions.push(sdk.navigator.onSlideInNavigation(triggerCallback));
+
+  for (const field of Object.values(sdk.entry.fields)) {
+    if (field.id === 'members') {
+      subscriptions.push(field.onValueChanged(triggerCallback));
+    }
+  }
+
+  return () => {
+    subscriptions.forEach((unsubscribe) => unsubscribe());
+  };
+  /* eslint-enable no-restricted-syntax */
+}

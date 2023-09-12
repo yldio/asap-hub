@@ -1,6 +1,6 @@
 import { Frame } from '@asap-hub/frontend-utils';
-import { ProjectsBody } from '@asap-hub/gp2-components';
-import { ProjectPageList } from '@asap-hub/gp2-components/build/templates';
+import { ProjectPageList, ProjectsBody } from '@asap-hub/gp2-components';
+// import { ProjectPageList } from '@asap-hub/gp2-components/build/templates';
 import { gp2 } from '@asap-hub/model';
 import { FC } from 'react';
 import { useSearch } from '../hooks';

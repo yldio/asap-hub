@@ -34,7 +34,7 @@ const loadEvents = () =>
 const loadTags = () => import(/* webpackChunkName: "tags" */ './tags/Routes');
 
 const loadAbout = () =>
-  import(/* webpackChunkName: "events" */ './about/Routes');
+  import(/* webpackChunkName: "about" */ './about/Routes');
 
 const News = lazy(loadNews);
 const Network = lazy(loadNetwork);

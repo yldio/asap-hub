@@ -10,7 +10,6 @@ import {
   TeamEvent,
   TeamResponse,
 } from '@asap-hub/model';
-import { InputTeam } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import { TeamPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
@@ -236,31 +235,6 @@ export const getTeamCreateDataObject = (): TeamCreateDataObject => ({
     },
   ],
   researchOutputIds: [],
-});
-
-export const getInputTeam = (): InputTeam['data'] => ({
-  applicationNumber: { iv: 'ASAP-000420' },
-  displayName: {
-    iv: 'Team A',
-  },
-  inactiveSince: { iv: null },
-  projectSummary: { iv: 'project-summary' },
-  projectTitle: {
-    iv: 'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-  },
-  expertiseAndResourceTags: { iv: ['Animal resources'] },
-  proposal: {
-    iv: [],
-  },
-  tools: {
-    iv: [
-      {
-        name: 'Team Scherzer Slack Channel',
-        description: 'Connect with the team on the private slack channel',
-        url: 'https://scherzerlab.slack.com/archives/C019B8W86NQ',
-      },
-    ],
-  },
 });
 
 export const getTeamPublishContentfulWebhookPayload =

@@ -30,6 +30,7 @@ export const mockedUser: gp2.UserResponse = {
       members: [{ userId: 'user-id-1', role: 'Project lead' }],
     },
   ],
+  projectIds: ['project-id'],
   questions: ['a first question?', 'a second question?'],
   workingGroups: [
     {
@@ -38,6 +39,7 @@ export const mockedUser: gp2.UserResponse = {
       members: [{ userId: 'user-id-1', role: 'Co-lead' }],
     },
   ],
+  workingGroupIds: ['working-group-id'],
   contributingCohorts: [
     {
       contributingCohortId: 'cohort-id-11',
@@ -48,6 +50,7 @@ export const mockedUser: gp2.UserResponse = {
   ],
   fundingStreams: undefined,
   tags: [{ id: 'id-1', name: 'Cohort' }],
+  tagIds: ['id-1'],
   telephone: {
     countryCode: '+1',
     number: '0123456789',

@@ -72,7 +72,7 @@ jobs:
           total: ${{ strategy.job-total }}
   report-coverage:
     runs-on: ubuntu-latest
-    needs: [unit, integration-contentful]
+    needs: [unit, integration-test]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
@@ -89,8 +89,8 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  integration-contentful:
-    concurrency: integration-contentful
+  integration-test:
+    concurrency: integration-test
     permissions:
       packages: read
     runs-on: ubuntu-latest

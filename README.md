@@ -45,17 +45,23 @@ For a list of individual package and particularly app scripts, look inside the r
 - `yarn watch:typecheck` - This will watch all the packages (but not apps) for changes and whenever changes occur, typecheck them and emit new type definitions, so that other packages and apps can see the new module type signature.
 - `yarn fix:format` - This will reformat all files in the repository to match our formatting standards using [Prettier](https://prettier.io/).
 - `yarn test` - This will lint and test all packages and apps in the repository. You may want to run this with `--watch` or other [Jest CLI options](https://jestjs.io/docs/en/cli.html).
+- `yarn test:integration` - Runs the integration tests for the API against Contentful.
 - `yarn test:*` - There are further test configurations being run on CI that are usually slower or more specific and thus not suitable to run during day-to-day development. You can execute those scripts manually. Some of them may require installing native modules via `yarn rebuild` first.
 
 ## Setting up your development environment
 
 For you, a newcomer, to be running your development setup, you'll need to complete the following steps:
 
-### Create a new user on Squidex
+### Create a new user on Contentful
 
-- Log in to <https://cloud.squidex.io/app/asap-hub-dev>
-- You will need to be added to the "ASAP CRN Hub (dev)" app if you don't already have access
-- In `Content/Users`, create a new user (or edit if already created)
+- Log in to <https://www.contentful.com/>
+- You will need to be added to the "YLD ASAP > CRN Hub" or "YLD ASAP > GP2" app if you don't already have access
+- In th environment selector in the top left, select `Development` (or `Production` if required)
+- In the "Content" section, create a new `User` content model with your email address
+- If you use an `@yld.io` email address for the user then you should receive an invitation email, and you can follow th instructions from the email
+- If you do not receive an invitation email then you can copy the value which should be populated in the `Connections` field on the user, and visit <https://dev.hub.asap.science/welcome/{invitation-code}> with the invitation code replaced with the value from Contentful
+
+To send a new invitation you can remove the values from the `Connections` field.
 
 ### Get everything running
 
@@ -75,18 +81,23 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 
 ### Now that everything's up
 
-- On localhost:3000 you should have the CRN hub running.
-- On localhost:4000 you should have the GP2 hub running.
-- Get the UUID listed under "Connections" in Squidex on the user profile you created above.
-- Use this UUID to activate your account by visting <https://dev.hub.asap.science/welcome/{uuid}>.
-- Reload localhost:3000 and you should now be able to log in.
+- On <http://localhost:3000> you should have the CRN hub running
+- On <http://localhost:4000> you should have the GP2 hub running
+- You should be able to log in to the relevant app using the user you created above
 
 ### Contentful Dedicated Environment
 
-If you require a dedicated environment for your developement work, create a PR and add one or both of the followings labels to your PR. This will run the github action workflow to create a new environment in contentful.
+If you require a dedicated environment for your development work, create a PR and add one or both of the following labels to your PR. This will run the github action workflow to create a new environment in contentful.
 
 - crn-create-environment
 - gp2-create-environment
+
+You should create a dedicated environment in Contentful if:
+
+- you are making any changes to the content models in Contentful
+- you need to develop/test webhook behaviour as part of your PR
+
+When creating a new Contentful environment you will need to ensure that the API keys you are using for local development have permission to access that environment. You can check this by inspecting your API key settings at <https://app.contentful.com/spaces/5v6w5j61tndm/environments/master/api/keys>.
 
 ## Editor setup
 
@@ -97,105 +108,21 @@ Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks
 Individual `packages` or `apps` may contain their own readme files as deemed necessary.
 The [`docs`](docs) folder contains overall architecture / decision documentation.
 
-## Squidex schema changes and graphql
+## Contentful
 
-Squidex is our content management software, and manages our data. When you want to make a change, there are a specific set of steps which need to be taken in order to ensure that the software builds correctly.
+### Schema changes and graphql
 
-First of all, make the schema changes you want on your PR branch via [the Squidex UI](https://squidex.io), the details to log into the ops account are available from the team. You'll also want to update your `.env` file with the `SQUIDEX_CLIENT_ID`, `SQUIDEX_CLIENT_SECRET` (you can get these from 'My Profile'), and `SQUIDEX_APP_NAME` (the name of your PR app instance).
-
-After you've made and published the changes, you can regenerate the local schemas and queries by running this command (if you need to add anything to queries, you'll need to make those changes before running the command):
+The graphql schema, and associated types are generated automatically by Contentful. When you make changes to graphql queries, or to the content models in Contentful you will need to regenerate the schema documents. You can do this by running the following command:
 
 ```sh
-yarn schema:update
+yarn contentful:schema:update
+
+# or for CRN or GP2 individually
+yarn contentful:schema:update:crn
+yarn contentful:schema:update:gp2
 ```
 
 Then commit the changed files.
-
-## Migrate squidex fields
-
-Create a migration script with the following command:
-
-```sh
-yarn workspace @asap-hub/(crn|gp2)-server migration:create <give-the-script-a-name>
-```
-
-This should create a new script in:
-
-src/apps/crn-server/src/migrations
-
-```javascript
-export default class MoveRepurposedFields extends Migration {
-  up = async (): Promise<void> => {
-    /* put migration code here */
-  };
-  down = async (): Promise<void> => {
-    /* put rollback code here  */
-  };
-}
-
-Log into AWS and go to Lambda to find the below function and run "Test". Eg asap-hub-2402-runMigrations would be for PR 2402
-```
-
-The up function is triggered by `asap-hub-{env}-runMigrations`
-The down function is triggered by `asap-hub-{env}-rollbackMigrations`
-
-## Running integration tests locally
-
-- Install python 3
-- From the root run
-
-  ```sh
-  pip3 install -r .github/scripts/squidex/requirements.txt
-  ```
-
-- Install Squidex CLI <https://github.com/Squidex/squidex-samples/releases>
-
-  - For macOS + zsh users:
-
-    In order to be able to run executable file, run in the terminal
-
-    ```sh
-    cd /directory/with/executable
-    chmod +x sq
-    sudo cp sq /usr/local/bin/
-    ```
-
-    For z shell users, edit ~/.zshrc and add the following line:
-
-    ```sh
-    alias sq=./sq
-    ```
-
-    Apply the changes running in the terminal:
-
-    ```sh
-    source ~/.zshrc
-    ```
-
-- Set env vars
-
-  - For zsh users:
-    Open `~/.zshenv` and add:
-
-    ```sh
-    export SQUIDEX_CLIENT_ID=*****
-    export SQUIDEX_CLIENT_SECRET=*****
-    export SQUIDEX_BASE_URL=https://cloud.squidex.io
-    export SQUIDEX_APP_NAME=<choose-any-name>
-    export APP=crn
-    ```
-
-    Run `source ~/.zshenv`
-
-- Then you are going to be able to run create-app script:
-
-  ```sh
-  python3 .github/scripts/squidex/create-app.py
-  ```
-
-- Run `yarn test:integration` to see the tests running locally.
-
-## Contentful
 
 ### Backup
 
@@ -210,16 +137,6 @@ Backups are done twice a day for production and once a day for dev. You can trig
 ### Migrations
 
 In order to support the migration from Squidex to Contentful, we've set up a migration system which allows us to track our changes on a per-content type basis, and preserve the history. This is done using [contentful-migrate](https://github.com/deluan/contentful-migrate), a thin third-party wrapper around the official [contentful-migration](https://github.com/contentful/contentful-migration) tool.
-
-#### Environment Setup
-
-There are four variables which you will need to set in `.env`:
-
-- `CONTENTFUL_SPACE_ID` is the Contentful Space which migrations should be run against (the default in `.env.example` is the ASAP-HUB Space);
-- `CONTENTFUL_ENV_ID` is the Contentful Environment on which to run migrations;
-- `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN` is your access token for Contentful, you can create one in the Contentful dashboard under Account Settings > Tokens > Generate Personal Token; and
-
-If you don't understand these concepts, you will need to familiarise yourself with the [Contentful documentation](https://contentful.com/developers/docs) before writing migrations.
 
 #### Creating a New Migration
 
@@ -310,36 +227,6 @@ CONTENTFUL_MIGRATIONS_DIR=migrations/crn yarn ctf-migrate down -c <content_type>
 ```
 
 Then repeat the command without `--dry-run` if all looks good.
-
-## CMS data migration
-
-The scripts to migrate data from Squidex to Contentful live in `packages/cms-data-sync`.
-
-There will be actions to run the migration scripts on demand, but if you need to run them locally, you just need to set these variables `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN`, `CONTENTFUL_SPACE_ID`, `CONTENTFUL_ENV_ID`, `CRN_SQUIDEX_APP_NAME`, `CRN_SQUIDEX_CLIENT_ID`, `CRN_SQUIDEX_CLIENT_SECRET`, `SQUIDEX_BASE_URL` in your `.env` file and run from the root
-
-```sh
-yarn workspace @asap-hub/cms-data-sync [name-of-package.json-script]
-```
-
-For example:
-
-```sh
-yarn workspace @asap-hub/cms-data-sync migrate
-```
-
-To fetch data from squidex if you might need to run the command to auto generate the types from graphql queries depending on if you are using graphql. To do that, set these variables `SQUIDEX_BASE_URL`, `CRN_SQUIDEX_APP_NAME`, `CRN_SQUIDEX_CLIENT_ID`, `CRN_SQUIDEX_CLIENT_SECRET` in your in your `.env` file and run from the root:
-
-```sh
-yarn workspace @asap-hub/cms-data-sync schema:update:crn
-```
-
-### Syncing Squidex data to Contentful
-
-There is a GitHub Actions workflow to sync data from Squidex to Contentful.
-
-You can specify the source Squidex app and the destination Contentful env.
-
-Check [on-demand-cms-sync.yml](./.github/workflows/on-demand-cms-sync.yml) for details.
 
 ## Docker Images
 

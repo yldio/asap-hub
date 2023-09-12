@@ -2,6 +2,7 @@ import { Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
+  about,
   dashboard,
   discover,
   events,
@@ -32,12 +33,16 @@ const loadEvents = () =>
   import(/* webpackChunkName: "events" */ './events/Events');
 const loadTags = () => import(/* webpackChunkName: "tags" */ './tags/Routes');
 
+const loadAbout = () =>
+  import(/* webpackChunkName: "about" */ './about/Routes');
+
 const News = lazy(loadNews);
 const Network = lazy(loadNetwork);
 const SharedResearch = lazy(loadSharedResearch);
 const Dashboard = lazy(loadDashboard);
 const Discover = lazy(loadDiscover);
 const Events = lazy(loadEvents);
+const About = lazy(loadAbout);
 const Tags = lazy(loadTags);
 
 const AuthenticatedApp: FC<Record<string, never>> = () => {
@@ -56,6 +61,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
       .then(loadNetwork)
       .then(loadSharedResearch)
       .then(loadDiscover)
+      .then(loadAbout)
       .then(loadEvents)
       .then(loadTags);
   }, []);
@@ -118,8 +124,13 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 </Frame>
               </Route>
               <Route path={discover.template}>
-                <Frame title="Discover ASAP">
+                <Frame title="Guides & Tutorials">
                   <Discover />
+                </Frame>
+              </Route>
+              <Route path={about.template}>
+                <Frame title="About ASAP">
+                  <About />
                 </Frame>
               </Route>
               <Route path={news.template}>

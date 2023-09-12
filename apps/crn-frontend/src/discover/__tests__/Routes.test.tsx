@@ -74,7 +74,7 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
 
   mockGetTutorialById.mockResolvedValue(tutorial);
 
-  const tutorialsAnchorTab = screen.getByText(/Tutorials/i);
+  const tutorialsAnchorTab = screen.getByText(/Tutorials/i, { selector: 'p' });
   expect(tutorialsAnchorTab).toBeVisible();
 
   userEvent.click(tutorialsAnchorTab);

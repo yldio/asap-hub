@@ -1,3 +1,6 @@
+export { default as AboutPage } from './AboutPage';
+export { default as AboutPageBody } from './AboutPageBody';
+export { default as AboutPageHeader } from './AboutPageHeader';
 export { default as BasicLayout } from './BasicLayout';
 export { default as BiographyModal } from './BiographyModal';
 export { default as ContactInfoModal } from './ContactInfoModal';
@@ -5,7 +8,6 @@ export { default as ContentPage } from './ContentPage';
 export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as DashboardPageHeader } from './DashboardPageHeader';
-export { default as DiscoverAbout } from './DiscoverAbout';
 export { default as DiscoverGuides } from './DiscoverGuides';
 export { default as DiscoverPage } from './DiscoverPage';
 export { default as DiscoverPageBody } from './DiscoverPageBody';

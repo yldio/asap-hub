@@ -16,17 +16,13 @@ const loadTutorialPage = () =>
     /* webpackChunkName: "tutorials-details-page" */ './tutorials/Tutorial'
   );
 
-const loadAbout = () =>
-  import(/* webpackChunkName: "discover-about" */ './About');
-
 const Guides = lazy(loadGuides);
 const TutorialList = lazy(loadTutorialList);
 const TutorialPage = lazy(loadTutorialPage);
-const About = lazy(loadAbout);
 
 const Discover: FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadGuides().then(loadTutorialList).then(loadAbout).then(loadTutorialPage);
+    loadGuides().then(loadTutorialList).then(loadTutorialPage);
   }, []);
 
   const { path } = useRouteMatch();
@@ -54,11 +50,6 @@ const Discover: FC<Record<string, never>> = () => {
           <Route exact path={path + discover({}).tutorials.template}>
             <Frame title="Tutorials">
               <TutorialList />
-            </Frame>
-          </Route>
-          <Route exact path={path + discover({}).about.template}>
-            <Frame title="About ASAP">
-              <About />
             </Frame>
           </Route>
           <Redirect to={discover({}).guides({}).$} />

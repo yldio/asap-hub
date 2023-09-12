@@ -1,7 +1,13 @@
 import { StaticRouter } from 'react-router-dom';
 import { select } from '@storybook/addon-knobs';
 import { MainNavigation } from '@asap-hub/react-components';
-import { discover, network, news, sharedResearch } from '@asap-hub/routing';
+import {
+  about,
+  discover,
+  network,
+  news,
+  sharedResearch,
+} from '@asap-hub/routing';
 
 import { NoPaddingDecorator } from './layout';
 
@@ -18,7 +24,8 @@ export const Normal = () => {
       Network: network({}).$,
       'Shared Research': sharedResearch({}).$,
       News: news({}).$,
-      'Discover ASAP': discover({}).$,
+      'Guides & Tutorials': discover({}).$,
+      'About ASAP': about({}).$,
       None: '/none',
     },
     'network',

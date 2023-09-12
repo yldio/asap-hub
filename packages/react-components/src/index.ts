@@ -182,13 +182,15 @@ export {
   WorkingGroupsTabbedCard,
 } from './organisms';
 export {
+  AboutPage,
+  AboutPageBody,
+  AboutPageHeader,
   BasicLayout,
   BiographyModal,
   ContactInfoModal,
   ContentPage,
   DashboardPage,
   DashboardPageBody,
-  DiscoverAbout,
   DiscoverGuides,
   DiscoverPage,
   DiscoverPageBody,

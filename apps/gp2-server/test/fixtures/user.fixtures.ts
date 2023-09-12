@@ -39,6 +39,7 @@ export const getUserResponse = (): gp2Model.UserResponse => ({
       title: 'Test Project',
     },
   ],
+  projectIds: ['test-project-id'],
   workingGroups: [
     {
       id: 'test-working-group-id',
@@ -49,6 +50,7 @@ export const getUserResponse = (): gp2Model.UserResponse => ({
       title: 'Steering Committee',
     },
   ],
+  workingGroupIds: ['test-working-group-id'],
   fundingStreams: 'A funding stream',
   contributingCohorts: [
     {
@@ -69,6 +71,7 @@ export const getUserResponse = (): gp2Model.UserResponse => ({
     { id: 'keyword-1', name: 'BLAAC-PD' },
     { id: 'keyword-2', name: 'Cohort' },
   ],
+  tagIds: ['keyword-1', 'keyword-2'],
   social: {
     googleScholar: 'https://scholar.google.com',
     orcid: 'https://orcid.org',
@@ -110,10 +113,13 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
       ],
       onboarded: true,
       projects: [],
+      projectIds: [],
       workingGroups: [],
+      workingGroupIds: [],
       fundingStreams: undefined,
       contributingCohorts: [],
       tags: [],
+      tagIds: [],
       questions: [],
     },
   ],

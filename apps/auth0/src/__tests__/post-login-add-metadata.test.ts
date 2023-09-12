@@ -270,10 +270,13 @@ describe('For a GP2 login', () => {
     degrees: [],
     positions: [],
     projects: [],
+    projectIds: [],
     workingGroups: [],
+    workingGroupIds: [],
     contributingCohorts: [],
     fundingStreams: undefined,
     tags: [],
+    tagIds: [],
     questions: [],
   };
   it('adds the user metadata on successful fetch for crn', async () => {

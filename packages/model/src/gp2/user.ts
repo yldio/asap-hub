@@ -21,6 +21,7 @@ export const userDegrees = [
   'AAS',
   'BA',
   'BSc',
+  'DO',
   'MA',
   'MBA',
   'MBBS',

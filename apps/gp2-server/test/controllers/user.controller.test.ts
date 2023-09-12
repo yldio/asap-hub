@@ -8,9 +8,7 @@ import { userDataProviderMock } from '../mocks/user.data-provider.mock';
 describe('Users controller', () => {
   const userController = new Users(userDataProviderMock, assetDataProviderMock);
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
+  beforeEach(jest.resetAllMocks);
 
   describe('Fetch', () => {
     beforeEach(jest.resetAllMocks);
@@ -75,9 +73,7 @@ describe('Users controller', () => {
   });
 
   describe('FetchById', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
 
     test('Should throw when user is not found', async () => {
       userDataProviderMock.fetchById.mockResolvedValue(null);
@@ -109,9 +105,7 @@ describe('Users controller', () => {
   describe('fetchByCode', () => {
     const code = 'some-uuid-code';
 
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
 
     test('Should return the users', async () => {
       userDataProviderMock.fetch.mockResolvedValue({
@@ -158,9 +152,7 @@ describe('Users controller', () => {
   });
 
   describe('update', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
 
     test('Should return the newly updated user', async () => {
       const user = getUserDataObject();
@@ -173,9 +165,7 @@ describe('Users controller', () => {
   });
 
   describe('updateAvatar', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
+    beforeEach(jest.resetAllMocks);
 
     test('should return 200 when syncs asset and updates users profile', async () => {
       const user = getUserDataObject();

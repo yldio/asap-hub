@@ -153,6 +153,7 @@ export type ListUserDataObject = ListResponse<UserDataObject>;
 export interface UserResponse
   extends Omit<UserDataObject, 'connections' | 'lastModifiedDate'> {
   displayName: string;
+  projectIds: string[];
 }
 export type ListUserResponse = ListResponse<UserResponse>;
 export type UserMetadataResponse = UserResponse & {

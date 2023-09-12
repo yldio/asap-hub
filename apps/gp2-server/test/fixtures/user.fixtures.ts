@@ -39,6 +39,7 @@ export const getUserResponse = (): gp2Model.UserResponse => ({
       title: 'Test Project',
     },
   ],
+  projectIds: ['test-project-id'],
   workingGroups: [
     {
       id: 'test-working-group-id',

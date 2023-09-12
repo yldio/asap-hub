@@ -6,7 +6,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from '../Frame';
 
 const loadProjectList = () =>
-  import(/* webpackChunkName: "project-list" */ './ProjectList');
+  import(/* webpackChunkName: "project-list" */ './ProjectDirectory');
 const loadProjectDetail = () =>
   import(/* webpackChunkName: "project-detail" */ './ProjectDetail');
 

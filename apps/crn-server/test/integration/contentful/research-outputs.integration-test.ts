@@ -3,8 +3,9 @@ import { Express } from 'express';
 
 import { AppHelper } from '../helpers/app';
 import { retryable } from '../helpers/retryable';
-import { getEnvironment, ContentfulFixture } from '../fixtures/contentful';
+import { getEnvironment } from '../fixtures/contentful';
 import {
+  FixtureFactory,
   getUserFixture,
   UserFixture,
   getTeamFixture,
@@ -14,7 +15,7 @@ import {
 
 jest.setTimeout(120000);
 
-const fixtures = new ContentfulFixture();
+const fixtures = FixtureFactory();
 
 describe('research outputs', () => {
   let app: Express;

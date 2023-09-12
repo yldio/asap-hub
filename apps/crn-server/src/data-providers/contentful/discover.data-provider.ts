@@ -8,10 +8,10 @@ import {
 } from '@asap-hub/contentful';
 import { DiscoverDataProvider } from '../types';
 import { parseContentfulGraphQlUsers } from './user.data-provider';
-import { parseUserToResponse } from '../user.data-provider';
 import { parseContentfulGraphQlPages } from './page.data-provider';
 import { parseContentfulGraphQlTutorials } from './tutorial.data-provider';
 import reducer from '../../utils/reducer';
+import { parseUserToResponse } from '../../controllers/user.controller';
 
 type DiscoverItem = NonNullable<
   NonNullable<FetchDiscoverQuery['discoverCollection']>['items']

@@ -23,8 +23,8 @@ import {
   ResearchOutputDataProvider,
   ResearchTagDataProvider,
 } from '../data-providers/types';
-import { ExternalAuthorDataProvider } from '../data-providers/external-author.data-provider';
 import { fetchAll } from '../utils/fetch-all';
+import { ExternalAuthorDataProvider } from '../data-providers/types/external-authors.data-provider.types';
 
 export default class ResearchOutputController {
   constructor(

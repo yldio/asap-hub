@@ -64,8 +64,6 @@ import { UserContentfulDataProvider } from './data-providers/contentful/user.dat
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
 
 import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
-import { ExternalAuthorDataProvider } from './data-providers/external-author.data-provider';
-import { TeamDataProvider } from './data-providers/team.data-provider';
 import {
   AssetDataProvider,
   DashboardDataProvider,
@@ -103,6 +101,8 @@ import { workingGroupRouteFactory } from './routes/working-group.route';
 import assignUserToContext from './utils/assign-user-to-context';
 import { FeatureFlagDependencySwitch } from './utils/feature-flag';
 import pinoLogger from './utils/logger';
+import { ExternalAuthorDataProvider } from './data-providers/types/external-authors.data-provider.types';
+import { TeamDataProvider } from './data-providers/types/teams.data-provider.types';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();

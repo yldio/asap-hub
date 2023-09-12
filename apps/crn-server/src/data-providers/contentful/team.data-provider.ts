@@ -1,5 +1,4 @@
 import {
-  FetchOptions,
   LabResponse,
   ListTeamDataObject,
   TeamCreateDataObject,
@@ -24,8 +23,10 @@ import {
 } from '@asap-hub/contentful';
 
 import { isTeamRole, sortMembers } from '../transformers';
-
-import { TeamDataProvider } from '../team.data-provider';
+import {
+  FetchTeamsOptions,
+  TeamDataProvider,
+} from '../types/teams.data-provider.types';
 
 export type TeamItem = NonNullable<
   NonNullable<FetchTeamsQuery['teamsCollection']>['items'][number]
@@ -37,11 +38,6 @@ export type Membership = NonNullable<
   >['items'][number]
 >;
 
-type TeamFilter = {
-  active?: boolean;
-};
-
-export type FetchTeamsOptions = FetchOptions<TeamFilter>;
 export class TeamContentfulDataProvider implements TeamDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,

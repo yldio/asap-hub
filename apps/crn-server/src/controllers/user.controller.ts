@@ -2,13 +2,13 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import {
   FetchUsersOptions,
   ListUserResponse,
+  UserDataObject,
   UserResponse,
   UserUpdateDataObject,
   UserUpdateRequest,
 } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
-import { parseUserToResponse } from '../data-providers/user.data-provider';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import logger from '../utils/logger';
 
@@ -131,3 +131,18 @@ export default class UserController {
     });
   }
 }
+
+export const parseUserToResponse = ({
+  connections: _,
+  ...user
+}: UserDataObject): UserResponse => {
+  const displayName = `${user.firstName} ${user.lastName}`;
+  const onboarded = typeof user.onboarded === 'boolean' ? user.onboarded : true;
+  const dismissedGettingStarted = !!user.dismissedGettingStarted;
+  return {
+    ...user,
+    displayName,
+    dismissedGettingStarted,
+    onboarded,
+  };
+};

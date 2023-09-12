@@ -1,4 +1,6 @@
+import { Frame } from '@asap-hub/frontend-utils';
 import { ProjectsBody } from '@asap-hub/gp2-components';
+import { ProjectPageList } from '@asap-hub/gp2-components/build/templates';
 import { gp2 } from '@asap-hub/model';
 import { FC } from 'react';
 import { useSearch } from '../hooks';
@@ -39,17 +41,23 @@ const ProjectList: FC<Record<string, never>> = () => {
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
 
   return (
-    <ProjectsBody
-      numberOfItems={total}
-      numberOfPages={numberOfPages}
-      currentPageIndex={currentPage}
-      renderPageHref={renderPageHref}
-      projects={items}
+    <ProjectPageList
       searchQuery={searchQuery}
       onChangeSearch={setSearchQuery}
       filters={filterSet}
       onChangeFilter={onChangeFilter}
-    />
+      hasProjects={!!total}
+    >
+      <Frame title="Outputs List">
+        <ProjectsBody
+          numberOfItems={total}
+          numberOfPages={numberOfPages}
+          currentPageIndex={currentPage}
+          renderPageHref={renderPageHref}
+          projects={items}
+        />
+      </Frame>
+    </ProjectPageList>
   );
 };
 

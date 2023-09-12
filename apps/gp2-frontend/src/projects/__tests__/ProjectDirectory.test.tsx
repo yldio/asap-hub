@@ -17,7 +17,7 @@ import {
 } from '../../__fixtures__/algolia';
 import { getAlgoliaProjects } from '../api';
 import { projectsState } from '../state';
-import ProjectList from '../ProjectList';
+import ProjectDirectory from '../ProjectDirectory';
 import { PAGE_SIZE } from '../../hooks';
 
 jest.mock('../api');
@@ -49,7 +49,7 @@ const renderProjectsList = async (searchQuery = '') => {
           <WhenReady>
             <MemoryRouter initialEntries={[gp2Routing.projects({}).$]}>
               <Route path={gp2Routing.projects.template}>
-                <ProjectList />
+                <ProjectDirectory />
               </Route>
             </MemoryRouter>
           </WhenReady>

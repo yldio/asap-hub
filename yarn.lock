@@ -972,7 +972,6 @@ __metadata:
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/server-common": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
-    "@asap-hub/squidex": "workspace:*"
     "@asap-hub/validation": "workspace:*"
     "@aws-sdk/client-eventbridge": ^3.306.0
     "@aws-sdk/client-ses": ^3.306.0
@@ -981,17 +980,6 @@ __metadata:
     "@babel/preset-typescript": 7.22.11
     "@babel/register": 7.22.5
     "@babel/runtime-corejs3": 7.22.11
-    "@graphql-codegen/cli": 2.16.5
-    "@graphql-codegen/gql-tag-operations-preset": 1.7.4
-    "@graphql-codegen/introspection": 2.2.3
-    "@graphql-codegen/schema-ast": 2.6.1
-    "@graphql-codegen/typescript": 2.8.8
-    "@graphql-codegen/typescript-operations": 2.5.13
-    "@graphql-tools/graphql-file-loader": 7.5.17
-    "@graphql-tools/load": 7.8.14
-    "@graphql-tools/mock": 8.7.20
-    "@graphql-tools/schema": 9.0.19
-    "@graphql-typed-document-node/core": 3.2.0
     "@hapi/boom": 9.1.4
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
@@ -1053,7 +1041,6 @@ __metadata:
     got: 11.8.6
     graphql: 15.8.0
     graphql-tag: 2.12.6
-    graphql-typescript-integration: 1.2.1
     jest-when: 3.5.2
     jsonwebtoken: 9.0.0
     jwt-decode: 2.2.0

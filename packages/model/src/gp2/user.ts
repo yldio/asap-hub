@@ -154,6 +154,8 @@ export interface UserResponse
   extends Omit<UserDataObject, 'connections' | 'lastModifiedDate'> {
   displayName: string;
   projectIds: string[];
+  workingGroupIds: string[];
+  tagIds: string[];
 }
 export type ListUserResponse = ListResponse<UserResponse>;
 export type UserMetadataResponse = UserResponse & {

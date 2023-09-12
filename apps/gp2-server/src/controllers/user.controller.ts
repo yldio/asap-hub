@@ -119,4 +119,6 @@ const parseUserToResponse = (
   displayName: `${user.firstName} ${user.lastName}`,
   ...(user.id === loggedInUserId && { telephone }),
   projectIds: user.projects.map(({ id }) => id),
+  workingGroupIds: user.workingGroups.map(({ id }) => id),
+  tagIds: user.tags.map(({ id }) => id),
 });

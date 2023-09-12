@@ -6,7 +6,7 @@ import { FixtureFactory, getUserFixture, UserFixture } from '../fixtures';
 
 jest.setTimeout(120000);
 
-const fixtures = FixtureFactory(process.env.INTEGRATION_TEST_CMS);
+const fixtures = FixtureFactory();
 
 describe('research tags', () => {
   let app: Express;

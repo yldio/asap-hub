@@ -5,8 +5,6 @@ import { UserFixture } from '../fixtures';
 
 jest.mock('../../../src/config', () => ({
   ...jest.requireActual('../../../src/config'),
-  isContentfulEnabled:
-    process.env.INTEGRATION_TEST_CMS === 'contentful' ? 'true' : undefined,
   logLevel: process.env.TEST_LOG_LEVEL || 'error',
 }));
 

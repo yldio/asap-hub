@@ -2,7 +2,7 @@ import { OrcidWork } from '@asap-hub/model';
 import Got from 'got';
 import get from 'lodash.get';
 
-export type CMSOrcidWork = OrcidWork;
+type CMSOrcidWork = OrcidWork;
 
 interface ORCIDExternalId {
   'external-id-type': string;

@@ -1,4 +1,5 @@
 import { gp2 } from '@asap-hub/model';
+import { AlgoliaClient } from '@asap-hub/algolia';
 import { GetListOptions, createSentryHeaders } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../config';
 import createListApiUrl from '../CreateListApiUrl';
@@ -17,6 +18,20 @@ export const getNews = async (
   }
   return resp.json();
 };
+
+export type NewsListOptions = GetListOptions;
+export const getAlgoliaNews = async (
+  client: AlgoliaClient<'gp2'>,
+  options: NewsListOptions,
+) =>
+  client
+    .search(['news'], options.searchQuery, {
+      page: options.currentPage ?? 0,
+      hitsPerPage: options.pageSize ?? 10,
+    })
+    .catch((error: Error) => {
+      throw new Error(`Could not search: ${error.message}`);
+    });
 
 export const getNewsById = async (
   id: string,

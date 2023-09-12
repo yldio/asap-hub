@@ -112,7 +112,7 @@ The [`docs`](docs) folder contains overall architecture / decision documentation
 
 ### Schema changes and graphql
 
-The graphql schema, and associated types are generated automatically by Contentful. When you make changes to graphql queries, or to the content models in Contentful you will need to regenerate the schema documents. Youcan do this by running the following command:
+The graphql schema, and associated types are generated automatically by Contentful. When you make changes to graphql queries, or to the content models in Contentful you will need to regenerate the schema documents. You can do this by running the following command:
 
 ```sh
 yarn contentful:schema:update

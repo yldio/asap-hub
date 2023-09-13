@@ -70,6 +70,7 @@ export const contentfulHandlerFactory =
     const fetchEntryById = async () => {
       try {
         const entry = await cdaClient.getEntry(detail.resourceId);
+        logger.debug(JSON.stringify(entry));
         return entry;
       } catch (error) {
         if (

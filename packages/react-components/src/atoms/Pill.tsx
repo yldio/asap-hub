@@ -6,7 +6,9 @@ import { lineHeight, perRem } from '../pixels';
 
 const borderWidth = 1;
 const styles = css({
-  display: 'inline-block',
+  display: 'flex',
+  alignItems: 'center',
+  width: 'fit-content',
   boxSizing: 'border-box',
   height: lineHeight,
   margin: `${12 / perRem}em 0`,

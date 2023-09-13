@@ -1,6 +1,5 @@
 import { Frame } from '@asap-hub/frontend-utils';
 import { ProjectPageList, ProjectsBody } from '@asap-hub/gp2-components';
-// import { ProjectPageList } from '@asap-hub/gp2-components/build/templates';
 import { gp2 } from '@asap-hub/model';
 import { FC } from 'react';
 import { useSearch } from '../hooks';
@@ -48,7 +47,7 @@ const ProjectList: FC<Record<string, never>> = () => {
       onChangeFilter={onChangeFilter}
       hasProjects={!!total}
     >
-      <Frame title="Outputs List">
+      <Frame title="Project List">
         <ProjectsBody
           numberOfItems={total}
           numberOfPages={numberOfPages}

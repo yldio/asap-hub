@@ -1,4 +1,4 @@
-import { GroupEvent } from '@asap-hub/model';
+import { InterestGroupEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { InterestGroupPayload } from '../../../src/handlers/event-bus';
@@ -17,12 +17,15 @@ const mapPayload = toPayload('event');
 
 const possibleEvents: [
   string,
-  EventBridgeEvent<GroupEvent, InterestGroupPayload>,
+  EventBridgeEvent<InterestGroupEvent, InterestGroupPayload>,
 ][] = [
-  ['created', getInterestGroupEvent('group-id', 'GroupsCreated')],
-  ['updated', getInterestGroupEvent('group-id', 'GroupsUpdated')],
-  ['unpublished', getInterestGroupEvent('group-id', 'GroupsUnpublished')],
-  ['deleted', getInterestGroupEvent('group-id', 'GroupsDeleted')],
+  ['created', getInterestGroupEvent('group-id', 'InterestGroupsCreated')],
+  ['updated', getInterestGroupEvent('group-id', 'InterestGroupsUpdated')],
+  [
+    'unpublished',
+    getInterestGroupEvent('group-id', 'InterestGroupsUnpublished'),
+  ],
+  ['deleted', getInterestGroupEvent('group-id', 'InterestGroupsDeleted')],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -37,7 +40,7 @@ describe('Index Events on Group event handler', () => {
     eventControllerMock.fetch.mockRejectedValue(Boom.badData());
 
     await expect(
-      indexHandler(getInterestGroupEvent('group-id', 'GroupsCreated')),
+      indexHandler(getInterestGroupEvent('group-id', 'InterestGroupsCreated')),
     ).rejects.toThrow(Boom.badData());
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
   });
@@ -50,7 +53,7 @@ describe('Index Events on Group event handler', () => {
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
     await expect(
-      indexHandler(getInterestGroupEvent('group-id', 'GroupsUpdated')),
+      indexHandler(getInterestGroupEvent('group-id', 'InterestGroupsUpdated')),
     ).rejects.toThrow(algoliaError);
   });
 
@@ -76,7 +79,9 @@ describe('Index Events on Group event handler', () => {
       ],
     });
 
-    await indexHandler(getInterestGroupEvent('group-id', 'GroupsPublished'));
+    await indexHandler(
+      getInterestGroupEvent('group-id', 'InterestGroupsPublished'),
+    );
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
       {

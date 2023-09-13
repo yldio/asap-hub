@@ -12,19 +12,17 @@ import {
   ResearchOutputUpdateDataObject,
   WebhookDetail,
 } from '@asap-hub/model';
-import { ResearchOutputsContentFragment } from '@asap-hub/contentful';
 import {
-  InputResearchOutput,
-  ResearchOutput,
-  Rest,
-  SquidexWebhookPayload,
-} from '@asap-hub/squidex';
+  ContentfulWebhookPayload,
+  ResearchOutputsContentFragment,
+} from '@asap-hub/contentful';
 import {
   ResearchOutputCreateData,
   ResearchOutputUpdateData,
 } from '../../src/controllers/research-output.controller';
-import { createEventBridgeEventMock } from '../helpers/events';
 import { fetchExpectation } from './users.fixtures';
+import { EventBridgeEvent } from 'aws-lambda';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getResearchOutputDataObject =
   (): ResearchOutputPublishedDataObject => ({
@@ -136,49 +134,6 @@ export const getListResearchOutputResponse = ({
   items: [getResearchOutputResponse()],
 });
 
-export const getResearchOutputWebhookPayload = (
-  id: string,
-  type: ResearchOutputEvent,
-): WebhookDetail<SquidexWebhookPayload<ResearchOutput>> => ({
-  type,
-  timestamp: '2021-02-15T13:11:25Z',
-  resourceId: id,
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: '',
-    id,
-    created: '2020-07-31T14:11:58Z',
-    lastModified: '2020-07-31T15:49:41Z',
-    version: 42,
-    data: {
-      documentType: { iv: 'Article' },
-      title: { iv: 'Research Output' },
-      description: { iv: 'Description' },
-      sharingStatus: { iv: 'Network Only' },
-      asapFunded: { iv: 'Not Sure' },
-      usedInAPublication: { iv: 'Not Sure' },
-    } as Rest<ResearchOutput>['data'],
-    dataOld: {
-      documentType: { iv: 'Article' },
-      title: { iv: 'Research Output' },
-      description: { iv: 'Description' },
-      sharingStatus: { iv: 'Network Only' },
-      asapFunded: { iv: 'Not Sure' },
-      usedInAPublication: { iv: 'Not Sure' },
-    } as Rest<ResearchOutput>['data'],
-  },
-});
-
-export const getResearchOutputEvent = (
-  id: string,
-  eventType: ResearchOutputEvent,
-) =>
-  createEventBridgeEventMock(
-    getResearchOutputWebhookPayload(id, eventType),
-    eventType,
-    id,
-  );
-
 export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
   const {
     id: _,
@@ -283,81 +238,10 @@ export const getResearchOutputUpdateDataObject =
     };
   };
 
-export const getRestResearchOutputCreateData =
-  (): InputResearchOutput['data'] => ({
-    documentType: { iv: 'Bioinformatics' },
-    link: { iv: 'http://a.link' },
-    title: { iv: 'Test Proposal 1234' },
-    asapFunded: { iv: 'Yes' },
-    sharingStatus: { iv: 'Network Only' },
-    addedDate: { iv: '2021-05-21T13:18:31Z' },
-    publishDate: { iv: '2021-05-21T13:18:31Z' },
-    description: { iv: '<p>Text</p>' },
-    descriptionMD: { iv: 'Text MD' },
-    methods: {
-      iv: ['ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca'],
-    },
-    organisms: {
-      iv: ['d77a7607-7b9a-4ef1-99ee-c389b33ea95b'],
-    },
-    environments: {
-      iv: ['8a936e45-6d5e-42a6-8acd-b849ab10f3f8'],
-    },
-    subtype: {
-      iv: ['dd0da578-5573-4758-b1db-43a078f5076e'],
-    },
-    keywords: {
-      iv: ['0368cc55-b2cb-484f-8f25-c1e37975ff32'],
-    },
-    type: { iv: 'Software' },
-    labs: {
-      iv: [
-        '99c78dd7-627e-4fbd-aaec-d1977895189e',
-        'cd7be402-84d7-4d21-a360-82e2695f2dd9',
-      ],
-    },
-    teams: {
-      iv: ['team-id-0'],
-    },
-    relatedResearch: {
-      iv: ['related-research-id-0', 'related-referencing-research-id'],
-    },
-    relatedEvents: {
-      iv: ['related-event-id-0'],
-    },
-    authors: { iv: ['user-id-1', 'user-id-2'] },
-    createdBy: { iv: ['userId'] },
-    updatedBy: { iv: ['userId'] },
-    usedInAPublication: { iv: 'No' },
-    doi: { iv: null },
-    accession: { iv: null },
-    rrid: { iv: 'RRID:AB_90755' },
-    labCatalogNumber: {
-      iv: 'http://example.com',
-    },
-    usageNotes: {
-      iv: 'some access instructions',
-    },
-    workingGroups: { iv: [] },
-    isInReview: { iv: false },
-  });
-
 export const getResearchOutputUpdateData = (): ResearchOutputUpdateData => ({
   ...getResearchOutputPutRequest(),
   updatedBy: 'userId',
 });
-
-export const getRestResearchOutputUpdateData =
-  (): InputResearchOutput['data'] => {
-    const { createdBy: _, ...restResearchOutputData } =
-      getRestResearchOutputCreateData();
-    return {
-      doi: { iv: null },
-      accession: { iv: null },
-      rrid: { iv: null },
-      ...restResearchOutputData,
-    };
-  };
 
 export const getContentfulResearchOutputGraphqlResponse =
   (): ResearchOutputsContentFragment => ({
@@ -546,3 +430,68 @@ export const getContentfulResearchOutputGraphqlResponse =
     },
     workingGroup: null,
   });
+
+export const getResearchOutputContentfulWebhookDetail = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'researchOutputs'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'crn-3046',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'researchOutputs',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {},
+});
+
+export const getResearchOutputEvent = (
+  id: string,
+  eventType: ResearchOutputEvent,
+): EventBridgeEvent<
+  ResearchOutputEvent,
+  WebhookDetail<ContentfulWebhookPayload<'researchOutputs'>>
+> =>
+  createEventBridgeEventMock(
+    getResearchOutputContentfulWebhookDetail(id),
+    eventType,
+    id,
+  );

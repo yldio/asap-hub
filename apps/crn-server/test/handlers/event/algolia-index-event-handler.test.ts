@@ -4,7 +4,6 @@ import { indexEventHandler } from '../../../src/handlers/event/algolia-index-eve
 import {
   getEventContentfulEvent,
   getEventResponse,
-  getEventSquidexEvent,
 } from '../../fixtures/events.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
@@ -18,21 +17,6 @@ describe('Event index handler', () => {
   );
 
   afterEach(() => jest.clearAllMocks());
-
-  test('Should fetch the event and create a record in Algolia when the event is created in Squidex', async () => {
-    const event = createEventSquidex();
-    const eventResponse = getEventResponse();
-    eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
-
-    await indexHandler(event);
-    expect(eventControllerMock.fetchById).toHaveBeenCalledWith(
-      event.detail.resourceId,
-    );
-    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: eventResponse,
-      type: 'event',
-    });
-  });
 
   test('Should fetch the external author and create a record in Algolia when the external author is created in Contentful', async () => {
     const event = createEventContentful();
@@ -73,20 +57,8 @@ describe('Event index handler', () => {
     );
   });
 
-  test('Should fetch the event and remove the record in Algolia when event is deleted in Squidex', async () => {
-    const event = deleteEventSquidex();
-
-    eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
-
-    await indexHandler(event);
-
-    expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-      event.detail.resourceId,
-    );
-  });
-
   test('Should fetch the event and remove the record in Algolia when controller throws NotFoundError', async () => {
-    const event = deleteEventSquidex();
+    const event = deleteEventContentful();
 
     eventControllerMock.fetchById.mockRejectedValue(
       new NotFoundError(undefined, 'not found'),
@@ -126,7 +98,7 @@ describe('Event index handler', () => {
   test('Should throw an error and do not trigger algolia when the event request fails with another error code', async () => {
     eventControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
-    await expect(indexHandler(createEventSquidex())).rejects.toThrow(
+    await expect(indexHandler(createEventContentful())).rejects.toThrow(
       Boom.badData(),
     );
     expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
@@ -148,7 +120,7 @@ describe('Event index handler', () => {
 
     algoliaSearchClientMock.remove.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(deleteEventSquidex())).rejects.toThrow(
+    await expect(indexHandler(deleteEventContentful())).rejects.toThrow(
       algoliaError,
     );
   });
@@ -165,7 +137,7 @@ describe('Event index handler', () => {
         ...eventResponse.data,
       });
 
-      await indexHandler(createEventSquidex(eventId));
+      await indexHandler(createEventContentful(eventId));
       await indexHandler(updateEvent(eventId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
@@ -183,7 +155,7 @@ describe('Event index handler', () => {
       eventControllerMock.fetchById.mockResolvedValue(eventResponse.data);
 
       await indexHandler(updateEvent(eventId));
-      await indexHandler(createEventSquidex(eventId));
+      await indexHandler(createEventContentful(eventId));
 
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
@@ -192,7 +164,7 @@ describe('Event index handler', () => {
 
     test('receives the events created and unpublished in correct order', async () => {
       const eventId = 'event-1234';
-      const createEv = createEventSquidex(eventId);
+      const createEv = createEventContentful(eventId);
       const unpublishedEv = unpublishedEvent(eventId);
       const algoliaError = new Error('ERROR');
 
@@ -212,7 +184,7 @@ describe('Event index handler', () => {
 
     test('receives the events created and unpublished in reverse order', async () => {
       const eventId = 'event-1234';
-      const createEv = createEventSquidex(eventId);
+      const createEv = createEventContentful(eventId);
       const unpublishedEv = unpublishedEvent(eventId);
       const algoliaError = new Error('ERROR');
 
@@ -232,8 +204,8 @@ describe('Event index handler', () => {
 
     test('receives the events created and deleted in correct order', async () => {
       const eventId = 'event-1234';
-      const createEv = createEventSquidex(eventId);
-      const deleteEv = deleteEventSquidex(eventId);
+      const createEv = createEventContentful(eventId);
+      const deleteEv = deleteEventContentful(eventId);
       const algoliaError = new Error('ERROR');
 
       eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -252,8 +224,8 @@ describe('Event index handler', () => {
 
     test('receives the events created and deleted in reverse order', async () => {
       const eventId = 'event-1234';
-      const createEv = createEventSquidex(eventId);
-      const deleteEv = deleteEventSquidex(eventId);
+      const createEv = createEventContentful(eventId);
+      const deleteEv = deleteEventContentful(eventId);
       const algoliaError = new Error('ERROR');
 
       eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -273,7 +245,7 @@ describe('Event index handler', () => {
     test('receives the events updated and deleted in correct order', async () => {
       const eventId = 'event-1234';
       const updateEv = updateEvent(eventId);
-      const deleteEv = deleteEventSquidex(eventId);
+      const deleteEv = deleteEventContentful(eventId);
       const algoliaError = new Error('ERROR');
 
       eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -293,7 +265,7 @@ describe('Event index handler', () => {
     test('receives the events updated and deleted in reverse order', async () => {
       const eventId = 'event-1234';
       const updateEv = updateEvent(eventId);
-      const deleteEv = deleteEventSquidex(eventId);
+      const deleteEv = deleteEventContentful(eventId);
       const algoliaError = new Error('ERROR');
 
       eventControllerMock.fetchById.mockRejectedValue(Boom.notFound());
@@ -352,19 +324,13 @@ describe('Event index handler', () => {
 });
 
 const unpublishedEvent = (id: string = 'event-1234') =>
-  getEventSquidexEvent(id, 'EventsUnpublished');
-
-const deleteEventSquidex = (id: string = 'event-1234') =>
-  getEventSquidexEvent(id, 'EventsDeleted');
+  getEventContentfulEvent(id, 'EventsUnpublished');
 
 const deleteEventContentful = (id: string = 'event-1234') =>
   getEventContentfulEvent(id, 'EventsDeleted');
-
-const createEventSquidex = (id: string = 'event-1234') =>
-  getEventSquidexEvent(id, 'EventsPublished');
 
 const createEventContentful = (id: string = 'event-1234') =>
   getEventContentfulEvent(id, 'EventsPublished');
 
 const updateEvent = (id: string = 'event-1234') =>
-  getEventSquidexEvent(id, 'EventsUpdated');
+  getEventContentfulEvent(id, 'EventsUpdated');

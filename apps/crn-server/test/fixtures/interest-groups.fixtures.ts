@@ -1,19 +1,19 @@
-import { FetchInterestGroupByIdQuery } from '@asap-hub/contentful';
+import {
+  ContentfulWebhookPayload,
+  FetchInterestGroupByIdQuery,
+} from '@asap-hub/contentful';
 import {
   InterestGroupDataObject,
   InterestGroupResponse,
   InterestGroupLeader,
   ListInterestGroupResponse,
-  GroupEvent,
+  InterestGroupEvent,
+  WebhookDetail,
 } from '@asap-hub/model';
-import { RestInterestGroup } from '@asap-hub/squidex';
 import { EventBridgeEvent } from 'aws-lambda';
 import { appName, baseUrl } from '../../src/config';
-import { InterestGroupPayload } from '../../src/handlers/event-bus';
 import { createEventBridgeEventMock } from '../helpers/events';
-import {
-  getContentfulGraphqlTeam,
-} from './teams.fixtures';
+import { getContentfulGraphqlTeam } from './teams.fixtures';
 
 export const queryInterestGroupsResponse = {
   data: {
@@ -317,34 +317,6 @@ export const getListInterestGroupResponse = (): ListInterestGroupResponse => ({
   items: [getInterestGroupResponse()],
 });
 
-export const getInterestGroupPayload = (
-  id: string,
-  type: GroupEvent,
-): InterestGroupPayload => ({
-  type,
-  timestamp: '2020-12-11T15:06:26Z',
-  resourceId: id,
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: 'Updated',
-    id,
-    created: '2020-12-11T14:33:50Z',
-    lastModified: '2020-12-11T15:06:26Z',
-    version: 42,
-    data: {} as RestInterestGroup['data'],
-  },
-});
-
-export const getInterestGroupEvent = (
-  id: string,
-  eventType: GroupEvent,
-): EventBridgeEvent<GroupEvent, InterestGroupPayload> =>
-  createEventBridgeEventMock(
-    getInterestGroupPayload(id, eventType),
-    eventType,
-    id,
-  );
-
 export const getInterestGroupDataObject = (): InterestGroupDataObject => ({
   id: 'group-id-1',
   active: true,
@@ -482,3 +454,68 @@ export const getContentfulGraphqlInterestGroup = (): NonNullable<
   },
   lastUpdated: '2020-12-11T15:06:26.000Z',
 });
+
+export const getInterestGroupContentfulWebhookDetail = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'interestGroups'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'crn-3046',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'interestGroups',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {},
+});
+
+export const getInterestGroupEvent = (
+  id: string,
+  eventType: InterestGroupEvent,
+): EventBridgeEvent<
+  InterestGroupEvent,
+  WebhookDetail<ContentfulWebhookPayload<'interestGroups'>>
+> =>
+  createEventBridgeEventMock(
+    getInterestGroupContentfulWebhookDetail(id),
+    eventType,
+    id,
+  );

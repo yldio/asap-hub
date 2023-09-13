@@ -1,10 +1,6 @@
-import { TeamEvent } from '@asap-hub/model';
-import { EventBridgeEvent } from 'aws-lambda';
-import { TeamPayload } from '../../../src/handlers/event-bus';
 import { indexResearchOutputByTeamHandler } from '../../../src/handlers/teams/algolia-index-team-research-outputs-handler';
 import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
-import { getTeamsEvent } from '../../fixtures/teams.fixtures';
-import { createEventBridgeEventMock } from '../../helpers/events';
+import { getTeamUpdateEvent } from '../../fixtures/teams.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { researchOutputControllerMock } from '../../mocks/research-output.controller.mock';
 
@@ -31,7 +27,7 @@ describe('Team Research Outputs Index', () => {
       items,
     });
 
-    const updateEvent = getEvent();
+    const updateEvent = getTeamUpdateEvent('teamId');
 
     await indexHandler(updateEvent);
 
@@ -49,13 +45,13 @@ describe('Team Research Outputs Index', () => {
     );
   });
 
-  test('Should not trigger algolia save when there are no research outputs associated with the team', async () => {
+  test('Should not trigger algolia save when there are no research outputs associated with the team that has been updated', async () => {
     researchOutputControllerMock.fetch.mockResolvedValueOnce({
       total: 0,
       items: [],
     });
 
-    const updateEvent = getEvent();
+    const updateEvent = getTeamUpdateEvent('teamId');
 
     await indexHandler(updateEvent);
 
@@ -68,9 +64,3 @@ describe('Team Research Outputs Index', () => {
     expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
   });
 });
-
-const getEvent = (): EventBridgeEvent<TeamEvent, TeamPayload> =>
-  createEventBridgeEventMock(
-    getTeamsEvent('TeamsPublished', 'TeamsPublished'),
-    'TeamsPublished',
-  );

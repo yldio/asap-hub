@@ -22,7 +22,7 @@ describe('User index handler', () => {
 
     await indexHandler(event);
     expect(userControllerMock.fetchById).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
     );
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: userResponse,
@@ -78,7 +78,7 @@ describe('User index handler', () => {
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
     );
   });
 
@@ -92,7 +92,7 @@ describe('User index handler', () => {
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
     );
   });
 
@@ -104,7 +104,7 @@ describe('User index handler', () => {
     await indexHandler(event);
 
     expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
     );
   });
 
@@ -193,7 +193,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        unpublishedEv.detail.payload.id,
+        unpublishedEv.detail.resourceId,
       );
     });
 
@@ -213,7 +213,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        unpublishedEv.detail.payload.id,
+        unpublishedEv.detail.resourceId,
       );
     });
 
@@ -233,7 +233,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        deleteEv.detail.payload.id,
+        deleteEv.detail.resourceId,
       );
     });
 
@@ -253,7 +253,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        deleteEv.detail.payload.id,
+        deleteEv.detail.resourceId,
       );
     });
 
@@ -273,7 +273,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        deleteEv.detail.payload.id,
+        deleteEv.detail.resourceId,
       );
     });
 
@@ -293,7 +293,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        deleteEv.detail.payload.id,
+        deleteEv.detail.resourceId,
       );
     });
     test('receives the events updated and unpublished in correct order', async () => {
@@ -312,7 +312,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        unpublishedEv.detail.payload.id,
+        unpublishedEv.detail.resourceId,
       );
     });
 
@@ -332,7 +332,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.save).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.remove).toHaveBeenCalledWith(
-        unpublishedEv.detail.payload.id,
+        unpublishedEv.detail.resourceId,
       );
     });
   });

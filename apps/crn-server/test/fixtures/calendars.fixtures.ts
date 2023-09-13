@@ -2,13 +2,10 @@ import { FetchCalendarsQuery as ContentfulFetchCalendarsQuery } from '@asap-hub/
 import {
   CalendarCreateDataObject,
   CalendarDataObject,
-  CalendarEvent,
   CalendarResponse,
   ListCalendarDataObject,
   ListCalendarResponse,
 } from '@asap-hub/model';
-import { CalendarPayload } from '@asap-hub/server-common';
-import { RestCalendar } from '@asap-hub/squidex';
 
 export const getContentfulGraphqlCalendar = (): NonNullable<
   NonNullable<
@@ -102,21 +99,6 @@ export const getListCalendarResponse = (): ListCalendarResponse => ({
   total: 1,
 });
 
-export const getRestCalendar = (): RestCalendar => ({
-  id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-  data: {
-    googleCalendarId: { iv: '3@group.calendar.google.com' },
-    color: { iv: '#2952A3' },
-    name: { iv: 'Tech 4a - iPSCs - 3D & Co-cultures' },
-    resourceId: { iv: 'resource-id' },
-    syncToken: { iv: 'sync-token' },
-    expirationDate: { iv: 1617196357000 },
-  },
-  created: '2021-01-07T16:44:09Z',
-  lastModified: '2021-01-07T16:44:09Z',
-  version: 42,
-});
-
 export const calendarsListRestResponse = () => [
   {
     id: 'cms-calendar-id-1',
@@ -139,25 +121,3 @@ export const calendarsListRestResponse = () => [
     version: 42,
   },
 ];
-
-export const getCalendarWebhookEvent = (
-  type: CalendarEvent,
-): CalendarPayload => ({
-  type,
-  timestamp: '2021-01-07T16:44:09Z',
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: 'Updated',
-    id: 'b57f3aed-9f07-49a6-a1c7-cc4948a3764f',
-    data: getRestCalendar().data,
-    version: 42,
-    created: '2021-01-07T16:44:09Z',
-    lastModified: '2021-01-07T16:44:09Z',
-  },
-});
-
-export const getCalendarUpdatedWebhookEvent = (): CalendarPayload =>
-  getCalendarWebhookEvent('CalendarsUpdated');
-
-export const getCalendarPublishedWebhookEvent = (): CalendarPayload =>
-  getCalendarWebhookEvent('CalendarsPublished');

@@ -7,11 +7,11 @@ import {
 import { toPayload } from '../../helpers/algolia';
 
 import {
-  createEvent,
-  deleteEvent,
+  getTeamCreateEvent,
+  getTeamDeleteEvent,
   TeamEventGenerator,
-  unpublishedEvent,
-  updateEvent,
+  getTeamUnpublishedEvent,
+  getTeamUpdateEvent,
 } from '../../fixtures/teams.fixtures';
 
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
@@ -23,10 +23,10 @@ const mapPayload = toPayload('user');
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 
 const possibleEvents: [string, TeamEventGenerator][] = [
-  ['created', createEvent],
-  ['updated', updateEvent],
-  ['unpublished', unpublishedEvent],
-  ['deleted', deleteEvent],
+  ['created', getTeamCreateEvent],
+  ['updated', getTeamUpdateEvent],
+  ['unpublished', getTeamUnpublishedEvent],
+  ['deleted', getTeamDeleteEvent],
 ];
 
 const possibleRacingConditionEvents: [
@@ -34,20 +34,20 @@ const possibleRacingConditionEvents: [
   TeamEventGenerator,
   TeamEventGenerator,
 ][] = [
-  ['created and updated', createEvent, updateEvent],
-  ['updated and created', updateEvent, createEvent],
+  ['created and updated', getTeamCreateEvent, getTeamUpdateEvent],
+  ['updated and created', getTeamUpdateEvent, getTeamCreateEvent],
 
-  ['created and unpublished', createEvent, unpublishedEvent],
-  ['unpublished and created', unpublishedEvent, createEvent],
+  ['created and unpublished', getTeamCreateEvent, getTeamUnpublishedEvent],
+  ['unpublished and created', getTeamUnpublishedEvent, getTeamCreateEvent],
 
-  ['created and deleted', createEvent, deleteEvent],
-  ['deleted and created', deleteEvent, createEvent],
+  ['created and deleted', getTeamCreateEvent, getTeamDeleteEvent],
+  ['deleted and created', getTeamDeleteEvent, getTeamCreateEvent],
 
-  ['updated and deleted', updateEvent, deleteEvent],
-  ['deleted and updated', deleteEvent, updateEvent],
+  ['updated and deleted', getTeamUpdateEvent, getTeamDeleteEvent],
+  ['deleted and updated', getTeamDeleteEvent, getTeamUpdateEvent],
 
-  ['updated and unpublished', updateEvent, unpublishedEvent],
-  ['unpublished and updated', unpublishedEvent, updateEvent],
+  ['updated and unpublished', getTeamUpdateEvent, getTeamUnpublishedEvent],
+  ['unpublished and updated', getTeamUnpublishedEvent, getTeamUpdateEvent],
 ];
 
 describe('Index Users on Team event handler', () => {
@@ -60,7 +60,7 @@ describe('Index Users on Team event handler', () => {
   test('Should throw an error and do not trigger algolia when the team request fails with another error code', async () => {
     userControllerMock.fetch.mockRejectedValue(Boom.badData());
 
-    await expect(indexHandler(createEvent('team-1234'))).rejects.toThrow(
+    await expect(indexHandler(getTeamCreateEvent('team-1234'))).rejects.toThrow(
       Boom.badData(),
     );
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
@@ -72,7 +72,7 @@ describe('Index Users on Team event handler', () => {
     userControllerMock.fetch.mockResolvedValueOnce(getListUserResponse());
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(updateEvent('team-1234'))).rejects.toThrow(
+    await expect(indexHandler(getTeamUpdateEvent('team-1234'))).rejects.toThrow(
       algoliaError,
     );
   });
@@ -87,7 +87,7 @@ describe('Index Users on Team event handler', () => {
       ],
     });
 
-    await indexHandler(updateEvent('lab-1234'));
+    await indexHandler(getTeamUpdateEvent('lab-1234'));
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
       mapPayload(getUserResponse()),

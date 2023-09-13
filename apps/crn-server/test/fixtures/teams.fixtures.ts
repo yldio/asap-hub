@@ -1,4 +1,5 @@
 import {
+  ContentfulWebhookPayload,
   ContentfulWebhookPublishPayload,
   ContentfulWebhookUnpublishPayload,
   FetchTeamsQuery as ContentfulFetchTeamsQuery,
@@ -9,6 +10,7 @@ import {
   TeamDataObject,
   TeamEvent,
   TeamResponse,
+  WebhookDetail,
 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { TeamPayload } from '../../src/handlers/event-bus';
@@ -139,85 +141,82 @@ export const getTeamDataObject = (): TeamDataObject => ({
 
 export const getTeamResponse = (): TeamResponse => getTeamDataObject();
 
-export const getTeamsEvent = (
-  eventType: string,
-  eventName: TeamEvent,
-  data = {
-    displayName: { iv: 'Team 1' },
-    applicationNumber: { iv: '12345' },
-    expertiseAndResourceTags: { iv: [] },
-    proposal: { iv: [] },
-    projectTitle: { iv: 'Team Project' },
-    projectSummary: { iv: '' },
-    tools: { iv: [] },
-  },
-  dataOld = {
-    displayName: { iv: 'Team 1' },
-    applicationNumber: { iv: '12345' },
-    expertiseAndResourceTags: { iv: [] },
-    proposal: { iv: [] },
-    projectTitle: { iv: 'Team Project' },
-    projectSummary: { iv: '' },
-    tools: { iv: [] },
-  },
-): TeamPayload => ({
-  type: eventName,
-  timestamp: '2021-10-05T12:49:49Z',
-  resourceId: 'teamId',
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: eventType,
-    id: 'teamId',
-    created: '2021-10-04T16:55:30Z',
-    lastModified: '2021-10-05T12:49:49Z',
-    version: 42,
-    data,
-    dataOld,
-  },
-});
-
-export const getTeamsCreated = getTeamsEvent('Published', 'TeamsPublished');
-export const getTeamsUpdated = getTeamsEvent('Updated', 'TeamsUpdated');
-export const getTeamsDeleted = getTeamsEvent('Deleted', 'TeamsDeleted');
-export const getTeamsUnpublished = getTeamsEvent('Deleted', 'TeamsUnpublished');
-
-export const getPossibleTeamEvents: [string, string, TeamPayload][] = [
-  ['teams-created', 'TeamsCreated', getTeamsCreated],
-  ['teams-unpublished', 'TeamsDeleted', getTeamsUnpublished],
-  ['teams-updated', 'TeamsUpdated', getTeamsUpdated],
-  ['teams-deleted', 'TeamsDeleted', getTeamsDeleted],
-];
-
-export const getTeamsEventbridgeEvent = (id: string, eventType: TeamEvent) =>
-  createEventBridgeEventMock(getTeamsEvent(id, eventType), eventType, id);
-
 export type TeamEventGenerator = (
   id: string,
 ) => EventBridgeEvent<TeamEvent, TeamPayload>;
 
-export const unpublishedEvent: TeamEventGenerator = (id: string) =>
-  getTeamsEventbridgeEvent(id, 'TeamsUnpublished') as EventBridgeEvent<
-    TeamEvent,
-    TeamPayload
-  >;
+export const getTeamUnpublishedEvent: TeamEventGenerator = (id: string) =>
+  getTeamEvent(id, 'TeamsUnpublished');
 
-export const deleteEvent: TeamEventGenerator = (id: string) =>
-  getTeamsEventbridgeEvent(id, 'TeamsDeleted') as EventBridgeEvent<
-    TeamEvent,
-    TeamPayload
-  >;
+export const getTeamDeleteEvent: TeamEventGenerator = (id: string) =>
+  getTeamEvent(id, 'TeamsUnpublished');
 
-export const createEvent: TeamEventGenerator = (id: string) =>
-  getTeamsEventbridgeEvent(id, 'TeamsPublished') as EventBridgeEvent<
-    TeamEvent,
-    TeamPayload
-  >;
+export const getTeamCreateEvent: TeamEventGenerator = (id: string) =>
+  getTeamEvent(id, 'TeamsPublished');
 
-export const updateEvent: TeamEventGenerator = (id: string) =>
-  getTeamsEventbridgeEvent(id, 'TeamsUpdated') as EventBridgeEvent<
-    TeamEvent,
-    TeamPayload
-  >;
+export const getTeamUpdateEvent: TeamEventGenerator = (id: string) =>
+  getTeamEvent(id, 'TeamsPublished');
+
+export const getTeamContentfulWebhookDetail = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'teams'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'crn-3046',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'teams',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '2SHvngTJ24kxZGAPDJ8J1y',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {},
+});
+
+export const getTeamEvent = (
+  id: string,
+  eventType: TeamEvent,
+): EventBridgeEvent<
+  TeamEvent,
+  WebhookDetail<ContentfulWebhookPayload<'teams'>>
+> =>
+  createEventBridgeEventMock(getTeamContentfulWebhookDetail(id), eventType, id);
 
 export const getTeamCreateDataObject = (): TeamCreateDataObject => ({
   applicationNumber: 'ASAP-000420',

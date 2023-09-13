@@ -21,7 +21,7 @@ import {
   FetchRemindersQuery,
   FetchTeamProjectManagerQuery,
 } from '@asap-hub/contentful';
-import { getEventResponse, getSquidexGraphqlEvent } from './events.fixtures';
+import { getContentfulGraphqlEvent, getEventResponse } from './events.fixtures';
 import {
   getContentfulResearchOutputGraphqlResponse,
   getResearchOutputDataObject,
@@ -301,18 +301,18 @@ export const getReferencingWorkingGroupsContents = () => {
 export const getContentfulReminderEventsCollectionItem = (): NonNullable<
   FetchRemindersQuery['eventsCollection']
 >['items'][number] => {
-  const event = getSquidexGraphqlEvent();
+  const event = getContentfulGraphqlEvent();
 
   return {
     sys: {
-      id: event.id,
+      id: event.sys.id,
     },
-    startDate: event.flatData.startDate,
-    endDate: event.flatData.endDate,
-    title: event.flatData.title,
-    videoRecordingUpdatedAt: event.flatData.videoRecordingUpdatedAt,
-    presentationUpdatedAt: event.flatData.presentationUpdatedAt,
-    notesUpdatedAt: event.flatData.notesUpdatedAt,
+    startDate: event.startDate,
+    endDate: event.endDate,
+    title: event.title,
+    videoRecordingUpdatedAt: event.videoRecordingUpdatedAt,
+    presentationUpdatedAt: event.presentationUpdatedAt,
+    notesUpdatedAt: event.notesUpdatedAt,
     speakersCollection: {
       items: [
         {

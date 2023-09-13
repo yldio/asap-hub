@@ -10,11 +10,9 @@ import {
   WorkingGroupListDataObject,
   WorkingGroupResponse,
 } from '@asap-hub/model';
-import { parseToSquidex, WorkingGroup } from '@asap-hub/squidex';
 import type { EventBridgeEvent } from 'aws-lambda';
 
 import { createEventBridgeEventMock } from '../helpers/events';
-import { WorkingGroupPayload } from '../../src/handlers/event-bus';
 import { FetchWorkingGroupByIdQuery } from '@asap-hub/contentful';
 
 export const getListWorkingGroupsDataObject =
@@ -65,46 +63,6 @@ export const getWorkingGroupResponse = (
   data: Partial<WorkingGroupDataObject> = {},
 ): WorkingGroupResponse =>
   getWorkingGroupDataObject(data) as WorkingGroupResponse;
-
-
-
-export const getWorkingGroupSquidexEventPayload = (
-  id: string,
-  data: Partial<WorkingGroup>,
-): WorkingGroupPayload => ({
-  resourceId: id,
-  type: 'WorkingGroupsUpdated',
-  timestamp: '2021-01-01T00:00:00.000Z',
-  payload: {
-    id,
-    $type: 'EnrichedContentEvent',
-    type: 'Updated',
-    created: '2021-01-01T00:00:00.000Z',
-    lastModified: '2021-01-01T00:00:00.000Z',
-    version: 1,
-    data: {
-      description: { iv: 'description' },
-      shortText: { iv: 'short text' },
-      leaders: { iv: [] },
-      members: { iv: [] },
-      calendars: { iv: [] },
-      title: { iv: 'Working Group Title' },
-      complete: { iv: false },
-      deliverables: { iv: [] },
-      lastModifiedDate: { iv: '2021-01-01T00:00:00.000Z' },
-      ...parseToSquidex(data),
-    },
-  },
-});
-
-export const getWorkingGroupSquidexEvent = (
-  data = {},
-): EventBridgeEvent<WorkingGroupEvent, WorkingGroupPayload> =>
-  createEventBridgeEventMock(
-    getWorkingGroupSquidexEventPayload('123', data),
-    'WorkingGroupsUpdated',
-    '123',
-  );
 
 export const getWorkingGroupContentfulWebhookDetail = (
   id: string,

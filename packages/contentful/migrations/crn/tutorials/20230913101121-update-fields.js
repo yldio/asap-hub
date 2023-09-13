@@ -64,6 +64,16 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   tutorials
+    .createField('datePublished')
+    .name('Date Published')
+    .type('Date')
+    .localized(false)
+    .required(false)
+    .validations([])
+    .disabled(false)
+    .omitted(false);
+
+  tutorials
     .createField('tags')
     .name('Tags')
     .type('Array')
@@ -175,6 +185,7 @@ module.exports.down = (migration) => {
   tutorials.deleteField('teams');
   tutorials.deleteField('addedDate');
   tutorials.deleteField('lastUpdated');
+  tutorials.deleteField('datePublished');
   tutorials.deleteField('tags');
   tutorials.deleteField('relatedTutorials');
   tutorials.deleteField('relatedEvents');

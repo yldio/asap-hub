@@ -1,11 +1,6 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { css } from '@emotion/react';
-import { pixels, SearchAndFilter } from '@asap-hub/react-components';
+import { SearchAndFilter } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-
-const containerStyles = css({
-  marginTop: pixels.rem(48),
-});
 
 type ProjectPageListProps = {
   hasProjects: boolean;
@@ -33,7 +28,7 @@ const ProjectPageList: React.FC<ProjectPageListProps> = ({
   searchQuery,
   hasProjects,
 }) => (
-  <div css={containerStyles}>
+  <>
     {hasProjects && (
       <SearchAndFilter
         onChangeSearch={onChangeSearch}
@@ -45,7 +40,7 @@ const ProjectPageList: React.FC<ProjectPageListProps> = ({
       />
     )}
     <main>{children}</main>
-  </div>
+  </>
 );
 
 export default ProjectPageList;

@@ -5,10 +5,6 @@ import ProjectsBody, { ProjectsBodyProps } from '../ProjectsBody';
 describe('ProjectsBody', () => {
   const props: ProjectsBodyProps = {
     projects: [],
-    filters: new Set(),
-    searchQuery: '',
-    onChangeFilter: () => '',
-    onChangeSearch: () => '',
     numberOfPages: 1,
     numberOfItems: 3,
     currentPageIndex: 0,

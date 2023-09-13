@@ -5,18 +5,18 @@ import { lazy, useEffect, useState } from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import Frame from '../Frame';
 
-const loadProjectList = () =>
-  import(/* webpackChunkName: "project-list" */ './ProjectList');
+const loadProjectDirectory = () =>
+  import(/* webpackChunkName: "project-list" */ './ProjectDirectory');
 const loadProjectDetail = () =>
   import(/* webpackChunkName: "project-detail" */ './ProjectDetail');
 
-const ProjectList = lazy(loadProjectList);
+const ProjectDirectory = lazy(loadProjectDirectory);
 const ProjectDetail = lazy(loadProjectDetail);
 
 const { projects } = gp2;
 const Routes: React.FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadProjectList().then(loadProjectDetail);
+    loadProjectDirectory().then(loadProjectDetail);
   }, []);
   const { path } = useRouteMatch();
 
@@ -26,7 +26,7 @@ const Routes: React.FC<Record<string, never>> = () => {
       <Route exact path={path}>
         <ProjectsPage>
           <Frame title="Projects">
-            <ProjectList />
+            <ProjectDirectory />
           </Frame>
         </ProjectsPage>
       </Route>

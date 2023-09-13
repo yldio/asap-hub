@@ -18,6 +18,7 @@ export { default as OutputForm } from './OutputForm';
 export { default as OutputPageList } from './OutputPageList';
 export { default as OutputsPage } from './OutputsPage';
 export { default as PageNotifications } from './PageNotifications';
+export { default as ProjectPageList } from './ProjectPageList';
 export { default as ProjectDetailPage } from './ProjectDetailPage';
 export { default as ProjectOverview } from './ProjectOverview';
 export { default as ProjectResources } from './ProjectResources';

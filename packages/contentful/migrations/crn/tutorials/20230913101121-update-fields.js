@@ -55,7 +55,7 @@ module.exports.up = (migration) => {
 
   tutorials
     .createField('lastUpdated')
-    .name('Last updated')
+    .name('Last Updated')
     .type('Date')
     .localized(false)
     .required(false)
@@ -65,6 +65,7 @@ module.exports.up = (migration) => {
 
   tutorials
     .createField('tags')
+    .name('Tags')
     .type('Array')
     .localized(false)
     .required(false)
@@ -130,10 +131,10 @@ module.exports.up = (migration) => {
     .name('ASAP Funded')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([
       {
-        in: ['Yes', 'No', 'Not Sure'],
+        in: ['Yes', 'No', "Don't Know"],
       },
     ])
     .disabled(false)
@@ -144,10 +145,10 @@ module.exports.up = (migration) => {
     .name('Used in a Publication')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([
       {
-        in: ['Yes', 'No', 'Not Sure'],
+        in: ['Yes', 'No', "Don't Know"],
       },
     ])
     .disabled(false)
@@ -158,7 +159,7 @@ module.exports.up = (migration) => {
     .name('Sharing Status')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([
       {
         in: ['Public', 'Network Only'],

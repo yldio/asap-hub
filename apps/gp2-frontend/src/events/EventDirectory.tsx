@@ -13,7 +13,7 @@ type EventDirectoryProps = {
 };
 
 const eventFilters = [
-  { title: 'TYPE OF OUTPUT' },
+  { title: 'TYPE OF EVENT' },
   ...[gp2.eventWorkingGroups, gp2.eventProjects, gp2.eventGP2Hub].map(
     (value) => ({ label: value, value }),
   ),

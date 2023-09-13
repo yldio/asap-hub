@@ -186,6 +186,9 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
         ...(calendarId ? { calendar: { sys: { id: calendarId } } } : {}),
         ...(filter?.hidden !== true ? { hidden_not: true } : {}),
         ...(filter?.googleId ? { googleId_contains: filter.googleId } : {}),
+        ...(filter?.calendarName
+          ? { calendar: { name_contains: filter.calendarName } }
+          : {}),
         ...(after ? { endDate_gt: after } : {}),
         ...(before ? { endDate_lt: before } : {}),
         ...(search ? { OR: searchFilter } : {}),

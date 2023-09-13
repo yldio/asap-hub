@@ -144,8 +144,6 @@ export const FETCH_REMINDERS = gql`
           id
           publishedAt
         }
-        documentType
-        title
         linkedFrom {
           researchOutputsCollection(limit: 1) {
             items {
@@ -153,6 +151,7 @@ export const FETCH_REMINDERS = gql`
                 id
               }
               title
+              documentType
               teamsCollection(limit: 10) {
                 items {
                   sys {

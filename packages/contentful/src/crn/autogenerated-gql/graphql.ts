@@ -13444,32 +13444,30 @@ export type FetchRemindersQuery = {
   >;
   researchOutputVersionsCollection?: Maybe<{
     items: Array<
-      Maybe<
-        Pick<ResearchOutputVersions, 'documentType' | 'title'> & {
-          sys: Pick<Sys, 'id' | 'publishedAt'>;
-          linkedFrom?: Maybe<{
-            researchOutputsCollection?: Maybe<{
-              items: Array<
-                Maybe<
-                  Pick<ResearchOutputs, 'title'> & {
-                    sys: Pick<Sys, 'id'>;
-                    teamsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<
-                          Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
-                        >
-                      >;
-                    }>;
-                    workingGroup?: Maybe<
-                      Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+      Maybe<{
+        sys: Pick<Sys, 'id' | 'publishedAt'>;
+        linkedFrom?: Maybe<{
+          researchOutputsCollection?: Maybe<{
+            items: Array<
+              Maybe<
+                Pick<ResearchOutputs, 'title' | 'documentType'> & {
+                  sys: Pick<Sys, 'id'>;
+                  teamsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                      >
                     >;
-                  }
-                >
-              >;
-            }>;
+                  }>;
+                  workingGroup?: Maybe<
+                    Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
+                  >;
+                }
+              >
+            >;
           }>;
-        }
-      >
+        }>;
+      }>
     >;
   }>;
 };
@@ -23633,11 +23631,6 @@ export const FetchRemindersDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'documentType' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
                         name: { kind: 'Name', value: 'linkedFrom' },
                         selectionSet: {
                           kind: 'SelectionSet',
@@ -23685,6 +23678,13 @@ export const FetchRemindersDocument = {
                                           name: {
                                             kind: 'Name',
                                             value: 'title',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'documentType',
                                           },
                                         },
                                         {

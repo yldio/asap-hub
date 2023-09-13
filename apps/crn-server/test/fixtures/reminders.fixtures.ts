@@ -674,12 +674,12 @@ export const getContentfulReminderResearchOutputVersionCollectionItem =
         id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
         publishedAt: '2020-09-23T16:34:26.842Z',
       },
-      documentType: 'Bioinformatics',
-      title: 'test-research-output-version',
       linkedFrom: {
         researchOutputsCollection: {
           items: [
             {
+              title: 'test-research-output-version',
+              documentType: 'Bioinformatics',
               sys: {
                 id: 'research-output-1',
               },

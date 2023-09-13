@@ -1206,8 +1206,9 @@ describe('Reminders data provider', () => {
         expect(result).toEqual({ items: [], total: 0 });
       });
 
-      test("Should not fetch the reminders if the research output version doesn't have a title", async () => {
-        researchOutputVersionItem!.title = null;
+      test("Should not fetch the reminders if the related research output doesn't have a title", async () => {
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.title =
+          null;
 
         const researchOutputVersionsCollection = {
           items: [researchOutputVersionItem],
@@ -1220,8 +1221,9 @@ describe('Reminders data provider', () => {
         expect(result).toEqual({ items: [], total: 0 });
       });
 
-      test("Should not fetch the reminders if the research output version doesn't have a documentType", async () => {
-        researchOutputVersionItem!.documentType = null;
+      test("Should not fetch the reminders if the related research output doesn't have a documentType", async () => {
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.documentType =
+          null;
 
         const researchOutputVersionsCollection = {
           items: [researchOutputVersionItem],
@@ -1234,8 +1236,9 @@ describe('Reminders data provider', () => {
         expect(result).toEqual({ items: [], total: 0 });
       });
 
-      test('Should not fetch the reminder if the research output version documentType property is not a valid documentType', async () => {
-        researchOutputVersionItem!.documentType = 'invalid-document-type';
+      test('Should not fetch the reminder if the related research output documentType property is not a valid documentType', async () => {
+        researchOutputVersionItem!.linkedFrom!.researchOutputsCollection!.items[0]!.documentType =
+          'invalid-document-type';
 
         const researchOutputVersionsCollection = {
           items: [researchOutputVersionItem],

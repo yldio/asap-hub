@@ -96,7 +96,7 @@ describe('Index Events on Team event handler', () => {
 
       expect(eventControllerMock.fetch).toHaveBeenCalledWith({
         filter: {
-          teamId: 'teamId',
+          teamId: 'team-id',
         },
         skip: 0,
         take: 8,

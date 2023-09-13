@@ -151,7 +151,7 @@ jobs:
         with:
           algolia-api-key: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           algolia-app-id: ${{ steps.algolia-keys.outputs.algolia-app-id }}
-          algolia-index: '${{ steps.setup.outputs.gp2-algolia-index }}_temp'
+          algolia-index: '${{ steps.setup.outputs.gp2-algolia-index }}_${{github.run_id}}_temp'
           app: 'gp2'
           entity-type: 'news'
           contentful-env: ${{ inputs.contentful-environment-id }}

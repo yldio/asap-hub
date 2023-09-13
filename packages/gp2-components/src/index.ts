@@ -84,6 +84,7 @@ export {
   ProjectOverview,
   ProjectResources,
   ProjectsPage,
+  ProjectPageList,
   Theme,
   UserDetailPage,
   UserOverview,

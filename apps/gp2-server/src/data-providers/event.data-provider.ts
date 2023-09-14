@@ -341,6 +341,8 @@ export const parseGraphQLEvent = (
     hideMeetingLink,
     status,
     speakersCollection,
+    googleId,
+    copyMeetingLink,
   } = item;
 
   const speakersItems = (speakersCollection?.items as SpeakerItem[]) ?? [];
@@ -353,6 +355,8 @@ export const parseGraphQLEvent = (
     id,
     title: title!,
     description: description || '',
+    googleId: googleId ?? undefined,
+    copyMeetingLink: copyMeetingLink ?? undefined,
     startDate: startDate.toUTC().toString(),
     startDateTimeZone: startDateTimeZone!,
     startDateTimestamp: startDate.toSeconds(),

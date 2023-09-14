@@ -27,6 +27,8 @@ export interface BasicEvent {
   lastModifiedDate: string;
   thumbnail?: string;
   tags: string[];
+  googleId?: string;
+  copyMeetingLink?: boolean;
 
   // These are typically added around the date when the event happens.
   // `null` means it is not intended to add materials to the event in the future.

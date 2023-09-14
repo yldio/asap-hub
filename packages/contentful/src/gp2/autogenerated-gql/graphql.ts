@@ -334,6 +334,8 @@ export type AssetLinkingCollectionsUsersCollectionArgs = {
 };
 
 export enum AssetLinkingCollectionsEventsCollectionOrder {
+  CopyMeetingLinkAsc = 'copyMeetingLink_ASC',
+  CopyMeetingLinkDesc = 'copyMeetingLink_DESC',
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -584,6 +586,8 @@ export type CalendarsLinkingCollectionsWorkingGroupsCollectionArgs = {
 };
 
 export enum CalendarsLinkingCollectionsEventsCollectionOrder {
+  CopyMeetingLinkAsc = 'copyMeetingLink_ASC',
+  CopyMeetingLinkDesc = 'copyMeetingLink_DESC',
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -1197,6 +1201,8 @@ export type EventSpeakersLinkingCollectionsEventsCollectionArgs = {
 };
 
 export enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
+  CopyMeetingLinkAsc = 'copyMeetingLink_ASC',
+  CopyMeetingLinkDesc = 'copyMeetingLink_DESC',
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -1276,6 +1282,7 @@ export type EventSpeakersUserFilter = {
 export type Events = Entry & {
   calendar?: Maybe<Calendars>;
   contentfulMetadata: ContentfulMetadata;
+  copyMeetingLink?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
   endDate?: Maybe<Scalars['DateTime']>;
   endDateTimeZone?: Maybe<Scalars['String']>;
@@ -1311,6 +1318,11 @@ export type EventsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<CalendarsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
+export type EventsCopyMeetingLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
@@ -1472,6 +1484,9 @@ export type EventsFilter = {
   calendar?: InputMaybe<CfCalendarsNestedFilter>;
   calendar_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  copyMeetingLink?: InputMaybe<Scalars['Boolean']>;
+  copyMeetingLink_exists?: InputMaybe<Scalars['Boolean']>;
+  copyMeetingLink_not?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
   description_exists?: InputMaybe<Scalars['Boolean']>;
@@ -1675,6 +1690,8 @@ export type EventsNotesResources = {
 };
 
 export enum EventsOrder {
+  CopyMeetingLinkAsc = 'copyMeetingLink_ASC',
+  CopyMeetingLinkDesc = 'copyMeetingLink_DESC',
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -2391,6 +2408,8 @@ export type KeywordsLinkingCollectionsWorkingGroupsCollectionArgs = {
 };
 
 export enum KeywordsLinkingCollectionsEventsCollectionOrder {
+  CopyMeetingLinkAsc = 'copyMeetingLink_ASC',
+  CopyMeetingLinkDesc = 'copyMeetingLink_DESC',
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -6864,6 +6883,8 @@ export type EventsContentDataFragment = Pick<
   | 'eventLink'
   | 'status'
   | 'hidden'
+  | 'googleId'
+  | 'copyMeetingLink'
   | 'title'
   | 'notesPermanentlyUnavailable'
   | 'notesUpdatedAt'
@@ -7106,6 +7127,8 @@ export type FetchEventByIdQuery = {
       | 'eventLink'
       | 'status'
       | 'hidden'
+      | 'googleId'
+      | 'copyMeetingLink'
       | 'title'
       | 'notesPermanentlyUnavailable'
       | 'notesUpdatedAt'
@@ -7373,6 +7396,8 @@ export type FetchEventsQuery = {
             | 'eventLink'
             | 'status'
             | 'hidden'
+            | 'googleId'
+            | 'copyMeetingLink'
             | 'title'
             | 'notesPermanentlyUnavailable'
             | 'notesUpdatedAt'
@@ -7734,6 +7759,8 @@ export type FetchEventsByUserIdQuery = {
                         | 'eventLink'
                         | 'status'
                         | 'hidden'
+                        | 'googleId'
+                        | 'copyMeetingLink'
                         | 'title'
                         | 'notesPermanentlyUnavailable'
                         | 'notesUpdatedAt'
@@ -8156,6 +8183,8 @@ export type FetchEventsByExternalUserIdQuery = {
                         | 'eventLink'
                         | 'status'
                         | 'hidden'
+                        | 'googleId'
+                        | 'copyMeetingLink'
                         | 'title'
                         | 'notesPermanentlyUnavailable'
                         | 'notesUpdatedAt'
@@ -11086,6 +11115,8 @@ export const EventsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'eventLink' } },
           { kind: 'Field', name: { kind: 'Name', value: 'status' } },
           { kind: 'Field', name: { kind: 'Name', value: 'hidden' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'googleId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'copyMeetingLink' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'keywordsCollection' },

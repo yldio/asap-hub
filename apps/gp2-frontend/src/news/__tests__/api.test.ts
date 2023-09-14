@@ -125,6 +125,15 @@ describe('getAlgoliaNews', () => {
       }),
     );
   });
+
+  it('throws an error of type error', async () => {
+    mockAlgoliaSearchClient.search.mockRejectedValue({
+      message: 'Some Error',
+    });
+    await expect(
+      getAlgoliaNews(mockAlgoliaSearchClient, options),
+    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
+  });
 });
 
 describe('getNews', () => {

@@ -5,8 +5,7 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
-import { authorizationState } from '../auth/state';
-import { getAlgoliaNews, getNewsById, NewsListOptions } from './api';
+import { getAlgoliaNews, NewsListOptions } from './api';
 import { useAlgolia } from '../hooks/algolia';
 
 const newsIndexState = atomFamily<
@@ -97,19 +96,7 @@ export const useNews = (options: NewsListOptions) => {
   return news;
 };
 
-const fetchNewsItemState = selectorFamily<gp2.NewsResponse | undefined, string>(
-  {
-    key: 'fetchNews',
-    get:
-      (id) =>
-      async ({ get }) => {
-        const authorization = get(authorizationState);
-        return getNewsById(id, authorization);
-      },
-  },
-);
-
 const newsItemState = atomFamily<gp2.NewsResponse | undefined, string>({
   key: 'newsItem',
-  default: fetchNewsItemState,
+  default: undefined,
 });

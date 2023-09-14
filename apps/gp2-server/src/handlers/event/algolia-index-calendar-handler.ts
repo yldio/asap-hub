@@ -35,7 +35,7 @@ export const indexCalendarEventsHandler =
       eventController.fetch({
         skip,
         take,
-        filter: { calendarName: event.detail.resourceId },
+        filter: { calendarId: event.detail.resourceId },
       });
 
     const processingFunction = async (

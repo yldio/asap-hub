@@ -75,7 +75,7 @@ type BaseFilterOptions = {
   externalUserId?: never;
   googleId?: never;
   hidden?: never;
-  calendarName?: never;
+  calendarId?: never;
 };
 
 type ExclusiveFilterOption<T> = Omit<BaseFilterOptions, keyof T> & T;
@@ -89,7 +89,7 @@ type FilterOptions =
       googleId?: string;
       hidden?: boolean;
     }>
-  | ExclusiveFilterOption<{ calendarName?: string }>;
+  | ExclusiveFilterOption<{ calendarId?: string }>;
 
 export const eventWorkingGroups = 'Working Groups';
 export const eventProjects = 'Projects';

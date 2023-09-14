@@ -363,15 +363,15 @@ describe('Events Contentful Data Provider', () => {
         expect(result).toEqual(getContentfulListEventDataObject());
       });
 
-      test('can filter by calendarName', async () => {
-        const calendarName = 'Tech 1 - Sequencing/omics';
+      test('can filter by calendarId', async () => {
+        const calendarId = 'caledndar-id';
 
         const eventsGraphqlResponse = getContentfulGraphqlEventsResponse();
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
           eventsGraphqlResponse,
         );
         const result = await eventDataProvider.fetch({
-          filter: { calendarName },
+          filter: { calendarId },
         });
 
         expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
@@ -380,7 +380,11 @@ describe('Events Contentful Data Provider', () => {
             limit: 10,
             skip: 0,
             where: {
-              calendar: { name_contains: 'Tech 1 - Sequencing/omics' },
+              calendar: {
+                sys: {
+                  id: calendarId,
+                },
+              },
               hidden_not: true,
             },
             order: undefined,

@@ -19,7 +19,10 @@ export const getNews = async (
   return resp.json();
 };
 
-export type NewsListOptions = GetListOptions;
+const getAllFilters = (filters: Set<string>) =>
+  [...filters].map((filter) => `type:"${filter}"`).join(' OR ');
+
+export type NewsListOptions = GetListOptions & gp2.FetchNewsFilter;
 export const getAlgoliaNews = async (
   client: AlgoliaClient<'gp2'>,
   options: NewsListOptions,
@@ -28,6 +31,7 @@ export const getAlgoliaNews = async (
     .search(['news'], options.searchQuery, {
       page: options.currentPage ?? 0,
       hitsPerPage: options.pageSize ?? 10,
+      filters: getAllFilters(options.filters),
     })
     .catch((error: Error) => {
       throw new Error(`Could not search: ${error.message}`);

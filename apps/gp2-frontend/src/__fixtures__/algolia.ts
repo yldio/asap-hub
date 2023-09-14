@@ -89,3 +89,26 @@ export const createEventListAlgoliaResponse = (
     Array.from({ length: items }, () => createEventAlgoliaRecord()),
     responseOverride,
   );
+
+type NewsSearchResponse = ClientSearchResponse<'gp2', 'news'>;
+export const createNewsAlgoliaRecord = (
+  item: gp2.NewsResponse,
+): NewsSearchResponse['hits'][number] => ({
+  ...item,
+  objectID: item.id,
+  __meta: { type: 'news' },
+});
+
+export const createNewsListAlgoliaResponse = (
+  items: number,
+  total: number,
+): NewsSearchResponse => {
+  const response = createAlgoliaResponse<'news'>(
+    gp2Fixtures
+      .createListNewsResponse(items, total)
+      .items.map((item) => createNewsAlgoliaRecord(item)),
+  );
+
+  response.nbHits = total;
+  return response;
+};

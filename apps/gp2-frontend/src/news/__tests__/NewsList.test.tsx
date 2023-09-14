@@ -12,9 +12,11 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { PAGE_SIZE } from '../../hooks';
 import { createNewsListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getAlgoliaNews } from '../api';
 import NewsPage from '../Routes';
+import { newsState } from '../state';
 
 jest.mock('../api');
 
@@ -26,9 +28,20 @@ const pageSize = 10;
 beforeEach(jest.resetAllMocks);
 
 mockConsoleError();
-const renderPage = async () => {
+const renderPage = async (searchQuery = '') => {
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset }) => {
+        reset(
+          newsState({
+            searchQuery,
+            currentPage: 0,
+            filters: new Set(),
+            pageSize: PAGE_SIZE,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

@@ -3,4 +3,5 @@ export type ContentfulWebhookPayloadType =
   | 'project'
   | 'event'
   | 'user'
-  | 'calendar';
+  | 'calendar'
+  | 'externalUser';

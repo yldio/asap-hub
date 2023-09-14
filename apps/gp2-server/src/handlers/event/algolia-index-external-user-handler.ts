@@ -14,14 +14,14 @@ import {
 } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { UserPayload } from '../event-bus';
+import { ExternalUserPayload } from '../event-bus';
 
 export const indexExternalUserEventsHandler =
   (
     eventController: EventController,
     algoliaClient: AlgoliaClient<'gp2'>,
   ): ((
-    event: EventBridgeEvent<gp2Model.UserEvent, UserPayload>,
+    event: EventBridgeEvent<gp2Model.ExternalUserEvent, ExternalUserPayload>,
   ) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

@@ -1,18 +1,5 @@
 import { parseRichText, RichTextFromQuery } from '@asap-hub/contentful';
 
-export const getMeetingMaterial = <T>(
-  material: T,
-  isPermanentlyUnavailable: boolean,
-  isStale: boolean,
-  emptyState: T,
-): T | null => {
-  const isEmpty = !(Array.isArray(material) ? material.length : material);
-  if (isPermanentlyUnavailable || (isEmpty && isStale)) {
-    return null;
-  }
-  return isEmpty ? emptyState : material;
-};
-
 export type MeetingMaterial = {
   title: string;
   url: string;

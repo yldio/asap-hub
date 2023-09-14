@@ -484,21 +484,6 @@ export const getListEventResponse = (
   isReducedResponse: boolean = true,
 ): ListEventResponse => getListEventDataObject(isReducedResponse);
 
-export const getEventInput = () => ({
-  googleId: { iv: 'google-event-id' },
-  title: { iv: 'Event Tittle' },
-  description: { iv: 'This event will be good' },
-  startDate: { iv: '2021-02-23T19:32:00Z' },
-  startDateTimeZone: { iv: 'Europe/Lisbon' },
-  endDate: { iv: '2021-02-23T19:32:00Z' },
-  endDateTimeZone: { iv: 'Europe/Lisbon' },
-  calendar: { iv: ['squidex-calendar-id'] },
-  status: { iv: 'Confirmed' as EventStatus },
-  tags: { iv: [] },
-  hidden: { iv: false },
-  hideMeetingLink: { iv: false },
-});
-
 export const getEventCreateDataObject = (): EventCreateDataObject => ({
   googleId: 'google-event-id',
   title: 'Event Tittle',

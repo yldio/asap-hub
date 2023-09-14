@@ -93,11 +93,6 @@ export const getLabCreateEvent: LabEventGenerator = (id: string) =>
 export const updateEvent: LabEventGenerator = (id: string) =>
   getLabEvent(id, 'LabsUpdated') as EventBridgeEvent<LabEvent, LabPayload>;
 
-export const getSquidexGraphqlLab = () => ({
-  flatData: { name: 'Simpson' },
-  id: '12345',
-});
-
 export const getLabDataObject = (): LabDataObject => ({
   name: 'Simpson',
   id: '12345',

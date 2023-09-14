@@ -5,9 +5,7 @@ import {
 } from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
 
-const getSquidexGraphqlDiscoverMembersResponse = (
-  prefix = '',
-): UserResponse[] => [
+const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
   {
     id: `${prefix}uuid-members-1`,
     onboarded: true,
@@ -81,9 +79,9 @@ export const getDiscoverDataObject = (): DiscoverDataObject => ({
       thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid-1`,
     },
   ],
-  members: getSquidexGraphqlDiscoverMembersResponse(),
+  members: getDiscoverMembersResponse(),
   membersTeamId: 'uuid-team-1',
-  scientificAdvisoryBoard: getSquidexGraphqlDiscoverMembersResponse('sab-'),
+  scientificAdvisoryBoard: getDiscoverMembersResponse('sab-'),
   pages: [
     {
       id: 'uuid-pages-1',

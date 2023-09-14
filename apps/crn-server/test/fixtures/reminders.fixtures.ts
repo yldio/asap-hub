@@ -278,26 +278,6 @@ export const getListReminderResponse = (): ListReminderResponse => ({
   items: [getReminderResponse()],
 });
 
-export const getReferencingWorkingGroupsContents = () => {
-  return {
-    id: 'wg-id-1',
-    flatData: {
-      complete: true,
-      leaders: [
-        {
-          role: 'Project Manager',
-          inactiveSinceDate: null,
-          user: [
-            {
-              id: 'user-id',
-            },
-          ],
-        },
-      ],
-    },
-  };
-};
-
 export const getContentfulReminderEventsCollectionItem = (): NonNullable<
   FetchRemindersQuery['eventsCollection']
 >['items'][number] => {

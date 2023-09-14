@@ -13,6 +13,8 @@ import { ResearchOutputPermissions } from '@asap-hub/react-context';
 import { network, sharedResearch } from '@asap-hub/routing';
 import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
+import { useRouteMatch } from 'react-router-dom';
+
 import { contentSidePaddingWithNavigation } from '../layout';
 import {
   ConfirmModal,
@@ -37,7 +39,6 @@ import {
   noop,
 } from '../utils';
 import { richTextToMarkdown } from '../utils/parsing';
-import { useRouteMatch } from 'react-router-dom';
 
 type ResearchOutputFormProps = Pick<
   ComponentProps<typeof ResearchOutputFormSharingCard>,

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
-import { fern, steel, paper, lead, pine } from '../colors';
+import { fern, lead, paper, pine, steel } from '../colors';
 import { noop } from '../utils';
 
 const styles = css({
@@ -24,6 +24,13 @@ const styles = css({
   backgroundClip: 'content-box',
   backgroundColor: paper.rgb,
 
+  ':disabled': {
+    borderColor: steel.rgb,
+    ':hover, :focus': {
+      borderColor: steel.rgb,
+    },
+  },
+
   ':hover, :focus': {
     borderColor: lead.rgb,
   },
@@ -43,6 +50,7 @@ interface RadioButtonProps {
   readonly groupName: string;
 
   readonly checked?: boolean;
+  readonly disabled?: boolean;
   readonly onSelect?: () => void;
 }
 const RadioButton: React.FC<RadioButtonProps> = ({
@@ -50,6 +58,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   groupName,
 
   checked = false,
+  disabled = false,
   onSelect = noop,
 }) => (
   <input
@@ -57,8 +66,9 @@ const RadioButton: React.FC<RadioButtonProps> = ({
     id={id}
     name={groupName}
     checked={checked}
-    onChange={() => onSelect()}
+    onChange={() => !disabled && onSelect()}
     css={styles}
+    disabled={disabled}
   />
 );
 

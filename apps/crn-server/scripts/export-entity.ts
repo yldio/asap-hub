@@ -84,8 +84,10 @@ const getController = (entity: keyof EntityResponsesCRN) => {
 };
 
 const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
-  record: T[K] & { id: string },
-  type: K,
+  record: T[K] extends EntityResponsesCRN[keyof EntityResponsesCRN]
+    ? T[K] & { id: string }
+    : never,
+  type: K extends keyof EntityResponsesCRN ? K : never,
 ) => {
   const payload = {
     ...record,
@@ -95,19 +97,19 @@ const transformRecords = <T extends EntityResponsesCRN, K extends keyof T>(
     },
   };
 
-  if (type === 'research-output') {
-    const subtype = (record as unknown as EntityResponsesCRN['research-output'])
-      .subtype;
+  if (type === 'research-output' && 'subtype' in record) {
+    const subtype = record.subtype;
 
-    // @ts-ignore
-    payload._tags = [
-      ...(record as unknown as EntityResponsesCRN['research-output']).methods,
-      ...(record as unknown as EntityResponsesCRN['research-output']).organisms,
-      ...(record as unknown as EntityResponsesCRN['research-output'])
-        .environments,
-      ...(subtype ? [subtype] : []),
-      ...(record as unknown as EntityResponsesCRN['research-output']).keywords,
-    ];
+    return {
+      ...payload,
+      _tags: [
+        ...record.methods,
+        ...record.organisms,
+        ...record.environments,
+        ...(subtype ? [subtype] : []),
+        ...record.keywords,
+      ],
+    };
   }
 
   return payload;

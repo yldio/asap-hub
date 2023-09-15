@@ -4,6 +4,7 @@ import {
   GoogleEvent,
   validateGoogleEvent,
 } from '../validation/sync-google-event.validation';
+import { isCRNEventController } from './type-narrowing';
 import { Logger } from './logger';
 
 export type SyncEvent = (
@@ -79,16 +80,34 @@ export const syncEventFactory =
         return eventsController.update(existingEvent.id, eventToUpdate);
       }
 
-      const eventToCreate = {
-        ...newEvent,
-        hidden: newEvent.status === 'Cancelled',
-        tags: [],
-      };
+      const hidden = newEvent.status === 'Cancelled';
+      if (isCRNEventController(eventsController)) {
+        const crnEventToCreate = {
+          ...newEvent,
+          hidden,
+          tags: [],
+        };
+
+        logger.info(
+          {
+            id: googleEvent.id,
+            event: crnEventToCreate,
+          },
+          'Event not found. Creating.',
+        );
+        return eventsController.create(crnEventToCreate);
+      }
+
+      const gp2EventToCreate = { ...newEvent, hidden };
+
       logger.info(
-        { id: googleEvent.id, event: eventToCreate },
+        {
+          id: googleEvent.id,
+          event: gp2EventToCreate,
+        },
         'Event not found. Creating.',
       );
-      return eventsController.create(eventToCreate);
+      return eventsController.create(gp2EventToCreate);
     } catch (err) {
       logger.error(err, 'Error syncing event');
       throw err;

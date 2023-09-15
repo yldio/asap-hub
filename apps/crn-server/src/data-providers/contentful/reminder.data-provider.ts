@@ -165,8 +165,15 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       timezone,
     );
 
+    const versionReminderIds = publishedResearchOutputVersionReminders.map(
+      (reminder) => reminder.data.researchOutputId,
+    );
+
     const reminders = [
-      ...publishedResearchOutputReminders,
+      ...publishedResearchOutputReminders.filter(
+        (reminder) =>
+          !versionReminderIds.includes(reminder.data.researchOutputId),
+      ),
       ...draftResearchOutputReminders,
       ...inReviewResearchOutputReminders,
       ...switchToDraftResearchOutputReminders,

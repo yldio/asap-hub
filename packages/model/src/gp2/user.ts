@@ -173,6 +173,7 @@ export type FetchUsersFilter = FetchUsersSearchFilter & {
   code?: string;
   onlyOnboarded?: boolean;
   hidden?: boolean;
+  userIds?: string[];
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;

@@ -14,8 +14,8 @@ import {
   pollContentfulGql,
 } from '@asap-hub/contentful';
 import logger from '../utils/logger';
-import { UserDataProvider } from './types';
 import { KeywordItem, parseKeyword } from './keyword.data-provider';
+import { UserDataProvider } from './types';
 
 export type UserItem = NonNullable<
   NonNullable<gp2Contentful.FetchUsersQuery['usersCollection']>['items'][number]
@@ -56,22 +56,28 @@ export class UserContentfulDataProvider implements UserDataProvider {
   private getUserIdFilter = async ({
     projects,
     workingGroups,
+    userIds,
   }: gp2Model.FetchUsersOptions['filter'] = {}): Promise<string[]> => {
-    const members = await Promise.all([
-      getEntityMembers(projects, this.fetchUsersByProject.bind(this)),
-      getEntityMembers(workingGroups, this.fetchUsersByWorkingGroup.bind(this)),
+    const unfilteredUserIds = await Promise.all([
+      getEntityMemberUserIds(projects, this.fetchUsersByProject.bind(this)),
+      getEntityMemberUserIds(
+        workingGroups,
+        this.fetchUsersByWorkingGroup.bind(this),
+      ),
+      userIds,
     ]);
 
-    return members
+    return unfilteredUserIds
       .flat()
-      .filter((member): member is string => Boolean(member))
-      .filter((id, index, arr) => arr.indexOf(id) === index);
+      .filter((userId): userId is string => Boolean(userId))
+      .filter((userId, index, arr) => arr.indexOf(userId) === index);
   };
   async fetch(options: gp2Model.FetchUsersOptions) {
-    const { projects, workingGroups } = options.filter || {};
+    const { projects, workingGroups, userIds } = options.filter || {};
     const userIdFilter = await this.getUserIdFilter({
       projects,
       workingGroups,
+      userIds,
     });
     if (
       userIdFilter.length === 0 &&
@@ -472,7 +478,7 @@ const parsePositions = (
     }),
   ) || [];
 
-const getEntityMembers = async (
+const getEntityMemberUserIds = async (
   ids: string[] | undefined,
   queryFetchMemberData: (
     filter: string[],

@@ -16,7 +16,7 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { UserPayload } from '../event-bus';
 
-export const indexUserProjectsHandler =
+export const indexProjectUserHandler =
   (
     projectController: ProjectController,
     algoliaClient: AlgoliaClient<'gp2'>,
@@ -73,7 +73,7 @@ const projectDataProvider = new ProjectContentfulDataProvider(
 );
 
 export const handler = sentryWrapper(
-  indexUserProjectsHandler(
+  indexProjectUserHandler(
     new ProjectController(projectDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,

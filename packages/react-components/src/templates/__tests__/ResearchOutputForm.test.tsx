@@ -28,6 +28,7 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
+import { network } from '@asap-hub/routing';
 import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../ResearchOutputForm';
 import { ENTER_KEYCODE } from '../../atoms/Dropdown';
@@ -320,10 +321,12 @@ describe('on submit', () => {
       },
       documentType = 'Article',
       researchTags = [{ id: '1', name: 'research tag 1' }],
+      researchOutputData = undefined,
     }: {
       data?: Data;
       documentType?: ComponentProps<typeof ResearchOutputForm>['documentType'];
       researchTags?: ResearchTagResponse[];
+      researchOutputData?: ResearchOutputResponse;
     } = {
       data: {
         descriptionMD: 'example description',
@@ -339,6 +342,7 @@ describe('on submit', () => {
       <Router history={history}>
         <ResearchOutputForm
           {...props}
+          researchOutputData={researchOutputData}
           selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}
           typeOptions={Array.from(
@@ -771,6 +775,34 @@ describe('on submit', () => {
         [fieldName]: expected,
       });
     });
+  });
+
+  it('should disable "No" and "Not Sure" options', async () => {
+    history = createMemoryHistory({
+      initialEntries: [
+        network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
+          outputDocumentType: 'article',
+        }).$,
+      ],
+    });
+    await setupForm({
+      researchOutputData: {
+        ...createResearchOutputResponse(),
+        usedInPublication: undefined,
+        sharingStatus: 'Network Only',
+        documentType: 'Article',
+      },
+    });
+    const usedInPublication = screen.getByRole('group', {
+      name: /Has this output been used in a publication/i,
+    });
+
+    expect(
+      within(usedInPublication).getByRole('radio', { name: 'No' }),
+    ).toBeDisabled();
+    expect(
+      within(usedInPublication).getByRole('radio', { name: 'Not Sure' }),
+    ).toBeDisabled();
   });
 
   const saveDraft = async () => {

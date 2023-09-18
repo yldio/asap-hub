@@ -363,6 +363,36 @@ describe('Events Contentful Data Provider', () => {
         expect(result).toEqual(getContentfulListEventDataObject());
       });
 
+      test('can filter by calendarId', async () => {
+        const calendarId = 'caledndar-id';
+
+        const eventsGraphqlResponse = getContentfulGraphqlEventsResponse();
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          eventsGraphqlResponse,
+        );
+        const result = await eventDataProvider.fetch({
+          filter: { calendarId },
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_EVENTS,
+          {
+            limit: 10,
+            skip: 0,
+            where: {
+              calendar: {
+                sys: {
+                  id: calendarId,
+                },
+              },
+              hidden_not: true,
+            },
+            order: undefined,
+          },
+        );
+        expect(result).toEqual(getContentfulListEventDataObject());
+      });
+
       test('Should apply search query params', async () => {
         const eventsGraphqlResponse = getContentfulGraphqlEventsResponse();
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(

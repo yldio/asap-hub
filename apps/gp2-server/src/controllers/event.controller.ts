@@ -1,5 +1,5 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { FetchEventsOptions, gp2 } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 
 const processEvent = (event: gp2.EventDataObject) => ({
   ...event,
@@ -12,7 +12,7 @@ const processEvent = (event: gp2.EventDataObject) => ({
 export default class EventController {
   constructor(private dataProvider: gp2.EventDataProvider) {}
 
-  async fetch(options: FetchEventsOptions): Promise<gp2.ListEventResponse> {
+  async fetch(options: gp2.FetchEventsOptions): Promise<gp2.ListEventResponse> {
     const events = await this.dataProvider.fetch(options);
 
     return {

@@ -1,5 +1,10 @@
-import { gp2 as gp2Contentful } from '@asap-hub/contentful';
-import { CalendarCreateDataObject, gp2 } from '@asap-hub/model';
+import {
+  gp2 as gp2Contentful,
+  ContentfulWebhookPayload,
+} from '@asap-hub/contentful';
+import { CalendarCreateDataObject, gp2, WebhookDetail } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getContentfulGraphql = () => ({
   Calendars: () => getContentfulGraphqlCalendar(),
@@ -128,3 +133,73 @@ export const calendarsListRestResponse = () => [
     version: 42,
   },
 ];
+
+export const getCalendarWebhookPayload = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'calendar'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'an-environment',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'calendar',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    name: {
+      'en-US': 'Tony',
+    },
+    googleCalendarId: {
+      'en-US': 'calendar-id',
+    },
+    color: {
+      'en-US': '#009900',
+    },
+  },
+});
+
+export const getCalendarEvent = (
+  id: string,
+  eventType: gp2.CalendarEvent,
+): EventBridgeEvent<
+  gp2.CalendarEvent,
+  WebhookDetail<ContentfulWebhookPayload<'calendar'>>
+> => createEventBridgeEventMock(getCalendarWebhookPayload(id), eventType, id);

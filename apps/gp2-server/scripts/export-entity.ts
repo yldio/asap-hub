@@ -18,7 +18,7 @@ import {
   getContentfulRestClientFactory,
 } from '../src/dependencies/clients.dependency';
 
-type EntityResponsesGP2 = EntityResponses['gp2'];
+type EntityResponsesGP2 = Omit<EntityResponses['gp2'], 'working-group'>;
 export const exportEntity = async (
   entity: keyof EntityResponsesGP2,
   filename?: string,
@@ -63,7 +63,9 @@ export const exportEntity = async (
   console.log(`Finished exporting ${recordCount} records`);
 };
 
-const getController = (entity: keyof EntityResponsesGP2) => {
+const getController = (
+  entity: keyof Omit<EntityResponsesGP2, 'working-group'>,
+) => {
   const graphQLClient = getContentfulGraphQLClientFactory();
 
   const outputDataProvider = new OutputContentfulDataProvider(

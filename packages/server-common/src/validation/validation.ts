@@ -38,9 +38,7 @@ export function validateInput<T>(
     coerce?: boolean;
     nullableKeys?: string[];
   },
-): (
-  data: Record<string, unknown>,
-) => NonNullable<T> | NullableOptionalProperties<T> {
+): (data: Record<string, T>) => NonNullable<T> | NullableOptionalProperties<T> {
   const ajvValidation = (options?.coerce ? ajvCoerced : ajv).compile(schema);
 
   return (data) => {

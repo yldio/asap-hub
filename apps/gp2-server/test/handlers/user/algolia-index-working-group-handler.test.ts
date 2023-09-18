@@ -1,0 +1,253 @@
+import { gp2 as gp2Model } from '@asap-hub/model';
+import Boom from '@hapi/boom';
+import { EventBridgeEvent } from 'aws-lambda';
+import { WorkingGroupPayload } from '../../../src/handlers/event-bus';
+import { indexUserWorkingGroupHandler } from '../../../src/handlers/user/algolia-index-working-group-handler';
+import { getListUsersResponse } from '../../fixtures/user.fixtures';
+import {
+  createWorkingGroupMembersResponse,
+  getWorkingGroupEvent,
+  getWorkingGroupResponse,
+} from '../../fixtures/working-group.fixtures';
+import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
+import { userControllerMock } from '../../mocks/user.controller.mock';
+import { workingGroupControllerMock } from '../../mocks/working-group.controller.mock';
+import {
+  createAlgoliaResponse,
+  createWorkingGroupAlgoliaRecord,
+  toPayload,
+} from '../../utils/algolia';
+
+const mapPayload = toPayload('user');
+
+const algoliaSearchClientMock = getAlgoliaSearchClientMock();
+const workingGroupId = '42';
+const possibleEvents: [
+  string,
+  EventBridgeEvent<gp2Model.WorkingGroupEvent, WorkingGroupPayload>,
+][] = [
+  ['created', getWorkingGroupEvent(workingGroupId, 'WorkingGroupsCreated')],
+  ['updated', getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUpdated')],
+  [
+    'unpublished',
+    getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUnpublished'),
+  ],
+  ['deleted', getWorkingGroupEvent(workingGroupId, 'WorkingGroupsDeleted')],
+];
+
+jest.mock('../../../src/utils/logger');
+describe('Index WorkingGroups on User event handler', () => {
+  const indexHandler = indexUserWorkingGroupHandler(
+    workingGroupControllerMock,
+    userControllerMock,
+    algoliaSearchClientMock,
+  );
+  beforeEach(jest.resetAllMocks);
+
+  test('Should throw an error and do not trigger algolia when the user request fails with another error code', async () => {
+    workingGroupControllerMock.fetchById.mockRejectedValue(Boom.badData());
+
+    await expect(
+      indexHandler(
+        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsCreated'),
+      ),
+    ).rejects.toThrow(Boom.badData());
+    expect(userControllerMock.fetch).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.search).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
+  });
+
+  test('Should throw the algolia error when saving the record fails', async () => {
+    const algoliaError = new Error('ERROR');
+
+    const workingGroupResponse = getWorkingGroupResponse();
+    const userListResponse = getListUsersResponse();
+    const algoliaRecord = createWorkingGroupAlgoliaRecord(workingGroupResponse);
+    const algoliaResponse = createAlgoliaResponse<'working-group'>([
+      algoliaRecord,
+    ]);
+    workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+      workingGroupResponse,
+    );
+    algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
+    userControllerMock.fetch.mockResolvedValueOnce(userListResponse);
+    algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
+
+    await expect(
+      indexHandler(
+        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUpdated'),
+      ),
+    ).rejects.toThrow(algoliaError);
+  });
+  test('Should throw the algolia error when searching the record fails', async () => {
+    const algoliaError = new Error('ERROR');
+
+    const workingGroupResponse = getWorkingGroupResponse();
+    const listUserResponse = getListUsersResponse();
+    workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+      workingGroupResponse,
+    );
+    algoliaSearchClientMock.search.mockRejectedValueOnce(algoliaError);
+    userControllerMock.fetch.mockResolvedValueOnce(listUserResponse);
+    algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
+
+    await expect(
+      indexHandler(
+        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUpdated'),
+      ),
+    ).rejects.toThrow(algoliaError);
+    expect(userControllerMock.fetch).not.toHaveBeenCalled();
+    expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
+  });
+  test('Should throw the an error when fetching the user record fails', async () => {
+    const workingGroupResponse = getWorkingGroupResponse();
+    const algoliaRecord = createWorkingGroupAlgoliaRecord(workingGroupResponse);
+    const algoliaResponse = createAlgoliaResponse<'working-group'>([
+      algoliaRecord,
+    ]);
+    workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+      workingGroupResponse,
+    );
+    algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
+    userControllerMock.fetch.mockRejectedValue(Boom.badData());
+
+    await expect(
+      indexHandler(
+        getWorkingGroupEvent(workingGroupId, 'WorkingGroupsUpdated'),
+      ),
+    ).rejects.toThrow(Boom.badData());
+    expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
+  });
+
+  test.each(possibleEvents)(
+    'Should index event when workingGroup event %s occurs',
+    async (_name, event) => {
+      const userId = '32';
+      const memberId = '11';
+      const currentWorkingGroupResponse = getWorkingGroupResponse({
+        members: [
+          {
+            userId: memberId,
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Lead',
+          },
+        ],
+      });
+      const previousWorkingGroupResponse = getWorkingGroupResponse({
+        members: [
+          {
+            userId,
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Lead',
+          },
+        ],
+      });
+      const listUserResponse = getListUsersResponse();
+      const algoliaRecord = createWorkingGroupAlgoliaRecord(
+        currentWorkingGroupResponse,
+      );
+      const algoliaResponse = createAlgoliaResponse<'working-group'>([
+        algoliaRecord,
+      ]);
+      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+        previousWorkingGroupResponse,
+      );
+      algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
+      userControllerMock.fetch.mockResolvedValueOnce(listUserResponse);
+      await indexHandler(event);
+
+      expect(workingGroupControllerMock.fetchById).toHaveBeenCalledWith(
+        workingGroupId,
+      );
+      expect(algoliaSearchClientMock.search).toHaveBeenCalledWith(
+        ['working-group'],
+        workingGroupId,
+      );
+      expect(userControllerMock.fetch).toBeCalledTimes(1);
+      expect(userControllerMock.fetch).toBeCalledWith({
+        filter: {
+          userIds: [userId, memberId],
+        },
+        take: 10,
+      });
+      expect(algoliaSearchClientMock.saveMany).toBeCalledTimes(1);
+      expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith(
+        listUserResponse.items.map(mapPayload),
+      );
+    },
+  );
+  test.each(possibleEvents)(
+    'removes duplicate users for event %s',
+    async (_name, event) => {
+      const userId = '32';
+      const currentWorkingGroupResponse = getWorkingGroupResponse({
+        members: [
+          {
+            userId,
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Lead',
+          },
+        ],
+      });
+      const previousWorkingGroupResponse = getWorkingGroupResponse({
+        members: [
+          {
+            userId,
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Lead',
+          },
+        ],
+      });
+      const listUserResponse = getListUsersResponse();
+      const algoliaRecord = createWorkingGroupAlgoliaRecord(
+        currentWorkingGroupResponse,
+      );
+      const algoliaResponse = createAlgoliaResponse<'working-group'>([
+        algoliaRecord,
+      ]);
+      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+        previousWorkingGroupResponse,
+      );
+      algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
+      userControllerMock.fetch.mockResolvedValueOnce(listUserResponse);
+      await indexHandler(event);
+
+      expect(userControllerMock.fetch).toBeCalledWith({
+        filter: {
+          userIds: [userId],
+        },
+        take: 10,
+      });
+    },
+  );
+  test.each(possibleEvents)(
+    'more than 10 users for event %s',
+    async (_name, event) => {
+      const members = createWorkingGroupMembersResponse(11);
+      const workingGroupResponse = getWorkingGroupResponse({
+        members,
+      });
+      const listUserResponse = getListUsersResponse();
+      const algoliaRecord =
+        createWorkingGroupAlgoliaRecord(workingGroupResponse);
+      const algoliaResponse = createAlgoliaResponse<'working-group'>([
+        algoliaRecord,
+      ]);
+      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+        workingGroupResponse,
+      );
+      algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
+      userControllerMock.fetch
+        .mockResolvedValueOnce(listUserResponse)
+        .mockResolvedValueOnce(listUserResponse);
+      await indexHandler(event);
+
+      expect(userControllerMock.fetch).toBeCalledTimes(2);
+      expect(algoliaSearchClientMock.saveMany).toBeCalledTimes(2);
+    },
+  );
+});

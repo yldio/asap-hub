@@ -36,3 +36,13 @@ export const createProjectAlgoliaRecord = (
     __meta: { type: 'project' },
   };
 };
+
+export const createWorkingGroupAlgoliaRecord = (
+  response: gp2Model.WorkingGroupResponse,
+): ClientSearchResponse<'gp2', 'working-group'>['hits'][number] => {
+  return {
+    ...response,
+    objectID: response.id,
+    __meta: { type: 'working-group' },
+  };
+};

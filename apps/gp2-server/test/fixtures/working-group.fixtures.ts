@@ -1,6 +1,11 @@
 import type {
+<<<<<<< HEAD
   gp2 as gp2Contentful,
   ContentfulWebhookPayload,
+=======
+  ContentfulWebhookPayload,
+  gp2 as gp2Contentful,
+>>>>>>> 26b106f20 (adds working group user index)
 } from '@asap-hub/contentful';
 import type { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
@@ -67,8 +72,22 @@ export const getListWorkingGroupDataObject =
     items: [getWorkingGroupDataObject()],
   });
 
-export const getWorkingGroupResponse = (): gp2Model.WorkingGroupResponse =>
-  getWorkingGroupDataObject();
+export const getWorkingGroupResponse = (
+  overrides: Partial<gp2Model.WorkingGroupResponse> = {},
+): gp2Model.WorkingGroupResponse => ({
+  ...getWorkingGroupDataObject(),
+  ...overrides,
+});
+
+export const createWorkingGroupMembersResponse = (
+  length = 1,
+): gp2Model.WorkingGroupMember[] =>
+  Array.from({ length }, (_, id) => ({
+    userId: String(id),
+    firstName: 'Tony',
+    lastName: 'Stark',
+    role: 'Lead',
+  }));
 
 export const getListWorkingGroupsResponse =
   (): gp2Model.ListWorkingGroupResponse => ({

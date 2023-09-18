@@ -109,6 +109,11 @@ export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOpt
             items: { type: 'string' },
             nullable: true,
           },
+          userIds: {
+            type: 'array',
+            items: { type: 'string' },
+            nullable: true,
+          },
           code: { type: 'string', nullable: true },
           onlyOnboarded: { type: 'boolean', nullable: true, default: true },
           hidden: { type: 'boolean', nullable: true },

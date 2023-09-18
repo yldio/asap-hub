@@ -30,9 +30,4 @@ module.exports = {
     filename: '[name].js',
   },
   devtool: 'source-map',
-  plugins: [
-    new CopyPlugin({
-      patterns: [{ from: './src/migrations', to: './migrations' }],
-    }),
-  ],
 };

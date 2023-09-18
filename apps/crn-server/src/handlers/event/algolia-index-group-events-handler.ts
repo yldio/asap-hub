@@ -2,7 +2,7 @@ import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import {
   EventController,
   EventResponse,
-  GroupEvent,
+  InterestGroupEvent,
   ListResponse,
 } from '@asap-hub/model';
 import {
@@ -22,7 +22,7 @@ export const indexGroupEventsHandler =
     eventController: EventController,
     algoliaClient: AlgoliaClient<'crn'>,
   ): ((
-    event: EventBridgeEvent<GroupEvent, InterestGroupPayload>,
+    event: EventBridgeEvent<InterestGroupEvent, InterestGroupPayload>,
   ) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);

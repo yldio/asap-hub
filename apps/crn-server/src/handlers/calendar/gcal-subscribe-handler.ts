@@ -1,6 +1,5 @@
 import {
   AlertsSentry,
-  calendarCreatedSquidexHandlerFactory,
   calendarCreatedContentfulHandlerFactory,
   getJWTCredentialsFactory,
   subscribeToEventChangesFactory,
@@ -16,7 +15,6 @@ import {
   googleApiCredentialsSecretId,
   googleApiToken,
   googleApiUrl,
-  isContentfulEnabled,
   region,
 } from '../../config';
 import { getCalendarDataProvider } from '../../dependencies/calendars.dependencies';
@@ -31,40 +29,25 @@ const getJWTCredentialsAWS = getJWTCredentialsFactory({
 });
 
 /* istanbul ignore next */
-export const webhookHandler = isContentfulEnabled
-  ? calendarCreatedContentfulHandlerFactory(
-      subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
-        asapApiUrl,
-        googleApiToken,
-        googleApiUrl,
-        cms: 'contentful',
-      }),
-      unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
-        googleApiUrl,
-      }),
-      getCalendarDataProvider(),
-      new AlertsSentry(Sentry.captureException.bind(Sentry)),
-      logger,
-      {
-        environment: contentfulEnvId,
-        space: contentfulSpaceId,
-        accessToken: contentfulAccessToken,
-      },
-      getCalendarSubscriptionId,
-    )
-  : calendarCreatedSquidexHandlerFactory(
-      subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
-        asapApiUrl,
-        googleApiToken,
-        googleApiUrl,
-        cms: 'squidex',
-      }),
-      unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
-        googleApiUrl,
-      }),
-      getCalendarDataProvider(),
-      new AlertsSentry(Sentry.captureException.bind(Sentry)),
-      logger,
-    );
+export const webhookHandler = calendarCreatedContentfulHandlerFactory(
+  subscribeToEventChangesFactory(getJWTCredentialsAWS, logger, {
+    asapApiUrl,
+    googleApiToken,
+    googleApiUrl,
+    cms: 'contentful',
+  }),
+  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS, logger, {
+    googleApiUrl,
+  }),
+  getCalendarDataProvider(),
+  new AlertsSentry(Sentry.captureException.bind(Sentry)),
+  logger,
+  {
+    environment: contentfulEnvId,
+    space: contentfulSpaceId,
+    accessToken: contentfulAccessToken,
+  },
+  getCalendarSubscriptionId,
+);
 
 export const handler = sentryWrapper(webhookHandler);

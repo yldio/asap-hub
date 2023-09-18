@@ -8,7 +8,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "start": "SQUIDEX_APP_NAME=$CRN_SQUIDEX_APP_NAME SQUIDEX_CLIENT_ID=$CRN_SQUIDEX_CLIENT_ID SQUIDEX_CLIENT_SECRET=$CRN_SQUIDEX_CLIENT_SECRET node-dev ./src/server.ts",
+    "start": "node-dev ./src/server.ts",
     "migration:create": "./scripts/create-migration.sh",
     "typecheck": "tsc"
   },
@@ -36,7 +36,6 @@
     "@asap-hub/routing": "workspace:*",
     "@asap-hub/server-common": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
-    "@asap-hub/squidex": "workspace:*",
     "@asap-hub/validation": "workspace:*",
     "@aws-sdk/client-eventbridge": "^3.306.0",
     "@aws-sdk/client-ses": "^3.306.0",

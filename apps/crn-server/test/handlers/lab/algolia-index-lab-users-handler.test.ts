@@ -1,10 +1,10 @@
 import Boom from '@hapi/boom';
 import { indexLabUsersHandler } from '../../../src/handlers/lab/algolia-index-lab-users-handler';
 import {
-  createEvent,
-  deleteEvent,
+  getLabCreateEvent,
+  getLabDeleteEvent,
   LabEventGenerator,
-  unpublishedEvent,
+  getLabUnpublishedEvent,
   updateEvent,
 } from '../../fixtures/labs.fixtures';
 import {
@@ -20,10 +20,10 @@ const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 const mapPayload = toPayload('user');
 
 const possibleEvents: [string, LabEventGenerator][] = [
-  ['created', createEvent],
+  ['created', getLabCreateEvent],
   ['updated', updateEvent],
-  ['unpublished', unpublishedEvent],
-  ['deleted', deleteEvent],
+  ['unpublished', getLabUnpublishedEvent],
+  ['deleted', getLabDeleteEvent],
 ];
 
 const possibleRacingConditionEvents: [
@@ -31,20 +31,20 @@ const possibleRacingConditionEvents: [
   LabEventGenerator,
   LabEventGenerator,
 ][] = [
-  ['created and updated', createEvent, updateEvent],
-  ['updated and created', updateEvent, createEvent],
+  ['created and updated', getLabCreateEvent, updateEvent],
+  ['updated and created', updateEvent, getLabCreateEvent],
 
-  ['created and unpublished', createEvent, unpublishedEvent],
-  ['unpublished and created', unpublishedEvent, createEvent],
+  ['created and unpublished', getLabCreateEvent, getLabUnpublishedEvent],
+  ['unpublished and created', getLabUnpublishedEvent, getLabCreateEvent],
 
-  ['created and deleted', createEvent, deleteEvent],
-  ['deleted and created', deleteEvent, createEvent],
+  ['created and deleted', getLabCreateEvent, getLabDeleteEvent],
+  ['deleted and created', getLabDeleteEvent, getLabCreateEvent],
 
-  ['updated and deleted', updateEvent, deleteEvent],
-  ['deleted and updated', deleteEvent, updateEvent],
+  ['updated and deleted', updateEvent, getLabDeleteEvent],
+  ['deleted and updated', getLabDeleteEvent, updateEvent],
 
-  ['updated and unpublished', updateEvent, unpublishedEvent],
-  ['unpublished and updated', unpublishedEvent, updateEvent],
+  ['updated and unpublished', updateEvent, getLabUnpublishedEvent],
+  ['unpublished and updated', getLabUnpublishedEvent, updateEvent],
 ];
 
 describe('Index Users on Lab event handler', () => {
@@ -57,7 +57,7 @@ describe('Index Users on Lab event handler', () => {
   test('Should throw an error and do not trigger algolia when the lab request fails with another error code', async () => {
     userControllerMock.fetch.mockRejectedValue(Boom.badData());
 
-    await expect(indexHandler(createEvent('lab-1234'))).rejects.toThrow(
+    await expect(indexHandler(getLabCreateEvent('lab-1234'))).rejects.toThrow(
       Boom.badData(),
     );
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();

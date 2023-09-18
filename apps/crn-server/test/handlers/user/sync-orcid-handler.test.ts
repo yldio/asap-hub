@@ -19,7 +19,7 @@ describe('POST /webhook/users/orcid', () => {
     await syncHandler(event);
 
     expect(userControllerMock.syncOrcidProfile).toHaveBeenCalledWith(
-      event.detail.payload.id,
+      event.detail.resourceId,
       undefined,
     );
   });

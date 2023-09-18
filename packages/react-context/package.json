@@ -20,14 +20,14 @@
     "@asap-hub/flags": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/validation": "workspace:*",
-    "@babel/runtime-corejs3": "7.22.11",
+    "@babel/runtime-corejs3": "7.22.15",
     "core-js": "3.32.1"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/core": "7.22.11",
-    "@babel/preset-react": "7.22.5",
+    "@babel/core": "7.22.20",
+    "@babel/preset-react": "7.22.15",
     "@testing-library/react": "11.2.7",
     "@testing-library/react-hooks": "8.0.1",
     "@types/jest": "29.5.4",

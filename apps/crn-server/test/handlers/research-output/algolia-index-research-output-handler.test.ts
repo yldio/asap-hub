@@ -37,6 +37,11 @@ describe('Research Output index handler', () => {
 
   test('Should populate _tags field before saving the research-output to Algolia', async () => {
     const researchOutputResponse = getResearchOutputResponse();
+    researchOutputResponse.methods = ['methods-tag'];
+    researchOutputResponse.organisms = ['organisms-tag'];
+    researchOutputResponse.environments = ['environments-tag'];
+    researchOutputResponse.subtype = 'subtype-tag';
+    researchOutputResponse.keywords = ['keywords-tag'];
     researchOutputResponse.relatedResearch = [];
     researchOutputControllerMock.fetchById.mockResolvedValueOnce(
       researchOutputResponse,
@@ -47,7 +52,13 @@ describe('Research Output index handler', () => {
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: {
         ...researchOutputResponse,
-        _tags: ['Activity Assay', 'Rat', 'In Vitro', 'Metabolite', 'Keyword1'],
+        _tags: [
+          'methods-tag',
+          'organisms-tag',
+          'environments-tag',
+          'subtype-tag',
+          'keywords-tag',
+        ],
       },
       type: 'research-output',
     });

@@ -66,49 +66,13 @@ describe('Meeting Link Update Handler', () => {
     expect(eventControllerMock.update).toHaveBeenNthCalledWith(
       1,
       'event-series-2',
-      { meetingLink: 'https://zoom.com/shared-link' },
+      { meetingLink: 'https://zoom.com/shared-link', copyMeetingLink: false },
     );
     expect(eventControllerMock.update).toHaveBeenNthCalledWith(
       2,
       'event-series-3',
-      { meetingLink: 'https://zoom.com/shared-link' },
+      { meetingLink: 'https://zoom.com/shared-link', copyMeetingLink: false },
     );
-  });
-
-  test('does not update copyMeetingLink', async () => {
-    const seriesEvent1 = getEventResponse();
-    seriesEvent1.id = 'event-series-1';
-    seriesEvent1.googleId = 'googleId_1';
-    seriesEvent1.meetingLink = 'https://zoom.com/shared-link';
-    seriesEvent1.copyMeetingLink = true;
-
-    const seriesEvent2 = getEventResponse();
-    seriesEvent2.id = 'event-series-2';
-    seriesEvent2.googleId = 'googleId_2';
-    seriesEvent2.meetingLink = undefined;
-
-    eventControllerMock.fetchById.mockResolvedValueOnce(seriesEvent1);
-    eventControllerMock.fetch.mockResolvedValueOnce({
-      total: 2,
-      items: [seriesEvent1, seriesEvent2],
-    });
-
-    const webhookEvent = getEventEvent(seriesEvent1.id, 'EventsPublished');
-
-    await handler(webhookEvent);
-
-    expect(eventControllerMock.fetchById).toHaveBeenCalledWith(seriesEvent1.id);
-    expect(eventControllerMock.fetch).toHaveBeenCalledWith({
-      filter: { googleId: 'googleId' },
-    });
-
-    const updateCall = eventControllerMock.update.mock.calls[0];
-    expect(Object.keys(updateCall?.[1] || {}).includes('meetingLink')).toEqual(
-      true,
-    );
-    expect(
-      Object.keys(updateCall?.[1] || {}).includes('copyMeetingLink'),
-    ).toEqual(false);
   });
 
   test('does not update series events when there are not other events with common google ids', async () => {
@@ -203,12 +167,14 @@ describe('Meeting Link Update Handler', () => {
     when(eventControllerMock.update)
       .calledWith('event-series-2', {
         meetingLink: 'https://zoom.com/shared-link',
+        copyMeetingLink: false,
       })
       .mockResolvedValueOnce(getEventResponse());
 
     when(eventControllerMock.update)
       .calledWith('event-series-3', {
         meetingLink: 'https://zoom.com/shared-link',
+        copyMeetingLink: false,
       })
       .mockRejectedValueOnce(new Error('unknown error'));
 
@@ -224,7 +190,7 @@ describe('Meeting Link Update Handler', () => {
     expect(eventControllerMock.update).toHaveBeenNthCalledWith(
       1,
       'event-series-2',
-      { meetingLink: 'https://zoom.com/shared-link' },
+      { meetingLink: 'https://zoom.com/shared-link', copyMeetingLink: false },
     );
 
     expect(loggerMock.error).toHaveBeenCalledWith(

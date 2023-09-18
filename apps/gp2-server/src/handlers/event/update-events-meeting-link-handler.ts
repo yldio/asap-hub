@@ -55,6 +55,7 @@ export const meetingLinkUpdateHandler =
         try {
           await eventController.update(seriesEvent.id, {
             meetingLink: calendarEvent.meetingLink,
+            copyMeetingLink: false,
           });
         } catch (e) {
           log.error(`Error updating event ${seriesEvent.id}: ${e}`);

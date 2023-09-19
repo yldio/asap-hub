@@ -68,7 +68,7 @@ describe('Index Outputs on External User event handler', () => {
 
       expect(outputControllerMock.fetch).toHaveBeenCalledWith({
         filter: {
-          externalUserId: 'external-user-id',
+          externalAuthorId: 'external-user-id',
         },
         skip: 0,
         take: 8,

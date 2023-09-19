@@ -61,7 +61,7 @@ describe('Index Outputs on User event handler', () => {
 
       expect(outputControllerMock.fetch).toHaveBeenCalledWith({
         filter: {
-          userId: 'user-id',
+          authorId: 'user-id',
         },
         skip: 0,
         take: 8,

@@ -63,9 +63,7 @@ export const exportEntity = async (
   console.log(`Finished exporting ${recordCount} records`);
 };
 
-const getController = (
-  entity: keyof Omit<EntityResponsesGP2, 'working-group'>,
-) => {
+const getController = (entity: keyof EntityResponsesGP2) => {
   const graphQLClient = getContentfulGraphQLClientFactory();
 
   const outputDataProvider = new OutputContentfulDataProvider(

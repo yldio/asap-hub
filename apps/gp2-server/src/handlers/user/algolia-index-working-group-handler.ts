@@ -37,7 +37,7 @@ export const indexUserWorkingGroupHandler =
           data,
           type: 'user' as const,
         }));
-        logger.info(`trying to save: ${JSON.stringify(users, null, 2)}`);
+        logger.debug(`trying to save: ${JSON.stringify(users, null, 2)}`);
         await algoliaClient.saveMany(users);
       } catch (err) {
         logger.error('Error occurred during saveMany');

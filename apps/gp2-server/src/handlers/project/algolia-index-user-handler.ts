@@ -41,7 +41,7 @@ export const indexProjectUserHandler =
     const processingFunction = async (
       foundProjects: ListResponse<gp2Model.ProjectResponse>,
     ) => {
-      logger.info(
+      logger.debug(
         `Found ${foundProjects.total} projects. Processing ${foundProjects.items.length} projects.`,
       );
 
@@ -50,7 +50,7 @@ export const indexProjectUserHandler =
           data,
           type: 'project' as const,
         }));
-        logger.info(`trying to save: ${JSON.stringify(projects, null, 2)}`);
+        logger.debug(`trying to save: ${JSON.stringify(projects, null, 2)}`);
         await algoliaClient.saveMany(projects);
       } catch (err) {
         logger.error('Error occurred during saveMany');

@@ -50,7 +50,7 @@ export const indexUserEventsHandler =
           data,
           type: 'event' as const,
         }));
-        logger.info(`trying to save: ${JSON.stringify(events, null, 2)}`);
+        logger.debug(`trying to save: ${JSON.stringify(events, null, 2)}`);
         await algoliaClient.saveMany(events);
       } catch (err) {
         logger.error('Error occurred during saveMany');

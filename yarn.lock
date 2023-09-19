@@ -890,7 +890,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-test-renderer": 18.0.1
+    "@types/react-test-renderer": 18.0.2
     "@types/streamsaver": 2.0.1
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1299,7 +1299,7 @@ __metadata:
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 2.4.6
-    "@types/react-test-renderer": 18.0.1
+    "@types/react-test-renderer": 18.0.2
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
@@ -1363,7 +1363,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
-    "@types/react-test-renderer": 18.0.1
+    "@types/react-test-renderer": 18.0.2
     "@types/streamsaver": 2.0.1
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -1612,7 +1612,7 @@ __metadata:
     "@types/react-router-dom": 5.3.3
     "@types/react-router-hash-link": 2.4.6
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
-    "@types/react-test-renderer": 18.0.1
+    "@types/react-test-renderer": 18.0.2
     "@types/rehype-slug": "workspace:*"
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
@@ -18095,12 +18095,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:18.0.1":
-  version: 18.0.1
-  resolution: "@types/react-test-renderer@npm:18.0.1"
+"@types/react-test-renderer@npm:18.0.2":
+  version: 18.0.2
+  resolution: "@types/react-test-renderer@npm:18.0.2"
   dependencies:
     "@types/react": "*"
-  checksum: ec149c2ab4d76c7286ef5d8ca9546765632e0c7a0788e5850081af38526f7fcb6413641e083520ee4b2fc57755f475990fbfabcbcdda8d954aa708708c866a96
+  checksum: 2845b05adcb28180e530b63c47495b2c0beb1a669a0ce962dcfa6ed5b88d37c8438de1f29cb2e599b5f229307a4479e424677407111a571bbcab06bd538ea1df
   languageName: node
   linkType: hard
 
@@ -20697,7 +20697,7 @@ __metadata:
     "@peculiar/webcrypto": 1.4.3
     "@testing-library/jest-dom": ^5.16.5
     "@types/jest": 29.5.5
-    "@types/react-test-renderer": 18.0.1
+    "@types/react-test-renderer": 18.0.2
     "@types/uuid": 8.3.4
     "@types/webpack": 4.41.33
     "@yarnpkg/pnpify": 3.1.6

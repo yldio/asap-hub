@@ -143,7 +143,7 @@
     "@peculiar/webcrypto": "1.4.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/jest": "29.5.5",
-    "@types/react-test-renderer": "18.0.1",
+    "@types/react-test-renderer": "18.0.2",
     "@types/uuid": "8.3.4",
     "@types/webpack": "4.41.33",
     "@yarnpkg/pnpify": "3.1.6",

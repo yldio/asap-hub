@@ -56,11 +56,22 @@ export const indexUserProjectHandler =
     );
     const currentUserIds = currentMembers.map(({ userId }) => userId);
 
-    const previous = await algoliaClient.search(['project'], projectId);
-    const previousProject: gp2Model.ProjectResponse | undefined =
-      previous.hits[0];
-    const previousMembers = previousProject?.members || [];
-    const previousUserIds = previousMembers.map(({ userId }) => userId);
+    const searchUsers = async (page = 0) => {
+      const users = await algoliaClient.search(['user'], projectId, {
+        page,
+        hitsPerPage: 10,
+      });
+      return {
+        userIds: users.hits.map(({ id }) => id),
+        nbPages: users.nbPages,
+      };
+    };
+
+    const { userIds: previousUserIds, nbPages } = await searchUsers();
+    for (let page = 1; page < nbPages; page += 1) {
+      const { userIds } = await searchUsers(page);
+      previousUserIds.concat(userIds);
+    }
     const mergedUserIds = [...new Set([...currentUserIds, ...previousUserIds])];
 
     const take = 10;

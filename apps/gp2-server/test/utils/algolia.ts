@@ -27,22 +27,12 @@ export const createAlgoliaResponse = <
   ...overrides,
 });
 
-export const createProjectAlgoliaRecord = (
-  response: gp2Model.ProjectResponse,
-): ClientSearchResponse<'gp2', 'project'>['hits'][number] => {
+export const createUserAlgoliaRecord = (
+  response: gp2Model.UserResponse,
+): ClientSearchResponse<'gp2', 'user'>['hits'][number] => {
   return {
     ...response,
     objectID: response.id,
-    __meta: { type: 'project' },
-  };
-};
-
-export const createWorkingGroupAlgoliaRecord = (
-  response: gp2Model.WorkingGroupResponse,
-): ClientSearchResponse<'gp2', 'working-group'>['hits'][number] => {
-  return {
-    ...response,
-    objectID: response.id,
-    __meta: { type: 'working-group' },
+    __meta: { type: 'user' },
   };
 };

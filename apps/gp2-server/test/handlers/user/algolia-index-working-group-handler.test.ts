@@ -3,7 +3,10 @@ import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { WorkingGroupPayload } from '../../../src/handlers/event-bus';
 import { indexUserWorkingGroupHandler } from '../../../src/handlers/user/algolia-index-working-group-handler';
-import { getListUsersResponse } from '../../fixtures/user.fixtures';
+import {
+  getListUsersResponse,
+  getUserResponse,
+} from '../../fixtures/user.fixtures';
 import {
   createWorkingGroupMembersResponse,
   getWorkingGroupEvent,
@@ -14,7 +17,7 @@ import { userControllerMock } from '../../mocks/user.controller.mock';
 import { workingGroupControllerMock } from '../../mocks/working-group.controller.mock';
 import {
   createAlgoliaResponse,
-  createWorkingGroupAlgoliaRecord,
+  createUserAlgoliaRecord,
   toPayload,
 } from '../../utils/algolia';
 
@@ -62,10 +65,9 @@ describe('Index WorkingGroups on User event handler', () => {
 
     const workingGroupResponse = getWorkingGroupResponse();
     const userListResponse = getListUsersResponse();
-    const algoliaRecord = createWorkingGroupAlgoliaRecord(workingGroupResponse);
-    const algoliaResponse = createAlgoliaResponse<'working-group'>([
-      algoliaRecord,
-    ]);
+    const previousUserResponse = getUserResponse();
+    const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+    const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
     workingGroupControllerMock.fetchById.mockResolvedValueOnce(
       workingGroupResponse,
     );
@@ -101,10 +103,9 @@ describe('Index WorkingGroups on User event handler', () => {
   });
   test('Should throw the an error when fetching the user record fails', async () => {
     const workingGroupResponse = getWorkingGroupResponse();
-    const algoliaRecord = createWorkingGroupAlgoliaRecord(workingGroupResponse);
-    const algoliaResponse = createAlgoliaResponse<'working-group'>([
-      algoliaRecord,
-    ]);
+    const previousUserResponse = getUserResponse();
+    const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+    const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
     workingGroupControllerMock.fetchById.mockResolvedValueOnce(
       workingGroupResponse,
     );
@@ -124,7 +125,7 @@ describe('Index WorkingGroups on User event handler', () => {
     async (_name, event) => {
       const userId = '32';
       const memberId = '11';
-      const currentWorkingGroupResponse = getWorkingGroupResponse({
+      const workingGroupResponse = getWorkingGroupResponse({
         members: [
           {
             userId: memberId,
@@ -134,25 +135,12 @@ describe('Index WorkingGroups on User event handler', () => {
           },
         ],
       });
-      const previousWorkingGroupResponse = getWorkingGroupResponse({
-        members: [
-          {
-            userId,
-            firstName: 'Tony',
-            lastName: 'Stark',
-            role: 'Lead',
-          },
-        ],
-      });
+      const previousUserResponse = getUserResponse({ id: userId });
       const listUserResponse = getListUsersResponse();
-      const algoliaRecord = createWorkingGroupAlgoliaRecord(
-        currentWorkingGroupResponse,
-      );
-      const algoliaResponse = createAlgoliaResponse<'working-group'>([
-        algoliaRecord,
-      ]);
+      const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+      const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
       workingGroupControllerMock.fetchById.mockResolvedValueOnce(
-        previousWorkingGroupResponse,
+        workingGroupResponse,
       );
       algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
       userControllerMock.fetch.mockResolvedValueOnce(listUserResponse);
@@ -162,13 +150,14 @@ describe('Index WorkingGroups on User event handler', () => {
         workingGroupId,
       );
       expect(algoliaSearchClientMock.search).toHaveBeenCalledWith(
-        ['working-group'],
+        ['user'],
         workingGroupId,
+        { page: 0, hitsPerPage: 10 },
       );
       expect(userControllerMock.fetch).toBeCalledTimes(1);
       expect(userControllerMock.fetch).toBeCalledWith({
         filter: {
-          userIds: [userId, memberId],
+          userIds: [memberId, userId],
         },
         take: 10,
       });
@@ -179,10 +168,63 @@ describe('Index WorkingGroups on User event handler', () => {
     },
   );
   test.each(possibleEvents)(
+    'Should page though possible previous users for event %s',
+    async (_name, event) => {
+      const userId = '32';
+      const memberId = '11';
+      const projectResponse = getWorkingGroupResponse({
+        members: [
+          {
+            userId: memberId,
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Lead',
+          },
+        ],
+      });
+      const previousUserResponse = getUserResponse({ id: userId });
+      const listUserResponse = getListUsersResponse();
+      const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+      const firstAlgoliaResponse = createAlgoliaResponse<'user'>(
+        [algoliaRecord],
+        { nbPages: 2 },
+      );
+      const secondAlgoliaResponse = createAlgoliaResponse<'user'>(
+        [algoliaRecord],
+        { nbPages: 2 },
+      );
+      workingGroupControllerMock.fetchById.mockResolvedValueOnce(
+        projectResponse,
+      );
+      algoliaSearchClientMock.search
+        .mockResolvedValueOnce(firstAlgoliaResponse)
+        .mockResolvedValueOnce(secondAlgoliaResponse);
+      userControllerMock.fetch.mockResolvedValueOnce(listUserResponse);
+      await indexHandler(event);
+
+      expect(workingGroupControllerMock.fetchById).toHaveBeenCalledWith(
+        workingGroupId,
+      );
+      expect(algoliaSearchClientMock.search).toBeCalledTimes(2);
+      expect(algoliaSearchClientMock.search).toHaveBeenNthCalledWith(
+        1,
+        ['user'],
+        workingGroupId,
+        { page: 0, hitsPerPage: 10 },
+      );
+      expect(algoliaSearchClientMock.search).toHaveBeenNthCalledWith(
+        2,
+        ['user'],
+        workingGroupId,
+        { page: 1, hitsPerPage: 10 },
+      );
+    },
+  );
+  test.each(possibleEvents)(
     'removes duplicate users for event %s',
     async (_name, event) => {
       const userId = '32';
-      const currentWorkingGroupResponse = getWorkingGroupResponse({
+      const workingGroupResponse = getWorkingGroupResponse({
         members: [
           {
             userId,
@@ -192,25 +234,12 @@ describe('Index WorkingGroups on User event handler', () => {
           },
         ],
       });
-      const previousWorkingGroupResponse = getWorkingGroupResponse({
-        members: [
-          {
-            userId,
-            firstName: 'Tony',
-            lastName: 'Stark',
-            role: 'Lead',
-          },
-        ],
-      });
+      const previousUserResponse = getUserResponse({ id: userId });
       const listUserResponse = getListUsersResponse();
-      const algoliaRecord = createWorkingGroupAlgoliaRecord(
-        currentWorkingGroupResponse,
-      );
-      const algoliaResponse = createAlgoliaResponse<'working-group'>([
-        algoliaRecord,
-      ]);
+      const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+      const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
       workingGroupControllerMock.fetchById.mockResolvedValueOnce(
-        previousWorkingGroupResponse,
+        workingGroupResponse,
       );
       algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
       userControllerMock.fetch.mockResolvedValueOnce(listUserResponse);
@@ -231,12 +260,10 @@ describe('Index WorkingGroups on User event handler', () => {
       const workingGroupResponse = getWorkingGroupResponse({
         members,
       });
+      const previousUserResponse = getUserResponse({ id: '11' });
       const listUserResponse = getListUsersResponse();
-      const algoliaRecord =
-        createWorkingGroupAlgoliaRecord(workingGroupResponse);
-      const algoliaResponse = createAlgoliaResponse<'working-group'>([
-        algoliaRecord,
-      ]);
+      const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+      const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
       workingGroupControllerMock.fetchById.mockResolvedValueOnce(
         workingGroupResponse,
       );

@@ -18,7 +18,7 @@ import {
   getContentfulRestClientFactory,
 } from '../src/dependencies/clients.dependency';
 
-type EntityResponsesGP2 = Omit<EntityResponses['gp2'], 'working-group'>;
+type EntityResponsesGP2 = EntityResponses['gp2'];
 export const exportEntity = async (
   entity: keyof EntityResponsesGP2,
   filename?: string,

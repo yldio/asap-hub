@@ -19,7 +19,6 @@ import {
   OUTPUT_ENTITY_TYPE,
   Payload as GP2Payload,
   PROJECT_ENTITY_TYPE,
-  WORKING_GROUP_ENTITY_TYPE,
 } from './gp2';
 
 const CRN = 'crn';
@@ -38,7 +37,6 @@ export type EntityResponses = {
     [OUTPUT_ENTITY_TYPE]: gp2Model.OutputResponse;
     [PROJECT_ENTITY_TYPE]: gp2Model.ProjectResponse;
     [USER_ENTITY_TYPE]: gp2Model.UserResponse;
-    [WORKING_GROUP_ENTITY_TYPE]: gp2Model.WorkingGroupResponse;
   };
 };
 export type SavePayload = Payload | GP2Payload;

@@ -8,13 +8,16 @@ import {
   getProjectEvent,
   getProjectResponse,
 } from '../../fixtures/project.fixtures';
-import { getListUsersResponse } from '../../fixtures/user.fixtures';
+import {
+  getListUsersResponse,
+  getUserResponse,
+} from '../../fixtures/user.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { projectControllerMock } from '../../mocks/project.controller.mock';
 import { userControllerMock } from '../../mocks/user.controller.mock';
 import {
   createAlgoliaResponse,
-  createProjectAlgoliaRecord,
+  createUserAlgoliaRecord,
   toPayload,
 } from '../../utils/algolia';
 
@@ -57,8 +60,9 @@ describe('Index Projects on User event handler', () => {
 
     const projectResponse = getProjectResponse();
     const userListResponse = getListUsersResponse();
-    const algoliaRecord = createProjectAlgoliaRecord(projectResponse);
-    const algoliaResponse = createAlgoliaResponse<'project'>([algoliaRecord]);
+    const previousUserResponse = getUserResponse();
+    const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+    const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
     projectControllerMock.fetchById.mockResolvedValueOnce(projectResponse);
     algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
     userControllerMock.fetch.mockResolvedValueOnce(userListResponse);
@@ -86,8 +90,9 @@ describe('Index Projects on User event handler', () => {
   });
   test('Should throw the an error when fetching the user record fails', async () => {
     const projectResponse = getProjectResponse();
-    const algoliaRecord = createProjectAlgoliaRecord(projectResponse);
-    const algoliaResponse = createAlgoliaResponse<'project'>([algoliaRecord]);
+    const previousUserResponse = getUserResponse();
+    const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+    const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
     projectControllerMock.fetchById.mockResolvedValueOnce(projectResponse);
     algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
     userControllerMock.fetch.mockRejectedValue(Boom.badData());
@@ -103,7 +108,7 @@ describe('Index Projects on User event handler', () => {
     async (_name, event) => {
       const userId = '32';
       const memberId = '11';
-      const currentProjectResponse = getProjectResponse({
+      const projectResponse = getProjectResponse({
         members: [
           {
             userId: memberId,
@@ -113,35 +118,25 @@ describe('Index Projects on User event handler', () => {
           },
         ],
       });
-      const previousProjectResponse = getProjectResponse({
-        members: [
-          {
-            userId,
-            firstName: 'Tony',
-            lastName: 'Stark',
-            role: 'Project manager',
-          },
-        ],
-      });
+      const previousUserResponse = getUserResponse({ id: userId });
       const listUserResponse = getListUsersResponse();
-      const algoliaRecord = createProjectAlgoliaRecord(currentProjectResponse);
-      const algoliaResponse = createAlgoliaResponse<'project'>([algoliaRecord]);
-      projectControllerMock.fetchById.mockResolvedValueOnce(
-        previousProjectResponse,
-      );
+      const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+      const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
+      projectControllerMock.fetchById.mockResolvedValueOnce(projectResponse);
       algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
       userControllerMock.fetch.mockResolvedValueOnce(listUserResponse);
       await indexHandler(event);
 
       expect(projectControllerMock.fetchById).toHaveBeenCalledWith(projectId);
       expect(algoliaSearchClientMock.search).toHaveBeenCalledWith(
-        ['project'],
+        ['user'],
         projectId,
+        { page: 0, hitsPerPage: 10 },
       );
       expect(userControllerMock.fetch).toBeCalledTimes(1);
       expect(userControllerMock.fetch).toBeCalledWith({
         filter: {
-          userIds: [userId, memberId],
+          userIds: [memberId, userId],
         },
         take: 10,
       });
@@ -152,10 +147,59 @@ describe('Index Projects on User event handler', () => {
     },
   );
   test.each(possibleEvents)(
+    'Should page though possible previous users for event %s',
+    async (_name, event) => {
+      const userId = '32';
+      const memberId = '11';
+      const projectResponse = getProjectResponse({
+        members: [
+          {
+            userId: memberId,
+            firstName: 'Tony',
+            lastName: 'Stark',
+            role: 'Project manager',
+          },
+        ],
+      });
+      const previousUserResponse = getUserResponse({ id: userId });
+      const listUserResponse = getListUsersResponse();
+      const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+      const firstAlgoliaResponse = createAlgoliaResponse<'user'>(
+        [algoliaRecord],
+        { nbPages: 2 },
+      );
+      const secondAlgoliaResponse = createAlgoliaResponse<'user'>(
+        [algoliaRecord],
+        { nbPages: 2 },
+      );
+      projectControllerMock.fetchById.mockResolvedValueOnce(projectResponse);
+      algoliaSearchClientMock.search
+        .mockResolvedValueOnce(firstAlgoliaResponse)
+        .mockResolvedValueOnce(secondAlgoliaResponse);
+      userControllerMock.fetch.mockResolvedValueOnce(listUserResponse);
+      await indexHandler(event);
+
+      expect(projectControllerMock.fetchById).toHaveBeenCalledWith(projectId);
+      expect(algoliaSearchClientMock.search).toBeCalledTimes(2);
+      expect(algoliaSearchClientMock.search).toHaveBeenNthCalledWith(
+        1,
+        ['user'],
+        projectId,
+        { page: 0, hitsPerPage: 10 },
+      );
+      expect(algoliaSearchClientMock.search).toHaveBeenNthCalledWith(
+        2,
+        ['user'],
+        projectId,
+        { page: 1, hitsPerPage: 10 },
+      );
+    },
+  );
+  test.each(possibleEvents)(
     'removes duplicate users for event %s',
     async (_name, event) => {
       const userId = '32';
-      const currentProjectResponse = getProjectResponse({
+      const projectResponse = getProjectResponse({
         members: [
           {
             userId,
@@ -165,22 +209,11 @@ describe('Index Projects on User event handler', () => {
           },
         ],
       });
-      const previousProjectResponse = getProjectResponse({
-        members: [
-          {
-            userId,
-            firstName: 'Tony',
-            lastName: 'Stark',
-            role: 'Project manager',
-          },
-        ],
-      });
+      const previousUserResponse = getUserResponse({ id: userId });
       const listUserResponse = getListUsersResponse();
-      const algoliaRecord = createProjectAlgoliaRecord(currentProjectResponse);
-      const algoliaResponse = createAlgoliaResponse<'project'>([algoliaRecord]);
-      projectControllerMock.fetchById.mockResolvedValueOnce(
-        previousProjectResponse,
-      );
+      const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+      const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
+      projectControllerMock.fetchById.mockResolvedValueOnce(projectResponse);
       algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
       userControllerMock.fetch.mockResolvedValueOnce(listUserResponse);
       await indexHandler(event);
@@ -196,13 +229,14 @@ describe('Index Projects on User event handler', () => {
   test.each(possibleEvents)(
     'more than 10 users for event %s',
     async (_name, event) => {
-      const members = createProjectMembersResponse(11);
+      const members = createProjectMembersResponse(10);
       const projectResponse = getProjectResponse({
         members,
       });
+      const previousUserResponse = getUserResponse({ id: '11' });
       const listUserResponse = getListUsersResponse();
-      const algoliaRecord = createProjectAlgoliaRecord(projectResponse);
-      const algoliaResponse = createAlgoliaResponse<'project'>([algoliaRecord]);
+      const algoliaRecord = createUserAlgoliaRecord(previousUserResponse);
+      const algoliaResponse = createAlgoliaResponse<'user'>([algoliaRecord]);
       projectControllerMock.fetchById.mockResolvedValueOnce(projectResponse);
       algoliaSearchClientMock.search.mockResolvedValueOnce(algoliaResponse);
       userControllerMock.fetch

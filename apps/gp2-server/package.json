@@ -75,7 +75,7 @@
     "@types/aws-lambda": "8.10.121",
     "@types/cors": "2.8.14",
     "@types/express": "4.17.17",
-    "@types/jest": "29.5.4",
+    "@types/jest": "29.5.5",
     "@types/jest-when": "3.5.2",
     "@types/jsonwebtoken": "8.5.9",
     "@types/jwt-encode": "workspace:*",

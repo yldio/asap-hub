@@ -259,7 +259,6 @@ __metadata:
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
-    "@asap-hub/squidex": "workspace:*"
     "@babel/core": 7.22.20
     "@babel/plugin-transform-modules-commonjs": 7.22.15
     "@babel/plugin-transform-runtime": 7.22.15

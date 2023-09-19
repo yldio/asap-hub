@@ -140,7 +140,7 @@ export const FETCH_OUTPUTS_BY_USER_ID = gql`
 `;
 
 export const FETCH_OUTPUTS_BY_EXTERNAL_USER_ID = gql`
-  query FetchOutputsByUserId($id: String!, $limit: Int, $skip: Int) {
+  query FetchOutputsByExternalUserId($id: String!, $limit: Int, $skip: Int) {
     externalUsers(id: $id) {
       sys {
         id

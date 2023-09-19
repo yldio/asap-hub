@@ -69,6 +69,14 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     if (filter?.authorId) {
       return this.fetchOutputsByUserId(take, skip, filter.authorId);
     }
+
+    if (filter?.externalAuthorId) {
+      return this.fetchOutputsByExternalUserId(
+        take,
+        skip,
+        filter.externalAuthorId,
+      );
+    }
     const searchWhere = search ? getSearchWhere(search) : [];
     const filterWhere = filter ? getFilterWhere(filter) : [];
     const where = [...searchWhere, ...filterWhere];
@@ -95,6 +103,22 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
       id,
     });
     return users?.linkedFrom?.outputsCollection;
+  }
+
+  private async fetchOutputsByExternalUserId(
+    take: number,
+    skip: number,
+    id: string,
+  ) {
+    const { externalUsers } = await this.graphQLClient.request<
+      gp2Contentful.FetchOutputsByExternalUserIdQuery,
+      gp2Contentful.FetchOutputsByExternalUserIdQueryVariables
+    >(gp2Contentful.FETCH_OUTPUTS_BY_EXTERNAL_USER_ID, {
+      limit: take,
+      skip,
+      id,
+    });
+    return externalUsers?.linkedFrom?.outputsCollection;
   }
 
   private async fetchOutputsByProjectId(

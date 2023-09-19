@@ -8982,6 +8982,79 @@ export type FetchOutputsByUserIdQuery = {
   }>;
 };
 
+export type FetchOutputsByExternalUserIdQueryVariables = Exact<{
+  id: Scalars['String'];
+  limit?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+export type FetchOutputsByExternalUserIdQuery = {
+  externalUsers?: Maybe<{
+    sys: Pick<Sys, 'id'>;
+    linkedFrom?: Maybe<{
+      outputsCollection?: Maybe<
+        Pick<OutputsCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              Pick<
+                Outputs,
+                | 'title'
+                | 'documentType'
+                | 'type'
+                | 'subtype'
+                | 'link'
+                | 'addedDate'
+                | 'publishDate'
+                | 'lastUpdatedPartial'
+              > & {
+                sys: Pick<
+                  Sys,
+                  'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
+                >;
+                relatedEntity?: Maybe<
+                  | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+                        sys: Pick<Sys, 'id'>;
+                      })
+                  | ({ __typename: 'WorkingGroups' } & Pick<
+                      WorkingGroups,
+                      'title'
+                    > & { sys: Pick<Sys, 'id'> })
+                >;
+                authorsCollection?: Maybe<
+                  Pick<OutputsAuthorsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        | ({ __typename: 'ExternalUsers' } & Pick<
+                            ExternalUsers,
+                            'name'
+                          > & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'Users' } & Pick<
+                            Users,
+                            'firstName' | 'lastName' | 'email' | 'onboarded'
+                          > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                            })
+                      >
+                    >;
+                  }
+                >;
+                tagsCollection?: Maybe<
+                  Pick<OutputsTagsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<Pick<Keywords, 'name'> & { sys: Pick<Sys, 'id'> }>
+                    >;
+                  }
+                >;
+              }
+            >
+          >;
+        }
+      >;
+    }>;
+  }>;
+};
+
 export type FetchOutputsByProjectIdQueryVariables = Exact<{
   id: Scalars['String'];
   limit?: InputMaybe<Scalars['Int']>;
@@ -15740,6 +15813,136 @@ export const FetchOutputsByUserIdDocument = {
 } as unknown as DocumentNode<
   FetchOutputsByUserIdQuery,
   FetchOutputsByUserIdQueryVariables
+>;
+export const FetchOutputsByExternalUserIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchOutputsByExternalUserId' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'externalUsers' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'outputsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'limit' },
+                            },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'skip' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'skip' },
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'OutputsContentData',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...OutputsContentDataFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchOutputsByExternalUserIdQuery,
+  FetchOutputsByExternalUserIdQueryVariables
 >;
 export const FetchOutputsByProjectIdDocument = {
   kind: 'Document',

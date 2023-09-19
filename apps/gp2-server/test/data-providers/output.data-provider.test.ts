@@ -603,6 +603,23 @@ describe('Outputs data provider', () => {
           },
         );
       });
+      test('filter by external authors', async () => {
+        await outputDataProvider.fetch({
+          ...defaultParams,
+          filter: {
+            externalAuthorId: 'external-user-id',
+          },
+        });
+
+        expect(graphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_OUTPUTS_BY_EXTERNAL_USER_ID,
+          {
+            limit: 8,
+            skip: 0,
+            id: 'external-user-id',
+          },
+        );
+      });
     });
   });
 

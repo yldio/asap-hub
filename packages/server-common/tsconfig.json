@@ -12,7 +12,6 @@
     { "path": "../../packages/model" },
     { "path": "../../packages/errors" },
     { "path": "../../packages/message-templates" },
-    { "path": "../../packages/services-common" },
-    { "path": "../../packages/squidex" }
+    { "path": "../../packages/services-common" }
   ]
 }

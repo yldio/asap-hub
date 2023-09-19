@@ -21,9 +21,16 @@ describe('Tutorials data provider', () => {
 
   describe('Fetch by ID', () => {
     test('it should return the tutorial from the mock server', async () => {
+      const graphqlTutorialResponse = getContentfulGraphqlTutorial();
       const contentfulGraphqlClientMockServer =
         getContentfulGraphqlClientMockServer({
-          Tutorials: () => getContentfulGraphqlTutorial(),
+          Tutorials: () => graphqlTutorialResponse,
+          TutorialsCollection: () => {
+            return graphqlTutorialResponse.linkedFrom?.tutorialsCollection;
+          },
+          RelatedTutorialsCollection: () => {
+            return graphqlTutorialResponse.relatedTutorialsCollection;
+          },
         });
       const dataProviderWithMockServer: TutorialDataProvider =
         new TutorialContentfulDataProvider(contentfulGraphqlClientMockServer);

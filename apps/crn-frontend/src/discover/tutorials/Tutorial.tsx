@@ -1,4 +1,4 @@
-import { NotFoundPage, NewsDetailsPage } from '@asap-hub/react-components';
+import { NotFoundPage, TutorialDetailsPage } from '@asap-hub/react-components';
 import { discover as discoverRoute, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
@@ -18,7 +18,7 @@ const Tutorial: React.FC<Record<string, never>> = () => {
     };
     return (
       <Frame title={tutorial.title}>
-        <NewsDetailsPage {...props} type="Tutorial" />
+        <TutorialDetailsPage {...props} />
       </Frame>
     );
   }

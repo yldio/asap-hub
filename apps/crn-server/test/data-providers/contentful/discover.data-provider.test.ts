@@ -8,6 +8,7 @@ import {
   getContentfulGraphqlDiscoverMembers,
 } from '../../fixtures/discover.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulGraphqlTutorial } from '../../fixtures/tutorials.fixtures';
 
 describe('Discover data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -17,9 +18,14 @@ describe('Discover data provider', () => {
 
   describe('Fetch', () => {
     test('it should return the tutorial from the mock server', async () => {
+      const graphqlTutorialResponse = getContentfulGraphqlTutorial();
       const contentfulGraphqlClientMockServer =
         getContentfulGraphqlClientMockServer({
           Discover: () => getContentfulGraphqlDiscover(),
+          Tutorials: () => graphqlTutorialResponse,
+          TutorialsCollection: () => {
+            return graphqlTutorialResponse.linkedFrom?.tutorialsCollection;
+          },
         });
       const dataProviderWithMockServer: DiscoverDataProvider =
         new DiscoverContentfulDataProvider(contentfulGraphqlClientMockServer);

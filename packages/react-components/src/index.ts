@@ -236,6 +236,7 @@ export {
   TeamProfilePage,
   TeamProfileWorkspace,
   ToolModal,
+  TutorialDetailsPage,
   UnsupportedBrowserPage,
   UserProfileAbout,
   UserProfilePage,

@@ -59,6 +59,7 @@ export { default as TeamProfileHeader } from './TeamProfileHeader';
 export { default as TeamProfilePage } from './TeamProfilePage';
 export { default as TeamProfileWorkspace } from './TeamProfileWorkspace';
 export { default as ToolModal } from './ToolModal';
+export { default as TutorialDetailsPage } from './TutorialDetailsPage';
 export { default as UnsupportedBrowserPage } from './UnsupportedBrowserPage';
 export { default as UserProfileAbout } from './UserProfileAbout';
 export { default as UserProfileHeader } from './UserProfileHeader';

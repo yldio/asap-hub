@@ -8,6 +8,12 @@ export const tutorialsContentQueryFragment = gql`
       id
     }
     publishDate
+    addedDate
+    lastUpdated
+    datePublished
+    asapFunded
+    usedInAPublication
+    sharingStatus
     title
     shortText
     thumbnail {
@@ -41,6 +47,74 @@ export const tutorialsContentQueryFragment = gql`
             height
           }
         }
+      }
+    }
+    authorsCollection(limit: 100) {
+      items {
+        __typename
+        ... on ExternalAuthors {
+          sys {
+            id
+          }
+          name
+          orcid
+        }
+        ... on Users {
+          sys {
+            id
+          }
+          firstName
+          lastName
+          email
+          onboarded
+          orcid
+          alumniSinceDate
+          avatar {
+            url
+          }
+        }
+      }
+    }
+    teamsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        displayName
+      }
+    }
+    tagsCollection(limit: 20) {
+      items {
+        name
+      }
+    }
+    linkedFrom {
+      tutorialsCollection(limit: 60, order: [addedDate_ASC]) {
+        items {
+          sys {
+            id
+          }
+          title
+          publishDate
+        }
+      }
+    }
+    relatedTutorialsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        title
+        publishDate
+      }
+    }
+    relatedEventsCollection(limit: 10) {
+      items {
+        sys {
+          id
+        }
+        title
+        endDate
       }
     }
   }

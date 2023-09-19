@@ -65,6 +65,11 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
     id: '55724942-3408-4ad6-9a73-14b92226ffb6',
     created: '2020-09-07T17:36:54Z',
     title: 'First One title',
+    authors: [],
+    tags: [],
+    teams: [],
+    relatedEvents: [],
+    relatedTutorials: [],
   };
 
   mockGetDiscover.mockResolvedValue({

@@ -1,7 +1,8 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
-import { NewsSection, HelpSection } from '../organisms';
+import { Headline2, Paragraph } from '../atoms';
+import { HelpSection, TutorialCard } from '../organisms';
 import { perRem } from '../pixels';
 
 const styles = css({
@@ -13,21 +14,26 @@ const styles = css({
 type DiscoverTutorialsCardListProps = {
   title: string;
   subtitle: string;
-  news: ComponentProps<typeof NewsSection>['news'];
+  tutorials: ReadonlyArray<
+    Omit<ComponentProps<typeof TutorialCard>, 'children'>
+  >;
 };
 
 const DiscoverTutorialsCardList: React.FC<DiscoverTutorialsCardListProps> = ({
   title,
   subtitle,
-  news,
+  tutorials,
 }) => (
   <div css={styles}>
-    <NewsSection
-      type="Tutorial"
-      title={title}
-      subtitle={subtitle}
-      news={news}
-    />
+    <section>
+      <Headline2 styleAsHeading={3}>{title}</Headline2>
+      {subtitle && <Paragraph accent="lead">{subtitle}</Paragraph>}
+      <div css={styles}>
+        {tutorials.map((tutorial) => (
+          <TutorialCard key={tutorial.id} {...tutorial} />
+        ))}
+      </div>
+    </section>
     <HelpSection />
   </div>
 );

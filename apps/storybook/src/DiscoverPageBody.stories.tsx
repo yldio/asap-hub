@@ -106,6 +106,11 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
       shortText:
         'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
       thumbnail: 'https://picsum.photos/200',
+      authors: [],
+      tags: [],
+      teams: [],
+      relatedEvents: [],
+      relatedTutorials: [],
     },
   ],
   members,

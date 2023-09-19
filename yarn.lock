@@ -307,7 +307,7 @@ __metadata:
     "@types/jest": 29.5.5
     "@types/jsdom": 16.2.15
     "@types/node": 18.17.3
-    core-js: 3.32.1
+    core-js: 3.32.2
     jsdom: 16.7.0
   languageName: unknown
   linkType: soft
@@ -948,7 +948,7 @@ __metadata:
     aws-sdk: 2.1448.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
-    core-js: 3.32.1
+    core-js: 3.32.2
     juice: 7.0.0
     react: 17.0.2
     react-dom: 17.0.2
@@ -1160,7 +1160,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.22.15
     "@types/jsonwebtoken": 8.5.9
-    core-js: 3.32.1
+    core-js: 3.32.2
     date-fns: 2.30.0
     jsonwebtoken: 9.0.0
     ramda: 0.27.1
@@ -1175,7 +1175,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.22.15
     "@types/asap-hub__inline-environment": "workspace:*"
     "@types/jest": 29.5.5
-    core-js: 3.32.1
+    core-js: 3.32.2
   languageName: unknown
   linkType: soft
 
@@ -1218,7 +1218,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@sentry/react": 6.19.7
-    core-js: 3.32.1
+    core-js: 3.32.2
     react: ^17.0.2
     react-error-boundary: 3.1.4
     react-router-dom: 5.3.4
@@ -1304,7 +1304,7 @@ __metadata:
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
-    core-js: 3.32.1
+    core-js: 3.32.2
     date-fns: 2.30.0
     dom-to-playwright: ^0.1.3
     emotion-normalize: 11.0.1
@@ -1419,7 +1419,7 @@ __metadata:
     aws-sdk: 2.1448.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
-    core-js: 3.32.1
+    core-js: 3.32.2
     juice: 7.0.0
     react: 17.0.2
     react-dom: 17.0.2
@@ -1541,7 +1541,7 @@ __metadata:
     "@types/react-dom": 17.0.20
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
-    core-js: 3.32.1
+    core-js: 3.32.2
     juice: 7.0.0
     react: 17.0.2
     react-dom: 17.0.2
@@ -1618,7 +1618,7 @@ __metadata:
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
     "@types/uuid": 8.3.4
-    core-js: 3.32.1
+    core-js: 3.32.2
     date-fns: 2.30.0
     date-fns-tz: 1.3.8
     emotion-normalize: 11.0.1
@@ -1679,7 +1679,7 @@ __metadata:
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
-    core-js: 3.32.1
+    core-js: 3.32.2
     react: 17.0.2
     react-dom: 17.0.2
     react-test-renderer: 17.0.2
@@ -1857,7 +1857,7 @@ __metadata:
     "@types/react": 17.0.65
     "@types/react-router-dom": 5.3.3
     babel-preset-react-app: 10.0.1
-    core-js: 3.32.1
+    core-js: 3.32.2
     date-fns: 2.30.0
     emotion: 10.0.27
     history: 4.10.1
@@ -24553,10 +24553,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:3.32.1":
-  version: 3.32.1
-  resolution: "core-js@npm:3.32.1"
-  checksum: e4af91d9c6be7b59235feb3f273d16705126ce09a0b4a787144d131d874f0cd10be3c24fc52e5eea7d7cb03ceabe4be7b255abcd9474b5eb1ff365d2c5611f9a
+"core-js@npm:3.32.2":
+  version: 3.32.2
+  resolution: "core-js@npm:3.32.2"
+  checksum: d6fac7e8eb054eefc211c76cd0a0ff07447a917122757d085f469f046ec888d122409c7db1a9601c3eb5fa767608ed380bcd219eace02bdf973da155680edeec
   languageName: node
   linkType: hard
 

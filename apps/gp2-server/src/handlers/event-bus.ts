@@ -12,3 +12,6 @@ export type CalendarPayload = WebhookDetail<
 export type ExternalUserPayload = WebhookDetail<
   ContentfulWebhookPayload<'externalUser'>
 >;
+export type WorkingGroupPayload = WebhookDetail<
+  ContentfulWebhookPayload<'workingGroup'>
+>;

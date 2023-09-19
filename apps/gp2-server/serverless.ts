@@ -336,6 +336,104 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    algoliaIndexUserOutputs: {
+      handler: './src/handlers/output/algolia-index-user-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'UsersPublished',
+                'UsersUpdated',
+                'UsersUnpublished',
+                'UsersDeleted',
+              ] satisfies gp2.WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexExternalUserOutputs: {
+      handler:
+        './src/handlers/output/algolia-index-external-user-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'ExternalUsersPublished',
+                'ExternalUsersUpdated',
+                'ExternalUsersUnpublished',
+                'ExternalUsersDeleted',
+              ] satisfies gp2.WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexProjectOutputs: {
+      handler: './src/handlers/output/algolia-index-project-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'ProjectsPublished',
+                'ProjectsUpdated',
+                'ProjectsUnpublished',
+                'ProjectsDeleted',
+              ] satisfies gp2.WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    algoliaIndexWorkingGroupOutputs: {
+      handler:
+        './src/handlers/output/algolia-index-working-group-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': [
+                'WorkingGroupsPublished',
+                'WorkingGroupsUpdated',
+                'WorkingGroupsUnpublished',
+                'WorkingGroupsDeleted',
+              ] satisfies gp2.WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_API_KEY: `\${ssm:gp2-algolia-index-api-key-${envAlias}}`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
     algoliaIndexProject: {
       handler: './src/handlers/project/algolia-index-handler.handler',
       events: [

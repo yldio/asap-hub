@@ -1,5 +1,10 @@
-import type { gp2 as gp2Contentful } from '@asap-hub/contentful';
-import type { gp2 as gp2Model } from '@asap-hub/model';
+import type {
+  gp2 as gp2Contentful,
+  ContentfulWebhookPayload,
+} from '@asap-hub/contentful';
+import type { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
+import { EventBridgeEvent } from 'aws-lambda';
+import { createEventBridgeEventMock } from '../helpers/events';
 
 export const getWorkingGroupDataObject =
   (): gp2Model.WorkingGroupDataObject => ({
@@ -169,3 +174,69 @@ export const getContentfulGraphqlWorkingGroupsResponse =
       items: [getContentfulGraphqlWorkingGroup()],
     },
   });
+
+export const getWorkingGroupWebhookPayload = (
+  id: string,
+): WebhookDetail<ContentfulWebhookPayload<'workingGroup'>> => ({
+  resourceId: id,
+  metadata: {
+    tags: [],
+  },
+  sys: {
+    type: 'Entry',
+    id: 'fc496d00-053f-44fd-9bac-68dd9d959848',
+    space: {
+      sys: {
+        type: 'Link',
+        linkType: 'Space',
+        id: '5v6w5j61tndm',
+      },
+    },
+    environment: {
+      sys: {
+        id: 'an-environment',
+        type: 'Link',
+        linkType: 'Environment',
+      },
+    },
+    contentType: {
+      sys: {
+        type: 'Link',
+        linkType: 'ContentType',
+        id: 'workingGroup',
+      },
+    },
+    createdBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    updatedBy: {
+      sys: {
+        type: 'Link',
+        linkType: 'User',
+        id: '3ZHvngTJ24kxZUAPDJ8J1z',
+      },
+    },
+    revision: 14,
+    createdAt: '2023-05-17T13:39:03.250Z',
+    updatedAt: '2023-05-18T16:17:36.425Z',
+  },
+  fields: {
+    title: {
+      'en-US':
+        'Sci 7 - Inflammation & Immune Reg., Presenting Teams: Sulzer, Desjardins, Kordower',
+    },
+  },
+});
+
+export const getWorkingGroupEvent = (
+  id: string,
+  eventType: gp2Model.WorkingGroupEvent,
+): EventBridgeEvent<
+  gp2Model.WorkingGroupEvent,
+  WebhookDetail<ContentfulWebhookPayload<'workingGroup'>>
+> =>
+  createEventBridgeEventMock(getWorkingGroupWebhookPayload(id), eventType, id);

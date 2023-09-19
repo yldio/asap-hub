@@ -7,6 +7,7 @@ export type UserEvent = `Users${EntityEventAction}`;
 export type NewsEvent = `News${EntityEventAction}`;
 export type CalendarEvent = `Calendars${EntityEventAction}`;
 export type ExternalUserEvent = `ExternalUsers${EntityEventAction}`;
+export type WorkingGroupEvent = `WorkingGroups${EntityEventAction}`;
 
 export type WebhookDetailType =
   | OutputEvent
@@ -15,4 +16,5 @@ export type WebhookDetailType =
   | UserEvent
   | NewsEvent
   | CalendarEvent
-  | ExternalUserEvent;
+  | ExternalUserEvent
+  | WorkingGroupEvent;

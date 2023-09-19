@@ -1,6 +1,10 @@
 import { TutorialDataProvider } from '../../../src/data-providers/types';
 import { TutorialContentfulDataProvider } from '../../../src/data-providers/contentful/tutorial.data-provider';
-import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import {
+  FetchTutorialByIdQuery,
+  getContentfulGraphqlClientMockServer,
+} from '@asap-hub/contentful';
+import { TutorialsDataObject } from '@asap-hub/model';
 import {
   getTutorialsDataObject,
   getContentfulGraphqlTutorial,
@@ -122,5 +126,85 @@ describe('Tutorials data provider', () => {
       expect(result!.linkText).toEqual(undefined);
       expect(result!.shortText).toEqual(undefined);
     });
+
+    test('Should return a mix of internal and external authors', async () => {
+      const tutorials = getContentfulGraphqlTutorial();
+      const user1 = {
+        sys: { id: 'user-id-0' },
+        firstName: 'Test',
+        lastName: 'User',
+        email: 'user0@example.com',
+        onboarded: true,
+        orcid: '1111-2222-3333-4444',
+        avatar: {
+          url: 'https://example.com/user-id-0',
+        },
+        alumniSinceDate: null,
+        __typename: 'Users',
+      } as InternalUser;
+      const user2 = {
+        sys: { id: 'user-id-1' },
+        firstName: 'Test',
+        lastName: 'User',
+        email: 'user1@example.com',
+        onboarded: true,
+        orcid: '1111-2222-3333-4444',
+        avatar: {
+          url: 'https://example.com/user-id-1',
+        },
+        alumniSinceDate: '2023-01-01T12:00:00.000Z',
+        __typename: 'Users',
+      } as InternalUser;
+      const externalAuthor = {
+        sys: {
+          id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
+        },
+        name: 'test external author',
+        orcid: '23423423',
+        __typename: 'ExternalAuthors',
+      } as ExternalUser;
+      tutorials.authorsCollection!.items = [user1, externalAuthor, user2];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        tutorials,
+      });
+
+      const result = await dataProvider.fetchById('123');
+
+      const expectedAuthorsResponse: TutorialsDataObject['authors'] = [
+        {
+          id: 'user-id-0',
+          displayName: 'Test User',
+          firstName: 'Test',
+          lastName: 'User',
+          email: 'user0@example.com',
+          avatarUrl: 'https://example.com/user-id-0',
+          alumniSinceDate: undefined,
+        },
+        {
+          id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
+          displayName: 'test external author',
+          orcid: '23423423',
+        },
+        {
+          id: 'user-id-1',
+          displayName: 'Test User',
+          firstName: 'Test',
+          lastName: 'User',
+          email: 'user1@example.com',
+          avatarUrl: 'https://example.com/user-id-1',
+          alumniSinceDate: '2023-01-01T12:00:00.000Z',
+        },
+      ];
+
+      expect(result!.authors).toEqual(expectedAuthorsResponse);
+    });
   });
 });
+
+type Author = NonNullable<
+  NonNullable<
+    NonNullable<FetchTutorialByIdQuery['tutorials']>['authorsCollection']
+  >['items']
+>[number];
+type InternalUser = Extract<Author, { __typename: 'Users' }>;
+type ExternalUser = Extract<Author, { __typename: 'ExternalAuthors' }>;

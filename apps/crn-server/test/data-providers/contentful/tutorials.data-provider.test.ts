@@ -127,6 +127,18 @@ describe('Tutorials data provider', () => {
       expect(result!.shortText).toEqual(undefined);
     });
 
+    test('Should default sharingStatus to Network Only when missing', async () => {
+      const tutorials = getContentfulGraphqlTutorial();
+      tutorials.sharingStatus = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        tutorials,
+      });
+
+      const result = await dataProvider.fetchById('123');
+
+      expect(result!.sharingStatus).toEqual('Network Only');
+    });
+
     test('Should return a mix of internal and external authors', async () => {
       const tutorials = getContentfulGraphqlTutorial();
       const user1 = {
@@ -197,6 +209,30 @@ describe('Tutorials data provider', () => {
       ];
 
       expect(result!.authors).toEqual(expectedAuthorsResponse);
+    });
+
+    test('Should default authors to an empty array when missing', async () => {
+      const tutorials = getContentfulGraphqlTutorial();
+      tutorials.authorsCollection = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        tutorials,
+      });
+
+      const result = await dataProvider.fetchById('123');
+
+      expect(result!.authors).toEqual([]);
+    });
+
+    test('Should default related events to an empty array when missing', async () => {
+      const tutorials = getContentfulGraphqlTutorial();
+      tutorials.relatedEventsCollection = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        tutorials,
+      });
+
+      const result = await dataProvider.fetchById('123');
+
+      expect(result!.relatedEvents).toEqual([]);
     });
   });
 });

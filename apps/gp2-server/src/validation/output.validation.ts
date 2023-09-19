@@ -33,6 +33,10 @@ const outputsParametersValidationSchema: JSONSchemaType<gp2Model.FetchOutputOpti
             type: 'string',
             nullable: true,
           },
+          externalAuthorId: {
+            type: 'string',
+            nullable: true,
+          },
           documentType: {
             type: 'array',
             items: { type: 'string' },

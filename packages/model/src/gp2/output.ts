@@ -131,6 +131,7 @@ export type FetchOutputFilter = FetchOutputSearchFilter & {
   workingGroupId?: string;
   projectId?: string;
   authorId?: string;
+  externalAuthorId?: string;
 };
 
 export type FetchOutputOptions = FetchOptions<FetchOutputFilter>;

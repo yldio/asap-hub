@@ -1,5 +1,6 @@
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { syncEventFactory } from '../../src';
+import * as typeNarrowing from '../../src/utils/type-narrowing';
 import { getEventResponse } from '../fixtures/events.fixtures';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { loggerMock as logger } from '../mocks/logger.mock';
@@ -10,6 +11,9 @@ describe('Sync calendar util hook', () => {
   const defaultCalendarTimezone = 'Europe/Lisbon';
   const syncEvent = syncEventFactory(eventControllerMock, logger);
 
+  beforeEach(() => {
+    jest.spyOn(typeNarrowing, 'isCRNEventController').mockReturnValue(true);
+  });
   afterEach(jest.resetAllMocks);
 
   test('Should create the event when it is not found', async () => {
@@ -35,6 +39,36 @@ describe('Sync calendar util hook', () => {
       status: 'Confirmed',
       calendar: squidexCalendarId,
       tags: [],
+      hidden: false,
+      hideMeetingLink: false,
+    });
+  });
+
+  test('Should create gp2 event when it is not found', async () => {
+    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
+    jest
+      .spyOn(typeNarrowing, 'isCRNEventController')
+      .mockReturnValueOnce(false);
+
+    await syncEvent(
+      getGoogleEvent(),
+      googleCalendarId,
+      squidexCalendarId,
+      defaultCalendarTimezone,
+    );
+
+    expect(eventControllerMock.update).not.toHaveBeenCalled();
+    expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
+    expect(eventControllerMock.create).toHaveBeenCalledWith({
+      googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
+      title: 'Event Title',
+      description: 'Event Description',
+      startDate: '2021-02-27T00:00:00.000Z',
+      startDateTimeZone: 'Europe/Lisbon',
+      endDate: '2021-02-28T00:00:00.000Z',
+      endDateTimeZone: 'Europe/Lisbon',
+      status: 'Confirmed',
+      calendar: squidexCalendarId,
       hidden: false,
       hideMeetingLink: false,
     });

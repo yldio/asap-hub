@@ -27,6 +27,7 @@ type ResearchOutputFormSharingCardProps = Pick<
   'link' | 'title' | 'descriptionMD' | 'sharingStatus' | 'subtype'
 > & {
   researchOutputData?: ResearchOutputResponse;
+  documentType?: ResearchOutputResponse['documentType'];
   isCreatingOutputRoute?: boolean;
   type?: ResearchOutputType | '';
   onChangeLink?: (newValue: string) => void;
@@ -61,6 +62,7 @@ const ResearchOutputFormSharingCard: React.FC<
   ResearchOutputFormSharingCardProps
 > = ({
   researchOutputData,
+  documentType,
   isCreatingOutputRoute,
   isSaving,
   link,
@@ -228,7 +230,7 @@ const ResearchOutputFormSharingCard: React.FC<
             label: 'No',
             disabled:
               isCreatingOutputRoute &&
-              researchOutputData?.documentType === 'Article' &&
+              documentType === 'Article' &&
               researchOutputData?.usedInPublication === undefined,
           },
           {
@@ -236,7 +238,7 @@ const ResearchOutputFormSharingCard: React.FC<
             label: 'Not Sure',
             disabled:
               isCreatingOutputRoute &&
-              researchOutputData?.documentType === 'Article' &&
+              documentType === 'Article' &&
               researchOutputData?.usedInPublication === undefined,
           },
         ]}
@@ -251,7 +253,7 @@ const ResearchOutputFormSharingCard: React.FC<
             value: 'Network Only',
             label: 'CRN Only',
             disabled:
-              researchOutputData?.documentType === 'Article' &&
+              documentType === 'Article' &&
               researchOutputData?.sharingStatus === undefined,
           },
           { value: 'Public', label: 'Public' },

@@ -467,6 +467,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles}>
                 <ResearchOutputFormSharingCard
+                  documentType={documentType}
                   isCreatingOutputRoute={!!isCreatingOutput}
                   researchOutputData={researchOutputData}
                   serverValidationErrors={serverValidationErrors}

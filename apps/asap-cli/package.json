@@ -23,7 +23,6 @@
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
-    "@asap-hub/squidex": "workspace:*",
     "@hapi/boom": "9.1.4",
     "@types/yargs": "17.0.5",
     "algoliasearch": "4.19.1",

@@ -31,8 +31,19 @@ export const indexResearchOutputHandler =
           return researchOutput;
         }
 
+        const data = {
+          ...researchOutput,
+          _tags: [
+            ...researchOutput.methods,
+            ...researchOutput.organisms,
+            ...researchOutput.environments,
+            researchOutput.subtype,
+            ...researchOutput.keywords,
+          ],
+        };
+
         await algoliaClient.save({
-          data: researchOutput,
+          data,
           type: 'research-output',
         });
 

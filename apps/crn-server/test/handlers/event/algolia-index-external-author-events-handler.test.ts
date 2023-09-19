@@ -1,16 +1,13 @@
 import { ExternalAuthorEvent } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
-import { ExternalAuthorSquidexPayload } from '../../../src/handlers/event-bus';
+import { ExternalAuthorContentfulPayload } from '../../../src/handlers/event-bus';
 import { indexExternalAuthorEventsHandler } from '../../../src/handlers/event/algolia-index-external-author-events-handler';
 import {
   getListEventResponse,
   getEventDataObject,
 } from '../../fixtures/events.fixtures';
-import {
-  getExternalAuthorSquidexEvent,
-  getExternalAuthorContentfulEvent,
-} from '../../fixtures/external-authors.fixtures';
+import { getExternalAuthorContentfulEvent } from '../../fixtures/external-authors.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
@@ -20,32 +17,32 @@ const mapPayload = toPayload('event');
 
 const possibleEvents: [
   string,
-  EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorSquidexPayload>,
+  EventBridgeEvent<ExternalAuthorEvent, ExternalAuthorContentfulPayload>,
 ][] = [
   [
     'created',
-    getExternalAuthorSquidexEvent(
+    getExternalAuthorContentfulEvent(
       'external-author-id',
       'ExternalAuthorsCreated',
     ),
   ],
   [
     'updated',
-    getExternalAuthorSquidexEvent(
+    getExternalAuthorContentfulEvent(
       'external-author-id',
       'ExternalAuthorsUpdated',
     ),
   ],
   [
     'unpublished',
-    getExternalAuthorSquidexEvent(
+    getExternalAuthorContentfulEvent(
       'external-author-id',
       'ExternalAuthorsUnpublished',
     ),
   ],
   [
     'deleted',
-    getExternalAuthorSquidexEvent(
+    getExternalAuthorContentfulEvent(
       'external-author-id',
       'ExternalAuthorsDeleted',
     ),
@@ -65,7 +62,7 @@ describe('Index Events on External Author event handler', () => {
 
     await expect(
       indexHandler(
-        getExternalAuthorSquidexEvent(
+        getExternalAuthorContentfulEvent(
           'external-author-id',
           'ExternalAuthorsCreated',
         ),
@@ -83,7 +80,7 @@ describe('Index Events on External Author event handler', () => {
 
     await expect(
       indexHandler(
-        getExternalAuthorSquidexEvent(
+        getExternalAuthorContentfulEvent(
           'external-author-id',
           'ExternalAuthorsUpdated',
         ),

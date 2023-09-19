@@ -22,7 +22,7 @@
     "@storybook/addon-knobs": "6.4.0",
     "@storybook/addon-viewport": "6.5.16",
     "@storybook/react": "6.5.16",
-    "core-js": "3.32.1",
+    "core-js": "3.32.2",
     "date-fns": "2.30.0",
     "emotion": "10.0.27",
     "history": "4.10.1",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/core": "7.22.11",
+    "@babel/core": "7.22.20",
     "@storybook/builder-webpack5": "^6.5.13",
     "@storybook/manager-webpack5": "^6.5.13",
     "@types/history": "4.7.11",

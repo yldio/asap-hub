@@ -2,6 +2,8 @@ import {
   convertDecisionToBoolean,
   ListResponse,
   TutorialsDataObject,
+  TutorialsSharingStatus,
+  sharingStatuses,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
@@ -12,7 +14,6 @@ import {
   RichTextFromQuery,
 } from '@asap-hub/contentful';
 import { TutorialDataProvider } from '../types';
-import { isTutorialSharingStatus } from '../transformers/tutorials';
 
 type TutorialItem = NonNullable<FetchTutorialByIdQuery['tutorials']>;
 
@@ -52,6 +53,11 @@ export class TutorialContentfulDataProvider implements TutorialDataProvider {
     return parseContentfulGraphQlTutorials(tutorials);
   }
 }
+
+const isTutorialSharingStatus = (
+  status: string,
+): status is TutorialsSharingStatus =>
+  (sharingStatuses as ReadonlyArray<string>).includes(status);
 
 const mapTeams = (items: (TeamItem | null)[]) =>
   items

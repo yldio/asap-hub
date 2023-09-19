@@ -90,6 +90,10 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
       };
     }
 
+    if (filter?.calendarId) {
+      calendarId = filter.calendarId;
+    }
+
     if (filter?.userId) {
       const { users } = await this.contentfulClient.request<
         gp2.FetchEventsByUserIdQuery,

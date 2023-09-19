@@ -6,3 +6,9 @@ export type OutputPayload = WebhookDetail<ContentfulWebhookPayload<'output'>>;
 export type ProjectPayload = WebhookDetail<ContentfulWebhookPayload<'project'>>;
 export type UserPayload = WebhookDetail<ContentfulWebhookPayload<'user'>>;
 export type NewsPayload = WebhookDetail<ContentfulWebhookPayload<'news'>>;
+export type CalendarPayload = WebhookDetail<
+  ContentfulWebhookPayload<'calendar'>
+>;
+export type ExternalUserPayload = WebhookDetail<
+  ContentfulWebhookPayload<'externalUser'>
+>;

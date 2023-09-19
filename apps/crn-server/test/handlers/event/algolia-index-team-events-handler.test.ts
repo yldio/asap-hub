@@ -5,11 +5,11 @@ import {
   getEventDataObject,
 } from '../../fixtures/events.fixtures';
 import {
-  createEvent,
-  deleteEvent,
+  getTeamCreateEvent,
+  getTeamDeleteEvent,
   TeamEventGenerator,
-  unpublishedEvent,
-  updateEvent,
+  getTeamUnpublishedEvent,
+  getTeamUpdateEvent,
 } from '../../fixtures/teams.fixtures';
 import { toPayload } from '../../helpers/algolia';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
@@ -19,10 +19,10 @@ const mapPayload = toPayload('event');
 
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 const possibleEvents: [string, TeamEventGenerator][] = [
-  ['created', createEvent],
-  ['updated', updateEvent],
-  ['unpublished', unpublishedEvent],
-  ['deleted', deleteEvent],
+  ['created', getTeamCreateEvent],
+  ['updated', getTeamUpdateEvent],
+  ['unpublished', getTeamUnpublishedEvent],
+  ['deleted', getTeamDeleteEvent],
 ];
 
 jest.mock('../../../src/utils/logger');
@@ -36,7 +36,7 @@ describe('Index Events on Team event handler', () => {
   test('Should throw an error and do not trigger algolia when the team request fails with another error code', async () => {
     eventControllerMock.fetch.mockRejectedValue(Boom.badData());
 
-    await expect(indexHandler(createEvent('team-id'))).rejects.toThrow(
+    await expect(indexHandler(getTeamCreateEvent('team-id'))).rejects.toThrow(
       Boom.badData(),
     );
     expect(algoliaSearchClientMock.saveMany).not.toHaveBeenCalled();
@@ -49,7 +49,7 @@ describe('Index Events on Team event handler', () => {
     eventControllerMock.fetch.mockResolvedValueOnce(listEventResponse);
     algoliaSearchClientMock.saveMany.mockRejectedValueOnce(algoliaError);
 
-    await expect(indexHandler(updateEvent('team-id'))).rejects.toThrow(
+    await expect(indexHandler(getTeamUpdateEvent('team-id'))).rejects.toThrow(
       algoliaError,
     );
   });
@@ -76,7 +76,7 @@ describe('Index Events on Team event handler', () => {
       ],
     });
 
-    await indexHandler(updateEvent('team-id'));
+    await indexHandler(getTeamUpdateEvent('team-id'));
 
     expect(algoliaSearchClientMock.saveMany).toHaveBeenCalledWith([
       {
@@ -96,7 +96,7 @@ describe('Index Events on Team event handler', () => {
 
       expect(eventControllerMock.fetch).toHaveBeenCalledWith({
         filter: {
-          teamId: 'teamId',
+          teamId: 'team-id',
         },
         skip: 0,
         take: 8,

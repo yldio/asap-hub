@@ -30,7 +30,36 @@ describe('Research Output index handler', () => {
     await indexHandler(createEvent('ro-1234'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: researchOutputResponse,
+      data: expect.objectContaining(researchOutputResponse),
+      type: 'research-output',
+    });
+  });
+
+  test('Should populate _tags field before saving the research-output to Algolia', async () => {
+    const researchOutputResponse = getResearchOutputResponse();
+    researchOutputResponse.methods = ['methods-tag'];
+    researchOutputResponse.organisms = ['organisms-tag'];
+    researchOutputResponse.environments = ['environments-tag'];
+    researchOutputResponse.subtype = 'subtype-tag';
+    researchOutputResponse.keywords = ['keywords-tag'];
+    researchOutputResponse.relatedResearch = [];
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+      researchOutputResponse,
+    );
+
+    await indexHandler(createEvent('ro-1234'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: {
+        ...researchOutputResponse,
+        _tags: [
+          'methods-tag',
+          'organisms-tag',
+          'environments-tag',
+          'subtype-tag',
+          'keywords-tag',
+        ],
+      },
       type: 'research-output',
     });
   });
@@ -67,11 +96,11 @@ describe('Research Output index handler', () => {
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
-      data: researchOutputResponse,
+      data: expect.objectContaining(researchOutputResponse),
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
-      data: relatedResearchOutputResponse,
+      data: expect.objectContaining(relatedResearchOutputResponse),
       type: 'research-output',
     });
   });
@@ -118,15 +147,15 @@ describe('Research Output index handler', () => {
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(3);
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
-      data: researchOutputResponse,
+      data: expect.objectContaining(researchOutputResponse),
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
-      data: ownRelatedResearchOutputResponse,
+      data: expect.objectContaining(ownRelatedResearchOutputResponse),
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(3, {
-      data: foreignRelatedResearchOutputResponse,
+      data: expect.objectContaining(foreignRelatedResearchOutputResponse),
       type: 'research-output',
     });
   });
@@ -141,7 +170,7 @@ describe('Research Output index handler', () => {
     await indexHandler(updateEvent('ro-1234'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: researchOutputResponse,
+      data: expect.objectContaining(researchOutputResponse),
       type: 'research-output',
     });
   });
@@ -305,7 +334,7 @@ describe('Research Output index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(6);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: researchOutputResponse,
+        data: expect.objectContaining(researchOutputResponse),
         type: 'research-output',
       });
     });
@@ -327,7 +356,7 @@ describe('Research Output index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(6);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: researchOutputResponse,
+        data: expect.objectContaining(researchOutputResponse),
         type: 'research-output',
       });
     });

@@ -49,7 +49,7 @@
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@babel/runtime-corejs3": "7.22.11",
+    "@babel/runtime-corejs3": "7.22.15",
     "@sentry/cli": "^2.20.3",
     "@testing-library/dom": "9.3.1",
     "@testing-library/jest-dom": "^5.16.5",
@@ -57,7 +57,7 @@
     "@testing-library/react-hooks": "8.0.1",
     "@testing-library/user-event": "12.8.3",
     "@types/history": "4.7.11",
-    "@types/jest": "29.5.4",
+    "@types/jest": "29.5.5",
     "@types/nock": "11.1.0",
     "@types/node": "18.17.3",
     "@types/react": "17.0.65",

@@ -14,15 +14,15 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.306.0",
-    "@babel/core": "7.22.11",
-    "@babel/preset-react": "7.22.5",
-    "@babel/runtime-corejs3": "7.22.11",
+    "@babel/core": "7.22.20",
+    "@babel/preset-react": "7.22.15",
+    "@babel/runtime-corejs3": "7.22.15",
     "@emotion/cache": "11.11.0",
     "@emotion/react": "11.11.1",
     "@emotion/server": "11.11.0",
     "babel-loader": "8.3.0",
     "babel-preset-react-app": "10.0.1",
-    "core-js": "3.32.1",
+    "core-js": "3.32.2",
     "juice": "7.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@types/babel__core": "7.20.1",
+    "@types/babel__core": "7.20.2",
     "@types/react": "17.0.65",
     "@types/react-dom": "17.0.20"
   }

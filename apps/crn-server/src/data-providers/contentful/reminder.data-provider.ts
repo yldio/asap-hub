@@ -165,8 +165,15 @@ export class ReminderContentfulDataProvider implements ReminderDataProvider {
       timezone,
     );
 
+    const versionReminderIds = publishedResearchOutputVersionReminders.map(
+      (reminder) => reminder.data.researchOutputId,
+    );
+
     const reminders = [
-      ...publishedResearchOutputReminders,
+      ...publishedResearchOutputReminders.filter(
+        (reminder) =>
+          !versionReminderIds.includes(reminder.data.researchOutputId),
+      ),
       ...draftResearchOutputReminders,
       ...inReviewResearchOutputReminders,
       ...switchToDraftResearchOutputReminders,
@@ -924,12 +931,12 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
       )[0];
 
       if (
-        !researchOutputVersion.title ||
-        !researchOutputVersion.documentType ||
-        !isResearchOutputDocumentType(researchOutputVersion.documentType) ||
+        !researchOutput ||
+        !researchOutput.title ||
+        !researchOutput.documentType ||
+        !isResearchOutputDocumentType(researchOutput.documentType) ||
         !isPublished ||
-        !inLast24Hours(researchOutputVersion.sys.publishedAt, zone) ||
-        !researchOutput
+        !inLast24Hours(researchOutputVersion.sys.publishedAt, zone)
       ) {
         return reminders;
       }
@@ -965,8 +972,8 @@ const getPublishedResearchOutputVersionRemindersFromQuery = (
           type: 'Published',
           data: {
             researchOutputId: researchOutput.sys.id,
-            documentType: researchOutputVersion.documentType,
-            title: researchOutputVersion.title,
+            documentType: researchOutput.documentType,
+            title: researchOutput.title,
             publishedAt: researchOutputVersion.sys.publishedAt,
             associationType,
             associationName,

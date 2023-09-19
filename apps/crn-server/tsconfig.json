@@ -27,7 +27,6 @@
     { "path": "../../packages/routing" },
     { "path": "../../packages/server-common" },
     { "path": "../../packages/services-common" },
-    { "path": "../../packages/squidex" },
     { "path": "../../packages/validation" },
     { "path": "../../packages/message-templates" }
   ]

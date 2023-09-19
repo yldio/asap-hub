@@ -20,7 +20,7 @@
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/core": "7.22.20",
-    "@types/jest": "29.5.4",
+    "@types/jest": "29.5.5",
     "@types/jsdom": "16.2.15",
     "@types/node": "18.17.3"
   }

@@ -50,7 +50,7 @@
     "@graphql-tools/schema": "9.0.19",
     "@graphql-typed-document-node/core": "3.2.0",
     "@types/async-retry": "^1",
-    "@types/jest": "29.5.4",
+    "@types/jest": "29.5.5",
     "@types/minimist": "^1",
     "@types/node": "18.17.3",
     "contentful-cli": "1.19.1",

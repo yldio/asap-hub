@@ -42,7 +42,7 @@ it('falls back to created date when added date omitted', () => {
     />,
   );
   expect(getByText(/2012/)).toBeVisible();
-  expect(queryByText(/2011/)).not.toBeVisible();
+  expect(queryByText(/2011/)).not.toBeInTheDocument();
 
   const { addedDate, ...modifiedProps } = tutorialHeaderCardProps;
   rerender(<TutorialHeaderCard {...modifiedProps} />);

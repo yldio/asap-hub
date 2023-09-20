@@ -2,9 +2,9 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { CalendarPayload } from '../../../src/handlers/event-bus';
-import { indexCalendarEventsHandler } from '../../../src/handlers/event/algolia-index-calendar-handler';
-import { getListEventResponse } from '../../fixtures/event.fixtures';
+import { indexEventCalendarHandler } from '../../../src/handlers/event/algolia-index-calendar-handler';
 import { getCalendarEvent } from '../../fixtures/calendar.fixtures';
+import { getListEventResponse } from '../../fixtures/event.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
 import { eventControllerMock } from '../../mocks/event.controller.mock';
 import { toPayload } from '../../utils/algolia';
@@ -24,7 +24,7 @@ const possibleEvents: [
 
 jest.mock('../../../src/utils/logger');
 describe('Index Events on External User event handler', () => {
-  const indexHandler = indexCalendarEventsHandler(
+  const indexHandler = indexEventCalendarHandler(
     eventControllerMock,
     algoliaSearchClientMock,
   );

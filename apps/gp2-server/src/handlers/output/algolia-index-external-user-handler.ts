@@ -17,7 +17,7 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalUserPayload } from '../event-bus';
 
-export const indexExternalUserOutputsHandler =
+export const indexOutputExternalUserHandler =
   (
     outputController: OutputController,
     algoliaClient: AlgoliaClient<'gp2'>,
@@ -51,7 +51,7 @@ export const indexExternalUserOutputsHandler =
           data,
           type: 'output' as const,
         }));
-        logger.info(`trying to save: ${JSON.stringify(outputs, null, 2)}`);
+        logger.debug(`trying to save: ${JSON.stringify(outputs, null, 2)}`);
         await algoliaClient.saveMany(outputs);
       } catch (err) {
         logger.error('Error occurred during saveMany');
@@ -79,7 +79,7 @@ const externalUserDataProvider = new ExternalUserContentfulDataProvider(
 );
 
 export const handler = sentryWrapper(
-  indexExternalUserOutputsHandler(
+  indexOutputExternalUserHandler(
     new OutputController(outputDataProvider, externalUserDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,

@@ -17,7 +17,7 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ProjectPayload } from '../event-bus';
 
-export const indexProjectOutputsHandler =
+export const indexOutputProjectHandler =
   (
     outputController: OutputController,
     algoliaClient: AlgoliaClient<'gp2'>,
@@ -51,7 +51,7 @@ export const indexProjectOutputsHandler =
           data,
           type: 'output' as const,
         }));
-        logger.info(`trying to save: ${JSON.stringify(outputs, null, 2)}`);
+        logger.debug(`trying to save: ${JSON.stringify(outputs, null, 2)}`);
         await algoliaClient.saveMany(outputs);
       } catch (err) {
         logger.error('Error occurred during saveMany');
@@ -79,7 +79,7 @@ const externalUserDataProvider = new ExternalUserContentfulDataProvider(
 );
 
 export const handler = sentryWrapper(
-  indexProjectOutputsHandler(
+  indexOutputProjectHandler(
     new OutputController(outputDataProvider, externalUserDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,

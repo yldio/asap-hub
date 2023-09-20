@@ -336,7 +336,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexUserOutputs: {
+    algoliaIndexOutputUser: {
       handler: './src/handlers/output/algolia-index-user-handler.handler',
       events: [
         {
@@ -360,7 +360,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexExternalUserOutputs: {
+    algoliaIndexOutputExternalUser: {
       handler:
         './src/handlers/output/algolia-index-external-user-handler.handler',
       events: [
@@ -385,7 +385,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexProjectOutputs: {
+    algoliaIndexOutputProject: {
       handler: './src/handlers/output/algolia-index-project-handler.handler',
       events: [
         {
@@ -409,7 +409,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexWorkingGroupOutputs: {
+    algoliaIndexOutputWorkingGroup: {
       handler:
         './src/handlers/output/algolia-index-working-group-handler.handler',
       events: [

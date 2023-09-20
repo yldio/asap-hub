@@ -1,11 +1,6 @@
 import type {
-<<<<<<< HEAD
-  gp2 as gp2Contentful,
-  ContentfulWebhookPayload,
-=======
   ContentfulWebhookPayload,
   gp2 as gp2Contentful,
->>>>>>> 26b106f20 (adds working group user index)
 } from '@asap-hub/contentful';
 import type { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';

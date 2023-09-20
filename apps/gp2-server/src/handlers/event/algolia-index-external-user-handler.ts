@@ -16,7 +16,7 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalUserPayload } from '../event-bus';
 
-export const indexExternalUserEventsHandler =
+export const indexEventExternalUserHandler =
   (
     eventController: EventController,
     algoliaClient: AlgoliaClient<'gp2'>,
@@ -73,7 +73,7 @@ const eventDataProvider = new EventContentfulDataProvider(
 );
 
 export const handler = sentryWrapper(
-  indexExternalUserEventsHandler(
+  indexEventExternalUserHandler(
     new EventController(eventDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,

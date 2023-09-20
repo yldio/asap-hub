@@ -95,6 +95,12 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
         pattern: urlExpression,
       },
       title: { type: 'string' },
+      description: {
+        type: 'string',
+        nullable: true,
+      },
+      gp2Supported: { type: 'string', nullable: true },
+      sharingStatus: { type: 'string' },
       publishDate: { type: 'string', format: 'date-time', nullable: true },
       authors: {
         type: 'array',

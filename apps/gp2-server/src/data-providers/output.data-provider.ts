@@ -7,9 +7,10 @@ import {
   patchAndPublish,
   pollContentfulGql,
 } from '@asap-hub/contentful';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model, GP2DecisionOption } from '@asap-hub/model';
 import logger from '../utils/logger';
 import { KeywordItem, parseKeyword } from './keyword.data-provider';
+import { isSharingStatus } from './transformers';
 import { OutputDataProvider } from './types';
 
 export type OutputItem = NonNullable<
@@ -154,7 +155,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
   }
 
   async create({
-    publishDate: _,
     workingGroupId,
     projectId,
     ...data
@@ -177,10 +177,7 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     return outputEntry.sys.id;
   }
 
-  async update(
-    id: string,
-    { publishDate: _, ...data }: gp2Model.OutputUpdateDataObject,
-  ) {
+  async update(id: string, data: gp2Model.OutputUpdateDataObject) {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
 
@@ -268,6 +265,12 @@ export const parseContentfulGraphQLOutput = (
     type,
     subtype,
     title: data.title ?? '',
+    description: data.description ?? '',
+    gp2Supported: data.gp2Supported as GP2DecisionOption,
+    sharingStatus:
+      data.sharingStatus && isSharingStatus(data.sharingStatus)
+        ? data.sharingStatus
+        : 'GP2 Only',
     publishDate: data.publishDate,
     addedDate: data.addedDate ?? '',
     lastUpdatedPartial:

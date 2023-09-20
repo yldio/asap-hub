@@ -1,4 +1,5 @@
-import { FetchOptions, ListResponse } from '../common';
+import { GP2ResearchOutputSharingStatus } from '..';
+import { FetchOptions, GP2DecisionOption, ListResponse } from '../common';
 import { ExternalUserResponse } from './external-user';
 import { KeywordDataObject } from './keywords';
 
@@ -52,6 +53,9 @@ export type OutputCoreObject = {
   title: string;
   type?: OutputType;
   subtype?: OutputSubtype;
+  description?: string;
+  gp2Supported?: GP2DecisionOption;
+  sharingStatus: GP2ResearchOutputSharingStatus;
 };
 
 export type UserAuthor = {
@@ -116,6 +120,9 @@ export type OutputPostRequest = {
   title: string;
   type?: OutputType;
   subtype?: OutputSubtype;
+  description?: string;
+  gp2Supported?: GP2DecisionOption;
+  sharingStatus: GP2ResearchOutputSharingStatus;
   workingGroupId?: string;
   projectId?: string;
 };

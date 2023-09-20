@@ -17,6 +17,7 @@ const outputResponse: Omit<gp2.ListOutputResponse['items'][0], 'id'> = {
   lastUpdatedPartial: '2020-11-09T20:36:54Z',
   lastModifiedDate: '2020-12-10T20:36:54Z',
   title: 'Output',
+  sharingStatus: 'Public',
   authors: [userAuthor],
   documentType: 'Code/Software',
 };
@@ -25,6 +26,9 @@ export const createOutputResponse = (itemIndex = 0): gp2.OutputResponse => ({
   ...outputResponse,
   id: `ro${itemIndex}`,
   title: `${outputResponse.title} ${itemIndex + 1}`,
+  description: 'An interesting article',
+  gp2Supported: 'Yes',
+  sharingStatus: 'GP2 Only',
 });
 
 export const createListOutputResponse = (

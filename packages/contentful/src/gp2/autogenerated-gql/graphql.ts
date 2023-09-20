@@ -1917,12 +1917,16 @@ export enum ExternalUsersLinkingCollectionsOutputsCollectionOrder {
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  Gp2SupportedAsc = 'gp2Supported_ASC',
+  Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
   LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
   SubtypeDesc = 'subtype_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -2463,12 +2467,16 @@ export enum KeywordsLinkingCollectionsOutputsCollectionOrder {
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  Gp2SupportedAsc = 'gp2Supported_ASC',
+  Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
   LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
   SubtypeDesc = 'subtype_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -3176,12 +3184,15 @@ export type Outputs = Entry & {
   authorsCollection?: Maybe<OutputsAuthorsCollection>;
   contentfulMetadata: ContentfulMetadata;
   createdBy?: Maybe<Users>;
+  description?: Maybe<Scalars['String']>;
   documentType?: Maybe<Scalars['String']>;
+  gp2Supported?: Maybe<Scalars['String']>;
   lastUpdatedPartial?: Maybe<Scalars['DateTime']>;
   link?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<OutputsLinkingCollections>;
   publishDate?: Maybe<Scalars['DateTime']>;
   relatedEntity?: Maybe<OutputsRelatedEntity>;
+  sharingStatus?: Maybe<Scalars['String']>;
   subtype?: Maybe<Scalars['String']>;
   sys: Sys;
   tagsCollection?: Maybe<OutputsTagsCollection>;
@@ -3217,7 +3228,17 @@ export type OutputsCreatedByArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsDocumentTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsGp2SupportedArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -3245,6 +3266,11 @@ export type OutputsPublishDateArgs = {
 export type OutputsRelatedEntityArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsSharingStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3333,6 +3359,13 @@ export type OutputsFilter = {
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   createdBy?: InputMaybe<CfUsersNestedFilter>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   documentType?: InputMaybe<Scalars['String']>;
   documentType_contains?: InputMaybe<Scalars['String']>;
   documentType_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3340,6 +3373,13 @@ export type OutputsFilter = {
   documentType_not?: InputMaybe<Scalars['String']>;
   documentType_not_contains?: InputMaybe<Scalars['String']>;
   documentType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  gp2Supported?: InputMaybe<Scalars['String']>;
+  gp2Supported_contains?: InputMaybe<Scalars['String']>;
+  gp2Supported_exists?: InputMaybe<Scalars['Boolean']>;
+  gp2Supported_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  gp2Supported_not?: InputMaybe<Scalars['String']>;
+  gp2Supported_not_contains?: InputMaybe<Scalars['String']>;
+  gp2Supported_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   lastUpdatedPartial?: InputMaybe<Scalars['DateTime']>;
   lastUpdatedPartial_exists?: InputMaybe<Scalars['Boolean']>;
   lastUpdatedPartial_gt?: InputMaybe<Scalars['DateTime']>;
@@ -3368,6 +3408,13 @@ export type OutputsFilter = {
   publishDate_not?: InputMaybe<Scalars['DateTime']>;
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEntity_exists?: InputMaybe<Scalars['Boolean']>;
+  sharingStatus?: InputMaybe<Scalars['String']>;
+  sharingStatus_contains?: InputMaybe<Scalars['String']>;
+  sharingStatus_exists?: InputMaybe<Scalars['Boolean']>;
+  sharingStatus_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sharingStatus_not?: InputMaybe<Scalars['String']>;
+  sharingStatus_not_contains?: InputMaybe<Scalars['String']>;
+  sharingStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   subtype?: InputMaybe<Scalars['String']>;
   subtype_contains?: InputMaybe<Scalars['String']>;
   subtype_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3414,12 +3461,16 @@ export enum OutputsOrder {
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  Gp2SupportedAsc = 'gp2Supported_ASC',
+  Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
   LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
   SubtypeDesc = 'subtype_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -3974,12 +4025,16 @@ export enum ProjectsLinkingCollectionsOutputsCollectionOrder {
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  Gp2SupportedAsc = 'gp2Supported_ASC',
+  Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
   LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
   SubtypeDesc = 'subtype_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -5292,12 +5347,16 @@ export enum UsersLinkingCollectionsOutputsCollectionOrder {
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  Gp2SupportedAsc = 'gp2Supported_ASC',
+  Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
   LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
   SubtypeDesc = 'subtype_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -5969,12 +6028,16 @@ export enum WorkingGroupsLinkingCollectionsOutputsCollectionOrder {
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  Gp2SupportedAsc = 'gp2Supported_ASC',
+  Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
   LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
   SubtypeDesc = 'subtype_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -8695,6 +8758,9 @@ export type OutputsContentDataFragment = Pick<
   | 'documentType'
   | 'type'
   | 'subtype'
+  | 'description'
+  | 'gp2Supported'
+  | 'sharingStatus'
   | 'link'
   | 'addedDate'
   | 'publishDate'
@@ -8746,6 +8812,9 @@ export type FetchOutputByIdQuery = {
       | 'documentType'
       | 'type'
       | 'subtype'
+      | 'description'
+      | 'gp2Supported'
+      | 'sharingStatus'
       | 'link'
       | 'addedDate'
       | 'publishDate'
@@ -8814,6 +8883,9 @@ export type FetchOutputsQuery = {
             | 'documentType'
             | 'type'
             | 'subtype'
+            | 'description'
+            | 'gp2Supported'
+            | 'sharingStatus'
             | 'link'
             | 'addedDate'
             | 'publishDate'
@@ -8885,6 +8957,9 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                 | 'documentType'
                 | 'type'
                 | 'subtype'
+                | 'description'
+                | 'gp2Supported'
+                | 'sharingStatus'
                 | 'link'
                 | 'addedDate'
                 | 'publishDate'
@@ -8958,6 +9033,9 @@ export type FetchOutputsByUserIdQuery = {
                 | 'documentType'
                 | 'type'
                 | 'subtype'
+                | 'description'
+                | 'gp2Supported'
+                | 'sharingStatus'
                 | 'link'
                 | 'addedDate'
                 | 'publishDate'
@@ -9104,6 +9182,9 @@ export type FetchOutputsByProjectIdQuery = {
                 | 'documentType'
                 | 'type'
                 | 'subtype'
+                | 'description'
+                | 'gp2Supported'
+                | 'sharingStatus'
                 | 'link'
                 | 'addedDate'
                 | 'publishDate'
@@ -12020,6 +12101,9 @@ export const OutputsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'documentType' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subtype' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'gp2Supported' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'sharingStatus' } },
           { kind: 'Field', name: { kind: 'Name', value: 'link' } },
           { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },

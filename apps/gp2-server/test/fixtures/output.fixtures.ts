@@ -18,6 +18,8 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   addedDate: '2021-05-21T13:18:31.000Z',
   title: 'Test Proposal 1234',
   link: 'http://a.link',
+  description: 'A nice article',
+  sharingStatus: 'GP2 Only',
   authors: [
     {
       id: 'user-id-1',
@@ -144,6 +146,7 @@ export const getContentfulGraphqlOutput = (): NonNullable<
   documentType: 'Article',
   type: 'Research',
   subtype: 'Published',
+  description: 'A nice article',
   link: 'http://a.link',
   addedDate: '2021-05-21T13:18:31.000Z',
   publishDate: '2021-05-21T13:18:31.000Z',

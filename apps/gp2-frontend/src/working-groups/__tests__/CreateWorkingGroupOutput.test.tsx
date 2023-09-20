@@ -87,6 +87,10 @@ it('publishes the output', async () => {
 
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
   userEvent.type(screen.getByRole('textbox', { name: /url/i }), link);
+  userEvent.type(
+    screen.getByRole('textbox', { name: /description/i }),
+    'An interesting article',
+  );
   const authors = screen.getByRole('textbox', { name: /Authors/i });
   userEvent.click(authors);
   userEvent.click(screen.getByText(/Tony Stark/i));
@@ -98,6 +102,8 @@ it('publishes the output', async () => {
     {
       title,
       link,
+      description: 'An interesting article',
+      sharingStatus: 'GP2 Only',
       documentType: 'Procedural Form',
       authors: [
         {

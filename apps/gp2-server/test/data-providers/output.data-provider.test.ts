@@ -634,12 +634,7 @@ describe('Outputs data provider', () => {
 
       const result = await outputDataProvider.create(outputRequest);
       expect(result).toEqual(outputId);
-      const {
-        publishDate: _,
-        workingGroupId: __,
-        projectId,
-        ...fieldsCreated
-      } = outputRequest;
+      const { workingGroupId: __, projectId, ...fieldsCreated } = outputRequest;
       const fields = addLocaleToFields({
         ...fieldsCreated,
         authors: fieldsCreated.authors.map((author) => ({
@@ -768,10 +763,9 @@ describe('Outputs data provider', () => {
       const outputUpdateData = getOutputUpdateDataObject();
 
       await outputDataProvider.update(outputId, outputUpdateData);
-      const { publishDate: _, ...fieldsCreated } = outputUpdateData;
       const fields = {
-        ...fieldsCreated,
-        authors: fieldsCreated.authors.map((author) => ({
+        ...outputUpdateData,
+        authors: outputUpdateData.authors.map((author) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
@@ -782,7 +776,7 @@ describe('Outputs data provider', () => {
           sys: {
             type: 'Link',
             linkType: 'Entry',
-            id: fieldsCreated.updatedBy,
+            id: outputUpdateData.updatedBy,
           },
         },
       };

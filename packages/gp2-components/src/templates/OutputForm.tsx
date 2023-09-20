@@ -171,7 +171,7 @@ const OutputForm: React.FC<OutputFormType> = ({
     }
 
     setIsGP2SupportedAlwaysTrue(newisGP2SupportedAlwaysTrue);
-  }, [newType]);
+  }, [newType, documentType]);
 
   const isFieldDirty = (original: string = '', current: string) =>
     current !== original;

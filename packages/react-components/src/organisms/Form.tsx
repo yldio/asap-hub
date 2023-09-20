@@ -55,10 +55,16 @@ const Form = <T extends void | Record<string, unknown>>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, redirectOnSave, dirty]);
   useEffect(() => {
-    if (serverErrors.length && formRef.current) {
-      formRef.current.reportValidity();
+    if (
+      serverErrors.length &&
+      formRef.current &&
+      formRef.current.reportValidity()
+    ) {
+      toast(
+        'There are some errors in the form. Please correct the fields below.',
+      );
     }
-  }, [serverErrors]);
+  }, [serverErrors, toast]);
   const getWrappedOnSave =
     (onSaveFunction: () => Promise<T | void>) => async () => {
       const parentValidation = validate();

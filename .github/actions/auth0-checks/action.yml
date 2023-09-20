@@ -1,0 +1,82 @@
+name: Auth0 Checks
+description: Defines outputs to set up a dedicated Auth0 environment
+
+inputs:
+  auth0-tenant-domain:
+    description: 'Auth0 tenant domain'
+    required: true
+  auth0-client-id:
+    description: 'Auth0 client ID'
+    required: true
+  auth0-client-secret:
+    description: 'Auth0 client secret'
+    required: true
+  auth0-audience:
+    description: 'Auth0 audience'
+    required: true
+  app:
+    description: 'crn or gp2'
+    required: true
+    type: string
+  create-dedicated-env:
+    description: 'if a dedicated env should be created'
+    required: true
+    type: boolean
+
+outputs:
+  auth0-env:
+    description: 'Auth0 environment to be used on branch'
+    value: ${{ steps.determine-environment.outputs.env-id }}
+  on-branch-env:
+    description: 'Whether the Auth0 environment being used is a branch environment'
+    value: ${{ steps.determine-environment.outputs.on-branch-env }}
+  auth0-env-exists:
+    description: 'Whether the Auth0 environment already exists'
+    value: ${{ steps.check-auth0-exists.outputs.exists }}
+
+runs:
+  using: 'composite'
+  steps:
+    # Determine whether a dedicated environment is needed for this branch
+    # otherwise default to the default auth0 environment
+    - name: Determine Environment
+      id: determine-environment
+      shell: bash
+      # run: |
+    #     CONTENTFUL_ENV=$CONTENTFUL_MASTER_ENV
+    #     BRANCH_ENV=false
+
+    #     echo "CREATE_DEDICATED_ENV = $CREATE_DEDICATED_ENV"
+
+    #     if [ "$CREATE_DEDICATED_ENV" = true ]; then
+    #       CONTENTFUL_ENV=$CONTENTFUL_ENV_ID
+    #       BRANCH_ENV=true
+    #     fi
+
+    #     echo "env-id=$CONTENTFUL_ENV" >> $GITHUB_OUTPUT
+    #     echo "on-branch-env=$BRANCH_ENV" >> $GITHUB_OUTPUT
+    #   env:
+    #     CONTENTFUL_MASTER_ENV: ${{ inputs.contentful-master-env }}
+    #     CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
+    #     CREATE_DEDICATED_ENV: ${{ inputs.create-dedicated-env }}
+    # - name: Determine whether the Contentful environment has been created
+    #   id: check-contentful-exists
+    #   shell: bash
+    #   run: |
+    #     ENVIRONMENT_TYPE=$(curl --silent \
+    #                             --request GET \
+    #                             --header "Authorization: Bearer ${CONTENTFUL_MANAGEMENT_ACCESS_TOKEN}" \
+    #                             https://api.contentful.com/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENV} \
+    #                             | jq '.sys.type' -r)
+
+    #     if [[ "$ENVIRONMENT_TYPE" == "Environment" ]]; then
+    #       echo "Environment found, setting exists flag to true."
+    #       echo "exists=true" >> $GITHUB_OUTPUT
+    #     else
+    #       echo "Environment not found, setting exists flag to false."
+    #       echo "exists=false" >> $GITHUB_OUTPUT
+    #     fi
+    #   env:
+    #     CONTENTFUL_ENV: ${{ steps.determine-environment.outputs.env-id }}
+    #     CONTENTFUL_SPACE_ID: ${{ inputs.contentful-space-id }}
+    #     CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ inputs.contentful-token }}

@@ -4,6 +4,7 @@ import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC } from 'react';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 import { documentTypeMapper } from '../projects/CreateProjectOutput';
+import { useKeywords } from '../shared/state';
 
 const { workingGroups } = gp2Routing;
 
@@ -15,6 +16,7 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
   );
   const createOutput = useCreateOutput();
   const getAuthorSuggestions = useAuthorSuggestions();
+  const { items: suggestions } = useKeywords();
   return (
     <CreateOutputPage
       documentType={documentTypeMapper[outputDocumentType]}
@@ -31,6 +33,7 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         }
         documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
+        suggestions={suggestions}
       />
     </CreateOutputPage>
   );

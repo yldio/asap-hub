@@ -18,6 +18,7 @@ describe('OutputForm', () => {
     shareOutput: jest.fn(),
     documentType: 'Procedural Form' as const,
     entityType: 'workingGroup' as const,
+    suggestions: [],
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {

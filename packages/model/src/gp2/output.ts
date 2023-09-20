@@ -13,6 +13,34 @@ export const outputDocumentTypes = [
 
 export type OutputDocumentType = (typeof outputDocumentTypes)[number];
 
+export enum OutputIdentifierType {
+  Empty = '',
+  None = 'None',
+  DOI = 'DOI',
+  AccessionNumber = 'Accession Number',
+  RRID = 'RRID',
+}
+
+export const outputToIdentifierType: Record<
+  OutputDocumentType,
+  OutputIdentifierType[]
+> = {
+  Article: [OutputIdentifierType.None, OutputIdentifierType.DOI],
+  'Code/Software': [
+    OutputIdentifierType.None,
+    OutputIdentifierType.DOI,
+    OutputIdentifierType.RRID,
+  ],
+  Dataset: [
+    OutputIdentifierType.None,
+    OutputIdentifierType.DOI,
+    OutputIdentifierType.AccessionNumber,
+  ],
+  'Procedural Form': [OutputIdentifierType.None, OutputIdentifierType.DOI],
+  'GP2 Reports': [],
+  'Training Materials': [],
+};
+
 export const outputTypes = [
   'Research',
   'Review',
@@ -132,6 +160,7 @@ export type OutputPostRequest = {
   sharingStatus: OutputSharingStatus;
   workingGroupId?: string;
   projectId?: string;
+  tags?: KeywordDataObject[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

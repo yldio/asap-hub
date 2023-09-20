@@ -55,6 +55,7 @@ export default function LabeledRadioButtonGroup<V extends string>({
         {options.map((option) => (
           <LabeledRadioButton
             key={option.value}
+            disabled={option.disabled}
             groupName={groupName.current}
             title={option.label}
             checked={option.value === value}

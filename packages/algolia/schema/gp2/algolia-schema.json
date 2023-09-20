@@ -32,6 +32,7 @@
     "project.id",
     "speakers.user.id",
     "status",
+    "type",
     "workingGroup.id"
   ],
   "attributesToSnippet": null,

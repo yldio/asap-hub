@@ -35,6 +35,9 @@ describe('getDecision', () => {
   it('returns not sure for undefined', () => {
     expect(getDecision()).toEqual('Not Sure');
   });
+  it('return yes for "Article" and decision undefined', () => {
+    expect(getDecision(undefined, 'Article')).toEqual('Yes');
+  });
 });
 
 describe('getIdentifierType', () => {

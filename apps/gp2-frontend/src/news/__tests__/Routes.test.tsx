@@ -5,8 +5,12 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import {
+  createAlgoliaResponse,
+  createNewsAlgoliaRecord,
+} from '../../__fixtures__/algolia';
 
-import { getNews } from '../api';
+import { getAlgoliaNews } from '../api';
 import Routes from '../Routes';
 
 jest.mock('../api');
@@ -14,7 +18,10 @@ jest.mock('../api');
 afterEach(() => {
   jest.resetAllMocks();
 });
-const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
+
+const mockGetNews = getAlgoliaNews as jest.MockedFunction<
+  typeof getAlgoliaNews
+>;
 const renderNews = async ({ user = {} }: { user?: Partial<User> }) => {
   render(
     <Suspense fallback="loading">
@@ -38,16 +45,16 @@ const renderNews = async ({ user = {} }: { user?: Partial<User> }) => {
 
 describe('Routes', () => {
   it('renders the title', async () => {
-    mockGetNews.mockResolvedValue({ items: [], total: 0 });
+    mockGetNews.mockResolvedValue(createAlgoliaResponse<'news'>([]));
     await renderNews({});
     expect(screen.getByRole('heading', { name: 'News' })).toBeVisible();
   });
 
   it('renders a list of news', async () => {
     const mockedNews = gp2.createNewsResponse().items[0]!;
-    const news = gp2.createNewsResponse([
-      { ...mockedNews, id: '1', title: 'News 1' },
-      { ...mockedNews, id: '2', title: 'News 2' },
+    const news = createAlgoliaResponse<'news'>([
+      createNewsAlgoliaRecord({ ...mockedNews, id: '1', title: 'News 1' }),
+      createNewsAlgoliaRecord({ ...mockedNews, id: '2', title: 'News 2' }),
     ]);
 
     mockGetNews.mockResolvedValue(news);

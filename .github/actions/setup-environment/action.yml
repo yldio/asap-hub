@@ -11,6 +11,9 @@ outputs:
   app-release:
     description: 'App Release'
     value: ${{ steps.vars.outputs.app-release }}
+  auth0-label:
+    description: 'PR has auth0 label'
+    value: ${{ steps.vars.outputs.auth0-label }}
   aws-acm-asap-science-certificate-arn:
     description: 'AWS ACM ASAP Science Certificate ARN'
     value: ${{ steps.vars.outputs.aws-acm-asap-science-certificate-arn }}
@@ -251,17 +254,34 @@ runs:
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
           HAS_CONTENTFUL_LABEL=${{ contains(github.event.pull_request.labels.*.name, 'contentful') }}
+          AUTH0_LABEL=${{contains(github.event.pull_request.labels.*.name, 'use-pr-auth0-tenant') }}
+          echo "auth0-label=$AUTH0_LABEL" >> $GITHUB_OUTPUT
+          if [ "$AUTH0_LABEL" = true ]; then
+            echo "gp2-auth0-additional-claim-domain=https://$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
+            echo "gp2-auth0-audience=https://pr.gp2.asap.science" >> $GITHUB_OUTPUT
+            echo "gp2-auth-url=https://$PR_NUMBER.gp2.asap.science/.auth/" >> $GITHUB_OUTPUT
+            echo "gp2-auth0-client-id=Um9rLU2D9MjAA4LzKZz5MVRl5ESodg4B" >> $GITHUB_OUTPUT
+            echo "gp2-ci-auth0-client-id=FUhxz0YEhaLGIfBYOyzJ7ed3e32CCMpW" >> $GITHUB_OUTPUT
+            echo "gp2-auth0-domain=pr-gp2-hub.us.auth0.com" >> $GITHUB_OUTPUT
+
+            echo "crn-auth0-additional-claim-domain=https://$PR_NUMBER.hub.asap.science/" >> $GITHUB_OUTPUT
+            echo "crn-auth0-audience=https://pr.hub.asap.science" >> $GITHUB_OUTPUT
+            echo "crn-auth-url=https://$PR_NUMBER.hub.asap.science/.auth/" >> $GITHUB_OUTPUT
+            echo "crn-auth0-client-id=s1ZOMWgaQKtCeRSnr7LRamFWh0WD8azN" >> $GITHUB_OUTPUT
+            echo "crn-ci-auth0-client-id=WHi7btcaXqs2lJnvVyp6SP12onYNbkIA" >> $GITHUB_OUTPUT
+            echo "crn-auth0-domain=pr-asap-hub.us.auth0.com" >> $GITHUB_OUTPUT
+          fi
           CRN_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'crn-create-environment') }}
           GP2_CREATE_CONTENTFUL_PR_ENV=${{ contains(github.event.pull_request.labels.*.name, 'gp2-create-environment') }}
-          
+
           echo "pr-number=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "sls-stage=$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT
-          
+
           echo "crn-app-url=https://$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT
           echo "crn-api-url=https://api-$PR_NUMBER.hub.asap.science" >> $GITHUB_OUTPUT
           echo "gp2-app-url=https://$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
-          echo "gp2-api-url=https://api-$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT          
+          echo "gp2-api-url=https://api-$PR_NUMBER.gp2.asap.science" >> $GITHUB_OUTPUT
 
           if [ "$CRN_CREATE_CONTENTFUL_PR_ENV" = true ]; then
             echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT

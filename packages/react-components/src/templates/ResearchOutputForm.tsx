@@ -10,9 +10,11 @@ import {
 } from '@asap-hub/model';
 
 import { ResearchOutputPermissions } from '@asap-hub/react-context';
-import { sharedResearch } from '@asap-hub/routing';
+import { network, sharedResearch } from '@asap-hub/routing';
 import React, { ComponentProps, useState } from 'react';
 import equal from 'fast-deep-equal';
+import { useRouteMatch } from 'react-router-dom';
+
 import { contentSidePaddingWithNavigation } from '../layout';
 import {
   ConfirmModal,
@@ -33,6 +35,7 @@ import {
   getOwnRelatedResearchLinks,
   getPayload,
   getPublishDate,
+  getSharingStatus,
   noop,
 } from '../utils';
 import { richTextToMarkdown } from '../utils/parsing';
@@ -268,13 +271,46 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     getDecision(researchOutputData?.asapFunded),
   );
 
+  const isCreatingTeamArticle = useRouteMatch(
+    network({})
+      .teams({})
+      .team({
+        teamId: teams[0]?.value || '',
+      })
+      .createOutput({
+        outputDocumentType: 'article',
+      }).$,
+  );
+
+  const isCreatingWorkingGroupArticle = useRouteMatch(
+    network({})
+      .workingGroups({})
+      .workingGroup({
+        workingGroupId: researchOutputData?.workingGroups?.[0]?.id ?? '',
+      })
+      .createOutput({
+        outputDocumentType: 'article',
+      }).$,
+  );
+
+  const isCreatingOutput =
+    isCreatingTeamArticle || isCreatingWorkingGroupArticle;
+
   const [usedInPublication, setUsedInPublication] = useState<DecisionOption>(
-    getDecision(researchOutputData?.usedInPublication),
+    getDecision(
+      researchOutputData?.usedInPublication,
+      isCreatingOutput ? documentType : undefined,
+    ),
   );
 
   const [sharingStatus, setSharingStatus] = useState<
     ResearchOutputPostRequest['sharingStatus']
-  >(researchOutputData?.sharingStatus || 'Network Only');
+  >(
+    getSharingStatus(
+      researchOutputData?.sharingStatus,
+      isCreatingOutput ? documentType : undefined,
+    ),
+  );
 
   const [publishDate, setPublishDate] = useState<Date | undefined>(
     getPublishDate(researchOutputData?.publishDate) || undefined,
@@ -431,6 +467,9 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
               )}
               <div css={contentStyles}>
                 <ResearchOutputFormSharingCard
+                  documentType={documentType}
+                  isCreatingOutputRoute={!!isCreatingOutput}
+                  researchOutputData={researchOutputData}
                   serverValidationErrors={serverValidationErrors}
                   clearServerValidationError={clearServerValidationError}
                   isSaving={isSaving}

@@ -1,6 +1,7 @@
 import {
   DecisionOption,
   ResearchOutputPostRequest,
+  ResearchOutputResponse,
   ResearchOutputSharingStatus,
   ResearchOutputType,
   ResearchTagResponse,
@@ -25,6 +26,9 @@ type ResearchOutputFormSharingCardProps = Pick<
   ResearchOutputPostRequest,
   'link' | 'title' | 'descriptionMD' | 'sharingStatus' | 'subtype'
 > & {
+  researchOutputData?: ResearchOutputResponse;
+  documentType?: ResearchOutputResponse['documentType'];
+  isCreatingOutputRoute?: boolean;
   type?: ResearchOutputType | '';
   onChangeLink?: (newValue: string) => void;
   onChangeTitle?: (newValue: string) => void;
@@ -57,6 +61,9 @@ export const getPublishDateValidationMessage = (e: ValidityState): string => {
 const ResearchOutputFormSharingCard: React.FC<
   ResearchOutputFormSharingCardProps
 > = ({
+  researchOutputData,
+  documentType,
+  isCreatingOutputRoute,
   isSaving,
   link,
   title,
@@ -218,8 +225,22 @@ const ResearchOutputFormSharingCard: React.FC<
         subtitle="(required)"
         options={[
           { value: 'Yes', label: 'Yes' },
-          { value: 'No', label: 'No' },
-          { value: 'Not Sure', label: 'Not Sure' },
+          {
+            value: 'No',
+            label: 'No',
+            disabled:
+              isCreatingOutputRoute &&
+              documentType === 'Article' &&
+              researchOutputData?.usedInPublication === undefined,
+          },
+          {
+            value: 'Not Sure',
+            label: 'Not Sure',
+            disabled:
+              isCreatingOutputRoute &&
+              documentType === 'Article' &&
+              researchOutputData?.usedInPublication === undefined,
+          },
         ]}
         value={usedInPublication}
         onChange={onChangeUsedInPublication}
@@ -228,7 +249,13 @@ const ResearchOutputFormSharingCard: React.FC<
         title="Sharing status"
         subtitle="(required)"
         options={[
-          { value: 'Network Only', label: 'CRN Only' },
+          {
+            value: 'Network Only',
+            label: 'CRN Only',
+            disabled:
+              documentType === 'Article' &&
+              researchOutputData?.sharingStatus === undefined,
+          },
           { value: 'Public', label: 'Public' },
         ]}
         value={sharingStatus}

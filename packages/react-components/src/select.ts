@@ -28,6 +28,7 @@ import { lineHeight, perRem } from './pixels';
 export interface Option<V extends string> {
   value: V;
   label: string;
+  disabled?: boolean;
 }
 
 const { ...baseStyles } = styles;

@@ -88,8 +88,25 @@ export const getPublishDate = (publishDate?: string): Date | undefined => {
   return undefined;
 };
 
-export const getDecision = (decision?: boolean): DecisionOption =>
-  decision === undefined ? 'Not Sure' : decision ? 'Yes' : 'No';
+export const getDecision = (
+  decision?: boolean,
+  documentType?: ResearchOutputDocumentType,
+): DecisionOption => {
+  if (documentType === 'Article' && decision === undefined) {
+    return 'Yes';
+  }
+  return decision === undefined ? 'Not Sure' : decision ? 'Yes' : 'No';
+};
+
+export const getSharingStatus = (
+  sharingStatus?: ResearchOutputPostRequest['sharingStatus'],
+  documentType?: ResearchOutputDocumentType,
+): ResearchOutputPostRequest['sharingStatus'] => {
+  if (sharingStatus !== undefined) {
+    return sharingStatus;
+  }
+  return documentType === 'Article' ? 'Public' : 'Network Only';
+};
 
 export const getOwnRelatedResearchLinks = (
   relatedResearch?: ResearchOutputDataObject['relatedResearch'],

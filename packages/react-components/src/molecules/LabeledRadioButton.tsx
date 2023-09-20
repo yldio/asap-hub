@@ -1,5 +1,11 @@
 import { ComponentProps } from 'react';
-import { RadioButton, Label } from '../atoms';
+import { css } from '@emotion/react';
+import { Label, Paragraph, RadioButton } from '../atoms';
+import { steel } from '../colors';
+
+const disabledStyles = css({
+  color: steel.rgb,
+});
 
 type LabeledRadioButtonProps = {
   readonly title: string;
@@ -12,7 +18,12 @@ const LabeledRadioButton: React.FC<LabeledRadioButtonProps> = ({
     trailing
     forContent={(id) => <RadioButton {...radioButtonProps} id={id} />}
   >
-    {title}
+    <Paragraph
+      noMargin
+      styles={radioButtonProps.disabled ? disabledStyles : undefined}
+    >
+      {title}
+    </Paragraph>
   </Label>
 );
 

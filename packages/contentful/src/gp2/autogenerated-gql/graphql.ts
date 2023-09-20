@@ -1941,12 +1941,16 @@ export enum ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder {
 }
 
 export enum ExternalUsersLinkingCollectionsOutputsCollectionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AdminNotesAsc = 'adminNotes_ASC',
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   Gp2SupportedAsc = 'gp2Supported_ASC',
   Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -1955,6 +1959,8 @@ export enum ExternalUsersLinkingCollectionsOutputsCollectionOrder {
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
@@ -2491,12 +2497,16 @@ export enum KeywordsLinkingCollectionsEventsCollectionOrder {
 }
 
 export enum KeywordsLinkingCollectionsOutputsCollectionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AdminNotesAsc = 'adminNotes_ASC',
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   Gp2SupportedAsc = 'gp2Supported_ASC',
   Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -2505,6 +2515,8 @@ export enum KeywordsLinkingCollectionsOutputsCollectionOrder {
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
@@ -3217,6 +3229,7 @@ export enum NewsOrder {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type Outputs = Entry & {
+  accessionNumber?: Maybe<Scalars['String']>;
   addedDate?: Maybe<Scalars['DateTime']>;
   adminNotes?: Maybe<Scalars['String']>;
   authorsCollection?: Maybe<OutputsAuthorsCollection>;
@@ -3224,12 +3237,14 @@ export type Outputs = Entry & {
   createdBy?: Maybe<Users>;
   description?: Maybe<Scalars['String']>;
   documentType?: Maybe<Scalars['String']>;
+  doi?: Maybe<Scalars['String']>;
   gp2Supported?: Maybe<Scalars['String']>;
   lastUpdatedPartial?: Maybe<Scalars['DateTime']>;
   link?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<OutputsLinkingCollections>;
   publishDate?: Maybe<Scalars['DateTime']>;
   relatedEntity?: Maybe<OutputsRelatedEntity>;
+  rrid?: Maybe<Scalars['String']>;
   sharingStatus?: Maybe<Scalars['String']>;
   subtype?: Maybe<Scalars['String']>;
   sys: Sys;
@@ -3237,6 +3252,11 @@ export type Outputs = Entry & {
   title?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   updatedBy?: Maybe<Users>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsAccessionNumberArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3276,6 +3296,11 @@ export type OutputsDocumentTypeArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsDoiArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsGp2SupportedArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
@@ -3304,6 +3329,11 @@ export type OutputsPublishDateArgs = {
 export type OutputsRelatedEntityArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsRridArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3376,6 +3406,13 @@ export type OutputsCollection = {
 export type OutputsFilter = {
   AND?: InputMaybe<Array<InputMaybe<OutputsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<OutputsFilter>>>;
+  accessionNumber?: InputMaybe<Scalars['String']>;
+  accessionNumber_contains?: InputMaybe<Scalars['String']>;
+  accessionNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  accessionNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  accessionNumber_not?: InputMaybe<Scalars['String']>;
+  accessionNumber_not_contains?: InputMaybe<Scalars['String']>;
+  accessionNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   addedDate?: InputMaybe<Scalars['DateTime']>;
   addedDate_exists?: InputMaybe<Scalars['Boolean']>;
   addedDate_gt?: InputMaybe<Scalars['DateTime']>;
@@ -3411,6 +3448,13 @@ export type OutputsFilter = {
   documentType_not?: InputMaybe<Scalars['String']>;
   documentType_not_contains?: InputMaybe<Scalars['String']>;
   documentType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi?: InputMaybe<Scalars['String']>;
+  doi_contains?: InputMaybe<Scalars['String']>;
+  doi_exists?: InputMaybe<Scalars['Boolean']>;
+  doi_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  doi_not?: InputMaybe<Scalars['String']>;
+  doi_not_contains?: InputMaybe<Scalars['String']>;
+  doi_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   gp2Supported?: InputMaybe<Scalars['String']>;
   gp2Supported_contains?: InputMaybe<Scalars['String']>;
   gp2Supported_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3446,6 +3490,13 @@ export type OutputsFilter = {
   publishDate_not?: InputMaybe<Scalars['DateTime']>;
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEntity_exists?: InputMaybe<Scalars['Boolean']>;
+  rrid?: InputMaybe<Scalars['String']>;
+  rrid_contains?: InputMaybe<Scalars['String']>;
+  rrid_exists?: InputMaybe<Scalars['Boolean']>;
+  rrid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  rrid_not?: InputMaybe<Scalars['String']>;
+  rrid_not_contains?: InputMaybe<Scalars['String']>;
+  rrid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sharingStatus?: InputMaybe<Scalars['String']>;
   sharingStatus_contains?: InputMaybe<Scalars['String']>;
   sharingStatus_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3493,12 +3544,16 @@ export type OutputsLinkingCollectionsEntryCollectionArgs = {
 };
 
 export enum OutputsOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AdminNotesAsc = 'adminNotes_ASC',
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   Gp2SupportedAsc = 'gp2Supported_ASC',
   Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -3507,6 +3562,8 @@ export enum OutputsOrder {
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
@@ -4057,12 +4114,16 @@ export type ProjectsLinkingCollectionsOutputsCollectionArgs = {
 };
 
 export enum ProjectsLinkingCollectionsOutputsCollectionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AdminNotesAsc = 'adminNotes_ASC',
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   Gp2SupportedAsc = 'gp2Supported_ASC',
   Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -4071,6 +4132,8 @@ export enum ProjectsLinkingCollectionsOutputsCollectionOrder {
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
@@ -5379,12 +5442,16 @@ export enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsOutputsCollectionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AdminNotesAsc = 'adminNotes_ASC',
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   Gp2SupportedAsc = 'gp2Supported_ASC',
   Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -5393,6 +5460,8 @@ export enum UsersLinkingCollectionsOutputsCollectionOrder {
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
@@ -6060,12 +6129,16 @@ export type WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionArgs = {
 };
 
 export enum WorkingGroupsLinkingCollectionsOutputsCollectionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AdminNotesAsc = 'adminNotes_ASC',
   AdminNotesDesc = 'adminNotes_DESC',
   DocumentTypeAsc = 'documentType_ASC',
   DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
   Gp2SupportedAsc = 'gp2Supported_ASC',
   Gp2SupportedDesc = 'gp2Supported_DESC',
   LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
@@ -6074,6 +6147,8 @@ export enum WorkingGroupsLinkingCollectionsOutputsCollectionOrder {
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
   SharingStatusAsc = 'sharingStatus_ASC',
   SharingStatusDesc = 'sharingStatus_DESC',
   SubtypeAsc = 'subtype_ASC',
@@ -8812,6 +8887,9 @@ export type OutputsContentDataFragment = Pick<
   | 'addedDate'
   | 'publishDate'
   | 'lastUpdatedPartial'
+  | 'doi'
+  | 'rrid'
+  | 'accessionNumber'
 > & {
   sys: Pick<
     Sys,
@@ -8866,6 +8944,9 @@ export type FetchOutputByIdQuery = {
       | 'addedDate'
       | 'publishDate'
       | 'lastUpdatedPartial'
+      | 'doi'
+      | 'rrid'
+      | 'accessionNumber'
     > & {
       sys: Pick<
         Sys,
@@ -8937,6 +9018,9 @@ export type FetchOutputsQuery = {
             | 'addedDate'
             | 'publishDate'
             | 'lastUpdatedPartial'
+            | 'doi'
+            | 'rrid'
+            | 'accessionNumber'
           > & {
             sys: Pick<
               Sys,
@@ -9011,6 +9095,9 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                 | 'addedDate'
                 | 'publishDate'
                 | 'lastUpdatedPartial'
+                | 'doi'
+                | 'rrid'
+                | 'accessionNumber'
               > & {
                 sys: Pick<
                   Sys,
@@ -9087,6 +9174,9 @@ export type FetchOutputsByUserIdQuery = {
                 | 'addedDate'
                 | 'publishDate'
                 | 'lastUpdatedPartial'
+                | 'doi'
+                | 'rrid'
+                | 'accessionNumber'
               > & {
                 sys: Pick<
                   Sys,
@@ -9163,6 +9253,9 @@ export type FetchOutputsByExternalUserIdQuery = {
                 | 'addedDate'
                 | 'publishDate'
                 | 'lastUpdatedPartial'
+                | 'doi'
+                | 'rrid'
+                | 'accessionNumber'
               > & {
                 sys: Pick<
                   Sys,
@@ -9239,6 +9332,9 @@ export type FetchOutputsByProjectIdQuery = {
                 | 'addedDate'
                 | 'publishDate'
                 | 'lastUpdatedPartial'
+                | 'doi'
+                | 'rrid'
+                | 'accessionNumber'
               > & {
                 sys: Pick<
                   Sys,
@@ -12386,6 +12482,9 @@ export const OutputsContentDataFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'doi' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'rrid' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'accessionNumber' } },
         ],
       },
     },

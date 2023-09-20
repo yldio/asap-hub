@@ -41,6 +41,33 @@ export const outputToIdentifierType: Record<
   'Training Materials': [],
 };
 
+const identifierTypeToFieldName: Record<
+  OutputIdentifierType,
+  'doi' | 'accessionNumber' | 'rrid' | undefined
+> = {
+  [OutputIdentifierType.Empty]: undefined,
+  [OutputIdentifierType.None]: undefined,
+  [OutputIdentifierType.DOI]: 'doi',
+  [OutputIdentifierType.AccessionNumber]: 'accessionNumber',
+  [OutputIdentifierType.RRID]: 'rrid',
+};
+
+export const createIdentifierField = (
+  identifierType: OutputIdentifierType,
+  rawIdentifier: string,
+):
+  | { rrid: string }
+  | { doi: string }
+  | { accessionNumber: string }
+  | Record<never, never> => {
+  const fieldName = identifierTypeToFieldName[identifierType];
+  if (fieldName) {
+    return { [fieldName]: rawIdentifier };
+  }
+
+  return {};
+};
+
 export const outputTypes = [
   'Research',
   'Review',
@@ -91,6 +118,10 @@ export type OutputCoreObject = {
   description?: string;
   gp2Supported?: DecisionOption;
   sharingStatus: OutputSharingStatus;
+  tags?: KeywordDataObject[];
+  doi?: string;
+  rrid?: string;
+  accessionNumber?: string;
 };
 
 export type UserAuthor = {
@@ -115,7 +146,6 @@ export type OutputDataObject = OutputCoreObject & {
   lastUpdatedPartial: string;
   workingGroup?: OutputOwner;
   project?: OutputOwner;
-  tags?: KeywordDataObject[];
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;
@@ -161,6 +191,9 @@ export type OutputPostRequest = {
   workingGroupId?: string;
   projectId?: string;
   tags?: KeywordDataObject[];
+  doi?: string;
+  rrid?: string;
+  accessionNumber?: string;
 };
 
 export type OutputPutRequest = OutputPostRequest;

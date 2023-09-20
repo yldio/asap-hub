@@ -31,6 +31,7 @@ const identifierMap = {
     regex: gp2Validation.OutputIdentifierValidationExpression.DOI,
     errorMessage:
       'Please enter a valid DOI. It starts with a 1 and it cannot be a URL. (e.g. 10.1234/abcde.121212)',
+    required: true,
     name: 'DOI',
   },
   [gp2.OutputIdentifierType.AccessionNumber]: {
@@ -41,6 +42,7 @@ const identifierMap = {
       gp2Validation.OutputIdentifierValidationExpression['Accession Number'],
     errorMessage:
       'Please enter a valid Accession Number which must start with a letter (e.g. NT_123456)',
+    required: true,
     name: 'Accesion Number',
   },
   [gp2.OutputIdentifierType.RRID]: {
@@ -49,6 +51,7 @@ const identifierMap = {
     regex: gp2Validation.OutputIdentifierValidationExpression.RRID,
     errorMessage:
       'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
+    required: true,
     name: 'RRID',
   },
   [gp2.OutputIdentifierType.None]: {
@@ -56,6 +59,7 @@ const identifierMap = {
     placeholder: '',
     regex: gp2Validation.OutputIdentifierValidationExpression.None,
     errorMessage: undefined,
+    required: false,
     name: '',
   },
   [gp2.OutputIdentifierType.Empty]: {
@@ -63,6 +67,7 @@ const identifierMap = {
     placeholder: '',
     regex: undefined,
     errorMessage: undefined,
+    required: false,
     name: '',
   },
 } as const;
@@ -132,6 +137,7 @@ export const OutputIdentifier: React.FC<OutputIdentifierProps> = ({
         getValidationMessage={() => `Please choose an identifier`}
         required={true}
         info={infoText}
+        enabled={identifiers.length > 0}
       />
 
       <TeamCreateOutputIdentifierField
@@ -150,7 +156,8 @@ export interface TeamCreateOutputIdentifierFieldProps {
 export const TeamCreateOutputIdentifierField: React.FC<
   TeamCreateOutputIdentifierFieldProps
 > = ({ type, identifier, setIdentifier }) => {
-  const { helpText, placeholder, errorMessage, regex } = identifierMap[type];
+  const { helpText, placeholder, errorMessage, regex, required } =
+    identifierMap[type];
 
   return (
     <>
@@ -166,6 +173,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
           onChange={setIdentifier}
           pattern={regex}
           subtitle={'(required)'}
+          required={required}
         />
       )}
     </>

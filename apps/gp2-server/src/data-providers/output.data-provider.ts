@@ -332,6 +332,14 @@ const cleanOutput = (
         updatedBy: getLinkEntity(value as string),
       };
     }
+    if (key === 'tags') {
+      return {
+        ...acc,
+        tags: (value as gp2Model.OutputUpdateDataObject['tags'])?.map((tag) =>
+          getLinkEntity(tag.id),
+        ),
+      };
+    }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 

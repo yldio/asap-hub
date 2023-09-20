@@ -78,6 +78,9 @@ type OutputFormType = {
     | 'publishDate'
     | 'authors'
     | 'tags'
+    | 'doi'
+    | 'rrid'
+    | 'accessionNumber'
   >
 >;
 
@@ -109,6 +112,9 @@ const OutputForm: React.FC<OutputFormType> = ({
   publishDate,
   authors,
   tags,
+  doi,
+  rrid,
+  accessionNumber,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -147,17 +153,18 @@ const OutputForm: React.FC<OutputFormType> = ({
     tags || [],
   );
 
-  console.log(suggestions);
   const [identifierType, setIdentifierType] =
     useState<gp2Model.OutputIdentifierType>(
-      //   getIdentifierType(output),
-      gp2Model.OutputIdentifierType.None,
+      doi
+        ? gp2Model.OutputIdentifierType.DOI
+        : rrid
+        ? gp2Model.OutputIdentifierType.RRID
+        : accessionNumber
+        ? gp2Model.OutputIdentifierType.AccessionNumber
+        : gp2Model.OutputIdentifierType.Empty,
     );
   const [identifier, setIdentifier] = useState<string>(
-    // doi ||
-    //   rrid ||
-    //   accession ||
-    '',
+    doi || rrid || accessionNumber || '',
   );
   const { addNotification } = useNotificationContext();
 
@@ -180,6 +187,7 @@ const OutputForm: React.FC<OutputFormType> = ({
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
     tags: newTags || undefined,
+    ...gp2Model.createIdentifierField(identifierType, identifier),
   };
 
   useEffect(() => {
@@ -348,7 +356,6 @@ const OutputForm: React.FC<OutputFormType> = ({
                 label: name,
                 value: id,
               }))}
-              required
               enabled={!isSaving}
               suggestions={suggestions.map(({ id, name }) => ({
                 label: name,
@@ -369,7 +376,6 @@ const OutputForm: React.FC<OutputFormType> = ({
               }}
               placeholder="Start typing..."
               maxMenuHeight={160}
-              getValidationMessage={() => 'Please add your keywords'}
             />
             <Link
               href={mailToSupport({
@@ -380,13 +386,16 @@ const OutputForm: React.FC<OutputFormType> = ({
               Ask GP2 to add a new keyword
             </Link>
 
-            <OutputIdentifier
-              documentType={documentType}
-              identifier={identifier}
-              setIdentifier={setIdentifier}
-              identifierType={identifierType}
-              setIdentifierType={setIdentifierType}
-            />
+            {documentType !== 'GP2 Reports' &&
+            documentType !== 'Training Materials' ? (
+              <OutputIdentifier
+                documentType={documentType}
+                identifier={identifier}
+                setIdentifier={setIdentifier}
+                identifierType={identifierType}
+                setIdentifierType={setIdentifierType}
+              />
+            ) : null}
           </FormCard>
           <FormCard title="Who were the contributors?">
             <AuthorSelect

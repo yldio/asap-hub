@@ -4,7 +4,6 @@ import {
   EventStatus,
   gp2 as gp2Model,
 } from '@asap-hub/model';
-import { RestEvent } from '@asap-hub/squidex';
 
 export const getEventSpeakerUser = (): EventSpeakerUser => ({
   team: {
@@ -54,23 +53,16 @@ export const getEventResponse = ({
     color: '#125A12',
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     name: 'Tech 1 - Sequencing/omics',
-    groups: [],
+    interestGroups: [],
     workingGroups: [],
   },
   speakers: [getEventSpeakerUser()],
+  relatedResearch: [],
 });
 
 export const getListEventResponse = () => ({
   total: 1,
   items: [getEventResponse()],
-});
-
-export const getRestEvent = (): RestEvent => ({
-  id: 'squidex-event-id',
-  created: '2021-02-23T19:32:00Z',
-  lastModified: '2021-02-23T19:32:00Z',
-  version: 42,
-  data: getEventInput(),
 });
 
 export const getEventInput = () => ({

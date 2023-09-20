@@ -368,51 +368,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/cms-data-sync@workspace:packages/cms-data-sync":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/cms-data-sync@workspace:packages/cms-data-sync"
-  dependencies:
-    "@asap-hub/contentful": "workspace:*"
-    "@asap-hub/crn-server": "workspace:*"
-    "@asap-hub/model": "workspace:*"
-    "@asap-hub/server-common": "workspace:*"
-    "@asap-hub/squidex": "workspace:*"
-    "@babel/runtime-corejs3": 7.22.15
-    "@contentful/rich-text-types": 16.2.1
-    "@graphql-codegen/cli": 2.16.5
-    "@graphql-codegen/gql-tag-operations-preset": 1.7.4
-    "@graphql-codegen/introspection": 2.2.3
-    "@graphql-codegen/schema-ast": 2.6.1
-    "@graphql-codegen/typescript": 2.8.8
-    "@graphql-codegen/typescript-operations": 2.5.13
-    "@graphql-tools/graphql-file-loader": 7.5.17
-    "@graphql-tools/load": 7.8.14
-    "@graphql-tools/mock": 8.7.20
-    "@graphql-tools/schema": 9.0.19
-    "@graphql-typed-document-node/core": 3.2.0
-    "@types/contentful-html-rich-text-converter": "workspace:^"
-    "@types/jest": 29.5.5
-    "@types/jest-when": 3.5.2
-    "@types/node": 18.17.3
-    "@types/prettier": 2.7.3
-    cheerio: ^1.0.0-rc.12
-    contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.19"
-    contentful-management: 10.40.1
-    graphql: 15.8.0
-    graphql-tag: 2.12.6
-    graphql-typescript-integration: 1.2.1
-    jest-when: 3.5.2
-    limiter: ^2.1.0
-    prettier: 2.8.8
-    rehype-parse: 7.0.1
-    rehype-remark: 8.1.1
-    rehype-sanitize: 4.0.0
-    remark-stringify: 9.0.1
-    ts-node: 10.9.1
-    unified: 9.2.2
-  languageName: unknown
-  linkType: soft
-
 "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change"
@@ -957,7 +912,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/crn-server@workspace:*, @asap-hub/crn-server@workspace:apps/crn-server":
+"@asap-hub/crn-server@workspace:apps/crn-server":
   version: 0.0.0-use.local
   resolution: "@asap-hub/crn-server@workspace:apps/crn-server"
   dependencies:
@@ -1715,7 +1670,6 @@ __metadata:
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
-    "@asap-hub/squidex": "workspace:*"
     "@aws-sdk/client-cloudfront": ^3.287.0
     "@aws-sdk/client-eventbridge": ^3.306.0
     "@aws-sdk/client-secrets-manager": ^3.306.0
@@ -1798,7 +1752,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/squidex@workspace:*, @asap-hub/squidex@workspace:packages/squidex":
+"@asap-hub/squidex@workspace:packages/squidex":
   version: 0.0.0-use.local
   resolution: "@asap-hub/squidex@workspace:packages/squidex"
   dependencies:
@@ -17144,7 +17098,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter, @types/contentful-html-rich-text-converter@workspace:^":
+"@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter":
   version: 0.0.0-use.local
   resolution: "@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter"
   languageName: unknown
@@ -23097,7 +23051,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cheerio@npm:^1.0.0-rc.12, cheerio@npm:^1.0.0-rc.3":
+"cheerio@npm:^1.0.0-rc.3":
   version: 1.0.0-rc.12
   resolution: "cheerio@npm:1.0.0-rc.12"
   dependencies:

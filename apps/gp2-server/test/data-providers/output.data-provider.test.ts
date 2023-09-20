@@ -346,6 +346,44 @@ describe('Outputs data provider', () => {
 
       expect(result!.tags).toMatchObject([]);
     });
+
+    describe('Sharing Status', () => {
+      test('Should default to GP2 Only if the sharingStatus is not present', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        delete graphqlResponse!.sharingStatus;
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
+
+        const result = await outputDataProvider.fetchById(outputId);
+
+        expect(result!.sharingStatus).toEqual('GP2 Only');
+      });
+
+      test('Should default to GP2 Only if the sharingStatus is not valid', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        graphqlResponse!.sharingStatus = 'CRN Only';
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
+
+        const result = await outputDataProvider.fetchById(outputId);
+
+        expect(result!.sharingStatus).toEqual('GP2 Only');
+      });
+
+      test('Should return sharingStatus when present and valid', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        graphqlResponse!.sharingStatus = 'Public';
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
+
+        const result = await outputDataProvider.fetchById(outputId);
+
+        expect(result!.sharingStatus).toEqual('Public');
+      });
+    });
   });
 
   describe('Fetch method', () => {

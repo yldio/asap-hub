@@ -343,6 +343,111 @@ describe('OutputForm', () => {
       expect(history.location.pathname).toEqual(`/outputs`);
     }, 30000);
   });
+
+  describe('GP2 Supported', () => {
+    test.each`
+      gp2SupportedValue | documentType
+      ${'Yes'}          | ${'GP2 Reports'}
+      ${"Don't Know"}   | ${'Procedural Form'}
+      ${"Don't Know"}   | ${'Training Materials'}
+      ${"Don't Know"}   | ${'Dataset'}
+      ${"Don't Know"}   | ${'Code/Software'}
+    `(
+      'is $gp2SupportedValue by default when document type is $documentType',
+      ({ gp2SupportedValue, documentType }) => {
+        render(<OutputForm {...defaultProps} documentType={documentType} />, {
+          wrapper: StaticRouter,
+        });
+
+        const gp2Supported = screen.getByRole('group', {
+          name: /has this output been supported by gp2?/i,
+        });
+        expect(
+          within(gp2Supported).getByRole('radio', { name: gp2SupportedValue }),
+        ).toBeChecked();
+      },
+    );
+
+    test.each`
+      gp2SupportedValue | type
+      ${'Yes'}          | ${'Blog'}
+      ${"Don't Know"}   | ${'Research'}
+      ${"Don't Know"}   | ${'Review'}
+      ${"Don't Know"}   | ${'Letter'}
+      ${"Don't Know"}   | ${'Hot Topic'}
+    `(
+      'is $gp2SupportedValue by default when type is $type',
+      ({ gp2SupportedValue, type }) => {
+        render(<OutputForm {...defaultProps} type={type} />, {
+          wrapper: StaticRouter,
+        });
+
+        const gp2Supported = screen.getByRole('group', {
+          name: /has this output been supported by gp2?/i,
+        });
+        expect(
+          within(gp2Supported).getByRole('radio', { name: gp2SupportedValue }),
+        ).toBeChecked();
+      },
+    );
+
+    test("is set to 'Yes' and make the gp2 supported disabled when type Blog is selected", () => {
+      render(<OutputForm {...defaultProps} documentType="Article" />, {
+        wrapper: StaticRouter,
+      });
+
+      const gp2Supported = screen.getByRole('group', {
+        name: /has this output been supported by gp2?/i,
+      });
+      expect(
+        within(gp2Supported).getByRole('radio', { name: "Don't Know" }),
+      ).toBeChecked();
+
+      const input = screen.getByRole('textbox', { name: /type/i });
+      userEvent.click(input);
+      userEvent.click(screen.getByText('Blog'));
+      fireEvent.focusOut(input);
+
+      expect(
+        within(gp2Supported).getByRole('radio', { name: 'Yes' }),
+      ).toBeChecked();
+
+      expect(
+        within(gp2Supported).getByRole('radio', { name: 'No' }),
+      ).toBeDisabled();
+
+      expect(
+        within(gp2Supported).getByRole('radio', { name: "Don't Know" }),
+      ).toBeDisabled();
+    });
+  });
+
+  describe('Sharing Status', () => {
+    test.each`
+      sharingStatus | documentType
+      ${'Public'}   | ${'Training Materials'}
+      ${'GP2 Only'} | ${'GP2 Reports'}
+      ${'GP2 Only'} | ${'Procedural Form'}
+      ${'GP2 Only'} | ${'Dataset'}
+      ${'GP2 Only'} | ${'Code/Software'}
+    `(
+      'is $sharingStatus by default when document type is $documentType',
+      ({ sharingStatus, documentType }) => {
+        render(<OutputForm {...defaultProps} documentType={documentType} />, {
+          wrapper: StaticRouter,
+        });
+
+        const sharingStatusElement = screen.getByRole('group', {
+          name: /sharing status?/i,
+        });
+        expect(
+          within(sharingStatusElement).getByRole('radio', {
+            name: sharingStatus,
+          }),
+        ).toBeChecked();
+      },
+    );
+  });
   describe('validation', () => {
     it.each`
       title      | label       | error
@@ -356,6 +461,27 @@ describe('OutputForm', () => {
       const input = screen.getByLabelText(label);
       fireEvent.focusOut(input);
       expect(screen.getByText(error)).toBeVisible();
+    });
+
+    it('shows the custom error message for a date in the future', async () => {
+      render(<OutputForm {...defaultProps} />, { wrapper: StaticRouter });
+
+      const sharingStatus = screen.getByRole('group', {
+        name: /sharing status?/i,
+      });
+      userEvent.click(
+        within(sharingStatus).getByRole('radio', { name: 'Public' }),
+      );
+
+      const input = screen.getByLabelText(/public repository published date/i);
+      fireEvent.change(input, {
+        target: { value: '2050-12-12' },
+      });
+      fireEvent.focusOut(input);
+
+      expect(
+        screen.getByText(/publish date cannot be greater than today/i),
+      ).toBeVisible();
     });
   });
   describe('edit output', () => {

@@ -234,6 +234,18 @@ describe('Tutorials data provider', () => {
 
       expect(result!.relatedEvents).toEqual([]);
     });
+
+    test('Should default tags to an empty array when missing', async () => {
+      const tutorials = getContentfulGraphqlTutorial();
+      tutorials.tagsCollection = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        tutorials,
+      });
+
+      const result = await dataProvider.fetchById('123');
+
+      expect(result!.tags).toEqual([]);
+    });
   });
 });
 

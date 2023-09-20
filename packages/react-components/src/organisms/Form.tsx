@@ -13,6 +13,8 @@ const styles = css({
   overflow: 'auto',
 });
 
+type FormStatus = 'initial' | 'isSaving' | 'hasError' | 'hasSaved';
+
 type FormProps<T> = {
   validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
@@ -43,9 +45,8 @@ const Form = <T extends void | Record<string, unknown>>({
   const [redirectOnSave, setRedirectOnSave] = useState<string>();
 
   const formRef = useRef<HTMLFormElement>(null);
-  const [status, setStatus] = useState<
-    'initial' | 'isSaving' | 'hasError' | 'hasSaved'
-  >('initial');
+  const [status, setStatus] = useState<FormStatus>('initial');
+
   useEffect(() => {
     if (status === 'hasSaved' && redirectOnSave) {
       pushFromHere(redirectOnSave);
@@ -55,42 +56,39 @@ const Form = <T extends void | Record<string, unknown>>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, redirectOnSave, dirty]);
   useEffect(() => {
-    if (
-      serverErrors.length &&
-      formRef.current &&
-      formRef.current.reportValidity()
-    ) {
-      toast(
-        'There are some errors in the form. Please correct the fields below.',
-      );
+    if (serverErrors.length && formRef.current) {
+      formRef.current.reportValidity();
     }
   }, [serverErrors, toast]);
+
   const getWrappedOnSave =
     (onSaveFunction: () => Promise<T | void>) => async () => {
-      const parentValidation = validate();
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      if (formRef.current!.reportValidity() && parentValidation) {
-        setStatus('isSaving');
-        try {
-          const result = await onSaveFunction();
-          if (formRef.current) {
-            setStatus('hasSaved');
-          }
-          return result;
-        } catch {
-          if (formRef.current) {
-            setStatus('hasError');
-            toast(
-              'There was an error and we were unable to save your changes. Please try again.',
-            );
-          }
-        }
-      } else {
+      if (!(formRef.current!.reportValidity() && validate())) {
         toast(
           'There are some errors in the form. Please correct the fields below.',
         );
+        return Promise.resolve();
       }
-      return Promise.resolve();
+      setStatus('isSaving');
+      try {
+        const result = await onSaveFunction();
+
+        if (formRef.current && result) {
+          setStatus('hasSaved');
+        } else {
+          throw new Error('Form saving error.');
+        }
+        return result;
+      } catch {
+        if (formRef.current) {
+          setStatus('hasError');
+          toast(
+            'There was an error and we were unable to save your changes. Please try again.',
+          );
+        }
+        return Promise.resolve();
+      }
     };
 
   const onCancel = () => {

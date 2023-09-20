@@ -96,7 +96,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
 }) => {
   const href = discover({}).tutorials({}).tutorial({ tutorialId: id }).$;
 
-  const newsImage = (
+  const tutorialImage = (
     <>
       {thumbnail ? (
         <img
@@ -114,7 +114,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
     <Card>
       <div css={cardStyle}>
         <div css={imageContainerStyle}>
-          <ImageLink link={href}>{newsImage}</ImageLink>
+          <ImageLink link={href}>{tutorialImage}</ImageLink>
         </div>
         <div css={containerStyle}>
           <div css={headerStyles}>

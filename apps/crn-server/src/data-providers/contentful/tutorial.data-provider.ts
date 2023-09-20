@@ -99,20 +99,15 @@ const mapAuthors = (items: AuthorItem[]) =>
     });
 
 const mapRelatedTutorials = (
-  items: (RelatedTutorialItem | null)[],
+  items: RelatedTutorialItem[],
   isOwnRelatedTutorialLink: boolean,
 ) =>
-  items
-    .filter(
-      (rt: RelatedTutorialItem | null): rt is RelatedTutorialItem =>
-        rt !== null,
-    )
-    .map((rt: RelatedTutorialItem) => ({
-      id: rt?.sys.id,
-      title: rt.title || '',
-      created: rt.publishDate,
-      isOwnRelatedTutorialLink,
-    }));
+  items.map((rt: RelatedTutorialItem) => ({
+    id: rt?.sys.id,
+    title: rt.title || '',
+    created: rt.publishDate,
+    isOwnRelatedTutorialLink,
+  }));
 
 export const parseContentfulGraphQlTutorials = (
   tutorial: TutorialItem,
@@ -151,11 +146,11 @@ export const parseContentfulGraphQlTutorials = (
     teams,
     relatedTutorials: [
       ...mapRelatedTutorials(
-        tutorial.relatedTutorialsCollection?.items || [],
+        cleanArray(tutorial.relatedTutorialsCollection?.items),
         true,
       ),
       ...mapRelatedTutorials(
-        tutorial.linkedFrom?.tutorialsCollection?.items || [],
+        cleanArray(tutorial.linkedFrom?.tutorialsCollection?.items),
         false,
       ),
     ],

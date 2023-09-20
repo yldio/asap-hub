@@ -49,7 +49,7 @@ export const tutorialsContentQueryFragment = gql`
         }
       }
     }
-    authorsCollection(limit: 100) {
+    authorsCollection(limit: 10) {
       items {
         __typename
         ... on ExternalAuthors {
@@ -89,7 +89,7 @@ export const tutorialsContentQueryFragment = gql`
       }
     }
     linkedFrom {
-      tutorialsCollection(limit: 60, order: [addedDate_ASC]) {
+      tutorialsCollection(limit: 20, order: [addedDate_ASC]) {
         items {
           sys {
             id

@@ -1,9 +1,12 @@
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getNewsById, getNews } from '../api';
+import { PAGE_SIZE } from '../../hooks';
+import { createNewsListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getNewsById, getNews, getAlgoliaNews } from '../api';
 
 jest.mock('../../config');
 
@@ -42,6 +45,94 @@ describe('getNewsById', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch news with id unknown-id. Expected status 2xx or 404. Received status 500."`,
     );
+  });
+});
+
+describe('getAlgoliaNews', () => {
+  const mockAlgoliaSearchClient = {
+    search: jest.fn(),
+  } as unknown as jest.Mocked<AlgoliaSearchClient<'gp2'>>;
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockAlgoliaSearchClient.search = jest
+      .fn()
+      .mockResolvedValue(createNewsListAlgoliaResponse(10, 10));
+  });
+  const options: GetListOptions = {
+    filters: new Set<string>(),
+    pageSize: PAGE_SIZE,
+    currentPage: 0,
+    searchQuery: '',
+  };
+
+  it('makes a search request with query, default page and page size', async () => {
+    await getAlgoliaNews(mockAlgoliaSearchClient, {
+      ...options,
+      searchQuery: 'test',
+      currentPage: null,
+      pageSize: null,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['news'],
+      'test',
+      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+    );
+  });
+
+  it('passes page number and page size to request', async () => {
+    await getAlgoliaNews(mockAlgoliaSearchClient, {
+      ...options,
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['news'],
+      '',
+      expect.objectContaining({ hitsPerPage: 20, page: 1 }),
+    );
+  });
+
+  it('builds a single filter query', async () => {
+    await getAlgoliaNews(mockAlgoliaSearchClient, {
+      ...options,
+      filters: new Set(['news']),
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['news'],
+      '',
+      expect.objectContaining({ filters: 'type:"news"' }),
+    );
+  });
+
+  it('builds a multiple filter query', async () => {
+    await getAlgoliaNews(mockAlgoliaSearchClient, {
+      ...options,
+      filters: new Set(['news', 'update']),
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['news'],
+      '',
+      expect.objectContaining({
+        filters: 'type:"news" OR type:"update"',
+      }),
+    );
+  });
+
+  it('throws an error of type error', async () => {
+    mockAlgoliaSearchClient.search.mockRejectedValue({
+      message: 'Some Error',
+    });
+    await expect(
+      getAlgoliaNews(mockAlgoliaSearchClient, options),
+    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
   });
 });
 

@@ -1,5 +1,4 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
 import {
   render,
@@ -13,20 +12,36 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getNews } from '../api';
+import { PAGE_SIZE } from '../../hooks';
+import { createNewsListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getAlgoliaNews } from '../api';
 import NewsPage from '../Routes';
+import { newsState } from '../state';
 
 jest.mock('../api');
 
-const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
+const mockGetNews = getAlgoliaNews as jest.MockedFunction<
+  typeof getAlgoliaNews
+>;
 const pageSize = 10;
 
 beforeEach(jest.resetAllMocks);
 
 mockConsoleError();
-const renderPage = async () => {
+const renderPage = async (searchQuery = '') => {
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset }) => {
+        reset(
+          newsState({
+            searchQuery,
+            currentPage: 0,
+            filters: new Set(),
+            pageSize: PAGE_SIZE,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -46,9 +61,10 @@ const renderPage = async () => {
 
 it('renders the page title', async () => {
   const numberOfItems = 20;
-  const news = gp2Fixtures.createListNewsResponse(pageSize, numberOfItems);
 
-  mockGetNews.mockResolvedValue(news);
+  mockGetNews.mockResolvedValue(
+    createNewsListAlgoliaResponse(pageSize, numberOfItems),
+  );
 
   await renderPage();
 
@@ -58,7 +74,7 @@ it('renders the page title', async () => {
 it('renders a counter with the total number of items', async () => {
   const numberOfItems = 20;
   mockGetNews.mockResolvedValue(
-    gp2Fixtures.createListNewsResponse(pageSize, numberOfItems),
+    createNewsListAlgoliaResponse(pageSize, numberOfItems),
   );
 
   await renderPage();
@@ -68,9 +84,8 @@ it('renders a counter with the total number of items', async () => {
 
 it('renders a paginated list of news', async () => {
   const numberOfItems = 40;
-  mockGetNews.mockResolvedValue(
-    gp2Fixtures.createListNewsResponse(pageSize, numberOfItems),
-  );
+  const response = createNewsListAlgoliaResponse(pageSize, numberOfItems);
+  mockGetNews.mockResolvedValue(response);
 
   await renderPage();
   expect(screen.getAllByText('News Item')).toHaveLength(pageSize);
@@ -93,29 +108,34 @@ it('renders error message when when the request it not a 2XX', async () => {
 });
 
 it('can perform a search', async () => {
-  mockGetNews.mockResolvedValue(gp2Fixtures.createListNewsResponse(pageSize));
+  mockGetNews.mockResolvedValue(
+    createNewsListAlgoliaResponse(pageSize, pageSize),
+  );
   await renderPage();
   fireEvent.change(screen.getByPlaceholderText(/Enter name/i), {
     target: { value: 'example' },
   });
   await waitFor(() =>
     expect(mockGetNews).toHaveBeenLastCalledWith(
-      expect.objectContaining({ searchQuery: 'example' }),
       expect.anything(),
+      expect.objectContaining({ searchQuery: 'example' }),
     ),
   );
 });
 
 it('can perform a filter search', async () => {
-  mockGetNews.mockResolvedValue(gp2Fixtures.createListNewsResponse(pageSize));
+  mockGetNews.mockResolvedValue(
+    createNewsListAlgoliaResponse(pageSize, pageSize),
+  );
+
   await renderPage();
   userEvent.click(screen.getByTitle('Filter'));
   userEvent.click(screen.getByRole('checkbox', { name: /Newsletters/i }));
 
   await waitFor(() =>
     expect(mockGetNews).toHaveBeenLastCalledWith(
-      expect.objectContaining({ filters: new Set('news') }),
       expect.anything(),
+      expect.objectContaining({ filters: new Set(['news']) }),
     ),
   );
 });

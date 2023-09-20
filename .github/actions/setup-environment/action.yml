@@ -103,7 +103,7 @@ outputs:
     value: ${{ steps.vars.outputs.crn-auth0-client-id }}
   crn-auth0-domain:
     description: 'CRN Auth0 Domain'
-    value: ${{ steps.vars.outputs.crn-auth0-domain }}
+    value: ${{ steps.vars.outputs.crn-auth0-domain  }}
   crn-aws-acm-certificate-arn:
     description: 'CRN AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
@@ -248,6 +248,15 @@ runs:
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
           HAS_CONTENTFUL_LABEL=${{ contains(github.event.pull_request.labels.*.name, 'contentful') }}
+          HAS_AUTH0_LABEL=${{contains(github.event.pull_request.labels.*.name, 'use-pr-auth0-tenant') }}
+          if [ "$HAS_AUTH0_LABEL" = true ]; then
+            echo "crn-auth0-additional-claim-domain=https://pr-asap-hub.hub.asap.science" >> $GITHUB_OUTPUT
+            echo "crn-auth0-audience=https://pr.hub.asap.science" >> $GITHUB_OUTPUT
+            echo "crn-auth0-client-id=s1ZOMWgaQKtCeRSnr7LRamFWh0WD8azN" >> $GITHUB_OUTPUT
+            echo "crn-ci-auth0-client-id=WHi7btcaXqs2lJnvVyp6SP12onYNbkIA" >> $GITHUB_OUTPUT
+            echo "crn-auth0-domain=pr-asap-hub.us.auth0.com" >> $GITHUB_OUTPUT
+          fi
+          echo "HAS_AUTH0_LABEL=$HAS_AUTH0_LABEL" >> $GITHUB_OUTPUT
           echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "gp2-algolia-index=gp2-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT

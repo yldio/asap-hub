@@ -14,6 +14,7 @@ import {
   RichTextFromQuery,
 } from '@asap-hub/contentful';
 import { TutorialDataProvider } from '../types';
+import { cleanArray } from '../../utils/clean-array';
 
 type TutorialItem = NonNullable<FetchTutorialByIdQuery['tutorials']>;
 
@@ -59,13 +60,43 @@ const isTutorialSharingStatus = (
 ): status is TutorialsSharingStatus =>
   (sharingStatuses as ReadonlyArray<string>).includes(status);
 
-const mapTeams = (items: (TeamItem | null)[]) =>
+const mapTeams = (items: TeamItem[]) =>
+  items.map((team) => ({
+    id: team.sys.id,
+    displayName: team.displayName || '',
+  }));
+
+const mapEvents = (items: RelatedEventItem[]) =>
+  items.map((event) => ({
+    id: event.sys.id,
+    title: event?.title || '',
+    endDate: event.endDate || '',
+  }));
+
+const mapAuthors = (items: AuthorItem[]) =>
   items
-    .filter((team: TeamItem | null): team is TeamItem => team !== null)
-    .map((team) => ({
-      id: team.sys.id,
-      displayName: team.displayName || '',
-    }));
+    .filter(
+      (author) => author.__typename !== 'Users' || author?.onboarded !== false,
+    )
+    .map((author) => {
+      if (author.__typename === 'Users') {
+        return {
+          id: author.sys.id,
+          firstName: author.firstName || '',
+          lastName: author.lastName || '',
+          email: author.email || '',
+          displayName: `${author.firstName} ${author.lastName}`,
+          avatarUrl: author.avatar?.url || undefined,
+          alumniSinceDate: author.alumniSinceDate || undefined,
+        };
+      }
+
+      return {
+        id: author.sys.id,
+        displayName: author?.name || '',
+        orcid: author.orcid || '',
+      };
+    });
 
 const mapRelatedTutorials = (
   items: (RelatedTutorialItem | null)[],
@@ -86,7 +117,11 @@ const mapRelatedTutorials = (
 export const parseContentfulGraphQlTutorials = (
   tutorial: TutorialItem,
 ): TutorialsDataObject => {
-  const teams = mapTeams(tutorial.teamsCollection?.items || []);
+  const teams = mapTeams(cleanArray(tutorial.teamsCollection?.items));
+  const authors = mapAuthors(cleanArray(tutorial.authorsCollection?.items));
+  const relatedEvents = mapEvents(
+    cleanArray(tutorial.relatedEventsCollection?.items),
+  );
   return {
     id: tutorial.sys.id,
     created: tutorial.publishDate,
@@ -107,44 +142,12 @@ export const parseContentfulGraphQlTutorials = (
       tutorial.sharingStatus && isTutorialSharingStatus(tutorial.sharingStatus)
         ? tutorial.sharingStatus
         : 'Network Only',
-    authors:
-      tutorial.authorsCollection?.items
-        ?.filter((author): author is AuthorItem => author !== null)
-        ?.filter(
-          (author) =>
-            author.__typename !== 'Users' || author?.onboarded !== false,
-        )
-        .map((author) => {
-          if (author.__typename === 'Users') {
-            return {
-              id: author.sys.id,
-              firstName: author.firstName || '',
-              lastName: author.lastName || '',
-              email: author.email || '',
-              displayName: `${author.firstName} ${author.lastName}`,
-              avatarUrl: author.avatar?.url || undefined,
-              alumniSinceDate: author.alumniSinceDate || undefined,
-            };
-          }
-
-          return {
-            id: author.sys.id,
-            displayName: author?.name || '',
-            orcid: author.orcid || '',
-          };
-        }) || [],
     tags:
       tutorial.tagsCollection?.items
         .map((tag) => tag?.name || '')
         .filter(Boolean) || [],
-    relatedEvents:
-      tutorial.relatedEventsCollection?.items
-        ?.filter((event): event is RelatedEventItem => event !== null)
-        .map((event) => ({
-          id: event.sys.id,
-          title: event?.title || '',
-          endDate: event.endDate || '',
-        })) || [],
+    authors,
+    relatedEvents,
     teams,
     relatedTutorials: [
       ...mapRelatedTutorials(

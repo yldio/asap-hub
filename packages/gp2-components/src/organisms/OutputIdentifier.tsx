@@ -94,7 +94,7 @@ export interface OutputIdentifierProps {
   identifierType?: gp2.OutputIdentifierType;
   setIdentifierType?: (value: gp2.OutputIdentifierType) => void;
   documentType: gp2.OutputDocumentType;
-  isEditMode?: boolean;
+  enabled?: boolean;
 }
 
 export const OutputIdentifier: React.FC<OutputIdentifierProps> = ({
@@ -103,6 +103,7 @@ export const OutputIdentifier: React.FC<OutputIdentifierProps> = ({
   identifier = '',
   setIdentifier = noop,
   documentType,
+  enabled,
 }) => {
   const identifiers = useMemo(
     () => getIdentifiers(documentType),
@@ -134,16 +135,17 @@ export const OutputIdentifier: React.FC<OutputIdentifierProps> = ({
         value={identifierType}
         onChange={onChangeIdentifierType}
         placeholder={'Choose an identifier...'}
-        getValidationMessage={() => `Please choose an identifier`}
+        getValidationMessage={() => `Please choose an identifier.`}
         required={true}
         info={infoText}
-        enabled={identifiers.length > 0}
+        enabled={enabled}
       />
 
       <TeamCreateOutputIdentifierField
         type={identifierType}
         identifier={identifier}
         setIdentifier={setIdentifier}
+        enabled={enabled}
       />
     </>
   );
@@ -152,10 +154,11 @@ export interface TeamCreateOutputIdentifierFieldProps {
   identifier: string;
   setIdentifier: (value: string) => void;
   type: gp2.OutputIdentifierType;
+  enabled?: boolean;
 }
 export const TeamCreateOutputIdentifierField: React.FC<
   TeamCreateOutputIdentifierFieldProps
-> = ({ type, identifier, setIdentifier }) => {
+> = ({ type, identifier, setIdentifier, enabled }) => {
   const { helpText, placeholder, errorMessage, regex, required } =
     identifierMap[type];
 
@@ -174,6 +177,7 @@ export const TeamCreateOutputIdentifierField: React.FC<
           pattern={regex}
           subtitle={'(required)'}
           required={required}
+          enabled={enabled}
         />
       )}
     </>

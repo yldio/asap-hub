@@ -50,6 +50,10 @@ const footerStyles = css({
     flexDirection: 'column-reverse',
   },
 });
+
+const linkStyles = css({
+  marginBottom: rem(36),
+});
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -186,7 +190,7 @@ const OutputForm: React.FC<OutputFormType> = ({
     sharingStatus: newSharingStatus,
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
-    tags: newTags || undefined,
+    tags: newTags.length > 0 ? newTags : undefined,
     ...gp2Model.createIdentifierField(identifierType, identifier),
   };
 
@@ -377,14 +381,16 @@ const OutputForm: React.FC<OutputFormType> = ({
               placeholder="Start typing..."
               maxMenuHeight={160}
             />
-            <Link
-              href={mailToSupport({
-                email: INVITE_SUPPORT_EMAIL,
-                subject: 'New Keyword',
-              })}
-            >
-              Ask GP2 to add a new keyword
-            </Link>
+            <div css={linkStyles}>
+              <Link
+                href={mailToSupport({
+                  email: INVITE_SUPPORT_EMAIL,
+                  subject: 'New Keyword',
+                })}
+              >
+                Ask GP2 to add a new keyword
+              </Link>
+            </div>
 
             {documentType !== 'GP2 Reports' &&
             documentType !== 'Training Materials' ? (
@@ -394,6 +400,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                 setIdentifier={setIdentifier}
                 identifierType={identifierType}
                 setIdentifierType={setIdentifierType}
+                enabled={!isSaving}
               />
             ) : null}
           </FormCard>

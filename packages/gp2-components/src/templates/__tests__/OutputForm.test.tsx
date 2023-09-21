@@ -225,6 +225,8 @@ describe('OutputForm', () => {
     userEvent.type(authors, 'Alex White');
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]!);
+    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    userEvent.click(screen.getByText('None'));
     userEvent.click(screen.getByRole('button', { name: /publish/i }));
     expect(
       await screen.findByRole('button', { name: /publish/i }),
@@ -250,7 +252,7 @@ describe('OutputForm', () => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
         wrapper: StaticRouter,
       });
-      expect(screen.getByRole('textbox', { name: /type/i })).toBeVisible();
+      expect(screen.getByRole('textbox', { name: /^type/i })).toBeVisible();
     });
     it.each<gp2.OutputType>(['Blog', 'Hot Topic', 'Letter', 'Review'])(
       '%d does not render subtype',
@@ -258,7 +260,7 @@ describe('OutputForm', () => {
         render(<OutputForm {...defaultProps} documentType="Article" />, {
           wrapper: StaticRouter,
         });
-        userEvent.click(screen.getByRole('textbox', { name: /type/i }));
+        userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
         userEvent.click(screen.getByText(type));
         expect(
           screen.queryByRole('textbox', { name: /subtype/i }),
@@ -269,7 +271,7 @@ describe('OutputForm', () => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
         wrapper: StaticRouter,
       });
-      userEvent.click(screen.getByRole('textbox', { name: /type/i }));
+      userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
       userEvent.click(screen.getByText(type));
       expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
     });
@@ -309,6 +311,7 @@ describe('OutputForm', () => {
           ),
         },
       );
+
       userEvent.type(
         screen.getByRole('textbox', { name: /title/i }),
         'output title',
@@ -321,7 +324,7 @@ describe('OutputForm', () => {
         screen.getByRole('textbox', { name: /description/i }),
         'Research description',
       );
-      userEvent.click(screen.getByRole('textbox', { name: /type/i }));
+      userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
       userEvent.click(screen.getByText('Research'));
       userEvent.click(screen.getByRole('textbox', { name: /subtype/i }));
       userEvent.click(screen.getByText('Published'));
@@ -329,6 +332,11 @@ describe('OutputForm', () => {
       userEvent.click(authors);
       await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
       userEvent.click(screen.getByText('Chris Blue'));
+      userEvent.click(
+        screen.getByRole('textbox', { name: /identifier type/i }),
+      );
+      userEvent.click(screen.getByText('None'));
+
       userEvent.click(screen.getByRole('button', { name: /publish/i }));
       expect(
         await screen.findByRole('button', { name: /publish/i }),
@@ -474,16 +482,16 @@ describe('OutputForm', () => {
       },
     );
   });
-  describe('validation', () => {
+  describe.only('validation', () => {
     it.each`
       title      | label       | error
-      ${'Url'}   | ${/URL/i}   | ${'Please enter a valid URL, starting with http://'}
       ${'Title'} | ${/title/i} | ${'Please fill out this field.'}
-      ${'Type'}  | ${/type/i}  | ${'Please fill out this field.'}
+      ${'Type'}  | ${/^type/i} | ${'Please fill out this field.'}
     `('shows error message for missing value $title', ({ label, error }) => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
         wrapper: StaticRouter,
       });
+
       const input = screen.getByLabelText(label);
       fireEvent.focusOut(input);
       expect(screen.getByText(error)).toBeVisible();

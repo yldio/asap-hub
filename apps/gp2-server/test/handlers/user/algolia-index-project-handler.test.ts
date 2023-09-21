@@ -44,7 +44,7 @@ describe('Index Users on Project event handler', () => {
   );
   beforeEach(jest.resetAllMocks);
 
-  test('Should throw an error and do not trigger algolia when the user request fails with another error code', async () => {
+  test('Should throw an error and do not trigger algolia when the project request fails with another error code', async () => {
     projectControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
     await expect(

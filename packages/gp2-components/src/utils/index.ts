@@ -1,1 +1,1 @@
-export * from './research-output-form';
+export * from './output-form';

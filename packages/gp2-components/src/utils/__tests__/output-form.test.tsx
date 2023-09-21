@@ -1,4 +1,4 @@
-import { getPublishDate } from '../research-output-form';
+import { getPublishDate } from '../output-form';
 
 describe('getPublishDate', () => {
   const dateString = new Date().toString();

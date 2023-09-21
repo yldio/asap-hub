@@ -11,7 +11,7 @@ export const createProcessingFunction =
   ) =>
   async (found: ListResponse<T['data']>) => {
     logger.info(
-      `Found ${found.total} items. Processing ${found.items.length} items.`,
+      `Found ${found.total} items. Processing ${found.items.length} ${type}s.`,
     );
 
     try {

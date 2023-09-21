@@ -1,5 +1,4 @@
-import { GP2ResearchOutputSharingStatus } from '..';
-import { FetchOptions, GP2DecisionOption, ListResponse } from '../common';
+import { FetchOptions, ListResponse } from '../common';
 import { ExternalUserResponse } from './external-user';
 import { KeywordDataObject } from './keywords';
 
@@ -44,6 +43,14 @@ export const outputDocumentTypeToType: Record<
   'Code/Software': new Set<OutputType>(),
 };
 
+export const decisionOptions = ['Yes', 'No', "Don't Know"] as const;
+
+export type DecisionOption = (typeof decisionOptions)[number];
+
+export const sharingStatuses = ['GP2 Only', 'Public'] as const;
+
+export type OutputSharingStatus = (typeof sharingStatuses)[number];
+
 export type OutputCoreObject = {
   addedDate: string;
   documentType: OutputDocumentType;
@@ -54,8 +61,8 @@ export type OutputCoreObject = {
   type?: OutputType;
   subtype?: OutputSubtype;
   description?: string;
-  gp2Supported?: GP2DecisionOption;
-  sharingStatus: GP2ResearchOutputSharingStatus;
+  gp2Supported?: DecisionOption;
+  sharingStatus: OutputSharingStatus;
 };
 
 export type UserAuthor = {
@@ -121,8 +128,8 @@ export type OutputPostRequest = {
   type?: OutputType;
   subtype?: OutputSubtype;
   description?: string;
-  gp2Supported?: GP2DecisionOption;
-  sharingStatus: GP2ResearchOutputSharingStatus;
+  gp2Supported?: DecisionOption;
+  sharingStatus: OutputSharingStatus;
   workingGroupId?: string;
   projectId?: string;
 };

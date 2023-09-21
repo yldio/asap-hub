@@ -9,10 +9,6 @@ export const decisionOptions = ['Yes', 'No', 'Not Sure'] as const;
 
 export type DecisionOption = (typeof decisionOptions)[number];
 
-export const gp2DecisionOptions = ['Yes', 'No', "Don't Know"] as const;
-
-export type GP2DecisionOption = (typeof gp2DecisionOptions)[number];
-
 export type FetchPaginationOptions = {
   take?: number;
   skip?: number;

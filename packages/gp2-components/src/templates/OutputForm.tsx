@@ -1,8 +1,4 @@
-import {
-  gp2 as gp2Model,
-  GP2DecisionOption,
-  GP2ResearchOutputSharingStatus,
-} from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   AuthorSelect,
   Button,
@@ -119,10 +115,10 @@ const OutputForm: React.FC<OutputFormType> = ({
   );
   const [newDescription, setDescription] = useState(description || '');
   const [newGp2Supported, setGp2Supported] = useState<
-    GP2DecisionOption | undefined
+    gp2Model.DecisionOption | undefined
   >(isGP2SupportedAlwaysTrue ? 'Yes' : gp2Supported);
   const [newSharingStatus, setSharingStatus] =
-    useState<GP2ResearchOutputSharingStatus>(
+    useState<gp2Model.OutputSharingStatus>(
       isAlwaysPublic ? 'Public' : sharingStatus || 'GP2 Only',
     );
 
@@ -258,7 +254,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                 ></Markdown>
               }
             />
-            <LabeledRadioButtonGroup<GP2DecisionOption>
+            <LabeledRadioButtonGroup<gp2Model.DecisionOption>
               title="Has this output been supported by GP2?"
               subtitle="(required)"
               options={[
@@ -281,7 +277,7 @@ const OutputForm: React.FC<OutputFormType> = ({
               value={newGp2Supported ?? "Don't Know"}
               onChange={setGp2Supported}
             />
-            <LabeledRadioButtonGroup<GP2ResearchOutputSharingStatus>
+            <LabeledRadioButtonGroup<gp2Model.OutputSharingStatus>
               title="Sharing status"
               subtitle="(required)"
               options={[

@@ -7,7 +7,7 @@ import {
   patchAndPublish,
   pollContentfulGql,
 } from '@asap-hub/contentful';
-import { gp2 as gp2Model, GP2DecisionOption } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import logger from '../utils/logger';
 import { KeywordItem, parseKeyword } from './keyword.data-provider';
 import { isSharingStatus } from './transformers';
@@ -266,7 +266,7 @@ export const parseContentfulGraphQLOutput = (
     subtype,
     title: data.title ?? '',
     description: data.description ?? '',
-    gp2Supported: data.gp2Supported as GP2DecisionOption,
+    gp2Supported: data.gp2Supported as gp2Model.DecisionOption,
     sharingStatus:
       data.sharingStatus && isSharingStatus(data.sharingStatus)
         ? data.sharingStatus

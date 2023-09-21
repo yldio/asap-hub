@@ -182,11 +182,6 @@ export const researchOutputToIdentifierType: Record<
   Report: [],
 };
 
-export const gp2SharingStatuses = ['GP2 Only', 'Public'] as const;
-
-export type GP2ResearchOutputSharingStatus =
-  (typeof gp2SharingStatuses)[number];
-
 export const sharingStatuses = ['Public', 'Network Only'] as const;
 
 export type ResearchOutputSharingStatus = (typeof sharingStatuses)[number];

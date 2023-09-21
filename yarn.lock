@@ -1128,7 +1128,6 @@ __metadata:
   resolution: "@asap-hub/flags@workspace:packages/flags"
   dependencies:
     "@babel/runtime-corejs3": 7.22.15
-    "@types/asap-hub__inline-environment": "workspace:*"
     "@types/jest": 29.5.5
     core-js: 3.32.2
   languageName: unknown
@@ -16885,12 +16884,6 @@ __metadata:
 "@types/asap-hub__assets@workspace:*, @types/asap-hub__assets@workspace:@types/asap-hub__assets":
   version: 0.0.0-use.local
   resolution: "@types/asap-hub__assets@workspace:@types/asap-hub__assets"
-  languageName: unknown
-  linkType: soft
-
-"@types/asap-hub__inline-environment@workspace:*, @types/asap-hub__inline-environment@workspace:@types/asap-hub__inline-environment":
-  version: 0.0.0-use.local
-  resolution: "@types/asap-hub__inline-environment@workspace:@types/asap-hub__inline-environment"
   languageName: unknown
   linkType: soft
 

@@ -47,7 +47,7 @@ describe('Index WorkingGroups on User event handler', () => {
   );
   beforeEach(jest.resetAllMocks);
 
-  test('Should throw an error and do not trigger algolia when the user request fails with another error code', async () => {
+  test('Should throw an error and do not trigger algolia when the working group request fails with another error code', async () => {
     workingGroupControllerMock.fetchById.mockRejectedValue(Boom.badData());
 
     await expect(

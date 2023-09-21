@@ -121,7 +121,7 @@ describe('Index WorkingGroups on User event handler', () => {
   });
 
   test.each(possibleEvents)(
-    'Should index event when workingGroup event %s occurs',
+    'Should index user when workingGroup event %s occurs',
     async (_name, event) => {
       const userId = '32';
       const memberId = '11';

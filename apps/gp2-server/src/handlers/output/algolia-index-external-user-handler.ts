@@ -16,6 +16,7 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ExternalUserPayload } from '../event-bus';
+import { createProcessingFunction } from '../utils';
 
 export const indexOutputExternalUserHandler =
   (
@@ -39,30 +40,10 @@ export const indexOutputExternalUserHandler =
         filter: { externalAuthorId: event.detail.resourceId },
       });
 
-    const processingFunction = async (
-      foundOutputs: ListResponse<gp2Model.OutputResponse>,
-    ) => {
-      logger.info(
-        `Found ${foundOutputs.total} outputs. Processing ${foundOutputs.items.length} outputs.`,
-      );
-
-      try {
-        const outputs = foundOutputs.items.map((data) => ({
-          data,
-          type: 'output' as const,
-        }));
-        logger.debug(`trying to save: ${JSON.stringify(outputs, null, 2)}`);
-        await algoliaClient.saveMany(outputs);
-      } catch (err) {
-        logger.error('Error occurred during saveMany');
-        if (err instanceof Error) {
-          logger.error(`The error message: ${err.message}`);
-        }
-        throw err;
-      }
-
-      logger.info(`Updated ${foundOutputs.items.length} outputs.`);
-    };
+    const processingFunction = createProcessingFunction(
+      algoliaClient,
+      'output',
+    );
 
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };

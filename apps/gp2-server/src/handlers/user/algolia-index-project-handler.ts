@@ -1,5 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
-import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ProjectController from '../../controllers/project.controller';
@@ -14,6 +14,7 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ProjectPayload } from '../event-bus';
+import { createProcessingFunction } from '../utils';
 
 export const indexUserProjectHandler =
   (
@@ -25,30 +26,8 @@ export const indexUserProjectHandler =
   ) => Promise<void>) =>
   async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
-    const processingFunction = async (
-      foundUsers: ListResponse<gp2Model.UserResponse>,
-    ) => {
-      logger.info(
-        `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
-      );
 
-      try {
-        const users = foundUsers.items.map((data) => ({
-          data,
-          type: 'user' as const,
-        }));
-        logger.debug(`trying to save: ${JSON.stringify(users, null, 2)}`);
-        await algoliaClient.saveMany(users);
-      } catch (err) {
-        logger.error('Error occurred during saveMany');
-        if (err instanceof Error) {
-          logger.error(`The error message: ${err.message}`);
-        }
-        throw err;
-      }
-
-      logger.info(`Updated ${foundUsers.items.length} events.`);
-    };
+    const processingFunction = createProcessingFunction(algoliaClient, 'user');
 
     const projectId = event.detail.resourceId;
     const { members: currentMembers } = await projectController.fetchById(

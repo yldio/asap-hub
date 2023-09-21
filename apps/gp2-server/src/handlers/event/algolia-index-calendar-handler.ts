@@ -15,6 +15,7 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { CalendarPayload } from '../event-bus';
+import { createProcessingFunction } from '../utils';
 
 export const indexEventCalendarHandler =
   (
@@ -38,30 +39,7 @@ export const indexEventCalendarHandler =
         filter: { calendarId: event.detail.resourceId },
       });
 
-    const processingFunction = async (
-      foundEvents: ListResponse<gp2Model.EventResponse>,
-    ) => {
-      logger.info(
-        `Found ${foundEvents.total} events. Processing ${foundEvents.items.length} events.`,
-      );
-
-      try {
-        const events = foundEvents.items.map((data) => ({
-          data,
-          type: 'event' as const,
-        }));
-        logger.debug(`trying to save: ${JSON.stringify(events, null, 2)}`);
-        await algoliaClient.saveMany(events);
-      } catch (err) {
-        logger.error('Error occurred during saveMany');
-        if (err instanceof Error) {
-          logger.error(`The error message: ${err.message}`);
-        }
-        throw err;
-      }
-
-      logger.info(`Updated ${foundEvents.items.length} events.`);
-    };
+    const processingFunction = createProcessingFunction(algoliaClient, 'event');
 
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };

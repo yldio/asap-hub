@@ -39,7 +39,7 @@ const possibleEvents: [
 ];
 
 jest.mock('../../../src/utils/logger');
-describe('Index WorkingGroups on User event handler', () => {
+describe('Index Users on Working Group event handler', () => {
   const indexHandler = indexUserWorkingGroupHandler(
     workingGroupControllerMock,
     userControllerMock,

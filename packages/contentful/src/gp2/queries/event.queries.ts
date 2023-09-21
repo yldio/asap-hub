@@ -19,6 +19,8 @@ export const eventsContentQueryFragment = gql`
     eventLink
     status
     hidden
+    googleId
+    copyMeetingLink
     keywordsCollection(limit: 10) {
       total
       items {

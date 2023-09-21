@@ -1,10 +1,7 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import {
-  gp2 as gp2Model,
-  GP2ResearchOutputSharingStatus,
-} from '@asap-hub/model';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
 import { PAGE_SIZE } from '../../hooks';
@@ -298,7 +295,7 @@ describe('createOutput', () => {
   const payload = {
     title: 'output title',
     documentType: 'Procedural Form' as const,
-    sharingStatus: 'GP2 Only' as GP2ResearchOutputSharingStatus,
+    sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
@@ -325,7 +322,7 @@ describe('updateOutput', () => {
   const payload = {
     title: 'output title',
     documentType: 'Procedural Form' as const,
-    sharingStatus: 'GP2 Only' as GP2ResearchOutputSharingStatus,
+    sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
   };
   it('makes an authorized POST request to update a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

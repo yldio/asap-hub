@@ -104,7 +104,7 @@ describe('Index Users on Project event handler', () => {
   });
 
   test.each(possibleEvents)(
-    'Should index event when project event %s occurs',
+    'Should index user when project event %s occurs',
     async (_name, event) => {
       const userId = '32';
       const memberId = '11';

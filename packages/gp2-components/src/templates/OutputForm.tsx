@@ -254,29 +254,33 @@ const OutputForm: React.FC<OutputFormType> = ({
                 ></Markdown>
               }
             />
-            <LabeledRadioButtonGroup<gp2Model.DecisionOption>
-              title="Has this output been supported by GP2?"
-              subtitle="(required)"
-              options={[
-                {
-                  value: 'Yes',
-                  label: 'Yes',
-                  disabled: isGP2SupportedAlwaysTrue,
-                },
-                {
-                  value: 'No',
-                  label: 'No',
-                  disabled: isGP2SupportedAlwaysTrue,
-                },
-                {
-                  value: "Don't Know",
-                  label: "Don't Know",
-                  disabled: isGP2SupportedAlwaysTrue,
-                },
-              ]}
-              value={newGp2Supported ?? "Don't Know"}
-              onChange={setGp2Supported}
-            />
+            {!['Training Materials', 'Procedural Form'].includes(
+              documentType,
+            ) ? (
+              <LabeledRadioButtonGroup<gp2Model.DecisionOption>
+                title="Has this output been supported by GP2?"
+                subtitle="(required)"
+                options={[
+                  {
+                    value: 'Yes',
+                    label: 'Yes',
+                    disabled: isGP2SupportedAlwaysTrue,
+                  },
+                  {
+                    value: 'No',
+                    label: 'No',
+                    disabled: isGP2SupportedAlwaysTrue,
+                  },
+                  {
+                    value: "Don't Know",
+                    label: "Don't Know",
+                    disabled: isGP2SupportedAlwaysTrue,
+                  },
+                ]}
+                value={newGp2Supported ?? "Don't Know"}
+                onChange={setGp2Supported}
+              />
+            ) : null}
             <LabeledRadioButtonGroup<gp2Model.OutputSharingStatus>
               title="Sharing status"
               subtitle="(required)"

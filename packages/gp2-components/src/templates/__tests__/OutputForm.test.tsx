@@ -21,7 +21,9 @@ describe('OutputForm', () => {
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {
-    render(<OutputForm {...defaultProps} />, { wrapper: StaticRouter });
+    render(<OutputForm {...defaultProps} documentType="Dataset" />, {
+      wrapper: StaticRouter,
+    });
     expect(screen.getByRole('textbox', { name: /title/i })).toBeVisible();
     expect(screen.getByRole('textbox', { name: /url/i })).toBeVisible();
     expect(screen.getByRole('textbox', { name: /description/i })).toBeVisible();
@@ -66,6 +68,7 @@ describe('OutputForm', () => {
     render(
       <OutputForm
         {...defaultProps}
+        documentType="Code/Software"
         shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
       />,
@@ -123,7 +126,7 @@ describe('OutputForm', () => {
     expect(shareOutput).toHaveBeenCalledWith({
       title: 'output title',
       link: 'https://example.com',
-      documentType: 'Procedural Form',
+      documentType: 'Code/Software',
       description: 'An interesting article',
       gp2Supported: 'Yes',
       sharingStatus: 'GP2 Only',
@@ -135,7 +138,7 @@ describe('OutputForm', () => {
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
-        message: 'Working group procedural form published successfully.',
+        message: 'Working group code/software published successfully.',
         page: 'outputs',
         type: 'success',
       }),
@@ -346,12 +349,30 @@ describe('OutputForm', () => {
 
   describe('GP2 Supported', () => {
     test.each`
+      documentType
+      ${'Procedural Form'}
+      ${'Training Materials'}
+    `(
+      'is not displayed when document type is $documentType',
+      ({ documentType }) => {
+        render(<OutputForm {...defaultProps} documentType={documentType} />, {
+          wrapper: StaticRouter,
+        });
+
+        expect(
+          screen.queryByRole('group', {
+            name: /has this output been supported by gp2?/i,
+          }),
+        ).toBeNull();
+      },
+    );
+
+    test.each`
       gp2SupportedValue | documentType
       ${'Yes'}          | ${'GP2 Reports'}
-      ${"Don't Know"}   | ${'Procedural Form'}
-      ${"Don't Know"}   | ${'Training Materials'}
       ${"Don't Know"}   | ${'Dataset'}
       ${"Don't Know"}   | ${'Code/Software'}
+      ${"Don't Know"}   | ${'Article'}
     `(
       'is $gp2SupportedValue by default when document type is $documentType',
       ({ gp2SupportedValue, documentType }) => {
@@ -378,9 +399,12 @@ describe('OutputForm', () => {
     `(
       'is $gp2SupportedValue by default when type is $type',
       ({ gp2SupportedValue, type }) => {
-        render(<OutputForm {...defaultProps} type={type} />, {
-          wrapper: StaticRouter,
-        });
+        render(
+          <OutputForm {...defaultProps} documentType="Article" type={type} />,
+          {
+            wrapper: StaticRouter,
+          },
+        );
 
         const gp2Supported = screen.getByRole('group', {
           name: /has this output been supported by gp2?/i,
@@ -430,6 +454,7 @@ describe('OutputForm', () => {
       ${'GP2 Only'} | ${'Procedural Form'}
       ${'GP2 Only'} | ${'Dataset'}
       ${'GP2 Only'} | ${'Code/Software'}
+      ${'GP2 Only'} | ${'Article'}
     `(
       'is $sharingStatus by default when document type is $documentType',
       ({ sharingStatus, documentType }) => {

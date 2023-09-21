@@ -1,4 +1,8 @@
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import {
+  SearchOptions,
+  SearchResponse,
+  SearchForFacetValuesResponse,
+} from '@algolia/client-search';
 import {
   EventResponse,
   ExternalAuthorResponse,
@@ -69,6 +73,11 @@ export interface SearchClient {
   save: (payload: SavePayload) => Promise<void>;
   saveMany: (payload: SavePayload[]) => Promise<void>;
   remove: (id: string) => Promise<void>;
+  searchForTagValues: <ResponsesKey extends keyof EntityResponses[Apps]>(
+    entityTypes: ResponsesKey[],
+    query: string,
+    requestOptions?: SearchOptions | undefined,
+  ) => Promise<SearchForFacetValuesResponse>;
 }
 
 export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
@@ -97,17 +106,15 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
     await this.index.deleteObject(id);
   }
 
-  async search<ResponsesKey extends keyof EntityResponses[App]>(
+  private getSearchOptions<ResponsesKey extends keyof EntityResponses[App]>(
     entityTypes: ResponsesKey[],
-    query: string,
     requestOptions?: SearchOptions,
-    descendingEvents?: boolean,
-  ): Promise<ClientSearchResponse<App, ResponsesKey>> {
+  ): SearchOptions {
     const entityTypesFilter = entityTypes
       .map((entityType) => `__meta.type:"${String(entityType)}"`)
       .join(' OR ');
 
-    const options = {
+    return {
       ...requestOptions,
       clickAnalytics: this.clickAnalytics,
       userToken: this.userToken,
@@ -115,6 +122,15 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
         ? `${requestOptions.filters} AND (${entityTypesFilter})`
         : entityTypesFilter,
     };
+  }
+
+  async search<ResponsesKey extends keyof EntityResponses[App]>(
+    entityTypes: ResponsesKey[],
+    query: string,
+    requestOptions?: SearchOptions,
+    descendingEvents?: boolean,
+  ): Promise<ClientSearchResponse<App, ResponsesKey>> {
+    const options = this.getSearchOptions(entityTypes, requestOptions);
     if (descendingEvents) {
       const result = await this.reverseEventsIndex.search<
         DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
@@ -142,5 +158,17 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
       objectID: body.id,
       __meta: { type },
     };
+  }
+
+  async searchForTagValues<ResponsesKey extends keyof EntityResponses[App]>(
+    entityTypes: ResponsesKey[],
+    query: string,
+    requestOptions?: SearchOptions,
+  ): Promise<SearchForFacetValuesResponse> {
+    return this.index.searchForFacetValues(
+      '_tags',
+      query,
+      this.getSearchOptions(entityTypes, requestOptions),
+    );
   }
 }

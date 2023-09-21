@@ -1,4 +1,7 @@
-import { SearchOptions } from '@algolia/client-search';
+import {
+  SearchForFacetValuesResponse,
+  SearchOptions,
+} from '@algolia/client-search';
 import { SearchIndex } from 'algoliasearch';
 import {
   Apps,
@@ -22,6 +25,7 @@ export const EMPTY_ALGOLIA_RESPONSE = {
   exhaustiveNbHits: false,
   query: '',
   params: '',
+  queryID: '',
 };
 
 /*
@@ -67,5 +71,17 @@ export class NoTokenAlgoliaClient<App extends Apps> implements SearchClient {
     _descendingEvents?: boolean,
   ): Promise<ClientSearchResponse<App, ResponsesKey>> {
     return EMPTY_ALGOLIA_RESPONSE as ClientSearchResponse<App, ResponsesKey>;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async searchForTagValues<ResponsesKey extends keyof EntityResponses[App]>(
+    _entityTypes: ResponsesKey[],
+    _query: string,
+    _requestOptions?: SearchOptions,
+  ): Promise<SearchForFacetValuesResponse> {
+    return {
+      facetHits: [],
+      exhaustiveFacetsCount: true,
+    };
   }
 }

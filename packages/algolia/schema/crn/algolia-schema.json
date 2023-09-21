@@ -49,6 +49,7 @@
   "optionalWords": null,
   "queryLanguages": ["en"],
   "attributesForFaceting": [
+    "searchable(_tags)",
     "teams.id",
     "documentType",
     "authors.id",

@@ -1,3 +1,4 @@
+import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
@@ -154,6 +155,16 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   const { client } = useAlgolia();
   const authorization = useRecoilValue(authorizationState);
   if (researchOutputs === undefined) {
+    if (
+      options.noResultsWithoutCriteria &&
+      options.searchQuery === '' &&
+      options.filters.size === 0 &&
+      (options.tags?.length ?? 0) === 0
+    ) {
+      setResearchOutputs(EMPTY_ALGOLIA_RESPONSE);
+      return EMPTY_ALGOLIA_RESPONSE;
+    }
+
     throw (
       options.draftsOnly
         ? getDraftResearchOutputs(options, authorization)

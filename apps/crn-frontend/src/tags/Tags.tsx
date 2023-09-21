@@ -1,30 +1,43 @@
 import { TagsPage, TagsPageBody } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
+import { useAlgolia } from '../hooks/algolia';
+import { useResearchOutputs } from '../shared-research/state';
 
 const Tags: React.FC<Record<string, never>> = () => {
-  const { tags, setTags } = useSearch();
+  const { tags, setTags, searchQuery, filters } = useSearch();
   const { currentPage, pageSize } = usePaginationParams();
   const { numberOfPages, renderPageHref } = usePagination(0, pageSize);
+  const { client } = useAlgolia();
+  const { items, total } = useResearchOutputs({
+    searchQuery,
+    filters,
+    currentPage,
+    pageSize,
+    noResultsWithoutCriteria: true,
+    tags,
+  });
   return (
     <TagsPage
       tags={tags}
       setTags={setTags}
-      loadTags={() =>
-        new Promise((resolve) =>
-          resolve([
-            { value: 'test', label: 'test' },
-            { value: 'test2', label: 'test2' },
-            { value: 'test3', label: 'test3' },
-          ]),
-        )
-      }
+      loadTags={async (tagQuery) => {
+        const searchedTags = await client.searchForTagValues(
+          ['research-output'],
+          tagQuery,
+          { tagFilters: tags },
+        );
+        return searchedTags.facetHits.map(({ value }) => ({
+          label: value,
+          value,
+        }));
+      }}
     >
       <TagsPageBody
         currentPage={currentPage}
-        numberOfItems={0}
+        numberOfItems={total}
         numberOfPages={numberOfPages}
         renderPageHref={renderPageHref}
-        results={[]}
+        results={items}
       />
     </TagsPage>
   );

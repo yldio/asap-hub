@@ -36,7 +36,7 @@ const possibleEvents: [
 ];
 
 jest.mock('../../../src/utils/logger');
-describe('Index Projects on User event handler', () => {
+describe('Index Users on Project event handler', () => {
   const indexHandler = indexUserProjectHandler(
     projectControllerMock,
     userControllerMock,

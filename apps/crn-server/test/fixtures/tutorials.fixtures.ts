@@ -14,7 +14,6 @@ export const getTutorialsDataObject = (): TutorialsDataObject => ({
   linkText: 'ASAP',
   thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid1`,
   created: '2020-09-08T16:35:28.000Z',
-  addedDate: '2021-05-21T13:18:31Z',
   authors: [],
   teams: [{ id: 'team-id-0', displayName: 'Team A' }],
   sharingStatus: 'Network Only',
@@ -49,7 +48,7 @@ export const getContentfulGraphqlTutorial = (): TutorialsContentFragment => {
     sys: {
       id: 'tutorial-1',
     },
-    publishDate: '2020-09-08T16:35:28.000Z',
+    addedDate: '2020-09-08T16:35:28.000Z',
     title: 'Tutorial 1',
     shortText: 'Short text of tutorial 1',
     text: {
@@ -86,7 +85,7 @@ export const getContentfulGraphqlTutorial = (): TutorialsContentFragment => {
             id: 'related-tutorial-id-0',
           },
           title: 'Related Tutorial1',
-          publishDate: '2020-09-08T16:35:28.000Z',
+          addedDate: '2020-09-08T16:35:28.000Z',
         },
       ],
     },
@@ -98,7 +97,7 @@ export const getContentfulGraphqlTutorial = (): TutorialsContentFragment => {
               id: 'related-referencing-tutorial-id',
             },
             title: 'Related Tutorial2',
-            publishDate: '2020-09-08T16:35:28.000Z',
+            addedDate: '2020-09-08T16:35:28.000Z',
           },
         ],
       },
@@ -134,6 +133,5 @@ export const getContentfulGraphqlTutorial = (): TutorialsContentFragment => {
     },
     asapFunded: 'Yes',
     usedInAPublication: 'No',
-    addedDate: '2021-05-21T13:18:31Z',
   };
 };

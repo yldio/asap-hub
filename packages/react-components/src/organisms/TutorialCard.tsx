@@ -68,7 +68,6 @@ const footerStyles = css({
 
 type TutorialCardProps = Pick<
   TutorialsResponse,
-  | 'addedDate'
   | 'authors'
   | 'created'
   | 'id'
@@ -89,7 +88,6 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   linkText,
   shortText,
   created,
-  addedDate,
   authors,
   teams,
   tags,
@@ -150,7 +148,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
             </div>
           )}
           <span css={footerStyles}>
-            Posted: {formatDate(new Date(addedDate || created))}
+            Posted: {formatDate(new Date(created))}
           </span>
         </div>
       </div>

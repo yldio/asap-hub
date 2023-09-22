@@ -105,7 +105,7 @@ const mapRelatedTutorials = (
   items.map((rt: RelatedTutorialItem) => ({
     id: rt?.sys.id,
     title: rt.title || '',
-    created: rt.publishDate,
+    created: rt.addedDate,
     isOwnRelatedTutorialLink,
   }));
 
@@ -119,7 +119,7 @@ export const parseContentfulGraphQlTutorials = (
   );
   return {
     id: tutorial.sys.id,
-    created: tutorial.publishDate,
+    created: tutorial.addedDate,
     title: tutorial.title || '',
     text: tutorial.text
       ? parseRichText(tutorial.text as RichTextFromQuery)
@@ -128,7 +128,6 @@ export const parseContentfulGraphQlTutorials = (
     link: tutorial.link || undefined,
     linkText: tutorial.linkText || undefined,
     thumbnail: tutorial.thumbnail?.url || undefined,
-    addedDate: tutorial.addedDate,
     asapFunded: convertDecisionToBoolean(tutorial.asapFunded || null),
     usedInPublication: convertDecisionToBoolean(
       tutorial.usedInAPublication || null,

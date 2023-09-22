@@ -45,7 +45,6 @@ const associationStyles = css({
 
 type TutorialHeaderCardProps = Pick<
   TutorialsResponse,
-  | 'addedDate'
   | 'authors'
   | 'created'
   | 'lastUpdated'
@@ -61,7 +60,6 @@ const TutorialHeaderCard: React.FC<TutorialHeaderCardProps> = ({
   linkText,
   created,
   lastUpdated,
-  addedDate,
   authors,
   teams,
 }) => (
@@ -82,7 +80,7 @@ const TutorialHeaderCard: React.FC<TutorialHeaderCardProps> = ({
       <AssociationList type="Team" inline associations={teams} />
     </div>
     <div css={[timestampStyles, captionStyles]}>
-      <span>Date added: {formatDate(new Date(addedDate || created))}</span>
+      <span>Date added: {formatDate(new Date(created))}</span>
       {lastUpdated && (
         <span> . Last updated: {formatDate(new Date(lastUpdated))}</span>
       )}

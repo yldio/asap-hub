@@ -13,7 +13,6 @@ export const createTutorialsResponse = ({
   shortText: `${key} short text`,
   text: `<h1>${key} text</h1>`,
   created: new Date().toISOString(),
-  addedDate: new Date().toISOString(),
   lastUpdated: new Date().toISOString(),
   datePublished: new Date().toISOString(),
   tags: [],

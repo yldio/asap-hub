@@ -33,18 +33,3 @@ it('shows authors', () => {
   );
   expect(getByText('John Doe')).toBeVisible();
 });
-
-it('falls back to created date when added date omitted', () => {
-  const { getByText, rerender, queryByText } = render(
-    <TutorialHeaderCard
-      {...tutorialHeaderCardProps}
-      addedDate={new Date(2012, 1, 1, 1).toISOString()}
-    />,
-  );
-  expect(getByText(/2012/)).toBeVisible();
-  expect(queryByText(/2011/)).not.toBeInTheDocument();
-
-  const { addedDate, ...modifiedProps } = tutorialHeaderCardProps;
-  rerender(<TutorialHeaderCard {...modifiedProps} />);
-  expect(getByText(/2011/)).toBeVisible();
-});

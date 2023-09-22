@@ -15,7 +15,6 @@ export interface TutorialsDataObject {
   linkText?: string;
   text?: string;
   created: string;
-  addedDate?: string;
   lastUpdated?: string;
   datePublished?: string;
   tags: string[];

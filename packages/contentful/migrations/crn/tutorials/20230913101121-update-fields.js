@@ -2,6 +2,23 @@ module.exports.description = 'Updates fields on tutorials model';
 
 module.exports.up = (migration) => {
   const tutorials = migration.editContentType('tutorials');
+  tutorials.changeFieldId('publishDate', 'addedDate');
+  tutorials.editField('addedDate').name('Added Date').required(false);
+
+  tutorials
+    .createField('lastUpdated')
+    .name('Last Updated')
+    .type('Date')
+    .localized(false)
+    .required(false)
+    .validations([])
+    .disabled(false)
+    .omitted(false);
+
+  tutorials.changeFieldControl('lastUpdated', 'app', 'v97H7wgmtstfxNheYWy0G', {
+    exclude: 'addedDate',
+  });
+
   tutorials
     .createField('authors')
     .name('Authors')
@@ -42,26 +59,6 @@ module.exports.up = (migration) => {
 
       linkType: 'Entry',
     });
-
-  tutorials
-    .createField('addedDate')
-    .name('Added Date')
-    .type('Date')
-    .localized(false)
-    .required(false)
-    .validations([])
-    .disabled(false)
-    .omitted(false);
-
-  tutorials
-    .createField('lastUpdated')
-    .name('Last Updated')
-    .type('Date')
-    .localized(false)
-    .required(false)
-    .validations([])
-    .disabled(false)
-    .omitted(false);
 
   tutorials
     .createField('datePublished')
@@ -177,13 +174,26 @@ module.exports.up = (migration) => {
     ])
     .disabled(false)
     .omitted(false);
+
+  tutorials.moveField('addedDate').toTheTop();
+  tutorials.moveField('lastUpdated').afterField('addedDate');
+  tutorials.moveField('tags').afterField('text');
+  tutorials.moveField('authors').afterField('tags');
+  tutorials.moveField('teams').afterField('authors');
+  tutorials.moveField('relatedTutorials').afterField('teams');
+  tutorials.moveField('relatedEvents').afterField('relatedTutorials');
+  tutorials.moveField('asapFunded').afterField('relatedEvents');
+  tutorials.moveField('usedInAPublication').afterField('asapFunded');
+  tutorials.moveField('sharingStatus').afterField('usedInAPublication');
+  tutorials.moveField('datePublished').afterField('sharingStatus');
 };
 
 module.exports.down = (migration) => {
   const tutorials = migration.editContentType('tutorials');
   tutorials.deleteField('authors');
   tutorials.deleteField('teams');
-  tutorials.deleteField('addedDate');
+  tutorials.changeFieldId('addedDate', 'publishDate');
+  tutorials.editField('publishDate').name('Publish Date').required(true);
   tutorials.deleteField('lastUpdated');
   tutorials.deleteField('datePublished');
   tutorials.deleteField('tags');

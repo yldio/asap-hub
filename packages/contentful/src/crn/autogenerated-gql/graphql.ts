@@ -10251,7 +10251,6 @@ export type FetchDiscoverQuery = {
             Maybe<
               Pick<
                 Tutorials,
-                | 'publishDate'
                 | 'addedDate'
                 | 'lastUpdated'
                 | 'datePublished'
@@ -10412,7 +10411,7 @@ export type FetchDiscoverQuery = {
                   tutorialsCollection?: Maybe<{
                     items: Array<
                       Maybe<
-                        Pick<Tutorials, 'title' | 'publishDate'> & {
+                        Pick<Tutorials, 'title' | 'addedDate'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -10422,7 +10421,7 @@ export type FetchDiscoverQuery = {
                 relatedTutorialsCollection?: Maybe<{
                   items: Array<
                     Maybe<
-                      Pick<Tutorials, 'title' | 'publishDate'> & {
+                      Pick<Tutorials, 'title' | 'addedDate'> & {
                         sys: Pick<Sys, 'id'>;
                       }
                     >
@@ -15160,7 +15159,6 @@ export type FetchTeamsQuery = {
 
 export type TutorialsContentFragment = Pick<
   Tutorials,
-  | 'publishDate'
   | 'addedDate'
   | 'lastUpdated'
   | 'datePublished'
@@ -15263,15 +15261,13 @@ export type TutorialsContentFragment = Pick<
   linkedFrom?: Maybe<{
     tutorialsCollection?: Maybe<{
       items: Array<
-        Maybe<
-          Pick<Tutorials, 'title' | 'publishDate'> & { sys: Pick<Sys, 'id'> }
-        >
+        Maybe<Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }>
       >;
     }>;
   }>;
   relatedTutorialsCollection?: Maybe<{
     items: Array<
-      Maybe<Pick<Tutorials, 'title' | 'publishDate'> & { sys: Pick<Sys, 'id'> }>
+      Maybe<Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }>
     >;
   }>;
   relatedEventsCollection?: Maybe<{
@@ -15289,7 +15285,6 @@ export type FetchTutorialByIdQuery = {
   tutorials?: Maybe<
     Pick<
       Tutorials,
-      | 'publishDate'
       | 'addedDate'
       | 'lastUpdated'
       | 'datePublished'
@@ -15407,9 +15402,7 @@ export type FetchTutorialByIdQuery = {
         tutorialsCollection?: Maybe<{
           items: Array<
             Maybe<
-              Pick<Tutorials, 'title' | 'publishDate'> & {
-                sys: Pick<Sys, 'id'>;
-              }
+              Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }
             >
           >;
         }>;
@@ -15417,7 +15410,7 @@ export type FetchTutorialByIdQuery = {
       relatedTutorialsCollection?: Maybe<{
         items: Array<
           Maybe<
-            Pick<Tutorials, 'title' | 'publishDate'> & { sys: Pick<Sys, 'id'> }
+            Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }
           >
         >;
       }>;
@@ -19938,7 +19931,6 @@ export const TutorialsContentFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'datePublished' } },
@@ -20333,7 +20325,7 @@ export const TutorialsContentFragmentDoc = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'publishDate' },
+                              name: { kind: 'Name', value: 'addedDate' },
                             },
                           ],
                         },
@@ -20379,7 +20371,7 @@ export const TutorialsContentFragmentDoc = {
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'publishDate' },
+                        name: { kind: 'Name', value: 'addedDate' },
                       },
                     ],
                   },

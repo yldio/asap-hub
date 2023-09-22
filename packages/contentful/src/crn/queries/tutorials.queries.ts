@@ -7,7 +7,6 @@ export const tutorialsContentQueryFragment = gql`
     sys {
       id
     }
-    publishDate
     addedDate
     lastUpdated
     datePublished
@@ -95,7 +94,7 @@ export const tutorialsContentQueryFragment = gql`
             id
           }
           title
-          publishDate
+          addedDate
         }
       }
     }
@@ -105,7 +104,7 @@ export const tutorialsContentQueryFragment = gql`
           id
         }
         title
-        publishDate
+        addedDate
       }
     }
     relatedEventsCollection(limit: 10) {

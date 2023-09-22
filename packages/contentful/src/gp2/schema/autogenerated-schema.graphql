@@ -181,6 +181,8 @@ type AssetLinkingCollections {
 }
 
 enum AssetLinkingCollectionsEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
   endDateTimeZone_ASC
   endDateTimeZone_DESC
   endDate_ASC
@@ -369,6 +371,8 @@ type CalendarsLinkingCollections {
 }
 
 enum CalendarsLinkingCollectionsEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
   endDateTimeZone_ASC
   endDateTimeZone_DESC
   endDate_ASC
@@ -847,6 +851,8 @@ type EventSpeakersLinkingCollections {
 }
 
 enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
   endDateTimeZone_ASC
   endDateTimeZone_DESC
   endDate_ASC
@@ -926,6 +932,7 @@ input EventSpeakersUserFilter {
 type Events implements Entry {
   calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
+  copyMeetingLink(locale: String): Boolean
   description(locale: String): String
   endDate(locale: String): DateTime
   endDateTimeZone(locale: String): String
@@ -969,6 +976,9 @@ input EventsFilter {
   calendar: cfCalendarsNestedFilter
   calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
+  copyMeetingLink: Boolean
+  copyMeetingLink_exists: Boolean
+  copyMeetingLink_not: Boolean
   description: String
   description_contains: String
   description_exists: Boolean
@@ -1157,6 +1167,8 @@ type EventsNotesResources {
 }
 
 enum EventsOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
   endDateTimeZone_ASC
   endDateTimeZone_DESC
   endDate_ASC
@@ -1683,6 +1695,8 @@ type KeywordsLinkingCollections {
 }
 
 enum KeywordsLinkingCollectionsEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
   endDateTimeZone_ASC
   endDateTimeZone_DESC
   endDate_ASC

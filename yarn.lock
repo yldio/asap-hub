@@ -1753,41 +1753,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/squidex@workspace:packages/squidex":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/squidex@workspace:packages/squidex"
-  dependencies:
-    "@asap-hub/errors": "workspace:*"
-    "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.22.15
-    "@hapi/boom": 9.1.4
-    "@hapi/bourne": 2.1.0
-    "@hapi/joi": 17.1.1
-    "@types/apr-intercept": "workspace:*"
-    "@types/debug": 4.1.8
-    "@types/hapi": 18.0.11
-    "@types/hapi__boom": 9.0.1
-    "@types/hapi__bourne": "workspace:*"
-    "@types/hapi__joi": 17.1.11
-    "@types/jest": 29.5.5
-    "@types/jwt-decode": 2.2.1
-    "@types/jwt-encode": "workspace:*"
-    "@types/luxon": 1.27.1
-    apr-intercept: 3.0.4
-    chance: 1.1.11
-    cross-fetch: ^3.1.4
-    debug: 4.3.4
-    got: 11.8.6
-    graphql: 15.8.0
-    graphql-request: 6.1.0
-    jwt-decode: 2.2.0
-    jwt-encode: 1.0.1
-    luxon: 1.28.1
-    nock: 13.3.3
-  languageName: unknown
-  linkType: soft
-
 "@asap-hub/storybook@workspace:apps/storybook":
   version: 0.0.0-use.local
   resolution: "@asap-hub/storybook@workspace:apps/storybook"

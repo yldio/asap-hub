@@ -6,15 +6,12 @@ import {
   getListEventDataObject,
   getListEventResponse,
 } from '../fixtures/events.fixtures';
-import { identity } from '../helpers/squidex';
-
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 
 describe('Event controller', () => {
   const eventDataProviderMock = getDataProviderMock();
   const eventController = new Events(eventDataProviderMock);
 
-  beforeAll(() => identity());
   afterEach(() => {
     jest.resetAllMocks();
     jest.useRealTimers();
@@ -56,7 +53,7 @@ describe('Event controller', () => {
   describe('Create method', () => {
     test('Should return the newly created event', async () => {
       const googleId = 'a-google-id';
-      const calendar = 'a-squidex-calendar';
+      const calendar = 'a-new-calendar';
       const hidden = false;
       const {
         title,

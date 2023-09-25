@@ -1,4 +1,5 @@
 import { gp2 } from '@asap-hub/fixtures';
+import { ToastContext } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
@@ -54,9 +55,11 @@ const renderCreateProjectOutput = async (
                     .createOutput.template
                 }
               >
-                <NotificationMessages>
-                  <CreateProjectOutput />
-                </NotificationMessages>
+                <ToastContext.Provider value={jest.fn()}>
+                  <NotificationMessages>
+                    <CreateProjectOutput />
+                  </NotificationMessages>
+                </ToastContext.Provider>
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -103,9 +106,9 @@ it('publishes the output', async () => {
   userEvent.click(screen.getByText(/Tony Stark/i));
   userEvent.click(authors);
   userEvent.click(screen.getByText(/Steve Rogers \(/i));
-  userEvent.click(screen.getByRole('button', { name: /publish/i }));
   userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-  userEvent.click(screen.getByText(/none/i));
+  userEvent.click(screen.getByText(/^none/i));
+  userEvent.click(screen.getByRole('button', { name: /publish/i }));
   expect(await screen.findByRole('button', { name: /publish/i })).toBeEnabled();
   expect(mockCreateOutput).toHaveBeenCalledWith(
     {
@@ -127,4 +130,4 @@ it('publishes the output', async () => {
     },
     expect.anything(),
   );
-}, 30000);
+});

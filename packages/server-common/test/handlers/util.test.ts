@@ -40,6 +40,20 @@ describe('utils', () => {
       processingFunction(users);
       expect(filter).toBeCalled();
     });
+    test('Should throw the algolia error when saving the record fails', async () => {
+      const algoliaError = new Error('ERROR');
+      const algoliaClient = getAlgoliaSearchClientMock();
+
+      const users = getListUserResponse();
+      algoliaClient.saveMany.mockRejectedValueOnce(algoliaError);
+      const processingFunction = createProcessingFunction(
+        algoliaClient,
+        'user',
+        logger,
+      );
+
+      await expect(processingFunction(users)).rejects.toThrow(algoliaError);
+    });
   });
   describe('userFilter', () => {
     test('returns true when the user is onboarded and not hidden', () => {

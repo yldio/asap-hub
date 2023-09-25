@@ -161,7 +161,6 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
       options.filters.size === 0 &&
       (options.tags?.length ?? 0) === 0
     ) {
-      setResearchOutputs(EMPTY_ALGOLIA_RESPONSE);
       return EMPTY_ALGOLIA_RESPONSE;
     }
 

@@ -10,7 +10,7 @@ const Routes: React.FC<Record<string, never>> = () => {
   return (
     <Switch>
       <Route exact path={path}>
-        <Frame title="Tag Search">
+        <Frame title="Search">
           <Tags />
         </Frame>
       </Route>

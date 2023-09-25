@@ -1,3 +1,4 @@
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   Auth0Provider,
   WhenReady,
@@ -5,6 +6,7 @@ import {
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -12,7 +14,26 @@ import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
+import { useAlgolia } from '../../hooks/algolia';
 import Routes from '../Routes';
+
+jest.mock('../../hooks/algolia');
+jest.mock('../../shared-research/api');
+const mockSearchForTagValues = jest.fn();
+const mockSearch = jest.fn();
+beforeEach(() => {
+  const mockUseAlgolia = useAlgolia as jest.MockedFunction<typeof useAlgolia>;
+  const mockAlgoliaClient = {
+    searchForTagValues: mockSearchForTagValues,
+    search: mockSearch,
+  };
+  mockUseAlgolia.mockReturnValue({
+    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'crn'>,
+  });
+  mockAlgoliaClient.search.mockResolvedValue({
+    hits: [],
+  });
+});
 
 const renderTagsPage = async (query = '') => {
   render(
@@ -37,4 +58,11 @@ it('allows typing in tag queries', async () => {
 
   userEvent.type(searchBox, 'test123');
   expect(searchBox.value).toEqual('test123');
+  await waitFor(() => {
+    expect(mockSearchForTagValues).toHaveBeenCalledWith(
+      ['research-output'],
+      'test123',
+      { tagFilters: [] },
+    );
+  });
 });

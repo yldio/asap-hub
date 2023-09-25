@@ -28,6 +28,11 @@ export const EMPTY_ALGOLIA_RESPONSE = {
   queryID: '',
 };
 
+export const EMPTY_ALGOLIA_FACET_HITS = {
+  facetHits: [],
+  exhaustiveFacetsCount: true,
+};
+
 /*
     This is a dummy client that is used when the Algolia API key is not available so that the app does not crash.
     It is used in case the user is not onboarded yet.
@@ -79,9 +84,6 @@ export class NoTokenAlgoliaClient<App extends Apps> implements SearchClient {
     _query: string,
     _requestOptions?: SearchOptions,
   ): Promise<SearchForFacetValuesResponse> {
-    return {
-      facetHits: [],
-      exhaustiveFacetsCount: true,
-    };
+    return EMPTY_ALGOLIA_FACET_HITS;
   }
 }

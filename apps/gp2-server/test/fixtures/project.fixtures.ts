@@ -6,7 +6,9 @@ import { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
 
-export const getProjectDataObject = (): gp2Model.ProjectDataObject => ({
+export const getProjectDataObject = (
+  overrides: Partial<gp2Model.ProjectDataObject> = {},
+): gp2Model.ProjectDataObject => ({
   id: '7',
   title: 'a project title',
   startDate: '2020-07-06',
@@ -43,6 +45,7 @@ export const getProjectDataObject = (): gp2Model.ProjectDataObject => ({
   traineeProject: false,
   opportunitiesLink: 'http://opportunities',
   calendar: { id: '42', name: 'project calendar' },
+  ...overrides,
 });
 export const getProjectUpdateDataObject =
   (): gp2Model.ProjectUpdateDataObject => ({
@@ -67,10 +70,22 @@ export const getListProjectDataObject = (): gp2Model.ListProjectDataObject => ({
   items: [getProjectDataObject()],
 });
 
-export const getProjectResponse = (): gp2Model.ProjectResponse => ({
+export const getProjectResponse = (
+  overrides: Partial<gp2Model.ProjectResponse> = {},
+): gp2Model.ProjectResponse => ({
   ...getProjectDataObject(),
   _tags: [gp2Model.opportunitiesAvailable],
+  ...overrides,
 });
+export const createProjectMembersResponse = (
+  length = 1,
+): gp2Model.ProjectMember[] =>
+  Array.from({ length }, (_, id) => ({
+    userId: String(id),
+    firstName: 'Tony',
+    lastName: 'Stark',
+    role: 'Project manager',
+  }));
 
 export const getListProjectsResponse = (): gp2Model.ListProjectResponse => ({
   total: 1,

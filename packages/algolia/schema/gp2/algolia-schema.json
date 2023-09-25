@@ -17,7 +17,9 @@
     "speakers.team.displayName",
     "speakers.user.displayName",
     "title",
-    "workingGroup.title"
+    "workingGroup.title",
+    "projectIds",
+    "workingGroupIds"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,

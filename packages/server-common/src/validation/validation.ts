@@ -38,9 +38,7 @@ export function validateInput<T>(
     coerce?: boolean;
     nullableKeys?: string[];
   },
-): (
-  data: Record<string, unknown>,
-) => NonNullable<T> | NullableOptionalProperties<T> {
+): (data: Record<string, T>) => NonNullable<T> | NullableOptionalProperties<T> {
   const ajvValidation = (options?.coerce ? ajvCoerced : ajv).compile(schema);
 
   return (data) => {
@@ -105,6 +103,11 @@ export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOpt
             nullable: true,
           },
           workingGroups: {
+            type: 'array',
+            items: { type: 'string' },
+            nullable: true,
+          },
+          userIds: {
             type: 'array',
             items: { type: 'string' },
             nullable: true,

@@ -2,7 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { UserPayload } from '../../../src/handlers/event-bus';
-import { indexUserOutputsHandler } from '../../../src/handlers/output/algolia-index-user-handler';
+import { indexOutputUserHandler } from '../../../src/handlers/output/algolia-index-user-handler';
 import { getListOutputResponse } from '../../fixtures/output.fixtures';
 import { getUserEvent } from '../../fixtures/user.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
@@ -24,7 +24,7 @@ const possibleEvents: [
 
 jest.mock('../../../src/utils/logger');
 describe('Index Outputs on User event handler', () => {
-  const indexHandler = indexUserOutputsHandler(
+  const indexHandler = indexOutputUserHandler(
     outputControllerMock,
     algoliaSearchClientMock,
   );

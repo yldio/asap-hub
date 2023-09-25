@@ -2,7 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { EventBridgeEvent } from 'aws-lambda';
 import { WorkingGroupPayload } from '../../../src/handlers/event-bus';
-import { indexWorkingGroupOutputsHandler } from '../../../src/handlers/output/algolia-index-working-group-handler';
+import { indexOutputWorkingGroupHandler } from '../../../src/handlers/output/algolia-index-working-group-handler';
 import { getListOutputResponse } from '../../fixtures/output.fixtures';
 import { getWorkingGroupEvent } from '../../fixtures/working-group.fixtures';
 import { getAlgoliaSearchClientMock } from '../../mocks/algolia-client.mock';
@@ -27,7 +27,7 @@ const possibleEvents: [
 
 jest.mock('../../../src/utils/logger');
 describe('Index Outputs on Working Group event handler', () => {
-  const indexHandler = indexWorkingGroupOutputsHandler(
+  const indexHandler = indexOutputWorkingGroupHandler(
     outputControllerMock,
     algoliaSearchClientMock,
   );

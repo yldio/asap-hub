@@ -46,7 +46,7 @@ describe('Contentful event webhook', () => {
       eventSource,
       space: '',
       environment: '',
-      previewAccessToken: '',
+      accessToken: '',
     },
     logger,
   );
@@ -137,7 +137,7 @@ describe('Contentful event webhook', () => {
         eventSource,
         space: '',
         environment: '',
-        previewAccessToken: '',
+        accessToken: '',
       },
       logger,
     );

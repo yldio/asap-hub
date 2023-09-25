@@ -1,6 +1,7 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
 import {
+  createProcessingFunction,
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '@asap-hub/server-common';
@@ -17,14 +18,19 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { WorkingGroupPayload } from '../event-bus';
 
-export const indexWorkingGroupOutputsHandler =
-  (
-    outputController: OutputController,
-    algoliaClient: AlgoliaClient<'gp2'>,
-  ): ((
-    event: EventBridgeEvent<gp2Model.WorkingGroupEvent, WorkingGroupPayload>,
-  ) => Promise<void>) =>
-  async (event) => {
+export const indexOutputWorkingGroupHandler = (
+  outputController: OutputController,
+  algoliaClient: AlgoliaClient<'gp2'>,
+): ((
+  event: EventBridgeEvent<gp2Model.WorkingGroupEvent, WorkingGroupPayload>,
+) => Promise<void>) => {
+  const processingFunction = createProcessingFunction(
+    algoliaClient,
+    'output',
+    logger,
+  );
+
+  return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({
@@ -39,33 +45,9 @@ export const indexWorkingGroupOutputsHandler =
         filter: { workingGroupId: event.detail.resourceId },
       });
 
-    const processingFunction = async (
-      foundOutputs: ListResponse<gp2Model.OutputResponse>,
-    ) => {
-      logger.info(
-        `Found ${foundOutputs.total} outputs. Processing ${foundOutputs.items.length} outputs.`,
-      );
-
-      try {
-        const outputs = foundOutputs.items.map((data) => ({
-          data,
-          type: 'output' as const,
-        }));
-        logger.info(`trying to save: ${JSON.stringify(outputs, null, 2)}`);
-        await algoliaClient.saveMany(outputs);
-      } catch (err) {
-        logger.error('Error occurred during saveMany');
-        if (err instanceof Error) {
-          logger.error(`The error message: ${err.message}`);
-        }
-        throw err;
-      }
-
-      logger.info(`Updated ${foundOutputs.items.length} outputs.`);
-    };
-
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
+};
 
 const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 const outputDataProvider = new OutputContentfulDataProvider(
@@ -79,7 +61,7 @@ const externalUserDataProvider = new ExternalUserContentfulDataProvider(
 );
 
 export const handler = sentryWrapper(
-  indexWorkingGroupOutputsHandler(
+  indexOutputWorkingGroupHandler(
     new OutputController(outputDataProvider, externalUserDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,

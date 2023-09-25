@@ -6,6 +6,8 @@ import {
   TeamEvent,
 } from '@asap-hub/model';
 import {
+  createProcessingFunction,
+  eventFilter,
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '@asap-hub/server-common';
@@ -17,12 +19,17 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
 
-export const indexTeamEventsHandler =
-  (
-    eventController: EventController,
-    algoliaClient: AlgoliaClient<'crn'>,
-  ): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) =>
-  async (event) => {
+export const indexTeamEventsHandler = (
+  eventController: EventController,
+  algoliaClient: AlgoliaClient<'crn'>,
+): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) => {
+  const processingFunction = createProcessingFunction(
+    algoliaClient,
+    'event',
+    logger,
+    eventFilter,
+  );
+  return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({
@@ -39,27 +46,9 @@ export const indexTeamEventsHandler =
         },
       });
 
-    const processingFunction = async (
-      foundEvents: ListResponse<EventResponse>,
-    ) => {
-      logger.info(
-        `Found ${foundEvents.total} events. Processing ${foundEvents.items.length} events.`,
-      );
-
-      await algoliaClient.saveMany(
-        foundEvents.items
-          .filter((e) => !e.hidden)
-          .map((data) => ({
-            data,
-            type: 'event',
-          })),
-      );
-
-      logger.info(`Updated ${foundEvents.items.length} events.`);
-    };
-
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
+};
 
 const eventDataProvider = getEventDataProvider();
 /* istanbul ignore next */

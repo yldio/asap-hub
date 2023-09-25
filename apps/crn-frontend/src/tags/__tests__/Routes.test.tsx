@@ -1,4 +1,8 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
+import {
+  AlgoliaSearchClient,
+  EMPTY_ALGOLIA_FACET_HITS,
+  EMPTY_ALGOLIA_RESPONSE,
+} from '@asap-hub/algolia';
 import {
   Auth0Provider,
   WhenReady,
@@ -19,9 +23,14 @@ import Routes from '../Routes';
 
 jest.mock('../../hooks/algolia');
 jest.mock('../../shared-research/api');
-const mockSearchForTagValues = jest.fn();
-const mockSearch = jest.fn();
+const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
+  AlgoliaSearchClient<'crn'>['searchForTagValues']
+>;
+const mockSearch = jest.fn() as jest.MockedFunction<
+  AlgoliaSearchClient<'crn'>['search']
+>;
 beforeEach(() => {
+  jest.resetAllMocks();
   const mockUseAlgolia = useAlgolia as jest.MockedFunction<typeof useAlgolia>;
   const mockAlgoliaClient = {
     searchForTagValues: mockSearchForTagValues,
@@ -30,9 +39,10 @@ beforeEach(() => {
   mockUseAlgolia.mockReturnValue({
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'crn'>,
   });
-  mockAlgoliaClient.search.mockResolvedValue({
-    hits: [],
-  });
+  mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
+  mockAlgoliaClient.searchForTagValues.mockResolvedValue(
+    EMPTY_ALGOLIA_FACET_HITS,
+  );
 });
 
 const renderTagsPage = async (query = '') => {
@@ -64,5 +74,22 @@ it('allows typing in tag queries', async () => {
       'test123',
       { tagFilters: [] },
     );
+  });
+});
+
+it('Will search algolia using selected tag', async () => {
+  mockSearchForTagValues.mockResolvedValue({
+    ...EMPTY_ALGOLIA_FACET_HITS,
+    facetHits: [{ value: 'LGW', count: 1, highlighted: 'LGW' }],
+  });
+
+  await renderTagsPage();
+
+  userEvent.click(screen.getByRole('textbox'));
+  userEvent.click(screen.getByText('LGW'));
+  await waitFor(() => {
+    expect(mockSearch).toHaveBeenCalledWith(['research-output'], '', {
+      tagFilters: ['LGW'],
+    });
   });
 });

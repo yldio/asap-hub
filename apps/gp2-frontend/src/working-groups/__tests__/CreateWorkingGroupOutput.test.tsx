@@ -12,11 +12,13 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
 import { createOutput } from '../../outputs/api';
+import { getKeywords } from '../../shared/api';
 import { getExternalUsers, getUsers } from '../../users/api';
 import CreateWorkingGroupOutput from '../CreateWorkingGroupOutput';
 
 jest.mock('../../outputs/api');
 jest.mock('../../users/api');
+jest.mock('../../shared/api');
 
 const mockCreateOutput = createOutput as jest.MockedFunction<
   typeof createOutput
@@ -25,6 +27,7 @@ const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 const mockGetExternalUsers = getExternalUsers as jest.MockedFunction<
   typeof getExternalUsers
 >;
+const mockGetKeywords = getKeywords as jest.MockedFunction<typeof getKeywords>;
 
 const renderCreateWorkingGroupOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
@@ -66,6 +69,11 @@ const renderCreateWorkingGroupOutput = async (
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
+beforeEach(() => {
+  jest.resetAllMocks();
+  mockGetKeywords.mockResolvedValue(gp2.createKeywordsResponse());
+});
+
 it('renders the title', async () => {
   await renderCreateWorkingGroupOutput();
   expect(screen.getByRole('heading', { name: /share/i })).toBeVisible();
@@ -86,7 +94,7 @@ it('publishes the output', async () => {
   await renderCreateWorkingGroupOutput('procedural-form');
 
   userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
-  userEvent.type(screen.getByRole('textbox', { name: /url/i }), link);
+  userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
   userEvent.type(
     screen.getByRole('textbox', { name: /description/i }),
     'An interesting article',
@@ -96,6 +104,8 @@ it('publishes the output', async () => {
   userEvent.click(screen.getByText(/Tony Stark/i));
   userEvent.click(authors);
   userEvent.click(screen.getByText(/Steve Rogers \(/i));
+  userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
+  userEvent.click(screen.getByText(/^none/i));
   userEvent.click(screen.getByRole('button', { name: /publish/i }));
   expect(await screen.findByRole('button', { name: /publish/i })).toBeEnabled();
   expect(mockCreateOutput).toHaveBeenCalledWith(

@@ -1,5 +1,6 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { createProcessingFunction } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import ProjectController from '../../controllers/project.controller';
@@ -14,20 +15,21 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ProjectPayload } from '../event-bus';
-import { createProcessingFunction } from '../utils';
 
-export const indexUserProjectHandler =
-  (
-    projectController: ProjectController,
-    userController: UserController,
-    algoliaClient: AlgoliaClient<'gp2'>,
-  ): ((
-    event: EventBridgeEvent<gp2Model.ProjectEvent, ProjectPayload>,
-  ) => Promise<void>) =>
-  async (event) => {
+export const indexUserProjectHandler = (
+  projectController: ProjectController,
+  userController: UserController,
+  algoliaClient: AlgoliaClient<'gp2'>,
+): ((
+  event: EventBridgeEvent<gp2Model.ProjectEvent, ProjectPayload>,
+) => Promise<void>) => {
+  const processingFunction = createProcessingFunction(
+    algoliaClient,
+    'user',
+    logger,
+  );
+  return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
-
-    const processingFunction = createProcessingFunction(algoliaClient, 'user');
 
     const projectId = event.detail.resourceId;
     const { members: currentMembers } = await projectController.fetchById(
@@ -63,6 +65,7 @@ export const indexUserProjectHandler =
       await processingFunction(users);
     }
   };
+};
 
 const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 const projectDataProvider = new ProjectContentfulDataProvider(

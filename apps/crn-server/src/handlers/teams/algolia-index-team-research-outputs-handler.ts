@@ -5,6 +5,7 @@ import {
   TeamEvent,
 } from '@asap-hub/model';
 import {
+  createProcessingFunction,
   EventBridgeHandler,
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
@@ -20,12 +21,16 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
 
-export const indexResearchOutputByTeamHandler =
-  (
-    researchOutputController: ResearchOutputController,
-    algoliaClient: AlgoliaClient<'crn'>,
-  ): EventBridgeHandler<TeamEvent, TeamPayload> =>
-  async (event) => {
+export const indexResearchOutputByTeamHandler = (
+  researchOutputController: ResearchOutputController,
+  algoliaClient: AlgoliaClient<'crn'>,
+): EventBridgeHandler<TeamEvent, TeamPayload> => {
+  const processingFunction = createProcessingFunction(
+    algoliaClient,
+    'research-output',
+    logger,
+  );
+  return async (event) => {
     const fetchFunction = ({
       skip,
       take,
@@ -40,26 +45,9 @@ export const indexResearchOutputByTeamHandler =
         take,
       });
 
-    const processingFunction = async (
-      foundOutputs: ListResponse<ResearchOutputResponse>,
-    ) => {
-      logger.info(
-        `Found ${foundOutputs.total} research outputs. Processing ${foundOutputs.items.length} research outputs.`,
-      );
-
-      await algoliaClient.saveMany(
-        foundOutputs.items.map((data) => ({
-          data,
-          type: 'research-output',
-        })),
-      );
-
-      logger.info(`Updated ${foundOutputs.total} research outputs.`);
-    };
-
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
-
+};
 const researchOutputDataProvider = getResearchOutputDataProvider();
 const researchTagDataProvider = getResearchTagDataProvider();
 const externalAuthorDataProvider = getExternalAuthorDataProvider();

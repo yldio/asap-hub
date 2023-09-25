@@ -1,5 +1,6 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { createProcessingFunction } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
 import UserController from '../../controllers/user.controller';
@@ -14,20 +15,21 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { WorkingGroupPayload } from '../event-bus';
-import { createProcessingFunction } from '../utils';
 
-export const indexUserWorkingGroupHandler =
-  (
-    workingGroupController: WorkingGroupController,
-    userController: UserController,
-    algoliaClient: AlgoliaClient<'gp2'>,
-  ): ((
-    event: EventBridgeEvent<gp2Model.WorkingGroupEvent, WorkingGroupPayload>,
-  ) => Promise<void>) =>
-  async (event) => {
+export const indexUserWorkingGroupHandler = (
+  workingGroupController: WorkingGroupController,
+  userController: UserController,
+  algoliaClient: AlgoliaClient<'gp2'>,
+): ((
+  event: EventBridgeEvent<gp2Model.WorkingGroupEvent, WorkingGroupPayload>,
+) => Promise<void>) => {
+  const processingFunction = createProcessingFunction(
+    algoliaClient,
+    'user',
+    logger,
+  );
+  return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
-
-    const processingFunction = createProcessingFunction(algoliaClient, 'user');
 
     const workingGroupId = event.detail.resourceId;
     const { members: currentMembers } = await workingGroupController.fetchById(
@@ -62,6 +64,7 @@ export const indexUserWorkingGroupHandler =
       await processingFunction(users);
     }
   };
+};
 
 const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 const workingGroupDataProvider = new WorkingGroupContentfulDataProvider(

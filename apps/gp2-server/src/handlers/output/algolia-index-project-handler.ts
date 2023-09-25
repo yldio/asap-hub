@@ -1,6 +1,7 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
 import {
+  createProcessingFunction,
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '@asap-hub/server-common';
@@ -16,16 +17,19 @@ import {
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ProjectPayload } from '../event-bus';
-import { createProcessingFunction } from '../utils';
 
-export const indexOutputProjectHandler =
-  (
-    outputController: OutputController,
-    algoliaClient: AlgoliaClient<'gp2'>,
-  ): ((
-    event: EventBridgeEvent<gp2Model.ProjectEvent, ProjectPayload>,
-  ) => Promise<void>) =>
-  async (event) => {
+export const indexOutputProjectHandler = (
+  outputController: OutputController,
+  algoliaClient: AlgoliaClient<'gp2'>,
+): ((
+  event: EventBridgeEvent<gp2Model.ProjectEvent, ProjectPayload>,
+) => Promise<void>) => {
+  const processingFunction = createProcessingFunction(
+    algoliaClient,
+    'output',
+    logger,
+  );
+  return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({
@@ -40,12 +44,9 @@ export const indexOutputProjectHandler =
         filter: { projectId: event.detail.resourceId },
       });
 
-    const processingFunction = createProcessingFunction(
-      algoliaClient,
-      'output',
-    );
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
+};
 
 const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 const outputDataProvider = new OutputContentfulDataProvider(

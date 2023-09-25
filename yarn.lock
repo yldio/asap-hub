@@ -1663,6 +1663,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/server-common@workspace:packages/server-common"
   dependencies:
+    "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/contentful": "workspace:*"
     "@asap-hub/errors": "workspace:*"

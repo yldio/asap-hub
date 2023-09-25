@@ -51,7 +51,7 @@ const researchOutputIndexState = atomFamily<
   default: undefined,
 });
 
-const refreshResearchOutputIndex = atom<number>({
+export const refreshResearchOutputIndex = atom<number>({
   key: 'refreshResearchOutputIndex',
   default: 0,
 });

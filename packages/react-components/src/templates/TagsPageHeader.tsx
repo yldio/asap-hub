@@ -57,6 +57,7 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
           label: tag,
           value: tag,
         }))}
+        key={tags.join(',')} // Force re-render to refresh default options. (https://github.com/JedWatson/react-select/discussions/5389)
         placeholder="Search for any tags..."
       />
     </div>

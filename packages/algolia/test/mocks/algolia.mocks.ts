@@ -7,4 +7,5 @@ export const getAlgoliaSearchIndexMock = (): jest.Mocked<SearchIndex> =>
     deleteObject: jest.fn(),
     search: jest.fn(),
     initIndex: jest.fn(),
+    searchForFacetValues: jest.fn(),
   } as unknown as jest.Mocked<SearchIndex>);

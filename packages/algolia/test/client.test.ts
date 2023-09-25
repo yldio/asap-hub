@@ -187,6 +187,35 @@ describe('Algolia Search Client', () => {
         'some-filters AND (__meta.type:"user" OR __meta.type:"external-author")',
     });
   });
+
+  test('Should do facet value search', async () => {
+    await algoliaSearchClient.searchForTagValues(
+      ['research-output'],
+      'query',
+      {},
+    );
+
+    expect(algoliaSearchIndex.searchForFacetValues).toBeCalledWith(
+      '_tags',
+      'query',
+      expect.objectContaining({
+        filters: '__meta.type:"research-output"',
+      }),
+    );
+  });
+  test('Should do facet value search with tags', async () => {
+    await algoliaSearchClient.searchForTagValues(['research-output'], 'query', {
+      tagFilters: ['tag1', 'tag2'],
+    });
+
+    expect(algoliaSearchIndex.searchForFacetValues).toBeCalledWith(
+      '_tags',
+      'query',
+      expect.objectContaining({
+        tagFilters: ['tag1', 'tag2'],
+      }),
+    );
+  });
 });
 
 const searchResearchOutputResponse: ClientSearchResponse<

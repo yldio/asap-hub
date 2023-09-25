@@ -511,6 +511,7 @@ describe('OutputForm', () => {
   });
   describe('edit output', () => {
     it('renders all the base fields', () => {
+      const publishDate = '2020-03-04';
       const title = 'Output Title';
       const link = 'https://example.com/output';
       const { authors } = gp2Fixtures.createOutputResponse();
@@ -518,17 +519,29 @@ describe('OutputForm', () => {
       const output = {
         ...defaultProps,
         ...gp2Fixtures.createOutputResponse(),
+        publishDate,
         title,
         link,
         authors,
       };
       render(<OutputForm {...output} />, { wrapper: StaticRouter });
+
+      const sharingStatus = screen.getByRole('group', {
+        name: /sharing status?/i,
+      });
+      userEvent.click(
+        within(sharingStatus).getByRole('radio', { name: 'Public' }),
+      );
+
       expect(
         screen.getByRole('textbox', { name: /title/i }),
       ).toHaveDisplayValue(title);
       expect(screen.getByRole('textbox', { name: /url/i })).toHaveDisplayValue(
         link,
       );
+      expect(
+        screen.getByLabelText(/public repository published date/i),
+      ).toHaveDisplayValue('2020-03-04');
       expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
       expect(screen.getByText('Tony Stark')).toBeVisible();
       expect(screen.getByRole('button', { name: /save/i })).toBeVisible();

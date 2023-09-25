@@ -21,7 +21,6 @@ import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentPropsWithRef, useEffect, useState } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
-import { getPublishDate } from '../utils';
 import { EntityMappper } from './CreateOutputPage';
 
 const { rem } = pixels;
@@ -123,7 +122,7 @@ const OutputForm: React.FC<OutputFormType> = ({
     );
 
   const [newPublishDate, setPublishDate] = useState<Date | undefined>(
-    getPublishDate(publishDate) || undefined,
+    publishDate ? new Date(publishDate) : undefined,
   );
 
   const [newAuthors, setAuthors] = useState<

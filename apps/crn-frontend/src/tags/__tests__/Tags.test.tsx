@@ -1,16 +1,25 @@
 import { render, RenderResult } from '@testing-library/react';
+import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { authTestUtils } from '@asap-hub/react-components';
+import { RecoilRoot } from 'recoil';
+
+import { WhenReady, Auth0Provider } from '../../auth/test-utils';
 
 import Tags from '../Tags';
 
 const renderTags = async (): Promise<RenderResult> =>
   render(
-    <authTestUtils.UserAuth0Provider>
-      <MemoryRouter initialEntries={['/']}>
-        <Route exact path="/" component={Tags} />
-      </MemoryRouter>
-    </authTestUtils.UserAuth0Provider>,
+    <RecoilRoot>
+      <Auth0Provider user={{}}>
+        <WhenReady>
+          <Suspense fallback="Loading...">
+            <MemoryRouter initialEntries={['/']}>
+              <Route exact path="/" component={Tags} />
+            </MemoryRouter>
+          </Suspense>
+        </WhenReady>
+      </Auth0Provider>
+    </RecoilRoot>,
   );
 
 it('renders a headline', async () => {

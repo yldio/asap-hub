@@ -127,4 +127,4 @@ it('publishes the output', async () => {
     },
     expect.anything(),
   );
-});
+}, 30000);

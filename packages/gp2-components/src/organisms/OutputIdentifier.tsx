@@ -136,7 +136,7 @@ export const OutputIdentifier: React.FC<OutputIdentifierProps> = ({
         onChange={onChangeIdentifierType}
         placeholder={'Choose an identifier...'}
         getValidationMessage={() => `Please choose an identifier.`}
-        required={true}
+        required
         info={infoText}
         enabled={enabled}
       />

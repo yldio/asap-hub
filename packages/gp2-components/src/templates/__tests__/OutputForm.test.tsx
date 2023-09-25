@@ -38,6 +38,7 @@ describe('OutputForm', () => {
         name: /sharing status?/i,
       }),
     ).toBeVisible();
+    expect(screen.getByRole('textbox', { name: /tags/i })).toBeVisible();
     expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /publish/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
@@ -482,19 +483,28 @@ describe('OutputForm', () => {
       },
     );
   });
-  describe.only('validation', () => {
-    it.each`
-      title      | label       | error
-      ${'Title'} | ${/title/i} | ${'Please fill out this field.'}
-      ${'Type'}  | ${/^type/i} | ${'Please fill out this field.'}
-    `('shows error message for missing value $title', ({ label, error }) => {
+  it.each<gp2.OutputDocumentType>(['GP2 Reports', 'Training Materials'])(
+    'should not render identifier textbox when docType = %d',
+    (type) => {
+      render(<OutputForm {...defaultProps} documentType={type} />, {
+        wrapper: StaticRouter,
+      });
+
+      expect(
+        screen.queryByRole('textbox', { name: /identifier type/i }),
+      ).not.toBeInTheDocument();
+    },
+  );
+
+  describe('validation', () => {
+    it('shows error message for missing value title', () => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
         wrapper: StaticRouter,
       });
 
-      const input = screen.getByLabelText(label);
+      const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
-      expect(screen.getByText(error)).toBeVisible();
+      expect(screen.getByText('Please fill out this field.')).toBeVisible();
     });
 
     it('shows the custom error message for a date in the future', async () => {
@@ -553,6 +563,11 @@ describe('OutputForm', () => {
       ).toHaveDisplayValue('2020-03-04');
       expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
       expect(screen.getByText('Tony Stark')).toBeVisible();
+      expect(screen.getByRole('textbox', { name: /tags/i })).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: /identifier type/i }),
+      ).toBeVisible();
+      expect(screen.getByText('None')).toBeVisible();
       expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
       expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
     });

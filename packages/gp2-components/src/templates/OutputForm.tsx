@@ -157,16 +157,18 @@ const OutputForm: React.FC<OutputFormType> = ({
     tags || [],
   );
 
-  const [identifierType, setIdentifierType] =
-    useState<gp2Model.OutputIdentifierType>(
-      doi
-        ? gp2Model.OutputIdentifierType.DOI
-        : rrid
-        ? gp2Model.OutputIdentifierType.RRID
-        : accessionNumber
-        ? gp2Model.OutputIdentifierType.AccessionNumber
-        : gp2Model.OutputIdentifierType.Empty,
-    );
+  const identifierType: gp2Model.OutputIdentifierType = doi
+    ? gp2Model.OutputIdentifierType.DOI
+    : rrid
+    ? gp2Model.OutputIdentifierType.RRID
+    : accessionNumber
+    ? gp2Model.OutputIdentifierType.AccessionNumber
+    : title // if it's editing
+    ? gp2Model.OutputIdentifierType.None
+    : gp2Model.OutputIdentifierType.Empty;
+  const [newIdentifierType, setNewIdentifierType] =
+    useState<gp2Model.OutputIdentifierType>(identifierType);
+
   const [identifier, setIdentifier] = useState<string>(
     doi || rrid || accessionNumber || '',
   );
@@ -214,6 +216,7 @@ const OutputForm: React.FC<OutputFormType> = ({
     isFieldDirty(link, newLink) ||
     isFieldDirty(type, newType) ||
     isFieldDirty(subtype, newSubtype) ||
+    isFieldDirty(identifierType, newIdentifierType) ||
     (authors
       ? !authors.every(
           (author, index) =>
@@ -398,8 +401,8 @@ const OutputForm: React.FC<OutputFormType> = ({
                 documentType={documentType}
                 identifier={identifier}
                 setIdentifier={setIdentifier}
-                identifierType={identifierType}
-                setIdentifierType={setIdentifierType}
+                identifierType={newIdentifierType}
+                setIdentifierType={setNewIdentifierType}
                 enabled={!isSaving}
               />
             ) : null}

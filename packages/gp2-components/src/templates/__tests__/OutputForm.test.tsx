@@ -632,13 +632,21 @@ describe('OutputForm', () => {
       { id: '2', name: 'Adenosine' },
       { id: '3', name: 'Adrenal' },
     ];
-    const renderWithSuggestions = (suggestions = defaultSuggestions) =>
-      render(<OutputForm {...defaultProps} suggestions={suggestions} />, {
-        wrapper: StaticRouter,
-      });
+
+    const defaultTags = [{ id: '5', name: 'Neurology' }];
+    const renderWithSuggestions = (
+      suggestions = defaultSuggestions,
+      tags = defaultTags,
+    ) =>
+      render(
+        <OutputForm {...defaultProps} suggestions={suggestions} tags={tags} />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
 
     it('displays tags empty', () => {
-      renderWithSuggestions(undefined);
+      renderWithSuggestions(defaultSuggestions, []);
       const textbox = screen.getByRole('textbox', {
         name: /tags/i,
       });
@@ -653,6 +661,18 @@ describe('OutputForm', () => {
       expect(screen.getByText('2D Cultures')).toBeVisible();
       expect(screen.getByText('Adenosine')).toBeVisible();
       expect(screen.getByText('Adrenal')).toBeVisible();
+    });
+
+    it('displays existing tags', () => {
+      renderWithSuggestions();
+      expect(screen.getByText('Neurology')).toBeVisible();
+    });
+    it('update tags after adding one', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/additional tags/i));
+      userEvent.click(screen.getByText('2D Cultures'));
+      expect(screen.getByText('Neurology')).toBeVisible();
+      expect(screen.getByText('2D Cultures')).toBeVisible();
     });
   });
   describe('identifierType', () => {

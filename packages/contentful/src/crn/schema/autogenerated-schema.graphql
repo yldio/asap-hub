@@ -206,12 +206,22 @@ enum AssetLinkingCollectionsNewsCollectionOrder {
 }
 
 enum AssetLinkingCollectionsTutorialsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   linkText_ASC
   linkText_DESC
   link_ASC
   link_DESC
   publishDate_ASC
   publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
   shortText_ASC
   shortText_DESC
   sys_firstPublishedAt_ASC
@@ -224,6 +234,8 @@ enum AssetLinkingCollectionsTutorialsCollectionOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 enum AssetLinkingCollectionsUsersCollectionOrder {
@@ -852,12 +864,22 @@ type DiscoverTrainingCollection {
 }
 
 enum DiscoverTrainingCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   linkText_ASC
   linkText_DESC
   link_ASC
   link_DESC
   publishDate_ASC
   publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
   shortText_ASC
   shortText_DESC
   sys_firstPublishedAt_ASC
@@ -870,6 +892,8 @@ enum DiscoverTrainingCollectionOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 interface Entry {
@@ -1209,6 +1233,7 @@ input EventsFilter {
 type EventsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [EventsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+  tutorialsCollection(limit: Int = 100, locale: String, order: [EventsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
 }
 
 enum EventsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -1252,6 +1277,39 @@ enum EventsLinkingCollectionsResearchOutputsCollectionOrder {
   title_DESC
   type_ASC
   type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+enum EventsLinkingCollectionsTutorialsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  shortText_ASC
+  shortText_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
 }
@@ -1442,6 +1500,7 @@ type ExternalAuthorsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+  tutorialsCollection(limit: Int = 100, locale: String, order: [ExternalAuthorsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
 }
 
 enum ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder {
@@ -1496,6 +1555,39 @@ enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
   title_DESC
   type_ASC
   type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+enum ExternalAuthorsLinkingCollectionsTutorialsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  shortText_ASC
+  shortText_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
 }
@@ -3692,6 +3784,7 @@ input ResearchTagsFilter {
 type ResearchTagsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+  tutorialsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
 }
 
 enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
@@ -3735,6 +3828,39 @@ enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   title_DESC
   type_ASC
   type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  shortText_ASC
+  shortText_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
 }
@@ -4016,6 +4142,7 @@ type TeamsLinkingCollections {
   interestGroupsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsInterestGroupsCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
   teamMembershipCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTeamMembershipCollectionOrder], preview: Boolean, skip: Int = 0): TeamMembershipCollection
+  tutorialsCollection(limit: Int = 100, locale: String, order: [TeamsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
 }
 
 enum TeamsLinkingCollectionsDiscoverCollectionOrder {
@@ -4121,6 +4248,39 @@ enum TeamsLinkingCollectionsTeamMembershipCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+enum TeamsLinkingCollectionsTutorialsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  shortText_ASC
+  shortText_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
 enum TeamsOrder {
   applicationNumber_ASC
   applicationNumber_DESC
@@ -4164,17 +4324,51 @@ enum TeamsToolsCollectionOrder {
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials)"""
 type Tutorials implements Entry {
+  addedDate(locale: String): DateTime
+  asapFunded(locale: String): String
+  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: TutorialsAuthorsFilter): TutorialsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
+  datePublished(locale: String): DateTime
+  lastUpdated(locale: String): DateTime
   link(locale: String): String
   linkText(locale: String): String
   linkedFrom(allowedLocales: [String]): TutorialsLinkingCollections
   publishDate(locale: String): DateTime
+  relatedEventsCollection(limit: Int = 100, locale: String, order: [TutorialsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): TutorialsRelatedEventsCollection
+  relatedTutorialsCollection(limit: Int = 100, locale: String, order: [TutorialsRelatedTutorialsCollectionOrder], preview: Boolean, skip: Int = 0, where: TutorialsFilter): TutorialsRelatedTutorialsCollection
+  sharingStatus(locale: String): String
   shortText(locale: String): String
   sys: Sys!
+  tagsCollection(limit: Int = 100, locale: String, order: [TutorialsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: ResearchTagsFilter): TutorialsTagsCollection
+  teamsCollection(limit: Int = 100, locale: String, order: [TutorialsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, where: TeamsFilter): TutorialsTeamsCollection
   text(locale: String): TutorialsText
   thumbnail(locale: String, preview: Boolean): Asset
   title(locale: String): String
+  usedInAPublication(locale: String): String
 }
+
+type TutorialsAuthorsCollection {
+  items: [TutorialsAuthorsItem]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input TutorialsAuthorsFilter {
+  AND: [TutorialsAuthorsFilter]
+  OR: [TutorialsAuthorsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  orcid: String
+  orcid_contains: String
+  orcid_exists: Boolean
+  orcid_in: [String]
+  orcid_not: String
+  orcid_not_contains: String
+  orcid_not_in: [String]
+  sys: SysFilter
+}
+
+union TutorialsAuthorsItem = ExternalAuthors | Users
 
 type TutorialsCollection {
   items: [Tutorials]!
@@ -4186,7 +4380,43 @@ type TutorialsCollection {
 input TutorialsFilter {
   AND: [TutorialsFilter]
   OR: [TutorialsFilter]
+  addedDate: DateTime
+  addedDate_exists: Boolean
+  addedDate_gt: DateTime
+  addedDate_gte: DateTime
+  addedDate_in: [DateTime]
+  addedDate_lt: DateTime
+  addedDate_lte: DateTime
+  addedDate_not: DateTime
+  addedDate_not_in: [DateTime]
+  asapFunded: String
+  asapFunded_contains: String
+  asapFunded_exists: Boolean
+  asapFunded_in: [String]
+  asapFunded_not: String
+  asapFunded_not_contains: String
+  asapFunded_not_in: [String]
+  authors: cfauthorsMultiTypeNestedFilter
+  authorsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
+  datePublished: DateTime
+  datePublished_exists: Boolean
+  datePublished_gt: DateTime
+  datePublished_gte: DateTime
+  datePublished_in: [DateTime]
+  datePublished_lt: DateTime
+  datePublished_lte: DateTime
+  datePublished_not: DateTime
+  datePublished_not_in: [DateTime]
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   link: String
   linkText: String
   linkText_contains: String
@@ -4210,6 +4440,17 @@ input TutorialsFilter {
   publishDate_lte: DateTime
   publishDate_not: DateTime
   publishDate_not_in: [DateTime]
+  relatedEvents: cfEventsNestedFilter
+  relatedEventsCollection_exists: Boolean
+  relatedTutorials: cfTutorialsNestedFilter
+  relatedTutorialsCollection_exists: Boolean
+  sharingStatus: String
+  sharingStatus_contains: String
+  sharingStatus_exists: Boolean
+  sharingStatus_in: [String]
+  sharingStatus_not: String
+  sharingStatus_not_contains: String
+  sharingStatus_not_in: [String]
   shortText: String
   shortText_contains: String
   shortText_exists: Boolean
@@ -4218,6 +4459,10 @@ input TutorialsFilter {
   shortText_not_contains: String
   shortText_not_in: [String]
   sys: SysFilter
+  tags: cfResearchTagsNestedFilter
+  tagsCollection_exists: Boolean
+  teams: cfTeamsNestedFilter
+  teamsCollection_exists: Boolean
   text_contains: String
   text_exists: Boolean
   text_not_contains: String
@@ -4229,11 +4474,19 @@ input TutorialsFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+  usedInAPublication: String
+  usedInAPublication_contains: String
+  usedInAPublication_exists: Boolean
+  usedInAPublication_in: [String]
+  usedInAPublication_not: String
+  usedInAPublication_not_contains: String
+  usedInAPublication_not_in: [String]
 }
 
 type TutorialsLinkingCollections {
   discoverCollection(limit: Int = 100, locale: String, order: [TutorialsLinkingCollectionsDiscoverCollectionOrder], preview: Boolean, skip: Int = 0): DiscoverCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  tutorialsCollection(limit: Int = 100, locale: String, order: [TutorialsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
 }
 
 enum TutorialsLinkingCollectionsDiscoverCollectionOrder {
@@ -4247,13 +4500,23 @@ enum TutorialsLinkingCollectionsDiscoverCollectionOrder {
   sys_publishedVersion_DESC
 }
 
-enum TutorialsOrder {
+enum TutorialsLinkingCollectionsTutorialsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
   linkText_ASC
   linkText_DESC
   link_ASC
   link_DESC
   publishDate_ASC
   publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
   shortText_ASC
   shortText_DESC
   sys_firstPublishedAt_ASC
@@ -4266,6 +4529,183 @@ enum TutorialsOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+enum TutorialsOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  shortText_ASC
+  shortText_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+type TutorialsRelatedEventsCollection {
+  items: [Events]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum TutorialsRelatedEventsCollectionOrder {
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+type TutorialsRelatedTutorialsCollection {
+  items: [Tutorials]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum TutorialsRelatedTutorialsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  shortText_ASC
+  shortText_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+type TutorialsTagsCollection {
+  items: [ResearchTags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum TutorialsTagsCollectionOrder {
+  category_ASC
+  category_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type TutorialsTeamsCollection {
+  items: [Teams]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum TutorialsTeamsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  displayName_ASC
+  displayName_DESC
+  inactiveSince_ASC
+  inactiveSince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 type TutorialsText {
@@ -4629,6 +5069,7 @@ type UsersLinkingCollections {
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
   interestGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsInterestGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): InterestGroupLeadersCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0): ResearchOutputsCollection
+  tutorialsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0): TutorialsCollection
   workingGroupLeadersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupLeadersCollection
   workingGroupMembersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembersCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupMembersCollection
 }
@@ -4711,6 +5152,39 @@ enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
   title_DESC
   type_ASC
   type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
+}
+
+enum UsersLinkingCollectionsTutorialsCollectionOrder {
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  datePublished_ASC
+  datePublished_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  shortText_ASC
+  shortText_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
 }
@@ -6026,7 +6500,42 @@ input cfTeamsNestedFilter {
 input cfTutorialsNestedFilter {
   AND: [cfTutorialsNestedFilter]
   OR: [cfTutorialsNestedFilter]
+  addedDate: DateTime
+  addedDate_exists: Boolean
+  addedDate_gt: DateTime
+  addedDate_gte: DateTime
+  addedDate_in: [DateTime]
+  addedDate_lt: DateTime
+  addedDate_lte: DateTime
+  addedDate_not: DateTime
+  addedDate_not_in: [DateTime]
+  asapFunded: String
+  asapFunded_contains: String
+  asapFunded_exists: Boolean
+  asapFunded_in: [String]
+  asapFunded_not: String
+  asapFunded_not_contains: String
+  asapFunded_not_in: [String]
+  authorsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
+  datePublished: DateTime
+  datePublished_exists: Boolean
+  datePublished_gt: DateTime
+  datePublished_gte: DateTime
+  datePublished_in: [DateTime]
+  datePublished_lt: DateTime
+  datePublished_lte: DateTime
+  datePublished_not: DateTime
+  datePublished_not_in: [DateTime]
+  lastUpdated: DateTime
+  lastUpdated_exists: Boolean
+  lastUpdated_gt: DateTime
+  lastUpdated_gte: DateTime
+  lastUpdated_in: [DateTime]
+  lastUpdated_lt: DateTime
+  lastUpdated_lte: DateTime
+  lastUpdated_not: DateTime
+  lastUpdated_not_in: [DateTime]
   link: String
   linkText: String
   linkText_contains: String
@@ -6050,6 +6559,15 @@ input cfTutorialsNestedFilter {
   publishDate_lte: DateTime
   publishDate_not: DateTime
   publishDate_not_in: [DateTime]
+  relatedEventsCollection_exists: Boolean
+  relatedTutorialsCollection_exists: Boolean
+  sharingStatus: String
+  sharingStatus_contains: String
+  sharingStatus_exists: Boolean
+  sharingStatus_in: [String]
+  sharingStatus_not: String
+  sharingStatus_not_contains: String
+  sharingStatus_not_in: [String]
   shortText: String
   shortText_contains: String
   shortText_exists: Boolean
@@ -6058,6 +6576,8 @@ input cfTutorialsNestedFilter {
   shortText_not_contains: String
   shortText_not_in: [String]
   sys: SysFilter
+  tagsCollection_exists: Boolean
+  teamsCollection_exists: Boolean
   text_contains: String
   text_exists: Boolean
   text_not_contains: String
@@ -6069,6 +6589,13 @@ input cfTutorialsNestedFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+  usedInAPublication: String
+  usedInAPublication_contains: String
+  usedInAPublication_exists: Boolean
+  usedInAPublication_in: [String]
+  usedInAPublication_not: String
+  usedInAPublication_not_contains: String
+  usedInAPublication_not_in: [String]
 }
 
 input cfUsersNestedFilter {

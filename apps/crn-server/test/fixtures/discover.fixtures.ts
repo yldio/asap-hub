@@ -4,6 +4,10 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
+import {
+  getContentfulGraphqlTutorial,
+  getTutorialsDataObject,
+} from './tutorials.fixtures';
 
 const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
   {
@@ -67,18 +71,7 @@ const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
 
 export const getDiscoverDataObject = (): DiscoverDataObject => ({
   aboutUs: '<p>content</p>',
-  training: [
-    {
-      id: 'uuid-training-1',
-      created: '2020-09-24T11:06:27.164Z',
-      title: 'Title',
-      text: '<p>Content</p>',
-      link: 'https://hub.asap.science',
-      linkText: 'ASAP Training',
-      shortText: 'Short text',
-      thumbnail: `${baseUrl}/api/assets/${appName}/thumbnail-uuid-1`,
-    },
-  ],
+  training: [getTutorialsDataObject()],
   members: getDiscoverMembersResponse(),
   membersTeamId: 'uuid-team-1',
   scientificAdvisoryBoard: getDiscoverMembersResponse('sab-'),
@@ -219,44 +212,7 @@ export const getContentfulGraphqlDiscover = (props = {}) => ({
     },
   },
   trainingCollection: {
-    items: [
-      {
-        sys: {
-          id: 'uuid-training-1',
-        },
-        publishDate: '2020-09-24T11:06:27.164Z',
-        link: 'https://hub.asap.science',
-        linkText: 'ASAP Training',
-        text: {
-          json: {
-            nodeType: 'document',
-            data: {},
-            content: [
-              {
-                nodeType: 'paragraph',
-                data: {},
-                content: [
-                  { nodeType: 'text', value: 'Content', marks: [], data: {} },
-                ],
-              },
-            ],
-          },
-          links: {
-            entries: {
-              inline: [],
-            },
-            assets: {
-              block: [],
-            },
-          },
-        },
-        title: 'Title',
-        shortText: 'Short text',
-        thumbnail: {
-          url: `${baseUrl}/api/assets/${appName}/thumbnail-uuid-1`,
-        },
-      },
-    ],
+    items: [getContentfulGraphqlTutorial()],
   },
   scientificAdvisoryBoardCollection: {
     items: [

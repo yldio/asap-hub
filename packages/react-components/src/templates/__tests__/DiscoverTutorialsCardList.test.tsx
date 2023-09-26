@@ -1,4 +1,4 @@
-import { createNewsResponseWithType } from '@asap-hub/fixtures';
+import { createTutorialsResponse } from '@asap-hub/fixtures';
 import { render, screen } from '@testing-library/react';
 
 import DiscoverTutorialsCardList from '../DiscoverTutorialsCardList';
@@ -8,7 +8,7 @@ it('renders the provided title and subtitle', () => {
     <DiscoverTutorialsCardList
       title="Tutorials"
       subtitle="Explore our tutorials to understand how you can use the Hub and work with the tools."
-      news={[]}
+      tutorials={[]}
     />,
   );
 
@@ -24,9 +24,9 @@ it('renders news items', () => {
     <DiscoverTutorialsCardList
       title="Tutorials"
       subtitle="Explore our tutorials to understand how you can use the Hub and work with the tools."
-      news={[
-        createNewsResponseWithType({ key: 'First One', type: 'Tutorial' }),
-        createNewsResponseWithType({ key: 'Second One', type: 'Tutorial' }),
+      tutorials={[
+        createTutorialsResponse({ key: 'First Tutorial' }),
+        createTutorialsResponse({ key: 'Second Tutorial' }),
       ]}
     />,
   );
@@ -34,5 +34,5 @@ it('renders news items', () => {
     screen
       .getAllByRole('heading', { level: 4 })
       .map(({ textContent }) => textContent),
-  ).toEqual(['Tutorial First One title', 'Tutorial Second One title']);
+  ).toEqual(['First Tutorial title', 'Second Tutorial title']);
 });

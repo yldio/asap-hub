@@ -352,12 +352,22 @@ export enum AssetLinkingCollectionsNewsCollectionOrder {
 }
 
 export enum AssetLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkTextAsc = 'linkText_ASC',
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
   ShortTextAsc = 'shortText_ASC',
   ShortTextDesc = 'shortText_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -370,6 +380,8 @@ export enum AssetLinkingCollectionsTutorialsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
 export enum AssetLinkingCollectionsUsersCollectionOrder {
@@ -1147,12 +1159,22 @@ export type DiscoverTrainingCollection = {
 };
 
 export enum DiscoverTrainingCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkTextAsc = 'linkText_ASC',
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
   ShortTextAsc = 'shortText_ASC',
   ShortTextDesc = 'shortText_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -1165,6 +1187,8 @@ export enum DiscoverTrainingCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
 export type Entry = {
@@ -1701,6 +1725,7 @@ export type EventsFilter = {
 export type EventsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  tutorialsCollection?: Maybe<TutorialsCollection>;
 };
 
 export type EventsLinkingCollectionsEntryCollectionArgs = {
@@ -1715,6 +1740,16 @@ export type EventsLinkingCollectionsResearchOutputsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<EventsLinkingCollectionsResearchOutputsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type EventsLinkingCollectionsTutorialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<EventsLinkingCollectionsTutorialsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -1761,6 +1796,39 @@ export enum EventsLinkingCollectionsResearchOutputsCollectionOrder {
   TitleDesc = 'title_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum EventsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
   UsedInAPublicationAsc = 'usedInAPublication_ASC',
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
@@ -1966,6 +2034,7 @@ export type ExternalAuthorsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  tutorialsCollection?: Maybe<TutorialsCollection>;
 };
 
 export type ExternalAuthorsLinkingCollectionsEntryCollectionArgs = {
@@ -1994,6 +2063,16 @@ export type ExternalAuthorsLinkingCollectionsResearchOutputsCollectionArgs = {
     Array<
       InputMaybe<ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder>
     >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ExternalAuthorsLinkingCollectionsTutorialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ExternalAuthorsLinkingCollectionsTutorialsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -2051,6 +2130,39 @@ export enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
   TitleDesc = 'title_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum ExternalAuthorsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
   UsedInAPublicationAsc = 'usedInAPublication_ASC',
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
@@ -5566,6 +5678,7 @@ export type ResearchTagsFilter = {
 export type ResearchTagsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  tutorialsCollection?: Maybe<TutorialsCollection>;
 };
 
 export type ResearchTagsLinkingCollectionsEntryCollectionArgs = {
@@ -5582,6 +5695,16 @@ export type ResearchTagsLinkingCollectionsResearchOutputsCollectionArgs = {
     Array<
       InputMaybe<ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder>
     >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type ResearchTagsLinkingCollectionsTutorialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchTagsLinkingCollectionsTutorialsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -5628,6 +5751,39 @@ export enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   TitleDesc = 'title_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
   UsedInAPublicationAsc = 'usedInAPublication_ASC',
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
@@ -6006,6 +6162,7 @@ export type TeamsLinkingCollections = {
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   teamMembershipCollection?: Maybe<TeamMembershipCollection>;
+  tutorialsCollection?: Maybe<TutorialsCollection>;
 };
 
 export type TeamsLinkingCollectionsDiscoverCollectionArgs = {
@@ -6060,6 +6217,16 @@ export type TeamsLinkingCollectionsTeamMembershipCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<TeamsLinkingCollectionsTeamMembershipCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type TeamsLinkingCollectionsTutorialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsTutorialsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -6168,6 +6335,39 @@ export enum TeamsLinkingCollectionsTeamMembershipCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum TeamsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
 export enum TeamsOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
   ApplicationNumberDesc = 'applicationNumber_DESC',
@@ -6211,16 +6411,56 @@ export enum TeamsToolsCollectionOrder {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
 export type Tutorials = Entry & {
+  addedDate?: Maybe<Scalars['DateTime']>;
+  asapFunded?: Maybe<Scalars['String']>;
+  authorsCollection?: Maybe<TutorialsAuthorsCollection>;
   contentfulMetadata: ContentfulMetadata;
+  datePublished?: Maybe<Scalars['DateTime']>;
+  lastUpdated?: Maybe<Scalars['DateTime']>;
   link?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<TutorialsLinkingCollections>;
   publishDate?: Maybe<Scalars['DateTime']>;
+  relatedEventsCollection?: Maybe<TutorialsRelatedEventsCollection>;
+  relatedTutorialsCollection?: Maybe<TutorialsRelatedTutorialsCollection>;
+  sharingStatus?: Maybe<Scalars['String']>;
   shortText?: Maybe<Scalars['String']>;
   sys: Sys;
+  tagsCollection?: Maybe<TutorialsTagsCollection>;
+  teamsCollection?: Maybe<TutorialsTeamsCollection>;
   text?: Maybe<TutorialsText>;
   thumbnail?: Maybe<Asset>;
   title?: Maybe<Scalars['String']>;
+  usedInAPublication?: Maybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsAddedDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsAsapFundedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsAuthorsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TutorialsAuthorsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsDatePublishedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsLastUpdatedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
@@ -6244,8 +6484,55 @@ export type TutorialsPublishDateArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsRelatedEventsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TutorialsRelatedEventsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<EventsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsRelatedTutorialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TutorialsRelatedTutorialsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TutorialsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsSharingStatusArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
 export type TutorialsShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsTagsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TutorialsTagsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsTeamsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TutorialsTeamsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TeamsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
@@ -6264,6 +6551,34 @@ export type TutorialsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsUsedInAPublicationArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+export type TutorialsAuthorsCollection = {
+  items: Array<Maybe<TutorialsAuthorsItem>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type TutorialsAuthorsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<TutorialsAuthorsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<TutorialsAuthorsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type TutorialsAuthorsItem = ExternalAuthors | Users;
+
 export type TutorialsCollection = {
   items: Array<Maybe<Tutorials>>;
   limit: Scalars['Int'];
@@ -6274,7 +6589,43 @@ export type TutorialsCollection = {
 export type TutorialsFilter = {
   AND?: InputMaybe<Array<InputMaybe<TutorialsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<TutorialsFilter>>>;
+  addedDate?: InputMaybe<Scalars['DateTime']>;
+  addedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  addedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  addedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  asapFunded?: InputMaybe<Scalars['String']>;
+  asapFunded_contains?: InputMaybe<Scalars['String']>;
+  asapFunded_exists?: InputMaybe<Scalars['Boolean']>;
+  asapFunded_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  asapFunded_not?: InputMaybe<Scalars['String']>;
+  asapFunded_not_contains?: InputMaybe<Scalars['String']>;
+  asapFunded_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  authors?: InputMaybe<CfauthorsMultiTypeNestedFilter>;
+  authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  datePublished?: InputMaybe<Scalars['DateTime']>;
+  datePublished_exists?: InputMaybe<Scalars['Boolean']>;
+  datePublished_gt?: InputMaybe<Scalars['DateTime']>;
+  datePublished_gte?: InputMaybe<Scalars['DateTime']>;
+  datePublished_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  datePublished_lt?: InputMaybe<Scalars['DateTime']>;
+  datePublished_lte?: InputMaybe<Scalars['DateTime']>;
+  datePublished_not?: InputMaybe<Scalars['DateTime']>;
+  datePublished_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   link?: InputMaybe<Scalars['String']>;
   linkText?: InputMaybe<Scalars['String']>;
   linkText_contains?: InputMaybe<Scalars['String']>;
@@ -6298,6 +6649,17 @@ export type TutorialsFilter = {
   publishDate_lte?: InputMaybe<Scalars['DateTime']>;
   publishDate_not?: InputMaybe<Scalars['DateTime']>;
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  relatedEvents?: InputMaybe<CfEventsNestedFilter>;
+  relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  relatedTutorials?: InputMaybe<CfTutorialsNestedFilter>;
+  relatedTutorialsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sharingStatus?: InputMaybe<Scalars['String']>;
+  sharingStatus_contains?: InputMaybe<Scalars['String']>;
+  sharingStatus_exists?: InputMaybe<Scalars['Boolean']>;
+  sharingStatus_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sharingStatus_not?: InputMaybe<Scalars['String']>;
+  sharingStatus_not_contains?: InputMaybe<Scalars['String']>;
+  sharingStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   shortText?: InputMaybe<Scalars['String']>;
   shortText_contains?: InputMaybe<Scalars['String']>;
   shortText_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6306,6 +6668,10 @@ export type TutorialsFilter = {
   shortText_not_contains?: InputMaybe<Scalars['String']>;
   shortText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+  tags?: InputMaybe<CfResearchTagsNestedFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  teams?: InputMaybe<CfTeamsNestedFilter>;
+  teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   text_contains?: InputMaybe<Scalars['String']>;
   text_exists?: InputMaybe<Scalars['Boolean']>;
   text_not_contains?: InputMaybe<Scalars['String']>;
@@ -6317,11 +6683,19 @@ export type TutorialsFilter = {
   title_not?: InputMaybe<Scalars['String']>;
   title_not_contains?: InputMaybe<Scalars['String']>;
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  usedInAPublication?: InputMaybe<Scalars['String']>;
+  usedInAPublication_contains?: InputMaybe<Scalars['String']>;
+  usedInAPublication_exists?: InputMaybe<Scalars['Boolean']>;
+  usedInAPublication_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  usedInAPublication_not?: InputMaybe<Scalars['String']>;
+  usedInAPublication_not_contains?: InputMaybe<Scalars['String']>;
+  usedInAPublication_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type TutorialsLinkingCollections = {
   discoverCollection?: Maybe<DiscoverCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  tutorialsCollection?: Maybe<TutorialsCollection>;
 };
 
 export type TutorialsLinkingCollectionsDiscoverCollectionArgs = {
@@ -6341,6 +6715,16 @@ export type TutorialsLinkingCollectionsEntryCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
 };
 
+export type TutorialsLinkingCollectionsTutorialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TutorialsLinkingCollectionsTutorialsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
 export enum TutorialsLinkingCollectionsDiscoverCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
@@ -6352,13 +6736,23 @@ export enum TutorialsLinkingCollectionsDiscoverCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-export enum TutorialsOrder {
+export enum TutorialsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
   LinkTextAsc = 'linkText_ASC',
   LinkTextDesc = 'linkText_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
   PublishDateAsc = 'publishDate_ASC',
   PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
   ShortTextAsc = 'shortText_ASC',
   ShortTextDesc = 'shortText_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -6371,6 +6765,183 @@ export enum TutorialsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum TutorialsOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export type TutorialsRelatedEventsCollection = {
+  items: Array<Maybe<Events>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum TutorialsRelatedEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export type TutorialsRelatedTutorialsCollection = {
+  items: Array<Maybe<Tutorials>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum TutorialsRelatedTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export type TutorialsTagsCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum TutorialsTagsCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type TutorialsTeamsCollection = {
+  items: Array<Maybe<Teams>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum TutorialsTeamsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
 export type TutorialsText = {
@@ -6962,6 +7533,7 @@ export type UsersLinkingCollections = {
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
   interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  tutorialsCollection?: Maybe<TutorialsCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
 };
@@ -7010,6 +7582,16 @@ export type UsersLinkingCollectionsResearchOutputsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<UsersLinkingCollectionsResearchOutputsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type UsersLinkingCollectionsTutorialsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsTutorialsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -7113,6 +7695,39 @@ export enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
   TitleDesc = 'title_DESC',
   TypeAsc = 'type_ASC',
   TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum UsersLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
   UsedInAPublicationAsc = 'usedInAPublication_ASC',
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
@@ -8645,7 +9260,42 @@ export type CfTeamsNestedFilter = {
 export type CfTutorialsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfTutorialsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfTutorialsNestedFilter>>>;
+  addedDate?: InputMaybe<Scalars['DateTime']>;
+  addedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  addedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  addedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  addedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not?: InputMaybe<Scalars['DateTime']>;
+  addedDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  asapFunded?: InputMaybe<Scalars['String']>;
+  asapFunded_contains?: InputMaybe<Scalars['String']>;
+  asapFunded_exists?: InputMaybe<Scalars['Boolean']>;
+  asapFunded_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  asapFunded_not?: InputMaybe<Scalars['String']>;
+  asapFunded_not_contains?: InputMaybe<Scalars['String']>;
+  asapFunded_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  datePublished?: InputMaybe<Scalars['DateTime']>;
+  datePublished_exists?: InputMaybe<Scalars['Boolean']>;
+  datePublished_gt?: InputMaybe<Scalars['DateTime']>;
+  datePublished_gte?: InputMaybe<Scalars['DateTime']>;
+  datePublished_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  datePublished_lt?: InputMaybe<Scalars['DateTime']>;
+  datePublished_lte?: InputMaybe<Scalars['DateTime']>;
+  datePublished_not?: InputMaybe<Scalars['DateTime']>;
+  datePublished_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  lastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  lastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   link?: InputMaybe<Scalars['String']>;
   linkText?: InputMaybe<Scalars['String']>;
   linkText_contains?: InputMaybe<Scalars['String']>;
@@ -8669,6 +9319,15 @@ export type CfTutorialsNestedFilter = {
   publishDate_lte?: InputMaybe<Scalars['DateTime']>;
   publishDate_not?: InputMaybe<Scalars['DateTime']>;
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  relatedEventsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  relatedTutorialsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sharingStatus?: InputMaybe<Scalars['String']>;
+  sharingStatus_contains?: InputMaybe<Scalars['String']>;
+  sharingStatus_exists?: InputMaybe<Scalars['Boolean']>;
+  sharingStatus_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sharingStatus_not?: InputMaybe<Scalars['String']>;
+  sharingStatus_not_contains?: InputMaybe<Scalars['String']>;
+  sharingStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   shortText?: InputMaybe<Scalars['String']>;
   shortText_contains?: InputMaybe<Scalars['String']>;
   shortText_exists?: InputMaybe<Scalars['Boolean']>;
@@ -8677,6 +9336,8 @@ export type CfTutorialsNestedFilter = {
   shortText_not_contains?: InputMaybe<Scalars['String']>;
   shortText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  teamsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   text_contains?: InputMaybe<Scalars['String']>;
   text_exists?: InputMaybe<Scalars['Boolean']>;
   text_not_contains?: InputMaybe<Scalars['String']>;
@@ -8688,6 +9349,13 @@ export type CfTutorialsNestedFilter = {
   title_not?: InputMaybe<Scalars['String']>;
   title_not_contains?: InputMaybe<Scalars['String']>;
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  usedInAPublication?: InputMaybe<Scalars['String']>;
+  usedInAPublication_contains?: InputMaybe<Scalars['String']>;
+  usedInAPublication_exists?: InputMaybe<Scalars['Boolean']>;
+  usedInAPublication_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  usedInAPublication_not?: InputMaybe<Scalars['String']>;
+  usedInAPublication_not_contains?: InputMaybe<Scalars['String']>;
+  usedInAPublication_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CfUsersNestedFilter = {
@@ -9583,7 +10251,16 @@ export type FetchDiscoverQuery = {
             Maybe<
               Pick<
                 Tutorials,
-                'publishDate' | 'title' | 'shortText' | 'link' | 'linkText'
+                | 'addedDate'
+                | 'lastUpdated'
+                | 'datePublished'
+                | 'asapFunded'
+                | 'usedInAPublication'
+                | 'sharingStatus'
+                | 'title'
+                | 'shortText'
+                | 'link'
+                | 'linkText'
               > & {
                 sys: Pick<Sys, 'id'>;
                 thumbnail?: Maybe<Pick<Asset, 'url'>>;
@@ -9700,6 +10377,65 @@ export type FetchDiscoverQuery = {
                     };
                   }
                 >;
+                authorsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      | ({ __typename: 'ExternalAuthors' } & Pick<
+                          ExternalAuthors,
+                          'name' | 'orcid'
+                        > & { sys: Pick<Sys, 'id'> })
+                      | ({ __typename: 'Users' } & Pick<
+                          Users,
+                          | 'firstName'
+                          | 'lastName'
+                          | 'email'
+                          | 'onboarded'
+                          | 'orcid'
+                          | 'alumniSinceDate'
+                        > & {
+                            sys: Pick<Sys, 'id'>;
+                            avatar?: Maybe<Pick<Asset, 'url'>>;
+                          })
+                    >
+                  >;
+                }>;
+                teamsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
+                  >;
+                }>;
+                tagsCollection?: Maybe<{
+                  items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
+                }>;
+                linkedFrom?: Maybe<{
+                  tutorialsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Tutorials, 'title' | 'addedDate'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }>;
+                }>;
+                relatedTutorialsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Tutorials, 'title' | 'addedDate'> & {
+                        sys: Pick<Sys, 'id'>;
+                      }
+                    >
+                  >;
+                }>;
+                relatedEventsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<Events, 'title' | 'endDate'> & {
+                        sys: Pick<Sys, 'id'>;
+                      }
+                    >
+                  >;
+                }>;
               }
             >
           >;
@@ -14423,7 +15159,16 @@ export type FetchTeamsQuery = {
 
 export type TutorialsContentFragment = Pick<
   Tutorials,
-  'publishDate' | 'title' | 'shortText' | 'link' | 'linkText'
+  | 'addedDate'
+  | 'lastUpdated'
+  | 'datePublished'
+  | 'asapFunded'
+  | 'usedInAPublication'
+  | 'sharingStatus'
+  | 'title'
+  | 'shortText'
+  | 'link'
+  | 'linkText'
 > & {
   sys: Pick<Sys, 'id'>;
   thumbnail?: Maybe<Pick<Asset, 'url'>>;
@@ -14490,6 +15235,46 @@ export type TutorialsContentFragment = Pick<
       };
     }
   >;
+  authorsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        | ({ __typename: 'ExternalAuthors' } & Pick<
+            ExternalAuthors,
+            'name' | 'orcid'
+          > & { sys: Pick<Sys, 'id'> })
+        | ({ __typename: 'Users' } & Pick<
+            Users,
+            | 'firstName'
+            | 'lastName'
+            | 'email'
+            | 'onboarded'
+            | 'orcid'
+            | 'alumniSinceDate'
+          > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
+      >
+    >;
+  }>;
+  teamsCollection?: Maybe<{
+    items: Array<Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>>;
+  }>;
+  tagsCollection?: Maybe<{ items: Array<Maybe<Pick<ResearchTags, 'name'>>> }>;
+  linkedFrom?: Maybe<{
+    tutorialsCollection?: Maybe<{
+      items: Array<
+        Maybe<Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }>
+      >;
+    }>;
+  }>;
+  relatedTutorialsCollection?: Maybe<{
+    items: Array<
+      Maybe<Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }>
+    >;
+  }>;
+  relatedEventsCollection?: Maybe<{
+    items: Array<
+      Maybe<Pick<Events, 'title' | 'endDate'> & { sys: Pick<Sys, 'id'> }>
+    >;
+  }>;
 };
 
 export type FetchTutorialByIdQueryVariables = Exact<{
@@ -14500,7 +15285,16 @@ export type FetchTutorialByIdQuery = {
   tutorials?: Maybe<
     Pick<
       Tutorials,
-      'publishDate' | 'title' | 'shortText' | 'link' | 'linkText'
+      | 'addedDate'
+      | 'lastUpdated'
+      | 'datePublished'
+      | 'asapFunded'
+      | 'usedInAPublication'
+      | 'sharingStatus'
+      | 'title'
+      | 'shortText'
+      | 'link'
+      | 'linkText'
     > & {
       sys: Pick<Sys, 'id'>;
       thumbnail?: Maybe<Pick<Asset, 'url'>>;
@@ -14577,6 +15371,54 @@ export type FetchTutorialByIdQuery = {
           };
         }
       >;
+      authorsCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            | ({ __typename: 'ExternalAuthors' } & Pick<
+                ExternalAuthors,
+                'name' | 'orcid'
+              > & { sys: Pick<Sys, 'id'> })
+            | ({ __typename: 'Users' } & Pick<
+                Users,
+                | 'firstName'
+                | 'lastName'
+                | 'email'
+                | 'onboarded'
+                | 'orcid'
+                | 'alumniSinceDate'
+              > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
+          >
+        >;
+      }>;
+      teamsCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>
+        >;
+      }>;
+      tagsCollection?: Maybe<{
+        items: Array<Maybe<Pick<ResearchTags, 'name'>>>;
+      }>;
+      linkedFrom?: Maybe<{
+        tutorialsCollection?: Maybe<{
+          items: Array<
+            Maybe<
+              Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }
+            >
+          >;
+        }>;
+      }>;
+      relatedTutorialsCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<Tutorials, 'title' | 'addedDate'> & { sys: Pick<Sys, 'id'> }
+          >
+        >;
+      }>;
+      relatedEventsCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<Events, 'title' | 'endDate'> & { sys: Pick<Sys, 'id'> }>
+        >;
+      }>;
     }
   >;
 };
@@ -19089,7 +19931,15 @@ export const TutorialsContentFragmentDoc = {
               ],
             },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'addedDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'datePublished' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'asapFunded' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'usedInAPublication' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'sharingStatus' } },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
           {
@@ -19224,6 +20074,347 @@ export const TutorialsContentFragmentDoc = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'authorsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'ExternalAuthors' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'orcid' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Users' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'onboarded' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'orcid' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'alumniSinceDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'teamsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'displayName' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'tagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'linkedFrom' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'tutorialsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '20' },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'order' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [{ kind: 'EnumValue', value: 'addedDate_ASC' }],
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'addedDate' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'relatedTutorialsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'addedDate' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'relatedEventsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endDate' },
                       },
                     ],
                   },

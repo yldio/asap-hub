@@ -7,7 +7,12 @@ export const tutorialsContentQueryFragment = gql`
     sys {
       id
     }
-    publishDate
+    addedDate
+    lastUpdated
+    datePublished
+    asapFunded
+    usedInAPublication
+    sharingStatus
     title
     shortText
     thumbnail {
@@ -41,6 +46,74 @@ export const tutorialsContentQueryFragment = gql`
             height
           }
         }
+      }
+    }
+    authorsCollection(limit: 10) {
+      items {
+        __typename
+        ... on ExternalAuthors {
+          sys {
+            id
+          }
+          name
+          orcid
+        }
+        ... on Users {
+          sys {
+            id
+          }
+          firstName
+          lastName
+          email
+          onboarded
+          orcid
+          alumniSinceDate
+          avatar {
+            url
+          }
+        }
+      }
+    }
+    teamsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        displayName
+      }
+    }
+    tagsCollection(limit: 20) {
+      items {
+        name
+      }
+    }
+    linkedFrom {
+      tutorialsCollection(limit: 20, order: [addedDate_ASC]) {
+        items {
+          sys {
+            id
+          }
+          title
+          addedDate
+        }
+      }
+    }
+    relatedTutorialsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        title
+        addedDate
+      }
+    }
+    relatedEventsCollection(limit: 10) {
+      items {
+        sys {
+          id
+        }
+        title
+        endDate
       }
     }
   }

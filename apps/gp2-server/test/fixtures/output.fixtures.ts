@@ -80,6 +80,7 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     type: 'Research',
     projectId: project?.id,
     authors: authors.map(({ id }) => ({ userId: id })),
+    tags,
   };
 };
 

@@ -703,6 +703,13 @@ describe('Outputs data provider', () => {
             id: projectId,
           },
         },
+        tags: fieldsCreated.tags?.map((tag) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: tag.id,
+          },
+        })),
       });
       expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
         fields,

@@ -624,23 +624,31 @@ describe('OutputForm', () => {
     });
   });
 
-  it('displays tags suggestions', () => {
-    render(
-      <OutputForm
-        {...defaultProps}
-        suggestions={[
-          { id: '1', name: '2D Cultures' },
-          { id: '2', name: 'Adenosine' },
-          { id: '3', name: 'Adrenal' },
-        ]}
-      />,
-      { wrapper: StaticRouter },
-    );
+  describe('tags', () => {
+    const defaultSuggestions = [
+      { id: '1', name: '2D Cultures' },
+      { id: '2', name: 'Adenosine' },
+      { id: '3', name: 'Adrenal' },
+    ];
+    const renderWithSuggestions = (suggestions = defaultSuggestions) =>
+      render(<OutputForm {...defaultProps} suggestions={suggestions} />, {
+        wrapper: StaticRouter,
+      });
 
-    userEvent.click(screen.getByLabelText(/additional tags/i));
-    expect(screen.getByText('2D Cultures')).toBeVisible();
-    expect(screen.getByText('Adenosine')).toBeVisible();
-    expect(screen.getByText('Adrenal')).toBeVisible();
+    it('displays tags empty', () => {
+      renderWithSuggestions(undefined);
+      const textbox = screen.getByRole('textbox', {
+        name: /tags/i,
+      });
+      expect(textbox).toBeVisible();
+      expect(screen.getByText('Start typing...')).toBeVisible();
+    });
+    it('displays tags suggestions', () => {
+      userEvent.click(screen.getByLabelText(/additional tags/i));
+      expect(screen.getByText('2D Cultures')).toBeVisible();
+      expect(screen.getByText('Adenosine')).toBeVisible();
+      expect(screen.getByText('Adrenal')).toBeVisible();
+    });
   });
   describe('identifierType', () => {
     it('returns DOI when doi is present', () => {

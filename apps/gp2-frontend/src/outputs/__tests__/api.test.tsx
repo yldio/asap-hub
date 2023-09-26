@@ -295,6 +295,7 @@ describe('createOutput', () => {
   const payload = {
     title: 'output title',
     documentType: 'Procedural Form' as const,
+    sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
@@ -321,6 +322,7 @@ describe('updateOutput', () => {
   const payload = {
     title: 'output title',
     documentType: 'Procedural Form' as const,
+    sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
   };
   it('makes an authorized POST request to update a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

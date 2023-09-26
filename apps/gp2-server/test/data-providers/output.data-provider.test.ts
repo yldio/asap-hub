@@ -346,6 +346,44 @@ describe('Outputs data provider', () => {
 
       expect(result!.tags).toMatchObject([]);
     });
+
+    describe('Sharing Status', () => {
+      test('Should default to GP2 Only if the sharingStatus is not present', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        delete graphqlResponse!.sharingStatus;
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
+
+        const result = await outputDataProvider.fetchById(outputId);
+
+        expect(result!.sharingStatus).toEqual('GP2 Only');
+      });
+
+      test('Should default to GP2 Only if the sharingStatus is not valid', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        graphqlResponse!.sharingStatus = 'CRN Only';
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
+
+        const result = await outputDataProvider.fetchById(outputId);
+
+        expect(result!.sharingStatus).toEqual('GP2 Only');
+      });
+
+      test('Should return sharingStatus when present and valid', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        graphqlResponse!.sharingStatus = 'Public';
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
+
+        const result = await outputDataProvider.fetchById(outputId);
+
+        expect(result!.sharingStatus).toEqual('Public');
+      });
+    });
   });
 
   describe('Fetch method', () => {
@@ -634,12 +672,7 @@ describe('Outputs data provider', () => {
 
       const result = await outputDataProvider.create(outputRequest);
       expect(result).toEqual(outputId);
-      const {
-        publishDate: _,
-        workingGroupId: __,
-        projectId,
-        ...fieldsCreated
-      } = outputRequest;
+      const { workingGroupId: __, projectId, ...fieldsCreated } = outputRequest;
       const fields = addLocaleToFields({
         ...fieldsCreated,
         authors: fieldsCreated.authors.map((author) => ({
@@ -768,10 +801,9 @@ describe('Outputs data provider', () => {
       const outputUpdateData = getOutputUpdateDataObject();
 
       await outputDataProvider.update(outputId, outputUpdateData);
-      const { publishDate: _, ...fieldsCreated } = outputUpdateData;
       const fields = {
-        ...fieldsCreated,
-        authors: fieldsCreated.authors.map((author) => ({
+        ...outputUpdateData,
+        authors: outputUpdateData.authors.map((author) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
@@ -782,7 +814,7 @@ describe('Outputs data provider', () => {
           sys: {
             type: 'Link',
             linkType: 'Entry',
-            id: fieldsCreated.updatedBy,
+            id: outputUpdateData.updatedBy,
           },
         },
       };

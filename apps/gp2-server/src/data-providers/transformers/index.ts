@@ -5,4 +5,5 @@ export * from './event';
 export * from './guides';
 export * from './members';
 export * from './milestones';
+export * from './output';
 export * from './resources';

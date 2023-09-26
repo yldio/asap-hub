@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import { UserSocial } from '@asap-hub/model/src/gp2';
 import {
   GithubIcon,
   GlobeIcon,
@@ -29,7 +28,7 @@ const externalProfilesContainerStyles = css({
 });
 
 const networkInfo: Record<
-  keyof UserSocial,
+  keyof gp2.UserSocial,
   { icon: ReactNode; displayName: string }
 > = {
   googleScholar: {
@@ -66,14 +65,14 @@ const networkInfo: Record<
   },
 };
 
-const researchNetworksKeys: Array<keyof UserSocial> = [
+const researchNetworksKeys: Array<keyof gp2.UserSocial> = [
   'googleScholar',
   'orcid',
   'researchGate',
   'researcherId',
 ];
 
-const socialNetworkKeys: Array<keyof UserSocial> = [
+const socialNetworkKeys: Array<keyof gp2.UserSocial> = [
   'blog',
   'twitter',
   'linkedIn',
@@ -87,8 +86,8 @@ const UserExternalProfiles: React.FC<UserExternalProfilesProps> = ({
   social,
   editHref,
 }) => {
-  const filterSocial = (key: keyof UserSocial) => !!social?.[key];
-  const mapSocialInfo = (key: keyof UserSocial) => ({
+  const filterSocial = (key: keyof gp2.UserSocial) => !!social?.[key];
+  const mapSocialInfo = (key: keyof gp2.UserSocial) => ({
     key,
     link: social?.[key],
     ...networkInfo[key],

@@ -1,5 +1,5 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { KeywordDataObject } from '@asap-hub/model/src/gp2';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -47,7 +47,9 @@ describe('KeywordsModal', () => {
 
   it('calls onSave with the right arguments', async () => {
     const onSave = jest.fn();
-    const tags = [{ id: 'id-1', name: 'Genetics' }] as KeywordDataObject[];
+    const tags = [
+      { id: 'id-1', name: 'Genetics' },
+    ] as gp2Model.KeywordDataObject[];
     renderModal({
       tags,
       onSave,

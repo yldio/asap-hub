@@ -1,5 +1,5 @@
-import { gp2 } from '@asap-hub/fixtures';
-import { FetchUsersFilter } from '@asap-hub/model/src/gp2';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UsersPageList from '../UsersPageList';
@@ -72,8 +72,9 @@ describe('UsersPageList', () => {
       const filters = { [name]: [value] };
       const updateFilterSpy = jest.fn();
 
-      const { items: projects } = gp2.createProjectsResponse();
-      const { items: workingGroups } = gp2.createWorkingGroupsResponse();
+      const { items: projects } = gp2Fixtures.createProjectsResponse();
+      const { items: workingGroups } =
+        gp2Fixtures.createWorkingGroupsResponse();
       render(
         <UsersPageList
           {...props}
@@ -96,7 +97,7 @@ describe('UsersPageList', () => {
     },
   );
   it('calls the updateFilters with the right arguments for removing a certain filter', () => {
-    const filters: FetchUsersFilter = {
+    const filters: gp2Model.FetchUsersFilter = {
       regions: ['Asia'],
       keywords: [],
       projects: [],
@@ -104,8 +105,8 @@ describe('UsersPageList', () => {
     };
     const updateFilterSpy = jest.fn();
 
-    const { items: projects } = gp2.createProjectsResponse();
-    const { items: workingGroups } = gp2.createWorkingGroupsResponse();
+    const { items: projects } = gp2Fixtures.createProjectsResponse();
+    const { items: workingGroups } = gp2Fixtures.createWorkingGroupsResponse();
     render(
       <UsersPageList
         {...props}

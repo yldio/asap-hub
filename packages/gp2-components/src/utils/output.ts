@@ -1,18 +1,18 @@
-import { OutputIdentifierType } from '@asap-hub/model/src/gp2';
+import { gp2 } from '@asap-hub/model';
 
 const identifierTypeToFieldName: Record<
-  OutputIdentifierType,
+  gp2.OutputIdentifierType,
   'doi' | 'accessionNumber' | 'rrid' | undefined
 > = {
-  [OutputIdentifierType.Empty]: undefined,
-  [OutputIdentifierType.None]: undefined,
-  [OutputIdentifierType.DOI]: 'doi',
-  [OutputIdentifierType.AccessionNumber]: 'accessionNumber',
-  [OutputIdentifierType.RRID]: 'rrid',
+  [gp2.OutputIdentifierType.Empty]: undefined,
+  [gp2.OutputIdentifierType.None]: undefined,
+  [gp2.OutputIdentifierType.DOI]: 'doi',
+  [gp2.OutputIdentifierType.AccessionNumber]: 'accessionNumber',
+  [gp2.OutputIdentifierType.RRID]: 'rrid',
 };
 
 export const createIdentifierField = (
-  identifierType: OutputIdentifierType,
+  identifierType: gp2.OutputIdentifierType,
   rawIdentifier: string,
 ):
   | { rrid: string }

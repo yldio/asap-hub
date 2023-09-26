@@ -358,7 +358,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           CRN_SES_REGION: ${{ steps.setup.outputs.crn-ses-region }}
           GP2_SES_REGION: ${{ steps.setup.outputs.gp2-ses-region }}
-  # use-pr-auth0-tenant
+
   auth0:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
@@ -388,9 +388,9 @@ jobs:
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: yarn workspace @asap-hub/auth0 deploy --debug
         env:
-          AUTH0_CLIENT_ID: ${{ contains(github.event.labels.*.name, 'use-auth0-pr-tenant') && 'my-mock-id' || steps.setup.outputs.crn-ci-auth0-client-id }}
-          AUTH0_CLIENT_SECRET: ${{ contains(github.event.labels.*.name, 'use-auth0-pr-tenant') && 'my-mock-secret' || secrets.CRN_CI_AUTH0_CLIENT_SECRET }}
-          AUTH0_DOMAIN: ${{ contains(github.event.labels.*.name, 'use-auth0-pr-tenant') && 'my-mock-domain' || steps.setup.outputs.crn-auth0-domain }}
+          AUTH0_CLIENT_ID: ${{ contains(github.event.labels.*.name, 'use-pr-auth0-tenant') && 'my-mock-id' || steps.setup.outputs.crn-ci-auth0-client-id }}
+          AUTH0_CLIENT_SECRET: ${{ contains(github.event.labels.*.name, 'use-pr-auth0-tenant') && 'my-mock-secret' || secrets.CRN_CI_AUTH0_CLIENT_SECRET }}
+          AUTH0_DOMAIN: ${{ contains(github.event.labels.*.name, 'use-pr-auth0-tenant') && 'my-mock-domain' || steps.setup.outputs.crn-auth0-domain }}
           APPLICATION_NAME: crn
           BASE_PR_APP_DOMAIN: ${{ steps.setup.outputs.crn-base-pr-app-domain }}
           API_URL: ${{ steps.setup.outputs.crn-api-url }}

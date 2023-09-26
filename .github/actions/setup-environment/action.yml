@@ -244,10 +244,11 @@ runs:
 
         set_outputs Base
         set_outputs $ENVIRONMENT_NAME
-
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
           HAS_CONTENTFUL_LABEL=${{ contains(github.event.pull_request.labels.*.name, 'contentful') }}
+          HAS_AUTH0_LABEL=${{contains(github.event.pull_request.labels.*.name, 'use-pr-auth0-tenant') }}
+          echo "HAS_AUTH0_LABEL=$HAS_AUTH0_LABEL" >> $GITHUB_OUTPUT
           echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "gp2-algolia-index=gp2-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT
           echo "app-release=${{ github.run_id }}-dev" >> $GITHUB_OUTPUT

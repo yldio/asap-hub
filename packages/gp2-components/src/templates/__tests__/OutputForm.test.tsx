@@ -111,6 +111,8 @@ describe('OutputForm', () => {
     userEvent.click(
       within(sharingStatus).getByRole('radio', { name: 'GP2 Only' }),
     );
+    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    userEvent.click(screen.getByText(/^none/i));
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);
 
@@ -119,6 +121,7 @@ describe('OutputForm', () => {
     userEvent.click(screen.getByText('Chris Blue'));
     userEvent.click(authors);
     userEvent.type(authors, 'Alex White');
+
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]!);
     userEvent.click(screen.getByRole('button', { name: /publish/i }));
@@ -438,7 +441,7 @@ describe('OutputForm', () => {
         within(gp2Supported).getByRole('radio', { name: "Don't Know" }),
       ).toBeChecked();
 
-      const input = screen.getByRole('textbox', { name: /type/i });
+      const input = screen.getByRole('textbox', { name: /^type/i });
       userEvent.click(input);
       userEvent.click(screen.getByText('Blog'));
       fireEvent.focusOut(input);

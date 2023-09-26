@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/fixtures';
-import { ToastContext } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
   render,
@@ -55,11 +54,9 @@ const renderCreateProjectOutput = async (
                     .createOutput.template
                 }
               >
-                <ToastContext.Provider value={jest.fn()}>
-                  <NotificationMessages>
-                    <CreateProjectOutput />
-                  </NotificationMessages>
-                </ToastContext.Provider>
+                <NotificationMessages>
+                  <CreateProjectOutput />
+                </NotificationMessages>
               </Route>
             </MemoryRouter>
           </WhenReady>

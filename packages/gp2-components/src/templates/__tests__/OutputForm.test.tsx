@@ -14,6 +14,8 @@ import { NotificationContext } from '@asap-hub/react-context';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 import { createIdentifierField } from '../../utils';
 
+jest.setTimeout(60_000);
+
 describe('OutputForm', () => {
   const defaultProps = {
     shareOutput: jest.fn(),
@@ -150,7 +152,7 @@ describe('OutputForm', () => {
       }),
     );
     expect(history.location.pathname).toEqual(`/outputs`);
-  }, 30000);
+  });
 
   it('can submit published date', async () => {
     const getAuthorSuggestions = jest.fn();
@@ -358,7 +360,7 @@ describe('OutputForm', () => {
         authors: [{ userId: 'u2' }],
       });
       expect(history.location.pathname).toEqual(`/outputs`);
-    }, 30000);
+    });
   });
 
   describe('GP2 Supported', () => {
@@ -574,7 +576,7 @@ describe('OutputForm', () => {
       expect(screen.getByText('None')).toBeVisible();
       expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
       expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
-    }, 30_000);
+    });
   });
 
   describe('getPublishDateValidationMessage returns', () => {

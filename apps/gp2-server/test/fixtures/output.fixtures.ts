@@ -111,6 +111,7 @@ export const getOutputCreateDataObject =
       createdBy: 'userId',
       projectId: project?.id,
       authors: authors.map(({ id }) => ({ userId: id })),
+      tags,
     };
   };
 

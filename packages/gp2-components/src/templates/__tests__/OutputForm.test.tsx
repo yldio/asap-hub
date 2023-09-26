@@ -641,9 +641,12 @@ describe('OutputForm', () => {
         name: /tags/i,
       });
       expect(textbox).toBeVisible();
-      expect(screen.getByText('Start typing...')).toBeVisible();
+      expect(
+        screen.getByText('Start typing... (E.g. Neurology)'),
+      ).toBeVisible();
     });
     it('displays tags suggestions', () => {
+      renderWithSuggestions();
       userEvent.click(screen.getByLabelText(/additional tags/i));
       expect(screen.getByText('2D Cultures')).toBeVisible();
       expect(screen.getByText('Adenosine')).toBeVisible();

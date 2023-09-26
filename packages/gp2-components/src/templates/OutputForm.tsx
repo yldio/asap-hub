@@ -382,7 +382,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                     ),
                 );
               }}
-              placeholder="Start typing..."
+              placeholder="Start typing... (E.g. Neurology)"
               maxMenuHeight={160}
             />
             <div css={linkStyles}>

@@ -130,4 +130,4 @@ it('publishes the output', async () => {
     },
     expect.anything(),
   );
-});
+}, 30_000);

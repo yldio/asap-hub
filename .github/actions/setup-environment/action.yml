@@ -103,13 +103,13 @@ outputs:
     value: ${{ steps.vars.outputs.crn-auth0-client-id }}
   crn-auth0-domain:
     description: 'CRN Auth0 Domain'
-    value: ${{ steps.vars.outputs.crn-auth0-domain }}
+    value: ${{ contains(github.event.labels.*.name, 'use-pr-auth0-tenant') && 'setting another domain' || steps.vars.outputs.crn-auth0-domain  }}
   crn-aws-acm-certificate-arn:
     description: 'CRN AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
   crn-base-pr-app-domain:
     description: 'CRN Base PR App Domain'
-    value: ${{ contains(github.event.labels.*.name, 'use-pr-auth0-tenant') && 'setting another domain' || steps.setup.outputs.crn-auth0-domain }}
+    value: ${{ steps.vars.outputs.crn-base-pr-app-domain }}
   crn-ci-auth0-client-id:
     description: 'CRN CI Auth0 Client Id'
     value: ${{ steps.vars.outputs.crn-ci-auth0-client-id }}
@@ -244,6 +244,7 @@ runs:
 
         set_outputs Base
         set_outputs $ENVIRONMENT_NAME
+
         if [ "$ENVIRONMENT_NAME" = "Branch" ]; then
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
           HAS_CONTENTFUL_LABEL=${{ contains(github.event.pull_request.labels.*.name, 'contentful') }}

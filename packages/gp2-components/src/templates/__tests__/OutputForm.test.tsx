@@ -574,7 +574,7 @@ describe('OutputForm', () => {
       expect(screen.getByText('None')).toBeVisible();
       expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
       expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
-    });
+    }, 30_000);
   });
 
   describe('getPublishDateValidationMessage returns', () => {

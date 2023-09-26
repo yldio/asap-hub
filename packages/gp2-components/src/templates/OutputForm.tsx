@@ -6,16 +6,20 @@ import {
   FormCard,
   GlobeIcon,
   LabeledDropdown,
+  LabeledRadioButtonGroup,
   LabeledTextField,
+  LabeledTextArea,
+  Markdown,
   noop,
   pixels,
+  LabeledDateField,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
 
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentPropsWithRef, useState } from 'react';
+import { ComponentPropsWithRef, useEffect, useState } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
 import { EntityMappper } from './CreateOutputPage';
 
@@ -58,7 +62,15 @@ type OutputFormType = {
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
-    'title' | 'link' | 'type' | 'subtype' | 'authors'
+    | 'title'
+    | 'link'
+    | 'type'
+    | 'subtype'
+    | 'description'
+    | 'gp2Supported'
+    | 'sharingStatus'
+    | 'publishDate'
+    | 'authors'
   >
 >;
 
@@ -83,14 +95,36 @@ const OutputForm: React.FC<OutputFormType> = ({
   link,
   type,
   subtype,
+  description,
+  gp2Supported,
+  sharingStatus,
+  publishDate,
   authors,
 }) => {
+  const isAlwaysPublic = documentType === 'Training Materials';
+  const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
+    Boolean(type === 'Blog' || documentType === 'GP2 Reports'),
+  );
+
   const [newTitle, setTitle] = useState(title || '');
   const [newLink, setLink] = useState(link || '');
   const [newType, setType] = useState<gp2Model.OutputType | ''>(type || '');
   const [newSubtype, setSubtype] = useState<gp2Model.OutputSubtype | ''>(
     subtype || '',
   );
+  const [newDescription, setDescription] = useState(description || '');
+  const [newGp2Supported, setGp2Supported] = useState<
+    gp2Model.DecisionOption | undefined
+  >(isGP2SupportedAlwaysTrue ? 'Yes' : gp2Supported);
+  const [newSharingStatus, setSharingStatus] =
+    useState<gp2Model.OutputSharingStatus>(
+      isAlwaysPublic ? 'Public' : sharingStatus || 'GP2 Only',
+    );
+
+  const [newPublishDate, setPublishDate] = useState<Date | undefined>(
+    publishDate ? new Date(publishDate) : undefined,
+  );
+
   const [newAuthors, setAuthors] = useState<
     ComponentPropsWithRef<typeof AuthorSelect>['values']
   >(
@@ -115,8 +149,25 @@ const OutputForm: React.FC<OutputFormType> = ({
     link: newLink,
     type: newType || undefined,
     subtype: newSubtype || undefined,
+    description: newDescription || undefined,
+    gp2Supported: newGp2Supported || undefined,
+    sharingStatus: newSharingStatus,
+    publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
   };
+
+  useEffect(() => {
+    const newisGP2SupportedAlwaysTrue = Boolean(
+      newType === 'Blog' || documentType === 'GP2 Reports',
+    );
+
+    if (newisGP2SupportedAlwaysTrue) {
+      setGp2Supported('Yes');
+    }
+
+    setIsGP2SupportedAlwaysTrue(newisGP2SupportedAlwaysTrue);
+  }, [newType, documentType]);
+
   const isFieldDirty = (original: string = '', current: string) =>
     current !== original;
 
@@ -186,7 +237,78 @@ const OutputForm: React.FC<OutputFormType> = ({
               required
               enabled={!isSaving}
             />
+            <LabeledTextArea
+              title="Description"
+              subtitle="(required)"
+              tip="Add an abstract or a summary that describes this work."
+              onChange={setDescription}
+              getValidationMessage={() => 'Please enter a description'}
+              required
+              enabled={!isSaving}
+              value={newDescription}
+              info={
+                <Markdown
+                  value={`**Markup Language**\n\n**Bold:** \\*\\*your text\\*\\*\n\n**Italic:** \\*your text\\*\n\n**H1:** \\# Your Text\n\n**H2:** \\#\\# Your Text\n\n**H3:** \\#\\#\\# Your Text\n\n**Hyperlink:** [your text](https://example.com)\n\n**New Paragraph:** To create a line break, you will need to press the enter button twice.
+        `}
+                ></Markdown>
+              }
+            />
+            {!['Training Materials', 'Procedural Form'].includes(
+              documentType,
+            ) ? (
+              <LabeledRadioButtonGroup<gp2Model.DecisionOption>
+                title="Has this output been supported by GP2?"
+                subtitle="(required)"
+                options={[
+                  {
+                    value: 'Yes',
+                    label: 'Yes',
+                    disabled: isGP2SupportedAlwaysTrue,
+                  },
+                  {
+                    value: 'No',
+                    label: 'No',
+                    disabled: isGP2SupportedAlwaysTrue,
+                  },
+                  {
+                    value: "Don't Know",
+                    label: "Don't Know",
+                    disabled: isGP2SupportedAlwaysTrue,
+                  },
+                ]}
+                value={newGp2Supported ?? "Don't Know"}
+                onChange={setGp2Supported}
+              />
+            ) : null}
+            <LabeledRadioButtonGroup<gp2Model.OutputSharingStatus>
+              title="Sharing status"
+              subtitle="(required)"
+              options={[
+                {
+                  value: 'GP2 Only',
+                  label: 'GP2 Only',
+                  disabled: isAlwaysPublic,
+                },
+                { value: 'Public', label: 'Public', disabled: isAlwaysPublic },
+              ]}
+              value={newSharingStatus}
+              onChange={setSharingStatus}
+            />
+            {newSharingStatus === 'Public' ? (
+              <LabeledDateField
+                title="Public Repository Published Date"
+                subtitle="(optional)"
+                description="This should be the date your output was shared publicly on its repository."
+                onChange={(date) =>
+                  setPublishDate(date ? new Date(date) : undefined)
+                }
+                value={newPublishDate}
+                max={new Date()}
+                getValidationMessage={(e) => getPublishDateValidationMessage(e)}
+              />
+            ) : null}
           </FormCard>
+
           <FormCard title="Who were the contributors?">
             <AuthorSelect
               title="Authors"
@@ -240,3 +362,10 @@ const OutputForm: React.FC<OutputFormType> = ({
 };
 
 export default OutputForm;
+
+export const getPublishDateValidationMessage = (e: ValidityState): string => {
+  if (e.badInput) {
+    return 'Date published should be complete or removed';
+  }
+  return 'Publish date cannot be greater than today';
+};

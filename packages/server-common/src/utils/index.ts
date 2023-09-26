@@ -3,7 +3,6 @@ export * from './aws-secret-manager';
 export * from './csv-parse';
 export * from './logger';
 export * from './loop-over-custom-collection';
-export * from './migrations';
 export * from './send-email';
 export * from './sentry-wrapper';
 export * from './should-handle-error';

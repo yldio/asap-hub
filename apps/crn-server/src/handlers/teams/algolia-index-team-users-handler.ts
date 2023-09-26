@@ -1,8 +1,10 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { ListResponse, TeamEvent, UserResponse } from '@asap-hub/model';
 import {
+  createProcessingFunction,
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
+  userFilter,
 } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -15,12 +17,17 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { TeamPayload } from '../event-bus';
 
-export const indexTeamUsersHandler =
-  (
-    userController: UserController,
-    algoliaClient: AlgoliaClient<'crn'>,
-  ): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) =>
-  async (event) => {
+export const indexTeamUsersHandler = (
+  userController: UserController,
+  algoliaClient: AlgoliaClient<'crn'>,
+): ((event: EventBridgeEvent<TeamEvent, TeamPayload>) => Promise<void>) => {
+  const processingFunction = createProcessingFunction(
+    algoliaClient,
+    'user',
+    logger,
+    userFilter,
+  );
+  return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({
@@ -37,27 +44,9 @@ export const indexTeamUsersHandler =
         take,
       });
 
-    const processingFunction = async (
-      foundUsers: ListResponse<UserResponse>,
-    ) => {
-      logger.info(
-        `Found ${foundUsers.total} users. Processing ${foundUsers.items.length} users.`,
-      );
-
-      await algoliaClient.saveMany(
-        foundUsers.items
-          .filter((user) => user.onboarded && user.role !== 'Hidden')
-          .map((data) => ({
-            data,
-            type: 'user',
-          })),
-      );
-
-      logger.info(`Updated ${foundUsers.total} users.`);
-    };
-
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
+};
 
 const rawHandler = indexTeamUsersHandler(
   new UserController(getUserDataProvider(), getAssetDataProvider()),

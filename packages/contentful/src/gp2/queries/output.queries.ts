@@ -14,6 +14,9 @@ export const outputsContentQueryFragment = gql`
     documentType
     type
     subtype
+    description
+    gp2Supported
+    sharingStatus
     link
     addedDate
     publishDate

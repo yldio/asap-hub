@@ -53,6 +53,7 @@ export const contentfulHandlerFactory =
   ) => Promise<{ statusCode: number }>) =>
   async (request) => {
     validateContentfulRequest(request, webhookAuthenticationToken);
+    logger.debug(`request: ${JSON.stringify(request)}`);
 
     const detailType = getDetailTypeFromRequest(request);
     const detail = getDetailFromRequest(request);
@@ -70,6 +71,7 @@ export const contentfulHandlerFactory =
     const fetchEntryById = async () => {
       try {
         const entry = await cdaClient.getEntry(detail.resourceId);
+        logger.debug(`entry ${JSON.stringify(entry)}`);
         return entry;
       } catch (error) {
         if (

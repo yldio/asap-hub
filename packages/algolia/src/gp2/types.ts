@@ -1,10 +1,10 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 
+export const EVENT_ENTITY_TYPE = 'event';
+export const NEWS_ENTITY_TYPE = 'news';
 export const OUTPUT_ENTITY_TYPE = 'output';
 export const PROJECT_ENTITY_TYPE = 'project';
-export const EVENT_ENTITY_TYPE = 'event';
 export const USER_ENTITY_TYPE = 'user';
-export const NEWS_ENTITY_TYPE = 'news';
 
 export type Payload =
   | {

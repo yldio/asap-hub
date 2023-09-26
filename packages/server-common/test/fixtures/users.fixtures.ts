@@ -1,79 +1,4 @@
-import { UserEvent, UserDataObject } from '@asap-hub/model';
-import { RestUser, User, SquidexWebhookPayload } from '@asap-hub/squidex';
-
-export const patchResponse = (): RestUser => ({
-  id: 'userId',
-  data: {
-    dismissedGettingStarted: { iv: false },
-    onboarded: { iv: true },
-    reachOut: { iv: 'some reach out' },
-    responsibilities: { iv: 'some responsibilities' },
-    expertiseAndResourceDescription: { iv: 'some expertiseAndResourceTags' },
-    role: { iv: 'Grantee' },
-    lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
-    email: { iv: 'tony@stark.com' },
-    firstName: { iv: 'Tony' },
-    lastName: { iv: 'Stark' },
-    jobTitle: { iv: 'CEO' },
-    orcid: { iv: '363-98-9330' },
-    institution: { iv: 'Stark Enterprises' },
-    country: { iv: 'United Kingdom' },
-    city: { iv: 'Brighton' },
-    avatar: { iv: ['squidex-asset-id'] },
-    expertiseAndResourceTags: { iv: [] },
-    orcidWorks: { iv: [] },
-    teams: {
-      iv: [
-        {
-          id: ['team-id-1'],
-          role: 'Lead PI (Core Leadership)',
-        },
-        {
-          id: ['team-id-3'],
-          role: 'Collaborating PI',
-        },
-      ],
-    },
-    connections: { iv: [] },
-    questions: { iv: [] },
-    labs: { iv: [] },
-  },
-  created: '2020-09-25T09:42:51Z',
-  lastModified: '2020-09-25T09:42:51Z',
-  version: 42,
-});
-export const restUserMock = patchResponse;
-
-export const getUserWebhookPayload = (
-  id: string,
-  type: UserEvent,
-): SquidexWebhookPayload<User> => ({
-  type,
-  timestamp: '2021-02-15T13:11:25Z',
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: 'Updated',
-    id,
-    created: '2020-07-31T15:52:33Z',
-    lastModified: '2020-07-31T15:52:33Z',
-    version: 42,
-    data: {
-      dismissedGettingStarted: { iv: false },
-      firstName: { iv: 'Tony' },
-      lastName: { iv: 'Stark' },
-      onboarded: { iv: true },
-      avatar: { iv: [] },
-      connections: { iv: [] },
-      email: {
-        iv: 'tony@stark.com',
-      },
-      questions: { iv: [] },
-      role: { iv: 'Grantee' },
-      teams: { iv: [] },
-      labs: { iv: [] },
-    },
-  },
-});
+import { UserDataObject } from '@asap-hub/model';
 
 export const getUserDataObject = (): UserDataObject => ({
   id: 'userId',
@@ -81,4 +6,26 @@ export const getUserDataObject = (): UserDataObject => ({
   lastName: 'Stark',
   email: 'tony@.stark.com',
   connections: [],
+  createdDate: '2020-09-25T09:42:51.000Z',
+  expertiseAndResourceTags: [],
+  labs: [],
+  lastModifiedDate: '2020-09-25T09:42:51.132Z',
+  questions: [],
+  role: 'Grantee',
+  teams: [
+    {
+      displayName: 'Unknown',
+      id: 'team-id-1',
+      role: 'Lead PI (Core Leadership)',
+      inactiveSinceDate: '',
+    },
+    {
+      displayName: 'Unknown',
+      id: 'team-id-3',
+      role: 'Collaborating PI',
+      inactiveSinceDate: '2022-09-25T09:42:51.000Z',
+    },
+  ],
+  workingGroups: [],
+  interestGroups: [],
 });

@@ -1,6 +1,7 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
 import {
+  createProcessingFunction,
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '@asap-hub/server-common';
@@ -16,14 +17,19 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { UserPayload } from '../event-bus';
 
-export const indexUserProjectsHandler =
-  (
-    projectController: ProjectController,
-    algoliaClient: AlgoliaClient<'gp2'>,
-  ): ((
-    event: EventBridgeEvent<gp2Model.UserEvent, UserPayload>,
-  ) => Promise<void>) =>
-  async (event) => {
+export const indexProjectUserHandler = (
+  projectController: ProjectController,
+  algoliaClient: AlgoliaClient<'gp2'>,
+): ((
+  event: EventBridgeEvent<gp2Model.UserEvent, UserPayload>,
+) => Promise<void>) => {
+  const processingFunction = createProcessingFunction(
+    algoliaClient,
+    'project',
+    logger,
+  );
+
+  return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({
@@ -38,33 +44,9 @@ export const indexUserProjectsHandler =
         filter: { userId: event.detail.resourceId },
       });
 
-    const processingFunction = async (
-      foundProjects: ListResponse<gp2Model.ProjectResponse>,
-    ) => {
-      logger.info(
-        `Found ${foundProjects.total} projects. Processing ${foundProjects.items.length} projects.`,
-      );
-
-      try {
-        const projects = foundProjects.items.map((data) => ({
-          data,
-          type: 'project' as const,
-        }));
-        logger.info(`trying to save: ${JSON.stringify(projects, null, 2)}`);
-        await algoliaClient.saveMany(projects);
-      } catch (err) {
-        logger.error('Error occurred during saveMany');
-        if (err instanceof Error) {
-          logger.error(`The error message: ${err.message}`);
-        }
-        throw err;
-      }
-
-      logger.info(`Updated ${foundProjects.items.length} events.`);
-    };
-
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
+};
 
 const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 const projectDataProvider = new ProjectContentfulDataProvider(
@@ -73,7 +55,7 @@ const projectDataProvider = new ProjectContentfulDataProvider(
 );
 
 export const handler = sentryWrapper(
-  indexUserProjectsHandler(
+  indexProjectUserHandler(
     new ProjectController(projectDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,

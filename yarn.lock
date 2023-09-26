@@ -259,7 +259,6 @@ __metadata:
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
-    "@asap-hub/squidex": "workspace:*"
     "@babel/core": 7.22.20
     "@babel/plugin-transform-modules-commonjs": 7.22.15
     "@babel/plugin-transform-runtime": 7.22.15
@@ -272,6 +271,7 @@ __metadata:
     "@types/jwt-decode": 2.2.1
     "@types/jwt-encode": "workspace:*"
     "@types/luxon": 1.27.1
+    "@types/node": 18.17.3
     "@types/prettier": 2.7.3
     "@types/pump": 1.1.1
     "@types/through2-concurrent": 2.0.1
@@ -366,51 +366,6 @@ __metadata:
     "@babel/runtime-corejs3": 7.22.15
     "@types/jest": 29.5.5
     "@types/node": 18.17.3
-  languageName: unknown
-  linkType: soft
-
-"@asap-hub/cms-data-sync@workspace:packages/cms-data-sync":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/cms-data-sync@workspace:packages/cms-data-sync"
-  dependencies:
-    "@asap-hub/contentful": "workspace:*"
-    "@asap-hub/crn-server": "workspace:*"
-    "@asap-hub/model": "workspace:*"
-    "@asap-hub/server-common": "workspace:*"
-    "@asap-hub/squidex": "workspace:*"
-    "@babel/runtime-corejs3": 7.22.15
-    "@contentful/rich-text-types": 16.2.1
-    "@graphql-codegen/cli": 2.16.5
-    "@graphql-codegen/gql-tag-operations-preset": 1.7.4
-    "@graphql-codegen/introspection": 2.2.3
-    "@graphql-codegen/schema-ast": 2.6.1
-    "@graphql-codegen/typescript": 2.8.8
-    "@graphql-codegen/typescript-operations": 2.5.13
-    "@graphql-tools/graphql-file-loader": 7.5.17
-    "@graphql-tools/load": 7.8.14
-    "@graphql-tools/mock": 8.7.20
-    "@graphql-tools/schema": 9.0.19
-    "@graphql-typed-document-node/core": 3.2.0
-    "@types/contentful-html-rich-text-converter": "workspace:^"
-    "@types/jest": 29.5.5
-    "@types/jest-when": 3.5.2
-    "@types/node": 18.17.3
-    "@types/prettier": 2.7.3
-    cheerio: ^1.0.0-rc.12
-    contentful-html-rich-text-converter: "yldio/contentful-html-rich-text-converter#v1.0.19"
-    contentful-management: 10.40.1
-    graphql: 15.8.0
-    graphql-tag: 2.12.6
-    graphql-typescript-integration: 1.2.1
-    jest-when: 3.5.2
-    limiter: ^2.1.0
-    prettier: 2.8.8
-    rehype-parse: 7.0.1
-    rehype-remark: 8.1.1
-    rehype-sanitize: 4.0.0
-    remark-stringify: 9.0.1
-    ts-node: 10.9.1
-    unified: 9.2.2
   languageName: unknown
   linkType: soft
 
@@ -958,7 +913,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/crn-server@workspace:*, @asap-hub/crn-server@workspace:apps/crn-server":
+"@asap-hub/crn-server@workspace:apps/crn-server":
   version: 0.0.0-use.local
   resolution: "@asap-hub/crn-server@workspace:apps/crn-server"
   dependencies:
@@ -1173,8 +1128,8 @@ __metadata:
   resolution: "@asap-hub/flags@workspace:packages/flags"
   dependencies:
     "@babel/runtime-corejs3": 7.22.15
-    "@types/asap-hub__inline-environment": "workspace:*"
     "@types/jest": 29.5.5
+    "@types/node": 18.17.3
     core-js: 3.32.2
   languageName: unknown
   linkType: soft
@@ -1708,6 +1663,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/server-common@workspace:packages/server-common"
   dependencies:
+    "@asap-hub/algolia": "workspace:*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/contentful": "workspace:*"
     "@asap-hub/errors": "workspace:*"
@@ -1716,7 +1672,6 @@ __metadata:
     "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
-    "@asap-hub/squidex": "workspace:*"
     "@aws-sdk/client-cloudfront": ^3.287.0
     "@aws-sdk/client-eventbridge": ^3.306.0
     "@aws-sdk/client-secrets-manager": ^3.306.0
@@ -1795,41 +1750,6 @@ __metadata:
     graphql-request: 6.1.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
-    nock: 13.3.3
-  languageName: unknown
-  linkType: soft
-
-"@asap-hub/squidex@workspace:*, @asap-hub/squidex@workspace:packages/squidex":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/squidex@workspace:packages/squidex"
-  dependencies:
-    "@asap-hub/errors": "workspace:*"
-    "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@asap-hub/model": "workspace:*"
-    "@babel/runtime-corejs3": 7.22.15
-    "@hapi/boom": 9.1.4
-    "@hapi/bourne": 2.1.0
-    "@hapi/joi": 17.1.1
-    "@types/apr-intercept": "workspace:*"
-    "@types/debug": 4.1.8
-    "@types/hapi": 18.0.11
-    "@types/hapi__boom": 9.0.1
-    "@types/hapi__bourne": "workspace:*"
-    "@types/hapi__joi": 17.1.11
-    "@types/jest": 29.5.5
-    "@types/jwt-decode": 2.2.1
-    "@types/jwt-encode": "workspace:*"
-    "@types/luxon": 1.27.1
-    apr-intercept: 3.0.4
-    chance: 1.1.11
-    cross-fetch: ^3.1.4
-    debug: 4.3.4
-    got: 11.8.6
-    graphql: 15.8.0
-    graphql-request: 6.1.0
-    jwt-decode: 2.2.0
-    jwt-encode: 1.0.1
-    luxon: 1.28.1
     nock: 13.3.3
   languageName: unknown
   linkType: soft
@@ -16934,12 +16854,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@types/asap-hub__inline-environment@workspace:*, @types/asap-hub__inline-environment@workspace:@types/asap-hub__inline-environment":
-  version: 0.0.0-use.local
-  resolution: "@types/asap-hub__inline-environment@workspace:@types/asap-hub__inline-environment"
-  languageName: unknown
-  linkType: soft
-
 "@types/async-retry@npm:^1":
   version: 1.4.5
   resolution: "@types/async-retry@npm:1.4.5"
@@ -17145,7 +17059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter, @types/contentful-html-rich-text-converter@workspace:^":
+"@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter":
   version: 0.0.0-use.local
   resolution: "@types/contentful-html-rich-text-converter@workspace:@types/contentful-html-rich-text-converter"
   languageName: unknown
@@ -23098,7 +23012,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cheerio@npm:^1.0.0-rc.12, cheerio@npm:^1.0.0-rc.3":
+"cheerio@npm:^1.0.0-rc.3":
   version: 1.0.0-rc.12
   resolution: "cheerio@npm:1.0.0-rc.12"
   dependencies:

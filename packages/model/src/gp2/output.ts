@@ -43,6 +43,14 @@ export const outputDocumentTypeToType: Record<
   'Code/Software': new Set<OutputType>(),
 };
 
+export const decisionOptions = ['Yes', 'No', "Don't Know"] as const;
+
+export type DecisionOption = (typeof decisionOptions)[number];
+
+export const sharingStatuses = ['GP2 Only', 'Public'] as const;
+
+export type OutputSharingStatus = (typeof sharingStatuses)[number];
+
 export type OutputCoreObject = {
   addedDate: string;
   documentType: OutputDocumentType;
@@ -52,6 +60,9 @@ export type OutputCoreObject = {
   title: string;
   type?: OutputType;
   subtype?: OutputSubtype;
+  description?: string;
+  gp2Supported?: DecisionOption;
+  sharingStatus: OutputSharingStatus;
 };
 
 export type UserAuthor = {
@@ -116,6 +127,9 @@ export type OutputPostRequest = {
   title: string;
   type?: OutputType;
   subtype?: OutputSubtype;
+  description?: string;
+  gp2Supported?: DecisionOption;
+  sharingStatus: OutputSharingStatus;
   workingGroupId?: string;
   projectId?: string;
 };

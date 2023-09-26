@@ -1,6 +1,7 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
 import {
+  createProcessingFunction,
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
 } from '@asap-hub/server-common';
@@ -16,14 +17,18 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { CalendarPayload } from '../event-bus';
 
-export const indexCalendarEventsHandler =
-  (
-    eventController: EventController,
-    algoliaClient: AlgoliaClient<'gp2'>,
-  ): ((
-    event: EventBridgeEvent<gp2Model.CalendarEvent, CalendarPayload>,
-  ) => Promise<void>) =>
-  async (event) => {
+export const indexEventCalendarHandler = (
+  eventController: EventController,
+  algoliaClient: AlgoliaClient<'gp2'>,
+): ((
+  event: EventBridgeEvent<gp2Model.CalendarEvent, CalendarPayload>,
+) => Promise<void>) => {
+  const processingFunction = createProcessingFunction(
+    algoliaClient,
+    'event',
+    logger,
+  );
+  return async (event) => {
     logger.debug(`Event ${event['detail-type']}`);
 
     const fetchFunction = ({
@@ -38,33 +43,9 @@ export const indexCalendarEventsHandler =
         filter: { calendarId: event.detail.resourceId },
       });
 
-    const processingFunction = async (
-      foundEvents: ListResponse<gp2Model.EventResponse>,
-    ) => {
-      logger.info(
-        `Found ${foundEvents.total} events. Processing ${foundEvents.items.length} events.`,
-      );
-
-      try {
-        const events = foundEvents.items.map((data) => ({
-          data,
-          type: 'event' as const,
-        }));
-        logger.info(`trying to save: ${JSON.stringify(events, null, 2)}`);
-        await algoliaClient.saveMany(events);
-      } catch (err) {
-        logger.error('Error occurred during saveMany');
-        if (err instanceof Error) {
-          logger.error(`The error message: ${err.message}`);
-        }
-        throw err;
-      }
-
-      logger.info(`Updated ${foundEvents.items.length} events.`);
-    };
-
     await loopOverCustomCollection(fetchFunction, processingFunction, 8);
   };
+};
 
 const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
 const eventDataProvider = new EventContentfulDataProvider(
@@ -73,7 +54,7 @@ const eventDataProvider = new EventContentfulDataProvider(
 );
 
 export const handler = sentryWrapper(
-  indexCalendarEventsHandler(
+  indexEventCalendarHandler(
     new EventController(eventDataProvider),
     algoliaSearchClientFactory({
       algoliaApiKey,

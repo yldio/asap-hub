@@ -1361,6 +1361,93 @@ describe('User data provider', () => {
         );
       });
     });
+    describe('user filter', () => {
+      test('it should be able to filter by user', async () => {
+        const userId = '42';
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulUsersGraphqlResponse(),
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            userIds: [userId],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(1);
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
+            skip: 2,
+            where: expect.objectContaining({
+              role_not: 'Hidden',
+              sys: { id_in: [userId] },
+            }),
+          }),
+        );
+      });
+      test('it should be able to filter by users', async () => {
+        const user1Id = '11';
+        const user2Id = '7';
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulUsersGraphqlResponse(),
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            userIds: [user1Id, user2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(1);
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
+            skip: 2,
+            where: expect.objectContaining({
+              role_not: 'Hidden',
+              sys: { id_in: [user1Id, user2Id] },
+            }),
+          }),
+        );
+      });
+      test('it should be able to filter out duplicate user Ids', async () => {
+        const user1Id = '11';
+        const user2Id = '11';
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulUsersGraphqlResponse(),
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            userIds: [user1Id, user2Id],
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toBeCalledTimes(1);
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            limit: 12,
+            skip: 2,
+            where: expect.objectContaining({
+              role_not: 'Hidden',
+              sys: { id_in: [user1Id] },
+            }),
+          }),
+        );
+      });
+    });
     test('it should be able to filter out duplicate user Ids when both the project and working group filters are defined', async () => {
       const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
       const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
@@ -1381,6 +1468,7 @@ describe('User data provider', () => {
         filter: {
           projects: [projectId],
           workingGroups: [workingGroupId],
+          userIds: [user1Id],
         },
       };
       await userDataProvider.fetch(fetchOptions);

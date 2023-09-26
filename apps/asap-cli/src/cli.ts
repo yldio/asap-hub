@@ -7,7 +7,6 @@
 
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
-import * as importers from './import';
 import {
   clearAlgoliaIndex,
   deleteAlgoliaIndex,
@@ -141,23 +140,6 @@ yargs(hideBin(process.argv))
         indexNameFrom: indexfrom,
         indexNameTo: indexto,
       }),
-  })
-  .command({
-    command: 'import <entity> <path>',
-    describe: 'import entities data to squidex from csv',
-    builder: (cli) =>
-      cli
-        .positional('entity', {
-          describe: 'specific an entity to import',
-          type: 'string',
-          choices: ['users', 'protocols'],
-        })
-        .positional('path', {
-          describe: 'path to csv file',
-          type: 'string',
-        }),
-    handler: async ({ path, entity }) =>
-      importers[entity as 'users'](path as string),
   })
   .command({
     command: 'algolia:remove-records',

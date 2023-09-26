@@ -65,6 +65,9 @@ export default class OutputController {
       type: outputCreateData.type,
       workingGroupId: outputCreateData.workingGroupId,
       projectId: outputCreateData.projectId,
+      description: outputCreateData.description,
+      sharingStatus: outputCreateData.sharingStatus,
+      gp2Supported: outputCreateData.gp2Supported,
     };
 
     const outputId = await this.outputDataProvider.create(
@@ -98,6 +101,9 @@ export default class OutputController {
       title: outputUpdateData.title,
       type: outputUpdateData.type,
       updatedBy: outputUpdateData.updatedBy,
+      description: outputUpdateData.description,
+      gp2Supported: outputUpdateData.gp2Supported,
+      sharingStatus: outputUpdateData.sharingStatus,
     };
 
     await this.outputDataProvider.update(id, outputUpdateDataObject);

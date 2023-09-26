@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { gp2 } from '@asap-hub/model';
 
 export const OutputIdentifierValidationExpression: Record<

@@ -12,6 +12,7 @@ import { createMemoryHistory } from 'history';
 import { Router, StaticRouter } from 'react-router-dom';
 import { NotificationContext } from '@asap-hub/react-context';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
+import { createIdentifierField } from '../../utils';
 
 describe('OutputForm', () => {
   const defaultProps = {
@@ -598,6 +599,78 @@ describe('OutputForm', () => {
       expect(getPublishDateValidationMessage({ ...e, badInput: true })).toEqual(
         'Date published should be complete or removed',
       );
+    });
+  });
+  describe('createIdentifierField', () => {
+    it('maps the OutputIdentifierType to fields including the identifier', () => {
+      expect(
+        createIdentifierField(gp2.OutputIdentifierType.Empty, 'identifier'),
+      ).toEqual({});
+      expect(
+        createIdentifierField(gp2.OutputIdentifierType.RRID, 'identifier'),
+      ).toEqual({ rrid: 'identifier' });
+      expect(
+        createIdentifierField(gp2.OutputIdentifierType.DOI, 'identifier'),
+      ).toEqual({ doi: 'identifier' });
+      expect(
+        createIdentifierField(
+          gp2.OutputIdentifierType.AccessionNumber,
+          'identifier',
+        ),
+      ).toEqual({ accessionNumber: 'identifier' });
+    });
+  });
+
+  it('displays tags suggestions', () => {
+    render(
+      <OutputForm
+        {...defaultProps}
+        suggestions={[
+          { id: '1', name: '2D Cultures' },
+          { id: '2', name: 'Adenosine' },
+          { id: '3', name: 'Adrenal' },
+        ]}
+      />,
+      { wrapper: StaticRouter },
+    );
+
+    userEvent.click(screen.getByLabelText(/additional tags/i));
+    expect(screen.getByText('2D Cultures')).toBeVisible();
+    expect(screen.getByText('Adenosine')).toBeVisible();
+    expect(screen.getByText('Adrenal')).toBeVisible();
+  });
+  describe('identifierType', () => {
+    it('returns DOI when doi is present', () => {
+      render(<OutputForm {...defaultProps} doi="123" />, {
+        wrapper: StaticRouter,
+      });
+
+      expect(screen.getByDisplayValue(/doi/i)).toBeTruthy();
+    });
+    it('returns RRID when rrid is present', () => {
+      render(<OutputForm {...defaultProps} rrid="123" />, {
+        wrapper: StaticRouter,
+      });
+      expect(screen.getByDisplayValue(/rrid/i)).toBeTruthy();
+    });
+    it('returns Accession Number when accession is present', () => {
+      render(<OutputForm {...defaultProps} accessionNumber="123" />, {
+        wrapper: StaticRouter,
+      });
+      expect(screen.getByDisplayValue(/accession number/i)).toBeTruthy();
+    });
+    it('returns empty for create mode', () => {
+      render(<OutputForm {...defaultProps} />, {
+        wrapper: StaticRouter,
+      });
+
+      expect(screen.getByText(/choose an identifier.../i)).toBeVisible();
+    });
+    it('return none for edit mode', () => {
+      render(<OutputForm {...defaultProps} title="Output Title" />, {
+        wrapper: StaticRouter,
+      });
+      expect(screen.getByDisplayValue(/none/i)).toBeTruthy();
     });
   });
 });

@@ -26,6 +26,7 @@ import { ComponentPropsWithRef, useEffect, useState } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
 import { OutputIdentifier } from '../organisms/OutputIdentifier';
 import { EntityMappper } from './CreateOutputPage';
+import { createIdentifierField } from '../utils';
 
 const { rem } = pixels;
 const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
@@ -193,7 +194,7 @@ const OutputForm: React.FC<OutputFormType> = ({
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
     tags: newTags.length > 0 ? newTags : undefined,
-    ...gp2Model.createIdentifierField(identifierType, identifier),
+    ...createIdentifierField(identifierType, identifier),
   };
 
   useEffect(() => {

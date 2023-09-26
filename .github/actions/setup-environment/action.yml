@@ -109,7 +109,7 @@ outputs:
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
   crn-base-pr-app-domain:
     description: 'CRN Base PR App Domain'
-    value: ${{ steps.vars.outputs.crn-base-pr-app-domain }}
+    value: ${{ contains(github.event.labels.*.name, 'use-pr-auth0-tenant') && 'setting another domain' || steps.setup.outputs.crn-auth0-domain }}
   crn-ci-auth0-client-id:
     description: 'CRN CI Auth0 Client Id'
     value: ${{ steps.vars.outputs.crn-ci-auth0-client-id }}

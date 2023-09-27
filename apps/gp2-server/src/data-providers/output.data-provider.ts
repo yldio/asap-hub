@@ -279,6 +279,9 @@ export const parseContentfulGraphQLOutput = (
       data.sys.firstPublishedAt,
     authors,
     tags,
+    doi: data.doi ?? undefined,
+    rrid: data.rrid ?? undefined,
+    accessionNumber: data.accessionNumber ?? undefined,
     ...relatedEntity,
   };
 };

@@ -194,7 +194,7 @@ const OutputForm: React.FC<OutputFormType> = ({
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
     tags: newTags.length > 0 ? newTags : undefined,
-    ...createIdentifierField(identifierType, identifier),
+    ...createIdentifierField(newIdentifierType, identifier),
   };
 
   useEffect(() => {

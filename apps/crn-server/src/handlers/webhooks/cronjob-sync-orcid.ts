@@ -19,7 +19,7 @@ const rawHandler = async (): Promise<lambda.Response> => {
     .toISO();
 
   const { items: outdatedUsers } = await userDataProvider.fetch({
-    take: 50,
+    take: 40,
     filter: {
       orcid: '-',
       orcidLastSyncDate,
@@ -36,9 +36,9 @@ const rawHandler = async (): Promise<lambda.Response> => {
     users.syncOrcidProfile(user.id, user as UserResponse),
   );
 
-  await Promise.all(
-    outdatedUsers.map((user) => throttledSyncOrcidProfile(user)),
-  );
+  for (const outdatedUser of outdatedUsers) {
+    await throttledSyncOrcidProfile(outdatedUser);
+  }
 
   return {
     statusCode: 200,

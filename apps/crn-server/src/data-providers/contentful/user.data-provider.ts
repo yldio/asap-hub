@@ -366,18 +366,28 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
 const generateFetchQueryFilter = ({
   filter,
 }: FetchUsersOptions): UsersFilter => {
-  const { orcid, code, onboarded = true, hidden = true } = filter || {};
+  const {
+    orcid,
+    orcidLastSyncDate,
+    code,
+    onboarded = true,
+    hidden = true,
+  } = filter || {};
 
   const filterCode = code ? { connections_contains_all: [code] } : {};
   const filterHidden = hidden ? { role_not: 'Hidden' } : {};
   const filterNonOnboarded = onboarded ? { onboarded: true } : {};
   const filterOrcid = orcid ? { orcid_contains: orcid } : {};
+  const filterOrcidLastSyncDate = orcidLastSyncDate
+    ? { orcidLastSyncDate_lt: orcidLastSyncDate }
+    : {};
 
   const queryFilter = {
     ...filterCode,
     ...filterNonOnboarded,
     ...filterHidden,
     ...filterOrcid,
+    ...filterOrcidLastSyncDate,
   };
 
   return queryFilter;

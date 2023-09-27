@@ -586,6 +586,23 @@ describe('User data provider', () => {
           }),
         );
       });
+
+      test('should support filtering by orcidLastSyncDate', async () => {
+        await userDataProvider.fetch({
+          filter: {
+            orcidLastSyncDate: 'some-date',
+          },
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_USERS,
+          expect.objectContaining({
+            where: expect.objectContaining({
+              orcidLastSyncDate_lt: 'some-date',
+            }),
+          }),
+        );
+      });
     });
   });
 

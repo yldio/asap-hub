@@ -1,3 +1,4 @@
+import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
@@ -50,7 +51,7 @@ const researchOutputIndexState = atomFamily<
   default: undefined,
 });
 
-const refreshResearchOutputIndex = atom<number>({
+export const refreshResearchOutputIndex = atom<number>({
   key: 'refreshResearchOutputIndex',
   default: 0,
 });
@@ -154,6 +155,15 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   const { client } = useAlgolia();
   const authorization = useRecoilValue(authorizationState);
   if (researchOutputs === undefined) {
+    if (
+      options.noResultsWithoutCriteria &&
+      options.searchQuery === '' &&
+      options.filters.size === 0 &&
+      (options.tags?.length ?? 0) === 0
+    ) {
+      return EMPTY_ALGOLIA_RESPONSE;
+    }
+
     throw (
       options.draftsOnly
         ? getDraftResearchOutputs(options, authorization)

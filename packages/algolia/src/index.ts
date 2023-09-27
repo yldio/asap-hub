@@ -7,6 +7,10 @@ export type { SearchResponse } from '@algolia/client-search';
 export * from './client';
 export * from './crn/types';
 export * from './filters';
+export {
+  EMPTY_ALGOLIA_RESPONSE,
+  EMPTY_ALGOLIA_FACET_HITS,
+} from './no-token-client';
 export { gp2 };
 
 export type AlgoliaClient<App extends Apps> =

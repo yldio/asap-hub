@@ -19,18 +19,23 @@ export type ResearchOutputListOptions =
   | ResearchOutputPublishedListOptions
   | ResearchOutputDraftListOptions;
 
-type ResearchOutputPublishedListOptions = GetListOptions & {
-  teamId?: string;
-  userId?: string;
-  workingGroupId?: string;
-  draftsOnly?: false;
-};
-type ResearchOutputDraftListOptions = GetListOptions & {
-  userAssociationMember: boolean;
+type BasicOptions = {
   teamId?: string;
   workingGroupId?: string;
-  draftsOnly: true;
+  tags?: string[];
+  noResultsWithoutCriteria?: boolean;
 };
+
+type ResearchOutputPublishedListOptions = GetListOptions &
+  BasicOptions & {
+    userId?: string;
+    draftsOnly?: false;
+  };
+type ResearchOutputDraftListOptions = GetListOptions &
+  BasicOptions & {
+    userAssociationMember: boolean;
+    draftsOnly: true;
+  };
 
 export const getResearchOutput = async (
   id: string,
@@ -104,6 +109,7 @@ export const getResearchOutputs = (
     .search(['research-output'], options.searchQuery, {
       page: options.currentPage ?? 0,
       hitsPerPage: options.pageSize ?? 10,
+      tagFilters: options.tags,
       filters: getAllFilters(
         options.filters,
         options.teamId,

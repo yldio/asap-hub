@@ -4,6 +4,7 @@ import { RESEARCH_OUTPUT_ENTITY_TYPE } from '../src';
 import {
   NoTokenAlgoliaClient,
   CRN,
+  EMPTY_ALGOLIA_FACET_HITS,
   EMPTY_ALGOLIA_RESPONSE,
 } from '../src/no-token-client';
 
@@ -60,5 +61,14 @@ describe('NoTokenAlgoliaClient', () => {
       'some-query',
     );
     expect(result).toEqual(EMPTY_ALGOLIA_RESPONSE);
+  });
+
+  test('should return EMPTY_ALGOLIA_FACET_HITS on tag search', async () => {
+    const client = createClient();
+    const result = await client.searchForTagValues(
+      [RESEARCH_OUTPUT_ENTITY_TYPE],
+      'some-query',
+    );
+    expect(result).toEqual(EMPTY_ALGOLIA_FACET_HITS);
   });
 });

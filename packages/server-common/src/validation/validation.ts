@@ -94,7 +94,7 @@ export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOpt
           },
           keywords: {
             type: 'array',
-            items: { type: 'string', enum: gp2.keywords },
+            items: { type: 'string' },
             nullable: true,
           },
           projects: {

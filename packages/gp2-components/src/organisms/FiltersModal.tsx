@@ -6,7 +6,7 @@ import { formContainer, modalStyles, padding24Styles } from '../layout';
 import FilterModalFooter from '../molecules/FilterModalFooter';
 import FilterModalHeader from '../molecules/FilterModalHeader';
 
-const { userRegions, keywords } = gp2Model;
+const { userRegions } = gp2Model;
 
 type FiltersModalProps = {
   onBackClick: () => void;
@@ -14,6 +14,7 @@ type FiltersModalProps = {
   onApplyClick: (filters: gp2Model.FetchUsersSearchFilter) => void;
   projects: Pick<gp2Model.ProjectResponse, 'id' | 'title'>[];
   workingGroups: Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
+  keywords: gp2Model.KeywordDataObject[];
 };
 
 const getValues = <T extends string>(selected: T[]) =>
@@ -36,16 +37,26 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   filters,
   projects,
   workingGroups,
+  keywords,
 }) => {
   const entityToSelect = <T extends { title: string; id: string }>({
     title,
     id,
   }: T) => ({ label: title, value: id });
+  const keywordsToSelect = ({
+    name,
+    id,
+  }: FiltersModalProps['keywords'][number]) => ({
+    label: name,
+    value: id,
+  });
   const sortByLabel = <T extends { label: string }>(a: T, b: T) =>
     a.label.localeCompare(b.label);
   const [selectedRegions, setSelectedRegions] = useState(filters.regions || []);
   const [selectedExpertise, setSelectedExpertise] = useState(
-    filters.keywords || [],
+    keywords
+      .filter(({ id }) => filters.keywords?.includes(id))
+      .map(keywordsToSelect),
   );
   const [selectedProjects, setSelectedProjects] = useState(
     projects
@@ -77,9 +88,9 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
           <LabeledMultiSelect
             title={'Expertise / Interests'}
             placeholder="Start typing…"
-            values={getValues(selectedExpertise)}
-            suggestions={getValues([...keywords])}
-            onChange={onChange(setSelectedExpertise)}
+            values={selectedExpertise}
+            suggestions={keywords.map(keywordsToSelect).sort(sortByLabel)}
+            onChange={(newValues) => setSelectedExpertise([...newValues])}
             noOptionsMessage={getNoOptionsMessage(
               'Sorry, no current expertise / interests match',
             )}
@@ -123,7 +134,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
           onApply={() => {
             onApplyClick({
               regions: selectedRegions,
-              keywords: selectedExpertise,
+              keywords: selectedExpertise.map(({ value }) => value),
               projects: selectedProjects.map(({ value }) => value),
               workingGroups: selectedWorkingGroups.map(({ value }) => value),
             });

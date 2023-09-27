@@ -8,14 +8,15 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getAlgoliaUsers } from '../api';
 import { getAlgoliaProjects } from '../../projects/api';
+import { getKeywords } from '../../shared/api';
 import { getWorkingGroups } from '../../working-groups/api';
-import Routes from '../Routes';
 import {
   createProjectListAlgoliaResponse,
   createUserListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
+import { getAlgoliaUsers } from '../api';
+import Routes from '../Routes';
 
 const renderRoutes = async () => {
   render(
@@ -42,13 +43,9 @@ beforeEach(jest.resetAllMocks);
 jest.mock('../api');
 jest.mock('../../projects/api');
 jest.mock('../../working-groups/api');
+jest.mock('../../shared/api');
 describe('Routes', () => {
   it('renders a list of users', async () => {
-    const mockGetUsers = getAlgoliaUsers as jest.MockedFunction<
-      typeof getAlgoliaUsers
-    >;
-    console.log(mockGetUsers);
-    mockGetUsers.mockResolvedValue(createUserListAlgoliaResponse(1));
     const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
       typeof getAlgoliaProjects
     >;
@@ -57,6 +54,15 @@ describe('Routes', () => {
       typeof getWorkingGroups
     >;
     mockGetWorkingGroups.mockResolvedValue(gp2.createWorkingGroupsResponse());
+    const mockGetUsers = getAlgoliaUsers as jest.MockedFunction<
+      typeof getAlgoliaUsers
+    >;
+    mockGetUsers.mockResolvedValue(createUserListAlgoliaResponse(1));
+    const mockGetKeywords = getKeywords as jest.MockedFunction<
+      typeof getKeywords
+    >;
+    mockGetKeywords.mockResolvedValue(gp2.createKeywordsResponse());
+
     await renderRoutes();
     expect(
       screen.getByRole('heading', { name: 'Tony Stark, PhD' }),

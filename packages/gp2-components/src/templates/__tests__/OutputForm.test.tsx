@@ -234,6 +234,7 @@ describe('OutputForm', () => {
       link: 'https://example.com',
       documentType: 'Procedural Form',
       description: 'An interesting article',
+      gp2Supported: "Don't Know",
       sharingStatus: 'Public',
       publishDate: new Date('2022-03-24').toISOString(),
       authors: [
@@ -340,6 +341,7 @@ describe('OutputForm', () => {
         type: 'Research',
         subtype: 'Published',
         description: 'Research description',
+        gp2Supported: "Don't Know",
         sharingStatus: 'GP2 Only',
         authors: [{ userId: 'u2' }],
       });
@@ -366,6 +368,26 @@ describe('OutputForm', () => {
         ).toBeNull();
       },
     );
+
+    test("is set to Don't Know by default if gp2Support does not have a previousValue", () => {
+      render(
+        <OutputForm
+          {...defaultProps}
+          gp2Supported={undefined}
+          documentType="Article"
+        />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
+
+      const gp2Supported = screen.getByRole('group', {
+        name: /has this output been supported by gp2?/i,
+      });
+      expect(
+        within(gp2Supported).getByRole('radio', { name: "Don't Know" }),
+      ).toBeChecked();
+    });
 
     test.each`
       gp2SupportedValue | documentType

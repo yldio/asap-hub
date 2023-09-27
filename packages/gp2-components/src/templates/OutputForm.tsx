@@ -115,7 +115,7 @@ const OutputForm: React.FC<OutputFormType> = ({
   const [newDescription, setDescription] = useState(description || '');
   const [newGp2Supported, setGp2Supported] = useState<
     gp2Model.DecisionOption | undefined
-  >(isGP2SupportedAlwaysTrue ? 'Yes' : gp2Supported);
+  >(isGP2SupportedAlwaysTrue ? 'Yes' : gp2Supported || "Don't Know");
   const [newSharingStatus, setSharingStatus] =
     useState<gp2Model.OutputSharingStatus>(
       isAlwaysPublic ? 'Public' : sharingStatus || 'GP2 Only',
@@ -166,7 +166,7 @@ const OutputForm: React.FC<OutputFormType> = ({
     }
 
     setIsGP2SupportedAlwaysTrue(newisGP2SupportedAlwaysTrue);
-  }, [newType, documentType]);
+  }, [newType, documentType, setGp2Supported]);
 
   const isFieldDirty = (original: string = '', current: string) =>
     current !== original;

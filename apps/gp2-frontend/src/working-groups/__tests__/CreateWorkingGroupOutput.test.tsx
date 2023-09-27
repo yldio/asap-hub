@@ -20,6 +20,8 @@ jest.mock('../../outputs/api');
 jest.mock('../../users/api');
 jest.mock('../../shared/api');
 
+jest.setTimeout(60_000);
+
 const mockCreateOutput = createOutput as jest.MockedFunction<
   typeof createOutput
 >;

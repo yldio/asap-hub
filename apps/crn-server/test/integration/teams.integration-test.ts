@@ -1,15 +1,15 @@
 import supertest from 'supertest';
 import { Express } from 'express';
 
-import { AppHelper } from '../helpers/app';
-import { retryable } from '../helpers/retryable';
+import { AppHelper } from './helpers/app';
+import { retryable } from './helpers/retryable';
 import {
   FixtureFactory,
   getUserFixture,
   getTeamFixture,
   getInterestGroupFixture,
   UserFixture,
-} from '../fixtures';
+} from './fixtures';
 
 jest.setTimeout(120000);
 

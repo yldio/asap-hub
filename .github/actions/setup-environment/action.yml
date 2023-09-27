@@ -249,7 +249,7 @@ runs:
           PR_NUMBER=${{ github.event.number || github.event.inputs.pr-number || inputs.pr-number }}
           HAS_CONTENTFUL_LABEL=${{ contains(github.event.pull_request.labels.*.name, 'contentful') }}
           HAS_AUTH0_LABEL=${{contains(github.event.pull_request.labels.*.name, 'use-pr-auth0-tenant') }}
-          if [HAS_AUTH0_LABEL]; then
+          if ["$HAS_AUTH0_LABEL" = true]; then
             echo "crn-auth0-domain=testcrn" >> $GITHUB_OUTPUT
             echo "gp2-auth0-domain=testgp2" >> $GITHUB_OUTPUT
           fi

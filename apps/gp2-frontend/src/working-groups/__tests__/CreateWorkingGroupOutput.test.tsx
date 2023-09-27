@@ -113,6 +113,7 @@ it('publishes the output', async () => {
           externalUserId: '2',
         },
       ],
+      gp2Supported: "Don't Know",
       workingGroupId: 'working-group-id-1',
       projectId: undefined,
     },

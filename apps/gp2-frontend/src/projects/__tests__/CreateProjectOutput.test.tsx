@@ -105,6 +105,7 @@ it('publishes the output', async () => {
       documentType: 'Procedural Form',
       projectId: 'project-id-1',
       workingGroupId: undefined,
+      gp2Supported: "Don't Know",
       authors: [
         {
           userId: '1',

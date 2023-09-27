@@ -23,10 +23,10 @@ const UserTitle = ({ id }: { id: string }) => {
       </>
     );
   }
-  if (contentType === 'externalAuthors') {
+  if (contentType === 'externalUsers') {
     return (
       <>
-        {user.fields?.name?.['en-US']} <Badge>External Author</Badge>
+        {user.fields?.name?.['en-US']} <Badge>External User</Badge>
       </>
     );
   }

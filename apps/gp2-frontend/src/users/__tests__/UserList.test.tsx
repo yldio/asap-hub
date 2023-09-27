@@ -1,5 +1,4 @@
-import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { ClientSearchResponse } from '@asap-hub/algolia';
 import {
   render,
   screen,
@@ -11,7 +10,8 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useSearch } from '../../hooks/search';
-import { getUsers } from '../api';
+import { createUserListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getAlgoliaUsers } from '../api';
 import UserList from '../UserList';
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -25,15 +25,17 @@ jest.mock('@asap-hub/frontend-utils', () => {
 });
 jest.mock('../api');
 jest.mock('../../hooks/search');
-const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
+const mockGetUsers = getAlgoliaUsers as jest.MockedFunction<
+  typeof getAlgoliaUsers
+>;
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
 
 const renderUserList = async ({
   searchQuery = '',
   filters = {},
-  listUserResponse = gp2Fixtures.createUsersResponse(),
+  listUserResponse = createUserListAlgoliaResponse(1),
 }: Partial<ComponentProps<typeof UserList>> & {
-  listUserResponse?: gp2Model.ListUserResponse;
+  listUserResponse?: ClientSearchResponse<'gp2', 'user'>;
 } = {}) => {
   mockGetUsers.mockResolvedValue(listUserResponse);
   const mockUpdateFilter = jest.fn();
@@ -92,14 +94,17 @@ it('fetches the user information', async () => {
 });
 
 it('renders a list of fetched groups', async () => {
-  const listUserResponse = {
-    total: 2,
-    items: gp2Fixtures.createUsersResponse(2).items.map((user, i) => ({
-      ...user,
-      id: `${i}`,
-      displayName: `Display Name ${i}`,
-    })),
-  };
+  const listUserResponse = createUserListAlgoliaResponse(2);
+
+  // = {
+  //   total: 2,
+  //   items: gp2Fixtures.createUsersResponse(2).items.map((user, i) => ({
+  //     ...user,
+  //     id: `${i}`,
+  //     displayName: `Display Name ${i}`,
+  //   })),
+  // };
+
   await renderUserList({ listUserResponse });
   expect(
     screen.getByRole('heading', { name: /display name 0/i }),

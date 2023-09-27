@@ -84,7 +84,6 @@ export const useUsers = (options: UserListOptions) => {
   const [users, setUsers] = useRecoilState(usersState(options));
   const { client } = useAlgolia();
   if (users === undefined) {
-    console.log('use users');
     throw getAlgoliaUsers(client, options)
       .then(
         (data): gp2.ListUserResponse => ({

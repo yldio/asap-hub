@@ -1,6 +1,6 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
 import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
-import { FetchUsersOptions, gp2, InstitutionsResponse } from '@asap-hub/model';
+import { gp2, InstitutionsResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
 export const createUserApiUrl = ({
@@ -49,10 +49,10 @@ const getAllFilters = ({
   }) => items?.map((item) => `${name}:"${item}"`).join(' OR ');
 
   return [
-    { name: 'regions', items: regions },
-    { name: 'keywords', items: keywords },
-    { name: 'projects.id', items: projects },
-    { name: 'workingGroups.id', items: workingGroups },
+    { name: 'region', items: regions },
+    { name: 'tagIds', items: keywords },
+    { name: 'projectIds', items: projects },
+    { name: 'workingGroupIds', items: workingGroups },
   ]
     .map(addFilter)
     .filter(Boolean)

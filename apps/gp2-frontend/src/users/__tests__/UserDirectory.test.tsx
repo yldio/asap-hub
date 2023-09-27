@@ -16,8 +16,11 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useSearch } from '../../hooks/search';
 import { getAlgoliaProjects } from '../../projects/api';
 import { getWorkingGroups } from '../../working-groups/api';
-import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getUsers } from '../api';
+import {
+  createProjectListAlgoliaResponse,
+  createUserListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
+import { getAlgoliaUsers } from '../api';
 import { MAX_RESULTS } from '../export';
 import UserDirectory from '../UserDirectory';
 
@@ -34,7 +37,9 @@ jest.mock('../api');
 jest.mock('../../projects/api');
 jest.mock('../../working-groups/api');
 jest.mock('../../hooks/search');
-const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
+const mockGetUsers = getAlgoliaUsers as jest.MockedFunction<
+  typeof getAlgoliaUsers
+>;
 const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
   typeof getAlgoliaProjects
 >;
@@ -47,14 +52,14 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
 
 const renderUserDirectory = async ({
-  listUserResponse = gp2Fixtures.createUsersResponse(),
+  listUserResponse = createUserListAlgoliaResponse(1),
   listProjectResponse = createProjectListAlgoliaResponse(1),
   listWorkingGroupResponse = gp2Fixtures.createWorkingGroupsResponse(),
   displayFilters = false,
   isAdministrator = false,
   filters = {},
 }: {
-  listUserResponse?: gp2Model.ListUserResponse;
+  listUserResponse?: ClientSearchResponse<'gp2', 'user'>;
   listProjectResponse?: ClientSearchResponse<'gp2', 'project'>;
   listWorkingGroupResponse?: gp2Model.ListWorkingGroupResponse;
   displayFilters?: boolean;

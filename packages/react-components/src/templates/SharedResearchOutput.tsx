@@ -234,7 +234,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               {!!tags.length && (
                 <>
                   <Headline2 styleAsHeading={4}>Tags</Headline2>
-                  <TagList tags={tags} />
+                  <TagList
+                    tags={tags.map((tag) => ({
+                      tag,
+                      href: '#',
+                    }))}
+                  />
                 </>
               )}
             </Card>

@@ -80,13 +80,13 @@ describe('Field component', () => {
             },
           };
         }
-        if (id === 'external-author-1') {
+        if (id === 'external-user-1') {
           return {
             data: {
               sys: {
                 contentType: {
                   sys: {
-                    id: 'externalAuthors',
+                    id: 'externalUsers',
                   },
                 },
               },
@@ -125,7 +125,7 @@ describe('Field component', () => {
       await waitFor(() => {
         expect(screen.queryByText('Topic 1')).toBeInTheDocument();
         expect(screen.queryByText('User')).not.toBeInTheDocument();
-        expect(screen.queryByText('External Author')).not.toBeInTheDocument();
+        expect(screen.queryByText('External User')).not.toBeInTheDocument();
       });
     });
 
@@ -158,11 +158,11 @@ describe('Field component', () => {
         expect(useEntity).toHaveBeenCalledWith('Entry', 'user-1');
         expect(screen.queryByText('First Last')).toBeInTheDocument();
         expect(screen.queryByText('User')).toBeInTheDocument();
-        expect(screen.queryByText('External Author')).not.toBeInTheDocument();
+        expect(screen.queryByText('External User')).not.toBeInTheDocument();
       });
     });
 
-    it('loads external author name from related entity and renders external author name', async () => {
+    it('loads external user name from related entity and renders external user name', async () => {
       const props = {
         entity: {
           fields: {
@@ -170,7 +170,7 @@ describe('Field component', () => {
             user: {
               'en-US': {
                 sys: {
-                  id: 'external-author-1',
+                  id: 'external-user-1',
                 },
               },
             },
@@ -188,10 +188,10 @@ describe('Field component', () => {
       render(<CustomCard {...props} />);
 
       await waitFor(() => {
-        expect(useEntity).toHaveBeenCalledWith('Entry', 'external-author-1');
+        expect(useEntity).toHaveBeenCalledWith('Entry', 'external-user-1');
         expect(screen.queryByText('External Speaker')).toBeInTheDocument();
         expect(screen.queryByText('User')).not.toBeInTheDocument();
-        expect(screen.queryByText('External Author')).toBeInTheDocument();
+        expect(screen.queryByText('External User')).toBeInTheDocument();
       });
     });
 

@@ -293,6 +293,7 @@ export type AssetLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   eventsCollection?: Maybe<EventsCollection>;
   guideCollection?: Maybe<GuideCollection>;
+  newsCollection?: Maybe<NewsCollection>;
   usersCollection?: Maybe<UsersCollection>;
 };
 
@@ -318,6 +319,16 @@ export type AssetLinkingCollectionsGuideCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<AssetLinkingCollectionsGuideCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
+export type AssetLinkingCollectionsNewsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AssetLinkingCollectionsNewsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -393,6 +404,25 @@ export enum AssetLinkingCollectionsGuideCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+}
+
+export enum AssetLinkingCollectionsNewsCollectionOrder {
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
 }
 
 export enum AssetLinkingCollectionsUsersCollectionOrder {
@@ -3050,6 +3080,7 @@ export type News = Entry & {
   publishDate?: Maybe<Scalars['DateTime']>;
   shortText?: Maybe<Scalars['String']>;
   sys: Sys;
+  thumbnail?: Maybe<Asset>;
   title?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
 };
@@ -3077,6 +3108,12 @@ export type NewsPublishDateArgs = {
 /** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+};
+
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+export type NewsThumbnailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
@@ -3131,6 +3168,7 @@ export type NewsFilter = {
   shortText_not_contains?: InputMaybe<Scalars['String']>;
   shortText_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+  thumbnail_exists?: InputMaybe<Scalars['Boolean']>;
   title?: InputMaybe<Scalars['String']>;
   title_contains?: InputMaybe<Scalars['String']>;
   title_exists?: InputMaybe<Scalars['Boolean']>;
@@ -8715,7 +8753,10 @@ export type FetchKeywordsQuery = {
 export type NewsContentDataFragment = Pick<
   News,
   'title' | 'shortText' | 'link' | 'linkText' | 'publishDate' | 'type'
-> & { sys: Pick<Sys, 'id' | 'firstPublishedAt'> };
+> & {
+  sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+  thumbnail?: Maybe<Pick<Asset, 'url'>>;
+};
 
 export type FetchNewsByIdQueryVariables = Exact<{
   id: Scalars['String'];
@@ -8726,7 +8767,10 @@ export type FetchNewsByIdQuery = {
     Pick<
       News,
       'title' | 'shortText' | 'link' | 'linkText' | 'publishDate' | 'type'
-    > & { sys: Pick<Sys, 'id' | 'firstPublishedAt'> }
+    > & {
+      sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+      thumbnail?: Maybe<Pick<Asset, 'url'>>;
+    }
   >;
 };
 
@@ -8745,7 +8789,10 @@ export type FetchNewsQuery = {
           Pick<
             News,
             'title' | 'shortText' | 'link' | 'linkText' | 'publishDate' | 'type'
-          > & { sys: Pick<Sys, 'id' | 'firstPublishedAt'> }
+          > & {
+            sys: Pick<Sys, 'id' | 'firstPublishedAt'>;
+            thumbnail?: Maybe<Pick<Asset, 'url'>>;
+          }
         >
       >;
     }
@@ -9109,6 +9156,9 @@ export type FetchOutputsByExternalUserIdQuery = {
                 | 'documentType'
                 | 'type'
                 | 'subtype'
+                | 'description'
+                | 'gp2Supported'
+                | 'sharingStatus'
                 | 'link'
                 | 'addedDate'
                 | 'publishDate'
@@ -12056,6 +12106,16 @@ export const NewsContentDataFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'title' } },
           { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'thumbnail' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+              ],
+            },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'link' } },
           { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
           { kind: 'Field', name: { kind: 'Name', value: 'publishDate' } },

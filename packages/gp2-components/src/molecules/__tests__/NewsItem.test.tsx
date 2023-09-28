@@ -5,6 +5,7 @@ describe('NewsItem', () => {
   const newsProps = {
     title: 'News Title',
     shortText: 'News short text',
+    thumbnail: 'http://image.com/assets/thumbnail-uuid1',
     created: '2021-01-01T00:00:00.000Z',
     linkText: 'News link text',
     link: 'https://www.google.com',
@@ -19,6 +20,11 @@ describe('NewsItem', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('News short text')).toBeInTheDocument();
     expect(screen.getByText('News link text')).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', {
+        name: /"News Title"'s thumbnail/i,
+      }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: /News link text/i }),
     ).toHaveAttribute('href', 'https://www.google.com');

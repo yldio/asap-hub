@@ -12,6 +12,9 @@ export const getContentfulGraphqlNews = (): NonNullable<
 > => ({
   title: 'a news item',
   shortText: 'the short text of the news',
+  thumbnail: {
+    url: 'http://image.com/assets/thumbnail-uuid1',
+  },
   link: 'http://example.com/a-link',
   linkText: 'some link text',
   sys: {
@@ -34,6 +37,7 @@ export const getNewsDataObject = (): gp2Model.NewsDataObject => ({
   id: '42',
   title: 'a news item',
   shortText: 'the short text of the news',
+  thumbnail: 'http://image.com/assets/thumbnail-uuid1',
   created: '2021-12-28T00:00:00.000Z',
   link: 'http://example.com/a-link',
   linkText: 'some link text',

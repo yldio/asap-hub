@@ -35,10 +35,22 @@ const newsItemStyles = css({
   },
 });
 
-const imageStyles = css({
+const imageContainerStyles = css({
+  flexShrink: 0,
+  borderRadius: '8px',
+  height: rem(192),
+  width: rem(192),
+  overflow: 'hidden',
+
   gridArea: 'image',
   svg: { borderRadius: '8px' },
   [mobileQuery]: { display: 'none' },
+});
+
+const imageStyles = css({
+  objectFit: 'cover',
+  width: '100%',
+  height: '100%',
 });
 
 const contentStyles = css({
@@ -50,6 +62,7 @@ type NewsItemProps = gp2.NewsResponse;
 
 const NewsItem: React.FC<NewsItemProps> = ({
   title,
+  thumbnail,
   shortText,
   created,
   linkText,
@@ -57,7 +70,17 @@ const NewsItem: React.FC<NewsItemProps> = ({
 }) => (
   <Card padding={false}>
     <article css={newsItemStyles}>
-      <div css={imageStyles}>{newsPlaceholder}</div>
+      <div css={imageContainerStyles}>
+        {thumbnail ? (
+          <img
+            alt={`"${title}"'s thumbnail`}
+            src={thumbnail}
+            css={imageStyles}
+          />
+        ) : (
+          newsPlaceholder
+        )}
+      </div>
       <div css={css({ gridArea: 'headline' })}>
         <Subtitle noMargin styleAsHeading={4}>
           {title}

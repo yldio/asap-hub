@@ -9,6 +9,9 @@ export const newsContentQueryFragment = gql`
     }
     title
     shortText
+    thumbnail {
+      url
+    }
     link
     linkText
     publishDate

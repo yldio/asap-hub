@@ -9,6 +9,7 @@ export type NewsDataObject = {
   created: string;
   title: string;
   shortText: string;
+  thumbnail?: string;
   link?: string;
   linkText?: string;
   type: NewsType;

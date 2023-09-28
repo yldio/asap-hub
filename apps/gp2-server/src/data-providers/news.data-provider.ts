@@ -57,6 +57,7 @@ export const parseGraphQlNews = (item: NewsItem): gp2Model.NewsDataObject => ({
   id: item.sys.id ?? '',
   title: item.title ?? '',
   shortText: item.shortText ?? '',
+  thumbnail: item.thumbnail?.url ?? undefined,
   link: item.link ?? undefined,
   linkText: item.linkText ?? undefined,
   created: item.publishDate,

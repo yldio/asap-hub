@@ -388,7 +388,7 @@ jobs:
       - name: Deploy CRN PR
         if: ${{ inputs.environment-name=='Branch' }}
         run: yarn workspace @asap-hub/auth0 deploy --debug
-        env: 
+        env:
           AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-ci-auth0-client-id }}
           AUTH0_CLIENT_SECRET: ${{ secrets.CRN_CI_AUTH0_CLIENT_SECRET }}
           AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}

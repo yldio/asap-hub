@@ -27,7 +27,7 @@ const ShareOutput: React.FC<Record<string, never>> = () => {
         entityType={entityType}
         shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
-        suggestions={suggestions}
+        keywordSuggestions={suggestions}
       />
     </CreateOutputPage>
   );

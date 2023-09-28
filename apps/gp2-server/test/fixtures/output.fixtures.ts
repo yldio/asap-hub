@@ -71,7 +71,6 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     authors,
     workingGroup,
     project,
-    tags,
     ...outputResponse
   } = getOutputResponse();
   return {
@@ -80,7 +79,6 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     type: 'Research',
     projectId: project?.id,
     authors: authors.map(({ id }) => ({ userId: id })),
-    tags,
   };
 };
 
@@ -103,7 +101,6 @@ export const getOutputCreateDataObject =
       created: _created,
       workingGroup,
       project,
-      tags,
       ...outputPostRequest
     } = getOutputResponse();
 
@@ -112,7 +109,6 @@ export const getOutputCreateDataObject =
       createdBy: 'userId',
       projectId: project?.id,
       authors: authors.map(({ id }) => ({ userId: id })),
-      tags,
     };
   };
 

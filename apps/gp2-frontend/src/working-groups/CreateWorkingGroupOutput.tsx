@@ -33,7 +33,7 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         }
         documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
-        suggestions={suggestions}
+        keywordSuggestions={suggestions}
       />
     </CreateOutputPage>
   );

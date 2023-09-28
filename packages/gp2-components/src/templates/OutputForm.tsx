@@ -69,7 +69,7 @@ type OutputFormType = {
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
   >['loadOptions'];
-  suggestions: gp2Model.KeywordDataObject[];
+  keywordSuggestions: gp2Model.KeywordDataObject[];
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -105,7 +105,7 @@ const OutputForm: React.FC<OutputFormType> = ({
   entityType,
   shareOutput,
   documentType,
-  suggestions,
+  keywordSuggestions,
   getAuthorSuggestions = noop,
   title,
   link,
@@ -365,7 +365,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                 value: id,
               }))}
               enabled={!isSaving}
-              suggestions={suggestions.map(({ id, name }) => ({
+              suggestions={keywordSuggestions.map(({ id, name }) => ({
                 label: name,
                 value: id,
               }))}

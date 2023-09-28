@@ -101,8 +101,6 @@ export const createOutput = async (
     body: JSON.stringify(output),
   });
 
-  console.log(resp);
-
   if (!resp.ok) {
     throw new Error(
       `Failed to create output. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,

@@ -141,7 +141,7 @@ export const OutputIdentifier: React.FC<OutputIdentifierProps> = ({
         enabled={enabled}
       />
 
-      <TeamCreateOutputIdentifierField
+      <OutputIdentifierField
         type={identifierType}
         identifier={identifier}
         setIdentifier={setIdentifier}
@@ -150,15 +150,18 @@ export const OutputIdentifier: React.FC<OutputIdentifierProps> = ({
     </>
   );
 };
-export interface TeamCreateOutputIdentifierFieldProps {
+export interface OutputIdentifierFieldProps {
   identifier: string;
   setIdentifier: (value: string) => void;
   type: gp2.OutputIdentifierType;
   enabled?: boolean;
 }
-export const TeamCreateOutputIdentifierField: React.FC<
-  TeamCreateOutputIdentifierFieldProps
-> = ({ type, identifier, setIdentifier, enabled }) => {
+export const OutputIdentifierField: React.FC<OutputIdentifierFieldProps> = ({
+  type,
+  identifier,
+  setIdentifier,
+  enabled,
+}) => {
   const { helpText, placeholder, errorMessage, regex, required } =
     identifierMap[type];
 

@@ -3,10 +3,10 @@ import { Express } from 'express';
 import { omit } from 'lodash';
 import { ResearchTagDataObject, ResearchOutputResponse } from '@asap-hub/model';
 
-import { PAGE_SIZE } from '../../../scripts/export-entity';
-import { AppHelper } from '../helpers/app';
-import { retryable } from '../helpers/retryable';
-import '../helpers/matchers';
+import { PAGE_SIZE } from '../../scripts/export-entity';
+import { AppHelper } from './helpers/app';
+import { retryable } from './helpers/retryable';
+import './helpers/matchers';
 
 import {
   FixtureFactory,
@@ -18,7 +18,7 @@ import {
   WorkingGroupFixture,
   getResearchOutputFixture,
   ResearchOutputCreateDataObject,
-} from '../fixtures';
+} from './fixtures';
 
 jest.setTimeout(120000);
 

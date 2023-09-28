@@ -1,8 +1,8 @@
 import supertest from 'supertest';
 import { Express } from 'express';
 
-import { AppHelper } from '../helpers/app';
-import { FixtureFactory, getUserFixture, UserFixture } from '../fixtures';
+import { AppHelper } from './helpers/app';
+import { FixtureFactory, getUserFixture, UserFixture } from './fixtures';
 
 jest.setTimeout(120000);
 

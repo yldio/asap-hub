@@ -3,8 +3,8 @@ import { Express } from 'express';
 import { ListReminderResponse, UserCreateDataObject } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
-import { AppHelper } from '../helpers/app';
-import { retryable } from '../helpers/retryable';
+import { AppHelper } from './helpers/app';
+import { retryable } from './helpers/retryable';
 import {
   EventCreateDataObject,
   EventFixture,
@@ -17,11 +17,11 @@ import {
   TeamFixture,
   UserFixture,
   WorkingGroupFixture,
-} from '../fixtures';
-import { getCalendarFixture } from '../fixtures/calendar';
+} from './fixtures';
+import { getCalendarFixture } from './fixtures/calendar';
 
-jest.mock('../../../src/config', () => ({
-  ...jest.requireActual('../../../src/config'),
+jest.mock('../../src/config', () => ({
+  ...jest.requireActual('../../src/config'),
   isContentfulEnabled:
     process.env.INTEGRATION_TEST_CMS === 'contentful' ? 'true' : undefined,
   logLevel: 'silent',

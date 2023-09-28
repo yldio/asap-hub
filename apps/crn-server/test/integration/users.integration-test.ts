@@ -3,9 +3,9 @@ import { Express } from 'express';
 import { v4 as uuid } from 'uuid';
 import { omit } from 'lodash';
 
-import { PAGE_SIZE } from '../../../scripts/export-entity';
-import { AppHelper } from '../helpers/app';
-import { retryable } from '../helpers/retryable';
+import { PAGE_SIZE } from '../../scripts/export-entity';
+import { AppHelper } from './helpers/app';
+import { retryable } from './helpers/retryable';
 import {
   FixtureFactory,
   getUserFixture,
@@ -13,7 +13,7 @@ import {
   getInterestGroupFixture,
   getWorkingGroupFixture,
   UserFixture,
-} from '../fixtures';
+} from './fixtures';
 
 jest.setTimeout(120000);
 

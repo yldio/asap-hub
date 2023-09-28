@@ -51,7 +51,7 @@ interface ORCIDWork {
 }
 
 export interface ORCIDWorksResponse {
-  'last-modified-date': { value: number };
+  'last-modified-date': { value: number } | null;
   group: ORCIDWork[];
   path: string;
 }
@@ -59,9 +59,9 @@ export interface ORCIDWorksResponse {
 export const fetchOrcidProfile = (orcid: string): Promise<ORCIDWorksResponse> =>
   Got.get(`https://pub.orcid.org/v2.1/${orcid}/works`).json();
 
-export const transformOrcidWorks = (
-  orcidWorks: ORCIDWorksResponse,
-): { lastModifiedDate: string; works: CMSOrcidWork[] } =>
+export const transformOrcidWorks = (orcidWorks: {
+  [K in keyof ORCIDWorksResponse]: NonNullable<ORCIDWorksResponse[K]>;
+}): { lastModifiedDate: string; works: CMSOrcidWork[] } =>
   // parse & stringify to remove undefined values
   ({
     lastModifiedDate: `${orcidWorks['last-modified-date']?.value}`,

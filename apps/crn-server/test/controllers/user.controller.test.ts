@@ -298,7 +298,7 @@ describe('Users controller', () => {
       expect(result).toEqual({ ...getUserResponse(), orcid });
     });
 
-    test('Should update user profile even when ORCID returns 500', async () => {
+    test('Should update user profile orcidLastSyncDate when ORCID returns 500', async () => {
       const user = { ...getUserDataObject(), orcid };
       userDataProviderMock.fetchById.mockResolvedValue(user);
 
@@ -314,13 +314,32 @@ describe('Users controller', () => {
       });
 
       expect(userDataProviderMock.update).toHaveBeenCalled();
-      expect(userDataProviderMock.update).toHaveBeenCalledWith(
-        user.id,
-        expect.objectContaining({
-          email: user.email,
-        }),
-      );
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
+        email: user.email,
+        orcidLastSyncDate: expect.any(String),
+      });
       expect(result).toEqual({ ...getUserResponse(), orcid });
+    });
+
+    test('Should update user profile orcidLastSyncDate when last-modified-date is null', async () => {
+      const user = { ...getUserDataObject(), orcid };
+      userDataProviderMock.fetchById.mockResolvedValue(user);
+
+      const orcidWorksResponse = {
+        ...orcidFixtures.orcidWorksResponse,
+      };
+      orcidWorksResponse['last-modified-date'] = null;
+
+      nock('https://pub.orcid.org')
+        .get(`/v2.1/${orcid}/works`)
+        .reply(200, orcidWorksResponse);
+
+      await userController.syncOrcidProfile(userId);
+
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
+        email: user.email,
+        orcidLastSyncDate: expect.any(String),
+      });
     });
 
     test('Throws when user does not exist', async () => {
@@ -350,7 +369,7 @@ describe('Users controller', () => {
         user.id,
         expect.objectContaining({
           orcidLastModifiedDate: new Date(
-            orcidFixtures.orcidWorksResponse['last-modified-date'].value,
+            orcidFixtures.orcidWorksResponse['last-modified-date']!.value,
           ).toISOString(),
         }),
       );

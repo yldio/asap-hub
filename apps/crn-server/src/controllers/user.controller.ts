@@ -9,7 +9,11 @@ import {
 } from '@asap-hub/model';
 import Intercept from 'apr-intercept';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
-import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
+import {
+  fetchOrcidProfile,
+  ORCIDWorksResponse,
+  transformOrcidWorks,
+} from '../utils/fetch-orcid';
 import logger from '../utils/logger';
 
 export default class UserController {
@@ -110,7 +114,7 @@ export default class UserController {
       email: user.email,
       orcidLastSyncDate: new Date().toISOString(),
     };
-    if (!error) {
+    if (!error && isValidOrcidResponse(res)) {
       const { lastModifiedDate, works } = transformOrcidWorks(res);
       updateToUser.orcidLastModifiedDate = new Date(
         parseInt(lastModifiedDate, 10),
@@ -146,3 +150,9 @@ export const parseUserToResponse = ({
     onboarded,
   };
 };
+
+const isValidOrcidResponse = (
+  res: ORCIDWorksResponse,
+): res is {
+  [K in keyof ORCIDWorksResponse]: NonNullable<ORCIDWorksResponse[K]>;
+} => res['last-modified-date'] !== null;

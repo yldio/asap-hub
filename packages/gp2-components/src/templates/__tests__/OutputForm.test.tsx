@@ -23,6 +23,7 @@ describe('OutputForm', () => {
     entityType: 'workingGroup' as const,
     getRelatedOutputSuggestions: jest.fn(),
     tagSuggestions: [],
+    cohortSuggestions: [],
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {

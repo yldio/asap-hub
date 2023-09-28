@@ -96,6 +96,7 @@ type OutputFormProps = {
       typeof OutputRelatedResearchCard
     >['getRelatedResearchSuggestions']
   >;
+  cohortSuggestions: gp2Model.ContributingCohortDataObject[];
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -149,6 +150,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   accessionNumber,
   relatedOutputs = [],
   getRelatedOutputSuggestions,
+  cohortSuggestions,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -178,6 +180,10 @@ const OutputForm: React.FC<OutputFormProps> = ({
       ComponentProps<typeof OutputRelatedResearchCard>['relatedResearch']
     >
   >(getRelatedOutputs(relatedOutputs));
+
+  const [newCohorts, setCohorts] = useState<
+    gp2Model.ContributingCohortDataObject[]
+  >([]);
 
   const [newAuthors, setAuthors] = useState<
     ComponentPropsWithRef<typeof AuthorSelect>['values']
@@ -446,6 +452,48 @@ const OutputForm: React.FC<OutputFormProps> = ({
             ) : null}
           </FormCard>
           <FormCard title="Who were the contributors?">
+            <LabeledMultiSelect
+              title="Cohorts"
+              subtitle="(optional)"
+              description={
+                <>Add other cohorts that contributed to this output.</>
+              }
+              values={newCohorts.map(({ id, name }) => ({
+                label: name,
+                value: id,
+              }))}
+              enabled={!isSaving}
+              suggestions={cohortSuggestions.map(({ id, name }) => ({
+                label: name,
+                value: id,
+              }))}
+              onChange={(newValues) => {
+                setCohorts(
+                  newValues
+                    .slice(0, 10)
+                    .reduce(
+                      (acc, curr) => [
+                        ...acc,
+                        { id: curr.value, name: curr.label },
+                      ],
+                      [] as gp2Model.ContributingCohortDataObject[],
+                    ),
+                );
+              }}
+              placeholder="Start typing..."
+              maxMenuHeight={160}
+            />
+            <div css={linkStyles}>
+              Don’t see a cohort in this list?
+              <Link
+                href={mailToSupport({
+                  email: INVITE_SUPPORT_EMAIL,
+                  subject: 'New Cohort',
+                })}
+              >
+                Contact {INVITE_SUPPORT_EMAIL}
+              </Link>
+            </div>
             <AuthorSelect
               title="Authors"
               description=""

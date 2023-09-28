@@ -9,12 +9,9 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
+import { useContributingCohorts } from '../shared/state';
 
-import {
-  useContributingCohorts,
-  usePatchUserById,
-  useUserById,
-} from '../users/state';
+import { usePatchUserById, useUserById } from '../users/state';
 
 const AdditionalDetails: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();

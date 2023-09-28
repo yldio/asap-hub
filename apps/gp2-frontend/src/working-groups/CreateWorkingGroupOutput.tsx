@@ -5,7 +5,7 @@ import { FC } from 'react';
 import { useRelatedOutputSuggestions } from '../outputs';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 import { documentTypeMapper } from '../projects/CreateProjectOutput';
-import { useTags } from '../shared/state';
+import { useTags, useContributingCohorts } from '../shared/state';
 
 const { workingGroups } = gp2Routing;
 
@@ -19,6 +19,8 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const { items: tagSuggestions } = useTags();
+  const cohortSuggestions = useContributingCohorts();
+
   return (
     <CreateOutputPage
       documentType={documentTypeMapper[outputDocumentType]}
@@ -37,6 +39,7 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         getAuthorSuggestions={getAuthorSuggestions}
         tagSuggestions={tagSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        cohortSuggestions={cohortSuggestions}
       />
     </CreateOutputPage>
   );

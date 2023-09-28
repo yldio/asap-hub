@@ -4,7 +4,7 @@ import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC } from 'react';
 import { useRelatedOutputSuggestions } from '../outputs';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
-import { useTags } from '../shared/state';
+import { useContributingCohorts, useTags } from '../shared/state';
 
 const { projects } = gp2Routing;
 
@@ -29,6 +29,8 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const { items: tagSuggestions } = useTags();
+  const cohortSuggestions = useContributingCohorts();
+
   return (
     <CreateOutputPage
       documentType={documentTypeMapper[outputDocumentType]}
@@ -47,6 +49,7 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
         getAuthorSuggestions={getAuthorSuggestions}
         tagSuggestions={tagSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        cohortSuggestions={cohortSuggestions}
       />
     </CreateOutputPage>
   );

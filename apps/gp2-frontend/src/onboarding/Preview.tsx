@@ -20,12 +20,8 @@ import { getInstitutions } from '../users/api';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
 import locationSuggestions from '../users/location-suggestions';
 
-import {
-  useContributingCohorts,
-  usePatchUserById,
-  useUserById,
-} from '../users/state';
-import { useTags } from '../shared/state';
+import { usePatchUserById, useUserById } from '../users/state';
+import { useTags, useContributingCohorts } from '../shared/state';
 
 const Preview: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();

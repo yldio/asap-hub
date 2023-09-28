@@ -14,7 +14,8 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getContributingCohorts, getUser, patchUser } from '../../users/api';
+import { getContributingCohorts } from '../../shared/api';
+import { getUser, patchUser } from '../../users/api';
 import AdditionalDetails from '../AdditionalDetails';
 
 jest.mock('../../users/api');

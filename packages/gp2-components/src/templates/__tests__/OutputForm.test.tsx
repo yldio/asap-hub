@@ -340,6 +340,7 @@ describe('OutputForm', () => {
         type: 'Research',
         subtype: 'Published',
         description: 'Research description',
+        gp2Supported: "Don't Know",
         sharingStatus: 'GP2 Only',
         authors: [{ userId: 'u2' }],
       });

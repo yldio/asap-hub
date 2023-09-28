@@ -103,7 +103,7 @@ outputs:
     value: ${{ steps.vars.outputs.crn-auth0-client-id }}
   crn-auth0-domain:
     description: 'CRN Auth0 Domain'
-    value: ${{ contains(github.event.labels.*.name, 'use-pr-auth0-tenant') && 'setting another domain' || steps.vars.outputs.crn-auth0-domain  }}
+    value: ${{ steps.vars.outputs.crn-auth0-domain  }}
   crn-aws-acm-certificate-arn:
     description: 'CRN AWS ACM Certificate ARN'
     value: ${{ steps.vars.outputs.crn-aws-acm-certificate-arn }}
@@ -250,8 +250,10 @@ runs:
           HAS_CONTENTFUL_LABEL=${{ contains(github.event.pull_request.labels.*.name, 'contentful') }}
           HAS_AUTH0_LABEL=${{contains(github.event.pull_request.labels.*.name, 'use-pr-auth0-tenant') }}
           if [ "$HAS_AUTH0_LABEL" = true ]; then
-            echo "crn-auth0-domain=testcrn" >> $GITHUB_OUTPUT
-            echo "gp2-auth0-domain=testgp2" >> $GITHUB_OUTPUT
+            echo "crn-auth0-additional-claim-domain=https://${PR_NUMBER}.hub.asap.science" >> $GITHUB_OUTPUT
+            echo "crn-auth0-audience==${PR_NUMBER}.hub.asap.science" >> $GITHUB_ENV
+            echo "crn-auth0-client-id=Y8hFLdDA1hp9jc5Wg4Ntv2rbbKXfmDBx" >> $GITHUB_OUTPUT
+            echo "crn-auth0-domain=pr-crn-hub.us.auth0.com" >> $GITHUB_OUTPUT
           fi
           echo "HAS_AUTH0_LABEL=$HAS_AUTH0_LABEL" >> $GITHUB_OUTPUT
           echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT

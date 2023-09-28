@@ -1,9 +1,14 @@
+import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model, InstitutionsResponse } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
+import { PAGE_SIZE } from '../../hooks';
+import { createUserListAlgoliaResponse } from '../../__fixtures__/algolia';
 import {
   createUserApiUrl,
+  getAlgoliaUsers,
   getContributingCohorts,
   getExternalUsers,
   getInstitutions,
@@ -101,6 +106,134 @@ describe('getUsers', () => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch the users. Expected status 2xx. Received status 500."`,
     );
+  });
+});
+describe('getAlgoliaUsers', () => {
+  const mockAlgoliaSearchClient = {
+    search: jest.fn(),
+  } as unknown as jest.Mocked<AlgoliaSearchClient<'gp2'>>;
+  beforeEach(() => {
+    jest.resetAllMocks();
+    mockAlgoliaSearchClient.search = jest
+      .fn()
+      .mockResolvedValue(createUserListAlgoliaResponse(10));
+  });
+  const options: GetListOptions = {
+    filters: new Set<string>(),
+    pageSize: PAGE_SIZE,
+    currentPage: 0,
+    searchQuery: '',
+  };
+
+  it('makes a search request with query, default page and page size', async () => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      searchQuery: 'test',
+      currentPage: null,
+      pageSize: null,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      'test',
+      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+    );
+  });
+
+  it('passes page number and page size to request', async () => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({ hitsPerPage: 20, page: 1 }),
+    );
+  });
+
+  it('builds a single region filter query', async () => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      regions: ['Europe'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({ filters: 'region:"Europe"' }),
+    );
+  });
+
+  it('builds a multiple region filter query', async () => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      regions: ['Europe', 'Asia'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({
+        filters: 'region:"Europe" OR region:"Asia"',
+      }),
+    );
+  });
+  it.each`
+    given              | expected
+    ${'keywords'}      | ${'tagIds'}
+    ${'projects'}      | ${'projectIds'}
+    ${'workingGroups'} | ${'workingGroupIds'}
+  `('builds a single $given filter query', async ({ given, expected }) => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      [given]: ['42'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({ filters: `${expected}:"42"` }),
+    );
+  });
+
+  it.each`
+    given              | expected
+    ${'keywords'}      | ${'tagIds'}
+    ${'projects'}      | ${'projectIds'}
+    ${'workingGroups'} | ${'workingGroupIds'}
+  `('builds a multiple $given filter query', async ({ given, expected }) => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      [given]: ['42', '11'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({
+        filters: `${expected}:"42" OR ${expected}:"11"`,
+      }),
+    );
+  });
+
+  it('throws an error of type error', async () => {
+    mockAlgoliaSearchClient.search.mockRejectedValue({
+      message: 'Some Error',
+    });
+    await expect(
+      getAlgoliaUsers(mockAlgoliaSearchClient, options),
+    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
   });
 });
 describe('getExternalUsers', () => {

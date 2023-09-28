@@ -227,6 +227,27 @@ describe('getAlgoliaUsers', () => {
     );
   });
 
+  it('builds a multiple $given filter query', async () => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      regions: ['Europe'],
+      keywords: ['7'],
+      projects: ['11'],
+      workingGroups: ['23'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({
+        filters:
+          'region:"Europe" AND tagIds:"7" AND projectIds:"11" AND workingGroupIds:"23"',
+      }),
+    );
+  });
+
   it('throws an error of type error', async () => {
     mockAlgoliaSearchClient.search.mockRejectedValue({
       message: 'Some Error',

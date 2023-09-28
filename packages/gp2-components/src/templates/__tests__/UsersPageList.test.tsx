@@ -64,7 +64,7 @@ describe('UsersPageList', () => {
   it.each`
     name               | value
     ${'regions'}       | ${'Asia'}
-    ${'keywords'}      | ${'1'}
+    ${'keywords'}      | ${'11'}
     ${'projects'}      | ${'42'}
     ${'workingGroups'} | ${'42'}
   `(

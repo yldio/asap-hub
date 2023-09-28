@@ -79,13 +79,13 @@ it('should show an error when field is required but no input is provided', async
 });
 
 describe.each`
-  description          | type                                        | identifier       | isValid  | name            | error
-  ${'RRID'}            | ${gp2.OutputIdentifierType.RRID}            | ${'RRI:123'}     | ${false} | ${/rrid/i}      | ${/Please enter a valid RRID/i}
-  ${'RRID'}            | ${gp2.OutputIdentifierType.RRID}            | ${'RRID:AB123'}  | ${true}  | ${/rrid/i}      | ${/Please enter a valid RRID/i}
-  ${'DOI'}             | ${gp2.OutputIdentifierType.DOI}             | ${'doidoi'}      | ${false} | ${/doi/i}       | ${/Please enter a valid DOI/i}
-  ${'DOI'}             | ${gp2.OutputIdentifierType.DOI}             | ${'doi:10.1234'} | ${true}  | ${/doi/i}       | ${/Please enter a valid DOI/i}
-  ${'AccessionNumber'} | ${gp2.OutputIdentifierType.AccessionNumber} | ${'NP_wrong'}    | ${false} | ${/accession/i} | ${/Please enter a valid Accession/i}
-  ${'AccessionNumber'} | ${gp2.OutputIdentifierType.AccessionNumber} | ${'NP_1234567'}  | ${true}  | ${/accession/i} | ${/Please enter a valid Accession/i}
+  description          | type                                        | identifier      | isValid  | name            | error
+  ${'RRID'}            | ${gp2.OutputIdentifierType.RRID}            | ${'RRI:123'}    | ${false} | ${/rrid/i}      | ${/Please enter a valid RRID/i}
+  ${'RRID'}            | ${gp2.OutputIdentifierType.RRID}            | ${'RRID:AB123'} | ${true}  | ${/rrid/i}      | ${/Please enter a valid RRID/i}
+  ${'DOI'}             | ${gp2.OutputIdentifierType.DOI}             | ${'11.1234'}    | ${false} | ${/doi/i}       | ${/Please enter a valid DOI/i}
+  ${'DOI'}             | ${gp2.OutputIdentifierType.DOI}             | ${'10.1234'}    | ${true}  | ${/doi/i}       | ${/Please enter a valid DOI/i}
+  ${'AccessionNumber'} | ${gp2.OutputIdentifierType.AccessionNumber} | ${'NP_wrong'}   | ${false} | ${/accession/i} | ${/Please enter a valid Accession/i}
+  ${'AccessionNumber'} | ${gp2.OutputIdentifierType.AccessionNumber} | ${'NP_1234567'} | ${true}  | ${/accession/i} | ${/Please enter a valid Accession/i}
 `('$description', ({ type, identifier, isValid, name, error }) => {
   const assertError = () => {
     if (isValid) {

@@ -5,7 +5,7 @@ export const OutputIdentifierValidationExpression: Record<
   gp2.OutputIdentifierType,
   string | undefined
 > = {
-  [gp2.OutputIdentifierType.DOI]: '^(doi:)?\\d{2}\\.\\d{4}.*$',
+  [gp2.OutputIdentifierType.DOI]: '^10.\\d{4}.*$',
   [gp2.OutputIdentifierType.AccessionNumber]:
     '^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$',
   [gp2.OutputIdentifierType.RRID]: '^RRID:[a-zA-Z]+.+$',

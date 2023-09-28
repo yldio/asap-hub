@@ -12,7 +12,7 @@ module.exports.up = function (migration) {
     .validations([
       {
         regexp: {
-          pattern: '^(doi\\:)?\\d{2}\\.\\d{4}.*$',
+          pattern: '^10\\.\\d{4}.*$',
           flags: null,
         },
 

@@ -1,7 +1,7 @@
 import React, { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { network, sharedResearch, tags as tagRoute } from '@asap-hub/routing';
 
 import { Card, Headline2, Divider, Markdown, Link } from '../atoms';
 import { perRem } from '../pixels';
@@ -237,7 +237,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                   <TagList
                     tags={tags.map((tag) => ({
                       tag,
-                      href: '#',
+                      href: tagRoute({ tag }).$,
                     }))}
                   />
                 </>

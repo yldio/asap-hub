@@ -64,18 +64,3 @@ it('renders as a link when one is provided', () => {
     'http://example.com',
   );
 });
-
-it('renders as a link when one is provided', () => {
-  const { rerender } = render(<Tag title="Text">Test</Tag>);
-  expect(screen.getByText('Test').closest('a')).toBeNull();
-
-  rerender(
-    <Tag title="Text" href="http://example.com">
-      Test
-    </Tag>,
-  );
-  expect(screen.getByText('Test').closest('a')).toHaveAttribute(
-    'href',
-    'http://example.com',
-  );
-});

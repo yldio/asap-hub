@@ -11,13 +11,24 @@ import {
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { css } from '@emotion/react';
+import { tags } from '@asap-hub/routing';
 
-import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
+import {
+  steel,
+  paper,
+  tin,
+  colorWithTransparency,
+  pearl,
+  mint,
+  pine,
+} from '../colors';
 import { MenuHeader, OnboardingFooter, ToastStack } from '../organisms';
 import { Overlay } from '../atoms';
 import { navigationGrey, crossQuery, drawerQuery } from '../layout';
 import { Loading } from '../molecules';
 import { usePrevious } from '../hooks';
+import { searchIcon } from '../icons';
+import { rem } from '../pixels';
 
 const UserMenuButton = lazy(
   () =>
@@ -44,16 +55,16 @@ const styles = css({
   minHeight: '100vh',
   display: 'grid',
   grid: `
-    "header     header"  max-content
-    "main-menu  content" max-content
-    "user-menu  content" 1fr
-    "footer     footer"  auto   / max-content 1fr`,
+    "header     header  search-button"  max-content
+    "main-menu  content content"        max-content
+    "user-menu  content content"        1fr
+    "footer     footer  footer"         auto   / max-content 1fr`,
 
   [crossQuery]: {
     grid: `
-      "header     user-button" max-content
-      "main-menu  content"     1fr
-      "footer     footer" auto / max-content 1fr`,
+      "header     user-button search-button" max-content
+      "main-menu  content           content" 1fr
+      "footer     footer            footer"  auto / max-content 1fr`,
   },
 });
 
@@ -142,6 +153,15 @@ const mainMenuStyles = css({
     boxShadow: `0 -1px 0 ${steel.rgb}`, // instead of header border bottom
   },
 });
+
+const searchButtonStyles = css({
+  gridArea: 'search-button',
+  boxSizing: 'border-box',
+  borderBottom: `1px solid ${steel.rgb}`,
+  borderLeft: `1px solid ${steel.rgb}`,
+  backgroundColor: mint.rgb,
+  width: rem(72),
+});
 const userMenuStyles = css({
   backgroundColor: paper.rgb,
   gridArea: 'user-menu',
@@ -225,6 +245,22 @@ const Layout: FC<LayoutProps> = ({
               {...userNavProps}
             />
           </Suspense>
+        </div>
+        <div css={searchButtonStyles}>
+          <a
+            css={{
+              display: 'flex',
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              svg: {
+                stroke: pine.rgb,
+              },
+            }}
+            href={tags({}).$}
+          >
+            {searchIcon}
+          </a>
         </div>
         <main ref={mainRef} css={contentStyles}>
           {children}

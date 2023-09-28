@@ -72,6 +72,7 @@ const UsersPageList: React.FC<UsersPageListProps> = ({
         filters={filters}
         workingGroups={workingGroups}
         projects={projects}
+        keywords={keywords}
         onRemove={onRemove}
       />
       <main>{children}</main>

@@ -193,6 +193,18 @@ describe('/outputs/ route', () => {
         },
       );
 
+      test('Should not return a validation error when gp2Supported is missing', async () => {
+        const { app: adminApp } = getApp({ role: 'Administrator' });
+        const response = await supertest(adminApp)
+          .post('/outputs/')
+          .send({
+            ...output,
+            gp2Supported: undefined,
+          });
+
+        expect(response.status).toBe(201);
+      });
+
       describe('Authors validation', () => {
         const { ...outputPostRequest } = getOutputPostRequest();
 
@@ -380,6 +392,18 @@ describe('/outputs/ route', () => {
           });
         },
       );
+
+      test('Should not return a validation error when gp2Supported is missing', async () => {
+        const { app: adminApp } = getApp({ role: 'Administrator' });
+        const response = await supertest(adminApp)
+          .put('/outputs/abc123')
+          .send({
+            ...outputPutRequest,
+            gp2Supported: undefined,
+          });
+
+        expect(response.status).toBe(200);
+      });
 
       describe('Authors validation', () => {
         test('Should return a validation error when required field is missing', async () => {

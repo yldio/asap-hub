@@ -13,6 +13,9 @@ import {
   noop,
   pixels,
   LabeledDateField,
+  LabeledMultiSelect,
+  Link,
+  mail,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
 
@@ -21,9 +24,12 @@ import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentPropsWithRef, useEffect, useState } from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
+import { OutputIdentifier } from '../organisms/OutputIdentifier';
 import { EntityMappper } from './CreateOutputPage';
+import { createIdentifierField } from '../utils';
 
 const { rem } = pixels;
+const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
 
 const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
@@ -45,6 +51,10 @@ const footerStyles = css({
     flexDirection: 'column-reverse',
   },
 });
+
+const linkStyles = css({
+  marginBottom: rem(36),
+});
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -59,6 +69,7 @@ type OutputFormType = {
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
   >['loadOptions'];
+  keywordSuggestions: gp2Model.KeywordDataObject[];
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -71,6 +82,10 @@ type OutputFormType = {
     | 'sharingStatus'
     | 'publishDate'
     | 'authors'
+    | 'tags'
+    | 'doi'
+    | 'rrid'
+    | 'accessionNumber'
   >
 >;
 
@@ -90,6 +105,7 @@ const OutputForm: React.FC<OutputFormType> = ({
   entityType,
   shareOutput,
   documentType,
+  keywordSuggestions,
   getAuthorSuggestions = noop,
   title,
   link,
@@ -100,6 +116,10 @@ const OutputForm: React.FC<OutputFormType> = ({
   sharingStatus,
   publishDate,
   authors,
+  tags,
+  doi,
+  rrid,
+  accessionNumber,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -134,6 +154,25 @@ const OutputForm: React.FC<OutputFormType> = ({
       value: author.id,
     })) || [],
   );
+  const [newTags, setNewTags] = useState<gp2Model.KeywordDataObject[]>(
+    tags || [],
+  );
+
+  const identifierType: gp2Model.OutputIdentifierType = doi
+    ? gp2Model.OutputIdentifierType.DOI
+    : rrid
+    ? gp2Model.OutputIdentifierType.RRID
+    : accessionNumber
+    ? gp2Model.OutputIdentifierType.AccessionNumber
+    : title // if it's editing
+    ? gp2Model.OutputIdentifierType.None
+    : gp2Model.OutputIdentifierType.Empty;
+  const [newIdentifierType, setNewIdentifierType] =
+    useState<gp2Model.OutputIdentifierType>(identifierType);
+
+  const [identifier, setIdentifier] = useState<string>(
+    doi || rrid || accessionNumber || '',
+  );
   const { addNotification } = useNotificationContext();
 
   const setBannerMessage = (message: string) =>
@@ -154,6 +193,8 @@ const OutputForm: React.FC<OutputFormType> = ({
     sharingStatus: newSharingStatus,
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
+    tags: newTags.length > 0 ? newTags : undefined,
+    ...createIdentifierField(newIdentifierType, identifier),
   };
 
   useEffect(() => {
@@ -176,6 +217,7 @@ const OutputForm: React.FC<OutputFormType> = ({
     isFieldDirty(link, newLink) ||
     isFieldDirty(type, newType) ||
     isFieldDirty(subtype, newSubtype) ||
+    isFieldDirty(identifierType, newIdentifierType) ||
     (authors
       ? !authors.every(
           (author, index) =>
@@ -308,7 +350,64 @@ const OutputForm: React.FC<OutputFormType> = ({
               />
             ) : null}
           </FormCard>
+          <FormCard title="What extra information can you provide?">
+            <LabeledMultiSelect
+              title="Additional Tags"
+              subtitle="(optional)"
+              description={
+                <>
+                  Increase the discoverability of this output by adding
+                  keywords.{' '}
+                </>
+              }
+              values={newTags.map(({ id, name }) => ({
+                label: name,
+                value: id,
+              }))}
+              enabled={!isSaving}
+              suggestions={keywordSuggestions.map(({ id, name }) => ({
+                label: name,
+                value: id,
+              }))}
+              onChange={(newValues) => {
+                setNewTags(
+                  newValues
+                    .slice(0, 10)
+                    .reduce(
+                      (acc, curr) => [
+                        ...acc,
+                        { id: curr.value, name: curr.label },
+                      ],
+                      [] as gp2Model.KeywordDataObject[],
+                    ),
+                );
+              }}
+              placeholder="Start typing... (E.g. Neurology)"
+              maxMenuHeight={160}
+            />
+            <div css={linkStyles}>
+              <Link
+                href={mailToSupport({
+                  email: INVITE_SUPPORT_EMAIL,
+                  subject: 'New Keyword',
+                })}
+              >
+                Ask GP2 to add a new keyword
+              </Link>
+            </div>
 
+            {documentType !== 'GP2 Reports' &&
+            documentType !== 'Training Materials' ? (
+              <OutputIdentifier
+                documentType={documentType}
+                identifier={identifier}
+                setIdentifier={setIdentifier}
+                identifierType={newIdentifierType}
+                setIdentifierType={setNewIdentifierType}
+                enabled={!isSaving}
+              />
+            ) : null}
+          </FormCard>
           <FormCard title="Who were the contributors?">
             <AuthorSelect
               title="Authors"

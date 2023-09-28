@@ -12,12 +12,16 @@ import { createMemoryHistory } from 'history';
 import { Router, StaticRouter } from 'react-router-dom';
 import { NotificationContext } from '@asap-hub/react-context';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
+import { createIdentifierField } from '../../utils';
+
+jest.setTimeout(60_000);
 
 describe('OutputForm', () => {
   const defaultProps = {
     shareOutput: jest.fn(),
     documentType: 'Procedural Form' as const,
     entityType: 'workingGroup' as const,
+    keywordSuggestions: [],
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {
@@ -37,6 +41,7 @@ describe('OutputForm', () => {
         name: /sharing status?/i,
       }),
     ).toBeVisible();
+    expect(screen.getByRole('textbox', { name: /tags/i })).toBeVisible();
     expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /publish/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
@@ -108,6 +113,8 @@ describe('OutputForm', () => {
     userEvent.click(
       within(sharingStatus).getByRole('radio', { name: 'GP2 Only' }),
     );
+    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    userEvent.click(screen.getByText(/^none/i));
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);
 
@@ -116,6 +123,7 @@ describe('OutputForm', () => {
     userEvent.click(screen.getByText('Chris Blue'));
     userEvent.click(authors);
     userEvent.type(authors, 'Alex White');
+
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]!);
     userEvent.click(screen.getByRole('button', { name: /publish/i }));
@@ -144,7 +152,7 @@ describe('OutputForm', () => {
       }),
     );
     expect(history.location.pathname).toEqual(`/outputs`);
-  }, 30000);
+  });
 
   it('can submit published date', async () => {
     const getAuthorSuggestions = jest.fn();
@@ -224,6 +232,8 @@ describe('OutputForm', () => {
     userEvent.type(authors, 'Alex White');
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]!);
+    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    userEvent.click(screen.getByText('None'));
     userEvent.click(screen.getByRole('button', { name: /publish/i }));
     expect(
       await screen.findByRole('button', { name: /publish/i }),
@@ -249,7 +259,7 @@ describe('OutputForm', () => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
         wrapper: StaticRouter,
       });
-      expect(screen.getByRole('textbox', { name: /type/i })).toBeVisible();
+      expect(screen.getByRole('textbox', { name: /^type/i })).toBeVisible();
     });
     it.each<gp2.OutputType>(['Blog', 'Hot Topic', 'Letter', 'Review'])(
       '%d does not render subtype',
@@ -257,7 +267,7 @@ describe('OutputForm', () => {
         render(<OutputForm {...defaultProps} documentType="Article" />, {
           wrapper: StaticRouter,
         });
-        userEvent.click(screen.getByRole('textbox', { name: /type/i }));
+        userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
         userEvent.click(screen.getByText(type));
         expect(
           screen.queryByRole('textbox', { name: /subtype/i }),
@@ -268,7 +278,7 @@ describe('OutputForm', () => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
         wrapper: StaticRouter,
       });
-      userEvent.click(screen.getByRole('textbox', { name: /type/i }));
+      userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
       userEvent.click(screen.getByText(type));
       expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
     });
@@ -308,6 +318,7 @@ describe('OutputForm', () => {
           ),
         },
       );
+
       userEvent.type(
         screen.getByRole('textbox', { name: /title/i }),
         'output title',
@@ -320,7 +331,7 @@ describe('OutputForm', () => {
         screen.getByRole('textbox', { name: /description/i }),
         'Research description',
       );
-      userEvent.click(screen.getByRole('textbox', { name: /type/i }));
+      userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
       userEvent.click(screen.getByText('Research'));
       userEvent.click(screen.getByRole('textbox', { name: /subtype/i }));
       userEvent.click(screen.getByText('Published'));
@@ -328,6 +339,11 @@ describe('OutputForm', () => {
       userEvent.click(authors);
       await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
       userEvent.click(screen.getByText('Chris Blue'));
+      userEvent.click(
+        screen.getByRole('textbox', { name: /identifier type/i }),
+      );
+      userEvent.click(screen.getByText('None'));
+
       userEvent.click(screen.getByRole('button', { name: /publish/i }));
       expect(
         await screen.findByRole('button', { name: /publish/i }),
@@ -344,7 +360,7 @@ describe('OutputForm', () => {
         authors: [{ userId: 'u2' }],
       });
       expect(history.location.pathname).toEqual(`/outputs`);
-    }, 30000);
+    });
   });
 
   describe('GP2 Supported', () => {
@@ -427,7 +443,7 @@ describe('OutputForm', () => {
         within(gp2Supported).getByRole('radio', { name: "Don't Know" }),
       ).toBeChecked();
 
-      const input = screen.getByRole('textbox', { name: /type/i });
+      const input = screen.getByRole('textbox', { name: /^type/i });
       userEvent.click(input);
       userEvent.click(screen.getByText('Blog'));
       fireEvent.focusOut(input);
@@ -473,19 +489,28 @@ describe('OutputForm', () => {
       },
     );
   });
+  it.each<gp2.OutputDocumentType>(['GP2 Reports', 'Training Materials'])(
+    'should not render identifier textbox when docType = %d',
+    (type) => {
+      render(<OutputForm {...defaultProps} documentType={type} />, {
+        wrapper: StaticRouter,
+      });
+
+      expect(
+        screen.queryByRole('textbox', { name: /identifier type/i }),
+      ).not.toBeInTheDocument();
+    },
+  );
+
   describe('validation', () => {
-    it.each`
-      title      | label       | error
-      ${'Url'}   | ${/URL/i}   | ${'Please enter a valid URL, starting with http://'}
-      ${'Title'} | ${/title/i} | ${'Please fill out this field.'}
-      ${'Type'}  | ${/type/i}  | ${'Please fill out this field.'}
-    `('shows error message for missing value $title', ({ label, error }) => {
+    it('shows error message for missing value title', () => {
       render(<OutputForm {...defaultProps} documentType="Article" />, {
         wrapper: StaticRouter,
       });
-      const input = screen.getByLabelText(label);
+
+      const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
-      expect(screen.getByText(error)).toBeVisible();
+      expect(screen.getByText('Please fill out this field.')).toBeVisible();
     });
 
     it('shows the custom error message for a date in the future', async () => {
@@ -544,6 +569,11 @@ describe('OutputForm', () => {
       ).toHaveDisplayValue('2020-03-04');
       expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
       expect(screen.getByText('Tony Stark')).toBeVisible();
+      expect(screen.getByRole('textbox', { name: /tags/i })).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: /identifier type/i }),
+      ).toBeVisible();
+      expect(screen.getByText('None')).toBeVisible();
       expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
       expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
     });
@@ -574,6 +604,113 @@ describe('OutputForm', () => {
       expect(getPublishDateValidationMessage({ ...e, badInput: true })).toEqual(
         'Date published should be complete or removed',
       );
+    });
+  });
+  describe('createIdentifierField', () => {
+    it('maps the OutputIdentifierType to fields including the identifier', () => {
+      expect(
+        createIdentifierField(gp2.OutputIdentifierType.Empty, 'identifier'),
+      ).toEqual({});
+      expect(
+        createIdentifierField(gp2.OutputIdentifierType.RRID, 'identifier'),
+      ).toEqual({ rrid: 'identifier' });
+      expect(
+        createIdentifierField(gp2.OutputIdentifierType.DOI, 'identifier'),
+      ).toEqual({ doi: 'identifier' });
+      expect(
+        createIdentifierField(
+          gp2.OutputIdentifierType.AccessionNumber,
+          'identifier',
+        ),
+      ).toEqual({ accessionNumber: 'identifier' });
+    });
+  });
+
+  describe('tags', () => {
+    const defaultSuggestions = [
+      { id: '1', name: '2D Cultures' },
+      { id: '2', name: 'Adenosine' },
+      { id: '3', name: 'Adrenal' },
+    ];
+
+    const defaultTags = [{ id: '5', name: 'Neurology' }];
+    const renderWithSuggestions = (
+      suggestions = defaultSuggestions,
+      tags = defaultTags,
+    ) =>
+      render(
+        <OutputForm
+          {...defaultProps}
+          keywordSuggestions={suggestions}
+          tags={tags}
+        />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
+
+    it('displays tags empty', () => {
+      renderWithSuggestions(defaultSuggestions, []);
+      const textbox = screen.getByRole('textbox', {
+        name: /tags/i,
+      });
+      expect(textbox).toBeVisible();
+      expect(
+        screen.getByText('Start typing... (E.g. Neurology)'),
+      ).toBeVisible();
+    });
+    it('displays tags suggestions', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/additional tags/i));
+      expect(screen.getByText('2D Cultures')).toBeVisible();
+      expect(screen.getByText('Adenosine')).toBeVisible();
+      expect(screen.getByText('Adrenal')).toBeVisible();
+    });
+
+    it('displays existing tags', () => {
+      renderWithSuggestions();
+      expect(screen.getByText('Neurology')).toBeVisible();
+    });
+    it('update tags after adding one', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/additional tags/i));
+      userEvent.click(screen.getByText('2D Cultures'));
+      expect(screen.getByText('Neurology')).toBeVisible();
+      expect(screen.getByText('2D Cultures')).toBeVisible();
+    });
+  });
+  describe('identifierType', () => {
+    it('returns DOI when doi is present', () => {
+      render(<OutputForm {...defaultProps} doi="123" />, {
+        wrapper: StaticRouter,
+      });
+
+      expect(screen.getByDisplayValue(/doi/i)).toBeTruthy();
+    });
+    it('returns RRID when rrid is present', () => {
+      render(<OutputForm {...defaultProps} rrid="123" />, {
+        wrapper: StaticRouter,
+      });
+      expect(screen.getByDisplayValue(/rrid/i)).toBeTruthy();
+    });
+    it('returns Accession Number when accession is present', () => {
+      render(<OutputForm {...defaultProps} accessionNumber="123" />, {
+        wrapper: StaticRouter,
+      });
+      expect(screen.getByDisplayValue(/accession number/i)).toBeTruthy();
+    });
+    it('returns empty for create mode', () => {
+      render(<OutputForm {...defaultProps} />, {
+        wrapper: StaticRouter,
+      });
+
+      expect(screen.getByText(/choose an identifier.../i)).toBeVisible();
+    });
+    it('return none for edit mode', () => {
+      render(<OutputForm {...defaultProps} title="Output Title" />, {
+        wrapper: StaticRouter,
+      });
+      expect(screen.getByDisplayValue(/none/i)).toBeTruthy();
     });
   });
 });

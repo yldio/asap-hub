@@ -1,10 +1,10 @@
-import { getSpeakers } from '@asap-hub/fixtures/src/gp2';
-import { gp2 } from '@asap-hub/model';
+import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import EventSpeakers from '../EventSpeakers';
 
 describe('EventSpeakers', () => {
-  const renderEventSpeakers = (speakers: gp2.EventSpeaker[]) =>
+  const renderEventSpeakers = (speakers: gp2Model.EventSpeaker[]) =>
     render(<EventSpeakers speakers={speakers} />);
 
   it('should render all types of speakers', () => {
@@ -13,7 +13,7 @@ describe('EventSpeakers', () => {
     const numberOfSpeakersToBeAnnounced = 1;
 
     renderEventSpeakers(
-      getSpeakers(
+      gp2Fixtures.getSpeakers(
         numberOfInternalSpeakers,
         numberOfExternalSpeakers,
         numberOfSpeakersToBeAnnounced,

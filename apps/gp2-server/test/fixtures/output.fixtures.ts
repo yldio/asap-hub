@@ -71,7 +71,6 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     authors,
     workingGroup,
     project,
-    tags,
     ...outputResponse
   } = getOutputResponse();
   return {
@@ -102,7 +101,6 @@ export const getOutputCreateDataObject =
       created: _created,
       workingGroup,
       project,
-      tags,
       ...outputPostRequest
     } = getOutputResponse();
 

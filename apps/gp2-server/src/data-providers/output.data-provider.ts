@@ -279,6 +279,9 @@ export const parseContentfulGraphQLOutput = (
       data.sys.firstPublishedAt,
     authors,
     tags,
+    doi: data.doi ?? undefined,
+    rrid: data.rrid ?? undefined,
+    accessionNumber: data.accessionNumber ?? undefined,
     ...relatedEntity,
   };
 };
@@ -330,6 +333,14 @@ const cleanOutput = (
       return {
         ...acc,
         updatedBy: getLinkEntity(value as string),
+      };
+    }
+    if (key === 'tags') {
+      return {
+        ...acc,
+        tags: (value as gp2Model.OutputUpdateDataObject['tags'])?.map((tag) =>
+          getLinkEntity(tag.id),
+        ),
       };
     }
     return { ...acc, [key]: value };

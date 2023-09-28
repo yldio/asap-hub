@@ -3,6 +3,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC } from 'react';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
+import { useKeywords } from '../shared/state';
 
 const { projects } = gp2Routing;
 
@@ -25,6 +26,7 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
   );
   const createOutput = useCreateOutput();
   const getAuthorSuggestions = useAuthorSuggestions();
+  const { items: suggestions } = useKeywords();
   return (
     <CreateOutputPage
       documentType={documentTypeMapper[outputDocumentType]}
@@ -41,6 +43,7 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
         }
         documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
+        keywordSuggestions={suggestions}
       />
     </CreateOutputPage>
   );

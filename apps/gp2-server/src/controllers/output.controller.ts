@@ -68,6 +68,10 @@ export default class OutputController {
       description: outputCreateData.description,
       sharingStatus: outputCreateData.sharingStatus,
       gp2Supported: outputCreateData.gp2Supported,
+      tags: outputCreateData.tags,
+      doi: outputCreateData.doi,
+      rrid: outputCreateData.rrid,
+      accessionNumber: outputCreateData.accessionNumber,
     };
 
     const outputId = await this.outputDataProvider.create(
@@ -104,6 +108,10 @@ export default class OutputController {
       description: outputUpdateData.description,
       gp2Supported: outputUpdateData.gp2Supported,
       sharingStatus: outputUpdateData.sharingStatus,
+      tags: outputUpdateData.tags,
+      doi: outputUpdateData.doi,
+      rrid: outputUpdateData.rrid,
+      accessionNumber: outputUpdateData.accessionNumber,
     };
 
     await this.outputDataProvider.update(id, outputUpdateDataObject);

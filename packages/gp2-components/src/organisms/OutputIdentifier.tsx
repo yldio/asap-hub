@@ -26,18 +26,18 @@ const getIdentifiers = (
 
 const identifierMap = {
   [gp2.OutputIdentifierType.DOI]: {
-    helpText: 'Your DOI must start with 1 and it cannot be a URL',
-    placeholder: 'DOI number e.g. 10.5555/YFRU1371',
+    helpText: 'Your DOI must start with 10 and it cannot be a URL',
+    placeholder: 'e.g. 10.5555/YFRU1371',
     regex: gp2Validation.OutputIdentifierValidationExpression.DOI,
     errorMessage:
-      'Please enter a valid DOI. It starts with a 1 and it cannot be a URL. (e.g. 10.1234/abcde.121212)',
+      'Please enter a valid DOI which starts with a 10. and it cannot be a URL. (e.g. 10.5555/YFRU1371.121212)',
     required: true,
     name: 'DOI',
   },
   [gp2.OutputIdentifierType.AccessionNumber]: {
     helpText:
       'Your Accession Number must start with a letter. Accession Numbers are attributed by NIH, EMBL-EBI, ProteomeXchange, etc.',
-    placeholder: 'Accession number e.g. AF123456',
+    placeholder: 'e.g. NT_123456',
     regex:
       gp2Validation.OutputIdentifierValidationExpression['Accession Number'],
     errorMessage:
@@ -47,10 +47,10 @@ const identifierMap = {
   },
   [gp2.OutputIdentifierType.RRID]: {
     helpText: 'Your RRID must start with “RRID:”',
-    placeholder: 'RRID e.g. RRID:AB_90755',
+    placeholder: 'e.g. RRID:AB_007358',
     regex: gp2Validation.OutputIdentifierValidationExpression.RRID,
     errorMessage:
-      'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:SCR_007358)',
+      'Please enter a valid RRID which starts with `RRID`. (e.g. RRID:AB_007358)',
     required: true,
     name: 'RRID',
   },

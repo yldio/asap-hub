@@ -87,7 +87,7 @@ const renderUserList = async ({
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   return { mockUpdateFilter };
 };
-afterEach(jest.resetAllMocks);
+beforeEach(jest.resetAllMocks);
 it('fetches the user information', async () => {
   await renderUserList({
     filters: { regions: [], keywords: [], projects: [], workingGroups: [] },

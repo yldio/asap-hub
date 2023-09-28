@@ -1,3 +1,4 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import {
   render,
@@ -17,6 +18,8 @@ import {
 } from '../../__fixtures__/algolia';
 import { getAlgoliaUsers } from '../api';
 import Routes from '../Routes';
+
+mockConsoleError();
 
 const renderRoutes = async () => {
   render(
@@ -68,4 +71,26 @@ describe('Routes', () => {
       screen.getByRole('heading', { name: 'Tony Stark 0, PhD' }),
     ).toBeInTheDocument();
   }, 30_000);
+  it('renders error message when the request is not a 2XX', async () => {
+    const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+      typeof getAlgoliaProjects
+    >;
+    mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
+    const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+      typeof getWorkingGroups
+    >;
+    mockGetWorkingGroups.mockResolvedValue(gp2.createWorkingGroupsResponse());
+    const mockGetUsers = getAlgoliaUsers as jest.MockedFunction<
+      typeof getAlgoliaUsers
+    >;
+    const mockGetKeywords = getKeywords as jest.MockedFunction<
+      typeof getKeywords
+    >;
+    mockGetKeywords.mockResolvedValue(gp2.createKeywordsResponse());
+    mockGetUsers.mockRejectedValue(new Error('error'));
+
+    await renderRoutes();
+    expect(mockGetUsers).toHaveBeenCalled();
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+  });
 });

@@ -25,7 +25,7 @@ jest.mock('@asap-hub/frontend-utils', () => {
 });
 jest.mock('../api');
 jest.mock('../../hooks/search');
-const mockGetUsers = getAlgoliaUsers as jest.MockedFunction<
+const mockGetAlgoliaUsers = getAlgoliaUsers as jest.MockedFunction<
   typeof getAlgoliaUsers
 >;
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
@@ -37,7 +37,7 @@ const renderUserList = async ({
 }: Partial<ComponentProps<typeof UserList>> & {
   listUserResponse?: ClientSearchResponse<'gp2', 'user'>;
 } = {}) => {
-  mockGetUsers.mockResolvedValue(listUserResponse);
+  mockGetAlgoliaUsers.mockResolvedValue(listUserResponse);
   const mockUpdateFilter = jest.fn();
   const mockToggleFilter = jest.fn();
   mockUseSearch.mockImplementation(() => ({
@@ -81,14 +81,17 @@ it('fetches the user information', async () => {
   });
 
   await waitFor(() =>
-    expect(mockGetUsers).toHaveBeenCalledWith(
-      expect.objectContaining({
-        filter: { regions: [], keywords: [], projects: [], workingGroups: [] },
-        search: '',
-        skip: 0,
-        take: 10,
-      }),
+    expect(mockGetAlgoliaUsers).toHaveBeenCalledWith(
       expect.anything(),
+      expect.objectContaining({
+        regions: [],
+        keywords: [],
+        projects: [],
+        workingGroups: [],
+        searchQuery: '',
+        currentPage: 0,
+        pageSize: 10,
+      }),
     ),
   );
 });
@@ -96,20 +99,11 @@ it('fetches the user information', async () => {
 it('renders a list of fetched groups', async () => {
   const listUserResponse = createUserListAlgoliaResponse(2);
 
-  // = {
-  //   total: 2,
-  //   items: gp2Fixtures.createUsersResponse(2).items.map((user, i) => ({
-  //     ...user,
-  //     id: `${i}`,
-  //     displayName: `Display Name ${i}`,
-  //   })),
-  // };
-
   await renderUserList({ listUserResponse });
   expect(
-    screen.getByRole('heading', { name: /display name 0/i }),
+    screen.getByRole('heading', { name: /tony stark 0/i }),
   ).toBeInTheDocument();
   expect(
-    screen.getByRole('heading', { name: /display name 1/i }),
+    screen.getByRole('heading', { name: /tony stark 1/i }),
   ).toBeInTheDocument();
 });

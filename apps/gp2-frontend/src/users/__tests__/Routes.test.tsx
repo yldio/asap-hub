@@ -65,7 +65,7 @@ describe('Routes', () => {
 
     await renderRoutes();
     expect(
-      screen.getByRole('heading', { name: 'Tony Stark, PhD' }),
+      screen.getByRole('heading', { name: 'Tony Stark 0, PhD' }),
     ).toBeInTheDocument();
   }, 30_000);
 });

@@ -131,6 +131,11 @@ export const createUserListAlgoliaResponse = (
   responseOverride?: Partial<UserSearchResponse>,
 ): UserSearchResponse =>
   createAlgoliaResponse<'user'>(
-    Array.from({ length: items }, () => createUserAlgoliaRecord()),
+    Array.from({ length: items }, (_, index) =>
+      createUserAlgoliaRecord({
+        displayName: `Tony Stark ${index}`,
+        id: `${index}`,
+      }),
+    ),
     responseOverride,
   );

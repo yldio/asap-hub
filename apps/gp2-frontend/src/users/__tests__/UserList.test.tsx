@@ -9,9 +9,11 @@ import { ComponentProps, Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { PAGE_SIZE } from '../../hooks';
 import { useSearch } from '../../hooks/search';
 import { createUserListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getAlgoliaUsers } from '../api';
+import { usersState } from '../state';
 import UserList from '../UserList';
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -57,7 +59,18 @@ const renderUserList = async ({
   }));
 
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset }) => {
+        reset(
+          usersState({
+            searchQuery,
+            currentPage: 0,
+            filters: new Set(),
+            pageSize: PAGE_SIZE,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

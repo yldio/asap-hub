@@ -263,7 +263,7 @@ const OutputForm: React.FC<OutputFormType> = ({
             {!DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(documentType) ? (
               <LabeledRadioButtonGroup<gp2Model.DecisionOption>
                 title="Has this output been supported by GP2?"
-                subtitle="(optional)"
+                subtitle="(required)"
                 options={[
                   {
                     value: 'Yes',

@@ -18,14 +18,9 @@ import {
   createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import {
-  getContributingCohorts,
-  getInstitutions,
-  getUser,
-  patchUser,
-} from '../api';
+import { getInstitutions, getUser, patchUser } from '../api';
 import UserDetail from '../UserDetail';
-import { getTags } from '../../shared/api';
+import { getTags, getContributingCohorts } from '../../shared/api';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');

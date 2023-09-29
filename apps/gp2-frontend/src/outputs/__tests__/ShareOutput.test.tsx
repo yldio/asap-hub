@@ -14,7 +14,7 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
 import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getOutput, getOutputs, updateOutput } from '../api';
-import { getTags } from '../../shared/api';
+import { getTags, getContributingCohorts } from '../../shared/api';
 import ShareOutput from '../ShareOutput';
 
 jest.mock('../../outputs/api');
@@ -26,6 +26,8 @@ const mockUpdateOutput = updateOutput as jest.MockedFunction<
 const mockGetOutput = getOutput as jest.MockedFunction<typeof getOutput>;
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
+const mockGetContributingCohorts =
+  getContributingCohorts as jest.MockedFunction<typeof getContributingCohorts>;
 
 const renderShareOutput = async (outputId: string = 'ro0') => {
   render(
@@ -64,6 +66,9 @@ describe('ShareOutput', () => {
     jest.resetAllMocks();
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
     mockGetTags.mockResolvedValue(gp2.createTagsResponse());
+    mockGetContributingCohorts.mockResolvedValue(
+      gp2.contributingCohortResponse,
+    );
   });
   afterEach(jest.resetAllMocks);
   mockConsoleError();

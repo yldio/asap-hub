@@ -12,7 +12,7 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
 import { createOutput, getOutputs } from '../../outputs/api';
-import { getTags } from '../../shared/api';
+import { getTags, getContributingCohorts } from '../../shared/api';
 import { getExternalUsers, getUsers } from '../../users/api';
 import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import CreateWorkingGroupOutput from '../CreateWorkingGroupOutput';
@@ -32,6 +32,8 @@ const mockGetExternalUsers = getExternalUsers as jest.MockedFunction<
 >;
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
+const mockGetContributingCohorts =
+  getContributingCohorts as jest.MockedFunction<typeof getContributingCohorts>;
 
 const renderCreateWorkingGroupOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
@@ -77,6 +79,7 @@ beforeEach(() => {
   jest.resetAllMocks();
   mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
   mockGetTags.mockResolvedValue(gp2.createTagsResponse());
+  mockGetContributingCohorts.mockResolvedValue(gp2.contributingCohortResponse);
 });
 
 it('renders the title', async () => {

@@ -41,6 +41,15 @@ const DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED = [
   'Training Materials',
   'Procedural Form',
 ];
+const DOC_TYPES_IDENTIFIER_NOT_REQUIRED: gp2Model.OutputDocumentType[] = [
+  'Training Materials',
+  'GP2 Reports',
+];
+const DOC_TYPES_COHORTS_NOT_REQUIRED: gp2Model.OutputDocumentType[] = [
+  'Training Materials',
+  'GP2 Reports',
+  'Code/Software',
+];
 
 export const getRelatedOutputs = (
   relatedOutputs: gp2Model.OutputResponse['relatedOutputs'],
@@ -439,8 +448,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
               </Link>
             </div>
 
-            {documentType !== 'GP2 Reports' &&
-            documentType !== 'Training Materials' ? (
+            {!DOC_TYPES_IDENTIFIER_NOT_REQUIRED.includes(documentType) ? (
               <OutputIdentifier
                 documentType={documentType}
                 identifier={identifier}
@@ -452,48 +460,52 @@ const OutputForm: React.FC<OutputFormProps> = ({
             ) : null}
           </FormCard>
           <FormCard title="Who were the contributors?">
-            <LabeledMultiSelect
-              title="Cohorts"
-              subtitle="(optional)"
-              description={
-                <>Add other cohorts that contributed to this output.</>
-              }
-              values={newCohorts.map(({ id, name }) => ({
-                label: name,
-                value: id,
-              }))}
-              enabled={!isSaving}
-              suggestions={cohortSuggestions.map(({ id, name }) => ({
-                label: name,
-                value: id,
-              }))}
-              onChange={(newValues) => {
-                setCohorts(
-                  newValues
-                    .slice(0, 10)
-                    .reduce(
-                      (acc, curr) => [
-                        ...acc,
-                        { id: curr.value, name: curr.label },
-                      ],
-                      [] as gp2Model.ContributingCohortDataObject[],
-                    ),
-                );
-              }}
-              placeholder="Start typing..."
-              maxMenuHeight={160}
-            />
-            <div css={linkStyles}>
-              Don’t see a cohort in this list?
-              <Link
-                href={mailToSupport({
-                  email: INVITE_SUPPORT_EMAIL,
-                  subject: 'New Cohort',
-                })}
-              >
-                Contact {INVITE_SUPPORT_EMAIL}
-              </Link>
-            </div>
+            {!DOC_TYPES_COHORTS_NOT_REQUIRED.includes(documentType) ? (
+              <>
+                <LabeledMultiSelect
+                  title="Cohorts"
+                  subtitle="(optional)"
+                  description={
+                    <>Add other cohorts that contributed to this output.</>
+                  }
+                  values={newCohorts.map(({ id, name }) => ({
+                    label: name,
+                    value: id,
+                  }))}
+                  enabled={!isSaving}
+                  suggestions={cohortSuggestions.map(({ id, name }) => ({
+                    label: name,
+                    value: id,
+                  }))}
+                  onChange={(newValues) => {
+                    setCohorts(
+                      newValues
+                        .slice(0, 10)
+                        .reduce(
+                          (acc, curr) => [
+                            ...acc,
+                            { id: curr.value, name: curr.label },
+                          ],
+                          [] as gp2Model.ContributingCohortDataObject[],
+                        ),
+                    );
+                  }}
+                  placeholder="Start typing..."
+                  maxMenuHeight={160}
+                />
+                <div css={linkStyles}>
+                  Don’t see a cohort in this list?
+                  <Link
+                    href={mailToSupport({
+                      email: INVITE_SUPPORT_EMAIL,
+                      subject: 'New Cohort',
+                    })}
+                  >
+                    Contact {INVITE_SUPPORT_EMAIL}
+                  </Link>
+                </div>
+              </>
+            ) : null}
             <AuthorSelect
               title="Authors"
               description=""

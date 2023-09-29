@@ -128,12 +128,18 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
         },
         nullable: true,
       },
-      workingGroupId: {
-        type: 'string',
+      workingGroupIds: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
         nullable: true,
       },
-      projectId: {
-        type: 'string',
+      projectIds: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
         nullable: true,
       },
       relatedOutputs: {

@@ -1,6 +1,7 @@
 import {
   addLocaleToFields,
   Environment,
+  getLinkEntities,
   getLinkEntity,
   gp2 as gp2Contentful,
   GraphQLClient,
@@ -155,13 +156,12 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
   }
 
   async create({
-    workingGroupId,
-    projectId,
+    workingGroupIds,
+    projectIds,
     ...data
   }: gp2Model.OutputCreateDataObject) {
-    const relatedEntityId = workingGroupId || projectId;
-    if (!relatedEntityId) {
-      throw new Error('invalid related entity');
+    if (!workingGroupIds && !projectIds) {
+      throw new Error('invalid related entities');
     }
     const environment = await this.getRestClient();
 
@@ -169,7 +169,10 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     const outputEntry = await environment.createEntry('outputs', {
       fields: addLocaleToFields({
         ...fields,
-        relatedEntity: getLinkEntity(relatedEntityId),
+        relatedEntities: getLinkEntities([
+          ...(workingGroupIds || []),
+          ...(projectIds || []),
+        ]),
       }),
     });
     await outputEntry.publish();
@@ -207,19 +210,31 @@ const getSubType = (
     ? (subtype as gp2Model.OutputSubtype)
     : undefined;
 
-const getRelatedEntity = (related: OutputItem['relatedEntity']) => {
-  const empty = { project: undefined, workingGroup: undefined };
-
-  return related
-    ? {
-        ...empty,
-        [related.__typename === 'Projects' ? 'project' : 'workingGroup']: {
-          id: related.sys.id,
-          title: related.title,
-        },
-      }
-    : empty;
-};
+type GraphQLEntities = NonNullable<
+  OutputItem['relatedEntitiesCollection']
+>['items'];
+type GraphQLEntity = NonNullable<GraphQLEntities[number]>;
+const getRelatedEntities = (relatedEntities?: GraphQLEntities) =>
+  relatedEntities
+    ?.filter((entity): entity is GraphQLEntity => entity !== null)
+    .reduce(
+      (acc, entity) => ({
+        ...acc,
+        [entity.__typename === 'Projects' ? 'projects' : 'workingGroups']: [
+          ...(entity.__typename === 'Projects'
+            ? acc.projects
+            : acc.workingGroups),
+          {
+            id: entity.sys.id,
+            title: entity.title,
+          },
+        ],
+      }),
+      {
+        projects: [] as gp2Model.OutputOwner[],
+        workingGroups: [] as gp2Model.OutputOwner[],
+      },
+    );
 type GraphQLAuthors = NonNullable<OutputItem['authorsCollection']>['items'];
 type GraphQLAuthor = NonNullable<GraphQLAuthors[number]>;
 const getAuthors = (authors?: GraphQLAuthors) =>
@@ -270,10 +285,21 @@ export const parseContentfulGraphQLOutput = (
   const type = getType(documentType, data.type);
   const subtype = getSubType(documentType, type, data.subtype);
   const authors = getAuthors(data.authorsCollection?.items);
-  const relatedEntity = getRelatedEntity(data.relatedEntity);
   const relatedOutputs = getRelatedOutputs(
     data.relatedOutputsCollection?.items,
   );
+  const relatedEntities = getRelatedEntities(
+    data.relatedEntitiesCollection?.items,
+  );
+  const projects =
+    relatedEntities?.projects.length !== 0
+      ? relatedEntities?.projects
+      : undefined;
+  const workingGroups =
+    relatedEntities?.workingGroups.length !== 0
+      ? relatedEntities?.workingGroups
+      : undefined;
+
   const tags =
     data.tagsCollection?.items
       .filter((tag): tag is TagItem => tag !== null)
@@ -303,8 +329,9 @@ export const parseContentfulGraphQLOutput = (
     doi: data.doi ?? undefined,
     rrid: data.rrid ?? undefined,
     accessionNumber: data.accessionNumber ?? undefined,
-    ...relatedEntity,
     relatedOutputs,
+    projects,
+    workingGroups,
   };
 };
 

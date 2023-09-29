@@ -340,57 +340,71 @@ describe('Outputs data provider', () => {
         );
       });
     });
-    describe('related entity', () => {
+    describe('related entities', () => {
       it('should return a project', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
-        graphqlResponse!.relatedEntity = {
-          __typename: 'Projects',
-          sys: {
-            id: '42',
-          },
-          title: 'a project',
+        graphqlResponse!.relatedEntitiesCollection = {
+          total: 1,
+          items: [
+            {
+              __typename: 'Projects',
+              sys: {
+                id: '42',
+              },
+              title: 'a project',
+            },
+          ],
         };
         graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.workingGroup).toBeUndefined();
-        expect(result!.project).toEqual({
-          id: '42',
-          title: 'a project',
-        });
+        expect(result!.workingGroups).toBeUndefined();
+        expect(result!.projects).toEqual([
+          {
+            id: '42',
+            title: 'a project',
+          },
+        ]);
       });
       it('should return working group', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
-        graphqlResponse!.relatedEntity = {
-          __typename: 'WorkingGroups',
-          sys: {
-            id: '42',
-          },
-          title: 'a working group',
+        graphqlResponse!.relatedEntitiesCollection = {
+          total: 1,
+          items: [
+            {
+              __typename: 'WorkingGroups',
+              sys: {
+                id: '42',
+              },
+              title: 'a working group',
+            },
+          ],
         };
         graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.project).toBeUndefined();
-        expect(result!.workingGroup).toEqual({
-          id: '42',
-          title: 'a working group',
-        });
+        expect(result!.projects).toBeUndefined();
+        expect(result!.workingGroups).toEqual([
+          {
+            id: '42',
+            title: 'a working group',
+          },
+        ]);
       });
       it('should return empty if undefined', async () => {
         const graphqlResponse = getContentfulGraphqlOutput();
-        graphqlResponse!.relatedEntity = null;
+        graphqlResponse!.relatedEntitiesCollection = null;
         graphqlClientMock.request.mockResolvedValueOnce({
           outputs: graphqlResponse,
         });
         const result = await outputDataProvider.fetchById(outputId);
 
-        expect(result!.project).toBeUndefined();
-        expect(result!.workingGroup).toBeUndefined();
+        expect(result!.projects).toBeUndefined();
+        expect(result!.workingGroups).toBeUndefined();
       });
     });
     test('Should return empty array for tags if no tags', async () => {
@@ -730,7 +744,11 @@ describe('Outputs data provider', () => {
 
       const result = await outputDataProvider.create(outputRequest);
       expect(result).toEqual(outputId);
-      const { workingGroupId: __, projectId, ...fieldsCreated } = outputRequest;
+      const {
+        workingGroupIds: __,
+        projectIds,
+        ...fieldsCreated
+      } = outputRequest;
       const fields = addLocaleToFields({
         ...fieldsCreated,
         authors: fieldsCreated.authors.map((author) => ({
@@ -754,13 +772,13 @@ describe('Outputs data provider', () => {
             id: outputRequest.createdBy,
           },
         },
-        relatedEntity: {
+        relatedEntities: projectIds?.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
-            id: projectId,
+            id,
           },
-        },
+        })),
         tags: fieldsCreated.tags?.map((tag) => ({
           sys: {
             type: 'Link',
@@ -825,10 +843,10 @@ describe('Outputs data provider', () => {
       await expect(
         outputDataProvider.create({
           ...outputRequest,
-          workingGroupId: undefined,
-          projectId: undefined,
+          workingGroupIds: undefined,
+          projectIds: undefined,
         }),
-      ).rejects.toThrow(/invalid related entity/i);
+      ).rejects.toThrow(/invalid related entities/i);
     });
 
     test('Should throw when fails to create the output', async () => {

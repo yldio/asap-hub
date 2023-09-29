@@ -113,7 +113,7 @@ export type UserAuthor = {
   avatarUrl?: string;
 };
 
-type OutputOwner = {
+export type OutputOwner = {
   id: string;
   title: string;
 };
@@ -123,8 +123,8 @@ export type OutputDataObject = OutputCoreObject & {
   created: string;
   id: string;
   lastUpdatedPartial: string;
-  workingGroup?: OutputOwner;
-  project?: OutputOwner;
+  workingGroups?: OutputOwner[];
+  projects?: OutputOwner[];
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;
@@ -136,13 +136,15 @@ export type AuthorUpsertDataObject =
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
-  workingGroupId?: string;
-  projectId?: string;
+  workingGroupIds?: string[];
+  projectIds?: string[];
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   updatedBy: string;
+  workingGroupIds?: string[];
+  projectIds?: string[];
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
@@ -167,8 +169,8 @@ export type OutputPostRequest = {
   description?: string;
   gp2Supported?: DecisionOption;
   sharingStatus: OutputSharingStatus;
-  workingGroupId?: string;
-  projectId?: string;
+  workingGroupIds?: string[];
+  projectIds?: string[];
   tags?: TagDataObject[];
   doi?: string;
   rrid?: string;

@@ -251,9 +251,9 @@ runs:
           HAS_AUTH0_LABEL=${{contains(github.event.pull_request.labels.*.name, 'use-pr-auth0-tenant') }}
           if [ "$HAS_AUTH0_LABEL" = true ]; then
             echo "crn-auth0-additional-claim-domain=https://${PR_NUMBER}.hub.asap.science" >> $GITHUB_OUTPUT
-            echo "crn-auth0-audience==${PR_NUMBER}.hub.asap.science" >> $GITHUB_ENV
-            echo "crn-auth0-client-id=Y8hFLdDA1hp9jc5Wg4Ntv2rbbKXfmDBx" >> $GITHUB_OUTPUT
-            echo "crn-auth0-domain=pr-crn-hub.us.auth0.com" >> $GITHUB_OUTPUT
+            echo "crn-auth0-audience==https://${PR_NUMBER}.hub.asap.science" >> $GITHUB_ENV
+            echo "crn-auth0-client-id=XJHOnPGLxImmgRsuW1wtDVDFBPbAmCMj" >> $GITHUB_OUTPUT
+            echo "crn-auth0-domain=pr-asap-hub.us.auth0.com" >> $GITHUB_OUTPUT
           fi
           echo "HAS_AUTH0_LABEL=$HAS_AUTH0_LABEL" >> $GITHUB_OUTPUT
           echo "crn-algolia-index=asap-hub_CI-$PR_NUMBER" >> $GITHUB_OUTPUT

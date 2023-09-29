@@ -227,7 +227,7 @@ describe('getAlgoliaUsers', () => {
     );
   });
 
-  it('builds a multiple $given filter query', async () => {
+  it('builds a multiple filter query', async () => {
     await getAlgoliaUsers(mockAlgoliaSearchClient, {
       ...options,
       regions: ['Europe'],

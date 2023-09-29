@@ -29,6 +29,9 @@ on:
       CRN_AUTH0_SHARED_SECRET:
         description: 'CRN Auth0 Shared Secret'
         required: true
+      CRN_PR_AUTH0_SHARED_SECRET:
+        description: 'CRN PR Auth0 Shared Secret'
+        required: true
       CRN_CONTENTFUL_ACCESS_TOKEN:
         description: 'CRN Contentful Access Token'
         required: true

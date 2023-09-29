@@ -797,6 +797,7 @@ export type ContributingCohortsFilter = {
 export type ContributingCohortsLinkingCollections = {
   contributingCohortsMembershipCollection?: Maybe<ContributingCohortsMembershipCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  outputsCollection?: Maybe<OutputsCollection>;
 };
 
 export type ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionArgs =
@@ -819,6 +820,18 @@ export type ContributingCohortsLinkingCollectionsEntryCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
 };
 
+export type ContributingCohortsLinkingCollectionsOutputsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ContributingCohortsLinkingCollectionsOutputsCollectionOrder>
+    >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+};
+
 export enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder {
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
@@ -832,6 +845,45 @@ export enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCo
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ContributingCohortsLinkingCollectionsOutputsCollectionOrder {
+  AccessionNumberAsc = 'accessionNumber_ASC',
+  AccessionNumberDesc = 'accessionNumber_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AdminNotesAsc = 'adminNotes_ASC',
+  AdminNotesDesc = 'adminNotes_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  Gp2SupportedAsc = 'gp2Supported_ASC',
+  Gp2SupportedDesc = 'gp2Supported_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  SubtypeAsc = 'subtype_ASC',
+  SubtypeDesc = 'subtype_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
@@ -2927,6 +2979,7 @@ export type Outputs = Entry & {
   adminNotes?: Maybe<Scalars['String']>;
   authorsCollection?: Maybe<OutputsAuthorsCollection>;
   contentfulMetadata: ContentfulMetadata;
+  contributingCohortsCollection?: Maybe<OutputsContributingCohortsCollection>;
   createdBy?: Maybe<Users>;
   description?: Maybe<Scalars['String']>;
   documentType?: Maybe<Scalars['String']>;
@@ -2936,6 +2989,7 @@ export type Outputs = Entry & {
   link?: Maybe<Scalars['String']>;
   linkedFrom?: Maybe<OutputsLinkingCollections>;
   publishDate?: Maybe<Scalars['DateTime']>;
+  relatedEntitiesCollection?: Maybe<OutputsRelatedEntitiesCollection>;
   relatedEntity?: Maybe<OutputsRelatedEntity>;
   relatedOutputsCollection?: Maybe<OutputsRelatedOutputsCollection>;
   rrid?: Maybe<Scalars['String']>;
@@ -2970,6 +3024,18 @@ export type OutputsAuthorsCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<OutputsAuthorsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsContributingCohortsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<OutputsContributingCohortsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ContributingCohortsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3020,9 +3086,19 @@ export type OutputsPublishDateArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
+export type OutputsRelatedEntitiesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<OutputsRelatedEntitiesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsRelatedEntityArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<OutputsRelatedEntityFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3107,6 +3183,26 @@ export type OutputsCollection = {
   total: Scalars['Int'];
 };
 
+export type OutputsContributingCohortsCollection = {
+  items: Array<Maybe<ContributingCohorts>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum OutputsContributingCohortsCollectionOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type OutputsFilter = {
   AND?: InputMaybe<Array<InputMaybe<OutputsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<OutputsFilter>>>;
@@ -3136,6 +3232,8 @@ export type OutputsFilter = {
   authors?: InputMaybe<CfauthorsMultiTypeNestedFilter>;
   authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  contributingCohorts?: InputMaybe<CfContributingCohortsNestedFilter>;
+  contributingCohortsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   createdBy?: InputMaybe<CfUsersNestedFilter>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
@@ -3193,6 +3291,9 @@ export type OutputsFilter = {
   publishDate_lte?: InputMaybe<Scalars['DateTime']>;
   publishDate_not?: InputMaybe<Scalars['DateTime']>;
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  relatedEntities?: InputMaybe<CfrelatedEntitiesMultiTypeNestedFilter>;
+  relatedEntitiesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  relatedEntity?: InputMaybe<CfrelatedEntityMultiTypeNestedFilter>;
   relatedEntity_exists?: InputMaybe<Scalars['Boolean']>;
   relatedOutputs?: InputMaybe<CfOutputsNestedFilter>;
   relatedOutputsCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -3338,7 +3439,52 @@ export enum OutputsOrder {
   TypeDesc = 'type_DESC',
 }
 
+export type OutputsRelatedEntitiesCollection = {
+  items: Array<Maybe<OutputsRelatedEntitiesItem>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type OutputsRelatedEntitiesFilter = {
+  AND?: InputMaybe<Array<InputMaybe<OutputsRelatedEntitiesFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<OutputsRelatedEntitiesFilter>>>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type OutputsRelatedEntitiesItem = Projects | WorkingGroups;
+
 export type OutputsRelatedEntity = Projects | WorkingGroups;
+
+export type OutputsRelatedEntityFilter = {
+  AND?: InputMaybe<Array<InputMaybe<OutputsRelatedEntityFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<OutputsRelatedEntityFilter>>>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
 
 export type OutputsRelatedOutputsCollection = {
   items: Array<Maybe<Outputs>>;
@@ -6662,6 +6808,7 @@ export type CfOutputsNestedFilter = {
   adminNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  contributingCohortsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -6718,6 +6865,7 @@ export type CfOutputsNestedFilter = {
   publishDate_lte?: InputMaybe<Scalars['DateTime']>;
   publishDate_not?: InputMaybe<Scalars['DateTime']>;
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  relatedEntitiesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   relatedEntity_exists?: InputMaybe<Scalars['Boolean']>;
   relatedOutputsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
@@ -7078,6 +7226,42 @@ export type CfauthorsMultiTypeNestedFilter = {
   orcid_not_contains?: InputMaybe<Scalars['String']>;
   orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+};
+
+export type CfrelatedEntitiesMultiTypeNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfrelatedEntitiesMultiTypeNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfrelatedEntitiesMultiTypeNestedFilter>>>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type CfrelatedEntityMultiTypeNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfrelatedEntityMultiTypeNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfrelatedEntityMultiTypeNestedFilter>>>;
+  calendar_exists?: InputMaybe<Scalars['Boolean']>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CfuserMultiTypeNestedFilter = {
@@ -9099,13 +9283,19 @@ export type OutputsContentDataFragment = Pick<
     Sys,
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
   >;
-  relatedEntity?: Maybe<
-    | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-          sys: Pick<Sys, 'id'>;
-        })
-    | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
-          sys: Pick<Sys, 'id'>;
-        })
+  relatedEntitiesCollection?: Maybe<
+    Pick<OutputsRelatedEntitiesCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+                sys: Pick<Sys, 'id'>;
+              })
+          | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
+                sys: Pick<Sys, 'id'>;
+              })
+        >
+      >;
+    }
   >;
   authorsCollection?: Maybe<
     Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9138,6 +9328,13 @@ export type OutputsContentDataFragment = Pick<
       >;
     }
   >;
+  contributingCohortsCollection?: Maybe<
+    Pick<OutputsContributingCohortsCollection, 'total'> & {
+      items: Array<
+        Maybe<Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }>
+      >;
+    }
+  >;
 };
 
 export type FetchOutputByIdQueryVariables = Exact<{
@@ -9167,13 +9364,20 @@ export type FetchOutputByIdQuery = {
         Sys,
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
       >;
-      relatedEntity?: Maybe<
-        | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-              sys: Pick<Sys, 'id'>;
-            })
-        | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
-              sys: Pick<Sys, 'id'>;
-            })
+      relatedEntitiesCollection?: Maybe<
+        Pick<OutputsRelatedEntitiesCollection, 'total'> & {
+          items: Array<
+            Maybe<
+              | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+                    sys: Pick<Sys, 'id'>;
+                  })
+              | ({ __typename: 'WorkingGroups' } & Pick<
+                  WorkingGroups,
+                  'title'
+                > & { sys: Pick<Sys, 'id'> })
+            >
+          >;
+        }
       >;
       authorsCollection?: Maybe<
         Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9207,6 +9411,13 @@ export type FetchOutputByIdQuery = {
                 sys: Pick<Sys, 'id'>;
               }
             >
+          >;
+        }
+      >;
+      contributingCohortsCollection?: Maybe<
+        Pick<OutputsContributingCohortsCollection, 'total'> & {
+          items: Array<
+            Maybe<Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }>
           >;
         }
       >;
@@ -9250,14 +9461,20 @@ export type FetchOutputsQuery = {
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
             >;
-            relatedEntity?: Maybe<
-              | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                    sys: Pick<Sys, 'id'>;
-                  })
-              | ({ __typename: 'WorkingGroups' } & Pick<
-                  WorkingGroups,
-                  'title'
-                > & { sys: Pick<Sys, 'id'> })
+            relatedEntitiesCollection?: Maybe<
+              Pick<OutputsRelatedEntitiesCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
+                          sys: Pick<Sys, 'id'>;
+                        })
+                    | ({ __typename: 'WorkingGroups' } & Pick<
+                        WorkingGroups,
+                        'title'
+                      > & { sys: Pick<Sys, 'id'> })
+                  >
+                >;
+              }
             >;
             authorsCollection?: Maybe<
               Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9292,6 +9509,15 @@ export type FetchOutputsQuery = {
                     Pick<Outputs, 'title' | 'documentType' | 'type'> & {
                       sys: Pick<Sys, 'id'>;
                     }
+                  >
+                >;
+              }
+            >;
+            contributingCohortsCollection?: Maybe<
+              Pick<OutputsContributingCohortsCollection, 'total'> & {
+                items: Array<
+                  Maybe<
+                    Pick<ContributingCohorts, 'name'> & { sys: Pick<Sys, 'id'> }
                   >
                 >;
               }
@@ -9338,14 +9564,21 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                   Sys,
                   'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
                 >;
-                relatedEntity?: Maybe<
-                  | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                        sys: Pick<Sys, 'id'>;
-                      })
-                  | ({ __typename: 'WorkingGroups' } & Pick<
-                      WorkingGroups,
-                      'title'
-                    > & { sys: Pick<Sys, 'id'> })
+                relatedEntitiesCollection?: Maybe<
+                  Pick<OutputsRelatedEntitiesCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        | ({ __typename: 'Projects' } & Pick<
+                            Projects,
+                            'title'
+                          > & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroups' } & Pick<
+                            WorkingGroups,
+                            'title'
+                          > & { sys: Pick<Sys, 'id'> })
+                      >
+                    >;
+                  }
                 >;
                 authorsCollection?: Maybe<
                   Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9378,6 +9611,17 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }
+                >;
+                contributingCohortsCollection?: Maybe<
+                  Pick<OutputsContributingCohortsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<ContributingCohorts, 'name'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -9428,14 +9672,21 @@ export type FetchOutputsByUserIdQuery = {
                   Sys,
                   'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
                 >;
-                relatedEntity?: Maybe<
-                  | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                        sys: Pick<Sys, 'id'>;
-                      })
-                  | ({ __typename: 'WorkingGroups' } & Pick<
-                      WorkingGroups,
-                      'title'
-                    > & { sys: Pick<Sys, 'id'> })
+                relatedEntitiesCollection?: Maybe<
+                  Pick<OutputsRelatedEntitiesCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        | ({ __typename: 'Projects' } & Pick<
+                            Projects,
+                            'title'
+                          > & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroups' } & Pick<
+                            WorkingGroups,
+                            'title'
+                          > & { sys: Pick<Sys, 'id'> })
+                      >
+                    >;
+                  }
                 >;
                 authorsCollection?: Maybe<
                   Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9468,6 +9719,17 @@ export type FetchOutputsByUserIdQuery = {
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }
+                >;
+                contributingCohortsCollection?: Maybe<
+                  Pick<OutputsContributingCohortsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<ContributingCohorts, 'name'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -9518,14 +9780,21 @@ export type FetchOutputsByExternalUserIdQuery = {
                   Sys,
                   'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
                 >;
-                relatedEntity?: Maybe<
-                  | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                        sys: Pick<Sys, 'id'>;
-                      })
-                  | ({ __typename: 'WorkingGroups' } & Pick<
-                      WorkingGroups,
-                      'title'
-                    > & { sys: Pick<Sys, 'id'> })
+                relatedEntitiesCollection?: Maybe<
+                  Pick<OutputsRelatedEntitiesCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        | ({ __typename: 'Projects' } & Pick<
+                            Projects,
+                            'title'
+                          > & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroups' } & Pick<
+                            WorkingGroups,
+                            'title'
+                          > & { sys: Pick<Sys, 'id'> })
+                      >
+                    >;
+                  }
                 >;
                 authorsCollection?: Maybe<
                   Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9558,6 +9827,17 @@ export type FetchOutputsByExternalUserIdQuery = {
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }
+                >;
+                contributingCohortsCollection?: Maybe<
+                  Pick<OutputsContributingCohortsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<ContributingCohorts, 'name'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -9608,14 +9888,21 @@ export type FetchOutputsByProjectIdQuery = {
                   Sys,
                   'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
                 >;
-                relatedEntity?: Maybe<
-                  | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                        sys: Pick<Sys, 'id'>;
-                      })
-                  | ({ __typename: 'WorkingGroups' } & Pick<
-                      WorkingGroups,
-                      'title'
-                    > & { sys: Pick<Sys, 'id'> })
+                relatedEntitiesCollection?: Maybe<
+                  Pick<OutputsRelatedEntitiesCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        | ({ __typename: 'Projects' } & Pick<
+                            Projects,
+                            'title'
+                          > & { sys: Pick<Sys, 'id'> })
+                        | ({ __typename: 'WorkingGroups' } & Pick<
+                            WorkingGroups,
+                            'title'
+                          > & { sys: Pick<Sys, 'id'> })
+                      >
+                    >;
+                  }
                 >;
                 authorsCollection?: Maybe<
                   Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9648,6 +9935,17 @@ export type FetchOutputsByProjectIdQuery = {
                     items: Array<
                       Maybe<
                         Pick<Outputs, 'title' | 'documentType' | 'type'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }
+                >;
+                contributingCohortsCollection?: Maybe<
+                  Pick<OutputsContributingCohortsCollection, 'total'> & {
+                    items: Array<
+                      Maybe<
+                        Pick<ContributingCohorts, 'name'> & {
                           sys: Pick<Sys, 'id'>;
                         }
                       >
@@ -12530,60 +12828,79 @@ export const OutputsContentDataFragmentDoc = {
           },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'relatedEntity' },
+            name: { kind: 'Name', value: 'relatedEntitiesCollection' },
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
-                  kind: 'InlineFragment',
-                  typeCondition: {
-                    kind: 'NamedType',
-                    name: { kind: 'Name', value: 'Projects' },
-                  },
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
+                        name: { kind: 'Name', value: '__typename' },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'InlineFragment',
-                  typeCondition: {
-                    kind: 'NamedType',
-                    name: { kind: 'Name', value: 'WorkingGroups' },
-                  },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
                       {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Projects' },
+                        },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
                             },
                           ],
                         },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'WorkingGroups' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -12791,6 +13108,46 @@ export const OutputsContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'doi' } },
           { kind: 'Field', name: { kind: 'Name', value: 'rrid' } },
           { kind: 'Field', name: { kind: 'Name', value: 'accessionNumber' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'contributingCohortsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '10' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },

@@ -21,19 +21,22 @@ export const outputsContentQueryFragment = gql`
     addedDate
     publishDate
     lastUpdatedPartial
-    relatedEntity {
-      __typename
-      ... on Projects {
-        sys {
-          id
+    relatedEntitiesCollection {
+      total
+      items {
+        __typename
+        ... on Projects {
+          sys {
+            id
+          }
+          title
         }
-        title
-      }
-      ... on WorkingGroups {
-        sys {
-          id
+        ... on WorkingGroups {
+          sys {
+            id
+          }
+          title
         }
-        title
       }
     }
     authorsCollection(limit: 10) {
@@ -83,6 +86,15 @@ export const outputsContentQueryFragment = gql`
     doi
     rrid
     accessionNumber
+    contributingCohortsCollection(limit: 10) {
+      total
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
   }
 `;
 

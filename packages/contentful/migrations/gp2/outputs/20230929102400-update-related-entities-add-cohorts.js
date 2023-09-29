@@ -27,8 +27,8 @@ module.exports.up = function (migration) {
       linkType: 'Entry',
     });
   outputs
-    .createField('contributionCohorts')
-    .name('Contribution Cohorts')
+    .createField('contributingCohorts')
+    .name('Contributing Cohorts')
     .type('Array')
     .localized(false)
     .required(false)

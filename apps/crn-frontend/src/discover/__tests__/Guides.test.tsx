@@ -1,31 +1,29 @@
 import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
-import { render, waitFor, screen } from '@testing-library/react';
+import {
+  render,
+  waitForElementToBeRemoved,
+  screen,
+} from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import { createDiscoverResponse, createPageResponse } from '@asap-hub/fixtures';
+import { createListGuidesResponse } from '@asap-hub/fixtures';
 
 import Guides from '../Guides';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshDiscoverState } from '../state';
-import { getDiscover } from '../api';
+import { getGuides } from '../../guides/api';
 
-jest.mock('../api');
 jest.mock('../../guides/api');
 
 afterEach(() => {
   jest.clearAllMocks();
 });
 
-const mockGetDiscover = getDiscover as jest.MockedFunction<typeof getDiscover>;
+const mockGetGuides = getGuides as jest.MockedFunction<typeof getGuides>;
 
-const renderDiscover = async (user: Partial<User>) => {
-  const result = render(
+const renderGuides = async (user: Partial<User>) => {
+  render(
     <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(refreshDiscoverState, Math.random());
-        }}
-      >
+      <RecoilRoot>
         <Auth0Provider user={user}>
           <WhenReady>
             <Guides />
@@ -34,22 +32,14 @@ const renderDiscover = async (user: Partial<User>) => {
       </RecoilRoot>
     </Suspense>,
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
+
+  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
 };
 
 it('renders guides with pages and support', async () => {
-  mockGetDiscover.mockResolvedValue({
-    ...createDiscoverResponse(),
-    pages: [createPageResponse('1'), createPageResponse('2')],
-    training: [],
-    members: [],
-    scientificAdvisoryBoard: [],
-  });
+  mockGetGuides.mockResolvedValue(createListGuidesResponse());
 
-  await renderDiscover({});
+  await renderGuides({});
   expect(screen.getByText(/Guides/i, { selector: 'h2' })).toBeVisible();
-  expect(screen.queryAllByRole('heading').length).toBe(6);
+  expect(screen.getByText(/Example 1/i, { selector: 'h5' })).toBeVisible();
 });

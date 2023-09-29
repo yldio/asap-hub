@@ -98,21 +98,6 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
       ].join(''),
     },
   ],
-  training: [
-    {
-      id: 'uuid-1',
-      created: new Date().toISOString(),
-      title: "Coordinating different research interests into Parkinson's",
-      shortText:
-        'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
-      thumbnail: 'https://picsum.photos/200',
-      authors: [],
-      tags: [],
-      teams: [],
-      relatedEvents: [],
-      relatedTutorials: [],
-    },
-  ],
   members,
   scientificAdvisoryBoard: members,
   aboutUs: text('About Us', ''),

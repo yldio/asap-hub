@@ -1,17 +1,34 @@
-import { FC } from 'react';
-import { DiscoverTutorialsCardList } from '@asap-hub/react-components';
-import { useDiscoverState } from '../state';
+import { TutorialsPageBody } from '@asap-hub/react-components';
+import { usePagination, usePaginationParams } from '../../hooks';
+import { useTutorials } from './state';
 
-const Tutorials: FC<Record<string, never>> = () => {
-  const { training } = useDiscoverState();
+interface TutorialListProps {
+  searchQuery: string;
+}
+
+const TutorialList: React.FC<TutorialListProps> = ({ searchQuery = '' }) => {
+  const { currentPage, pageSize } = usePaginationParams();
+  const result = useTutorials({
+    searchQuery,
+    currentPage,
+    pageSize,
+    filters: new Set(),
+  });
+
+  const { numberOfPages, renderPageHref } = usePagination(
+    result.total || 0,
+    pageSize,
+  );
 
   return (
-    <DiscoverTutorialsCardList
-      title="Tutorials"
-      subtitle="Explore our tutorials to understand how you can use the Hub and work with the tools."
-      tutorials={training}
+    <TutorialsPageBody
+      tutorials={result.items}
+      numberOfPages={numberOfPages}
+      renderPageHref={renderPageHref}
+      currentPage={currentPage}
+      numberOfItems={result.total}
     />
   );
 };
 
-export default Tutorials;
+export default TutorialList;

@@ -12,10 +12,10 @@ import { DiscoverResponse } from '@asap-hub/model';
 
 import About from '../About';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshDiscoverState } from '../../discover/state';
-import { getDiscover } from '../../discover/api';
+import { refreshDiscoverState } from '../state';
+import { getDiscover } from '../api';
 
-jest.mock('../../discover/api');
+jest.mock('../api');
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -28,7 +28,6 @@ const props: DiscoverResponse = {
   members: [],
   pages: [],
   scientificAdvisoryBoard: [],
-  training: [],
 };
 
 const renderPage = async (user: Partial<User>) => {

@@ -2,39 +2,39 @@ import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor, screen } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { RecoilRoot } from 'recoil';
 import {
-  createDiscoverResponse,
   createTutorialsResponse,
+  createListTutorialsResponse,
 } from '@asap-hub/fixtures';
 import { discover } from '@asap-hub/routing';
+import { usePagination, usePaginationParams } from '../../../hooks';
 
-import Tutorials from '../TutorialList';
+import TutorialList from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { refreshDiscoverState } from '../../state';
-import { getDiscover } from '../../api';
+import { getTutorials } from '../api';
 
-jest.mock('../../api');
+jest.mock('../api');
 
 afterEach(() => {
   jest.clearAllMocks();
 });
 
-const mockGetDiscover = getDiscover as jest.MockedFunction<typeof getDiscover>;
+const mockGetTutorials = getTutorials as jest.MockedFunction<
+  typeof getTutorials
+>;
+const pageSize = 10;
 
-const renderDiscoverTutorials = async (user: Partial<User>) => {
+const renderTutorials = async (user: Partial<User> = {}, searchQuery = '') => {
   const result = render(
     <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(refreshDiscoverState, Math.random());
-        }}
-      >
+      <RecoilRoot>
         <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: discover({}).$ }]}>
               <Route path={discover.template}>
-                <Tutorials />
+                <TutorialList searchQuery={searchQuery} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -49,15 +49,15 @@ const renderDiscoverTutorials = async (user: Partial<User>) => {
 };
 
 it('renders tutorial page with two items', async () => {
-  mockGetDiscover.mockResolvedValue({
-    ...createDiscoverResponse(),
-    training: [
+  mockGetTutorials.mockResolvedValue({
+    total: 2,
+    items: [
       createTutorialsResponse({ key: 'First One' }),
       createTutorialsResponse({ key: 'Second One' }),
     ],
   });
 
-  await renderDiscoverTutorials({});
+  await renderTutorials();
   expect(
     screen
       .getAllByRole('heading', { level: 4 })
@@ -65,9 +65,37 @@ it('renders tutorial page with two items', async () => {
   ).toEqual(['First One title', 'Second One title']);
 });
 
-it('renders the correct title and subtitle', async () => {
-  await renderDiscoverTutorials({});
+it('renders a counter with the total number of items', async () => {
+  const numberOfItems = 20;
+  mockGetTutorials.mockResolvedValue(
+    createListTutorialsResponse(numberOfItems),
+  );
 
-  expect(screen.getByText(/Tutorials/i, { selector: 'h2' })).toBeVisible();
-  expect(screen.getByText(/Explore our tutorials/i)).toBeVisible();
+  const { getByText } = await renderTutorials();
+  await waitFor(() => expect(mockGetTutorials).toHaveBeenCalled());
+  expect(getByText(`${numberOfItems} results found`)).toBeVisible();
+});
+
+it('renders a paginated list of tutorials', async () => {
+  const numberOfItems = 40;
+  mockGetTutorials.mockResolvedValue(
+    createListTutorialsResponse(numberOfItems),
+  );
+
+  const { result } = renderHook(
+    () => ({
+      usePaginationParams: usePaginationParams(),
+      usePagination: usePagination(numberOfItems, pageSize),
+    }),
+    {
+      wrapper: MemoryRouter,
+      initialProps: {
+        initialEntries: [`/guides-tutorials/tutorials`],
+      },
+    },
+  );
+
+  await renderTutorials();
+  expect(result.current.usePagination.numberOfPages).toBe(4);
+  expect(result.current.usePaginationParams.currentPage).toBe(0);
 });

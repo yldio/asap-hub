@@ -8,7 +8,6 @@ import {
   getContentfulGraphqlDiscoverMembers,
 } from '../../fixtures/discover.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
-import { getContentfulGraphqlTutorial } from '../../fixtures/tutorials.fixtures';
 
 describe('Discover data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -17,15 +16,10 @@ describe('Discover data provider', () => {
   );
 
   describe('Fetch', () => {
-    test('it should return the tutorial from the mock server', async () => {
-      const graphqlTutorialResponse = getContentfulGraphqlTutorial();
+    test('it should return the Discover object from the mock server', async () => {
       const contentfulGraphqlClientMockServer =
         getContentfulGraphqlClientMockServer({
           Discover: () => getContentfulGraphqlDiscover(),
-          Tutorials: () => graphqlTutorialResponse,
-          TutorialsCollection: () => {
-            return graphqlTutorialResponse.linkedFrom?.tutorialsCollection;
-          },
         });
       const dataProviderWithMockServer: DiscoverDataProvider =
         new DiscoverContentfulDataProvider(contentfulGraphqlClientMockServer);
@@ -80,7 +74,6 @@ describe('Discover data provider', () => {
         ...getContentfulGraphqlDiscoverResponse({
           pagesCollection: null,
           membersCollection: null,
-          trainingCollection: null,
           scientificAdvisoryBoardCollection: null,
           membersTeam: null,
           aboutUs: null,
@@ -93,7 +86,6 @@ describe('Discover data provider', () => {
         members: [],
         pages: [],
         scientificAdvisoryBoard: [],
-        training: [],
         membersTeamId: undefined,
         aboutUs: '',
       });
@@ -126,7 +118,6 @@ describe('Discover data provider', () => {
         members: [],
         pages: [],
         scientificAdvisoryBoard: [],
-        training: [],
         membersTeamId: undefined,
         aboutUs: '',
       });
@@ -145,7 +136,6 @@ describe('Discover data provider', () => {
         members: [],
         pages: [],
         scientificAdvisoryBoard: [],
-        training: [],
         membersTeamId: undefined,
         aboutUs: '',
       });

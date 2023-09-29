@@ -4,6 +4,7 @@ import {
   TutorialsDataObject,
   TutorialsSharingStatus,
   sharingStatuses,
+  FetchOptions,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
@@ -12,6 +13,10 @@ import {
   FetchTutorialByIdQueryVariables,
   parseRichText,
   RichTextFromQuery,
+  TutorialsFilter,
+  FetchTutorialsQuery,
+  FetchTutorialsQueryVariables,
+  FETCH_TUTORIALS,
 } from '@asap-hub/contentful';
 import { TutorialDataProvider } from '../types';
 import { cleanArray } from '../../utils/clean-array';
@@ -37,8 +42,47 @@ type AuthorItem = NonNullable<
 export class TutorialContentfulDataProvider implements TutorialDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
 
-  async fetch(): Promise<ListResponse<TutorialsDataObject>> {
-    throw new Error('Method not implemented.');
+  async fetch(
+    options: FetchOptions<string[]>,
+  ): Promise<ListResponse<TutorialsDataObject>> {
+    const { take = 10, skip = 0, search } = options;
+
+    const where: TutorialsFilter = {};
+
+    const searchTerms = (search || '').split(' ').filter(Boolean);
+
+    if (searchTerms.length) {
+      where.OR = [
+        ...searchTerms.map((term) => ({ title_contains: term })),
+        ...searchTerms.map((term) => ({ shortText_contains: term })),
+        ...searchTerms.map((term) => ({ tags: { name: term } })),
+        ...searchTerms.map((term) => ({ teams: { displayName: term } })),
+      ];
+    }
+    const { discoverCollection } = await this.contentfulClient.request<
+      FetchTutorialsQuery,
+      FetchTutorialsQueryVariables
+    >(FETCH_TUTORIALS, {
+      limit: take,
+      skip,
+      where,
+    });
+
+    const trainingCollection = discoverCollection?.items[0]?.trainingCollection;
+
+    if (!trainingCollection) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
+    return {
+      total: trainingCollection.total,
+      items: trainingCollection?.items
+        .filter((x): x is TutorialItem => x !== null)
+        .map(parseContentfulGraphQlTutorials),
+    };
   }
 
   async fetchById(id: string): Promise<TutorialsDataObject | null> {

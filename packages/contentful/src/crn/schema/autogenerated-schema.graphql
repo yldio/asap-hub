@@ -218,8 +218,6 @@ enum AssetLinkingCollectionsTutorialsCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -876,8 +874,6 @@ enum DiscoverTrainingCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -1294,8 +1290,6 @@ enum EventsLinkingCollectionsTutorialsCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -1572,8 +1566,6 @@ enum ExternalAuthorsLinkingCollectionsTutorialsCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -3845,8 +3837,6 @@ enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -4261,8 +4251,6 @@ enum TeamsLinkingCollectionsTutorialsCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -4333,7 +4321,6 @@ type Tutorials implements Entry {
   link(locale: String): String
   linkText(locale: String): String
   linkedFrom(allowedLocales: [String]): TutorialsLinkingCollections
-  publishDate(locale: String): DateTime
   relatedEventsCollection(limit: Int = 100, locale: String, order: [TutorialsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): TutorialsRelatedEventsCollection
   relatedTutorialsCollection(limit: Int = 100, locale: String, order: [TutorialsRelatedTutorialsCollectionOrder], preview: Boolean, skip: Int = 0, where: TutorialsFilter): TutorialsRelatedTutorialsCollection
   sharingStatus(locale: String): String
@@ -4431,15 +4418,6 @@ input TutorialsFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
-  publishDate: DateTime
-  publishDate_exists: Boolean
-  publishDate_gt: DateTime
-  publishDate_gte: DateTime
-  publishDate_in: [DateTime]
-  publishDate_lt: DateTime
-  publishDate_lte: DateTime
-  publishDate_not: DateTime
-  publishDate_not_in: [DateTime]
   relatedEvents: cfEventsNestedFilter
   relatedEventsCollection_exists: Boolean
   relatedTutorials: cfTutorialsNestedFilter
@@ -4513,8 +4491,6 @@ enum TutorialsLinkingCollectionsTutorialsCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -4546,8 +4522,6 @@ enum TutorialsOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -4642,8 +4616,6 @@ enum TutorialsRelatedTutorialsCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -5169,8 +5141,6 @@ enum UsersLinkingCollectionsTutorialsCollectionOrder {
   linkText_DESC
   link_ASC
   link_DESC
-  publishDate_ASC
-  publishDate_DESC
   sharingStatus_ASC
   sharingStatus_DESC
   shortText_ASC
@@ -6550,15 +6520,6 @@ input cfTutorialsNestedFilter {
   link_not: String
   link_not_contains: String
   link_not_in: [String]
-  publishDate: DateTime
-  publishDate_exists: Boolean
-  publishDate_gt: DateTime
-  publishDate_gte: DateTime
-  publishDate_in: [DateTime]
-  publishDate_lt: DateTime
-  publishDate_lte: DateTime
-  publishDate_not: DateTime
-  publishDate_not_in: [DateTime]
   relatedEventsCollection_exists: Boolean
   relatedTutorialsCollection_exists: Boolean
   sharingStatus: String

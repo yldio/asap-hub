@@ -16,7 +16,6 @@ describe('/discover/ route', () => {
     test('Should return 200 when no information exists', async () => {
       discoverControllerMock.fetch.mockResolvedValueOnce({
         aboutUs: '',
-        training: [],
         members: [],
         scientificAdvisoryBoard: [],
         pages: [],
@@ -27,7 +26,6 @@ describe('/discover/ route', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
         aboutUs: '',
-        training: [],
         members: [],
         scientificAdvisoryBoard: [],
         pages: [],

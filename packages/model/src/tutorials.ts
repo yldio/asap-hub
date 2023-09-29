@@ -43,6 +43,9 @@ export interface TutorialsDataObject {
     }
   >;
 }
+
+export type ListTutorialsDataObject = ListResponse<TutorialsDataObject>;
+
 export type TutorialsResponse = TutorialsDataObject;
 
 export type ListTutorialsResponse = ListResponse<TutorialsResponse>;

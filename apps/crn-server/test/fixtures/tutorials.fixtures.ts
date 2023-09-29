@@ -1,9 +1,18 @@
-import { TutorialsDataObject, TutorialsResponse } from '@asap-hub/model';
+import {
+  ListTutorialsDataObject,
+  TutorialsDataObject,
+  TutorialsResponse,
+} from '@asap-hub/model';
 import { TutorialsContentFragment } from '@asap-hub/contentful';
 import { appName, baseUrl } from '../../src/config';
 
 export const getTutorialResponse = (): TutorialsResponse =>
   getTutorialsDataObject();
+
+export const getListTutorialsDataObject = (): ListTutorialsDataObject => ({
+  total: 1,
+  items: [getTutorialsDataObject()],
+});
 
 export const getTutorialsDataObject = (): TutorialsDataObject => ({
   id: 'tutorial-1',

@@ -17,27 +17,28 @@ describe('Tutorials data provider', () => {
     contentfulGraphqlClientMock,
   );
 
+  const graphqlTutorialResponse = getContentfulGraphqlTutorial();
+  const contentfulGraphqlClientMockServer =
+    getContentfulGraphqlClientMockServer({
+      Tutorials: () => graphqlTutorialResponse,
+      TutorialsCollection: () => {
+        return graphqlTutorialResponse.linkedFrom?.tutorialsCollection;
+      },
+      RelatedTutorialsCollection: () => {
+        return graphqlTutorialResponse.relatedTutorialsCollection;
+      },
+    });
+  const dataProviderWithMockServer: TutorialDataProvider =
+    new TutorialContentfulDataProvider(contentfulGraphqlClientMockServer);
+
   describe('Fetch', () => {
     test('not implemented', async () => {
-      await expect(dataProvider.fetch(null)).rejects.toThrow();
+      await expect(dataProvider.fetch({})).rejects.toThrow();
     });
   });
 
   describe('Fetch by ID', () => {
     test('it should return the tutorial from the mock server', async () => {
-      const graphqlTutorialResponse = getContentfulGraphqlTutorial();
-      const contentfulGraphqlClientMockServer =
-        getContentfulGraphqlClientMockServer({
-          Tutorials: () => graphqlTutorialResponse,
-          TutorialsCollection: () => {
-            return graphqlTutorialResponse.linkedFrom?.tutorialsCollection;
-          },
-          RelatedTutorialsCollection: () => {
-            return graphqlTutorialResponse.relatedTutorialsCollection;
-          },
-        });
-      const dataProviderWithMockServer: TutorialDataProvider =
-        new TutorialContentfulDataProvider(contentfulGraphqlClientMockServer);
       const result = await dataProviderWithMockServer.fetchById('123');
 
       const expectation = getTutorialsDataObject();

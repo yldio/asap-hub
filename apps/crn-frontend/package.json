@@ -52,7 +52,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/runtime-corejs3": "7.22.15",
     "@sentry/cli": "^2.20.3",
-    "@testing-library/dom": "9.3.1",
+    "@testing-library/dom": "9.3.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "11.2.7",
     "@testing-library/react-hooks": "8.0.1",

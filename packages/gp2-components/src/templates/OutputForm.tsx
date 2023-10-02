@@ -31,6 +31,11 @@ import { createIdentifierField } from '../utils';
 const { rem } = pixels;
 const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
 
+const DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED = [
+  'Training Materials',
+  'Procedural Form',
+];
+
 const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
@@ -133,9 +138,9 @@ const OutputForm: React.FC<OutputFormType> = ({
     subtype || '',
   );
   const [newDescription, setDescription] = useState(description || '');
-  const [newGp2Supported, setGp2Supported] = useState<
-    gp2Model.DecisionOption | undefined
-  >(isGP2SupportedAlwaysTrue ? 'Yes' : gp2Supported);
+  const [newGp2Supported, setGp2Supported] = useState<gp2Model.DecisionOption>(
+    isGP2SupportedAlwaysTrue ? 'Yes' : gp2Supported || "Don't Know",
+  );
   const [newSharingStatus, setSharingStatus] =
     useState<gp2Model.OutputSharingStatus>(
       isAlwaysPublic ? 'Public' : sharingStatus || 'GP2 Only',
@@ -189,7 +194,9 @@ const OutputForm: React.FC<OutputFormType> = ({
     type: newType || undefined,
     subtype: newSubtype || undefined,
     description: newDescription || undefined,
-    gp2Supported: newGp2Supported || undefined,
+    gp2Supported: DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(documentType)
+      ? undefined
+      : newGp2Supported,
     sharingStatus: newSharingStatus,
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
@@ -295,9 +302,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                 ></Markdown>
               }
             />
-            {!['Training Materials', 'Procedural Form'].includes(
-              documentType,
-            ) ? (
+            {!DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED.includes(documentType) ? (
               <LabeledRadioButtonGroup<gp2Model.DecisionOption>
                 title="Has this output been supported by GP2?"
                 subtitle="(required)"
@@ -318,7 +323,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                     disabled: isGP2SupportedAlwaysTrue,
                   },
                 ]}
-                value={newGp2Supported ?? "Don't Know"}
+                value={newGp2Supported}
                 onChange={setGp2Supported}
               />
             ) : null}

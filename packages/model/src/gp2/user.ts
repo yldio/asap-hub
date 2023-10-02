@@ -1,4 +1,4 @@
-import { FetchOptions, ListResponse } from '../common';
+import { FetchOptions, ListResponse, OrcidWork } from '../common';
 import { Connection, UserSocialLinks } from '../user';
 import { TagDataObject } from './tag';
 import { ProjectDataObject, ProjectMember } from './project';
@@ -104,6 +104,10 @@ export type UserDataObject = {
   tags: TagDataObject[];
   lastName: string;
   onboarded: boolean;
+  orcid?: string;
+  orcidLastModifiedDate?: string;
+  orcidLastSyncDate?: string;
+  orcidWorks?: OrcidWork[];
   positions: UserPosition[];
   projects: UserProject[];
   questions: string[];
@@ -140,7 +144,16 @@ export type UserUpdateDataObject = Partial<
   };
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
-  'avatar' | 'connections' | 'email' | 'role' | 'createdDate' | 'activatedDate'
+  | 'avatar'
+  | 'connections'
+  | 'email'
+  | 'role'
+  | 'createdDate'
+  | 'activatedDate'
+  | 'orcidLastModifiedDate'
+  | 'orcidLastSyncDate'
+  | 'orcidWorks'
+  | 'orcid'
 >;
 
 export type UserAvatarPostRequest = {

@@ -48,8 +48,10 @@ export const outputToCSV = ({
     ),
   ),
   tags: sorted(tags?.map(({ name }) => name)) || '',
-  workingGroups: sorted(workingGroups?.map(({ title }) => title)),
-  projects: sorted(projects?.map(({ title }) => title)),
+  workingGroups: sorted(
+    workingGroups?.map((workingGroup) => workingGroup.title),
+  ),
+  projects: sorted(projects?.map((project) => project.title)),
   date: formatDate(new Date(addedDate)),
 });
 

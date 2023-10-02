@@ -5,7 +5,6 @@ import { useResearchOutputs } from '../shared-research/state';
 const Tags: React.FC<Record<string, never>> = () => {
   const { tags, searchQuery, filters } = useSearch();
   const { currentPage, pageSize } = usePaginationParams();
-  const { numberOfPages, renderPageHref } = usePagination(0, pageSize);
   const { items, total } = useResearchOutputs({
     searchQuery,
     filters,
@@ -14,6 +13,7 @@ const Tags: React.FC<Record<string, never>> = () => {
     noResultsWithoutCriteria: true,
     tags,
   });
+  const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
     <TagsPageBody
       currentPage={currentPage}

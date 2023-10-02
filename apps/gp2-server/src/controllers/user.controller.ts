@@ -1,6 +1,13 @@
+import Intercept from 'apr-intercept';
 import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
+import {
+  fetchOrcidProfile,
+  isValidOrcidResponse,
+  transformOrcidWorks,
+} from '@asap-hub/server-common';
 import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
+import logger from '../utils/logger';
 
 export default class UserController {
   constructor(
@@ -95,6 +102,38 @@ export default class UserController {
       connections: [...existingConnections, { code: authUserId }],
       activatedDate: user.activatedDate ?? new Date().toISOString(),
     });
+  }
+
+  async syncOrcidProfile(
+    id: string,
+    cachedUser: gp2.UserResponse | undefined = undefined,
+  ): Promise<gp2.UserResponse> {
+    let fetchedUser;
+    if (!cachedUser) {
+      fetchedUser = await this.fetchById(id);
+    }
+
+    const user = cachedUser || (fetchedUser as gp2.UserResponse);
+    const [error, res] = await Intercept(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      fetchOrcidProfile(user!.orcid!),
+    );
+    const updateToUser: gp2.UserUpdateDataObject = {
+      email: user.email,
+      orcidLastSyncDate: new Date().toISOString(),
+    };
+    if (!error && isValidOrcidResponse(res)) {
+      const { lastModifiedDate, works } = transformOrcidWorks(res);
+      updateToUser.orcidLastModifiedDate = new Date(
+        parseInt(lastModifiedDate, 10),
+      ).toISOString();
+      updateToUser.orcidWorks = works.slice(0, 10);
+    }
+    if (error) {
+      logger.warn(error, 'Failed to sync ORCID profile');
+    }
+
+    return this.update(user.id, updateToUser);
   }
 
   private async queryByCode(code: string) {

@@ -120,8 +120,8 @@ it('publishes the output', async () => {
       description: 'An interesting article',
       sharingStatus: 'GP2 Only',
       documentType: 'Procedural Form',
-      projectId: 'project-id-1',
-      workingGroupId: undefined,
+      projectIds: ['project-id-1'],
+      workingGroupIds: undefined,
       authors: [
         {
           userId: '1',

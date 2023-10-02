@@ -13,8 +13,8 @@ export const outputFields = {
   link: 'Link',
   authors: 'Authors',
   tags: 'Tags',
-  workingGroup: 'Working Group',
-  project: 'Project',
+  workingGroups: 'Working Groups',
+  projects: 'Projects',
   date: 'Date Added',
 };
 
@@ -30,8 +30,8 @@ export const outputToCSV = ({
   subtype,
   link,
   authors,
-  workingGroup,
-  project,
+  workingGroups,
+  projects,
   addedDate,
   tags,
 }: gp2.OutputResponse): OutputCSV => ({
@@ -48,8 +48,8 @@ export const outputToCSV = ({
     ),
   ),
   tags: sorted(tags?.map(({ name }) => name)) || '',
-  workingGroup: workingGroup?.title,
-  project: project?.title,
+  workingGroups: sorted(workingGroups?.map(({ title }) => title)),
+  projects: sorted(projects?.map(({ title }) => title)),
   date: formatDate(new Date(addedDate)),
 });
 

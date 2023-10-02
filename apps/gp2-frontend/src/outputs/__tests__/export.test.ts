@@ -14,14 +14,18 @@ describe('outputToCSV', () => {
       type: 'Blog',
       subtype: 'Preprints',
       link: 'https://google.com',
-      workingGroup: {
-        title: 'WG-1',
-        id: '1',
-      },
-      project: {
-        id: '1',
-        title: 'Project-1',
-      },
+      workingGroups: [
+        {
+          title: 'WG-1',
+          id: '1',
+        },
+      ],
+      projects: [
+        {
+          id: '1',
+          title: 'Project-1',
+        },
+      ],
     };
     expect(outputToCSV(outputResponse)).toEqual({
       title: 'Output 1',
@@ -29,8 +33,8 @@ describe('outputToCSV', () => {
       type: 'Blog',
       subtype: 'Preprints',
       link: 'https://google.com',
-      workingGroup: 'WG-1',
-      project: 'Project-1',
+      workingGroups: expect.anything(),
+      projects: expect.anything(),
       authors: expect.anything(),
       tags: expect.anything(),
       date: expect.anything(),

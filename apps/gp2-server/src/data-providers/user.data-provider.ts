@@ -14,7 +14,7 @@ import {
   pollContentfulGql,
 } from '@asap-hub/contentful';
 import logger from '../utils/logger';
-import { KeywordItem, parseKeyword } from './keyword.data-provider';
+import { TagItem, parseTag } from './tag.data-provider';
 import { UserDataProvider } from './types';
 
 export type UserItem = NonNullable<
@@ -255,8 +255,8 @@ export const parseUserToDataObject = (
   );
   const tags =
     user.tagsCollection?.items
-      .filter((keyword): keyword is KeywordItem => keyword !== null)
-      .map(parseKeyword) ?? [];
+      .filter((tag): tag is TagItem => tag !== null)
+      .map(parseTag) ?? [];
 
   const positions = parsePositions(user.positions);
   const projects = parseProjects(user.linkedFrom?.projectMembershipCollection);
@@ -305,13 +305,7 @@ const generateFetchQueryFilter = (
   { filter, search }: gp2Model.FetchUsersOptions,
   userIdFilter: string[],
 ): gp2Contentful.UsersFilter => {
-  const {
-    regions,
-    keywords,
-    code,
-    onlyOnboarded,
-    hidden = true,
-  } = filter || {};
+  const { regions, tags, code, onlyOnboarded, hidden = true } = filter || {};
 
   const filterCode: gp2Contentful.UsersFilter = code
     ? { connections_contains_all: [code] }
@@ -325,8 +319,8 @@ const generateFetchQueryFilter = (
   const filterRegions: gp2Contentful.UsersFilter = regions
     ? { region_in: regions }
     : {};
-  const filterKeywords: gp2Contentful.UsersFilter = keywords
-    ? { tags: { name_in: keywords } }
+  const filterTags: gp2Contentful.UsersFilter = tags
+    ? { tags: { name_in: tags } }
     : {};
   const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =
@@ -337,7 +331,7 @@ const generateFetchQueryFilter = (
     ...filterNonOnboarded,
     ...filterHidden,
     ...filterRegions,
-    ...filterKeywords,
+    ...filterTags,
     ...searchFilter,
   };
 };

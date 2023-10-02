@@ -8,10 +8,10 @@ import {
   contentfulEnvId,
   contentfulSpaceId,
 } from '../src/config';
-import { KeywordContentfulDataProvider } from '../src/data-providers/keyword.data-provider';
+import { TagContentfulDataProvider } from '../src/data-providers/tag.data-provider';
 import { getContentfulRestClientFactory } from '../src/dependencies/clients.dependency';
 
-console.log('Importing keywords...');
+console.log('Importing tags...');
 
 const contentfulGraphQLClient = getContentfulGraphQLClient({
   space: contentfulSpaceId,
@@ -19,16 +19,16 @@ const contentfulGraphQLClient = getContentfulGraphQLClient({
   environment: contentfulEnvId,
 });
 
-const keywordDataProvider = new KeywordContentfulDataProvider(
+const tagDataProvider = new TagContentfulDataProvider(
   contentfulGraphQLClient,
   getContentfulRestClientFactory,
 );
 
-let mapKeywordID: { [key: string]: string } = {};
+let mapTagID: { [key: string]: string } = {};
 const app = async () => {
-  let numberOfImportedKeywords = 0;
-  let keywordsAlreadyExist = 0;
-  let keywordsFailed = 0;
+  let numberOfImportedTags = 0;
+  let tagsAlreadyExist = 0;
+  let tagsFailed = 0;
 
   console.log(`starting import for ${contentfulEnvId}`);
   const rateLimiter = new RateLimiter({
@@ -36,39 +36,34 @@ const app = async () => {
     interval: 5000,
   });
 
-  for await (const keyword of gp2.keywords) {
+  for await (const tag of gp2.tags) {
     try {
-      console.log(`about to create keyword: ${keyword}`);
+      console.log(`about to create tag: ${tag}`);
       await rateLimiter.removeTokens(5);
 
-      const keywordId = await keywordDataProvider.create({ name: keyword });
-      console.log(`created keyword: ${keyword} with id: ${keywordId}`);
+      const tagId = await tagDataProvider.create({ name: tag });
+      console.log(`created tag: ${tag} with id: ${tagId}`);
 
-      mapKeywordID[keyword] = keywordId;
+      mapTagID[tag] = tagId;
 
-      numberOfImportedKeywords++;
-      console.log(
-        `number of keywords imported so far: ${numberOfImportedKeywords} `,
-      );
+      numberOfImportedTags++;
+      console.log(`number of tags imported so far: ${numberOfImportedTags} `);
     } catch (e) {
       if (
         e instanceof Error &&
         e.message.includes('Same field value present in other entry')
       ) {
-        keywordsAlreadyExist++;
+        tagsAlreadyExist++;
       } else {
-        keywordsFailed++;
+        tagsFailed++;
       }
     }
   }
 
-  writeFileSync(
-    'mapKeywordsId.ts',
-    'export const map = ' + util.inspect(mapKeywordID),
-  );
+  writeFileSync('mapTagsId.ts', 'export const map = ' + util.inspect(mapTagID));
 
   console.log(
-    `Imported ${numberOfImportedKeywords} keywords, already exist ${keywordsAlreadyExist}, failed ${keywordsFailed}`,
+    `Imported ${numberOfImportedTags} tags, already exist ${tagsAlreadyExist}, failed ${tagsFailed}`,
   );
 };
 

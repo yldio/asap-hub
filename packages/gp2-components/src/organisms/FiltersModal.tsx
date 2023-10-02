@@ -6,7 +6,7 @@ import { formContainer, modalStyles, padding24Styles } from '../layout';
 import FilterModalFooter from '../molecules/FilterModalFooter';
 import FilterModalHeader from '../molecules/FilterModalHeader';
 
-const { userRegions, keywords } = gp2Model;
+const { userRegions, tags } = gp2Model;
 
 type FiltersModalProps = {
   onBackClick: () => void;
@@ -45,7 +45,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
     a.label.localeCompare(b.label);
   const [selectedRegions, setSelectedRegions] = useState(filters.regions || []);
   const [selectedExpertise, setSelectedExpertise] = useState(
-    filters.keywords || [],
+    filters.tags || [],
   );
   const [selectedProjects, setSelectedProjects] = useState(
     projects
@@ -78,7 +78,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
             title={'Expertise / Interests'}
             placeholder="Start typing…"
             values={getValues(selectedExpertise)}
-            suggestions={getValues([...keywords])}
+            suggestions={getValues([...tags])}
             onChange={onChange(setSelectedExpertise)}
             noOptionsMessage={getNoOptionsMessage(
               'Sorry, no current expertise / interests match',
@@ -123,7 +123,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
           onApply={() => {
             onApplyClick({
               regions: selectedRegions,
-              keywords: selectedExpertise,
+              tags: selectedExpertise,
               projects: selectedProjects.map(({ value }) => value),
               workingGroups: selectedWorkingGroups.map(({ value }) => value),
             });

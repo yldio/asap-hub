@@ -1,7 +1,7 @@
 import { FetchOptions, ListResponse } from '../common';
 import { Connection, UserSocialLinks } from '../user';
-import { Keyword } from './common';
-import { KeywordDataObject } from './keywords';
+import { Tags } from './common';
+import { TagDataObject } from './tag';
 import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
 
@@ -102,7 +102,7 @@ export type UserDataObject = {
   email: string;
   firstName: string;
   fundingStreams?: string;
-  tags: KeywordDataObject[];
+  tags: TagDataObject[];
   lastName: string;
   onboarded: boolean;
   positions: UserPosition[];
@@ -129,7 +129,7 @@ export type UserCreateDataObject = Omit<
 > & {
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
   avatar?: string;
-  tags?: Omit<KeywordDataObject, 'name'>[];
+  tags?: Omit<TagDataObject, 'name'>[];
 };
 
 export type UserUpdateDataObject = Partial<
@@ -137,7 +137,7 @@ export type UserUpdateDataObject = Partial<
 > &
   Partial<Pick<UserDataObject, 'connections'>> & {
     alternativeEmail?: string | null;
-    tags?: Omit<KeywordDataObject, 'name'>[];
+    tags?: Omit<TagDataObject, 'name'>[];
   };
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
@@ -167,7 +167,7 @@ export type FetchUsersSearchFilter = {
   projects?: string[];
   workingGroups?: string[];
   regions?: UserRegion[];
-  keywords?: Keyword[];
+  tags?: Tags[];
 };
 export type FetchUsersFilter = FetchUsersSearchFilter & {
   code?: string;

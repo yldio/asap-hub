@@ -92,9 +92,9 @@ export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOpt
             items: { type: 'string', enum: gp2.userRegions },
             nullable: true,
           },
-          keywords: {
+          tags: {
             type: 'array',
-            items: { type: 'string', enum: gp2.keywords },
+            items: { type: 'string', enum: gp2.tags },
             nullable: true,
           },
           projects: {

@@ -837,7 +837,7 @@ describe('User data provider', () => {
       );
       const fetchOptions: gp2Model.FetchUsersOptions = {
         filter: {
-          keywords: ['Keyword'],
+          tags: ['Keyword'],
         },
       };
       const users = await userDataProvider.fetch(fetchOptions);

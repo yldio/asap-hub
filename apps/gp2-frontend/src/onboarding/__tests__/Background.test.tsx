@@ -97,9 +97,7 @@ describe('Background', () => {
   });
 
   it('saves the keywords modal', async () => {
-    const tags = [
-      { id: '1', name: 'Genetics' },
-    ] as gp2Model.KeywordDataObject[];
+    const tags = [{ id: '1', name: 'Genetics' }] as gp2Model.TagDataObject[];
     const user = { ...gp2Fixtures.createUserResponse(), tags };
     mockGetUser.mockResolvedValueOnce(user);
     await renderBackground(user.id);

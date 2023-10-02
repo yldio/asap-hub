@@ -96,17 +96,17 @@ describe('Events Contentful Data Provider', () => {
       expect(result).toEqual(getContentfulListEventDataObject());
     });
 
-    test('Should return an empty result if no keywords', async () => {
+    test('Should return an empty result if no tags', async () => {
       const mockResponse = getContentfulGraphqlEventsResponse();
       const event = getContentfulGraphqlEvent();
-      event.keywordsCollection = null;
+      event.tagsCollection = null;
       mockResponse.eventsCollection!.items = [event];
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
 
       const { items } = await eventDataProvider.fetch({});
 
       expect(items[0]).toMatchObject({
-        keywords: [],
+        tags: [],
       });
     });
 
@@ -414,13 +414,13 @@ describe('Events Contentful Data Provider', () => {
                   title_contains: 'parkinson',
                 },
                 {
-                  keywords: { name_in: ['parkinson'] },
+                  tags: { name_in: ['parkinson'] },
                 },
                 {
                   title_contains: 'disease',
                 },
                 {
-                  keywords: { name_in: ['disease'] },
+                  tags: { name_in: ['disease'] },
                 },
               ],
               hidden_not: true,
@@ -698,7 +698,7 @@ describe('Events Contentful Data Provider', () => {
       });
 
       await eventDataProvider.update('123', {
-        keywords: [{ id: 'key-1' }],
+        tags: [{ id: 'tag-1' }],
       });
       expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {

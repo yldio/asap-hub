@@ -75,7 +75,7 @@ const renderUserList = async ({
 afterEach(jest.resetAllMocks);
 it('fetches the user information', async () => {
   await renderUserList({
-    filters: { regions: [], keywords: [], projects: [], workingGroups: [] },
+    filters: { regions: [], tags: [], projects: [], workingGroups: [] },
   });
 
   await waitFor(() =>

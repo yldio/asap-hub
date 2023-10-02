@@ -21,7 +21,7 @@ export const eventsContentQueryFragment = gql`
     hidden
     googleId
     copyMeetingLink
-    keywordsCollection(limit: 10) {
+    tagsCollection(limit: 10) {
       total
       items {
         sys {

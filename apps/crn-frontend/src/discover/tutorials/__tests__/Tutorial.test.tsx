@@ -9,11 +9,12 @@ import Tutorial from '../Tutorial';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getTutorialById } from '../api';
+import { refreshTutorialItemState } from '../state';
 
 jest.mock('../api');
 
 const tutorial: TutorialsResponse = {
-  id: '55724942-3408-4ad6-9a73-14b92226ffb6',
+  id: '1',
   created: '2020-09-07T17:36:54Z',
   title: 'Tutorial Title',
   authors: [],
@@ -29,7 +30,11 @@ const mockGetTutorialById = getTutorialById as jest.MockedFunction<
 
 const renderPage = async () => {
   const result = render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ set }) =>
+        set(refreshTutorialItemState(tutorial.id), Math.random())
+      }
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

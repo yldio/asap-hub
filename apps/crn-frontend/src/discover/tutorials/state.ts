@@ -42,7 +42,7 @@ const tutorialState = atomFamily<TutorialsResponse | undefined, string>({
   default: fetchTutorialState,
 });
 
-const tutorialsListState = selectorFamily<
+export const tutorialsListState = selectorFamily<
   ListTutorialsResponse | Error | undefined,
   GetListOptions
 >({

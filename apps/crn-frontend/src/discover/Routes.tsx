@@ -50,16 +50,14 @@ const Discover: FC<Record<string, never>> = () => {
             </Frame>
           </Route>
           <Route exact path={path + discover({}).tutorials.template}>
-            <Frame title="Tutorials">
-              <TutorialsPage
-                searchQuery={searchQuery}
-                onSearchQueryChange={setSearchQuery}
-              >
-                <Frame title={null}>
-                  <TutorialList searchQuery={debouncedSearchQuery} />
-                </Frame>
-              </TutorialsPage>
-            </Frame>
+            <TutorialsPage
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+            >
+              <Frame title="Tutorials">
+                <TutorialList searchQuery={debouncedSearchQuery} />
+              </Frame>
+            </TutorialsPage>
           </Route>
           <Redirect to={discover({}).guides({}).$} />
         </Switch>

@@ -76,6 +76,23 @@ it('renders tutorials list page when the tutorials tab is selected', async () =>
   ).toBeVisible();
 });
 
+it('allows search on tutorials list', async () => {
+  mockGetTutorials.mockResolvedValue(createListTutorialsResponse(1));
+
+  await renderDiscoverPage(discover({}).tutorials({}).$);
+
+  userEvent.type(screen.getByRole('searchbox'), 'searchterm');
+
+  await waitFor(() =>
+    expect(mockGetTutorials).toHaveBeenCalledWith(
+      expect.objectContaining({
+        searchQuery: 'searchterm',
+      }),
+      expect.anything(),
+    ),
+  );
+});
+
 it('renders tutorial page when user clicks tutorial card title', async () => {
   const tutorialsResponse = createListTutorialsResponse(1);
   const tutorial: TutorialsResponse = {

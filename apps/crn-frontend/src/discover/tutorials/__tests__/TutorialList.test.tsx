@@ -1,5 +1,5 @@
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { Suspense } from 'react';
-import { User } from '@asap-hub/auth';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor, screen } from '@testing-library/react';
 import { renderHook } from '@testing-library/react-hooks';
@@ -8,45 +8,49 @@ import {
   createTutorialsResponse,
   createListTutorialsResponse,
 } from '@asap-hub/fixtures';
-import { discover } from '@asap-hub/routing';
+import { Frame } from '@asap-hub/frontend-utils';
 import { usePagination, usePaginationParams } from '../../../hooks';
 
 import TutorialList from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getTutorials } from '../api';
-import { tutorialsIndexState } from '../state';
+import { tutorialsListState } from '../state';
 
 jest.mock('../api');
 
 afterEach(() => {
   jest.clearAllMocks();
 });
+mockConsoleError();
 
 const mockGetTutorials = getTutorials as jest.MockedFunction<
   typeof getTutorials
 >;
+
 const pageSize = 10;
 
-const renderTutorials = async (user: Partial<User> = {}, searchQuery = '') => {
+const renderTutorials = async (searchQuery = '') => {
   const result = render(
     <Suspense fallback="loading">
       <RecoilRoot
-        initializeState={({ reset }) =>
+        initializeState={({ reset }) => {
           reset(
-            tutorialsIndexState({
+            tutorialsListState({
+              searchQuery,
               currentPage: 0,
-              pageSize,
-              searchQuery: '',
               filters: new Set(),
+              pageSize: 10,
             }),
-          )
-        }
+          );
+        }}
       >
-        <Auth0Provider user={user}>
+        <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: discover({}).$ }]}>
-              <Route path={discover.template}>
-                <TutorialList searchQuery={searchQuery} />
+            <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
+              <Route path="/guides-tutorials/tutorials">
+                <Frame title={null}>
+                  <TutorialList searchQuery={searchQuery} />
+                </Frame>
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -86,6 +90,24 @@ it('renders a counter with the total number of items', async () => {
   const { getByText } = await renderTutorials();
   await waitFor(() => expect(mockGetTutorials).toHaveBeenCalled());
   expect(getByText(`${numberOfItems} results found`)).toBeVisible();
+});
+
+it('can perform a search', async () => {
+  await renderTutorials('searchterm');
+  expect(mockGetTutorials).toHaveBeenCalledWith(
+    expect.objectContaining({
+      searchQuery: 'searchterm',
+    }),
+    expect.anything(),
+  );
+});
+
+it('renders error message when when the request it not a 2XX', async () => {
+  mockGetTutorials.mockRejectedValue(new Error('error'));
+
+  const { getByText } = await renderTutorials();
+  expect(mockGetTutorials).toHaveBeenCalled();
+  expect(getByText(/Something went wrong/i)).toBeVisible();
 });
 
 it('renders a paginated list of tutorials', async () => {

@@ -84,43 +84,6 @@ module.exports.up = function (migration) {
       showCreateEntityAction: true,
     },
   );
-
-  migration.deriveLinkedEntries({
-    // Start from blog post's category field
-    contentType: 'outputs',
-    from: ['relatedEntity'],
-    // This is the field we created above, which will hold the link to the derived category entries.
-    toReferenceField: 'relatedEntities',
-    // The new entries to create are of type 'category'.
-    derivedContentType: ['projects', 'workingGroup'],
-    derivedFields: ['title'],
-    identityKey: async (from) => {
-      // The category name will be used as an identity key.
-      return from.title['en-US'].toLowerCase();
-    },
-    deriveEntryForLocale: async (from, locale, { id }) => {
-      // The structure represents the resulting category entry with the 2 fields mentioned in the `derivedFields` property.
-      return from.relatedEntity[locale];
-    },
-  });
-  migration.deriveLinkedEntries({
-    // Start from blog post's category field
-    contentType: 'outputs',
-    from: ['relatedEntity'],
-    // This is the field we created above, which will hold the link to the derived category entries.
-    toReferenceField: 'mainEntity',
-    derivedFields: ['title'],
-    // The new entries to create are of type 'category'.
-    derivedContentType: ['projects', 'workingGroup'],
-    identityKey: async (from) => {
-      // The category name will be used as an identity key.
-      return from.title['en-US'].toLowerCase();
-    },
-    deriveEntryForLocale: async (from, locale) => {
-      // The structure represents the resulting category entry with the 2 fields mentioned in the `derivedFields` property.
-      return from.relatedEntity[locale];
-    },
-  });
 };
 
 module.exports.down = function (migration) {

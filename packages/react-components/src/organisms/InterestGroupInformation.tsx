@@ -2,6 +2,7 @@ import { InterestGroupResponse } from '@asap-hub/model';
 
 import { Card, Divider, Headline3, Paragraph } from '../atoms';
 import TagList from '../molecules/TagList';
+import { perRem } from '../pixels';
 
 type InterestGroupInformationProps = Pick<
   InterestGroupResponse,
@@ -17,7 +18,17 @@ const InterestGroupInformation: React.FC<InterestGroupInformationProps> = ({
       <span css={{ whiteSpace: 'pre-line' }}>{description}</span>
     </Paragraph>
     <Divider />
-    <Headline3>Interest Group Expertise</Headline3>
+    <Headline3>Tags</Headline3>
+    <div
+      css={{
+        marginTop: `${12 / perRem}em`,
+        marginBottom: `${24 / perRem}em`,
+      }}
+    >
+      <Paragraph noMargin accent={'lead'}>
+        Explore keywords related to skills, techniques, resources, and tools.
+      </Paragraph>
+    </div>
     <TagList tags={tags} />
   </Card>
 );

@@ -155,7 +155,7 @@ describe('FiltersModal', () => {
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: ['Asia'],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
     });
@@ -167,7 +167,7 @@ describe('FiltersModal', () => {
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
-      keywords: ['Administrative Support'],
+      tags: ['Administrative Support'],
       projects: [],
       workingGroups: [],
     });
@@ -179,7 +179,7 @@ describe('FiltersModal', () => {
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [projects[0]!.id],
       workingGroups: [],
     });
@@ -191,7 +191,7 @@ describe('FiltersModal', () => {
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [workingGroups[0]!.id],
     });
@@ -232,7 +232,7 @@ describe('FiltersModal', () => {
 
   it.each`
     name               | value                       | expected
-    ${'keywords'}      | ${'Administrative Support'} | ${'Administrative Support'}
+    ${'tags'}          | ${'Administrative Support'} | ${'Administrative Support'}
     ${'regions'}       | ${'Asia'}                   | ${'Asia'}
     ${'projects'}      | ${projects[0]!.id}          | ${projects[0]!.title}
     ${'workingGroups'} | ${workingGroups[0]!.id}     | ${workingGroups[0]!.title}

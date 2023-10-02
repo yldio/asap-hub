@@ -680,7 +680,7 @@ describe('Events Contentful Data Provider', () => {
       });
     });
 
-    test('updates keywords`', async () => {
+    test('updates tags`', async () => {
       const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
         typeof patchAndPublish
       >;
@@ -702,10 +702,10 @@ describe('Events Contentful Data Provider', () => {
       });
       expect(environmentMock.getEntry).toHaveBeenCalledWith('123');
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
-        keywords: [
+        tags: [
           {
             sys: {
-              id: 'key-1',
+              id: 'tag-1',
               linkType: 'Entry',
               type: 'Link',
             },

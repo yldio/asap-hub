@@ -42,7 +42,7 @@ const renderUserList = async ({
     changeLocation: jest.fn(),
     filters: {
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
       ...filters,
@@ -81,7 +81,7 @@ it('fetches the user information', async () => {
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { regions: [], keywords: [], projects: [], workingGroups: [] },
+        filter: { regions: [], tags: [], projects: [], workingGroups: [] },
         search: '',
         skip: 0,
         take: 10,

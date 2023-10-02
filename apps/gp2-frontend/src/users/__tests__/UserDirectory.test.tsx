@@ -71,7 +71,7 @@ const renderUserDirectory = async ({
     changeLocation: jest.fn(),
     filters: {
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
       ...filters,
@@ -114,7 +114,7 @@ it('renders the filters modal', async () => {
 it.each`
   name               | value
   ${'regions'}       | ${'Asia'}
-  ${'keywords'}      | ${'Aging'}
+  ${'tags'}          | ${'Aging'}
   ${'projects'}      | ${'42'}
   ${'workingGroups'} | ${'42'}
 `(
@@ -127,7 +127,7 @@ it.each`
     userEvent.click(screen.getByRole('button', { name: 'Apply' }));
     expect(mockUpdateFilter).toHaveBeenCalledWith('/users', {
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
       [name]: [value],
@@ -139,7 +139,7 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
   await waitFor(() =>
     expect(mockGetUsers).toHaveBeenCalledWith(
       expect.objectContaining({
-        filter: { regions: [], keywords: [], projects: [], workingGroups: [] },
+        filter: { regions: [], tags: [], projects: [], workingGroups: [] },
         search: '',
         skip: 0,
         take: 10,
@@ -157,7 +157,7 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
       expect.objectContaining({
         filter: {
           regions: [],
-          keywords: [],
+          tags: [],
           projects: [],
           workingGroups: [],
           onlyOnboarded: false,

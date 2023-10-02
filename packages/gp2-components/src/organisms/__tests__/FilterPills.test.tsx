@@ -6,7 +6,7 @@ import FilterPills from '../FilterPills';
 describe('FilterPills', () => {
   const props = {
     filters: {
-      keywords: ['Epidemiology'],
+      tags: ['Epidemiology'],
       regions: ['Asia'],
       projects: ['project-1'],
       workingGroups: ['working-group-1'],
@@ -38,7 +38,7 @@ describe('FilterPills', () => {
     expect(onRemoveWorkingGroupButton).toBeVisible();
 
     userEvent.click(onRemoveKeywordButton);
-    expect(props.onRemove).toBeCalledWith('Epidemiology', 'keywords');
+    expect(props.onRemove).toBeCalledWith('Epidemiology', 'tags');
 
     userEvent.click(onRemoveRegionButton);
     expect(props.onRemove).toBeCalledWith('Asia', 'regions');

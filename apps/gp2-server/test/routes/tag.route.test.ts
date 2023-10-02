@@ -21,7 +21,7 @@ describe('/tags route', () => {
         items: [],
       });
 
-      const response = await supertest(app).get('/keywords');
+      const response = await supertest(app).get('/tags');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -33,7 +33,7 @@ describe('/tags route', () => {
     test('Should return the results correctly', async () => {
       tagControllerMock.fetch.mockResolvedValueOnce(getListTagsResponse());
 
-      const response = await supertest(app).get('/keywords');
+      const response = await supertest(app).get('/tags');
 
       expect(tagControllerMock.fetch).toBeCalled();
       expect(response.status).toBe(200);

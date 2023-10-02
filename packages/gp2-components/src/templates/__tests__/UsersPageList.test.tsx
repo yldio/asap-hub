@@ -63,7 +63,7 @@ describe('UsersPageList', () => {
   it.each`
     name               | value
     ${'regions'}       | ${'Asia'}
-    ${'keywords'}      | ${'Aging'}
+    ${'tags'}          | ${'Aging'}
     ${'projects'}      | ${'42'}
     ${'workingGroups'} | ${'42'}
   `(
@@ -89,7 +89,7 @@ describe('UsersPageList', () => {
       userEvent.click(screen.getByRole('button', { name: 'Apply' }));
       expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
         regions: [],
-        keywords: [],
+        tags: [],
         projects: [],
         workingGroups: [],
         [name]: [value],
@@ -123,7 +123,7 @@ describe('UsersPageList', () => {
 
     expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
     });

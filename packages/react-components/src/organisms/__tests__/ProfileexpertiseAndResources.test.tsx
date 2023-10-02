@@ -4,15 +4,15 @@ import { UserProfileContext } from '@asap-hub/react-context';
 import ProfileExpertiseAndResources from '../ProfileExpertiseAndResources';
 
 it('renders expertiseAndResourceTags and expertise', () => {
-  const { getByText, getByRole } = render(
+  const { getByText, getAllByRole } = render(
     <ProfileExpertiseAndResources expertiseAndResourceTags={['a', 'b', 'c']} />,
   );
   expect(getByText('a')).toBeVisible();
   expect(getByText('b')).toBeVisible();
   expect(getByText('c')).toBeVisible();
-  expect(getByRole('heading', { level: 2 }).textContent).toEqual(
-    'Expertise and Resources',
-  );
+  expect(
+    getAllByRole('heading', { level: 2 }).map(({ textContent }) => textContent),
+  ).toEqual(['Expertise and Resources', 'Tags']);
 });
 
 it('renders expertiseAndResourceTags and expertises with description', () => {

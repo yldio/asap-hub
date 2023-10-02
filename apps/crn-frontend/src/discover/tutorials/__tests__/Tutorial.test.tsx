@@ -8,7 +8,6 @@ import { discover } from '@asap-hub/routing';
 import Tutorial from '../Tutorial';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { refreshTutorialItemState } from '../state';
 import { getTutorialById } from '../api';
 
 jest.mock('../api');
@@ -30,11 +29,7 @@ const mockGetTutorialById = getTutorialById as jest.MockedFunction<
 
 const renderPage = async () => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshTutorialItemState(tutorial.id), Math.random())
-      }
-    >
+    <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

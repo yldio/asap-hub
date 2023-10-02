@@ -14,6 +14,7 @@ import { usePagination, usePaginationParams } from '../../../hooks';
 import TutorialList from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getTutorials } from '../api';
+import { tutorialsIndexState } from '../state';
 
 jest.mock('../api');
 
@@ -29,7 +30,18 @@ const pageSize = 10;
 const renderTutorials = async (user: Partial<User> = {}, searchQuery = '') => {
   const result = render(
     <Suspense fallback="loading">
-      <RecoilRoot>
+      <RecoilRoot
+        initializeState={({ reset }) =>
+          reset(
+            tutorialsIndexState({
+              currentPage: 0,
+              pageSize,
+              searchQuery: '',
+              filters: new Set(),
+            }),
+          )
+        }
+      >
         <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: discover({}).$ }]}>

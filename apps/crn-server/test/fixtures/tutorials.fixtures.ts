@@ -2,17 +2,10 @@ import {
   ListTutorialsDataObject,
   TutorialsDataObject,
   TutorialsResponse,
+  ListTutorialsResponse,
 } from '@asap-hub/model';
 import { TutorialsContentFragment } from '@asap-hub/contentful';
 import { appName, baseUrl } from '../../src/config';
-
-export const getTutorialResponse = (): TutorialsResponse =>
-  getTutorialsDataObject();
-
-export const getListTutorialsDataObject = (): ListTutorialsDataObject => ({
-  total: 1,
-  items: [getTutorialsDataObject()],
-});
 
 export const getTutorialsDataObject = (): TutorialsDataObject => ({
   id: 'tutorial-1',
@@ -50,6 +43,18 @@ export const getTutorialsDataObject = (): TutorialsDataObject => ({
       isOwnRelatedTutorialLink: false,
     },
   ],
+});
+
+export const getTutorialResponse = (): TutorialsResponse =>
+  getTutorialsDataObject();
+
+export const getListTutorialsResponse = (): ListTutorialsResponse => ({
+  total: 1,
+  items: [getTutorialResponse()],
+});
+export const getListTutorialsDataObject = (): ListTutorialsDataObject => ({
+  total: 1,
+  items: [getTutorialsDataObject()],
 });
 
 export const getContentfulGraphqlTutorial = (): TutorialsContentFragment => {

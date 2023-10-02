@@ -1,3 +1,4 @@
+import { FETCH_TUTORIALS } from '@asap-hub/contentful';
 import { TutorialDataProvider } from '../../../src/data-providers/types';
 import { TutorialContentfulDataProvider } from '../../../src/data-providers/contentful/tutorial.data-provider';
 import {
@@ -8,8 +9,10 @@ import { TutorialsDataObject } from '@asap-hub/model';
 import {
   getTutorialsDataObject,
   getContentfulGraphqlTutorial,
+  getListTutorialsDataObject,
 } from '../../fixtures/tutorials.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulGraphqlDiscover } from '../../fixtures/discover.fixtures';
 
 describe('Tutorials data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -20,6 +23,13 @@ describe('Tutorials data provider', () => {
   const graphqlTutorialResponse = getContentfulGraphqlTutorial();
   const contentfulGraphqlClientMockServer =
     getContentfulGraphqlClientMockServer({
+      Discover: () => getContentfulGraphqlDiscover(),
+      DiscoverTrainingCollection: () => {
+        return {
+          total: 1,
+          items: [graphqlTutorialResponse],
+        };
+      },
       Tutorials: () => graphqlTutorialResponse,
       TutorialsCollection: () => {
         return graphqlTutorialResponse.linkedFrom?.tutorialsCollection;
@@ -32,8 +42,74 @@ describe('Tutorials data provider', () => {
     new TutorialContentfulDataProvider(contentfulGraphqlClientMockServer);
 
   describe('Fetch', () => {
-    test('not implemented', async () => {
-      await expect(dataProvider.fetch({})).rejects.toThrow();
+    test('should fetch a list of tutorials', async () => {
+      const result = await dataProviderWithMockServer.fetch({});
+
+      console.log(result);
+
+      expect(result).toEqual(getListTutorialsDataObject());
+    });
+
+    test('should return an empty response if there is no result', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        trainingCollection: null,
+      });
+      const result = await dataProvider.fetch({});
+      expect(result).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    describe('query parameters', () => {
+      beforeEach(() => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          trainingCollection: {
+            total: 0,
+            items: [],
+          },
+        });
+      });
+
+      test('should set default pagination parameters', async () => {
+        await dataProvider.fetch({});
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_TUTORIALS,
+          expect.objectContaining({ limit: 10, skip: 0 }),
+        );
+      });
+
+      test('should pass pagination parameters if provided', async () => {
+        await dataProvider.fetch({ take: 20, skip: 20 });
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          FETCH_TUTORIALS,
+          expect.objectContaining({ limit: 20, skip: 20 }),
+        );
+      });
+
+      test('adds keyword and title search parameters for each word in the query', async () => {
+        await dataProvider.fetch({
+          search: 'test search',
+        });
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            where: {
+              OR: [
+                { title_contains: 'test' },
+                { title_contains: 'search' },
+                { shortText_contains: 'test' },
+                { shortText_contains: 'search' },
+                { tags: { name: 'test' } },
+                { tags: { name: 'search' } },
+                { teams: { displayName: 'test' } },
+                { teams: { displayName: 'search' } },
+              ],
+            },
+          }),
+        );
+      });
     });
   });
 

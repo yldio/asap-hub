@@ -155,9 +155,9 @@ export const FETCH_USERS = gql`
   ${usersContentQueryFragment}
 `;
 
-export const FETCH_USERS_BY_PROJECT_ID = gql`
-  query FetchUsersByProjectId($id: [String]!) {
-    projectsCollection(limit: 20, where: { sys: { id_in: $id } }) {
+export const FETCH_USERS_BY_PROJECT_IDS = gql`
+  query FetchUsersByProjectIds($ids: [String]!) {
+    projectsCollection(limit: 20, where: { sys: { id_in: $ids } }) {
       total
       items {
         membersCollection(limit: 25) {
@@ -175,9 +175,9 @@ export const FETCH_USERS_BY_PROJECT_ID = gql`
   }
 `;
 
-export const FETCH_USERS_BY_WORKING_GROUP_ID = gql`
-  query FetchUsersByWorkingGroupId($id: [String]!) {
-    workingGroupsCollection(limit: 20, where: { sys: { id_in: $id } }) {
+export const FETCH_USERS_BY_WORKING_GROUP_IDS = gql`
+  query FetchUsersByWorkingGroupIds($ids: [String]!) {
+    workingGroupsCollection(limit: 20, where: { sys: { id_in: $ids } }) {
       total
       items {
         membersCollection(limit: 25) {
@@ -189,6 +189,19 @@ export const FETCH_USERS_BY_WORKING_GROUP_ID = gql`
               }
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_USERS_BY_TAG_IDS = gql`
+  query FetchUsersByTagIds($ids: [String]!) {
+    usersCollection(where: { tags: { sys: { id_in: $ids } } }) {
+      total
+      items {
+        sys {
+          id
         }
       }
     }

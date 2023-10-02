@@ -93,10 +93,12 @@ const documents = {
     types.FetchUserByIdDocument,
   '\n  query FetchUsers(\n    $limit: Int\n    $skip: Int\n    $order: [UsersOrder]\n    $where: UsersFilter\n  ) {\n    usersCollection(limit: $limit, skip: $skip, order: $order, where: $where) {\n      total\n      items {\n        ...UsersContentData\n      }\n    }\n  }\n  \n':
     types.FetchUsersDocument,
-  '\n  query FetchUsersByProjectId($id: [String]!) {\n    projectsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
-    types.FetchUsersByProjectIdDocument,
-  '\n  query FetchUsersByWorkingGroupId($id: [String]!) {\n    workingGroupsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
-    types.FetchUsersByWorkingGroupIdDocument,
+  '\n  query FetchUsersByProjectIds($ids: [String]!) {\n    projectsCollection(limit: 20, where: { sys: { id_in: $ids } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
+    types.FetchUsersByProjectIdsDocument,
+  '\n  query FetchUsersByWorkingGroupIds($ids: [String]!) {\n    workingGroupsCollection(limit: 20, where: { sys: { id_in: $ids } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
+    types.FetchUsersByWorkingGroupIdsDocument,
+  '\n  query FetchUsersByTagIds($ids: [String]!) {\n    usersCollection(where: { tags: { sys: { id_in: $ids } } }) {\n      total\n      items {\n        sys {\n          id\n        }\n      }\n    }\n  }\n':
+    types.FetchUsersByTagIdsDocument,
   '\n  fragment WorkingGroupNetworkContentData on WorkingGroupNetwork {\n    supportCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    monogenicCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    operationalCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n    complexDiseaseCollection(limit: 10) {\n      total\n      items {\n        ...WorkingGroupsContentData\n      }\n    }\n  }\n  \n':
     types.WorkingGroupNetworkContentDataFragmentDoc,
   '\n  query FetchWorkingGroupNetwork {\n    workingGroupNetworkCollection(limit: 1) {\n      total\n      items {\n        ...WorkingGroupNetworkContentData\n      }\n    }\n  }\n  \n':
@@ -367,14 +369,20 @@ export function gql(
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  query FetchUsersByProjectId($id: [String]!) {\n    projectsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n',
-): (typeof documents)['\n  query FetchUsersByProjectId($id: [String]!) {\n    projectsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'];
+  source: '\n  query FetchUsersByProjectIds($ids: [String]!) {\n    projectsCollection(limit: 20, where: { sys: { id_in: $ids } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query FetchUsersByProjectIds($ids: [String]!) {\n    projectsCollection(limit: 20, where: { sys: { id_in: $ids } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(
-  source: '\n  query FetchUsersByWorkingGroupId($id: [String]!) {\n    workingGroupsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n',
-): (typeof documents)['\n  query FetchUsersByWorkingGroupId($id: [String]!) {\n    workingGroupsCollection(limit: 20, where: { sys: { id_in: $id } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'];
+  source: '\n  query FetchUsersByWorkingGroupIds($ids: [String]!) {\n    workingGroupsCollection(limit: 20, where: { sys: { id_in: $ids } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query FetchUsersByWorkingGroupIds($ids: [String]!) {\n    workingGroupsCollection(limit: 20, where: { sys: { id_in: $ids } }) {\n      total\n      items {\n        membersCollection(limit: 25) {\n          total\n          items {\n            user {\n              sys {\n                id\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(
+  source: '\n  query FetchUsersByTagIds($ids: [String]!) {\n    usersCollection(where: { tags: { sys: { id_in: $ids } } }) {\n      total\n      items {\n        sys {\n          id\n        }\n      }\n    }\n  }\n',
+): (typeof documents)['\n  query FetchUsersByTagIds($ids: [String]!) {\n    usersCollection(where: { tags: { sys: { id_in: $ids } } }) {\n      total\n      items {\n        sys {\n          id\n        }\n      }\n    }\n  }\n'];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

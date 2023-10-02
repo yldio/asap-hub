@@ -7,11 +7,11 @@ import {
 import { ResultList, SearchAndFilter } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { ComponentProps } from 'react';
-import { usePagination, usePaginationParams } from '../hooks/pagination';
-import { useOutputs } from './state';
 import { useAlgolia } from '../hooks/algolia';
+import { usePagination, usePaginationParams } from '../hooks/pagination';
 import { getOutputs } from './api';
 import { outputFields, outputsResponseToStream, outputToCSV } from './export';
+import { useOutputs } from './state';
 
 type OutputListProps = {
   projectId?: string;
@@ -41,8 +41,6 @@ const OutputList: React.FC<OutputListProps> = ({
         getOutputs(client, {
           ...paginationParams,
           filters,
-          currentPage,
-          pageSize,
           searchQuery,
         }).then((data) => ({ items: data.hits, total: data.nbHits })),
       outputToCSV,

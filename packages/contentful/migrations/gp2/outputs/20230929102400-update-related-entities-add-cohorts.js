@@ -73,7 +73,7 @@ module.exports.up = function (migration) {
   );
 
   outputs.changeFieldControl(
-    'contributionCohorts',
+    'contributingCohorts',
     'builtin',
     'entryLinksEditor',
     {
@@ -90,6 +90,6 @@ module.exports.down = function (migration) {
   const outputs = migration.editContentType('outputs');
 
   outputs.deleteField('relatedEntities');
-  outputs.deleteField('contributionCohorts');
+  outputs.deleteField('contributingCohorts');
   outputs.deleteField('mainEntity');
 };

@@ -16,7 +16,7 @@ it('renders expertiseAndResourceTags and expertise', () => {
 });
 
 it('renders expertiseAndResourceTags and expertises with description', () => {
-  const { getByText, getByRole } = render(
+  const { getByText, getAllByRole } = render(
     <ProfileExpertiseAndResources
       expertiseAndResourceDescription={'description'}
       expertiseAndResourceTags={['a', 'b', 'c']}
@@ -27,7 +27,9 @@ it('renders expertiseAndResourceTags and expertises with description', () => {
   expect(getByText('b')).toBeVisible();
   expect(getByText('c')).toBeVisible();
   expect(getByText('description')).toBeVisible();
-  expect(getByRole('heading').textContent).toEqual('Expertise and Resources');
+  expect(getAllByRole('heading').map(({ textContent }) => textContent)).toEqual(
+    ['Expertise and Resources', 'Tags'],
+  );
 });
 
 it('renders description placeholder component when no description and own profile', () => {

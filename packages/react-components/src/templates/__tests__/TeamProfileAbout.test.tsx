@@ -100,14 +100,15 @@ it('shows the lab list when present on member list', () => {
 });
 
 it('renders the expertise and resources list', () => {
-  const { getByText } = render(
+  const { getByText, queryByText } = render(
     <TeamProfileAbout
       {...props}
       expertiseAndResourceTags={['example expertise']}
     />,
   );
   expect(getByText(/example expertise/i)).toBeVisible();
-  expect(getByText(/expertise and resources/i)).toBeVisible();
+  expect(queryByText(/expertise and resources/i)).toBeNull();
+  expect(getByText(/tags/i)).toBeVisible();
 });
 
 it('renders the Teams Tabbed card when team is inactive and there are members', () => {

@@ -70,7 +70,7 @@ export const outputsResponseToStream = async (
     // We are doing this in chunks and streams to avoid blob/ram limits.
     // eslint-disable-next-line no-await-in-loop
     const data = await getResults({
-      currentPage: currentPage * MAX_RESULTS,
+      currentPage,
       pageSize: MAX_RESULTS,
     });
     data.items.map(transform).forEach((row) => csvStream.write(row));

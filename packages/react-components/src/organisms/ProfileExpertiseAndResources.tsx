@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { UserProfileContext } from '@asap-hub/react-context';
 
-import { Card, Headline2, Paragraph } from '../atoms';
+import { Card, Divider, Headline2, Paragraph } from '../atoms';
 import { TagList } from '../molecules';
 import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
 import { perRem } from '../pixels';
@@ -25,15 +25,18 @@ const ProfileExpertiseAndResources: React.FC<
       ) : (
         <Paragraph>{expertiseAndResourceDescription}</Paragraph>
       )}
+      <div css={{ marginTop: `${24 / perRem}em` }}>
+        <Divider />
+      </div>
+      <Headline2 styleAsHeading={3}>Tags</Headline2>
       {expertiseAndResourceTags.length ? (
         <TagList tags={expertiseAndResourceTags} />
       ) : (
-        <div css={{ marginTop: `${24 / perRem}em` }}>
+        <div css={{ marginTop: `${4 / perRem}em` }}>
           <UserProfilePlaceholderCard title="Add tags to your profile">
-            Help other researchers find you by adding tags about your
-            expertiseAndResourceTags, techniques, resources, and tools.
-            Completing this section will make you more likely to come up in
-            search results.
+            Help other researchers find you by adding keywords about your
+            skills, techniques, resources, and tools. Completing this section
+            will make you more likely to come up in search results.
             <TagList
               tags={[
                 'Structural biology',

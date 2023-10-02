@@ -5,6 +5,7 @@ import {
   formatDate,
   Headline2,
   Link,
+  Paragraph,
   pixels,
   SharedResearchMetadata,
   UsersList,
@@ -22,8 +23,8 @@ type OutputCardProps = Pick<
   | 'id'
   | 'addedDate'
   | 'title'
-  | 'workingGroup'
-  | 'project'
+  | 'workingGroups'
+  | 'projects'
   | 'authors'
   | 'link'
   | 'documentType'
@@ -33,12 +34,14 @@ type OutputCardProps = Pick<
   isAdministrator?: boolean;
 };
 
+// TODO: update card to reflect main entity
+
 const OutputCard: React.FC<OutputCardProps> = ({
   id,
   addedDate,
   title,
-  workingGroup,
-  project,
+  workingGroups,
+  projects,
   documentType,
   type,
   subtype,
@@ -52,8 +55,8 @@ const OutputCard: React.FC<OutputCardProps> = ({
         <SharedResearchMetadata
           pills={
             [
-              workingGroup && 'Working Group',
-              project && 'Project',
+              workingGroups && 'Working Group',
+              projects && 'Project',
               documentType,
               type,
               subtype,
@@ -97,28 +100,38 @@ const OutputCard: React.FC<OutputCardProps> = ({
         max={3}
       />
       <div css={css({ margin: `${rem(4)} 0 ${rem(32)}` })}>
-        {workingGroup && (
+        {workingGroups && (
           <IconWithLabel noMargin icon={workingGroupIcon}>
-            <Link
-              href={
-                gp2Routing
-                  .workingGroups({})
-                  .workingGroup({ workingGroupId: workingGroup.id }).$
-              }
-            >
-              {workingGroup.title}
-            </Link>
+            {workingGroups.length > 1 ? (
+              <Paragraph>{workingGroups.length} Working Groups</Paragraph>
+            ) : (
+              <Link
+                href={
+                  gp2Routing.workingGroups({}).workingGroup({
+                    workingGroupId: workingGroups[0]?.id as string,
+                  }).$
+                }
+              >
+                {workingGroups[0]?.title}
+              </Link>
+            )}
           </IconWithLabel>
         )}
-        {project && (
+        {projects && (
           <IconWithLabel noMargin icon={projectIcon}>
-            <Link
-              href={
-                gp2Routing.projects({}).project({ projectId: project.id }).$
-              }
-            >
-              {project.title}
-            </Link>
+            {projects.length > 1 ? (
+              <Paragraph>{projects.length} Projects</Paragraph>
+            ) : (
+              <Link
+                href={
+                  gp2Routing
+                    .projects({})
+                    .project({ projectId: projects[0]?.id as string }).$
+                }
+              >
+                {projects[0]?.title}
+              </Link>
+            )}
           </IconWithLabel>
         )}
       </div>

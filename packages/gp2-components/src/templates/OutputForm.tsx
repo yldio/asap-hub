@@ -106,6 +106,11 @@ type OutputFormProps = {
     >['getRelatedResearchSuggestions']
   >;
   cohortSuggestions: gp2Model.ContributingCohortDataObject[];
+  workingGroupSuggestions: Pick<
+    gp2Model.WorkingGroupDataObject,
+    'id' | 'title'
+  >[];
+  projectSuggestions: Pick<gp2Model.ProjectDataObject, 'id' | 'title'>[];
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -123,6 +128,10 @@ type OutputFormProps = {
     | 'rrid'
     | 'accessionNumber'
     | 'relatedOutputs'
+    | 'contributingCohorts'
+    | 'mainEntity'
+    | 'workingGroups'
+    | 'projects'
   >
 >;
 
@@ -160,6 +169,12 @@ const OutputForm: React.FC<OutputFormProps> = ({
   relatedOutputs = [],
   getRelatedOutputSuggestions,
   cohortSuggestions,
+  contributingCohorts,
+  mainEntity,
+  workingGroups,
+  projects,
+  workingGroupSuggestions,
+  projectSuggestions,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -190,9 +205,17 @@ const OutputForm: React.FC<OutputFormProps> = ({
     >
   >(getRelatedOutputs(relatedOutputs));
 
+  const [newWorkingGroups, setWorkingGroups] = useState<gp2Model.OutputOwner[]>(
+    workingGroups || [],
+  );
+
+  const [newProjects, setProjects] = useState<gp2Model.OutputOwner[]>(
+    projects || [],
+  );
+
   const [newCohorts, setCohorts] = useState<
     gp2Model.ContributingCohortDataObject[]
-  >([]);
+  >(contributingCohorts || []);
 
   const [newAuthors, setAuthors] = useState<
     ComponentPropsWithRef<typeof AuthorSelect>['values']
@@ -248,6 +271,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
       title: output.label,
       documentType: output.documentType as gp2Model.OutputDocumentType,
     })),
+    mainEntity: mainEntity?.id!,
     ...createIdentifierField(newIdentifierType, identifier),
   };
 
@@ -460,6 +484,72 @@ const OutputForm: React.FC<OutputFormProps> = ({
             ) : null}
           </FormCard>
           <FormCard title="Who were the contributors?">
+            <LabeledMultiSelect
+              title="Working Groups"
+              description="Add other working groups that contributed to this output. Those working groups will also then be able to edit."
+              subtitle={entityType === 'project' ? '(optional)' : '(required)'}
+              required={entityType === 'workingGroup'}
+              enabled={!isSaving}
+              placeholder="Start typing..."
+              suggestions={workingGroupSuggestions.map(({ id, title }) => ({
+                label: title,
+                value: id,
+              }))}
+              onChange={(newValues) => {
+                setWorkingGroups(
+                  newValues
+                    .slice(0, 10)
+                    .reduce(
+                      (acc, curr) => [
+                        ...acc,
+                        { id: curr.value, title: curr.label },
+                      ],
+                      [] as gp2Model.OutputOwner[],
+                    ),
+                );
+              }}
+              values={newWorkingGroups.map(({ id, title }, idx) => ({
+                label: title,
+                value: id,
+                isFixed: idx === 0,
+              }))}
+              noOptionsMessage={({ inputValue }) =>
+                `Sorry, no working groups match ${inputValue}`
+              }
+            />
+            <LabeledMultiSelect
+              title="Projects"
+              description="Add other projects that contributed to this output. Those projects will also then be able to edit."
+              subtitle={entityType === 'project' ? '(required)' : '(optional)'}
+              enabled={!isSaving}
+              required={entityType === 'project'}
+              placeholder="Start typing..."
+              suggestions={projectSuggestions.map(({ id, title }) => ({
+                label: title,
+                value: id,
+              }))}
+              onChange={(newValues) => {
+                setProjects(
+                  newValues
+                    .slice(0, 10)
+                    .reduce(
+                      (acc, curr) => [
+                        ...acc,
+                        { id: curr.value, title: curr.label },
+                      ],
+                      [] as gp2Model.OutputOwner[],
+                    ),
+                );
+              }}
+              values={newProjects.map(({ id, title }, idx) => ({
+                label: title,
+                value: id,
+                isFixed: idx === 0,
+              }))}
+              noOptionsMessage={({ inputValue }) =>
+                `Sorry, no projects match ${inputValue}`
+              }
+            />
             {!DOC_TYPES_COHORTS_NOT_REQUIRED.includes(documentType) ? (
               <>
                 <LabeledMultiSelect

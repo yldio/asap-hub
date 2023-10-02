@@ -1,4 +1,5 @@
 import { FetchOptions, ListResponse } from '../common';
+import { ContributingCohortDataObject } from './contributing-cohort';
 import { ExternalUserResponse } from './external-user';
 import { TagDataObject } from './tag';
 
@@ -125,6 +126,9 @@ export type OutputDataObject = OutputCoreObject & {
   lastUpdatedPartial: string;
   workingGroups?: OutputOwner[];
   projects?: OutputOwner[];
+  contributingCohorts?: ContributingCohortDataObject[];
+  mainEntity: OutputOwner;
+  relatedEntity?: OutputOwner;
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;
@@ -138,6 +142,8 @@ export type OutputCreateDataObject = OutputCoreObject & {
   createdBy: string;
   workingGroupIds?: string[];
   projectIds?: string[];
+  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  mainEntity: string;
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
@@ -145,6 +151,8 @@ export type OutputUpdateDataObject = OutputCoreObject & {
   updatedBy: string;
   workingGroupIds?: string[];
   projectIds?: string[];
+  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  mainEntity: string;
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
@@ -176,6 +184,8 @@ export type OutputPostRequest = {
   rrid?: string;
   accessionNumber?: string;
   relatedOutputs: RelatedOutputs[];
+  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  mainEntity: string;
 };
 
 export type OutputPutRequest = OutputPostRequest;

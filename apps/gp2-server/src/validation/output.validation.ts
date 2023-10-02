@@ -177,8 +177,22 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
       doi: { type: 'string', nullable: true },
       rrid: { type: 'string', nullable: true },
       accessionNumber: { type: 'string', nullable: true },
+      mainEntity: {
+        type: 'string',
+      },
+      contributingCohorts: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+          },
+          required: ['id'],
+        },
+        nullable: true,
+      },
     },
-    required: ['documentType', 'title'],
+    required: ['documentType', 'title', 'mainEntity', 'sharingStatus'],
     additionalProperties: false,
   };
 

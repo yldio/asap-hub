@@ -11,6 +11,9 @@ describe('OutputForm', () => {
     getRelatedOutputSuggestions: jest.fn(),
     tagSuggestions: [],
     cohortSuggestions: [],
+    workingGroupSuggestions: [],
+    projectSuggestions: [],
+    mainEntity: { id: '12', title: 'a title' },
   };
 
   describe('validation', () => {

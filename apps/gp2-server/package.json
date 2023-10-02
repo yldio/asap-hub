@@ -12,6 +12,8 @@
     "typecheck": "tsc",
     "import:users": "ts-node ./scripts/import-users.ts",
     "import:cohorts": "ts-node ./scripts/import-cohorts.ts",
+    "import:keywords": "ts-node ./scripts/import-keywords.ts",
+    "migrate:entity-outputs": "CONTENTFUL_ACCESS_TOKEN=$GP2_CONTENTFUL_ACCESS_TOKEN CONTENTFUL_SPACE_ID=$GP2_CONTENTFUL_SPACE_ID CONTENTFUL_ENV_ID=$GP2_CONTENTFUL_ENV_ID ts-node ./scripts/migrate-entity-outputs.ts",
     "user:invitations": "ts-node ./scripts/user-invitations.ts"
   },
   "dependencies": {

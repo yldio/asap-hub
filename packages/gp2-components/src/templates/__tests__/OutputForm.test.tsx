@@ -24,6 +24,9 @@ describe('OutputForm', () => {
     getRelatedOutputSuggestions: jest.fn(),
     tagSuggestions: [],
     cohortSuggestions: [],
+    workingGroupSuggestions: [],
+    projectSuggestions: [],
+    mainEntity: { id: '12', title: 'a title' },
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {
@@ -682,6 +685,7 @@ describe('OutputForm', () => {
         name: /tags/i,
       });
       expect(textbox).toBeVisible();
+      expect(textbox).toHaveValue('');
       expect(
         screen.getByText('Start typing... (E.g. Neurology)'),
       ).toBeVisible();
@@ -701,6 +705,58 @@ describe('OutputForm', () => {
     it('update tags after adding one', () => {
       renderWithSuggestions();
       userEvent.click(screen.getByLabelText(/additional tags/i));
+      userEvent.click(screen.getByText('2D Cultures'));
+      expect(screen.getByText('Neurology')).toBeVisible();
+      expect(screen.getByText('2D Cultures')).toBeVisible();
+    });
+  });
+
+  describe('cohorts', () => {
+    const defaultCohortSuggestions = [
+      { id: '1', name: '2D Cultures' },
+      { id: '2', name: 'Adenosine' },
+      { id: '3', name: 'Adrenal' },
+    ];
+
+    const defaultCohorts = [{ id: '5', name: 'Neurology' }];
+    const renderWithSuggestions = (
+      suggestions = defaultCohortSuggestions,
+      tags = defaultCohorts,
+    ) =>
+      render(
+        <OutputForm
+          {...defaultProps}
+          cohortSuggestions={suggestions}
+          tags={tags}
+        />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
+
+    it('displays cohorts empty', () => {
+      renderWithSuggestions(defaultCohortSuggestions, []);
+      const textbox = screen.getByRole('textbox', {
+        name: /cohorts/i,
+      });
+      expect(textbox).toBeVisible();
+      expect(textbox).toHaveValue('');
+    });
+    it('displays cohorts suggestions', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/cohorts/i));
+      expect(screen.getByText('2D Cultures')).toBeVisible();
+      expect(screen.getByText('Adenosine')).toBeVisible();
+      expect(screen.getByText('Adrenal')).toBeVisible();
+    });
+
+    it('displays existing cohorts', () => {
+      renderWithSuggestions();
+      expect(screen.getByText('Neurology')).toBeVisible();
+    });
+    it('update cohorts after adding one', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/cohorts/i));
       userEvent.click(screen.getByText('2D Cultures'));
       expect(screen.getByText('Neurology')).toBeVisible();
       expect(screen.getByText('2D Cultures')).toBeVisible();

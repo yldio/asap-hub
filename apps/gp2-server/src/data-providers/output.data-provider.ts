@@ -9,6 +9,7 @@ import {
   pollContentfulGql,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { OutputOwner } from '@asap-hub/model/src/gp2';
 import logger from '../utils/logger';
 import { parseTag, TagItem } from './tag.data-provider';
 import { isSharingStatus } from './transformers';
@@ -184,8 +185,16 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
 
-    const fields = cleanOutput(data);
-    const result = await patchAndPublish(user, fields);
+    const { workingGroupIds, projectIds, ...restData } = data;
+
+    const fields = cleanOutput(restData);
+    const result = await patchAndPublish(user, {
+      ...fields,
+      relatedEntities: getLinkEntities([
+        ...(data.workingGroupIds || []),
+        ...(data.projectIds || []),
+      ]),
+    });
 
     const fetchEventById = () => this.fetchOutputById(id);
     await pollContentfulGql<gp2Contentful.FetchOutputByIdQuery>(
@@ -210,10 +219,18 @@ const getSubType = (
     ? (subtype as gp2Model.OutputSubtype)
     : undefined;
 
+const getEntity = (entity?: GraphQLEntity | null) =>
+  entity
+    ? {
+        id: entity.sys.id,
+        title: entity.title ?? '',
+      }
+    : ({} as OutputOwner);
 type GraphQLEntities = NonNullable<
   OutputItem['relatedEntitiesCollection']
 >['items'];
 type GraphQLEntity = NonNullable<GraphQLEntities[number]>;
+
 const getRelatedEntities = (relatedEntities?: GraphQLEntities) =>
   relatedEntities
     ?.filter((entity): entity is GraphQLEntity => entity !== null)
@@ -235,6 +252,18 @@ const getRelatedEntities = (relatedEntities?: GraphQLEntities) =>
         workingGroups: [] as gp2Model.OutputOwner[],
       },
     );
+
+type GraphQLCohorts = NonNullable<
+  OutputItem['contributingCohortsCollection']
+>['items'];
+type GraphQLCohort = NonNullable<GraphQLCohorts[number]>;
+const getCohorts = (cohorts?: GraphQLCohorts) =>
+  cohorts
+    ?.filter((cohort): cohort is GraphQLCohort => cohort !== null)
+    .map((cohort) => ({
+      id: cohort.sys.id,
+      name: cohort.name ?? '',
+    })) || [];
 type GraphQLAuthors = NonNullable<OutputItem['authorsCollection']>['items'];
 type GraphQLAuthor = NonNullable<GraphQLAuthors[number]>;
 const getAuthors = (authors?: GraphQLAuthors) =>
@@ -288,16 +317,25 @@ export const parseContentfulGraphQLOutput = (
   const relatedOutputs = getRelatedOutputs(
     data.relatedOutputsCollection?.items,
   );
+  const relatedEntity = getEntity(data.relatedEntity); // TODO: remove on cleanup
+  const mainEntity = getEntity(data.mainEntity);
   const relatedEntities = getRelatedEntities(
     data.relatedEntitiesCollection?.items,
+  );
+  const contributingCohorts = getCohorts(
+    data.contributingCohortsCollection?.items,
   );
   const projects =
     relatedEntities?.projects.length !== 0
       ? relatedEntities?.projects
+      : data.relatedEntity?.__typename === 'Projects'
+      ? [relatedEntity] // TODO: remove on cleanup
       : undefined;
   const workingGroups =
     relatedEntities?.workingGroups.length !== 0
       ? relatedEntities?.workingGroups
+      : data.relatedEntity?.__typename === 'WorkingGroups'
+      ? [relatedEntity] // TODO: remove on cleanup
       : undefined;
 
   const tags =
@@ -332,6 +370,9 @@ export const parseContentfulGraphQLOutput = (
     relatedOutputs,
     projects,
     workingGroups,
+    mainEntity,
+    contributingCohorts,
+    relatedEntity,
   };
 };
 
@@ -398,6 +439,12 @@ const cleanOutput = (
         relatedOutputs: (
           value as gp2Model.OutputUpdateDataObject['relatedOutputs']
         ).map((output) => getLinkEntity(output.id)),
+      };
+    }
+    if (key === 'mainEntity') {
+      return {
+        ...acc,
+        mainEntity: getLinkEntity(value as string),
       };
     }
     return { ...acc, [key]: value };

@@ -55,6 +55,11 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
     },
   ],
   tags: [{ id: 'tag-1', name: 'Cohort' }],
+  contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
+  mainEntity: {
+    id: '42',
+    title: 'a project',
+  },
 });
 
 export const getListOutputDataObject =
@@ -80,6 +85,7 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     authors,
     workingGroups,
     projects,
+    mainEntity,
     ...outputResponse
   } = getOutputResponse();
   return {
@@ -88,6 +94,7 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     type: 'Research',
     projectIds: projects?.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
+    mainEntity: mainEntity.id,
   };
 };
 
@@ -110,6 +117,7 @@ export const getOutputCreateDataObject =
       created: _created,
       workingGroups,
       projects,
+      mainEntity,
       ...outputPostRequest
     } = getOutputResponse();
 
@@ -118,6 +126,7 @@ export const getOutputCreateDataObject =
       createdBy: 'userId',
       projectIds: projects?.map(({ id }) => id),
       authors: authors.map(({ id }) => ({ userId: id })),
+      mainEntity: mainEntity.id,
     };
   };
 

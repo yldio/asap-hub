@@ -73,6 +73,8 @@ export default class OutputController {
       rrid: outputCreateData.rrid,
       accessionNumber: outputCreateData.accessionNumber,
       relatedOutputs: outputCreateData.relatedOutputs,
+      mainEntity: outputCreateData.mainEntity,
+      contributingCohorts: outputCreateData.contributingCohorts,
     };
 
     const outputId = await this.outputDataProvider.create(
@@ -116,6 +118,8 @@ export default class OutputController {
       relatedOutputs: outputUpdateData.relatedOutputs,
       projectIds: outputUpdateData.projectIds,
       workingGroupIds: outputUpdateData.workingGroupIds,
+      mainEntity: outputUpdateData.mainEntity,
+      contributingCohorts: outputUpdateData.contributingCohorts,
     };
 
     await this.outputDataProvider.update(id, outputUpdateDataObject);

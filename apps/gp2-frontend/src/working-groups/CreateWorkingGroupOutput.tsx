@@ -5,7 +5,9 @@ import { FC } from 'react';
 import { useRelatedOutputSuggestions } from '../outputs';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 import { documentTypeMapper } from '../projects/CreateProjectOutput';
+import { useProjects } from '../projects/state';
 import { useTags, useContributingCohorts } from '../shared/state';
+import { useWorkingGroupById, useWorkingGroupsState } from './state';
 
 const { workingGroups } = gp2Routing;
 
@@ -20,6 +22,21 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
   const getAuthorSuggestions = useAuthorSuggestions();
   const { items: tagSuggestions } = useTags();
   const cohortSuggestions = useContributingCohorts();
+  const { items: workingGroupSuggestions } = useWorkingGroupsState();
+  const { items: projectSuggestions } = useProjects({
+    searchQuery: '',
+    pageSize: null,
+    currentPage: null,
+    filters: new Set(),
+  });
+
+  const workingGroup = useWorkingGroupById(workingGroupId);
+  const mainEntity = workingGroup
+    ? {
+        id: workingGroup.id,
+        title: workingGroup.title,
+      }
+    : ({} as gp2Model.OutputOwner);
 
   return (
     <CreateOutputPage
@@ -40,6 +57,9 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         tagSuggestions={tagSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
         cohortSuggestions={cohortSuggestions}
+        workingGroupSuggestions={workingGroupSuggestions}
+        projectSuggestions={projectSuggestions}
+        mainEntity={mainEntity}
       />
     </CreateOutputPage>
   );

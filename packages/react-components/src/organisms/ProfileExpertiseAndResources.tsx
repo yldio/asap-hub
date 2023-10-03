@@ -15,7 +15,7 @@ type ProfileExpertiseAndResourcesProps = {
 const ProfileExpertiseAndResources: React.FC<
   ProfileExpertiseAndResourcesProps
 > = ({
-  expertiseAndResourceTags = [],
+  expertiseAndResourceTags,
   expertiseAndResourceDescription,
   hideExpertiseAndResources,
 }) => {
@@ -46,7 +46,7 @@ const ProfileExpertiseAndResources: React.FC<
               marginBottom: `${24 / perRem}em`,
             }}
           >
-            <Paragraph noMargin accent={'lead'}>
+            <Paragraph noMargin accent="lead">
               Explore keywords related to skills, techniques, resources, and
               tools.
             </Paragraph>

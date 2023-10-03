@@ -39,7 +39,7 @@ const EventAbout: React.FC<EventAboutProps> = ({
           marginBottom: `${24 / perRem}em`,
         }}
       >
-        <Paragraph noMargin accent={'lead'}>
+        <Paragraph noMargin accent="lead">
           Explore keywords related to skills, techniques, resources, and tools.
         </Paragraph>
       </div>

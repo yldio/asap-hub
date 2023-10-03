@@ -240,7 +240,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                       marginBottom: `${24 / perRem}em`,
                     }}
                   >
-                    <Paragraph noMargin accent={'lead'}>
+                    <Paragraph noMargin accent="lead">
                       Explore keywords related to skills, techniques, resources,
                       and tools.
                     </Paragraph>

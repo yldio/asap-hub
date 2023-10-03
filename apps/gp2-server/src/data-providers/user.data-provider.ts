@@ -14,7 +14,7 @@ import {
   pollContentfulGql,
 } from '@asap-hub/contentful';
 import logger from '../utils/logger';
-import { KeywordItem, parseKeyword } from './keyword.data-provider';
+import { TagItem, parseTag } from './tag.data-provider';
 import { UserDataProvider } from './types';
 
 export type UserItem = NonNullable<
@@ -272,8 +272,8 @@ export const parseUserToDataObject = (
   );
   const tags =
     user.tagsCollection?.items
-      .filter((keyword): keyword is KeywordItem => keyword !== null)
-      .map(parseKeyword) ?? [];
+      .filter((tag): tag is TagItem => tag !== null)
+      .map(parseTag) ?? [];
 
   const positions = parsePositions(user.positions);
   const projects = parseProjects(user.linkedFrom?.projectMembershipCollection);

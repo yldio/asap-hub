@@ -76,7 +76,7 @@ describe('UsersPageList', () => {
       const { items: projects } = gp2Fixtures.createProjectsResponse();
       const { items: workingGroups } =
         gp2Fixtures.createWorkingGroupsResponse();
-      const { items: keywords } = gp2Fixtures.createKeywordsResponse();
+      const { items: keywords } = gp2Fixtures.createTagsResponse();
 
       render(
         <UsersPageList

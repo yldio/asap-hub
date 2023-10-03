@@ -12,8 +12,8 @@ describe('getKeywords', () => {
     nock.cleanAll();
   });
   it('returns a successfully fetched keywords list', async () => {
-    const keywordsResponse: gp2Model.ListKeywordsResponse =
-      gp2Fixtures.createKeywordsResponse();
+    const keywordsResponse: gp2Model.ListTagsResponse =
+      gp2Fixtures.createTagsResponse();
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/keywords')
       .reply(200, keywordsResponse);

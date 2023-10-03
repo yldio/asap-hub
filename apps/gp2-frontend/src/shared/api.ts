@@ -4,7 +4,7 @@ import { API_BASE_URL } from '../config';
 
 export const getKeywords = async (
   authorization: string,
-): Promise<gp2.ListKeywordsResponse> => {
+): Promise<gp2.ListTagsResponse> => {
   const resp = await fetch(`${API_BASE_URL}/keywords`, {
     headers: { authorization, ...createSentryHeaders() },
   });

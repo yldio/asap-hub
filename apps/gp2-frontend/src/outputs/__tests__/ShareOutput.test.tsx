@@ -60,7 +60,7 @@ const renderShareOutput = async (outputId: string = 'ro0') => {
 describe('ShareOutput', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    mockGetKeywords.mockResolvedValue(gp2.createKeywordsResponse());
+    mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
   });
   afterEach(jest.resetAllMocks);
   mockConsoleError();

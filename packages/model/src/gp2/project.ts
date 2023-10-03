@@ -1,6 +1,6 @@
 import { FetchOptions, ListResponse } from '../common';
 import { Calendar, Member, Milestone, Resource, UpdateMember } from './common';
-import { KeywordDataObject } from './keywords';
+import { TagDataObject } from './tag';
 
 export const projectStatus = ['Active', 'Paused', 'Completed'] as const;
 export type ProjectStatus = (typeof projectStatus)[number];
@@ -20,7 +20,7 @@ export type ProjectDataObject = {
   description?: string;
   endDate?: string;
   id: string;
-  tags: KeywordDataObject[];
+  tags: TagDataObject[];
   leadEmail?: string;
   members: ProjectMember[];
   milestones: Milestone[];
@@ -46,7 +46,7 @@ export type ProjectUpdateDataObject = Partial<
   Pick<ProjectDataObject, 'resources'>
 > & {
   members?: UpdateMember<ProjectMemberRole>[];
-  tags?: Omit<KeywordDataObject, 'name'>[];
+  tags?: Omit<TagDataObject, 'name'>[];
 };
 
 export type ProjectUpdateRequest = ProjectUpdateDataObject;

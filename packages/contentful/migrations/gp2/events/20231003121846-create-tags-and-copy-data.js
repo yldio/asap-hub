@@ -1,4 +1,4 @@
-module.exports.description = 'Create tags field and copy keywords to tags';
+module.exports.description = 'Create tags field';
 
 module.exports.up = (migration) => {
   const events = migration.editContentType('events');

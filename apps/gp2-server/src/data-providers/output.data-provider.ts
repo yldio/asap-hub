@@ -9,7 +9,6 @@ import {
   pollContentfulGql,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { OutputOwner } from '@asap-hub/model/src/gp2';
 import logger from '../utils/logger';
 import { parseTag, TagItem } from './tag.data-provider';
 import { isSharingStatus } from './transformers';
@@ -184,15 +183,14 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
   async update(id: string, data: gp2Model.OutputUpdateDataObject) {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-
     const { workingGroupIds, projectIds, ...restData } = data;
 
     const fields = cleanOutput(restData);
     const result = await patchAndPublish(user, {
       ...fields,
       relatedEntities: getLinkEntities([
-        ...(data.workingGroupIds || []),
-        ...(data.projectIds || []),
+        ...(workingGroupIds || []),
+        ...(projectIds || []),
       ]),
     });
 
@@ -222,10 +220,11 @@ const getSubType = (
 const getEntity = (entity?: GraphQLEntity | null) =>
   entity
     ? {
+        type: entity.__typename,
         id: entity.sys.id,
         title: entity.title ?? '',
       }
-    : ({} as OutputOwner);
+    : ({} as gp2Model.OutputOwner);
 type GraphQLEntities = NonNullable<
   OutputItem['relatedEntitiesCollection']
 >['items'];

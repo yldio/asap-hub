@@ -60,6 +60,7 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         workingGroupSuggestions={workingGroupSuggestions}
         projectSuggestions={projectSuggestions}
         mainEntity={mainEntity}
+        workingGroups={[mainEntity]}
       />
     </CreateOutputPage>
   );

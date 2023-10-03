@@ -12,7 +12,7 @@ const ShareOutput: React.FC<Record<string, never>> = () => {
   const { outputId } = useRouteParams(gp2.outputs({}).output);
   const output = useOutputById(outputId);
   const entityType =
-    output?.mainEntity.type === 'Working Groups' ? 'workingGroup' : 'project';
+    output?.mainEntity.type === 'WorkingGroups' ? 'workingGroup' : 'project';
   const shareOutput = useUpdateOutput(outputId);
   const getAuthorSuggestions = useAuthorSuggestions();
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions(outputId);
@@ -46,6 +46,8 @@ const ShareOutput: React.FC<Record<string, never>> = () => {
         workingGroupSuggestions={workingGroupSuggestions}
         projectSuggestions={projectSuggestions}
         mainEntity={output.mainEntity}
+        projects={output.projects}
+        workingGroups={output.workingGroups}
       />
     </CreateOutputPage>
   );

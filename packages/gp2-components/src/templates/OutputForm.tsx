@@ -272,6 +272,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
       documentType: output.documentType as gp2Model.OutputDocumentType,
     })),
     mainEntity: mainEntity?.id!,
+    workingGroupIds: newWorkingGroups.map(({ id }) => id),
+    projectIds: newProjects.map(({ id }) => id),
     ...createIdentifierField(newIdentifierType, identifier),
   };
 

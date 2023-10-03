@@ -117,6 +117,7 @@ export type UserAuthor = {
 export type OutputOwner = {
   id: string;
   title: string;
+  type?: 'Projects' | 'WorkingGroups';
 };
 export type OutputAuthor = UserAuthor | ExternalUserResponse;
 export type OutputDataObject = OutputCoreObject & {

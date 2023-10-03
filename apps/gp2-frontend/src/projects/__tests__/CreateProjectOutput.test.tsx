@@ -15,11 +15,16 @@ import { createOutput, getOutputs } from '../../outputs/api';
 import { getTags, getContributingCohorts } from '../../shared/api';
 import { getExternalUsers, getUsers } from '../../users/api';
 import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getWorkingGroups } from '../../working-groups/api';
+import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getAlgoliaProjects, getProject } from '../api';
 import CreateProjectOutput from '../CreateProjectOutput';
 
 jest.mock('../../outputs/api');
 jest.mock('../../users/api');
 jest.mock('../../shared/api');
+jest.mock('../../working-groups/api');
+jest.mock('../api');
 
 const mockCreateOutput = createOutput as jest.MockedFunction<
   typeof createOutput
@@ -33,6 +38,15 @@ const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 const mockGetContributingCohorts =
   getContributingCohorts as jest.MockedFunction<typeof getContributingCohorts>;
+
+const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+  typeof getWorkingGroups
+>;
+const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+  typeof getAlgoliaProjects
+>;
+
+const mockGetProjectById = getProject as jest.MockedFunction<typeof getProject>;
 
 const renderCreateProjectOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
@@ -77,6 +91,11 @@ beforeEach(() => {
   mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
   mockGetTags.mockResolvedValue(gp2.createTagsResponse());
   mockGetContributingCohorts.mockResolvedValue(gp2.contributingCohortResponse);
+  mockGetWorkingGroups.mockResolvedValue(gp2.createWorkingGroupsResponse());
+  mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
+  mockGetProjectById.mockResolvedValue(
+    gp2.createProjectResponse({ id: 'project-id-1' }),
+  );
 });
 
 it('renders the title', async () => {
@@ -111,6 +130,7 @@ it('publishes the output', async () => {
   userEvent.click(screen.getByText(/Steve Rogers \(/i));
   userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
   userEvent.click(screen.getByText(/^none/i));
+  expect(screen.getByText('Project Title')).toBeVisible();
   userEvent.click(screen.getByRole('button', { name: /publish/i }));
   expect(await screen.findByRole('button', { name: /publish/i })).toBeEnabled();
   expect(mockCreateOutput).toHaveBeenCalledWith(
@@ -122,6 +142,7 @@ it('publishes the output', async () => {
       documentType: 'Procedural Form',
       projectIds: ['project-id-1'],
       workingGroupIds: undefined,
+      mainEntity: 'project-id-1',
       authors: [
         {
           userId: '1',

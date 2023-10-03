@@ -69,6 +69,7 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
         cohortSuggestions={cohortSuggestions}
         workingGroupSuggestions={workingGroupSuggestions}
         projectSuggestions={projectSuggestions}
+        projects={[mainEntity]}
         mainEntity={mainEntity}
       />
     </CreateOutputPage>

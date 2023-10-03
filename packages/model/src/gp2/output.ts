@@ -129,7 +129,7 @@ export type OutputDataObject = OutputCoreObject & {
   projects?: OutputOwner[];
   contributingCohorts?: ContributingCohortDataObject[];
   mainEntity: OutputOwner;
-  relatedEntity?: OutputOwner;
+  relatedEntity?: OutputOwner; // to be removed
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;
@@ -144,7 +144,7 @@ export type OutputCreateDataObject = OutputCoreObject & {
   workingGroupIds?: string[];
   projectIds?: string[];
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
-  mainEntity: string;
+  mainEntityId: string;
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
@@ -153,7 +153,7 @@ export type OutputUpdateDataObject = OutputCoreObject & {
   workingGroupIds?: string[];
   projectIds?: string[];
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
-  mainEntity: string;
+  mainEntityId: string;
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
@@ -186,7 +186,7 @@ export type OutputPostRequest = {
   accessionNumber?: string;
   relatedOutputs: RelatedOutputs[];
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
-  mainEntity: string;
+  mainEntityId: string;
 };
 
 export type OutputPutRequest = OutputPostRequest;

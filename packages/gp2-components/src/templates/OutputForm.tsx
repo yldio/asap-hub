@@ -129,11 +129,11 @@ type OutputFormProps = {
     | 'accessionNumber'
     | 'relatedOutputs'
     | 'contributingCohorts'
-    | 'mainEntity'
     | 'workingGroups'
     | 'projects'
   >
->;
+> &
+  Pick<gp2Model.OutputResponse, 'mainEntity'>;
 
 export const getPostAuthors = (
   authors: ComponentPropsWithRef<typeof AuthorSelect>['values'],
@@ -271,9 +271,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
       title: output.label,
       documentType: output.documentType as gp2Model.OutputDocumentType,
     })),
-    mainEntity: mainEntity?.id!,
-    workingGroupIds: newWorkingGroups.map(({ id }) => id),
-    projectIds: newProjects.map(({ id }) => id),
+    mainEntityId: mainEntity.id,
+    workingGroupIds:
+      newWorkingGroups.length > 0
+        ? newWorkingGroups.map(({ id }) => id)
+        : undefined,
+    projectIds:
+      newProjects.length > 0 ? newProjects.map(({ id }) => id) : undefined,
     ...createIdentifierField(newIdentifierType, identifier),
   };
 
@@ -493,9 +497,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
               required={entityType === 'workingGroup'}
               enabled={!isSaving}
               placeholder="Start typing..."
-              suggestions={workingGroupSuggestions.map(({ id, title }) => ({
-                label: title,
-                value: id,
+              suggestions={workingGroupSuggestions.map((workingGroup) => ({
+                label: workingGroup.title,
+                value: workingGroup.id,
               }))}
               onChange={(newValues) => {
                 setWorkingGroups(
@@ -510,9 +514,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
                     ),
                 );
               }}
-              values={newWorkingGroups.map(({ id, title }, idx) => ({
-                label: title,
-                value: id,
+              values={newWorkingGroups.map((workingGroup, idx) => ({
+                label: workingGroup.title,
+                value: workingGroup.id,
                 isFixed: idx === 0,
               }))}
               noOptionsMessage={({ inputValue }) =>
@@ -526,9 +530,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
               enabled={!isSaving}
               required={entityType === 'project'}
               placeholder="Start typing..."
-              suggestions={projectSuggestions.map(({ id, title }) => ({
-                label: title,
-                value: id,
+              suggestions={projectSuggestions.map((project) => ({
+                label: project.title,
+                value: project.id,
               }))}
               onChange={(newValues) => {
                 setProjects(
@@ -543,9 +547,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
                     ),
                 );
               }}
-              values={newProjects.map(({ id, title }, idx) => ({
-                label: title,
-                value: id,
+              values={newProjects.map((project, idx) => ({
+                label: project.title,
+                value: project.id,
                 isFixed: idx === 0,
               }))}
               noOptionsMessage={({ inputValue }) =>

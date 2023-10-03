@@ -26,7 +26,8 @@ describe('OutputForm', () => {
     cohortSuggestions: [],
     workingGroupSuggestions: [],
     projectSuggestions: [],
-    mainEntity: { id: '12', title: 'a title' },
+    mainEntity: { id: '12', title: 'a WG title' },
+    workingGroups: [{ id: '12', title: 'a WG title' }],
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {
@@ -47,6 +48,11 @@ describe('OutputForm', () => {
       }),
     ).toBeVisible();
     expect(screen.getByRole('textbox', { name: /tags/i })).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: /working groups/i }),
+    ).toBeVisible();
+    expect(screen.getByRole('textbox', { name: /projects/i })).toBeVisible();
+    expect(screen.getByRole('textbox', { name: /cohorts/i })).toBeVisible();
     expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /publish/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
@@ -170,6 +176,8 @@ describe('OutputForm', () => {
           documentType: 'GP2 Reports',
         },
       ],
+      mainEntityId: '12',
+      workingGroupIds: ['12'],
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -279,6 +287,8 @@ describe('OutputForm', () => {
         { externalUserName: 'Alex White' },
       ],
       relatedOutputs: [],
+      mainEntityId: '12',
+      workingGroupIds: ['12'],
     });
   });
 
@@ -388,6 +398,8 @@ describe('OutputForm', () => {
         sharingStatus: 'GP2 Only',
         authors: [{ userId: 'u2' }],
         relatedOutputs: [],
+        mainEntityId: '12',
+        workingGroupIds: ['12'],
       });
       expect(history.location.pathname).toEqual(`/outputs`);
     });

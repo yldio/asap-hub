@@ -73,7 +73,7 @@ export default class OutputController {
       rrid: outputCreateData.rrid,
       accessionNumber: outputCreateData.accessionNumber,
       relatedOutputs: outputCreateData.relatedOutputs,
-      mainEntity: outputCreateData.mainEntity,
+      mainEntityId: outputCreateData.mainEntityId,
       contributingCohorts: outputCreateData.contributingCohorts,
     };
 
@@ -118,7 +118,7 @@ export default class OutputController {
       relatedOutputs: outputUpdateData.relatedOutputs,
       projectIds: outputUpdateData.projectIds,
       workingGroupIds: outputUpdateData.workingGroupIds,
-      mainEntity: outputUpdateData.mainEntity,
+      mainEntityId: outputUpdateData.mainEntityId,
       contributingCohorts: outputUpdateData.contributingCohorts,
     };
 

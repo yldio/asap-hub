@@ -371,7 +371,8 @@ export const parseContentfulGraphQLOutput = (
     workingGroups,
     mainEntity,
     contributingCohorts,
-    relatedEntity,
+    relatedEntity:
+      Object.keys(relatedEntity).length !== 0 ? relatedEntity : undefined,
   };
 };
 
@@ -438,12 +439,6 @@ const cleanOutput = (
         relatedOutputs: (
           value as gp2Model.OutputUpdateDataObject['relatedOutputs']
         ).map((output) => getLinkEntity(output.id)),
-      };
-    }
-    if (key === 'mainEntity') {
-      return {
-        ...acc,
-        mainEntity: getLinkEntity(value as string),
       };
     }
     return { ...acc, [key]: value };

@@ -142,7 +142,7 @@ it('publishes the output', async () => {
       documentType: 'Procedural Form',
       projectIds: ['project-id-1'],
       workingGroupIds: undefined,
-      mainEntity: 'project-id-1',
+      mainEntityId: 'project-id-1',
       authors: [
         {
           userId: '1',

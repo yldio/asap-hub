@@ -58,7 +58,8 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
   mainEntity: {
     id: '42',
-    title: 'a project',
+    title: 'A Project',
+    type: 'Projects',
   },
 });
 
@@ -94,13 +95,12 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     type: 'Research',
     projectIds: projects?.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
-    mainEntity: mainEntity.id,
+    mainEntityId: mainEntity.id,
   };
 };
 
 export const getOutputPutRequest = (): gp2Model.OutputPutRequest => {
-  const { projectIds, ...data } = getOutputPostRequest();
-  return data;
+  return getOutputPostRequest();
 };
 
 export const getOutputCreateData = (): OutputCreateData => ({
@@ -126,17 +126,14 @@ export const getOutputCreateDataObject =
       createdBy: 'userId',
       projectIds: projects?.map(({ id }) => id),
       authors: authors.map(({ id }) => ({ userId: id })),
-      mainEntity: mainEntity.id,
+      mainEntityId: mainEntity.id,
     };
   };
 
 export const getOutputUpdateDataObject =
   (): gp2Model.OutputUpdateDataObject => {
-    const {
-      createdBy: _,
-      projectIds: __,
-      ...outputCreateDataObject
-    } = getOutputCreateDataObject();
+    const { createdBy: _, ...outputCreateDataObject } =
+      getOutputCreateDataObject();
 
     return {
       ...outputCreateDataObject,
@@ -224,6 +221,17 @@ export const getContentfulGraphqlOutput = (): NonNullable<
         sys: { id: 'another-output-id' },
         title: 'another title',
         documentType: 'Dataset',
+      },
+    ],
+  },
+  contributingCohortsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'cohort-1',
+        },
+        name: 'Cohort',
       },
     ],
   },

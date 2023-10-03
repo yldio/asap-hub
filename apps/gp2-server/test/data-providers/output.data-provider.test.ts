@@ -747,6 +747,7 @@ describe('Outputs data provider', () => {
       const {
         workingGroupIds: __,
         projectIds,
+        mainEntityId,
         ...fieldsCreated
       } = outputRequest;
       const fields = addLocaleToFields({
@@ -891,8 +892,10 @@ describe('Outputs data provider', () => {
       const outputUpdateData = getOutputUpdateDataObject();
 
       await outputDataProvider.update(outputId, outputUpdateData);
+
+      const { mainEntityId, projectIds, ...fieldsUpdated } = outputUpdateData;
       const fields = {
-        ...outputUpdateData,
+        ...fieldsUpdated,
         authors: outputUpdateData.authors.map((author) => ({
           sys: {
             type: 'Link',
@@ -907,6 +910,13 @@ describe('Outputs data provider', () => {
             id: outputUpdateData.updatedBy,
           },
         },
+        relatedEntities: projectIds?.map((id) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id,
+          },
+        })),
         tags: outputUpdateData.tags?.map((tag) => ({
           sys: {
             type: 'Link',

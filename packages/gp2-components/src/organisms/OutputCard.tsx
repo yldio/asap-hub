@@ -18,6 +18,16 @@ import { IconWithLabel } from '../molecules';
 
 const { rem } = pixels;
 
+const entitiesStyles = css({
+  margin: `${rem(4)} 0 ${rem(32)}`,
+  display: 'flex',
+  flexDirection: 'column',
+
+  '&.reverse': {
+    flexDirection: 'column-reverse',
+  },
+});
+
 type OutputCardProps = Pick<
   gp2Model.OutputResponse,
   | 'id'
@@ -30,11 +40,10 @@ type OutputCardProps = Pick<
   | 'documentType'
   | 'type'
   | 'subtype'
+  | 'mainEntity'
 > & {
   isAdministrator?: boolean;
 };
-
-// TODO: update card to reflect main entity
 
 const OutputCard: React.FC<OutputCardProps> = ({
   id,
@@ -48,6 +57,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
   authors,
   link,
   isAdministrator,
+  mainEntity,
 }) => (
   <Card padding={false}>
     <div css={css({ padding: rem(24) })}>
@@ -55,8 +65,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
         <SharedResearchMetadata
           pills={
             [
-              workingGroups && 'Working Group',
-              projects && 'Project',
+              // mainEntity.type === 'WorkingGroups' ? 'Working Group' : 'Project',
               documentType,
               type,
               subtype,
@@ -99,9 +108,12 @@ const OutputCard: React.FC<OutputCardProps> = ({
         }))}
         max={3}
       />
-      <div css={css({ margin: `${rem(4)} 0 ${rem(32)}` })}>
+      <div
+        css={entitiesStyles}
+        className={`${mainEntity.type === 'Projects' ? 'reverse' : ''}`}
+      >
         {workingGroups && (
-          <IconWithLabel noMargin icon={workingGroupIcon}>
+          <IconWithLabel icon={workingGroupIcon}>
             {workingGroups.length > 1 ? (
               <Paragraph>{workingGroups.length} Working Groups</Paragraph>
             ) : (
@@ -118,7 +130,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
           </IconWithLabel>
         )}
         {projects && (
-          <IconWithLabel noMargin icon={projectIcon}>
+          <IconWithLabel icon={projectIcon}>
             {projects.length > 1 ? (
               <Paragraph>{projects.length} Projects</Paragraph>
             ) : (

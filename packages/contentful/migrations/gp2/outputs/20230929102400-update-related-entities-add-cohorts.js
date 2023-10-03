@@ -45,11 +45,6 @@ module.exports.up = function (migration) {
       linkType: 'Entry',
     });
 
-  outputs.changeFieldControl('mainEntity', 'builtin', 'entryLinkEditor', {
-    showLinkEntityAction: true,
-    showCreateEntityAction: false,
-  });
-
   outputs.changeFieldControl(
     'relatedEntities',
     'builtin',
@@ -76,5 +71,4 @@ module.exports.down = function (migration) {
 
   outputs.deleteField('relatedEntities');
   outputs.deleteField('contributingCohorts');
-  outputs.deleteField('mainEntity');
 };

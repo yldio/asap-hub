@@ -112,3 +112,30 @@ export const createNewsListAlgoliaResponse = (
   response.nbHits = total;
   return response;
 };
+
+type UserSearchResponse = ClientSearchResponse<'gp2', 'user'>;
+export const createUserAlgoliaRecord = (
+  overrides?: Partial<gp2.UserResponse>,
+): UserSearchResponse['hits'][number] => {
+  const response = gp2Fixtures.createUserResponse(overrides);
+
+  return {
+    ...response,
+    objectID: response.id,
+    __meta: { type: 'user' },
+  };
+};
+
+export const createUserListAlgoliaResponse = (
+  items: number,
+  responseOverride?: Partial<UserSearchResponse>,
+): UserSearchResponse =>
+  createAlgoliaResponse<'user'>(
+    Array.from({ length: items }, (_, index) =>
+      createUserAlgoliaRecord({
+        displayName: `Tony Stark ${index}`,
+        id: `${index}`,
+      }),
+    ),
+    responseOverride,
+  );

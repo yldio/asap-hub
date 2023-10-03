@@ -33,21 +33,35 @@ export class UserContentfulDataProvider implements UserDataProvider {
       gp2Contentful.FetchUserByIdQueryVariables
     >(gp2Contentful.FETCH_USER_BY_ID, { id });
   }
-  private async fetchUsersByProject(id: string[]) {
+  private async fetchUsersByProject(ids: string[]) {
     const { projectsCollection } = await this.graphQLClient.request<
-      gp2Contentful.FetchUsersByProjectIdQuery,
-      gp2Contentful.FetchUsersByProjectIdQueryVariables
-    >(gp2Contentful.FETCH_USERS_BY_PROJECT_ID, { id });
+      gp2Contentful.FetchUsersByProjectIdsQuery,
+      gp2Contentful.FetchUsersByProjectIdsQueryVariables
+    >(gp2Contentful.FETCH_USERS_BY_PROJECT_IDS, { ids });
     return projectsCollection;
   }
-  private async fetchUsersByWorkingGroup(id: string[]) {
+  private async fetchUsersByWorkingGroup(ids: string[]) {
     const { workingGroupsCollection } = await this.graphQLClient.request<
-      gp2Contentful.FetchUsersByWorkingGroupIdQuery,
-      gp2Contentful.FetchUsersByWorkingGroupIdQueryVariables
-    >(gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_ID, { id });
+      gp2Contentful.FetchUsersByWorkingGroupIdsQuery,
+      gp2Contentful.FetchUsersByWorkingGroupIdsQueryVariables
+    >(gp2Contentful.FETCH_USERS_BY_WORKING_GROUP_IDS, { ids });
     return workingGroupsCollection;
   }
 
+  private async fetchUsersByTag(ids: string[]) {
+    const { usersCollection } = await this.graphQLClient.request<
+      gp2Contentful.FetchUsersByTagIdsQuery,
+      gp2Contentful.FetchUsersByTagIdsQueryVariables
+    >(gp2Contentful.FETCH_USERS_BY_TAG_IDS, { ids });
+    return usersCollection;
+  }
+  private async getUsersByTags(ids?: string[]) {
+    if (!ids) {
+      return [];
+    }
+    const entities = await this.fetchUsersByTag(ids);
+    return entities?.items.flatMap((entity) => entity?.sys.id || []);
+  }
   async fetchById(id: string) {
     const { users } = await this.fetchUserById(id);
     return users ? parseUserToDataObject(users) : null;
@@ -56,6 +70,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
   private getUserIdFilter = async ({
     projects,
     workingGroups,
+    keywords,
     userIds,
   }: gp2Model.FetchUsersOptions['filter'] = {}): Promise<string[]> => {
     const unfilteredUserIds = await Promise.all([
@@ -64,6 +79,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
         workingGroups,
         this.fetchUsersByWorkingGroup.bind(this),
       ),
+      this.getUsersByTags(keywords),
       userIds,
     ]);
 
@@ -73,15 +89,16 @@ export class UserContentfulDataProvider implements UserDataProvider {
       .filter((userId, index, arr) => arr.indexOf(userId) === index);
   };
   async fetch(options: gp2Model.FetchUsersOptions) {
-    const { projects, workingGroups, userIds } = options.filter || {};
+    const { projects, workingGroups, userIds, keywords } = options.filter || {};
     const userIdFilter = await this.getUserIdFilter({
       projects,
       workingGroups,
       userIds,
+      keywords,
     });
     if (
       userIdFilter.length === 0 &&
-      (projects?.length || workingGroups?.length)
+      (projects?.length || workingGroups?.length || keywords?.length)
     ) {
       return { total: 0, items: [] };
     }
@@ -305,13 +322,7 @@ const generateFetchQueryFilter = (
   { filter, search }: gp2Model.FetchUsersOptions,
   userIdFilter: string[],
 ): gp2Contentful.UsersFilter => {
-  const {
-    regions,
-    keywords,
-    code,
-    onlyOnboarded,
-    hidden = true,
-  } = filter || {};
+  const { regions, code, onlyOnboarded, hidden = true } = filter || {};
 
   const filterCode: gp2Contentful.UsersFilter = code
     ? { connections_contains_all: [code] }
@@ -325,9 +336,6 @@ const generateFetchQueryFilter = (
   const filterRegions: gp2Contentful.UsersFilter = regions
     ? { region_in: regions }
     : {};
-  const filterKeywords: gp2Contentful.UsersFilter = keywords
-    ? { tags: { name_in: keywords } }
-    : {};
   const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =
     userIdFilter.length > 0 ? { sys: { id_in: userIdFilter } } : {};
@@ -337,7 +345,6 @@ const generateFetchQueryFilter = (
     ...filterNonOnboarded,
     ...filterHidden,
     ...filterRegions,
-    ...filterKeywords,
     ...searchFilter,
   };
 };
@@ -483,8 +490,8 @@ const getEntityMemberUserIds = async (
   queryFetchMemberData: (
     filter: string[],
   ) => Promise<
-    | gp2Contentful.FetchUsersByWorkingGroupIdQuery['workingGroupsCollection']
-    | gp2Contentful.FetchUsersByProjectIdQuery['projectsCollection']
+    | gp2Contentful.FetchUsersByWorkingGroupIdsQuery['workingGroupsCollection']
+    | gp2Contentful.FetchUsersByProjectIdsQuery['projectsCollection']
   >,
 ) => {
   if (!ids) {

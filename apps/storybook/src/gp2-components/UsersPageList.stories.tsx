@@ -30,6 +30,7 @@ export const Normal = () => (
       filters={{}}
       projects={[]}
       workingGroups={[]}
+      keywords={[]}
       displayFilters={
         (select<boolean>, 'Display Filters', { Yes: true, No: false }, false)
       }

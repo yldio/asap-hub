@@ -32,10 +32,14 @@
     "documentType",
     "id",
     "project.id",
+    "projectIds",
+    "region",
     "speakers.user.id",
     "status",
     "type",
-    "workingGroup.id"
+    "tagIds",
+    "workingGroup.id",
+    "workingGroupIds"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

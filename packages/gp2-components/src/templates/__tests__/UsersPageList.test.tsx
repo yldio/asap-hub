@@ -47,6 +47,7 @@ const props = {
   filters: {},
   projects: [],
   workingGroups: [],
+  keywords: [],
 };
 
 describe('UsersPageList', () => {
@@ -63,7 +64,7 @@ describe('UsersPageList', () => {
   it.each`
     name               | value
     ${'regions'}       | ${'Asia'}
-    ${'keywords'}      | ${'Aging'}
+    ${'keywords'}      | ${'11'}
     ${'projects'}      | ${'42'}
     ${'workingGroups'} | ${'42'}
   `(
@@ -75,6 +76,8 @@ describe('UsersPageList', () => {
       const { items: projects } = gp2Fixtures.createProjectsResponse();
       const { items: workingGroups } =
         gp2Fixtures.createWorkingGroupsResponse();
+      const { items: keywords } = gp2Fixtures.createKeywordsResponse();
+
       render(
         <UsersPageList
           {...props}
@@ -83,6 +86,7 @@ describe('UsersPageList', () => {
           updateFilters={updateFilterSpy}
           projects={projects}
           workingGroups={workingGroups}
+          keywords={keywords}
         />,
       );
 

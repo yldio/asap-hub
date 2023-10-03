@@ -6,18 +6,19 @@ import FilterPills from '../FilterPills';
 describe('FilterPills', () => {
   const props = {
     filters: {
-      keywords: ['Epidemiology'],
+      keywords: ['keyword-1'],
       regions: ['Asia'],
       projects: ['project-1'],
       workingGroups: ['working-group-1'],
     } as ComponentProps<typeof FilterPills>['filters'],
     projects: [{ id: 'project-1', title: 'Project 1' }],
     workingGroups: [{ id: 'working-group-1', title: 'Working Group 1' }],
+    keywords: [{ id: 'keyword-1', name: 'Keyword 1' }],
     onRemove: jest.fn(),
   };
   it('should render all the pills', () => {
     render(<FilterPills {...props} />);
-    expect(screen.getByText('Epidemiology')).toBeVisible();
+    expect(screen.getByText('Keyword 1')).toBeVisible();
     expect(screen.getByText('Asia')).toBeVisible();
     expect(screen.getByText('Project 1')).toBeVisible();
     expect(screen.getByText('Working Group 1')).toBeVisible();
@@ -25,7 +26,7 @@ describe('FilterPills', () => {
   it('calls the onRemove function for every pill with their respective id and type of filter', () => {
     render(<FilterPills {...props} />);
     const onRemoveKeywordButton =
-      screen.getByText('Epidemiology').nextElementSibling!;
+      screen.getByText('Keyword 1').nextElementSibling!;
     const onRemoveRegionButton = screen.getByText('Asia').nextElementSibling!;
     const onRemoveProjectButton =
       screen.getByText('Project 1').nextElementSibling!;
@@ -38,7 +39,7 @@ describe('FilterPills', () => {
     expect(onRemoveWorkingGroupButton).toBeVisible();
 
     userEvent.click(onRemoveKeywordButton);
-    expect(props.onRemove).toBeCalledWith('Epidemiology', 'keywords');
+    expect(props.onRemove).toBeCalledWith('keyword-1', 'keywords');
 
     userEvent.click(onRemoveRegionButton);
     expect(props.onRemove).toBeCalledWith('Asia', 'regions');

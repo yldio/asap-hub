@@ -390,7 +390,7 @@ const serverlessConfig: AWS = {
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexResearchOutputContentful: {
+    algoliaIndexResearchOutput: {
       handler:
         './src/handlers/research-output/algolia-index-research-output-handler.handler',
       events: [
@@ -411,12 +411,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexUserContentful: {
+    algoliaIndexUser: {
       handler: './src/handlers/user/algolia-index-user-handler.handler',
       events: [
         {
@@ -437,12 +437,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexExternalAuthorContentful: {
+    algoliaIndexExternalAuthor: {
       handler:
         './src/handlers/external-author/algolia-index-external-author-handler.handler',
       events: [
@@ -463,12 +463,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexEventsContentful: {
+    algoliaIndexEvents: {
       handler: './src/handlers/event/algolia-index-event-handler.handler',
       events: [
         {
@@ -486,12 +486,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexUserEventsContentful: {
+    algoliaIndexUserEvents: {
       handler: './src/handlers/event/algolia-index-user-events-handler.handler',
       events: [
         {
@@ -511,12 +511,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexExternalUserEventsContentful: {
+    algoliaIndexExternalUserEvents: {
       handler:
         './src/handlers/event/algolia-index-external-author-events-handler.handler',
       events: [
@@ -537,12 +537,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexTeamEventsContentful: {
+    algoliaIndexTeamEvents: {
       handler: './src/handlers/event/algolia-index-team-events-handler.handler',
       events: [
         {
@@ -562,12 +562,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexGroupEventsContentful: {
+    algoliaIndexGroupEvents: {
       handler:
         './src/handlers/event/algolia-index-group-events-handler.handler',
       events: [
@@ -588,12 +588,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexLabUsersContentful: {
+    algoliaIndexLabUsers: {
       handler: './src/handlers/lab/algolia-index-lab-users-handler.handler',
       events: [
         {
@@ -613,7 +613,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
@@ -662,7 +662,7 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    algoliaIndexTeamResearchOutputsContentful: {
+    algoliaIndexTeamResearchOutputs: {
       handler:
         './src/handlers/teams/algolia-index-team-research-outputs-handler.handler',
       events: [
@@ -678,12 +678,12 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },
     },
-    algoliaIndexTeamUsersContentful: {
+    algoliaIndexTeamUsers: {
       handler: './src/handlers/teams/algolia-index-team-users-handler.handler',
       events: [
         {
@@ -698,7 +698,7 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         ALGOLIA_API_KEY: `\${ssm:crn-algolia-index-api-key-${envAlias}}`,
-        ALGOLIA_INDEX: `${algoliaIndex}-contentful`,
+        ALGOLIA_INDEX: `${algoliaIndex}`,
         SENTRY_DSN: sentryDsnHandlers,
         IS_CONTENTFUL_ENABLED: 'true',
       },

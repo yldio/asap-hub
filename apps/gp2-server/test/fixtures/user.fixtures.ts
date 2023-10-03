@@ -70,10 +70,10 @@ export const getUserResponse = (
   telephone: { countryCode: '+1', number: '212-970-4133' },
   biography: 'a biography of Tony Stark',
   tags: [
-    { id: 'keyword-1', name: 'BLAAC-PD' },
-    { id: 'keyword-2', name: 'Cohort' },
+    { id: 'tag-1', name: 'BLAAC-PD' },
+    { id: 'tag-2', name: 'Cohort' },
   ],
-  tagIds: ['keyword-1', 'keyword-2'],
+  tagIds: ['tag-1', 'tag-2'],
   social: {
     googleScholar: 'https://scholar.google.com',
     orcid: 'https://orcid.org',
@@ -179,8 +179,8 @@ export const getUserDataObject = (): gp2Model.UserDataObject => ({
     },
   ],
   tags: [
-    { id: 'keyword-1', name: 'BLAAC-PD' },
-    { id: 'keyword-2', name: 'Cohort' },
+    { id: 'tag-1', name: 'BLAAC-PD' },
+    { id: 'tag-2', name: 'Cohort' },
   ],
   fundingStreams: 'A funding stream',
   biography: 'a biography of Tony Stark',
@@ -316,7 +316,7 @@ export const getContentfulGraphqlUser = (
     'What color was Iron Mans original armour?',
     'Who is the Stark family butler?',
   ],
-  tagsCollection: { ...getContentfulGraphqKeywords() },
+  tagsCollection: { ...getContentfulGraphqTags() },
   email: 'T@ark.io',
   alternativeEmail: 'tony@stark.com',
   firstName: 'Tony',
@@ -395,18 +395,18 @@ export const getContentfulGraphqlUser = (
   ...props,
 });
 
-export const getContentfulGraphqKeywords = () => ({
+export const getContentfulGraphqTags = () => ({
   total: 2,
   items: [
     {
       sys: {
-        id: 'keyword-1',
+        id: 'tag-1',
       },
       name: 'BLAAC-PD',
     },
     {
       sys: {
-        id: 'keyword-2',
+        id: 'tag-2',
       },
       name: 'Cohort',
     },
@@ -524,7 +524,7 @@ export const getContentfulUsersGraphqlResponse =
     },
   });
 
-export const getContentfulUsersByProjectId = (
+export const getContentfulUsersByProjectIds = (
   user1Id?: string,
   user2Id?: string,
 ) => ({
@@ -553,7 +553,7 @@ export const getContentfulUsersByProjectId = (
   },
 });
 
-export const getContentfulUsersByWorkingGroupId = (
+export const getContentfulUsersByWorkingGroupIds = (
   user1Id?: string,
   user2Id?: string,
 ) => ({
@@ -578,6 +578,22 @@ export const getContentfulUsersByWorkingGroupId = (
           ].filter(Boolean),
         },
       },
+    ],
+  },
+});
+export const getContentfulUsersByTagIds = (
+  user1Id?: string,
+  user2Id?: string,
+) => ({
+  usersCollection: {
+    total: 1,
+    items: [
+      user1Id && {
+        sys: {
+          id: user1Id,
+        },
+      },
+      user2Id && { sys: { id: user2Id } },
     ],
   },
 });

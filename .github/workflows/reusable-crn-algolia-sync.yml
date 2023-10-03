@@ -73,7 +73,7 @@ jobs:
       - name: Build
         run: yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/asap-cli,@asap-hub/crn-server}' run build:babel"
       - name: Copy index to a temporary index (ALL)
-        run: algolia indices copy -y -w $SCOPE $ALGOLIA_INDEX-contentful $ALGOLIA_INDEX_TEMP
+        run: algolia indices copy -y -w $SCOPE $ALGOLIA_INDEX $ALGOLIA_INDEX_TEMP
         env:
           ALGOLIA_APPLICATION_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_ADMIN_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
@@ -142,7 +142,7 @@ jobs:
           contentful-management-token: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           contentful-space-id: ${{ steps.setup.outputs.crn-contentful-space-id }}
       - name: Override index with the temp one
-        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX-contentful
+        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX_TEMP -i $ALGOLIA_INDEX
         env:
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}

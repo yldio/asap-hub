@@ -35,9 +35,12 @@ const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
 
 const renderOutputDirectory = async ({
   isAdministrator = false,
+  filters = {},
+  searchQuery = '',
 }: {
   isAdministrator?: boolean;
   filters?: Partial<ReturnType<typeof useSearch>['filters']>;
+  searchQuery?: string;
 } = {}) => {
   mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(2));
 
@@ -45,11 +48,11 @@ const renderOutputDirectory = async ({
   const mockToggleFilter = jest.fn();
   mockUseSearch.mockImplementation(() => ({
     changeLocation: jest.fn(),
-    filters: {},
+    filters,
     updateFilters: mockUpdateFilter,
     toggleFilter: mockToggleFilter,
-    searchQuery: '',
-    debouncedSearchQuery: '',
+    searchQuery,
+    debouncedSearchQuery: searchQuery,
     setSearchQuery: jest.fn(),
   }));
 
@@ -84,13 +87,19 @@ it('renders the filters modal', async () => {
 });
 
 it('triggers export', async () => {
-  await renderOutputDirectory({ isAdministrator: true });
+  const searchQuery = 'a search query';
+
+  const documentTypeFilter = ['Article' as const];
+  const filters = { documentType: documentTypeFilter };
+  const filterSet = new Set(documentTypeFilter);
+
+  await renderOutputDirectory({ isAdministrator: true, searchQuery, filters });
   await waitFor(() =>
     expect(mockGetOutputs).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
-        filters: new Set(),
-        searchQuery: '',
+        filters: filterSet,
+        searchQuery,
       }),
     ),
   );
@@ -103,10 +112,10 @@ it('triggers export', async () => {
     expect(mockGetOutputs).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
-        filters: new Set(),
-        searchQuery: '',
-        skip: 0,
-        take: MAX_RESULTS,
+        filters: filterSet,
+        searchQuery,
+        currentPage: 0,
+        pageSize: MAX_RESULTS,
       }),
     ),
   );

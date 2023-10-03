@@ -21,6 +21,7 @@ const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 
 mockConsoleError();
 
+jest.setTimeout(30_000);
 const renderRoutes = async () => {
   render(
     <RecoilRoot>
@@ -37,9 +38,10 @@ const renderRoutes = async () => {
       </Suspense>
     </RecoilRoot>,
   );
-  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i), {
+    timeout: 30_000,
+  });
 };
-jest.setTimeout(30000);
 beforeEach(jest.resetAllMocks);
 
 describe('Routes', () => {

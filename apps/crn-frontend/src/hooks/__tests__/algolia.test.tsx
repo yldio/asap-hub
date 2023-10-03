@@ -95,28 +95,4 @@ describe('useAlgolia', () => {
     });
     expect(result.current.client).toBeDefined();
   });
-
-  it('uses contentful index when the feature flag is on', async () => {
-    const mockAlgoliaSearchClientFactory =
-      algoliaSearchClientFactory as jest.MockedFunction<
-        typeof algoliaSearchClientFactory
-      >;
-    setCurrentOverrides({ CONTENTFUL: true });
-
-    const { waitForNextUpdate } = renderHook(() => useAlgolia(), {
-      wrapper: ({ children }) => (
-        <RecoilRoot>
-          <Auth0Provider user={{ algoliaApiKey: 'algolia key' }}>
-            <WhenReady>{children}</WhenReady>
-          </Auth0Provider>
-        </RecoilRoot>
-      ),
-    });
-    await waitForNextUpdate();
-    expect(mockAlgoliaSearchClientFactory).toHaveBeenCalledWith(
-      expect.objectContaining({
-        algoliaIndex: `${ALGOLIA_INDEX}-contentful`,
-      }),
-    );
-  });
 });

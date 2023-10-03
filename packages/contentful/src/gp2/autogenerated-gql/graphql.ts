@@ -10300,11 +10300,11 @@ export type FetchUsersQuery = {
   >;
 };
 
-export type FetchUsersByProjectIdQueryVariables = Exact<{
-  id: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+export type FetchUsersByProjectIdsQueryVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
 }>;
 
-export type FetchUsersByProjectIdQuery = {
+export type FetchUsersByProjectIdsQuery = {
   projectsCollection?: Maybe<
     Pick<ProjectsCollection, 'total'> & {
       items: Array<
@@ -10320,11 +10320,11 @@ export type FetchUsersByProjectIdQuery = {
   >;
 };
 
-export type FetchUsersByWorkingGroupIdQueryVariables = Exact<{
-  id: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+export type FetchUsersByWorkingGroupIdsQueryVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
 }>;
 
-export type FetchUsersByWorkingGroupIdQuery = {
+export type FetchUsersByWorkingGroupIdsQuery = {
   workingGroupsCollection?: Maybe<
     Pick<WorkingGroupsCollection, 'total'> & {
       items: Array<
@@ -10336,6 +10336,18 @@ export type FetchUsersByWorkingGroupIdQuery = {
           >;
         }>
       >;
+    }
+  >;
+};
+
+export type FetchUsersByTagIdsQueryVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+}>;
+
+export type FetchUsersByTagIdsQuery = {
+  usersCollection?: Maybe<
+    Pick<UsersCollection, 'total'> & {
+      items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
     }
   >;
 };
@@ -16943,17 +16955,17 @@ export const FetchUsersDocument = {
     ...UsersContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchUsersQuery, FetchUsersQueryVariables>;
-export const FetchUsersByProjectIdDocument = {
+export const FetchUsersByProjectIdsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchUsersByProjectId' },
+      name: { kind: 'Name', value: 'FetchUsersByProjectIds' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'ids' } },
           type: {
             kind: 'NonNullType',
             type: {
@@ -16995,7 +17007,7 @@ export const FetchUsersByProjectIdDocument = {
                             name: { kind: 'Name', value: 'id_in' },
                             value: {
                               kind: 'Variable',
-                              name: { kind: 'Name', value: 'id' },
+                              name: { kind: 'Name', value: 'ids' },
                             },
                           },
                         ],
@@ -17080,20 +17092,20 @@ export const FetchUsersByProjectIdDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  FetchUsersByProjectIdQuery,
-  FetchUsersByProjectIdQueryVariables
+  FetchUsersByProjectIdsQuery,
+  FetchUsersByProjectIdsQueryVariables
 >;
-export const FetchUsersByWorkingGroupIdDocument = {
+export const FetchUsersByWorkingGroupIdsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchUsersByWorkingGroupId' },
+      name: { kind: 'Name', value: 'FetchUsersByWorkingGroupIds' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'ids' } },
           type: {
             kind: 'NonNullType',
             type: {
@@ -17135,7 +17147,7 @@ export const FetchUsersByWorkingGroupIdDocument = {
                             name: { kind: 'Name', value: 'id_in' },
                             value: {
                               kind: 'Variable',
-                              name: { kind: 'Name', value: 'id' },
+                              name: { kind: 'Name', value: 'ids' },
                             },
                           },
                         ],
@@ -17220,8 +17232,111 @@ export const FetchUsersByWorkingGroupIdDocument = {
     },
   ],
 } as unknown as DocumentNode<
-  FetchUsersByWorkingGroupIdQuery,
-  FetchUsersByWorkingGroupIdQueryVariables
+  FetchUsersByWorkingGroupIdsQuery,
+  FetchUsersByWorkingGroupIdsQueryVariables
+>;
+export const FetchUsersByTagIdsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchUsersByTagIds' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'ids' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'String' },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'usersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'tags' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'sys' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'id_in' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'ids' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchUsersByTagIdsQuery,
+  FetchUsersByTagIdsQueryVariables
 >;
 export const FetchWorkingGroupNetworkDocument = {
   kind: 'Document',

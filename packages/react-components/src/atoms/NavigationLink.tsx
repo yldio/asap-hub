@@ -68,21 +68,34 @@ const squareBorderStyles = css({
   borderRadius: 'unset',
 });
 
-interface NavigationLinkProps {
+type NavigationLinkProps = NavigationProps & {
+  readonly icon?: JSX.Element;
+};
+const NavigationLink: React.FC<NavigationLinkProps> = ({
+  icon,
+  children,
+  ...props
+}) => (
+  <Navigation {...props}>
+    <p css={textStyles}>
+      {icon && <span css={iconStyles}>{icon}</span>}
+      {children}
+    </p>
+  </Navigation>
+);
+
+interface NavigationProps {
   readonly href: string;
   readonly enabled?: boolean;
-  readonly icon?: JSX.Element;
   readonly squareBorder?: boolean;
 }
-const NavigationLink: React.FC<NavigationLinkProps> = ({
+export const Navigation: React.FC<NavigationProps> = ({
   href,
-  enabled = true,
-  icon,
-  squareBorder = false,
   children,
+  enabled = true,
+  squareBorder,
 }) => {
   const [internal, url] = isInternalLink(href);
-
   if (useHasRouter() && internal) {
     return (
       <NavHashLink
@@ -100,10 +113,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         smooth
         isActive={(match) => enabled && !!match && match.url === url}
       >
-        <p css={textStyles}>
-          {icon && <span css={iconStyles}>{icon}</span>}
-          {children}
-        </p>
+        {children}
       </NavHashLink>
     );
   }
@@ -121,10 +131,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         components?.NavigationLink?.styles,
       ]}
     >
-      <p css={textStyles}>
-        {icon && <span css={iconStyles}>{icon}</span>}
-        {children}
-      </p>
+      {children}
     </a>
   );
 };

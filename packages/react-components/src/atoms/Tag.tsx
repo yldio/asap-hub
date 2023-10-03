@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { steel, mint, tin, neutral900 } from '../colors';
+import { steel, mint, tin, neutral900, pine, charcoal } from '../colors';
 import { crossSmallIcon } from '../icons';
 import { perRem } from '../pixels';
 import Ellipsis from './Ellipsis';
@@ -29,6 +29,14 @@ const highlightStyles = css({
   backgroundColor: mint.rgb,
 });
 
+const hoverStyles = css({
+  ':hover': {
+    backgroundColor: mint.rgb,
+    borderColor: pine.rgb,
+    color: pine.rgb,
+  },
+});
+
 const disabledStyles = css({
   borderColor: tin.rgb,
   color: tin.rgb,
@@ -51,27 +59,58 @@ type TagProps = {
   readonly highlight?: boolean;
   readonly children?: React.ReactNode;
   readonly title?: string;
-  onRemove?: () => void;
+} & (RemoveTagProps | TagWithHrefProps);
+
+type RemoveTagProps = {
+  readonly onRemove: () => void;
+  readonly href?: undefined;
 };
+type TagWithHrefProps = {
+  readonly href?: string;
+  readonly onRemove?: undefined;
+};
+
+const ConditionalLinkWrapper: React.FC<{
+  href?: string;
+  children: React.ReactNode;
+}> = ({ href, children }) => (
+  <>
+    {href ? (
+      <a href={href} style={{ color: charcoal.rgb, textDecoration: 'inherit' }}>
+        {children}
+      </a>
+    ) : (
+      children
+    )}
+  </>
+);
 
 const Tag: React.FC<TagProps> = ({
   children,
   highlight = false,
   enabled = true,
+  href,
   onRemove,
   title,
 }) => (
   <div css={containerStyles} title={title}>
-    <div
-      css={[styles, highlight && highlightStyles, !enabled && disabledStyles]}
-    >
-      <Ellipsis>{children}</Ellipsis>
-      {onRemove && (
-        <button css={iconStyles} onClick={onRemove}>
-          {crossSmallIcon}
-        </button>
-      )}
-    </div>
+    <ConditionalLinkWrapper href={enabled ? href : undefined}>
+      <div
+        css={[
+          styles,
+          ...(enabled
+            ? [highlight && highlightStyles, !!href && hoverStyles]
+            : [disabledStyles]),
+        ]}
+      >
+        <Ellipsis>{children}</Ellipsis>
+        {!!onRemove && enabled && (
+          <button css={iconStyles} onClick={onRemove}>
+            {crossSmallIcon}
+          </button>
+        )}
+      </div>
+    </ConditionalLinkWrapper>
   </div>
 );
 

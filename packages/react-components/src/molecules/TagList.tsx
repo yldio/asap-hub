@@ -31,7 +31,7 @@ const centerListStyles = css({
   gap: `${15 / perRem}em`,
 });
 
-const centeredItemStyles = css({
+const centredItemStyles = css({
   marginBottom: 0,
   ':not(:nth-last-of-type(1))': {
     paddingRight: 0,
@@ -70,7 +70,7 @@ const overflowStyles = css({
 
 const SAFARI_MAX_SAFE_INTEGER = 2 ** 31 - 2;
 interface TagListProps {
-  tags: ReadonlyArray<string>;
+  tags: ReadonlyArray<string | { tag: string; href: string }>;
   enabled?: boolean;
   min?: number;
   max?: number;
@@ -98,12 +98,18 @@ const TagList: React.FC<TagListProps> = ({
           css={[
             normalListItemStyles,
             summarizedListItemStyles(min, max),
-            centerContent && centeredItemStyles,
+            centerContent && centredItemStyles,
           ]}
         >
-          <Tag title={tag} enabled={enabled}>
-            {tag}
-          </Tag>
+          {typeof tag === 'string' ? (
+            <Tag title={tag} enabled={enabled}>
+              {tag}
+            </Tag>
+          ) : (
+            <Tag title={tag.tag} href={tag.href} enabled={enabled}>
+              {tag.tag}
+            </Tag>
+          )}
         </li>
       ))}
       <li key="overflow" className="overflow" css={overflowStyles}>

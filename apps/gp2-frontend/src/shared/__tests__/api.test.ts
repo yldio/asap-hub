@@ -15,7 +15,7 @@ describe('getKeywords', () => {
     const keywordsResponse: gp2Model.ListTagsResponse =
       gp2Fixtures.createTagsResponse();
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/keywords')
+      .get('/tags')
       .reply(200, keywordsResponse);
 
     const result = await getKeywords('Bearer x');
@@ -24,7 +24,7 @@ describe('getKeywords', () => {
 
   it('errors for error status', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/keywords')
+      .get('/tags')
       .reply(500);
 
     await expect(

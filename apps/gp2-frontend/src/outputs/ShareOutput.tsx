@@ -45,7 +45,7 @@ const ShareOutput: React.FC<Record<string, never>> = () => {
         cohortSuggestions={cohortSuggestions}
         workingGroupSuggestions={workingGroupSuggestions}
         projectSuggestions={projectSuggestions}
-        mainEntity={output.mainEntity}
+        mainEntityId={output.mainEntity.id}
         projects={output.projects}
         workingGroups={output.workingGroups}
       />

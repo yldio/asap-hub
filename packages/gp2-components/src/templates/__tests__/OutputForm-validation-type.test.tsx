@@ -13,7 +13,7 @@ describe('OutputForm', () => {
     cohortSuggestions: [],
     workingGroupSuggestions: [],
     projectSuggestions: [],
-    mainEntity: { id: '12', title: 'a title' },
+    mainEntityId: '12',
   };
 
   describe('validation', () => {

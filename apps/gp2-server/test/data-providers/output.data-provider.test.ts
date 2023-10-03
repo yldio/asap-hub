@@ -206,6 +206,19 @@ describe('Outputs data provider', () => {
       expect(result!.authors).toEqual([]);
     });
 
+    test('Should default projects and WG to undefined when related entities is empty', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlResponse!.relatedEntitiesCollection = null;
+      graphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
+
+      const result = await outputDataProvider.fetchById(outputId);
+
+      expect(result!.projects).toEqual(undefined);
+      expect(result!.workingGroups).toEqual(undefined);
+    });
+
     describe('Authors', () => {
       const getInternalUsers = (): InternalUser[] => [
         {
@@ -747,7 +760,6 @@ describe('Outputs data provider', () => {
       const {
         workingGroupIds: __,
         projectIds,
-        mainEntityId,
         ...fieldsCreated
       } = outputRequest;
       const fields = addLocaleToFields({
@@ -893,7 +905,7 @@ describe('Outputs data provider', () => {
 
       await outputDataProvider.update(outputId, outputUpdateData);
 
-      const { mainEntityId, projectIds, ...fieldsUpdated } = outputUpdateData;
+      const { projectIds, ...fieldsUpdated } = outputUpdateData;
       const fields = {
         ...fieldsUpdated,
         authors: outputUpdateData.authors.map((author) => ({

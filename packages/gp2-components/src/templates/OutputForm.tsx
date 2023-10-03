@@ -111,6 +111,7 @@ type OutputFormProps = {
     'id' | 'title'
   >[];
   projectSuggestions: Pick<gp2Model.ProjectDataObject, 'id' | 'title'>[];
+  mainEntityId: string;
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -132,8 +133,7 @@ type OutputFormProps = {
     | 'workingGroups'
     | 'projects'
   >
-> &
-  Pick<gp2Model.OutputResponse, 'mainEntity'>;
+>;
 
 export const getPostAuthors = (
   authors: ComponentPropsWithRef<typeof AuthorSelect>['values'],
@@ -170,7 +170,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   getRelatedOutputSuggestions,
   cohortSuggestions,
   contributingCohorts,
-  mainEntity,
+  mainEntityId,
   workingGroups,
   projects,
   workingGroupSuggestions,
@@ -271,7 +271,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
       title: output.label,
       documentType: output.documentType as gp2Model.OutputDocumentType,
     })),
-    mainEntityId: mainEntity.id,
+    mainEntityId,
     workingGroupIds:
       newWorkingGroups.length > 0
         ? newWorkingGroups.map(({ id }) => id)

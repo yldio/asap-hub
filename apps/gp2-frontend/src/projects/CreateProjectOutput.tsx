@@ -41,12 +41,10 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
   });
 
   const project = useProjectById(projectId);
-  const mainEntity = project
-    ? {
-        id: project.id,
-        title: project.title,
-      }
-    : ({} as gp2Model.OutputOwner);
+  const mainEntity = {
+    id: projectId,
+    title: project?.title || '',
+  };
 
   return (
     <CreateOutputPage
@@ -70,7 +68,7 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
         workingGroupSuggestions={workingGroupSuggestions}
         projectSuggestions={projectSuggestions}
         projects={[mainEntity]}
-        mainEntity={mainEntity}
+        mainEntityId={projectId}
       />
     </CreateOutputPage>
   );

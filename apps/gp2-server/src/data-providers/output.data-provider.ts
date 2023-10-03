@@ -317,7 +317,7 @@ export const parseContentfulGraphQLOutput = (
     data.relatedOutputsCollection?.items,
   );
   const relatedEntity = getEntity(data.relatedEntity); // TODO: remove on cleanup
-  const mainEntity = getEntity(data.mainEntity);
+  const mainEntity = getEntity(data.relatedEntitiesCollection?.items[0]);
   const relatedEntities = getRelatedEntities(
     data.relatedEntitiesCollection?.items,
   );

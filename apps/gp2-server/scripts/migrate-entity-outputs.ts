@@ -48,7 +48,6 @@ const app = async () => {
         ),
         workingGroupIds: output.workingGroups?.map(({ id }) => id),
         projectIds: output.projects?.map(({ id }) => id),
-        mainEntityId: output.relatedEntity?.id!,
       });
 
       console.log(`output with id ${output.id} updated.`);

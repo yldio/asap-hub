@@ -31,12 +31,10 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
   });
 
   const workingGroup = useWorkingGroupById(workingGroupId);
-  const mainEntity = workingGroup
-    ? {
-        id: workingGroup.id,
-        title: workingGroup.title,
-      }
-    : ({} as gp2Model.OutputOwner);
+  const mainEntity = {
+    id: workingGroupId,
+    title: workingGroup?.title || '',
+  };
 
   return (
     <CreateOutputPage
@@ -59,7 +57,7 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         cohortSuggestions={cohortSuggestions}
         workingGroupSuggestions={workingGroupSuggestions}
         projectSuggestions={projectSuggestions}
-        mainEntity={mainEntity}
+        mainEntityId={workingGroupId}
         workingGroups={[mainEntity]}
       />
     </CreateOutputPage>

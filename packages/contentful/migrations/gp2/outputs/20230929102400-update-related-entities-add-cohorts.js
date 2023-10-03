@@ -5,21 +5,6 @@ module.exports.up = function (migration) {
   const outputs = migration.editContentType('outputs');
 
   outputs
-    .createField('mainEntity')
-    .name('Main Entity')
-    .type('Link')
-    .localized(false)
-    .required(true)
-    .validations([
-      {
-        linkContentType: ['projects', 'workingGroups'],
-      },
-    ])
-    .disabled(false)
-    .omitted(false)
-    .linkType('Entry');
-
-  outputs
     .createField('relatedEntities')
     .name('Related Entities')
     .type('Array')

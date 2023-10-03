@@ -143,8 +143,8 @@ export type OutputCreateDataObject = OutputCoreObject & {
   createdBy: string;
   workingGroupIds?: string[];
   projectIds?: string[];
+  mainEntityId?: string;
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
-  mainEntityId: string;
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
@@ -152,8 +152,8 @@ export type OutputUpdateDataObject = OutputCoreObject & {
   updatedBy: string;
   workingGroupIds?: string[];
   projectIds?: string[];
+  mainEntityId?: string;
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
-  mainEntityId: string;
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;

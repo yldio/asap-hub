@@ -118,7 +118,6 @@ export default class OutputController {
       relatedOutputs: outputUpdateData.relatedOutputs,
       projectIds: outputUpdateData.projectIds,
       workingGroupIds: outputUpdateData.workingGroupIds,
-      mainEntityId: outputUpdateData.mainEntityId,
       contributingCohorts: outputUpdateData.contributingCohorts,
     };
 

@@ -56,7 +56,6 @@ const OutputList: React.FC<OutputListProps> = ({
     authorId,
   });
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
-  console.log(items);
   return total || searchQuery ? (
     <ResultList
       icon={noOutputsIcon}

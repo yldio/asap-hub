@@ -52,13 +52,12 @@ export const tutorialsListState = selectorFamily<
     ({ get }) => {
       const index = get(tutorialsIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const tutorialsList = index.ids.reduce((acc: TutorialsResponse[], id) => {
+      const tutorialsList: TutorialsResponse[] = [];
+      for (const id of index.ids) {
         const tutorialItem = get(tutorialState(id));
-        if (tutorialItem === undefined) {
-          return acc;
-        }
-        return [...acc, tutorialItem];
-      }, []);
+        if (tutorialItem === undefined) return undefined;
+        tutorialsList.push(tutorialItem);
+      }
       return { total: index.total, items: tutorialsList };
     },
   set:
@@ -68,10 +67,6 @@ export const tutorialsListState = selectorFamily<
         updatedTutorials === undefined ||
         updatedTutorials instanceof DefaultValue
       ) {
-        const oldTutorials = get(tutorialsIndexState(options));
-        if (!(oldTutorials instanceof Error)) {
-          oldTutorials?.ids?.forEach((id) => reset(tutorialState(id)));
-        }
         reset(tutorialsIndexState(options));
       } else if (updatedTutorials instanceof Error) {
         set(tutorialsIndexState(options), updatedTutorials);

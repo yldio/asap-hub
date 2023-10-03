@@ -65,7 +65,7 @@ export class TutorialContentfulDataProvider implements TutorialDataProvider {
     >(FETCH_TUTORIALS, {
       limit: take,
       skip,
-      where,
+      where: searchTerms.length ? where : null,
     });
 
     const trainingCollection = discoverCollection?.items[0]?.trainingCollection;

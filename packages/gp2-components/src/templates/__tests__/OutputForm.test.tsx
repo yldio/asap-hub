@@ -819,6 +819,19 @@ describe('OutputForm', () => {
       expect(screen.getByText('A WG title')).toBeVisible();
       expect(screen.getByText('WG 1')).toBeVisible();
     });
+
+    it('shows the custom no options message for working groups', async () => {
+      renderWithSuggestions();
+
+      userEvent.type(
+        screen.getByLabelText(/working groups/i),
+        'asdflkjasdflkj',
+      );
+
+      expect(
+        screen.getByText('Sorry, no working groups match asdflkjasdflkj'),
+      ).toBeVisible();
+    });
   });
 
   describe('projects', () => {
@@ -865,6 +878,16 @@ describe('OutputForm', () => {
       userEvent.click(screen.getByText('Project 1'));
       expect(screen.getByText('A Project title')).toBeVisible();
       expect(screen.getByText('Project 1')).toBeVisible();
+    });
+
+    it('shows the custom no options message for projects', async () => {
+      renderWithSuggestions();
+
+      userEvent.type(screen.getByLabelText(/projects/i), 'asdflkjasdflkj');
+
+      expect(
+        screen.getByText('Sorry, no projects match asdflkjasdflkj'),
+      ).toBeVisible();
     });
   });
 

@@ -218,6 +218,82 @@ describe('Outputs data provider', () => {
       expect(result!.projects).toEqual(undefined);
       expect(result!.workingGroups).toEqual(undefined);
     });
+    // TODO: to remove on cleanup
+    test('Should default projects to related entity', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlResponse!.relatedEntitiesCollection = null;
+      graphqlResponse!.relatedEntity = {
+        __typename: 'Projects',
+        sys: { id: '1' },
+      };
+      console.log(graphqlResponse);
+      graphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
+
+      const result = await outputDataProvider.fetchById(outputId);
+      console.log(result);
+
+      expect(result!.projects).toEqual([expect.objectContaining({ id: '1' })]);
+    });
+
+    // TODO: to remove on cleanup
+    test('Should default projects to undefined when no related entity', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlResponse!.relatedEntitiesCollection = null;
+      graphqlResponse!.relatedEntity = null;
+      graphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
+
+      const result = await outputDataProvider.fetchById(outputId);
+
+      expect(result!.projects).toEqual(undefined);
+    });
+    // TODO: to remove on cleanup
+    test('Should default WG to related entity', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlResponse!.relatedEntitiesCollection = null;
+      graphqlResponse!.relatedEntity = {
+        __typename: 'WorkingGroups',
+        sys: { id: '1' },
+      };
+      graphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
+
+      const result = await outputDataProvider.fetchById(outputId);
+
+      expect(result!.workingGroups).toEqual([
+        expect.objectContaining({ id: '1' }),
+      ]);
+    });
+
+    // TODO: to remove on cleanup
+    test('Should default WG to undefined when no related entity', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlResponse!.relatedEntitiesCollection = null;
+      graphqlResponse!.relatedEntity = null;
+      graphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
+
+      const result = await outputDataProvider.fetchById(outputId);
+
+      expect(result!.workingGroups).toEqual(undefined);
+    });
+
+    test('Should default cohorts to an empty array when missing', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlResponse!.contributingCohortsCollection = null;
+      graphqlClientMock.request.mockResolvedValueOnce({
+        outputs: graphqlResponse,
+      });
+
+      const result = await outputDataProvider.fetchById(outputId);
+
+      expect(result!.contributingCohorts).toEqual([]);
+    });
 
     describe('Authors', () => {
       const getInternalUsers = (): InternalUser[] => [

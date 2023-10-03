@@ -93,3 +93,17 @@ it('is not rendered when not own profile and without expertiseAndResourceTags', 
 
   expect(container).toBeEmptyDOMElement();
 });
+
+it('should not render the first section when hideExpertiseAndResources is true', () => {
+  const { queryByText } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <ProfileExpertiseAndResources
+        expertiseAndResourceDescription="Description that should not be rendered"
+        expertiseAndResourceTags={[]}
+        hideExpertiseAndResources
+      />
+    </UserProfileContext.Provider>,
+  );
+
+  expect(queryByText(/should not be rendered/i)).toBeNull();
+});

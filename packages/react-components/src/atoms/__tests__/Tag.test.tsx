@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import userEvent from '@testing-library/user-event';
 import Tag from '../Tag';
@@ -48,4 +48,19 @@ it('renders the remove Button if the onRemove is provided', () => {
   expect(onRemoveButton).toBeVisible();
   userEvent.click(onRemoveButton);
   expect(onRemove).toBeCalled();
+});
+
+it('renders as a link when one is provided', () => {
+  const { rerender } = render(<Tag title="Text">Test</Tag>);
+  expect(screen.getByText('Test').closest('a')).toBeNull();
+
+  rerender(
+    <Tag title="Text" href="http://example.com">
+      Test
+    </Tag>,
+  );
+  expect(screen.getByText('Test').closest('a')).toHaveAttribute(
+    'href',
+    'http://example.com',
+  );
 });

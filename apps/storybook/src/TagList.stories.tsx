@@ -23,3 +23,22 @@ export const Normal = () => (
     ])}
   />
 );
+
+export const LinkTagList = () => (
+  <TagList
+    min={number('Minimum number of tags shown on mobile', 3)}
+    max={number('Maximum number of tags shown on desktop', 5)}
+    enabled={boolean('Enabled', true)}
+    tags={[
+      { tag: 'Neurological Diseases', href: '#' },
+      { tag: 'Clinical Neurology', href: '#' },
+      { tag: 'Adult Neurology', href: '#' },
+      { tag: 'Neuroimaging', href: '#' },
+      { tag: 'Neurologic Examination', href: '#' },
+      { tag: 'Neuroprotection', href: '#' },
+      { tag: 'Movement Disorders', href: '#' },
+      { tag: 'Neurodegenerative Diseases', href: '#' },
+      { tag: 'Neurological Diseases', href: '#' },
+    ]}
+  />
+);

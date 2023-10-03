@@ -1,9 +1,9 @@
 import { gp2 } from '@asap-hub/model';
 
 export const mockedKeywords: gp2.KeywordResponse[] = [
-  { id: '1', name: 'Keyword-1' },
-  { id: '2', name: 'Keyword-2' },
-  { id: '3', name: 'Keyword-3' },
+  { id: '7', name: 'Keyword-7' },
+  { id: '11', name: 'Keyword-11' },
+  { id: '23', name: 'Keyword-23' },
 ];
 
 export const createKeywordsResponse = (): gp2.ListKeywordsResponse => ({

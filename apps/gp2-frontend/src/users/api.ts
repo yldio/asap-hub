@@ -1,4 +1,5 @@
-import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import { AlgoliaClient } from '@asap-hub/algolia';
+import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2, InstitutionsResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
@@ -32,6 +33,46 @@ export const createUserApiUrl = ({
 
   return url;
 };
+
+const getAllFilters = ({
+  projects,
+  workingGroups,
+  regions,
+  keywords,
+}: gp2.FetchUsersFilter) => {
+  const addFilter = ({
+    name,
+    items = [],
+  }: {
+    name: string;
+    items?: string[];
+  }) => items?.map((item) => `${name}:"${item}"`).join(' OR ');
+
+  return [
+    { name: 'region', items: regions },
+    { name: 'tagIds', items: keywords },
+    { name: 'projectIds', items: projects },
+    { name: 'workingGroupIds', items: workingGroups },
+  ]
+    .map(addFilter)
+    .filter(Boolean)
+    .join(' AND ');
+};
+
+export type UserListOptions = GetListOptions & gp2.FetchUsersFilter;
+export const getAlgoliaUsers = async (
+  client: AlgoliaClient<'gp2'>,
+  options: UserListOptions,
+) =>
+  client
+    .search(['user'], options.searchQuery ? options.searchQuery : '', {
+      page: options.currentPage ?? 0,
+      hitsPerPage: options.pageSize ?? 10,
+      filters: getAllFilters(options),
+    })
+    .catch((error: Error) => {
+      throw new Error(`Could not search: ${error.message}`);
+    });
 
 export const getUsers = async (
   options: gp2.FetchUsersOptions,

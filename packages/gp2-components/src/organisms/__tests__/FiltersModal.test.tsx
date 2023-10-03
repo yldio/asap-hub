@@ -13,6 +13,7 @@ describe('FiltersModal', () => {
     filters: {},
     projects: [],
     workingGroups: [],
+    keywords: [],
   };
   const projects: ComponentProps<typeof FiltersModal>['projects'] = [
     {
@@ -25,6 +26,9 @@ describe('FiltersModal', () => {
       id: '11',
       title: 'a working group',
     },
+  ];
+  const keywords: ComponentProps<typeof FiltersModal>['keywords'] = [
+    { id: '32', name: 'Data Science' },
   ];
   const getRegionsField = () =>
     screen.getByRole('textbox', { name: 'Regions' });
@@ -74,21 +78,21 @@ describe('FiltersModal', () => {
     ).toBeVisible();
   });
   it('should select an expertise', () => {
-    render(<FiltersModal {...defaultProps} />);
+    render(<FiltersModal {...defaultProps} keywords={keywords} />);
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`0 filters`);
     userEvent.click(getExpertiseField());
-    userEvent.type(getExpertiseField(), 'Parkinson’s');
-    userEvent.click(screen.getByText('Advanced Parkinson’s therapies'));
+    userEvent.type(getExpertiseField(), 'Data');
+    userEvent.click(screen.getByText('Data Science'));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain(`1 filter`);
   });
   it('renders the no options message for expertise', () => {
-    render(<FiltersModal {...defaultProps} />);
+    render(<FiltersModal {...defaultProps} keywords={keywords} />);
     userEvent.type(getExpertiseField(), 'LTX');
     expect(
       screen.getByText(/sorry, no current expertise \/ interests match "ltx"/i),
@@ -161,13 +165,13 @@ describe('FiltersModal', () => {
     });
   });
   it('calls the onApplyClick function with correct expertise filters', () => {
-    render(<FiltersModal {...defaultProps} />);
+    render(<FiltersModal {...defaultProps} keywords={keywords} />);
     userEvent.click(getExpertiseField());
-    userEvent.click(screen.getByText('Administrative Support'));
+    userEvent.click(screen.getByText('Data Science'));
     userEvent.click(getApplyButton());
     expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
       regions: [],
-      keywords: ['Administrative Support'],
+      keywords: [keywords[0]!.id],
       projects: [],
       workingGroups: [],
     });
@@ -200,7 +204,7 @@ describe('FiltersModal', () => {
   it.each`
     name               | getField                 | value
     ${'region'}        | ${getRegionsField}       | ${'Asia'}
-    ${'expertise'}     | ${getExpertiseField}     | ${'Administrative Support'}
+    ${'expertise'}     | ${getExpertiseField}     | ${keywords[0]!.name}
     ${'project'}       | ${getProjectsField}      | ${projects[0]!.title}
     ${'working group'} | ${getWorkingGroupsField} | ${workingGroups[0]!.title}
   `('resets selected filter, $name, on Reset', ({ getField, value }) => {
@@ -209,6 +213,7 @@ describe('FiltersModal', () => {
         {...defaultProps}
         projects={projects}
         workingGroups={workingGroups}
+        keywords={keywords}
       />,
     );
     const resetButton = screen.getByRole('button', { name: 'Reset' });
@@ -231,11 +236,11 @@ describe('FiltersModal', () => {
   });
 
   it.each`
-    name               | value                       | expected
-    ${'keywords'}      | ${'Administrative Support'} | ${'Administrative Support'}
-    ${'regions'}       | ${'Asia'}                   | ${'Asia'}
-    ${'projects'}      | ${projects[0]!.id}          | ${projects[0]!.title}
-    ${'workingGroups'} | ${workingGroups[0]!.id}     | ${workingGroups[0]!.title}
+    name               | value                   | expected
+    ${'keywords'}      | ${keywords[0]!.id}      | ${keywords[0]!.name}
+    ${'regions'}       | ${'Asia'}               | ${'Asia'}
+    ${'projects'}      | ${projects[0]!.id}      | ${projects[0]!.title}
+    ${'workingGroups'} | ${workingGroups[0]!.id} | ${workingGroups[0]!.title}
   `('displays current filter $name', ({ name, value, expected }) => {
     const filters: gp2Model.FetchUsersFilter = {
       [name]: [value],
@@ -245,6 +250,7 @@ describe('FiltersModal', () => {
         {...defaultProps}
         projects={projects}
         workingGroups={workingGroups}
+        keywords={keywords}
         filters={filters}
       />,
     );
@@ -255,6 +261,29 @@ describe('FiltersModal', () => {
     expect(screen.getByText(expected)).toBeVisible();
   });
   describe('sorting', () => {
+    it('sorts keyword', () => {
+      const keywordList = [
+        {
+          id: '42',
+          name: 'KeywordB',
+        },
+        {
+          id: '27',
+          name: 'KeywordC',
+        },
+        {
+          id: '11',
+          name: 'KeywordA',
+        },
+      ];
+      render(<FiltersModal {...defaultProps} keywords={keywordList} />);
+      userEvent.click(getExpertiseField());
+      const options =
+        screen.getByText('KeywordA').parentElement?.childNodes || [];
+      expect(options[0]!).toHaveTextContent('KeywordA');
+      expect(options[1]).toHaveTextContent('KeywordB');
+      expect(options[2]).toHaveTextContent('KeywordC');
+    });
     it('sorts projects', () => {
       const projectsList = [
         {

@@ -15,9 +15,13 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useSearch } from '../../hooks/search';
 import { getAlgoliaProjects } from '../../projects/api';
+import { getKeywords } from '../../shared/api';
 import { getWorkingGroups } from '../../working-groups/api';
-import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
-import { getUsers } from '../api';
+import {
+  createProjectListAlgoliaResponse,
+  createUserListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
+import { getAlgoliaUsers, getUsers } from '../api';
 import { MAX_RESULTS } from '../export';
 import UserDirectory from '../UserDirectory';
 
@@ -34,6 +38,10 @@ jest.mock('../api');
 jest.mock('../../projects/api');
 jest.mock('../../working-groups/api');
 jest.mock('../../hooks/search');
+jest.mock('../../shared/api');
+const mockGetAlgoliaUsers = getAlgoliaUsers as jest.MockedFunction<
+  typeof getAlgoliaUsers
+>;
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
   typeof getAlgoliaProjects
@@ -45,25 +53,32 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
+const mockGetKeywords = getKeywords as jest.MockedFunction<typeof getKeywords>;
 
 const renderUserDirectory = async ({
   listUserResponse = gp2Fixtures.createUsersResponse(),
+  listUserAlgoliaResponse = createUserListAlgoliaResponse(1),
   listProjectResponse = createProjectListAlgoliaResponse(1),
   listWorkingGroupResponse = gp2Fixtures.createWorkingGroupsResponse(),
+  listKeywordResponse = gp2Fixtures.createKeywordsResponse(),
   displayFilters = false,
   isAdministrator = false,
   filters = {},
 }: {
+  listUserAlgoliaResponse?: ClientSearchResponse<'gp2', 'user'>;
   listUserResponse?: gp2Model.ListUserResponse;
   listProjectResponse?: ClientSearchResponse<'gp2', 'project'>;
   listWorkingGroupResponse?: gp2Model.ListWorkingGroupResponse;
+  listKeywordResponse?: gp2Model.ListKeywordsResponse;
   displayFilters?: boolean;
   isAdministrator?: boolean;
   filters?: Partial<ReturnType<typeof useSearch>['filters']>;
 } = {}) => {
-  mockGetUsers.mockResolvedValue(listUserResponse);
+  mockGetAlgoliaUsers.mockResolvedValue(listUserAlgoliaResponse);
   mockGetProjects.mockResolvedValue(listProjectResponse);
   mockGetWorkingGroups.mockResolvedValue(listWorkingGroupResponse);
+  mockGetKeywords.mockResolvedValue(listKeywordResponse);
+  mockGetUsers.mockResolvedValue(listUserResponse);
 
   const mockUpdateFilter = jest.fn();
   const mockToggleFilter = jest.fn();
@@ -114,7 +129,7 @@ it('renders the filters modal', async () => {
 it.each`
   name               | value
   ${'regions'}       | ${'Asia'}
-  ${'keywords'}      | ${'Aging'}
+  ${'keywords'}      | ${'11'}
   ${'projects'}      | ${'42'}
   ${'workingGroups'} | ${'42'}
 `(
@@ -137,14 +152,17 @@ it.each`
 it('triggers export with the same parameters but overrides onlyOnboarded with false', async () => {
   await renderUserDirectory({ isAdministrator: true });
   await waitFor(() =>
-    expect(mockGetUsers).toHaveBeenCalledWith(
-      expect.objectContaining({
-        filter: { regions: [], keywords: [], projects: [], workingGroups: [] },
-        search: '',
-        skip: 0,
-        take: 10,
-      }),
+    expect(mockGetAlgoliaUsers).toHaveBeenCalledWith(
       expect.anything(),
+      expect.objectContaining({
+        currentPage: 0,
+        pageSize: 10,
+        searchQuery: '',
+        keywords: [],
+        regions: [],
+        projects: [],
+        workingGroups: [],
+      }),
     ),
   );
   userEvent.click(screen.getByRole('button', { name: 'Export Export' }));

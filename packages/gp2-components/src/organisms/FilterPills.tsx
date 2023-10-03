@@ -1,6 +1,7 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { pixels, Tag } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
+import { useMemo } from 'react';
 
 const { rem } = pixels;
 
@@ -17,6 +18,7 @@ type FilterPillsProps = {
   filters: FiltersType;
   projects: ProjectsType;
   workingGroups: WorkingGroupsType;
+  keywords: gp2Model.KeywordResponse[];
   onRemove: (id: string, typeOfFilter: FilterType) => void;
 };
 
@@ -32,55 +34,63 @@ const containerStyles = css({
   },
 });
 
-const getLabelFromArray = (
-  array: ProjectsType | WorkingGroupsType,
-  id: string,
-) => {
-  const index = array.findIndex((elem) => elem.id === id);
-
-  return array[index]?.title ?? '';
+const getArrayLookup = (array: ProjectsType | WorkingGroupsType) => {
+  const lookup = Object.fromEntries(array.map(({ id, title }) => [id, title]));
+  return (id: string) => lookup[id] ?? '';
 };
 
 const FilterPills: React.FC<FilterPillsProps> = ({
   filters,
   workingGroups,
   projects,
+  keywords,
   onRemove,
-}) => (
-  <div css={containerStyles}>
-    {filters.keywords?.map((filter: string) => (
-      <Tag
-        key={`filter-pill-${filter}`}
-        onRemove={() => onRemove(filter, 'keywords')}
-      >
-        {filter}
-      </Tag>
-    ))}
-    {filters.regions?.map((filter: string) => (
-      <Tag
-        key={`filter-pill-${filter}`}
-        onRemove={() => onRemove(filter, 'regions')}
-      >
-        {filter}
-      </Tag>
-    ))}
-    {filters.workingGroups?.map((filter: string) => (
-      <Tag
-        key={`filter-pill-${filter}`}
-        onRemove={() => onRemove(filter, 'workingGroups')}
-      >
-        {getLabelFromArray(workingGroups, filter)}
-      </Tag>
-    ))}
-    {filters.projects?.map((filter: string) => (
-      <Tag
-        key={`filter-pill-${filter}`}
-        onRemove={() => onRemove(filter, 'projects')}
-      >
-        {getLabelFromArray(projects, filter)}
-      </Tag>
-    ))}
-  </div>
-);
+}) => {
+  const lookupKeyword = useMemo(
+    () => getArrayLookup(keywords.map(({ id, name }) => ({ id, title: name }))),
+    [keywords],
+  );
+  const lookupWorkingGroup = useMemo(
+    () => getArrayLookup(workingGroups),
+    [workingGroups],
+  );
+  const lookupProject = useMemo(() => getArrayLookup(projects), [projects]);
+  return (
+    <div css={containerStyles}>
+      {filters.keywords?.map((filter: string) => (
+        <Tag
+          key={`filter-pill-${filter}`}
+          onRemove={() => onRemove(filter, 'keywords')}
+        >
+          {lookupKeyword(filter)}
+        </Tag>
+      ))}
+      {filters.regions?.map((filter: string) => (
+        <Tag
+          key={`filter-pill-${filter}`}
+          onRemove={() => onRemove(filter, 'regions')}
+        >
+          {filter}
+        </Tag>
+      ))}
+      {filters.workingGroups?.map((filter: string) => (
+        <Tag
+          key={`filter-pill-${filter}`}
+          onRemove={() => onRemove(filter, 'workingGroups')}
+        >
+          {lookupWorkingGroup(filter)}
+        </Tag>
+      ))}
+      {filters.projects?.map((filter: string) => (
+        <Tag
+          key={`filter-pill-${filter}`}
+          onRemove={() => onRemove(filter, 'projects')}
+        >
+          {lookupProject(filter)}
+        </Tag>
+      ))}
+    </div>
+  );
+};
 
 export default FilterPills;

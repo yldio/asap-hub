@@ -1,6 +1,5 @@
 import { FetchOptions, ListResponse } from '../common';
 import { Connection, UserSocialLinks } from '../user';
-import { Keyword } from './common';
 import { KeywordDataObject } from './keywords';
 import { ProjectDataObject, ProjectMember } from './project';
 import { WorkingGroupDataObject, WorkingGroupMember } from './working-group';
@@ -167,7 +166,7 @@ export type FetchUsersSearchFilter = {
   projects?: string[];
   workingGroups?: string[];
   regions?: UserRegion[];
-  keywords?: Keyword[];
+  keywords?: string[];
 };
 export type FetchUsersFilter = FetchUsersSearchFilter & {
   code?: string;

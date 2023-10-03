@@ -1,7 +1,15 @@
+import { ClientSearchResponse } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2, InstitutionsResponse } from '@asap-hub/model';
+import { createUserListAlgoliaResponse } from '../../__fixtures__/algolia';
 
+export const getAlgoliaUsers = jest.fn(
+  async ({
+    pageSize,
+  }: GetListOptions): Promise<ClientSearchResponse<'gp2', 'user'>> =>
+    createUserListAlgoliaResponse(pageSize ?? 10),
+);
 export const getUsers = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<gp2.ListUserResponse> =>
     gp2Fixtures.createUsersResponse(pageSize ?? 10),

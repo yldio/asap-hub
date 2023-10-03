@@ -1,7 +1,7 @@
 import { FiltersModal, UsersPageBody } from '@asap-hub/gp2-components';
 import { ComponentProps } from 'react';
 import { usePagination, usePaginationParams } from '../hooks/pagination';
-import { useUsersState } from './state';
+import { useUsers } from './state';
 
 type UserListProps = {
   searchQuery: string;
@@ -9,12 +9,17 @@ type UserListProps = {
 
 const UserList: React.FC<UserListProps> = ({ searchQuery, filters }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const userList = useUsersState({
-    skip: currentPage * pageSize,
-    take: pageSize,
-    search: searchQuery,
-    filter: filters,
+  const userList = useUsers({
+    currentPage,
+    pageSize,
+    searchQuery,
+    filters: new Set(),
+    keywords: filters.keywords,
+    regions: filters.regions,
+    projects: filters.projects,
+    workingGroups: filters.workingGroups,
   });
+
   const { numberOfPages, renderPageHref } = usePagination(
     userList.total,
     pageSize,

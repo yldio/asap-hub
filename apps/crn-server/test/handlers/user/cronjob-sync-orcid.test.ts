@@ -1,8 +1,8 @@
 import nock from 'nock';
-import { unloggedHandler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
+import { unloggedHandler } from '../../../src/handlers/user/cronjob-sync-orcid';
 import { getDataProviderMock } from '../../mocks/data-provider.mock';
 import { fetchUserResponseDataObject } from '../../fixtures/users.fixtures';
-import * as fixtures from './cronjob-sync-orcid.fixtures';
+import * as fixtures from '../webhooks/cronjob-sync-orcid.fixtures';
 
 const mockDataProvider = getDataProviderMock();
 

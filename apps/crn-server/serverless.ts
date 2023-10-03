@@ -741,7 +741,7 @@ const serverlessConfig: AWS = {
       },
     },
     cronjobSyncOrcidContentful: {
-      handler: './src/handlers/webhooks/cronjob-sync-orcid.handler',
+      handler: './src/handlers/user/cronjob-sync-orcid.handler',
       timeout: 120,
       events: [
         {

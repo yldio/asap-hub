@@ -9,10 +9,14 @@
     "authors.id",
     "documentType",
     "project.id",
+    "projectIds",
+    "region",
     "speakers.user.id",
     "status",
     "type",
-    "workingGroup.id"
+    "tagIds",
+    "workingGroup.id",
+    "workingGroupIds"
   ],
   "attributesToIndex": [
     "authors.displayName",

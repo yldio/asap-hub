@@ -1,5 +1,5 @@
 import { caseInsensitive, CSVValue } from '@asap-hub/frontend-utils';
-import { FetchOptions, gp2 } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import { formatDate } from '@asap-hub/react-components';
 import { isInternalUser } from '@asap-hub/validation';
 /* eslint-disable-next-line import/no-unresolved */
@@ -56,9 +56,12 @@ export const outputToCSV = ({
 export const outputsResponseToStream = async (
   csvStream: Stringifier,
   getResults: ({
-    take,
-    skip,
-  }: FetchOptions) => Readonly<Promise<gp2.ListOutputResponse>>,
+    pageSize,
+    currentPage,
+  }: {
+    pageSize: number;
+    currentPage: number;
+  }) => Readonly<Promise<gp2.ListOutputResponse>>,
   transform: (result: gp2.OutputResponse) => Record<string, unknown>,
 ) => {
   let morePages = true;
@@ -67,8 +70,8 @@ export const outputsResponseToStream = async (
     // We are doing this in chunks and streams to avoid blob/ram limits.
     // eslint-disable-next-line no-await-in-loop
     const data = await getResults({
-      skip: currentPage * MAX_RESULTS,
-      take: MAX_RESULTS,
+      currentPage,
+      pageSize: MAX_RESULTS,
     });
     data.items.map(transform).forEach((row) => csvStream.write(row));
     currentPage += 1;

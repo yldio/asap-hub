@@ -23,19 +23,23 @@ export const indexUserHandler =
   async (event) => {
     log.debug(`Event ${event['detail-type']}`);
 
-    const reindexOutput = async (id: string) => {
+    const reindexUser = async (id: string) => {
       try {
         const user = await userController.fetchById(id);
         log.debug(`Fetched user ${user.id}`);
 
-        await algoliaClient.save({
-          data: user,
-          type: 'user',
-        });
+        if (user.onboarded && user.role !== 'Hidden') {
+          await algoliaClient.save({
+            data: user,
+            type: 'user',
+          });
 
-        log.debug(`Saved user ${user.id}`);
+          log.debug(`Saved user ${user.id}`);
+        } else {
+          await algoliaClient.remove(event.detail.resourceId);
 
-        return user;
+          logger.debug(`User removed ${user.id}`);
+        }
       } catch (e) {
         log.error(e, `Error while reindexing user ${id}`);
         if (isBoom(e) && e.output.statusCode === 404) {
@@ -47,7 +51,7 @@ export const indexUserHandler =
     };
 
     try {
-      await reindexOutput(event.detail.resourceId);
+      await reindexUser(event.detail.resourceId);
     } catch (e) {
       log.error(e, `Error while reindexing user ${event.detail.resourceId}`);
       if (isBoom(e) && e.output.statusCode === 404) {

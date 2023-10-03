@@ -23,6 +23,16 @@ describe('OutputCard', () => {
     );
   });
 
+  it('renders project pill', () => {
+    render(
+      <OutputCard
+        {...defaultProps}
+        projects={[{ id: '42', title: 'project name' }]}
+      />,
+    );
+    expect(screen.getByText('Project')).toBeVisible();
+  });
+
   it('renders link to workingGroup', () => {
     render(
       <OutputCard
@@ -33,6 +43,21 @@ describe('OutputCard', () => {
     expect(
       screen.getByRole('link', { name: /working group name/i }),
     ).toHaveAttribute('href', expect.stringContaining('42'));
+  });
+
+  it('renders working Group pill', () => {
+    render(
+      <OutputCard
+        {...defaultProps}
+        workingGroups={[{ id: '42', title: 'working group name' }]}
+        mainEntity={{
+          id: '42',
+          title: 'working group name',
+          type: 'WorkingGroups',
+        }}
+      />,
+    );
+    expect(screen.getByText('Working Group')).toBeVisible();
   });
 
   it('renders multiple projects', () => {

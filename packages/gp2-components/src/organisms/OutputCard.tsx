@@ -65,7 +65,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
         <SharedResearchMetadata
           pills={
             [
-              // mainEntity.type === 'WorkingGroups' ? 'Working Group' : 'Project',
+              mainEntity.type === 'WorkingGroups' ? 'Working Group' : 'Project',
               documentType,
               type,
               subtype,

@@ -517,7 +517,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
               values={newWorkingGroups.map((workingGroup, idx) => ({
                 label: workingGroup.title,
                 value: workingGroup.id,
-                isFixed: idx === 0,
+                isFixed: idx === 0 && entityType === 'workingGroup',
               }))}
               noOptionsMessage={({ inputValue }) =>
                 `Sorry, no working groups match ${inputValue}`
@@ -550,7 +550,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
               values={newProjects.map((project, idx) => ({
                 label: project.title,
                 value: project.id,
-                isFixed: idx === 0,
+                isFixed: idx === 0 && entityType === 'project',
               }))}
               noOptionsMessage={({ inputValue }) =>
                 `Sorry, no projects match ${inputValue}`

@@ -102,7 +102,7 @@ it('can perform a search', async () => {
   );
 });
 
-it('renders error message when when the request it not a 2XX', async () => {
+it('renders error message when the response is not a 2XX', async () => {
   mockGetTutorials.mockRejectedValue(new Error('error'));
 
   const { getByText } = await renderTutorials();

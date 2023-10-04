@@ -45,8 +45,6 @@ describe('Tutorials data provider', () => {
     test('should fetch a list of tutorials', async () => {
       const result = await dataProviderWithMockServer.fetch({});
 
-      console.log(result);
-
       expect(result).toEqual(getListTutorialsDataObject());
     });
 
@@ -87,7 +85,7 @@ describe('Tutorials data provider', () => {
         );
       });
 
-      test('adds keyword and title search parameters for each word in the query', async () => {
+      test('adds search parameters for each word in the query', async () => {
         await dataProvider.fetch({
           search: 'test search',
         });

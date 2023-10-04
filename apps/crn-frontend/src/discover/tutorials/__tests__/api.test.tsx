@@ -51,7 +51,7 @@ describe('getTutorials', () => {
     searchQuery: '',
   };
 
-  it('returns successfully fetched guides', async () => {
+  it('returns successfully fetched tutorials', async () => {
     const tutorials = createListTutorialsResponse(1);
     nock(API_BASE_URL)
       .get('/tutorials')

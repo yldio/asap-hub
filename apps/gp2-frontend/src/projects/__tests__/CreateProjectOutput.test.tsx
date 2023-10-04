@@ -140,7 +140,7 @@ it('publishes the output', async () => {
       description: 'An interesting article',
       sharingStatus: 'GP2 Only',
       documentType: 'Procedural Form',
-      projectIds: ['project-id-1'],
+      projectIds: [],
       workingGroupIds: undefined,
       authors: [
         {
@@ -151,6 +151,7 @@ it('publishes the output', async () => {
         },
       ],
       relatedOutputs: [],
+      mainEntityId: 'project-id-1',
     },
     expect.anything(),
   );

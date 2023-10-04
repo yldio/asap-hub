@@ -126,6 +126,7 @@ export const getOutputCreateDataObject =
       createdBy: 'userId',
       projectIds: projects?.map(({ id }) => id),
       authors: authors.map(({ id }) => ({ userId: id })),
+      mainEntityId: mainEntity.id,
     };
   };
 

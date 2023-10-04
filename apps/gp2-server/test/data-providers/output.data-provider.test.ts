@@ -226,13 +226,11 @@ describe('Outputs data provider', () => {
         __typename: 'Projects',
         sys: { id: '1' },
       };
-      console.log(graphqlResponse);
       graphqlClientMock.request.mockResolvedValueOnce({
         outputs: graphqlResponse,
       });
 
       const result = await outputDataProvider.fetchById(outputId);
-      console.log(result);
 
       expect(result!.projects).toEqual([expect.objectContaining({ id: '1' })]);
     });
@@ -836,6 +834,7 @@ describe('Outputs data provider', () => {
       const {
         workingGroupIds: __,
         projectIds,
+        mainEntityId,
         ...fieldsCreated
       } = outputRequest;
       const fields = addLocaleToFields({
@@ -861,7 +860,14 @@ describe('Outputs data provider', () => {
             id: outputRequest.createdBy,
           },
         },
-        relatedEntities: projectIds?.map((id) => ({
+        relatedEntity: {
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: mainEntityId,
+          },
+        },
+        relatedEntities: [mainEntityId, ...(projectIds || [])]?.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
@@ -934,6 +940,7 @@ describe('Outputs data provider', () => {
           ...outputRequest,
           workingGroupIds: undefined,
           projectIds: undefined,
+          mainEntityId: undefined,
         }),
       ).rejects.toThrow(/invalid related entities/i);
     });
@@ -981,7 +988,7 @@ describe('Outputs data provider', () => {
 
       await outputDataProvider.update(outputId, outputUpdateData);
 
-      const { projectIds, ...fieldsUpdated } = outputUpdateData;
+      const { projectIds, mainEntityId, ...fieldsUpdated } = outputUpdateData;
       const fields = {
         ...fieldsUpdated,
         authors: outputUpdateData.authors.map((author) => ({
@@ -998,7 +1005,7 @@ describe('Outputs data provider', () => {
             id: outputUpdateData.updatedBy,
           },
         },
-        relatedEntities: projectIds?.map((id) => ({
+        relatedEntities: [mainEntityId, ...(projectIds || [])]?.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',

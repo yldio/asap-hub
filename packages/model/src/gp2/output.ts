@@ -3,12 +3,12 @@ import { ExternalUserResponse } from './external-user';
 import { TagDataObject } from './tag';
 
 export const outputDocumentTypes = [
-  'Procedural Form',
-  'GP2 Reports',
-  'Training Materials',
-  'Dataset',
   'Article',
   'Code/Software',
+  'Dataset',
+  'GP2 Reports',
+  'Procedural Form',
+  'Training Materials',
 ] as const;
 
 export type OutputDocumentType = (typeof outputDocumentTypes)[number];
@@ -78,7 +78,12 @@ export type DecisionOption = (typeof decisionOptions)[number];
 export const sharingStatuses = ['GP2 Only', 'Public'] as const;
 
 export type OutputSharingStatus = (typeof sharingStatuses)[number];
-
+type RelatedOutputs = {
+  id: string;
+  title: string;
+  type?: OutputType;
+  documentType: OutputDocumentType;
+};
 export type OutputCoreObject = {
   addedDate: string;
   documentType: OutputDocumentType;
@@ -95,6 +100,7 @@ export type OutputCoreObject = {
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
+  relatedOutputs: RelatedOutputs[];
 };
 
 export type UserAuthor = {
@@ -167,6 +173,7 @@ export type OutputPostRequest = {
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
+  relatedOutputs: RelatedOutputs[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

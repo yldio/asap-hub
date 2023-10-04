@@ -283,6 +283,7 @@ export const parseContentfulGraphQLOutput = (
     rrid: data.rrid ?? undefined,
     accessionNumber: data.accessionNumber ?? undefined,
     ...relatedEntity,
+    relatedOutputs: [],
   };
 };
 

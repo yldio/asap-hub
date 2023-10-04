@@ -22,11 +22,10 @@ export type getTeamState = {
   researchOutputData: ResearchOutputResponse | undefined;
 };
 
-export type ResearchOutputOption = Pick<
-  ResearchOutputResponse,
-  'type' | 'documentType'
-> &
-  MultiSelectOptionsType;
+export type ResearchOutputOption = {
+  documentType: string;
+  type?: string;
+} & MultiSelectOptionsType;
 
 const identifierTypeToFieldName: Record<
   ResearchOutputIdentifierType,

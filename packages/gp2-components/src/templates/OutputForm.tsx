@@ -5,28 +5,34 @@ import {
   Form,
   FormCard,
   GlobeIcon,
+  LabeledDateField,
   LabeledDropdown,
+  LabeledMultiSelect,
   LabeledRadioButtonGroup,
-  LabeledTextField,
   LabeledTextArea,
+  LabeledTextField,
+  Link,
+  mail,
   Markdown,
   noop,
   pixels,
-  LabeledDateField,
-  LabeledMultiSelect,
-  Link,
-  mail,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
 
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
-import { ComponentPropsWithRef, useEffect, useState } from 'react';
+import {
+  ComponentProps,
+  ComponentPropsWithRef,
+  useEffect,
+  useState,
+} from 'react';
 import { buttonWrapperStyle, mobileQuery } from '../layout';
 import { OutputIdentifier } from '../organisms/OutputIdentifier';
-import { EntityMappper } from './CreateOutputPage';
+import OutputRelatedResearchCard from '../organisms/OutputRelatedResearchCard';
 import { createIdentifierField } from '../utils';
+import { EntityMappper } from './CreateOutputPage';
 
 const { rem } = pixels;
 const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
@@ -36,6 +42,18 @@ const DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED = [
   'Procedural Form',
 ];
 
+// Check this:isOwnRelatedResearchLink
+export const getOwnRelatedResearchLinks = (
+  relatedResearch?: gp2Model.OutputResponse['relatedOutputs'],
+) =>
+  relatedResearch
+    // ?.filter(({ isOwnRelatedResearchLink }) => !!isOwnRelatedResearchLink)
+    ?.map((research) => ({
+      value: research.id,
+      label: research.title,
+      type: research.type,
+      documentType: research.documentType,
+    })) || [];
 const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
@@ -65,7 +83,7 @@ const containerStyles = css({
   flexDirection: 'column',
   gap: rem(32),
 });
-type OutputFormType = {
+type OutputFormProps = {
   entityType: 'workingGroup' | 'project';
   shareOutput: (
     payload: gp2Model.OutputPostRequest,
@@ -75,6 +93,11 @@ type OutputFormType = {
     typeof AuthorSelect
   >['loadOptions'];
   keywordSuggestions: gp2Model.TagDataObject[];
+  getRelatedResearchSuggestions?: NonNullable<
+    ComponentProps<
+      typeof OutputRelatedResearchCard
+    >['getRelatedResearchSuggestions']
+  >;
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -91,6 +114,7 @@ type OutputFormType = {
     | 'doi'
     | 'rrid'
     | 'accessionNumber'
+    | 'relatedOutputs'
   >
 >;
 
@@ -106,7 +130,7 @@ export const getPostAuthors = (
     return { externalUserName: value };
   });
 
-const OutputForm: React.FC<OutputFormType> = ({
+const OutputForm: React.FC<OutputFormProps> = ({
   entityType,
   shareOutput,
   documentType,
@@ -125,6 +149,8 @@ const OutputForm: React.FC<OutputFormType> = ({
   doi,
   rrid,
   accessionNumber,
+  relatedOutputs,
+  getRelatedResearchSuggestions = noop,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -149,6 +175,11 @@ const OutputForm: React.FC<OutputFormType> = ({
   const [newPublishDate, setPublishDate] = useState<Date | undefined>(
     publishDate ? new Date(publishDate) : undefined,
   );
+  const [newRelatedOutputs, setRelatedOutputs] = useState<
+    NonNullable<
+      ComponentProps<typeof OutputRelatedResearchCard>['relatedResearch']
+    >
+  >(getOwnRelatedResearchLinks(relatedOutputs));
 
   const [newAuthors, setAuthors] = useState<
     ComponentPropsWithRef<typeof AuthorSelect>['values']
@@ -199,6 +230,11 @@ const OutputForm: React.FC<OutputFormType> = ({
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
     tags: newTags.length > 0 ? newTags : undefined,
+    relatedOutputs: newRelatedOutputs.map((output) => ({
+      id: output.value,
+      title: output.label,
+      documentType: output.documentType as gp2Model.OutputDocumentType,
+    })),
     ...createIdentifierField(newIdentifierType, identifier),
   };
 
@@ -428,6 +464,12 @@ const OutputForm: React.FC<OutputFormType> = ({
               }
             />
           </FormCard>
+          <OutputRelatedResearchCard
+            isSaving={isSaving}
+            relatedResearch={newRelatedOutputs}
+            onChangeRelatedResearch={setRelatedOutputs}
+            getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+          />
           <div css={footerStyles}>
             <div css={[buttonWrapperStyle, { margin: 0 }]}>
               <Button noMargin enabled={!isSaving} onClick={onCancel}>

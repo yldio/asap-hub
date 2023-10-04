@@ -2,6 +2,7 @@ import { AlgoliaClient } from '@asap-hub/algolia';
 import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
+import { useAlgolia } from '../hooks/algolia';
 
 export const getOutput = async (
   id: string,
@@ -24,7 +25,7 @@ export const getOutput = async (
 export type OutputListOptions = GetListOptions & gp2.FetchOutputFilter;
 
 type DocumentTypeFilter = Record<gp2.OutputDocumentType, { filter: string }>;
-export const researchOutputDocumentTypeFilters =
+export const outputDocumentTypeFilters =
   gp2.outputDocumentTypes.reduce<DocumentTypeFilter>(
     (acc, type) => ({
       ...acc,
@@ -34,7 +35,7 @@ export const researchOutputDocumentTypeFilters =
   );
 
 export const getTypeFilters = (filters: Set<string>): string =>
-  Object.entries(researchOutputDocumentTypeFilters)
+  Object.entries(outputDocumentTypeFilters)
     .reduce<string[]>(
       (acc, [key, { filter }]) => (filters.has(key) ? [filter, ...acc] : acc),
       [],
@@ -87,6 +88,27 @@ export const getOutputs = (
       throw new Error(`Could not search: ${error.message}`);
     });
 
+export const useRelatedOutputSuggestions = (currentId?: string) => {
+  const algoliaClient = useAlgolia();
+  return (searchQuery: string) =>
+    getOutputs(algoliaClient.client, {
+      searchQuery,
+      filters: new Set(),
+      currentPage: null,
+      pageSize: null,
+    })
+      .then(({ hits }) =>
+        hits.map(({ id, title, type, documentType }) => ({
+          label: title,
+          value: id,
+          type,
+          documentType,
+        })),
+      )
+      .then((hits) =>
+        currentId ? hits.filter(({ value }) => value !== currentId) : hits,
+      );
+};
 export const createOutput = async (
   output: gp2.OutputPostRequest,
   authorization: string,

@@ -2,6 +2,7 @@ import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2, useRouteParams } from '@asap-hub/routing';
 import { useKeywords } from '../shared/state';
+import { useRelatedOutputSuggestions } from './api';
 
 import { useAuthorSuggestions, useOutputById, useUpdateOutput } from './state';
 
@@ -11,7 +12,8 @@ const ShareOutput: React.FC<Record<string, never>> = () => {
   const entityType = output?.workingGroup ? 'workingGroup' : 'project';
   const shareOutput = useUpdateOutput(outputId);
   const getAuthorSuggestions = useAuthorSuggestions();
-  const { items: suggestions } = useKeywords();
+  const getRelatedOutputSuggestions = useRelatedOutputSuggestions(outputId);
+  const { items: keywordSuggestions } = useKeywords();
 
   if (!output) {
     return <NotFoundPage />;
@@ -27,7 +29,8 @@ const ShareOutput: React.FC<Record<string, never>> = () => {
         entityType={entityType}
         shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
-        keywordSuggestions={suggestions}
+        keywordSuggestions={keywordSuggestions}
+        getRelatedResearchSuggestions={getRelatedOutputSuggestions}
       />
     </CreateOutputPage>
   );

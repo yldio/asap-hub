@@ -158,9 +158,10 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
   async create({
     workingGroupIds,
     projectIds,
+    mainEntityId,
     ...data
   }: gp2Model.OutputCreateDataObject) {
-    if (!workingGroupIds && !projectIds) {
+    if (!mainEntityId) {
       throw new Error('invalid related entities');
     }
     const environment = await this.getRestClient();
@@ -169,7 +170,9 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     const outputEntry = await environment.createEntry('outputs', {
       fields: addLocaleToFields({
         ...fields,
+        relatedEntity: getLinkEntity(mainEntityId as string), // TODO: to be removed on cleanup
         relatedEntities: getLinkEntities([
+          mainEntityId as string,
           ...(workingGroupIds || []),
           ...(projectIds || []),
         ]),
@@ -183,12 +186,13 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
   async update(id: string, data: gp2Model.OutputUpdateDataObject) {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-    const { workingGroupIds, projectIds, ...restData } = data;
+    const { workingGroupIds, projectIds, mainEntityId, ...restData } = data;
 
     const fields = cleanOutput(restData);
     const result = await patchAndPublish(user, {
       ...fields,
       relatedEntities: getLinkEntities([
+        mainEntityId as string,
         ...(workingGroupIds || []),
         ...(projectIds || []),
       ]),

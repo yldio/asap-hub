@@ -274,10 +274,16 @@ const OutputForm: React.FC<OutputFormProps> = ({
     mainEntityId,
     workingGroupIds:
       newWorkingGroups.length > 0
-        ? newWorkingGroups.map(({ id }) => id)
+        ? newWorkingGroups
+            .filter(({ id }) => id !== mainEntityId)
+            .map(({ id }) => id)
         : undefined,
     projectIds:
-      newProjects.length > 0 ? newProjects.map(({ id }) => id) : undefined,
+      newProjects.length > 0
+        ? newProjects
+            .filter(({ id }) => id !== mainEntityId)
+            .map(({ id }) => id)
+        : undefined,
     ...createIdentifierField(newIdentifierType, identifier),
   };
 
@@ -590,7 +596,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                   maxMenuHeight={160}
                 />
                 <div css={linkStyles}>
-                  Don’t see a cohort in this list?
+                  Don’t see a cohort in this list?{' '}
                   <Link
                     href={mailToSupport({
                       email: INVITE_SUPPORT_EMAIL,

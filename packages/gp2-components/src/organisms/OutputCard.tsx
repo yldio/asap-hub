@@ -115,7 +115,9 @@ const OutputCard: React.FC<OutputCardProps> = ({
         {workingGroups && (
           <IconWithLabel icon={workingGroupIcon}>
             {workingGroups.length > 1 ? (
-              <Paragraph>{workingGroups.length} Working Groups</Paragraph>
+              <Paragraph noMargin>
+                {workingGroups.length} Working Groups
+              </Paragraph>
             ) : (
               <Link
                 href={
@@ -132,7 +134,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
         {projects && (
           <IconWithLabel icon={projectIcon}>
             {projects.length > 1 ? (
-              <Paragraph>{projects.length} Projects</Paragraph>
+              <Paragraph noMargin>{projects.length} Projects</Paragraph>
             ) : (
               <Link
                 href={

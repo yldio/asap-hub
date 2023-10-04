@@ -53,13 +53,7 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
     >
       <OutputForm
         entityType="project"
-        shareOutput={async (payload: gp2Model.OutputPostRequest) =>
-          createOutput({
-            ...payload,
-            workingGroupIds: undefined,
-            projectIds: [projectId],
-          })
-        }
+        shareOutput={createOutput}
         documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
         tagSuggestions={tagSuggestions}

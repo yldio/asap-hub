@@ -1803,6 +1803,44 @@ describe('User data provider', () => {
         }),
       );
     });
+
+    test('should support filtering by orcid', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+      await userDataProvider.fetch({
+        filter: { orcid: '0000-0000-1111-1111' },
+      });
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            orcid_contains: '0000-0000-1111-1111',
+          }),
+        }),
+      );
+    });
+
+    test('should support filtering by orcidLastSyncDate', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+      await userDataProvider.fetch({
+        filter: {
+          orcidLastSyncDate: 'some-date',
+        },
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            orcidLastSyncDate_lt: 'some-date',
+          }),
+        }),
+      );
+    });
+
     describe('search', () => {
       test('Should query with filters and return the users', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(

@@ -50,6 +50,8 @@ describe('Users controller', () => {
           tags: ['Aging', 'RNA'],
           projects: ['a project'],
           workingGroups: ['a working group'],
+          orcid: '0000-0001-9884-1913',
+          orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
         },
       };
       await userController.fetch(params);

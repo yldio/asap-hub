@@ -322,7 +322,14 @@ const generateFetchQueryFilter = (
   { filter, search }: gp2Model.FetchUsersOptions,
   userIdFilter: string[],
 ): gp2Contentful.UsersFilter => {
-  const { regions, code, onlyOnboarded, hidden = true } = filter || {};
+  const {
+    regions,
+    code,
+    onlyOnboarded,
+    orcid,
+    orcidLastSyncDate,
+    hidden = true,
+  } = filter || {};
 
   const filterCode: gp2Contentful.UsersFilter = code
     ? { connections_contains_all: [code] }
@@ -336,6 +343,10 @@ const generateFetchQueryFilter = (
   const filterRegions: gp2Contentful.UsersFilter = regions
     ? { region_in: regions }
     : {};
+  const filterOrcid = orcid ? { orcid_contains: orcid } : {};
+  const filterOrcidLastSyncDate = orcidLastSyncDate
+    ? { orcidLastSyncDate_lt: orcidLastSyncDate }
+    : {};
   const searchFilter = search ? getSearchFilter(search) : {};
   const filterUserId =
     userIdFilter.length > 0 ? { sys: { id_in: userIdFilter } } : {};
@@ -345,6 +356,8 @@ const generateFetchQueryFilter = (
     ...filterNonOnboarded,
     ...filterHidden,
     ...filterRegions,
+    ...filterOrcid,
+    ...filterOrcidLastSyncDate,
     ...searchFilter,
   };
 };

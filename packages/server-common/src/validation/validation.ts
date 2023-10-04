@@ -77,7 +77,7 @@ export const fetchOptionsValidationSchema: JSONSchemaType<FetchOptions> = {
   additionalProperties: false,
 };
 
-export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOptions> =
+export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersApiOptions> =
   {
     type: 'object',
     properties: {

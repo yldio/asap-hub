@@ -186,6 +186,11 @@ export type FetchUsersFilter = FetchUsersSearchFilter & {
   onlyOnboarded?: boolean;
   hidden?: boolean;
   userIds?: string[];
+  orcid?: string;
+  orcidLastSyncDate?: string;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
+export type FetchUsersApiOptions = FetchOptions<
+  Omit<FetchUsersFilter, 'orcid' | 'orcidLastSyncDate'>
+>;

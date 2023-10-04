@@ -27,12 +27,7 @@ export const indexProjectHandler =
         const project = await projectController.fetchById(id);
         log.debug(`Fetched project ${project.id}`);
 
-        const tags = project.tags?.map((tag) => {
-          if (typeof tag === 'object') {
-            return tag.name;
-          }
-          return tag;
-        });
+        const tags = project.tags?.map((tag) => tag.name);
 
         const data = {
           ...project,

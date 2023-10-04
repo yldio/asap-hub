@@ -29,12 +29,7 @@ export const indexUserHandler =
         log.debug(`Fetched user ${user.id}`);
 
         if (user.onboarded && user.role !== 'Hidden') {
-          const tags = user.tags?.map((tag) => {
-            if (typeof tag === 'object') {
-              return tag.name;
-            }
-            return tag;
-          });
+          const tags = user.tags?.map((tag) => tag.name);
 
           const data = {
             ...user,

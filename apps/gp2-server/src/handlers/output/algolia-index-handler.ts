@@ -28,12 +28,7 @@ export const indexOutputHandler =
         const output = await outputController.fetchById(id);
         log.debug(`Fetched output ${output.id}`);
 
-        const tags = output.tags?.map((tag) => {
-          if (typeof tag === 'object') {
-            return tag.name;
-          }
-          return tag;
-        });
+        const tags = output.tags?.map((tag) => tag.name);
 
         const data = {
           ...output,

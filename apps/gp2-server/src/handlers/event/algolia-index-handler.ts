@@ -27,12 +27,7 @@ export const indexEventHandler =
         const calendarEvent = await eventController.fetchById(id);
         log.debug(`Fetched calendar event ${calendarEvent.id}`);
 
-        const tags = calendarEvent.keywords?.map((tag) => {
-          if (typeof tag === 'object') {
-            return tag.name;
-          }
-          return tag;
-        });
+        const tags = calendarEvent.keywords?.map((tag) => tag.name);
 
         const data = {
           ...calendarEvent,

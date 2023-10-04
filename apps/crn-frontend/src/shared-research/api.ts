@@ -105,21 +105,17 @@ export const getResearchOutputs = (
   client: AlgoliaClient<'crn'>,
   options: ResearchOutputPublishedListOptions,
 ) =>
-  client
-    .search(['research-output'], options.searchQuery, {
-      page: options.currentPage ?? 0,
-      hitsPerPage: options.pageSize ?? 10,
-      tagFilters: options.tags,
-      filters: getAllFilters(
-        options.filters,
-        options.teamId,
-        options.userId,
-        options.workingGroupId,
-      ),
-    })
-    .catch((error: Error) => {
-      throw new Error(`Could not search: ${error.message}`);
-    });
+  client.search(['research-output'], options.searchQuery, {
+    page: options.currentPage ?? 0,
+    hitsPerPage: options.pageSize ?? 10,
+    tagFilters: options.tags,
+    filters: getAllFilters(
+      options.filters,
+      options.teamId,
+      options.userId,
+      options.workingGroupId,
+    ),
+  });
 
 export const getDraftResearchOutputs = async (
   options: ResearchOutputDraftListOptions,

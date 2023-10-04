@@ -102,12 +102,48 @@ const getController = (entity: keyof EntityResponsesGP2) => {
 };
 
 const transformRecords = <T extends EntityResponsesGP2, K extends keyof T>(
-  record: T[K] & { id: string },
-  type: K,
-) => ({
-  ...record,
-  objectID: record.id,
-  __meta: {
-    type,
-  },
-});
+  record: T[K] extends EntityResponsesGP2[keyof EntityResponsesGP2]
+    ? T[K] & { id: string }
+    : never,
+  type: K extends keyof EntityResponsesGP2 ? K : never,
+) => {
+  const payload = {
+    ...record,
+    objectID: record.id,
+    __meta: {
+      type,
+    },
+  };
+
+  if (type === 'event' && 'keywords' in record) {
+    const tags = record.keywords?.map((tag) => tag.name);
+
+    const _tags = '_tags' in record ? record._tags : [];
+
+    return {
+      ...payload,
+      _tags: [..._tags, ...(tags ? tags : [])],
+    };
+  }
+
+  if (
+    (type === 'output' || type === 'project' || type === 'user') &&
+    'tags' in record
+  ) {
+    const tags = record.tags?.map((tag) => {
+      if (typeof tag === 'object') {
+        return tag.name;
+      }
+      return tag;
+    });
+
+    const _tags = '_tags' in record ? record._tags : [];
+
+    return {
+      ...payload,
+      _tags: [..._tags, ...(tags ? tags : [])],
+    };
+  }
+
+  return payload;
+};

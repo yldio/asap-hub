@@ -29,8 +29,20 @@ export const indexUserHandler =
         log.debug(`Fetched user ${user.id}`);
 
         if (user.onboarded && user.role !== 'Hidden') {
+          const tags = user.tags?.map((tag) => {
+            if (typeof tag === 'object') {
+              return tag.name;
+            }
+            return tag;
+          });
+
+          const data = {
+            ...user,
+            _tags: tags,
+          };
+
           await algoliaClient.save({
-            data: user,
+            data,
             type: 'user',
           });
 

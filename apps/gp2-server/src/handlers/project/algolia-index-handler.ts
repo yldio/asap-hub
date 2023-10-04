@@ -27,8 +27,21 @@ export const indexProjectHandler =
         const project = await projectController.fetchById(id);
         log.debug(`Fetched project ${project.id}`);
 
+        const tags = project.tags?.map((tag) => {
+          if (typeof tag === 'object') {
+            return tag.name;
+          }
+          return tag;
+        });
+
+        const data = {
+          ...project,
+          // eslint-disable-next-line no-underscore-dangle
+          _tags: [...tags, ...project._tags],
+        };
+
         await algoliaClient.save({
-          data: project,
+          data,
           type: 'project',
         });
 

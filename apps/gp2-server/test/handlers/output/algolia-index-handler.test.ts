@@ -27,7 +27,19 @@ describe('Output index handler', () => {
     await indexHandler(createEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: outputResponse,
+      data: expect.objectContaining(outputResponse),
+      type: 'output',
+    });
+  });
+
+  test('Should populate the _tags field before saving the research output to Algolia', async () => {
+    const outputResponse = getOutputResponse();
+    outputResponse.tags = [{ id: '1', name: 'output tag' }];
+    outputControllerMock.fetchById.mockResolvedValueOnce(outputResponse);
+
+    await indexHandler(createEvent('42'));
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: { ...outputResponse, _tags: ['output tag'] },
       type: 'output',
     });
   });
@@ -39,7 +51,7 @@ describe('Output index handler', () => {
     await indexHandler(updateEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: outputResponse,
+      data: expect.objectContaining(outputResponse),
       type: 'output',
     });
   });
@@ -118,7 +130,7 @@ describe('Output index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: outputResponse,
+        data: expect.objectContaining(outputResponse),
         type: 'output',
       });
     });
@@ -138,7 +150,7 @@ describe('Output index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: outputResponse,
+        data: expect.objectContaining(outputResponse),
         type: 'output',
       });
     });

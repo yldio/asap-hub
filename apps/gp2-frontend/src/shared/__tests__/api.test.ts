@@ -11,15 +11,15 @@ describe('getKeywords', () => {
     expect(nock.isDone()).toBe(true);
     nock.cleanAll();
   });
-  it('returns a successfully fetched keywords list', async () => {
-    const keywordsResponse: gp2Model.ListTagsResponse =
+  it('returns a successfully fetched tags list', async () => {
+    const tagsResponse: gp2Model.ListTagsResponse =
       gp2Fixtures.createTagsResponse();
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/tags')
-      .reply(200, keywordsResponse);
+      .reply(200, tagsResponse);
 
     const result = await getKeywords('Bearer x');
-    expect(result).toEqual(keywordsResponse);
+    expect(result).toEqual(tagsResponse);
   });
 
   it('errors for error status', async () => {

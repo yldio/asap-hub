@@ -543,7 +543,7 @@ describe('Project Data Provider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
 
-    test('Should return an empty result if no keywords', async () => {
+    test('Should return an empty result if no tags', async () => {
       const mockResponse = getContentfulGraphqlProjectsResponse();
       const project = getContentfulGraphqlProject();
       project.tagsCollection = null;
@@ -557,7 +557,7 @@ describe('Project Data Provider', () => {
       });
     });
 
-    test('Should return an empty result if no keywords', async () => {
+    test('Should return an empty result if no tags', async () => {
       const mockResponse = getContentfulGraphqlProjectsResponse();
       const project = getContentfulGraphqlProject();
       project.tagsCollection = null;
@@ -1316,10 +1316,10 @@ describe('Project Data Provider', () => {
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(3);
     });
 
-    describe('keywords', () => {
-      test('It should associate the keyword to the project', async () => {
+    describe('tags', () => {
+      test('It should associate the tag to the project', async () => {
         const projectId = '11';
-        const keywordId = '23';
+        const tagId = '23';
         const existingProjectMock = getEntry({}, projectId);
         const project = getContentfulGraphqlProject();
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
@@ -1334,11 +1334,11 @@ describe('Project Data Provider', () => {
         environmentMock.getEntry.mockResolvedValueOnce(existingProjectMock);
 
         await projectDataProvider.update(projectId, {
-          tags: [{ id: keywordId }],
+          tags: [{ id: tagId }],
         });
 
         expect(patchAndPublish).toHaveBeenCalledWith(existingProjectMock, {
-          tags: [{ sys: { id: keywordId, linkType: 'Entry', type: 'Link' } }],
+          tags: [{ sys: { id: tagId, linkType: 'Entry', type: 'Link' } }],
         });
       });
     });

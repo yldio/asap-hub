@@ -1,5 +1,6 @@
-import { gp2 } from '@asap-hub/model';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
+import { gp2 } from '@asap-hub/model';
+import { NotificationContext } from '@asap-hub/react-context';
 import {
   fireEvent,
   render,
@@ -10,9 +11,8 @@ import {
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import { Router, StaticRouter } from 'react-router-dom';
-import { NotificationContext } from '@asap-hub/react-context';
-import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 import { createIdentifierField } from '../../utils';
+import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
 jest.setTimeout(60_000);
 
@@ -143,6 +143,7 @@ describe('OutputForm', () => {
         { userId: 'u2' },
         { externalUserName: 'Alex White' },
       ],
+      relatedOutputs: [],
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -251,6 +252,7 @@ describe('OutputForm', () => {
         { userId: 'u2' },
         { externalUserName: 'Alex White' },
       ],
+      relatedOutputs: [],
     });
   });
 
@@ -359,6 +361,7 @@ describe('OutputForm', () => {
         gp2Supported: "Don't Know",
         sharingStatus: 'GP2 Only',
         authors: [{ userId: 'u2' }],
+        relatedOutputs: [],
       });
       expect(history.location.pathname).toEqual(`/outputs`);
     });

@@ -171,11 +171,12 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
     requestOptions?: SearchOptions,
   ): Promise<SearchForFacetValuesResponse> {
     try {
-      return this.index.searchForFacetValues(
+      const result = await this.index.searchForFacetValues(
         '_tags',
         query,
         this.getSearchOptions(entityTypes, requestOptions),
       );
+      return result;
     } catch (error) {
       throw new Error(
         `Could not search for facet values: ${(error as Error).message}`,

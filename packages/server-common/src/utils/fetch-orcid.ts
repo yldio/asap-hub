@@ -1,6 +1,5 @@
 import { OrcidWork } from '@asap-hub/model';
 import Got from 'got';
-import get from 'lodash.get';
 
 type CMSOrcidWork = OrcidWork;
 
@@ -68,27 +67,18 @@ export const transformOrcidWorks = (orcidWorks: {
     works: orcidWorks.group.map((work) =>
       JSON.parse(
         JSON.stringify({
-          doi: get(
+          doi:
             // get first external-id with url value
-            get(work, 'external-ids.external-id', []).find(
+            work['external-ids']['external-id'].find(
               (e: ORCIDExternalId) => e['external-id-url']?.value,
-            ),
-            // return such value
-            'external-id-url.value',
-          ),
-          id: `${get(work, '["work-summary"][0]["put-code"]')}`,
-          title: get(work, '["work-summary"][0].title.title.value'),
-          type: get(work, '["work-summary"][0].type'),
+            )?.['external-id-url']?.value,
+          id: `${work['work-summary'][0]?.['put-code']}`,
+          title: work['work-summary'][0]?.title.title.value,
+          type: work['work-summary'][0]?.type,
           publicationDate: {
-            year: get(
-              work,
-              '["work-summary"][0]["publication-date"].year.value',
-            ),
-            month: get(
-              work,
-              '["work-summary"][0]["publication-date"].month.value',
-            ),
-            day: get(work, '["work-summary"][0]["publication-date"].day.value'),
+            year: work['work-summary'][0]?.['publication-date'].year.value,
+            month: work['work-summary'][0]?.['publication-date'].month.value,
+            day: work['work-summary'][0]?.['publication-date'].day?.value,
           },
           lastModifiedDate: `${work['last-modified-date'].value}`,
         }),

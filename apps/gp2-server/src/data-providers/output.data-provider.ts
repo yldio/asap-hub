@@ -445,6 +445,14 @@ const cleanOutput = (
         ).map((output) => getLinkEntity(output.id)),
       };
     }
+    if (key === 'contributingCohorts') {
+      return {
+        ...acc,
+        contributingCohorts: (
+          value as gp2Model.OutputUpdateDataObject['contributingCohorts']
+        )?.map((cohort) => getLinkEntity(cohort.id)),
+      };
+    }
     return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 

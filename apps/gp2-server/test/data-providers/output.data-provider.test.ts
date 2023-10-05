@@ -888,6 +888,15 @@ describe('Outputs data provider', () => {
             id: output.id,
           },
         })),
+        contributingCohorts: fieldsCreated.contributingCohorts?.map(
+          (cohort) => ({
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id: cohort.id,
+            },
+          }),
+        ),
       });
       expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
         fields,
@@ -1026,6 +1035,15 @@ describe('Outputs data provider', () => {
             id: output.id,
           },
         })),
+        contributingCohorts: outputUpdateData.contributingCohorts?.map(
+          (cohort) => ({
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id: cohort.id,
+            },
+          }),
+        ),
       };
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
         ...fields,

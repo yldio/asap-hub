@@ -1,5 +1,4 @@
-module.exports.description =
-  'Remove related entity, add related entities and contributing cohorts';
+module.exports.description = 'Adddd related entities and contributing cohorts';
 
 module.exports.up = function (migration) {
   const outputs = migration.editContentType('outputs');

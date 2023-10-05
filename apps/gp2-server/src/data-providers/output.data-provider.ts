@@ -329,13 +329,13 @@ export const parseContentfulGraphQLOutput = (
     data.contributingCohortsCollection?.items,
   );
   const projects =
-    relatedEntities && relatedEntities?.projects.length !== 0
+    relatedEntities && relatedEntities.projects.length !== 0
       ? relatedEntities?.projects
       : data.relatedEntity?.__typename === 'Projects'
       ? [relatedEntity] // TODO: remove on cleanup
       : undefined;
   const workingGroups =
-    relatedEntities && relatedEntities?.workingGroups.length !== 0
+    relatedEntities && relatedEntities.workingGroups.length !== 0
       ? relatedEntities?.workingGroups
       : data.relatedEntity?.__typename === 'WorkingGroups'
       ? [relatedEntity] // TODO: remove on cleanup

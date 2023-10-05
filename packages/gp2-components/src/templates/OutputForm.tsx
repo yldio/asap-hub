@@ -272,6 +272,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
       documentType: output.documentType as gp2Model.OutputDocumentType,
     })),
     mainEntityId,
+    contributingCohorts: newCohorts.length > 0 ? newCohorts : undefined,
     workingGroupIds:
       newWorkingGroups.length > 0
         ? newWorkingGroups

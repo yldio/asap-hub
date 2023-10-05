@@ -1,4 +1,4 @@
-module.exports.description = '<Put your description here>';
+module.exports.description = 'Add ORCID fields to user model';
 
 module.exports.up = (migration) => {
   const users = migration.editContentType('users');

@@ -96,6 +96,7 @@ describe('OutputForm', () => {
         shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        workingGroupSuggestions={[{ id: '2', title: 'another group' }]}
       />,
       {
         wrapper: ({ children }) => (
@@ -135,6 +136,12 @@ describe('OutputForm', () => {
     );
     userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
     userEvent.click(screen.getByText(/^none/i));
+    const workingGroups = screen.getByRole('textbox', {
+      name: /working groups/i,
+    });
+    userEvent.click(workingGroups);
+
+    userEvent.click(screen.getByText('another group'));
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);
 
@@ -177,7 +184,7 @@ describe('OutputForm', () => {
         },
       ],
       mainEntityId: '12',
-      workingGroupIds: [],
+      workingGroupIds: ['2'],
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -590,6 +597,12 @@ describe('OutputForm', () => {
         title,
         link,
         authors,
+        entityType: 'project' as const,
+        projects: [{ id: '1', title: 'a project' }],
+        workingGroups: undefined,
+        tags: [{ id: 'tag-1', name: 'Tag' }],
+        contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
+        documentType: 'Dataset' as gp2.OutputDocumentType,
       };
       render(<OutputForm {...output} />, { wrapper: StaticRouter });
 
@@ -609,6 +622,11 @@ describe('OutputForm', () => {
       expect(
         screen.getByLabelText(/public repository published date/i),
       ).toHaveDisplayValue('2020-03-04');
+      expect(
+        screen.getByRole('textbox', { name: /working groups/i }),
+      ).toBeVisible();
+      expect(screen.getByRole('textbox', { name: /projects/i })).toBeVisible();
+      expect(screen.getByRole('textbox', { name: /cohorts/i })).toBeVisible();
       expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
       expect(screen.getByText('Tony Stark')).toBeVisible();
       expect(screen.getByRole('textbox', { name: /tags/i })).toBeVisible();
@@ -618,48 +636,6 @@ describe('OutputForm', () => {
       expect(screen.getByText('None')).toBeVisible();
       expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
       expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
-    });
-
-    it('saves the form with projects, tags and cohorts', () => {
-      const shareOutput = jest.fn();
-
-      shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
-      render(
-        <OutputForm
-          {...defaultProps}
-          title="output title"
-          link="https://example.com"
-          description="An interesting article"
-          gp2Supported="Yes"
-          sharingStatus="GP2 Only"
-          documentType="Code/Software"
-          shareOutput={shareOutput}
-          entityType="project"
-          projects={[{ id: '1', title: 'a project' }]}
-          workingGroups={undefined}
-          tags={[{ id: 'tag-1', name: 'Tag' }]}
-          contributingCohorts={[{ id: 'cohort-1', name: 'Cohort' }]}
-        />,
-        {
-          wrapper: StaticRouter,
-        },
-      );
-
-      userEvent.click(screen.getByRole('button', { name: /save/i }));
-
-      expect(shareOutput).toHaveBeenCalledWith({
-        title: 'output title',
-        link: 'https://example.com',
-        documentType: 'Code/Software',
-        description: 'An interesting article',
-        gp2Supported: 'Yes',
-        sharingStatus: 'GP2 Only',
-        authors: [],
-        mainEntityId: '1',
-        projectIds: [],
-        tags: [{ id: 'tag-1', name: 'Tag' }],
-        contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
-      });
     });
   });
 

@@ -30,7 +30,7 @@ jest.mock('@asap-hub/contentful', () => ({
 }));
 jest.mock('../../src/utils/logger');
 
-describe.skip('Outputs data provider', () => {
+describe('Outputs data provider', () => {
   const graphqlClientMock = getContentfulGraphqlClientMock();
   const environmentMock = getContentfulEnvironmentMock();
   const restClientMock: () => Promise<Environment> = () =>
@@ -76,6 +76,41 @@ describe.skip('Outputs data provider', () => {
       const expectedResult = getOutputDataObject();
 
       expect(result).toEqual(expectedResult);
+    });
+    test('should return the related output type', async () => {
+      const graphqlResponse = getContentfulGraphqlOutput();
+      graphqlClientMock.request.mockResolvedValueOnce({
+        outputs: {
+          ...graphqlResponse,
+
+          relatedOutputsCollection: {
+            total: 1,
+            items: [
+              {
+                sys: { id: 'another-output-id' },
+                title: 'another title',
+                documentType: 'Article',
+                type: 'Blog',
+              },
+            ],
+          },
+        },
+      });
+
+      const result = await outputDataProvider.fetchById(outputId);
+      const expectedResult = getOutputDataObject();
+
+      expect(result).toEqual({
+        ...expectedResult,
+        relatedOutputs: [
+          {
+            id: 'another-output-id',
+            title: 'another title',
+            documentType: 'Article',
+            type: 'Blog',
+          },
+        ],
+      });
     });
 
     describe('Document Types', () => {

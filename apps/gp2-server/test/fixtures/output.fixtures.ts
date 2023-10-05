@@ -201,6 +201,16 @@ export const getContentfulGraphqlOutput = (): NonNullable<
       },
     ],
   },
+  relatedOutputsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: { id: 'another-output-id' },
+        title: 'another title',
+        documentType: 'Dataset',
+      },
+    ],
+  },
 });
 
 export const getContentfulOutputsGraphqlResponse =

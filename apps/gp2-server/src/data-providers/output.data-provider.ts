@@ -245,6 +245,19 @@ const getAuthors = (authors?: GraphQLAuthors) =>
           },
     ) || [];
 
+type GraphQLOutputs = NonNullable<
+  OutputItem['relatedOutputsCollection']
+>['items'];
+type GraphQLOutput = NonNullable<GraphQLOutputs[number]>;
+const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
+  outputs
+    ?.filter((output): output is GraphQLOutput => output !== null)
+    .map(({ sys, documentType, title, type }) => ({
+      id: sys.id,
+      title,
+      documentType,
+      type,
+    })) || [];
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
 ): gp2Model.OutputDataObject => {
@@ -253,6 +266,9 @@ export const parseContentfulGraphQLOutput = (
   const subtype = getSubType(documentType, type, data.subtype);
   const authors = getAuthors(data.authorsCollection?.items);
   const relatedEntity = getRelatedEntity(data.relatedEntity);
+  const relatedOutputs = getRelatedOutputs(
+    data.relatedOutputsCollection?.items,
+  );
   const tags =
     data.tagsCollection?.items
       .filter((tag): tag is TagItem => tag !== null)
@@ -283,7 +299,7 @@ export const parseContentfulGraphQLOutput = (
     rrid: data.rrid ?? undefined,
     accessionNumber: data.accessionNumber ?? undefined,
     ...relatedEntity,
-    relatedOutputs: [],
+    relatedOutputs,
   };
 };
 

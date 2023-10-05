@@ -1,6 +1,6 @@
 import { FC, lazy, useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { discover } from '@asap-hub/routing';
 import { DiscoverPage, TutorialsPage } from '@asap-hub/react-components';
 import { useSearch } from '../hooks';
@@ -54,9 +54,9 @@ const Discover: FC<Record<string, never>> = () => {
               searchQuery={searchQuery}
               onSearchQueryChange={setSearchQuery}
             >
-              <Frame title="Tutorials">
+              <SearchFrame title="Tutorials">
                 <TutorialList searchQuery={debouncedSearchQuery} />
-              </Frame>
+              </SearchFrame>
             </TutorialsPage>
           </Route>
           <Redirect to={discover({}).guides({}).$} />

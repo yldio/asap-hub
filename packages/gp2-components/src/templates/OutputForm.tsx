@@ -42,18 +42,16 @@ const DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED = [
   'Procedural Form',
 ];
 
-// Check this:isOwnRelatedResearchLink
-export const getOwnRelatedResearchLinks = (
-  relatedResearch?: gp2Model.OutputResponse['relatedOutputs'],
+export const getRelatedOutputs = (
+  relatedOutputs: gp2Model.OutputResponse['relatedOutputs'],
 ) =>
-  relatedResearch
-    // ?.filter(({ isOwnRelatedResearchLink }) => !!isOwnRelatedResearchLink)
-    ?.map((research) => ({
-      value: research.id,
-      label: research.title,
-      type: research.type,
-      documentType: research.documentType,
-    })) || [];
+  relatedOutputs.map(({ id, title, type, documentType }) => ({
+    value: id,
+    label: title,
+    type,
+    documentType,
+  }));
+
 const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
@@ -149,7 +147,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   doi,
   rrid,
   accessionNumber,
-  relatedOutputs,
+  relatedOutputs = [],
   getRelatedResearchSuggestions = noop,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
@@ -179,7 +177,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
     NonNullable<
       ComponentProps<typeof OutputRelatedResearchCard>['relatedResearch']
     >
-  >(getOwnRelatedResearchLinks(relatedOutputs));
+  >(getRelatedOutputs(relatedOutputs));
 
   const [newAuthors, setAuthors] = useState<
     ComponentPropsWithRef<typeof AuthorSelect>['values']

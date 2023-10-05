@@ -131,22 +131,27 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
     descendingEvents?: boolean,
   ): Promise<ClientSearchResponse<App, ResponsesKey>> {
     const options = this.getSearchOptions(entityTypes, requestOptions);
-    if (descendingEvents) {
-      const result = await this.reverseEventsIndex.search<
+    try {
+      if (descendingEvents) {
+        const result = await this.reverseEventsIndex.search<
+          DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
+        >(query, options);
+        return {
+          ...result,
+          index: this.reverseEventsIndex.indexName,
+        };
+      }
+
+      const result = await this.index.search<
         DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
       >(query, options);
       return {
         ...result,
-        index: this.reverseEventsIndex.indexName,
+        index: this.index.indexName,
       };
+    } catch (error) {
+      throw new Error(`Could not search: ${(error as Error).message}`);
     }
-    const result = await this.index.search<
-      DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
-    >(query, options);
-    return {
-      ...result,
-      index: this.index.indexName,
-    };
   }
 
   private static getAlgoliaObject(
@@ -165,10 +170,17 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
     query: string,
     requestOptions?: SearchOptions,
   ): Promise<SearchForFacetValuesResponse> {
-    return this.index.searchForFacetValues(
-      '_tags',
-      query,
-      this.getSearchOptions(entityTypes, requestOptions),
-    );
+    try {
+      const result = await this.index.searchForFacetValues(
+        '_tags',
+        query,
+        this.getSearchOptions(entityTypes, requestOptions),
+      );
+      return result;
+    } catch (error) {
+      throw new Error(
+        `Could not search for facet values: ${(error as Error).message}`,
+      );
+    }
   }
 }

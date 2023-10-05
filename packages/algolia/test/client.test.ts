@@ -143,6 +143,20 @@ describe('Algolia Search Client', () => {
     });
   });
 
+  test('Should throw Error when search throws', async () => {
+    algoliaSearchIndex.search.mockRejectedValue({
+      message: 'Some Algolia ERROR',
+    });
+
+    await expect(
+      algoliaSearchClient.search(['research-output'], 'query', {
+        hitsPerPage: 10,
+        page: 0,
+        filters: 'some-filters',
+      }),
+    ).rejects.toThrow(new Error('Could not search: Some Algolia ERROR'));
+  });
+
   test('Should search user entity', async () => {
     algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
 
@@ -201,6 +215,20 @@ describe('Algolia Search Client', () => {
       expect.objectContaining({
         filters: '__meta.type:"research-output"',
       }),
+    );
+  });
+  test('Should throw Error when facet search throws', async () => {
+    algoliaSearchIndex.searchForFacetValues.mockRejectedValue({
+      message: 'Some Algolia ERROR',
+    });
+    await expect(
+      algoliaSearchClient.searchForTagValues(['research-output'], 'query', {
+        hitsPerPage: 10,
+        page: 0,
+        filters: 'some-filters',
+      }),
+    ).rejects.toThrow(
+      new Error('Could not search for facet values: Some Algolia ERROR'),
     );
   });
   test('Should do facet value search with tags', async () => {

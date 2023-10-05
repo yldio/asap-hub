@@ -2,7 +2,7 @@ import { EventsPage } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 
 import { useSearch } from '../hooks';
 import Event from './Event';
@@ -40,12 +40,12 @@ const Events: FC<Record<string, never>> = () => {
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
         >
-          <Frame title="Upcoming Events">
+          <SearchFrame title="Upcoming Events">
             <EventList
               currentTime={currentTime}
               searchQuery={debouncedSearchQuery}
             />
-          </Frame>
+          </SearchFrame>
         </EventsPage>
       </Route>
       <Route exact path={path + events({}).past.template}>
@@ -53,13 +53,13 @@ const Events: FC<Record<string, never>> = () => {
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
         >
-          <Frame title="Past Events">
+          <SearchFrame title="Past Events">
             <EventList
               past
               currentTime={currentTime}
               searchQuery={debouncedSearchQuery}
             />
-          </Frame>
+          </SearchFrame>
         </EventsPage>
       </Route>
       <Route path={path + events({}).event.template}>

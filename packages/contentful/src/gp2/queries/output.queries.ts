@@ -69,6 +69,17 @@ export const outputsContentQueryFragment = gql`
         name
       }
     }
+    relatedOutputsCollection(limit: 10) {
+      total
+      items {
+        sys {
+          id
+        }
+        title
+        documentType
+        type
+      }
+    }
     doi
     rrid
     accessionNumber

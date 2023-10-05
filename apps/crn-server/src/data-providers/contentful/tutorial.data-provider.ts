@@ -79,9 +79,9 @@ export class TutorialContentfulDataProvider implements TutorialDataProvider {
 
     return {
       total: trainingCollection.total,
-      items: trainingCollection?.items
-        .filter((x): x is TutorialItem => x !== null)
-        .map(parseContentfulGraphQlTutorials),
+      items: cleanArray(trainingCollection?.items).map(
+        parseContentfulGraphQlTutorials,
+      ),
     };
   }
 

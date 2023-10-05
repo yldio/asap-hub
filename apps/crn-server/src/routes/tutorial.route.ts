@@ -13,9 +13,7 @@ export const tutorialRouteFactory = (
 
     const options = validateFetchOptions(query);
 
-    const result = await tutorialController.fetch({
-      ...options,
-    });
+    const result = await tutorialController.fetch(options);
 
     res.json(result);
   });

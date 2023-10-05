@@ -1,6 +1,11 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor, screen } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
@@ -77,19 +82,31 @@ it('renders tutorials list page when the tutorials tab is selected', async () =>
 });
 
 it('allows search on tutorials list', async () => {
-  mockGetTutorials.mockResolvedValue(createListTutorialsResponse(1));
+  const tutorialsResponse = createListTutorialsResponse(1);
+  mockGetTutorials.mockResolvedValue({
+    ...tutorialsResponse,
+    items: tutorialsResponse.items.map((tutorial) => ({
+      ...tutorial,
+      title: 'Tutorial 1',
+    })),
+  });
 
   await renderDiscoverPage(discover({}).tutorials({}).$);
 
-  userEvent.type(screen.getByRole('searchbox'), 'searchterm');
+  userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
 
   await waitFor(() =>
     expect(mockGetTutorials).toHaveBeenCalledWith(
       expect.objectContaining({
-        searchQuery: 'searchterm',
+        searchQuery: 'Tutorial 1',
       }),
       expect.anything(),
     ),
+  );
+  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+
+  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+    /Tutorial 1/i,
   );
 });
 

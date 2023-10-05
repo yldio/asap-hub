@@ -14,12 +14,7 @@ export default class TutorialController {
   }
 
   async fetch(options: FetchOptions): Promise<ListTutorialsResponse> {
-    const { total, items } = await this.tutorialDataProvider.fetch(options);
-
-    return {
-      total,
-      items,
-    };
+    return this.tutorialDataProvider.fetch(options);
   }
 
   async fetchById(id: string): Promise<TutorialsResponse> {

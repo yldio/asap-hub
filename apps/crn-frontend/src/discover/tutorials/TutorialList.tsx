@@ -16,7 +16,7 @@ const TutorialList: React.FC<TutorialListProps> = ({ searchQuery = '' }) => {
   });
 
   const { numberOfPages, renderPageHref } = usePagination(
-    result.total || 0,
+    result.total,
     pageSize,
   );
 

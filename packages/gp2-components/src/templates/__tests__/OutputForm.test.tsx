@@ -733,13 +733,13 @@ describe('OutputForm', () => {
     const defaultCohorts = [{ id: '5', name: 'Neurology' }];
     const renderWithSuggestions = (
       suggestions = defaultCohortSuggestions,
-      tags = defaultCohorts,
+      cohorts = defaultCohorts,
     ) =>
       render(
         <OutputForm
           {...defaultProps}
           cohortSuggestions={suggestions}
-          contributingCohorts={tags}
+          contributingCohorts={cohorts}
         />,
         {
           wrapper: StaticRouter,

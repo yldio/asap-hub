@@ -91,7 +91,7 @@ type OutputFormProps = {
     typeof AuthorSelect
   >['loadOptions'];
   keywordSuggestions: gp2Model.TagDataObject[];
-  getRelatedResearchSuggestions?: NonNullable<
+  getRelatedOutputSuggestions?: NonNullable<
     ComponentProps<
       typeof OutputRelatedResearchCard
     >['getRelatedResearchSuggestions']
@@ -148,7 +148,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   rrid,
   accessionNumber,
   relatedOutputs = [],
-  getRelatedResearchSuggestions = noop,
+  getRelatedOutputSuggestions = noop,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -466,7 +466,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
             isSaving={isSaving}
             relatedResearch={newRelatedOutputs}
             onChangeRelatedResearch={setRelatedOutputs}
-            getRelatedResearchSuggestions={getRelatedResearchSuggestions}
+            getRelatedResearchSuggestions={getRelatedOutputSuggestions}
           />
           <div css={footerStyles}>
             <div css={[buttonWrapperStyle, { margin: 0 }]}>

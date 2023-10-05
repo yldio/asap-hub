@@ -48,6 +48,7 @@ describe('OutputForm', () => {
   });
   it('publish the form', async () => {
     const getAuthorSuggestions = jest.fn();
+    const getRelatedOutputSuggestions = jest.fn();
     const history = createMemoryHistory();
     const shareOutput = jest.fn();
     const addNotification = jest.fn();
@@ -69,6 +70,13 @@ describe('OutputForm', () => {
         value: 'u1',
       },
     ]);
+    getRelatedOutputSuggestions.mockResolvedValue([
+      {
+        value: '11',
+        label: 'related output',
+        documentType: 'GP2 Reports',
+      },
+    ]);
     shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
     render(
       <OutputForm
@@ -76,6 +84,7 @@ describe('OutputForm', () => {
         documentType="Code/Software"
         shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
+        getRelatedOutputSuggestions={getRelatedOutputSuggestions}
       />,
       {
         wrapper: ({ children }) => (
@@ -126,6 +135,12 @@ describe('OutputForm', () => {
 
     await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
     userEvent.click(screen.getAllByText('Alex White')[1]!);
+    const relatedOutputs = screen.getByRole('textbox', {
+      name: /related output/i,
+    });
+    userEvent.click(relatedOutputs);
+    const relatedOutputOption = await screen.findByText(/GP2 Reports/i);
+    userEvent.click(relatedOutputOption);
     userEvent.click(screen.getByRole('button', { name: /publish/i }));
     expect(
       await screen.findByRole('button', { name: /publish/i }),
@@ -143,7 +158,13 @@ describe('OutputForm', () => {
         { userId: 'u2' },
         { externalUserName: 'Alex White' },
       ],
-      relatedOutputs: [],
+      relatedOutputs: [
+        {
+          id: '11',
+          title: 'related output',
+          documentType: 'GP2 Reports',
+        },
+      ],
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({

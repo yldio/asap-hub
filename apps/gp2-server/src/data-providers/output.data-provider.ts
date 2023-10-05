@@ -9,7 +9,7 @@ import {
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import logger from '../utils/logger';
-import { KeywordItem, parseKeyword } from './keyword.data-provider';
+import { TagItem, parseTag } from './tag.data-provider';
 import { isSharingStatus } from './transformers';
 import { OutputDataProvider } from './types';
 
@@ -255,8 +255,8 @@ export const parseContentfulGraphQLOutput = (
   const relatedEntity = getRelatedEntity(data.relatedEntity);
   const tags =
     data.tagsCollection?.items
-      .filter((keyword): keyword is KeywordItem => keyword !== null)
-      .map(parseKeyword) ?? [];
+      .filter((tag): tag is TagItem => tag !== null)
+      .map(parseTag) ?? [];
   return {
     id: data.sys.id,
     created: data.sys.firstPublishedAt,

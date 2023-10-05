@@ -18,7 +18,7 @@ type FilterPillsProps = {
   filters: FiltersType;
   projects: ProjectsType;
   workingGroups: WorkingGroupsType;
-  keywords: gp2Model.KeywordResponse[];
+  keywords: gp2Model.TagResponse[];
   onRemove: (id: string, typeOfFilter: FilterType) => void;
 };
 

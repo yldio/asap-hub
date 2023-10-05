@@ -4,34 +4,34 @@ import {
   getGP2ContentfulGraphqlClientMockServer,
 } from '@asap-hub/contentful';
 import { GraphQLError } from 'graphql';
-import { KeywordContentfulDataProvider } from '../../src/data-providers/keyword.data-provider';
+import { TagContentfulDataProvider } from '../../src/data-providers/tag.data-provider';
 import { getEntry } from '../fixtures/contentful.fixtures';
 import {
-  getContentfulGraphqlKeywords,
-  getListKeywordsDataObject,
-  getContentfulKeywordsGraphqlResponse,
-  getKeywordCreateDataObject,
-} from '../fixtures/keyword.fixtures';
+  getContentfulGraphqlTags,
+  getListTagsDataObject,
+  getContentfulTagsGraphqlResponse,
+  getTagCreateDataObject,
+} from '../fixtures/tag.fixtures';
 import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../mocks/contentful-rest-client.mock';
 
-describe('Keyword data provider', () => {
+describe('Tag data provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
   const environmentMock = getContentfulEnvironmentMock();
   const contentfulRestClientMock: () => Promise<Environment> = () =>
     Promise.resolve(environmentMock);
 
-  const keywordDataProvider = new KeywordContentfulDataProvider(
+  const tagDataProvider = new TagContentfulDataProvider(
     contentfulGraphqlClientMock,
     contentfulRestClientMock,
   );
 
   const contentfulGraphqlClientMockServer =
     getGP2ContentfulGraphqlClientMockServer({
-      Keywords: () => getContentfulGraphqlKeywords(),
+      Tags: () => getContentfulGraphqlTags(),
     });
 
-  const keywordDataProviderMockGraphql = new KeywordContentfulDataProvider(
+  const tagDataProviderMockGraphql = new TagContentfulDataProvider(
     contentfulGraphqlClientMockServer,
     contentfulRestClientMock,
   );
@@ -39,22 +39,22 @@ describe('Keyword data provider', () => {
   beforeEach(jest.resetAllMocks);
 
   describe('Fetch method', () => {
-    test('Should fetch the list of keywords from Contentful GraphQl', async () => {
-      const result = await keywordDataProviderMockGraphql.fetch();
+    test('Should fetch the list of tags from Contentful GraphQl', async () => {
+      const result = await tagDataProviderMockGraphql.fetch();
 
-      expect(result).toMatchObject(getListKeywordsDataObject());
+      expect(result).toMatchObject(getListTagsDataObject());
     });
 
-    test('Should return an empty result when no keywords exist', async () => {
-      const contentfulGraphQLResponse = getContentfulKeywordsGraphqlResponse();
-      contentfulGraphQLResponse.keywordsCollection!.total = 0;
-      contentfulGraphQLResponse.keywordsCollection!.items = [];
+    test('Should return an empty result when no tags exist', async () => {
+      const contentfulGraphQLResponse = getContentfulTagsGraphqlResponse();
+      contentfulGraphQLResponse.tagsCollection!.total = 0;
+      contentfulGraphQLResponse.tagsCollection!.items = [];
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
-      const result = await keywordDataProvider.fetch();
+      const result = await tagDataProvider.fetch();
 
       expect(result).toEqual({
         items: [],
@@ -67,20 +67,20 @@ describe('Keyword data provider', () => {
         new GraphQLError('some error message'),
       );
 
-      await expect(keywordDataProvider.fetch()).rejects.toThrow(
+      await expect(tagDataProvider.fetch()).rejects.toThrow(
         'some error message',
       );
     });
 
     test('Should return an empty result when the query is returned as null', async () => {
-      const contentfulGraphQLResponse = getContentfulKeywordsGraphqlResponse();
-      contentfulGraphQLResponse.keywordsCollection = null;
+      const contentfulGraphQLResponse = getContentfulTagsGraphqlResponse();
+      contentfulGraphQLResponse.tagsCollection = null;
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce(
         contentfulGraphQLResponse,
       );
 
-      const result = await keywordDataProvider.fetch();
+      const result = await tagDataProvider.fetch();
 
       expect(result).toEqual({
         items: [],
@@ -92,7 +92,7 @@ describe('Keyword data provider', () => {
   describe('Fetch-by-id method', () => {
     test('Should throw as not implemented', async () => {
       expect.assertions(1);
-      await expect(keywordDataProvider.fetchById()).rejects.toThrow(
+      await expect(tagDataProvider.fetchById()).rejects.toThrow(
         /Method not implemented/i,
       );
     });
@@ -104,42 +104,42 @@ describe('Keyword data provider', () => {
       environmentMock.createEntry.mockRejectedValue(new Error('failed'));
 
       await expect(
-        keywordDataProvider.create(getKeywordCreateDataObject()),
+        tagDataProvider.create(getTagCreateDataObject()),
       ).rejects.toThrow(Error);
     });
 
-    test('Should create the keyword', async () => {
-      const { name } = getKeywordCreateDataObject();
+    test('Should create the tag', async () => {
+      const { name } = getTagCreateDataObject();
 
-      const keywordMock = getEntry({});
-      environmentMock.createEntry.mockResolvedValue(keywordMock);
-      keywordMock.publish = jest.fn().mockResolvedValueOnce(keywordMock);
+      const tagMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(tagMock);
+      tagMock.publish = jest.fn().mockResolvedValueOnce(tagMock);
 
-      await keywordDataProvider.create({
+      await tagDataProvider.create({
         name,
       });
 
       const fields = addLocaleToFields({
         name,
       });
-      expect(environmentMock.createEntry).toHaveBeenCalledWith('keywords', {
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('tags', {
         fields,
       });
 
-      expect(keywordMock.publish).toHaveBeenCalled();
+      expect(tagMock.publish).toHaveBeenCalled();
     });
 
     test('Should throw error if error on publish', async () => {
-      const { name } = getKeywordCreateDataObject();
+      const { name } = getTagCreateDataObject();
 
-      const keywordMock = getEntry({});
-      environmentMock.createEntry.mockResolvedValue(keywordMock);
+      const tagMock = getEntry({});
+      environmentMock.createEntry.mockResolvedValue(tagMock);
 
-      keywordMock.publish = jest
+      tagMock.publish = jest
         .fn()
         .mockRejectedValue(new Error('error on publish'));
 
-      await expect(keywordDataProvider.create({ name })).rejects.toThrow(Error);
+      await expect(tagDataProvider.create({ name })).rejects.toThrow(Error);
     });
   });
 });

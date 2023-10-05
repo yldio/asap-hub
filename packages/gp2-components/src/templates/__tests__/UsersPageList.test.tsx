@@ -76,7 +76,7 @@ describe('UsersPageList', () => {
       const { items: projects } = gp2Fixtures.createProjectsResponse();
       const { items: workingGroups } =
         gp2Fixtures.createWorkingGroupsResponse();
-      const { items: keywords } = gp2Fixtures.createKeywordsResponse();
+      const { items: tags } = gp2Fixtures.createTagsResponse();
 
       render(
         <UsersPageList
@@ -86,7 +86,7 @@ describe('UsersPageList', () => {
           updateFilters={updateFilterSpy}
           projects={projects}
           workingGroups={workingGroups}
-          keywords={keywords}
+          keywords={tags}
         />,
       );
 

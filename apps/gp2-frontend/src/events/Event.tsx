@@ -14,6 +14,7 @@ const Event: React.FC = () => {
       <Frame title={event.title}>
         <EventPage
           {...event}
+          tags={event.tags.map((t) => t.name)}
           displayCalendar={true}
           eventOwner={
             <EventOwner

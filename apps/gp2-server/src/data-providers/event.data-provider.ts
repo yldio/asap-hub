@@ -14,7 +14,7 @@ import { EventStatus, gp2 as gp2Model } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 
 import { parseCalendarDataObjectToResponse } from '../controllers/calendar.controller';
-import { KeywordItem, parseKeyword } from './keyword.data-provider';
+import { TagItem, parseTag } from './tag.data-provider';
 import {
   getContentfulEventMaterial,
   MeetingMaterial,
@@ -166,14 +166,11 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
       .split(' ')
       .reduce(
         (
-          acc: (
-            | { title_contains: string }
-            | { keywords: { name_in: string[] } }
-          )[],
+          acc: ({ title_contains: string } | { tags: { name_in: string[] } })[],
           word,
         ) => {
           acc.push({ title_contains: word });
-          acc.push({ keywords: { name_in: [word] } });
+          acc.push({ tags: { name_in: [word] } });
           return acc;
         },
         [],
@@ -222,13 +219,11 @@ export class EventContentfulDataProvider implements gp2Model.EventDataProvider {
   ): Promise<void> {
     const environment = await this.getRestClient();
     const event = await environment.getEntry(id);
-    const { calendar, keywords, ...otherUpdateFields } = update;
+    const { calendar, tags, ...otherUpdateFields } = update;
 
     const updateWithCalendarLink = {
       ...(calendar ? { calendar: createLink(calendar) } : {}),
-      ...(keywords
-        ? { keywords: getLinkEntities(keywords.map((k) => k.id)) }
-        : {}),
+      ...(tags ? { tags: getLinkEntities(tags.map((k) => k.id)) } : {}),
       ...otherUpdateFields,
     };
 
@@ -350,10 +345,10 @@ export const parseGraphQLEvent = (
   } = item;
 
   const speakersItems = (speakersCollection?.items as SpeakerItem[]) ?? [];
-  const keywords =
-    item.keywordsCollection?.items
-      .filter((keyword): keyword is KeywordItem => keyword !== null)
-      .map(parseKeyword) ?? [];
+  const tags =
+    item.tagsCollection?.items
+      .filter((tag): tag is TagItem => tag !== null)
+      .map(parseTag) ?? [];
 
   return {
     id,
@@ -396,9 +391,7 @@ export const parseGraphQLEvent = (
     meetingLink: meetingLink || undefined,
     hideMeetingLink: hideMeetingLink || false,
     status: status as EventStatus,
-    // keeping tags as this is mandatory in BasicEvent and a lot of workarounds would be needed to not interefere with CRN
-    tags: [],
-    keywords,
+    tags,
     calendar,
     speakers: parseGraphQLSpeakers(speakersItems),
     workingGroup: calendar.workingGroups?.[0],

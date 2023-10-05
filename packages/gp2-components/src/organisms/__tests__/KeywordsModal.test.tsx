@@ -47,9 +47,7 @@ describe('KeywordsModal', () => {
 
   it('calls onSave with the right arguments', async () => {
     const onSave = jest.fn();
-    const tags = [
-      { id: 'id-1', name: 'Genetics' },
-    ] as gp2Model.KeywordDataObject[];
+    const tags = [{ id: 'id-1', name: 'Genetics' }] as gp2Model.TagDataObject[];
     renderModal({
       tags,
       onSave,

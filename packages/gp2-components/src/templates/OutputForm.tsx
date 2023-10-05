@@ -74,7 +74,7 @@ type OutputFormType = {
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
   >['loadOptions'];
-  keywordSuggestions: gp2Model.KeywordDataObject[];
+  keywordSuggestions: gp2Model.TagDataObject[];
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -159,9 +159,7 @@ const OutputForm: React.FC<OutputFormType> = ({
       value: author.id,
     })) || [],
   );
-  const [newTags, setNewTags] = useState<gp2Model.KeywordDataObject[]>(
-    tags || [],
-  );
+  const [newTags, setNewTags] = useState<gp2Model.TagDataObject[]>(tags || []);
 
   const identifierType: gp2Model.OutputIdentifierType = doi
     ? gp2Model.OutputIdentifierType.DOI
@@ -383,7 +381,7 @@ const OutputForm: React.FC<OutputFormType> = ({
                         ...acc,
                         { id: curr.value, name: curr.label },
                       ],
-                      [] as gp2Model.KeywordDataObject[],
+                      [] as gp2Model.TagDataObject[],
                     ),
                 );
               }}

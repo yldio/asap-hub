@@ -739,7 +739,7 @@ describe('OutputForm', () => {
         <OutputForm
           {...defaultProps}
           cohortSuggestions={suggestions}
-          tags={tags}
+          contributingCohorts={tags}
         />,
         {
           wrapper: StaticRouter,

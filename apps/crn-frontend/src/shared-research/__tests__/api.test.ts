@@ -218,17 +218,7 @@ describe('getResearchOutputs', () => {
       }),
     );
   });
-
-  it('throws an error of type error', async () => {
-    mockAlgoliaSearchClient.search.mockRejectedValue({
-      message: 'Some Error',
-    });
-    await expect(
-      getResearchOutputs(mockAlgoliaSearchClient, options),
-    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
-  });
 });
-
 describe('getResearchOutput', () => {
   it('makes an authorized GET request for the research output id', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

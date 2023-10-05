@@ -50,8 +50,6 @@ const Form = <T extends void | Record<string, unknown>>({
   useEffect(() => {
     if (status === 'hasSaved' && redirectOnSave) {
       pushFromHere(redirectOnSave);
-    } else if (status === 'hasSaved' && !dirty) {
-      setStatus('initial');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, redirectOnSave, dirty]);

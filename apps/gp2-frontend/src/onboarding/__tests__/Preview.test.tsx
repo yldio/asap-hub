@@ -80,7 +80,7 @@ const renderPreview = async (
 describe('Preview', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    mockGetKeywords.mockResolvedValue(gp2Fixtures.createKeywordsResponse());
+    mockGetKeywords.mockResolvedValue(gp2Fixtures.createTagsResponse());
   });
   const contributingCohortResponse: gp2Model.ContributingCohortResponse[] = [
     { id: '7', name: 'AGPDS' },
@@ -291,9 +291,7 @@ describe('Preview', () => {
   });
 
   it('saves the keywords modal', async () => {
-    const tags = [
-      { id: '1', name: 'Genetics' },
-    ] as gp2Model.KeywordDataObject[];
+    const tags = [{ id: '1', name: 'Genetics' }] as gp2Model.TagDataObject[];
     const user = { ...gp2Fixtures.createUserResponse(), tags };
     mockGetUser.mockResolvedValueOnce(user);
     await renderPreview(user.id);

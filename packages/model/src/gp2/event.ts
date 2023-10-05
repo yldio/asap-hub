@@ -1,7 +1,7 @@
 import { FetchOptions, ListResponse } from '../common';
 import { BasicEvent, SortOptions } from '../event-common';
 import { CalendarResponse } from './calendar';
-import { KeywordDataObject } from './keywords';
+import { TagDataObject } from './tag';
 import { ProjectResponse } from './project';
 import { WorkingGroupResponse } from './working-group';
 
@@ -21,12 +21,12 @@ export interface SpeakerInfo {
 }
 export type EventSpeaker = SpeakerInfo & { topic?: string };
 
-export interface EventDataObject extends BasicEvent {
+export interface EventDataObject extends Omit<BasicEvent, 'tags'> {
   calendar: CalendarResponse;
   project?: Pick<ProjectResponse, 'id' | 'title'>;
   workingGroup?: Pick<WorkingGroupResponse, 'id' | 'title'>;
   speakers: EventSpeaker[];
-  keywords: KeywordDataObject[];
+  tags: TagDataObject[];
 }
 
 export type ListEventDataObject = ListResponse<EventDataObject>;
@@ -59,9 +59,9 @@ export type EventCreateDataObject = Pick<
 };
 
 export type EventUpdateDataObject = Partial<
-  Omit<EventDataObject, 'calendar' | 'keywords'> & {
+  Omit<EventDataObject, 'calendar' | 'tags'> & {
     calendar: string;
-    keywords?: Omit<KeywordDataObject, 'name'>[] | null;
+    tags?: Omit<TagDataObject, 'name'>[] | null;
   }
 >;
 

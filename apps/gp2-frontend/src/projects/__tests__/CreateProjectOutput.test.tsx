@@ -70,7 +70,7 @@ const renderCreateProjectOutput = async (
 
 beforeEach(() => {
   jest.resetAllMocks();
-  mockGetKeywords.mockResolvedValue(gp2.createKeywordsResponse());
+  mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
 });
 
 it('renders the title', async () => {

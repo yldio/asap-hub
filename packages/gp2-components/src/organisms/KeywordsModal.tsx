@@ -9,7 +9,7 @@ const { perRem } = pixels;
 type KeywordsModalProps = Pick<gp2.UserResponse, 'tags'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
-    suggestions: gp2.KeywordDataObject[];
+    suggestions: gp2.TagDataObject[];
   };
 
 const KeywordsModal: React.FC<KeywordsModalProps> = ({
@@ -18,7 +18,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
   tags,
   suggestions,
 }) => {
-  const [newKeywords, setNewKeywords] = useState<gp2.KeywordDataObject[]>(
+  const [newKeywords, setNewKeywords] = useState<gp2.TagDataObject[]>(
     tags || [],
   );
 
@@ -70,7 +70,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
                       ...acc,
                       { id: curr.value, name: curr.label },
                     ],
-                    [] as gp2.KeywordDataObject[],
+                    [] as gp2.TagDataObject[],
                   ),
               );
             }}

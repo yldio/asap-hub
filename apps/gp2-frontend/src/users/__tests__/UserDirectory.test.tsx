@@ -60,7 +60,7 @@ const renderUserDirectory = async ({
   listUserAlgoliaResponse = createUserListAlgoliaResponse(1),
   listProjectResponse = createProjectListAlgoliaResponse(1),
   listWorkingGroupResponse = gp2Fixtures.createWorkingGroupsResponse(),
-  listKeywordResponse = gp2Fixtures.createKeywordsResponse(),
+  listKeywordResponse = gp2Fixtures.createTagsResponse(),
   displayFilters = false,
   isAdministrator = false,
   filters = {},
@@ -69,7 +69,7 @@ const renderUserDirectory = async ({
   listUserResponse?: gp2Model.ListUserResponse;
   listProjectResponse?: ClientSearchResponse<'gp2', 'project'>;
   listWorkingGroupResponse?: gp2Model.ListWorkingGroupResponse;
-  listKeywordResponse?: gp2Model.ListKeywordsResponse;
+  listKeywordResponse?: gp2Model.ListTagsResponse;
   displayFilters?: boolean;
   isAdministrator?: boolean;
   filters?: Partial<ReturnType<typeof useSearch>['filters']>;

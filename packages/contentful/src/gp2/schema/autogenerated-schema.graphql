@@ -976,6 +976,7 @@ type Events implements Entry {
   startDateTimeZone(locale: String): String
   status(locale: String): String
   sys: Sys!
+  tagsCollection(limit: Int = 100, locale: String, order: [EventsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): EventsTagsCollection
   thumbnail(locale: String, preview: Boolean): Asset
   title(locale: String): String
   videoRecording(locale: String): EventsVideoRecording
@@ -1111,6 +1112,8 @@ input EventsFilter {
   status_not_contains: String
   status_not_in: [String]
   sys: SysFilter
+  tags: cfTagsNestedFilter
+  tagsCollection_exists: Boolean
   thumbnail_exists: Boolean
   title: String
   title_contains: String
@@ -1279,6 +1282,26 @@ enum EventsSpeakersCollectionOrder {
   sys_publishedVersion_DESC
   title_ASC
   title_DESC
+}
+
+type EventsTagsCollection {
+  items: [Tags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum EventsTagsCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 type EventsVideoRecording {
@@ -1718,10 +1741,6 @@ input KeywordsFilter {
 type KeywordsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
   eventsCollection(limit: Int = 100, locale: String, order: [KeywordsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [KeywordsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
-  projectsCollection(limit: Int = 100, locale: String, order: [KeywordsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
-  usersCollection(limit: Int = 100, locale: String, order: [KeywordsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, order: [KeywordsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
 }
 
 enum KeywordsLinkingCollectionsEventsCollectionOrder {
@@ -1771,146 +1790,6 @@ enum KeywordsLinkingCollectionsEventsCollectionOrder {
   videoRecordingPermanentlyUnavailable_DESC
   videoRecordingUpdatedAt_ASC
   videoRecordingUpdatedAt_DESC
-}
-
-enum KeywordsLinkingCollectionsOutputsCollectionOrder {
-  accessionNumber_ASC
-  accessionNumber_DESC
-  addedDate_ASC
-  addedDate_DESC
-  adminNotes_ASC
-  adminNotes_DESC
-  documentType_ASC
-  documentType_DESC
-  doi_ASC
-  doi_DESC
-  gp2Supported_ASC
-  gp2Supported_DESC
-  lastUpdatedPartial_ASC
-  lastUpdatedPartial_DESC
-  link_ASC
-  link_DESC
-  publishDate_ASC
-  publishDate_DESC
-  rrid_ASC
-  rrid_DESC
-  sharingStatus_ASC
-  sharingStatus_DESC
-  subtype_ASC
-  subtype_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
-  type_ASC
-  type_DESC
-}
-
-enum KeywordsLinkingCollectionsProjectsCollectionOrder {
-  endDate_ASC
-  endDate_DESC
-  leadEmail_ASC
-  leadEmail_DESC
-  opportunitiesLink_ASC
-  opportunitiesLink_DESC
-  pmEmail_ASC
-  pmEmail_DESC
-  projectProposal_ASC
-  projectProposal_DESC
-  startDate_ASC
-  startDate_DESC
-  status_ASC
-  status_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
-  traineeProject_ASC
-  traineeProject_DESC
-}
-
-enum KeywordsLinkingCollectionsUsersCollectionOrder {
-  activatedDate_ASC
-  activatedDate_DESC
-  alternativeEmail_ASC
-  alternativeEmail_DESC
-  blog_ASC
-  blog_DESC
-  city_ASC
-  city_DESC
-  country_ASC
-  country_DESC
-  email_ASC
-  email_DESC
-  firstName_ASC
-  firstName_DESC
-  github_ASC
-  github_DESC
-  googleScholar_ASC
-  googleScholar_DESC
-  lastName_ASC
-  lastName_DESC
-  linkedIn_ASC
-  linkedIn_DESC
-  onboarded_ASC
-  onboarded_DESC
-  orcid_ASC
-  orcid_DESC
-  region_ASC
-  region_DESC
-  researchGate_ASC
-  researchGate_DESC
-  researcherId_ASC
-  researcherId_DESC
-  role_ASC
-  role_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  telephoneCountryCode_ASC
-  telephoneCountryCode_DESC
-  telephoneNumber_ASC
-  telephoneNumber_DESC
-  twitter_ASC
-  twitter_DESC
-}
-
-enum KeywordsLinkingCollectionsWorkingGroupsCollectionOrder {
-  leadingMembers_ASC
-  leadingMembers_DESC
-  primaryEmail_ASC
-  primaryEmail_DESC
-  secondaryEmail_ASC
-  secondaryEmail_DESC
-  shortDescription_ASC
-  shortDescription_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
 }
 
 enum KeywordsOrder {
@@ -2349,7 +2228,7 @@ type Outputs implements Entry {
   sharingStatus(locale: String): String
   subtype(locale: String): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [OutputsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: KeywordsFilter): OutputsTagsCollection
+  tagsCollection(limit: Int = 100, locale: String, order: [OutputsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): OutputsTagsCollection
   title(locale: String): String
   type(locale: String): String
   updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
@@ -2492,7 +2371,7 @@ input OutputsFilter {
   subtype_not_contains: String
   subtype_not_in: [String]
   sys: SysFilter
-  tags: cfKeywordsNestedFilter
+  tags: cfTagsNestedFilter
   tagsCollection_exists: Boolean
   title: String
   title_contains: String
@@ -2558,7 +2437,7 @@ enum OutputsOrder {
 union OutputsRelatedEntity = Projects | WorkingGroups
 
 type OutputsTagsCollection {
-  items: [Keywords]!
+  items: [Tags]!
   limit: Int!
   skip: Int!
   total: Int!
@@ -2785,7 +2664,7 @@ type Projects implements Entry {
   startDate(locale: String): DateTime
   status(locale: String): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [ProjectsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: KeywordsFilter): ProjectsTagsCollection
+  tagsCollection(limit: Int = 100, locale: String, order: [ProjectsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): ProjectsTagsCollection
   title(locale: String): String
   traineeProject(locale: String): Boolean
 }
@@ -2870,7 +2749,7 @@ input ProjectsFilter {
   status_not_contains: String
   status_not_in: [String]
   sys: SysFilter
-  tags: cfKeywordsNestedFilter
+  tags: cfTagsNestedFilter
   tagsCollection_exists: Boolean
   title: String
   title_contains: String
@@ -3030,7 +2909,7 @@ enum ProjectsResourcesCollectionOrder {
 }
 
 type ProjectsTagsCollection {
-  items: [Keywords]!
+  items: [Tags]!
   limit: Int!
   skip: Int!
   total: Int!
@@ -3098,6 +2977,8 @@ type Query {
   projectsCollection(limit: Int = 100, locale: String, order: [ProjectsOrder], preview: Boolean, skip: Int = 0, where: ProjectsFilter): ProjectsCollection
   resources(id: String!, locale: String, preview: Boolean): Resources
   resourcesCollection(limit: Int = 100, locale: String, order: [ResourcesOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): ResourcesCollection
+  tags(id: String!, locale: String, preview: Boolean): Tags
+  tagsCollection(limit: Int = 100, locale: String, order: [TagsOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): TagsCollection
   users(id: String!, locale: String, preview: Boolean): Users
   usersCollection(limit: Int = 100, locale: String, order: [UsersOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): UsersCollection
   workingGroupMembership(id: String!, locale: String, preview: Boolean): WorkingGroupMembership
@@ -3292,6 +3173,246 @@ input SysFilter {
   publishedVersion_not_in: [Float]
 }
 
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/tags)"""
+type Tags implements Entry {
+  contentfulMetadata: ContentfulMetadata!
+  linkedFrom(allowedLocales: [String]): TagsLinkingCollections
+  name(locale: String): String
+  sys: Sys!
+}
+
+type TagsCollection {
+  items: [Tags]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input TagsFilter {
+  AND: [TagsFilter]
+  OR: [TagsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
+}
+
+type TagsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+  usersCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+}
+
+enum TagsLinkingCollectionsEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+enum TagsLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum TagsLinkingCollectionsProjectsCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
+enum TagsLinkingCollectionsUsersCollectionOrder {
+  activatedDate_ASC
+  activatedDate_DESC
+  alternativeEmail_ASC
+  alternativeEmail_DESC
+  blog_ASC
+  blog_DESC
+  city_ASC
+  city_DESC
+  country_ASC
+  country_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  lastName_ASC
+  lastName_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  onboarded_ASC
+  onboarded_DESC
+  orcid_ASC
+  orcid_DESC
+  region_ASC
+  region_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  telephoneCountryCode_ASC
+  telephoneCountryCode_DESC
+  telephoneNumber_ASC
+  telephoneNumber_DESC
+  twitter_ASC
+  twitter_DESC
+}
+
+enum TagsLinkingCollectionsWorkingGroupsCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum TagsOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users)"""
 type Users implements Entry {
   activatedDate(locale: String): DateTime
@@ -3322,7 +3443,7 @@ type Users implements Entry {
   researcherId(locale: String): String
   role(locale: String): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [UsersTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: KeywordsFilter): UsersTagsCollection
+  tagsCollection(limit: Int = 100, locale: String, order: [UsersTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): UsersTagsCollection
   telephoneCountryCode(locale: String): String
   telephoneNumber(locale: String): String
   twitter(locale: String): String
@@ -3509,7 +3630,7 @@ input UsersFilter {
   role_not_contains: String
   role_not_in: [String]
   sys: SysFilter
-  tags: cfKeywordsNestedFilter
+  tags: cfTagsNestedFilter
   tagsCollection_exists: Boolean
   telephoneCountryCode: String
   telephoneCountryCode_contains: String
@@ -3672,7 +3793,7 @@ enum UsersOrder {
 }
 
 type UsersTagsCollection {
-  items: [Keywords]!
+  items: [Tags]!
   limit: Int!
   skip: Int!
   total: Int!
@@ -3936,7 +4057,7 @@ type WorkingGroups implements Entry {
   secondaryEmail(locale: String): String
   shortDescription(locale: String): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: KeywordsFilter): WorkingGroupsTagsCollection
+  tagsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): WorkingGroupsTagsCollection
   title(locale: String): String
 }
 
@@ -4017,7 +4138,7 @@ input WorkingGroupsFilter {
   shortDescription_not_contains: String
   shortDescription_not_in: [String]
   sys: SysFilter
-  tags: cfKeywordsNestedFilter
+  tags: cfTagsNestedFilter
   tagsCollection_exists: Boolean
   title: String
   title_contains: String
@@ -4178,7 +4299,7 @@ enum WorkingGroupsResourcesCollectionOrder {
 }
 
 type WorkingGroupsTagsCollection {
-  items: [Keywords]!
+  items: [Tags]!
   limit: Int!
   skip: Int!
   total: Int!
@@ -4489,6 +4610,20 @@ input cfResourcesNestedFilter {
   type_not: String
   type_not_contains: String
   type_not_in: [String]
+}
+
+input cfTagsNestedFilter {
+  AND: [cfTagsNestedFilter]
+  OR: [cfTagsNestedFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  name: String
+  name_contains: String
+  name_exists: Boolean
+  name_in: [String]
+  name_not: String
+  name_not_contains: String
+  name_not_in: [String]
+  sys: SysFilter
 }
 
 input cfUsersNestedFilter {

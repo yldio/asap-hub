@@ -30,14 +30,6 @@ yarn import:cohorts <file-path>
 
 Where `<file-path>` is a relative path to the CSV file.
 
-### Keywords import
-
-To run the import script use this command from the root of this repository:
-
-```bash
-yarn import:keywords
-```
-
 ### User invitations
 
 To run the script use this command from the root of this repository.

@@ -14,7 +14,7 @@ const UserList: React.FC<UserListProps> = ({ searchQuery, filters }) => {
     pageSize,
     searchQuery,
     filters: new Set(),
-    keywords: filters.keywords,
+    tags: filters.tags,
     regions: filters.regions,
     projects: filters.projects,
     workingGroups: filters.workingGroups,

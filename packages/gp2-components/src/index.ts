@@ -31,7 +31,7 @@ export {
   FiltersModal,
   FundingProviderModal,
   KeyInformationModal,
-  KeywordsModal,
+  TagsModal,
   MainNavigation,
   Milestone,
   Milestones,

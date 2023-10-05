@@ -5,8 +5,10 @@ import {
   crossQuery,
   Headline3,
   MembersList,
+  Paragraph,
   pixels,
   RichText,
+  TagList,
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
@@ -23,6 +25,7 @@ type WorkingGroupOverviewProps = Pick<
   | 'secondaryEmail'
   | 'calendar'
   | 'milestones'
+  | 'tags'
 >;
 
 const { rem } = pixels;
@@ -57,6 +60,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   members,
   calendar,
   milestones,
+  tags,
 }) => (
   <div css={containerStyles}>
     <Card overrideStyles={cardStyles}>
@@ -91,6 +95,17 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
         </Card>
       ) : undefined}
     </div>
+    {tags.length ? (
+      <Card overrideStyles={cardStyles}>
+        <Headline3 noMargin>Tags</Headline3>
+        <Paragraph accent="lead">
+          Explore keywords related to skills, techniques, resources, and tools.
+        </Paragraph>
+        <div css={contentStyles}>
+          <TagList tags={tags.map(({ name }) => name)} />
+        </div>
+      </Card>
+    ) : null}
     <Card overrideStyles={cardStyles}>
       <Headline3
         noMargin

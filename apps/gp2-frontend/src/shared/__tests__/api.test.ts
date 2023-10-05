@@ -2,11 +2,11 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import nock from 'nock';
 import { API_BASE_URL } from '../../config';
-import { getKeywords } from '../api';
+import { getTags } from '../api';
 
 jest.mock('../../config');
 
-describe('getKeywords', () => {
+describe('getTags', () => {
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
     nock.cleanAll();
@@ -18,7 +18,7 @@ describe('getKeywords', () => {
       .get('/tags')
       .reply(200, tagsResponse);
 
-    const result = await getKeywords('Bearer x');
+    const result = await getTags('Bearer x');
     expect(result).toEqual(tagsResponse);
   });
 
@@ -28,9 +28,9 @@ describe('getKeywords', () => {
       .reply(500);
 
     await expect(
-      getKeywords('Bearer x'),
+      getTags('Bearer x'),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch the Keywords. Expected status 2xx. Received status 500."`,
+      `"Failed to fetch the Tags. Expected status 2xx. Received status 500."`,
     );
   });
 });

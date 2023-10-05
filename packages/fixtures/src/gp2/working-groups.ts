@@ -28,6 +28,7 @@ const mockedWorkingGroup: gp2.WorkingGroupResponse = {
       status: 'Active',
     },
   ],
+  tags: [],
 };
 
 export const createWorkingGroupResponse = (

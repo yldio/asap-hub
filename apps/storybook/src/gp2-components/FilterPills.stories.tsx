@@ -10,7 +10,7 @@ export default {
 
 const props: ComponentProps<typeof FilterPills> = {
   filters: {
-    keywords: [],
+    tags: [],
     regions: ['Asia', 'Africa'],
     projects: [],
     workingGroups: [],
@@ -25,7 +25,7 @@ const props: ComponentProps<typeof FilterPills> = {
       id,
       title,
     })),
-  keywords: gp2Fixtures.createTagsResponse().items,
+  tags: gp2Fixtures.createTagsResponse().items,
   onRemove: noop,
 };
 

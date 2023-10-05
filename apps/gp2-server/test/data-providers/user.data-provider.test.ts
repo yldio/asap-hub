@@ -1355,7 +1355,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tagId],
+            tags: [tagId],
           },
         };
         const result = await userDataProvider.fetch(fetchOptions);
@@ -1382,7 +1382,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tagId],
+            tags: [tagId],
           },
         };
         await userDataProvider.fetch(fetchOptions);
@@ -1432,7 +1432,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tag1Id, tag2Id],
+            tags: [tag1Id, tag2Id],
           },
         };
         await userDataProvider.fetch(fetchOptions);
@@ -1482,7 +1482,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tag1Id, tag2Id],
+            tags: [tag1Id, tag2Id],
           },
         };
         await userDataProvider.fetch(fetchOptions);
@@ -1531,7 +1531,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tag1Id, tag2Id],
+            tags: [tag1Id, tag2Id],
           },
         };
         await userDataProvider.fetch(fetchOptions);
@@ -1645,7 +1645,7 @@ describe('User data provider', () => {
         );
       });
     });
-    test('it should be able to filter out duplicate user Ids when  the project and working group and keyword filters are defined', async () => {
+    test('it should be able to filter out duplicate user Ids when  the project and working group and tag filters are defined', async () => {
       const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
       const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
       const tagId = '0a391bca-5ad8-45c1-82d4-02bfde66481b';
@@ -1668,7 +1668,7 @@ describe('User data provider', () => {
         filter: {
           projects: [projectId],
           workingGroups: [workingGroupId],
-          keywords: [tagId],
+          tags: [tagId],
           userIds: [user1Id],
         },
       };

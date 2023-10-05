@@ -8,7 +8,7 @@ import {
   UserContributingCohorts,
   UserExternalProfiles,
   UserFundingStreams,
-  UserKeywords,
+  UserTags,
   UserProjects,
   UserQuestions,
   UserWorkingGroups,
@@ -34,7 +34,7 @@ type UserOverviewProps = Pick<
     editContributingCohortsHref?: string;
     editExternalProfilesHref?: string;
     editFundingStreamsHref?: string;
-    editKeywordsHref?: string;
+    editTagsHref?: string;
     editQuestionsHref?: string;
   };
 
@@ -73,7 +73,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
   editContributingCohortsHref,
   editExternalProfilesHref,
   editFundingStreamsHref,
-  editKeywordsHref,
+  editTagsHref,
   editQuestionsHref,
 }) => (
   <div css={containerStyles}>
@@ -83,7 +83,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({
         email={email}
         editHref={editContactInfoHref}
       />
-      <UserKeywords tags={tags} editHref={editKeywordsHref} />
+      <UserTags tags={tags} editHref={editTagsHref} />
     </div>
     <UserBiography biography={biography} editHref={editBiographyHref} />
     {projects.length > 0 && (

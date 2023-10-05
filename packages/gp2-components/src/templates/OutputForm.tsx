@@ -90,7 +90,7 @@ type OutputFormProps = {
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
   >['loadOptions'];
-  keywordSuggestions: gp2Model.TagDataObject[];
+  tagSuggestions: gp2Model.TagDataObject[];
   getRelatedOutputSuggestions: NonNullable<
     ComponentProps<
       typeof OutputRelatedResearchCard
@@ -132,7 +132,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   entityType,
   shareOutput,
   documentType,
-  keywordSuggestions,
+  tagSuggestions,
   getAuthorSuggestions = noop,
   title,
   link,
@@ -402,7 +402,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 value: id,
               }))}
               enabled={!isSaving}
-              suggestions={keywordSuggestions.map(({ id, name }) => ({
+              suggestions={tagSuggestions.map(({ id, name }) => ({
                 label: name,
                 value: id,
               }))}

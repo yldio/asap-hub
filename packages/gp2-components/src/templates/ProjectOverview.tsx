@@ -5,6 +5,7 @@ import {
   crossQuery,
   Headline3,
   MembersList,
+  Paragraph,
   pixels,
   TagList,
 } from '@asap-hub/react-components';
@@ -22,9 +23,8 @@ type ProjectOverviewProps = Pick<
   | 'milestones'
   | 'members'
   | 'calendar'
-> & {
-  keywords: string[];
-};
+  | 'tags'
+>;
 
 const { rem } = pixels;
 
@@ -36,7 +36,7 @@ const containerStyles = css({
 });
 
 const contentStyles = css({
-  paddingTop: rem(32),
+  paddingTop: rem(20),
 });
 
 const columnStyles = css({
@@ -55,7 +55,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   description,
   pmEmail,
   leadEmail,
-  keywords,
+  tags,
   milestones,
   members,
   calendar,
@@ -94,12 +94,17 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
       ) : undefined}
     </div>
 
-    <Card overrideStyles={cardStyles}>
-      <Headline3 noMargin>Keywords</Headline3>
-      <div css={contentStyles}>
-        <TagList tags={keywords} />
-      </div>
-    </Card>
+    {tags.length ? (
+      <Card overrideStyles={cardStyles}>
+        <Headline3 noMargin>Tags</Headline3>
+        <Paragraph accent="lead">
+          Explore keywords related to skills, techniques, resources, and tools.
+        </Paragraph>
+        <div css={contentStyles}>
+          <TagList tags={tags.map(({ name }) => name)} />
+        </div>
+      </Card>
+    ) : null}
     <Card>
       <Headline3 noMargin>{`Project Members (${members.length})`}</Headline3>
       <div css={contentStyles}>

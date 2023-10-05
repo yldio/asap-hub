@@ -6,33 +6,31 @@ import EditUserModal from './EditUserModal';
 
 const { perRem } = pixels;
 
-type KeywordsModalProps = Pick<gp2.UserResponse, 'tags'> &
+type TagsModalProps = Pick<gp2.UserResponse, 'tags'> &
   Pick<ComponentProps<typeof EditUserModal>, 'backHref'> & {
     onSave: (userData: gp2.UserPatchRequest) => Promise<void>;
     suggestions: gp2.TagDataObject[];
   };
 
-const KeywordsModal: React.FC<KeywordsModalProps> = ({
+const TagsModal: React.FC<TagsModalProps> = ({
   onSave,
   backHref,
   tags,
   suggestions,
 }) => {
-  const [newKeywords, setNewKeywords] = useState<gp2.TagDataObject[]>(
-    tags || [],
-  );
+  const [newTags, setNewTags] = useState<gp2.TagDataObject[]>(tags || []);
 
   const checkDirty = () =>
-    (!tags && newKeywords.length) ||
-    (!!tags && !tags.every((val, index) => val === newKeywords[index]));
+    (!tags && newTags.length) ||
+    (!!tags && !tags.every((val, index) => val === newTags[index]));
 
   return (
     <EditUserModal
-      title="Keywords"
+      title="Tags"
       description="Help others to understand your areas of expertise or what you’re passionate about."
       onSave={() =>
         onSave({
-          tags: newKeywords.map(({ id }) => ({ id })),
+          tags: newTags.map(({ id }) => ({ id })),
         })
       }
       backHref={backHref}
@@ -41,7 +39,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
       {({ isSaving }) => (
         <div css={{ paddingBottom: `${162 / perRem}em` }}>
           <LabeledMultiSelect
-            title="Keywords"
+            title="Tags"
             subtitle="(required)"
             description={
               <>
@@ -51,7 +49,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
                 </span>
               </>
             }
-            values={newKeywords.map(({ id, name }) => ({
+            values={newTags.map(({ id, name }) => ({
               label: name,
               value: id,
             }))}
@@ -62,7 +60,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
               value: id,
             }))}
             onChange={(newValues) => {
-              setNewKeywords(
+              setNewTags(
                 newValues
                   .slice(0, 10)
                   .reduce(
@@ -76,7 +74,7 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
             }}
             placeholder="Start typing..."
             maxMenuHeight={160}
-            getValidationMessage={() => 'Please add your keywords'}
+            getValidationMessage={() => 'Please add your tags'}
           />
         </div>
       )}
@@ -84,4 +82,4 @@ const KeywordsModal: React.FC<KeywordsModalProps> = ({
   );
 };
 
-export default KeywordsModal;
+export default TagsModal;

@@ -1189,5 +1189,36 @@ describe('Working Group Data Provider', () => {
       });
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledTimes(3);
     });
+
+    describe('tags', () => {
+      test('It should associate the tag to the working groups', async () => {
+        const workingGroupId = '11';
+        const tagId = '23';
+        const existingWorkingGroupMock = getEntry({});
+        const workingGroup = getContentfulGraphqlWorkingGroup();
+
+        environmentMock.getEntry.mockResolvedValueOnce(
+          existingWorkingGroupMock,
+        );
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          workingGroup: {
+            ...workingGroup,
+            tagsCollection: {
+              total: 0,
+              items: [],
+            },
+          },
+        });
+
+        await workingGroupDataProvider.update(workingGroupId, {
+          tags: [{ id: tagId }],
+        });
+
+        expect(patchAndPublish).toHaveBeenCalledWith(existingWorkingGroupMock, {
+          tags: [{ sys: { id: tagId, linkType: 'Entry', type: 'Link' } }],
+        });
+      });
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { FetchOptions, ListResponse } from '../common';
 import { ExternalUserResponse } from './external-user';
-import { KeywordDataObject } from './keywords';
+import { TagDataObject } from './tag';
 
 export const outputDocumentTypes = [
   'Procedural Form',
@@ -91,7 +91,7 @@ export type OutputCoreObject = {
   description?: string;
   gp2Supported?: DecisionOption;
   sharingStatus: OutputSharingStatus;
-  tags?: KeywordDataObject[];
+  tags?: TagDataObject[];
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
@@ -163,7 +163,7 @@ export type OutputPostRequest = {
   sharingStatus: OutputSharingStatus;
   workingGroupId?: string;
   projectId?: string;
-  tags?: KeywordDataObject[];
+  tags?: TagDataObject[];
   doi?: string;
   rrid?: string;
   accessionNumber?: string;

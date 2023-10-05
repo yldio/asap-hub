@@ -14,7 +14,7 @@ type FiltersModalProps = {
   onApplyClick: (filters: gp2Model.FetchUsersSearchFilter) => void;
   projects: Pick<gp2Model.ProjectResponse, 'id' | 'title'>[];
   workingGroups: Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
-  keywords: gp2Model.KeywordResponse[];
+  keywords: gp2Model.TagResponse[];
 };
 
 const getValues = <T extends string>(selected: T[]) =>

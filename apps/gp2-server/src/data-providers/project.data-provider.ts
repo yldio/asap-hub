@@ -7,7 +7,7 @@ import {
   pollContentfulGql,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { KeywordItem, parseKeyword } from './keyword.data-provider';
+import { TagItem, parseTag } from './tag.data-provider';
 import {
   deleteEntries,
   parseCalendar,
@@ -179,8 +179,8 @@ export function parseProjectToDataObject(
   const calendar = parseCalendar(project.calendar);
   const tags =
     project.tagsCollection?.items
-      .filter((keyword): keyword is KeywordItem => keyword !== null)
-      .map(parseKeyword) ?? [];
+      .filter((tag): tag is TagItem => tag !== null)
+      .map(parseTag) ?? [];
 
   return {
     id: project.sys.id,

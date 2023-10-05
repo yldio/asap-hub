@@ -44,9 +44,15 @@ it('displays the event with given id', async () => {
     ...gp2.createEventResponse(),
     id,
     title: 'Kool Event',
+    tags: [
+      { id: 'tag-1', name: '10X Genomics' },
+      { id: 'tag-1', name: '2D cultures' },
+    ],
   });
   await renderEvent();
   expect(screen.getByText('Kool Event', { exact: false })).toBeVisible();
+  expect(screen.getByText('10X Genomics', { exact: false })).toBeVisible();
+  expect(screen.getByText('2D cultures', { exact: false })).toBeVisible();
   expect(mockGetEvent.mock.calls).toEqual([[id, expect.anything()]]);
 });
 

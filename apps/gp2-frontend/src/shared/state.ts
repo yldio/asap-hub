@@ -10,7 +10,7 @@ const keywordsSelector = selector({
     return getKeywords(authorization);
   },
 });
-const keywordsState = atom<gp2.ListKeywordsResponse>({
+const keywordsState = atom<gp2.ListTagsResponse>({
   key: 'keywordsState',
   default: keywordsSelector,
 });

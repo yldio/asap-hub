@@ -1,4 +1,9 @@
-import { BasicEvent, EventController, EventStatus, gp2 } from '@asap-hub/model';
+import {
+  EventController,
+  EventResponse,
+  EventStatus,
+  gp2,
+} from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import {
   GoogleEvent,
@@ -12,7 +17,7 @@ export type SyncEvent = (
   googleCalendarId: string,
   cmsCalendarId: string,
   defaultTimezone: string,
-) => Promise<BasicEvent>;
+) => Promise<EventResponse | gp2.EventResponse>;
 
 const getEventDate = (eventDate: calendarV3.Schema$EventDateTime): string =>
   eventDate.dateTime

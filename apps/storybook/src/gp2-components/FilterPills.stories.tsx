@@ -25,7 +25,7 @@ const props: ComponentProps<typeof FilterPills> = {
       id,
       title,
     })),
-  keywords: gp2Fixtures.createKeywordsResponse().items,
+  keywords: gp2Fixtures.createTagsResponse().items,
   onRemove: noop,
 };
 

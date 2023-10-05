@@ -2,7 +2,7 @@ import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC } from 'react';
-import { useRelatedOutputSuggestions } from '../outputs/api';
+import { useRelatedOutputSuggestions } from '../outputs';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 import { useKeywords } from '../shared/state';
 

@@ -17,7 +17,6 @@ type OutputRelatedResearchProps = ComponentProps<
 export const getIconForDocumentType = (
   documentType: string,
 ): EmotionJSX.Element => {
-  console.log(documentType);
   switch (documentType) {
     case 'Article':
       return outputArticle;

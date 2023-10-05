@@ -1,8 +1,8 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2, useRouteParams } from '@asap-hub/routing';
+import { useRelatedOutputSuggestions } from '../outputs';
 import { useKeywords } from '../shared/state';
-import { useRelatedOutputSuggestions } from './api';
 
 import { useAuthorSuggestions, useOutputById, useUpdateOutput } from './state';
 

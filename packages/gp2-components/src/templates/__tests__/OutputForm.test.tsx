@@ -597,9 +597,6 @@ describe('OutputForm', () => {
         title,
         link,
         authors,
-        entityType: 'project' as const,
-        projects: [{ id: '1', title: 'a project' }],
-        workingGroups: undefined,
         tags: [{ id: 'tag-1', name: 'Tag' }],
         contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
         documentType: 'Dataset' as gp2.OutputDocumentType,
@@ -625,17 +622,58 @@ describe('OutputForm', () => {
       expect(
         screen.getByRole('textbox', { name: /working groups/i }),
       ).toBeVisible();
+      expect(screen.getByText('a WG title')).toBeVisible();
       expect(screen.getByRole('textbox', { name: /projects/i })).toBeVisible();
+      expect(
+        screen.getByLabelText(/projects/i, {
+          selector: 'input',
+        }),
+      ).toHaveValue('');
       expect(screen.getByRole('textbox', { name: /cohorts/i })).toBeVisible();
+      expect(screen.getByText('Cohort')).toBeVisible();
       expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
       expect(screen.getByText('Tony Stark')).toBeVisible();
       expect(screen.getByRole('textbox', { name: /tags/i })).toBeVisible();
+      expect(screen.getByText('Tag')).toBeVisible();
       expect(
         screen.getByRole('textbox', { name: /identifier type/i }),
       ).toBeVisible();
       expect(screen.getByText('None')).toBeVisible();
       expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
       expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
+    });
+
+    it('renders with projects', () => {
+      const output = {
+        ...defaultProps,
+        ...gp2Fixtures.createOutputResponse(),
+        entityType: 'project' as const,
+        projects: [{ id: '1', title: 'a project' }],
+        workingGroups: undefined,
+      };
+      render(<OutputForm {...output} />, { wrapper: StaticRouter });
+
+      expect(
+        screen.getByRole('textbox', { name: /working groups/i }),
+      ).toBeVisible();
+      expect(
+        screen.getByLabelText(/working groups/i, {
+          selector: 'input',
+        }),
+      ).toHaveValue('');
+      expect(screen.getByRole('textbox', { name: /projects/i })).toBeVisible();
+      expect(screen.getByText('a project')).toBeVisible();
+    });
+
+    it('does not render cohort', () => {
+      render(
+        <OutputForm {...defaultProps} documentType="Training Materials" />,
+        { wrapper: StaticRouter },
+      );
+
+      expect(
+        screen.queryByRole('textbox', { name: /cohorts/i }),
+      ).not.toBeInTheDocument();
     });
   });
 

@@ -310,6 +310,39 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isFieldDirty(type, newType) ||
     isFieldDirty(subtype, newSubtype) ||
     isFieldDirty(identifierType, newIdentifierType) ||
+    isFieldDirty(sharingStatus, newSharingStatus) ||
+    isFieldDirty(gp2Supported, newGp2Supported) ||
+    (workingGroups
+      ? !workingGroups.every(
+          (workingGroup, index) =>
+            index ===
+            newWorkingGroups?.findIndex(
+              (newWorkingGroup) => newWorkingGroup.id === workingGroup.id,
+            ),
+        )
+      : !!newWorkingGroups?.length) ||
+    (projects
+      ? !projects.every(
+          (project, index) =>
+            index ===
+            newProjects?.findIndex(
+              (newProject) => newProject.id === project.id,
+            ),
+        )
+      : !!newProjects?.length) ||
+    (tags
+      ? !tags.every(
+          (tag, index) =>
+            index === newTags?.findIndex((newTag) => newTag.id === tag.id),
+        )
+      : !!newTags?.length) ||
+    (contributingCohorts
+      ? !contributingCohorts.every(
+          (cohort, index) =>
+            index ===
+            newCohorts?.findIndex((newCohort) => newCohort.id === cohort.id),
+        )
+      : !!newCohorts?.length) ||
     (authors
       ? !authors.every(
           (author, index) =>

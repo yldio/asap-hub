@@ -189,48 +189,6 @@ describe('OutputForm', () => {
     expect(history.location.pathname).toEqual(`/outputs`);
   });
 
-  it('publishes the form with projects', () => {
-    const shareOutput = jest.fn();
-
-    shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
-    render(
-      <OutputForm
-        {...defaultProps}
-        title="output title"
-        link="https://example.com"
-        description="An interesting article"
-        gp2Supported="Yes"
-        sharingStatus="GP2 Only"
-        documentType="Code/Software"
-        shareOutput={shareOutput}
-        entityType="project"
-        projects={[{ id: '1', title: 'a project' }]}
-        workingGroups={undefined}
-        tags={[{ id: 'tag-1', name: 'Tag' }]}
-        contributingCohorts={[{ id: 'cohort-1', name: 'Cohort' }]}
-      />,
-      {
-        wrapper: StaticRouter,
-      },
-    );
-
-    userEvent.click(screen.getByRole('button', { name: /publish/i }));
-
-    expect(shareOutput).toHaveBeenCalledWith({
-      title: 'output title',
-      link: 'https://example.com',
-      documentType: 'Code/Software',
-      description: 'An interesting article',
-      gp2Supported: 'Yes',
-      sharingStatus: 'GP2 Only',
-      authors: [],
-      mainEntityId: '1',
-      projectIds: [],
-      tags: [{ id: 'tag-1', name: 'Tag' }],
-      contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
-    });
-  });
-
   it('can submit published date', async () => {
     const getAuthorSuggestions = jest.fn();
     const history = createMemoryHistory();
@@ -660,6 +618,48 @@ describe('OutputForm', () => {
       expect(screen.getByText('None')).toBeVisible();
       expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
       expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
+    });
+
+    it('saves the form with projects, tags and cohorts', () => {
+      const shareOutput = jest.fn();
+
+      shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
+      render(
+        <OutputForm
+          {...defaultProps}
+          title="output title"
+          link="https://example.com"
+          description="An interesting article"
+          gp2Supported="Yes"
+          sharingStatus="GP2 Only"
+          documentType="Code/Software"
+          shareOutput={shareOutput}
+          entityType="project"
+          projects={[{ id: '1', title: 'a project' }]}
+          workingGroups={undefined}
+          tags={[{ id: 'tag-1', name: 'Tag' }]}
+          contributingCohorts={[{ id: 'cohort-1', name: 'Cohort' }]}
+        />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
+
+      userEvent.click(screen.getByRole('button', { name: /save/i }));
+
+      expect(shareOutput).toHaveBeenCalledWith({
+        title: 'output title',
+        link: 'https://example.com',
+        documentType: 'Code/Software',
+        description: 'An interesting article',
+        gp2Supported: 'Yes',
+        sharingStatus: 'GP2 Only',
+        authors: [],
+        mainEntityId: '1',
+        projectIds: [],
+        tags: [{ id: 'tag-1', name: 'Tag' }],
+        contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
+      });
     });
   });
 

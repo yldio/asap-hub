@@ -46,7 +46,7 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
         documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
         keywordSuggestions={keywordSuggestions}
-        getRelatedResearchSuggestions={getRelatedOutputSuggestions}
+        getRelatedOutputSuggestions={getRelatedOutputSuggestions}
       />
     </CreateOutputPage>
   );

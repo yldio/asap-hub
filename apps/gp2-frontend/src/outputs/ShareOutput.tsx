@@ -30,7 +30,7 @@ const ShareOutput: React.FC<Record<string, never>> = () => {
         shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
         keywordSuggestions={keywordSuggestions}
-        getRelatedResearchSuggestions={getRelatedOutputSuggestions}
+        getRelatedOutputSuggestions={getRelatedOutputSuggestions}
       />
     </CreateOutputPage>
   );

@@ -9,7 +9,7 @@ import {
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import logger from '../utils/logger';
-import { TagItem, parseTag } from './tag.data-provider';
+import { parseTag, TagItem } from './tag.data-provider';
 import { isSharingStatus } from './transformers';
 import { OutputDataProvider } from './types';
 
@@ -251,12 +251,17 @@ type GraphQLOutputs = NonNullable<
 type GraphQLOutput = NonNullable<GraphQLOutputs[number]>;
 const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
   outputs
-    ?.filter((output): output is GraphQLOutput => output !== null)
+    ?.filter(
+      (output): output is GraphQLOutput =>
+        output !== null &&
+        output.documentType !== null &&
+        output.title !== null,
+    )
     .map(({ sys, documentType, title, type }) => ({
       id: sys.id,
-      title,
-      documentType,
-      type,
+      title: title ?? '',
+      documentType: documentType as gp2Model.OutputDocumentType,
+      ...(type ? { type: type as gp2Model.OutputType } : {}),
     })) || [];
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
@@ -358,6 +363,14 @@ const cleanOutput = (
         tags: (value as gp2Model.OutputUpdateDataObject['tags'])?.map((tag) =>
           getLinkEntity(tag.id),
         ),
+      };
+    }
+    if (key === 'relatedOutputs') {
+      return {
+        ...acc,
+        relatedOutputs: (
+          value as gp2Model.OutputUpdateDataObject['relatedOutputs']
+        ).map((output) => getLinkEntity(output.id)),
       };
     }
     return { ...acc, [key]: value };

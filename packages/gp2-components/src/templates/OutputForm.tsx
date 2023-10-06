@@ -91,7 +91,7 @@ type OutputFormProps = {
     typeof AuthorSelect
   >['loadOptions'];
   keywordSuggestions: gp2Model.TagDataObject[];
-  getRelatedOutputSuggestions?: NonNullable<
+  getRelatedOutputSuggestions: NonNullable<
     ComponentProps<
       typeof OutputRelatedResearchCard
     >['getRelatedResearchSuggestions']

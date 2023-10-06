@@ -22,6 +22,7 @@ describe('OutputForm', () => {
     documentType: 'Procedural Form' as const,
     entityType: 'workingGroup' as const,
     keywordSuggestions: [],
+    getRelatedOutputSuggestions: jest.fn(),
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {

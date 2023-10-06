@@ -1,4 +1,4 @@
-import { gp2 as gp2Model, UserSocialLinks } from '@asap-hub/model';
+import { gp2 as gp2Model, OrcidWork, UserSocialLinks } from '@asap-hub/model';
 
 import {
   addLocaleToFields,
@@ -16,10 +16,20 @@ import {
 import logger from '../utils/logger';
 import { TagItem, parseTag } from './tag.data-provider';
 import { UserDataProvider } from './types';
+import { parseOrcidWorkFromCMS } from './transformers/users';
 
 export type UserItem = NonNullable<
   NonNullable<gp2Contentful.FetchUsersQuery['usersCollection']>['items'][number]
 >;
+
+type OrcidWorkContentful = {
+  id: string;
+  doi?: string;
+  title?: string;
+  type?: string;
+  publicationDate?: Record<'day' | 'month' | 'year', string | undefined>;
+  lastModifiedDate?: string;
+};
 
 export class UserContentfulDataProvider implements UserDataProvider {
   constructor(
@@ -280,6 +290,10 @@ export const parseUserToDataObject = (
   const workingGroups = parseWorkingGroups(
     user.linkedFrom?.workingGroupMembershipCollection,
   );
+  const orcidWorks: OrcidWork[] = parseOrcidWorksContentful(
+    user.orcidWorks || [],
+  );
+
   return {
     id: user.sys.id,
     createdDate: user.sys.firstPublishedAt,
@@ -304,7 +318,7 @@ export const parseUserToDataObject = (
     fundingStreams: user.fundingStreams ?? undefined,
     social: {
       linkedIn: user.linkedIn ?? undefined,
-      orcid: user.orcid ?? undefined,
+      orcid: user.orcid ? `https://orcid.org/${user.orcid}` : undefined,
       researcherId: user.researcherId ?? undefined,
       twitter: user.twitter ?? undefined,
       github: user.github ?? undefined,
@@ -316,6 +330,10 @@ export const parseUserToDataObject = (
     projects,
     contributingCohorts,
     workingGroups,
+    orcid: user.orcid ?? undefined,
+    orcidLastModifiedDate: user.orcidLastModifiedDate ?? undefined,
+    orcidLastSyncDate: user.orcidLastSyncDate ?? undefined,
+    orcidWorks,
   };
 };
 const generateFetchQueryFilter = (
@@ -601,4 +619,14 @@ const removePreviousCohorts = async (
     return Promise.all(cohortEntities.items.map((entry) => entry.delete()));
   }
   return null;
+};
+
+const parseOrcidWorksContentful = (
+  orcidWorksContentful: OrcidWorkContentful[],
+): OrcidWork[] => {
+  try {
+    return orcidWorksContentful.map(parseOrcidWorkFromCMS);
+  } catch (e) {
+    throw new Error(`Invalid ORCID works content data: ${e}`);
+  }
 };

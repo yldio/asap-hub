@@ -1954,6 +1954,7 @@ describe('User data provider', () => {
         ...fieldsWithoutLocale,
         contributingCohorts: [],
         ...social,
+        orcid: userCreateDataObject.orcid,
         telephoneCountryCode: telephone?.countryCode,
         telephoneNumber: telephone?.number,
       });

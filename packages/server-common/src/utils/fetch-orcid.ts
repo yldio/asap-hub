@@ -34,10 +34,10 @@ interface ORCIDWork {
     'publication-date': {
       year: {
         value: string;
-      };
+      } | null;
       month: {
         value?: string;
-      };
+      } | null;
       day: {
         value?: string;
       } | null;
@@ -76,8 +76,8 @@ export const transformOrcidWorks = (orcidWorks: {
           title: work['work-summary'][0]?.title.title.value,
           type: work['work-summary'][0]?.type,
           publicationDate: {
-            year: work['work-summary'][0]?.['publication-date'].year.value,
-            month: work['work-summary'][0]?.['publication-date'].month.value,
+            year: work['work-summary'][0]?.['publication-date'].year?.value,
+            month: work['work-summary'][0]?.['publication-date'].month?.value,
             day: work['work-summary'][0]?.['publication-date'].day?.value,
           },
           lastModifiedDate: `${work['last-modified-date'].value}`,

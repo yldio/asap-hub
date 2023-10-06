@@ -3,7 +3,7 @@ import { gp2 } from '@asap-hub/model';
 
 const processEvent = (event: gp2.EventDataObject) => ({
   ...event,
-  _tags: [
+  eventTypes: [
     ...(event.workingGroup ? [gp2.eventWorkingGroups] : []),
     ...(event.project ? [gp2.eventProjects] : []),
     ...(event.calendar.name === gp2.gp2CalendarName ? [gp2.eventGP2Hub] : []),

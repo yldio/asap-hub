@@ -30,6 +30,7 @@
     "__meta.type",
     "authors.id",
     "documentType",
+    "eventTypes",
     "id",
     "project.id",
     "projectIds",

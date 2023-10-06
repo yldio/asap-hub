@@ -27,10 +27,7 @@ describe('Project index handler', () => {
     await indexHandler(createEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: {
-        ...projectResponse,
-        _tags: expect.arrayContaining(projectResponse._tags),
-      },
+      data: expect.objectContaining(projectResponse),
       type: 'project',
     });
   });
@@ -57,10 +54,7 @@ describe('Project index handler', () => {
     await indexHandler(updateEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: {
-        ...projectResponse,
-        _tags: expect.arrayContaining(projectResponse._tags),
-      },
+      data: expect.objectContaining(projectResponse),
       type: 'project',
     });
   });
@@ -139,10 +133,7 @@ describe('Project index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: {
-          ...projectResponse,
-          _tags: expect.arrayContaining(projectResponse._tags),
-        },
+        data: expect.objectContaining(projectResponse),
         type: 'project',
       });
     });
@@ -162,10 +153,7 @@ describe('Project index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: {
-          ...projectResponse,
-          _tags: expect.arrayContaining(projectResponse._tags),
-        },
+        data: expect.objectContaining(projectResponse),
         type: 'project',
       });
     });

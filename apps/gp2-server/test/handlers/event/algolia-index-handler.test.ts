@@ -24,24 +24,21 @@ describe('Event index handler', () => {
     await indexHandler(createEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: {
-        ...eventResponse,
-        _tags: expect.arrayContaining(eventResponse._tags),
-      },
+      data: expect.objectContaining(eventResponse),
       type: 'event',
     });
   });
 
   test('Should populate the _tags field before saving the event to Algolia', async () => {
     const eventResponse = getEventResponse();
-    eventResponse.keywords = [{ id: '1', name: 'event tag' }];
+    eventResponse.tags = [{ id: '1', name: 'event tag' }];
     eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
 
     await indexHandler(createEvent('42'));
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: {
         ...eventResponse,
-        _tags: ['event tag', ...eventResponse._tags],
+        _tags: ['event tag'],
       },
       type: 'event',
     });
@@ -54,10 +51,7 @@ describe('Event index handler', () => {
     await indexHandler(updateEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: {
-        ...eventResponse,
-        _tags: expect.arrayContaining(eventResponse._tags),
-      },
+      data: expect.objectContaining(eventResponse),
       type: 'event',
     });
   });
@@ -136,10 +130,7 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: {
-          ...eventResponse,
-          _tags: expect.arrayContaining(eventResponse._tags),
-        },
+        data: expect.objectContaining(eventResponse),
         type: 'event',
       });
     });
@@ -159,10 +150,7 @@ describe('Event index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: {
-          ...eventResponse,
-          _tags: expect.arrayContaining(eventResponse._tags),
-        },
+        data: expect.objectContaining(eventResponse),
         type: 'event',
       });
     });

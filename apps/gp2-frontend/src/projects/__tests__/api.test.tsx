@@ -142,7 +142,7 @@ describe('getAlgoliaProjects', () => {
       ['project'],
       '',
       expect.objectContaining({
-        filters: '_tags:"Opportunities Available"',
+        filters: 'opportunitiesAvailable=1',
       }),
     );
   });

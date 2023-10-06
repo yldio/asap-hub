@@ -111,7 +111,7 @@ describe('getAlgoliaEvents', () => {
       ['event'],
       '',
       expect.objectContaining({
-        filters: 'endDateTimestamp > 1577836800 AND _tags:"GP2 Hub"',
+        filters: 'endDateTimestamp > 1577836800 AND eventTypes:"GP2 Hub"',
       }),
     );
   });
@@ -129,7 +129,7 @@ describe('getAlgoliaEvents', () => {
       '',
       expect.objectContaining({
         filters:
-          'endDateTimestamp > 1577836800 AND _tags:"GP2 Hub" OR _tags:"Projects"',
+          'endDateTimestamp > 1577836800 AND eventTypes:"GP2 Hub" OR eventTypes:"Projects"',
       }),
     );
   });

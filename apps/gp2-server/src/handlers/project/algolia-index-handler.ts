@@ -31,8 +31,7 @@ export const indexProjectHandler =
 
         const data = {
           ...project,
-          // eslint-disable-next-line no-underscore-dangle
-          _tags: [...tags, ...project._tags],
+          _tags: tags,
         };
 
         await algoliaClient.save({

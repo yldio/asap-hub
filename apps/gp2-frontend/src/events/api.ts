@@ -50,7 +50,7 @@ export const getAllFilters = ({
   eventType?: gp2.EventType[];
 }) => {
   const typeFilters = eventType
-    ?.map((filter) => `_tags:"${filter}"`)
+    ?.map((filter) => `eventTypes:"${filter}"`)
     .join(' OR ');
   const eventFilters = getEventFilters({ before, after }, constraint);
   return [eventFilters, typeFilters].filter(Boolean).join(' AND ');

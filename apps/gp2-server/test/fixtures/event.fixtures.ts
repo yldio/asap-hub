@@ -394,7 +394,7 @@ export const getListEventDataObject = (): gp2Model.ListEventDataObject => ({
 });
 export const getEventResponse = (): gp2Model.EventResponse => ({
   ...getEventDataObject(),
-  _tags: [gp2Model.eventWorkingGroups, gp2Model.eventProjects],
+  eventTypes: [gp2Model.eventWorkingGroups, gp2Model.eventProjects],
 });
 export const getListEventResponse = (): gp2Model.ListEventResponse => ({
   total: 1,

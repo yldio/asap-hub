@@ -115,21 +115,7 @@ const transformRecords = <T extends EntityResponsesGP2, K extends keyof T>(
     },
   };
 
-  if (type === 'event' && 'keywords' in record) {
-    const tags = record.keywords?.map((tag) => tag.name);
-
-    const _tags = '_tags' in record ? record._tags : [];
-
-    return {
-      ...payload,
-      _tags: [..._tags, ...(tags ? tags : [])],
-    };
-  }
-
-  if (
-    (type === 'output' || type === 'project' || type === 'user') &&
-    'tags' in record
-  ) {
+  if ('tags' in record) {
     const tags = record.tags?.map((tag) => {
       if (typeof tag === 'object') {
         return tag.name;
@@ -137,11 +123,9 @@ const transformRecords = <T extends EntityResponsesGP2, K extends keyof T>(
       return tag;
     });
 
-    const _tags = '_tags' in record ? record._tags : [];
-
     return {
       ...payload,
-      _tags: [..._tags, ...(tags ? tags : [])],
+      _tags: tags ? tags : [],
     };
   }
 

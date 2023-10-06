@@ -27,12 +27,11 @@ export const indexEventHandler =
         const calendarEvent = await eventController.fetchById(id);
         log.debug(`Fetched calendar event ${calendarEvent.id}`);
 
-        const tags = calendarEvent.keywords?.map((tag) => tag.name);
+        const tags = calendarEvent.tags?.map((tag) => tag.name);
 
         const data = {
           ...calendarEvent,
-          // eslint-disable-next-line no-underscore-dangle
-          _tags: [...tags, ...calendarEvent._tags],
+          _tags: tags,
         };
 
         await algoliaClient.save({

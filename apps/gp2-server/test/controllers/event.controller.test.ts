@@ -151,7 +151,7 @@ describe('Event controller', () => {
         ),
       });
     });
-    test('if the calender is GP2 Hub, it should set the gp2 hub _tags', async () => {
+    test('if the calender is GP2 Hub, it should set the gp2 hub eventType', async () => {
       const eventDataObject = getEventDataObject();
       eventDataProviderMock.fetchById.mockResolvedValue({
         ...eventDataObject,

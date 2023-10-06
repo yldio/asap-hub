@@ -1,5 +1,6 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { getTagsNames } from '@asap-hub/model/src/gp2';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -29,11 +30,9 @@ export const indexUserHandler =
         log.debug(`Fetched user ${user.id}`);
 
         if (user.onboarded && user.role !== 'Hidden') {
-          const tags = user.tags?.map((tag) => tag.name);
-
           const data = {
             ...user,
-            _tags: tags,
+            _tags: getTagsNames(user.tags),
           };
 
           await algoliaClient.save({

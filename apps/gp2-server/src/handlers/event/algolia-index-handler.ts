@@ -1,5 +1,6 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { getTagsNames } from '@asap-hub/model/src/gp2';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -27,11 +28,9 @@ export const indexEventHandler =
         const calendarEvent = await eventController.fetchById(id);
         log.debug(`Fetched calendar event ${calendarEvent.id}`);
 
-        const tags = calendarEvent.tags?.map((tag) => tag.name);
-
         const data = {
           ...calendarEvent,
-          _tags: tags,
+          _tags: getTagsNames(calendarEvent.tags),
         };
 
         await algoliaClient.save({

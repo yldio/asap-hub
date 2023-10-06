@@ -1,5 +1,6 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { getTagsNames } from '@asap-hub/model/src/gp2';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -27,11 +28,9 @@ export const indexProjectHandler =
         const project = await projectController.fetchById(id);
         log.debug(`Fetched project ${project.id}`);
 
-        const tags = project.tags?.map((tag) => tag.name);
-
         const data = {
           ...project,
-          _tags: tags,
+          _tags: getTagsNames(project.tags),
         };
 
         await algoliaClient.save({

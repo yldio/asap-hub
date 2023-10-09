@@ -86,7 +86,7 @@ describe('UserDetail', () => {
   beforeEach(() => {
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
-    mockGetKeywords.mockResolvedValue(gp2Fixtures.createKeywordsResponse());
+    mockGetKeywords.mockResolvedValue(gp2Fixtures.createTagsResponse());
   });
 
   it('renders header with title', async () => {

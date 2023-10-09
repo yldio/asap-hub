@@ -274,7 +274,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/prettier": 2.7.3
     "@types/pump": 1.1.1
-    "@types/through2-concurrent": 2.0.1
+    "@types/through2-concurrent": 2.0.2
     "@types/uuid": 8.3.4
     "@types/yargs": 17.0.5
     "@yarnpkg/pnpify": 3.1.6
@@ -378,7 +378,7 @@ __metadata:
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
-    "@contentful/rich-text-html-renderer": 16.1.1
+    "@contentful/rich-text-html-renderer": 16.2.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
@@ -574,7 +574,7 @@ __metadata:
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
-    "@contentful/rich-text-html-renderer": 16.1.1
+    "@contentful/rich-text-html-renderer": 16.2.0
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": 11.2.7
     "@tsconfig/create-react-app": 2.0.1
@@ -740,8 +740,8 @@ __metadata:
     "@asap-hub/errors": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": 7.22.15
-    "@contentful/rich-text-html-renderer": 16.1.1
-    "@contentful/rich-text-types": 16.2.1
+    "@contentful/rich-text-html-renderer": 16.2.0
+    "@contentful/rich-text-types": 16.3.0
     "@graphql-codegen/cli": 2.16.5
     "@graphql-codegen/gql-tag-operations-preset": 1.7.4
     "@graphql-codegen/introspection": 2.2.3
@@ -954,8 +954,8 @@ __metadata:
     "@slack/webhook": ^6.1.0
     "@types/apr-intercept": "workspace:*"
     "@types/async-retry": ^1
-    "@types/aws-lambda": 8.10.121
-    "@types/babel__preset-env": 7.9.2
+    "@types/aws-lambda": 8.10.124
+    "@types/babel__preset-env": 7.9.3
     "@types/chance": 1.1.4
     "@types/cors": 2.8.14
     "@types/debug": 4.1.8
@@ -980,7 +980,7 @@ __metadata:
     "@types/parse-data-url": 3.0.0
     "@types/pump": 1.1.1
     "@types/serverless": 3.12.15
-    "@types/source-map-support": 0.5.4
+    "@types/source-map-support": 0.5.8
     "@types/stream-json": 1.7.3
     "@types/supertest": 2.0.12
     "@types/uuid": 8.3.4
@@ -1417,7 +1417,7 @@ __metadata:
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.30.1
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.121
+    "@types/aws-lambda": 8.10.124
     "@types/cors": 2.8.14
     "@types/express": 4.17.17
     "@types/jest": 29.5.5
@@ -1430,7 +1430,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/parse-data-url": 3.0.0
     "@types/serverless": 3.12.15
-    "@types/source-map-support": 0.5.4
+    "@types/source-map-support": 0.5.8
     "@types/supertest": 2.0.12
     "@types/uuid": 8.3.4
     "@types/yargs": 17.0.5
@@ -1683,15 +1683,15 @@ __metadata:
     "@sentry/serverless": 6.19.7
     "@types/apr-intercept": "workspace:*"
     "@types/async": ^3
-    "@types/aws-lambda": 8.10.121
+    "@types/aws-lambda": 8.10.124
     "@types/express": 4.17.17
     "@types/jest": 29.5.5
     "@types/jsonwebtoken": 8.5.9
     "@types/luxon": 1.27.1
     "@types/pump": 1.1.1
-    "@types/source-map-support": 0.5.4
+    "@types/source-map-support": 0.5.8
     "@types/supertest": 2.0.12
-    "@types/through2-concurrent": 2.0.1
+    "@types/through2-concurrent": 2.0.2
     "@types/uuid": 8.3.4
     ajv: 8.11.0
     ajv-formats: 2.1.1
@@ -1731,7 +1731,7 @@ __metadata:
     "@hapi/bourne": 2.1.0
     "@hapi/joi": 17.1.1
     "@types/apr-intercept": "workspace:*"
-    "@types/aws-lambda": 8.10.121
+    "@types/aws-lambda": 8.10.124
     "@types/debug": 4.1.8
     "@types/hapi": 18.0.11
     "@types/hapi__boom": 9.0.1
@@ -11187,32 +11187,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-html-renderer@npm:16.1.1":
-  version: 16.1.1
-  resolution: "@contentful/rich-text-html-renderer@npm:16.1.1"
+"@contentful/rich-text-html-renderer@npm:16.2.0":
+  version: 16.2.0
+  resolution: "@contentful/rich-text-html-renderer@npm:16.2.0"
   dependencies:
-    "@contentful/rich-text-types": ^16.2.1
+    "@contentful/rich-text-types": ^16.3.0
     escape-html: ^1.0.3
-  checksum: de29a138f3a1d0f2681b01a000cb43257010ff7d5ccf6a1906f34ff1bb3f7bbe7daffabc6640cc3b39417864a2118dfd0527e6d6d69b75da926bca03a7aab2c9
+  checksum: 9b29d6a59e7c83abd0398fde67bbe90fe1354f1f66d9b6c8bd4fce32dbe8ea749827e04729c91f38965e87ccabe90f6f6c4ea31cec05ad1fb644e317bbe37ff6
   languageName: node
   linkType: hard
 
 "@contentful/rich-text-react-renderer@npm:^15.16.4":
-  version: 15.17.1
-  resolution: "@contentful/rich-text-react-renderer@npm:15.17.1"
+  version: 15.18.0
+  resolution: "@contentful/rich-text-react-renderer@npm:15.18.0"
   dependencies:
-    "@contentful/rich-text-types": ^16.2.1
+    "@contentful/rich-text-types": ^16.3.0
   peerDependencies:
     react: ^16.8.6 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.6 || ^17.0.0 || ^18.0.0
-  checksum: 79254fec516ac8c1a9ed32a95f095f5a1d2d25133f6e1dd275dec039fd28b20380a4cd87d3d32ddd2a9c1021003a746812f8d6fbdb0b3f78122c7773d68a27ea
+  checksum: 660fb8aa7522f3a2a08e5bb2810a3ae30cdac220ed88c88f7667935a4ea56c96ca61c545e695a2e0bb5961cac0337baa8c58c85ee80f33e4fd993014120ac8f1
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-types@npm:16.2.1, @contentful/rich-text-types@npm:^16.2.1":
-  version: 16.2.1
-  resolution: "@contentful/rich-text-types@npm:16.2.1"
-  checksum: 717a449f243b56f8c09f1a6b14b84a462e67af2f6d7a62b4be42cb9b3413cd0d18f71bb3c1829398d22681cec82a66e7eb9b0d873ea7faecff2acc3136e57d53
+"@contentful/rich-text-types@npm:16.3.0, @contentful/rich-text-types@npm:^16.3.0":
+  version: 16.3.0
+  resolution: "@contentful/rich-text-types@npm:16.3.0"
+  checksum: 86d5a0bcc84804beb750d94cd9ed9a590c3811bf57e10e6c4b25403bbdb85c8a9bc6d336fe98e561b252c5010527398bd21c6548ffdc289bce9e01898bcdc59c
   languageName: node
   linkType: hard
 
@@ -16855,11 +16855,11 @@ __metadata:
   linkType: soft
 
 "@types/async-retry@npm:^1":
-  version: 1.4.5
-  resolution: "@types/async-retry@npm:1.4.5"
+  version: 1.4.6
+  resolution: "@types/async-retry@npm:1.4.6"
   dependencies:
     "@types/retry": "*"
-  checksum: 39413b8bf4bb1bb7dbbd9a7415cc1d0fa8a10b9308afb4578dbdcaabc7e58a980a7c5a2cf7905912b722716e5d5aeb12f76ecf54b402932b863a80bc79108ae1
+  checksum: bdea1cf24816bae5eaefa462f962a04055d8fcdf4949b65685ac17fa9b2da53fa975925817606bcb105e863b3c9b1e2ed14226c3f9bfef2757c15e17146802ca
   languageName: node
   linkType: hard
 
@@ -16877,10 +16877,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/aws-lambda@npm:8.10.121":
-  version: 8.10.121
-  resolution: "@types/aws-lambda@npm:8.10.121"
-  checksum: d3fc915d6c88b5a9821de3346bcaee874ddab0544b39541aa61e65ee89eb09202f94a4640f7f6217eae489ac03e5532abc5fd35afa012b2f9f81d5c8947b7215
+"@types/aws-lambda@npm:8.10.124":
+  version: 8.10.124
+  resolution: "@types/aws-lambda@npm:8.10.124"
+  checksum: 6b2a0920559e0373905aed4f9a37afe69cc094cc0bfe45be324c153c716811697a94e19a034a614aff22ca84c79dbeefd0d912135cdec9c0fd052d0a6d6ed0a8
   languageName: node
   linkType: hard
 
@@ -16946,10 +16946,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__preset-env@npm:7.9.2":
-  version: 7.9.2
-  resolution: "@types/babel__preset-env@npm:7.9.2"
-  checksum: a905ed92a3f602384966153e74a94790425e98af54e392a7fcfb5c5ded2f2a58c49a9fa64a0cb506fbffb8169ad25b56ea87983c812a4fb880f0716668c8c085
+"@types/babel__preset-env@npm:7.9.3":
+  version: 7.9.3
+  resolution: "@types/babel__preset-env@npm:7.9.3"
+  checksum: 7e89a37c4a7ebe841e0bc610e19497fe0642d741e8651c52ea4727782e46ea47d2aaf2656927a684c6618d8981b0febc1fc8c82c4a1d84b4ec5793a283e1ef7f
   languageName: node
   linkType: hard
 
@@ -17479,17 +17479,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/js-yaml@npm:^4":
-  version: 4.0.5
-  resolution: "@types/js-yaml@npm:4.0.5"
-  checksum: 7dcac8c50fec31643cc9d6444b5503239a861414cdfaa7ae9a38bc22597c4d850c4b8cec3d82d73b3fbca408348ce223b0408d598b32e094470dfffc6d486b4d
-  languageName: node
-  linkType: hard
-
-"@types/js-yaml@npm:^4.0.0":
-  version: 4.0.3
-  resolution: "@types/js-yaml@npm:4.0.3"
-  checksum: 4be74c029f3fe4ab01f382481521c15bc79c96589747f588f8d3b92e97b8e04ffbe208451d24c99fd289593ff5325710eb83d267c8f2449d3248299f909003d7
+"@types/js-yaml@npm:^4, @types/js-yaml@npm:^4.0.0":
+  version: 4.0.6
+  resolution: "@types/js-yaml@npm:4.0.6"
+  checksum: d4439ec2cc830d355c2a1d7508f49888931b2cfe59d786d27621edd530bf06314b1dceeaa759e21f9b035a0ff623a0ca306752ebb73df9485c02abe045bd962c
   languageName: node
   linkType: hard
 
@@ -18213,12 +18206,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/source-map-support@npm:0.5.4":
-  version: 0.5.4
-  resolution: "@types/source-map-support@npm:0.5.4"
+"@types/source-map-support@npm:0.5.8":
+  version: 0.5.8
+  resolution: "@types/source-map-support@npm:0.5.8"
   dependencies:
-    source-map: "npm:^0.6.0"
-  checksum: 160ff77e8a101b18d9915cb5320fd73d484679aef8518ce007b9b5988e333631778730196c4bb15517ff881bee805663fd8640c0ce2ebfab65f061103c452369
+    source-map: ^0.6.0
+  checksum: 333d77b70fd793de066572aa1c7d988ac351e6591b860db8df05bdb2ad40ee2aa1a31d66c3c0d019137d72fb7b806dfc55c2b47958d1599e775e1d37dc1f736d
   languageName: node
   linkType: hard
 
@@ -18335,13 +18328,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/through2-concurrent@npm:2.0.1":
-  version: 2.0.1
-  resolution: "@types/through2-concurrent@npm:2.0.1"
+"@types/through2-concurrent@npm:2.0.2":
+  version: 2.0.2
+  resolution: "@types/through2-concurrent@npm:2.0.2"
   dependencies:
-    "@types/node": "npm:*"
-    "@types/through2": "npm:*"
-  checksum: 3fde6fe82b2cac2da4bf70f8ab1643eed197f4f2c6f28d3f6da00c9d1c4b37615d957578fc51603564f5ca50879495a83987dfc381f58d6a80bbc5e96133f188
+    "@types/node": "*"
+    "@types/through2": "*"
+  checksum: d687c04c9979100e9c23914445350d58d4e2c8bcfce338c2b76c2ba7dc0f7449c451cd2f9d49678720fbd4f6dd46fef61c830c3480cea221fad85755402ce232
   languageName: node
   linkType: hard
 

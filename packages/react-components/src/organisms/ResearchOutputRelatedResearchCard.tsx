@@ -1,13 +1,14 @@
-import { ComponentPropsWithRef } from 'react';
 import { css } from '@emotion/react';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import { ComponentPropsWithRef } from 'react';
 import { components } from 'react-select';
 
-import { FormCard, LabeledMultiSelect } from '../molecules';
-import { noop, ResearchOutputOption } from '../utils';
-import { perRem } from '../pixels';
-import { getIconForDocumentType } from './RecentSharedOutputs';
 import { Pill } from '../atoms';
 import { charcoal } from '../colors';
+import { FormCard, LabeledMultiSelect } from '../molecules';
+import { perRem } from '../pixels';
+import { noop, ResearchOutputOption } from '../utils';
+import { getIconForDocumentType as getIconForDocumentTypeCRN } from './RecentSharedOutputs';
 
 const optionStyles = (showPill: boolean) =>
   css({
@@ -43,6 +44,8 @@ type ResearchOutputRelatedResearchProps = {
 
   readonly isSaving: boolean;
   isEditMode?: boolean;
+  description?: string;
+  getIconForDocumentType?: (documentType: string) => EmotionJSX.Element;
 };
 
 const ResearchOutputRelatedResearchCard: React.FC<
@@ -53,12 +56,11 @@ const ResearchOutputRelatedResearchCard: React.FC<
   onChangeRelatedResearch = noop,
   isSaving,
   isEditMode,
+  description = `List all resources that were important to the creation of this output.
+      Only published outputs on the CRN Hub will be available below.`,
+  getIconForDocumentType = getIconForDocumentTypeCRN,
 }) => (
-  <FormCard
-    title="Are there any related outputs?"
-    description="List all resources that were important to the creation of this output.
-      Only published outputs on the CRN Hub will be available below."
-  >
+  <FormCard title="Are there any related outputs?" description={description}>
     <LabeledMultiSelect<ResearchOutputOption>
       title="Related Outputs"
       description=""

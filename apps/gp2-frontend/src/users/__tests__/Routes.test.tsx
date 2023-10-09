@@ -64,7 +64,7 @@ describe('Routes', () => {
     const mockGetKeywords = getKeywords as jest.MockedFunction<
       typeof getKeywords
     >;
-    mockGetKeywords.mockResolvedValue(gp2.createKeywordsResponse());
+    mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
 
     await renderRoutes();
     expect(
@@ -86,7 +86,7 @@ describe('Routes', () => {
     const mockGetKeywords = getKeywords as jest.MockedFunction<
       typeof getKeywords
     >;
-    mockGetKeywords.mockResolvedValue(gp2.createKeywordsResponse());
+    mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
     mockGetUsers.mockRejectedValue(new Error('error'));
 
     await renderRoutes();

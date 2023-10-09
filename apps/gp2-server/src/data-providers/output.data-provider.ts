@@ -9,7 +9,7 @@ import {
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import logger from '../utils/logger';
-import { KeywordItem, parseKeyword } from './keyword.data-provider';
+import { parseTag, TagItem } from './tag.data-provider';
 import { isSharingStatus } from './transformers';
 import { OutputDataProvider } from './types';
 
@@ -245,6 +245,24 @@ const getAuthors = (authors?: GraphQLAuthors) =>
           },
     ) || [];
 
+type GraphQLOutputs = NonNullable<
+  OutputItem['relatedOutputsCollection']
+>['items'];
+type GraphQLOutput = NonNullable<GraphQLOutputs[number]>;
+const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
+  outputs
+    ?.filter(
+      (output): output is GraphQLOutput =>
+        output !== null &&
+        output.documentType !== null &&
+        output.title !== null,
+    )
+    .map(({ sys, documentType, title, type }) => ({
+      id: sys.id,
+      title: title ?? '',
+      documentType: documentType as gp2Model.OutputDocumentType,
+      ...(type ? { type: type as gp2Model.OutputType } : {}),
+    })) || [];
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
 ): gp2Model.OutputDataObject => {
@@ -253,10 +271,13 @@ export const parseContentfulGraphQLOutput = (
   const subtype = getSubType(documentType, type, data.subtype);
   const authors = getAuthors(data.authorsCollection?.items);
   const relatedEntity = getRelatedEntity(data.relatedEntity);
+  const relatedOutputs = getRelatedOutputs(
+    data.relatedOutputsCollection?.items,
+  );
   const tags =
     data.tagsCollection?.items
-      .filter((keyword): keyword is KeywordItem => keyword !== null)
-      .map(parseKeyword) ?? [];
+      .filter((tag): tag is TagItem => tag !== null)
+      .map(parseTag) ?? [];
   return {
     id: data.sys.id,
     created: data.sys.firstPublishedAt,
@@ -283,6 +304,7 @@ export const parseContentfulGraphQLOutput = (
     rrid: data.rrid ?? undefined,
     accessionNumber: data.accessionNumber ?? undefined,
     ...relatedEntity,
+    relatedOutputs,
   };
 };
 
@@ -341,6 +363,14 @@ const cleanOutput = (
         tags: (value as gp2Model.OutputUpdateDataObject['tags'])?.map((tag) =>
           getLinkEntity(tag.id),
         ),
+      };
+    }
+    if (key === 'relatedOutputs') {
+      return {
+        ...acc,
+        relatedOutputs: (
+          value as gp2Model.OutputUpdateDataObject['relatedOutputs']
+        ).map((output) => getLinkEntity(output.id)),
       };
     }
     return { ...acc, [key]: value };

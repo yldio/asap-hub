@@ -11,9 +11,10 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
-import { createOutput } from '../../outputs/api';
+import { createOutput, getOutputs } from '../../outputs/api';
 import { getKeywords } from '../../shared/api';
 import { getExternalUsers, getUsers } from '../../users/api';
+import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import CreateProjectOutput from '../CreateProjectOutput';
 
 jest.mock('../../outputs/api');
@@ -29,6 +30,7 @@ const mockGetExternalUsers = getExternalUsers as jest.MockedFunction<
 >;
 
 const mockGetKeywords = getKeywords as jest.MockedFunction<typeof getKeywords>;
+const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 
 const renderCreateProjectOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
@@ -70,7 +72,8 @@ const renderCreateProjectOutput = async (
 
 beforeEach(() => {
   jest.resetAllMocks();
-  mockGetKeywords.mockResolvedValue(gp2.createKeywordsResponse());
+  mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
+  mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
 });
 
 it('renders the title', async () => {
@@ -124,6 +127,7 @@ it('publishes the output', async () => {
           externalUserId: '2',
         },
       ],
+      relatedOutputs: [],
     },
     expect.anything(),
   );

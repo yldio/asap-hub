@@ -77,6 +77,64 @@ describe('Outputs data provider', () => {
 
       expect(result).toEqual(expectedResult);
     });
+    describe('related outputs', () => {
+      test('should return the related output', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: {
+            ...graphqlResponse,
+
+            relatedOutputsCollection: {
+              total: 1,
+              items: [
+                {
+                  sys: { id: 'another-output-id' },
+                  title: 'another title',
+                  documentType: 'Article',
+                  type: 'Blog',
+                },
+              ],
+            },
+          },
+        });
+
+        const result = await outputDataProvider.fetchById(outputId);
+        const expectedResult = getOutputDataObject();
+
+        expect(result).toEqual({
+          ...expectedResult,
+          relatedOutputs: [
+            {
+              id: 'another-output-id',
+              title: 'another title',
+              documentType: 'Article',
+              type: 'Blog',
+            },
+          ],
+        });
+      });
+      test('should default to empty array', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: {
+            ...graphqlResponse,
+
+            relatedOutputsCollection: {
+              total: 1,
+              items: undefined,
+            },
+          },
+        });
+
+        const result = await outputDataProvider.fetchById(outputId);
+        const expectedResult = getOutputDataObject();
+
+        expect(result).toEqual({
+          ...expectedResult,
+          relatedOutputs: [],
+        });
+      });
+    });
 
     describe('Document Types', () => {
       test.each(gp2Model.outputDocumentTypes)(
@@ -710,6 +768,13 @@ describe('Outputs data provider', () => {
             id: tag.id,
           },
         })),
+        relatedOutputs: fieldsCreated.relatedOutputs.map((output) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: output.id,
+          },
+        })),
       });
       expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
         fields,
@@ -829,6 +894,13 @@ describe('Outputs data provider', () => {
             type: 'Link',
             linkType: 'Entry',
             id: tag.id,
+          },
+        })),
+        relatedOutputs: outputUpdateData.relatedOutputs.map((output) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: output.id,
           },
         })),
       };

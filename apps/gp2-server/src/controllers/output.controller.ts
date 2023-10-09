@@ -72,6 +72,7 @@ export default class OutputController {
       doi: outputCreateData.doi,
       rrid: outputCreateData.rrid,
       accessionNumber: outputCreateData.accessionNumber,
+      relatedOutputs: outputCreateData.relatedOutputs,
     };
 
     const outputId = await this.outputDataProvider.create(
@@ -112,6 +113,7 @@ export default class OutputController {
       doi: outputUpdateData.doi,
       rrid: outputUpdateData.rrid,
       accessionNumber: outputUpdateData.accessionNumber,
+      relatedOutputs: outputUpdateData.relatedOutputs,
     };
 
     await this.outputDataProvider.update(id, outputUpdateDataObject);

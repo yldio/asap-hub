@@ -118,7 +118,7 @@ describe('getOutputs', () => {
       ['output'],
       '',
       expect.objectContaining({
-        filters: '(documentType:"Article" OR documentType:"GP2 Reports")',
+        filters: '(documentType:"GP2 Reports" OR documentType:"Article")',
       }),
     );
   });
@@ -184,7 +184,7 @@ describe('getOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(documentType:"Article" OR documentType:"GP2 Reports") AND project.id:"12345"',
+          '(documentType:"GP2 Reports" OR documentType:"Article") AND project.id:"12345"',
       }),
     );
   });
@@ -231,7 +231,7 @@ describe('getOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(documentType:"Article" OR documentType:"GP2 Reports") AND workingGroup.id:"12345"',
+          '(documentType:"GP2 Reports" OR documentType:"Article") AND workingGroup.id:"12345"',
       }),
     );
   });
@@ -277,7 +277,7 @@ describe('getOutputs', () => {
       '',
       expect.objectContaining({
         filters:
-          '(documentType:"Article" OR documentType:"GP2 Reports") AND authors.id:"12345"',
+          '(documentType:"GP2 Reports" OR documentType:"Article") AND authors.id:"12345"',
       }),
     );
   });
@@ -296,6 +296,7 @@ describe('createOutput', () => {
     title: 'output title',
     documentType: 'Procedural Form' as const,
     sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
+    relatedOutputs: [],
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
@@ -323,6 +324,7 @@ describe('updateOutput', () => {
     title: 'output title',
     documentType: 'Procedural Form' as const,
     sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
+    relatedOutputs: [],
   };
   it('makes an authorized POST request to update a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

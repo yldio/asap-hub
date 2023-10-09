@@ -70,7 +70,7 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
         onSave({
           social: {
             ...(newGoogleScholar ? { googleScholar: newGoogleScholar } : {}),
-            ...(newOrcid ? { orcid: `${baseUrls.orcid}${newOrcid}` } : {}),
+            ...(newOrcid ? { orcid: newOrcid } : {}),
             ...(newResearchGate ? { researchGate: newResearchGate } : {}),
             ...(newResearcherId
               ? { researcherId: `${baseUrls.researcherId}${newResearcherId}` }

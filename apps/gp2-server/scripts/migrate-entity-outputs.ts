@@ -51,6 +51,7 @@ const app = async () => {
           ),
           workingGroupIds: output.workingGroups?.map(({ id }) => id),
           projectIds: output.projects?.map(({ id }) => id),
+          relatedOutputs: output.relatedOutputs,
         });
 
         console.log(`output with id ${output.id} updated.`);

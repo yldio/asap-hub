@@ -12,13 +12,15 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
-import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getOutput, getOutputs, updateOutput } from '../api';
 import { getTags, getContributingCohorts } from '../../shared/api';
 import { getAlgoliaProjects } from '../../projects/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import ShareOutput from '../ShareOutput';
-import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  createOutputListAlgoliaResponse,
+  createProjectListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
 
 jest.mock('../../outputs/api');
 jest.mock('../../shared/api');

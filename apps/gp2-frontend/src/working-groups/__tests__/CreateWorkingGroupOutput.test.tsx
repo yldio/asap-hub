@@ -14,9 +14,11 @@ import NotificationMessages from '../../NotificationMessages';
 import { createOutput, getOutputs } from '../../outputs/api';
 import { getTags, getContributingCohorts } from '../../shared/api';
 import { getExternalUsers, getUsers } from '../../users/api';
-import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getAlgoliaProjects } from '../../projects/api';
-import { createProjectListAlgoliaResponse } from '../../__fixtures__/algolia';
+import {
+  createOutputListAlgoliaResponse,
+  createProjectListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
 import { getWorkingGroup, getWorkingGroups } from '../api';
 import CreateWorkingGroupOutput from '../CreateWorkingGroupOutput';
 

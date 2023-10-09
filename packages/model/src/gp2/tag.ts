@@ -11,6 +11,3 @@ export type TagResponse = TagDataObject;
 export type ListTagsResponse = ListResponse<TagResponse>;
 
 export type TagCreateDataObject = Omit<TagDataObject, 'id'>;
-
-export const getTagsNames = (tags?: TagDataObject[]) =>
-  tags ? tags.map((tag) => tag.name) : [];

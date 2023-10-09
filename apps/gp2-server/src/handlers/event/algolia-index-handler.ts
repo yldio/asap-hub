@@ -1,6 +1,5 @@
 import { AlgoliaClient, algoliaSearchClientFactory } from '@asap-hub/algolia';
 import { gp2 as gp2Model } from '@asap-hub/model';
-import { getTagsNames } from '@asap-hub/model/src/gp2';
 import { EventBridgeHandler, Logger } from '@asap-hub/server-common';
 import { isBoom } from '@hapi/boom';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -11,6 +10,7 @@ import {
   getContentfulRestClientFactory,
 } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
+import { getTagsNames } from '../../utils/tag-names';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { EventPayload } from '../event-bus';
 

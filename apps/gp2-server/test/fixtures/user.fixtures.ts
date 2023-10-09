@@ -311,6 +311,7 @@ export const userPatchRequest: gp2Model.UserPatchRequest = {
   onboarded: true,
   country: 'United Kingdom',
   city: 'Manchester',
+  orcid: '1234-1234-1234-1234',
 };
 
 export const getContentfulGraphql = (props = {}) => ({

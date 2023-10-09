@@ -387,6 +387,7 @@ describe('UserDetail', () => {
       const user = gp2Fixtures.createUserResponse({
         id: 'testuserid',
       });
+      const userRequest = gp2Fixtures.createUserPatchRequest();
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -404,7 +405,10 @@ describe('UserDetail', () => {
       });
       expect(mockPatchUser).toHaveBeenCalledWith(
         expect.anything(),
-        expect.objectContaining({ social: user.social }),
+        expect.objectContaining({
+          social: userRequest.social,
+          orcid: userRequest.orcid,
+        }),
         expect.anything(),
       );
     });

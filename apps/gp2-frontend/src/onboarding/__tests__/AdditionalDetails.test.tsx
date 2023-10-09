@@ -195,9 +195,9 @@ describe('AdditionalDetails', () => {
     expect(mockPatchUser).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
+        orcid: '1234-1234-1234-1234',
         social: {
           googleScholar: 'https://scholar.google.com',
-          orcid: 'https://orcid.org/1234-1234-1234-1234',
           researchGate: 'https://researchid.com/rid/',
           researcherId: 'https://researcherid.com/rid/R-1234-1234',
           blog: 'https://www.blogger.com',

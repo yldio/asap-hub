@@ -129,10 +129,12 @@ export type UserCreateDataObject = Omit<
   | 'contributingCohorts'
   | 'connections'
   | 'tags'
+  | 'social'
 > & {
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
   avatar?: string;
   tags?: Omit<TagDataObject, 'name'>[];
+  social?: Omit<UserSocialLinks, 'orcid' | 'website1' | 'website2'>;
 };
 
 export type UserUpdateDataObject = Partial<
@@ -153,7 +155,6 @@ export type UserPatchRequest = Omit<
   | 'orcidLastModifiedDate'
   | 'orcidLastSyncDate'
   | 'orcidWorks'
-  | 'orcid'
 >;
 
 export type UserAvatarPostRequest = {

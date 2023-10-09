@@ -93,7 +93,6 @@ describe('ExternalProfilesModal', () => {
   it.each`
     name               | input                                          | field               | value
     ${'googleScholar'} | ${'https://scholar.google.com/test_scholar'}   | ${/Google Scholar/} | ${undefined}
-    ${'orcid'}         | ${'1234-1234-1234-1234'}                       | ${/ORCID/}          | ${'1234-1234-1234-1234'}
     ${'researchGate'}  | ${'https://researchid.com/rid/1234-1234-1234'} | ${/Research Gate/}  | ${undefined}
     ${'researcherId'}  | ${'R-1234-1234'}                               | ${/ResearcherID/}   | ${'https://researcherid.com/rid/R-1234-1234'}
     ${'blog'}          | ${'https://www.blogger.com'}                   | ${/Blog/}           | ${undefined}

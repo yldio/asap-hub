@@ -61,7 +61,7 @@
     "@types/jsonwebtoken": "8.5.9",
     "@types/luxon": "1.27.1",
     "@types/pump": "1.1.1",
-    "@types/source-map-support": "0.5.4",
+    "@types/source-map-support": "0.5.8",
     "@types/supertest": "2.0.12",
     "@types/through2-concurrent": "2.0.1",
     "@types/uuid": "8.3.4",

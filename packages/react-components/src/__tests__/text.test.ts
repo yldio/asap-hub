@@ -61,6 +61,7 @@ describe.each([
   [[[false, 42], 'text']],
   [createElement('i')],
   [createElement('em')],
+  [createElement('u')],
   [createElement('i', { children: ['Italic Text'] })],
 ])('for the allowed children %p', (children) => {
   describe('isAllowedChildren', () => {

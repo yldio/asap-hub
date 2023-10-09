@@ -24,7 +24,7 @@ export const getOutput = async (
 export type OutputListOptions = GetListOptions & gp2.FetchOutputFilter;
 
 type DocumentTypeFilter = Record<gp2.OutputDocumentType, { filter: string }>;
-export const researchOutputDocumentTypeFilters =
+export const outputDocumentTypeFilters =
   gp2.outputDocumentTypes.reduce<DocumentTypeFilter>(
     (acc, type) => ({
       ...acc,
@@ -34,7 +34,7 @@ export const researchOutputDocumentTypeFilters =
   );
 
 export const getTypeFilters = (filters: Set<string>): string =>
-  Object.entries(researchOutputDocumentTypeFilters)
+  Object.entries(outputDocumentTypeFilters)
     .reduce<string[]>(
       (acc, [key, { filter }]) => (filters.has(key) ? [filter, ...acc] : acc),
       [],

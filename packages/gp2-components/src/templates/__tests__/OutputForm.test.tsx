@@ -21,8 +21,8 @@ describe('OutputForm', () => {
     shareOutput: jest.fn(),
     documentType: 'Procedural Form' as const,
     entityType: 'workingGroup' as const,
-    keywordSuggestions: [],
     getRelatedOutputSuggestions: jest.fn(),
+    tagSuggestions: [],
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {
@@ -667,7 +667,7 @@ describe('OutputForm', () => {
       render(
         <OutputForm
           {...defaultProps}
-          keywordSuggestions={suggestions}
+          tagSuggestions={suggestions}
           tags={tags}
         />,
         {

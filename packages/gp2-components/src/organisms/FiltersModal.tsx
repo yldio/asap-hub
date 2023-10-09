@@ -14,7 +14,7 @@ type FiltersModalProps = {
   onApplyClick: (filters: gp2Model.FetchUsersSearchFilter) => void;
   projects: Pick<gp2Model.ProjectResponse, 'id' | 'title'>[];
   workingGroups: Pick<gp2Model.WorkingGroupResponse, 'id' | 'title'>[];
-  keywords: gp2Model.TagResponse[];
+  tags: gp2Model.TagResponse[];
 };
 
 const getValues = <T extends string>(selected: T[]) =>
@@ -37,16 +37,13 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   filters,
   projects,
   workingGroups,
-  keywords,
+  tags,
 }) => {
   const entityToSelect = <T extends { title: string; id: string }>({
     title,
     id,
   }: T) => ({ label: title, value: id });
-  const keywordsToSelect = ({
-    name,
-    id,
-  }: FiltersModalProps['keywords'][number]) => ({
+  const tagsToSelect = ({ name, id }: FiltersModalProps['tags'][number]) => ({
     label: name,
     value: id,
   });
@@ -54,9 +51,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
     a.label.localeCompare(b.label);
   const [selectedRegions, setSelectedRegions] = useState(filters.regions || []);
   const [selectedExpertise, setSelectedExpertise] = useState(
-    keywords
-      .filter(({ id }) => filters.keywords?.includes(id))
-      .map(keywordsToSelect),
+    tags.filter(({ id }) => filters.tags?.includes(id)).map(tagsToSelect),
   );
   const [selectedProjects, setSelectedProjects] = useState(
     projects
@@ -89,7 +84,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
             title={'Expertise / Interests'}
             placeholder="Start typing…"
             values={selectedExpertise}
-            suggestions={keywords.map(keywordsToSelect).sort(sortByLabel)}
+            suggestions={tags.map(tagsToSelect).sort(sortByLabel)}
             onChange={(newValues) => setSelectedExpertise([...newValues])}
             noOptionsMessage={getNoOptionsMessage(
               'Sorry, no current expertise / interests match',
@@ -134,7 +129,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
           onApply={() => {
             onApplyClick({
               regions: selectedRegions,
-              keywords: selectedExpertise.map(({ value }) => value),
+              tags: selectedExpertise.map(({ value }) => value),
               projects: selectedProjects.map(({ value }) => value),
               workingGroups: selectedWorkingGroups.map(({ value }) => value),
             });

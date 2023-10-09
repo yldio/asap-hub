@@ -47,7 +47,7 @@ const props = {
   filters: {},
   projects: [],
   workingGroups: [],
-  keywords: [],
+  tags: [],
 };
 
 describe('UsersPageList', () => {
@@ -64,7 +64,7 @@ describe('UsersPageList', () => {
   it.each`
     name               | value
     ${'regions'}       | ${'Asia'}
-    ${'keywords'}      | ${'11'}
+    ${'tags'}          | ${'11'}
     ${'projects'}      | ${'42'}
     ${'workingGroups'} | ${'42'}
   `(
@@ -86,14 +86,14 @@ describe('UsersPageList', () => {
           updateFilters={updateFilterSpy}
           projects={projects}
           workingGroups={workingGroups}
-          keywords={tags}
+          tags={tags}
         />,
       );
 
       userEvent.click(screen.getByRole('button', { name: 'Apply' }));
       expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
         regions: [],
-        keywords: [],
+        tags: [],
         projects: [],
         workingGroups: [],
         [name]: [value],
@@ -103,7 +103,7 @@ describe('UsersPageList', () => {
   it('calls the updateFilters with the right arguments for removing a certain filter', () => {
     const filters: gp2Model.FetchUsersFilter = {
       regions: ['Asia'],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
     };
@@ -127,7 +127,7 @@ describe('UsersPageList', () => {
 
     expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
     });

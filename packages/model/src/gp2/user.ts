@@ -166,7 +166,7 @@ export type FetchUsersSearchFilter = {
   projects?: string[];
   workingGroups?: string[];
   regions?: UserRegion[];
-  keywords?: string[];
+  tags?: string[];
 };
 export type FetchUsersFilter = FetchUsersSearchFilter & {
   code?: string;

@@ -187,7 +187,7 @@ describe('getAlgoliaUsers', () => {
   });
   it.each`
     given              | expected
-    ${'keywords'}      | ${'tagIds'}
+    ${'tags'}          | ${'tagIds'}
     ${'projects'}      | ${'projectIds'}
     ${'workingGroups'} | ${'workingGroupIds'}
   `('builds a single $given filter query', async ({ given, expected }) => {
@@ -207,7 +207,7 @@ describe('getAlgoliaUsers', () => {
 
   it.each`
     given              | expected
-    ${'keywords'}      | ${'tagIds'}
+    ${'tags'}          | ${'tagIds'}
     ${'projects'}      | ${'projectIds'}
     ${'workingGroups'} | ${'workingGroupIds'}
   `('builds a multiple $given filter query', async ({ given, expected }) => {
@@ -231,7 +231,7 @@ describe('getAlgoliaUsers', () => {
     await getAlgoliaUsers(mockAlgoliaSearchClient, {
       ...options,
       regions: ['Europe'],
-      keywords: ['7'],
+      tags: ['7'],
       projects: ['11'],
       workingGroups: ['23'],
       currentPage: 1,
@@ -370,7 +370,7 @@ describe('createUserApiUrl', () => {
   it.each`
     name               | value
     ${'regions'}       | ${['Africa', 'Asia']}
-    ${'keywords'}      | ${['Cohort', 'BLAAC-PD']}
+    ${'tags'}          | ${['Cohort', 'BLAAC-PD']}
     ${'projects'}      | ${['a project', 'another project']}
     ${'workingGroups'} | ${['a working group', 'another working group']}
   `(

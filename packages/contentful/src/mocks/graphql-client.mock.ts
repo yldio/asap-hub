@@ -108,6 +108,7 @@ export const getGP2ContentfulGraphqlClientMockServer = (
     WorkingGroupsMembersCollection: resultDto,
     WorkingGroupsMilestonesCollection: resultDto,
     WorkingGroupsResourcesCollection: resultDto,
+    WorkingGroupsTagsCollection: resultDto,
   };
   return getGraphqlClientMockServer(schemaLocation, baseMocks, inputMocks);
 };

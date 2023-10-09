@@ -502,8 +502,8 @@ describe('/users/ route', () => {
           expect(response.status).toBe(400);
         });
       });
-      describe('keywords', () => {
-        test('allows valid keywords:', async () => {
+      describe('tags', () => {
+        test('allows valid tags:', async () => {
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({ tags: [{ id: 'id-1' }] });

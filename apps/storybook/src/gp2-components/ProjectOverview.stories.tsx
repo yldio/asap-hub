@@ -23,6 +23,6 @@ export const Normal = () => (
     )}
     pmEmail={text('PM Email', 'pm@example.com')}
     leadEmail={text('Lead Email', 'lead@example.com')}
-    keywords={project.tags.map((t) => t.name)}
+    tags={project.tags}
   />
 );

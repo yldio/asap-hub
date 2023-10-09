@@ -1,5 +1,6 @@
 import {
   Environment,
+  getLinkEntities,
   gp2 as gp2Contentful,
   GraphQLClient,
   parseRichText,
@@ -8,6 +9,7 @@ import {
   RichTextFromQuery,
 } from '@asap-hub/contentful';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { parseTag, TagItem } from './tag.data-provider';
 import {
   deleteEntries,
   parseCalendar,
@@ -81,6 +83,9 @@ export class WorkingGroupContentfulDataProvider
       ...workingGroup,
       ...resourceFields,
       ...memberFields,
+      ...(workingGroup.tags
+        ? { tags: getLinkEntities(workingGroup.tags.map((tag) => tag.id)) }
+        : {}),
     });
 
     await deleteEntries(
@@ -123,6 +128,11 @@ export const parseWorkingGroupToDataObject = (
   const resources = parseResources(workingGroup.resourcesCollection);
   const calendar = parseCalendar(workingGroup.calendar);
 
+  const tags =
+    workingGroup.tagsCollection?.items
+      .filter((tag): tag is TagItem => tag !== null)
+      .map(parseTag) ?? [];
+
   return {
     id: workingGroup.sys.id,
     title: workingGroup.title ?? '',
@@ -133,6 +143,7 @@ export const parseWorkingGroupToDataObject = (
     primaryEmail: workingGroup.primaryEmail ?? undefined,
     secondaryEmail: workingGroup.secondaryEmail ?? undefined,
     leadingMembers: workingGroup.leadingMembers ?? '',
+    tags,
     members,
     milestones,
     resources,

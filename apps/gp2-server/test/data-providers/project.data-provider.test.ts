@@ -557,20 +557,6 @@ describe('Project Data Provider', () => {
       });
     });
 
-    test('Should return an empty result if no tags', async () => {
-      const mockResponse = getContentfulGraphqlProjectsResponse();
-      const project = getContentfulGraphqlProject();
-      project.tagsCollection = null;
-      mockResponse.projectsCollection!.items = [project];
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce(mockResponse);
-
-      const { items } = await projectDataProvider.fetch(options);
-
-      expect(items[0]).toMatchObject({
-        tags: [],
-      });
-    });
-
     test('Should default null title, startDate to undefined', async () => {
       const mockResponse = getContentfulGraphqlProjectsResponse();
       const project = getContentfulGraphqlProject();

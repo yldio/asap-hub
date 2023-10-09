@@ -70,7 +70,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
   private getUserIdFilter = async ({
     projects,
     workingGroups,
-    keywords,
+    tags,
     userIds,
   }: gp2Model.FetchUsersOptions['filter'] = {}): Promise<string[]> => {
     const unfilteredUserIds = await Promise.all([
@@ -79,7 +79,7 @@ export class UserContentfulDataProvider implements UserDataProvider {
         workingGroups,
         this.fetchUsersByWorkingGroup.bind(this),
       ),
-      this.getUsersByTags(keywords),
+      this.getUsersByTags(tags),
       userIds,
     ]);
 
@@ -89,16 +89,16 @@ export class UserContentfulDataProvider implements UserDataProvider {
       .filter((userId, index, arr) => arr.indexOf(userId) === index);
   };
   async fetch(options: gp2Model.FetchUsersOptions) {
-    const { projects, workingGroups, userIds, keywords } = options.filter || {};
+    const { projects, workingGroups, userIds, tags } = options.filter || {};
     const userIdFilter = await this.getUserIdFilter({
       projects,
       workingGroups,
       userIds,
-      keywords,
+      tags,
     });
     if (
       userIdFilter.length === 0 &&
-      (projects?.length || workingGroups?.length || keywords?.length)
+      (projects?.length || workingGroups?.length || tags?.length)
     ) {
       return { total: 0, items: [] };
     }

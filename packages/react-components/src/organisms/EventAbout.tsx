@@ -4,7 +4,7 @@ import {
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
 } from '@asap-hub/model';
 
-import { Headline2, Divider } from '../atoms';
+import { Headline2, Divider, Paragraph } from '../atoms';
 import { TagList, RichText } from '..';
 import { Collapsible } from '../molecules';
 
@@ -31,7 +31,10 @@ const EventAbout: React.FC<EventAboutProps> = ({
 
   const tagsComponent = tags.length ? (
     <div>
-      <Headline2 styleAsHeading={4}>Event tags</Headline2>
+      <Headline2 styleAsHeading={4}>Tags</Headline2>
+      <Paragraph>
+        Explore keywords related to skills, techniques, resources, and tools.
+      </Paragraph>
       <TagList tags={tags} />
     </div>
   ) : null;

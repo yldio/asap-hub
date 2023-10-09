@@ -6,14 +6,15 @@ import {
 import { ComponentProps } from 'react';
 import EditableCard from '../molecules/EditableCard';
 
-type UserKeywordsProps = Pick<gp2.UserResponse, 'tags'> &
+type UserTagsProps = Pick<gp2.UserResponse, 'tags'> &
   Pick<ComponentProps<typeof EditableCard>, 'editHref'>;
 
-const UserKeywords: React.FC<UserKeywordsProps> = ({ tags, editHref }) => (
+const UserTags: React.FC<UserTagsProps> = ({ tags, editHref }) => (
   <EditableCard
     editHref={editHref}
-    title="Keywords"
+    title="Tags"
     edit={!!tags && tags.length > 0}
+    subtitle="Explore keywords related to skills, techniques, resources, and tools."
   >
     {editHref && !(tags?.length > 0) ? (
       <UserProfilePlaceholderCard>
@@ -26,4 +27,4 @@ const UserKeywords: React.FC<UserKeywordsProps> = ({ tags, editHref }) => (
   </EditableCard>
 );
 
-export default UserKeywords;
+export default UserTags;

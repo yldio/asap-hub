@@ -45,7 +45,6 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
     id: '42',
     title: 'A Project',
   },
-  tags: [{ id: 'keyword-1', name: 'Cohort' }],
   relatedOutputs: [
     {
       id: 'another-output-id',
@@ -53,6 +52,7 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
       documentType: 'Dataset',
     },
   ],
+  tags: [{ id: 'tag-1', name: 'Cohort' }],
 });
 
 export const getListOutputDataObject =
@@ -195,7 +195,7 @@ export const getContentfulGraphqlOutput = (): NonNullable<
     items: [
       {
         sys: {
-          id: 'keyword-1',
+          id: 'tag-1',
         },
         name: 'Cohort',
       },

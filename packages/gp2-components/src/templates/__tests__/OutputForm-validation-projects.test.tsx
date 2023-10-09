@@ -13,6 +13,7 @@ describe('OutputForm', () => {
     workingGroupSuggestions: [],
     projectSuggestions: [],
     mainEntityId: '12',
+    getRelatedOutputSuggestions: jest.fn(),
   };
 
   describe('validation', () => {

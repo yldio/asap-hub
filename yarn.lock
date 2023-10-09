@@ -274,7 +274,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/prettier": 2.7.3
     "@types/pump": 1.1.1
-    "@types/through2-concurrent": 2.0.1
+    "@types/through2-concurrent": 2.0.2
     "@types/uuid": 8.3.4
     "@types/yargs": 17.0.5
     "@yarnpkg/pnpify": 3.1.6
@@ -1691,7 +1691,7 @@ __metadata:
     "@types/pump": 1.1.1
     "@types/source-map-support": 0.5.8
     "@types/supertest": 2.0.12
-    "@types/through2-concurrent": 2.0.1
+    "@types/through2-concurrent": 2.0.2
     "@types/uuid": 8.3.4
     ajv: 8.11.0
     ajv-formats: 2.1.1
@@ -18335,13 +18335,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/through2-concurrent@npm:2.0.1":
-  version: 2.0.1
-  resolution: "@types/through2-concurrent@npm:2.0.1"
+"@types/through2-concurrent@npm:2.0.2":
+  version: 2.0.2
+  resolution: "@types/through2-concurrent@npm:2.0.2"
   dependencies:
-    "@types/node": "npm:*"
-    "@types/through2": "npm:*"
-  checksum: 3fde6fe82b2cac2da4bf70f8ab1643eed197f4f2c6f28d3f6da00c9d1c4b37615d957578fc51603564f5ca50879495a83987dfc381f58d6a80bbc5e96133f188
+    "@types/node": "*"
+    "@types/through2": "*"
+  checksum: d687c04c9979100e9c23914445350d58d4e2c8bcfce338c2b76c2ba7dc0f7449c451cd2f9d49678720fbd4f6dd46fef61c830c3480cea221fad85755402ce232
   languageName: node
   linkType: hard
 

@@ -148,7 +148,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   rrid,
   accessionNumber,
   relatedOutputs = [],
-  getRelatedOutputSuggestions = noop,
+  getRelatedOutputSuggestions,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(

@@ -8,7 +8,7 @@ const processProject = (
   loggedInUserId?: string,
 ): gp2.ProjectResponse => ({
   ...removeNotAllowedResources(project, loggedInUserId),
-  _tags: project.opportunitiesLink ? [gp2.opportunitiesAvailable] : [],
+  opportunitiesAvailable: !!project.opportunitiesLink,
 });
 
 export default class ProjectController {

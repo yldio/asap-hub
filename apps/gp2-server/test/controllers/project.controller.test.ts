@@ -32,7 +32,7 @@ describe('Project controller', () => {
 
       expect(result).toEqual({ items: [], total: 0 });
     });
-    test('Should not set the opportunitiesAvailable in _tags if there is no opportunity link', async () => {
+    test('Should not set opportunitiesAvailable if there is no opportunity link', async () => {
       const listProjectDataObject = getListProjectsResponse();
 
       projectDataProviderMock.fetch.mockResolvedValue({
@@ -49,7 +49,7 @@ describe('Project controller', () => {
         items: listProjectResponse.items.map(
           ({ opportunitiesLink: __, ...expected }) => ({
             ...expected,
-            _tags: [],
+            opportunitiesAvailable: false,
           }),
         ),
       });
@@ -133,7 +133,7 @@ describe('Project controller', () => {
 
       expect(result).toEqual(getProjectResponse());
     });
-    test('Should not set the opportunitiesAvailable in _tags if there is no opportunity link', async () => {
+    test('Should not set opportunitiesAvailable if there is no opportunity link', async () => {
       const { opportunitiesLink: _, ...projectDataObject } =
         getProjectDataObject();
       projectDataProviderMock.fetchById.mockResolvedValue(projectDataObject);
@@ -142,7 +142,7 @@ describe('Project controller', () => {
       const { opportunitiesLink: __, ...expected } = getProjectResponse();
       expect(result).toEqual({
         ...expected,
-        _tags: [],
+        opportunitiesAvailable: false,
       });
     });
 

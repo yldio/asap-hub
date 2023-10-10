@@ -10,6 +10,7 @@ import {
   getContentfulRestClientFactory,
 } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
+import { getTagsNames } from '../../utils/tag-names';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { EventPayload } from '../event-bus';
 
@@ -27,8 +28,13 @@ export const indexEventHandler =
         const calendarEvent = await eventController.fetchById(id);
         log.debug(`Fetched calendar event ${calendarEvent.id}`);
 
+        const data = {
+          ...calendarEvent,
+          _tags: getTagsNames(calendarEvent.tags),
+        };
+
         await algoliaClient.save({
-          data: calendarEvent,
+          data,
           type: 'event',
         });
 

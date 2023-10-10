@@ -8,6 +8,7 @@
     "__meta.type",
     "authors.id",
     "documentType",
+    "eventTypes",
     "project.id",
     "projectIds",
     "region",

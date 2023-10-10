@@ -38,7 +38,7 @@ export type ProjectDataObject = {
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;
 
 export type ProjectResponse = ProjectDataObject & {
-  _tags: string[];
+  opportunitiesAvailable: boolean;
 };
 
 export type ListProjectResponse = ListResponse<ProjectResponse>;

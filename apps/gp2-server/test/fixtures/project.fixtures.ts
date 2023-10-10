@@ -74,7 +74,7 @@ export const getProjectResponse = (
   overrides: Partial<gp2Model.ProjectResponse> = {},
 ): gp2Model.ProjectResponse => ({
   ...getProjectDataObject(),
-  _tags: [gp2Model.opportunitiesAvailable],
+  opportunitiesAvailable: true,
   ...overrides,
 });
 export const createProjectMembersResponse = (

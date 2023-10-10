@@ -12,6 +12,7 @@ import {
 } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
+import { getTagsNames } from '../../utils/tag-names';
 import { OutputPayload } from '../event-bus';
 
 export const indexOutputHandler =
@@ -28,8 +29,13 @@ export const indexOutputHandler =
         const output = await outputController.fetchById(id);
         log.debug(`Fetched output ${output.id}`);
 
+        const data = {
+          ...output,
+          _tags: getTagsNames(output.tags),
+        };
+
         await algoliaClient.save({
-          data: output,
+          data,
           type: 'output',
         });
 

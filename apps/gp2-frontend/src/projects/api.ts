@@ -28,8 +28,7 @@ const getAllFilters = ({ status = [], type = [] }: gp2.FetchProjectFilter) => {
     ?.map((filter) => `status:"${filter}"`)
     .join(' OR ');
   const opportunityFilter =
-    type?.includes(gp2.opportunitiesAvailable) &&
-    `_tags:"${gp2.opportunitiesAvailable}"`;
+    type?.includes(gp2.opportunitiesAvailable) && 'opportunitiesAvailable=1';
   const traineeFilter =
     type?.includes(gp2.traineeProject) && 'traineeProject=1';
 

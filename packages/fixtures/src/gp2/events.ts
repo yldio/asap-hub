@@ -101,7 +101,7 @@ export const createEventResponse = (
     numberOfExternalSpeakers,
     numberOfSpeakersToBeAnnounced,
   ),
-  _tags: [],
+  eventTypes: [],
 });
 
 export const createListEventResponse = (

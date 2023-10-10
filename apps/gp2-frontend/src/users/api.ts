@@ -20,7 +20,7 @@ export const createUserApiUrl = ({
   const addFilter = (name: string, items?: string[]) =>
     items?.forEach((item) => url.searchParams.append(`filter[${name}]`, item));
   addFilter('regions', filter?.regions);
-  addFilter('keywords', filter?.keywords);
+  addFilter('tags', filter?.tags);
   addFilter('projects', filter?.projects);
   addFilter('workingGroups', filter?.workingGroups);
 
@@ -38,7 +38,7 @@ const getAllFilters = ({
   projects,
   workingGroups,
   regions,
-  keywords,
+  tags,
 }: gp2.FetchUsersFilter) => {
   const addFilter = ({
     name,
@@ -50,7 +50,7 @@ const getAllFilters = ({
 
   return [
     { name: 'region', items: regions },
-    { name: 'tagIds', items: keywords },
+    { name: 'tagIds', items: tags },
     { name: 'projectIds', items: projects },
     { name: 'workingGroupIds', items: workingGroups },
   ]

@@ -12,8 +12,9 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
-import { getKeywords } from '../../shared/api';
-import { getOutput, updateOutput } from '../api';
+import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { getOutput, getOutputs, updateOutput } from '../api';
+import { getTags } from '../../shared/api';
 import ShareOutput from '../ShareOutput';
 
 jest.mock('../../outputs/api');
@@ -23,7 +24,8 @@ const mockUpdateOutput = updateOutput as jest.MockedFunction<
   typeof updateOutput
 >;
 const mockGetOutput = getOutput as jest.MockedFunction<typeof getOutput>;
-const mockGetKeywords = getKeywords as jest.MockedFunction<typeof getKeywords>;
+const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
 const renderShareOutput = async (outputId: string = 'ro0') => {
   render(
@@ -60,7 +62,8 @@ const renderShareOutput = async (outputId: string = 'ro0') => {
 describe('ShareOutput', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
+    mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
+    mockGetTags.mockResolvedValue(gp2.createTagsResponse());
   });
   afterEach(jest.resetAllMocks);
   mockConsoleError();

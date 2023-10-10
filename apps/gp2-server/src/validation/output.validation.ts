@@ -136,6 +136,26 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
         type: 'string',
         nullable: true,
       },
+      relatedOutputs: {
+        type: 'array',
+        items: {
+          type: 'object',
+          required: ['id'],
+          properties: {
+            id: { type: 'string' },
+            title: { type: 'string' },
+            documentType: {
+              type: 'string',
+              enum: outputDocumentTypes,
+            },
+            type: {
+              type: 'string',
+              nullable: true,
+              enum: outputTypes,
+            },
+          },
+        },
+      },
       tags: {
         type: 'array',
         items: {

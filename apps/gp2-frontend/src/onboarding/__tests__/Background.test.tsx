@@ -15,7 +15,7 @@ import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, patchUser } from '../../users/api';
-import { getKeywords } from '../../shared/api';
+import { getTags } from '../../shared/api';
 import Background from '../Background';
 
 jest.mock('../../users/api');
@@ -47,21 +47,19 @@ const renderBackground = async (id: string) => {
 describe('Background', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    mockGetKeywords.mockResolvedValue(gp2Fixtures.createTagsResponse());
+    mockGetTags.mockResolvedValue(gp2Fixtures.createTagsResponse());
   });
 
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
-  const mockGetKeywords = getKeywords as jest.MockedFunction<
-    typeof getKeywords
-  >;
+  const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
-  it('renders biography and keywords', async () => {
+  it('renders biography and tags', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderBackground(user.id);
     expect(screen.getByRole('heading', { name: 'Biography' })).toBeVisible();
-    expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Tags' })).toBeVisible();
   });
 
   it('renders not found if no user is returned', async () => {
@@ -96,16 +94,16 @@ describe('Background', () => {
     );
   });
 
-  it('saves the keywords modal', async () => {
+  it('saves the tags modal', async () => {
     const tags = [{ id: '1', name: 'Genetics' }] as gp2Model.TagDataObject[];
     const user = { ...gp2Fixtures.createUserResponse(), tags };
     mockGetUser.mockResolvedValueOnce(user);
     await renderBackground(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    const [keywordsEditButton] = screen.getAllByRole('link', {
+    const [tagsEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keywordsEditButton!);
+    userEvent.click(tagsEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {

@@ -4,7 +4,7 @@ import ProjectOverview from '../ProjectOverview';
 
 describe('ProjectOverview', () => {
   const defaultProps: ComponentProps<typeof ProjectOverview> = {
-    keywords: [],
+    tags: [],
     milestones: [],
     members: [],
   };
@@ -75,15 +75,29 @@ describe('ProjectOverview', () => {
       screen.getByRole('link', { name: 'tony@stark.com' }),
     ).toBeInTheDocument();
   });
-  it('renders the keyword: Test', () => {
+  it('renders the tags', () => {
     render(
-      <ProjectOverview {...defaultProps} keywords={['Test']}>
+      <ProjectOverview
+        {...defaultProps}
+        tags={[
+          { id: 'tag-1', name: 'Tag 1' },
+          { id: 'tag-2', name: 'Tag 2' },
+        ]}
+      >
         Body
       </ProjectOverview>,
     );
-
-    expect(screen.getByText('Test')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Tags' })).toBeInTheDocument();
+    expect(screen.getByText('Tag 1')).toBeInTheDocument();
+    expect(screen.getByText('Tag 2')).toBeInTheDocument();
   });
+  it('does not render tags if empty', () => {
+    render(<ProjectOverview {...defaultProps} tags={[]} />);
+    expect(
+      screen.queryByRole('heading', { name: 'Tags' }),
+    ).not.toBeInTheDocument();
+  });
+
   it('displays the milestones', () => {
     render(
       <ProjectOverview

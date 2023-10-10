@@ -18,6 +18,11 @@ export const getContentfulTagsGraphqlResponse =
     },
   });
 
+export const getContentfulTagsCollectionGraphqlResponse = () => ({
+  total: 1,
+  items: [getContentfulGraphqlTags()],
+});
+
 export const getTagDataObject = (): gp2Model.TagDataObject => ({
   id: '42',
   name: 'tag-1',

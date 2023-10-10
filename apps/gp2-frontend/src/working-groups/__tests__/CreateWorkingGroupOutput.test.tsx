@@ -11,9 +11,10 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
-import { createOutput } from '../../outputs/api';
-import { getKeywords } from '../../shared/api';
+import { createOutput, getOutputs } from '../../outputs/api';
+import { getTags } from '../../shared/api';
 import { getExternalUsers, getUsers } from '../../users/api';
+import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import CreateWorkingGroupOutput from '../CreateWorkingGroupOutput';
 
 jest.mock('../../outputs/api');
@@ -29,7 +30,8 @@ const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 const mockGetExternalUsers = getExternalUsers as jest.MockedFunction<
   typeof getExternalUsers
 >;
-const mockGetKeywords = getKeywords as jest.MockedFunction<typeof getKeywords>;
+const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
 const renderCreateWorkingGroupOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
@@ -73,7 +75,8 @@ const renderCreateWorkingGroupOutput = async (
 
 beforeEach(() => {
   jest.resetAllMocks();
-  mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
+  mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
+  mockGetTags.mockResolvedValue(gp2.createTagsResponse());
 });
 
 it('renders the title', async () => {
@@ -127,6 +130,7 @@ it('publishes the output', async () => {
       ],
       workingGroupId: 'working-group-id-1',
       projectId: undefined,
+      relatedOutputs: [],
     },
     expect.anything(),
   );

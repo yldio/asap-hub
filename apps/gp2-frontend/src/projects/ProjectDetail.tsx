@@ -92,10 +92,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
           <Switch>
             <Route path={overview}>
               <Frame title="Overview">
-                <ProjectOverview
-                  {...project}
-                  keywords={project.tags.map((t) => t.name)}
-                />
+                <ProjectOverview {...project} />
               </Frame>
             </Route>
             {isProjectMember && (

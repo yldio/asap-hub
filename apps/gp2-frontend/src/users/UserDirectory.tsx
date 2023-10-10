@@ -8,7 +8,7 @@ import { authorizationState } from '../auth/state';
 import Frame from '../Frame';
 import { useSearch } from '../hooks/search';
 import { useProjects } from '../projects/state';
-import { useKeywords } from '../shared/state';
+import { useTags } from '../shared/state';
 import { useWorkingGroupsState } from '../working-groups/state';
 import { getUsers } from './api';
 import { userFields, usersResponseToStream, userToCSV } from './export';
@@ -28,14 +28,14 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
     setSearchQuery,
     debouncedSearchQuery,
     updateFilters,
-  } = useSearch(['regions', 'keywords', 'projects', 'workingGroups']);
+  } = useSearch(['regions', 'tags', 'projects', 'workingGroups']);
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
 
   const filtersHref = users({}).filters({}).$;
   const onFiltersClick = () => changeLocation(filtersHref);
   const autorization = useRecoilValue(authorizationState);
-  const { items: keywords } = useKeywords();
+  const { items: tags } = useTags();
   const exportUsers = () =>
     usersResponseToStream(
       createCsvFileStream('user_export.csv', {
@@ -77,7 +77,7 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
       projects={projects}
       workingGroups={workingGroups}
       filters={filters}
-      keywords={keywords}
+      tags={tags}
     >
       <Frame title="User List">
         <UserList searchQuery={debouncedSearchQuery} filters={filters} />

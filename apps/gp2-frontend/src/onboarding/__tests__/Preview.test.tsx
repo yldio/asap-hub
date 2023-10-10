@@ -26,7 +26,7 @@ import {
   patchUser,
   postUserAvatar,
 } from '../../users/api';
-import { getKeywords } from '../../shared/api';
+import { getTags } from '../../shared/api';
 import Preview from '../Preview';
 
 jest.mock('browser-image-compression');
@@ -80,7 +80,7 @@ const renderPreview = async (
 describe('Preview', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    mockGetKeywords.mockResolvedValue(gp2Fixtures.createTagsResponse());
+    mockGetTags.mockResolvedValue(gp2Fixtures.createTagsResponse());
   });
   const contributingCohortResponse: gp2Model.ContributingCohortResponse[] = [
     { id: '7', name: 'AGPDS' },
@@ -88,9 +88,7 @@ describe('Preview', () => {
   ];
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
-  const mockGetKeywords = getKeywords as jest.MockedFunction<
-    typeof getKeywords
-  >;
+  const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
   const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
     typeof postUserAvatar
   >;
@@ -290,16 +288,16 @@ describe('Preview', () => {
     );
   });
 
-  it('saves the keywords modal', async () => {
+  it('saves the tags modal', async () => {
     const tags = [{ id: '1', name: 'Genetics' }] as gp2Model.TagDataObject[];
     const user = { ...gp2Fixtures.createUserResponse(), tags };
     mockGetUser.mockResolvedValueOnce(user);
     await renderPreview(user.id);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    const [, , keywordsEditButton] = screen.getAllByRole('link', {
+    const [, , tagsEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keywordsEditButton!);
+    userEvent.click(tagsEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
     userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {

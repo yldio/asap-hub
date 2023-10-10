@@ -2,9 +2,10 @@ import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC } from 'react';
+import { useRelatedOutputSuggestions } from '../outputs';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
 import { documentTypeMapper } from '../projects/CreateProjectOutput';
-import { useKeywords } from '../shared/state';
+import { useTags } from '../shared/state';
 
 const { workingGroups } = gp2Routing;
 
@@ -15,8 +16,9 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
     workingGroups({}).workingGroup({ workingGroupId }).createOutput,
   );
   const createOutput = useCreateOutput();
+  const getRelatedOutputSuggestions = useRelatedOutputSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
-  const { items: suggestions } = useKeywords();
+  const { items: tagSuggestions } = useTags();
   return (
     <CreateOutputPage
       documentType={documentTypeMapper[outputDocumentType]}
@@ -33,7 +35,8 @@ const CreateWorkingGroupOutput: FC<Record<string, never>> = () => {
         }
         documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
-        keywordSuggestions={suggestions}
+        tagSuggestions={tagSuggestions}
+        getRelatedOutputSuggestions={getRelatedOutputSuggestions}
       />
     </CreateOutputPage>
   );

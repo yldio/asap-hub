@@ -8,7 +8,7 @@ describe('OnboardingBackground', () => {
   const defaultProps = {
     ...createUserResponse(),
     editBiographyHref: '',
-    editKeywordsHref: '',
+    editTagsHref: '',
   };
   it('renders the page description', () => {
     render(<OnboardingBackground {...defaultProps} />);
@@ -16,9 +16,9 @@ describe('OnboardingBackground', () => {
       screen.getByText(/next up, we’d like to capture some more information/i),
     ).toBeVisible();
   });
-  it('renders the keywords card', () => {
+  it('renders the tags card', () => {
     render(<OnboardingBackground {...defaultProps} />);
-    expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Tags' })).toBeVisible();
   });
   it('renders the biography card', () => {
     render(<OnboardingBackground {...defaultProps} />);

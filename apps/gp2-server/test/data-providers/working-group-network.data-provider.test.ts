@@ -1,5 +1,6 @@
 import { getGP2ContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
 import { WorkingGroupNetworkContentfulDataProvider } from '../../src/data-providers/working-group-network.data-provider';
+import { getContentfulTagsCollectionGraphqlResponse } from '../fixtures/tag.fixtures';
 import {
   getContentfulGraphqlWorkingGroupNetwork,
   getContentfulGraphqlWorkingGroupNetworkResponse,
@@ -27,6 +28,8 @@ describe('Working Group Network Data Provider', () => {
         getContentfulGraphqlWorkingGroupMilestones(),
       WorkingGroupsResourcesCollection: () =>
         getContentfulGraphqlWorkingGroupResources(),
+      WorkingGroupsTagsCollection: () =>
+        getContentfulTagsCollectionGraphqlResponse(),
     });
 
   const workingGroupNetworkDataProviderWithMockServer =

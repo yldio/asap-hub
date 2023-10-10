@@ -21,7 +21,7 @@ describe('UserOverview', () => {
     expect(
       screen.getByRole('heading', { name: 'Contact Details' }),
     ).toBeVisible();
-    expect(screen.getByRole('heading', { name: 'Keywords' })).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Tags' })).toBeVisible();
   });
 
   it('renders the biography', () => {
@@ -135,7 +135,7 @@ describe('UserOverview', () => {
     });
   });
 
-  it('renders the keyword: Test', () => {
+  it('renders the tag: Test', () => {
     render(
       <UserOverview {...defaultProps} tags={[{ id: 'id', name: 'Test' }]}>
         Body

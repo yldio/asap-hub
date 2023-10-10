@@ -46,7 +46,7 @@ const renderUserList = async ({
     changeLocation: jest.fn(),
     filters: {
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
       ...filters,
@@ -90,7 +90,7 @@ const renderUserList = async ({
 beforeEach(jest.resetAllMocks);
 it('fetches the user information', async () => {
   await renderUserList({
-    filters: { regions: [], keywords: [], projects: [], workingGroups: [] },
+    filters: { regions: [], tags: [], projects: [], workingGroups: [] },
   });
 
   await waitFor(() =>
@@ -98,7 +98,7 @@ it('fetches the user information', async () => {
       expect.anything(),
       expect.objectContaining({
         regions: [],
-        keywords: [],
+        tags: [],
         projects: [],
         workingGroups: [],
         searchQuery: '',

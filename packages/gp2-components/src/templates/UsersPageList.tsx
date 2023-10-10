@@ -18,7 +18,7 @@ type UsersPageListProps = ComponentProps<typeof FilterSearchExport> & {
   ) => void;
 } & Pick<
     ComponentProps<typeof FiltersModal>,
-    'filters' | 'projects' | 'workingGroups' | 'keywords'
+    'filters' | 'projects' | 'workingGroups' | 'tags'
   >;
 
 type FiltersType = ComponentProps<typeof FilterPills>['filters'];
@@ -41,7 +41,7 @@ const UsersPageList: React.FC<UsersPageListProps> = ({
   updateFilters,
   projects,
   workingGroups,
-  keywords,
+  tags,
 }) => {
   const { users } = gp2Routing;
   const backHref = users({}).$;
@@ -72,7 +72,7 @@ const UsersPageList: React.FC<UsersPageListProps> = ({
         filters={filters}
         workingGroups={workingGroups}
         projects={projects}
-        keywords={keywords}
+        tags={tags}
         onRemove={onRemove}
       />
       <main>{children}</main>
@@ -83,7 +83,7 @@ const UsersPageList: React.FC<UsersPageListProps> = ({
           onApplyClick={(filter) => updateFilters(backHref, filter)}
           projects={projects}
           workingGroups={workingGroups}
-          keywords={keywords}
+          tags={tags}
         />
       )}
     </>

@@ -1,18 +1,18 @@
 import { gp2 } from '@asap-hub/model';
 import { atom, selector, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getKeywords } from './api';
+import { getTags } from './api';
 
-const keywordsSelector = selector({
-  key: 'keywords',
+const tagsSelector = selector({
+  key: 'tags',
   get: ({ get }) => {
     const authorization = get(authorizationState);
-    return getKeywords(authorization);
+    return getTags(authorization);
   },
 });
-const keywordsState = atom<gp2.ListTagsResponse>({
-  key: 'keywordsState',
-  default: keywordsSelector,
+const tagsState = atom<gp2.ListTagsResponse>({
+  key: 'tagsState',
+  default: tagsSelector,
 });
 
-export const useKeywords = () => useRecoilValue(keywordsState);
+export const useTags = () => useRecoilValue(tagsState);

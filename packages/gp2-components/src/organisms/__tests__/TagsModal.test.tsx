@@ -4,42 +4,42 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
-import KeywordsModal from '../KeywordsModal';
+import TagsModal from '../TagsModal';
 
-describe('KeywordsModal', () => {
+describe('TagsModal', () => {
   const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
 
   beforeEach(jest.resetAllMocks);
-  type KeywordsModalProps = ComponentProps<typeof KeywordsModal>;
-  const defaultProps: KeywordsModalProps = {
+  type TagsModalProps = ComponentProps<typeof TagsModal>;
+  const defaultProps: TagsModalProps = {
     ...gp2Fixtures.createUserResponse(),
     backHref: '',
     onSave: jest.fn(),
-    suggestions: [{ name: 'Keyword-2', id: 'id-2' }],
+    suggestions: [{ name: 'Tag-2', id: 'id-2' }],
   };
 
-  const renderModal = (overrides: Partial<KeywordsModalProps> = {}) =>
+  const renderModal = (overrides: Partial<TagsModalProps> = {}) =>
     render(
       <StaticRouter>
-        <KeywordsModal {...defaultProps} {...overrides} />
+        <TagsModal {...defaultProps} {...overrides} />
       </StaticRouter>,
     );
 
   it('renders a dialog with the right title', () => {
     renderModal();
     expect(screen.getByRole('dialog')).toContainElement(
-      screen.getByRole('heading', { name: 'Keywords' }),
+      screen.getByRole('heading', { name: 'Tags' }),
     );
   });
 
   it.each`
-    keywords                              | expected
+    tags                                  | expected
     ${undefined}                          | ${'Start typing...'}
     ${[{ id: 'id-1', name: 'Genetics' }]} | ${'Genetics'}
-  `('renders keywords with value "$expected"', ({ keywords, expected }) => {
-    renderModal({ tags: keywords });
+  `('renders tags with value "$expected"', ({ tags, expected }) => {
+    renderModal({ tags });
     const textbox = screen.getByRole('textbox', {
-      name: /Keywords/i,
+      name: /Tags/i,
     });
     expect(textbox).toBeVisible();
     expect(screen.getByText(expected)).toBeVisible();
@@ -70,10 +70,10 @@ describe('KeywordsModal', () => {
 
     userEvent.click(
       screen.getByRole('textbox', {
-        name: /Keywords/i,
+        name: /Tags/i,
       }),
     );
-    userEvent.click(screen.getByText('Keyword-2'));
+    userEvent.click(screen.getByText('Tag-2'));
 
     userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
@@ -91,7 +91,7 @@ describe('KeywordsModal', () => {
 
     userEvent.click(getSaveButton());
     expect(onSave).not.toHaveBeenCalled();
-    expect(screen.getByText('Please add your keywords')).toBeVisible();
+    expect(screen.getByText('Please add your tags')).toBeVisible();
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
 });

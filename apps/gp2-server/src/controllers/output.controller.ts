@@ -63,8 +63,8 @@ export default class OutputController {
       subtype: outputCreateData.subtype,
       title: outputCreateData.title,
       type: outputCreateData.type,
-      workingGroupId: outputCreateData.workingGroupId,
-      projectId: outputCreateData.projectId,
+      workingGroupIds: outputCreateData.workingGroupIds,
+      projectIds: outputCreateData.projectIds,
       description: outputCreateData.description,
       sharingStatus: outputCreateData.sharingStatus,
       gp2Supported: outputCreateData.gp2Supported,
@@ -73,6 +73,8 @@ export default class OutputController {
       rrid: outputCreateData.rrid,
       accessionNumber: outputCreateData.accessionNumber,
       relatedOutputs: outputCreateData.relatedOutputs,
+      mainEntityId: outputCreateData.mainEntityId,
+      contributingCohorts: outputCreateData.contributingCohorts,
     };
 
     const outputId = await this.outputDataProvider.create(
@@ -114,6 +116,10 @@ export default class OutputController {
       rrid: outputUpdateData.rrid,
       accessionNumber: outputUpdateData.accessionNumber,
       relatedOutputs: outputUpdateData.relatedOutputs,
+      projectIds: outputUpdateData.projectIds,
+      workingGroupIds: outputUpdateData.workingGroupIds,
+      mainEntityId: outputUpdateData.mainEntityId,
+      contributingCohorts: outputUpdateData.contributingCohorts,
     };
 
     await this.outputDataProvider.update(id, outputUpdateDataObject);

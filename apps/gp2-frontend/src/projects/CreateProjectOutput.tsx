@@ -4,7 +4,9 @@ import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC } from 'react';
 import { useRelatedOutputSuggestions } from '../outputs';
 import { useAuthorSuggestions, useCreateOutput } from '../outputs/state';
-import { useTags } from '../shared/state';
+import { useContributingCohorts, useTags } from '../shared/state';
+import { useWorkingGroupsState } from '../working-groups/state';
+import { useProjectById, useProjects } from './state';
 
 const { projects } = gp2Routing;
 
@@ -29,6 +31,21 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
   const getRelatedOutputSuggestions = useRelatedOutputSuggestions();
   const getAuthorSuggestions = useAuthorSuggestions();
   const { items: tagSuggestions } = useTags();
+  const cohortSuggestions = useContributingCohorts();
+  const { items: workingGroupSuggestions } = useWorkingGroupsState();
+  const { items: projectSuggestions } = useProjects({
+    searchQuery: '',
+    pageSize: null,
+    currentPage: null,
+    filters: new Set(),
+  });
+
+  const project = useProjectById(projectId);
+  const mainEntity = {
+    id: projectId,
+    title: project?.title || '',
+  };
+
   return (
     <CreateOutputPage
       documentType={documentTypeMapper[outputDocumentType]}
@@ -36,17 +53,16 @@ const CreateProjectOutput: FC<Record<string, never>> = () => {
     >
       <OutputForm
         entityType="project"
-        shareOutput={async (payload: gp2Model.OutputPostRequest) =>
-          createOutput({
-            ...payload,
-            workingGroupId: undefined,
-            projectId,
-          })
-        }
+        shareOutput={createOutput}
         documentType={documentTypeMapper[outputDocumentType]}
         getAuthorSuggestions={getAuthorSuggestions}
         tagSuggestions={tagSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        cohortSuggestions={cohortSuggestions}
+        workingGroupSuggestions={workingGroupSuggestions}
+        projectSuggestions={projectSuggestions}
+        projects={[mainEntity]}
+        mainEntityId={projectId}
       />
     </CreateOutputPage>
   );

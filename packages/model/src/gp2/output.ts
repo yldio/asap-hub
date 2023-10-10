@@ -1,4 +1,5 @@
 import { FetchOptions, ListResponse } from '../common';
+import { ContributingCohortDataObject } from './contributing-cohort';
 import { ExternalUserResponse } from './external-user';
 import { TagDataObject } from './tag';
 
@@ -113,9 +114,10 @@ export type UserAuthor = {
   avatarUrl?: string;
 };
 
-type OutputOwner = {
+export type OutputOwner = {
   id: string;
   title: string;
+  type?: 'Projects' | 'WorkingGroups';
 };
 export type OutputAuthor = UserAuthor | ExternalUserResponse;
 export type OutputDataObject = OutputCoreObject & {
@@ -123,8 +125,11 @@ export type OutputDataObject = OutputCoreObject & {
   created: string;
   id: string;
   lastUpdatedPartial: string;
-  workingGroup?: OutputOwner;
-  project?: OutputOwner;
+  workingGroups?: OutputOwner[];
+  projects?: OutputOwner[];
+  contributingCohorts?: ContributingCohortDataObject[];
+  mainEntity: OutputOwner;
+  relatedEntity?: OutputOwner; // to be removed
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;
@@ -136,13 +141,19 @@ export type AuthorUpsertDataObject =
 export type OutputCreateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
-  workingGroupId?: string;
-  projectId?: string;
+  workingGroupIds?: string[];
+  projectIds?: string[];
+  mainEntityId?: string;
+  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
 };
 
 export type OutputUpdateDataObject = OutputCoreObject & {
   authors: AuthorUpsertDataObject[];
   updatedBy: string;
+  workingGroupIds?: string[];
+  projectIds?: string[];
+  mainEntityId?: string;
+  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
@@ -167,13 +178,15 @@ export type OutputPostRequest = {
   description?: string;
   gp2Supported?: DecisionOption;
   sharingStatus: OutputSharingStatus;
-  workingGroupId?: string;
-  projectId?: string;
+  workingGroupIds?: string[];
+  projectIds?: string[];
   tags?: TagDataObject[];
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
   relatedOutputs: RelatedOutputs[];
+  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  mainEntityId: string;
 };
 
 export type OutputPutRequest = OutputPostRequest;

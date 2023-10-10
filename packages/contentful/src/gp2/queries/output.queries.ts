@@ -83,6 +83,33 @@ export const outputsContentQueryFragment = gql`
     doi
     rrid
     accessionNumber
+    relatedEntitiesCollection {
+      total
+      items {
+        __typename
+        ... on Projects {
+          sys {
+            id
+          }
+          title
+        }
+        ... on WorkingGroups {
+          sys {
+            id
+          }
+          title
+        }
+      }
+    }
+    contributingCohortsCollection(limit: 10) {
+      total
+      items {
+        sys {
+          id
+        }
+        name
+      }
+    }
   }
 `;
 

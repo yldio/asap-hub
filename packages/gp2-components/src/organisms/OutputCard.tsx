@@ -5,6 +5,7 @@ import {
   formatDate,
   Headline2,
   Link,
+  Paragraph,
   pixels,
   SharedResearchMetadata,
   UsersList,
@@ -17,18 +18,29 @@ import { IconWithLabel } from '../molecules';
 
 const { rem } = pixels;
 
+const entitiesStyles = css({
+  margin: `${rem(4)} 0 ${rem(32)}`,
+  display: 'flex',
+  flexDirection: 'column',
+
+  '&.reverse': {
+    flexDirection: 'column-reverse',
+  },
+});
+
 type OutputCardProps = Pick<
   gp2Model.OutputResponse,
   | 'id'
   | 'addedDate'
   | 'title'
-  | 'workingGroup'
-  | 'project'
+  | 'workingGroups'
+  | 'projects'
   | 'authors'
   | 'link'
   | 'documentType'
   | 'type'
   | 'subtype'
+  | 'mainEntity'
 > & {
   isAdministrator?: boolean;
 };
@@ -37,14 +49,15 @@ const OutputCard: React.FC<OutputCardProps> = ({
   id,
   addedDate,
   title,
-  workingGroup,
-  project,
+  workingGroups,
+  projects,
   documentType,
   type,
   subtype,
   authors,
   link,
   isAdministrator,
+  mainEntity,
 }) => (
   <Card padding={false}>
     <div css={css({ padding: rem(24) })}>
@@ -52,8 +65,7 @@ const OutputCard: React.FC<OutputCardProps> = ({
         <SharedResearchMetadata
           pills={
             [
-              workingGroup && 'Working Group',
-              project && 'Project',
+              mainEntity.type === 'WorkingGroups' ? 'Working Group' : 'Project',
               documentType,
               type,
               subtype,
@@ -96,29 +108,44 @@ const OutputCard: React.FC<OutputCardProps> = ({
         }))}
         max={3}
       />
-      <div css={css({ margin: `${rem(4)} 0 ${rem(32)}` })}>
-        {workingGroup && (
-          <IconWithLabel noMargin icon={workingGroupIcon}>
-            <Link
-              href={
-                gp2Routing
-                  .workingGroups({})
-                  .workingGroup({ workingGroupId: workingGroup.id }).$
-              }
-            >
-              {workingGroup.title}
-            </Link>
+      <div
+        css={entitiesStyles}
+        className={`${mainEntity.type === 'Projects' ? 'reverse' : ''}`}
+      >
+        {workingGroups && (
+          <IconWithLabel icon={workingGroupIcon}>
+            {workingGroups.length > 1 ? (
+              <Paragraph noMargin>
+                {workingGroups.length} Working Groups
+              </Paragraph>
+            ) : (
+              <Link
+                href={
+                  gp2Routing.workingGroups({}).workingGroup({
+                    workingGroupId: workingGroups[0]?.id as string,
+                  }).$
+                }
+              >
+                {workingGroups[0]?.title}
+              </Link>
+            )}
           </IconWithLabel>
         )}
-        {project && (
-          <IconWithLabel noMargin icon={projectIcon}>
-            <Link
-              href={
-                gp2Routing.projects({}).project({ projectId: project.id }).$
-              }
-            >
-              {project.title}
-            </Link>
+        {projects && (
+          <IconWithLabel icon={projectIcon}>
+            {projects.length > 1 ? (
+              <Paragraph noMargin>{projects.length} Projects</Paragraph>
+            ) : (
+              <Link
+                href={
+                  gp2Routing
+                    .projects({})
+                    .project({ projectId: projects[0]?.id as string }).$
+                }
+              >
+                {projects[0]?.title}
+              </Link>
+            )}
           </IconWithLabel>
         )}
       </div>

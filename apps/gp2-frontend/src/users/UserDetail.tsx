@@ -22,11 +22,11 @@ import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { useOutputs } from '../outputs/state';
-import { useTags } from '../shared/state';
+import { useTags, useContributingCohorts } from '../shared/state';
 import { getInstitutions } from './api';
 import countryCodesSuggestions from './country-codes-suggestions';
 import locationSuggestions from './location-suggestions';
-import { useContributingCohorts, usePatchUserById, useUserById } from './state';
+import { usePatchUserById, useUserById } from './state';
 
 const { users } = gp2;
 type UserDetailProps = {

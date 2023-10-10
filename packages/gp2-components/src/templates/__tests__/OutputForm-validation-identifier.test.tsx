@@ -10,6 +10,10 @@ describe('OutputForm', () => {
     entityType: 'workingGroup' as const,
     getRelatedOutputSuggestions: jest.fn(),
     tagSuggestions: [],
+    cohortSuggestions: [],
+    workingGroupSuggestions: [],
+    projectSuggestions: [],
+    mainEntityId: '12',
   };
 
   describe('validation', () => {

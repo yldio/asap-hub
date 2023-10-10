@@ -24,7 +24,7 @@ const FormCard: React.FC<FormCardProps> = ({
 }) => (
   <Card padding={false}>
     <div role="presentation" css={[paddingStyles]}>
-      <Headline3>{title}</Headline3>
+      <Headline3 noMargin>{title}</Headline3>
     </div>
     {!!description && (
       <div css={[paddingStyles, descriptionStyles]}>

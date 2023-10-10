@@ -41,10 +41,12 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
   publishDate: '2021-05-21T13:18:31.000Z',
   lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
   subtype: 'Published',
-  project: {
-    id: '42',
-    title: 'A Project',
-  },
+  projects: [
+    {
+      id: '42',
+      title: 'A Project',
+    },
+  ],
   relatedOutputs: [
     {
       id: 'another-output-id',
@@ -53,6 +55,12 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
     },
   ],
   tags: [{ id: 'tag-1', name: 'Cohort' }],
+  contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
+  mainEntity: {
+    id: '42',
+    title: 'A Project',
+    type: 'Projects',
+  },
 });
 
 export const getListOutputDataObject =
@@ -76,22 +84,23 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     lastUpdatedPartial: _lastUpdatedPartial,
     addedDate: _addedDate,
     authors,
-    workingGroup,
-    project,
+    workingGroups,
+    projects,
+    mainEntity,
     ...outputResponse
   } = getOutputResponse();
   return {
     ...outputResponse,
     link: 'http://a.link',
     type: 'Research',
-    projectId: project?.id,
+    projectIds: projects?.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
+    mainEntityId: mainEntity.id,
   };
 };
 
 export const getOutputPutRequest = (): gp2Model.OutputPutRequest => {
-  const { projectId, ...data } = getOutputPostRequest();
-  return data;
+  return getOutputPostRequest();
 };
 
 export const getOutputCreateData = (): OutputCreateData => ({
@@ -106,26 +115,25 @@ export const getOutputCreateDataObject =
       id: _id,
       lastUpdatedPartial: _lastUpdatedPartial,
       created: _created,
-      workingGroup,
-      project,
+      workingGroups,
+      projects,
+      mainEntity,
       ...outputPostRequest
     } = getOutputResponse();
 
     return {
       ...outputPostRequest,
       createdBy: 'userId',
-      projectId: project?.id,
+      projectIds: projects?.map(({ id }) => id),
       authors: authors.map(({ id }) => ({ userId: id })),
+      mainEntityId: mainEntity.id,
     };
   };
 
 export const getOutputUpdateDataObject =
   (): gp2Model.OutputUpdateDataObject => {
-    const {
-      createdBy: _,
-      projectId: __,
-      ...outputCreateDataObject
-    } = getOutputCreateDataObject();
+    const { createdBy: _, ...outputCreateDataObject } =
+      getOutputCreateDataObject();
 
     return {
       ...outputCreateDataObject,
@@ -156,12 +164,17 @@ export const getContentfulGraphqlOutput = (): NonNullable<
   addedDate: '2021-05-21T13:18:31.000Z',
   publishDate: '2021-05-21T13:18:31.000Z',
   lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-  relatedEntity: {
-    __typename: 'Projects',
-    sys: {
-      id: '42',
-    },
-    title: 'A Project',
+  relatedEntitiesCollection: {
+    total: 1,
+    items: [
+      {
+        __typename: 'Projects',
+        sys: {
+          id: '42',
+        },
+        title: 'A Project',
+      },
+    ],
   },
   authorsCollection: {
     total: 2,
@@ -208,6 +221,17 @@ export const getContentfulGraphqlOutput = (): NonNullable<
         sys: { id: 'another-output-id' },
         title: 'another title',
         documentType: 'Dataset',
+      },
+    ],
+  },
+  contributingCohortsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'cohort-1',
+        },
+        name: 'Cohort',
       },
     ],
   },

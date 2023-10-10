@@ -8,7 +8,7 @@ describe('OutputForm', () => {
     shareOutput: jest.fn(),
     documentType: 'Procedural Form' as const,
     entityType: 'project' as const,
-    keywordSuggestions: [],
+    tagSuggestions: [],
     cohortSuggestions: [],
     workingGroupSuggestions: [],
     projectSuggestions: [],

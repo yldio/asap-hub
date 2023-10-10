@@ -129,7 +129,6 @@ export type OutputDataObject = OutputCoreObject & {
   projects?: OutputOwner[];
   contributingCohorts?: ContributingCohortDataObject[];
   mainEntity: OutputOwner;
-  relatedEntity?: OutputOwner; // to be removed
 };
 
 export type ListOutputDataObject = ListResponse<OutputDataObject>;

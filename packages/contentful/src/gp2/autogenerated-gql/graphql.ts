@@ -2990,7 +2990,6 @@ export type Outputs = Entry & {
   linkedFrom?: Maybe<OutputsLinkingCollections>;
   publishDate?: Maybe<Scalars['DateTime']>;
   relatedEntitiesCollection?: Maybe<OutputsRelatedEntitiesCollection>;
-  relatedEntity?: Maybe<OutputsRelatedEntity>;
   relatedOutputsCollection?: Maybe<OutputsRelatedOutputsCollection>;
   rrid?: Maybe<Scalars['String']>;
   sharingStatus?: Maybe<Scalars['String']>;
@@ -3092,13 +3091,6 @@ export type OutputsRelatedEntitiesCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<OutputsRelatedEntitiesFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
-export type OutputsRelatedEntityArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<OutputsRelatedEntityFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3293,8 +3285,6 @@ export type OutputsFilter = {
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEntities?: InputMaybe<CfrelatedEntitiesMultiTypeNestedFilter>;
   relatedEntitiesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  relatedEntity?: InputMaybe<CfrelatedEntityMultiTypeNestedFilter>;
-  relatedEntity_exists?: InputMaybe<Scalars['Boolean']>;
   relatedOutputs?: InputMaybe<CfOutputsNestedFilter>;
   relatedOutputsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
@@ -3465,26 +3455,6 @@ export type OutputsRelatedEntitiesFilter = {
 };
 
 export type OutputsRelatedEntitiesItem = Projects | WorkingGroups;
-
-export type OutputsRelatedEntity = Projects | WorkingGroups;
-
-export type OutputsRelatedEntityFilter = {
-  AND?: InputMaybe<Array<InputMaybe<OutputsRelatedEntityFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<OutputsRelatedEntityFilter>>>;
-  calendar_exists?: InputMaybe<Scalars['Boolean']>;
-  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  sys?: InputMaybe<SysFilter>;
-  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  title?: InputMaybe<Scalars['String']>;
-  title_contains?: InputMaybe<Scalars['String']>;
-  title_exists?: InputMaybe<Scalars['Boolean']>;
-  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  title_not?: InputMaybe<Scalars['String']>;
-  title_not_contains?: InputMaybe<Scalars['String']>;
-  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
 
 export type OutputsRelatedOutputsCollection = {
   items: Array<Maybe<Outputs>>;
@@ -6866,7 +6836,6 @@ export type CfOutputsNestedFilter = {
   publishDate_not?: InputMaybe<Scalars['DateTime']>;
   publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedEntitiesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  relatedEntity_exists?: InputMaybe<Scalars['Boolean']>;
   relatedOutputsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
@@ -7231,24 +7200,6 @@ export type CfauthorsMultiTypeNestedFilter = {
 export type CfrelatedEntitiesMultiTypeNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfrelatedEntitiesMultiTypeNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfrelatedEntitiesMultiTypeNestedFilter>>>;
-  calendar_exists?: InputMaybe<Scalars['Boolean']>;
-  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  resourcesCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  sys?: InputMaybe<SysFilter>;
-  tagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  title?: InputMaybe<Scalars['String']>;
-  title_contains?: InputMaybe<Scalars['String']>;
-  title_exists?: InputMaybe<Scalars['Boolean']>;
-  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  title_not?: InputMaybe<Scalars['String']>;
-  title_not_contains?: InputMaybe<Scalars['String']>;
-  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-export type CfrelatedEntityMultiTypeNestedFilter = {
-  AND?: InputMaybe<Array<InputMaybe<CfrelatedEntityMultiTypeNestedFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<CfrelatedEntityMultiTypeNestedFilter>>>;
   calendar_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9283,14 +9234,6 @@ export type OutputsContentDataFragment = Pick<
     Sys,
     'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
   >;
-  relatedEntity?: Maybe<
-    | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-          sys: Pick<Sys, 'id'>;
-        })
-    | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
-          sys: Pick<Sys, 'id'>;
-        })
-  >;
   authorsCollection?: Maybe<
     Pick<OutputsAuthorsCollection, 'total'> & {
       items: Array<
@@ -9371,14 +9314,6 @@ export type FetchOutputByIdQuery = {
       sys: Pick<
         Sys,
         'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
-      >;
-      relatedEntity?: Maybe<
-        | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-              sys: Pick<Sys, 'id'>;
-            })
-        | ({ __typename: 'WorkingGroups' } & Pick<WorkingGroups, 'title'> & {
-              sys: Pick<Sys, 'id'>;
-            })
       >;
       authorsCollection?: Maybe<
         Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9476,15 +9411,6 @@ export type FetchOutputsQuery = {
             sys: Pick<
               Sys,
               'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
-            >;
-            relatedEntity?: Maybe<
-              | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                    sys: Pick<Sys, 'id'>;
-                  })
-              | ({ __typename: 'WorkingGroups' } & Pick<
-                  WorkingGroups,
-                  'title'
-                > & { sys: Pick<Sys, 'id'> })
             >;
             authorsCollection?: Maybe<
               Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9588,15 +9514,6 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                 sys: Pick<
                   Sys,
                   'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
-                >;
-                relatedEntity?: Maybe<
-                  | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                        sys: Pick<Sys, 'id'>;
-                      })
-                  | ({ __typename: 'WorkingGroups' } & Pick<
-                      WorkingGroups,
-                      'title'
-                    > & { sys: Pick<Sys, 'id'> })
                 >;
                 authorsCollection?: Maybe<
                   Pick<OutputsAuthorsCollection, 'total'> & {
@@ -9706,15 +9623,6 @@ export type FetchOutputsByUserIdQuery = {
                   Sys,
                   'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
                 >;
-                relatedEntity?: Maybe<
-                  | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                        sys: Pick<Sys, 'id'>;
-                      })
-                  | ({ __typename: 'WorkingGroups' } & Pick<
-                      WorkingGroups,
-                      'title'
-                    > & { sys: Pick<Sys, 'id'> })
-                >;
                 authorsCollection?: Maybe<
                   Pick<OutputsAuthorsCollection, 'total'> & {
                     items: Array<
@@ -9823,15 +9731,6 @@ export type FetchOutputsByExternalUserIdQuery = {
                   Sys,
                   'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
                 >;
-                relatedEntity?: Maybe<
-                  | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                        sys: Pick<Sys, 'id'>;
-                      })
-                  | ({ __typename: 'WorkingGroups' } & Pick<
-                      WorkingGroups,
-                      'title'
-                    > & { sys: Pick<Sys, 'id'> })
-                >;
                 authorsCollection?: Maybe<
                   Pick<OutputsAuthorsCollection, 'total'> & {
                     items: Array<
@@ -9939,15 +9838,6 @@ export type FetchOutputsByProjectIdQuery = {
                 sys: Pick<
                   Sys,
                   'id' | 'firstPublishedAt' | 'publishedAt' | 'publishedVersion'
-                >;
-                relatedEntity?: Maybe<
-                  | ({ __typename: 'Projects' } & Pick<Projects, 'title'> & {
-                        sys: Pick<Sys, 'id'>;
-                      })
-                  | ({ __typename: 'WorkingGroups' } & Pick<
-                      WorkingGroups,
-                      'title'
-                    > & { sys: Pick<Sys, 'id'> })
                 >;
                 authorsCollection?: Maybe<
                   Pick<OutputsAuthorsCollection, 'total'> & {
@@ -12886,68 +12776,6 @@ export const OutputsContentDataFragmentDoc = {
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'lastUpdatedPartial' },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'relatedEntity' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
-                {
-                  kind: 'InlineFragment',
-                  typeCondition: {
-                    kind: 'NamedType',
-                    name: { kind: 'Name', value: 'Projects' },
-                  },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'InlineFragment',
-                  typeCondition: {
-                    kind: 'NamedType',
-                    name: { kind: 'Name', value: 'WorkingGroups' },
-                  },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                    ],
-                  },
-                },
-              ],
-            },
           },
           {
             kind: 'Field',

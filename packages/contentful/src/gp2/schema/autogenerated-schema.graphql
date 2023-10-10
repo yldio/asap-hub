@@ -2146,7 +2146,6 @@ type Outputs implements Entry {
   linkedFrom(allowedLocales: [String]): OutputsLinkingCollections
   publishDate(locale: String): DateTime
   relatedEntitiesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: OutputsRelatedEntitiesFilter): OutputsRelatedEntitiesCollection
-  relatedEntity(locale: String, preview: Boolean, where: OutputsRelatedEntityFilter): OutputsRelatedEntity
   relatedOutputsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedOutputsCollectionOrder], preview: Boolean, skip: Int = 0, where: OutputsFilter): OutputsRelatedOutputsCollection
   rrid(locale: String): String
   sharingStatus(locale: String): String
@@ -2296,8 +2295,6 @@ input OutputsFilter {
   publishDate_not_in: [DateTime]
   relatedEntities: cfrelatedEntitiesMultiTypeNestedFilter
   relatedEntitiesCollection_exists: Boolean
-  relatedEntity: cfrelatedEntityMultiTypeNestedFilter
-  relatedEntity_exists: Boolean
   relatedOutputs: cfOutputsNestedFilter
   relatedOutputsCollection_exists: Boolean
   rrid: String
@@ -2451,26 +2448,6 @@ input OutputsRelatedEntitiesFilter {
 }
 
 union OutputsRelatedEntitiesItem = Projects | WorkingGroups
-
-union OutputsRelatedEntity = Projects | WorkingGroups
-
-input OutputsRelatedEntityFilter {
-  AND: [OutputsRelatedEntityFilter]
-  OR: [OutputsRelatedEntityFilter]
-  calendar_exists: Boolean
-  contentfulMetadata: ContentfulMetadataFilter
-  milestonesCollection_exists: Boolean
-  resourcesCollection_exists: Boolean
-  sys: SysFilter
-  tagsCollection_exists: Boolean
-  title: String
-  title_contains: String
-  title_exists: Boolean
-  title_in: [String]
-  title_not: String
-  title_not_contains: String
-  title_not_in: [String]
-}
 
 type OutputsRelatedOutputsCollection {
   items: [Outputs]!
@@ -4712,7 +4689,6 @@ input cfOutputsNestedFilter {
   publishDate_not: DateTime
   publishDate_not_in: [DateTime]
   relatedEntitiesCollection_exists: Boolean
-  relatedEntity_exists: Boolean
   relatedOutputsCollection_exists: Boolean
   rrid: String
   rrid_contains: String
@@ -5075,24 +5051,6 @@ input cfauthorsMultiTypeNestedFilter {
 input cfrelatedEntitiesMultiTypeNestedFilter {
   AND: [cfrelatedEntitiesMultiTypeNestedFilter]
   OR: [cfrelatedEntitiesMultiTypeNestedFilter]
-  calendar_exists: Boolean
-  contentfulMetadata: ContentfulMetadataFilter
-  milestonesCollection_exists: Boolean
-  resourcesCollection_exists: Boolean
-  sys: SysFilter
-  tagsCollection_exists: Boolean
-  title: String
-  title_contains: String
-  title_exists: Boolean
-  title_in: [String]
-  title_not: String
-  title_not_contains: String
-  title_not_in: [String]
-}
-
-input cfrelatedEntityMultiTypeNestedFilter {
-  AND: [cfrelatedEntityMultiTypeNestedFilter]
-  OR: [cfrelatedEntityMultiTypeNestedFilter]
   calendar_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   milestonesCollection_exists: Boolean

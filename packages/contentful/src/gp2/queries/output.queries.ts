@@ -21,21 +21,6 @@ export const outputsContentQueryFragment = gql`
     addedDate
     publishDate
     lastUpdatedPartial
-    relatedEntity {
-      __typename
-      ... on Projects {
-        sys {
-          id
-        }
-        title
-      }
-      ... on WorkingGroups {
-        sys {
-          id
-        }
-        title
-      }
-    }
     authorsCollection(limit: 10) {
       total
       items {

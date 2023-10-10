@@ -24,6 +24,7 @@ export {
   ContactInformationModal,
   ContributingCohortsModal,
   DashboardHeader,
+  DashboardUserCard,
   EditResourceModal,
   EmailSection,
   ExternalProfilesModal,

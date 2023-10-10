@@ -3,6 +3,7 @@ import { DashboardPageBody } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/model';
 import { eventMapper } from '../events/EventsList';
 import { useEvents } from '../events/state';
+import { useUsers } from '../users/state';
 import { useDashboard, useNews } from './state';
 
 const pageSize = 3;
@@ -19,6 +20,13 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
     }),
   );
 
+  const { items: latestUsers } = useUsers({
+    searchQuery: '',
+    filters: new Set(),
+    currentPage: 0,
+    pageSize: 3,
+  });
+
   const stats = dashboard.items[0]?.latestStats || {
     sampleCount: 0,
     cohortCount: 0,
@@ -34,6 +42,7 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
       totalOfUpcomingEvents={total}
       announcements={announcements}
       guides={guides}
+      latestUsers={latestUsers}
     />
   );
 };

@@ -228,11 +228,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
     tags: newTags.length > 0 ? newTags : undefined,
-    relatedOutputs: newRelatedOutputs.map((output) => ({
-      id: output.value,
-      title: output.label,
-      documentType: output.documentType as gp2Model.OutputDocumentType,
-    })),
+    relatedOutputs: newRelatedOutputs.map(({ value }) => value),
+    relatedEvents: [],
     ...createIdentifierField(newIdentifierType, identifier),
   };
 

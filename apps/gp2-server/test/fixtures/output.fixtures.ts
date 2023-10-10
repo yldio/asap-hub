@@ -52,6 +52,13 @@ export const getOutputDataObject = (): gp2Model.OutputDataObject => ({
       documentType: 'Dataset',
     },
   ],
+  relatedEvents: [
+    {
+      id: 'an-event-id',
+      title: 'an event title',
+      endDate: '2021-12-28T14:00:00.000Z',
+    },
+  ],
   tags: [{ id: 'tag-1', name: 'Cohort' }],
 });
 
@@ -78,6 +85,8 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     authors,
     workingGroup,
     project,
+    relatedOutputs,
+    relatedEvents,
     ...outputResponse
   } = getOutputResponse();
   return {
@@ -86,6 +95,8 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     type: 'Research',
     projectId: project?.id,
     authors: authors.map(({ id }) => ({ userId: id })),
+    relatedOutputs: relatedOutputs.map(({ id }) => id),
+    relatedEvents: relatedEvents.map(({ id }) => id),
   };
 };
 
@@ -108,6 +119,8 @@ export const getOutputCreateDataObject =
       created: _created,
       workingGroup,
       project,
+      relatedOutputs,
+      relatedEvents,
       ...outputPostRequest
     } = getOutputResponse();
 
@@ -116,6 +129,8 @@ export const getOutputCreateDataObject =
       createdBy: 'userId',
       projectId: project?.id,
       authors: authors.map(({ id }) => ({ userId: id })),
+      relatedOutputs: relatedOutputs.map(({ id }) => id),
+      relatedEvents: relatedEvents.map(({ id }) => id),
     };
   };
 
@@ -208,6 +223,16 @@ export const getContentfulGraphqlOutput = (): NonNullable<
         sys: { id: 'another-output-id' },
         title: 'another title',
         documentType: 'Dataset',
+      },
+    ],
+  },
+  relatedEventsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: { id: 'an-event-id' },
+        title: 'an event title',
+        endDate: '2021-12-28T14:00:00.000Z',
       },
     ],
   },

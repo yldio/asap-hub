@@ -1,4 +1,5 @@
 import { FetchOptions, ListResponse } from '../common';
+import { EventDataObject } from './event';
 import { ExternalUserResponse } from './external-user';
 import { TagDataObject } from './tag';
 
@@ -101,6 +102,7 @@ export type OutputCoreObject = {
   rrid?: string;
   accessionNumber?: string;
   relatedOutputs: RelatedOutputs[];
+  relatedEvents: Pick<EventDataObject, 'id' | 'title' | 'endDate'>[];
 };
 
 export type UserAuthor = {
@@ -133,16 +135,26 @@ export type AuthorUpsertDataObject =
   | { userId: string; externalUserId?: undefined }
   | { externalUserId: string; userId?: undefined };
 
-export type OutputCreateDataObject = OutputCoreObject & {
+export type OutputCreateDataObject = Omit<
+  OutputCoreObject,
+  'relatedOutputs' | 'relatedEvents'
+> & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
   workingGroupId?: string;
   projectId?: string;
+  relatedOutputs: string[];
+  relatedEvents: string[];
 };
 
-export type OutputUpdateDataObject = OutputCoreObject & {
+export type OutputUpdateDataObject = Omit<
+  OutputCoreObject,
+  'relatedOutputs' | 'relatedEvents'
+> & {
   authors: AuthorUpsertDataObject[];
   updatedBy: string;
+  relatedOutputs: string[];
+  relatedEvents: string[];
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
@@ -173,7 +185,8 @@ export type OutputPostRequest = {
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
-  relatedOutputs: RelatedOutputs[];
+  relatedOutputs: string[];
+  relatedEvents: string[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

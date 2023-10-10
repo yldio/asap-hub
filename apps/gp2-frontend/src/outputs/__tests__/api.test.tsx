@@ -297,6 +297,7 @@ describe('createOutput', () => {
     documentType: 'Procedural Form' as const,
     sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
     relatedOutputs: [],
+    relatedEvents: [],
   };
   it('makes an authorized POST request to create a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
@@ -325,6 +326,7 @@ describe('updateOutput', () => {
     documentType: 'Procedural Form' as const,
     sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
     relatedOutputs: [],
+    relatedEvents: [],
   };
   it('makes an authorized POST request to update a research output', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })

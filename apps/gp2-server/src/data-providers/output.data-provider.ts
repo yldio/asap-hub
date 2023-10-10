@@ -179,10 +179,10 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
 
   async update(id: string, data: gp2Model.OutputUpdateDataObject) {
     const environment = await this.getRestClient();
-    const user = await environment.getEntry(id);
+    const entry = await environment.getEntry(id);
 
     const fields = cleanOutput(data);
-    const result = await patchAndPublish(user, fields);
+    const result = await patchAndPublish(entry, fields);
 
     const fetchEventById = () => this.fetchOutputById(id);
     await pollContentfulGql<gp2Contentful.FetchOutputByIdQuery>(
@@ -263,6 +263,9 @@ const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
       documentType: documentType as gp2Model.OutputDocumentType,
       ...(type ? { type: type as gp2Model.OutputType } : {}),
     })) || [];
+type RelatedEventItem = NonNullable<
+  NonNullable<OutputItem['relatedEventsCollection']>['items'][number]
+>;
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
 ): gp2Model.OutputDataObject => {
@@ -305,6 +308,14 @@ export const parseContentfulGraphQLOutput = (
     accessionNumber: data.accessionNumber ?? undefined,
     ...relatedEntity,
     relatedOutputs,
+    relatedEvents:
+      data.relatedEventsCollection?.items
+        ?.filter((event): event is RelatedEventItem => event !== null)
+        .map((event) => ({
+          id: event.sys.id,
+          title: event?.title || '',
+          endDate: event.endDate || '',
+        })) || [],
   };
 };
 
@@ -370,7 +381,15 @@ const cleanOutput = (
         ...acc,
         relatedOutputs: (
           value as gp2Model.OutputUpdateDataObject['relatedOutputs']
-        ).map((output) => getLinkEntity(output.id)),
+        ).map((id) => getLinkEntity(id)),
+      };
+    }
+    if (key === 'relatedEvents') {
+      return {
+        ...acc,
+        relatedEvents: (
+          value as gp2Model.OutputUpdateDataObject['relatedEvents']
+        ).map((id) => getLinkEntity(id)),
       };
     }
     return { ...acc, [key]: value };

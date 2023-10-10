@@ -135,6 +135,19 @@ describe('Outputs data provider', () => {
         });
       });
     });
+    describe('related events', () => {
+      test('Should default related events to an empty array when missing', async () => {
+        const graphqlResponse = getContentfulGraphqlOutput();
+        graphqlResponse.relatedEventsCollection = null;
+        graphqlClientMock.request.mockResolvedValueOnce({
+          outputs: graphqlResponse,
+        });
+
+        const result = await outputDataProvider.fetchById('1');
+
+        expect(result!.relatedEvents).toEqual([]);
+      });
+    });
 
     describe('Document Types', () => {
       test.each(gp2Model.outputDocumentTypes)(
@@ -768,11 +781,18 @@ describe('Outputs data provider', () => {
             id: tag.id,
           },
         })),
-        relatedOutputs: fieldsCreated.relatedOutputs.map((output) => ({
+        relatedOutputs: fieldsCreated.relatedOutputs.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
-            id: output.id,
+            id,
+          },
+        })),
+        relatedEvents: fieldsCreated.relatedEvents.map((id) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id,
           },
         })),
       });
@@ -896,11 +916,18 @@ describe('Outputs data provider', () => {
             id: tag.id,
           },
         })),
-        relatedOutputs: outputUpdateData.relatedOutputs.map((output) => ({
+        relatedOutputs: outputUpdateData.relatedOutputs.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
-            id: output.id,
+            id,
+          },
+        })),
+        relatedEvents: outputUpdateData.relatedEvents.map((id) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id,
           },
         })),
       };

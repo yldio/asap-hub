@@ -159,13 +159,8 @@ describe('OutputForm', () => {
         { userId: 'u2' },
         { externalUserName: 'Alex White' },
       ],
-      relatedOutputs: [
-        {
-          id: '11',
-          title: 'related output',
-          documentType: 'GP2 Reports',
-        },
-      ],
+      relatedOutputs: ['11'],
+      relatedEvents: [],
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -275,6 +270,7 @@ describe('OutputForm', () => {
         { externalUserName: 'Alex White' },
       ],
       relatedOutputs: [],
+      relatedEvents: [],
     });
   });
 
@@ -384,6 +380,7 @@ describe('OutputForm', () => {
         sharingStatus: 'GP2 Only',
         authors: [{ userId: 'u2' }],
         relatedOutputs: [],
+        relatedEvents: [],
       });
       expect(history.location.pathname).toEqual(`/outputs`);
     });

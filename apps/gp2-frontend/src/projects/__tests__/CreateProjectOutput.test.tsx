@@ -128,6 +128,7 @@ it('publishes the output', async () => {
         },
       ],
       relatedOutputs: [],
+      relatedEvents: [],
     },
     expect.anything(),
   );

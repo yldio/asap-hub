@@ -131,6 +131,7 @@ it('publishes the output', async () => {
       workingGroupId: 'working-group-id-1',
       projectId: undefined,
       relatedOutputs: [],
+      relatedEvents: [],
     },
     expect.anything(),
   );

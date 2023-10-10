@@ -170,7 +170,6 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     const outputEntry = await environment.createEntry('outputs', {
       fields: addLocaleToFields({
         ...fields,
-        relatedEntity: getLinkEntity(mainEntityId as string), // TODO: to be removed on cleanup
         relatedEntities: getLinkEntities([
           mainEntityId as string,
           ...(workingGroupIds || []),
@@ -320,7 +319,6 @@ export const parseContentfulGraphQLOutput = (
   const relatedOutputs = getRelatedOutputs(
     data.relatedOutputsCollection?.items,
   );
-  const relatedEntity = getEntity(data.relatedEntity); // TODO: remove on cleanup
   const mainEntity = getEntity(data.relatedEntitiesCollection?.items[0]);
   const relatedEntities = getRelatedEntities(
     data.relatedEntitiesCollection?.items,
@@ -331,14 +329,10 @@ export const parseContentfulGraphQLOutput = (
   const projects =
     relatedEntities && relatedEntities.projects.length !== 0
       ? relatedEntities?.projects
-      : data.relatedEntity?.__typename === 'Projects'
-      ? [relatedEntity] // TODO: remove on cleanup
       : undefined;
   const workingGroups =
     relatedEntities && relatedEntities.workingGroups.length !== 0
       ? relatedEntities?.workingGroups
-      : data.relatedEntity?.__typename === 'WorkingGroups'
-      ? [relatedEntity] // TODO: remove on cleanup
       : undefined;
 
   const tags =
@@ -375,8 +369,6 @@ export const parseContentfulGraphQLOutput = (
     workingGroups,
     mainEntity,
     contributingCohorts,
-    relatedEntity:
-      Object.keys(relatedEntity).length !== 0 ? relatedEntity : undefined,
   };
 };
 

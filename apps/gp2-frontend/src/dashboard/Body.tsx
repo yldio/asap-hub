@@ -42,7 +42,7 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
       totalOfUpcomingEvents={total}
       announcements={announcements}
       guides={guides}
-      latestUsers={latestUsers}
+      latestUsers={latestUsers || []}
     />
   );
 };

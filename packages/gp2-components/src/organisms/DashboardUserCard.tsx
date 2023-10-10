@@ -12,8 +12,8 @@ import {
   TagList,
   pixels,
 } from '@asap-hub/react-components';
-const { perRem } = pixels;
 
+const { perRem } = pixels;
 const NUMBER_OF_TAGS_TO_DISPLAY = 5;
 
 const cardStyles = css({
@@ -61,8 +61,7 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
         noMargin
         title={`${user.displayName}${
           !!user.degrees.length && `, ${user.degrees.join(', ')}`
-        }
-          }`}
+        }`}
       >
         <Ellipsis>
           {user.displayName}

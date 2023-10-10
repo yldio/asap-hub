@@ -74,7 +74,7 @@ type DashboardPageBodyProps = {
   announcements?: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
   guides?: gp2Model.GuideDataObject[];
-  latestUsers?: gp2Model.UserResponse[];
+  latestUsers: gp2Model.UserResponse[];
 };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
@@ -154,8 +154,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </div>
           <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
           {totalOfUpcomingEvents > 3 && (
-            <p css={viewAllStyles} data-testid="view-upcoming-events">
+            <p css={viewAllStyles}>
               <Button
+                data-testid="view-upcoming-events"
                 onClick={() =>
                   history.push({
                     pathname: gp2Routes.events({}).upcoming({}).$,
@@ -175,11 +176,16 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </Paragraph>
         <div css={usersCardsStyles}>
           {latestUsers?.map((user) => (
-            <DashboardUserCard user={user} />
+            <DashboardUserCard
+              user={user}
+              key={`${user.id}-${user.displayName}`}
+            />
           ))}
         </div>
-        <p css={viewAllStyles} data-testid="view-users">
+
+        <p css={viewAllStyles}>
           <Button
+            data-testid="view-users"
             onClick={() =>
               history.push({
                 pathname: gp2Routes.users({}).$,

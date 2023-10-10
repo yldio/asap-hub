@@ -60,6 +60,7 @@ const Button: React.FC<ButtonProps> = ({
   children,
   onClick = noop,
   overrideStyles,
+  ...props
 }) => (
   <button
     type={submit ? 'submit' : 'button'}
@@ -83,6 +84,7 @@ const Button: React.FC<ButtonProps> = ({
           }),
       overrideStyles,
     ]}
+    {...props}
   >
     {getButtonChildren(children)}
   </button>

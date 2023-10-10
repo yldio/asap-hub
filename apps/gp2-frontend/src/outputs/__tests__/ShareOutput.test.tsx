@@ -43,22 +43,17 @@ const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
   typeof getAlgoliaProjects
 >;
 
-const renderShareOutput = async (outputId: string = 'ro0') => {
+const renderShareOutput = async (path: string) => {
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                gp2Routing.outputs({}).output({ outputId }).edit({}).$,
-              ]}
-            >
+            <MemoryRouter initialEntries={[path]} initialIndex={1}>
               <Route
                 path={
                   gp2Routing.outputs.template +
-                  gp2Routing.outputs({}).output.template +
-                  gp2Routing.outputs({}).output({ outputId }).edit.template
+                  gp2Routing.outputs({}).output.template
                 }
               >
                 <NotificationMessages>
@@ -75,6 +70,12 @@ const renderShareOutput = async (outputId: string = 'ro0') => {
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
+const getDetailPagePath = (outputId = 'output-id') =>
+  gp2Routing.outputs({}).output({ outputId }).$;
+
+const getEditPath = (outputId = 'output-id') =>
+  gp2Routing.outputs({}).output({ outputId }).edit({}).$;
+
 describe('ShareOutput', () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -88,14 +89,20 @@ describe('ShareOutput', () => {
   });
   afterEach(jest.resetAllMocks);
   mockConsoleError();
-  it('renders the title', async () => {
-    mockGetOutput.mockResolvedValueOnce(gp2.createOutputResponse());
-    await renderShareOutput();
-    expect(screen.getByRole('heading', { name: /share/i })).toBeVisible();
+  it('renders the detail page', async () => {
+    const outputResponse = gp2.createOutputResponse();
+    mockGetOutput.mockResolvedValueOnce(outputResponse);
+    await renderShareOutput(getDetailPagePath());
+    expect(
+      screen.getByRole('heading', { name: outputResponse.title }),
+    ).toBeVisible();
+    expect(
+      screen.getByText(outputResponse.authors[0]!.displayName),
+    ).toBeVisible();
   });
-  it('renders not found if output was not found', async () => {
+  it('renders not found if output was not found in detail page', async () => {
     mockGetOutput.mockResolvedValueOnce(undefined);
-    await renderShareOutput();
+    await renderShareOutput(getDetailPagePath());
     expect(
       screen.getByRole('heading', {
         name: /Sorry! We can’t seem to find that page/i,
@@ -103,7 +110,22 @@ describe('ShareOutput', () => {
     ).toBeVisible();
   });
 
-  it('saves the output', async () => {
+  it('renders the title in edit page', async () => {
+    mockGetOutput.mockResolvedValueOnce(gp2.createOutputResponse());
+    await renderShareOutput(getEditPath());
+    expect(screen.getByRole('heading', { name: /share/i })).toBeVisible();
+  });
+  it('renders not found if output was not found in edit page', async () => {
+    mockGetOutput.mockResolvedValueOnce(undefined);
+    await renderShareOutput(getEditPath());
+    expect(
+      screen.getByRole('heading', {
+        name: /Sorry! We can’t seem to find that page/i,
+      }),
+    ).toBeVisible();
+  });
+
+  it('saves the output in edit page', async () => {
     const title = 'Output title';
     const link = 'https://example.com';
     const id = 'output-id';
@@ -116,7 +138,7 @@ describe('ShareOutput', () => {
     });
     mockUpdateOutput.mockResolvedValueOnce(gp2.createOutputResponse());
 
-    await renderShareOutput(id);
+    await renderShareOutput(getEditPath(id));
 
     userEvent.click(screen.getByRole('button', { name: /save/i }));
     expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();

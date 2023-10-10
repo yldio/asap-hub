@@ -3,9 +3,9 @@ import {
   Caption,
   Card,
   formatDate,
-  Headline2,
   Link,
   Paragraph,
+  LinkHeadline,
   pixels,
   SharedResearchMetadata,
   UsersList,
@@ -97,9 +97,13 @@ const OutputCard: React.FC<OutputCardProps> = ({
         )}
       </div>
       <div css={css({ margin: `${rem(12)} 0 ${rem(24)}` })}>
-        <Headline2 styleAsHeading={4} noMargin>
+        <LinkHeadline
+          level={2}
+          styleAsHeading={4}
+          href={gp2Routing.outputs({}).output({ outputId: id }).$}
+        >
           {title}
-        </Headline2>
+        </LinkHeadline>
       </div>
       <UsersList
         users={authors.map((author) => ({

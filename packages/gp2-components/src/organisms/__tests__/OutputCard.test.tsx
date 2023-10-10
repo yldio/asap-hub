@@ -6,8 +6,14 @@ describe('OutputCard', () => {
   const defaultProps = gp2.createOutputResponse();
 
   it('renders title', () => {
-    render(<OutputCard {...defaultProps} title="Output Title" />);
+    render(
+      <OutputCard {...defaultProps} title="Output Title" id="output-id" />,
+    );
     expect(screen.getByRole('heading', { name: 'Output Title' })).toBeVisible();
+    expect(screen.getByText('Output Title').closest('a')).toHaveAttribute(
+      'href',
+      '/outputs/output-id',
+    );
   });
 
   it('renders link to project', () => {

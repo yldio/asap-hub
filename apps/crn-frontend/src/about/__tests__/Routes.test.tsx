@@ -13,9 +13,9 @@ import { about } from '@asap-hub/routing';
 
 import About from '../Routes';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getDiscover } from '../../discover/api';
+import { getDiscover } from '../api';
 
-jest.mock('../../discover/api');
+jest.mock('../api');
 mockConsoleError();
 afterEach(() => {
   jest.clearAllMocks();
@@ -28,7 +28,6 @@ const props: DiscoverResponse = {
   members: [],
   pages: [],
   scientificAdvisoryBoard: [],
-  training: [],
 };
 
 const renderPage = async () => {

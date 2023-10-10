@@ -1,29 +1,31 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { render, waitFor, screen } from '@testing-library/react';
+import {
+  render,
+  waitFor,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import {
-  createDiscoverResponse,
-  createTutorialsResponse,
-} from '@asap-hub/fixtures';
+import { createListTutorialsResponse } from '@asap-hub/fixtures';
 import { TutorialsResponse } from '@asap-hub/model';
 import { discover } from '@asap-hub/routing';
 import userEvent from '@testing-library/user-event';
 
 import Routes from '../Routes';
 
-import { getDiscover } from '../api';
-import { getTutorialById } from '../tutorials/api';
+import { getTutorials, getTutorialById } from '../tutorials/api';
 
-jest.mock('../api');
 jest.mock('../../guides/api');
 jest.mock('../tutorials/api');
 
-const mockGetDiscover = getDiscover as jest.MockedFunction<typeof getDiscover>;
+const mockGetTutorials = getTutorials as jest.MockedFunction<
+  typeof getTutorials
+>;
 
 const mockGetTutorialById = getTutorialById as jest.MockedFunction<
   typeof getTutorialById
@@ -49,6 +51,7 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
 };
+
 it('redirects to the guides page when the index page accessed', async () => {
   await renderDiscoverPage(discover({}).$);
   expect(
@@ -58,13 +61,61 @@ it('redirects to the guides page when the index page accessed', async () => {
   ).toBeVisible();
 });
 
-it('renders tutorial page when user clicks tutorial card title', async () => {
+it('renders tutorials list page when the tutorials tab is selected', async () => {
   await renderDiscoverPage(discover({}).$);
 
+  mockGetTutorials.mockResolvedValue(createListTutorialsResponse(1));
+
+  const tutorialsAnchorTab = screen.getByText(/Tutorials/i, { selector: 'p' });
+
+  expect(tutorialsAnchorTab).toBeVisible();
+  expect(screen.queryByText(/Explore our tutorials/i)).not.toBeInTheDocument();
+
+  userEvent.click(tutorialsAnchorTab);
+  await waitFor(() =>
+    expect(screen.queryByText(/Loading/i)).not.toBeInTheDocument(),
+  );
+
+  expect(
+    await screen.findByText(/Explore our tutorials/i, { selector: 'p' }),
+  ).toBeVisible();
+});
+
+it('allows search on tutorials list', async () => {
+  const tutorialsResponse = createListTutorialsResponse(1);
+  mockGetTutorials.mockResolvedValue({
+    ...tutorialsResponse,
+    items: tutorialsResponse.items.map((tutorial) => ({
+      ...tutorial,
+      title: 'Tutorial 1',
+    })),
+  });
+
+  await renderDiscoverPage(discover({}).tutorials({}).$);
+
+  userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
+
+  await waitFor(() =>
+    expect(mockGetTutorials).toHaveBeenCalledWith(
+      expect.objectContaining({
+        searchQuery: 'Tutorial 1',
+      }),
+      expect.anything(),
+    ),
+  );
+  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+
+  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+    /Tutorial 1/i,
+  );
+});
+
+it('renders tutorial page when user clicks tutorial card title', async () => {
+  const tutorialsResponse = createListTutorialsResponse(1);
   const tutorial: TutorialsResponse = {
-    id: '55724942-3408-4ad6-9a73-14b92226ffb6',
+    id: 'uuid-first-tutorial',
     created: '2020-09-07T17:36:54Z',
-    title: 'First One title',
+    title: 'First Tutorial Title',
     authors: [],
     tags: [],
     teams: [],
@@ -72,38 +123,28 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
     relatedTutorials: [],
   };
 
-  mockGetDiscover.mockResolvedValue({
-    ...createDiscoverResponse(),
-    training: [createTutorialsResponse({ key: 'First One' })],
+  mockGetTutorials.mockResolvedValue({
+    ...tutorialsResponse,
+    items: tutorialsResponse.items.map((tutorialItem) => ({
+      ...tutorialItem,
+      id: 'uuid-first-tutorial',
+      title: 'First Tutorial Title',
+    })),
   });
-
   mockGetTutorialById.mockResolvedValue(tutorial);
 
-  const tutorialsAnchorTab = screen.getByText(/Tutorials/i, { selector: 'p' });
-  expect(tutorialsAnchorTab).toBeVisible();
+  await renderDiscoverPage(discover({}).tutorials({}).$);
 
-  userEvent.click(tutorialsAnchorTab);
-
-  await waitFor(() =>
-    expect(screen.queryByText(/Loading/i)).not.toBeInTheDocument(),
-  );
-
-  const tutorialAnchorTitle = screen.getByText(/First One title/i, {
+  const tutorialCardTitle = screen.getByText(/First Tutorial Title/i, {
     selector: 'a',
   }) as HTMLAnchorElement;
 
-  expect(tutorialAnchorTitle).toBeVisible();
-  expect(tutorialAnchorTitle.href).toContain('/tutorials/');
+  expect(tutorialCardTitle).toBeVisible();
+  expect(tutorialCardTitle.href).toContain('/tutorials/');
 
-  userEvent.click(tutorialAnchorTitle);
-  await waitFor(() =>
-    expect(mockGetTutorialById).toHaveBeenCalledWith(
-      'uuid-First One',
-      'Bearer access_token',
-    ),
-  );
+  userEvent.click(tutorialCardTitle);
 
   expect(
-    await screen.findByText(/First One title/i, { selector: 'h1' }),
+    await screen.findByText(/First Tutorial Title/i, { selector: 'h1' }),
   ).toBeVisible();
 });

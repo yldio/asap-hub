@@ -127,3 +127,19 @@ export const FETCH_TUTORIAL_BY_ID = gql`
   }
   ${tutorialsContentQueryFragment}
 `;
+
+export const FETCH_TUTORIALS = gql`
+  query FetchTutorials($limit: Int, $skip: Int, $where: TutorialsFilter) {
+    discoverCollection(limit: 1, order: sys_publishedAt_DESC) {
+      items {
+        trainingCollection(limit: $limit, skip: $skip, where: $where) {
+          total
+          items {
+            ...TutorialsContent
+          }
+        }
+      }
+    }
+  }
+  ${tutorialsContentQueryFragment}
+`;

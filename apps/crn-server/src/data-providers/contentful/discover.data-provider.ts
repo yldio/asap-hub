@@ -9,7 +9,6 @@ import {
 import { DiscoverDataProvider } from '../types';
 import { parseContentfulGraphQlUsers } from './user.data-provider';
 import { parseContentfulGraphQlPages } from './page.data-provider';
-import { parseContentfulGraphQlTutorials } from './tutorial.data-provider';
 import reducer from '../../utils/reducer';
 import { parseUserToResponse } from '../../controllers/user.controller';
 
@@ -21,17 +20,12 @@ type UserItem = NonNullable<
   NonNullable<NonNullable<DiscoverItem>['membersCollection']>['items']
 >[number];
 
-type TutorialItem = NonNullable<
-  NonNullable<NonNullable<DiscoverItem>['trainingCollection']>['items']
->[number];
-
 type PageItem = NonNullable<
   NonNullable<NonNullable<DiscoverItem>['pagesCollection']>['items']
 >[number];
 
 type UserResult = ReturnType<typeof parseContentfulGraphQlUsers>;
 type PageResult = ReturnType<typeof parseContentfulGraphQlPages>;
-type TutorialResult = ReturnType<typeof parseContentfulGraphQlTutorials>;
 
 export class DiscoverContentfulDataProvider implements DiscoverDataProvider {
   constructor(private contentfulClient: GraphQLClient) {}
@@ -45,9 +39,6 @@ export class DiscoverContentfulDataProvider implements DiscoverDataProvider {
 }
 
 const reduceUsers = reducer<UserItem, UserResult>(parseContentfulGraphQlUsers);
-const reduceTutorials = reducer<TutorialItem, TutorialResult>(
-  parseContentfulGraphQlTutorials,
-);
 const reducePages = reducer<PageItem, PageResult>(parseContentfulGraphQlPages);
 
 const parseGraphQLDiscover = (
@@ -66,6 +57,4 @@ const parseGraphQLDiscover = (
       ?.reduce(reduceUsers, [])
       .map(parseUserToResponse) ?? [],
   pages: discover?.pagesCollection?.items?.reduce(reducePages, []) ?? [],
-  training:
-    discover?.trainingCollection?.items?.reduce(reduceTutorials, []) ?? [],
 });

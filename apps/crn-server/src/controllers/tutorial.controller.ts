@@ -1,5 +1,9 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { TutorialsResponse } from '@asap-hub/model';
+import {
+  FetchOptions,
+  ListTutorialsResponse,
+  TutorialsResponse,
+} from '@asap-hub/model';
 import { TutorialDataProvider } from '../data-providers/types';
 
 export default class TutorialController {
@@ -7,6 +11,10 @@ export default class TutorialController {
 
   constructor(tutorialsDataProvider: TutorialDataProvider) {
     this.tutorialDataProvider = tutorialsDataProvider;
+  }
+
+  async fetch(options: FetchOptions): Promise<ListTutorialsResponse> {
+    return this.tutorialDataProvider.fetch(options);
   }
 
   async fetchById(id: string): Promise<TutorialsResponse> {

@@ -4,10 +4,6 @@ import {
   UserResponse,
 } from '@asap-hub/model';
 import { appName, baseUrl } from '../../src/config';
-import {
-  getContentfulGraphqlTutorial,
-  getTutorialsDataObject,
-} from './tutorials.fixtures';
 
 const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
   {
@@ -71,7 +67,6 @@ const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
 
 export const getDiscoverDataObject = (): DiscoverDataObject => ({
   aboutUs: '<p>content</p>',
-  training: [getTutorialsDataObject()],
   members: getDiscoverMembersResponse(),
   membersTeamId: 'uuid-team-1',
   scientificAdvisoryBoard: getDiscoverMembersResponse('sab-'),
@@ -210,9 +205,6 @@ export const getContentfulGraphqlDiscover = (props = {}) => ({
     sys: {
       id: 'uuid-team-1',
     },
-  },
-  trainingCollection: {
-    items: [getContentfulGraphqlTutorial()],
   },
   scientificAdvisoryBoardCollection: {
     items: [

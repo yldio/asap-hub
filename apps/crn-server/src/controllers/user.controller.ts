@@ -7,13 +7,13 @@ import {
   UserUpdateDataObject,
   UserUpdateRequest,
 } from '@asap-hub/model';
-import Intercept from 'apr-intercept';
-import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
 import {
   fetchOrcidProfile,
-  ORCIDWorksResponse,
+  isValidOrcidResponse,
   transformOrcidWorks,
-} from '../utils/fetch-orcid';
+} from '@asap-hub/server-common';
+import Intercept from 'apr-intercept';
+import { AssetDataProvider, UserDataProvider } from '../data-providers/types';
 import logger from '../utils/logger';
 
 export default class UserController {
@@ -150,9 +150,3 @@ export const parseUserToResponse = ({
     onboarded,
   };
 };
-
-const isValidOrcidResponse = (
-  res: ORCIDWorksResponse,
-): res is {
-  [K in keyof ORCIDWorksResponse]: NonNullable<ORCIDWorksResponse[K]>;
-} => res['last-modified-date'] !== null;

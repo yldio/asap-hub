@@ -287,6 +287,10 @@ enum AssetLinkingCollectionsUsersCollectionOrder {
   linkedIn_DESC
   onboarded_ASC
   onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
   region_ASC
@@ -689,6 +693,10 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   linkedIn_DESC
   onboarded_ASC
   onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
   region_ASC
@@ -3410,6 +3418,10 @@ enum TagsLinkingCollectionsUsersCollectionOrder {
   linkedIn_DESC
   onboarded_ASC
   onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
   region_ASC
@@ -3493,6 +3505,9 @@ type Users implements Entry {
   linkedIn(locale: String): String
   onboarded(locale: String): Boolean
   orcid(locale: String): String
+  orcidLastModifiedDate(locale: String): DateTime
+  orcidLastSyncDate(locale: String): DateTime
+  orcidWorks(locale: String): JSON
   positions(locale: String): JSON
   questions(locale: String): [String]
   region(locale: String): String
@@ -3647,6 +3662,25 @@ input UsersFilter {
   onboarded_exists: Boolean
   onboarded_not: Boolean
   orcid: String
+  orcidLastModifiedDate: DateTime
+  orcidLastModifiedDate_exists: Boolean
+  orcidLastModifiedDate_gt: DateTime
+  orcidLastModifiedDate_gte: DateTime
+  orcidLastModifiedDate_in: [DateTime]
+  orcidLastModifiedDate_lt: DateTime
+  orcidLastModifiedDate_lte: DateTime
+  orcidLastModifiedDate_not: DateTime
+  orcidLastModifiedDate_not_in: [DateTime]
+  orcidLastSyncDate: DateTime
+  orcidLastSyncDate_exists: Boolean
+  orcidLastSyncDate_gt: DateTime
+  orcidLastSyncDate_gte: DateTime
+  orcidLastSyncDate_in: [DateTime]
+  orcidLastSyncDate_lt: DateTime
+  orcidLastSyncDate_lte: DateTime
+  orcidLastSyncDate_not: DateTime
+  orcidLastSyncDate_not_in: [DateTime]
+  orcidWorks_exists: Boolean
   orcid_contains: String
   orcid_exists: Boolean
   orcid_in: [String]
@@ -3823,6 +3857,10 @@ enum UsersOrder {
   linkedIn_DESC
   onboarded_ASC
   onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
   region_ASC
@@ -4905,6 +4943,25 @@ input cfUsersNestedFilter {
   onboarded_exists: Boolean
   onboarded_not: Boolean
   orcid: String
+  orcidLastModifiedDate: DateTime
+  orcidLastModifiedDate_exists: Boolean
+  orcidLastModifiedDate_gt: DateTime
+  orcidLastModifiedDate_gte: DateTime
+  orcidLastModifiedDate_in: [DateTime]
+  orcidLastModifiedDate_lt: DateTime
+  orcidLastModifiedDate_lte: DateTime
+  orcidLastModifiedDate_not: DateTime
+  orcidLastModifiedDate_not_in: [DateTime]
+  orcidLastSyncDate: DateTime
+  orcidLastSyncDate_exists: Boolean
+  orcidLastSyncDate_gt: DateTime
+  orcidLastSyncDate_gte: DateTime
+  orcidLastSyncDate_in: [DateTime]
+  orcidLastSyncDate_lt: DateTime
+  orcidLastSyncDate_lte: DateTime
+  orcidLastSyncDate_not: DateTime
+  orcidLastSyncDate_not_in: [DateTime]
+  orcidWorks_exists: Boolean
   orcid_contains: String
   orcid_exists: Boolean
   orcid_in: [String]

@@ -68,9 +68,9 @@ const ExternalProfilesModal: React.FC<ExternalProfilesModalProps> = ({
       description=""
       onSave={() =>
         onSave({
+          ...(newOrcid ? { orcid: newOrcid } : {}),
           social: {
             ...(newGoogleScholar ? { googleScholar: newGoogleScholar } : {}),
-            ...(newOrcid ? { orcid: `${baseUrls.orcid}${newOrcid}` } : {}),
             ...(newResearchGate ? { researchGate: newResearchGate } : {}),
             ...(newResearcherId
               ? { researcherId: `${baseUrls.researcherId}${newResearcherId}` }

@@ -1,6 +1,8 @@
 import { GenericError, NotFoundError } from '@asap-hub/errors';
+import nock from 'nock';
 import { gp2 } from '@asap-hub/model';
 import Users from '../../src/controllers/user.controller';
+import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import { getUserDataObject, getUserResponse } from '../fixtures/user.fixtures';
 import { assetDataProviderMock } from '../mocks/asset.data-provider.mock';
 import { userDataProviderMock } from '../mocks/user.data-provider.mock';
@@ -48,6 +50,8 @@ describe('Users controller', () => {
           tags: ['Aging', 'RNA'],
           projects: ['a project'],
           workingGroups: ['a working group'],
+          orcid: '0000-0001-9884-1913',
+          orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
         },
       };
       await userController.fetch(params);
@@ -339,6 +343,136 @@ describe('Users controller', () => {
       await expect(
         userController.connectByCode('some code', 'user-id'),
       ).rejects.toThrow(NotFoundError);
+    });
+  });
+
+  describe('syncOrcidProfile', () => {
+    const userId = 'userId';
+    const orcid = '363-98-9330';
+
+    test('should successfully fetch and update user - with id', async () => {
+      const user = { ...getUserDataObject(), orcid };
+      userDataProviderMock.fetchById.mockResolvedValue(user);
+
+      nock('https://pub.orcid.org')
+        .get(`/v2.1/${orcid}/works`)
+        .reply(200, orcidFixtures.orcidWorksResponse);
+
+      const result = await userController.syncOrcidProfile(userId);
+
+      expect(userDataProviderMock.update).toHaveBeenCalled();
+      expect(result).toEqual({ ...getUserResponse(), orcid });
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        user.id,
+        expect.objectContaining({
+          email: user.email,
+          orcidLastModifiedDate: '2020-07-14T01:36:15.911Z',
+          orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
+        }),
+      );
+    });
+
+    test('successfully fetch and update user - with user', async () => {
+      const user = { ...getUserDataObject(), orcid };
+      userDataProviderMock.fetchById.mockResolvedValue(user);
+
+      nock('https://pub.orcid.org')
+        .get(`/v2.1/${orcid}/works`)
+        .reply(200, orcidFixtures.orcidWorksResponse);
+
+      const result = await userController.syncOrcidProfile(userId, {
+        ...getUserResponse(),
+        email: 'cache-user-email',
+        orcid,
+      });
+
+      expect(userDataProviderMock.update).toHaveBeenCalled();
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        user.id,
+        expect.objectContaining({
+          email: 'cache-user-email',
+          orcidLastModifiedDate: '2020-07-14T01:36:15.911Z',
+          orcidWorks: orcidFixtures.orcidWorksDeserialisedExpectation,
+        }),
+      );
+      expect(result).toEqual({ ...getUserResponse(), orcid });
+    });
+
+    test('Should update user profile orcidLastSyncDate when ORCID returns 500', async () => {
+      const user = { ...getUserDataObject(), orcid };
+      userDataProviderMock.fetchById.mockResolvedValue(user);
+
+      nock('https://pub.orcid.org')
+        .get(`/v2.1/${orcid}/works`)
+        .times(3)
+        .reply(502, orcidFixtures.orcidWorksResponse);
+
+      const result = await userController.syncOrcidProfile(userId, {
+        ...getUserResponse(),
+        email: user.email,
+        orcid,
+      });
+
+      expect(userDataProviderMock.update).toHaveBeenCalled();
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
+        email: user.email,
+        orcidLastSyncDate: expect.any(String),
+      });
+      expect(result).toEqual({ ...getUserResponse(), orcid });
+    });
+
+    test('Should update user profile orcidLastSyncDate when last-modified-date is null', async () => {
+      const user = { ...getUserDataObject(), orcid };
+      userDataProviderMock.fetchById.mockResolvedValue(user);
+
+      const orcidWorksResponse = {
+        ...orcidFixtures.orcidWorksResponse,
+      };
+      orcidWorksResponse['last-modified-date'] = null;
+
+      nock('https://pub.orcid.org')
+        .get(`/v2.1/${orcid}/works`)
+        .reply(200, orcidWorksResponse);
+
+      await userController.syncOrcidProfile(userId);
+
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(user.id, {
+        email: user.email,
+        orcidLastSyncDate: expect.any(String),
+      });
+    });
+
+    test('Throws when user does not exist', async () => {
+      userDataProviderMock.fetchById.mockResolvedValue(null);
+
+      await expect(
+        userController.syncOrcidProfile('user-not-found'),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('should convert the modified date to ISO before sending to data provider', async () => {
+      const user = { ...getUserDataObject(), orcid };
+      userDataProviderMock.fetchById.mockResolvedValue(user);
+
+      const orcidWorksResponse = {
+        ...orcidFixtures.orcidWorksResponse,
+      };
+      orcidWorksResponse['last-modified-date'] = { value: 1594690575911 };
+
+      nock('https://pub.orcid.org')
+        .get(`/v2.1/${orcid}/works`)
+        .reply(200, orcidWorksResponse);
+
+      await userController.syncOrcidProfile(userId);
+
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        user.id,
+        expect.objectContaining({
+          orcidLastModifiedDate: new Date(
+            orcidFixtures.orcidWorksResponse['last-modified-date']!.value,
+          ).toISOString(),
+        }),
+      );
     });
   });
 });

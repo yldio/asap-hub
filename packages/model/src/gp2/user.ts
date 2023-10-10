@@ -1,4 +1,4 @@
-import { FetchOptions, ListResponse } from '../common';
+import { FetchOptions, ListResponse, OrcidWork } from '../common';
 import { Connection, UserSocialLinks } from '../user';
 import { TagDataObject } from './tag';
 import { ProjectDataObject, ProjectMember } from './project';
@@ -104,6 +104,10 @@ export type UserDataObject = {
   tags: TagDataObject[];
   lastName: string;
   onboarded: boolean;
+  orcid?: string;
+  orcidLastModifiedDate?: string;
+  orcidLastSyncDate?: string;
+  orcidWorks?: OrcidWork[];
   positions: UserPosition[];
   projects: UserProject[];
   questions: string[];
@@ -125,10 +129,12 @@ export type UserCreateDataObject = Omit<
   | 'contributingCohorts'
   | 'connections'
   | 'tags'
+  | 'social'
 > & {
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
   avatar?: string;
   tags?: Omit<TagDataObject, 'name'>[];
+  social?: Omit<UserSocial, 'orcid'>;
 };
 
 export type UserUpdateDataObject = Partial<
@@ -140,7 +146,15 @@ export type UserUpdateDataObject = Partial<
   };
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
-  'avatar' | 'connections' | 'email' | 'role' | 'createdDate' | 'activatedDate'
+  | 'avatar'
+  | 'connections'
+  | 'email'
+  | 'role'
+  | 'createdDate'
+  | 'activatedDate'
+  | 'orcidLastModifiedDate'
+  | 'orcidLastSyncDate'
+  | 'orcidWorks'
 >;
 
 export type UserAvatarPostRequest = {
@@ -173,6 +187,11 @@ export type FetchUsersFilter = FetchUsersSearchFilter & {
   onlyOnboarded?: boolean;
   hidden?: boolean;
   userIds?: string[];
+  orcid?: string;
+  orcidLastSyncDate?: string;
 };
 
 export type FetchUsersOptions = FetchOptions<FetchUsersFilter>;
+export type FetchUsersApiOptions = FetchOptions<
+  Omit<FetchUsersFilter, 'orcid' | 'orcidLastSyncDate'>
+>;

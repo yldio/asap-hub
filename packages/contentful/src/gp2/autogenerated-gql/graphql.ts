@@ -450,6 +450,10 @@ export enum AssetLinkingCollectionsUsersCollectionOrder {
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
   RegionAsc = 'region_ASC',
@@ -999,6 +1003,10 @@ export enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder 
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
   RegionAsc = 'region_ASC',
@@ -5129,6 +5137,10 @@ export enum TagsLinkingCollectionsUsersCollectionOrder {
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
   RegionAsc = 'region_ASC',
@@ -5212,6 +5224,9 @@ export type Users = Entry & {
   linkedIn?: Maybe<Scalars['String']>;
   onboarded?: Maybe<Scalars['Boolean']>;
   orcid?: Maybe<Scalars['String']>;
+  orcidLastModifiedDate?: Maybe<Scalars['DateTime']>;
+  orcidLastSyncDate?: Maybe<Scalars['DateTime']>;
+  orcidWorks?: Maybe<Scalars['JSON']>;
   positions?: Maybe<Scalars['JSON']>;
   questions?: Maybe<Array<Maybe<Scalars['String']>>>;
   region?: Maybe<Scalars['String']>;
@@ -5330,6 +5345,21 @@ export type UsersOnboardedArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersOrcidArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersOrcidLastModifiedDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersOrcidLastSyncDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersOrcidWorksArgs = {
   locale?: InputMaybe<Scalars['String']>;
 };
 
@@ -5529,6 +5559,27 @@ export type UsersFilter = {
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
   orcid?: InputMaybe<Scalars['String']>;
+  orcidLastModifiedDate?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  orcidLastModifiedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidLastModifiedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_not?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  orcidLastSyncDate?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_exists?: InputMaybe<Scalars['Boolean']>;
+  orcidLastSyncDate_gt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_gte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidLastSyncDate_lt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_lte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_not?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidWorks_exists?: InputMaybe<Scalars['Boolean']>;
   orcid_contains?: InputMaybe<Scalars['String']>;
   orcid_exists?: InputMaybe<Scalars['Boolean']>;
   orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -5756,6 +5807,10 @@ export enum UsersOrder {
   LinkedInDesc = 'linkedIn_DESC',
   OnboardedAsc = 'onboarded_ASC',
   OnboardedDesc = 'onboarded_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
   OrcidAsc = 'orcid_ASC',
   OrcidDesc = 'orcid_DESC',
   RegionAsc = 'region_ASC',
@@ -7052,6 +7107,27 @@ export type CfUsersNestedFilter = {
   onboarded_exists?: InputMaybe<Scalars['Boolean']>;
   onboarded_not?: InputMaybe<Scalars['Boolean']>;
   orcid?: InputMaybe<Scalars['String']>;
+  orcidLastModifiedDate?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_exists?: InputMaybe<Scalars['Boolean']>;
+  orcidLastModifiedDate_gt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_gte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidLastModifiedDate_lt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_lte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_not?: InputMaybe<Scalars['DateTime']>;
+  orcidLastModifiedDate_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['DateTime']>>
+  >;
+  orcidLastSyncDate?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_exists?: InputMaybe<Scalars['Boolean']>;
+  orcidLastSyncDate_gt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_gte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidLastSyncDate_lt?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_lte?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_not?: InputMaybe<Scalars['DateTime']>;
+  orcidLastSyncDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  orcidWorks_exists?: InputMaybe<Scalars['Boolean']>;
   orcid_contains?: InputMaybe<Scalars['String']>;
   orcid_exists?: InputMaybe<Scalars['Boolean']>;
   orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -10470,6 +10546,9 @@ export type UsersContentDataFragment = Pick<
   | 'github'
   | 'googleScholar'
   | 'orcid'
+  | 'orcidLastModifiedDate'
+  | 'orcidLastSyncDate'
+  | 'orcidWorks'
   | 'researchGate'
   | 'researcherId'
   | 'connections'
@@ -10596,6 +10675,9 @@ export type FetchUserByIdQuery = {
       | 'github'
       | 'googleScholar'
       | 'orcid'
+      | 'orcidLastModifiedDate'
+      | 'orcidLastSyncDate'
+      | 'orcidWorks'
       | 'researchGate'
       | 'researcherId'
       | 'connections'
@@ -10730,6 +10812,9 @@ export type FetchUsersQuery = {
             | 'github'
             | 'googleScholar'
             | 'orcid'
+            | 'orcidLastModifiedDate'
+            | 'orcidLastSyncDate'
+            | 'orcidWorks'
             | 'researchGate'
             | 'researcherId'
             | 'connections'
@@ -13714,6 +13799,12 @@ export const UsersContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'github' } },
           { kind: 'Field', name: { kind: 'Name', value: 'googleScholar' } },
           { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'orcidLastModifiedDate' },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'orcidLastSyncDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'orcidWorks' } },
           { kind: 'Field', name: { kind: 'Name', value: 'researchGate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'researcherId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'connections' } },

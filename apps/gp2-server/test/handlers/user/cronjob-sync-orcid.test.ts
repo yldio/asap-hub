@@ -1,13 +1,13 @@
 import nock from 'nock';
-import { unloggedHandler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
-import { getDataProviderMock } from '../../mocks/data-provider.mock';
-import { fetchUserResponseDataObject } from '../../fixtures/users.fixtures';
-import * as fixtures from './cronjob-sync-orcid.fixtures';
+import { unloggedHandler } from '../../../src/handlers/user/cronjob-sync-orcid';
+import { fetchUserResponseDataObject } from '../../fixtures/user.fixtures';
+import * as fixtures from '../../fixtures/cronjob-sync-orcid.fixtures';
+import { userDataProviderMock } from '../../mocks/user.data-provider.mock';
 
-const mockDataProvider = getDataProviderMock();
+const mockDataProvider = userDataProviderMock;
 
 jest.mock('../../../src/utils/logger');
-jest.mock('../../../src/dependencies/users.dependencies', () => ({
+jest.mock('../../../src/dependencies/user.dependency', () => ({
   getUserDataProvider: () => mockDataProvider,
   getAssetDataProvider: jest.fn(),
 }));

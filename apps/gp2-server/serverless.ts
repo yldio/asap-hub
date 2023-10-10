@@ -761,6 +761,39 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
+    syncUserOrcidContentful: {
+      handler: './src/handlers/user/sync-orcid-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus,
+            pattern: {
+              source: [eventBusSource],
+              'detail-type': ['UsersPublished'],
+            },
+            retryPolicy: {
+              maximumRetryAttempts: 2,
+            },
+          },
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    cronjobSyncOrcidContentful: {
+      handler: './src/handlers/user/cronjob-sync-orcid.handler',
+      timeout: 120,
+      events: [
+        {
+          schedule: 'rate(1 hour)', // run every hour
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        IS_CONTENTFUL_ENABLED: 'true',
+      },
+    },
   },
   resources: {
     Conditions: {

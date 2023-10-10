@@ -281,8 +281,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
             .filter(({ id }) => id !== mainEntityId)
             .map(({ id }) => id)
         : undefined,
-    relatedOutputs: newRelatedOutputs.map(({ value }) => value),
-    relatedEvents: [],
+    relatedOutputIds: newRelatedOutputs.map(({ value }) => value),
+    relatedEventIds: [],
     ...createIdentifierField(newIdentifierType, identifier),
   };
 

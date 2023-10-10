@@ -178,8 +178,8 @@ describe('OutputForm', () => {
       ],
       mainEntityId: '12',
       workingGroupIds: ['2'],
-      relatedOutputs: ['11'],
-      relatedEvents: [],
+      relatedOutputIds: ['11'],
+      relatedEventIds: [],
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -290,8 +290,8 @@ describe('OutputForm', () => {
       ],
       mainEntityId: '12',
       workingGroupIds: [],
-      relatedOutputs: [],
-      relatedEvents: [],
+      relatedOutputIds: [],
+      relatedEventIds: [],
     });
   });
 
@@ -402,8 +402,8 @@ describe('OutputForm', () => {
         authors: [{ userId: 'u2' }],
         mainEntityId: '12',
         workingGroupIds: [],
-        relatedOutputs: [],
-        relatedEvents: [],
+        relatedOutputIds: [],
+        relatedEventIds: [],
       });
       expect(history.location.pathname).toEqual(`/outputs`);
     });

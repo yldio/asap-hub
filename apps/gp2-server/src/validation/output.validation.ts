@@ -142,12 +142,12 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
         },
         nullable: true,
       },
-      relatedOutputs: {
+      relatedOutputIds: {
         type: 'array',
         items: { type: 'string' },
         nullable: true,
       },
-      relatedEvents: {
+      relatedEventIds: {
         type: 'array',
         items: { type: 'string' },
         nullable: true,

@@ -783,7 +783,9 @@ describe('Outputs data provider', () => {
       const result = await outputDataProvider.create(outputRequest);
       expect(result).toEqual(outputId);
       const {
-        workingGroupIds: __,
+        workingGroupIds: _,
+        relatedOutputIds,
+        relatedEventIds,
         projectIds,
         mainEntityId,
         ...fieldsCreated
@@ -825,14 +827,14 @@ describe('Outputs data provider', () => {
             id: tag.id,
           },
         })),
-        relatedOutputs: fieldsCreated.relatedOutputs.map((id) => ({
+        relatedOutputs: relatedOutputIds.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
             id,
           },
         })),
-        relatedEvents: fieldsCreated.relatedEvents.map((id) => ({
+        relatedEvents: relatedEventIds.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
@@ -948,7 +950,13 @@ describe('Outputs data provider', () => {
 
       await outputDataProvider.update(outputId, outputUpdateData);
 
-      const { projectIds, mainEntityId, ...fieldsUpdated } = outputUpdateData;
+      const {
+        projectIds,
+        relatedEventIds,
+        relatedOutputIds,
+        mainEntityId,
+        ...fieldsUpdated
+      } = outputUpdateData;
       const fields = {
         ...fieldsUpdated,
         authors: outputUpdateData.authors.map((author) => ({
@@ -979,14 +987,14 @@ describe('Outputs data provider', () => {
             id: tag.id,
           },
         })),
-        relatedOutputs: outputUpdateData.relatedOutputs.map((id) => ({
+        relatedOutputs: relatedOutputIds.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
             id,
           },
         })),
-        relatedEvents: outputUpdateData.relatedEvents.map((id) => ({
+        relatedEvents: relatedEventIds.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',

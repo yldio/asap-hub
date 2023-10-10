@@ -149,8 +149,8 @@ export type OutputCreateDataObject = Omit<
   projectIds?: string[];
   mainEntityId?: string;
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
-  relatedOutputs: string[];
-  relatedEvents: string[];
+  relatedOutputIds: string[];
+  relatedEventIds: string[];
 };
 
 export type OutputUpdateDataObject = Omit<
@@ -163,8 +163,8 @@ export type OutputUpdateDataObject = Omit<
   projectIds?: string[];
   mainEntityId?: string;
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
-  relatedOutputs: string[];
-  relatedEvents: string[];
+  relatedOutputIds: string[];
+  relatedEventIds: string[];
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
@@ -197,8 +197,8 @@ export type OutputPostRequest = {
   accessionNumber?: string;
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
   mainEntityId: string;
-  relatedOutputs: string[];
-  relatedEvents: string[];
+  relatedOutputIds: string[];
+  relatedEventIds: string[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

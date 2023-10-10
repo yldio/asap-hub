@@ -442,19 +442,19 @@ const cleanOutput = (
         ),
       };
     }
-    if (key === 'relatedOutputs') {
+    if (key === 'relatedOutputIds') {
       return {
         ...acc,
         relatedOutputs: (
-          value as gp2Model.OutputUpdateDataObject['relatedOutputs']
+          value as gp2Model.OutputUpdateDataObject['relatedOutputIds']
         ).map((id) => getLinkEntity(id)),
       };
     }
-    if (key === 'relatedEvents') {
+    if (key === 'relatedEventIds') {
       return {
         ...acc,
         relatedEvents: (
-          value as gp2Model.OutputUpdateDataObject['relatedEvents']
+          value as gp2Model.OutputUpdateDataObject['relatedEventIds']
         ).map((id) => getLinkEntity(id)),
       };
     }

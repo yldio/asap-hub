@@ -46,7 +46,7 @@ export default class OutputController {
     };
   }
 
-  private async parseReceivedDataObject(
+  private async parseToDataObject(
     data: OutputCreateData | OutputUpdateData,
   ): Promise<
     Omit<
@@ -73,8 +73,8 @@ export default class OutputController {
       projectIds: data.projectIds,
       mainEntityId: data.mainEntityId,
       contributingCohorts: data.contributingCohorts,
-      relatedOutputs: data.relatedOutputs,
-      relatedEvents: data.relatedEvents,
+      relatedOutputIds: data.relatedOutputIds,
+      relatedEventIds: data.relatedEventIds,
     };
   }
   async create(
@@ -82,7 +82,7 @@ export default class OutputController {
   ): Promise<gp2Model.OutputResponse | null> {
     await this.validateOutput(data);
 
-    const dataObject = await this.parseReceivedDataObject(data);
+    const dataObject = await this.parseToDataObject(data);
 
     const outputId = await this.outputDataProvider.create({
       ...dataObject,
@@ -105,7 +105,7 @@ export default class OutputController {
 
     await this.validateOutput(data, id);
 
-    const dataObject = await this.parseReceivedDataObject(data);
+    const dataObject = await this.parseToDataObject(data);
 
     await this.outputDataProvider.update(id, {
       ...dataObject,

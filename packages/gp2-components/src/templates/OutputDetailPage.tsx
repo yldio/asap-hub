@@ -66,36 +66,33 @@ type OutputDetailPageProps = Pick<
 const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
   isAdministrator,
   ...output
-}: OutputDetailPageProps) => {
-  return (
-    <div css={containerStyles}>
-      {isAdministrator ? (
-        <div css={buttonsContainer}>
-          <div css={leftButtons}>
-            <Link
-              noMargin
-              href={
-                gp2Routing.outputs({}).output({ outputId: output.id }).edit({})
-                  .$
-              }
-              buttonStyle
-              small
-              primary
-            >
-              {editIcon} Edit
-            </Link>
-          </div>
+}: OutputDetailPageProps) => (
+  <div css={containerStyles}>
+    {isAdministrator ? (
+      <div css={buttonsContainer}>
+        <div css={leftButtons}>
+          <Link
+            noMargin
+            href={
+              gp2Routing.outputs({}).output({ outputId: output.id }).edit({}).$
+            }
+            buttonStyle
+            small
+            primary
+          >
+            {editIcon} Edit
+          </Link>
         </div>
-      ) : null}
-      <OutputDetailPageHeader {...output} />
-      <CtaCard
-        href={createMailTo(INVITE_SUPPORT_EMAIL)}
-        buttonText="Contact Tech Support"
-      >
-        <strong>Have additional questions?</strong>
-        <br /> Reach out to tech support if you need help.
-      </CtaCard>
-    </div>
-  );
-};
+      </div>
+    ) : null}
+    <OutputDetailPageHeader {...output} />
+    <CtaCard
+      href={createMailTo(INVITE_SUPPORT_EMAIL)}
+      buttonText="Contact Tech Support"
+    >
+      <strong>Have additional questions?</strong>
+      <br /> Reach out to tech support if you need help.
+    </CtaCard>
+  </div>
+);
 export default OutputDetailPage;

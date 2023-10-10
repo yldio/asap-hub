@@ -81,6 +81,11 @@ it('renders an output with source (project/working group), document type, type, 
       authors={[]}
       documentType="Code/Software"
       projects={[]}
+      mainEntity={{
+        id: 'wg-id',
+        type: 'WorkingGroups',
+        title: 'Steering Committee',
+      }}
       workingGroups={[
         {
           id: 'wg-id',
@@ -92,8 +97,7 @@ it('renders an output with source (project/working group), document type, type, 
   );
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Working Group', 'Code/Software']);
-  expect(getByText('Steering Committee')).toBeVisible();
+  ).toEqual(['Working Group', 'Code/Software', 'Steering Committee']);
   expect(getByText('Steering Committee').closest('a')).toHaveAttribute(
     'href',
     '/working-groups/wg-id',
@@ -104,6 +108,12 @@ it('renders an output with source (project/working group), document type, type, 
       {...gp2Fixtures.createOutputResponse()}
       authors={[]}
       documentType="Article"
+      mainEntity={{
+        id: 'project-id',
+        type: 'Projects',
+        title:
+          'Polygenic Risk Score Project of PD risk in non-European populations',
+      }}
       projects={[
         {
           id: 'project-id',
@@ -118,12 +128,13 @@ it('renders an output with source (project/working group), document type, type, 
   );
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Project', 'Article', 'Blog', 'Preprints']);
-  expect(
-    getByText(
-      'Polygenic Risk Score Project of PD risk in non-European populations',
-    ),
-  ).toBeVisible();
+  ).toEqual([
+    'Project',
+    'Article',
+    'Blog',
+    'Preprints',
+    'Polygenic Risk Score Project of PD risk in non-European populations',
+  ]);
   expect(
     getByText(
       'Polygenic Risk Score Project of PD risk in non-European populations',

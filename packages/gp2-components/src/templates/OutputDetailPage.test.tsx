@@ -45,12 +45,13 @@ describe('OutputDetailPage', () => {
     );
     expect(
       getAllByRole('listitem').map(({ textContent }) => textContent),
-    ).toEqual(['Project', 'Article', 'Blog', 'Preprints']);
-    expect(
-      getByText(
-        'Polygenic Risk Score Project of PD risk in non-European populations',
-      ),
-    ).toBeVisible();
+    ).toEqual([
+      'Project',
+      'Article',
+      'Blog',
+      'Preprints',
+      'Polygenic Risk Score Project of PD risk in non-European populations',
+    ]);
     expect(
       getByText(
         'Polygenic Risk Score Project of PD risk in non-European populations',

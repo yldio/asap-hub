@@ -108,7 +108,7 @@ const AssociationList: FC<AssociationListProps> = ({
     <div>
       {inline && <Indicator type={type} />}
       <ul css={[containerStyles, inline && inlineContainerStyles]}>
-        {associations.map(({ id, title }) => (
+        {associations.map(({ id, title }, index) => (
           <li key={id} css={[itemStyles, inline && inlineItemStyles]}>
             {inline || <Indicator type={type} />}
             {type === 'Project' && (
@@ -127,7 +127,9 @@ const AssociationList: FC<AssociationListProps> = ({
                 {title}
               </Link>
             )}
-            {inline && <span css={bulletStyles}>·</span>}
+            {inline && index !== associations.length - 1 && (
+              <span css={bulletStyles}>·</span>
+            )}
           </li>
         ))}
         {more && (

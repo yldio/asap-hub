@@ -72,52 +72,47 @@ const OutputDetailPageHeader = ({
   title,
   type,
   workingGroups,
-}: OutputDetailPageHeaderProps) => {
-  return (
-    <Card padding={false}>
-      <div css={containerStyles}>
-        <SharedResearchMetadata
-          pills={
-            [
-              mainEntity.type === 'WorkingGroups' ? 'Working Group' : 'Project',
-              documentType,
-              type,
-              subtype,
-            ].filter(Boolean) as string[]
-          }
-          link={link}
-        />
-        <span css={headerStyle}>
-          <Display styleAsHeading={3}>{title}</Display>
-        </span>
-        <UsersList
-          users={authors.map((author) => ({
-            ...author,
-            href:
-              author.id && gp2Routing.users({}).user({ userId: author.id }).$,
-          }))}
-        />
-        <div css={associationStyles}>
-          {workingGroups?.length && (
-            <AssociationList
-              type="Working Group"
-              inline
-              associations={workingGroups}
-            />
-          )}
-          {projects?.length && (
-            <AssociationList type="Project" inline associations={projects} />
-          )}
-        </div>
-        <div css={timestampStyles}>
-          <span>
-            Date added: {formatDate(new Date(addedDate || created))} ·{' '}
-          </span>
-          <span>Last updated: {formatDate(new Date(lastUpdatedPartial))}</span>
-        </div>
+}: OutputDetailPageHeaderProps) => (
+  <Card padding={false}>
+    <div css={containerStyles}>
+      <SharedResearchMetadata
+        pills={
+          [
+            mainEntity.type === 'WorkingGroups' ? 'Working Group' : 'Project',
+            documentType,
+            type,
+            subtype,
+          ].filter(Boolean) as string[]
+        }
+        link={link}
+      />
+      <span css={headerStyle}>
+        <Display styleAsHeading={3}>{title}</Display>
+      </span>
+      <UsersList
+        users={authors.map((author) => ({
+          ...author,
+          href: author.id && gp2Routing.users({}).user({ userId: author.id }).$,
+        }))}
+      />
+      <div css={associationStyles}>
+        {workingGroups?.length && (
+          <AssociationList
+            type="Working Group"
+            inline
+            associations={workingGroups}
+          />
+        )}
+        {projects?.length && (
+          <AssociationList type="Project" inline associations={projects} />
+        )}
       </div>
-    </Card>
-  );
-};
+      <div css={timestampStyles}>
+        <span>Date added: {formatDate(new Date(addedDate || created))} · </span>
+        <span>Last updated: {formatDate(new Date(lastUpdatedPartial))}</span>
+      </div>
+    </div>
+  </Card>
+);
 
 export default OutputDetailPageHeader;

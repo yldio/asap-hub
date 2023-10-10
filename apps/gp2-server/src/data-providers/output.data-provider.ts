@@ -309,6 +309,9 @@ const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
       documentType: documentType as gp2Model.OutputDocumentType,
       ...(type ? { type: type as gp2Model.OutputType } : {}),
     })) || [];
+type RelatedEventItem = NonNullable<
+  NonNullable<OutputItem['relatedEventsCollection']>['items'][number]
+>;
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
 ): gp2Model.OutputDataObject => {
@@ -364,11 +367,21 @@ export const parseContentfulGraphQLOutput = (
     doi: data.doi ?? undefined,
     rrid: data.rrid ?? undefined,
     accessionNumber: data.accessionNumber ?? undefined,
-    relatedOutputs,
     projects,
     workingGroups,
     mainEntity,
     contributingCohorts,
+    relatedEntity:
+      Object.keys(relatedEntity).length !== 0 ? relatedEntity : undefined,
+    relatedOutputs,
+    relatedEvents:
+      data.relatedEventsCollection?.items
+        ?.filter((event): event is RelatedEventItem => event !== null)
+        .map((event) => ({
+          id: event.sys.id,
+          title: event?.title || '',
+          endDate: event.endDate || '',
+        })) || [],
   };
 };
 
@@ -434,7 +447,15 @@ const cleanOutput = (
         ...acc,
         relatedOutputs: (
           value as gp2Model.OutputUpdateDataObject['relatedOutputs']
-        ).map((output) => getLinkEntity(output.id)),
+        ).map((id) => getLinkEntity(id)),
+      };
+    }
+    if (key === 'relatedEvents') {
+      return {
+        ...acc,
+        relatedEvents: (
+          value as gp2Model.OutputUpdateDataObject['relatedEvents']
+        ).map((id) => getLinkEntity(id)),
       };
     }
     if (key === 'contributingCohorts') {

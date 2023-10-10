@@ -266,11 +266,6 @@ const OutputForm: React.FC<OutputFormProps> = ({
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
     tags: newTags.length > 0 ? newTags : undefined,
-    relatedOutputs: newRelatedOutputs.map((output) => ({
-      id: output.value,
-      title: output.label,
-      documentType: output.documentType as gp2Model.OutputDocumentType,
-    })),
     mainEntityId,
     contributingCohorts:
       newCohorts.length > 0 ? newCohorts.map(({ id }) => ({ id })) : undefined,
@@ -286,6 +281,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
             .filter(({ id }) => id !== mainEntityId)
             .map(({ id }) => id)
         : undefined,
+    relatedOutputs: newRelatedOutputs.map(({ value }) => value),
+    relatedEvents: [],
     ...createIdentifierField(newIdentifierType, identifier),
   };
 

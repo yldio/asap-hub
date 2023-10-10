@@ -1,5 +1,6 @@
 import { FetchOptions, ListResponse } from '../common';
 import { ContributingCohortDataObject } from './contributing-cohort';
+import { EventDataObject } from './event';
 import { ExternalUserResponse } from './external-user';
 import { TagDataObject } from './tag';
 
@@ -12,7 +13,7 @@ export const outputDocumentTypes = [
   'Training Materials',
 ] as const;
 
-export type OutputDocumentType = (typeof outputDocumentTypes)[number];
+export type OutputDocumentType = typeof outputDocumentTypes[number];
 
 export enum OutputIdentifierType {
   Empty = '',
@@ -49,10 +50,10 @@ export const outputTypes = [
   'Hot Topic',
   'Blog',
 ] as const;
-export type OutputType = (typeof outputTypes)[number];
+export type OutputType = typeof outputTypes[number];
 
 export const outputSubtypes = ['Preprints', 'Published'] as const;
-export type OutputSubtype = (typeof outputSubtypes)[number];
+export type OutputSubtype = typeof outputSubtypes[number];
 
 export const outputDocumentTypeToType: Record<
   OutputDocumentType,
@@ -74,11 +75,11 @@ export const outputDocumentTypeToType: Record<
 
 export const decisionOptions = ['Yes', 'No', "Don't Know"] as const;
 
-export type DecisionOption = (typeof decisionOptions)[number];
+export type DecisionOption = typeof decisionOptions[number];
 
 export const sharingStatuses = ['GP2 Only', 'Public'] as const;
 
-export type OutputSharingStatus = (typeof sharingStatuses)[number];
+export type OutputSharingStatus = typeof sharingStatuses[number];
 type RelatedOutputs = {
   id: string;
   title: string;
@@ -102,6 +103,7 @@ export type OutputCoreObject = {
   rrid?: string;
   accessionNumber?: string;
   relatedOutputs: RelatedOutputs[];
+  relatedEvents: Pick<EventDataObject, 'id' | 'title' | 'endDate'>[];
 };
 
 export type UserAuthor = {
@@ -137,22 +139,32 @@ export type AuthorUpsertDataObject =
   | { userId: string; externalUserId?: undefined }
   | { externalUserId: string; userId?: undefined };
 
-export type OutputCreateDataObject = OutputCoreObject & {
+export type OutputCreateDataObject = Omit<
+  OutputCoreObject,
+  'relatedOutputs' | 'relatedEvents'
+> & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
   workingGroupIds?: string[];
   projectIds?: string[];
   mainEntityId?: string;
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  relatedOutputs: string[];
+  relatedEvents: string[];
 };
 
-export type OutputUpdateDataObject = OutputCoreObject & {
+export type OutputUpdateDataObject = Omit<
+  OutputCoreObject,
+  'relatedOutputs' | 'relatedEvents'
+> & {
   authors: AuthorUpsertDataObject[];
   updatedBy: string;
   workingGroupIds?: string[];
   projectIds?: string[];
   mainEntityId?: string;
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  relatedOutputs: string[];
+  relatedEvents: string[];
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;
@@ -183,9 +195,10 @@ export type OutputPostRequest = {
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
-  relatedOutputs: RelatedOutputs[];
   contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
   mainEntityId: string;
+  relatedOutputs: string[];
+  relatedEvents: string[];
 };
 
 export type OutputPutRequest = OutputPostRequest;

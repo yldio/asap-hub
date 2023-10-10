@@ -154,10 +154,11 @@ it('publishes the output', async () => {
           externalUserId: '2',
         },
       ],
-      relatedOutputs: [],
       workingGroupIds: [],
       projectIds: undefined,
       mainEntityId: 'working-group-id-1',
+      relatedOutputs: [],
+      relatedEvents: [],
     },
     expect.anything(),
   );

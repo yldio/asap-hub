@@ -20,8 +20,9 @@ const outputResponse: Omit<gp2.ListOutputResponse['items'][0], 'id'> = {
   sharingStatus: 'Public',
   authors: [userAuthor],
   documentType: 'Code/Software',
-  relatedOutputs: [],
   mainEntity: { id: '42', title: 'a project', type: 'Projects' },
+  relatedOutputs: [],
+  relatedEvents: [],
 };
 
 export const createOutputResponse = (itemIndex = 0): gp2.OutputResponse => ({

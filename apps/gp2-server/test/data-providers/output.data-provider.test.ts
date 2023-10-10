@@ -787,6 +787,8 @@ describe('Outputs data provider', () => {
         relatedOutputIds,
         relatedEventIds,
         projectIds,
+        tagIds,
+        contributingCohortIds,
         mainEntityId,
         ...fieldsCreated
       } = outputRequest;
@@ -820,11 +822,11 @@ describe('Outputs data provider', () => {
             id,
           },
         })),
-        tags: fieldsCreated.tags?.map((tag) => ({
+        tags: tagIds.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
-            id: tag.id,
+            id,
           },
         })),
         relatedOutputs: relatedOutputIds.map((id) => ({
@@ -841,15 +843,13 @@ describe('Outputs data provider', () => {
             id,
           },
         })),
-        contributingCohorts: fieldsCreated.contributingCohorts?.map(
-          (cohort) => ({
-            sys: {
-              type: 'Link',
-              linkType: 'Entry',
-              id: cohort.id,
-            },
-          }),
-        ),
+        contributingCohorts: contributingCohortIds.map((id) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id,
+          },
+        })),
       });
       expect(environmentMock.createEntry).toHaveBeenCalledWith('outputs', {
         fields,
@@ -902,7 +902,7 @@ describe('Outputs data provider', () => {
           ...outputRequest,
           workingGroupIds: undefined,
           projectIds: undefined,
-          mainEntityId: undefined,
+          mainEntityId: undefined as unknown as string,
         }),
       ).rejects.toThrow(/invalid related entities/i);
     });
@@ -955,6 +955,8 @@ describe('Outputs data provider', () => {
         relatedEventIds,
         relatedOutputIds,
         mainEntityId,
+        contributingCohortIds,
+        tagIds,
         ...fieldsUpdated
       } = outputUpdateData;
       const fields = {
@@ -980,11 +982,11 @@ describe('Outputs data provider', () => {
             id,
           },
         })),
-        tags: outputUpdateData.tags?.map((tag) => ({
+        tags: tagIds.map((id) => ({
           sys: {
             type: 'Link',
             linkType: 'Entry',
-            id: tag.id,
+            id,
           },
         })),
         relatedOutputs: relatedOutputIds.map((id) => ({
@@ -1001,15 +1003,13 @@ describe('Outputs data provider', () => {
             id,
           },
         })),
-        contributingCohorts: outputUpdateData.contributingCohorts?.map(
-          (cohort) => ({
-            sys: {
-              type: 'Link',
-              linkType: 'Entry',
-              id: cohort.id,
-            },
-          }),
-        ),
+        contributingCohorts: contributingCohortIds.map((id) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id,
+          },
+        })),
       };
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
         ...fields,

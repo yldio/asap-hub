@@ -51,9 +51,12 @@ const app = async () => {
               : { externalUserId: auth.id },
           ),
           workingGroupIds: output.workingGroups?.map(toId),
+          mainEntityId: output.mainEntity.id,
           projectIds: output.projects?.map(toId),
           relatedOutputIds: output.relatedOutputs.map(toId),
           relatedEventIds: output.relatedEvents.map(toId),
+          tagIds: output.tags.map(toId),
+          contributingCohortIds: output.contributingCohorts.map(toId),
         });
 
         console.log(`output with id ${output.id} updated.`);

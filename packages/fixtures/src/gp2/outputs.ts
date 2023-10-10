@@ -21,6 +21,8 @@ const outputResponse: Omit<gp2.ListOutputResponse['items'][0], 'id'> = {
   authors: [userAuthor],
   documentType: 'Code/Software',
   mainEntity: { id: '42', title: 'a project', type: 'Projects' },
+  contributingCohorts: [],
+  tags: [],
   relatedOutputs: [],
   relatedEvents: [],
 };

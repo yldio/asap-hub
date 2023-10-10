@@ -180,6 +180,8 @@ describe('OutputForm', () => {
       workingGroupIds: ['2'],
       relatedOutputIds: ['11'],
       relatedEventIds: [],
+      tagIds: [],
+      contributingCohortIds: [],
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -292,6 +294,8 @@ describe('OutputForm', () => {
       workingGroupIds: [],
       relatedOutputIds: [],
       relatedEventIds: [],
+      tagIds: [],
+      contributingCohortIds: [],
     });
   });
 
@@ -404,6 +408,8 @@ describe('OutputForm', () => {
         workingGroupIds: [],
         relatedOutputIds: [],
         relatedEventIds: [],
+        tagIds: [],
+        contributingCohortIds: [],
       });
       expect(history.location.pathname).toEqual(`/outputs`);
     });

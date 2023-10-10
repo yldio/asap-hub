@@ -297,6 +297,8 @@ describe('createOutput', () => {
     documentType: 'Procedural Form' as const,
     sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
     mainEntityId: 'id-1',
+    tagIds: [],
+    contributingCohortIds: [],
     relatedOutputIds: [],
     relatedEventIds: [],
   };
@@ -327,6 +329,8 @@ describe('updateOutput', () => {
     documentType: 'Procedural Form' as const,
     sharingStatus: 'GP2 Only' as gp2Model.OutputSharingStatus,
     mainEntityId: 'id-1',
+    tagIds: [],
+    contributingCohortIds: [],
     relatedOutputIds: [],
     relatedEventIds: [],
   };

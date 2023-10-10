@@ -252,6 +252,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
       type: 'success',
     });
 
+  const toId = ({ id }: { id: string }) => id;
+  const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
   const currentPayload: gp2Model.OutputPostRequest = {
     title: newTitle,
     documentType,
@@ -265,21 +267,16 @@ const OutputForm: React.FC<OutputFormProps> = ({
     sharingStatus: newSharingStatus,
     publishDate: newPublishDate?.toISOString(),
     authors: getPostAuthors(newAuthors),
-    tags: newTags.length > 0 ? newTags : undefined,
+    tagIds: newTags.map(toId),
     mainEntityId,
-    contributingCohorts:
-      newCohorts.length > 0 ? newCohorts.map(({ id }) => ({ id })) : undefined,
+    contributingCohortIds: newCohorts.map(toId),
     workingGroupIds:
       newWorkingGroups.length > 0
-        ? newWorkingGroups
-            .filter(({ id }) => id !== mainEntityId)
-            .map(({ id }) => id)
+        ? newWorkingGroups.filter(outMainEntity).map(toId)
         : undefined,
     projectIds:
       newProjects.length > 0
-        ? newProjects
-            .filter(({ id }) => id !== mainEntityId)
-            .map(({ id }) => id)
+        ? newProjects.filter(outMainEntity).map(toId)
         : undefined,
     relatedOutputIds: newRelatedOutputs.map(({ value }) => value),
     relatedEventIds: [],

@@ -182,12 +182,19 @@ export class OutputContentfulDataProvider implements OutputDataProvider {
     return outputEntry.sys.id;
   }
 
-  async update(id: string, data: gp2Model.OutputUpdateDataObject) {
+  async update(
+    id: string,
+    {
+      workingGroupIds,
+      projectIds,
+      mainEntityId,
+      ...data
+    }: gp2Model.OutputUpdateDataObject,
+  ) {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
-    const { workingGroupIds, projectIds, mainEntityId, ...restData } = data;
 
-    const fields = cleanOutput(restData);
+    const fields = cleanOutput(data);
     const result = await patchAndPublish(user, {
       ...fields,
       relatedEntities: getLinkEntities([
@@ -407,9 +414,10 @@ const getSearchWhere = (search: string) => {
 };
 
 const cleanOutput = (
-  outputToUpdate:
-    | gp2Model.OutputUpdateDataObject
-    | gp2Model.OutputCreateDataObject,
+  outputToUpdate: Omit<
+    gp2Model.OutputUpdateDataObject | gp2Model.OutputCreateDataObject,
+    'mainEntityId'
+  >,
 ) =>
   Object.entries(outputToUpdate).reduce((acc, [key, value]) => {
     if (key === 'authors') {
@@ -434,12 +442,20 @@ const cleanOutput = (
         updatedBy: getLinkEntity(value as string),
       };
     }
-    if (key === 'tags') {
+    if (key === 'tagIds') {
       return {
         ...acc,
-        tags: (value as gp2Model.OutputUpdateDataObject['tags'])?.map((tag) =>
-          getLinkEntity(tag.id),
+        tags: (value as gp2Model.OutputUpdateDataObject['tagIds'])?.map((id) =>
+          getLinkEntity(id),
         ),
+      };
+    }
+    if (key === 'contributingCohortIds') {
+      return {
+        ...acc,
+        contributingCohorts: (
+          value as gp2Model.OutputUpdateDataObject['contributingCohortIds']
+        )?.map((id) => getLinkEntity(id)),
       };
     }
     if (key === 'relatedOutputIds') {
@@ -458,12 +474,12 @@ const cleanOutput = (
         ).map((id) => getLinkEntity(id)),
       };
     }
-    if (key === 'contributingCohorts') {
+    if (key === 'contributingCohortIds') {
       return {
         ...acc,
         contributingCohorts: (
-          value as gp2Model.OutputUpdateDataObject['contributingCohorts']
-        )?.map((cohort) => getLinkEntity(cohort.id)),
+          value as gp2Model.OutputUpdateDataObject['contributingCohortIds']
+        )?.map((id) => getLinkEntity(id)),
       };
     }
     return { ...acc, [key]: value };

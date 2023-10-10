@@ -94,6 +94,8 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     workingGroups,
     projects,
     mainEntity,
+    contributingCohorts,
+    tags,
     relatedOutputs,
     relatedEvents,
     ...outputResponse
@@ -105,6 +107,8 @@ export const getOutputPostRequest = (): gp2Model.OutputPostRequest => {
     projectIds: projects?.map(({ id }) => id),
     authors: authors.map(({ id }) => ({ userId: id })),
     mainEntityId: mainEntity.id,
+    contributingCohortIds: contributingCohorts.map(({ id }) => id),
+    tagIds: tags.map(({ id }) => id),
     relatedOutputIds: relatedOutputs.map(({ id }) => id),
     relatedEventIds: relatedEvents.map(({ id }) => id),
   };
@@ -129,6 +133,8 @@ export const getOutputCreateDataObject =
       workingGroups,
       projects,
       mainEntity,
+      tags,
+      contributingCohorts,
       relatedOutputs,
       relatedEvents,
       ...outputPostRequest
@@ -139,7 +145,9 @@ export const getOutputCreateDataObject =
       createdBy: 'userId',
       projectIds: projects?.map(({ id }) => id),
       authors: authors.map(({ id }) => ({ userId: id })),
+      tagIds: tags.map(({ id }) => id),
       mainEntityId: mainEntity.id,
+      contributingCohortIds: contributingCohorts.map(({ id }) => id),
       relatedOutputIds: relatedOutputs.map(({ id }) => id),
       relatedEventIds: relatedEvents.map(({ id }) => id),
     };

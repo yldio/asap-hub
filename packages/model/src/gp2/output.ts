@@ -98,7 +98,7 @@ export type OutputCoreObject = {
   description?: string;
   gp2Supported?: DecisionOption;
   sharingStatus: OutputSharingStatus;
-  tags?: TagDataObject[];
+  tags: TagDataObject[];
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
@@ -129,7 +129,7 @@ export type OutputDataObject = OutputCoreObject & {
   lastUpdatedPartial: string;
   workingGroups?: OutputOwner[];
   projects?: OutputOwner[];
-  contributingCohorts?: ContributingCohortDataObject[];
+  contributingCohorts: ContributingCohortDataObject[];
   mainEntity: OutputOwner;
 };
 
@@ -141,28 +141,30 @@ export type AuthorUpsertDataObject =
 
 export type OutputCreateDataObject = Omit<
   OutputCoreObject,
-  'relatedOutputs' | 'relatedEvents'
+  'relatedOutputs' | 'relatedEvents' | 'tags'
 > & {
   authors: AuthorUpsertDataObject[];
   createdBy: string;
+  tagIds: string[];
   workingGroupIds?: string[];
   projectIds?: string[];
-  mainEntityId?: string;
-  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  mainEntityId: string;
+  contributingCohortIds: string[];
   relatedOutputIds: string[];
   relatedEventIds: string[];
 };
 
 export type OutputUpdateDataObject = Omit<
   OutputCoreObject,
-  'relatedOutputs' | 'relatedEvents'
+  'relatedOutputs' | 'relatedEvents' | 'tags'
 > & {
   authors: AuthorUpsertDataObject[];
   updatedBy: string;
+  tagIds: string[];
   workingGroupIds?: string[];
   projectIds?: string[];
-  mainEntityId?: string;
-  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  mainEntityId: string;
+  contributingCohortIds: string[];
   relatedOutputIds: string[];
   relatedEventIds: string[];
 };
@@ -191,11 +193,11 @@ export type OutputPostRequest = {
   sharingStatus: OutputSharingStatus;
   workingGroupIds?: string[];
   projectIds?: string[];
-  tags?: TagDataObject[];
+  tagIds: string[];
   doi?: string;
   rrid?: string;
   accessionNumber?: string;
-  contributingCohorts?: Omit<ContributingCohortDataObject, 'name'>[];
+  contributingCohortIds: string[];
   mainEntityId: string;
   relatedOutputIds: string[];
   relatedEventIds: string[];

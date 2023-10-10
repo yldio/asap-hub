@@ -38,4 +38,16 @@ describe('parseOrcidWorkFromCMS', () => {
     delete orcidWorks.title;
     expect(parseOrcidWorkFromCMS(orcidWorks).title).toBeUndefined();
   });
+
+  test('Should parse ORCID data from CMS when type is unknown', () => {
+    const orcidWorks = getOrcidWorks();
+    orcidWorks.type = 'some-type';
+    expect(parseOrcidWorkFromCMS(orcidWorks).type).toBe('UNDEFINED');
+  });
+
+  test('Should parse ORCID data from CMS when the publicationDate is not defined', () => {
+    const orcidWorks = getOrcidWorks();
+    orcidWorks.publicationDate = undefined;
+    expect(parseOrcidWorkFromCMS(orcidWorks).publicationDate).toEqual({});
+  });
 });

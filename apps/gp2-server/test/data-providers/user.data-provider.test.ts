@@ -76,6 +76,18 @@ describe('User data provider', () => {
       expect(result).toEqual(getUserDataObject());
     });
 
+    test('Should throw an error when the ORCID Works field has invalid data', async () => {
+      const mockResponse = getContentfulGraphqlUser();
+      mockResponse.orcidWorks = [null];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: mockResponse,
+      });
+
+      await expect(userDataProvider.fetchById('user-id')).rejects.toThrow(
+        'Invalid ORCID works content data',
+      );
+    });
+
     test.each(gp2Model.userDegrees)(
       'Should correctly map MD, PhD Correctly - %s',
       async (degree) => {

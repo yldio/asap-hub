@@ -83,7 +83,7 @@
     "@types/parse-data-url": "3.0.0",
     "@types/serverless": "3.12.15",
     "@types/source-map-support": "0.5.8",
-    "@types/supertest": "2.0.12",
+    "@types/supertest": "2.0.14",
     "@types/uuid": "8.3.4",
     "@yarnpkg/pnpify": "3.1.6",
     "babel-loader": "8.3.0",

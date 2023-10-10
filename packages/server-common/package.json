@@ -62,7 +62,7 @@
     "@types/luxon": "1.27.1",
     "@types/pump": "1.1.1",
     "@types/source-map-support": "0.5.8",
-    "@types/supertest": "2.0.12",
+    "@types/supertest": "2.0.14",
     "@types/through2-concurrent": "2.0.2",
     "@types/uuid": "8.3.4",
     "express-async-errors": "3.1.1",

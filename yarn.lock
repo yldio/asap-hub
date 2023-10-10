@@ -982,7 +982,7 @@ __metadata:
     "@types/serverless": 3.12.15
     "@types/source-map-support": 0.5.8
     "@types/stream-json": 1.7.4
-    "@types/supertest": 2.0.12
+    "@types/supertest": 2.0.14
     "@types/uuid": 8.3.4
     "@types/yargs": 17.0.5
     "@yarnpkg/pnpify": 3.1.6
@@ -1431,7 +1431,7 @@ __metadata:
     "@types/parse-data-url": 3.0.0
     "@types/serverless": 3.12.15
     "@types/source-map-support": 0.5.8
-    "@types/supertest": 2.0.12
+    "@types/supertest": 2.0.14
     "@types/uuid": 8.3.4
     "@types/yargs": 17.0.5
     "@yarnpkg/pnpify": 3.1.6
@@ -1690,7 +1690,7 @@ __metadata:
     "@types/luxon": 1.27.1
     "@types/pump": 1.1.1
     "@types/source-map-support": 0.5.8
-    "@types/supertest": 2.0.12
+    "@types/supertest": 2.0.14
     "@types/through2-concurrent": 2.0.2
     "@types/uuid": 8.3.4
     ajv: 8.11.0
@@ -18270,12 +18270,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/supertest@npm:2.0.12":
-  version: 2.0.12
-  resolution: "@types/supertest@npm:2.0.12"
+"@types/supertest@npm:2.0.14":
+  version: 2.0.14
+  resolution: "@types/supertest@npm:2.0.14"
   dependencies:
-    "@types/superagent": "npm:*"
-  checksum: f0e2b44f86bec2f708d6a3d0cb209055b487922040773049b0f8c6b557af52d4b5fa904e17dfaa4ce6e610172206bbec7b62420d158fa57b6ffc2de37b1730d3
+    "@types/superagent": "*"
+  checksum: 9f6850a22b8f0fd4c26a6dfd9b64771a66476b1a4f841a3b84a9da843ce69463efbf37594fe107297dd14a225d199b802464d48d70e9413238c637903d392137
   languageName: node
   linkType: hard
 

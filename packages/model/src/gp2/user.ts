@@ -134,7 +134,7 @@ export type UserCreateDataObject = Omit<
   contributingCohorts: Omit<UserContributingCohort, 'name'>[];
   avatar?: string;
   tags?: Omit<TagDataObject, 'name'>[];
-  social?: Omit<UserSocialLinks, 'orcid' | 'website1' | 'website2'>;
+  social?: Omit<UserSocial, 'orcid'>;
 };
 
 export type UserUpdateDataObject = Partial<

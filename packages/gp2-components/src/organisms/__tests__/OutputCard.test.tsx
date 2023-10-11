@@ -108,36 +108,179 @@ describe('OutputCard', () => {
     ).toEqual(expect.arrayContaining(['Article', 'Research']));
   });
 
-  it('renders authors', () => {
-    const author = gp2.createOutputResponse().authors[0]!;
-    author.displayName = 'Tony Stark';
-    author.id = '123';
-    render(<OutputCard {...defaultProps} authors={[author]} />);
-    expect(screen.getByRole('link', { name: 'Tony Stark' })).toHaveAttribute(
-      'href',
-      expect.stringMatching(/123/),
+  it('renders at most 3 authors names when detailed view is false', () => {
+    const authors = [];
+    const numAuthors = 10;
+
+    for (let i = 1; i <= numAuthors; i += 1) {
+      authors.push({
+        ...gp2.createUserResponse(),
+        displayName: `John ${i}`,
+        id: `john-${i}`,
+      });
+    }
+
+    const { getByText } = render(
+      <OutputCard
+        {...gp2.createOutputResponse()}
+        detailedView={false}
+        authors={authors}
+      />,
     );
+
+    for (let i = 1; i <= 3; i += 1) {
+      expect(getByText(`John ${i}`)).toBeVisible();
+      expect(getByText(`John ${i}`).closest('a')).toHaveAttribute(
+        'href',
+        `/users/john-${i}`,
+      );
+    }
+    expect(getByText('+7')).toBeVisible();
   });
 
-  describe('Edit output button', () => {
-    it('should not render if user is not an administrator', async () => {
-      render(<OutputCard {...defaultProps} isAdministrator={false} />);
+  describe('detailedView', () => {
+    it('shows all authors names', () => {
+      const authors = [];
+      const numAuthors = 10;
 
-      expect(
-        await screen.queryByRole('link', {
-          name: 'Edit Edit',
-        }),
-      ).not.toBeInTheDocument();
+      for (let i = 1; i <= numAuthors; i += 1) {
+        authors.push({
+          ...gp2.createUserResponse(),
+          displayName: `John ${i}`,
+          id: `john-${i}`,
+        });
+      }
+
+      const { getByText } = render(
+        <OutputCard
+          detailedView
+          {...gp2.createOutputResponse()}
+          authors={authors}
+        />,
+      );
+
+      for (let i = 1; i <= numAuthors; i += 1) {
+        expect(getByText(`John ${i}`)).toBeVisible();
+        expect(getByText(`John ${i}`).closest('a')).toHaveAttribute(
+          'href',
+          `/users/john-${i}`,
+        );
+      }
     });
 
-    it('should render if user is an administrator', () => {
-      render(<OutputCard {...defaultProps} isAdministrator={true} />);
+    it('renders an output with the last updated date', () => {
+      const { getByText } = render(
+        <OutputCard
+          detailedView
+          {...gp2.createOutputResponse()}
+          // month index starts with 0, so month 1 is Feb
+          lastUpdatedPartial={new Date(2003, 1, 1, 1).toISOString()}
+        />,
+      );
+      expect(getByText(/1st February 2003/)).toBeVisible();
+    });
 
+    it('falls back to created date when added date omitted', () => {
+      const { getByText, rerender } = render(
+        <OutputCard
+          detailedView
+          {...gp2.createOutputResponse()}
+          created={new Date(2011, 1, 1, 1).toISOString()}
+          addedDate={new Date(2012, 1, 1, 1).toISOString()}
+        />,
+      );
+      expect(getByText(/1st February 2012/)).toBeVisible();
+      rerender(
+        <OutputCard
+          detailedView
+          {...gp2.createOutputResponse()}
+          created={new Date(2011, 1, 1, 1).toISOString()}
+          addedDate={new Date(2011, 1, 1, 1).toISOString()}
+        />,
+      );
+      expect(getByText(/1st February 2011/)).toBeVisible();
+    });
+
+    it('renders an output with source (project/working group), document type, type, subtype and source name', () => {
+      const { getAllByRole, getByText, rerender } = render(
+        <OutputCard
+          {...gp2.createOutputResponse()}
+          detailedView
+          authors={[]}
+          documentType="Code/Software"
+          projects={[]}
+          mainEntity={{
+            id: 'wg-id',
+            type: 'WorkingGroups',
+            title: 'Steering Committee',
+          }}
+          workingGroups={[
+            {
+              id: 'wg-1',
+              title: 'Steering Committee',
+            },
+            {
+              id: 'wg-2',
+              title: 'Training, Networking and Communication',
+            },
+          ]}
+          type={undefined}
+        />,
+      );
       expect(
-        screen.getByRole('link', {
-          name: 'Edit Edit',
-        }),
-      ).toBeVisible();
+        getAllByRole('listitem').map(({ textContent }) => textContent),
+      ).toEqual([
+        'Working Group',
+        'Code/Software',
+        'Steering Committee·',
+        'Training, Networking and Communication',
+      ]);
+      expect(getByText('Steering Committee').closest('a')).toHaveAttribute(
+        'href',
+        '/working-groups/wg-1',
+      );
+      expect(
+        getByText('Training, Networking and Communication').closest('a'),
+      ).toHaveAttribute('href', '/working-groups/wg-2');
+
+      rerender(
+        <OutputCard
+          {...gp2.createOutputResponse()}
+          detailedView
+          authors={[]}
+          documentType="Article"
+          mainEntity={{
+            id: 'project-id',
+            type: 'Projects',
+            title:
+              'Polygenic Risk Score Project of PD risk in non-European populations',
+          }}
+          projects={[
+            {
+              id: 'project-id',
+              title:
+                'Polygenic Risk Score Project of PD risk in non-European populations',
+            },
+          ]}
+          workingGroups={[]}
+          type="Blog"
+          subtype="Preprints"
+        />,
+      );
+      expect(
+        getAllByRole('listitem').map(({ textContent }) => textContent),
+      ).toEqual([
+        'Project',
+        'Article',
+        'Blog',
+        'Preprints',
+        'Polygenic Risk Score Project of PD risk in non-European populations',
+      ]);
+      expect(
+        getByText(
+          'Polygenic Risk Score Project of PD risk in non-European populations',
+        ).closest('a'),
+      ).toHaveAttribute('href', '/projects/project-id');
     });
   });
 });

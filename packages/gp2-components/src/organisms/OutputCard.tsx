@@ -1,24 +1,36 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  Caption,
   Card,
+  Display,
   formatDate,
-  Link,
-  Paragraph,
   LinkHeadline,
   pixels,
   SharedResearchMetadata,
   UsersList,
+  lead,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
-import { editIcon, projectIcon, workingGroupIcon } from '../icons';
-import { IconWithLabel } from '../molecules';
+import { AssociationList } from '../molecules';
 
-const { rem } = pixels;
+const { rem, mobileScreen } = pixels;
+
+const cardContainerStyles = css({
+  padding: rem(24),
+});
+
+const detailedViewContainerStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
+});
+
+const titleStyles = css({
+  display: 'flex',
+  marginBottom: rem(12),
+});
 
 const entitiesStyles = css({
+  gap: rem(15),
   margin: `${rem(4)} 0 ${rem(32)}`,
   display: 'flex',
   flexDirection: 'column',
@@ -28,10 +40,24 @@ const entitiesStyles = css({
   },
 });
 
+const timestampStyles = css({
+  color: lead.rgb,
+  display: 'flex',
+  flexDirection: 'row',
+  whiteSpace: 'pre',
+  fontSize: rem(14),
+  fontWeight: 400,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+  },
+});
+
 type OutputCardProps = Pick<
   gp2Model.OutputResponse,
   | 'id'
   | 'addedDate'
+  | 'created'
+  | 'lastUpdatedPartial'
   | 'title'
   | 'workingGroups'
   | 'projects'
@@ -42,12 +68,14 @@ type OutputCardProps = Pick<
   | 'subtype'
   | 'mainEntity'
 > & {
-  isAdministrator?: boolean;
+  detailedView?: boolean;
 };
 
 const OutputCard: React.FC<OutputCardProps> = ({
   id,
   addedDate,
+  created,
+  lastUpdatedPartial,
   title,
   workingGroups,
   projects,
@@ -56,11 +84,11 @@ const OutputCard: React.FC<OutputCardProps> = ({
   subtype,
   authors,
   link,
-  isAdministrator,
   mainEntity,
+  detailedView = false,
 }) => (
   <Card padding={false}>
-    <div css={css({ padding: rem(24) })}>
+    <div css={detailedView ? detailedViewContainerStyles : cardContainerStyles}>
       <div css={css({ display: 'flex', gap: rem(24) })}>
         <SharedResearchMetadata
           pills={
@@ -72,90 +100,61 @@ const OutputCard: React.FC<OutputCardProps> = ({
             ].filter(Boolean) as string[]
           }
           link={link}
+          small={false}
         />
-        {isAdministrator && (
-          <div css={css({ width: 'min-content' })}>
-            <Link
-              href={gp2Routing.outputs({}).output({ outputId: id }).edit({}).$}
-              buttonStyle
-              noMargin
-              small
-              fullWidth
-            >
-              <span
-                css={{
-                  display: 'inline-flex',
-                  gap: rem(8),
-                  marginLeft: rem(6),
-                }}
-              >
-                {'Edit'}
-                {editIcon}
-              </span>
-            </Link>
-          </div>
-        )}
       </div>
-      <div css={css({ margin: `${rem(12)} 0 ${rem(24)}` })}>
-        <LinkHeadline
-          level={2}
-          styleAsHeading={4}
-          href={gp2Routing.outputs({}).output({ outputId: id }).$}
-        >
-          {title}
-        </LinkHeadline>
-      </div>
+      {detailedView ? (
+        <span css={titleStyles}>
+          <Display styleAsHeading={3}>{title}</Display>
+        </span>
+      ) : (
+        <div css={css({ margin: `${rem(12)} 0 ${rem(24)}` })}>
+          <LinkHeadline
+            level={2}
+            styleAsHeading={4}
+            href={gp2Routing.outputs({}).output({ outputId: id }).$}
+          >
+            {title}
+          </LinkHeadline>
+        </div>
+      )}
       <UsersList
         users={authors.map((author) => ({
           ...author,
           href: author.id && gp2Routing.users({}).user({ userId: author.id }).$,
         }))}
-        max={3}
+        max={detailedView ? undefined : 3}
       />
       <div
         css={entitiesStyles}
         className={`${mainEntity.type === 'Projects' ? 'reverse' : ''}`}
       >
-        {workingGroups && (
-          <IconWithLabel icon={workingGroupIcon}>
-            {workingGroups.length > 1 ? (
-              <Paragraph noMargin>
-                {workingGroups.length} Working Groups
-              </Paragraph>
-            ) : (
-              <Link
-                href={
-                  gp2Routing.workingGroups({}).workingGroup({
-                    workingGroupId: workingGroups[0]?.id as string,
-                  }).$
-                }
-              >
-                {workingGroups[0]?.title}
-              </Link>
-            )}
-          </IconWithLabel>
+        {workingGroups?.length && (
+          <AssociationList
+            type="Working Group"
+            inline
+            associations={workingGroups}
+            max={detailedView ? undefined : 1}
+          />
         )}
-        {projects && (
-          <IconWithLabel icon={projectIcon}>
-            {projects.length > 1 ? (
-              <Paragraph noMargin>{projects.length} Projects</Paragraph>
-            ) : (
-              <Link
-                href={
-                  gp2Routing
-                    .projects({})
-                    .project({ projectId: projects[0]?.id as string }).$
-                }
-              >
-                {projects[0]?.title}
-              </Link>
-            )}
-          </IconWithLabel>
+        {projects?.length && (
+          <AssociationList
+            type="Project"
+            inline
+            associations={projects}
+            max={detailedView ? undefined : 1}
+          />
         )}
       </div>
-      <Caption noMargin accent={'lead'} asParagraph>
-        Date Added: {formatDate(new Date(addedDate))}
-      </Caption>
+      <div css={timestampStyles}>
+        <span>Date added: {formatDate(new Date(addedDate || created))}</span>
+        {detailedView && (
+          <span>
+            {' '}
+            · Last updated: {formatDate(new Date(lastUpdatedPartial))}
+          </span>
+        )}
+      </div>
     </div>
   </Card>
 );

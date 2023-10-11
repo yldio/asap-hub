@@ -4,7 +4,7 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { CtaCard } from '../molecules';
-import { OutputDetailPageHeader } from '../organisms';
+import { OutputCard } from '../organisms';
 
 const { rem, mobileScreen } = pixels;
 const { createMailTo, INVITE_SUPPORT_EMAIL } = mail;
@@ -85,7 +85,7 @@ const OutputDetailPage: React.FC<OutputDetailPageProps> = ({
         </div>
       </div>
     ) : null}
-    <OutputDetailPageHeader {...output} />
+    <OutputCard {...output} detailedView />
     <CtaCard
       href={createMailTo(INVITE_SUPPORT_EMAIL)}
       buttonText="Contact Tech Support"

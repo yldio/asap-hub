@@ -89,12 +89,7 @@ const Pill: React.FC<PillProps> = ({
   accent = 'default',
 }) => (
   <span
-    css={({ components }) => [
-      styles,
-      components?.Pill?.styles,
-      accents[accent],
-      ...(accent === 'gray' ? [grayStyles] : []),
-    ]}
+    css={[styles, accents[accent], ...(accent === 'gray' ? [grayStyles] : [])]}
   >
     <Ellipsis>{small ? <small>{children}</small> : children}</Ellipsis>
   </span>

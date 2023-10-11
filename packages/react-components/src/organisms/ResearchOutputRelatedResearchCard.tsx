@@ -7,8 +7,11 @@ import { Pill } from '../atoms';
 import { charcoal } from '../colors';
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { perRem } from '../pixels';
-import { noop, ResearchOutputOption } from '../utils';
-import { getIconForDocumentType as getIconForDocumentTypeCRN } from './RecentSharedOutputs';
+import {
+  noop,
+  ResearchOutputOption,
+  getIconForDocumentType as getIconForDocumentTypeCRN,
+} from '../utils';
 
 const optionStyles = (showPill: boolean) =>
   css({

@@ -1,4 +1,4 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { gp2, ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
@@ -7,36 +7,7 @@ import { Card, Link } from '../atoms';
 import { formatDateToTimezone } from '../date';
 import { perRem, tabletScreen } from '../pixels';
 import { charcoal, lead, steel } from '../colors';
-import {
-  protocol,
-  article,
-  dataset,
-  bioinformatics,
-  labResource,
-  grantDocument,
-} from '../icons';
-
-export const getIconForDocumentType = (
-  documentType: string,
-): EmotionJSX.Element => {
-  switch (documentType) {
-    case 'Protocol':
-      return protocol;
-    case 'Article':
-      return article;
-    case 'Dataset':
-      return dataset;
-    case 'Bioinformatics':
-      return bioinformatics;
-    case 'Lab Resource':
-      return labResource;
-    case 'Grant Document':
-      return grantDocument;
-    default:
-      return protocol;
-  }
-};
-
+import { getIconForDocumentType as getIconForDocumentTypeCRN } from '../utils';
 const container = css({
   display: 'grid',
   color: lead.rgb,
@@ -87,37 +58,45 @@ const paragraphStyle = css({
 
 const titleStyles = css({ fontWeight: 'bold', color: charcoal.rgb });
 
+const getSharedOutputHrefCRN = (id: string) =>
+  sharedResearch({}).researchOutput({
+    researchOutputId: id,
+  }).$;
+
 type RecentSharedOutputProp = {
-  outputs?: ResearchOutputResponse[];
+  outputs?: ResearchOutputResponse[] | gp2.OutputBaseResponse[];
+  getIconForDocumentType?: (documentType: string) => EmotionJSX.Element;
+  getSharedOutputHref?: (id: string) => string;
+  tableTitles?: [string, string, string]; // ensuring it has exactly 3 elements
 };
 
-const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({ outputs }) => (
+const RecentSharedOutputs: React.FC<RecentSharedOutputProp> = ({
+  outputs,
+  getIconForDocumentType = getIconForDocumentTypeCRN,
+  getSharedOutputHref = getSharedOutputHrefCRN,
+  tableTitles = ['Shared Output', 'Type of Output', 'Date Added'],
+}) => (
   <Card>
     <div css={container}>
       <div css={[rowStyles, gridTitleStyles]}>
-        <span css={titleStyles}>Shared Output</span>
-        <span css={titleStyles}>Type of Output</span>
-        <span css={titleStyles}>Date Added</span>
+        {tableTitles.map((title) => (
+          <span key={title} css={titleStyles}>
+            {title}
+          </span>
+        ))}
       </div>
       {outputs &&
         outputs.map(({ id, documentType, addedDate, title, created }) => (
           <div key={id} css={[rowStyles]}>
-            <span css={[titleStyles, rowTitleStyles]}>Event</span>
-            <Link
-              ellipsed
-              href={
-                sharedResearch({}).researchOutput({
-                  researchOutputId: id,
-                }).$
-              }
-            >
+            <span css={[titleStyles, rowTitleStyles]}>{tableTitles[0]}</span>
+            <Link ellipsed href={getSharedOutputHref(id)}>
               {title}
             </Link>
-            <span css={[titleStyles, rowTitleStyles]}>Meeting Materials</span>
+            <span css={[titleStyles, rowTitleStyles]}>{tableTitles[1]}</span>
             <p css={paragraphStyle}>
               {getIconForDocumentType(documentType)} {documentType}
             </p>
-            <span css={[titleStyles, rowTitleStyles]}>Date</span>
+            <span css={[titleStyles, rowTitleStyles]}>{tableTitles[2]}</span>
             <span>
               {formatDateToTimezone(
                 addedDate || created,

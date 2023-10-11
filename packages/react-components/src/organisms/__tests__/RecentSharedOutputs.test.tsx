@@ -1,19 +1,8 @@
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
-import RecentSharedOutputs, {
-  getIconForDocumentType,
-} from '../RecentSharedOutputs';
+import RecentSharedOutputs from '../RecentSharedOutputs';
 import { formatDateToTimezone } from '../../date';
-import {
-  protocol,
-  article,
-  dataset,
-  bioinformatics,
-  labResource,
-  grantDocument,
-} from '../../icons';
-
 const date = '2020-01-01';
 
 it('renders the table research outputs', () => {
@@ -51,14 +40,4 @@ it('falls back to created date if addedDate is undefined', () => {
   expect(
     getByText(formatDateToTimezone('2022-01-01', 'E, d MMM y').toUpperCase()),
   ).toBeVisible();
-});
-
-it('tests getIconForDocumentType return the correct icon', () => {
-  expect(getIconForDocumentType('Article')).toEqual(article);
-  expect(getIconForDocumentType('Protocol')).toEqual(protocol);
-  expect(getIconForDocumentType('Dataset')).toEqual(dataset);
-  expect(getIconForDocumentType('Bioinformatics')).toEqual(bioinformatics);
-  expect(getIconForDocumentType('Lab Resource')).toEqual(labResource);
-  expect(getIconForDocumentType('Grant Document')).toEqual(grantDocument);
-  expect(getIconForDocumentType('')).toEqual(protocol);
 });

@@ -17,6 +17,7 @@ describe('DashboardPageBody', () => {
         latestStats={mockStats}
         upcomingEvents={[]}
         totalOfUpcomingEvents={0}
+        latestUsers={[]}
       />,
     );
     expect(
@@ -31,6 +32,7 @@ describe('DashboardPageBody', () => {
         latestStats={mockStats}
         upcomingEvents={[]}
         totalOfUpcomingEvents={0}
+        latestUsers={[]}
       />,
     );
     expect(screen.getByRole('heading', { name: 'Latest News' })).toBeVisible();
@@ -49,6 +51,7 @@ describe('DashboardPageBody', () => {
               description: 'This is an announcement',
             },
           ]}
+          latestUsers={[]}
         />,
       );
       expect(
@@ -66,6 +69,7 @@ describe('DashboardPageBody', () => {
           latestStats={mockStats}
           upcomingEvents={[]}
           totalOfUpcomingEvents={0}
+          latestUsers={[]}
         />,
       );
       expect(
@@ -80,6 +84,7 @@ describe('DashboardPageBody', () => {
           latestStats={mockStats}
           upcomingEvents={[]}
           totalOfUpcomingEvents={0}
+          latestUsers={[]}
           guides={[
             {
               id: '123',
@@ -112,6 +117,7 @@ describe('DashboardPageBody', () => {
           latestStats={mockStats}
           upcomingEvents={[]}
           totalOfUpcomingEvents={0}
+          latestUsers={[]}
         />,
       );
       expect(
@@ -134,6 +140,7 @@ describe('DashboardPageBody', () => {
               tags: event.tags.map((k) => k.name),
             }))}
           totalOfUpcomingEvents={1}
+          latestUsers={[]}
         />,
       );
       expect(
@@ -161,18 +168,77 @@ describe('DashboardPageBody', () => {
                 tags: event.tags.map((k) => k.name),
               }))}
             totalOfUpcomingEvents={4}
+            latestUsers={[]}
           />
         </Router>,
       );
       expect(
         screen.getByRole('heading', { name: 'Upcoming Events' }),
       ).toBeVisible();
-      const viewAllButton = screen.getByRole('button', { name: 'View All' });
+      const viewAllButton = screen.getByTestId('view-upcoming-events');
       expect(viewAllButton).toBeVisible();
 
       fireEvent.click(viewAllButton);
 
       expect(pushSpy).toHaveBeenCalledWith({ pathname: '/events/upcoming' });
+    });
+  });
+
+  describe('Latest Users', () => {
+    it('should render users if there is a latest user item', async () => {
+      render(
+        <DashboardPageBody
+          news={{ total: 0, items: [] }}
+          latestStats={mockStats}
+          latestUsers={[
+            {
+              ...gp2.createUserResponse(),
+              displayName: 'John Doe',
+            },
+            {
+              ...gp2.createUserResponse(),
+              displayName: 'Octavian Ratiu',
+            },
+            {
+              ...gp2.createUserResponse(),
+              displayName: 'User 3',
+            },
+          ]}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+        />,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Latest Users' }),
+      ).toBeVisible();
+      expect(screen.getByText(/John Doe/i)).toBeVisible();
+      expect(screen.getByText(/Octavian Ratiu/i)).toBeVisible();
+      expect(screen.getByText(/User 3/i)).toBeVisible();
+    });
+
+    it('should render View All', () => {
+      const history = createMemoryHistory();
+      const pushSpy = jest.spyOn(history, 'push');
+      render(
+        <Router history={history}>
+          <DashboardPageBody
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            latestUsers={gp2.createUsersResponse(3).items}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+          />
+        </Router>,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Latest Users' }),
+      ).toBeVisible();
+      const viewAllButton = screen.getByTestId('view-users');
+      expect(viewAllButton).toBeVisible();
+
+      fireEvent.click(viewAllButton);
+
+      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/users' });
     });
   });
 });

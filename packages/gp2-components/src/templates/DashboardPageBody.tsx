@@ -24,6 +24,7 @@ import { mobileQuery } from '../layout';
 import GuideDescription from '../molecules/GuideDescription';
 import { NewsItem } from '../molecules';
 import InfoCard from '../molecules/InfoCard';
+import { DashboardUserCard } from '../organisms';
 
 const { rem } = pixels;
 const infoStyles = css({
@@ -54,6 +55,18 @@ const contentCardsStyles = css({
   },
 });
 
+const usersCardsStyles = css({
+  display: 'flex',
+  gap: rem(15),
+  width: '100%',
+  justifyContent: 'center',
+  justifyItems: 'center',
+  marginTop: rem(24),
+  [mobileQuery]: {
+    flexDirection: 'column',
+  },
+});
+
 type DashboardPageBodyProps = {
   news: gp2Model.ListNewsResponse;
   latestStats: gp2Model.StatsDataObject;
@@ -61,6 +74,7 @@ type DashboardPageBodyProps = {
   announcements?: ComponentProps<typeof RemindersCard>['reminders'];
   upcomingEvents: ComponentProps<typeof EventCard>[];
   guides?: gp2Model.GuideDataObject[];
+  latestUsers: gp2Model.UserResponse[];
 };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
@@ -70,6 +84,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   announcements,
   upcomingEvents,
   guides,
+  latestUsers,
 }) => {
   const { isEnabled } = useFlags();
   const history = useHistory();
@@ -139,8 +154,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           </div>
           <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
           {totalOfUpcomingEvents > 3 && (
-            <p css={viewAllStyles} data-testid="view-upcoming-events">
+            <p css={viewAllStyles}>
               <Button
+                data-testid="view-upcoming-events"
                 onClick={() =>
                   history.push({
                     pathname: gp2Routes.events({}).upcoming({}).$,
@@ -153,6 +169,33 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           )}
         </div>
       )}
+      <div css={columnContainer}>
+        <Headline2>Latest Users</Headline2>
+        <Paragraph accent="lead" noMargin>
+          Explore and learn more about the latest users on the hub.
+        </Paragraph>
+        <div css={usersCardsStyles}>
+          {latestUsers?.map((user) => (
+            <DashboardUserCard
+              user={user}
+              key={`${user.id}-${user.displayName}`}
+            />
+          ))}
+        </div>
+
+        <p css={viewAllStyles}>
+          <Button
+            data-testid="view-users"
+            onClick={() =>
+              history.push({
+                pathname: gp2Routes.users({}).$,
+              })
+            }
+          >
+            View All
+          </Button>
+        </p>
+      </div>
       {lastestNews ? (
         <div css={columnContainer}>
           <Headline2>Latest News</Headline2>

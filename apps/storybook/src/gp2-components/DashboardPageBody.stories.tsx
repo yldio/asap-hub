@@ -25,5 +25,6 @@ export const Normal = () => (
         eventOwner: <div>GP2 Team</div>,
       }))}
     totalOfUpcomingEvents={4}
+    latestUsers={gp2.createUsersResponse(3).items}
   />
 );

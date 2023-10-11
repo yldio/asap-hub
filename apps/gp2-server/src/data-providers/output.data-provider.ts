@@ -415,6 +415,10 @@ const getSearchWhere = (search: string) => {
     );
   return [{ OR: where }];
 };
+const linkEntityValue = (value: string | string[]) =>
+  Array.isArray(value)
+    ? value.map((id) => getLinkEntity(id))
+    : getLinkEntity(value);
 
 const cleanOutput = (
   outputToUpdate: Omit<
@@ -423,69 +427,37 @@ const cleanOutput = (
   >,
 ) =>
   Object.entries(outputToUpdate).reduce((acc, [key, value]) => {
-    if (key === 'authors') {
-      return {
-        ...acc,
-        authors: (value as gp2Model.OutputUpdateDataObject['authors']).map(
-          (author) =>
-            getLinkEntity(author.userId || (author.externalUserId as string)),
-        ),
-      };
+    switch (key) {
+      case 'authors':
+        return {
+          ...acc,
+          authors: (value as gp2Model.OutputUpdateDataObject['authors']).map(
+            (author) =>
+              getLinkEntity(author.userId || (author.externalUserId as string)),
+          ),
+        };
+      case 'createdBy':
+        return {
+          ...acc,
+          createdBy: linkEntityValue(value as string),
+          updatedBy: linkEntityValue(value as string),
+        };
+      case 'updatedBy':
+        return { ...acc, updatedBy: linkEntityValue(value as string) };
+      case 'tagIds':
+        return { ...acc, tags: linkEntityValue(value as string[]) };
+      case 'contributingCohortIds':
+        return {
+          ...acc,
+          contributingCohorts: linkEntityValue(value as string[]),
+        };
+      case 'relatedOutputIds':
+        return { ...acc, relatedOutputs: linkEntityValue(value as string[]) };
+      case 'relatedEventIds':
+        return { ...acc, relatedEvents: linkEntityValue(value as string[]) };
+      default:
+        return { ...acc, [key]: value };
     }
-    if (key === 'createdBy') {
-      return {
-        ...acc,
-        updatedBy: getLinkEntity(value as string),
-        createdBy: getLinkEntity(value as string),
-      };
-    }
-    if (key === 'updatedBy') {
-      return {
-        ...acc,
-        updatedBy: getLinkEntity(value as string),
-      };
-    }
-    if (key === 'tagIds') {
-      return {
-        ...acc,
-        tags: (value as gp2Model.OutputUpdateDataObject['tagIds'])?.map((id) =>
-          getLinkEntity(id),
-        ),
-      };
-    }
-    if (key === 'contributingCohortIds') {
-      return {
-        ...acc,
-        contributingCohorts: (
-          value as gp2Model.OutputUpdateDataObject['contributingCohortIds']
-        )?.map((id) => getLinkEntity(id)),
-      };
-    }
-    if (key === 'relatedOutputIds') {
-      return {
-        ...acc,
-        relatedOutputs: (
-          value as gp2Model.OutputUpdateDataObject['relatedOutputIds']
-        ).map((id) => getLinkEntity(id)),
-      };
-    }
-    if (key === 'relatedEventIds') {
-      return {
-        ...acc,
-        relatedEvents: (
-          value as gp2Model.OutputUpdateDataObject['relatedEventIds']
-        ).map((id) => getLinkEntity(id)),
-      };
-    }
-    if (key === 'contributingCohortIds') {
-      return {
-        ...acc,
-        contributingCohorts: (
-          value as gp2Model.OutputUpdateDataObject['contributingCohortIds']
-        )?.map((id) => getLinkEntity(id)),
-      };
-    }
-    return { ...acc, [key]: value };
   }, {} as { [key: string]: unknown });
 
 type OutputsCollection = gp2Contentful.FetchOutputsQuery['outputsCollection'];

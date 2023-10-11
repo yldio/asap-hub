@@ -42,6 +42,9 @@ export const usersContentQueryFragment = gql`
     github
     googleScholar
     orcid
+    orcidLastModifiedDate
+    orcidLastSyncDate
+    orcidWorks
     researchGate
     researcherId
     connections

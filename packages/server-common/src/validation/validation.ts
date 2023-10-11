@@ -77,7 +77,7 @@ export const fetchOptionsValidationSchema: JSONSchemaType<FetchOptions> = {
   additionalProperties: false,
 };
 
-export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOptions> =
+export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersApiOptions> =
   {
     type: 'object',
     properties: {
@@ -92,7 +92,7 @@ export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersOpt
             items: { type: 'string', enum: gp2.userRegions },
             nullable: true,
           },
-          keywords: {
+          tags: {
             type: 'array',
             items: { type: 'string' },
             nullable: true,

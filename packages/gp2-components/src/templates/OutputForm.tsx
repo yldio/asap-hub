@@ -41,6 +41,15 @@ const DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED = [
   'Training Materials',
   'Procedural Form',
 ];
+const DOC_TYPES_IDENTIFIER_NOT_REQUIRED: gp2Model.OutputDocumentType[] = [
+  'Training Materials',
+  'GP2 Reports',
+];
+const DOC_TYPES_COHORTS_NOT_REQUIRED: gp2Model.OutputDocumentType[] = [
+  'Training Materials',
+  'GP2 Reports',
+  'Code/Software',
+];
 
 export const getRelatedOutputs = (
   relatedOutputs: gp2Model.OutputResponse['relatedOutputs'],
@@ -90,12 +99,19 @@ type OutputFormProps = {
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
   >['loadOptions'];
-  keywordSuggestions: gp2Model.TagDataObject[];
+  tagSuggestions: gp2Model.TagDataObject[];
   getRelatedOutputSuggestions: NonNullable<
     ComponentProps<
       typeof OutputRelatedResearchCard
     >['getRelatedResearchSuggestions']
   >;
+  cohortSuggestions: gp2Model.ContributingCohortDataObject[];
+  workingGroupSuggestions: Pick<
+    gp2Model.WorkingGroupDataObject,
+    'id' | 'title'
+  >[];
+  projectSuggestions: Pick<gp2Model.ProjectDataObject, 'id' | 'title'>[];
+  mainEntityId: string;
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -113,6 +129,9 @@ type OutputFormProps = {
     | 'rrid'
     | 'accessionNumber'
     | 'relatedOutputs'
+    | 'contributingCohorts'
+    | 'workingGroups'
+    | 'projects'
   >
 >;
 
@@ -132,7 +151,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
   entityType,
   shareOutput,
   documentType,
-  keywordSuggestions,
+  tagSuggestions,
   getAuthorSuggestions = noop,
   title,
   link,
@@ -149,6 +168,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
   accessionNumber,
   relatedOutputs = [],
   getRelatedOutputSuggestions,
+  cohortSuggestions,
+  contributingCohorts,
+  mainEntityId,
+  workingGroups,
+  projects,
+  workingGroupSuggestions,
+  projectSuggestions,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -178,6 +204,18 @@ const OutputForm: React.FC<OutputFormProps> = ({
       ComponentProps<typeof OutputRelatedResearchCard>['relatedResearch']
     >
   >(getRelatedOutputs(relatedOutputs));
+
+  const [newWorkingGroups, setWorkingGroups] = useState<gp2Model.OutputOwner[]>(
+    workingGroups || [],
+  );
+
+  const [newProjects, setProjects] = useState<gp2Model.OutputOwner[]>(
+    projects || [],
+  );
+
+  const [newCohorts, setCohorts] = useState<
+    gp2Model.ContributingCohortDataObject[]
+  >(contributingCohorts || []);
 
   const [newAuthors, setAuthors] = useState<
     ComponentPropsWithRef<typeof AuthorSelect>['values']
@@ -233,6 +271,21 @@ const OutputForm: React.FC<OutputFormProps> = ({
       title: output.label,
       documentType: output.documentType as gp2Model.OutputDocumentType,
     })),
+    mainEntityId,
+    contributingCohorts:
+      newCohorts.length > 0 ? newCohorts.map(({ id }) => ({ id })) : undefined,
+    workingGroupIds:
+      newWorkingGroups.length > 0
+        ? newWorkingGroups
+            .filter(({ id }) => id !== mainEntityId)
+            .map(({ id }) => id)
+        : undefined,
+    projectIds:
+      newProjects.length > 0
+        ? newProjects
+            .filter(({ id }) => id !== mainEntityId)
+            .map(({ id }) => id)
+        : undefined,
     ...createIdentifierField(newIdentifierType, identifier),
   };
 
@@ -257,6 +310,39 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isFieldDirty(type, newType) ||
     isFieldDirty(subtype, newSubtype) ||
     isFieldDirty(identifierType, newIdentifierType) ||
+    isFieldDirty(sharingStatus, newSharingStatus) ||
+    isFieldDirty(gp2Supported, newGp2Supported) ||
+    (workingGroups
+      ? !workingGroups.every(
+          (workingGroup, index) =>
+            index ===
+            newWorkingGroups?.findIndex(
+              (newWorkingGroup) => newWorkingGroup.id === workingGroup.id,
+            ),
+        )
+      : !!newWorkingGroups?.length) ||
+    (projects
+      ? !projects.every(
+          (project, index) =>
+            index ===
+            newProjects?.findIndex(
+              (newProject) => newProject.id === project.id,
+            ),
+        )
+      : !!newProjects?.length) ||
+    (tags
+      ? !tags.every(
+          (tag, index) =>
+            index === newTags?.findIndex((newTag) => newTag.id === tag.id),
+        )
+      : !!newTags?.length) ||
+    (contributingCohorts
+      ? !contributingCohorts.every(
+          (cohort, index) =>
+            index ===
+            newCohorts?.findIndex((newCohort) => newCohort.id === cohort.id),
+        )
+      : !!newCohorts?.length) ||
     (authors
       ? !authors.every(
           (author, index) =>
@@ -402,7 +488,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 value: id,
               }))}
               enabled={!isSaving}
-              suggestions={keywordSuggestions.map(({ id, name }) => ({
+              suggestions={tagSuggestions.map(({ id, name }) => ({
                 label: name,
                 value: id,
               }))}
@@ -433,8 +519,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
               </Link>
             </div>
 
-            {documentType !== 'GP2 Reports' &&
-            documentType !== 'Training Materials' ? (
+            {!DOC_TYPES_IDENTIFIER_NOT_REQUIRED.includes(documentType) ? (
               <OutputIdentifier
                 documentType={documentType}
                 identifier={identifier}
@@ -446,6 +531,118 @@ const OutputForm: React.FC<OutputFormProps> = ({
             ) : null}
           </FormCard>
           <FormCard title="Who were the contributors?">
+            <LabeledMultiSelect
+              title="Working Groups"
+              description="Add other working groups that contributed to this output. Those working groups will also then be able to edit."
+              subtitle={entityType === 'project' ? '(optional)' : '(required)'}
+              required={entityType === 'workingGroup'}
+              enabled={!isSaving}
+              placeholder="Start typing..."
+              suggestions={workingGroupSuggestions.map((workingGroup) => ({
+                label: workingGroup.title,
+                value: workingGroup.id,
+              }))}
+              onChange={(newValues) => {
+                setWorkingGroups(
+                  newValues
+                    .slice(0, 10)
+                    .reduce(
+                      (acc, curr) => [
+                        ...acc,
+                        { id: curr.value, title: curr.label },
+                      ],
+                      [] as gp2Model.OutputOwner[],
+                    ),
+                );
+              }}
+              values={newWorkingGroups.map((workingGroup, idx) => ({
+                label: workingGroup.title,
+                value: workingGroup.id,
+                isFixed: idx === 0 && entityType === 'workingGroup',
+              }))}
+              noOptionsMessage={({ inputValue }) =>
+                `Sorry, no working groups match ${inputValue}`
+              }
+            />
+            <LabeledMultiSelect
+              title="Projects"
+              description="Add other projects that contributed to this output. Those projects will also then be able to edit."
+              subtitle={entityType === 'project' ? '(required)' : '(optional)'}
+              enabled={!isSaving}
+              required={entityType === 'project'}
+              placeholder="Start typing..."
+              suggestions={projectSuggestions.map((project) => ({
+                label: project.title,
+                value: project.id,
+              }))}
+              onChange={(newValues) => {
+                setProjects(
+                  newValues
+                    .slice(0, 10)
+                    .reduce(
+                      (acc, curr) => [
+                        ...acc,
+                        { id: curr.value, title: curr.label },
+                      ],
+                      [] as gp2Model.OutputOwner[],
+                    ),
+                );
+              }}
+              values={newProjects.map((project, idx) => ({
+                label: project.title,
+                value: project.id,
+                isFixed: idx === 0 && entityType === 'project',
+              }))}
+              noOptionsMessage={({ inputValue }) =>
+                `Sorry, no projects match ${inputValue}`
+              }
+            />
+            {!DOC_TYPES_COHORTS_NOT_REQUIRED.includes(documentType) ? (
+              <>
+                <LabeledMultiSelect
+                  title="Cohorts"
+                  subtitle="(optional)"
+                  description={
+                    <>Add other cohorts that contributed to this output.</>
+                  }
+                  values={newCohorts.map(({ id, name }) => ({
+                    label: name,
+                    value: id,
+                  }))}
+                  enabled={!isSaving}
+                  suggestions={cohortSuggestions.map(({ id, name }) => ({
+                    label: name,
+                    value: id,
+                  }))}
+                  onChange={(newValues) => {
+                    setCohorts(
+                      newValues
+                        .slice(0, 10)
+                        .reduce(
+                          (acc, curr) => [
+                            ...acc,
+                            { id: curr.value, name: curr.label },
+                          ],
+                          [] as gp2Model.ContributingCohortDataObject[],
+                        ),
+                    );
+                  }}
+                  placeholder="Start typing..."
+                  maxMenuHeight={160}
+                />
+                <div css={linkStyles}>
+                  Don’t see a cohort in this list?{' '}
+                  <Link
+                    href={mailToSupport({
+                      email: INVITE_SUPPORT_EMAIL,
+                      subject: 'New Cohort',
+                    })}
+                  >
+                    Contact {INVITE_SUPPORT_EMAIL}
+                  </Link>
+                </div>
+              </>
+            ) : null}
             <AuthorSelect
               title="Authors"
               description=""

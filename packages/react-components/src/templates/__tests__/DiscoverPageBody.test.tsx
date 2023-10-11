@@ -7,7 +7,6 @@ import DiscoverPageBody from '../DiscoverPageBody';
 const props: ComponentProps<typeof DiscoverPageBody> = {
   aboutUs: '',
   pages: [],
-  training: [],
   members: [],
   scientificAdvisoryBoard: [],
 };

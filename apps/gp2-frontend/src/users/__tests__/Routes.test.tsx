@@ -10,7 +10,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getAlgoliaProjects } from '../../projects/api';
-import { getKeywords } from '../../shared/api';
+import { getTags } from '../../shared/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import {
   createProjectListAlgoliaResponse,
@@ -61,10 +61,8 @@ describe('Routes', () => {
       typeof getAlgoliaUsers
     >;
     mockGetUsers.mockResolvedValue(createUserListAlgoliaResponse(1));
-    const mockGetKeywords = getKeywords as jest.MockedFunction<
-      typeof getKeywords
-    >;
-    mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
+    const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
+    mockGetTags.mockResolvedValue(gp2.createTagsResponse());
 
     await renderRoutes();
     expect(
@@ -83,10 +81,8 @@ describe('Routes', () => {
     const mockGetUsers = getAlgoliaUsers as jest.MockedFunction<
       typeof getAlgoliaUsers
     >;
-    const mockGetKeywords = getKeywords as jest.MockedFunction<
-      typeof getKeywords
-    >;
-    mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
+    const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
+    mockGetTags.mockResolvedValue(gp2.createTagsResponse());
     mockGetUsers.mockRejectedValue(new Error('error'));
 
     await renderRoutes();

@@ -8,13 +8,13 @@ import { discover } from '@asap-hub/routing';
 import Tutorial from '../Tutorial';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { refreshTutorialItemState } from '../state';
 import { getTutorialById } from '../api';
+import { refreshTutorialItemState } from '../state';
 
 jest.mock('../api');
 
 const tutorial: TutorialsResponse = {
-  id: '55724942-3408-4ad6-9a73-14b92226ffb6',
+  id: '1',
   created: '2020-09-07T17:36:54Z',
   title: 'Tutorial Title',
   authors: [],

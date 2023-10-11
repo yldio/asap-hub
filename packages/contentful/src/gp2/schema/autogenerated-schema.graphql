@@ -287,6 +287,10 @@ enum AssetLinkingCollectionsUsersCollectionOrder {
   linkedIn_DESC
   onboarded_ASC
   onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
   region_ASC
@@ -562,6 +566,7 @@ input ContributingCohortsFilter {
 type ContributingCohortsLinkingCollections {
   contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder], preview: Boolean, skip: Int = 0): ContributingCohortsMembershipCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
 }
 
 enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder {
@@ -577,6 +582,45 @@ enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectio
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+enum ContributingCohortsLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership)"""
@@ -649,6 +693,10 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   linkedIn_DESC
   onboarded_ASC
   onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
   region_ASC
@@ -960,7 +1008,6 @@ type Events implements Entry {
   googleId(locale: String): String
   hidden(locale: String): Boolean
   hideMeetingLink(locale: String): Boolean
-  keywordsCollection(limit: Int = 100, locale: String, order: [EventsKeywordsCollectionOrder], preview: Boolean, skip: Int = 0, where: KeywordsFilter): EventsKeywordsCollection
   linkedFrom(allowedLocales: [String]): EventsLinkingCollections
   meetingLink(locale: String): String
   meetingMaterials(locale: String): JSON
@@ -1043,8 +1090,6 @@ input EventsFilter {
   hideMeetingLink: Boolean
   hideMeetingLink_exists: Boolean
   hideMeetingLink_not: Boolean
-  keywords: cfKeywordsNestedFilter
-  keywordsCollection_exists: Boolean
   meetingLink: String
   meetingLink_contains: String
   meetingLink_exists: Boolean
@@ -1137,26 +1182,6 @@ input EventsFilter {
   videoRecording_contains: String
   videoRecording_exists: Boolean
   videoRecording_not_contains: String
-}
-
-type EventsKeywordsCollection {
-  items: [Keywords]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-enum EventsKeywordsCollectionOrder {
-  name_ASC
-  name_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
 }
 
 type EventsLinkingCollections {
@@ -1709,102 +1734,6 @@ input ImageTransformOptions {
 """The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."""
 scalar JSON
 
-"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/keywords)"""
-type Keywords implements Entry {
-  contentfulMetadata: ContentfulMetadata!
-  linkedFrom(allowedLocales: [String]): KeywordsLinkingCollections
-  name(locale: String): String
-  sys: Sys!
-}
-
-type KeywordsCollection {
-  items: [Keywords]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-input KeywordsFilter {
-  AND: [KeywordsFilter]
-  OR: [KeywordsFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  name: String
-  name_contains: String
-  name_exists: Boolean
-  name_in: [String]
-  name_not: String
-  name_not_contains: String
-  name_not_in: [String]
-  sys: SysFilter
-}
-
-type KeywordsLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, order: [KeywordsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
-}
-
-enum KeywordsLinkingCollectionsEventsCollectionOrder {
-  copyMeetingLink_ASC
-  copyMeetingLink_DESC
-  endDateTimeZone_ASC
-  endDateTimeZone_DESC
-  endDate_ASC
-  endDate_DESC
-  eventLink_ASC
-  eventLink_DESC
-  googleId_ASC
-  googleId_DESC
-  hidden_ASC
-  hidden_DESC
-  hideMeetingLink_ASC
-  hideMeetingLink_DESC
-  meetingLink_ASC
-  meetingLink_DESC
-  meetingMaterialsPermanentlyUnavailable_ASC
-  meetingMaterialsPermanentlyUnavailable_DESC
-  notesPermanentlyUnavailable_ASC
-  notesPermanentlyUnavailable_DESC
-  notesUpdatedAt_ASC
-  notesUpdatedAt_DESC
-  presentationPermanentlyUnavailable_ASC
-  presentationPermanentlyUnavailable_DESC
-  presentationUpdatedAt_ASC
-  presentationUpdatedAt_DESC
-  startDateTimeZone_ASC
-  startDateTimeZone_DESC
-  startDate_ASC
-  startDate_DESC
-  status_ASC
-  status_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
-  videoRecordingPermanentlyUnavailable_ASC
-  videoRecordingPermanentlyUnavailable_DESC
-  videoRecordingUpdatedAt_ASC
-  videoRecordingUpdatedAt_DESC
-}
-
-enum KeywordsOrder {
-  name_ASC
-  name_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-}
-
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats)"""
 type LatestStats implements Entry {
   articleCount(locale: String): Int
@@ -2214,6 +2143,7 @@ type Outputs implements Entry {
   adminNotes(locale: String): String
   authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: OutputsAuthorsFilter): OutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
+  contributingCohortsCollection(limit: Int = 100, locale: String, order: [OutputsContributingCohortsCollectionOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsFilter): OutputsContributingCohortsCollection
   createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
   description(locale: String): String
   documentType(locale: String): String
@@ -2223,7 +2153,7 @@ type Outputs implements Entry {
   link(locale: String): String
   linkedFrom(allowedLocales: [String]): OutputsLinkingCollections
   publishDate(locale: String): DateTime
-  relatedEntity(locale: String, preview: Boolean): OutputsRelatedEntity
+  relatedEntitiesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: OutputsRelatedEntitiesFilter): OutputsRelatedEntitiesCollection
   relatedOutputsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedOutputsCollectionOrder], preview: Boolean, skip: Int = 0, where: OutputsFilter): OutputsRelatedOutputsCollection
   rrid(locale: String): String
   sharingStatus(locale: String): String
@@ -2265,6 +2195,26 @@ type OutputsCollection {
   total: Int!
 }
 
+type OutputsContributingCohortsCollection {
+  items: [ContributingCohorts]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum OutputsContributingCohortsCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 input OutputsFilter {
   AND: [OutputsFilter]
   OR: [OutputsFilter]
@@ -2294,6 +2244,8 @@ input OutputsFilter {
   authors: cfauthorsMultiTypeNestedFilter
   authorsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
+  contributingCohorts: cfContributingCohortsNestedFilter
+  contributingCohortsCollection_exists: Boolean
   createdBy: cfUsersNestedFilter
   createdBy_exists: Boolean
   description: String
@@ -2349,7 +2301,8 @@ input OutputsFilter {
   publishDate_lte: DateTime
   publishDate_not: DateTime
   publishDate_not_in: [DateTime]
-  relatedEntity_exists: Boolean
+  relatedEntities: cfrelatedEntitiesMultiTypeNestedFilter
+  relatedEntitiesCollection_exists: Boolean
   relatedOutputs: cfOutputsNestedFilter
   relatedOutputsCollection_exists: Boolean
   rrid: String
@@ -2477,7 +2430,32 @@ enum OutputsOrder {
   type_DESC
 }
 
-union OutputsRelatedEntity = Projects | WorkingGroups
+type OutputsRelatedEntitiesCollection {
+  items: [OutputsRelatedEntitiesItem]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input OutputsRelatedEntitiesFilter {
+  AND: [OutputsRelatedEntitiesFilter]
+  OR: [OutputsRelatedEntitiesFilter]
+  calendar_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  milestonesCollection_exists: Boolean
+  resourcesCollection_exists: Boolean
+  sys: SysFilter
+  tagsCollection_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
+}
+
+union OutputsRelatedEntitiesItem = Projects | WorkingGroups
 
 type OutputsRelatedOutputsCollection {
   items: [Outputs]!
@@ -3044,8 +3022,6 @@ type Query {
   guideCollection(limit: Int = 100, locale: String, order: [GuideOrder], preview: Boolean, skip: Int = 0, where: GuideFilter): GuideCollection
   guideDescription(id: String!, locale: String, preview: Boolean): GuideDescription
   guideDescriptionCollection(limit: Int = 100, locale: String, order: [GuideDescriptionOrder], preview: Boolean, skip: Int = 0, where: GuideDescriptionFilter): GuideDescriptionCollection
-  keywords(id: String!, locale: String, preview: Boolean): Keywords
-  keywordsCollection(limit: Int = 100, locale: String, order: [KeywordsOrder], preview: Boolean, skip: Int = 0, where: KeywordsFilter): KeywordsCollection
   latestStats(id: String!, locale: String, preview: Boolean): LatestStats
   latestStatsCollection(limit: Int = 100, locale: String, order: [LatestStatsOrder], preview: Boolean, skip: Int = 0, where: LatestStatsFilter): LatestStatsCollection
   media(id: String!, locale: String, preview: Boolean): Media
@@ -3442,6 +3418,10 @@ enum TagsLinkingCollectionsUsersCollectionOrder {
   linkedIn_DESC
   onboarded_ASC
   onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
   region_ASC
@@ -3525,6 +3505,9 @@ type Users implements Entry {
   linkedIn(locale: String): String
   onboarded(locale: String): Boolean
   orcid(locale: String): String
+  orcidLastModifiedDate(locale: String): DateTime
+  orcidLastSyncDate(locale: String): DateTime
+  orcidWorks(locale: String): JSON
   positions(locale: String): JSON
   questions(locale: String): [String]
   region(locale: String): String
@@ -3679,6 +3662,25 @@ input UsersFilter {
   onboarded_exists: Boolean
   onboarded_not: Boolean
   orcid: String
+  orcidLastModifiedDate: DateTime
+  orcidLastModifiedDate_exists: Boolean
+  orcidLastModifiedDate_gt: DateTime
+  orcidLastModifiedDate_gte: DateTime
+  orcidLastModifiedDate_in: [DateTime]
+  orcidLastModifiedDate_lt: DateTime
+  orcidLastModifiedDate_lte: DateTime
+  orcidLastModifiedDate_not: DateTime
+  orcidLastModifiedDate_not_in: [DateTime]
+  orcidLastSyncDate: DateTime
+  orcidLastSyncDate_exists: Boolean
+  orcidLastSyncDate_gt: DateTime
+  orcidLastSyncDate_gte: DateTime
+  orcidLastSyncDate_in: [DateTime]
+  orcidLastSyncDate_lt: DateTime
+  orcidLastSyncDate_lte: DateTime
+  orcidLastSyncDate_not: DateTime
+  orcidLastSyncDate_not_in: [DateTime]
+  orcidWorks_exists: Boolean
   orcid_contains: String
   orcid_exists: Boolean
   orcid_in: [String]
@@ -3855,6 +3857,10 @@ enum UsersOrder {
   linkedIn_DESC
   onboarded_ASC
   onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
   orcid_ASC
   orcid_DESC
   region_ASC
@@ -4568,20 +4574,6 @@ input cfGuideNestedFilter {
   title_not_in: [String]
 }
 
-input cfKeywordsNestedFilter {
-  AND: [cfKeywordsNestedFilter]
-  OR: [cfKeywordsNestedFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  name: String
-  name_contains: String
-  name_exists: Boolean
-  name_in: [String]
-  name_not: String
-  name_not_contains: String
-  name_not_in: [String]
-  sys: SysFilter
-}
-
 input cfLatestStatsNestedFilter {
   AND: [cfLatestStatsNestedFilter]
   OR: [cfLatestStatsNestedFilter]
@@ -4679,6 +4671,7 @@ input cfOutputsNestedFilter {
   adminNotes_not_in: [String]
   authorsCollection_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
+  contributingCohortsCollection_exists: Boolean
   createdBy_exists: Boolean
   description: String
   description_contains: String
@@ -4733,7 +4726,7 @@ input cfOutputsNestedFilter {
   publishDate_lte: DateTime
   publishDate_not: DateTime
   publishDate_not_in: [DateTime]
-  relatedEntity_exists: Boolean
+  relatedEntitiesCollection_exists: Boolean
   relatedOutputsCollection_exists: Boolean
   rrid: String
   rrid_contains: String
@@ -4950,6 +4943,25 @@ input cfUsersNestedFilter {
   onboarded_exists: Boolean
   onboarded_not: Boolean
   orcid: String
+  orcidLastModifiedDate: DateTime
+  orcidLastModifiedDate_exists: Boolean
+  orcidLastModifiedDate_gt: DateTime
+  orcidLastModifiedDate_gte: DateTime
+  orcidLastModifiedDate_in: [DateTime]
+  orcidLastModifiedDate_lt: DateTime
+  orcidLastModifiedDate_lte: DateTime
+  orcidLastModifiedDate_not: DateTime
+  orcidLastModifiedDate_not_in: [DateTime]
+  orcidLastSyncDate: DateTime
+  orcidLastSyncDate_exists: Boolean
+  orcidLastSyncDate_gt: DateTime
+  orcidLastSyncDate_gte: DateTime
+  orcidLastSyncDate_in: [DateTime]
+  orcidLastSyncDate_lt: DateTime
+  orcidLastSyncDate_lte: DateTime
+  orcidLastSyncDate_not: DateTime
+  orcidLastSyncDate_not_in: [DateTime]
+  orcidWorks_exists: Boolean
   orcid_contains: String
   orcid_exists: Boolean
   orcid_in: [String]
@@ -5091,6 +5103,24 @@ input cfauthorsMultiTypeNestedFilter {
   orcid_not_contains: String
   orcid_not_in: [String]
   sys: SysFilter
+}
+
+input cfrelatedEntitiesMultiTypeNestedFilter {
+  AND: [cfrelatedEntitiesMultiTypeNestedFilter]
+  OR: [cfrelatedEntitiesMultiTypeNestedFilter]
+  calendar_exists: Boolean
+  contentfulMetadata: ContentfulMetadataFilter
+  milestonesCollection_exists: Boolean
+  resourcesCollection_exists: Boolean
+  sys: SysFilter
+  tagsCollection_exists: Boolean
+  title: String
+  title_contains: String
+  title_exists: Boolean
+  title_in: [String]
+  title_not: String
+  title_not_contains: String
+  title_not_in: [String]
 }
 
 input cfuserMultiTypeNestedFilter {

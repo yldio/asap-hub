@@ -24,7 +24,22 @@ describe('User index handler', () => {
     await indexHandler(createEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: userResponse,
+      data: expect.objectContaining(userResponse),
+      type: 'user',
+    });
+  });
+
+  test('Should populate the _tags field before saving the user to Algolia', async () => {
+    const userResponse = getUserResponse();
+    userResponse.tags = [{ id: '1', name: 'user tag' }];
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+    await indexHandler(createEvent('42'));
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: {
+        ...userResponse,
+        _tags: expect.arrayContaining(['user tag']),
+      },
       type: 'user',
     });
   });
@@ -36,7 +51,7 @@ describe('User index handler', () => {
     await indexHandler(updateEvent('42'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: userResponse,
+      data: expect.objectContaining(userResponse),
       type: 'user',
     });
   });
@@ -143,7 +158,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: userResponse,
+        data: expect.objectContaining(userResponse),
         type: 'user',
       });
     });
@@ -163,7 +178,7 @@ describe('User index handler', () => {
       expect(algoliaSearchClientMock.remove).not.toHaveBeenCalled();
       expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
       expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-        data: userResponse,
+        data: expect.objectContaining(userResponse),
         type: 'user',
       });
     });

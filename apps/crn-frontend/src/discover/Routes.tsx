@@ -1,8 +1,9 @@
 import { FC, lazy, useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { discover } from '@asap-hub/routing';
-import { DiscoverPage } from '@asap-hub/react-components';
+import { DiscoverPage, TutorialsPage } from '@asap-hub/react-components';
+import { useSearch } from '../hooks';
 
 const loadGuides = () =>
   import(/* webpackChunkName: "discover-guides" */ './Guides');
@@ -26,6 +27,7 @@ const Discover: FC<Record<string, never>> = () => {
   }, []);
 
   const { path } = useRouteMatch();
+  const { searchQuery, debouncedSearchQuery, setSearchQuery } = useSearch();
 
   return (
     <Switch>
@@ -48,9 +50,14 @@ const Discover: FC<Record<string, never>> = () => {
             </Frame>
           </Route>
           <Route exact path={path + discover({}).tutorials.template}>
-            <Frame title="Tutorials">
-              <TutorialList />
-            </Frame>
+            <TutorialsPage
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+            >
+              <SearchFrame title="Tutorials">
+                <TutorialList searchQuery={debouncedSearchQuery} />
+              </SearchFrame>
+            </TutorialsPage>
           </Route>
           <Redirect to={discover({}).guides({}).$} />
         </Switch>

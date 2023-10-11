@@ -128,12 +128,18 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
         },
         nullable: true,
       },
-      workingGroupId: {
-        type: 'string',
+      workingGroupIds: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
         nullable: true,
       },
-      projectId: {
-        type: 'string',
+      projectIds: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
         nullable: true,
       },
       relatedOutputs: {
@@ -171,8 +177,20 @@ const outputPostRequestValidationSchema: JSONSchemaType<gp2Model.OutputPostReque
       doi: { type: 'string', nullable: true },
       rrid: { type: 'string', nullable: true },
       accessionNumber: { type: 'string', nullable: true },
+      mainEntityId: { type: 'string' },
+      contributingCohorts: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+          },
+          required: ['id'],
+        },
+        nullable: true,
+      },
     },
-    required: ['documentType', 'title'],
+    required: ['documentType', 'title', 'sharingStatus', 'mainEntityId'],
     additionalProperties: false,
   };
 

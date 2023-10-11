@@ -12,20 +12,36 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import NotificationMessages from '../../NotificationMessages';
-import { getKeywords } from '../../shared/api';
-import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getOutput, getOutputs, updateOutput } from '../api';
+import { getTags, getContributingCohorts } from '../../shared/api';
+import { getAlgoliaProjects } from '../../projects/api';
+import { getWorkingGroups } from '../../working-groups/api';
 import ShareOutput from '../ShareOutput';
+import {
+  createOutputListAlgoliaResponse,
+  createProjectListAlgoliaResponse,
+} from '../../__fixtures__/algolia';
 
 jest.mock('../../outputs/api');
 jest.mock('../../shared/api');
+jest.mock('../../projects/api');
+jest.mock('../../working-groups/api');
 
 const mockUpdateOutput = updateOutput as jest.MockedFunction<
   typeof updateOutput
 >;
 const mockGetOutput = getOutput as jest.MockedFunction<typeof getOutput>;
-const mockGetKeywords = getKeywords as jest.MockedFunction<typeof getKeywords>;
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
+const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
+const mockGetContributingCohorts =
+  getContributingCohorts as jest.MockedFunction<typeof getContributingCohorts>;
+
+const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
+  typeof getWorkingGroups
+>;
+const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
+  typeof getAlgoliaProjects
+>;
 
 const renderShareOutput = async (outputId: string = 'ro0') => {
   render(
@@ -62,8 +78,13 @@ const renderShareOutput = async (outputId: string = 'ro0') => {
 describe('ShareOutput', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    mockGetKeywords.mockResolvedValue(gp2.createTagsResponse());
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
+    mockGetTags.mockResolvedValue(gp2.createTagsResponse());
+    mockGetContributingCohorts.mockResolvedValue(
+      gp2.contributingCohortResponse,
+    );
+    mockGetWorkingGroups.mockResolvedValue(gp2.createWorkingGroupsResponse());
+    mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
   });
   afterEach(jest.resetAllMocks);
   mockConsoleError();
@@ -91,6 +112,7 @@ describe('ShareOutput', () => {
       id,
       title,
       link,
+      projects: [{ id: '42', title: 'a title' }],
     });
     mockUpdateOutput.mockResolvedValueOnce(gp2.createOutputResponse());
 

@@ -1,10 +1,8 @@
 import { gp2 } from '@asap-hub/model';
 import { useAuth0GP2 } from '@asap-hub/react-context';
 import {
-  atom,
   atomFamily,
   DefaultValue,
-  selector,
   selectorFamily,
   useRecoilState,
   useRecoilValue,
@@ -14,7 +12,6 @@ import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
   getAlgoliaUsers,
-  getContributingCohorts,
   getUser,
   patchUser,
   postUserAvatar,
@@ -153,18 +150,3 @@ export const usePostUserAvatarById = (id: string) => {
     await refreshUser();
   };
 };
-
-const contributingCohortSelector = selector({
-  key: 'contributingCohorts',
-  get: ({ get }) => {
-    const authorization = get(authorizationState);
-    return getContributingCohorts(authorization);
-  },
-});
-const contributingCohortsState = atom<gp2.ContributingCohortResponse[]>({
-  key: 'contributingCohortsState',
-  default: contributingCohortSelector,
-});
-
-export const useContributingCohorts = () =>
-  useRecoilValue(contributingCohortsState);

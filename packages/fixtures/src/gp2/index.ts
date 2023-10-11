@@ -1,5 +1,6 @@
 export * from './auth';
 export * from './calendars';
+export * from './contributing-cohorts';
 export * from './dashboard';
 export * from './events';
 export * from './external-users';

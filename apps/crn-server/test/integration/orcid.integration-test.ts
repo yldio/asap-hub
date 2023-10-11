@@ -2,7 +2,7 @@ import nock from 'nock';
 import supertest from 'supertest';
 import Chance from 'chance';
 import { DateTime, Settings } from 'luxon';
-import { unloggedHandler } from '../../src/handlers/webhooks/cronjob-sync-orcid';
+import { unloggedHandler } from '../../src/handlers/user/cronjob-sync-orcid';
 import { AppHelper } from './helpers/app';
 import { FixtureFactory, getUserFixture } from './fixtures';
 import { retryable } from './helpers/retryable';

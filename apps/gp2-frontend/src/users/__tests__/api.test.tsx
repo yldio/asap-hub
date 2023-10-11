@@ -9,7 +9,6 @@ import { createUserListAlgoliaResponse } from '../../__fixtures__/algolia';
 import {
   createUserApiUrl,
   getAlgoliaUsers,
-  getContributingCohorts,
   getExternalUsers,
   getInstitutions,
   getUser,
@@ -187,7 +186,7 @@ describe('getAlgoliaUsers', () => {
   });
   it.each`
     given              | expected
-    ${'keywords'}      | ${'tagIds'}
+    ${'tags'}          | ${'tagIds'}
     ${'projects'}      | ${'projectIds'}
     ${'workingGroups'} | ${'workingGroupIds'}
   `('builds a single $given filter query', async ({ given, expected }) => {
@@ -207,7 +206,7 @@ describe('getAlgoliaUsers', () => {
 
   it.each`
     given              | expected
-    ${'keywords'}      | ${'tagIds'}
+    ${'tags'}          | ${'tagIds'}
     ${'projects'}      | ${'projectIds'}
     ${'workingGroups'} | ${'workingGroupIds'}
   `('builds a multiple $given filter query', async ({ given, expected }) => {
@@ -231,7 +230,7 @@ describe('getAlgoliaUsers', () => {
     await getAlgoliaUsers(mockAlgoliaSearchClient, {
       ...options,
       regions: ['Europe'],
-      keywords: ['7'],
+      tags: ['7'],
       projects: ['11'],
       workingGroups: ['23'],
       currentPage: 1,
@@ -370,7 +369,7 @@ describe('createUserApiUrl', () => {
   it.each`
     name               | value
     ${'regions'}       | ${['Africa', 'Asia']}
-    ${'keywords'}      | ${['Cohort', 'BLAAC-PD']}
+    ${'tags'}          | ${['Cohort', 'BLAAC-PD']}
     ${'projects'}      | ${['a project', 'another project']}
     ${'workingGroups'} | ${['a working group', 'another working group']}
   `(
@@ -428,36 +427,6 @@ describe('getInstitutions', () => {
 
     await expect(getInstitutions()).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch institutions. Expected status 2xx. Received status 500."`,
-    );
-  });
-});
-describe('getContributingCohorts', () => {
-  const validResponse: gp2Model.ListContributingCohortResponse = {
-    total: 2,
-    items: [
-      { id: '7', name: 'S3' },
-      { id: '11', name: 'CALYPSO' },
-    ],
-  };
-  it('returns successfully fetched cohorts', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/contributing-cohorts')
-      .reply(200, validResponse);
-
-    const result = await getContributingCohorts('Bearer x');
-    expect(result).toEqual(validResponse.items);
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('errors for error status', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/contributing-cohorts')
-      .reply(500);
-
-    await expect(
-      getContributingCohorts('Bearer x'),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch contributing cohorts. Expected status 2xx. Received status 500."`,
     );
   });
 });

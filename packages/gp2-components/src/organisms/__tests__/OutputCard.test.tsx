@@ -14,7 +14,7 @@ describe('OutputCard', () => {
     render(
       <OutputCard
         {...defaultProps}
-        project={{ id: '42', title: 'project name' }}
+        projects={[{ id: '42', title: 'project name' }]}
       />,
     );
     expect(screen.getByRole('link', { name: /project name/i })).toHaveAttribute(
@@ -23,16 +23,67 @@ describe('OutputCard', () => {
     );
   });
 
+  it('renders project pill', () => {
+    render(
+      <OutputCard
+        {...defaultProps}
+        projects={[{ id: '42', title: 'project name' }]}
+      />,
+    );
+    expect(screen.getByText('Project')).toBeVisible();
+  });
+
   it('renders link to workingGroup', () => {
     render(
       <OutputCard
         {...defaultProps}
-        workingGroup={{ id: '42', title: 'working group name' }}
+        workingGroups={[{ id: '42', title: 'working group name' }]}
       />,
     );
     expect(
       screen.getByRole('link', { name: /working group name/i }),
     ).toHaveAttribute('href', expect.stringContaining('42'));
+  });
+
+  it('renders working Group pill', () => {
+    render(
+      <OutputCard
+        {...defaultProps}
+        workingGroups={[{ id: '42', title: 'working group name' }]}
+        mainEntity={{
+          id: '42',
+          title: 'working group name',
+          type: 'WorkingGroups',
+        }}
+      />,
+    );
+    expect(screen.getByText('Working Group')).toBeVisible();
+  });
+
+  it('renders multiple projects', () => {
+    render(
+      <OutputCard
+        {...defaultProps}
+        projects={[
+          { id: '42', title: 'project name' },
+          { id: '44', title: 'project name 2' },
+        ]}
+      />,
+    );
+    expect(screen.getByText(/2 projects/i)).toBeVisible();
+  });
+
+  it('renders multiple workingGroups', () => {
+    render(
+      <OutputCard
+        {...defaultProps}
+        workingGroups={[
+          { id: '42', title: 'working group name' },
+          { id: '44', title: 'working group name 2' },
+        ]}
+      />,
+    );
+    expect(screen.getByText(/2 working groups/i)).toBeVisible();
   });
 
   it('renders the link when available', () => {

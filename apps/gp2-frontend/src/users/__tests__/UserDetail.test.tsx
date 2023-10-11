@@ -18,14 +18,9 @@ import {
   createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import {
-  getContributingCohorts,
-  getInstitutions,
-  getUser,
-  patchUser,
-} from '../api';
+import { getInstitutions, getUser, patchUser } from '../api';
 import UserDetail from '../UserDetail';
-import { getKeywords } from '../../shared/api';
+import { getTags, getContributingCohorts } from '../../shared/api';
 
 jest.mock('../api');
 jest.mock('../../outputs/api');
@@ -66,9 +61,7 @@ describe('UserDetail', () => {
   const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
     typeof getAlgoliaEvents
   >;
-  const mockGetKeywords = getKeywords as jest.MockedFunction<
-    typeof getKeywords
-  >;
+  const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
   const mockGetInstitutions = getInstitutions as jest.MockedFunction<
     typeof getInstitutions
@@ -86,7 +79,7 @@ describe('UserDetail', () => {
   beforeEach(() => {
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
-    mockGetKeywords.mockResolvedValue(gp2Fixtures.createTagsResponse());
+    mockGetTags.mockResolvedValue(gp2Fixtures.createTagsResponse());
   });
 
   it('renders header with title', async () => {
@@ -115,7 +108,7 @@ describe('UserDetail', () => {
       await renderUserDetail(user.id);
 
       expect(screen.getByRole('heading', { name: /biography/i })).toBeVisible();
-      expect(screen.getByRole('heading', { name: /Keywords/i })).toBeVisible();
+      expect(screen.getByRole('heading', { name: /Tags/i })).toBeVisible();
       expect(
         screen.getByRole('heading', { name: /Contact details/i }),
       ).toBeVisible();
@@ -155,7 +148,7 @@ describe('UserDetail', () => {
       expect(editButtons.map((button) => button.getAttribute('href'))).toEqual([
         '/users/testuserid/overview/edit-key-info',
         '/users/testuserid/overview/edit-contact-info',
-        '/users/testuserid/overview/edit-keywords',
+        '/users/testuserid/overview/edit-tags',
         '/users/testuserid/overview/edit-biography',
         '/users/testuserid/overview/edit-questions',
         '/users/testuserid/overview/edit-funding-streams',
@@ -246,17 +239,17 @@ describe('UserDetail', () => {
       );
     });
 
-    it('saves the keywords modal', async () => {
+    it('saves the tags modal', async () => {
       const user = gp2Fixtures.createUserResponse({
         id: 'testuserid',
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const [, , keywordsEditButton] = screen.getAllByRole('link', {
+      const [, , tagsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(keywordsEditButton!);
+      userEvent.click(tagsEditButton!);
       expect(screen.getByRole('dialog')).toBeVisible();
       userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
@@ -389,6 +382,7 @@ describe('UserDetail', () => {
       const user = gp2Fixtures.createUserResponse({
         id: 'testuserid',
       });
+      const userRequest = gp2Fixtures.createUserPatchRequest();
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -406,7 +400,10 @@ describe('UserDetail', () => {
       });
       expect(mockPatchUser).toHaveBeenCalledWith(
         expect.anything(),
-        expect.objectContaining({ social: user.social }),
+        expect.objectContaining({
+          social: userRequest.social,
+          orcid: userRequest.orcid,
+        }),
         expect.anything(),
       );
     });

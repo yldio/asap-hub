@@ -5,7 +5,7 @@ import {
   ExternalProfilesModal,
   FundingProviderModal,
   KeyInformationModal,
-  KeywordsModal,
+  TagsModal,
   OnboardingPreview,
   OpenQuestionsModal,
   PublishModal,
@@ -20,12 +20,8 @@ import { getInstitutions } from '../users/api';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
 import locationSuggestions from '../users/location-suggestions';
 
-import {
-  useContributingCohorts,
-  usePatchUserById,
-  useUserById,
-} from '../users/state';
-import { useKeywords } from '../shared/state';
+import { usePatchUserById, useUserById } from '../users/state';
+import { useTags, useContributingCohorts } from '../shared/state';
 
 const Preview: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
@@ -37,7 +33,7 @@ const Preview: React.FC<Record<string, never>> = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
 
-  const { items: allKeywords } = useKeywords();
+  const { items: allTags } = useTags();
 
   const commonModalProps = {
     backHref: onboarding({}).preview({}).$,
@@ -47,7 +43,7 @@ const Preview: React.FC<Record<string, never>> = () => {
     editKeyInfo,
     editContactInfo,
     editBiography,
-    editKeywords,
+    editTags,
     editQuestions,
     editFundingStreams,
     editContributingCohorts,
@@ -66,7 +62,7 @@ const Preview: React.FC<Record<string, never>> = () => {
           editKeyInfoHref={editKeyInfo({}).$}
           editContactInfoHref={editContactInfo({}).$}
           editBiographyHref={editBiography({}).$}
-          editKeywordsHref={editKeywords({}).$}
+          editTagsHref={editTags({}).$}
           editQuestionsHref={editQuestions({}).$}
           editFundingStreamsHref={editFundingStreams({}).$}
           editContributingCohortsHref={editContributingCohorts({}).$}
@@ -96,11 +92,11 @@ const Preview: React.FC<Record<string, never>> = () => {
         <Route path={editBiography({}).$}>
           <BiographyModal {...userData} {...commonModalProps} />
         </Route>
-        <Route path={editKeywords({}).$}>
-          <KeywordsModal
+        <Route path={editTags({}).$}>
+          <TagsModal
             {...userData}
             {...commonModalProps}
-            suggestions={allKeywords}
+            suggestions={allTags}
           />
         </Route>
         <Route path={editQuestions({}).$}>

@@ -31,7 +31,7 @@ export interface EventDataObject extends Omit<BasicEvent, 'tags'> {
 
 export type ListEventDataObject = ListResponse<EventDataObject>;
 export type EventResponse = EventDataObject & {
-  _tags: string[];
+  eventTypes: string[];
 };
 export type ListEventResponse = ListResponse<EventResponse>;
 

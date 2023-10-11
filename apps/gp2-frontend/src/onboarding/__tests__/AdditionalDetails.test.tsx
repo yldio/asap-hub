@@ -14,10 +14,12 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getContributingCohorts, getUser, patchUser } from '../../users/api';
+import { getContributingCohorts } from '../../shared/api';
+import { getUser, patchUser } from '../../users/api';
 import AdditionalDetails from '../AdditionalDetails';
 
 jest.mock('../../users/api');
+jest.mock('../../shared/api');
 
 mockConsoleError();
 
@@ -48,10 +50,6 @@ const renderAdditionalDetails = async (id: string) => {
 };
 describe('AdditionalDetails', () => {
   beforeEach(jest.resetAllMocks);
-  const contributingCohortResponse: gp2Model.ContributingCohortResponse[] = [
-    { id: '7', name: 'AGPDS' },
-    { id: '11', name: 'S3' },
-  ];
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
   const mockGetContributingCohorts =
@@ -63,7 +61,7 @@ describe('AdditionalDetails', () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     mockGetContributingCohorts.mockResolvedValueOnce(
-      contributingCohortResponse,
+      gp2Fixtures.contributingCohortResponse,
     );
     await renderAdditionalDetails(user.id);
     expect(
@@ -83,7 +81,7 @@ describe('AdditionalDetails', () => {
   it('renders not found if no user is returned', async () => {
     mockGetUser.mockResolvedValueOnce(undefined);
     mockGetContributingCohorts.mockResolvedValueOnce(
-      contributingCohortResponse,
+      gp2Fixtures.contributingCohortResponse,
     );
     await renderAdditionalDetails('unknown-id');
     expect(
@@ -151,7 +149,7 @@ describe('AdditionalDetails', () => {
     const user = { ...gp2Fixtures.createUserResponse(), contributingCohorts };
     mockGetUser.mockResolvedValueOnce(user);
     mockGetContributingCohorts.mockResolvedValueOnce(
-      contributingCohortResponse,
+      gp2Fixtures.contributingCohortResponse,
     );
 
     await renderAdditionalDetails(user.id);
@@ -195,9 +193,9 @@ describe('AdditionalDetails', () => {
     expect(mockPatchUser).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
+        orcid: '1234-1234-1234-1234',
         social: {
           googleScholar: 'https://scholar.google.com',
-          orcid: 'https://orcid.org/1234-1234-1234-1234',
           researchGate: 'https://researchid.com/rid/',
           researcherId: 'https://researcherid.com/rid/R-1234-1234',
           blog: 'https://www.blogger.com',

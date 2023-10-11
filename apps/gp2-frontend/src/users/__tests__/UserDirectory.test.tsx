@@ -15,7 +15,7 @@ import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useSearch } from '../../hooks/search';
 import { getAlgoliaProjects } from '../../projects/api';
-import { getKeywords } from '../../shared/api';
+import { getTags } from '../../shared/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import {
   createProjectListAlgoliaResponse,
@@ -53,14 +53,14 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
 const mockUseSearch = useSearch as jest.MockedFunction<typeof useSearch>;
-const mockGetKeywords = getKeywords as jest.MockedFunction<typeof getKeywords>;
+const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
 const renderUserDirectory = async ({
   listUserResponse = gp2Fixtures.createUsersResponse(),
   listUserAlgoliaResponse = createUserListAlgoliaResponse(1),
   listProjectResponse = createProjectListAlgoliaResponse(1),
   listWorkingGroupResponse = gp2Fixtures.createWorkingGroupsResponse(),
-  listKeywordResponse = gp2Fixtures.createTagsResponse(),
+  listTagResponse = gp2Fixtures.createTagsResponse(),
   displayFilters = false,
   isAdministrator = false,
   filters = {},
@@ -69,7 +69,7 @@ const renderUserDirectory = async ({
   listUserResponse?: gp2Model.ListUserResponse;
   listProjectResponse?: ClientSearchResponse<'gp2', 'project'>;
   listWorkingGroupResponse?: gp2Model.ListWorkingGroupResponse;
-  listKeywordResponse?: gp2Model.ListTagsResponse;
+  listTagResponse?: gp2Model.ListTagsResponse;
   displayFilters?: boolean;
   isAdministrator?: boolean;
   filters?: Partial<ReturnType<typeof useSearch>['filters']>;
@@ -77,7 +77,7 @@ const renderUserDirectory = async ({
   mockGetAlgoliaUsers.mockResolvedValue(listUserAlgoliaResponse);
   mockGetProjects.mockResolvedValue(listProjectResponse);
   mockGetWorkingGroups.mockResolvedValue(listWorkingGroupResponse);
-  mockGetKeywords.mockResolvedValue(listKeywordResponse);
+  mockGetTags.mockResolvedValue(listTagResponse);
   mockGetUsers.mockResolvedValue(listUserResponse);
 
   const mockUpdateFilter = jest.fn();
@@ -86,7 +86,7 @@ const renderUserDirectory = async ({
     changeLocation: jest.fn(),
     filters: {
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
       ...filters,
@@ -129,7 +129,7 @@ it('renders the filters modal', async () => {
 it.each`
   name               | value
   ${'regions'}       | ${'Asia'}
-  ${'keywords'}      | ${'11'}
+  ${'tags'}          | ${'11'}
   ${'projects'}      | ${'42'}
   ${'workingGroups'} | ${'42'}
 `(
@@ -142,7 +142,7 @@ it.each`
     userEvent.click(screen.getByRole('button', { name: 'Apply' }));
     expect(mockUpdateFilter).toHaveBeenCalledWith('/users', {
       regions: [],
-      keywords: [],
+      tags: [],
       projects: [],
       workingGroups: [],
       [name]: [value],
@@ -158,7 +158,7 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
         currentPage: 0,
         pageSize: 10,
         searchQuery: '',
-        keywords: [],
+        tags: [],
         regions: [],
         projects: [],
         workingGroups: [],
@@ -175,7 +175,7 @@ it('triggers export with the same parameters but overrides onlyOnboarded with fa
       expect.objectContaining({
         filter: {
           regions: [],
-          keywords: [],
+          tags: [],
           projects: [],
           workingGroups: [],
           onlyOnboarded: false,

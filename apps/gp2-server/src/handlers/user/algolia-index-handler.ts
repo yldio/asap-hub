@@ -11,6 +11,7 @@ import {
   getContentfulRestClientFactory,
 } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
+import { getTagsNames } from '../../utils/tag-names';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { UserPayload } from '../event-bus';
 
@@ -29,8 +30,13 @@ export const indexUserHandler =
         log.debug(`Fetched user ${user.id}`);
 
         if (user.onboarded && user.role !== 'Hidden') {
+          const data = {
+            ...user,
+            _tags: getTagsNames(user.tags),
+          };
+
           await algoliaClient.save({
-            data: user,
+            data,
             type: 'user',
           });
 

@@ -14,14 +14,20 @@ describe('outputToCSV', () => {
       type: 'Blog',
       subtype: 'Preprints',
       link: 'https://google.com',
-      workingGroup: {
-        title: 'WG-1',
-        id: '1',
-      },
-      project: {
-        id: '1',
-        title: 'Project-1',
-      },
+      tags: [{ id: 'tag-1', name: 'Neurology' }],
+      workingGroups: [
+        {
+          title: 'WG-1',
+          id: '1',
+        },
+      ],
+      projects: [
+        {
+          id: '1',
+          title: 'Project-1',
+        },
+      ],
+      contributingCohorts: [{ id: '2', name: 'Cohort' }],
     };
     expect(outputToCSV(outputResponse)).toEqual({
       title: 'Output 1',
@@ -29,10 +35,11 @@ describe('outputToCSV', () => {
       type: 'Blog',
       subtype: 'Preprints',
       link: 'https://google.com',
-      workingGroup: 'WG-1',
-      project: 'Project-1',
+      workingGroups: 'WG-1',
+      projects: 'Project-1',
+      contributingCohorts: 'Cohort',
       authors: expect.anything(),
-      tags: expect.anything(),
+      tags: 'Neurology',
       date: expect.anything(),
     });
   });

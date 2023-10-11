@@ -1,4 +1,5 @@
 import UserController from '../../src/controllers/user.controller';
+import { PublicInterface } from '../utils/types';
 
 export const userControllerMock = {
   fetch: jest.fn(),
@@ -7,4 +8,7 @@ export const userControllerMock = {
   connectByCode: jest.fn(),
   update: jest.fn(),
   updateAvatar: jest.fn(),
-} as unknown as jest.Mocked<UserController>;
+  syncOrcidProfile: jest.fn(),
+} satisfies jest.Mocked<
+  PublicInterface<UserController>
+> as unknown as jest.Mocked<UserController>;

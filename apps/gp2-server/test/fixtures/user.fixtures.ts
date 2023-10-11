@@ -10,6 +10,7 @@ export const getUserResponse = (
   overrides: Partial<gp2Model.UserResponse> = {},
 ): gp2Model.UserResponse => ({
   id: 'user-id-1',
+  avatarUrl: 'https://example.com',
   createdDate: '2020-09-23T20:45:22.000Z',
   activatedDate: '2020-09-24T20:45:22.000Z',
   displayName: 'Tony Stark',
@@ -76,7 +77,7 @@ export const getUserResponse = (
   tagIds: ['tag-1', 'tag-2'],
   social: {
     googleScholar: 'https://scholar.google.com',
-    orcid: 'https://orcid.org',
+    orcid: 'https://orcid.org/1234-5678-9123-4567',
     blog: 'https://www.blogger.com',
     twitter: 'https://twitter.com',
     linkedIn: 'https://www.linkedin.com',
@@ -84,6 +85,19 @@ export const getUserResponse = (
     researchGate: 'https://researchid.com/rid/',
     researcherId: 'https://researcherid.com/rid/',
   },
+  orcidWorks: [
+    {
+      doi: 'test-doi',
+      id: '123-456-789',
+      lastModifiedDate: '2020-10-26T15:33:18Z',
+      publicationDate: {},
+      type: 'ANNOTATION',
+      title: 'orcid work title',
+    },
+  ],
+  orcid: '1234-5678-9123-4567',
+  orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
+  orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
   ...overrides,
 });
 
@@ -134,8 +148,9 @@ export const fetchExpectation: gp2Model.ListUserResponse = {
   ],
 };
 
-export const getUserDataObject = (): gp2Model.UserDataObject => ({
+export const getUserDataObject = (): Required<gp2Model.UserDataObject> => ({
   id: 'user-id-1',
+  avatarUrl: 'https://example.com',
   createdDate: '2020-09-23T20:45:22.000Z',
   activatedDate: '2020-09-24T20:45:22.000Z',
   lastModifiedDate: '2023-07-06T07:23:32.000Z',
@@ -200,7 +215,7 @@ export const getUserDataObject = (): gp2Model.UserDataObject => ({
   ],
   social: {
     googleScholar: 'https://scholar.google.com',
-    orcid: 'https://orcid.org',
+    orcid: 'https://orcid.org/1234-5678-9123-4567',
     blog: 'https://www.blogger.com',
     twitter: 'https://twitter.com',
     linkedIn: 'https://www.linkedin.com',
@@ -208,6 +223,19 @@ export const getUserDataObject = (): gp2Model.UserDataObject => ({
     researcherId: 'https://researcherid.com/rid/',
     researchGate: 'https://researchid.com/rid/',
   },
+  orcid: '1234-5678-9123-4567',
+  orcidWorks: [
+    {
+      doi: 'test-doi',
+      id: '123-456-789',
+      lastModifiedDate: '2020-10-26T15:33:18Z',
+      publicationDate: {},
+      type: 'ANNOTATION',
+      title: 'orcid work title',
+    },
+  ],
+  orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
+  orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
 });
 export const getUserCreateDataObject = (): gp2Model.UserCreateDataObject => {
   const {
@@ -283,6 +311,7 @@ export const userPatchRequest: gp2Model.UserPatchRequest = {
   onboarded: true,
   country: 'United Kingdom',
   city: 'Manchester',
+  orcid: '1234-1234-1234-1234',
 };
 
 export const getContentfulGraphql = (props = {}) => ({
@@ -299,8 +328,12 @@ export const getContentfulGraphql = (props = {}) => ({
 
 export const getContentfulGraphqlUser = (
   props = {},
-): NonNullable<
-  NonNullable<gp2Contentful.FetchUsersQuery['usersCollection']>['items'][number]
+): Required<
+  NonNullable<
+    NonNullable<
+      gp2Contentful.FetchUsersQuery['usersCollection']
+    >['items'][number]
+  >
 > => ({
   sys: {
     id: 'user-id-1',
@@ -308,7 +341,9 @@ export const getContentfulGraphqlUser = (
     publishedAt: '2023-07-06T07:23:32.000Z',
   },
   activatedDate: '2020-09-24T20:45:22.000Z',
-  avatar: null,
+  avatar: {
+    url: 'https://example.com',
+  },
   biography: 'a biography of Tony Stark',
   onboarded: true,
   connections: ['some-code'],
@@ -334,7 +369,19 @@ export const getContentfulGraphqlUser = (
   researcherId: 'https://researcherid.com/rid/',
   twitter: 'https://twitter.com',
   blog: 'https://www.blogger.com',
-  orcid: 'https://orcid.org',
+  orcid: '1234-5678-9123-4567',
+  orcidLastModifiedDate: '2020-09-23T20:45:22.000Z',
+  orcidLastSyncDate: '2020-09-23T20:45:22.000Z',
+  orcidWorks: [
+    {
+      doi: 'test-doi',
+      id: '123-456-789',
+      lastModifiedDate: '2020-10-26T15:33:18Z',
+      publicationDate: {},
+      type: 'ANNOTATION',
+      title: 'orcid work title',
+    },
+  ],
   role: 'Trainee',
   fundingStreams: 'A funding stream',
   positions: [

@@ -468,6 +468,35 @@ describe('/users/ route', () => {
           },
         );
       });
+      describe('social', () => {
+        test('allows valid socials', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              social: {
+                googleScholar: 'https://scholar.google.com',
+                researchGate: 'https://researchid.com/rid/',
+                github: 'https://github.com/rid/',
+                linkedIn: 'https://linkedin.com/rid/',
+                researcherId: 'https://researchid.co/id',
+                twitter: 'https://twitter.com/profile',
+              },
+            } satisfies gp2.UserPatchRequest);
+          expect(response.status).toBe(200);
+        });
+        test('does not allow invalid socials', async () => {
+          const response = await supertest(app)
+            .patch(`/users/${loggedInUserId}`)
+            .send({
+              social: [
+                {
+                  x: 'invalid',
+                },
+              ],
+            });
+          expect(response.status).toBe(400);
+        });
+      });
       describe('degrees', () => {
         test.each(userDegrees)('allows valid degree: %s', async (degree) => {
           const response = await supertest(app)
@@ -502,8 +531,8 @@ describe('/users/ route', () => {
           expect(response.status).toBe(400);
         });
       });
-      describe('keywords', () => {
-        test('allows valid keywords:', async () => {
+      describe('tags', () => {
+        test('allows valid tags:', async () => {
           const response = await supertest(app)
             .patch(`/users/${loggedInUserId}`)
             .send({ tags: [{ id: 'id-1' }] });

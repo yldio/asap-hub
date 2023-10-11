@@ -1,7 +1,7 @@
 import {
   OnboardingBackground,
   BiographyModal,
-  KeywordsModal,
+  TagsModal,
 } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
@@ -9,7 +9,7 @@ import { gp2 } from '@asap-hub/routing';
 import { Route } from 'react-router-dom';
 
 import { usePatchUserById, useUserById } from '../users/state';
-import { useKeywords } from '../shared/state';
+import { useTags } from '../shared/state';
 
 const Background: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
@@ -20,7 +20,7 @@ const Background: React.FC<Record<string, never>> = () => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const patchUser = usePatchUserById(currentUser!.id);
 
-  const { items: allKeywords } = useKeywords();
+  const { items: allTags } = useTags();
 
   if (userData) {
     return (
@@ -28,7 +28,7 @@ const Background: React.FC<Record<string, never>> = () => {
         <OnboardingBackground
           {...userData}
           editBiographyHref={onboarding({}).background({}).editBiography({}).$}
-          editKeywordsHref={onboarding({}).background({}).editKeywords({}).$}
+          editTagsHref={onboarding({}).background({}).editTags({}).$}
         />
         <Route path={onboarding({}).background({}).editBiography({}).$}>
           <BiographyModal
@@ -37,12 +37,12 @@ const Background: React.FC<Record<string, never>> = () => {
             onSave={(patchedUser) => patchUser(patchedUser)}
           />
         </Route>
-        <Route path={onboarding({}).background({}).editKeywords({}).$}>
-          <KeywordsModal
+        <Route path={onboarding({}).background({}).editTags({}).$}>
+          <TagsModal
             {...userData}
             backHref={onboarding({}).background({}).$}
             onSave={(patchedUser) => patchUser(patchedUser)}
-            suggestions={allKeywords}
+            suggestions={allTags}
           />
         </Route>
       </>

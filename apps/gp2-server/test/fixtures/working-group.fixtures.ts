@@ -5,6 +5,7 @@ import type {
 import type { gp2 as gp2Model, WebhookDetail } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
+import { getContentfulTagsCollectionGraphqlResponse } from './tag.fixtures';
 
 export const getWorkingGroupDataObject =
   (): gp2Model.WorkingGroupDataObject => ({
@@ -42,6 +43,7 @@ export const getWorkingGroupDataObject =
       id: '42',
       name: 'working group calendar',
     },
+    tags: [{ id: '42', name: 'tag-1' }],
   });
 
 export const getWorkingGroupUpdateDataObject =
@@ -172,6 +174,7 @@ export const getContentfulGraphqlWorkingGroup = (
   membersCollection: { ...getContentfulGraphqlWorkingGroupMembers() },
   milestonesCollection: { ...getContentfulGraphqlWorkingGroupMilestones() },
   resourcesCollection: { ...getContentfulGraphqlWorkingGroupResources() },
+  tagsCollection: { ...getContentfulTagsCollectionGraphqlResponse() },
   calendar: {
     sys: {
       id: '42',

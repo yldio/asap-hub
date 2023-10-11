@@ -20,7 +20,7 @@ export const createUserApiUrl = ({
   const addFilter = (name: string, items?: string[]) =>
     items?.forEach((item) => url.searchParams.append(`filter[${name}]`, item));
   addFilter('regions', filter?.regions);
-  addFilter('keywords', filter?.keywords);
+  addFilter('tags', filter?.tags);
   addFilter('projects', filter?.projects);
   addFilter('workingGroups', filter?.workingGroups);
 
@@ -38,7 +38,7 @@ const getAllFilters = ({
   projects,
   workingGroups,
   regions,
-  keywords,
+  tags,
 }: gp2.FetchUsersFilter) => {
   const addFilter = ({
     name,
@@ -50,7 +50,7 @@ const getAllFilters = ({
 
   return [
     { name: 'region', items: regions },
-    { name: 'tagIds', items: keywords },
+    { name: 'tagIds', items: tags },
     { name: 'projectIds', items: projects },
     { name: 'workingGroupIds', items: workingGroups },
   ]
@@ -186,21 +186,4 @@ export const getInstitutions = async ({
     );
   }
   return resp.json();
-};
-export const getContributingCohorts = async (
-  authorization: string,
-): Promise<gp2.ContributingCohortResponse[]> => {
-  const resp = await fetch(`${API_BASE_URL}/contributing-cohorts`, {
-    headers: { authorization, ...createSentryHeaders() },
-  });
-
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch contributing cohorts. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-
-  const response = await resp.json();
-
-  return response?.items || [];
 };

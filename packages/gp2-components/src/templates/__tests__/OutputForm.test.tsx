@@ -21,8 +21,13 @@ describe('OutputForm', () => {
     shareOutput: jest.fn(),
     documentType: 'Procedural Form' as const,
     entityType: 'workingGroup' as const,
-    keywordSuggestions: [],
     getRelatedOutputSuggestions: jest.fn(),
+    tagSuggestions: [],
+    cohortSuggestions: [],
+    workingGroupSuggestions: [],
+    projectSuggestions: [],
+    mainEntityId: '12',
+    workingGroups: [{ id: '12', title: 'a WG title' }],
   };
   afterEach(jest.resetAllMocks);
   it('renders all the base fields', () => {
@@ -43,6 +48,11 @@ describe('OutputForm', () => {
       }),
     ).toBeVisible();
     expect(screen.getByRole('textbox', { name: /tags/i })).toBeVisible();
+    expect(
+      screen.getByRole('textbox', { name: /working groups/i }),
+    ).toBeVisible();
+    expect(screen.getByRole('textbox', { name: /projects/i })).toBeVisible();
+    expect(screen.getByRole('textbox', { name: /cohorts/i })).toBeVisible();
     expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /publish/i })).toBeVisible();
     expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
@@ -86,6 +96,7 @@ describe('OutputForm', () => {
         shareOutput={shareOutput}
         getAuthorSuggestions={getAuthorSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        workingGroupSuggestions={[{ id: '2', title: 'another group' }]}
       />,
       {
         wrapper: ({ children }) => (
@@ -125,6 +136,12 @@ describe('OutputForm', () => {
     );
     userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
     userEvent.click(screen.getByText(/^none/i));
+    const workingGroups = screen.getByRole('textbox', {
+      name: /working groups/i,
+    });
+    userEvent.click(workingGroups);
+
+    userEvent.click(screen.getByText('another group'));
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     userEvent.click(authors);
 
@@ -166,6 +183,8 @@ describe('OutputForm', () => {
           documentType: 'GP2 Reports',
         },
       ],
+      mainEntityId: '12',
+      workingGroupIds: ['2'],
     });
     expect(addNotification).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -275,6 +294,8 @@ describe('OutputForm', () => {
         { externalUserName: 'Alex White' },
       ],
       relatedOutputs: [],
+      mainEntityId: '12',
+      workingGroupIds: [],
     });
   });
 
@@ -384,6 +405,8 @@ describe('OutputForm', () => {
         sharingStatus: 'GP2 Only',
         authors: [{ userId: 'u2' }],
         relatedOutputs: [],
+        mainEntityId: '12',
+        workingGroupIds: [],
       });
       expect(history.location.pathname).toEqual(`/outputs`);
     });
@@ -574,6 +597,9 @@ describe('OutputForm', () => {
         title,
         link,
         authors,
+        tags: [{ id: 'tag-1', name: 'Tag' }],
+        contributingCohorts: [{ id: 'cohort-1', name: 'Cohort' }],
+        documentType: 'Dataset' as gp2.OutputDocumentType,
       };
       render(<OutputForm {...output} />, { wrapper: StaticRouter });
 
@@ -593,15 +619,61 @@ describe('OutputForm', () => {
       expect(
         screen.getByLabelText(/public repository published date/i),
       ).toHaveDisplayValue('2020-03-04');
+      expect(
+        screen.getByRole('textbox', { name: /working groups/i }),
+      ).toBeVisible();
+      expect(screen.getByText('a WG title')).toBeVisible();
+      expect(screen.getByRole('textbox', { name: /projects/i })).toBeVisible();
+      expect(
+        screen.getByLabelText(/projects/i, {
+          selector: 'input',
+        }),
+      ).toHaveValue('');
+      expect(screen.getByRole('textbox', { name: /cohorts/i })).toBeVisible();
+      expect(screen.getByText('Cohort')).toBeVisible();
       expect(screen.getByRole('textbox', { name: /authors/i })).toBeVisible();
       expect(screen.getByText('Tony Stark')).toBeVisible();
       expect(screen.getByRole('textbox', { name: /tags/i })).toBeVisible();
+      expect(screen.getByText('Tag')).toBeVisible();
       expect(
         screen.getByRole('textbox', { name: /identifier type/i }),
       ).toBeVisible();
       expect(screen.getByText('None')).toBeVisible();
       expect(screen.getByRole('button', { name: /save/i })).toBeVisible();
       expect(screen.getByRole('button', { name: /cancel/i })).toBeVisible();
+    });
+
+    it('renders with projects', () => {
+      const output = {
+        ...defaultProps,
+        ...gp2Fixtures.createOutputResponse(),
+        entityType: 'project' as const,
+        projects: [{ id: '1', title: 'a project' }],
+        workingGroups: undefined,
+      };
+      render(<OutputForm {...output} />, { wrapper: StaticRouter });
+
+      expect(
+        screen.getByRole('textbox', { name: /working groups/i }),
+      ).toBeVisible();
+      expect(
+        screen.getByLabelText(/working groups/i, {
+          selector: 'input',
+        }),
+      ).toHaveValue('');
+      expect(screen.getByRole('textbox', { name: /projects/i })).toBeVisible();
+      expect(screen.getByText('a project')).toBeVisible();
+    });
+
+    it('does not render cohort', () => {
+      render(
+        <OutputForm {...defaultProps} documentType="Training Materials" />,
+        { wrapper: StaticRouter },
+      );
+
+      expect(
+        screen.queryByRole('textbox', { name: /cohorts/i }),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -667,7 +739,7 @@ describe('OutputForm', () => {
       render(
         <OutputForm
           {...defaultProps}
-          keywordSuggestions={suggestions}
+          tagSuggestions={suggestions}
           tags={tags}
         />,
         {
@@ -681,6 +753,7 @@ describe('OutputForm', () => {
         name: /tags/i,
       });
       expect(textbox).toBeVisible();
+      expect(textbox).toHaveValue('');
       expect(
         screen.getByText('Start typing... (E.g. Neurology)'),
       ).toBeVisible();
@@ -705,6 +778,175 @@ describe('OutputForm', () => {
       expect(screen.getByText('2D Cultures')).toBeVisible();
     });
   });
+
+  describe('cohorts', () => {
+    const defaultCohortSuggestions = [
+      { id: '1', name: '2D Cultures' },
+      { id: '2', name: 'Adenosine' },
+      { id: '3', name: 'Adrenal' },
+    ];
+
+    const defaultCohorts = [{ id: '5', name: 'Neurology' }];
+    const renderWithSuggestions = (
+      suggestions = defaultCohortSuggestions,
+      cohorts = defaultCohorts,
+    ) =>
+      render(
+        <OutputForm
+          {...defaultProps}
+          cohortSuggestions={suggestions}
+          contributingCohorts={cohorts}
+        />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
+
+    it('displays cohorts empty', () => {
+      renderWithSuggestions(defaultCohortSuggestions, []);
+      const textbox = screen.getByRole('textbox', {
+        name: /cohorts/i,
+      });
+      expect(textbox).toBeVisible();
+      expect(textbox).toHaveValue('');
+    });
+    it('displays cohorts suggestions', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/cohorts/i));
+      expect(screen.getByText('2D Cultures')).toBeVisible();
+      expect(screen.getByText('Adenosine')).toBeVisible();
+      expect(screen.getByText('Adrenal')).toBeVisible();
+    });
+
+    it('displays existing cohorts', () => {
+      renderWithSuggestions();
+      expect(screen.getByText('Neurology')).toBeVisible();
+    });
+    it('update cohorts after adding one', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/cohorts/i));
+      userEvent.click(screen.getByText('2D Cultures'));
+      expect(screen.getByText('Neurology')).toBeVisible();
+      expect(screen.getByText('2D Cultures')).toBeVisible();
+    });
+  });
+
+  describe('working Groups', () => {
+    const defaultWorkingGroupsSuggestions = [{ id: '1', title: 'WG 1' }];
+
+    const defaultWorkingGroups = [{ id: '5', title: 'A WG title' }];
+    const renderWithSuggestions = (
+      suggestions = defaultWorkingGroupsSuggestions,
+      workingGroups = defaultWorkingGroups,
+    ) =>
+      render(
+        <OutputForm
+          {...defaultProps}
+          workingGroupSuggestions={suggestions}
+          workingGroups={workingGroups}
+        />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
+
+    it('displays working groups empty', () => {
+      renderWithSuggestions(defaultWorkingGroupsSuggestions, []);
+      const textbox = screen.getByRole('textbox', {
+        name: /working groups/i,
+      });
+      expect(textbox).toBeVisible();
+      expect(textbox).toHaveValue('');
+    });
+    it('displays working groups suggestions', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/working groups/i));
+      expect(screen.getByText('WG 1')).toBeVisible();
+    });
+
+    it('displays existing working groups', () => {
+      renderWithSuggestions();
+      expect(screen.getByText('A WG title')).toBeVisible();
+    });
+    it('update working groups after adding one', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/working groups/i));
+      userEvent.click(screen.getByText('WG 1'));
+      expect(screen.getByText('A WG title')).toBeVisible();
+      expect(screen.getByText('WG 1')).toBeVisible();
+    });
+
+    it('shows the custom no options message for working groups', async () => {
+      renderWithSuggestions();
+
+      userEvent.type(
+        screen.getByLabelText(/working groups/i),
+        'asdflkjasdflkj',
+      );
+
+      expect(
+        screen.getByText('Sorry, no working groups match asdflkjasdflkj'),
+      ).toBeVisible();
+    });
+  });
+
+  describe('projects', () => {
+    const defaultProjectsSuggestions = [{ id: '1', title: 'Project 1' }];
+
+    const defaultProjects = [{ id: '5', title: 'A Project title' }];
+    const renderWithSuggestions = (
+      suggestions = defaultProjectsSuggestions,
+      projects = defaultProjects,
+    ) =>
+      render(
+        <OutputForm
+          {...defaultProps}
+          entityType="project"
+          projectSuggestions={suggestions}
+          projects={projects}
+        />,
+        {
+          wrapper: StaticRouter,
+        },
+      );
+
+    it('displays projects empty', () => {
+      renderWithSuggestions(defaultProjectsSuggestions, []);
+      const textbox = screen.getByRole('textbox', {
+        name: /projects/i,
+      });
+      expect(textbox).toBeVisible();
+      expect(textbox).toHaveValue('');
+    });
+    it('displays projects suggestions', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/projects/i));
+      expect(screen.getByText('Project 1')).toBeVisible();
+    });
+
+    it('displays existing projects', () => {
+      renderWithSuggestions();
+      expect(screen.getByText('A Project title')).toBeVisible();
+    });
+    it('update projects after adding one', () => {
+      renderWithSuggestions();
+      userEvent.click(screen.getByLabelText(/projects/i));
+      userEvent.click(screen.getByText('Project 1'));
+      expect(screen.getByText('A Project title')).toBeVisible();
+      expect(screen.getByText('Project 1')).toBeVisible();
+    });
+
+    it('shows the custom no options message for projects', async () => {
+      renderWithSuggestions();
+
+      userEvent.type(screen.getByLabelText(/projects/i), 'asdflkjasdflkj');
+
+      expect(
+        screen.getByText('Sorry, no projects match asdflkjasdflkj'),
+      ).toBeVisible();
+    });
+  });
+
   describe('identifierType', () => {
     it('returns DOI when doi is present', () => {
       render(<OutputForm {...defaultProps} doi="123" />, {

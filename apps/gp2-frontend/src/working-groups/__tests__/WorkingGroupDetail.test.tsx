@@ -82,10 +82,12 @@ describe('WorkingGroupDetail', () => {
   >;
 
   const outputs = createOutputListAlgoliaResponse(1);
-  outputs.hits[0]!.workingGroup = {
-    id: '42',
-    title: 'Steering Committee',
-  };
+  outputs.hits[0]!.workingGroups = [
+    {
+      id: '42',
+      title: 'Steering Committee',
+    },
+  ];
 
   beforeEach(() => {
     mockGetOutputs.mockResolvedValue(outputs);

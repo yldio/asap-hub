@@ -2,7 +2,6 @@
 
 import { gql } from 'graphql-tag';
 import { pagesContentQueryFragment } from './pages.queries';
-import { tutorialsContentQueryFragment } from './tutorials.queries';
 
 const usersContentQueryFragment = gql`
   fragment PartialUsersContent on Users {
@@ -31,11 +30,6 @@ export const FETCH_DISCOVER = gql`
         pagesCollection(limit: 20) {
           items {
             ...PageContent
-          }
-        }
-        trainingCollection(limit: 20) {
-          items {
-            ...TutorialsContent
           }
         }
         aboutUs {
@@ -85,6 +79,5 @@ export const FETCH_DISCOVER = gql`
     }
   }
   ${pagesContentQueryFragment}
-  ${tutorialsContentQueryFragment}
   ${usersContentQueryFragment}
 `;

@@ -10,6 +10,6 @@ const item = {
   ...gp2Fixtures.createUserResponse(),
 
   editBiographyHref: '',
-  editKeywordsHref: '',
+  editTagsHref: '',
 };
 export const Normal = () => <OnboardingBackground {...item} />;

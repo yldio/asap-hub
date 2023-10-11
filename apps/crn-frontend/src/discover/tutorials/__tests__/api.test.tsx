@@ -1,7 +1,11 @@
-import { createTutorialsResponse } from '@asap-hub/fixtures';
+import {
+  createListTutorialsResponse,
+  createTutorialsResponse,
+} from '@asap-hub/fixtures';
 import nock from 'nock';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import { API_BASE_URL } from '../../../config';
-import { getTutorialById } from '../api';
+import { getTutorialById, getTutorials } from '../api';
 
 jest.mock('../../../config');
 
@@ -35,6 +39,37 @@ describe('getTutorialById', () => {
       getTutorialById('42', ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch tutorial with id 42. Expected status 2xx or 404. Received status 500."`,
+    );
+  });
+});
+
+describe('getTutorials', () => {
+  const options: GetListOptions = {
+    filters: new Set(),
+    pageSize: 10,
+    currentPage: 0,
+    searchQuery: '',
+  };
+
+  it('returns successfully fetched tutorials', async () => {
+    const tutorials = createListTutorialsResponse(1);
+    nock(API_BASE_URL)
+      .get('/tutorials')
+      .query({ take: '10', skip: '0' })
+      .reply(200, tutorials);
+    expect(await getTutorials(options, '')).toEqual(tutorials);
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL)
+      .get('/tutorials')
+      .query({ take: '10', skip: '0' })
+      .reply(500);
+
+    await expect(
+      getTutorials(options, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch tutorials. Expected status 2xx. Received status 500."`,
     );
   });
 });

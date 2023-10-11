@@ -23,7 +23,7 @@ export type WorkingGroupDataObject = {
   milestones: Milestone[];
   resources?: Resource[];
   calendar?: Calendar;
-  tags?: TagDataObject;
+  tags: TagDataObject[];
 };
 
 export type ListWorkingGroupDataObject = ListResponse<WorkingGroupDataObject>;

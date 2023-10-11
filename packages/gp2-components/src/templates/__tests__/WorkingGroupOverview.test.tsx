@@ -7,6 +7,7 @@ describe('WorkingGroupOverview', () => {
     primaryEmail: 'primary@example.com',
     milestones: [],
     members: [],
+    tags: [],
   };
 
   it('renders the description', () => {
@@ -21,6 +22,27 @@ describe('WorkingGroupOverview', () => {
     expect(
       screen.getByRole('heading', { name: 'Contact Details' }),
     ).toBeInTheDocument();
+  });
+
+  it('renders tags', () => {
+    render(
+      <WorkingGroupOverview
+        {...defaultProps}
+        tags={[
+          { id: 'tag-1', name: 'Tag 1' },
+          { id: 'tag-2', name: 'Tag 2' },
+        ]}
+      />,
+    );
+    expect(screen.getByRole('heading', { name: 'Tags' })).toBeInTheDocument();
+    expect(screen.getByText('Tag 1')).toBeInTheDocument();
+    expect(screen.getByText('Tag 2')).toBeInTheDocument();
+  });
+  it('does not render tags if empty', () => {
+    render(<WorkingGroupOverview {...defaultProps} tags={[]} />);
+    expect(
+      screen.queryByRole('heading', { name: 'Tags' }),
+    ).not.toBeInTheDocument();
   });
 
   it('renders the members list', () => {

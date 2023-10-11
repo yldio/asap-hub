@@ -10,7 +10,7 @@ import {
   UserDetailHeaderCard,
   UserExternalProfiles,
   UserFundingStreams,
-  UserKeywords,
+  UserTags,
   UserProjects,
   UserQuestions,
   UserWorkingGroups,
@@ -54,7 +54,7 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
   editBiographyHref,
   editContactInfoHref,
   editKeyInfoHref,
-  editKeywordsHref,
+  editTagsHref,
   editQuestionsHref,
   editFundingStreamsHref,
   editContributingCohortsHref,
@@ -77,7 +77,7 @@ const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
         alternativeEmail={alternativeEmail}
         email={email}
       />
-      <UserKeywords tags={tags} editHref={editKeywordsHref} />
+      <UserTags tags={tags} editHref={editTagsHref} />
     </div>
     <UserBiography biography={biography} editHref={editBiographyHref} />
     {projects && (

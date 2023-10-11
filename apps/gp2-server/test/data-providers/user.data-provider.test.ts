@@ -76,6 +76,18 @@ describe('User data provider', () => {
       expect(result).toEqual(getUserDataObject());
     });
 
+    test('Should throw an error when the ORCID Works field has invalid data', async () => {
+      const mockResponse = getContentfulGraphqlUser();
+      mockResponse.orcidWorks = [null];
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: mockResponse,
+      });
+
+      await expect(userDataProvider.fetchById('user-id')).rejects.toThrow(
+        'Invalid ORCID works content data',
+      );
+    });
+
     test.each(gp2Model.userDegrees)(
       'Should correctly map MD, PhD Correctly - %s',
       async (degree) => {
@@ -1355,7 +1367,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tagId],
+            tags: [tagId],
           },
         };
         const result = await userDataProvider.fetch(fetchOptions);
@@ -1382,7 +1394,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tagId],
+            tags: [tagId],
           },
         };
         await userDataProvider.fetch(fetchOptions);
@@ -1432,7 +1444,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tag1Id, tag2Id],
+            tags: [tag1Id, tag2Id],
           },
         };
         await userDataProvider.fetch(fetchOptions);
@@ -1482,7 +1494,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tag1Id, tag2Id],
+            tags: [tag1Id, tag2Id],
           },
         };
         await userDataProvider.fetch(fetchOptions);
@@ -1531,7 +1543,7 @@ describe('User data provider', () => {
           take: 12,
           skip: 2,
           filter: {
-            keywords: [tag1Id, tag2Id],
+            tags: [tag1Id, tag2Id],
           },
         };
         await userDataProvider.fetch(fetchOptions);
@@ -1645,7 +1657,7 @@ describe('User data provider', () => {
         );
       });
     });
-    test('it should be able to filter out duplicate user Ids when  the project and working group and keyword filters are defined', async () => {
+    test('it should be able to filter out duplicate user Ids when  the project and working group and tag filters are defined', async () => {
       const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';
       const workingGroupId = '3ec68d44-82c1-4855-b6a0-ba44b9e313bb';
       const tagId = '0a391bca-5ad8-45c1-82d4-02bfde66481b';
@@ -1668,7 +1680,7 @@ describe('User data provider', () => {
         filter: {
           projects: [projectId],
           workingGroups: [workingGroupId],
-          keywords: [tagId],
+          tags: [tagId],
           userIds: [user1Id],
         },
       };
@@ -1803,6 +1815,44 @@ describe('User data provider', () => {
         }),
       );
     });
+
+    test('should support filtering by orcid', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+      await userDataProvider.fetch({
+        filter: { orcid: '0000-0000-1111-1111' },
+      });
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            orcid_contains: '0000-0000-1111-1111',
+          }),
+        }),
+      );
+    });
+
+    test('should support filtering by orcidLastSyncDate', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+      await userDataProvider.fetch({
+        filter: {
+          orcidLastSyncDate: 'some-date',
+        },
+      });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          where: expect.objectContaining({
+            orcidLastSyncDate_lt: 'some-date',
+          }),
+        }),
+      );
+    });
+
     describe('search', () => {
       test('Should query with filters and return the users', async () => {
         contentfulGraphqlClientMock.request.mockResolvedValueOnce(
@@ -1916,6 +1966,7 @@ describe('User data provider', () => {
         ...fieldsWithoutLocale,
         contributingCohorts: [],
         ...social,
+        orcid: userCreateDataObject.orcid,
         telephoneCountryCode: telephone?.countryCode,
         telephoneNumber: telephone?.number,
       });

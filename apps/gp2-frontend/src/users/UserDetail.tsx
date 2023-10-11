@@ -5,7 +5,7 @@ import {
   ExternalProfilesModal,
   FundingProviderModal,
   KeyInformationModal,
-  KeywordsModal,
+  TagsModal,
   OpenQuestionsModal,
   UserDetailPage,
   UserOverview,
@@ -22,11 +22,11 @@ import Frame from '../Frame';
 import { usePaginationParams } from '../hooks';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { useOutputs } from '../outputs/state';
-import { useKeywords } from '../shared/state';
+import { useTags, useContributingCohorts } from '../shared/state';
 import { getInstitutions } from './api';
 import countryCodesSuggestions from './country-codes-suggestions';
 import locationSuggestions from './location-suggestions';
-import { useContributingCohorts, usePatchUserById, useUserById } from './state';
+import { usePatchUserById, useUserById } from './state';
 
 const { users } = gp2;
 type UserDetailProps = {
@@ -72,7 +72,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
       .$,
     editExternalProfilesHref: userOverviewRoute.editExternalProfiles({}).$,
     editFundingStreamsHref: userOverviewRoute.editFundingStreams({}).$,
-    editKeywordsHref: userOverviewRoute.editKeywords({}).$,
+    editTagsHref: userOverviewRoute.editTags({}).$,
     editQuestionsHref: userOverviewRoute.editQuestions({}).$,
   };
   const cohortOptions = useContributingCohorts();
@@ -80,7 +80,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
 
-  const { items: allKeywords } = useKeywords();
+  const { items: allTags } = useTags();
 
   const commonModalProps = {
     backHref: backToUserDetails,
@@ -149,11 +149,11 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                     <Route path={userOverviewRoute.editFundingStreams({}).$}>
                       <FundingProviderModal {...user} {...commonModalProps} />
                     </Route>
-                    <Route path={userOverviewRoute.editKeywords({}).$}>
-                      <KeywordsModal
+                    <Route path={userOverviewRoute.editTags({}).$}>
+                      <TagsModal
                         {...user}
                         {...commonModalProps}
-                        suggestions={allKeywords}
+                        suggestions={allTags}
                       />
                     </Route>
                     <Route path={userOverviewRoute.editQuestions({}).$}>

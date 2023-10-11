@@ -2,6 +2,7 @@ import { gp2 } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import {
   emailExpression,
+  orcidExpression,
   telephoneCountryExpression,
   telephoneNumberExpression,
   urlExpression,
@@ -150,11 +151,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
           pattern: urlExpression,
           nullable: true,
         },
-        orcid: {
-          type: 'string',
-          pattern: urlExpression,
-          nullable: true,
-        },
+
         researchGate: {
           type: 'string',
           pattern: urlExpression,
@@ -170,6 +167,11 @@ const userPatchRequestValidationSchema: JSONSchemaType<gp2.UserPatchRequest> = {
         linkedIn: { type: 'string', pattern: urlExpression, nullable: true },
         github: { type: 'string', pattern: urlExpression, nullable: true },
       },
+    },
+    orcid: {
+      type: 'string',
+      pattern: orcidExpression,
+      nullable: true,
     },
   },
   additionalProperties: false,

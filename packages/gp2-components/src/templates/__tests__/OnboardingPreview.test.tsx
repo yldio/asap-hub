@@ -9,7 +9,7 @@ describe('OnboardingPreview', () => {
     editKeyInfoHref: '',
     editContactInfoHref: '',
     editBiographyHref: '',
-    editKeywordsHref: '',
+    editTagsHref: '',
     editQuestionsHref: '',
     editFundingStreamsHref: '',
     editContributingCohortsHref: '',
@@ -87,7 +87,7 @@ describe('OnboardingPreview', () => {
 
   it.each([
     'Biography',
-    'Keywords',
+    'Tags',
     'Projects',
     'Working Groups',
     'Open Questions',

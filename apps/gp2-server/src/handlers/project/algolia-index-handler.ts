@@ -10,6 +10,7 @@ import {
   getContentfulRestClientFactory,
 } from '../../dependencies/clients.dependency';
 import logger from '../../utils/logger';
+import { getTagsNames } from '../../utils/tag-names';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import { ProjectPayload } from '../event-bus';
 
@@ -27,8 +28,13 @@ export const indexProjectHandler =
         const project = await projectController.fetchById(id);
         log.debug(`Fetched project ${project.id}`);
 
+        const data = {
+          ...project,
+          _tags: getTagsNames(project.tags),
+        };
+
         await algoliaClient.save({
-          data: project,
+          data,
           type: 'project',
         });
 

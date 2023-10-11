@@ -7,7 +7,7 @@ const { rem } = pixels;
 
 type FiltersType = Pick<
   gp2Model.FetchUsersFilter,
-  'keywords' | 'regions' | 'workingGroups' | 'projects'
+  'tags' | 'regions' | 'workingGroups' | 'projects'
 >;
 
 type FilterType = keyof FiltersType;
@@ -18,7 +18,7 @@ type FilterPillsProps = {
   filters: FiltersType;
   projects: ProjectsType;
   workingGroups: WorkingGroupsType;
-  keywords: gp2Model.TagResponse[];
+  tags: gp2Model.TagResponse[];
   onRemove: (id: string, typeOfFilter: FilterType) => void;
 };
 
@@ -43,12 +43,12 @@ const FilterPills: React.FC<FilterPillsProps> = ({
   filters,
   workingGroups,
   projects,
-  keywords,
+  tags,
   onRemove,
 }) => {
-  const lookupKeyword = useMemo(
-    () => getArrayLookup(keywords.map(({ id, name }) => ({ id, title: name }))),
-    [keywords],
+  const lookupTag = useMemo(
+    () => getArrayLookup(tags.map(({ id, name }) => ({ id, title: name }))),
+    [tags],
   );
   const lookupWorkingGroup = useMemo(
     () => getArrayLookup(workingGroups),
@@ -57,12 +57,12 @@ const FilterPills: React.FC<FilterPillsProps> = ({
   const lookupProject = useMemo(() => getArrayLookup(projects), [projects]);
   return (
     <div css={containerStyles}>
-      {filters.keywords?.map((filter: string) => (
+      {filters.tags?.map((filter: string) => (
         <Tag
           key={`filter-pill-${filter}`}
-          onRemove={() => onRemove(filter, 'keywords')}
+          onRemove={() => onRemove(filter, 'tags')}
         >
-          {lookupKeyword(filter)}
+          {lookupTag(filter)}
         </Tag>
       ))}
       {filters.regions?.map((filter: string) => (

@@ -846,7 +846,7 @@ __metadata:
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 18.0.2
-    "@types/streamsaver": 2.0.1
+    "@types/streamsaver": 2.0.2
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
@@ -1154,7 +1154,7 @@ __metadata:
     "@types/node": 18.17.3
     "@types/react": 17.0.65
     "@types/react-router-dom": 5.3.3
-    "@types/streamsaver": 2.0.1
+    "@types/streamsaver": 2.0.2
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     csv-stringify: 6.4.2
@@ -1319,7 +1319,7 @@ __metadata:
     "@types/react-dom": 17.0.20
     "@types/react-router-dom": 5.3.3
     "@types/react-test-renderer": 18.0.2
-    "@types/streamsaver": 2.0.1
+    "@types/streamsaver": 2.0.2
     "@types/testing-library__jest-dom": 5.14.9
     "@types/testing-library__react": 10.0.1
     "@types/testing-library__react-hooks": 3.4.1
@@ -18253,10 +18253,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/streamsaver@npm:2.0.1":
-  version: 2.0.1
-  resolution: "@types/streamsaver@npm:2.0.1"
-  checksum: f347d17f0bc6f70fd49971e1ed74a595ccd280a66bc4dbe5a1c9eab67e147e4874cb98c2fa7d9a9f103045ea53bf0320e685cadcdf68a08c69d567f4aa9b29bc
+"@types/streamsaver@npm:2.0.2":
+  version: 2.0.2
+  resolution: "@types/streamsaver@npm:2.0.2"
+  checksum: 6790b521a0b62902af6a503cc350770de1c07015dc61dc89250192c884d1001e0c01aec1a91ce0250034960cf8de51509415c434f5750775b3acd33732690863
   languageName: node
   linkType: hard
 

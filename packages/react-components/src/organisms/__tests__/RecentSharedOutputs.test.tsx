@@ -3,6 +3,7 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import RecentSharedOutputs from '../RecentSharedOutputs';
 import { formatDateToTimezone } from '../../date';
+
 const date = '2020-01-01';
 
 it('renders the table research outputs', () => {

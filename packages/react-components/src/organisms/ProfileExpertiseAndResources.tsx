@@ -60,20 +60,22 @@ const ProfileExpertiseAndResources: React.FC<
             Help other researchers find you by adding keywords about your
             skills, techniques, resources, and tools. Completing this section
             will make you more likely to come up in search results.
-            <TagList
-              tags={[
-                'Structural biology',
-                'Autophagy',
-                'Transcriptional regulation',
-                'Electron Microscopy',
-                'Multi-omics',
-                'Long-read sequencing',
-                'LRRK2',
-                'Alpha-synuclein',
-                'VPS35',
-              ]}
-              enabled={false}
-            />
+            <div css={{ marginTop: `${16 / perRem}em` }}>
+              <TagList
+                tags={[
+                  'Structural biology',
+                  'Autophagy',
+                  'Transcriptional regulation',
+                  'Electron Microscopy',
+                  'Multi-omics',
+                  'Long-read sequencing',
+                  'LRRK2',
+                  'Alpha-synuclein',
+                  'VPS35',
+                ]}
+                enabled={false}
+              />
+            </div>
           </UserProfilePlaceholderCard>
         </div>
       )}

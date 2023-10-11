@@ -1,5 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import {
@@ -47,7 +47,7 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
 }) => (
   <Card key={user.id} overrideStyles={cardStyles}>
     <div css={containerStyles}>
-      <ImageLink link={network({}).users({}).user({ userId: user.id }).$}>
+      <ImageLink link={gp2Routing.users({}).user({ userId: user.id }).$}>
         <Avatar
           overrideStyles={avatarStyles}
           imageUrl={user.avatarUrl}
@@ -56,7 +56,7 @@ const DashboardRecommendedUsers: React.FC<DashboardRecommendedUsersProps> = ({
         />
       </ImageLink>
       <LinkHeadline
-        href={network({}).users({}).user({ userId: user.id }).$}
+        href={gp2Routing.users({}).user({ userId: user.id }).$}
         level={4}
         noMargin
         title={`${user.displayName}${

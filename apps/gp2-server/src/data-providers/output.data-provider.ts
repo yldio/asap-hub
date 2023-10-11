@@ -262,6 +262,19 @@ const getRelatedEntities = (relatedEntities?: GraphQLEntities) =>
       },
     );
 
+type GraphQLEvents = NonNullable<
+  OutputItem['relatedEventsCollection']
+>['items'];
+type GraphQLEvent = NonNullable<GraphQLEvents[number]>;
+const getRelatedEvents = (relatedEvents?: GraphQLEvents) =>
+  relatedEvents
+    ?.filter((event): event is GraphQLEvent => event !== null)
+    .map((event) => ({
+      id: event.sys.id,
+      title: event?.title || '',
+      endDate: event.endDate || '',
+    })) || [];
+
 type GraphQLCohorts = NonNullable<
   OutputItem['contributingCohortsCollection']
 >['items'];
@@ -273,6 +286,7 @@ const getCohorts = (cohorts?: GraphQLCohorts) =>
       id: cohort.sys.id,
       name: cohort.name ?? '',
     })) || [];
+
 type GraphQLAuthors = NonNullable<OutputItem['authorsCollection']>['items'];
 type GraphQLAuthor = NonNullable<GraphQLAuthors[number]>;
 const getAuthors = (authors?: GraphQLAuthors) =>
@@ -316,9 +330,6 @@ const getRelatedOutputs = (outputs?: GraphQLOutputs) =>
       documentType: documentType as gp2Model.OutputDocumentType,
       ...(type ? { type: type as gp2Model.OutputType } : {}),
     })) || [];
-type RelatedEventItem = NonNullable<
-  NonNullable<OutputItem['relatedEventsCollection']>['items'][number]
->;
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,
 ): gp2Model.OutputDataObject => {
@@ -333,6 +344,7 @@ export const parseContentfulGraphQLOutput = (
   const relatedEntities = getRelatedEntities(
     data.relatedEntitiesCollection?.items,
   );
+  const relatedEvents = getRelatedEvents(data.relatedEventsCollection?.items);
   const contributingCohorts = getCohorts(
     data.contributingCohortsCollection?.items,
   );
@@ -378,17 +390,8 @@ export const parseContentfulGraphQLOutput = (
     workingGroups,
     mainEntity,
     contributingCohorts,
-    relatedEntity:
-      Object.keys(relatedEntity).length !== 0 ? relatedEntity : undefined,
     relatedOutputs,
-    relatedEvents:
-      data.relatedEventsCollection?.items
-        ?.filter((event): event is RelatedEventItem => event !== null)
-        .map((event) => ({
-          id: event.sys.id,
-          title: event?.title || '',
-          endDate: event.endDate || '',
-        })) || [],
+    relatedEvents,
   };
 };
 

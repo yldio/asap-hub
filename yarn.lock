@@ -286,7 +286,7 @@ __metadata:
     got: 11.8.6
     jwt-encode: 1.0.1
     luxon: 1.28.1
-    nock: 13.3.3
+    nock: 13.3.4
     prettier: 2.8.8
     pump: 3.0.0
     through2-concurrent: 2.0.0
@@ -351,7 +351,7 @@ __metadata:
     auth0-deploy-cli: ^7.15.1
     got: 11.8.6
     js-yaml: ^4.1.0
-    nock: 13.3.3
+    nock: 13.3.4
     ts-node: 10.9.1
   languageName: unknown
   linkType: soft
@@ -860,7 +860,7 @@ __metadata:
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jose: 2.0.6
-    nock: 13.3.3
+    nock: 13.3.4
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.6
     qs: 6.11.2
@@ -1019,7 +1019,7 @@ __metadata:
     lodash.uniqby: 4.7.0
     luxon: 1.28.1
     mime-types: 2.1.35
-    nock: 13.3.3
+    nock: 13.3.4
     node-dev: 6.7.0
     odata-query: 7.0.4
     p-throttle: 4.1.1
@@ -1332,7 +1332,7 @@ __metadata:
     history: 4.10.1
     identity-obj-proxy: 3.0.0
     jose: 2.0.6
-    nock: 13.3.3
+    nock: 13.3.4
     path: "npm:path-browserify@1.0.1"
     pirates: 4.0.6
     react: 17.0.2
@@ -1454,7 +1454,7 @@ __metadata:
     lodash.matches: 4.6.0
     luxon: 1.28.1
     mime-types: 2.1.35
-    nock: 13.3.3
+    nock: 13.3.4
     node-dev: 6.7.0
     odata-query: 7.0.4
     p-throttle: 4.1.1
@@ -1706,7 +1706,7 @@ __metadata:
     jsonwebtoken: 9.0.0
     jwt-encode: 1.0.1
     luxon: 1.28.1
-    nock: 13.3.3
+    nock: 13.3.4
     pino: 8.14.1
     pino-http: 8.3.3
     pino-lambda: 4.2.1
@@ -1750,7 +1750,7 @@ __metadata:
     graphql-request: 6.1.0
     jwt-decode: 2.2.0
     jwt-encode: 1.0.1
-    nock: 13.3.3
+    nock: 13.3.4
   languageName: unknown
   linkType: soft
 
@@ -20636,7 +20636,7 @@ __metadata:
     jest-watch-select-projects: 2.0.0
     jest-watch-suspend: 1.1.2
     jest-watch-typeahead: 0.6.5
-    nock: 13.3.3
+    nock: 13.3.4
     node-fetch: 3.0.0-beta.9
     prettier: 2.8.8
     react-test-renderer: 17.0.2
@@ -37526,15 +37526,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:13.3.3":
-  version: 13.3.3
-  resolution: "nock@npm:13.3.3"
+"nock@npm:13.3.4":
+  version: 13.3.4
+  resolution: "nock@npm:13.3.4"
   dependencies:
     debug: ^4.1.0
     json-stringify-safe: ^5.0.1
     lodash: ^4.17.21
     propagate: ^2.0.0
-  checksum: e3e4f0fb777ac63d74f89bbb7aebe8e815b891b64ac71983d91686f725fdab856fe189cf2fe23d4add9f5dd5da53f3568106a61116a771ce0f4ed0f5ad7b035b
+  checksum: 34ba5fdc025db1f6eb3ea5e3067489e37d6982534ad23d2c1e9fe33ab844c73ed9161012ce4c116c7aa9b765e5a9cfb1541163c936e06fb3331d51c61e2869f7
   languageName: node
   linkType: hard
 

@@ -1,4 +1,5 @@
-module.exports.description = 'Adds validation to social media urls on the users';
+module.exports.description =
+  'Adds validation to social media urls on the users';
 
 module.exports.up = (migration) => {
   const users = migration.editContentType('users');

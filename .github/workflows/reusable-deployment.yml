@@ -383,18 +383,19 @@ jobs:
         with:
           environment-name: ${{ inputs.environment-name }}
 
-      # - name: Deploy CRN PR
-      #   if: ${{ inputs.environment-name=='Branch' }}
-      #   run: yarn workspace @asap-hub/auth0 deploy --debug
-      #   env:
-      #     AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-ci-auth0-client-id }}
-      #     AUTH0_CLIENT_SECRET: ${{ secrets.CRN_CI_PR_AUTH0_CLIENT_SECRET  }}
-      #     AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
-      #     APPLICATION_NAME: crn
-      #     BASE_PR_APP_DOMAIN: ${{ steps.setup.outputs.crn-base-pr-app-domain }}
-      #     API_URL: ${{ steps.setup.outputs.crn-api-url }}
-      #     AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}
-      #     AUTH0_SHARED_SECRET: ${{ secrets.CRN_PR_AUTH0_SHARED_SECRET }}
+      - name: Deploy CRN PR
+        if: ${{ inputs.environment-name == 'Branch' && steps.setup.outputs.crn-auth0-label == 'true' }}
+        run: yarn workspace @asap-hub/auth0 deploy --debug
+        env:
+          AUTH0_CLIENT_SECRET: ${{ secrets.CRN_CI_PR_AUTH0_CLIENT_SECRET  }}
+          AUTH0_SHARED_SECRET: ${{ secrets.CRN_PR_AUTH0_SHARED_SECRET }}
+          AUTH0_CLIENT_ID: ${{ steps.setup.outputs.crn-ci-auth0-client-id }}
+          AUTH0_DOMAIN: ${{ steps.setup.outputs.crn-auth0-domain }}
+          APPLICATION_NAME: crn
+          BASE_PR_APP_DOMAIN: ${{ steps.setup.outputs.crn-base-pr-app-domain }}
+          API_URL: ${{ steps.setup.outputs.crn-api-url }}
+          AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}
+
       - name: Deploy CRN
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
         run: yarn workspace @asap-hub/auth0 deploy --debug

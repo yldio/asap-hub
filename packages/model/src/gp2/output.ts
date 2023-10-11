@@ -139,12 +139,11 @@ export type AuthorUpsertDataObject =
   | { userId: string; externalUserId?: undefined }
   | { externalUserId: string; userId?: undefined };
 
-export type OutputCreateDataObject = Omit<
+export type OutputUpsertDataObject = Omit<
   OutputCoreObject,
   'relatedOutputs' | 'relatedEvents' | 'tags'
 > & {
   authors: AuthorUpsertDataObject[];
-  createdBy: string;
   tagIds: string[];
   workingGroupIds?: string[];
   projectIds?: string[];
@@ -153,20 +152,12 @@ export type OutputCreateDataObject = Omit<
   relatedOutputIds: string[];
   relatedEventIds: string[];
 };
+export type OutputCreateDataObject = OutputUpsertDataObject & {
+  createdBy: string;
+};
 
-export type OutputUpdateDataObject = Omit<
-  OutputCoreObject,
-  'relatedOutputs' | 'relatedEvents' | 'tags'
-> & {
-  authors: AuthorUpsertDataObject[];
+export type OutputUpdateDataObject = OutputUpsertDataObject & {
   updatedBy: string;
-  tagIds: string[];
-  workingGroupIds?: string[];
-  projectIds?: string[];
-  mainEntityId: string;
-  contributingCohortIds: string[];
-  relatedOutputIds: string[];
-  relatedEventIds: string[];
 };
 
 export type OutputBaseResponse = Omit<OutputDataObject, 'createdBy'>;

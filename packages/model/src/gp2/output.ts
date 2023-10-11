@@ -13,7 +13,7 @@ export const outputDocumentTypes = [
   'Training Materials',
 ] as const;
 
-export type OutputDocumentType = typeof outputDocumentTypes[number];
+export type OutputDocumentType = (typeof outputDocumentTypes)[number];
 
 export enum OutputIdentifierType {
   Empty = '',
@@ -50,10 +50,10 @@ export const outputTypes = [
   'Hot Topic',
   'Blog',
 ] as const;
-export type OutputType = typeof outputTypes[number];
+export type OutputType = (typeof outputTypes)[number];
 
 export const outputSubtypes = ['Preprints', 'Published'] as const;
-export type OutputSubtype = typeof outputSubtypes[number];
+export type OutputSubtype = (typeof outputSubtypes)[number];
 
 export const outputDocumentTypeToType: Record<
   OutputDocumentType,
@@ -75,11 +75,11 @@ export const outputDocumentTypeToType: Record<
 
 export const decisionOptions = ['Yes', 'No', "Don't Know"] as const;
 
-export type DecisionOption = typeof decisionOptions[number];
+export type DecisionOption = (typeof decisionOptions)[number];
 
 export const sharingStatuses = ['GP2 Only', 'Public'] as const;
 
-export type OutputSharingStatus = typeof sharingStatuses[number];
+export type OutputSharingStatus = (typeof sharingStatuses)[number];
 type RelatedOutputs = {
   id: string;
   title: string;

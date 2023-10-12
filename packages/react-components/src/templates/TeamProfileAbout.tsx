@@ -5,8 +5,8 @@ import { TeamResponse } from '@asap-hub/model';
 import { perRem } from '../pixels';
 import {
   ProfileExpertiseAndResources,
-  TeamProfileOverview,
   TeamMembersTabbedCard,
+  TeamProfileOverview,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -48,6 +48,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     ) : null}
     {expertiseAndResourceTags.length ? (
       <ProfileExpertiseAndResources
+        hideExpertiseAndResources
         expertiseAndResourceTags={expertiseAndResourceTags}
       />
     ) : null}

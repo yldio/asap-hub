@@ -3,22 +3,22 @@ import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch, tags as tagRoute } from '@asap-hub/routing';
 
-import { Card, Headline2, Divider, Markdown, Link } from '../atoms';
+import { Card, Divider, Headline2, Link, Markdown, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { CtaCard, TagList } from '../molecules';
 import {
   ConfirmModal,
+  OutputVersions,
+  RelatedEventsCard,
   RelatedResearchCard,
   RichText,
   SharedResearchAdditionalInformationCard,
   SharedResearchOutputBanners,
   SharedResearchOutputButtons,
   SharedResearchOutputHeaderCard,
-  RelatedEventsCard,
-  OutputVersions,
 } from '../organisms';
-import { createMailTo, TECH_SUPPORT_EMAIL, mailToSupport } from '../mail';
+import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
 import {
   getResearchOutputAssociation,
   getResearchOutputAssociationName,
@@ -234,6 +234,17 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               {!!tags.length && (
                 <>
                   <Headline2 styleAsHeading={4}>Tags</Headline2>
+                  <div
+                    css={{
+                      marginTop: `${12 / perRem}em`,
+                      marginBottom: `${24 / perRem}em`,
+                    }}
+                  >
+                    <Paragraph noMargin accent="lead">
+                      Explore keywords related to skills, techniques, resources,
+                      and tools.
+                    </Paragraph>
+                  </div>
                   <TagList
                     tags={tags.map((tag) => ({
                       tag,

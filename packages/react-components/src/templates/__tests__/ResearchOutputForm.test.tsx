@@ -189,7 +189,9 @@ it('displays keywords suggestions', async () => {
       />
     </StaticRouter>,
   );
-  userEvent.click(screen.getByText(/add a keyword/i));
+  userEvent.click(
+    screen.getByText(/Start typing\.\.\. \(E\.g\. Cell Biology\)/i),
+  );
   expect(screen.getByText('2D Cultures')).toBeVisible();
   expect(screen.getByText('Adenosine')).toBeVisible();
   expect(screen.getByText('Adrenal')).toBeVisible();

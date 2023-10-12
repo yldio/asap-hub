@@ -152,8 +152,11 @@ it('publishes the output', async () => {
           externalUserId: '2',
         },
       ],
-      relatedOutputs: [],
       mainEntityId: 'project-id-1',
+      tagIds: [],
+      contributingCohortIds: [],
+      relatedOutputIds: [],
+      relatedEventIds: [],
     },
     expect.anything(),
   );

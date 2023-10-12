@@ -1,21 +1,23 @@
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
-import { NotFoundPage } from '@asap-hub/react-components';
-import { gp2, useRouteParams } from '@asap-hub/routing';
+import { gp2 as gp2Model } from '@asap-hub/model';
 import { useRelatedOutputSuggestions } from '../outputs';
 import { useProjects } from '../projects/state';
 import { useContributingCohorts, useTags } from '../shared/state';
 import { useWorkingGroupsState } from '../working-groups/state';
 
-import { useAuthorSuggestions, useOutputById, useUpdateOutput } from './state';
+import { useAuthorSuggestions, useUpdateOutput } from './state';
 
-const ShareOutput: React.FC<Record<string, never>> = () => {
-  const { outputId } = useRouteParams(gp2.outputs({}).output);
-  const output = useOutputById(outputId);
+interface ShareOutputProps {
+  output: gp2Model.OutputBaseResponse;
+}
+const ShareOutput: React.FC<ShareOutputProps> = ({
+  output,
+}: ShareOutputProps) => {
   const entityType =
     output?.mainEntity.type === 'WorkingGroups' ? 'workingGroup' : 'project';
-  const shareOutput = useUpdateOutput(outputId);
+  const shareOutput = useUpdateOutput(output.id);
   const getAuthorSuggestions = useAuthorSuggestions();
-  const getRelatedOutputSuggestions = useRelatedOutputSuggestions(outputId);
+  const getRelatedOutputSuggestions = useRelatedOutputSuggestions(output.id);
   const { items: tagSuggestions } = useTags();
   const cohortSuggestions = useContributingCohorts();
   const { items: workingGroupSuggestions } = useWorkingGroupsState();
@@ -25,11 +27,6 @@ const ShareOutput: React.FC<Record<string, never>> = () => {
     currentPage: null,
     filters: new Set(),
   });
-
-  if (!output) {
-    return <NotFoundPage />;
-  }
-
   return (
     <CreateOutputPage
       entityType={entityType}

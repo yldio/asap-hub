@@ -1,4 +1,4 @@
-import { gp2 as gp2Model } from '@asap-hub/model';
+import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
 import {
   AuthorSelect,
   Button,
@@ -17,6 +17,7 @@ import {
   noop,
   pixels,
   ResearchOutputRelatedEventsCard,
+  ajvErrors,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
 
@@ -38,6 +39,7 @@ import { EntityMappper } from './CreateOutputPage';
 
 const { rem } = pixels;
 const { mailToSupport, INVITE_SUPPORT_EMAIL } = mail;
+const { getAjvErrorForPath } = ajvErrors;
 
 const DOC_TYPES_GP2_SUPPORTED_NOT_REQUIRED = [
   'Training Materials',
@@ -75,10 +77,13 @@ const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
   published: boolean,
+  error?: boolean,
 ) =>
-  `${EntityMappper[entityType]} ${documentType} ${
-    published ? 'published' : 'saved'
-  } successfully.`;
+  error
+    ? 'There are some errors in the form. Please correct the fields below.'
+    : `${EntityMappper[entityType]} ${documentType} ${
+        published ? 'published' : 'saved'
+      } successfully.`;
 
 const capitalizeFirstLetter = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
@@ -104,7 +109,7 @@ type OutputFormProps = {
   entityType: 'workingGroup' | 'project';
   shareOutput: (
     payload: gp2Model.OutputPostRequest,
-  ) => Promise<gp2Model.OutputResponse | undefined>;
+  ) => Promise<gp2Model.OutputResponse | void>;
   documentType: gp2Model.OutputDocumentType;
   readonly getAuthorSuggestions?: ComponentPropsWithRef<
     typeof AuthorSelect
@@ -127,6 +132,8 @@ type OutputFormProps = {
       typeof ResearchOutputRelatedEventsCard
     >['getRelatedEventSuggestions']
   >;
+  serverValidationErrors?: ValidationErrorResponse['data'];
+  clearServerValidationError?: (instancePath: string) => void;
 } & Partial<
   Pick<
     gp2Model.OutputResponse,
@@ -214,6 +221,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
   workingGroupSuggestions,
   projectSuggestions,
   getRelatedEventSuggestions,
+  serverValidationErrors = [],
+  clearServerValidationError = noop,
 }) => {
   const isAlwaysPublic = documentType === 'Training Materials';
   const [isGP2SupportedAlwaysTrue, setIsGP2SupportedAlwaysTrue] = useState(
@@ -251,6 +260,9 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const [newProjects, setProjects] = useState<gp2Model.OutputOwner[]>(
     projects || [],
   );
+  const [urlValidationMessage, setUrlValidationMessage] = useState<string>();
+  const [titleValidationMessage, setTitleValidationMessage] =
+    useState<string>();
 
   const [newCohorts, setCohorts] = useState<
     gp2Model.ContributingCohortDataObject[]
@@ -289,11 +301,15 @@ const OutputForm: React.FC<OutputFormProps> = ({
   );
   const { addNotification } = useNotificationContext();
 
-  const setBannerMessage = (message: string) =>
+  const setBannerMessage = (
+    message: string,
+    page: 'output' | 'output-form',
+    type: 'error' | 'success',
+  ) =>
     addNotification({
       message: capitalizeFirstLetter(message),
-      page: 'output',
-      type: 'success',
+      page,
+      type,
     });
 
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
@@ -338,6 +354,26 @@ const OutputForm: React.FC<OutputFormProps> = ({
     setIsGP2SupportedAlwaysTrue(newisGP2SupportedAlwaysTrue);
   }, [newType, documentType]);
 
+  useEffect(() => {
+    setUrlValidationMessage(
+      getAjvErrorForPath(
+        serverValidationErrors,
+        '/link',
+        'An Output with this URL already exists. Please enter a different URL.',
+      ),
+    );
+    setTitleValidationMessage(
+      getAjvErrorForPath(
+        serverValidationErrors,
+        '/title',
+        'An Output with this title already exists. Please check if this is repeated and choose a different title.',
+      ),
+    );
+  }, [serverValidationErrors]);
+
+  const isFieldDirty = (original: string = '', current: string) =>
+    current !== original;
+
   const isFormDirty =
     isFieldDirty(title, newTitle) ||
     isFieldDirty(link, newLink) ||
@@ -354,19 +390,35 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isArrayDirty(relatedOutputs, newRelatedOutputs) ||
     isArrayDirty(relatedEvents, newRelatedEvents);
   return (
-    <Form dirty={isFormDirty}>
+    <Form dirty={isFormDirty} toastType="inner">
       {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (
         <div css={containerStyles}>
           <FormCard title="What are you sharing?">
+            <LabeledTextField
+              title={'Title'}
+              subtitle={'(required)'}
+              value={newTitle}
+              customValidationMessage={titleValidationMessage}
+              onChange={(newValue) => {
+                clearServerValidationError('/title');
+                setTitle(newValue);
+              }}
+              required
+              enabled={!isSaving}
+            />
             <LabeledTextField
               title="URL"
               subtitle={'(required)'}
               required
               pattern={urlExpression}
-              onChange={setLink}
+              onChange={(newValue) => {
+                clearServerValidationError('/link');
+                setLink(newValue);
+              }}
               getValidationMessage={() =>
                 'Please enter a valid URL, starting with http://'
               }
+              customValidationMessage={urlValidationMessage}
               value={newLink ?? ''}
               enabled={!isSaving}
               labelIndicator={<GlobeIcon />}
@@ -398,14 +450,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 onChange={setSubtype}
               />
             )}
-            <LabeledTextField
-              title={'Title'}
-              subtitle={'(required)'}
-              value={newTitle}
-              onChange={setTitle}
-              required
-              enabled={!isSaving}
-            />
+
             <LabeledTextArea
               title="Description"
               subtitle="(required)"
@@ -702,6 +747,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
 
                     setBannerMessage(
                       getBannerMessage(entityType, documentType, !title),
+                      'output',
+                      'success',
                     );
                     setRedirectOnSave(path);
                   }

@@ -1,13 +1,17 @@
+import { clearAjvErrorForPath } from '@asap-hub/frontend-utils';
 import { CreateOutputPage, OutputForm } from '@asap-hub/gp2-components';
 import { gp2 as gp2Model } from '@asap-hub/model';
+import { ValidationErrorResponse } from '@asap-hub/model';
+import { NotFoundPage, usePrevious } from '@asap-hub/react-components';
+import { useEffect, useState } from 'react';
 import {
-  useRelatedEventsSuggestions,
+  handleError,
   useRelatedOutputSuggestions,
+  useRelatedEventsSuggestions,
 } from '../outputs';
 import { useProjects } from '../projects/state';
 import { useContributingCohorts, useTags } from '../shared/state';
 import { useWorkingGroupsState } from '../working-groups/state';
-
 import { useAuthorSuggestions, useUpdateOutput } from './state';
 
 interface ShareOutputProps {
@@ -31,6 +35,20 @@ const ShareOutput: React.FC<ShareOutputProps> = ({
     currentPage: null,
     filters: new Set(),
   });
+
+  const [errors, setErrors] = useState<ValidationErrorResponse['data']>([]);
+  const previousErrors = usePrevious(errors);
+
+  useEffect(() => {
+    if (previousErrors && previousErrors?.length < errors.length) {
+      window.scrollTo(0, 0);
+    }
+  }, [errors.length, previousErrors]);
+
+  if (!output) {
+    return <NotFoundPage />;
+  }
+
   return (
     <CreateOutputPage
       entityType={entityType}
@@ -39,7 +57,11 @@ const ShareOutput: React.FC<ShareOutputProps> = ({
       <OutputForm
         {...output}
         entityType={entityType}
-        shareOutput={shareOutput}
+        shareOutput={async (payload) =>
+          shareOutput(payload).catch(
+            handleError(['/link', '/title'], setErrors),
+          )
+        }
         getAuthorSuggestions={getAuthorSuggestions}
         tagSuggestions={tagSuggestions}
         getRelatedOutputSuggestions={getRelatedOutputSuggestions}
@@ -50,6 +72,10 @@ const ShareOutput: React.FC<ShareOutputProps> = ({
         mainEntityId={output.mainEntity.id}
         projects={output.projects}
         workingGroups={output.workingGroups}
+        serverValidationErrors={errors}
+        clearServerValidationError={(instancePath: string) =>
+          setErrors(clearAjvErrorForPath(errors, instancePath))
+        }
       />
     </CreateOutputPage>
   );

@@ -19,6 +19,7 @@ const PageNotifications: React.FC<PageNotificationsProps> = ({
   const pageNotifications = notifications.filter(
     (notification) => notification.page === page,
   );
+  console.log(notifications);
   const displayNotification = pageNotifications[0];
   useEffect(
     () => () => displayNotification && removeNotification(displayNotification),

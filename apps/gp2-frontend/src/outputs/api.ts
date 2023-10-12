@@ -1,5 +1,9 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
-import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
+import {
+  BackendError,
+  createSentryHeaders,
+  GetListOptions,
+} from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
 
@@ -101,12 +105,16 @@ export const createOutput = async (
     body: JSON.stringify(output),
   });
 
+  const response = await resp.json();
+
   if (!resp.ok) {
-    throw new Error(
+    throw new BackendError(
       `Failed to create output. Expected status 201. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
     );
   }
-  return resp.json();
+  return response;
 };
 
 export const updateOutput = async (
@@ -124,13 +132,16 @@ export const updateOutput = async (
     body: JSON.stringify(output),
   });
 
+  const response = await resp.json();
   if (!resp.ok) {
     if (resp.status === 404) {
       return undefined;
     }
-    throw new Error(
+    throw new BackendError(
       `Failed to update output ${outputId}. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      response,
+      resp.status,
     );
   }
-  return resp.json();
+  return response;
 };

@@ -1,4 +1,12 @@
 import { getEvents } from './events/api';
+import {
+  BackendError,
+  validationErrorsAreSupported,
+} from '@asap-hub/frontend-utils';
+import {
+  isValidationErrorResponse,
+  ValidationErrorResponse,
+} from '@asap-hub/model';
 import { useAlgolia } from './hooks/algolia';
 import { getOutputs } from './outputs/api';
 
@@ -41,3 +49,21 @@ export const useRelatedEventsSuggestions = () => {
       })),
     );
 };
+export const handleError =
+  (
+    supportedErrors: string[],
+    setErrors: (errors: ValidationErrorResponse['data']) => void,
+  ) =>
+  (error: unknown) => {
+    if (error instanceof BackendError) {
+      const { response } = error;
+      if (
+        isValidationErrorResponse(response) &&
+        validationErrorsAreSupported(response, supportedErrors)
+      ) {
+        setErrors(response.data);
+        return;
+      }
+    }
+    throw error;
+  };

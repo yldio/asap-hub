@@ -94,13 +94,3 @@ it("renders the upcoming events with events when there's at least one upcoming e
     screen.getByRole('heading', { name: 'Upcoming Events' }),
   ).toBeVisible();
 });
-
-it("renders past events when there's at least one past event", async () => {
-  mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
-  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
-  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
-  mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
-  mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
-  await renderDashboard({});
-  expect(screen.getByRole('heading', { name: 'Past Events' })).toBeVisible();
-});

@@ -256,7 +256,7 @@ runs:
           if [ "$AUTH0_LABEL" = true ]; then
             echo "crn-auth0-additional-claim-domain=https://pr-asap-hub.hub.asap.science" >> $GITHUB_OUTPUT
             echo "crn-auth0-audience=https://pr.hub.asap.science" >> $GITHUB_OUTPUT
-            echo "crn-auth-url=https://pr-asap-hub.us.auth0.com" >> $GITHUB_OUTPUT
+            echo "crn-auth-url=https://$PR_NUMBER.hub.asap.science/.auth/" >> $GITHUB_OUTPUT"
             echo "crn-auth0-client-id=s1ZOMWgaQKtCeRSnr7LRamFWh0WD8azN" >> $GITHUB_OUTPUT
             echo "crn-ci-auth0-client-id=WHi7btcaXqs2lJnvVyp6SP12onYNbkIA" >> $GITHUB_OUTPUT
             echo "crn-auth0-domain=pr-asap-hub.us.auth0.com" >> $GITHUB_OUTPUT

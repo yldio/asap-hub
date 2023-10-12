@@ -22,6 +22,7 @@ describe('OutputForm', () => {
     documentType: 'Procedural Form' as const,
     entityType: 'workingGroup' as const,
     getRelatedOutputSuggestions: jest.fn(),
+    getRelatedEventSuggestions: jest.fn(),
     tagSuggestions: [],
     cohortSuggestions: [],
     workingGroupSuggestions: [],
@@ -60,6 +61,7 @@ describe('OutputForm', () => {
   it('publish the form', async () => {
     const getAuthorSuggestions = jest.fn();
     const getRelatedOutputSuggestions = jest.fn();
+    const getRelatedEventSuggestions = jest.fn();
     const history = createMemoryHistory();
     const shareOutput = jest.fn();
     const addNotification = jest.fn();
@@ -89,6 +91,13 @@ describe('OutputForm', () => {
       },
     ]);
     shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
+    getRelatedEventSuggestions.mockResolvedValueOnce([
+      {
+        value: '23',
+        label: 'related event',
+        endDate: '2021-12-28T14:00:00.000Z',
+      },
+    ]);
     render(
       <OutputForm
         {...defaultProps}

@@ -1,13 +1,13 @@
 import { EventResponse } from '@asap-hub/model';
-import { components } from 'react-select';
-import { ComponentPropsWithRef } from 'react';
 import { css } from '@emotion/react';
+import { ComponentPropsWithRef } from 'react';
+import { components } from 'react-select';
 
+import { MultiSelectOptionsType, Pill } from '../atoms';
+import { formatDateToTimezone } from '../date';
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { perRem } from '../pixels';
-import { MultiSelectOptionsType, Pill } from '../atoms';
 import { noop } from '../utils';
-import { formatDateToTimezone } from '../date';
 
 export type ResearchOutputRelatedEventsOption = Pick<EventResponse, 'endDate'> &
   MultiSelectOptionsType;
@@ -25,6 +25,9 @@ type ResearchOutputRelatedEventsCardProps = {
 
   readonly isSaving: boolean;
   isEditMode?: boolean;
+  title?: string;
+  description?: string;
+  labelTitle?: string;
 };
 
 const optionStyles = css({
@@ -44,13 +47,13 @@ const ResearchOutputRelatedEventsCard: React.FC<
   relatedEvents,
   getRelatedEventSuggestions = noop,
   onChangeRelatedEvents = noop,
+  title = 'Are there any related CRN Hub events?',
+  description = 'List all CRN Hub events that are related to this output.',
+  labelTitle = 'Related CRN Hub Events',
 }) => (
-  <FormCard
-    title="Are there any related CRN Hub events?"
-    description="List all CRN Hub events that are related to this output."
-  >
+  <FormCard title={title} description={description}>
     <LabeledMultiSelect<ResearchOutputRelatedEventsOption>
-      title="Related CRN Hub Events"
+      title={labelTitle}
       subtitle="(optional)"
       enabled={!isSaving || !isEditMode}
       placeholder="Start typing..."

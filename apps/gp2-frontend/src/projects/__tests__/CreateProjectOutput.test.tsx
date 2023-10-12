@@ -10,21 +10,24 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getAlgoliaEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
 import { createOutput, getOutputs } from '../../outputs/api';
-import { getTags, getContributingCohorts } from '../../shared/api';
+import { getContributingCohorts, getTags } from '../../shared/api';
 import { getExternalUsers, getUsers } from '../../users/api';
 import { getWorkingGroups } from '../../working-groups/api';
 import {
+  createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
 import { getAlgoliaProjects, getProject } from '../api';
 import CreateProjectOutput from '../CreateProjectOutput';
 
+jest.mock('../../events/api.ts');
 jest.mock('../../outputs/api');
-jest.mock('../../users/api');
 jest.mock('../../shared/api');
+jest.mock('../../users/api');
 jest.mock('../../working-groups/api');
 jest.mock('../api');
 
@@ -49,6 +52,9 @@ const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
 >;
 
 const mockGetProjectById = getProject as jest.MockedFunction<typeof getProject>;
+const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
+  typeof getAlgoliaEvents
+>;
 
 const renderCreateProjectOutput = async (
   documentType: gp2Routing.OutputDocumentTypeParameter = 'article',
@@ -95,6 +101,7 @@ beforeEach(() => {
   mockGetContributingCohorts.mockResolvedValue(gp2.contributingCohortResponse);
   mockGetWorkingGroups.mockResolvedValue(gp2.createWorkingGroupsResponse());
   mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
+  mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
   mockGetProjectById.mockResolvedValue(
     gp2.createProjectResponse({ id: 'project-id-1' }),
   );

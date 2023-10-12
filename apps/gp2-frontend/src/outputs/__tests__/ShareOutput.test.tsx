@@ -12,21 +12,24 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getAlgoliaEvents } from '../../events/api';
 import NotificationMessages from '../../NotificationMessages';
 import { getOutputs, updateOutput } from '../api';
 import { getTags, getContributingCohorts } from '../../shared/api';
 import { getAlgoliaProjects } from '../../projects/api';
 import { getWorkingGroups } from '../../working-groups/api';
-import ShareOutput from '../ShareOutput';
 import {
+  createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
   createProjectListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
+import ShareOutput from '../ShareOutput';
 
 jest.mock('../api');
 jest.mock('../../shared/api');
 jest.mock('../../projects/api');
 jest.mock('../../working-groups/api');
+jest.mock('../../events/api.ts');
 
 const mockUpdateOutput = updateOutput as jest.MockedFunction<
   typeof updateOutput
@@ -42,6 +45,9 @@ const mockGetWorkingGroups = getWorkingGroups as jest.MockedFunction<
 >;
 const mockGetProjects = getAlgoliaProjects as jest.MockedFunction<
   typeof getAlgoliaProjects
+>;
+const mockGetEvents = getAlgoliaEvents as jest.MockedFunction<
+  typeof getAlgoliaEvents
 >;
 
 const renderShareOutput = async (
@@ -89,6 +95,7 @@ describe('ShareOutput', () => {
     );
     mockGetWorkingGroups.mockResolvedValue(gp2.createWorkingGroupsResponse());
     mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
+    mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
   });
   afterEach(jest.resetAllMocks);
   mockConsoleError();

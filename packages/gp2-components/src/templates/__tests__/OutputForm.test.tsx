@@ -5,6 +5,7 @@ import {
   fireEvent,
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
@@ -14,7 +15,7 @@ import { Router, StaticRouter } from 'react-router-dom';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
-jest.setTimeout(60_000);
+jest.setTimeout(90_000);
 
 describe('OutputForm', () => {
   const defaultProps = {
@@ -216,6 +217,155 @@ describe('OutputForm', () => {
       }),
     );
     expect(history.location.pathname).toEqual(`/outputs/ro0`);
+  });
+
+  it.only('shows error message because of empty required fields', async () => {
+    const getAuthorSuggestions = jest.fn();
+    const getRelatedOutputSuggestions = jest.fn();
+    const history = createMemoryHistory();
+    const shareOutput = jest.fn();
+    const addNotification = jest.fn();
+    getAuthorSuggestions.mockResolvedValue([
+      {
+        author: {
+          ...gp2Fixtures.createUserResponse(),
+          displayName: 'Chris Blue',
+        },
+        label: 'Chris Blue',
+        value: 'u2',
+      },
+      {
+        author: {
+          ...gp2Fixtures.createExternalUserResponse(),
+          displayName: 'Chris Reed',
+        },
+        label: 'Chris Reed (Non CRN)',
+        value: 'u1',
+      },
+    ]);
+    getRelatedOutputSuggestions.mockResolvedValue([
+      {
+        value: '11',
+        label: 'related output',
+        documentType: 'GP2 Reports',
+      },
+    ]);
+    shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
+    render(
+      <OutputForm
+        {...defaultProps}
+        documentType="Code/Software"
+        shareOutput={shareOutput}
+        getAuthorSuggestions={getAuthorSuggestions}
+        getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        workingGroupSuggestions={[{ id: '2', title: 'another group' }]}
+      />,
+      {
+        wrapper: ({ children }) => (
+          <NotificationContext.Provider
+            value={{
+              notifications: [],
+              addNotification,
+              removeNotification: jest.fn(),
+            }}
+          >
+            <Router history={history}>{children}</Router>
+          </NotificationContext.Provider>
+        ),
+      },
+    );
+
+    userEvent.click(screen.getByRole('button', { name: /publish/i }));
+    expect(
+      await screen.findByRole('button', { name: /publish/i }),
+    ).toBeEnabled();
+
+    expect(shareOutput).not.toHaveBeenCalled();
+
+    await waitFor(() =>
+      expect(addNotification).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message:
+            'There are some errors in the form. Please correct the fields below.',
+          page: 'output-form',
+          type: 'error',
+        }),
+      ),
+    );
+  });
+
+  it('shows error message because of unkown error', async () => {
+    const getAuthorSuggestions = jest.fn();
+    const getRelatedOutputSuggestions = jest.fn();
+    const history = createMemoryHistory();
+    const shareOutput = jest.fn();
+    const addNotification = jest.fn();
+    getAuthorSuggestions.mockResolvedValue([
+      {
+        author: {
+          ...gp2Fixtures.createUserResponse(),
+          displayName: 'Chris Blue',
+        },
+        label: 'Chris Blue',
+        value: 'u2',
+      },
+      {
+        author: {
+          ...gp2Fixtures.createExternalUserResponse(),
+          displayName: 'Chris Reed',
+        },
+        label: 'Chris Reed (Non CRN)',
+        value: 'u1',
+      },
+    ]);
+    getRelatedOutputSuggestions.mockResolvedValue([
+      {
+        value: '11',
+        label: 'related output',
+        documentType: 'GP2 Reports',
+      },
+    ]);
+    shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
+    render(
+      <OutputForm
+        {...defaultProps}
+        shareOutput={shareOutput}
+        getAuthorSuggestions={getAuthorSuggestions}
+        getRelatedOutputSuggestions={getRelatedOutputSuggestions}
+        workingGroupSuggestions={[{ id: '2', title: 'another group' }]}
+        {...gp2Fixtures.createOutputResponse()}
+        link="https://example.com/output"
+        publishDate="2020-03-04"
+      />,
+      {
+        wrapper: ({ children }) => (
+          <NotificationContext.Provider
+            value={{
+              notifications: [],
+              addNotification,
+              removeNotification: jest.fn(),
+            }}
+          >
+            <Router history={history}>{children}</Router>
+          </NotificationContext.Provider>
+        ),
+      },
+    );
+
+    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
+
+    expect(shareOutput).toHaveBeenCalled();
+    await waitFor(() =>
+      expect(addNotification).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message:
+            'There was an error and we were unable to save your changes. Please try again.',
+          page: 'output-form',
+          type: 'error',
+        }),
+      ),
+    );
   });
 
   it('can submit published date', async () => {

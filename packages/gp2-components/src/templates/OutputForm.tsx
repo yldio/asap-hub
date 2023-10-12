@@ -2,7 +2,6 @@ import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
 import {
   AuthorSelect,
   Button,
-  Form,
   FormCard,
   GlobeIcon,
   LabeledDateField,
@@ -20,8 +19,8 @@ import {
   ajvErrors,
 } from '@asap-hub/react-components';
 import { useNotificationContext } from '@asap-hub/react-context';
-
 import { gp2 as gp2Routing } from '@asap-hub/routing';
+import { Form } from '../organisms';
 import { isInternalUser, urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import {
@@ -77,15 +76,10 @@ const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
   published: boolean,
-  error?: 'error' | 'validity',
 ) =>
-  error === 'error'
-    ? 'There was an error and we were unable to save your changes. Please try again.'
-    : error === 'validity'
-    ? 'There are some errors in the form. Please correct the fields below.'
-    : `${EntityMappper[entityType]} ${documentType} ${
-        published ? 'published' : 'saved'
-      } successfully.`;
+  `${EntityMappper[entityType]} ${documentType} ${
+    published ? 'published' : 'saved'
+  } successfully.`;
 
 const capitalizeFirstLetter = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
@@ -301,18 +295,21 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const [identifier, setIdentifier] = useState<string>(
     doi || rrid || accessionNumber || '',
   );
-  const { addNotification } = useNotificationContext();
+  const { addNotification, removeNotification, notifications } =
+    useNotificationContext();
 
   const setBannerMessage = (
     message: string,
     page: 'output' | 'output-form',
     bannerType: 'error' | 'success',
-  ) =>
+  ) => {
+    notifications[0] && removeNotification(notifications[0]);
     addNotification({
       message: capitalizeFirstLetter(message),
       page,
       type: bannerType,
     });
+  };
 
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
   const currentPayload: gp2Model.OutputPostRequest = {
@@ -392,14 +389,8 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isArrayDirty(relatedOutputs, newRelatedOutputs) ||
     isArrayDirty(relatedEvents, newRelatedEvents);
   return (
-    <Form dirty={isFormDirty} toastType="inner">
-      {({
-        isSaving,
-        getWrappedOnSave,
-        onCancel,
-        setRedirectOnSave,
-        status,
-      }) => (
+    <Form dirty={isFormDirty}>
+      {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (
         <div css={containerStyles}>
           <FormCard title="What are you sharing?">
             <LabeledTextField

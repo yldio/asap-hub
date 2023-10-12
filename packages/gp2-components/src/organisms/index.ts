@@ -9,6 +9,7 @@ export { default as EmailSection } from './EmailSection';
 export { default as ExternalProfilesModal } from './ExternalProfilesModal';
 export { default as FilterPills } from './FilterPills';
 export { default as FiltersModal } from './FiltersModal';
+export { default as Form } from './Form';
 export { default as FundingProviderModal } from './FundingProviderModal';
 export { default as KeyInformationModal } from './KeyInformationModal';
 export { default as TagsModal } from './TagsModal';

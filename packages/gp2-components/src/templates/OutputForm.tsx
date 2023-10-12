@@ -304,12 +304,12 @@ const OutputForm: React.FC<OutputFormProps> = ({
   const setBannerMessage = (
     message: string,
     page: 'output' | 'output-form',
-    type: 'error' | 'success',
+    bannerType: 'error' | 'success',
   ) =>
     addNotification({
       message: capitalizeFirstLetter(message),
       page,
-      type,
+      type: bannerType,
     });
 
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;

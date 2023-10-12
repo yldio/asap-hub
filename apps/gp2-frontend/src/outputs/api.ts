@@ -132,11 +132,13 @@ export const updateOutput = async (
     body: JSON.stringify(output),
   });
 
+  if (resp.status === 404) {
+    return undefined;
+  }
+
   const response = await resp.json();
+
   if (!resp.ok) {
-    if (resp.status === 404) {
-      return undefined;
-    }
     throw new BackendError(
       `Failed to update output ${outputId}. Expected status 200. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       response,

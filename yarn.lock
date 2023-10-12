@@ -374,7 +374,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-clear-on-change@workspace:packages/contentful-app-extensions/clear-on-change"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -402,7 +402,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-date-field-as-first-published-at@workspace:packages/contentful-app-extensions/date-field-as-first-published-at"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -429,7 +429,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-disabled-fields@workspace:packages/contentful-app-extensions/disabled-fields"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -457,7 +457,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-additional-materials@workspace:packages/contentful-app-extensions/event-additional-materials"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -484,7 +484,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-custom-validation@workspace:packages/contentful-app-extensions/event-custom-validation"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -512,7 +512,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-speakers-gp2@workspace:packages/contentful-app-extensions/event-speakers-gp2"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
@@ -541,7 +541,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-event-speakers-title@workspace:packages/contentful-app-extensions/event-speakers-title"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
@@ -570,7 +570,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-field-as-updated-at@workspace:packages/contentful-app-extensions/field-as-updated-at"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -598,7 +598,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-membership-custom-validation@workspace:packages/contentful-app-extensions/membership-custom-validation"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -626,7 +626,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-membership-reference@workspace:packages/contentful-app-extensions/membership-reference"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
@@ -655,7 +655,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-partial-last-updated@workspace:packages/contentful-app-extensions/partial-last-updated"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -682,7 +682,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-user-positions@workspace:packages/contentful-app-extensions/user-positions"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/react-apps-toolkit": 1.2.16
@@ -709,7 +709,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-working-group-deliverables@workspace:packages/contentful-app-extensions/working-group-deliverables"
   dependencies:
     "@contentful/app-scripts": 1.13.0
-    "@contentful/app-sdk": 4.23.0
+    "@contentful/app-sdk": 4.23.1
     "@contentful/f36-components": 4.52.0
     "@contentful/f36-tokens": 4.0.2
     "@contentful/field-editor-reference": ^5.9.0
@@ -9729,12 +9729,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/app-sdk@npm:4.23.0":
-  version: 4.23.0
-  resolution: "@contentful/app-sdk@npm:4.23.0"
+"@contentful/app-sdk@npm:4.23.1":
+  version: 4.23.1
+  resolution: "@contentful/app-sdk@npm:4.23.1"
   dependencies:
     contentful-management: ">=7.30.0"
-  checksum: 74167b69ec41cc1a3181c543d7810a7e1642cdaba29b9667827af0d0b9e8e2ade9e4c6f873aace244ca5d3992f93346dc065532b992ae58daac6e34a8894d57c
+  checksum: 70a40ab362dcc1bfc17c8ddb5175e54f04619d02626b8bf2e98d31dc79ddd172c45748be2a415ffbe09df913158de900d630729bff82c2a9742798caa2de8fd9
   languageName: node
   linkType: hard
 

@@ -77,16 +77,15 @@ const getBannerMessage = (
   entityType: 'workingGroup' | 'project',
   documentType: gp2Model.OutputDocumentType,
   published: boolean,
-  error?: boolean,
+  error?: 'error' | 'validity',
 ) =>
-  error
+  error === 'error'
+    ? 'There was an error and we were unable to save your changes. Please try again.'
+    : error === 'validity'
     ? 'There are some errors in the form. Please correct the fields below.'
     : `${EntityMappper[entityType]} ${documentType} ${
         published ? 'published' : 'saved'
       } successfully.`;
-
-const capitalizeFirstLetter = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 
 const footerStyles = css({
   display: 'flex',
@@ -307,7 +306,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
     bannerType: 'error' | 'success',
   ) =>
     addNotification({
-      message: capitalizeFirstLetter(message),
+      message,
       page,
       type: bannerType,
     });
@@ -391,7 +390,13 @@ const OutputForm: React.FC<OutputFormProps> = ({
     isArrayDirty(relatedEvents, newRelatedEvents);
   return (
     <Form dirty={isFormDirty} toastType="inner">
-      {({ isSaving, getWrappedOnSave, onCancel, setRedirectOnSave }) => (
+      {({
+        isSaving,
+        getWrappedOnSave,
+        onCancel,
+        setRedirectOnSave,
+        status,
+      }) => (
         <div css={containerStyles}>
           <FormCard title="What are you sharing?">
             <LabeledTextField
@@ -756,7 +761,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                 }}
                 enabled={!isSaving}
               >
-                {title ? 'Save' : 'Publish'}
+                {title !== undefined ? 'Save' : 'Publish'}
               </Button>
             </div>
           </div>

@@ -2,6 +2,8 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
+import { ValidationErrorResponse } from '@asap-hub/model';
+import { BackendError } from '@asap-hub/frontend-utils';
 import {
   render,
   screen,
@@ -94,6 +96,7 @@ describe('ShareOutput', () => {
     );
     mockGetProjects.mockResolvedValue(createProjectListAlgoliaResponse(1));
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
+    window.scrollTo = jest.fn();
   });
   afterEach(jest.resetAllMocks);
   mockConsoleError();
@@ -124,5 +127,51 @@ describe('ShareOutput', () => {
       expect.objectContaining({ title, link }),
       expect.anything(),
     );
+  });
+
+  it('will show server side validation error for link', async () => {
+    const title = 'Output title';
+    const link = 'https://example.com';
+    const id = 'output-id';
+    mockUpdateOutput.mockResolvedValueOnce({
+      ...gp2Fixtures.createOutputResponse(),
+      id,
+      title,
+      link,
+      projects: [{ id: '42', title: 'a title' }],
+    });
+    const validationResponse: ValidationErrorResponse = {
+      message: 'Validation error',
+      error: 'Bad Request',
+      statusCode: 400,
+      data: [
+        { instancePath: '/link', keyword: '', params: {}, schemaPath: 'link' },
+      ],
+    };
+
+    mockUpdateOutput.mockRejectedValue(
+      new BackendError('example', validationResponse, 400),
+    );
+
+    await renderShareOutput(id);
+    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
+
+    expect(mockUpdateOutput).toHaveBeenCalled();
+    expect(
+      screen.queryAllByText(
+        'An Output with this URL already exists. Please enter a different URL.',
+      ).length,
+    ).toBeGreaterThan(1);
+
+    const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
+    userEvent.type(url, 'a');
+    url.blur();
+
+    expect(
+      screen.queryByText(
+        'An Output with this URL already exists. Please enter a different URL.',
+      ),
+    ).toBeNull();
   });
 });

@@ -27,6 +27,7 @@ type FormProps<T> = {
       onSaveFunction: () => Promise<T | void>,
     ) => () => Promise<T | void>;
     onCancel: () => void;
+    status: FormStatus;
   }) => ReactNode;
 };
 const Form = <T extends void | Record<string, unknown>>({
@@ -113,6 +114,7 @@ const Form = <T extends void | Record<string, unknown>>({
           isSaving: status === 'isSaving',
           getWrappedOnSave,
           setRedirectOnSave,
+          status,
         })}
       </form>
     </>

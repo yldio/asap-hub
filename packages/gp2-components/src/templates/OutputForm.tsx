@@ -163,6 +163,27 @@ export const getPostAuthors = (
     return { externalUserName: value };
   });
 
+const isFieldDirty = (original: string = '', current: string) =>
+  current !== original;
+
+const hasId = (obj: { id?: string; value?: string }): obj is { id: string } =>
+  !!(obj.id as unknown as { id: string });
+
+const isArrayDirty = (
+  items?: readonly { id: string }[],
+  newItems?: readonly { id: string }[] | readonly { value: string }[],
+) =>
+  items
+    ? !items.every(
+        ({ id }, index) =>
+          index ===
+          newItems?.findIndex(
+            (newItem) => (hasId(newItem) ? newItem.id : newItem.value) === id,
+          ),
+      )
+    : !!newItems?.length;
+const toId = ({ id }: { id: string }) => id;
+
 const OutputForm: React.FC<OutputFormProps> = ({
   entityType,
   shareOutput,
@@ -275,7 +296,6 @@ const OutputForm: React.FC<OutputFormProps> = ({
       type: 'success',
     });
 
-  const toId = ({ id }: { id: string }) => id;
   const outMainEntity = ({ id }: { id: string }) => id !== mainEntityId;
   const currentPayload: gp2Model.OutputPostRequest = {
     title: newTitle,
@@ -318,29 +338,6 @@ const OutputForm: React.FC<OutputFormProps> = ({
     setIsGP2SupportedAlwaysTrue(newisGP2SupportedAlwaysTrue);
   }, [newType, documentType]);
 
-  const isFieldDirty = (original: string = '', current: string) =>
-    current !== original;
-
-  const hasIdProperty = (obj: {
-    id?: string;
-    value?: string;
-  }): obj is { id: string } => !!(obj.id as unknown as { id: string });
-
-  const isArrayDirty = (
-    items?: readonly { id: string }[],
-    newItems?: readonly { id: string }[] | readonly { value: string }[],
-  ) =>
-    items
-      ? !items.every(
-          (item, index) =>
-            index ===
-            newItems?.findIndex((newItem) =>
-              hasIdProperty(newItem)
-                ? newItem.id === item.id
-                : newItem.value === item.id,
-            ),
-        )
-      : !!newWorkingGroups?.length;
   const isFormDirty =
     isFieldDirty(title, newTitle) ||
     isFieldDirty(link, newLink) ||
